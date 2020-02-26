@@ -1,0 +1,33 @@
+{
+	"schemaVersion": 1,
+	"id": "jsmacros",
+	"version": "${version}",
+	"name": "js Macros",
+	"description": "Port of Advanced Macros to Fabric",
+	"authors": [
+		"wagyourtail"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/jsmacros/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"client": [
+			"xyz.wagyourtail.jsmacros.jsMacros"
+		]
+	},
+	"mixins": [
+			"jsmacros.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.7.2",
+		"fabric": "*",
+		"minecraft": "1.15.x"
+	},
+	"suggests": {
+		"flamingo": "*"
+	}
+}

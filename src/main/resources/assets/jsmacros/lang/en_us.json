@@ -1,0 +1,17 @@
+{
+	"jsmacros.title": "JS Macros",
+	"jsmacros.edit": "Edit",
+	"jsmacros.editfile": "Edit File",
+	"jsmacros.run": "Run",
+	"jsmacros.openfolder": "Open Folder",
+	"jsmacros.add": "Add Macro",
+	"jsmacros.stoprunning": "Stop Running Macro",
+	"jsmacros.editmacro": "Edit Macro",
+	"jsmacros.macrotypestitle": "Events",
+	"jsmacros.setkey": "Set Key",
+	"jsmacros.setfile": "Set File",
+	"jsmacros.save": "Save",
+	"jsmacros.delete": "Delete",
+	"jsmacros.close": "Close",
+	"jsmacros.stopmacro": "Stop Running Macro"
+}
