@@ -74,7 +74,7 @@ public class MacroEditScreen extends Screen {
             minecraft.openScreen(parent);
         }));
         
-        if (this.newMacro.type != null) this.select(this.newMacro.type != MacroEnum.EVENT ? this.macro.type.toString() : this.macro.eventkey);
+        if (this.newMacro.type != null) this.select(this.newMacro.type != MacroEnum.EVENT ? this.newMacro.type.toString() : this.macro.eventkey);
         else this.select(MacroEnum.KEY_RISING.toString());
     }
 
@@ -93,7 +93,7 @@ public class MacroEditScreen extends Screen {
         MacroTypeWidget.MacroTypeEntry entry = (MacroTypeWidget.MacroTypeEntry) this.macroTypeWidget.getSelected();
         if (entry != null) for (MacroEnum e : MacroEnum.values()) {
             if (entry.macroType == e.toString()) {
-                this.buttonSetKey.setMessage(newMacro.type != MacroEnum.EVENT ? newMacro.eventkey != null ? jsMacros.getLocalizedName(InputUtil.fromName(newMacro.eventkey)) : "" : "");
+                this.buttonSetKey.setMessage(newMacro.type != MacroEnum.EVENT ? newMacro.eventkey != null && newMacro.eventkey != "" ? jsMacros.getLocalizedName(InputUtil.fromName(newMacro.eventkey)) : "" : "");
                 this.buttonSetKey.active = true;
                 return;
             }
@@ -129,6 +129,7 @@ public class MacroEditScreen extends Screen {
         boolean flag = true;
         for (MacroEnum e : MacroEnum.values()) {
             if (e.toString() == entry.macroType) {
+                if (this.newMacro.type == MacroEnum.EVENT) this.newMacro.eventkey = "";
                 this.newMacro.type = e;
                 flag = false;
                 break;

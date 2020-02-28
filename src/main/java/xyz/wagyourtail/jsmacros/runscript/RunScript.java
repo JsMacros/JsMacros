@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.runscript;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,24 +28,33 @@ public class RunScript {
     public static HashMap<RawMacro, ArrayList<Thread>> threads = new HashMap<>();
     private static Builder context = Context.newBuilder("js");
     private static HashMap<String, Object> globals = new HashMap<>();
+    private static ScriptEngine engine = GraalJSScriptEngine.create(null, context);
     static {
         context.allowHostAccess(HostAccess.ALL);
         context.allowHostClassLookup(s -> true);
         context.allowAllAccess(true);
         context.allowExperimentalOptions(true);
+        engine.put("global", globals);
+        engine.put("jsmacros", new jsMacrosFunctions());
+        engine.put("time", new timeFunctions());
+        engine.put("binding", new keybindFunctions());
+        engine.put("chat", new chatFunctions());
     }
     
     public static Thread exec(RawMacro macro, HashMap<String, Object> args) {
         File file = macro.scriptFile;
-        ScriptEngine engine = GraalJSScriptEngine.create(null, context);
         
         final Runnable r = new Runnable() {
             public void run() {
                 try {
                     engine.eval(new FileReader(file));
-                } catch (FileNotFoundException | ScriptException e) {
-                    LiteralText text = new LiteralText(e.toString());
-                    jsMacros.getMinecraft().inGameHud.getChatHud().addMessage(text);
+                } catch (ScriptException | IOException e) {
+                    if (jsMacros.getMinecraft().inGameHud != null) {
+                        LiteralText text = new LiteralText(e.toString());
+                        jsMacros.getMinecraft().inGameHud.getChatHud().addMessage(text);
+                    } else {
+                        e.printStackTrace();
+                    }
                 }
                 threads.get(macro).remove(Thread.currentThread());
             }
@@ -55,13 +64,8 @@ public class RunScript {
         
         engine.put("args", args);
         engine.put("file", file);
-        engine.put("global", globals);
         
         //function files
-        engine.put("jsmacros", new jsMacrosFunctions());
-        engine.put("time", new timeFunctions());
-        engine.put("binding", new keybindFunctions());
-        engine.put("chat", new chatFunctions());
         threads.putIfAbsent(macro, new ArrayList<>());
         t.setName(macro.type.toString()+" "+macro.eventkey+" "+macro.scriptFileName()+": "+threads.get(macro).size());
         threads.get(macro).add(t);
