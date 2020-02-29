@@ -61,8 +61,9 @@ public class MacroListScreen extends Screen {
         this.buttonDelete = (ButtonWidget)this.addButton(new ButtonWidget(this.width / 2 - 74, this.height - 28, 70, 20, I18n.translate("jsmacros.delete"), (buttonWidget) -> {
             MacroListWidget.MacroEntry entry = (MacroListWidget.MacroEntry)this.macroListWidget.getSelected();
             if (entry != null) {
+                String s = entry.getRawMacro().eventkey;
                 Text text = new TranslatableText("jsmacros.deleteQuestion", new Object[0]);
-                Text text2 = new TranslatableText("jsmacros.deleteWarning", new Object[]{entry.getRawMacro().eventkey});
+                Text text2 = new TranslatableText("jsmacros.deleteWarning", new Object[]{s});
                 String string2 = I18n.translate("jsmacros.deleteButton");
                 String string3 = I18n.translate("gui.cancel");
                 this.minecraft.openScreen(new ConfirmScreen(this::removeEntry, text, text2, string2, string3));
@@ -101,6 +102,7 @@ public class MacroListScreen extends Screen {
         if (confirmAction && entry != null) {
             jsMacros.profile.removeMacro(entry.getRawMacro());
         }
+        this.minecraft.openScreen(this);
     }
     
     private void updateButtonActivationStates() {

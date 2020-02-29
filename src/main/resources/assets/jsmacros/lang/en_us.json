@@ -13,5 +13,8 @@
 	"jsmacros.save": "Save",
 	"jsmacros.delete": "Delete",
 	"jsmacros.close": "Close",
-	"jsmacros.stopmacro": "Stop Running Macro"
+	"jsmacros.stopmacro": "Stop Running Macro",
+	"jsmacros.deleteQuestion": "Delete Macro",
+	"jsmacros.deleteWarning": "Are You Sure You Would Like To Remove This",
+	"jsmacros.deleteButton": "Delete"
 }
