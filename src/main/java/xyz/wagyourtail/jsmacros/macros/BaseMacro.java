@@ -24,7 +24,7 @@ public abstract class BaseMacro {
     
     public Thread runMacro(EventTypesEnum type, HashMap<String, Object> args) {
         try {
-            return RunScript.exec(macro, args);
+            return RunScript.exec(macro, type, args);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -54,7 +54,7 @@ public class MacroListScreen extends Screen {
         //buttonRun
         this.buttonRun = (ButtonWidget)this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 70, 20, I18n.translate("jsmacros.run"), (buttonWidget) -> {
             MacroListWidget.MacroEntry entry = (MacroListWidget.MacroEntry)this.macroListWidget.getSelected();
-            if (entry != null) RunScript.exec(entry.getRawMacro(), null);
+            if (entry != null) RunScript.exec(entry.getRawMacro(), null, null);
         }));
         
         //buttonDelete

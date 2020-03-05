@@ -18,6 +18,7 @@ import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.events.EventTypesEnum;
 import xyz.wagyourtail.jsmacros.runscript.functions.chatFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.jsMacrosFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.keybindFunctions;
@@ -41,7 +42,7 @@ public class RunScript {
         engine.put("chat", new chatFunctions());
     }
     
-    public static Thread exec(RawMacro macro, HashMap<String, Object> args) {
+    public static Thread exec(RawMacro macro, EventTypesEnum event, HashMap<String, Object> args) {
         File file = macro.scriptFile;
         
         final Runnable r = new Runnable() {
@@ -62,6 +63,7 @@ public class RunScript {
         
         Thread t = new Thread(r);
         
+        engine.put("event", event);
         engine.put("args", args);
         engine.put("file", file);
         

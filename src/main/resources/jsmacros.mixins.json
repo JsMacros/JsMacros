@@ -8,7 +8,8 @@
 		"jsmacros_MouseMixin",
 		"jsmacros_PlayerManagerMixin",
 		"jsmacros_ScreenMixin",
-		"jsmacros_InGameHudMixin"
+		"jsmacros_InGameHudMixin",
+		"jsmacros_ClientPlayerEntityMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

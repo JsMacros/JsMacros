@@ -13,6 +13,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.*;
+import xyz.wagyourtail.jsmacros.events.AirChangeCallback;
+import xyz.wagyourtail.jsmacros.events.DamageCallback;
 import xyz.wagyourtail.jsmacros.events.EventTypesEnum;
 import xyz.wagyourtail.jsmacros.events.JoinCallback;
 import xyz.wagyourtail.jsmacros.events.KeyCallback;
@@ -37,93 +39,7 @@ public class Profile {
         KeyBindingRegistry.INSTANCE.addCategory("JSMacros");
         KeyBindingRegistry.INSTANCE.register(keyBinding);
 
-        // -------- JOIN ---------- //
-
-        JoinCallback.EVENT.register((conn, player) -> {
-            HashMap<String, Object> args = new HashMap<>();
-            args.put("connection", conn);
-            args.put("player", player);
-            if (macros.containsKey(EventTypesEnum.JOIN_SERVER)) for (BaseMacro macro : macros.get(EventTypesEnum.JOIN_SERVER).values()) {
-                macro.trigger(EventTypesEnum.JOIN_SERVER, args);
-            }
-        });
-        
-        // ----- SEND_MESSAGE -----//
-        
-        SendMessageCallback.EVENT.register((message) -> {
-            HashMap<String, Object> args = new HashMap<>();
-            args.put("message", message);
-            if (macros.containsKey(EventTypesEnum.SEND_MESSAGE)) for (BaseMacro macro : macros.get(EventTypesEnum.SEND_MESSAGE).values()) {
-                try {
-                    macro.trigger(EventTypesEnum.SEND_MESSAGE, args).join();
-                } catch (InterruptedException e1) {}
-            }
-            
-            if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
-                try {
-                    macro.trigger(EventTypesEnum.SEND_MESSAGE, args).join();
-                } catch (InterruptedException e1) {}
-            }
-            
-            message = (String) args.get("message");
-            return message;
-        });
-        
-        // ---- RECV_MESSAGE  ---- //
-        
-        RecieveMessageCallback.EVENT.register((message) -> {
-            HashMap<String, Object> args = new HashMap<>();
-            args.put("message", message);
-            if (macros.containsKey(EventTypesEnum.RECV_MESSAGE)) for (BaseMacro macro : macros.get(EventTypesEnum.RECV_MESSAGE).values()) {
-                try {
-                    macro.trigger(EventTypesEnum.RECV_MESSAGE, args).join();
-                } catch (InterruptedException e1) {}
-            }
-            
-            if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
-                try {
-                    macro.trigger(EventTypesEnum.RECV_MESSAGE, args).join();
-                } catch (InterruptedException e1) {}
-            }
-            
-            message = (String) args.get("message");
-            return message;
-        });
-        
-        // -------- TICK --------- //
-        
-        ClientTickCallback.EVENT.register(e -> {
-            if (macros.containsKey(EventTypesEnum.TICK)) for (BaseMacro macro : macros.get(EventTypesEnum.TICK).values()) {
-                macro.trigger(EventTypesEnum.TICK, new HashMap<>());
-            }
-        });
-
-        // -------- KEY ----------- //
-
-        KeyCallback.EVENT.register((window, key, scancode, action, mods) -> {
-            InputUtil.KeyCode keycode;
-            if (jsMacros.getMinecraft().currentScreen != null) return ActionResult.PASS;
-            if (key == -1 || action == 2) return ActionResult.PASS;
-            
-            if (key <= 7) keycode = InputUtil.Type.MOUSE.createFromCode(key);
-            else keycode = InputUtil.Type.KEYSYM.createFromCode(key);
-
-            if (keycode == InputUtil.UNKNOWN_KEYCODE) return ActionResult.PASS;
-            if (keyBinding.getBoundKey() == keycode && action == 1) jsMacros.getMinecraft().openScreen(jsMacros.macroListScreen);
-
-            HashMap<String, Object> args = new HashMap<>();
-            args.put("key", keycode);
-            args.put("action", action);
-            if (macros.containsKey(EventTypesEnum.KEY)) for (BaseMacro macro : macros.get(EventTypesEnum.KEY).values()) {
-                macro.trigger(EventTypesEnum.KEY, args);
-            }
-
-            if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
-                macro.trigger(EventTypesEnum.KEY, args);
-            }
-
-            return ActionResult.PASS;
-        });
+        initEventHandlerCallbacks();
     }
 
     public void loadProfile(String pName) {
@@ -210,4 +126,137 @@ public class Profile {
         }
         return null;
     }
+    
+    public HashMap<EventTypesEnum, HashMap<RawMacro, BaseMacro>> getMacros() {
+        return macros;
+    }
+    
+    private void initEventHandlerCallbacks() {
+        // -------- JOIN ---------- //
+
+           JoinCallback.EVENT.register((conn, player) -> {
+               HashMap<String, Object> args = new HashMap<>();
+               args.put("connection", conn);
+               args.put("player", player);
+               if (macros.containsKey(EventTypesEnum.JOIN_SERVER)) for (BaseMacro macro : macros.get(EventTypesEnum.JOIN_SERVER).values()) {
+                   macro.trigger(EventTypesEnum.JOIN_SERVER, args);
+               }
+           });
+           
+           // ----- SEND_MESSAGE -----//
+           
+           SendMessageCallback.EVENT.register((message) -> {
+               HashMap<String, Object> args = new HashMap<>();
+               args.put("message", message);
+               if (macros.containsKey(EventTypesEnum.SEND_MESSAGE)) for (BaseMacro macro : macros.get(EventTypesEnum.SEND_MESSAGE).values()) {
+                   try {
+                       macro.trigger(EventTypesEnum.SEND_MESSAGE, args).join();
+                   } catch (InterruptedException e1) {}
+               }
+               
+               if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
+                   try {
+                       macro.trigger(EventTypesEnum.SEND_MESSAGE, args).join();
+                   } catch (InterruptedException e1) {}
+               }
+               
+               message = (String) args.get("message");
+               return message;
+           });
+           
+           // ---- RECV_MESSAGE  ---- //
+           
+           RecieveMessageCallback.EVENT.register((message) -> {
+               HashMap<String, Object> args = new HashMap<>();
+               args.put("message", message);
+               if (macros.containsKey(EventTypesEnum.RECV_MESSAGE)) for (BaseMacro macro : macros.get(EventTypesEnum.RECV_MESSAGE).values()) {
+                   try {
+                       macro.trigger(EventTypesEnum.RECV_MESSAGE, args).join();
+                   } catch (InterruptedException e1) {}
+               }
+               
+               if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
+                   try {
+                       macro.trigger(EventTypesEnum.RECV_MESSAGE, args).join();
+                   } catch (InterruptedException e1) {}
+               }
+               
+               message = (String) args.get("message");
+               return message;
+           });
+           
+           // -------- TICK --------- //
+           
+           ClientTickCallback.EVENT.register(e -> {
+               if (macros.containsKey(EventTypesEnum.TICK)) for (BaseMacro macro : macros.get(EventTypesEnum.TICK).values()) {
+                   macro.trigger(EventTypesEnum.TICK, new HashMap<>());
+               }
+           });
+
+           // -------- KEY ----------- //
+
+           KeyCallback.EVENT.register((window, key, scancode, action, mods) -> {
+               InputUtil.KeyCode keycode;
+               if (jsMacros.getMinecraft().currentScreen != null) return ActionResult.PASS;
+               if (key == -1 || action == 2) return ActionResult.PASS;
+               
+               if (key <= 7) keycode = InputUtil.Type.MOUSE.createFromCode(key);
+               else keycode = InputUtil.Type.KEYSYM.createFromCode(key);
+
+               if (keycode == InputUtil.UNKNOWN_KEYCODE) return ActionResult.PASS;
+               if (keyBinding.getBoundKey() == keycode && action == 1) jsMacros.getMinecraft().openScreen(jsMacros.macroListScreen);
+
+               HashMap<String, Object> args = new HashMap<>();
+               args.put("key", keycode);
+               args.put("action", action);
+               if (macros.containsKey(EventTypesEnum.KEY)) for (BaseMacro macro : macros.get(EventTypesEnum.KEY).values()) {
+                   macro.trigger(EventTypesEnum.KEY, args);
+               }
+
+               if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
+                   macro.trigger(EventTypesEnum.KEY, args);
+               }
+
+               return ActionResult.PASS;
+           });
+           
+           // ------ AIR CHANGE ------ //
+           
+           AirChangeCallback.EVENT.register((air) -> {
+               HashMap<String, Object> args = new HashMap<>();
+               args.put("air", air);
+               if (macros.containsKey(EventTypesEnum.AIR_CHANGE)) for (BaseMacro macro : macros.get(EventTypesEnum.AIR_CHANGE).values()) {
+                   try {
+                       macro.trigger(EventTypesEnum.AIR_CHANGE, args).join();
+                   } catch (InterruptedException e1) {}
+               }
+               
+               if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
+                   try {
+                       macro.trigger(EventTypesEnum.AIR_CHANGE, args).join();
+                   } catch (InterruptedException e1) {}
+               }
+           });
+           
+           // ------ DAMAGE -------- //
+           
+           DamageCallback.EVENT.register((source, health, change) -> {
+               HashMap<String, Object> args = new HashMap<>();
+               args.put("source", source);
+               args.put("health", health);
+               args.put("change", change);
+               if (macros.containsKey(EventTypesEnum.DAMAGE)) for (BaseMacro macro : macros.get(EventTypesEnum.DAMAGE).values()) {
+                   try {
+                       macro.trigger(EventTypesEnum.DAMAGE, args).join();
+                   } catch (InterruptedException e1) {}
+               }
+               
+               if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
+                   try {
+                       macro.trigger(EventTypesEnum.DAMAGE, args).join();
+                   } catch (InterruptedException e1) {}
+               }
+           });
+           
+       }
 }

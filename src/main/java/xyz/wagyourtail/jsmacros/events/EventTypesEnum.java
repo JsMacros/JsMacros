@@ -4,8 +4,10 @@ public enum EventTypesEnum {
     KEY,
     TICK,
     JOIN_SERVER,
+    PROFILE_LOAD,
     SEND_MESSAGE,
     RECV_MESSAGE,
-    PROFILE_LOAD,
+    AIR_CHANGE,
+    DAMAGE,
     ANYTHING
 }
