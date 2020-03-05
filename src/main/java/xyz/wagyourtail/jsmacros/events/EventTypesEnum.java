@@ -10,5 +10,6 @@ public enum EventTypesEnum {
     AIR_CHANGE,
     DAMAGE,
     DEATH,
+    ITEM_DAMAGE,
     ANYTHING
 }
