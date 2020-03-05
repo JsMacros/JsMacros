@@ -9,7 +9,8 @@
 		"jsmacros_PlayerManagerMixin",
 		"jsmacros_ScreenMixin",
 		"jsmacros_InGameHudMixin",
-		"jsmacros_ClientPlayerEntityMixin"
+		"jsmacros_ClientPlayerEntityMixin",
+		"jsmacros_ClientPlayNetworkHandler"
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -9,5 +9,6 @@ public enum EventTypesEnum {
     RECV_MESSAGE,
     AIR_CHANGE,
     DAMAGE,
+    DEATH,
     ANYTHING
 }

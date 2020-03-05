@@ -15,6 +15,7 @@ import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.*;
 import xyz.wagyourtail.jsmacros.events.AirChangeCallback;
 import xyz.wagyourtail.jsmacros.events.DamageCallback;
+import xyz.wagyourtail.jsmacros.events.DeathCallback;
 import xyz.wagyourtail.jsmacros.events.EventTypesEnum;
 import xyz.wagyourtail.jsmacros.events.JoinCallback;
 import xyz.wagyourtail.jsmacros.events.KeyCallback;
@@ -254,6 +255,23 @@ public class Profile {
                if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
                    try {
                        macro.trigger(EventTypesEnum.DAMAGE, args).join();
+                   } catch (InterruptedException e1) {}
+               }
+           });
+           
+           // ------ DEATH -------- //
+           
+           DeathCallback.EVENT.register(() -> {
+               HashMap<String, Object> args = new HashMap<>();
+               if (macros.containsKey(EventTypesEnum.DEATH)) for (BaseMacro macro : macros.get(EventTypesEnum.DEATH).values()) {
+                   try {
+                       macro.trigger(EventTypesEnum.DEATH, args).join();
+                   } catch (InterruptedException e1) {}
+               }
+               
+               if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
+                   try {
+                       macro.trigger(EventTypesEnum.DEATH, args).join();
                    } catch (InterruptedException e1) {}
                }
            });
