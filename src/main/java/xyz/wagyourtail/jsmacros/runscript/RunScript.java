@@ -69,10 +69,6 @@ public class RunScript {
 
         Thread t = new Thread(r);
 
-        engine.put("event", event);
-        engine.put("args", args);
-        engine.put("file", file);
-
         // function files
         threads.putIfAbsent(macro, new ArrayList<>());
         t.setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFileName() + ": " + threads.get(macro).size());

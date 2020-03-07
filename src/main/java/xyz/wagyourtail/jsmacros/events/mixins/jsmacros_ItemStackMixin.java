@@ -11,7 +11,7 @@ import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.events.ItemDamageCallback;
 
 @Mixin(ItemStack.class)
-public abstract class jsmacros_ItemStackMixin {
+abstract class jsmacros_ItemStackMixin {
     
     @Shadow
     public abstract int getDamage();
