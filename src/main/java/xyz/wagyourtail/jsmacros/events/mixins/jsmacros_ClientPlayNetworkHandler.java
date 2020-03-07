@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.packet.CombatEventS2CPacket;
+import net.minecraft.network.packet.s2c.play.CombatEventS2CPacket;
 import xyz.wagyourtail.jsmacros.events.DeathCallback;
 
 @Mixin(ClientPlayNetworkHandler.class)

@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.events.mixins;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.gui.ClientChatListener;
@@ -19,26 +19,25 @@ import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.events.RecieveMessageCallback;
 
 @Mixin(InGameHud.class)
-class  jsmacros_InGameHudMixin {
-    
-    @Shadow @Final
+class jsmacros_InGameHudMixin {
+
+    @Shadow
+    @Final
     private Map<MessageType, List<ClientChatListener>> listeners;
-    
-    @SuppressWarnings("rawtypes")
-    @Inject(at = @At("HEAD"), method = "addChatMessage", cancellable = true)
-    private void jsmacros_addChatMessage(MessageType messageType, Text text, CallbackInfo info) {
+
+    @ModifyVariable(method = "addChatMessage", at = @At(value = "HEAD"))
+    private Text jsmacros_addChatMessagee(Text text) {
+        if (text == null) return text;
         String result = RecieveMessageCallback.EVENT.invoker().interact(text.asFormattedString());
-        if (result == null || result.equals("")) {
+        if (result == null) return new LiteralText("");
+        if (!text.asFormattedString().equals(result)) return new LiteralText(result);
+        else return text;
+    }
+
+    @Inject(method = "addChatMessage", at = @At("HEAD"), cancellable = true)
+    private void jsmacros_addChatMessage(MessageType messageType, Text text, CallbackInfo info) {
+        if (text == null || text.asFormattedString().equals("")) {
             info.cancel();
-        } else if (!text.asFormattedString().equals(result)) {
-            info.cancel();
-            Iterator var3 = ((List)this.listeners.get(messageType)).iterator();
-            Text msg = new LiteralText(result);
-            
-            while(var3.hasNext()) {
-               ClientChatListener clientChatListener = (ClientChatListener)var3.next();
-               clientChatListener.onChatMessage(messageType, msg);
-            }
-        }
+        } 
     }
 }

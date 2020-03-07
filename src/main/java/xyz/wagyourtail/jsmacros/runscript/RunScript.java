@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.script.Bindings;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+import javax.script.SimpleBindings;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
@@ -24,31 +26,35 @@ import xyz.wagyourtail.jsmacros.runscript.functions.jsMacrosFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.keybindFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.timeFunctions;
 
-
 public class RunScript {
     public static HashMap<RawMacro, ArrayList<Thread>> threads = new HashMap<>();
     private static Builder context = Context.newBuilder("js");
     private static HashMap<String, Object> globals = new HashMap<>();
     private static ScriptEngine engine = GraalJSScriptEngine.create(null, context);
+    private static HashMap<String, Object> globalBinds = new HashMap<>();
     static {
         context.allowHostAccess(HostAccess.ALL);
         context.allowHostClassLookup(s -> true);
         context.allowAllAccess(true);
         context.allowExperimentalOptions(true);
-        engine.put("global", globals);
-        engine.put("jsmacros", new jsMacrosFunctions());
-        engine.put("time", new timeFunctions());
-        engine.put("binding", new keybindFunctions());
-        engine.put("chat", new chatFunctions());
+        globalBinds.put("global", globals);
+        globalBinds.put("jsmacros", new jsMacrosFunctions());
+        globalBinds.put("time", new timeFunctions());
+        globalBinds.put("binding", new keybindFunctions());
+        globalBinds.put("chat", new chatFunctions());
     }
-    
+
     public static Thread exec(RawMacro macro, EventTypesEnum event, HashMap<String, Object> args) {
         File file = macro.scriptFile;
-        
+
         final Runnable r = new Runnable() {
             public void run() {
                 try {
-                    engine.eval(new FileReader(file));
+                    Bindings scriptBinds = new SimpleBindings(globalBinds);
+                    scriptBinds.put("event", event);
+                    scriptBinds.put("args", args);
+                    scriptBinds.put("file", file);
+                    engine.eval(new FileReader(file), scriptBinds);
                 } catch (ScriptException | IOException e) {
                     if (jsMacros.getMinecraft().inGameHud != null) {
                         LiteralText text = new LiteralText(e.toString());
@@ -60,16 +66,16 @@ public class RunScript {
                 threads.get(macro).remove(Thread.currentThread());
             }
         };
-        
+
         Thread t = new Thread(r);
-        
+
         engine.put("event", event);
         engine.put("args", args);
         engine.put("file", file);
-        
-        //function files
+
+        // function files
         threads.putIfAbsent(macro, new ArrayList<>());
-        t.setName(macro.type.toString()+" "+macro.eventkey+" "+macro.scriptFileName()+": "+threads.get(macro).size());
+        t.setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFileName() + ": " + threads.get(macro).size());
         threads.get(macro).add(t);
         t.start();
         return t;
