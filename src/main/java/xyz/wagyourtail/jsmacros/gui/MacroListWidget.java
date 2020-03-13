@@ -80,7 +80,7 @@ public class MacroListWidget extends AlwaysSelectedEntryListWidget<MacroListWidg
         public void render(int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean hovering, float delta) {
             this.client.textRenderer.draw(macro.type == MacroEnum.EVENT ? macro.eventkey : jsMacros.getLocalizedName(InputUtil.fromName(macro.eventkey)), (float)(x + 32 + 3), (float)(y + 1), 0xFFFFFF);
             
-            List<String> list = this.client.textRenderer.wrapStringToWidthAsList(macro.scriptFileName(), width - 32 - 2);
+            List<String> list = this.client.textRenderer.wrapStringToWidthAsList(macro.scriptFile, width - 32 - 2);
             for (int n = 0; n < Math.min(list.size(), 2); ++n) {
                 TextRenderer renderer = this.client.textRenderer;
                 String stringPart = (String)list.get(n);

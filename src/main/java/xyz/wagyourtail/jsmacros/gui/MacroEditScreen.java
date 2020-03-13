@@ -11,8 +11,8 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
-import xyz.wagyourtail.jsmacros.events.EventTypesEnum;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
+import xyz.wagyourtail.jsmacros.profile.Profile;
 
 public class MacroEditScreen extends Screen {
     private Screen parent;
@@ -52,13 +52,13 @@ public class MacroEditScreen extends Screen {
             File path = new File(jsMacros.config.macroFolder, string);
             if (path.isFile()) {
                 this.fileBox.setEditableColor(0x00FF00);
-                newMacro.scriptFile = path;
+                newMacro.scriptFile = string;
             } else {
                 this.fileBox.setEditableColor(0xFF0000);
             }
         });
         this.children.add(this.fileBox);
-        this.fileBox.setText(macro.scriptFileName());
+        this.fileBox.setText(macro.scriptFile == null ? "" : macro.scriptFile);
         
         // save
         this.addButton(new ButtonWidget(this.width / 2 + 100 - 100, this.height / 4 + 100 + 5, 200, 20, I18n.translate("jsmacros.save"), (buttonWidget) -> {
@@ -136,7 +136,7 @@ public class MacroEditScreen extends Screen {
             }
         }
         if (flag) {
-            for (EventTypesEnum e : EventTypesEnum.values()) {
+            for (String e : Profile.registry.events) {
                 if (e.toString() == entry.macroType) {
                     this.newMacro.eventkey = e.toString();
                     break;

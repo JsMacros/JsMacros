@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.macros;
 import java.util.HashMap;
 
 import xyz.wagyourtail.jsmacros.config.RawMacro;
-import xyz.wagyourtail.jsmacros.events.EventTypesEnum;
 
 public class EventMacro extends BaseMacro {
     
@@ -11,7 +10,7 @@ public class EventMacro extends BaseMacro {
         super(macro);
     }
     
-    public Thread trigger(EventTypesEnum type, HashMap<String, Object> args) {
+    public Thread trigger(String type, HashMap<String, Object> args) {
         return runMacro(type, args);
     }
 }

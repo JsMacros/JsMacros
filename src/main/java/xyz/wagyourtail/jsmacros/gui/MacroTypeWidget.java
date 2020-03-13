@@ -15,8 +15,8 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.jsmacros.jsMacros;
-import xyz.wagyourtail.jsmacros.events.EventTypesEnum;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
+import xyz.wagyourtail.jsmacros.profile.Profile;
 
 public class MacroTypeWidget extends AlwaysSelectedEntryListWidget<MacroTypeWidget.MacroTypeEntry> {
     protected final MinecraftClient client;
@@ -42,8 +42,8 @@ public class MacroTypeWidget extends AlwaysSelectedEntryListWidget<MacroTypeWidg
                 this.addMacroType(e.toString());
             }
         }
-        for (EventTypesEnum e : EventTypesEnum.values()) {
-            this.addMacroType(e.toString());
+        for (String e : Profile.registry.events) {
+            this.addMacroType(e);
         }
         this.macroTypes.forEach(this::addEntry);
     }

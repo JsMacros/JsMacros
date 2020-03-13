@@ -16,7 +16,6 @@ import xyz.wagyourtail.jsmacros.config.*;
 import xyz.wagyourtail.jsmacros.events.AirChangeCallback;
 import xyz.wagyourtail.jsmacros.events.DamageCallback;
 import xyz.wagyourtail.jsmacros.events.DeathCallback;
-import xyz.wagyourtail.jsmacros.events.EventTypesEnum;
 import xyz.wagyourtail.jsmacros.events.ItemDamageCallback;
 import xyz.wagyourtail.jsmacros.events.JoinCallback;
 import xyz.wagyourtail.jsmacros.events.KeyCallback;
@@ -26,14 +25,14 @@ import xyz.wagyourtail.jsmacros.macros.*;
 
 public class Profile {
     public String profileName;
-    public static HashMap<EventTypesEnum, HashMap<RawMacro, BaseMacro>> macros;
+    public static MacroRegistry registry = new MacroRegistry();
     private static FabricKeyBinding keyBinding;
 
     public Profile(String defaultProfile) {
         loadProfile(defaultProfile);
-        if (macros == null) {
+        if (registry.macros == null) {
             profileName = "default";
-            macros = new HashMap<>();
+            registry.clearMacros();
             saveProfile();
         }
         
@@ -45,7 +44,7 @@ public class Profile {
     }
 
     public void loadProfile(String pName) {
-        macros = new HashMap<>();
+        registry.clearMacros();
         ArrayList<RawMacro> rawProfile = jsMacros.config.options.profiles.get(pName);
         if (rawProfile == null) {
             System.out.println("profile \"" + pName + "\" does not exist or is broken/null");
@@ -58,14 +57,14 @@ public class Profile {
         
         HashMap<String, Object> args = new HashMap<>();
         args.put("profile", pName);
-        if (macros.containsKey(EventTypesEnum.PROFILE_LOAD)) for (BaseMacro macro : macros.get(EventTypesEnum.PROFILE_LOAD).values()) {
-            macro.trigger(EventTypesEnum.PROFILE_LOAD, args);
+        if (registry.macros.containsKey("PROFILE_LOAD")) for (BaseMacro macro : registry.macros.get("PROFILE_LOAD").values()) {
+            macro.trigger("PROFILE_LOAD", args);
         }
     }
 
     public ArrayList<RawMacro> toRawProfile() {
         ArrayList<RawMacro> rawProf = new ArrayList<>();
-        for (HashMap<RawMacro, BaseMacro> eventMacros : macros.values()) {
+        for (HashMap<RawMacro, BaseMacro> eventMacros : registry.macros.values()) {
             for (RawMacro macro : eventMacros.keySet()) {
                 rawProf.add(macro);
             }
@@ -78,87 +77,52 @@ public class Profile {
         jsMacros.config.saveConfig();
     }
 
+    @Deprecated
     public void addMacro(RawMacro rawmacro) {
-        switch (rawmacro.type) {
-            case KEY_RISING:
-                macros.putIfAbsent(EventTypesEnum.KEY, new HashMap<>());
-                macros.get(EventTypesEnum.KEY).put(rawmacro, new KeyDownMacro(rawmacro));
-                break;
-            case KEY_FALLING:
-                macros.putIfAbsent(EventTypesEnum.KEY, new HashMap<>());
-                macros.get(EventTypesEnum.KEY).put(rawmacro, new KeyUpMacro(rawmacro));
-                break;
-            case KEY_BOTH:
-                macros.putIfAbsent(EventTypesEnum.KEY, new HashMap<>());
-                macros.get(EventTypesEnum.KEY).put(rawmacro, new KeyBothMacro(rawmacro));
-                break;
-            case EVENT:
-                macros.putIfAbsent(EventTypesEnum.valueOf(rawmacro.eventkey), new HashMap<>());
-                macros.get(EventTypesEnum.valueOf(rawmacro.eventkey)).put(rawmacro, new EventMacro(rawmacro));
-                break;
-            default:
-                System.out.println("Failed To Add: Unknown macro type for file " + rawmacro.scriptFile.toString());
-                break;
-        }
+        registry.addMacro(rawmacro);
     }
 
+    @Deprecated
     public void removeMacro(RawMacro rawmacro) {
-        if (toRawProfile().contains(rawmacro) && rawmacro != null) switch (rawmacro.type) {
-            case KEY_RISING:
-            case KEY_FALLING:
-            case KEY_BOTH:
-                macros.putIfAbsent(EventTypesEnum.KEY, new HashMap<>());
-                macros.get(EventTypesEnum.KEY).remove(rawmacro);
-                break;
-            case EVENT:
-                macros.putIfAbsent(EventTypesEnum.valueOf(rawmacro.eventkey), new HashMap<>());
-                macros.get(EventTypesEnum.valueOf(rawmacro.eventkey)).remove(rawmacro);
-                break;
-            default:
-                System.out.println("Failed To Remove: Unknown macro type for file " + rawmacro.scriptFile.toString());
-                break;
-        }
+        if (toRawProfile().contains(rawmacro) && rawmacro != null) registry.removeMacro(rawmacro);
     }
 
+    @Deprecated
     public BaseMacro getMacro(RawMacro rawMacro) {
-        for (HashMap<RawMacro, BaseMacro> eventMacros : macros.values()) {
-            for (RawMacro macro : eventMacros.keySet()) {
-                if (rawMacro == macro) return eventMacros.get(macro);
-            }
-        }
-        return null;
+        return registry.getMacro(rawMacro);
     }
     
-    public HashMap<EventTypesEnum, HashMap<RawMacro, BaseMacro>> getMacros() {
-        return macros;
+    @Deprecated
+    public HashMap<String, HashMap<RawMacro, BaseMacro>> getMacros() {
+        return registry.macros;
     }
     
     private void initEventHandlerCallbacks() {
-        // -------- JOIN ---------- //
-
+           // -------- JOIN ---------- //
+           registry.addEvent("JOIN_SERVER");
            JoinCallback.EVENT.register((conn, player) -> {
                HashMap<String, Object> args = new HashMap<>();
                args.put("connection", conn);
                args.put("player", player);
-               if (macros.containsKey(EventTypesEnum.JOIN_SERVER)) for (BaseMacro macro : macros.get(EventTypesEnum.JOIN_SERVER).values()) {
-                   macro.trigger(EventTypesEnum.JOIN_SERVER, args);
+               if (registry.macros.containsKey("JOIN_SERVER")) for (BaseMacro macro : registry.macros.get("JOIN_SERVER").values()) {
+                   macro.trigger("JOIN_SERVER", args);
                }
            });
            
            // ----- SEND_MESSAGE -----//
-           
+           registry.addEvent("SEND_MESSAGE");
            SendMessageCallback.EVENT.register((message) -> {
                HashMap<String, Object> args = new HashMap<>();
                args.put("message", message);
-               if (macros.containsKey(EventTypesEnum.SEND_MESSAGE)) for (BaseMacro macro : macros.get(EventTypesEnum.SEND_MESSAGE).values()) {
+               if (registry.macros.containsKey("SEND_MESSAGE")) for (BaseMacro macro : registry.macros.get("SEND_MESSAGE").values()) {
                    try {
-                       macro.trigger(EventTypesEnum.SEND_MESSAGE, args).join();
+                       macro.trigger("SEND_MESSAGE", args).join();
                    } catch (InterruptedException e1) {}
                }
                
-               if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
+               if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
                    try {
-                       macro.trigger(EventTypesEnum.SEND_MESSAGE, args).join();
+                       macro.trigger("SEND_MESSAGE", args).join();
                    } catch (InterruptedException e1) {}
                }
                
@@ -167,19 +131,19 @@ public class Profile {
            });
            
            // ---- RECV_MESSAGE  ---- //
-           
+           registry.addEvent("RECV_MESSAGE");
            RecieveMessageCallback.EVENT.register((message) -> {
                HashMap<String, Object> args = new HashMap<>();
                args.put("message", message);
-               if (macros.containsKey(EventTypesEnum.RECV_MESSAGE)) for (BaseMacro macro : macros.get(EventTypesEnum.RECV_MESSAGE).values()) {
+               if (registry.macros.containsKey("RECV_MESSAGE")) for (BaseMacro macro : registry.macros.get("RECV_MESSAGE").values()) {
                    try {
-                       macro.trigger(EventTypesEnum.RECV_MESSAGE, args).join();
+                       macro.trigger("RECV_MESSAGE", args).join();
                    } catch (InterruptedException e1) {}
                }
                
-               if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
+               if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
                    try {
-                       macro.trigger(EventTypesEnum.RECV_MESSAGE, args).join();
+                       macro.trigger("RECV_MESSAGE", args).join();
                    } catch (InterruptedException e1) {}
                }
                
@@ -188,15 +152,15 @@ public class Profile {
            });
            
            // -------- TICK --------- //
-           
+           registry.addEvent("TICK");
            ClientTickCallback.EVENT.register(e -> {
-               if (macros.containsKey(EventTypesEnum.TICK)) for (BaseMacro macro : macros.get(EventTypesEnum.TICK).values()) {
-                   macro.trigger(EventTypesEnum.TICK, new HashMap<>());
+               if (registry.macros.containsKey("TICK")) for (BaseMacro macro : registry.macros.get("TICK").values()) {
+                   macro.trigger("TICK", new HashMap<>());
                }
            });
 
            // -------- KEY ----------- //
-
+           registry.addEvent("KEY");
            KeyCallback.EVENT.register((window, key, scancode, action, mods) -> {
                InputUtil.KeyCode keycode;
                if (jsMacros.getMinecraft().currentScreen != null) return ActionResult.PASS;
@@ -211,87 +175,87 @@ public class Profile {
                HashMap<String, Object> args = new HashMap<>();
                args.put("key", keycode);
                args.put("action", action);
-               if (macros.containsKey(EventTypesEnum.KEY)) for (BaseMacro macro : macros.get(EventTypesEnum.KEY).values()) {
-                   macro.trigger(EventTypesEnum.KEY, args);
+               if (registry.macros.containsKey("KEY")) for (BaseMacro macro : registry.macros.get("KEY").values()) {
+                   macro.trigger("KEY", args);
                }
 
-               if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
-                   macro.trigger(EventTypesEnum.KEY, args);
+               if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
+                   macro.trigger("KEY", args);
                }
 
                return ActionResult.PASS;
            });
            
            // ------ AIR CHANGE ------ //
-           
+           registry.addEvent("AIR_CHANGE");
            AirChangeCallback.EVENT.register((air) -> {
                HashMap<String, Object> args = new HashMap<>();
                args.put("air", air);
-               if (macros.containsKey(EventTypesEnum.AIR_CHANGE)) for (BaseMacro macro : macros.get(EventTypesEnum.AIR_CHANGE).values()) {
+               if (registry.macros.containsKey("AIR_CHANGE")) for (BaseMacro macro : registry.macros.get("AIR_CHANGE").values()) {
                    try {
-                       macro.trigger(EventTypesEnum.AIR_CHANGE, args).join();
+                       macro.trigger("AIR_CHANGE", args).join();
                    } catch (InterruptedException e1) {}
                }
                
-               if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
+               if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
                    try {
-                       macro.trigger(EventTypesEnum.AIR_CHANGE, args).join();
+                       macro.trigger("AIR_CHANGE", args).join();
                    } catch (InterruptedException e1) {}
                }
            });
            
            // ------ DAMAGE -------- //
-           
+           registry.addEvent("DAMAGE");
            DamageCallback.EVENT.register((source, health, change) -> {
                HashMap<String, Object> args = new HashMap<>();
                args.put("source", source);
                args.put("health", health);
                args.put("change", change);
-               if (macros.containsKey(EventTypesEnum.DAMAGE)) for (BaseMacro macro : macros.get(EventTypesEnum.DAMAGE).values()) {
+               if (registry.macros.containsKey("DAMAGE")) for (BaseMacro macro : registry.macros.get("DAMAGE").values()) {
                    try {
-                       macro.trigger(EventTypesEnum.DAMAGE, args).join();
+                       macro.trigger("DAMAGE", args).join();
                    } catch (InterruptedException e1) {}
                }
                
-               if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
+               if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
                    try {
-                       macro.trigger(EventTypesEnum.DAMAGE, args).join();
+                       macro.trigger("DAMAGE", args).join();
                    } catch (InterruptedException e1) {}
                }
            });
            
            // ------ DEATH -------- //
-           
+           registry.addEvent("DEATH");
            DeathCallback.EVENT.register(() -> {
                HashMap<String, Object> args = new HashMap<>();
-               if (macros.containsKey(EventTypesEnum.DEATH)) for (BaseMacro macro : macros.get(EventTypesEnum.DEATH).values()) {
+               if (registry.macros.containsKey("DEATH")) for (BaseMacro macro : registry.macros.get("DEATH").values()) {
                    try {
-                       macro.trigger(EventTypesEnum.DEATH, args).join();
+                       macro.trigger("DEATH", args).join();
                    } catch (InterruptedException e1) {}
                }
                
-               if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
+               if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
                    try {
-                       macro.trigger(EventTypesEnum.DEATH, args).join();
+                       macro.trigger("DEATH", args).join();
                    } catch (InterruptedException e1) {}
                }
            });
            
            // ----- ITEM DAMAGE ----- //
-           
+           registry.addEvent("ITEM_DAMAGE");
            ItemDamageCallback.EVENT.register((stack, damage) -> {
                HashMap<String, Object> args = new HashMap<>();
                args.put("stack", stack);
                args.put("damage", damage);
-               if (macros.containsKey(EventTypesEnum.ITEM_DAMAGE)) for (BaseMacro macro : macros.get(EventTypesEnum.ITEM_DAMAGE).values()) {
+               if (registry.macros.containsKey("ITEM_DAMAGE")) for (BaseMacro macro : registry.macros.get("ITEM_DAMAGE").values()) {
                    try {
-                       macro.trigger(EventTypesEnum.ITEM_DAMAGE, args).join();
+                       macro.trigger("ITEM_DAMAGE", args).join();
                    } catch (InterruptedException e1) {}
                }
                
-               if (macros.containsKey(EventTypesEnum.ANYTHING)) for (BaseMacro macro : macros.get(EventTypesEnum.ANYTHING).values()) {
+               if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
                    try {
-                       macro.trigger(EventTypesEnum.ITEM_DAMAGE, args).join();
+                       macro.trigger("ITEM_DAMAGE", args).join();
                    } catch (InterruptedException e1) {}
                }
            });

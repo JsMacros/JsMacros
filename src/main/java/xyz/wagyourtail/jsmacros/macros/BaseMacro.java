@@ -1,10 +1,8 @@
 package xyz.wagyourtail.jsmacros.macros;
 
-import java.io.File;
 import java.util.HashMap;
 
 import xyz.wagyourtail.jsmacros.config.RawMacro;
-import xyz.wagyourtail.jsmacros.events.EventTypesEnum;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 
 public abstract class BaseMacro {
@@ -14,15 +12,11 @@ public abstract class BaseMacro {
         this.macro = macro;
     }
     
-    public File getFile() {
-        return macro.scriptFile;
-    }
-    
     public RawMacro getRawMacro() {
         return macro;
     }
     
-    public Thread runMacro(EventTypesEnum type, HashMap<String, Object> args) {
+    public Thread runMacro(String type, HashMap<String, Object> args) {
         try {
             return RunScript.exec(macro, type, args);
         } catch (Exception e) {
@@ -31,7 +25,7 @@ public abstract class BaseMacro {
         }
     }
     
-    public Thread trigger(EventTypesEnum type, HashMap<String, Object> args) {
+    public Thread trigger(String type, HashMap<String, Object> args) {
         return null;
     }
 }

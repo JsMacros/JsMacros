@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import net.minecraft.client.util.InputUtil;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
-import xyz.wagyourtail.jsmacros.events.EventTypesEnum;
 
 public class KeyUpMacro extends BaseMacro {
     private InputUtil.KeyCode key;
@@ -23,7 +22,7 @@ public class KeyUpMacro extends BaseMacro {
         return key.getName();
     }
     
-    public Thread trigger(EventTypesEnum type, HashMap<String, Object> args) {
+    public Thread trigger(String type, HashMap<String, Object> args) {
         if (check(args)) {
             return runMacro(type, args);
         }

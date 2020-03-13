@@ -9,7 +9,6 @@ public class ConfigOptions {
     public HashMap<String, ArrayList<RawMacro>> profiles;
     
     public ConfigOptions(boolean allowPrivateAccess, String defaultProfile, HashMap<String, ArrayList<RawMacro>> profiles) {
-        this.allowPrivateAccess = allowPrivateAccess;
         this.defaultProfile = defaultProfile;
         this.profiles = profiles;
     }
