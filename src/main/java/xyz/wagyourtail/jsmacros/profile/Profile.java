@@ -22,6 +22,7 @@ import xyz.wagyourtail.jsmacros.events.KeyCallback;
 import xyz.wagyourtail.jsmacros.events.RecieveMessageCallback;
 import xyz.wagyourtail.jsmacros.events.SendMessageCallback;
 import xyz.wagyourtail.jsmacros.macros.*;
+import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 
 public class Profile {
     public String profileName;
@@ -245,7 +246,7 @@ public class Profile {
            registry.addEvent("ITEM_DAMAGE");
            ItemDamageCallback.EVENT.register((stack, damage) -> {
                HashMap<String, Object> args = new HashMap<>();
-               args.put("stack", stack);
+               args.put("stack", new ItemStackHelper(stack));
                args.put("damage", damage);
                if (registry.macros.containsKey("ITEM_DAMAGE")) for (BaseMacro macro : registry.macros.get("ITEM_DAMAGE").values()) {
                    try {
