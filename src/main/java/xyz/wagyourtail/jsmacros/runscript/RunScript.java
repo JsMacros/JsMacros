@@ -40,7 +40,7 @@ public class RunScript {
         globalBinds.put("global", globals);
         globalBinds.put("jsmacros", new jsMacrosFunctions());
         globalBinds.put("time", new timeFunctions());
-        globalBinds.put("binding", new keybindFunctions());
+        globalBinds.put("keybind", new keybindFunctions());
         globalBinds.put("chat", new chatFunctions());
     }
 

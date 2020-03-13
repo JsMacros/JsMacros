@@ -16,3 +16,4 @@ class jsmacros_ClientPlayNetworkHandler {
         DeathCallback.EVENT.invoker().interact();
     }
 }
+
