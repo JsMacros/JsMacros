@@ -32,4 +32,10 @@ public class ItemStackHelper {
     public String getItemID() {
         return i.getItem().toString();
     }
+    
+    
+    
+    public ItemStack getRaw() {
+        return i;
+    }
 }

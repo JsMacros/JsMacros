@@ -23,7 +23,7 @@ public class MacroCancelScreen extends Screen {
         
         for (ArrayList<Thread> a : RunScript.threads.values()) {
             for (Thread t : a) {
-                this.addButtonThread(t);
+                this.addButtonThread(t, a);
             }
         }
     }
@@ -36,9 +36,10 @@ public class MacroCancelScreen extends Screen {
 //        }
 //    };
     
-    private void addButtonThread(Thread t) {
+    private void addButtonThread(Thread t, ArrayList<Thread> a) {
         buttons.put(t, this.addButton((ButtonWidget)new ButtonWidget(0, 0, 200, 20, t.getName(), (buttonWidget) -> {
             t.interrupt();
+            a.remove(t);
             this.minecraft.openScreen(new MacroCancelScreen(this.parent));
         })));
     }
