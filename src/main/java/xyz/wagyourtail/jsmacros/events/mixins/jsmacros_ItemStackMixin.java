@@ -18,8 +18,9 @@ abstract class jsmacros_ItemStackMixin {
     
     @Inject(at = @At("HEAD"), method="setDamage")
     private void jsmacros_setDamage(int damage, CallbackInfo info) {
-        if (damage != 0 && jsMacros.getMinecraft().player.inventory.contains((ItemStack) (Object) this) ) {
-            ItemDamageCallback.EVENT.invoker().interact((ItemStack) (Object) this, damage);
-        }
+        if (jsMacros.getMinecraft().player != null && jsMacros.getMinecraft().player.inventory != null)
+            if (damage != 0 && jsMacros.getMinecraft().player.inventory.contains((ItemStack) (Object) this) ) {
+                ItemDamageCallback.EVENT.invoker().interact((ItemStack) (Object) this, damage);
+            }
     }
 }

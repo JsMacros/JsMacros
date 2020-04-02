@@ -2,19 +2,19 @@ package xyz.wagyourtail.jsmacros.reflector;
 
 import java.util.HashMap;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 
-public class PlayerHelper {
-    private PlayerEntity p;
+public class EntityHelper {
+    protected Entity e;
     
-    public PlayerHelper(PlayerEntity p) {
-        this.p = p;
+    public EntityHelper(Entity e) {
+        this.e = e;
     }
     
     public HashMap<String, Double> getPos() {
         HashMap<String, Double> r = new HashMap<>();
-        Vec3d pos = p.getPos();
+        Vec3d pos = e.getPos();
         r.put("x", pos.x);
         r.put("y", pos.y);
         r.put("z", pos.z);
@@ -22,10 +22,14 @@ public class PlayerHelper {
     }
     
     public String getName() {
-        return p.getName().asFormattedString();
+        return e.getName().asFormattedString();
     }
     
-    public PlayerEntity getRaw() {
-        return p;
+    public String getType() {
+        return e.getType().toString();
+    }
+    
+    public Entity getRaw() {
+        return e;
     }
 }
