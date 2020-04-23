@@ -16,12 +16,14 @@ import org.graalvm.polyglot.HostAccess;
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.runscript.functions.chatFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.jsMacrosFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.keybindFunctions;
+import xyz.wagyourtail.jsmacros.runscript.functions.playerFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.timeFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.worldFunctions;
 
@@ -50,6 +52,7 @@ public class RunScript {
                     engine.put("keybind", new keybindFunctions());
                     engine.put("chat", new chatFunctions());
                     engine.put("world", new worldFunctions());
+                    engine.put("player", new playerFunctions());
                     engine.eval(new FileReader(file));
                 } catch (ScriptException | IOException e) {
                     MinecraftClient mc = jsMacros.getMinecraft();
