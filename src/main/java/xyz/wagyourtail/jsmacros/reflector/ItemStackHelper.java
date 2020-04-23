@@ -33,7 +33,9 @@ public class ItemStackHelper {
         return i.getItem().toString();
     }
     
-    
+    public boolean isEmpty() {
+        return i.isEmpty();
+    }
     
     public ItemStack getRaw() {
         return i;
