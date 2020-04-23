@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.events.SendMessageCallback;
@@ -19,7 +20,8 @@ class jsmacros_ScreenMixin {
             info.cancel();
         } else if (!result.equals(message)) {
             info.cancel();
-            jsMacros.getMinecraft().currentScreen.sendMessage(result);
+            MinecraftClient mc = jsMacros.getMinecraft();
+            mc.currentScreen.sendMessage(result);
         }
     }
 }

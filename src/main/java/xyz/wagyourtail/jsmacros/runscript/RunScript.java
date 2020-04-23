@@ -15,6 +15,7 @@ import org.graalvm.polyglot.HostAccess;
 
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
@@ -51,9 +52,10 @@ public class RunScript {
                     engine.put("world", new worldFunctions());
                     engine.eval(new FileReader(file));
                 } catch (ScriptException | IOException e) {
-                    if (jsMacros.getMinecraft().inGameHud != null) {
+                    MinecraftClient mc = jsMacros.getMinecraft();
+                    if (mc.inGameHud != null) {
                         LiteralText text = new LiteralText(e.toString());
-                        jsMacros.getMinecraft().inGameHud.getChatHud().addMessage(text);
+                        mc.inGameHud.getChatHud().addMessage(text);
                     } else {
                         e.printStackTrace();
                     }

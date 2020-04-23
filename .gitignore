@@ -3,7 +3,7 @@
 .gradle/
 build/
 out/
-classes/
+build/classes/
 
 # idea
 

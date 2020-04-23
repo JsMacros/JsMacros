@@ -8,6 +8,7 @@ import org.lwjgl.glfw.GLFW;
 import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
 import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
@@ -164,14 +165,15 @@ public class Profile {
            registry.addEvent("KEY");
            KeyCallback.EVENT.register((window, key, scancode, action, mods) -> {
                InputUtil.KeyCode keycode;
-               if (jsMacros.getMinecraft().currentScreen != null) return ActionResult.PASS;
+               MinecraftClient mc = jsMacros.getMinecraft();
+               if (mc.currentScreen != null) return ActionResult.PASS;
                if (key == -1 || action == 2) return ActionResult.PASS;
                
                if (key <= 7) keycode = InputUtil.Type.MOUSE.createFromCode(key);
                else keycode = InputUtil.Type.KEYSYM.createFromCode(key);
 
                if (keycode == InputUtil.UNKNOWN_KEYCODE) return ActionResult.PASS;
-               if (keyBinding.getBoundKey() == keycode && action == 1) jsMacros.getMinecraft().openScreen(jsMacros.macroListScreen);
+               if (keyBinding.getBoundKey() == keycode && action == 1) mc.openScreen(jsMacros.macroListScreen);
 
                HashMap<String, Object> args = new HashMap<>();
                args.put("key", keycode);
