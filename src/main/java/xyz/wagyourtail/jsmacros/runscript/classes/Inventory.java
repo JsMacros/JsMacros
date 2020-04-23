@@ -35,7 +35,7 @@ public class Inventory {
         man.clickSlot(wID, slot, mousebutton, act, player);
     }
 
-    public void dragClick(ArrayList<Integer> slots, int mousebutton) {
+    public void dragClick(int[] slots, int mousebutton) {
         mousebutton = mousebutton == 0 ? 1 : 5;
         man.clickSlot(wID, -999, mousebutton - 1, SlotActionType.QUICK_CRAFT, player); // start drag click
         for (int i : slots) {
