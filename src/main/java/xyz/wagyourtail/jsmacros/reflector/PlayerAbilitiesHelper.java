@@ -25,6 +25,14 @@ public class PlayerAbilitiesHelper {
 		return a.creativeMode;
 	}
 	
+	public void setFlying(boolean b) {
+		a.flying = b;
+	}
+	
+	public void setAllowFlying(boolean b) {
+		a.allowFlying = b;
+	}
+	
 	public float getFlySpeed() {
 		return a.getFlySpeed();
 	}
