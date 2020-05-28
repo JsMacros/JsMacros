@@ -1,7 +1,5 @@
 package xyz.wagyourtail.jsmacros.runscript.classes;
 
-import java.util.ArrayList;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;

@@ -8,7 +8,11 @@ public class PlayerEntityHelper extends EntityHelper {
     public PlayerEntityHelper(Entity e) {
         super(e);
     }
-
+    
+    public PlayerAbilitiesHelper getAbilities() {
+    	return new PlayerAbilitiesHelper(((PlayerEntity)e).abilities);
+    }
+    
     public PlayerEntity getRaw() {
         return (PlayerEntity) e;
     }

@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import xyz.wagyourtail.jsmacros.reflector.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.reflector.EntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
-import xyz.wagyourtail.jsmacros.reflector.PlayerListHelper;
+import xyz.wagyourtail.jsmacros.reflector.PlayerListEntryHelper;
 
 public class worldFunctions {
     public ArrayList<PlayerEntityHelper> getLoadedPlayers() {
@@ -27,10 +27,10 @@ public class worldFunctions {
         return players;
     }
     
-    public ArrayList<PlayerListHelper> getPlayers() {
-        ArrayList<PlayerListHelper> players = new ArrayList<>();
+    public ArrayList<PlayerListEntryHelper> getPlayers() {
+        ArrayList<PlayerListEntryHelper> players = new ArrayList<>();
         for (PlayerListEntry p : MinecraftClient.getInstance().getNetworkHandler().getPlayerList()) {
-            players.add(new PlayerListHelper(p));
+            players.add(new PlayerListEntryHelper(p));
         }
         return players;
     }

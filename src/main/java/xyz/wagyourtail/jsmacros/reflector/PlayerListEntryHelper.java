@@ -2,10 +2,10 @@ package xyz.wagyourtail.jsmacros.reflector;
 
 import net.minecraft.client.network.PlayerListEntry;
 
-public class PlayerListHelper {
+public class PlayerListEntryHelper {
     private PlayerListEntry p;
     
-    public PlayerListHelper(PlayerListEntry p) {
+    public PlayerListEntryHelper(PlayerListEntry p) {
         this.p = p;
     }
     

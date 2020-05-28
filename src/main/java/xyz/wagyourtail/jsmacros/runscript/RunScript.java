@@ -16,7 +16,6 @@ import org.graalvm.polyglot.HostAccess;
 import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
@@ -42,7 +41,6 @@ public class RunScript {
                     context.allowExperimentalOptions(true);
                     ScriptEngine engine = GraalJSScriptEngine.create(null, context);
                     File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
-                    
                     engine.put("event", event);
                     engine.put("args", args);
                     engine.put("file", file);
