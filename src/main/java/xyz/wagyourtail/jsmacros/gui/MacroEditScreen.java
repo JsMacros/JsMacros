@@ -55,6 +55,7 @@ public class MacroEditScreen extends Screen {
                 newMacro.scriptFile = string;
             } else {
                 this.fileBox.setEditableColor(0xFF0000);
+                newMacro.scriptFile = string;
             }
         });
         this.children.add(this.fileBox);
