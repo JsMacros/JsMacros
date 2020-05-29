@@ -51,4 +51,8 @@ public class globalVarFunctions {
 			return null;
 		}
 	}
+	
+	public HashMap<String, Object> getRaw() {
+		return globalRaw;
+	}
 }
