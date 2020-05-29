@@ -20,6 +20,7 @@ import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.runscript.functions.chatFunctions;
+import xyz.wagyourtail.jsmacros.runscript.functions.globalVarFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.jsMacrosFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.keybindFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.playerFunctions;
@@ -44,7 +45,7 @@ public class RunScript {
                     engine.put("event", event);
                     engine.put("args", args);
                     engine.put("file", file);
-                    engine.put("global", globals);
+                    engine.put("global", new globalVarFunctions());
                     engine.put("jsmacros", new jsMacrosFunctions());
                     engine.put("time", new timeFunctions());
                     engine.put("keybind", new keybindFunctions());
