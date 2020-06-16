@@ -13,6 +13,7 @@ public class EntityHelper {
     }
     
     public HashMap<String, Double> getPos() {
+        if (e == null) return null;
         HashMap<String, Double> r = new HashMap<>();
         Vec3d pos = e.getPos();
         r.put("x", pos.x);
@@ -22,10 +23,12 @@ public class EntityHelper {
     }
     
     public String getName() {
+        if (e == null) return null;
         return e.getName().asFormattedString();
     }
     
     public String getType() {
+        if (e == null) return null;
         return e.getType().toString();
     }
     

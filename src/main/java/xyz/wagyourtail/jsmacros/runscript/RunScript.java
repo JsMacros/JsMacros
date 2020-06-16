@@ -2,12 +2,10 @@ package xyz.wagyourtail.jsmacros.runscript;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.script.ScriptEngine;
-import javax.script.ScriptException;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
@@ -21,6 +19,7 @@ import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.runscript.functions.chatFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.globalVarFunctions;
+import xyz.wagyourtail.jsmacros.runscript.functions.hudFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.jsMacrosFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.keybindFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.playerFunctions;
@@ -29,7 +28,6 @@ import xyz.wagyourtail.jsmacros.runscript.functions.worldFunctions;
 
 public class RunScript {
     public static HashMap<RawMacro, ArrayList<Thread>> threads = new HashMap<>();
-    private static HashMap<String, Object> globals = new HashMap<>();
     
     public static Thread exec(RawMacro macro, String event, HashMap<String, Object> args) {
         final Runnable r = new Runnable() {
@@ -52,15 +50,15 @@ public class RunScript {
                     engine.put("chat", new chatFunctions());
                     engine.put("world", new worldFunctions());
                     engine.put("player", new playerFunctions());
+                    engine.put("hud", new hudFunctions());
                     engine.eval(new FileReader(file));
-                } catch (ScriptException | IOException e) {
+                } catch (Exception e) {
                     MinecraftClient mc = jsMacros.getMinecraft();
                     if (mc.inGameHud != null) {
                         LiteralText text = new LiteralText(e.toString());
                         mc.inGameHud.getChatHud().addMessage(text);
-                    } else {
-                        e.printStackTrace();
                     }
+                    e.printStackTrace();
                 }
                 threads.get(macro).remove(Thread.currentThread());
             }

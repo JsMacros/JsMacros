@@ -1,8 +1,15 @@
 package xyz.wagyourtail.jsmacros.runscript.functions;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.reflector.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.reflector.ClientPlayerEntityHelper;
+import xyz.wagyourtail.jsmacros.reflector.EntityHelper;
 import xyz.wagyourtail.jsmacros.runscript.classes.Inventory;
 
 public class playerFunctions {
@@ -14,4 +21,21 @@ public class playerFunctions {
     	MinecraftClient mc = jsMacros.getMinecraft();
     	return new ClientPlayerEntityHelper(mc.player);
     }
+    
+    public BlockDataHelper rayTraceBlock(double distance, boolean fluid) {
+    	MinecraftClient mc = jsMacros.getMinecraft();
+    	BlockHitResult h = (BlockHitResult) mc.player.rayTrace(distance, 0, fluid);
+    	if (h.getType() == HitResult.Type.MISS) return null;
+		BlockState b = mc.world.getBlockState(h.getBlockPos());
+        BlockEntity t = mc.world.getBlockEntity(h.getBlockPos());
+        if (b.getBlock().equals(Blocks.VOID_AIR)) return null;
+        return new BlockDataHelper(b.getBlock(), t);
+    }
+    
+    public EntityHelper rayTraceEntity() {
+        MinecraftClient mc = jsMacros.getMinecraft();
+        if (mc.targetedEntity != null) return new EntityHelper(mc.targetedEntity);
+        else return null;
+    }
+    
 }
