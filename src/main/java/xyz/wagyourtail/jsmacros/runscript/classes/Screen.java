@@ -44,14 +44,6 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         }
     }
     
-    public int getWidthVal() {
-        return this.width;
-    }
-    
-    public int getHeightVal() {
-        return this.height;
-    }
-    
     public String getTitleText() {
         return title.toString();
     }
@@ -77,8 +69,8 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         return textFields;
     }
     
-    public ButtonWidgetHelper putButton(int x, int y, int width, int height, String text, BiConsumer<ButtonWidgetHelper, Screen> callback) {
-        ButtonWidget button = (ButtonWidget) addButton(new ButtonWidget(x, y, width, height, text, (btn) -> {
+    public ButtonWidgetHelper addButton(int x, int y, int width, int height, String text, BiConsumer<ButtonWidgetHelper, Screen> callback) {
+        ButtonWidget button = (ButtonWidget) super.addButton(new ButtonWidget(x, y, width, height, text, (btn) -> {
             try {
                 callback.accept(new ButtonWidgetHelper(btn), this);
             } catch (Exception e) {
@@ -92,7 +84,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         return new ButtonWidgetHelper(button);
     }
     
-    public TextFieldWidgetHelper putTextInput(int x, int y, int width, int height, String message, BiConsumer<String, Screen> onChange) {
+    public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, String message, BiConsumer<String, Screen> onChange) {
         TextFieldWidget field = new TextFieldWidget(this.font, x, y, width, height, message);
         if (onChange != null) {
             field.setChangedListener(str -> {
@@ -112,7 +104,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         return new TextFieldWidgetHelper(field);
     }
     
-    public text putText(String text, int x, int y, int color) {
+    public text addText(String text, int x, int y, int color) {
         text t =  new text(text, x, y, color);
         textFields.add(t);
         return t;
