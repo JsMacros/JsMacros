@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import javax.script.ScriptEngine;
 
@@ -29,47 +31,46 @@ import xyz.wagyourtail.jsmacros.runscript.functions.worldFunctions;
 public class RunScript {
     public static HashMap<RawMacro, ArrayList<Thread>> threads = new HashMap<>();
     
+    
     public static Thread exec(RawMacro macro, String event, HashMap<String, Object> args) {
-        final Runnable r = new Runnable() {
-            public void run() {
-                try {
-                    Builder context = Context.newBuilder("js");
-                    context.allowHostAccess(HostAccess.ALL);
-                    context.allowHostClassLookup(s -> true);
-                    context.allowAllAccess(true);
-                    context.allowExperimentalOptions(true);
-                    ScriptEngine engine = GraalJSScriptEngine.create(null, context);
-                    File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
-                    engine.put("event", event);
-                    engine.put("args", args);
-                    engine.put("file", file);
-                    engine.put("global", new globalVarFunctions());
-                    engine.put("jsmacros", new jsMacrosFunctions());
-                    engine.put("time", new timeFunctions());
-                    engine.put("keybind", new keybindFunctions());
-                    engine.put("chat", new chatFunctions());
-                    engine.put("world", new worldFunctions());
-                    engine.put("player", new playerFunctions());
-                    engine.put("hud", new hudFunctions());
-                    engine.eval(new FileReader(file));
-                } catch (Exception e) {
-                    MinecraftClient mc = jsMacros.getMinecraft();
-                    if (mc.inGameHud != null) {
-                        LiteralText text = new LiteralText(e.toString());
-                        mc.inGameHud.getChatHud().addMessage(text);
-                    }
-                    e.printStackTrace();
+        Thread t = new Thread(() -> {
+            threads.putIfAbsent(macro, new ArrayList<>());
+            Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());
+            threads.get(macro).add(Thread.currentThread());
+            try {
+                Builder context = Context.newBuilder("js");
+                context.allowHostAccess(HostAccess.ALL);
+                context.allowHostClassLookup(s -> true);
+                context.allowAllAccess(true);
+                context.allowExperimentalOptions(true);
+                ScriptEngine engine = GraalJSScriptEngine.create(null, context);
+                File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
+                engine.put("event", event);
+                engine.put("args", args);
+                engine.put("file", file);
+                engine.put("global", new globalVarFunctions());
+                engine.put("jsmacros", new jsMacrosFunctions());
+                engine.put("time", new timeFunctions());
+                engine.put("keybind", new keybindFunctions());
+                engine.put("chat", new chatFunctions());
+                engine.put("world", new worldFunctions());
+                engine.put("player", new playerFunctions());
+                engine.put("hud", new hudFunctions());
+                engine.eval(new FileReader(file));
+            } catch (Exception e) {
+                MinecraftClient mc = jsMacros.getMinecraft();
+                if (mc.inGameHud != null) {
+                    LiteralText text = new LiteralText(e.toString());
+                    mc.inGameHud.getChatHud().addMessage(text);
                 }
-                threads.get(macro).remove(Thread.currentThread());
+                e.printStackTrace();
             }
-        };
-
-        Thread t = new Thread(r);
+            threads.get(macro).remove(Thread.currentThread());
+        });
 
         // function files
-        threads.putIfAbsent(macro, new ArrayList<>());
-        t.setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());
-        threads.get(macro).add(t);
+        
+        
         t.start();
         return t;
     }
