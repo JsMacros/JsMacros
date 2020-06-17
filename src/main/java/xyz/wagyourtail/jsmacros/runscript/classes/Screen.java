@@ -48,6 +48,14 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         return title.toString();
     }
     
+    public int getWidth() {
+        return this.width;
+    }
+    
+    public int getHeight() {
+        return this.height;
+    }
+    
     public ArrayList<ButtonWidgetHelper> getButtonWidgets() {
         ArrayList<ButtonWidgetHelper> list = new ArrayList<ButtonWidgetHelper>();
         for (AbstractButtonWidget b : buttons) {
