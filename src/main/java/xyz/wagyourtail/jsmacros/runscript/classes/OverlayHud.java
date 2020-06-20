@@ -16,7 +16,6 @@ import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 
 public class OverlayHud extends DrawableHelper {
-    public static ArrayList<OverlayHud> instances = new ArrayList<>();
     public ArrayList<text> textFields = new ArrayList<>();
     public ArrayList<rect> rectFields = new ArrayList<>();
     public ArrayList<item> itemFields = new ArrayList<>();
@@ -84,23 +83,6 @@ public class OverlayHud extends DrawableHelper {
     
     public void removeItem(item i) {
         itemFields.remove(i);
-    }
-    
-    public void registerOverlay() {
-        init();
-        if (!instances.contains(this)) instances.add(this);
-    }
-    
-    public void unregisterOverlay() {
-        instances.remove(this);
-    }
-    
-    public ArrayList<OverlayHud> listOverlays() {
-        return instances;
-    }
-    
-    public void clearOverlays() {
-        instances.clear();
     }
     
     public void init() {

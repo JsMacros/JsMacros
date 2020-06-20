@@ -10,13 +10,14 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import net.minecraft.client.gui.hud.InGameHud;
 import xyz.wagyourtail.jsmacros.runscript.classes.OverlayHud;
+import xyz.wagyourtail.jsmacros.runscript.functions.hudFunctions;
 
 @Mixin(InGameHud.class)
 class jsmacros_InGameHudMixin {
     @Inject(at = @At("HEAD"), method = "render")
     public void jsMacros_renderHud(final CallbackInfo info) {
         
-        for (OverlayHud h : OverlayHud.instances) {
+        for (OverlayHud h : hudFunctions.overlays) {
             h.render();
         }
         
