@@ -92,6 +92,10 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         return new ButtonWidgetHelper(button);
     }
     
+    public void removeButton(ButtonWidgetHelper btn) {
+        this.buttons.remove(btn.getRaw());
+    }
+    
     public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, String message, BiConsumer<String, Screen> onChange) {
         TextFieldWidget field = new TextFieldWidget(this.font, x, y, width, height, message);
         if (onChange != null) {
@@ -112,10 +116,19 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         return new TextFieldWidgetHelper(field);
     }
     
-    public text addText(String text, int x, int y, int color) {
-        text t =  new text(text, x, y, color);
+    public void removeTextInput(TextFieldWidgetHelper inp) {
+        textFieldWidgets.remove(inp.getRaw());
+        children.remove(inp.getRaw());
+    }
+    
+    public text addText(String text, int x, int y, int color, boolean shadow) {
+        text t =  new text(text, x, y, color, shadow);
         textFields.add(t);
         return t;
+    }
+    
+    public void removeText(text t) {
+        textFields.remove(t);
     }
     
     public void render(int mouseX, int mouseY, float delta) {
@@ -125,7 +138,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
             w.render(mouseX, mouseY, delta);
         }
         for (text t : textFields) {
-            this.minecraft.textRenderer.draw(t.text, t.x, t.y, t.color);
+            t.render();
         }
         this.drawCenteredString(this.font, this.title.asFormattedString(), this.width / 2, 20, 0xFFFFFF);
         super.render(mouseX, mouseY, delta);
@@ -142,14 +155,16 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         public int y;
         public int color;
         public int width;
+        public boolean shadow;
         
-        public text(String text, int x, int y, int color) {
+        public text(String text, int x, int y, int color, boolean shadow) {
             MinecraftClient mc = jsMacros.getMinecraft();
             this.text = text;
             this.x = x;
             this.y = y;
             this.color = color;
             this.width = mc.textRenderer.getStringWidth(text);
+            this.shadow = shadow;
         }
         
         public void setPos(int x, int y) {
@@ -165,6 +180,12 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         
         public int getWidth() {
             return this.width;
+        }
+        
+        public void render() {
+            MinecraftClient mc = jsMacros.getMinecraft();
+            if (shadow) mc.textRenderer.drawWithShadow(text, x, y, color);
+            else mc.textRenderer.draw(text, x, y, color);
         }
     }
 }

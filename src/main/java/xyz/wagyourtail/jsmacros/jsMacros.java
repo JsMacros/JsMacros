@@ -45,6 +45,7 @@ public class jsMacros implements ClientModInitializer {
         return string2 == null ? I18n.translate(string) : string2;
      }
     
+    @Deprecated
     static public MinecraftClient getMinecraft() {
         return MinecraftClient.getInstance();
     }
