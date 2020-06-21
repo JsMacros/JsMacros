@@ -5,7 +5,8 @@
     "mixins": [],
     "client": [
         "jsmacros_InGameHudMixin",
-        "jsmacros_MinecraftClientMixin"
+        "jsmacros_MinecraftClientMixin",
+        "jsmacros_WorldRendererMixin"
     ],
     "injectors": {
         "defaultRequire": 1

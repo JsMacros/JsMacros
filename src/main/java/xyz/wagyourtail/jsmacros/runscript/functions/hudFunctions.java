@@ -3,11 +3,13 @@ package xyz.wagyourtail.jsmacros.runscript.functions;
 import java.util.ArrayList;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.runscript.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.runscript.classes.OverlayHud;
 import xyz.wagyourtail.jsmacros.runscript.classes.Screen;
 
 public class hudFunctions {
     public static ArrayList<OverlayHud> overlays = new ArrayList<>();
+    public static ArrayList<Draw3D> renders = new ArrayList<>();
     
     
     public Screen createScreen(String title, boolean dirtBG) {
@@ -37,5 +39,25 @@ public class hudFunctions {
     
     public void clearOverlays() {
         overlays.clear();
+    }
+    
+    public Draw3D createDraw3D() {
+        return new Draw3D();
+    }
+    
+    public void registerDraw3D(Draw3D draw) {
+        if (!renders.contains(draw)) renders.add(draw);
+    }
+    
+    public void unregisterDraw3D(Draw3D draw) {
+        renders.remove(draw);
+    }
+    
+    public ArrayList<Draw3D> listDraw3D() {
+        return renders;
+    }
+    
+    public void clearDraw3D() {
+        renders.clear();
     }
 }
