@@ -13,7 +13,7 @@ import xyz.wagyourtail.jsmacros.runscript.RunScript;
 public class jsMacrosFunctions {
     
     public MinecraftClient getMinecraft() {
-        return jsMacros.getMinecraft();
+        return MinecraftClient.getInstance();
     }
     
     public Profile getProfile() {

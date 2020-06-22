@@ -73,7 +73,7 @@ public class MacroListWidget extends AlwaysSelectedEntryListWidget<MacroListWidg
         
         protected MacroEntry(MacroListScreen screen, RawMacro macro) {
             this.screen = screen;
-            this.client = jsMacros.getMinecraft();
+            this.client = MinecraftClient.getInstance();
             this.macro = macro;
         }
         

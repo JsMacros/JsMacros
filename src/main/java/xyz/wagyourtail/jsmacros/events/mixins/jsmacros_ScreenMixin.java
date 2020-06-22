@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.events.SendMessageCallback;
 
 @Mixin(Screen.class)
@@ -20,7 +19,7 @@ class jsmacros_ScreenMixin {
             info.cancel();
         } else if (!result.equals(message)) {
             info.cancel();
-            MinecraftClient mc = jsMacros.getMinecraft();
+            MinecraftClient mc = MinecraftClient.getInstance();
             mc.currentScreen.sendMessage(result);
         }
     }

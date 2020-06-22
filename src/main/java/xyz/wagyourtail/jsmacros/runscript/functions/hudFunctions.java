@@ -2,10 +2,11 @@ package xyz.wagyourtail.jsmacros.runscript.functions;
 
 import java.util.ArrayList;
 
-import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.runscript.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.runscript.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.runscript.classes.Screen;
+
+import net.minecraft.client.MinecraftClient;
 
 public class hudFunctions {
     public static ArrayList<Draw2D> overlays = new ArrayList<>();
@@ -17,7 +18,7 @@ public class hudFunctions {
     }
     
     public void openScreen(Screen s) {
-        jsMacros.getMinecraft().openScreen(s);
+        MinecraftClient.getInstance().openScreen(s);
     }
     
     public Draw2D createDraw2D() {

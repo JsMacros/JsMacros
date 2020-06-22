@@ -9,7 +9,6 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.LiteralText;
-import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.reflector.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.reflector.TextFieldWidgetHelper;
 
@@ -158,7 +157,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         public boolean shadow;
         
         public text(String text, int x, int y, int color, boolean shadow) {
-            MinecraftClient mc = jsMacros.getMinecraft();
+            MinecraftClient mc = MinecraftClient.getInstance();
             this.text = text;
             this.x = x;
             this.y = y;
@@ -173,7 +172,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         }
         
         public void setText(String text) {
-            MinecraftClient mc = jsMacros.getMinecraft();
+            MinecraftClient mc = MinecraftClient.getInstance();
             this.text = text;
             this.width = mc.textRenderer.getStringWidth(text);
         }
@@ -183,7 +182,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         }
         
         public void render() {
-            MinecraftClient mc = jsMacros.getMinecraft();
+            MinecraftClient mc = MinecraftClient.getInstance();
             if (shadow) mc.textRenderer.drawWithShadow(text, x, y, color);
             else mc.textRenderer.draw(text, x, y, color);
         }

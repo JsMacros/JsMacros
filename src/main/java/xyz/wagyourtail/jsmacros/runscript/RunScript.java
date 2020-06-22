@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.runscript;
 
 import java.io.File;
 import java.io.FileReader;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +60,7 @@ public class RunScript {
                     engine.eval(new FileReader(file));
                 }
             } catch (Exception e) {
-                MinecraftClient mc = jsMacros.getMinecraft();
+                MinecraftClient mc = MinecraftClient.getInstance();
                 if (mc.inGameHud != null) {
                     LiteralText text = new LiteralText(e.toString());
                     mc.inGameHud.getChatHud().addMessage(text);

@@ -12,7 +12,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 
 public class Draw2D extends DrawableHelper {
@@ -190,7 +189,7 @@ public class Draw2D extends DrawableHelper {
         public boolean shadow;
         
         public text(String text, int x, int y, int color, boolean shadow) {
-            MinecraftClient mc = jsMacros.getMinecraft();
+            MinecraftClient mc = MinecraftClient.getInstance();
             this.text = text;
             this.x = x;
             this.y = y;
@@ -205,7 +204,7 @@ public class Draw2D extends DrawableHelper {
         }
         
         public void setText(String text) {
-            MinecraftClient mc = jsMacros.getMinecraft();
+            MinecraftClient mc = MinecraftClient.getInstance();
             this.text = text;
             this.width = mc.textRenderer.getStringWidth(text);
         }
@@ -215,7 +214,7 @@ public class Draw2D extends DrawableHelper {
         }
         
         public void render() {
-            MinecraftClient mc = jsMacros.getMinecraft();
+            MinecraftClient mc = MinecraftClient.getInstance();
             if (shadow) mc.textRenderer.drawWithShadow(text, x, y, color);
             else mc.textRenderer.draw(text, x, y, color);
         }

@@ -7,7 +7,6 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.item.ItemStack;
-import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 
 public class Inventory {
@@ -17,7 +16,7 @@ public class Inventory {
     private ClientPlayerEntity player;
 
     public Inventory() {
-        MinecraftClient mc = jsMacros.getMinecraft();
+        MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.currentScreen instanceof ContainerScreen) {
             this.inventory = (ContainerScreen<?>) mc.currentScreen;
         } else {
