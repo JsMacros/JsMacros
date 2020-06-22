@@ -2,6 +2,8 @@ package xyz.wagyourtail.jsmacros.runscript;
 
 import java.io.File;
 import java.io.FileReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -36,25 +38,28 @@ public class RunScript {
             Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());
             threads.get(macro).add(Thread.currentThread());
             try {
-                Builder context = Context.newBuilder("js");
-                context.allowHostAccess(HostAccess.ALL);
-                context.allowHostClassLookup(s -> true);
-                context.allowAllAccess(true);
-                context.allowExperimentalOptions(true);
-                ScriptEngine engine = GraalJSScriptEngine.create(null, context);
                 File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
-                engine.put("event", event);
-                engine.put("args", args);
-                engine.put("file", file);
-                engine.put("global", new globalVarFunctions());
-                engine.put("jsmacros", new jsMacrosFunctions());
-                engine.put("time", new timeFunctions());
-                engine.put("keybind", new keybindFunctions());
-                engine.put("chat", new chatFunctions());
-                engine.put("world", new worldFunctions());
-                engine.put("player", new playerFunctions());
-                engine.put("hud", new hudFunctions());
-                engine.eval(new FileReader(file));
+                if (file.exists()) {
+                    Builder context = Context.newBuilder("js");
+                    context.allowHostAccess(HostAccess.ALL);
+                    context.allowHostClassLookup(s -> true);
+                    context.allowAllAccess(true);
+                    context.allowExperimentalOptions(true);
+                    context.currentWorkingDirectory(Paths.get(file.getParent()));
+                    ScriptEngine engine = GraalJSScriptEngine.create(null, context);
+                    engine.put("event", event);
+                    engine.put("args", args);
+                    engine.put("file", file);
+                    engine.put("global", new globalVarFunctions());
+                    engine.put("jsmacros", new jsMacrosFunctions());
+                    engine.put("time", new timeFunctions());
+                    engine.put("keybind", new keybindFunctions());
+                    engine.put("chat", new chatFunctions());
+                    engine.put("world", new worldFunctions());
+                    engine.put("player", new playerFunctions());
+                    engine.put("hud", new hudFunctions());
+                    engine.eval(new FileReader(file));
+                }
             } catch (Exception e) {
                 MinecraftClient mc = jsMacros.getMinecraft();
                 if (mc.inGameHud != null) {
