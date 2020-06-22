@@ -10,7 +10,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.util.math.MathHelper;
@@ -30,7 +29,7 @@ public class Draw3D {
         boxes.remove(b);
     }
     
-    public ArrayList<box> listBoxes() {
+    public ArrayList<box> getBoxes() {
         return boxes;
     }
     
@@ -44,7 +43,7 @@ public class Draw3D {
         lines.remove(l);
     }
     
-    public ArrayList<line> listLines() {
+    public ArrayList<line> getLines() {
         return lines;
     }
     
@@ -107,19 +106,69 @@ public class Draw3D {
             this.fill = fill;
         }
         
+        public void setPos(double x1, double y1, double z1, double x2, double y2, double z2) {
+            this.x1 = x1;
+            this.y1 = y1;
+            this.z1 = z1;
+            this.x2 = x2;
+            this.y2 = y2;
+            this.z2 = z2;
+        }
+        
+        public void setColor(int color) {
+            this.color = color;
+        }
+        
+        public void setFillColor(int fillColor) {
+            this.fillColor = fillColor;
+        }
+        
+        public void setFill(boolean fill) {
+            this.fill = fill;
+        }
+        
         public void render() {
-            float a = ((color >> 24) & 0xFF)/255F;
-            float r = ((color >> 16) & 0xFF)/255F;
-            float g = ((color >> 8) & 0xFF)/255F;
-            float b = (color & 0xFF)/255F;
-
+            int a = (color >> 24) & 0xFF;
+            int r = (color >> 16) & 0xFF;
+            int g = (color >> 8) & 0xFF;
+            int b = color & 0xFF;
+            
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
-            buf.begin(GL11.GL_TRIANGLE_STRIP,  VertexFormats.POSITION_COLOR);
-            WorldRenderer.drawBox(buf, x1, y1, z1, x2, y2, z2, r, g, b, a);
+            
+            if (this.fill) {
+                float fa = ((fillColor >> 24) & 0xFF)/255F;
+                float fr = ((fillColor >> 16) & 0xFF)/255F;
+                float fg = ((fillColor >> 8) & 0xFF)/255F;
+                float fb = (fillColor & 0xFF)/255F;
+                
+                buf.begin(GL11.GL_TRIANGLE_STRIP,  VertexFormats.POSITION_COLOR); 
+                
+                WorldRenderer.drawBox(buf, x1, y1, z1, x2, y2, z2, fr, fg, fb, fa);
+                
+                tess.draw();
+            }
+            
+            buf.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
+            
+            buf.vertex(x1, y1, z1).color(r, g, b, a).next();
+            buf.vertex(x1, y1, z2).color(r, g, b, a).next();
+            buf.vertex(x2, y1, z2).color(r, g, b, a).next();
+            buf.vertex(x2, y1, z1).color(r, g, b, a).next();
+            buf.vertex(x1, y1, z1).color(r, g, b, a).next();
+            buf.vertex(x1, y2, z1).color(r, g, b, a).next();
+            buf.vertex(x2, y2, z1).color(r, g, b, a).next();
+            buf.vertex(x2, y2, z2).color(r, g, b, a).next();
+            buf.vertex(x1, y2, z2).color(r, g, b, a).next();
+            buf.vertex(x1, y2, z1).color(r, g, b, a).next();
+            buf.vertex(x1, y1, z2).color(r, g, b, 0).next();
+            buf.vertex(x1, y2, z2).color(r, g, b, a).next();
+            buf.vertex(x2, y1, z2).color(r, g, b, 0).next();
+            buf.vertex(x2, y2, z2).color(r, g, b, a).next();
+            buf.vertex(x2, y1, z1).color(r, g, b, 0).next();
+            buf.vertex(x2, y2, z1).color(r, g, b, a).next();
+            
             tess.draw();
-            
-            
         }
     }
     
@@ -138,6 +187,19 @@ public class Draw3D {
             this.x2 = x2;
             this.y2 = y2;
             this.z2 = z2;
+            this.color = color;
+        }
+        
+        public void setPos(double x1, double y1, double z1, double x2, double y2, double z2) {
+            this.x1 = x1;
+            this.y1 = y1;
+            this.z1 = z1;
+            this.x2 = x2;
+            this.y2 = y2;
+            this.z2 = z2;
+        }
+        
+        public void setColor(int color) {
             this.color = color;
         }
         
