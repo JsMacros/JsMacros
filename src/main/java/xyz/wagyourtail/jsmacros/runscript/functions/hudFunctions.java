@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.runscript.classes.Draw3D;
-import xyz.wagyourtail.jsmacros.runscript.classes.OverlayHud;
+import xyz.wagyourtail.jsmacros.runscript.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.runscript.classes.Screen;
 
 public class hudFunctions {
-    public static ArrayList<OverlayHud> overlays = new ArrayList<>();
+    public static ArrayList<Draw2D> overlays = new ArrayList<>();
     public static ArrayList<Draw3D> renders = new ArrayList<>();
     
     
@@ -20,24 +20,24 @@ public class hudFunctions {
         jsMacros.getMinecraft().openScreen(s);
     }
     
-    public OverlayHud createOverlay() {
-        return new OverlayHud();
+    public Draw2D createDraw2D() {
+        return new Draw2D();
     }
     
-    public void registerOverlay(OverlayHud overlay) {
+    public void registerDraw2D(Draw2D overlay) {
         overlay.init();
         if (!overlays.contains(overlay)) overlays.add(overlay);
     }
     
-    public void unregisterOverlay(OverlayHud overlay) {
+    public void unregisterDraw2D(Draw2D overlay) {
         overlays.remove(overlay);
     }
     
-    public ArrayList<OverlayHud> listOverlays() {
+    public ArrayList<Draw2D> listDraw2Ds() {
         return overlays;
     }
     
-    public void clearOverlays() {
+    public void clearDraw2Ds() {
         overlays.clear();
     }
     
@@ -53,11 +53,11 @@ public class hudFunctions {
         renders.remove(draw);
     }
     
-    public ArrayList<Draw3D> listDraw3D() {
+    public ArrayList<Draw3D> listDraw3Ds() {
         return renders;
     }
     
-    public void clearDraw3D() {
+    public void clearDraw3Ds() {
         renders.clear();
     }
 }

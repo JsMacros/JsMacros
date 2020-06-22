@@ -15,15 +15,15 @@ import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 
-public class OverlayHud extends DrawableHelper {
+public class Draw2D extends DrawableHelper {
     public ArrayList<text> textFields = new ArrayList<>();
     public ArrayList<rect> rectFields = new ArrayList<>();
     public ArrayList<item> itemFields = new ArrayList<>();
-    public Consumer<OverlayHud> onInit;
+    public Consumer<Draw2D> onInit;
     
     public MinecraftClient mc;
     
-    public OverlayHud() {
+    public Draw2D() {
         this.mc = MinecraftClient.getInstance();
     }
     
@@ -177,7 +177,7 @@ public class OverlayHud extends DrawableHelper {
         }
         
         public void render() {
-            OverlayHud.fill(x1, y1, x2, y2, color);
+            Draw2D.fill(x1, y1, x2, y2, color);
         }
     }
     
