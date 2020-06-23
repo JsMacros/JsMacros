@@ -16,7 +16,6 @@ public class jsMacros implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // TODO Auto-generated method stub
         config.loadConfig();
         profile = new Profile(config.options.defaultProfile);
         macroListScreen = new MacroListScreen(null);

@@ -21,7 +21,6 @@ import xyz.wagyourtail.jsmacros.events.JoinCallback;
 import xyz.wagyourtail.jsmacros.events.KeyCallback;
 import xyz.wagyourtail.jsmacros.events.RecieveMessageCallback;
 import xyz.wagyourtail.jsmacros.events.SendMessageCallback;
-import xyz.wagyourtail.jsmacros.gui2.KeyMacrosScreen;
 import xyz.wagyourtail.jsmacros.macros.*;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 

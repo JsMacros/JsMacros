@@ -11,6 +11,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.profile.Profile;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 
 public class MacroListScreen extends Screen {
@@ -61,7 +62,6 @@ public class MacroListScreen extends Screen {
         this.buttonDelete = (ButtonWidget)this.addButton(new ButtonWidget(this.width / 2 - 74, this.height - 28, 70, 20, new TranslatableText("jsmacros.delete"), (buttonWidget) -> {
             MacroListWidget.MacroEntry entry = (MacroListWidget.MacroEntry)this.macroListWidget.getSelected();
             if (entry != null) {
-                String s = entry.getRawMacro().eventkey;
                 Text text = new TranslatableText("jsmacros.deleteQuestion");
                 Text text2 = new TranslatableText("jsmacros.deleteWarning");
                 Text text3 = new TranslatableText("jsmacros.deleteButton");
@@ -100,7 +100,7 @@ public class MacroListScreen extends Screen {
     private void removeEntry(boolean confirmAction) {
         MacroListWidget.MacroEntry entry = (MacroListWidget.MacroEntry)this.macroListWidget.getSelected();
         if (confirmAction && entry != null) {
-            jsMacros.profile.removeMacro(entry.getRawMacro());
+            Profile.registry.removeMacro(entry.getRawMacro());
         }
         this.client.openScreen(this);
     }

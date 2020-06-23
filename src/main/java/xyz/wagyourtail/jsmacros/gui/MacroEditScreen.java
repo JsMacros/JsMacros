@@ -65,8 +65,8 @@ public class MacroEditScreen extends Screen {
         // save
         this.addButton(new ButtonWidget(this.width / 2 + 100, this.height / 4 + 100 + 5, 200, 20, new TranslatableText("jsmacros.save"), (buttonWidget) -> {
             if (!newMacro.equals(macro)) {
-                jsMacros.profile.removeMacro(macro);
-                jsMacros.profile.addMacro(newMacro);
+                Profile.registry.removeMacro(macro);
+                Profile.registry.addMacro(newMacro);
             }
             client.openScreen(parent);
         }));
