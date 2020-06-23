@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -92,18 +93,18 @@ public class Draw2D extends DrawableHelper {
     }
     
     
-    public void render() {
+    public void render(MatrixStack matrixStack) {
         RenderSystem.pushMatrix();
         for (rect r : rectFields) {
-            r.render();
+            r.render(matrixStack);
         }
         RenderSystem.popMatrix();
         for (item i : itemFields) {
-            i.render();
+            i.render(matrixStack);
         }
         RenderSystem.pushMatrix();
         for (text t : textFields) {
-            t.render();
+            t.render(matrixStack);
         }
         RenderSystem.popMatrix();
     }
@@ -139,11 +140,11 @@ public class Draw2D extends DrawableHelper {
             if (it != null) this.item = new ItemStack(it, count);
         }
         
-        public void render() {
+        public void render(MatrixStack matrixStack) {
             MinecraftClient mc = MinecraftClient.getInstance();
             if (item != null) {
                 ItemRenderer i = mc.getItemRenderer();
-                i.renderGuiItem(item, x, y);
+                i.renderGuiItemIcon(item, x, y);
                 i.renderGuiItemOverlay(mc.textRenderer, item, x, y);
             }
         }
@@ -175,8 +176,8 @@ public class Draw2D extends DrawableHelper {
             this.y2 = y2;
         }
         
-        public void render() {
-            Draw2D.fill(x1, y1, x2, y2, color);
+        public void render(MatrixStack matrixStack) {
+            Draw2D.fill(matrixStack, x1, y1, x2, y2, color);
         }
     }
     
@@ -194,7 +195,7 @@ public class Draw2D extends DrawableHelper {
             this.x = x;
             this.y = y;
             this.color = color;
-            this.width = mc.textRenderer.getStringWidth(text);
+            this.width = mc.textRenderer.getWidth(text);
             this.shadow = shadow;
         }
         
@@ -206,17 +207,17 @@ public class Draw2D extends DrawableHelper {
         public void setText(String text) {
             MinecraftClient mc = MinecraftClient.getInstance();
             this.text = text;
-            this.width = mc.textRenderer.getStringWidth(text);
+            this.width = mc.textRenderer.getWidth(text);
         }
         
         public int getWidth() {
             return this.width;
         }
         
-        public void render() {
+        public void render(MatrixStack matrixStack) {
             MinecraftClient mc = MinecraftClient.getInstance();
-            if (shadow) mc.textRenderer.drawWithShadow(text, x, y, color);
-            else mc.textRenderer.draw(text, x, y, color);
+            if (shadow) mc.textRenderer.drawWithShadow(matrixStack, text, x, y, color);
+            else mc.textRenderer.draw(matrixStack, text, x, y, color);
         }
     }
 }

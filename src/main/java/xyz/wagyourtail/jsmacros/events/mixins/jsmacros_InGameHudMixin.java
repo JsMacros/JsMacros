@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.events.mixins;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,17 +27,17 @@ class jsmacros_InGameHudMixin {
     private Map<MessageType, List<ClientChatListener>> listeners;
 
     @ModifyVariable(method = "addChatMessage", at = @At(value = "HEAD"))
-    private Text jsmacros_addChatMessagee(Text text) {
+    private Text jsmacros_addChatMessage(Text text) {
         if (text == null) return text;
-        String result = RecieveMessageCallback.EVENT.invoker().interact(text.asFormattedString());
+        String result = RecieveMessageCallback.EVENT.invoker().interact(text.asString());
         if (result == null) return new LiteralText("");
-        if (!text.asFormattedString().equals(result)) return new LiteralText(result);
+        if (!text.asString().equals(result)) return new LiteralText(result);
         else return text;
     }
 
     @Inject(method = "addChatMessage", at = @At("HEAD"), cancellable = true)
-    private void jsmacros_addChatMessage(MessageType messageType, Text text, CallbackInfo info) {
-        if (text == null || text.asFormattedString().equals("")) {
+    private void jsmacros_addChatMessage(MessageType messageType, Text text, UUID senderUuid, CallbackInfo info) {
+        if (text == null || text.asString().equals("")) {
             info.cancel();
         } 
     }

@@ -10,7 +10,7 @@ public class PlayerListEntryHelper {
     }
     
     public String getName() {
-        return p.getDisplayName().asFormattedString();
+        return p.getDisplayName().asString();
     }
     
     public PlayerListEntry getRaw() {

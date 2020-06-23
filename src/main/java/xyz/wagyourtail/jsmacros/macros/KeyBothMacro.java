@@ -6,20 +6,20 @@ import net.minecraft.client.util.InputUtil;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 
 public class KeyBothMacro extends BaseMacro {
-    private InputUtil.KeyCode key;
+    private InputUtil.Key key;
     private boolean prevKeyState = false;
     
     public KeyBothMacro(RawMacro macro) {
         super(macro);
-        key = InputUtil.fromName(macro.eventkey);
+        key = InputUtil.fromTranslationKey(macro.eventkey);
     }
     
-    public void setKey(InputUtil.KeyCode setkey) {
+    public void setKey(InputUtil.Key setkey) {
         key = setkey;
     }
     
     public String getKey() {
-        return key.getName();
+        return key.getTranslationKey();
     }
     
     public Thread trigger(String type, HashMap<String, Object> args) {
@@ -32,7 +32,7 @@ public class KeyBothMacro extends BaseMacro {
     private boolean check(HashMap<String, Object> args) {
         boolean keyState = false;
         if ((int)args.get("action") > 0) keyState = true;
-        if ((InputUtil.KeyCode)args.get("key") == key)
+        if ((InputUtil.Key)args.get("key") == key)
             if (keyState && !prevKeyState) {
                 prevKeyState = true;
                 return true;

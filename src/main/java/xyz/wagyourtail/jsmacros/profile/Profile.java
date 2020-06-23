@@ -5,13 +5,12 @@ import java.util.HashMap;
 
 import org.lwjgl.glfw.GLFW;
 
-import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
-import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Identifier;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.*;
 import xyz.wagyourtail.jsmacros.events.AirChangeCallback;
@@ -22,13 +21,14 @@ import xyz.wagyourtail.jsmacros.events.JoinCallback;
 import xyz.wagyourtail.jsmacros.events.KeyCallback;
 import xyz.wagyourtail.jsmacros.events.RecieveMessageCallback;
 import xyz.wagyourtail.jsmacros.events.SendMessageCallback;
+import xyz.wagyourtail.jsmacros.gui2.KeyMacrosScreen;
 import xyz.wagyourtail.jsmacros.macros.*;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 
 public class Profile {
     public String profileName;
     public static MacroRegistry registry = new MacroRegistry();
-    private static FabricKeyBinding keyBinding;
+    private static KeyBinding keyBinding;
 
     public Profile(String defaultProfile) {
         loadProfile(defaultProfile);
@@ -38,9 +38,8 @@ public class Profile {
             saveProfile();
         }
         
-        keyBinding = FabricKeyBinding.Builder.create(new Identifier("jsmacros", "menu"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, "JSMacros").build();
-        KeyBindingRegistry.INSTANCE.addCategory("JSMacros");
-        KeyBindingRegistry.INSTANCE.register(keyBinding);
+        keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, "JSMacros");
+        KeyBindingHelper.registerKeyBinding(keyBinding);
 
         initEventHandlerCallbacks();
     }
@@ -164,7 +163,7 @@ public class Profile {
            // -------- KEY ----------- //
            registry.addEvent("KEY");
            KeyCallback.EVENT.register((window, key, scancode, action, mods) -> {
-               InputUtil.KeyCode keycode;
+               InputUtil.Key keycode;
                MinecraftClient mc = MinecraftClient.getInstance();
                if (mc.currentScreen != null) return ActionResult.PASS;
                if (key == -1 || action == 2) return ActionResult.PASS;
@@ -172,8 +171,11 @@ public class Profile {
                if (key <= 7) keycode = InputUtil.Type.MOUSE.createFromCode(key);
                else keycode = InputUtil.Type.KEYSYM.createFromCode(key);
 
-               if (keycode == InputUtil.UNKNOWN_KEYCODE) return ActionResult.PASS;
-               if (keyBinding.getBoundKey() == keycode && action == 1) mc.openScreen(jsMacros.macroListScreen);
+               if (keycode == InputUtil.UNKNOWN_KEY) return ActionResult.PASS;
+               // new
+               if (keyBinding.matchesKey(key, scancode) && action == 1) mc.openScreen(jsMacros.macroListScreen);
+               // old
+//               if (keyBinding.getBoundKey() == keycode && action == 1) mc.openScreen(jsMacros.macroListScreen);
 
                HashMap<String, Object> args = new HashMap<>();
                args.put("key", keycode);

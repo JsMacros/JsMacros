@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
@@ -28,19 +28,19 @@ public class MacroListScreen extends Screen {
     
     protected void init() {
         super.init();
-        minecraft.keyboard.enableRepeatEvents(true);
-        macroListWidget = new MacroListWidget(this, this.minecraft, this.width, this.height, 32, this.height - 64, 36);
+        client.keyboard.enableRepeatEvents(true);
+        macroListWidget = new MacroListWidget(this, this.client, this.width, this.height, 32, this.height - 64, 36);
         this.children.add(this.macroListWidget);
         
         //buttonEdit
-        this.buttonEdit = (ButtonWidget)this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 52, 100, 20, I18n.translate("jsmacros.edit"), (buttonWidget) -> {
+        this.buttonEdit = (ButtonWidget)this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 52, 100, 20, new TranslatableText("jsmacros.edit"), (buttonWidget) -> {
             MacroListWidget.MacroEntry entry = (MacroListWidget.MacroEntry)this.macroListWidget.getSelected();
             if (entry != null)
                 this.edit(entry.getRawMacro());
         }));
         
         //buttonEditFile
-        this.buttonEditFile = (ButtonWidget)this.addButton(new ButtonWidget(this.width / 2 - 50, this.height - 52, 100, 20, I18n.translate("jsmacros.editfile"), (buttonWidget) -> {
+        this.buttonEditFile = (ButtonWidget)this.addButton(new ButtonWidget(this.width / 2 - 50, this.height - 52, 100, 20, new TranslatableText("jsmacros.editfile"), (buttonWidget) -> {
             MacroListWidget.MacroEntry entry = (MacroListWidget.MacroEntry)this.macroListWidget.getSelected();
             if (entry != null) {
                 System.out.println("broken...");
@@ -52,42 +52,42 @@ public class MacroListScreen extends Screen {
         }));
         
         //buttonRun
-        this.buttonRun = (ButtonWidget)this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 70, 20, I18n.translate("jsmacros.run"), (buttonWidget) -> {
+        this.buttonRun = (ButtonWidget)this.addButton(new ButtonWidget(this.width / 2 - 154, this.height - 28, 70, 20, new TranslatableText("jsmacros.run"), (buttonWidget) -> {
             MacroListWidget.MacroEntry entry = (MacroListWidget.MacroEntry)this.macroListWidget.getSelected();
             if (entry != null) RunScript.exec(entry.getRawMacro(), null, null);
         }));
         
         //buttonDelete
-        this.buttonDelete = (ButtonWidget)this.addButton(new ButtonWidget(this.width / 2 - 74, this.height - 28, 70, 20, I18n.translate("jsmacros.delete"), (buttonWidget) -> {
+        this.buttonDelete = (ButtonWidget)this.addButton(new ButtonWidget(this.width / 2 - 74, this.height - 28, 70, 20, new TranslatableText("jsmacros.delete"), (buttonWidget) -> {
             MacroListWidget.MacroEntry entry = (MacroListWidget.MacroEntry)this.macroListWidget.getSelected();
             if (entry != null) {
                 String s = entry.getRawMacro().eventkey;
-                Text text = new TranslatableText("jsmacros.deleteQuestion", new Object[0]);
-                Text text2 = new TranslatableText("jsmacros.deleteWarning", new Object[]{s});
-                String string2 = I18n.translate("jsmacros.deleteButton");
-                String string3 = I18n.translate("gui.cancel");
-                this.minecraft.openScreen(new ConfirmScreen(this::removeEntry, text, text2, string2, string3));
+                Text text = new TranslatableText("jsmacros.deleteQuestion");
+                Text text2 = new TranslatableText("jsmacros.deleteWarning");
+                Text text3 = new TranslatableText("jsmacros.deleteButton");
+                Text text4 = new TranslatableText("gui.cancel");
+                this.client.openScreen(new ConfirmScreen(this::removeEntry, text, text2, text3, text4));
             }
         }));
         
         //buttonCancel
-        this.addButton(new ButtonWidget(this.width / 2 + 4 + 76, this.height - 28, 75, 20, I18n.translate("jsmacros.close"), (buttonWidget) -> {
-            this.minecraft.openScreen(this.parent);
+        this.addButton(new ButtonWidget(this.width / 2 + 4 + 76, this.height - 28, 75, 20, new TranslatableText("jsmacros.close"), (buttonWidget) -> {
+            this.client.openScreen(this.parent);
         }));
         
         //buttonOpenFolder
-        this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 70, 20, I18n.translate("jsmacros.openfolder"), (buttonWidget) -> {
+        this.addButton(new ButtonWidget(this.width / 2 + 4, this.height - 28, 70, 20, new TranslatableText("jsmacros.openfolder"), (buttonWidget) -> {
             Util.getOperatingSystem().open(jsMacros.config.macroFolder);
             //Runtime.getRuntime().exec("explorer.exe \"" + jsMacros.config.macroFolder.toString()+"\"");
         }));
         
         //buttonNew
-        this.addButton(new ButtonWidget(this.width / 2 + 4 + 50, this.height - 52, 100, 20, I18n.translate("jsmacros.add"), (buttonWidget) -> {
+        this.addButton(new ButtonWidget(this.width / 2 + 4 + 50, this.height - 52, 100, 20, new TranslatableText("jsmacros.add"), (buttonWidget) -> {
             edit(new RawMacro(null, null, null));
         }));
         
-        this.addButton(new ButtonWidget(55, 10, 100, 20, I18n.translate("jsmacros.stoprunning"), (buttonWidget) -> {
-            this.minecraft.openScreen(new MacroCancelScreen(this));
+        this.addButton(new ButtonWidget(55, 10, 100, 20, new TranslatableText("jsmacros.stoprunning"), (buttonWidget) -> {
+            this.client.openScreen(new MacroCancelScreen(this));
         }));
         
         this.updateButtonActivationStates();
@@ -102,7 +102,7 @@ public class MacroListScreen extends Screen {
         if (confirmAction && entry != null) {
             jsMacros.profile.removeMacro(entry.getRawMacro());
         }
-        this.minecraft.openScreen(this);
+        this.client.openScreen(this);
     }
     
     private void updateButtonActivationStates() {
@@ -120,18 +120,18 @@ public class MacroListScreen extends Screen {
     }
 
     private void edit(RawMacro macro) {
-        this.minecraft.openScreen(new MacroEditScreen(this, macro));
+        this.client.openScreen(new MacroEditScreen(this, macro));
     }
     
     public ArrayList<RawMacro> getMacroList() {
         return jsMacros.profile.toRawProfile();
     }
     
-    public void render(int mouseX, int mouseY, float delta) {
-        this.renderBackground();
-        this.macroListWidget.render(mouseX, mouseY, delta);
-        this.drawCenteredString(this.font, this.title.asFormattedString(), this.width / 2, 20, 0xFFFFFF);
-        super.render(mouseX, mouseY, delta);
+    public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
+        this.renderBackground(matricies);
+        this.macroListWidget.render(matricies, mouseX, mouseY, delta);
+        this.drawCenteredText(matricies, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+        super.render(matricies, mouseX, mouseY, delta);
     }
 
     public void select(MacroListWidget.MacroEntry entry) {
@@ -141,6 +141,6 @@ public class MacroListScreen extends Screen {
     
     public void removed() {
         jsMacros.profile.saveProfile();
-        this.minecraft.keyboard.enableRepeatEvents(false);
+        this.client.keyboard.enableRepeatEvents(false);
     }
 }

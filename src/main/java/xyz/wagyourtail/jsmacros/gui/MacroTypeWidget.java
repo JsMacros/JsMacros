@@ -9,6 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -52,9 +53,9 @@ public class MacroTypeWidget extends AlwaysSelectedEntryListWidget<MacroTypeWidg
         this.macroTypes.add(new MacroTypeWidget.MacroTypeEntry(screen, type));
     }
     
-    protected void renderHeader(int i, int j, Tessellator tessellator) {
+    protected void renderHeader(MatrixStack matricies, int i, int j, Tessellator tessellator) {
         Text text = (new LiteralText("")).append(this.title).formatted(Formatting.UNDERLINE, Formatting.BOLD);
-        this.client.textRenderer.draw(text.asFormattedString(), (float)(this.left + this.width / 2 - this.client.textRenderer.getStringWidth(text.asFormattedString()) / 2), (float)Math.min(this.top + 3, j), 16777215);
+        this.client.textRenderer.draw(matricies, text, (float)(this.left + this.width / 2 - this.client.textRenderer.getWidth(text) / 2), (float)Math.min(this.top + 3, j), 16777215);
      }
     
     public boolean keyPressed(int key, int scancode, int mods) {
@@ -78,7 +79,7 @@ public class MacroTypeWidget extends AlwaysSelectedEntryListWidget<MacroTypeWidg
         return this.screen.getFocused() == this;
     }
     
-    protected int getScrollbarPosition() {
+    protected int getScrollbarPositionX() {
         return this.right - 6;
      }
     
@@ -102,35 +103,36 @@ public class MacroTypeWidget extends AlwaysSelectedEntryListWidget<MacroTypeWidg
             return true;
         }
         
-        public void render(int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean hovering, float delta) {
+        public void render(MatrixStack matrices, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean hovering, float delta) {
             switch(macroType) {
                 case "KEY_FALLING":
-                    this.client.textRenderer.draw("KEY UP", (float)(x + 32 + 3), (float)(y + 1), 0xFFFFFF);
-                    this.draw(x, y, key_up_tex);
+                    this.client.textRenderer.draw(matrices, "KEY UP", (float)(x + 32 + 3), (float)(y + 1), 0xFFFFFF);
+                    this.draw(matrices, x, y, key_up_tex);
                     break;
                 case "KEY_RISING":
-                    this.client.textRenderer.draw("KEY DOWN", (float)(x + 32 + 3), (float)(y + 1), 0xFFFFFF);
-                    this.draw(x, y, key_down_tex);
+                    this.client.textRenderer.draw(matrices, "KEY DOWN", (float)(x + 32 + 3), (float)(y + 1), 0xFFFFFF);
+                    this.draw(matrices, x, y, key_down_tex);
                     break;
                 case "KEY_BOTH":
-                    this.client.textRenderer.draw("KEY UP/DOWN", (float)(x + 32 + 3), (float)(y + 1), 0xFFFFFF);
-                    this.draw(x, y, key_both_tex);
+                    this.client.textRenderer.draw(matrices, "KEY UP/DOWN", (float)(x + 32 + 3), (float)(y + 1), 0xFFFFFF);
+                    this.draw(matrices, x, y, key_both_tex);
                     break;
                 default:
-                    this.client.textRenderer.draw(macroType, (float)(x + 32 + 3), (float)(y + 1), 0xFFFFFF);
-                    this.draw(x, y, event_tex);
+                    this.client.textRenderer.draw(matrices, macroType, (float)(x + 32 + 3), (float)(y + 1), 0xFFFFFF);
+                    this.draw(matrices, x, y, event_tex);
             }
         }
         
-        protected void draw(int x, int y, Identifier textureId) {
+        protected void draw(MatrixStack matrices, int x, int y, Identifier textureId) {
             this.client.getTextureManager().bindTexture(textureId);
             RenderSystem.enableBlend();
-            DrawableHelper.blit(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
+            DrawableHelper.drawTexture(matrices, x, y, 32, 32, 0, 0, 32, 32, 32, 32);
             RenderSystem.disableBlend();
         }
         
         public boolean keyPressed(int keyCode, int scanCode, int mods) {
             return super.keyPressed(keyCode, scanCode, mods);
         }
+
     }
 }

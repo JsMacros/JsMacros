@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.reflector;
 
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.text.LiteralText;
 
 public class ButtonWidgetHelper {
     private ButtonWidget btn;
@@ -27,7 +28,7 @@ public class ButtonWidgetHelper {
     }
     
     public void setText(String message) {
-        btn.setMessage(message);
+        btn.setMessage(new LiteralText(message));
     }
     
     public boolean getActive() {

@@ -10,6 +10,10 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.StringRenderable;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
@@ -50,9 +54,9 @@ public class MacroListWidget extends AlwaysSelectedEntryListWidget<MacroListWidg
         return false;
     }
     
-    protected int getScrollbarPosition() {
-        return super.getScrollbarPosition() + 30;
-    }
+    protected int getScrollbarPositionX() {
+        return super.getScrollbarPositionX() + 30;
+     }
     
     public int getRowWidth() {
         return super.getRowWidth() + 85;
@@ -77,38 +81,38 @@ public class MacroListWidget extends AlwaysSelectedEntryListWidget<MacroListWidg
             this.macro = macro;
         }
         
-        public void render(int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean hovering, float delta) {
-            this.client.textRenderer.draw(macro.type == MacroEnum.EVENT ? macro.eventkey : jsMacros.getLocalizedName(InputUtil.fromName(macro.eventkey)), (float)(x + 32 + 3), (float)(y + 1), 0xFFFFFF);
+        public void render(MatrixStack matrices, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean hovering, float delta) {
+            this.client.textRenderer.draw(matrices, macro.type == MacroEnum.EVENT ? new LiteralText(macro.eventkey) : InputUtil.fromTranslationKey(macro.eventkey).getLocalizedText(), (float)(x + 32 + 3), (float)(y + 1), 0xFFFFFF);
             
-            List<String> list = this.client.textRenderer.wrapStringToWidthAsList(macro.scriptFile, width - 32 - 2);
+            List<StringRenderable> list = this.client.textRenderer.wrapLines(new LiteralText(macro.scriptFile), width - 32 - 2);
             for (int n = 0; n < Math.min(list.size(), 2); ++n) {
                 TextRenderer renderer = this.client.textRenderer;
-                String stringPart = (String)list.get(n);
+                StringRenderable stringPart = (StringRenderable)list.get(n);
                 float xPosition = (float)(x + 32 + 3);
                 float yPosition = (float)(y + 12);
-                renderer.draw(stringPart, xPosition, yPosition + 9 * n, 0x808080);
+                renderer.draw(matrices, stringPart, xPosition, yPosition + 9 * n, 0x808080);
             }
             
             switch(macro.type) {
                 case KEY_FALLING:
-                    this.draw(x, y, key_up_tex);
+                    this.draw(matrices, x, y, key_up_tex);
                     break;
                 case KEY_RISING:
-                    this.draw(x, y, key_down_tex);
+                    this.draw(matrices, x, y, key_down_tex);
                     break;
                 case KEY_BOTH:
-                    this.draw(x, y, key_both_tex);
+                    this.draw(matrices, x, y, key_both_tex);
                     break;
                 case EVENT:
-                    this.draw(x, y, event_tex);
+                    this.draw(matrices, x, y, event_tex);
                     break;
             }
         }
 
-        protected void draw(int x, int y, Identifier textureId) {
+        protected void draw(MatrixStack matrices, int x, int y, Identifier textureId) {
             this.client.getTextureManager().bindTexture(textureId);
             RenderSystem.enableBlend();
-            DrawableHelper.blit(x, y, 0.0F, 0.0F, 32, 32, 32, 32);
+            DrawableHelper.drawTexture(matrices, x, y, 32, 32, 0, 0, 32, 32, 32, 32);
             RenderSystem.disableBlend();
         }
         

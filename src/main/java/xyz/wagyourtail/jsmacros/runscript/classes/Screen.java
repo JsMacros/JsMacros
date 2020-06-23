@@ -8,6 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.reflector.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.reflector.TextFieldWidgetHelper;
@@ -29,14 +30,14 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         super.init();
         textFieldWidgets.clear();
         textFields.clear();
-        minecraft.keyboard.enableRepeatEvents(true);
+        client.keyboard.enableRepeatEvents(true);
         if (onInit != null) {
             try {
                 onInit.accept(this);
             } catch (Exception e) {
-                if (this.minecraft.inGameHud != null) {
+                if (this.client.inGameHud != null) {
                     LiteralText text = new LiteralText(e.toString());
-                    this.minecraft.inGameHud.getChatHud().addMessage(text);
+                    this.client.inGameHud.getChatHud().addMessage(text);
                 }
                 e.printStackTrace();
             }
@@ -77,13 +78,13 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     }
     
     public ButtonWidgetHelper addButton(int x, int y, int width, int height, String text, BiConsumer<ButtonWidgetHelper, Screen> callback) {
-        ButtonWidget button = (ButtonWidget) super.addButton(new ButtonWidget(x, y, width, height, text, (btn) -> {
+        ButtonWidget button = (ButtonWidget) super.addButton(new ButtonWidget(x, y, width, height, new LiteralText(text), (btn) -> {
             try {
                 callback.accept(new ButtonWidgetHelper(btn), this);
             } catch (Exception e) {
-                if (this.minecraft.inGameHud != null) {
+                if (this.client.inGameHud != null) {
                     LiteralText te = new LiteralText(e.toString());
-                    this.minecraft.inGameHud.getChatHud().addMessage(te);
+                    this.client.inGameHud.getChatHud().addMessage(te);
                 }
                 e.printStackTrace();
             }
@@ -96,15 +97,15 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     }
     
     public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, String message, BiConsumer<String, Screen> onChange) {
-        TextFieldWidget field = new TextFieldWidget(this.font, x, y, width, height, message);
+        TextFieldWidget field = new TextFieldWidget(this.textRenderer, x, y, width, height, new LiteralText(message));
         if (onChange != null) {
             field.setChangedListener(str -> {
                 try {
                     onChange.accept(str, this);
                 } catch (Exception e) {
-                    if (this.minecraft.inGameHud != null) {
+                    if (this.client.inGameHud != null) {
                         LiteralText text = new LiteralText(e.toString());
-                        this.minecraft.inGameHud.getChatHud().addMessage(text);
+                        this.client.inGameHud.getChatHud().addMessage(text);
                     }
                     e.printStackTrace();
                 }
@@ -130,21 +131,24 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         textFields.remove(t);
     }
     
-    public void render(int mouseX, int mouseY, float delta) {
-        if (dirt) this.renderDirtBackground(0);
-        else this.renderBackground(0);
+    public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
+        if (dirt) this.renderBackgroundTexture(0);
+        else this.renderBackground(matricies, 0);
+        
+        this.drawCenteredText(matricies, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+        
         for (TextFieldWidget w : textFieldWidgets) {
-            w.render(mouseX, mouseY, delta);
+            w.render(matricies, mouseX, mouseY, delta);
         }
         for (text t : textFields) {
-            t.render();
+            t.render(matricies);
         }
-        this.drawCenteredString(this.font, this.title.asFormattedString(), this.width / 2, 20, 0xFFFFFF);
-        super.render(mouseX, mouseY, delta);
+        
+        super.render(matricies, mouseX, mouseY, delta);
     }
     
     public void removed() {
-        this.minecraft.keyboard.enableRepeatEvents(false);
+        this.client.keyboard.enableRepeatEvents(false);
     }
     
     
@@ -162,7 +166,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
             this.x = x;
             this.y = y;
             this.color = color;
-            this.width = mc.textRenderer.getStringWidth(text);
+            this.width = mc.textRenderer.getWidth(text);
             this.shadow = shadow;
         }
         
@@ -174,17 +178,17 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         public void setText(String text) {
             MinecraftClient mc = MinecraftClient.getInstance();
             this.text = text;
-            this.width = mc.textRenderer.getStringWidth(text);
+            this.width = mc.textRenderer.getWidth(text);
         }
         
         public int getWidth() {
             return this.width;
         }
         
-        public void render() {
+        public void render(MatrixStack matricies) {
             MinecraftClient mc = MinecraftClient.getInstance();
-            if (shadow) mc.textRenderer.drawWithShadow(text, x, y, color);
-            else mc.textRenderer.draw(text, x, y, color);
+            if (shadow) mc.textRenderer.drawWithShadow(matricies, text, x, y, color);
+            else mc.textRenderer.draw(matricies, text, x, y, color);
         }
     }
 }

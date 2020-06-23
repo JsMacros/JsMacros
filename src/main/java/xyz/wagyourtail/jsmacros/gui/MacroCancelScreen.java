@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 
@@ -19,7 +21,7 @@ public class MacroCancelScreen extends Screen {
     
     protected void init() {
         super.init();
-        minecraft.keyboard.enableRepeatEvents(true);
+        client.keyboard.enableRepeatEvents(true);
         
         for (ArrayList<Thread> a : RunScript.threads.values()) {
             for (Thread t : a) {
@@ -37,16 +39,16 @@ public class MacroCancelScreen extends Screen {
 //    };
     
     private void addButtonThread(Thread t, ArrayList<Thread> a) {
-        buttons.put(t, this.addButton((ButtonWidget)new ButtonWidget(0, 0, 200, 20, t.getName(), (buttonWidget) -> {
+        buttons.put(t, this.addButton((ButtonWidget)new ButtonWidget(0, 0, 200, 20, new LiteralText(t.getName()), (buttonWidget) -> {
             t.interrupt();
             a.remove(t);
-            this.minecraft.openScreen(new MacroCancelScreen(this.parent));
+            this.client.openScreen(new MacroCancelScreen(this.parent));
         })));
     }
 
-    public void render(int mouseX, int mouseY, float delta) {
-        this.renderBackground();
-        this.drawCenteredString(this.font, this.title.asFormattedString(), this.width / 2, 20, 0xFFFFFF);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        this.renderBackground(matrices);
+        this.drawCenteredString(matrices, this.textRenderer, this.title.asString(), this.width / 2, 20, 0xFFFFFF);
         int x = 5;
         int y = 34;
         
@@ -60,10 +62,10 @@ public class MacroCancelScreen extends Screen {
             B.y = y;
         }
         
-        super.render(mouseX, mouseY, delta);
+        super.render(matrices, mouseX, mouseY, delta);
     }
     
     public void removed() {
-        this.minecraft.keyboard.enableRepeatEvents(false);
+        this.client.keyboard.enableRepeatEvents(false);
     }
 }

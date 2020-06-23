@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.events.mixins;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -13,14 +12,11 @@ import xyz.wagyourtail.jsmacros.events.ItemDamageCallback;
 @Mixin(ItemStack.class)
 abstract class jsmacros_ItemStackMixin {
     
-    @Shadow
-    public abstract int getDamage();
-    
     @Inject(at = @At("HEAD"), method="setDamage")
     private void jsmacros_setDamage(int damage, CallbackInfo info) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc.player != null && mc.player.inventory != null)
-            if (damage != 0 && MinecraftClient.getInstance().player.inventory.contains((ItemStack) (Object) this) ) {
+        if (mc != null && mc.player != null && mc.player.inventory != null)
+            if (damage != 0 && mc.player.inventory.contains((ItemStack) (Object) this) ) {
                 ItemDamageCallback.EVENT.invoker().interact((ItemStack) (Object) this, damage);
             }
     }

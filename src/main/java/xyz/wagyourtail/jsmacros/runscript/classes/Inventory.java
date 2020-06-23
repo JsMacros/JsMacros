@@ -1,30 +1,30 @@
 package xyz.wagyourtail.jsmacros.runscript.classes;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.container.SlotActionType;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.item.ItemStack;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 
 public class Inventory {
-    private ContainerScreen<?> inventory;
+    private HandledScreen<?> inventory;
     private ClientPlayerInteractionManager man;
     private int wID;
     private ClientPlayerEntity player;
 
     public Inventory() {
         MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc.currentScreen instanceof ContainerScreen) {
-            this.inventory = (ContainerScreen<?>) mc.currentScreen;
+        if (mc.currentScreen instanceof HandledScreen) {
+            this.inventory = (HandledScreen<?>) mc.currentScreen;
         } else {
             this.inventory = new InventoryScreen(mc.player);
         }
         this.player = mc.player;
         this.man = mc.interactionManager;
-        this.wID = this.inventory.getContainer().syncId;
+        this.wID = this.inventory.getScreenHandler().syncId;
     }
 
     public void click(int slot, int mousebutton) {
@@ -44,12 +44,12 @@ public class Inventory {
     public void closeAndDrop() {
         ItemStack held = player.inventory.getCursorStack();
         if (!held.isEmpty()) man.clickSlot(wID, -999, 0, SlotActionType.PICKUP, player);
-        player.closeContainer();
+        player.closeHandledScreen();
         this.inventory = null;
     }
 
     public void close() {
-        player.closeContainer();
+        player.closeHandledScreen();
     }
 
     public void quick(int slot) {
@@ -61,11 +61,11 @@ public class Inventory {
     }
 
     public ItemStackHelper getSlot(int slot) {
-        return new ItemStackHelper(this.inventory.getContainer().getSlot(slot).getStack());
+        return new ItemStackHelper(this.inventory.getScreenHandler().getSlot(slot).getStack());
     }
 
     public int getTotalSlots() {
-        return this.inventory.getContainer().slots.size();
+        return this.inventory.getScreenHandler().slots.size();
     }
 
     public void split(int slot1, int slot2) throws Exception {
@@ -89,7 +89,7 @@ public class Inventory {
         if (!is2) man.clickSlot(wID, slot1, 0, SlotActionType.PICKUP, player);
     }
 
-    public ContainerScreen<?> getRawContainer() {
+    public HandledScreen<?> getRawContainer() {
         return this.inventory;
     }
 }

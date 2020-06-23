@@ -8,10 +8,10 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 
-public class KeyMacrosScreen extends Screen {
+public class ProfileScreen extends Screen {
     private Screen parent;
     
-    public KeyMacrosScreen(Screen parent) {
+    public ProfileScreen(Screen parent) {
         super(new TranslatableText("jsmacros.title"));
         this.parent = parent;
     }
@@ -19,16 +19,17 @@ public class KeyMacrosScreen extends Screen {
     protected void init() {
         super.init();
         client.keyboard.enableRepeatEvents(true);
-        Button keys = this.addButton(new Button(0, 0, this.width / 6 - 1, 20, 0x4FFFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Keys"), null));
-        keys.active = false;
+        this.addButton(new Button(0, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Keys"), (btn) -> {
+            client.openScreen(parent);
+        }));
         
         this.addButton(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Events"), (btn) -> {
-            client.openScreen(new EventMacrosScreen(this));
+            client.openScreen(new EventMacrosScreen(parent));
         }));
         
-        this.addButton(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Profile"), (btn) -> {
-            client.openScreen(new ProfileScreen(this));
-        }));
+        Button profile = this.addButton(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, 0x4FFFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Profile"), null));
+        profile.active = false;
+        
     }
     
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
