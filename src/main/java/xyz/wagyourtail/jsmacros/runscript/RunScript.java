@@ -36,6 +36,9 @@ public class RunScript {
             try {
                 File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
                 if (file.exists()) {
+                    
+                    //Build Context
+                    
                     Builder build = Context.newBuilder(language);
                     build.allowHostAccess(HostAccess.ALL);
                     build.allowHostClassLookup(s -> true);
@@ -43,6 +46,9 @@ public class RunScript {
                     build.allowExperimentalOptions(true);
                     build.currentWorkingDirectory(Paths.get(file.getParent()));
                     Context con = build.build();
+                    
+                    //Set Bindings
+                    
                     Value binds = con.getBindings(language);
 //                    ScriptEngine engine = GraalJSScriptEngine.create(null, build);
                     binds.putMember("event", event);
@@ -56,6 +62,9 @@ public class RunScript {
                     binds.putMember("world", new worldFunctions());
                     binds.putMember("player", new playerFunctions());
                     binds.putMember("hud", new hudFunctions());
+
+                    //Run Script
+                    
                     con.eval(language, "load(\"./"+file.getName()+"\")");
                     con.close();
 //                    engine.eval(new FileReader(file));
@@ -70,8 +79,6 @@ public class RunScript {
             }
             threads.get(macro).remove(Thread.currentThread());
         });
-
-        // function files
         
         
         t.start();
