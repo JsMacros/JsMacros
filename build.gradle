@@ -25,7 +25,6 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.graalvm.js/js
 	compile group: 'org.graalvm.sdk', name: 'graal-sdk', version: '20.1.0'
 	compile group: 'org.graalvm.js', name: 'js', version: '20.1.0'
-	compile group: 'org.graalvm.js', name: 'js-scriptengine', version: '20.1.0'
 	
 	//these ones are needed to build the mod because doesn't auto include sub-dependencies
 	compile group: 'org.graalvm.truffle', name: 'truffle-api', version: '20.1.0'
@@ -34,7 +33,6 @@ dependencies {
 	
 	include group: 'org.graalvm.sdk', name: 'graal-sdk', version: '20.1.0'
 	include group: 'org.graalvm.js', name: 'js', version: '20.1.0'
-	include group: 'org.graalvm.js', name: 'js-scriptengine', version: '20.1.0'
 	include group: 'org.graalvm.truffle', name: 'truffle-api', version: '20.1.0'
 	include group: 'org.graalvm.regex', name: 'regex', version: '20.1.0'
 	include group: 'com.ibm.icu', name: 'icu4j', version: '64.2'
