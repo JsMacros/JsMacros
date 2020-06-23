@@ -30,7 +30,6 @@ public class MacroTypeWidget extends AlwaysSelectedEntryListWidget<MacroTypeWidg
         this.client = client;
         this.centerListVertically = false;
         this.screen = screen;
-        client.textRenderer.getClass();
         this.setRenderHeader(true, (int)(9.0F * 1.5F));
         this.updateEntries();
      }

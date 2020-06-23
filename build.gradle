@@ -37,6 +37,8 @@ dependencies {
 	include group: 'org.graalvm.regex', name: 'regex', version: '20.1.0'
 	include group: 'com.ibm.icu', name: 'icu4j', version: '64.2'
 	
+	//nullable not defined so...
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
 	
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
