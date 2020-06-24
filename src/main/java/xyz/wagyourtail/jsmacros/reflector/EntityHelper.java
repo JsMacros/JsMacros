@@ -24,7 +24,7 @@ public class EntityHelper {
     
     public String getName() {
         if (e == null) return null;
-        return e.getName().asString();
+        return e.getName().toString();
     }
     
     public String getType() {

@@ -48,7 +48,7 @@ public class MacroCancelScreen extends Screen {
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
-        this.drawCenteredString(matrices, this.textRenderer, this.title.asString(), this.width / 2, 20, 0xFFFFFF);
+        this.drawCenteredString(matrices, this.textRenderer, this.title.getString(), this.width / 2, 20, 0xFFFFFF);
         int x = 5;
         int y = 34;
         

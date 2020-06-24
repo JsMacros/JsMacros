@@ -18,7 +18,7 @@ public class ItemStackHelper {
     }
     
     public String getName() {
-        return i.getName().asString();
+        return i.getName().toString();
     }
     
     public int getCount() {

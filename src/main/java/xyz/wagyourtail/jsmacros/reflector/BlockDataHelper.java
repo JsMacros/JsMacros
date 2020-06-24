@@ -21,7 +21,7 @@ public class BlockDataHelper {
     }
     
     public String getName() {
-        return b.getName().asString();
+        return b.getName().toString();
     }
     
     public HashMap<String, String> getNBT() {

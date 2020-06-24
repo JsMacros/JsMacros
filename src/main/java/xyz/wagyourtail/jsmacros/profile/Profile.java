@@ -117,13 +117,15 @@ public class Profile {
                args.put("message", message);
                if (registry.macros.containsKey("SEND_MESSAGE")) for (BaseMacro macro : registry.macros.get("SEND_MESSAGE").values()) {
                    try {
-                       macro.trigger("SEND_MESSAGE", args).join();
+                       Thread t =  macro.trigger("SEND_MESSAGE", args);
+                       if (t != null) t.join();
                    } catch (InterruptedException e1) {}
                }
                
                if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
                    try {
-                       macro.trigger("SEND_MESSAGE", args).join();
+                       Thread t =  macro.trigger("SEND_MESSAGE", args);
+                       if (t != null) t.join();
                    } catch (InterruptedException e1) {}
                }
                
@@ -138,13 +140,15 @@ public class Profile {
                args.put("message", message);
                if (registry.macros.containsKey("RECV_MESSAGE")) for (BaseMacro macro : registry.macros.get("RECV_MESSAGE").values()) {
                    try {
-                       macro.trigger("RECV_MESSAGE", args).join();
+                       Thread t = macro.trigger("RECV_MESSAGE", args);
+                       if (t != null) t.join();
                    } catch (InterruptedException e1) {}
                }
                
                if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
                    try {
-                       macro.trigger("RECV_MESSAGE", args).join();
+                       Thread t = macro.trigger("RECV_MESSAGE", args);
+                       if (t != null) t.join();
                    } catch (InterruptedException e1) {}
                }
                

@@ -29,15 +29,15 @@ class jsmacros_InGameHudMixin {
     @ModifyVariable(method = "addChatMessage", at = @At(value = "HEAD"))
     private Text jsmacros_addChatMessage(Text text) {
         if (text == null) return text;
-        String result = RecieveMessageCallback.EVENT.invoker().interact(text.asString());
+        String result = RecieveMessageCallback.EVENT.invoker().interact(text.getString());
         if (result == null) return new LiteralText("");
-        if (!text.asString().equals(result)) return new LiteralText(result);
+        if (!text.getString().equals(result)) return new LiteralText(result);
         else return text;
     }
 
     @Inject(method = "addChatMessage", at = @At("HEAD"), cancellable = true)
     private void jsmacros_addChatMessage(MessageType messageType, Text text, UUID senderUuid, CallbackInfo info) {
-        if (text == null || text.asString().equals("")) {
+        if (text == null || text.getString().equals("")) {
             info.cancel();
         } 
     }
