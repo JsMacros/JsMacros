@@ -175,7 +175,7 @@ public class Profile {
 
                if (keycode == InputUtil.UNKNOWN_KEY) return ActionResult.PASS;
                // new
-               if (keyBinding.matchesKey(key, scancode) && action == 1) mc.openScreen(jsMacros.macroListScreen);
+               if (keyBinding.matchesKey(key, scancode) && action == 1) mc.openScreen(jsMacros.keyMacrosScreen);
                // old
 //               if (keyBinding.getBoundKey() == keycode && action == 1) mc.openScreen(jsMacros.macroListScreen);
 
