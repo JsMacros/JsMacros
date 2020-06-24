@@ -107,5 +107,6 @@ public class KeyMacrosScreen extends Screen {
     
     public void onClose() {
         client.openScreen(parent);
+        jsMacros.profile.saveProfile();
     }
 }
