@@ -17,15 +17,16 @@ public abstract class BaseMacro {
     }
     
     public Thread runMacro(String type, HashMap<String, Object> args) {
-        try {
-            return RunScript.exec(macro, type, args);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    
-    public Thread trigger(String type, HashMap<String, Object> args) {
+        if (macro.enabled) {
+            try {
+                return RunScript.exec(macro, type, args);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        } 
         return null;
     }
+    
+    public abstract Thread trigger(String type, HashMap<String, Object> args);
 }

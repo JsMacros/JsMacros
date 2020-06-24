@@ -6,8 +6,9 @@ public class RawMacro {
     public MacroEnum type;
     public String eventkey;
     public String scriptFile;
+    public boolean enabled;
     
-    public RawMacro(MacroEnum type, String eventkey, String scriptFile) {
+    public RawMacro(MacroEnum type, String eventkey, String scriptFile, boolean enabled) {
         this.type = type;
         this.eventkey = eventkey;
         this.scriptFile = scriptFile;

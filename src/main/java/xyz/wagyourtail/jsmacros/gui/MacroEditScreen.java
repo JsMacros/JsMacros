@@ -28,7 +28,7 @@ public class MacroEditScreen extends Screen {
         super(new TranslatableText("jsmacros.editmacro"));
         this.parent = parent;
         this.macro = macro;
-        this.newMacro = new RawMacro(macro.type, macro.eventkey, macro.scriptFile);
+        this.newMacro = new RawMacro(macro.type, macro.eventkey, macro.scriptFile, true);
     }
 
     protected void init() {

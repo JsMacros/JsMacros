@@ -178,6 +178,7 @@ public class Profile {
 //               if (keyBinding.getBoundKey() == keycode && action == 1) mc.openScreen(jsMacros.macroListScreen);
 
                HashMap<String, Object> args = new HashMap<>();
+               args.put("rawkey", keycode);
                args.put("key", keycode.getTranslationKey());
                args.put("action", action);
                if (registry.macros.containsKey("KEY")) for (BaseMacro macro : registry.macros.get("KEY").values()) {

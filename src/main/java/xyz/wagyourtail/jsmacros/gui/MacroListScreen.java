@@ -83,7 +83,7 @@ public class MacroListScreen extends Screen {
         
         //buttonNew
         this.addButton(new ButtonWidget(this.width / 2 + 4 + 50, this.height - 52, 100, 20, new TranslatableText("jsmacros.add"), (buttonWidget) -> {
-            edit(new RawMacro(null, null, null));
+            edit(new RawMacro(null, null, null, true));
         }));
         
         this.addButton(new ButtonWidget(55, 10, 100, 20, new TranslatableText("jsmacros.stoprunning"), (buttonWidget) -> {

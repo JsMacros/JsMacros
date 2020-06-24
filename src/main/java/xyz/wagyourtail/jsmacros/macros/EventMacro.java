@@ -10,6 +10,7 @@ public class EventMacro extends BaseMacro {
         super(macro);
     }
     
+    @Override
     public Thread trigger(String type, HashMap<String, Object> args) {
         return runMacro(type, args);
     }

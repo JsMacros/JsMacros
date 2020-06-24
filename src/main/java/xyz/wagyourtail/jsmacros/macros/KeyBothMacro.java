@@ -22,6 +22,7 @@ public class KeyBothMacro extends BaseMacro {
         return key.getTranslationKey();
     }
     
+    @Override
     public Thread trigger(String type, HashMap<String, Object> args) {
         if (check(args)) {
             return runMacro(type, args);
@@ -32,7 +33,7 @@ public class KeyBothMacro extends BaseMacro {
     private boolean check(HashMap<String, Object> args) {
         boolean keyState = false;
         if ((int)args.get("action") > 0) keyState = true;
-        if ((InputUtil.Key)args.get("key") == key)
+        if ((InputUtil.Key)args.get("rawkey") == key)
             if (keyState && !prevKeyState) {
                 prevKeyState = true;
                 return true;

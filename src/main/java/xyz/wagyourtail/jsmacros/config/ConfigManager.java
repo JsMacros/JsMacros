@@ -24,7 +24,7 @@ public class ConfigManager {
     public ConfigManager() {
         options = new ConfigOptions(false, "default", new HashMap<>());
         options.profiles.put("default", new ArrayList<>());
-        options.profiles.get("default").add(new RawMacro(MacroEnum.KEY_RISING, "key.keyboard.j", "test.js"));
+        options.profiles.get("default").add(new RawMacro(MacroEnum.KEY_RISING, "key.keyboard.j", "test.js", true));
         File tf = new File(macroFolder, "test.js");
         if (!tf.exists()) try {
             tf.createNewFile();
