@@ -61,6 +61,7 @@ public class EventMacrosScreen extends Screen {
             buttons.remove(b);
         }
         macros.remove(macro);
+        Profile.registry.removeMacro(macro.getRawMacro());
     }
     
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {

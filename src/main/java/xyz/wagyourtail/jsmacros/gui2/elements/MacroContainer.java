@@ -29,6 +29,10 @@ public class MacroContainer extends MultiElementContainer {
         init();
     }
     
+    public RawMacro getRawMacro() {
+        return macro;
+    }
+    
     public void init() {
         super.init();
         int w = width - 12;
