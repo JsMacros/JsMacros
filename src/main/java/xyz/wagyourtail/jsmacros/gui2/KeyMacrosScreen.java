@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.gui2.elements.Button;
 import xyz.wagyourtail.jsmacros.gui2.elements.MacroContainer;
 import xyz.wagyourtail.jsmacros.gui2.elements.MacroListTopbar;
+import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
 import net.minecraft.client.gui.screen.Screen;
@@ -41,33 +42,28 @@ public class KeyMacrosScreen extends Screen {
             client.openScreen(new ProfileScreen(this));
         }));
         
-        topbar = new MacroListTopbar(this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer);
+        topbar = new MacroListTopbar(this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer, MacroEnum.KEY_FALLING, this::addButton, this::addMacro);
         
         for (RawMacro macro : Profile.registry.getMacros().get("KEY").keySet()) {
             addMacro(macro);
         }
-        
-        for (MacroContainer macro : macros) {
-            for (AbstractButtonWidget b : macro.getButtons()) {
-                this.addButton(b);
-            }
-        }
     }
     
     public void addMacro(RawMacro macro) {
-        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, (m) -> {
-            for (AbstractButtonWidget b : m.getButtons()) {
-                buttons.remove(b);
-            }
-            macros.remove(m);
-        }));
+        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::removeMacro));
+    }
+    
+    public void removeMacro(MacroContainer macro) {
+        for (AbstractButtonWidget b : macro.getButtons()) {
+            buttons.remove(b);
+        }
+        macros.remove(macro);
     }
     
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
         this.renderBackground(matricies, 0);
         
         topbar.render(matricies, mouseX, mouseY, delta);
-        //testmacro.render(matricies, mouseX, mouseY, delta);
         
         for (MacroContainer macro : macros) {
             macro.render(matricies, mouseX, mouseY, delta);

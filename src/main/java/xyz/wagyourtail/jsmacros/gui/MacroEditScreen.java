@@ -95,7 +95,7 @@ public class MacroEditScreen extends Screen {
         MacroTypeWidget.MacroTypeEntry entry = (MacroTypeWidget.MacroTypeEntry) this.macroTypeWidget.getSelected();
         if (entry != null) for (MacroEnum e : MacroEnum.values()) {
             if (entry.macroType == e.toString()) {
-                this.buttonSetKey.setMessage(newMacro.type != MacroEnum.EVENT ? newMacro.eventkey != null && newMacro.eventkey != "" ? InputUtil.fromTranslationKey(newMacro.eventkey).getLocalizedText() : new LiteralText("") : new LiteralText(""));
+                this.buttonSetKey.setMessage(newMacro.type != MacroEnum.EVENT ? newMacro.eventkey != null && newMacro.eventkey != "" ? jsMacros.getKeyText(newMacro.eventkey) : new LiteralText("") : new LiteralText(""));
                 this.buttonSetKey.active = true;
                 return;
             }

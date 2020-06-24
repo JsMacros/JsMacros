@@ -9,7 +9,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.StringRenderable;
@@ -81,7 +80,7 @@ public class MacroListWidget extends AlwaysSelectedEntryListWidget<MacroListWidg
         }
         
         public void render(MatrixStack matrices, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean hovering, float delta) {
-            this.client.textRenderer.draw(matrices, macro.type == MacroEnum.EVENT ? new LiteralText(macro.eventkey) : InputUtil.fromTranslationKey(macro.eventkey).getLocalizedText(), (float)(x + 32 + 3), (float)(y + 1), 0xFFFFFF);
+            this.client.textRenderer.draw(matrices, macro.type == MacroEnum.EVENT ? new LiteralText(macro.eventkey) : jsMacros.getKeyText(macro.eventkey), (float)(x + 32 + 3), (float)(y + 1), 0xFFFFFF);
             
             List<StringRenderable> list = this.client.textRenderer.wrapLines(new LiteralText(macro.scriptFile), width - 32 - 2);
             for (int n = 0; n < Math.min(list.size(), 2); ++n) {

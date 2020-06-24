@@ -2,7 +2,9 @@ package xyz.wagyourtail.jsmacros.gui2.elements;
 
 import java.util.function.Consumer;
 
+import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
 import net.minecraft.client.font.TextRenderer;
@@ -12,7 +14,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 
 public class MacroContainer extends MultiElementContainer {
-    private boolean visible = true;
     private RawMacro macro;
     private Button enableBtn;
     private Button keyBtn;
@@ -21,22 +22,11 @@ public class MacroContainer extends MultiElementContainer {
     private boolean selectkey = false;
     private Consumer<MacroContainer> onRemove;
 
-    public MacroContainer(int x, int y, int width, int height, TextRenderer textRenderer, RawMacro macro,  Consumer<MacroContainer> onRemove) {
-        super(x, y, width, height, textRenderer);
+    public MacroContainer(int x, int y, int width, int height, TextRenderer textRenderer, RawMacro macro,  Consumer<AbstractButtonWidget> addButton, Consumer<MacroContainer> onRemove) {
+        super(x, y, width, height, textRenderer, addButton);
         this.macro = macro;
         this.onRemove = onRemove;
         init();
-    }
-
-    public boolean getVisible() {
-        return visible;
-    }
-    
-    public void setVisible(boolean visible) {
-        for (AbstractButtonWidget btn : buttons) {
-            btn.visible = visible;
-        }
-        this.visible = visible;
     }
     
     public void init() {
@@ -50,7 +40,7 @@ public class MacroContainer extends MultiElementContainer {
             btn.setMessage(new LiteralText(macro.enabled ? "Enabled" : "Disabled"));
         }));
 
-        keyBtn = (Button) addButton(new Button(x + w / 12 + 1, y + 1, (w / 4) - (w / 12) - 1, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, InputUtil.fromTranslationKey(macro.eventkey).getLocalizedText(), (btn) -> {
+        keyBtn = (Button) addButton(new Button(x + w / 12 + 1, y + 1, (w / 4) - (w / 12) - 1, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.type == MacroEnum.EVENT ? new LiteralText(macro.eventkey) : jsMacros.getKeyText(macro.eventkey), (btn) -> {
             selectkey = true;
             btn.setMessage(new LiteralText("- Press A Key -"));
         }));
@@ -94,7 +84,7 @@ public class MacroContainer extends MultiElementContainer {
         Profile.registry.removeMacro(macro);
         macro.eventkey = translationKey;
         Profile.registry.addMacro(macro);
-        keyBtn.setMessage(InputUtil.fromTranslationKey(translationKey).getLocalizedText());
+        keyBtn.setMessage(jsMacros.getKeyText(translationKey));
         selectkey = false;
     }
     

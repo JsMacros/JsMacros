@@ -11,7 +11,11 @@ public class KeyDownMacro extends BaseMacro {
     
     public KeyDownMacro(RawMacro macro) {
         super(macro);
-        key = InputUtil.fromTranslationKey(macro.eventkey);
+        try {
+            key = InputUtil.fromTranslationKey(macro.eventkey);
+        } catch(Exception e) {
+            key = InputUtil.UNKNOWN_KEY;
+        }
     }
     
     public void setKey(InputUtil.Key setkey) {

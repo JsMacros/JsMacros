@@ -4,6 +4,9 @@ import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+
 import xyz.wagyourtail.jsmacros.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 import xyz.wagyourtail.jsmacros.gui.MacroListScreen;
@@ -25,6 +28,14 @@ public class jsMacros implements ClientModInitializer {
         
     }
 
+    static public Text getKeyText(String translationKey) {
+        try {
+            return InputUtil.fromTranslationKey(translationKey).getLocalizedText();
+        } catch(Exception e) {
+            return new LiteralText(translationKey);
+        }
+    }
+    
     @Deprecated
     static public String getLocalizedName(InputUtil.Key keyCode) {
         return I18n.translate(keyCode.getTranslationKey());

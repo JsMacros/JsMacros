@@ -8,7 +8,11 @@ public class keybindFunctions {
     
     
     public Key getKeyCode(String keyName) {
-        return InputUtil.fromTranslationKey(keyName);
+        try {
+            return InputUtil.fromTranslationKey(keyName);
+        } catch (Exception e) {
+            return InputUtil.UNKNOWN_KEY;
+        }
     }
     
     public void key(String keyName, boolean keyState) {
