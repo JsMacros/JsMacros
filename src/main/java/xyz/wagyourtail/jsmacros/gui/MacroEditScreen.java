@@ -85,7 +85,7 @@ public class MacroEditScreen extends Screen {
             InputUtil.Key key = InputUtil.Type.KEYSYM.createFromCode(keyCode);
             newMacro.eventkey = key.toString();
             selectKey = false;
-            this.buttonSetKey.setMessage(new TranslatableText(key.getTranslationKey()));
+            this.buttonSetKey.setMessage(key.getLocalizedText());
             return false;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -109,7 +109,7 @@ public class MacroEditScreen extends Screen {
             InputUtil.Key key = InputUtil.Type.MOUSE.createFromCode(button);
             newMacro.eventkey = key.toString();
             selectKey = false;
-            this.buttonSetKey.setMessage(new TranslatableText(key.getTranslationKey()));
+            this.buttonSetKey.setMessage(key.getLocalizedText());
             return false;
         }
         return super.mouseClicked(mouseX, mouseY, button);

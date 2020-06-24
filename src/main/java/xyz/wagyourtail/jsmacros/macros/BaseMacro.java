@@ -24,7 +24,7 @@ public abstract class BaseMacro {
                 e.printStackTrace();
                 return null;
             }
-        } 
+        }
         return null;
     }
     

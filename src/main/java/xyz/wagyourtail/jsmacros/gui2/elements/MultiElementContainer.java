@@ -17,12 +17,19 @@ public abstract class MultiElementContainer extends DrawableHelper {
     
     public MultiElementContainer(int x, int y, int width, int height, TextRenderer textRenderer) {
         this.textRenderer = textRenderer;
-        setPos(x, y, width, height);
-        init();
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
     }
     
     public void init() {
         buttons.clear();
+    }
+    
+    public AbstractButtonWidget addButton(AbstractButtonWidget btn) {
+        buttons.add(btn);
+        return btn;
     }
     
     public ArrayList<AbstractButtonWidget> getButtons() {
