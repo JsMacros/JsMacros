@@ -10,7 +10,6 @@ import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.network.ClientConnection;
 import net.minecraft.util.ActionResult;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.*;
@@ -23,7 +22,6 @@ import xyz.wagyourtail.jsmacros.events.KeyCallback;
 import xyz.wagyourtail.jsmacros.events.RecieveMessageCallback;
 import xyz.wagyourtail.jsmacros.events.SendMessageCallback;
 import xyz.wagyourtail.jsmacros.macros.*;
-import xyz.wagyourtail.jsmacros.reflector.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
 

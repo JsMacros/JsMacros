@@ -36,5 +36,4 @@ public class playerFunctions {
         if (mc.targetedEntity != null) return new EntityHelper(mc.targetedEntity);
         else return null;
     }
-    
 }
