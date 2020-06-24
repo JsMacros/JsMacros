@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.network.ClientConnection;
 import net.minecraft.util.ActionResult;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.*;
@@ -22,7 +23,9 @@ import xyz.wagyourtail.jsmacros.events.KeyCallback;
 import xyz.wagyourtail.jsmacros.events.RecieveMessageCallback;
 import xyz.wagyourtail.jsmacros.events.SendMessageCallback;
 import xyz.wagyourtail.jsmacros.macros.*;
+import xyz.wagyourtail.jsmacros.reflector.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
 
 public class Profile {
     public String profileName;
@@ -102,8 +105,8 @@ public class Profile {
            registry.addEvent("JOIN_SERVER");
            JoinCallback.EVENT.register((conn, player) -> {
                HashMap<String, Object> args = new HashMap<>();
-               args.put("connection", conn);
-               args.put("player", player);
+               args.put("address", conn.getAddress().toString());
+               args.put("player", new PlayerEntityHelper(player));
                if (registry.macros.containsKey("JOIN_SERVER")) for (BaseMacro macro : registry.macros.get("JOIN_SERVER").values()) {
                    macro.trigger("JOIN_SERVER", args);
                }
@@ -177,7 +180,7 @@ public class Profile {
 //               if (keyBinding.getBoundKey() == keycode && action == 1) mc.openScreen(jsMacros.macroListScreen);
 
                HashMap<String, Object> args = new HashMap<>();
-               args.put("key", keycode);
+               args.put("key", keycode.getTranslationKey());
                args.put("action", action);
                if (registry.macros.containsKey("KEY")) for (BaseMacro macro : registry.macros.get("KEY").values()) {
                    macro.trigger("KEY", args);
@@ -212,7 +215,7 @@ public class Profile {
            registry.addEvent("DAMAGE");
            DamageCallback.EVENT.register((source, health, change) -> {
                HashMap<String, Object> args = new HashMap<>();
-               args.put("source", source);
+               args.put("source", source.getName());
                args.put("health", health);
                args.put("change", change);
                if (registry.macros.containsKey("DAMAGE")) for (BaseMacro macro : registry.macros.get("DAMAGE").values()) {
