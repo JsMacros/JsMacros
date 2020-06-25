@@ -39,7 +39,8 @@ public class MacroListTopbar extends MultiElementContainer {
         fill(matricies, x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
         fill(matricies, x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
         int w = this.width - 12;
-        drawCenteredString(matricies, this.textRenderer, "Enabled", x + (w / 24), y + 2, 0xFFFFFF);
+        String s = textRenderer.trimToWidth("Enabled", w/12);
+        drawCenteredString(matricies, this.textRenderer, s, x + (w / 24), y + 2, 0xFFFFFF);
         fill(matricies, x + (w / 12), y + 1, x + (w / 12) + 1, y + height - 1, 0xFFFFFFFF);
         drawCenteredString(matricies, this.textRenderer, deftype == MacroEnum.EVENT ? "Event" : "Key", x + (w / 6), y + 2, 0xFFFFFF);
         fill(matricies, x + (w / 4), y + 1, x + (w / 4) + 1, y + height - 1, 0xFFFFFFFF);

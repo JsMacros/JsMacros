@@ -57,7 +57,7 @@ public class EventMacrosScreen extends Screen {
     }
     
     public void addMacro(RawMacro macro) {
-        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::removeMacro));
+        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::removeMacro, null));
     }
     
     public void removeMacro(MacroContainer macro) {

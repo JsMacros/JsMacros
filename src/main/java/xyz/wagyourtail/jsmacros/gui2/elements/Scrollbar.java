@@ -15,9 +15,7 @@ public class Scrollbar extends Button {
     public Scrollbar(int x, int y, int width, int height, int color, int borderColor, int hilightColor, double scrollPages, Consumer<Double> onChange) {
         super(x, y, width, height, color, borderColor, hilightColor, 0, new LiteralText(""), null);
         this.onChange = onChange;
-        this.scrollPages = scrollPages;
-        this.scrollbarHeight = (int) Math.ceil((height - 2) / scrollPages);
-        this.scrollDistance = height - 2 - this.scrollbarHeight;
+        this.setScrollPages(scrollPages);
     }
 
     public void setPos(int x, int y, int width, int height) {
@@ -32,24 +30,27 @@ public class Scrollbar extends Button {
         this.scrollDistance = height - 2 - this.scrollbarHeight;
     }
     
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public void onClick(double mouseX, double mouseY) {
         double mpos = mouseY - y - 1;
         if (mpos < scrollAmmount) {
             scrollAmmount = Math.max(mpos- (scrollbarHeight / 2), 0);
-            if (onChange != null) onChange.accept(scrollAmmount / scrollDistance);
+            onChange();
         }
         if (mpos > (scrollAmmount + scrollbarHeight)) {
             scrollAmmount = Math.min(mpos- (scrollbarHeight / 2), scrollDistance);
-            if (onChange != null) onChange.accept(scrollAmmount / scrollDistance);
+            onChange();
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+    }
+    
+    public void onChange() {
+        if (onChange != null) onChange.accept(scrollPages * scrollAmmount / scrollDistance);
     }
     
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         scrollAmmount += deltaY;
         if (scrollAmmount > scrollDistance) scrollAmmount = scrollDistance;
         if (scrollAmmount < 0) scrollAmmount = 0;
-        if (onChange != null) onChange.accept(scrollAmmount / scrollDistance);
+        onChange();
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 

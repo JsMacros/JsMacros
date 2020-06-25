@@ -39,6 +39,7 @@ public abstract class MultiElementContainer extends DrawableHelper {
     public void setVisible(boolean visible) {
         for (AbstractButtonWidget btn : buttons) {
             btn.visible = visible;
+            btn.active = visible;
         }
         this.visible = visible;
     }

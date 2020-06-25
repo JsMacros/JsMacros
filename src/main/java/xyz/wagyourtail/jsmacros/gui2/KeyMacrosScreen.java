@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.gui2.elements.Button;
 import xyz.wagyourtail.jsmacros.gui2.elements.MacroContainer;
 import xyz.wagyourtail.jsmacros.gui2.elements.MacroListTopbar;
+import xyz.wagyourtail.jsmacros.gui2.elements.OverlayContainer;
 import xyz.wagyourtail.jsmacros.gui2.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
@@ -22,7 +23,7 @@ public class KeyMacrosScreen extends Screen {
     private MacroListTopbar topbar;
     private Scrollbar macroScroll;
     private ArrayList<MacroContainer> macros = new ArrayList<>();
-    private int topScroll = 40;
+    private int topScroll;
     
     public KeyMacrosScreen(Screen parent) {
         super(new TranslatableText("jsmacros.title"));
@@ -44,37 +45,51 @@ public class KeyMacrosScreen extends Screen {
             client.openScreen(new ProfileScreen(this));
         }));
         
-        topbar = new MacroListTopbar(this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer, MacroEnum.KEY_FALLING, this::addButton, this::addMacro);
+        topbar = new MacroListTopbar(this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer, MacroEnum.KEY_RISING, this::addButton, this::addMacro);
+        
+        topScroll = 40;
+        macroScroll = this.addButton(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
        
         for (RawMacro macro : Profile.registry.getMacros().get("KEY").keySet()) {
             addMacro(macro);
         }
-        
-        macroScroll = this.addButton(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, null));
+    }
+    
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        macroScroll.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
+        return super.mouseScrolled(mouseX, mouseY, amount);
     }
     
     public void addMacro(RawMacro macro) {
-        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::removeMacro));
-        macroScroll.setScrollPages((macros.size() * 16) / (this.height - 50));
+        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::removeMacro, this::openOverlay));
+        macroScroll.setScrollPages((macros.size() * 16) / (double)Math.max(1, this.height - 40));
+    }
+    
+    public void openOverlay(OverlayContainer overlay) {
+        //for (AbstractButtonWidget b)
     }
     
     public void removeMacro(MacroContainer macro) {
         for (AbstractButtonWidget b : macro.getButtons()) {
             buttons.remove(b);
+            children.remove(b);
         }
         macros.remove(macro);
-        Profile.registry.removeMacro(macro.getRawMacro());
-        
+        setMacroPos();
+    }
+    
+    public void setMacroPos() {
         int i = 0;
         for (MacroContainer m : macros) {
             m.setPos(this.width / 12, topScroll + (i++) * 16, this.width * 5 / 6, 14);
         }
         
-        macroScroll.setScrollPages((macros.size() * 16) / (this.height - 50));
+        macroScroll.setScrollPages((macros.size() * 16) / (double)Math.max(1, this.height - 40));
     }
     
-    public void onScroll(double percent) {
-        
+    private void onScrollbar(double page) {
+        topScroll = 40 - (int) (page * (height - 60));
+        setMacroPos();
     }
     
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
