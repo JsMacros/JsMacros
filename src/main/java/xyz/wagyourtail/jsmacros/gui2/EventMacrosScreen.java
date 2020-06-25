@@ -50,6 +50,10 @@ public class EventMacrosScreen extends Screen {
                     addMacro(macro);
                 }
         }
+        if (Profile.registry.getMacros().containsKey(""))
+            for (RawMacro macro : Profile.registry.getMacros().get("").keySet()) {
+                addMacro(macro);
+            }
     }
     
     public void addMacro(RawMacro macro) {

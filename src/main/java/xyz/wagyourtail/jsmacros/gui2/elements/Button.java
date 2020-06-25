@@ -10,9 +10,9 @@ import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Text;
 
 public class Button extends AbstractPressableButtonWidget {
-    private int color;
-    private int borderColor;
-    private int hilightColor;
+    protected int color;
+    protected int borderColor;
+    protected int hilightColor;
     private int textColor;
     private ArrayList<StringRenderable> text;
     private MinecraftClient mc;

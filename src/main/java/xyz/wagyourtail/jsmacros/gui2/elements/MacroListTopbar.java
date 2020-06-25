@@ -12,21 +12,23 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 
 public class MacroListTopbar extends MultiElementContainer {
-    
+    private MacroEnum deftype;
+    private Consumer<RawMacro> addMacro;
     
     public MacroListTopbar(int x, int y, int width, int height, TextRenderer textRenderer, MacroEnum deftype, Consumer<AbstractButtonWidget> addButton, Consumer<RawMacro> addMacro) {
         super(x, y, width, height, textRenderer, addButton);
+        this.deftype = deftype;
+        this.addMacro = addMacro;
         init();
+    }
+
+    public void init() {
+        super.init();
         addButton(new Button(x + width - 13, y+1, 12, height - 3, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("+"), (btn) -> {
             RawMacro macro = new RawMacro(deftype, "", "", false);
             Profile.registry.addMacro(macro);
             addMacro.accept(macro);
         }));
-    }
-
-    public void init() {
-        super.init();
-        
     }
 
     @Override
@@ -39,7 +41,7 @@ public class MacroListTopbar extends MultiElementContainer {
         int w = this.width - 12;
         drawCenteredString(matricies, this.textRenderer, "Enabled", x + (w / 24), y + 2, 0xFFFFFF);
         fill(matricies, x + (w / 12), y + 1, x + (w / 12) + 1, y + height - 1, 0xFFFFFFFF);
-        drawCenteredString(matricies, this.textRenderer, "Key", x + (w / 6), y + 2, 0xFFFFFF);
+        drawCenteredString(matricies, this.textRenderer, deftype == MacroEnum.EVENT ? "Event" : "Key", x + (w / 6), y + 2, 0xFFFFFF);
         fill(matricies, x + (w / 4), y + 1, x + (w / 4) + 1, y + height - 1, 0xFFFFFFFF);
         drawCenteredString(matricies, this.textRenderer, "File", x + (w * 15 / 24), y + 2, 0xFFFFFF);
         fill(matricies, x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);

@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.gui2.elements.Button;
 import xyz.wagyourtail.jsmacros.gui2.elements.MacroContainer;
 import xyz.wagyourtail.jsmacros.gui2.elements.MacroListTopbar;
+import xyz.wagyourtail.jsmacros.gui2.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
@@ -19,6 +20,7 @@ import net.minecraft.text.TranslatableText;
 public class KeyMacrosScreen extends Screen {
     private Screen parent;
     private MacroListTopbar topbar;
+    private Scrollbar macroScroll;
     private ArrayList<MacroContainer> macros = new ArrayList<>();
     private int topScroll = 40;
     
@@ -43,14 +45,17 @@ public class KeyMacrosScreen extends Screen {
         }));
         
         topbar = new MacroListTopbar(this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer, MacroEnum.KEY_FALLING, this::addButton, this::addMacro);
-        
+       
         for (RawMacro macro : Profile.registry.getMacros().get("KEY").keySet()) {
             addMacro(macro);
         }
+        
+        macroScroll = this.addButton(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, null));
     }
     
     public void addMacro(RawMacro macro) {
         macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::removeMacro));
+        macroScroll.setScrollPages((macros.size() * 16) / (this.height - 50));
     }
     
     public void removeMacro(MacroContainer macro) {
@@ -59,6 +64,17 @@ public class KeyMacrosScreen extends Screen {
         }
         macros.remove(macro);
         Profile.registry.removeMacro(macro.getRawMacro());
+        
+        int i = 0;
+        for (MacroContainer m : macros) {
+            m.setPos(this.width / 12, topScroll + (i++) * 16, this.width * 5 / 6, 14);
+        }
+        
+        macroScroll.setScrollPages((macros.size() * 16) / (this.height - 50));
+    }
+    
+    public void onScroll(double percent) {
+        
     }
     
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {

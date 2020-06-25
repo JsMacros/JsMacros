@@ -45,8 +45,12 @@ public class MacroContainer extends MultiElementContainer {
         }));
 
         keyBtn = (Button) addButton(new Button(x + w / 12 + 1, y + 1, (w / 4) - (w / 12) - 1, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.type == MacroEnum.EVENT ? new LiteralText(macro.eventkey) : jsMacros.getKeyText(macro.eventkey), (btn) -> {
-            selectkey = true;
-            btn.setMessage(new LiteralText("- Press A Key -"));
+            if (macro.type == MacroEnum.EVENT) {
+                
+            } else {
+                selectkey = true;
+                btn.setMessage(new LiteralText("- Press A Key -"));
+            }
         }));
 
         fileBtn = (Button) addButton(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText(macro.scriptFile), (btn) -> {
