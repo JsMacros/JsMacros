@@ -19,6 +19,7 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 
 public class MacroContainer extends MultiElementContainer {
     private static final Identifier key_down_tex = new Identifier(jsMacros.MOD_ID, "resources/key_down.png");
@@ -95,7 +96,9 @@ public class MacroContainer extends MultiElementContainer {
             if (openFile != null) openFile.accept(this);
         }));
         
-        editBtn = (Button) addButton(new Button(x + w - 32, y + 1, 30, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("Edit"), null));
+        editBtn = (Button) addButton(new Button(x + w - 32, y + 1, 30, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("Edit"), (btn) -> {
+            Util.getOperatingSystem().open(new File(jsMacros.config.macroFolder, macro.scriptFile));
+        }));
 
         delBtn = (Button) addButton(new Button(x + w - 1, y + 1, 12, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("X"), (btn) -> {
             Profile.registry.removeMacro(macro);

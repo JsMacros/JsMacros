@@ -90,9 +90,9 @@ public class FileChooser extends OverlayContainer {
         }));
         
         editbtn = (Button) this.addButton(new Button(x + w * 4 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Edit"), (btn) -> {
-
+            if (this.selected != null) Util.getOperatingSystem().open(this.selected);
         }));
-        editbtn.visible = false;
+//        editbtn.visible = false;
         
         rename = (Button) this.addButton(new Button(x + w * 3 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Rename"), (btn) -> {
 
