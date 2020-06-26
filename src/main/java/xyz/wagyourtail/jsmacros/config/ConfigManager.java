@@ -25,14 +25,14 @@ public class ConfigManager {
         options = new ConfigOptions(false, "default", new HashMap<>());
         options.profiles.put("default", new ArrayList<>());
         options.profiles.get("default").add(new RawMacro(MacroEnum.KEY_RISING, "key.keyboard.j", "test.js", true));
+        if (!macroFolder.exists()) {
+            macroFolder.mkdirs();
+        }
         File tf = new File(macroFolder, "test.js");
         if (!tf.exists()) try {
             tf.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        if (!macroFolder.exists()) {
-            macroFolder.mkdirs();
         }
     }
 

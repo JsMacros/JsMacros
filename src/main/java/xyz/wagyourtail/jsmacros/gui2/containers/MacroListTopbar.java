@@ -1,8 +1,10 @@
-package xyz.wagyourtail.jsmacros.gui2.elements;
+package xyz.wagyourtail.jsmacros.gui2.containers;
 
 import java.util.function.Consumer;
 
 import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.gui2.elements.Button;
+import xyz.wagyourtail.jsmacros.gui2.elements.MultiElementContainer;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 

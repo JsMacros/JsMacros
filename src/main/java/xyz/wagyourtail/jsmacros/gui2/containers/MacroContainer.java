@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui2.elements;
+package xyz.wagyourtail.jsmacros.gui2.containers;
 
 import java.io.File;
 import java.util.function.Consumer;
@@ -7,6 +7,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.gui2.elements.Button;
+import xyz.wagyourtail.jsmacros.gui2.elements.MultiElementContainer;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
@@ -89,7 +91,7 @@ public class MacroContainer extends MultiElementContainer {
             Profile.registry.addMacro(macro);
         }));
 
-        fileBtn = (Button) addButton(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText(macro.scriptFile), (btn) -> {
+        fileBtn = (Button) addButton(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("./"+macro.scriptFile.replaceAll("\\\\", "/")), (btn) -> {
             if (openFile != null) openFile.accept(this);
         }));
         
@@ -102,7 +104,10 @@ public class MacroContainer extends MultiElementContainer {
     }
     
     public void setFile(File f) {
-        
+        Profile.registry.removeMacro(macro);
+        macro.scriptFile = f.getAbsolutePath().substring(jsMacros.config.macroFolder.getAbsolutePath().length()+1);
+        Profile.registry.addMacro(macro);
+        fileBtn.setMessage(new LiteralText("./"+macro.scriptFile.replaceAll("\\\\", "/")));
     }
 
     public void setPos(int x, int y, int width, int height) {

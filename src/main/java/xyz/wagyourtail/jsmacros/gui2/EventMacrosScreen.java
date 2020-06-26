@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.gui2.containers.MacroContainer;
+import xyz.wagyourtail.jsmacros.gui2.containers.MacroListTopbar;
 import xyz.wagyourtail.jsmacros.gui2.elements.Button;
-import xyz.wagyourtail.jsmacros.gui2.elements.MacroContainer;
-import xyz.wagyourtail.jsmacros.gui2.elements.MacroListTopbar;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
