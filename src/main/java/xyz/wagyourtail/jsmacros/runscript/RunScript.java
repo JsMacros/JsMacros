@@ -25,7 +25,7 @@ import xyz.wagyourtail.jsmacros.runscript.functions.worldFunctions;
 
 public class RunScript {
     public static HashMap<RawMacro, ArrayList<Thread>> threads = new HashMap<>();
-    public static String language = "js";
+    public static String language = "python";
     
     
     public static Thread exec(RawMacro macro, String event, HashMap<String, Object> args) {
@@ -73,7 +73,7 @@ public class RunScript {
                 MinecraftClient mc = MinecraftClient.getInstance();
                 if (mc.inGameHud != null) {
                     LiteralText text = new LiteralText(e.toString());
-                    mc.inGameHud.getChatHud().addMessage(text);
+                    mc.inGameHud.getChatHud().addMessage(text, 0);
                 }
                 e.printStackTrace();
             }

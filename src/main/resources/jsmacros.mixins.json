@@ -8,7 +8,7 @@
 		"jsmacros_MouseMixin",
 		"jsmacros_PlayerManagerMixin",
 		"jsmacros_ScreenMixin",
-		"jsmacros_InGameHudMixin",
+		"jsmacros_ChatHudMixin",
 		"jsmacros_ClientPlayerEntityMixin",
 		"jsmacros_ClientPlayNetworkHandler",
 		"jsmacros_ItemStackMixin"
