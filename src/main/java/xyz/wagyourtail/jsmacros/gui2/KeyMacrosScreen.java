@@ -1,10 +1,12 @@
 package xyz.wagyourtail.jsmacros.gui2;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.gui2.elements.Button;
+import xyz.wagyourtail.jsmacros.gui2.elements.FileChooser;
 import xyz.wagyourtail.jsmacros.gui2.elements.MacroContainer;
 import xyz.wagyourtail.jsmacros.gui2.elements.MacroListTopbar;
 import xyz.wagyourtail.jsmacros.gui2.elements.OverlayContainer;
@@ -24,6 +26,7 @@ public class KeyMacrosScreen extends Screen {
     private Scrollbar macroScroll;
     private ArrayList<MacroContainer> macros = new ArrayList<>();
     private int topScroll;
+    private OverlayContainer overlay;
     
     public KeyMacrosScreen(Screen parent) {
         super(new TranslatableText("jsmacros.title"));
@@ -33,6 +36,7 @@ public class KeyMacrosScreen extends Screen {
     protected void init() {
         super.init();
         macros.clear();
+        overlay = null;
         client.keyboard.enableRepeatEvents(true);
         Button keys = this.addButton(new Button(0, 0, this.width / 6 - 1, 20, 0x4FFFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Keys"), null));
         keys.active = false;
@@ -61,12 +65,34 @@ public class KeyMacrosScreen extends Screen {
     }
     
     public void addMacro(RawMacro macro) {
-        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::removeMacro, this::openOverlay));
+        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::removeMacro, this::setFile));
         macroScroll.setScrollPages((macros.size() * 16) / (double)Math.max(1, this.height - 40));
     }
     
+    public void setFile(MacroContainer macro) {
+        File f = new File(jsMacros.config.macroFolder, macro.getRawMacro().scriptFile);
+        if (!f.equals(jsMacros.config.macroFolder)) f = f.getParentFile();
+        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, f, this::addButton, this::closeOverlay, macro::setFile));
+    }
+    
     public void openOverlay(OverlayContainer overlay) {
-        //for (AbstractButtonWidget b)
+        for (AbstractButtonWidget b : buttons) {
+            overlay.savedBtnStates.put(b, b.active);
+            b.active = false;
+        }
+        this.overlay = overlay;
+        overlay.init();
+    }
+    
+    public void closeOverlay(OverlayContainer overlay) {
+        for (AbstractButtonWidget b : overlay.getButtons()) {
+            buttons.remove(b);
+            children.remove(b);
+        }
+        for (AbstractButtonWidget b : overlay.savedBtnStates.keySet()) {
+            b.active = overlay.savedBtnStates.get(b);
+        }
+        this.overlay = null;
     }
     
     public void removeMacro(MacroContainer macro) {
@@ -111,6 +137,8 @@ public class KeyMacrosScreen extends Screen {
         fill(matricies, this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);
         fill(matricies, this.width / 6 * 2, 0, this.width / 6 * 2 + 2, 20, 0xFFFFFFFF);
         fill(matricies, 0, 20, width, 22, 0xFFFFFFFF);
+        
+        if (overlay != null) overlay.render(matricies, mouseX, mouseY, delta);
     }
     
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {

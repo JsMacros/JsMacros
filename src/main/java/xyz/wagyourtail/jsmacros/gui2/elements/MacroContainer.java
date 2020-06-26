@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.gui2.elements;
 
+import java.io.File;
 import java.util.function.Consumer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -29,15 +30,17 @@ public class MacroContainer extends MultiElementContainer {
     private Button keyBtn;
     private Button fileBtn;
     private Button delBtn;
+    private Button editBtn;
     private Button keyStateBtn;
     private boolean selectkey = false;
     private Consumer<MacroContainer> onRemove;
-    private Consumer<OverlayContainer> openOverlay;
+    private Consumer<MacroContainer> openFile;
 
-    public MacroContainer(int x, int y, int width, int height, TextRenderer textRenderer, RawMacro macro,  Consumer<AbstractButtonWidget> addButton, Consumer<MacroContainer> onRemove, Consumer<OverlayContainer> openOverlay) {
+    public MacroContainer(int x, int y, int width, int height, TextRenderer textRenderer, RawMacro macro,  Consumer<AbstractButtonWidget> addButton, Consumer<MacroContainer> onRemove, Consumer<MacroContainer> openFile) {
         super(x, y, width, height, textRenderer, addButton);
         this.macro = macro;
         this.onRemove = onRemove;
+        this.openFile = openFile;
         this.mc = MinecraftClient.getInstance();
         init();
     }
@@ -86,14 +89,20 @@ public class MacroContainer extends MultiElementContainer {
             Profile.registry.addMacro(macro);
         }));
 
-        fileBtn = (Button) addButton(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText(macro.scriptFile), (btn) -> {
-            // TODO
+        fileBtn = (Button) addButton(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText(macro.scriptFile), (btn) -> {
+            if (openFile != null) openFile.accept(this);
         }));
+        
+        editBtn = (Button) addButton(new Button(x + w - 32, y + 1, 30, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("Edit"), null));
 
         delBtn = (Button) addButton(new Button(x + w - 1, y + 1, 12, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("X"), (btn) -> {
             Profile.registry.removeMacro(macro);
             if (onRemove != null) onRemove.accept(this);
         }));
+    }
+    
+    public void setFile(File f) {
+        
     }
 
     public void setPos(int x, int y, int width, int height) {
@@ -102,7 +111,8 @@ public class MacroContainer extends MultiElementContainer {
         enableBtn.setPos(x + 1, y + 1, w / 12 - 1, height - 2);
         keyBtn.setPos(x + w / 12 + 1, y + 1, macro.type == MacroEnum.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2);
         if (macro.type != MacroEnum.EVENT) keyStateBtn.setPos(x + w / 4 - height, y + 1, height, height - 2);
-        fileBtn.setPos(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3, height - 2);
+        fileBtn.setPos(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2);
+        editBtn.setPos(x + w - 32, y + 1, 30, height - 2);
         delBtn.setPos(x + w - 1, y + 1, 12, height - 2);
 
     }
