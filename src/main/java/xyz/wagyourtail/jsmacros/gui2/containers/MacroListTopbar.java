@@ -14,7 +14,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 
 public class MacroListTopbar extends MultiElementContainer {
-    private MacroEnum deftype;
+    public MacroEnum deftype;
     private Consumer<RawMacro> addMacro;
     
     public MacroListTopbar(int x, int y, int width, int height, TextRenderer textRenderer, MacroEnum deftype, Consumer<AbstractButtonWidget> addButton, Consumer<RawMacro> addMacro) {
