@@ -7,6 +7,9 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Context.Builder;
+
 import xyz.wagyourtail.jsmacros.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 import xyz.wagyourtail.jsmacros.gui.MacroListScreen;
@@ -25,6 +28,10 @@ public class jsMacros implements ClientModInitializer {
         profile = new Profile(config.options.defaultProfile);
         macroListScreen = new MacroListScreen(null);
         keyMacrosScreen = new KeyMacrosScreen(null);
+        
+        Builder build = Context.newBuilder("js");
+        Context con = build.build();
+        con.eval("js", "console.log('js loaded.')");
         
     }
 

@@ -13,6 +13,9 @@ public class globalVarFunctions {
 	public void putFloat(String name, float f) {
 		globalRaw.put(name, Float.valueOf(f));
 	}
+	public void putDouble(String name, double d) {
+	    globalRaw.put(name, Double.valueOf(d));
+	}
 	
 	public String getType(String name) {
 		Object i = globalRaw.get(name);
@@ -22,6 +25,8 @@ public class globalVarFunctions {
 			return "String";
 		} else if (i instanceof Float) {
 			return "Float";
+		} else if (i instanceof Double) {
+            return "Double";
 		} else {
 			return null;
 		}
@@ -51,6 +56,14 @@ public class globalVarFunctions {
 			return null;
 		}
 	}
+	public Double getDouble(String name) {
+        Object i = globalRaw.get(name);
+        if (i instanceof Float) {
+            return (Double) i;
+        } else {
+            return null;
+        }
+    }
 	
 	public HashMap<String, Object> getRaw() {
 		return globalRaw;
