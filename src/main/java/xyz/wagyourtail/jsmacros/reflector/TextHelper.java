@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.reflector;
 
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 public class TextHelper {
@@ -11,6 +12,14 @@ public class TextHelper {
     
     public TextHelper(Text t) {
         this.t = t;
+    }
+    
+    public void replaceFromJson(String json) {
+        t = Text.Serializer.fromJson(json);
+    }
+    
+    public void replaceFromString(String content) {
+        t = new LiteralText(content);
     }
     
     public String toJson() {
