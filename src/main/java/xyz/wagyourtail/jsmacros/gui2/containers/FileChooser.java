@@ -23,11 +23,14 @@ public class FileChooser extends OverlayContainer {
     private File directory;
     private StringRenderable dirname;
     private File selected;
+    @SuppressWarnings("unused")
     private Button select;
     private Button rename;
     private Button delete;
     private Button newbtn;
+    @SuppressWarnings("unused")
     private Button openf;
+    @SuppressWarnings("unused")
     private Button editbtn;
     private ArrayList<fileObj> files = new ArrayList<>();
     private Consumer<File> setFile;

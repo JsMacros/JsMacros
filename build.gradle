@@ -20,16 +20,26 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	//modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	
+	//partial fabric api
+	modImplementation "net.fabricmc.fabric-api:fabric-api-base:${project.api_base_version}"
+	include "net.fabricmc.fabric-api:fabric-api-base:${project.api_base_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-events-lifecycle-v0:${project.event_lifecycle_version}"
+    include "net.fabricmc.fabric-api:fabric-events-lifecycle-v0:${project.event_lifecycle_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-key-binding-api-v1:${project.key_bind_api_version}"
+    include "net.fabricmc.fabric-api:fabric-key-binding-api-v1:${project.key_bind_api_version}"
+    
+	
 	
 	// https://mvnrepository.com/artifact/org.graalvm.js/js
-	compile group: 'org.graalvm.sdk', name: 'graal-sdk', version: '20.1.0'
-	compile group: 'org.graalvm.js', name: 'js', version: '20.1.0'
+	implementation group: 'org.graalvm.sdk', name: 'graal-sdk', version: '20.1.0'
+	implementation group: 'org.graalvm.js', name: 'js', version: '20.1.0'
 	
 	//these ones are needed to build the mod because doesn't auto include sub-dependencies
-	compile group: 'org.graalvm.truffle', name: 'truffle-api', version: '20.1.0'
-	compile group: 'org.graalvm.regex', name: 'regex', version: '20.1.0'
-	compile group: 'com.ibm.icu', name: 'icu4j', version: '64.2'
+	implementation group: 'org.graalvm.truffle', name: 'truffle-api', version: '20.1.0'
+	implementation group: 'org.graalvm.regex', name: 'regex', version: '20.1.0'
+	implementation group: 'com.ibm.icu', name: 'icu4j', version: '64.2'
 	
 	include group: 'org.graalvm.sdk', name: 'graal-sdk', version: '20.1.0'
 	include group: 'org.graalvm.js', name: 'js', version: '20.1.0'
