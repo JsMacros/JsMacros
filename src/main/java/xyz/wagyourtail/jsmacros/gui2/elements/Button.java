@@ -41,7 +41,7 @@ public class Button extends AbstractPressableButtonWidget {
     public void setMessage(Text message) {
         super.setMessage(message);
         this.text = new ArrayList<>(this.mc.textRenderer.wrapLines(message, width - 4));
-        this.lines = Math.min(height / mc.textRenderer.fontHeight, text.size());
+        this.lines = Math.max(Math.min((height - 2) / mc.textRenderer.fontHeight, text.size()), 1);
         this.vcenter = ((height - 4) - (lines * mc.textRenderer.fontHeight)) / 2;
     }
     
@@ -72,6 +72,7 @@ public class Button extends AbstractPressableButtonWidget {
             fill(matricies, x + width - 1, y, x + width, y + height, borderColor);
             fill(matricies, x + 1, y, x + width - 1, y + 1, borderColor);
             fill(matricies, x + 1, y + height - 1, x + width - 1, y + height, borderColor);
+            this.renderMessage(matricies);
         }
     }
     
