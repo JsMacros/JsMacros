@@ -29,9 +29,10 @@ dependencies {
     include "net.fabricmc.fabric-api:fabric-events-lifecycle-v0:${project.event_lifecycle_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-key-binding-api-v1:${project.key_bind_api_version}"
     include "net.fabricmc.fabric-api:fabric-key-binding-api-v1:${project.key_bind_api_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-resource-loader-v0:${resource_loader_version}"
+    include "net.fabricmc.fabric-api:fabric-resource-loader-v0:${project.resource_loader_version}"
     
-	
-	
+    
 	// https://mvnrepository.com/artifact/org.graalvm.js/js
 	implementation group: 'org.graalvm.sdk', name: 'graal-sdk', version: '20.1.0'
 	implementation group: 'org.graalvm.js', name: 'js', version: '20.1.0'
