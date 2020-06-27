@@ -13,11 +13,11 @@ public class Button extends AbstractPressableButtonWidget {
     protected int color;
     protected int borderColor;
     protected int hilightColor;
-    private int textColor;
-    private ArrayList<StringRenderable> text;
-    private MinecraftClient mc;
-    private int lines;
-    private int vcenter;
+    protected MinecraftClient mc;
+    protected int textColor;
+    protected ArrayList<StringRenderable> text;
+    protected int lines;
+    protected int vcenter;
     public Consumer<Button> onPress;
     
     public Button(int x, int y, int width, int height, int color, int borderColor, int hilightColor, int textColor, Text message, Consumer<Button> onPress) {
@@ -52,7 +52,13 @@ public class Button extends AbstractPressableButtonWidget {
     public void setHilightColor(int color) {
         this.hilightColor = color;
     }
-
+    
+    protected void renderMessage(MatrixStack matricies) {
+        for (int i = 0; i < lines; ++i) {
+            drawCenteredText(matricies, mc.textRenderer, text.get(i), x + width / 2, y + 2 + vcenter + (i * mc.textRenderer.fontHeight), textColor);
+        }
+    }
+    
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             // fill
@@ -66,10 +72,6 @@ public class Button extends AbstractPressableButtonWidget {
             fill(matricies, x + width - 1, y, x + width, y + height, borderColor);
             fill(matricies, x + 1, y, x + width - 1, y + 1, borderColor);
             fill(matricies, x + 1, y + height - 1, x + width - 1, y + height, borderColor);
-    
-            for (int i = 0; i < lines; ++i) {
-                drawCenteredText(matricies, mc.textRenderer, text.get(i), x + width / 2, y + 2 + vcenter + (i * mc.textRenderer.fontHeight), textColor);
-            }
         }
     }
     
