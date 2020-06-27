@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.events.RecieveMessageCallback;
+import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
 @Mixin(ChatHud.class)
 class jsmacros_ChatHudMixin {
@@ -16,16 +17,10 @@ class jsmacros_ChatHudMixin {
     @ModifyVariable(method = "addMessage", at = @At(value = "HEAD"))
     private Text jsmacros_addChatMessage(Text text) {
         if (text == null) return text;
-        String json = Text.Serializer.toJson(text);
-        String result = RecieveMessageCallback.EVENT.invoker().interact(json);
+        TextHelper result = RecieveMessageCallback.EVENT.invoker().interact(new TextHelper(text));
         if (result == null) return null;
-        if (!json.equals(result)) {
-            try {
-                return Text.Serializer.fromJson(result);
-            } catch(Exception e) {
-                e.printStackTrace();
-                return text;
-            }
+        if (!result.getRaw().equals(text)) {
+            return result.getRaw();
         }
         else return text;
     }

@@ -24,6 +24,7 @@ import xyz.wagyourtail.jsmacros.events.SendMessageCallback;
 import xyz.wagyourtail.jsmacros.macros.*;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
+import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
 public class Profile {
     public String profileName;
@@ -152,7 +153,7 @@ public class Profile {
                    } catch (InterruptedException e1) {}
                }
                
-               message = (String) args.get("message");
+               message = (TextHelper) args.get("message");
                return message;
            });
            
