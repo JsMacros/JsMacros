@@ -41,7 +41,7 @@ public class Button extends AbstractPressableButtonWidget {
     public void setMessage(Text message) {
         super.setMessage(message);
         this.text = new ArrayList<>(this.mc.textRenderer.wrapLines(message, width - 4));
-        this.lines = Math.max(Math.min((height - 2) / mc.textRenderer.fontHeight, text.size()), 1);
+        this.lines = Math.min(Math.max((height - 2) / mc.textRenderer.fontHeight, 1), text.size());
         this.vcenter = ((height - 4) - (lines * mc.textRenderer.fontHeight)) / 2;
     }
     
