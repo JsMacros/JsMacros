@@ -22,6 +22,26 @@ public class EntityHelper {
         return r;
     }
     
+    public double getX() {
+        return e.getX();
+    }
+
+    public double getY() {
+        return e.getY();
+    }
+    
+    public double getZ() {
+        return e.getZ();
+    }
+    
+    public float getPitch() {
+        return e.pitch;
+    }
+    
+    public float getYaw() {
+        return e.yaw;
+    }
+    
     public String getName() {
         if (e == null) return null;
         return e.getName().toString();

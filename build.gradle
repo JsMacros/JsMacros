@@ -25,7 +25,7 @@ dependencies {
 	//partial fabric api
 	modImplementation "net.fabricmc.fabric-api:fabric-api-base:${project.api_base_version}"
 	include "net.fabricmc.fabric-api:fabric-api-base:${project.api_base_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-events-lifecycle-v0:${project.event_lifecycle_version}"
+	modImplemen tation "net.fabricmc.fabric-api:fabric-events-lifecycle-v0:${project.event_lifecycle_version}"
     include "net.fabricmc.fabric-api:fabric-events-lifecycle-v0:${project.event_lifecycle_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-key-binding-api-v1:${project.key_bind_api_version}"
     include "net.fabricmc.fabric-api:fabric-key-binding-api-v1:${project.key_bind_api_version}"
