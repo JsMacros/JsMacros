@@ -15,7 +15,6 @@ import xyz.wagyourtail.jsmacros.gui2.elements.OverlayContainer;
 
 public class ConfirmOverlay extends OverlayContainer {
     private Consumer<ConfirmOverlay> accept;
-    private Text message;
     private ArrayList<StringRenderable> text;
     private int lines;
     private int vcenter;
