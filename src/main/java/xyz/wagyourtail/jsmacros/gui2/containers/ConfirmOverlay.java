@@ -29,8 +29,8 @@ public class ConfirmOverlay extends OverlayContainer {
     
     public void setMessage(Text message) {
         this.text = new ArrayList<>(this.mc.textRenderer.wrapLines(message, width - 6));
-        this.lines = Math.min(Math.max((height - 14) / mc.textRenderer.fontHeight, 1), text.size());
-        this.vcenter = ((height - 14) - (lines * mc.textRenderer.fontHeight)) / 2;
+        this.lines = Math.min(Math.max((height - 15) / mc.textRenderer.fontHeight, 1), text.size());
+        this.vcenter = ((height - 15) - (lines * mc.textRenderer.fontHeight)) / 2;
     }
     
     public void init() {
@@ -55,6 +55,7 @@ public class ConfirmOverlay extends OverlayContainer {
     
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
+        fill(matrices, x + 1, y + height - 13, x + width - 1, y + height - 12, 0xFFFFFFFF);
         this.renderMessage(matrices);
         super.render(matrices, mouseX, mouseY, delta);
     }
