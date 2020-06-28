@@ -26,6 +26,7 @@ public class FileChooser extends OverlayContainer {
     @SuppressWarnings("unused")
     private Button select;
     private Button rename;
+    @SuppressWarnings("unused")
     private Button delete;
     private Button newbtn;
     @SuppressWarnings("unused")
@@ -49,11 +50,11 @@ public class FileChooser extends OverlayContainer {
         files.clear();
         this.directory = dir;
         this.dirname = new LiteralText("." + dir.getAbsolutePath().substring(jsMacros.config.macroFolder.getAbsolutePath().length()).replaceAll("\\\\", "/"));
-        
+
         if (!this.directory.equals(jsMacros.config.macroFolder)) {
             addFile(this.directory.getParentFile(), "..");
         }
-        
+
         ArrayList<File> files = new ArrayList<File>(Arrays.asList(directory.listFiles()));
         Collections.sort(files, new sortFile());
         for (File f : files) {
@@ -91,38 +92,46 @@ public class FileChooser extends OverlayContainer {
                 this.close();
             }
         }));
-        
+
         editbtn = (Button) this.addButton(new Button(x + w * 4 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Edit"), (btn) -> {
             if (this.selected != null) Util.getOperatingSystem().open(this.selected);
         }));
 //        editbtn.visible = false;
-        
+
         rename = (Button) this.addButton(new Button(x + w * 3 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Rename"), (btn) -> {
 
         }));
         rename.visible = false;
-        
-        delete = (Button) this.addButton(new Button(x + w * 2 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Delete"), (btn) -> {
 
+        delete = (Button) this.addButton(new Button(x + w * 2 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Delete"), (btn) -> {
+            if (this.selected != null && this.selected.isFile()) {
+                fileObj f = null;
+                for (fileObj fi : files) {
+                    if (fi.file.equals(this.selected)) {
+                        f = fi;
+                        break;
+                    }
+                }
+                if (f != null) confirmDelete(f);
+            }
         }));
-        delete.visible = false;
-        
+
         newbtn = (Button) this.addButton(new Button(x + w * 1 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("New"), (btn) -> {
 
         }));
         newbtn.visible = false;
-        
+
         openf = (Button) this.addButton(new Button(x + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Open Folder"), (btn) -> {
             Util.getOperatingSystem().open(directory);
         }));
-        
+
         this.setDir(directory);
     }
-    
+
     public void addFile(File f) {
         addFile(f, f.getName());
     }
-    
+
     public void addFile(File f, String btnText) {
         fileObj file = new fileObj(f, new Button(x + 3 + (files.size() % 5 * (width - 12) / 5), topScroll + (files.size() / 5 * 12), (width - 12) / 5, 12, 0, 0, 0x7FFFFFFF, f.isDirectory() ? 0xFFFF00 : 0xFFFFFF, new LiteralText(btnText), (btn) -> {
             selectFile(f);
@@ -130,6 +139,25 @@ public class FileChooser extends OverlayContainer {
         files.add(file);
         this.addButton(file.btn);
         scroll.setScrollPages((files.size() / 5 * 12) / Math.max(1, height - 27));
+    }
+
+    public void updateFilePos() {
+        for (int i = 0; i < files.size(); ++i) {
+            files.get(i).btn.setPos(x + 3 + (i % 5 * (width - 12) / 5), topScroll + (i / 5 * 12), (width - 12) / 5, 12);
+        }
+    }
+
+    public void confirmDelete(fileObj f) {
+        this.openOverlay(new ConfirmOverlay(x + width / 2 - 100, x + height / 2 - 50, 200, 100, textRenderer, new LiteralText("Are you sure you want to delete this file?"), addButton, removeButton, this::closeOverlay, (conf) -> {
+            delete(f);
+        }));
+    }
+
+    public void delete(fileObj f) {
+        removeButton(f.btn);
+        files.remove(f);
+        f.file.delete();
+        updateFilePos();
     }
 
     public void onScrollbar(double page) {
@@ -145,9 +173,9 @@ public class FileChooser extends OverlayContainer {
 
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
         renderBackground(matricies);
-        
-        textRenderer.drawTrimmed(this.dirname, x+3, y+3,width-14, 0xFFFFFF);
-        
+
+        textRenderer.drawTrimmed(this.dirname, x + 3, y + 3, width - 14, 0xFFFFFF);
+
         fill(matricies, x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
         fill(matricies, x + 2, y + height - 15, x + width - 2, y + height - 14, 0xFFFFFFFF);
 //        textRenderer.draw(, mouseX, mouseY, color, shadow, matrix, vertexConsumers, seeThrough, backgroundColor, light)

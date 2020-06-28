@@ -14,7 +14,7 @@ public abstract class MultiElementContainer extends DrawableHelper {
     protected int width;
     protected int height;
     protected ArrayList<AbstractButtonWidget> buttons = new ArrayList<>();
-    private Consumer<AbstractButtonWidget> addButton;
+    protected Consumer<AbstractButtonWidget> addButton;
     protected TextRenderer textRenderer;
     protected boolean visible = true;
     

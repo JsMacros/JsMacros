@@ -131,7 +131,7 @@ public class MacroScreen extends Screen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == 256) {
             if (overlay != null) {
-                this.overlay.closeOverlay();
+                this.overlay.closeOverlay(null);
                 return true;
             }
         }

@@ -10,9 +10,9 @@ import net.minecraft.client.util.math.MatrixStack;
 public class OverlayContainer extends MultiElementContainer {
     public HashMap<AbstractButtonWidget, Boolean> savedBtnStates = new HashMap<>();
     public Scrollbar scroll;
-    public Consumer<OverlayContainer> close;
-    Consumer<AbstractButtonWidget> removeButton;
-    private OverlayContainer overlay;
+    protected Consumer<OverlayContainer> close;
+    protected Consumer<AbstractButtonWidget> removeButton;
+    protected OverlayContainer overlay;
     
     public OverlayContainer(int x, int y, int width, int height, TextRenderer textRenderer, Consumer<AbstractButtonWidget> addButton, Consumer<AbstractButtonWidget> removeButton, Consumer<OverlayContainer> close) {
         super(x, y, width, height, textRenderer, addButton);
@@ -34,9 +34,12 @@ public class OverlayContainer extends MultiElementContainer {
         overlay.init();
     }
     
-    public void closeOverlay() {
-        if (this.overlay != null) this.overlay.closeOverlay();
-        else this.close.accept(this);
+    public void closeOverlay(OverlayContainer overlay) {
+        if (this.overlay != null && this.overlay == overlay) {
+            this.close.accept(overlay);
+            this.overlay = null;
+        }
+        else this.close.accept(overlay);
     }
     
     public void close() {
