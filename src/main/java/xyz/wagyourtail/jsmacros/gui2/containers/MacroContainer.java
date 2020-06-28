@@ -101,7 +101,6 @@ public class MacroContainer extends MultiElementContainer {
         }));
 
         delBtn = (Button) addButton(new Button(x + w - 1, y + 1, 12, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("X"), (btn) -> {
-            Profile.registry.removeMacro(macro);
             if (onRemove != null) onRemove.accept(this);
         }));
     }

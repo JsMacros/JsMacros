@@ -143,22 +143,6 @@ public class FileChooser extends OverlayContainer {
         }
     }
 
-    public void renderBackground(MatrixStack matricies) {
-        // black bg
-        fill(matricies, x, y, x + width, y + height, 0xFF000000);
-        // 2 layer border
-        fill(matricies, x, y, x + width, y + 1, 0x7F7F7F7F);
-        fill(matricies, x, y + height - 1, x + width, y + height, 0x7F7F7F7F);
-        fill(matricies, x, y + 1, x + 1, y + height - 1, 0x7F7F7F7F);
-        fill(matricies, x + width - 1, y + 1, x + width, y + height - 1, 0x7F7F7F7F);
-
-        fill(matricies, x + 1, y + 1, x + width - 1, y + 2, 0xFFFFFFFF);
-        fill(matricies, x + 1, y + height - 2, x + width - 1, y + height - 1, 0xFFFFFFFF);
-        fill(matricies, x + 1, y + 1, x + 2, y + height - 1, 0xFFFFFFFF);
-        fill(matricies, x + width - 2, y + 1, x + width - 1, y + height - 1, 0xFFFFFFFF);
-
-    }
-
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
         renderBackground(matricies);
         

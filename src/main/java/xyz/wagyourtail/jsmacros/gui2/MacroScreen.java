@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.gui2.containers.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.gui2.containers.FileChooser;
 import xyz.wagyourtail.jsmacros.gui2.containers.MacroContainer;
 import xyz.wagyourtail.jsmacros.gui2.containers.MacroListTopbar;
@@ -12,7 +13,7 @@ import xyz.wagyourtail.jsmacros.gui2.elements.Button;
 import xyz.wagyourtail.jsmacros.gui2.elements.OverlayContainer;
 import xyz.wagyourtail.jsmacros.gui2.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
-
+import xyz.wagyourtail.jsmacros.profile.Profile;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -62,7 +63,7 @@ public class MacroScreen extends Screen {
     }
 
     public void addMacro(RawMacro macro) {
-        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::removeMacro, this::setFile));
+        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::confirmRemoveMacro, this::setFile));
         macroScroll.setScrollPages((macros.size() * 16) / (double) Math.max(1, this.height - 40));
     }
 
@@ -96,7 +97,14 @@ public class MacroScreen extends Screen {
         if (this.overlay == overlay) this.overlay = null;
     }
 
+    public void confirmRemoveMacro(MacroContainer macro) {
+        openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, this.textRenderer, new LiteralText("Are you sure you want to remove this macro?"), this::addButton, this::removeButton, this::closeOverlay, (conf) -> {
+            removeMacro(macro);
+        }));
+    }
+    
     public void removeMacro(MacroContainer macro) {
+        Profile.registry.removeMacro(macro.getRawMacro());
         for (AbstractButtonWidget b : macro.getButtons()) {
             removeButton(b);
         }
