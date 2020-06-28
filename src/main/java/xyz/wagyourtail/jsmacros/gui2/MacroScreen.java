@@ -88,6 +88,7 @@ public class MacroScreen extends Screen {
     }
     
     public void closeOverlay(OverlayContainer overlay) {
+        if (overlay == null) return;
         for (AbstractButtonWidget b : overlay.getButtons()) {
             removeButton(b);
         }
@@ -131,7 +132,7 @@ public class MacroScreen extends Screen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == 256) {
             if (overlay != null) {
-                this.overlay.closeOverlay(null);
+                this.overlay.closeOverlay(this.overlay.getChildOverlay());
                 return true;
             }
         }

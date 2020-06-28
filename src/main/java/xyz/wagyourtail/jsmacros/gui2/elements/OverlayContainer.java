@@ -34,6 +34,11 @@ public class OverlayContainer extends MultiElementContainer {
         overlay.init();
     }
     
+    public OverlayContainer getChildOverlay() {
+        if (overlay != null) return overlay.getChildOverlay();
+        else return this;
+    }
+    
     public void closeOverlay(OverlayContainer overlay) {
         if (this.overlay != null && this.overlay == overlay) {
             this.close.accept(overlay);
