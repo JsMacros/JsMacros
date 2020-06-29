@@ -49,7 +49,7 @@ public class RunScript {
                     interp.set("file", file);
                     interp.set("global", new globalVarFunctions());
                     interp.set("jsmacros", new jsMacrosFunctions());
-                    interp.set("time", new timeFunctions());
+                    //interp.set("time", new timeFunctions());
                     interp.set("keybind", new keybindFunctions());
                     interp.set("chat", new chatFunctions());
                     interp.set("world", new worldFunctions());
