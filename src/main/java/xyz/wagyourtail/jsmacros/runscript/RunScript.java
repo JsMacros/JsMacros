@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.runscript;
 
 import java.io.File;
-import java.io.FileReader;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
