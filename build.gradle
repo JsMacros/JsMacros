@@ -25,14 +25,17 @@ dependencies {
 	//partial fabric api
 	modImplementation "net.fabricmc.fabric-api:fabric-api-base:${project.api_base_version}"
 	include "net.fabricmc.fabric-api:fabric-api-base:${project.api_base_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-events-lifecycle-v0:${project.event_lifecycle_version}"
-    include "net.fabricmc.fabric-api:fabric-events-lifecycle-v0:${project.event_lifecycle_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-lifecycle-events-v1:${project.lifecycle_events_version}"
+    include "net.fabricmc.fabric-api:fabric-lifecycle-events-v1:${project.lifecycle_events_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-key-binding-api-v1:${project.key_bind_api_version}"
     include "net.fabricmc.fabric-api:fabric-key-binding-api-v1:${project.key_bind_api_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-resource-loader-v0:${resource_loader_version}"
     include "net.fabricmc.fabric-api:fabric-resource-loader-v0:${project.resource_loader_version}"
     
     
+	// https://mvnrepository.com/artifact/org.python/jython-standalone
+    compile group: 'org.python', name: 'jython-standalone', version: '2.7.2'
+	
 	// https://mvnrepository.com/artifact/org.graalvm.js/js
 	implementation group: 'org.graalvm.sdk', name: 'graal-sdk', version: '20.1.0'
 	implementation group: 'org.graalvm.js', name: 'js', version: '20.1.0'
@@ -42,11 +45,14 @@ dependencies {
 	implementation group: 'org.graalvm.regex', name: 'regex', version: '20.1.0'
 	implementation group: 'com.ibm.icu', name: 'icu4j', version: '64.2'
 	
+	
+	
 	include group: 'org.graalvm.sdk', name: 'graal-sdk', version: '20.1.0'
 	include group: 'org.graalvm.js', name: 'js', version: '20.1.0'
 	include group: 'org.graalvm.truffle', name: 'truffle-api', version: '20.1.0'
 	include group: 'org.graalvm.regex', name: 'regex', version: '20.1.0'
 	include group: 'com.ibm.icu', name: 'icu4j', version: '64.2'
+	include group: 'org.python', name: 'jython-standalone', version: '2.7.2'
 	
 	//nullable not defined so...
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'

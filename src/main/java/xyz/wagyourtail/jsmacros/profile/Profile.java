@@ -5,8 +5,8 @@ import java.util.HashMap;
 
 import org.lwjgl.glfw.GLFW;
 
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -159,7 +159,7 @@ public class Profile {
            
            // -------- TICK --------- //
            registry.addEvent("TICK");
-           ClientTickCallback.EVENT.register(e -> {
+           ClientTickEvents.END_CLIENT_TICK.register(e -> {
                if (registry.macros.containsKey("TICK")) for (BaseMacro macro : registry.macros.get("TICK").values()) {
                    macro.trigger("TICK", new HashMap<>());
                }

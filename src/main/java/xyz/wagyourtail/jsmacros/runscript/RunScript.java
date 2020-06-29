@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.runscript;
 
 import java.io.File;
+import java.io.FileReader;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
 import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.Value;
+import org.python.util.PythonInterpreter;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
@@ -29,6 +31,49 @@ public class RunScript {
     
     
     public static Thread exec(RawMacro macro, String event, HashMap<String, Object> args) {
+        if (macro.scriptFile.endsWith(".py")) {
+            return execPY(macro, event, args);
+        } else {
+            return execJS(macro, event, args);
+        }
+    }
+    
+    public static Thread execPY(RawMacro macro, String event, HashMap<String, Object> args) {
+        Thread t = new Thread(() -> {
+            try {
+                File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
+                if (file.exists()) {
+                    PythonInterpreter interp = new PythonInterpreter();
+                    interp.set("event", event);
+                    interp.set("args", args);
+                    interp.set("file", file);
+                    interp.set("global", new globalVarFunctions());
+                    interp.set("jsmacros", new jsMacrosFunctions());
+                    interp.set("time", new timeFunctions());
+                    interp.set("keybind", new keybindFunctions());
+                    interp.set("chat", new chatFunctions());
+                    interp.set("world", new worldFunctions());
+                    interp.set("player", new playerFunctions());
+                    interp.set("hud", new hudFunctions());
+                    interp.exec("import os\nos.chdir('"+file.getParentFile().getCanonicalPath().replaceAll("\\\\", "/")+"')");
+                    interp.execfile(file.getAbsolutePath());
+                    interp.close();
+                }
+            } catch (Exception e) {
+                MinecraftClient mc = MinecraftClient.getInstance();
+                if (mc.inGameHud != null) {
+                    LiteralText text = new LiteralText(e.toString());
+                    mc.inGameHud.getChatHud().addMessage(text, 0);
+                }
+                e.printStackTrace();
+            }
+        });
+        
+        t.start();
+        return t;
+    }
+    
+    public static Thread execJS(RawMacro macro, String event, HashMap<String, Object> args) {
         Thread t = new Thread(() -> {
             threads.putIfAbsent(macro, new ArrayList<>());
             Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());
