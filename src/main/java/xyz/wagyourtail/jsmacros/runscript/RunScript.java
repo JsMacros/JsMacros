@@ -56,7 +56,7 @@ public class RunScript {
                     interp.set("player", new playerFunctions());
                     interp.set("hud", new hudFunctions());
                     interp.exec("import os\nos.chdir('"+file.getParentFile().getCanonicalPath().replaceAll("\\\\", "/")+"')");
-                    interp.execfile(file.getAbsolutePath());
+                    interp.execfile(file.getCanonicalPath());
                     interp.close();
                 }
             } catch (Exception e) {
