@@ -99,7 +99,7 @@ public class RunScript {
                     binds.putMember("event", event);
                     binds.putMember("args", args);
                     binds.putMember("file", file);
-                    binds.putMember("global", new globalVarFunctions());
+                    binds.putMember("globalvars", new globalVarFunctions());
                     binds.putMember("jsmacros", new jsMacrosFunctions());
                     binds.putMember("time", new timeFunctions());
                     binds.putMember("keybind", new keybindFunctions());
