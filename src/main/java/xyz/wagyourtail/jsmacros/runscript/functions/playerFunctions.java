@@ -21,6 +21,11 @@ public class playerFunctions {
     	return new ClientPlayerEntityHelper(mc.player);
     }
     
+    public String getGameMode() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        return mc.interactionManager.getCurrentGameMode().toString();
+    }
+    
     public BlockDataHelper rayTraceBlock(double distance, boolean fluid) {
     	MinecraftClient mc = MinecraftClient.getInstance();
     	BlockHitResult h = (BlockHitResult) mc.player.rayTrace(distance, 0, fluid);
