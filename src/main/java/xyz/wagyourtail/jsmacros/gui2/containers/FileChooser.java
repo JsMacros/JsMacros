@@ -90,7 +90,7 @@ public class FileChooser extends OverlayContainer {
 
         this.addButton(new Button(x + w * 3 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Rename"), (btn) -> {
             if (selected != null) {
-                this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new LiteralText("File Name."), addButton, removeButton, this::closeOverlay, (str) -> {
+                this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new LiteralText("File Name."), selected.getName(), addButton, removeButton, this::closeOverlay, (str) -> {
                     File f = new File(directory, str);
                     if (selected.renameTo(f)) this.setDir(directory);
                 }));
@@ -111,7 +111,7 @@ public class FileChooser extends OverlayContainer {
         }));
 
         this.addButton(new Button(x + w * 1 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("New"), (btn) -> {
-            this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new LiteralText("File Name."), addButton, removeButton, this::closeOverlay, (str) -> {
+            this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new LiteralText("File Name."), "", addButton, removeButton, this::closeOverlay, (str) -> {
                 File f = new File(directory, str);
                 try {
                     f.createNewFile();
