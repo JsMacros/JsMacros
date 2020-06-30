@@ -17,14 +17,13 @@ public class ProfileContainer extends MultiElementContainer {
     private Consumer<ProfileContainer> setDefault;
     private boolean defaultProfile;
 
-    public ProfileContainer(int x, int y, int width, int height, TextRenderer textRenderer, String pName, String selectedProfile, String defaultProfile, Consumer<AbstractButtonWidget> addButton, Consumer<ProfileContainer> setSelected, Consumer<ProfileContainer> setDefault) {
+    public ProfileContainer(int x, int y, int width, int height, TextRenderer textRenderer, String pName, String defaultProfile, Consumer<AbstractButtonWidget> addButton, Consumer<ProfileContainer> setSelected, Consumer<ProfileContainer> setDefault) {
         super(x, y, width, height, textRenderer, addButton);
         this.pName = pName;
         this.setSelected = setSelected;
         this.setDefault = setDefault;
         this.defaultProfile = defaultProfile.equals(pName);
         this.init();
-        if (selectedProfile.equals(pName)) setSelected.accept(this);
     }
 
     public void init() {

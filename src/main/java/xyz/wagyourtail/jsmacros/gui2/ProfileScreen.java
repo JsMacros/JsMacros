@@ -90,9 +90,10 @@ public class ProfileScreen extends Screen {
 //            
 //            setSelected(jsMacros.profile.profileName);
 //        })));
-        ProfileContainer pc = new ProfileContainer(20, topScroll + profiles.size() * 22, this.width / 2 - 40, 20, this.textRenderer, pName, jsMacros.profile.profileName, jsMacros.config.options.defaultProfile, this::addButton, this::setSelected, this::setDefault);
+        ProfileContainer pc = new ProfileContainer(20, topScroll + profiles.size() * 22, this.width / 2 - 40, 20, this.textRenderer, pName, jsMacros.config.options.defaultProfile, this::addButton, this::setSelected, this::setDefault);
         profiles.add(pc);
         profileScroll.setScrollPages((topScroll + profiles.size() * 22) / (double) Math.max(1, this.height - 43));
+        if (pName.equals(jsMacros.profile.profileName)) setSelected(pc);
         return pc;
     }
 
