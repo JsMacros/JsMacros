@@ -34,7 +34,7 @@ dependencies {
     
     
 	// https://mvnrepository.com/artifact/org.python/jython-standalone
-    compile group: 'org.python', name: 'jython-standalone', version: '2.7.2'
+    implementation group: 'org.python', name: 'jython-standalone', version: '2.7.2'
 	
 	// https://mvnrepository.com/artifact/org.graalvm.js/js
 	implementation group: 'org.graalvm.sdk', name: 'graal-sdk', version: '20.1.0'

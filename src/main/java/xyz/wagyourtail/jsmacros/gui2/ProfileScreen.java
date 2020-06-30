@@ -32,7 +32,7 @@ public class ProfileScreen extends Screen {
     protected void init() {
         super.init();
         profiles.clear();
-        topScroll = 25;
+        topScroll = 35;
 
         client.keyboard.enableRepeatEvents(true);
         this.addButton(new Button(0, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Keys"), (btn) -> {
@@ -76,7 +76,7 @@ public class ProfileScreen extends Screen {
             }));
         }));
 
-        profileScroll = this.addButton(new Scrollbar(this.width / 2 - 8, 23, 8, this.height - 43, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
+        profileScroll = this.addButton(new Scrollbar(this.width / 2 - 8, 33, 8, this.height - 53, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
 
         for (String k : jsMacros.config.options.profiles.keySet()) {
             addProfile(k);
@@ -92,7 +92,7 @@ public class ProfileScreen extends Screen {
 //        })));
         ProfileContainer pc = new ProfileContainer(20, topScroll + profiles.size() * 22, this.width / 2 - 40, 20, this.textRenderer, pName, jsMacros.config.options.defaultProfile, this::addButton, this::setSelected, this::setDefault);
         profiles.add(pc);
-        profileScroll.setScrollPages((topScroll + profiles.size() * 22) / (double) Math.max(1, this.height - 43));
+        profileScroll.setScrollPages((topScroll + profiles.size() * 22) / (double) Math.max(1, this.height - 53));
         if (pName.equals(jsMacros.profile.profileName)) setSelected(pc);
         return pc;
     }
@@ -104,7 +104,7 @@ public class ProfileScreen extends Screen {
             this.children.remove(b);
         }
         profiles.remove(prof);
-        profileScroll.setScrollPages((topScroll + profiles.size() * 22) / (double) Math.max(1, this.height - 43));
+        profileScroll.setScrollPages((topScroll + profiles.size() * 22) / (double) Math.max(1, this.height - 53));
     }
 
     public void setSelected(ProfileContainer profile) {
@@ -126,7 +126,7 @@ public class ProfileScreen extends Screen {
 
     public void updateBtnPos() {
         for (int i = 0; i < profiles.size(); ++i) {
-            if (topScroll + i * 22 < 23 || topScroll + i * 22 > height - 42) profiles.get(i).setVisible(false);
+            if (topScroll + i * 22 < 33 || topScroll + i * 22 > height - 42) profiles.get(i).setVisible(false);
             else {
                 profiles.get(i).setVisible(true);
                 profiles.get(i).setPos(20, topScroll + i * 22, this.width / 2 - 40, 20);
@@ -144,7 +144,7 @@ public class ProfileScreen extends Screen {
     }
 
     private void onScrollbar(double page) {
-        topScroll = 25 - (int) (page * (height - 60));
+        topScroll = 35 - (int) (page * (height - 60));
         updateBtnPos();
     }
 
@@ -193,13 +193,21 @@ public class ProfileScreen extends Screen {
         for (AbstractButtonWidget b : buttons) {
             ((Button) b).render(matricies, mouseX, mouseY, delta);
         }
-
+        
+        //plist topbar
+        int w = this.width / 2 - 40;
+        drawCenteredString(matricies, textRenderer, "Profile", w * 3 / 8 + 20, 24, 0xFFFFFF);
+        drawCenteredString(matricies, this.textRenderer, textRenderer.trimToWidth("Default", w/4), w * 7 / 8 + 20, 24, 0xFFFFFF);
+        fill(matricies, 20, 33, this.width / 2 - 20, 34, 0xFFFFFFFF);
+        
+        //pname
         drawCenteredString(matricies, this.textRenderer, jsMacros.profile.profileName, this.width * 7 / 12, 5, 0x7F7F7F);
-
 //        drawCenteredString(matricies, this.textRenderer, "Not Yet Implemented", this.width / 2, 50, 0xFFFFFFFF);
-
+        
+        //middle bar
         fill(matricies, this.width / 2, 22, this.width / 2 + 1, this.height - 1, 0xFFFFFFFF);
 
+        //top stuff
         fill(matricies, this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
         fill(matricies, this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);
         fill(matricies, this.width / 6 * 2, 0, this.width / 6 * 2 + 2, 20, 0xFFFFFFFF);
