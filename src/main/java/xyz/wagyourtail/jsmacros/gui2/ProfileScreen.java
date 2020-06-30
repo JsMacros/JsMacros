@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.gui2.elements.Button;
 import xyz.wagyourtail.jsmacros.gui2.elements.OverlayContainer;
 import xyz.wagyourtail.jsmacros.gui2.elements.Scrollbar;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.minecraft.client.gui.screen.Screen;
@@ -47,6 +48,8 @@ public class ProfileScreen extends Screen {
         this.addButton(new Button(0, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Add Profile"), (btn) -> {
             this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new LiteralText("Profile Name."), this::addButton, this::removeButton, this::closeOverlay, (str) -> {
                 addProfile(str);
+                if (!jsMacros.config.options.profiles.containsKey(str)) jsMacros.config.options.profiles.put(str, new ArrayList<>());
+                jsMacros.config.saveConfig();
             }));
         }));
         
