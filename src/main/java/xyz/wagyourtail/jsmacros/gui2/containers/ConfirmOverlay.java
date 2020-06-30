@@ -36,11 +36,11 @@ public class ConfirmOverlay extends OverlayContainer {
     public void init() {
         super.init();
         
-        this.addButton(new Button(x + 2, y+height-12, (width - 4) / 2, 10, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("cancel"), (btn) -> {
+        this.addButton(new Button(x + 2, y+height-12, (width - 4) / 2, 10, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Cancel"), (btn) -> {
             this.close();
         }));
         
-        this.addButton(new Button(x + (width - 4) / 2 + 2, y+height-12, (width - 4) / 2, 10, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("confirm"), (btn) -> {
+        this.addButton(new Button(x + (width - 4) / 2 + 2, y+height-12, (width - 4) / 2, 10, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Confirm"), (btn) -> {
             if (this.accept != null) this.accept.accept(this);
             this.close();
         }));

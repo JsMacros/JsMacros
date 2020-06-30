@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.gui2.containers;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,16 +24,6 @@ public class FileChooser extends OverlayContainer {
     private File directory;
     private StringRenderable dirname;
     private File selected;
-    @SuppressWarnings("unused")
-    private Button select;
-    private Button rename;
-    @SuppressWarnings("unused")
-    private Button delete;
-    private Button newbtn;
-    @SuppressWarnings("unused")
-    private Button openf;
-    @SuppressWarnings("unused")
-    private Button editbtn;
     private ArrayList<fileObj> files = new ArrayList<>();
     private Consumer<File> setFile;
     private int topScroll;
@@ -86,24 +77,27 @@ public class FileChooser extends OverlayContainer {
         }));
         scroll = (Scrollbar) this.addButton(new Scrollbar(x + width - 10, y + 13, 8, height - 28, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
 
-        select = (Button) this.addButton(new Button(x + w * 5 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Select"), (btn) -> {
+        this.addButton(new Button(x + w * 5 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Select"), (btn) -> {
             if (this.selected != null && this.setFile != null) {
                 this.setFile.accept(this.selected);
                 this.close();
             }
         }));
 
-        editbtn = (Button) this.addButton(new Button(x + w * 4 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Edit"), (btn) -> {
+        this.addButton(new Button(x + w * 4 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Edit"), (btn) -> {
             if (this.selected != null) Util.getOperatingSystem().open(this.selected);
         }));
-//        editbtn.visible = false;
 
-        rename = (Button) this.addButton(new Button(x + w * 3 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Rename"), (btn) -> {
-
+        this.addButton(new Button(x + w * 3 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Rename"), (btn) -> {
+            if (selected != null) {
+                this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new LiteralText("File Name."), addButton, removeButton, this::closeOverlay, (str) -> {
+                    File f = new File(directory, str);
+                    if (selected.renameTo(f)) this.setDir(directory);
+                }));
+            }
         }));
-        rename.visible = false;
 
-        delete = (Button) this.addButton(new Button(x + w * 2 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Delete"), (btn) -> {
+        this.addButton(new Button(x + w * 2 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Delete"), (btn) -> {
             if (this.selected != null && this.selected.isFile()) {
                 fileObj f = null;
                 for (fileObj fi : files) {
@@ -116,12 +110,19 @@ public class FileChooser extends OverlayContainer {
             }
         }));
 
-        newbtn = (Button) this.addButton(new Button(x + w * 1 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("New"), (btn) -> {
-
+        this.addButton(new Button(x + w * 1 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("New"), (btn) -> {
+            this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new LiteralText("File Name."), addButton, removeButton, this::closeOverlay, (str) -> {
+                File f = new File(directory, str);
+                try {
+                    f.createNewFile();
+                    this.setDir(directory);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }));
         }));
-        newbtn.visible = false;
 
-        openf = (Button) this.addButton(new Button(x + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Open Folder"), (btn) -> {
+        this.addButton(new Button(x + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Open Folder"), (btn) -> {
             Util.getOperatingSystem().open(directory);
         }));
 
