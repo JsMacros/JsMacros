@@ -30,14 +30,17 @@ public class jsMacros implements ClientModInitializer {
         macroListScreen = new MacroListScreen(null);
         keyMacrosScreen = new KeyMacrosScreen(null);
         
-        Builder build = Context.newBuilder("js");
-        Context con = build.build();
-        con.eval("js", "console.log('js loaded.')");
         
-        PythonInterpreter interp = new PythonInterpreter();
-        interp.exec("print('py loaded.')");
-        interp.close();
-        
+        Thread t = new Thread(() -> {
+            Builder build = Context.newBuilder("js");
+            Context con = build.build();
+            con.eval("js", "console.log('js loaded.')");
+            
+            PythonInterpreter interp = new PythonInterpreter();
+            interp.exec("print('py loaded.')");
+            interp.close();
+        });
+        t.start();
     }
 
     static public Text getKeyText(String translationKey) {
