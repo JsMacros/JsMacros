@@ -15,6 +15,7 @@ public class EventMacrosScreen extends MacroScreen {
     
     protected void init() {
         super.init();
+        eventScreen.setColor(0x4FFFFFFF);
         
         keyScreen.onPress = (btn) -> {
             client.openScreen(this.parent);
@@ -27,9 +28,9 @@ public class EventMacrosScreen extends MacroScreen {
         topbar.deftype = MacroEnum.EVENT;
         
         for (String event : Profile.registry.events) {
-            if (event != "KEY" && Profile.registry.getMacros().containsKey(event))
+            if (Profile.registry.getMacros().containsKey(event))
                 for (RawMacro macro : Profile.registry.getMacros().get(event).keySet()) {
-                    addMacro(macro);
+                    if (macro.type == MacroEnum.EVENT) addMacro(macro);
                 }
         }
         if (Profile.registry.getMacros().containsKey(""))

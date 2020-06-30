@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.gui2;
 
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.gui2.containers.MacroContainer;
+import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
 import net.minecraft.client.gui.screen.Screen;
@@ -14,6 +15,8 @@ public class KeyMacrosScreen extends MacroScreen {
 
     public void init() {
         super.init();
+        keyScreen.setColor(0x4FFFFFFF);
+        
         eventScreen.onPress = (btn) -> {
             client.openScreen(new EventMacrosScreen(this));
         };
@@ -21,10 +24,11 @@ public class KeyMacrosScreen extends MacroScreen {
         profileScreen.onPress = (btn) -> {
             client.openScreen(new ProfileScreen(this));
         };
-
-        for (RawMacro macro : Profile.registry.getMacros().get("KEY").keySet()) {
-            addMacro(macro);
-        }
+        
+        if (Profile.registry.getMacros().containsKey("KEY"))
+            for (RawMacro macro : Profile.registry.getMacros().get("KEY").keySet()) {
+                if (macro.type != MacroEnum.EVENT) addMacro(macro);
+            }
     }
 
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {

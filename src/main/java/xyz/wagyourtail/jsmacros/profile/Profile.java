@@ -32,12 +32,7 @@ public class Profile {
     private static KeyBinding keyBinding;
 
     public Profile(String defaultProfile) {
-        loadProfile(defaultProfile);
-        if (registry.macros == null) {
-            profileName = "default";
-            registry.clearMacros();
-            saveProfile();
-        }
+        loadOrCreateProfile(defaultProfile);
         
         keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, "JSMacros");
         KeyBindingHelper.registerKeyBinding(keyBinding);
@@ -45,16 +40,27 @@ public class Profile {
         initEventHandlerCallbacks();
     }
 
-    public void loadProfile(String pName) {
+    public void loadOrCreateProfile(String pName) {
+        registry.clearMacros();
+        if (jsMacros.config.options.profiles.containsKey(pName)) {
+            loadProfile(pName);
+        } else {
+            jsMacros.config.options.profiles.put(pName, new ArrayList<>());
+            loadProfile(pName);
+            jsMacros.config.saveConfig();
+        }
+    }
+    
+    private boolean loadProfile(String pName) {
         registry.clearMacros();
         ArrayList<RawMacro> rawProfile = jsMacros.config.options.profiles.get(pName);
         if (rawProfile == null) {
             System.out.println("profile \"" + pName + "\" does not exist or is broken/null");
-            return;
+            return false;
         }
         profileName = pName;
         for (RawMacro rawmacro : rawProfile) {
-            addMacro(rawmacro);
+            registry.addMacro(rawmacro);
         }
         
         HashMap<String, Object> args = new HashMap<>();
@@ -62,6 +68,7 @@ public class Profile {
         if (registry.macros.containsKey("PROFILE_LOAD")) for (BaseMacro macro : registry.macros.get("PROFILE_LOAD").values()) {
             macro.trigger("PROFILE_LOAD", args);
         }
+        return true;
     }
 
     public ArrayList<RawMacro> toRawProfile() {
