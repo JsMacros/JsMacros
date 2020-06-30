@@ -9,6 +9,7 @@ import net.minecraft.text.Text;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
+import org.python.util.PythonInterpreter;
 
 import xyz.wagyourtail.jsmacros.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.profile.Profile;
@@ -32,6 +33,10 @@ public class jsMacros implements ClientModInitializer {
         Builder build = Context.newBuilder("js");
         Context con = build.build();
         con.eval("js", "console.log('js loaded.')");
+        
+        PythonInterpreter interp = new PythonInterpreter();
+        interp.eval("print('py loaded.')");
+        interp.close();
         
     }
 
