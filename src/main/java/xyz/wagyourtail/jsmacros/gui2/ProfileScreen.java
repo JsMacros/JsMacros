@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.gui2;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.gui2.containers.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.gui2.containers.TextPrompt;
 import xyz.wagyourtail.jsmacros.gui2.elements.Button;
 import xyz.wagyourtail.jsmacros.gui2.elements.OverlayContainer;
@@ -47,6 +48,24 @@ public class ProfileScreen extends Screen {
             this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new LiteralText("Profile Name."), this::addButton, this::removeButton, this::closeOverlay, (str) -> {
                 addProfile(str);
             }));
+        }));
+        
+        this.addButton(new Button(this.width / 6, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Rename Profile"), (btn) -> {
+            if (jsMacros.profile.profileName != "default")
+                this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new LiteralText("Profile Name."), this::addButton, this::removeButton, this::closeOverlay, (str) -> {
+                    jsMacros.config.options.profiles.remove(jsMacros.profile.profileName);
+                    jsMacros.profile.profileName = str;
+                    jsMacros.profile.saveProfile();
+                }));
+        }));
+        
+        this.addButton(new Button(this.width / 6, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Delete Profile"), (btn) -> {
+            if (jsMacros.profile.profileName != "default")
+                this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new LiteralText("Delete Profile: "+jsMacros.profile.profileName), this::addButton, this::removeButton, this::closeOverlay, (cf) -> {
+                    jsMacros.config.options.profiles.remove(jsMacros.profile.profileName);
+                    jsMacros.profile.loadOrCreateProfile("default");
+                    jsMacros.profile.saveProfile();
+                }));
         }));
         
         profileScroll = this.addButton(new Scrollbar(this.width / 2 - 8, 23, this.width / 2, this.height - 43, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
