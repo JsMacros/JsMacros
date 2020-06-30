@@ -148,7 +148,7 @@ public class FileChooser extends OverlayContainer {
     }
 
     public void confirmDelete(fileObj f) {
-        this.openOverlay(new ConfirmOverlay(x + width / 2 - 100, x + height / 2 - 50, 200, 100, textRenderer, new LiteralText("Are you sure you want to delete this file?"), addButton, removeButton, this::closeOverlay, (conf) -> {
+        this.openOverlay(new ConfirmOverlay(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new LiteralText("Are you sure you want to delete this file?"), addButton, removeButton, this::closeOverlay, (conf) -> {
             delete(f);
         }));
     }
