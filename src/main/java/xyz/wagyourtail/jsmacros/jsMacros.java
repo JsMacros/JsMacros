@@ -35,7 +35,7 @@ public class jsMacros implements ClientModInitializer {
         con.eval("js", "console.log('js loaded.')");
         
         PythonInterpreter interp = new PythonInterpreter();
-        interp.eval("print('py loaded.')");
+        interp.exec("print('py loaded.')");
         interp.close();
         
     }
