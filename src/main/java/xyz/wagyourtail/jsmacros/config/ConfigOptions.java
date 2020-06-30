@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ConfigOptions {
-    public boolean allowPrivateAccess;
     public String defaultProfile;
     public HashMap<String, ArrayList<RawMacro>> profiles;
     
