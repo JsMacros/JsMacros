@@ -51,7 +51,7 @@ public class ProfileScreen extends Screen {
         }));
         
         this.addButton(new Button(this.width / 6, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Rename Profile"), (btn) -> {
-            if (jsMacros.profile.profileName != "default")
+            if (jsMacros.profile.profileName != jsMacros.config.options.defaultProfile)
                 this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new LiteralText("Profile Name."), this::addButton, this::removeButton, this::closeOverlay, (str) -> {
                     jsMacros.config.options.profiles.remove(jsMacros.profile.profileName);
                     jsMacros.profile.profileName = str;
@@ -59,16 +59,18 @@ public class ProfileScreen extends Screen {
                 }));
         }));
         
-        this.addButton(new Button(this.width / 6, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Delete Profile"), (btn) -> {
-            if (jsMacros.profile.profileName != "default")
+        this.addButton(new Button(this.width / 3, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Delete Profile"), (btn) -> {
+            if (jsMacros.profile.profileName != jsMacros.config.options.defaultProfile)
                 this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new LiteralText("Delete Profile: "+jsMacros.profile.profileName), this::addButton, this::removeButton, this::closeOverlay, (cf) -> {
+                    this.removeButton(profiles.get(jsMacros.profile.profileName));
                     jsMacros.config.options.profiles.remove(jsMacros.profile.profileName);
-                    jsMacros.profile.loadOrCreateProfile("default");
+                    jsMacros.profile.loadOrCreateProfile(jsMacros.config.options.defaultProfile);
+                    setSelected(jsMacros.config.options.defaultProfile);
                     jsMacros.profile.saveProfile();
                 }));
         }));
         
-        profileScroll = this.addButton(new Scrollbar(this.width / 2 - 8, 23, this.width / 2, this.height - 43, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
+        profileScroll = this.addButton(new Scrollbar(this.width / 2 - 8, 23, 8, this.height - 43, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
         
         for (String k : jsMacros.config.options.profiles.keySet()) {
             addProfile(k);
@@ -96,11 +98,14 @@ public class ProfileScreen extends Screen {
     }
     
     public void updateBtnPos() {
-        Button[] a = (Button[]) profiles.values().toArray();
-        for (int i = 0; i < profiles.size(); ++i) {
-            a[i].setPos(20, topScroll + i * 22, this.width / 2 - 40, 20);
-            if (topScroll + i * 22 < 23 || topScroll + i * 22 > height - 42) a[i].visible = false;
-            else a[i].visible = true;
+        int i = 0;
+        for (String name : profiles.keySet()) {
+            if (topScroll + i * 22 < 23 || topScroll + i * 22 > height - 42) profiles.get(name).visible = false;
+            else {
+                profiles.get(name).visible = true;
+                profiles.get(name).setPos(20, topScroll + i * 22, this.width / 2 - 40, 20);
+            }
+            ++i;
         }
     }
     

@@ -30,7 +30,6 @@ public class jsMacros implements ClientModInitializer {
         macroListScreen = new MacroListScreen(null);
         keyMacrosScreen = new KeyMacrosScreen(null);
         
-        
         Thread t = new Thread(() -> {
             Builder build = Context.newBuilder("js");
             Context con = build.build();
