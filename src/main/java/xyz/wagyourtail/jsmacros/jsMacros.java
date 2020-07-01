@@ -60,6 +60,7 @@ public class jsMacros implements ClientModInitializer {
                 jythonFailed = false;
             } catch (Exception e) {
                 jythonFailStack = e.getStackTrace().toString();
+                e.printStackTrace();
             }
         });
         t.start();
