@@ -34,7 +34,7 @@ public class KeyMacrosScreen extends MacroScreen {
             }
         
         if (jsMacros.jythonFailed) {
-            this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new LiteralText("Jython Failed to Launch, this is normal for the first launch of the mod but if it fails again please send the logs to me in the github issue page for this mod."), this::addButton, this::removeButton, this::closeOverlay, (conf) -> {
+            this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new LiteralText("Jython Failed to Launch.\n\n this is normal for the first launch of the mod but if it fails again please send the logs to me in the github issue page for this mod."), this::addButton, this::removeButton, this::closeOverlay, (conf) -> {
                 jsMacros.jythonFailed = false;
             }));
         }
