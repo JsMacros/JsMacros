@@ -7,9 +7,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.gui2.elements.Button;
 import xyz.wagyourtail.jsmacros.gui2.elements.OverlayContainer;
 
@@ -36,11 +36,11 @@ public class ConfirmOverlay extends OverlayContainer {
     public void init() {
         super.init();
         
-        this.addButton(new Button(x + 2, y+height-12, (width - 4) / 2, 10, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Cancel"), (btn) -> {
+        this.addButton(new Button(x + 2, y+height-12, (width - 4) / 2, 10, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("gui.cancel"), (btn) -> {
             this.close();
         }));
         
-        this.addButton(new Button(x + (width - 4) / 2 + 2, y+height-12, (width - 4) / 2, 10, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Confirm"), (btn) -> {
+        this.addButton(new Button(x + (width - 4) / 2 + 2, y+height-12, (width - 4) / 2, 10, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.confirm"), (btn) -> {
             if (this.accept != null) this.accept.accept(this);
             this.close();
         }));

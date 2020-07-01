@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 
 public class KeyMacrosScreen extends MacroScreen {
     
@@ -34,7 +34,7 @@ public class KeyMacrosScreen extends MacroScreen {
             }
         
         if (jsMacros.jythonFailed) {
-            this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new LiteralText("Jython Failed to Launch.\n\n this is normal for the first launch of the mod but if it fails again please send the logs to me in the github issue page for this mod."), this::addButton, this::removeButton, this::closeOverlay, (conf) -> {
+            this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.jythonfail"), this::addButton, this::removeButton, this::closeOverlay, (conf) -> {
                 jsMacros.jythonFailed = false;
             }));
         }

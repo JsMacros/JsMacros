@@ -10,12 +10,16 @@ import xyz.wagyourtail.jsmacros.profile.Profile;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 
 public class MacroListTopbar extends MultiElementContainer {
     public MacroEnum deftype;
     private Consumer<RawMacro> addMacro;
+    private String enabled;
+    private String type;
+    private String file;
     
     public MacroListTopbar(int x, int y, int width, int height, TextRenderer textRenderer, MacroEnum deftype, Consumer<AbstractButtonWidget> addButton, Consumer<RawMacro> addMacro) {
         super(x, y, width, height, textRenderer, addButton);
@@ -26,6 +30,10 @@ public class MacroListTopbar extends MultiElementContainer {
 
     public void init() {
         super.init();
+        enabled = I18n.translate("Enabled");
+        type = I18n.translate(deftype == MacroEnum.EVENT ? "jsmacros.events" : "jsmacros.keys");
+        file = I18n.translate("jsmacros.file");
+        
         addButton(new Button(x + width - 13, y+1, 12, height - 3, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("+"), (btn) -> {
             RawMacro macro = new RawMacro(deftype, "", "", false);
             Profile.registry.addMacro(macro);
@@ -41,12 +49,12 @@ public class MacroListTopbar extends MultiElementContainer {
         fill(matricies, x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
         fill(matricies, x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
         int w = this.width - 12;
-        String s = textRenderer.trimToWidth("Enabled", w/12);
-        drawCenteredString(matricies, this.textRenderer, s, x + (w / 24), y + 2, 0xFFFFFF);
+        
+        drawCenteredString(matricies, this.textRenderer, textRenderer.trimToWidth(enabled, w/12), x + (w / 24), y + 2, 0xFFFFFF);
         fill(matricies, x + (w / 12), y + 1, x + (w / 12) + 1, y + height - 1, 0xFFFFFFFF);
-        drawCenteredString(matricies, this.textRenderer, deftype == MacroEnum.EVENT ? "Event" : "Key", x + (w / 6), y + 2, 0xFFFFFF);
+        drawCenteredString(matricies, this.textRenderer, type, x + (w / 6), y + 2, 0xFFFFFF);
         fill(matricies, x + (w / 4), y + 1, x + (w / 4) + 1, y + height - 1, 0xFFFFFFFF);
-        drawCenteredString(matricies, this.textRenderer, "File", x + (w * 15 / 24), y + 2, 0xFFFFFF);
+        drawCenteredString(matricies, this.textRenderer, file, x + (w * 15 / 24), y + 2, 0xFFFFFF);
         fill(matricies, x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
     }
 }

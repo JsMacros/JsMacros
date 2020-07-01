@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.resource.language.I18n;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 
@@ -40,14 +41,14 @@ public class ConfigManager {
         try {
             options = gson.fromJson(new FileReader(configFile), ConfigOptions.class);
         } catch (Exception e) {
-            System.out.println("load config failed, backing up old file if exists.");
+            System.out.println(I18n.translate("jsmacros.loadconfigfail"));
             e.printStackTrace();
             if (configFile.exists()) {
                 configFile.renameTo(new File(configFolder, "options.json.bak"));
             }
             saveConfig();
         }
-        System.out.println("Profiles Loaded: ");
+        System.out.println(I18n.translate("jsmacros.profilesloaded"));
         for (String key : jsMacros.config.options.profiles.keySet()) {
             System.out.println("    " + key);
         }
@@ -61,7 +62,7 @@ public class ConfigManager {
             fw.write(gson.toJson(options));
             fw.close();
         } catch (Exception e) {
-            System.out.println("save config failed");
+            System.out.println(I18n.translate("jsmacros.saveconfigfail"));
             e.printStackTrace();
         }
     }

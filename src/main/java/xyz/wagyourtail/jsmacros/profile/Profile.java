@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.ActionResult;
 import xyz.wagyourtail.jsmacros.jsMacros;
@@ -34,7 +35,7 @@ public class Profile {
     public Profile(String defaultProfile) {
         loadOrCreateProfile(defaultProfile);
         
-        keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, "JSMacros");
+        keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title"));
         KeyBindingHelper.registerKeyBinding(keyBinding);
 
         initEventHandlerCallbacks();

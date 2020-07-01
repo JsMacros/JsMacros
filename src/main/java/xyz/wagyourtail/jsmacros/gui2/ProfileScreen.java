@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.StringRenderable;
 import net.minecraft.text.TranslatableText;
 
 public class ProfileScreen extends Screen {
@@ -23,6 +24,8 @@ public class ProfileScreen extends Screen {
     private ProfileContainer selected;
     private Scrollbar profileScroll;
     protected OverlayContainer overlay;
+    private StringRenderable profText;
+    private StringRenderable defText;
 
     public ProfileScreen(Screen parent) {
         super(new TranslatableText("jsmacros.title"));
@@ -31,31 +34,34 @@ public class ProfileScreen extends Screen {
 
     protected void init() {
         super.init();
+        profText = new TranslatableText("jsmacros.profile");
+        defText = new TranslatableText("jsmacros.default");
+        
         profiles.clear();
         topScroll = 35;
 
         client.keyboard.enableRepeatEvents(true);
-        this.addButton(new Button(0, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Keys"), (btn) -> {
+        this.addButton(new Button(0, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.keys"), (btn) -> {
             client.openScreen(parent);
         }));
 
-        this.addButton(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Events"), (btn) -> {
+        this.addButton(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.events"), (btn) -> {
             client.openScreen(new EventMacrosScreen(parent));
         }));
 
-        Button profile  = this.addButton(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, 0x4FFFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Profile"), null));
+        Button profile = this.addButton(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, 0x4FFFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.profile"), null));
         profile.active = false;
 
-        this.addButton(new Button(0, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Add Profile"), (btn) -> {
-            this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new LiteralText("Profile Name."), "", this::addButton, this::removeButton, this::closeOverlay, (str) -> {
+        this.addButton(new Button(0, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.addprofile"), (btn) -> {
+            this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), "", this::addButton, this::removeButton, this::closeOverlay, (str) -> {
                 addProfile(str);
                 if (!jsMacros.config.options.profiles.containsKey(str)) jsMacros.config.options.profiles.put(str, new ArrayList<>());
                 jsMacros.config.saveConfig();
             }));
         }));
 
-        this.addButton(new Button(this.width / 6, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Rename Profile"), (btn) -> {
-            if (!selected.pName.equals(jsMacros.config.options.defaultProfile)) this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new LiteralText("Profile Name."), selected.pName, this::addButton, this::removeButton, this::closeOverlay, (str) -> {
+        this.addButton(new Button(this.width / 6, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.renameprofile"), (btn) -> {
+            if (!selected.pName.equals(jsMacros.config.options.defaultProfile)) this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), selected.pName, this::addButton, this::removeButton, this::closeOverlay, (str) -> {
                 jsMacros.config.options.profiles.remove(selected.pName);
                 jsMacros.profile.profileName = str;
                 jsMacros.profile.saveProfile();
@@ -63,8 +69,8 @@ public class ProfileScreen extends Screen {
             }));
         }));
 
-        this.addButton(new Button(this.width / 3, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Delete Profile"), (btn) -> {
-            if (selected.pName != jsMacros.config.options.defaultProfile) this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new LiteralText("Delete Profile: " + jsMacros.profile.profileName), this::addButton, this::removeButton, this::closeOverlay, (cf) -> {
+        this.addButton(new Button(this.width / 3, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.deleteprofile"), (btn) -> {
+            if (selected.pName != jsMacros.config.options.defaultProfile) this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.deleteprofile").append(new LiteralText(" \"" + jsMacros.profile.profileName+"\"")), this::addButton, this::removeButton, this::closeOverlay, (cf) -> {
                 removeProfile(selected);
                 jsMacros.profile.loadOrCreateProfile(jsMacros.config.options.defaultProfile);
                 for (ProfileContainer p : profiles) {
@@ -193,21 +199,21 @@ public class ProfileScreen extends Screen {
         for (AbstractButtonWidget b : buttons) {
             ((Button) b).render(matricies, mouseX, mouseY, delta);
         }
-        
-        //plist topbar
+
+        // plist topbar
         int w = this.width / 2 - 40;
-        drawCenteredString(matricies, textRenderer, "Profile", w * 3 / 8 + 20, 24, 0xFFFFFF);
-        drawCenteredString(matricies, this.textRenderer, textRenderer.trimToWidth("Default", w/4), w * 7 / 8 + 20, 24, 0xFFFFFF);
+        drawCenteredText(matricies, textRenderer, profText, w * 3 / 8 + 20, 24, 0xFFFFFF);
+        drawCenteredText(matricies, this.textRenderer, textRenderer.trimToWidth(defText, w / 4), w * 7 / 8 + 20, 24, 0xFFFFFF);
         fill(matricies, 20, 33, this.width / 2 - 20, 34, 0xFFFFFFFF);
-        
-        //pname
+
+        // pname
         drawCenteredString(matricies, this.textRenderer, jsMacros.profile.profileName, this.width * 7 / 12, 5, 0x7F7F7F);
 //        drawCenteredString(matricies, this.textRenderer, "Not Yet Implemented", this.width / 2, 50, 0xFFFFFFFF);
-        
-        //middle bar
+
+        // middle bar
         fill(matricies, this.width / 2, 22, this.width / 2 + 1, this.height - 1, 0xFFFFFFFF);
 
-        //top stuff
+        // top stuff
         fill(matricies, this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
         fill(matricies, this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);
         fill(matricies, this.width / 6 * 2, 0, this.width / 6 * 2 + 2, 20, 0xFFFFFFFF);

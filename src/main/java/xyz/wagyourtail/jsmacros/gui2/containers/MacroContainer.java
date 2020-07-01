@@ -18,6 +18,7 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
@@ -60,7 +61,7 @@ public class MacroContainer extends MultiElementContainer {
             macro.enabled = !macro.enabled;
             Profile.registry.addMacro(macro);
             btn.setColor(macro.enabled ? 0x7000FF00 : 0x70FF0000);
-            btn.setMessage(new LiteralText(macro.enabled ? "Enabled" : "Disabled"));
+            btn.setMessage(new LiteralText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"));
         }));
 
         keyBtn = (Button) addButton(new Button(x + w / 12 + 1, y + 1, macro.type == MacroEnum.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.type == MacroEnum.EVENT ? new LiteralText(macro.eventkey) : jsMacros.getKeyText(macro.eventkey), (btn) -> {
@@ -72,7 +73,7 @@ public class MacroContainer extends MultiElementContainer {
                 btn.setMessage(new LiteralText(macro.eventkey));
             } else {
                 selectkey = true;
-                btn.setMessage(new LiteralText("- Press A Key -"));
+                btn.setMessage(new TranslatableText("jsmacros.presskey"));
             }
         }));
         if (macro.type != MacroEnum.EVENT) keyStateBtn = (Button) addButton(new Button(x + w / 4 - height, y + 1, height, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText(""), (btn) -> {
@@ -96,7 +97,7 @@ public class MacroContainer extends MultiElementContainer {
             if (openFile != null) openFile.accept(this);
         }));
         
-        editBtn = (Button) addButton(new Button(x + w - 32, y + 1, 30, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("Edit"), (btn) -> {
+        editBtn = (Button) addButton(new Button(x + w - 32, y + 1, 30, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("selectServer.edit"), (btn) -> {
             Util.getOperatingSystem().open(new File(jsMacros.config.macroFolder, macro.scriptFile));
         }));
 
