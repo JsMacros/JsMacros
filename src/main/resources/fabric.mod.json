@@ -20,13 +20,14 @@
 		]
 	},
 	"mixins": [
-			"jsmacros.mixins.json",
-			"jsmacros_compat.mixins.json"
+		"jsmacros.mixins.json",
+		"jsmacros_compat.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.7.2",
 		"minecraft": "1.16.x"
 	},
 	"suggests": {
+		"jython-standalone": "*"
 	}
 }

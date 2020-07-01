@@ -27,15 +27,23 @@ public class jsMacros implements ClientModInitializer {
     public static Profile profile;
     public static MacroListScreen macroListScreen;
     public static KeyMacrosScreen keyMacrosScreen;
+    public static boolean jythonFailed = true;
+    public static String jythonFailStack;
     
     @Override
     public void onInitializeClient() {
+        
+        //janky hack mate
         try {
-            InputStream f = this.getClass().getClassLoader().getResourceAsStream("META-INF/jars/jython-standalone-2.7.2.jar");
-            FileUtils.copyInputStreamToFile(f, new File(FabricLoader.getInstance().getGameDirectory(), "mods/jython-standalone-2.7.2.jar"));
+            if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
+                InputStream f = this.getClass().getClassLoader().getResourceAsStream("META-INF/jars/jython-standalone-2.7.2.jar");
+                File fi = new File(FabricLoader.getInstance().getGameDirectory(), "mods/jython-standalone-2.7.2.jar");
+                if (!fi.exists()) FileUtils.copyInputStreamToFile(f, fi);
+            }
         } catch(Exception e) {
             e.printStackTrace();
         }
+        
         config.loadConfig();
         profile = new Profile(config.options.defaultProfile);
         macroListScreen = new MacroListScreen(null);
@@ -45,10 +53,14 @@ public class jsMacros implements ClientModInitializer {
             Builder build = Context.newBuilder("js");
             Context con = build.build();
             con.eval("js", "console.log('js loaded.')");
-            
-            PythonInterpreter interp = new PythonInterpreter();
-            interp.exec("print('py loaded.')");
-            interp.close();
+            try {
+                PythonInterpreter interp = new PythonInterpreter();
+                interp.exec("print('py loaded.')");
+                interp.close();
+                jythonFailed = false;
+            } catch (Exception e) {
+                jythonFailStack = e.getStackTrace().toString();
+            }
         });
         t.start();
     }
