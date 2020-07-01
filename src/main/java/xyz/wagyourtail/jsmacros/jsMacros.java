@@ -1,12 +1,17 @@
 package xyz.wagyourtail.jsmacros;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
+import java.io.File;
+import java.io.InputStream;
+
+import org.apache.commons.io.FileUtils;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
 import org.python.util.PythonInterpreter;
@@ -25,6 +30,12 @@ public class jsMacros implements ClientModInitializer {
     
     @Override
     public void onInitializeClient() {
+        try {
+            InputStream f = this.getClass().getClassLoader().getResourceAsStream("META-INF/jars/jython-2.7.2.jar");
+            FileUtils.copyInputStreamToFile(f, new File(FabricLoader.getInstance().getGameDirectory(), "mods/jython-2.7.2.jar"));
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         config.loadConfig();
         profile = new Profile(config.options.defaultProfile);
         macroListScreen = new MacroListScreen(null);
