@@ -65,7 +65,7 @@ dependencies {
 	include group: 'org.graalvm.truffle', name: 'truffle-api', version: '20.1.0'
 	include group: 'org.graalvm.regex', name: 'regex', version: '20.1.0'
 	include group: 'com.ibm.icu', name: 'icu4j', version: '64.2'
-	//include group: 'org.python', name: 'jython-standalone', version: '2.7.2'
+	include group: 'org.python', name: 'jython-standalone', version: '2.7.2'
 	
 	//nullable not defined so...
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'
