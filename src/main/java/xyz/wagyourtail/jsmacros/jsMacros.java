@@ -31,8 +31,8 @@ public class jsMacros implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         try {
-            InputStream f = this.getClass().getClassLoader().getResourceAsStream("META-INF/jars/jython-2.7.2.jar");
-            FileUtils.copyInputStreamToFile(f, new File(FabricLoader.getInstance().getGameDirectory(), "mods/jython-2.7.2.jar"));
+            InputStream f = this.getClass().getClassLoader().getResourceAsStream("META-INF/jars/jython-standalone-2.7.2.jar");
+            FileUtils.copyInputStreamToFile(f, new File(FabricLoader.getInstance().getGameDirectory(), "mods/jython-standalone-2.7.2.jar"));
         } catch(Exception e) {
             e.printStackTrace();
         }
