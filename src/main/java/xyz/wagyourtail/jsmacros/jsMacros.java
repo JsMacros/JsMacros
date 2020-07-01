@@ -18,14 +18,12 @@ import org.python.util.PythonInterpreter;
 
 import xyz.wagyourtail.jsmacros.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.profile.Profile;
-import xyz.wagyourtail.jsmacros.gui.MacroListScreen;
 import xyz.wagyourtail.jsmacros.gui2.KeyMacrosScreen;
 
 public class jsMacros implements ClientModInitializer {
     public static final String MOD_ID = "jsmacros";
     public static ConfigManager config = new ConfigManager();
     public static Profile profile;
-    public static MacroListScreen macroListScreen;
     public static KeyMacrosScreen keyMacrosScreen;
     public static boolean jythonFailed = true;
     public static String jythonFailStack;
@@ -46,7 +44,6 @@ public class jsMacros implements ClientModInitializer {
         
         config.loadConfig();
         profile = new Profile(config.options.defaultProfile);
-        macroListScreen = new MacroListScreen(null);
         keyMacrosScreen = new KeyMacrosScreen(null);
         
         Thread t = new Thread(() -> {
