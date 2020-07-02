@@ -27,4 +27,9 @@ public class jsMacrosFunctions {
     public HashMap<RawMacro, ArrayList<Thread>> getRunningThreads() {
         return RunScript.threads;
     }
+    
+    public String mcVersion() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        return mc.getGameVersion();
+    }
 }
