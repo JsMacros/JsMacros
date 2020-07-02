@@ -110,7 +110,6 @@ public class RunScript {
                     //Run Script
                     
                     con.eval(language, "load(\"./"+file.getName()+"\")");
-                    con.close();
 //                    engine.eval(new FileReader(file));
                 }
             } catch (Exception e) {
