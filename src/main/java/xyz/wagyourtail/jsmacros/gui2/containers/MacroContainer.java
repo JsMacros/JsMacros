@@ -56,12 +56,12 @@ public class MacroContainer extends MultiElementContainer {
     public void init() {
         super.init();
         int w = width - 12;
-        enableBtn = (Button) addButton(new Button(x + 1, y + 1, w / 12 - 1, height - 2, macro.enabled ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText(macro.enabled ? "Enabled" : "Disabled"), (btn) -> {
+        enableBtn = (Button) addButton(new Button(x + 1, y + 1, w / 12 - 1, height - 2, macro.enabled ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"), (btn) -> {
             Profile.registry.removeMacro(macro);
             macro.enabled = !macro.enabled;
             Profile.registry.addMacro(macro);
             btn.setColor(macro.enabled ? 0x7000FF00 : 0x70FF0000);
-            btn.setMessage(new LiteralText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"));
+            btn.setMessage(new TranslatableText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"));
         }));
 
         keyBtn = (Button) addButton(new Button(x + w / 12 + 1, y + 1, macro.type == MacroEnum.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.type == MacroEnum.EVENT ? new LiteralText(macro.eventkey) : jsMacros.getKeyText(macro.eventkey), (btn) -> {
