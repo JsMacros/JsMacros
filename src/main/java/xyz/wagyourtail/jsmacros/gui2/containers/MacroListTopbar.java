@@ -42,7 +42,7 @@ public class MacroListTopbar extends MultiElementContainer {
             if (runFile != null) runFile.accept(this);
         }));
         
-        addButton(new Button(x + w + 1, y+1, 12, height - 3, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("+"), (btn) -> {
+        addButton(new Button(x + w - 1, y+1, 11, height - 3, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("+"), (btn) -> {
             RawMacro macro = new RawMacro(deftype, "", "", false);
             Profile.registry.addMacro(macro);
             addMacro.accept(macro);
