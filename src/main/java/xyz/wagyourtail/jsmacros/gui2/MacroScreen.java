@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.gui2;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
@@ -14,6 +15,7 @@ import xyz.wagyourtail.jsmacros.gui2.elements.OverlayContainer;
 import xyz.wagyourtail.jsmacros.gui2.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
+import xyz.wagyourtail.jsmacros.runscript.RunScript;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -46,7 +48,7 @@ public class MacroScreen extends Screen {
 
         profileScreen = this.addButton(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.profile"), null));
 
-        topbar = new MacroListTopbar(this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer, MacroEnum.KEY_RISING, this::addButton, this::addMacro);
+        topbar = new MacroListTopbar(this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer, MacroEnum.KEY_RISING, this::addButton, this::addMacro, this::runFile);
 
         topScroll = 40;
         macroScroll = this.addButton(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
@@ -72,6 +74,16 @@ public class MacroScreen extends Screen {
         openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, f, this::addButton, this::removeButton, this::closeOverlay, macro::setFile));
     }
 
+    public void runFile(MacroListTopbar m) {
+        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, jsMacros.config.macroFolder, this::addButton, this::removeButton, this::closeOverlay,(file) -> {
+            try {
+                RunScript.exec(new RawMacro(MacroEnum.EVENT, "", file.getCanonicalPath().substring(jsMacros.config.macroFolder.getCanonicalPath().length()), true), "", null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }));
+    }
+    
     public void openOverlay(OverlayContainer overlay) {
         for (AbstractButtonWidget b : buttons) {
             overlay.savedBtnStates.put(b, b.active);

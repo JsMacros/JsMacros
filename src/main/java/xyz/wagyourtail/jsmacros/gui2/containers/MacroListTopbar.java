@@ -7,24 +7,26 @@ import xyz.wagyourtail.jsmacros.gui2.elements.Button;
 import xyz.wagyourtail.jsmacros.gui2.elements.MultiElementContainer;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
-
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 
 public class MacroListTopbar extends MultiElementContainer {
     public MacroEnum deftype;
     private Consumer<RawMacro> addMacro;
+    private Consumer<MacroListTopbar> runFile;
     private String enabled;
     private String type;
     private String file;
     
-    public MacroListTopbar(int x, int y, int width, int height, TextRenderer textRenderer, MacroEnum deftype, Consumer<AbstractButtonWidget> addButton, Consumer<RawMacro> addMacro) {
+    public MacroListTopbar(int x, int y, int width, int height, TextRenderer textRenderer, MacroEnum deftype, Consumer<AbstractButtonWidget> addButton, Consumer<RawMacro> addMacro, Consumer<MacroListTopbar>runFile) {
         super(x, y, width, height, textRenderer, addButton);
         this.deftype = deftype;
         this.addMacro = addMacro;
+        this.runFile = runFile;
         init();
     }
 
@@ -34,7 +36,13 @@ public class MacroListTopbar extends MultiElementContainer {
         type = I18n.translate(deftype == MacroEnum.EVENT ? "jsmacros.events" : "jsmacros.keys");
         file = I18n.translate("jsmacros.file");
         
-        addButton(new Button(x + width - 13, y+1, 12, height - 3, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("+"), (btn) -> {
+        int w = width - 12;
+        
+        addButton(new Button(x + w - 32, y + 1, 30, height - 3, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.run"), (btn) -> {
+            if (runFile != null) runFile.accept(this);
+        }));
+        
+        addButton(new Button(x + w + 1, y+1, 12, height - 3, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("+"), (btn) -> {
             RawMacro macro = new RawMacro(deftype, "", "", false);
             Profile.registry.addMacro(macro);
             addMacro.accept(macro);

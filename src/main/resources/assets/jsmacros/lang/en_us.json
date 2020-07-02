@@ -23,5 +23,6 @@
 	"jsmacros.confirmdeletefile": "Are you sure you want to delete this file?",
 	"jsmacros.enabled":"Enabled",
 	"jsmacros.disabled":"Disabled",
-	"jsmacros.presskey":"- Press A Key -"
+	"jsmacros.presskey":"- Press A Key -",
+	"jsmacros.run":"Run"
 }
