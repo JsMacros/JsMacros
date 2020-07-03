@@ -25,9 +25,22 @@ import xyz.wagyourtail.jsmacros.runscript.functions.timeFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.worldFunctions;
 
 public class RunScript {
-    public static HashMap<RawMacro, ArrayList<Thread>> threads = new HashMap<>();
+    public static HashMap<RawMacro, ArrayList<thread>> threads = new HashMap<>();
     public static String language = "js";
     
+    public static ArrayList<thread> getThreads() {
+        ArrayList<thread> th = new ArrayList<>();
+        for (ArrayList<thread> tl : threads.values()) {
+            th.addAll(tl);
+        }
+        return th;
+    }
+    
+    public static void removeThread(thread t) {
+        if (threads.containsKey(t.m)) {
+            threads.get(t.m).remove(t);
+        }
+    }
     
     public static Thread exec(RawMacro macro, String event, HashMap<String, Object> args) {
         if (macro.scriptFile.endsWith(".py")) {
@@ -39,6 +52,10 @@ public class RunScript {
     
     public static Thread execPY(RawMacro macro, String event, HashMap<String, Object> args) {
         Thread t = new Thread(() -> {
+            threads.putIfAbsent(macro, new ArrayList<>());
+            Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());
+            thread th = new thread(Thread.currentThread(), macro, System.currentTimeMillis());
+            threads.get(macro).add(th);
             try {
                 File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
                 if (file.exists()) {
@@ -58,14 +75,22 @@ public class RunScript {
                     interp.execfile(file.getCanonicalPath());
                     interp.close();
                 }
-            } catch (Exception e) {
-                MinecraftClient mc = MinecraftClient.getInstance();
-                if (mc.inGameHud != null) {
-                    LiteralText text = new LiteralText(e.toString());
-                    mc.inGameHud.getChatHud().addMessage(text, 0);
+            } catch(Exception e) {
+                if (e.getCause() instanceof ThreadDeath) {
+                    MinecraftClient mc = MinecraftClient.getInstance();
+                    if (mc.inGameHud != null) {
+                        mc.inGameHud.getChatHud().addMessage(new LiteralText("Jython exception: java.lang.ThreadDeath"), 0);
+                    }  
+                } else {
+                    MinecraftClient mc = MinecraftClient.getInstance();
+                    if (mc.inGameHud != null) {
+                        LiteralText text = new LiteralText(e.toString());
+                        mc.inGameHud.getChatHud().addMessage(text, 0);
+                    }
                 }
                 e.printStackTrace();
             }
+            removeThread(th);
         });
         
         t.start();
@@ -76,7 +101,8 @@ public class RunScript {
         Thread t = new Thread(() -> {
             threads.putIfAbsent(macro, new ArrayList<>());
             Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());
-            threads.get(macro).add(Thread.currentThread());
+            thread th = new thread(Thread.currentThread(), macro, System.currentTimeMillis());
+            threads.get(macro).add(th);
             try {
                 File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
                 if (file.exists()) {
@@ -120,11 +146,27 @@ public class RunScript {
                 }
                 e.printStackTrace();
             }
-            threads.get(macro).remove(Thread.currentThread());
+            removeThread(th);
         });
         
         
         t.start();
         return t;
+    }
+    
+    public static class thread {
+        public Thread t;
+        public RawMacro m;
+        public long startTime;
+        
+        public thread(Thread t, RawMacro m, long startTime) {
+            this.t = t;
+            this.m = m;
+            this.startTime = startTime;
+        }
+        
+        public void start() {
+            t.start();
+        }
     }
 }

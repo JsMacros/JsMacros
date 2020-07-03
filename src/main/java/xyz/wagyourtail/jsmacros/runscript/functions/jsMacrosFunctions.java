@@ -9,6 +9,7 @@ import xyz.wagyourtail.jsmacros.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
+import xyz.wagyourtail.jsmacros.runscript.RunScript.thread;
 
 public class jsMacrosFunctions {
     
@@ -24,7 +25,7 @@ public class jsMacrosFunctions {
         return jsMacros.config;
     }
     
-    public HashMap<RawMacro, ArrayList<Thread>> getRunningThreads() {
+    public HashMap<RawMacro, ArrayList<thread>> getRunningThreads() {
         return RunScript.threads;
     }
     

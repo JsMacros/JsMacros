@@ -52,6 +52,10 @@ public class MacroScreen extends Screen {
 
         topScroll = 40;
         macroScroll = this.addButton(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
+    
+        this.addButton(new Button(0, this.height - 12, this.width / 12, 12, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.running"), (btn) -> {
+            client.openScreen(new CancelScreen(this));
+        }));
     }
     
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
