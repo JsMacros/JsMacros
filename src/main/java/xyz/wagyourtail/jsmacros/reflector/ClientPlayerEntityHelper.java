@@ -22,6 +22,10 @@ public class ClientPlayerEntityHelper extends PlayerEntityHelper {
         }
     }
 	
+	public int getFoodLevel() {
+	    return ((ClientPlayerEntity)e).getHungerManager().getFoodLevel();
+	}
+	
 	
 	public ClientPlayerEntity getRaw() {
         return (ClientPlayerEntity) e;
