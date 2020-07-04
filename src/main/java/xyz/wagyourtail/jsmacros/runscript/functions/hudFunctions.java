@@ -3,10 +3,12 @@ package xyz.wagyourtail.jsmacros.runscript.functions;
 import java.util.ArrayList;
 
 import xyz.wagyourtail.jsmacros.runscript.classes.Draw3D;
+import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.runscript.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.runscript.classes.Screen;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 
 public class hudFunctions {
     public static ArrayList<Draw2D> overlays = new ArrayList<>();
@@ -19,6 +21,16 @@ public class hudFunctions {
     
     public void openScreen(Screen s) {
         MinecraftClient.getInstance().openScreen(s);
+    }
+    
+    public String getOpenScreen() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        return jsMacros.getScreenName(mc.currentScreen);
+    }
+    
+    public boolean isContainer() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        return mc.currentScreen instanceof HandledScreen;
     }
     
     public Draw2D createDraw2D() {

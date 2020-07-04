@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.world.ClientWorld;
 import xyz.wagyourtail.jsmacros.events.DimensionChangeCallback;
 
@@ -16,5 +17,10 @@ public class jsmacros_MinecraftClientMixin {
     public void jsmacros_joinWorld(ClientWorld world, CallbackInfo info) {
         if (world != null)
             DimensionChangeCallback.EVENT.invoker().interact(world.getDimensionRegistryKey().getValue().toString());
+    }
+    
+    @Inject(at = @At("TAIL"), method="openScreen")
+    public void jsmacros_openScreen(Screen screen, CallbackInfo info) {
+        
     }
 }

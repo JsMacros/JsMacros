@@ -3,6 +3,8 @@ package xyz.wagyourtail.jsmacros;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.LiteralText;
@@ -69,6 +71,60 @@ public class jsMacros implements ClientModInitializer {
         } catch(Exception e) {
             return new LiteralText(translationKey);
         }
+    }
+    
+    static public String getScreenName(Screen s) {
+        if (s instanceof HandledScreen) {
+            //add more ?
+            if (s instanceof GenericContainerScreen) {
+                return String.format("%d row chest", ((GenericContainerScreen) s).getScreenHandler().getRows());
+            } else if (s instanceof Generic3x3ContainerScreen) {
+                return "3x3 container";
+            } else if (s instanceof AnvilScreen) {
+                return "Anvil";
+            } else if (s instanceof BeaconScreen) {
+                return "Beacon";
+            } else if (s instanceof BlastFurnaceScreen) {
+                return "Blast Furnace";
+            } else if (s instanceof BrewingStandScreen) {
+                return "Brewing Stand";
+            } else if (s instanceof CraftingScreen) {
+                return "Crafting Table";
+            } else if (s instanceof EnchantmentScreen) {
+                return "Enchanting Table";
+            } else if (s instanceof FurnaceScreen) {
+                return "Furnace";
+            } else if (s instanceof GrindstoneScreen) {
+                return "Grindstone";
+            } else if (s instanceof HopperScreen) {
+                return "Hopper";
+            } else if (s instanceof LecternScreen) {
+                return "Lectern";
+            } else if (s instanceof LoomScreen) {
+                return "Loom";
+            } else if (s instanceof MerchantScreen) {
+                return "Villager";
+            } else if (s instanceof ShulkerBoxScreen) {
+                return "Shulker Box";
+            } else if (s instanceof SmithingScreen) {
+                return "Smithing Table";
+            } else if (s instanceof SmokerScreen) {
+                return "Smoker";
+            } else if (s instanceof CartographyTableScreen) {
+                return "Cartography Table";
+            } else if (s instanceof StonecutterScreen) {
+                return "Stonecutter";
+            } else if (s instanceof InventoryScreen) {
+                return "Survival Inventory";
+            } else if (s instanceof HorseScreen) {
+                return "Horse";
+            } else if (s instanceof CreativeInventoryScreen) {
+                return "Creative Inventory";
+            } else {
+                return s.getClass().getName();
+            }
+        }
+        return s.getTitle().getString();
     }
     
     @Deprecated
