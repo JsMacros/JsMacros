@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.LightType;
 import xyz.wagyourtail.jsmacros.reflector.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.reflector.EntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
@@ -60,5 +61,15 @@ public class worldFunctions {
     public String getDimension() {
         MinecraftClient mc = MinecraftClient.getInstance();
         return mc.world.getDimensionRegistryKey().getValue().toString();
+    }
+    
+    public int getSkyLight(int x, int y, int z) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        return mc.world.getLightLevel(LightType.SKY, new BlockPos(x, y, z));
+    }
+    
+    public int getBlockLight(int x, int y, int z) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        return mc.world.getLightLevel(LightType.BLOCK, new BlockPos(x, y, z));
     }
 }
