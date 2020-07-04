@@ -12,7 +12,8 @@
 		"jsmacros_ClientPlayerEntityMixin",
 		"jsmacros_ClientPlayNetworkHandler",
 		"jsmacros_ItemStackMixin",
-		"jsmacros_HungerManagerMixin"
+		"jsmacros_HungerManagerMixin",
+		"jsmacros_MinecraftClientMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

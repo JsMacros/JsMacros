@@ -17,6 +17,7 @@ import xyz.wagyourtail.jsmacros.config.*;
 import xyz.wagyourtail.jsmacros.events.AirChangeCallback;
 import xyz.wagyourtail.jsmacros.events.DamageCallback;
 import xyz.wagyourtail.jsmacros.events.DeathCallback;
+import xyz.wagyourtail.jsmacros.events.DimensionChangeCallback;
 import xyz.wagyourtail.jsmacros.events.HungerChangeCallback;
 import xyz.wagyourtail.jsmacros.events.ItemDamageCallback;
 import xyz.wagyourtail.jsmacros.events.JoinCallback;
@@ -308,6 +309,27 @@ public class Profile {
                 }
             }
         });
+        
+        // ----- DIMENSION CHANGE --- //
+        registry.addEvent("DIMENSION_CHANGE");
+        DimensionChangeCallback.EVENT.register((dim) -> {
+            HashMap<String, Object> args = new HashMap<>();
+            args.put("dimension", dim);
+            if (registry.macros.containsKey("DIMENSION_CHANGE")) for (BaseMacro macro : registry.macros.get("DIMENSION_CHANGE").values()) {
+                try {
+                    macro.trigger("DIMENSION_CHANGE", args).join();
+                } catch (InterruptedException e1) {
+                }
+            }
+
+            if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
+                try {
+                    macro.trigger("DIMENSION_CHANGE", args).join();
+                } catch (InterruptedException e1) {
+                }
+            }
+        });
+        
 
     }
 }
