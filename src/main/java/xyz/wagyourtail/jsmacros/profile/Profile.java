@@ -24,6 +24,7 @@ import xyz.wagyourtail.jsmacros.events.JoinCallback;
 import xyz.wagyourtail.jsmacros.events.KeyCallback;
 import xyz.wagyourtail.jsmacros.events.RecieveMessageCallback;
 import xyz.wagyourtail.jsmacros.events.SendMessageCallback;
+import xyz.wagyourtail.jsmacros.events.SoundCallback;
 import xyz.wagyourtail.jsmacros.macros.*;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
@@ -330,6 +331,24 @@ public class Profile {
             }
         });
         
+        registry.addEvent("SOUND");
+        SoundCallback.EVENT.register((sound) -> {
+            HashMap<String, Object> args = new HashMap<>();
+            args.put("sound", sound);
+            if (registry.macros.containsKey("SOUND")) for (BaseMacro macro : registry.macros.get("SOUND").values()) {
+                try {
+                    macro.trigger("SOUND", args).join();
+                } catch (InterruptedException e1) {
+                }
+            }
 
+            if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
+                try {
+                    macro.trigger("SOUND", args).join();
+                } catch (InterruptedException e1) {
+                }
+            }
+        });
+        
     }
 }
