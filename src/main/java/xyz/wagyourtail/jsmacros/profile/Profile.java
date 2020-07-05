@@ -22,6 +22,7 @@ import xyz.wagyourtail.jsmacros.events.HungerChangeCallback;
 import xyz.wagyourtail.jsmacros.events.ItemDamageCallback;
 import xyz.wagyourtail.jsmacros.events.JoinCallback;
 import xyz.wagyourtail.jsmacros.events.KeyCallback;
+import xyz.wagyourtail.jsmacros.events.OpenScreenCallback;
 import xyz.wagyourtail.jsmacros.events.RecieveMessageCallback;
 import xyz.wagyourtail.jsmacros.events.SendMessageCallback;
 import xyz.wagyourtail.jsmacros.events.SoundCallback;
@@ -345,6 +346,25 @@ public class Profile {
             if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
                 try {
                     macro.trigger("SOUND", args).join();
+                } catch (InterruptedException e1) {
+                }
+            }
+        });
+        
+        registry.addEvent("OPEN_SCREEN");
+        OpenScreenCallback.EVENT.register((screen) -> {
+            HashMap<String, Object> args = new HashMap<>();
+            args.put("screen", screen);
+            if (registry.macros.containsKey("OPEN_SCREEN")) for (BaseMacro macro : registry.macros.get("OPEN_SCREEN").values()) {
+                try {
+                    macro.trigger("OPEN_SCREEN", args).join();
+                } catch (InterruptedException e1) {
+                }
+            }
+
+            if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
+                try {
+                    macro.trigger("OPEN_SCREEN", args).join();
                 } catch (InterruptedException e1) {
                 }
             }

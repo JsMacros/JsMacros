@@ -74,6 +74,7 @@ public class jsMacros implements ClientModInitializer {
     }
     
     static public String getScreenName(Screen s) {
+        if (s == null) return null;
         if (s instanceof HandledScreen) {
             //add more ?
             if (s instanceof GenericContainerScreen) {
