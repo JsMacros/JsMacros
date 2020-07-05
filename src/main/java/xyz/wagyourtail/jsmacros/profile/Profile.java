@@ -38,7 +38,6 @@ public class Profile {
 
     public Profile(String defaultProfile) {
         loadOrCreateProfile(defaultProfile);
-
         keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title"));
         KeyBindingHelper.registerKeyBinding(keyBinding);
 
@@ -216,17 +215,11 @@ public class Profile {
             HashMap<String, Object> args = new HashMap<>();
             args.put("air", air);
             if (registry.macros.containsKey("AIR_CHANGE")) for (BaseMacro macro : registry.macros.get("AIR_CHANGE").values()) {
-                try {
-                    macro.trigger("AIR_CHANGE", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("AIR_CHANGE", args);
             }
 
             if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
-                try {
-                    macro.trigger("AIR_CHANGE", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("AIR_CHANGE", args);
             }
         });
 
@@ -238,17 +231,11 @@ public class Profile {
             args.put("health", health);
             args.put("change", change);
             if (registry.macros.containsKey("DAMAGE")) for (BaseMacro macro : registry.macros.get("DAMAGE").values()) {
-                try {
-                    macro.trigger("DAMAGE", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("DAMAGE", args);
             }
 
             if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
-                try {
-                    macro.trigger("DAMAGE", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("DAMAGE", args);
             }
         });
 
@@ -257,17 +244,11 @@ public class Profile {
         DeathCallback.EVENT.register(() -> {
             HashMap<String, Object> args = new HashMap<>();
             if (registry.macros.containsKey("DEATH")) for (BaseMacro macro : registry.macros.get("DEATH").values()) {
-                try {
-                    macro.trigger("DEATH", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("DEATH", args);
             }
 
             if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
-                try {
-                    macro.trigger("DEATH", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("DEATH", args);
             }
         });
 
@@ -278,17 +259,11 @@ public class Profile {
             args.put("stack", new ItemStackHelper(stack));
             args.put("damage", damage);
             if (registry.macros.containsKey("ITEM_DAMAGE")) for (BaseMacro macro : registry.macros.get("ITEM_DAMAGE").values()) {
-                try {
-                    macro.trigger("ITEM_DAMAGE", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("ITEM_DAMAGE", args);
             }
 
             if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
-                try {
-                    macro.trigger("ITEM_DAMAGE", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("ITEM_DAMAGE", args);
             }
         });
 
@@ -298,77 +273,53 @@ public class Profile {
             HashMap<String, Object> args = new HashMap<>();
             args.put("foodLevel", foodLevel);
             if (registry.macros.containsKey("HUNGER_CHANGE")) for (BaseMacro macro : registry.macros.get("HUNGER_CHANGE").values()) {
-                try {
-                    macro.trigger("HUNGER_CHANGE", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("HUNGER_CHANGE", args);
             }
 
             if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
-                try {
-                    macro.trigger("HUNGER_CHANGE", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("HUNGER_CHANGE", args);
             }
         });
-        
+
         // ----- DIMENSION CHANGE --- //
         registry.addEvent("DIMENSION_CHANGE");
         DimensionChangeCallback.EVENT.register((dim) -> {
             HashMap<String, Object> args = new HashMap<>();
             args.put("dimension", dim);
             if (registry.macros.containsKey("DIMENSION_CHANGE")) for (BaseMacro macro : registry.macros.get("DIMENSION_CHANGE").values()) {
-                try {
-                    macro.trigger("DIMENSION_CHANGE", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("DIMENSION_CHANGE", args);
             }
 
             if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
-                try {
-                    macro.trigger("DIMENSION_CHANGE", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("DIMENSION_CHANGE", args);
             }
         });
-        
+
         registry.addEvent("SOUND");
         SoundCallback.EVENT.register((sound) -> {
             HashMap<String, Object> args = new HashMap<>();
             args.put("sound", sound);
             if (registry.macros.containsKey("SOUND")) for (BaseMacro macro : registry.macros.get("SOUND").values()) {
-                try {
-                    macro.trigger("SOUND", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("SOUND", args);
             }
 
             if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
-                try {
-                    macro.trigger("SOUND", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("SOUND", args);
             }
         });
-        
+
         registry.addEvent("OPEN_SCREEN");
         OpenScreenCallback.EVENT.register((screen) -> {
             HashMap<String, Object> args = new HashMap<>();
             args.put("screen", screen);
             if (registry.macros.containsKey("OPEN_SCREEN")) for (BaseMacro macro : registry.macros.get("OPEN_SCREEN").values()) {
-                try {
-                    macro.trigger("OPEN_SCREEN", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("OPEN_SCREEN", args);
             }
 
             if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
-                try {
-                    macro.trigger("OPEN_SCREEN", args).join();
-                } catch (InterruptedException e1) {
-                }
+                macro.trigger("OPEN_SCREEN", args);
             }
         });
-        
+
     }
 }
