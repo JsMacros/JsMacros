@@ -5,7 +5,7 @@ import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
 public class chatFunctions {
-    public void log(String message) {
+    private void logInternal(String message) {
         if (message != null) {
             MinecraftClient mc = MinecraftClient.getInstance();
             LiteralText text = new LiteralText(message);
@@ -13,9 +13,18 @@ public class chatFunctions {
         }
     }
     
-    public void log(TextHelper text) {
+    private void logInternal(TextHelper text) {
         MinecraftClient mc = MinecraftClient.getInstance();
         mc.inGameHud.getChatHud().addMessage(text.getRaw(), 0);
+    }
+    
+    // yay, auto type coercion.
+    public void log(Object message) {
+        if (message instanceof TextHelper) {
+            this.logInternal((TextHelper)message);
+        } else {
+            this.logInternal(message.toString());
+        }
     }
     
     public void say(String message) {
