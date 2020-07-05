@@ -22,7 +22,7 @@ public class chatFunctions {
     public void log(Object message) {
         if (message instanceof TextHelper) {
             this.logInternal((TextHelper)message);
-        } else {
+        } else if (message != null) {
             this.logInternal(message.toString());
         }
     }
