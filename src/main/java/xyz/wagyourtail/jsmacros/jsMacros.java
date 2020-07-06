@@ -137,4 +137,21 @@ public class jsMacros implements ClientModInitializer {
     static public MinecraftClient getMinecraft() {
         return MinecraftClient.getInstance();
     }
+    
+
+    public static int[] range(int end) {
+        return range(0, end, 1);
+    }
+    
+    public static int[] range(int start, int end) {
+        return range(0, end, 1);
+    }
+    
+    public static int[] range(int start, int end, int iter) {
+        int[] a = new int[Math.max(end-start, 0)];
+        for (int i = start; i < end; i+=iter) {
+            a[i-start] = i;
+        }
+        return a;
+    }
 }

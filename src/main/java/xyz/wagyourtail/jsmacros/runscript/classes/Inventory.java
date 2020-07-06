@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.runscript.classes;
 
+import java.util.HashMap;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -7,6 +9,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.item.ItemStack;
+import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 
 public class Inventory {
@@ -89,7 +92,34 @@ public class Inventory {
         if (!is2) man.clickSlot(wID, slot1, 0, SlotActionType.PICKUP, player);
     }
 
+    public String getType() {
+        return jsMacros.getScreenName(this.inventory);
+    }
+    
+    public HashMap<String, int[]> getMap() {
+        HashMap<String, int[]> map = new HashMap<>();
+        int slots = getTotalSlots();
+        if (this.inventory instanceof InventoryScreen) {
+            map.put("hotbar", jsMacros.range(slots-10, slots-1)); //range(36, 45);
+            map.put("offhand", new int[] {slots-1}); // range(45, 46);
+            map.put("main", jsMacros.range(slots-10-27, slots-10)); //range(9, 36);
+            map.put("boots", new int[] {slots-10-27-1}); // range(8, 9);
+            map.put("leggings", new int[] {slots-10-27-2}); // range(7, 8);
+            map.put("chestplate", new int[] {slots-10-27-3}); // range(6, 7);
+            map.put("helmet", new int[] {slots-10-27-4}); // range(5, 6);
+            map.put("crafting_in", jsMacros.range(slots-10-27-4-4, slots-10-27-4)); // range(1, 5);
+            map.put("craft_out", new int[] {slots-10-27-4-4-1});
+        } else {
+            map.put("hotbar", jsMacros.range(slots-9, slots));
+            map.put("main", jsMacros.range(slots-9-27, slots-9));
+        }
+        
+        return map;
+    }
+
+    
     public HandledScreen<?> getRawContainer() {
         return this.inventory;
     }
+    
 }

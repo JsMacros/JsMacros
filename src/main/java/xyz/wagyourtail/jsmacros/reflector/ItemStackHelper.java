@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.reflector;
 
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
 public class ItemStackHelper {
@@ -27,6 +28,14 @@ public class ItemStackHelper {
     
     public int getMaxCount() {
         return i.getMaxCount();
+    }
+    
+    public String getCreativeTab() {
+        ItemGroup g = i.getItem().getGroup();
+        if (g != null)
+            return g.getId();
+        else
+            return null;
     }
     
     public String getItemID() {
