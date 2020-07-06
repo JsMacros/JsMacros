@@ -18,6 +18,7 @@ import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 
 public class Inventory {
     private HandledScreen<?> inventory;
+    private HashMap<String, int[]> map;
     private ClientPlayerInteractionManager man;
     private int wID;
     private ClientPlayerEntity player;
@@ -119,6 +120,13 @@ public class Inventory {
     }
 
     public HashMap<String, int[]> getMap() {
+        if (map == null) {
+            map = getMapInternal();
+        }
+        return map;
+    }
+    
+    private HashMap<String, int[]> getMapInternal() {
         HashMap<String, int[]> map = new HashMap<>();
         int slots = getTotalSlots();
         if (this.inventory instanceof InventoryScreen) {
