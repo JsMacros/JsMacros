@@ -26,5 +26,5 @@
 	"jsmacros.presskey": "- Press A Key -",
 	"jsmacros.run": "Run",
 	"jsmacros.running": "Running",
-	"jsmacros.disablewithscreen": "disable KEY event when any screen is open."
+	"jsmacros.disablewithscreen": "Disable KEY event when any screen is open."
 }
