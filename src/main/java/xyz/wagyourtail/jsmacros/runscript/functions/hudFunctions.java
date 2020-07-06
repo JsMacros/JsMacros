@@ -73,4 +73,14 @@ public class hudFunctions {
     public void clearDraw3Ds() {
         renders.clear();
     }
+    
+    public double getMouseX() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        return mc.mouse.getX() * (double)mc.getWindow().getScaledWidth() / (double)mc.getWindow().getWidth();
+    }
+    
+    public double getMouseY() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        return mc.mouse.getY() * (double)mc.getWindow().getScaledHeight() / (double)mc.getWindow().getHeight();
+    }
 }

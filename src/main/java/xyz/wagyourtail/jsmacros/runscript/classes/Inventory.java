@@ -1,30 +1,13 @@
 package xyz.wagyourtail.jsmacros.runscript.classes;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.AnvilScreen;
-import net.minecraft.client.gui.screen.ingame.BeaconScreen;
-import net.minecraft.client.gui.screen.ingame.BlastFurnaceScreen;
-import net.minecraft.client.gui.screen.ingame.BrewingStandScreen;
-import net.minecraft.client.gui.screen.ingame.CartographyTableScreen;
-import net.minecraft.client.gui.screen.ingame.CraftingScreen;
-import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;
-import net.minecraft.client.gui.screen.ingame.FurnaceScreen;
-import net.minecraft.client.gui.screen.ingame.Generic3x3ContainerScreen;
-import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
-import net.minecraft.client.gui.screen.ingame.GrindstoneScreen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.ingame.HopperScreen;
-import net.minecraft.client.gui.screen.ingame.HorseScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.screen.ingame.LoomScreen;
-import net.minecraft.client.gui.screen.ingame.ShulkerBoxScreen;
-import net.minecraft.client.gui.screen.ingame.SmithingScreen;
-import net.minecraft.client.gui.screen.ingame.SmokerScreen;
-import net.minecraft.client.gui.screen.ingame.StonecutterScreen;
+import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.item.ItemStack;
 import xyz.wagyourtail.jsmacros.jsMacros;
@@ -110,6 +93,24 @@ public class Inventory {
         if (!is2) man.clickSlot(wID, slot1, 0, SlotActionType.PICKUP, player);
     }
 
+    public int getSlotUnderMouse() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        double x = mc.mouse.getX() * (double)mc.getWindow().getScaledWidth() / (double)mc.getWindow().getWidth();
+        double y = mc.mouse.getY() * (double)mc.getWindow().getScaledHeight() / (double)mc.getWindow().getHeight();
+        
+        //using reflection is annoying...
+        try {
+            Method getSlot = HandledScreen.class.getDeclaredMethod("getSlotAt", double.class, double.class);
+            getSlot.setAccessible(true);
+            Slot s = (Slot) getSlot.invoke(this.inventory, x, y);
+            if (s == null) return -999;
+            return this.inventory.getScreenHandler().slots.indexOf(s);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+    
     public String getType() {
         return jsMacros.getScreenName(this.inventory);
     }
