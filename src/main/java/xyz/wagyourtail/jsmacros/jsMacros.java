@@ -144,11 +144,11 @@ public class jsMacros implements ClientModInitializer {
     }
     
     public static int[] range(int start, int end) {
-        return range(0, end, 1);
+        return range(start, end, 1);
     }
     
     public static int[] range(int start, int end, int iter) {
-        int[] a = new int[Math.max(end-start, 0)];
+        int[] a = new int[end-start];
         for (int i = start; i < end; i+=iter) {
             a[i-start] = i;
         }

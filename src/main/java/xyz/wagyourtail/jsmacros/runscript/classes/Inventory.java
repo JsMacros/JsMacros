@@ -126,10 +126,27 @@ public class Inventory {
         return map;
     }
     
+    public String getLocation(int slotNum) {
+        if (map == null) {
+            map = getMapInternal();
+        }
+        for (String k : map.keySet()) {
+           for (int i : map.get(k)) {
+                if (i == slotNum) {
+                    return k;
+                }
+            }
+        }
+        return null;
+    }
+    
     private HashMap<String, int[]> getMapInternal() {
         HashMap<String, int[]> map = new HashMap<>();
         int slots = getTotalSlots();
-        if (this.inventory instanceof InventoryScreen) {
+        if (this.inventory instanceof CreativeInventoryScreen) {
+            map.put("delete", new int[] {--slots});
+        }
+        if (this.inventory instanceof InventoryScreen || this.inventory instanceof CreativeInventoryScreen) {
             map.put("hotbar", jsMacros.range(slots - 10, slots - 1)); // range(36, 45);
             map.put("offhand", new int[] { slots - 1 }); // range(45, 46);
             map.put("main", jsMacros.range(slots - 10 - 27, slots - 10)); // range(9, 36);
@@ -170,14 +187,13 @@ public class Inventory {
                 map.put("input", new int[] { slots - 9 - 27 - 2 });
             } else if (inventory instanceof HorseScreen) {
                 try {
-                    Field entity = HorseScreen.class.getField("entity");
+                    Field entity = HorseScreen.class.getDeclaredField("entity");
                     entity.setAccessible(true);
                     HorseBaseEntity h = (HorseBaseEntity) entity.get(inventory);
-                    int i = 0;
-                    if (h.canBeSaddled()) map.put("saddle", new int[] {i++});
-                    if (h.canEquip()) map.put("armor", new int[] {i++});
+                    if (h.canBeSaddled()) map.put("saddle", new int[] {0});
+                    if (h.canEquip()) map.put("armor", new int[] {1});
                     if (h instanceof AbstractDonkeyEntity && ((AbstractDonkeyEntity) h).hasChest()) {
-                        map.put("container", jsMacros.range(i, slots - 9 - 27));
+                        map.put("container", jsMacros.range(2, slots - 9 - 27));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
