@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -105,7 +106,12 @@ public class Inventory {
         
         //using reflection is annoying...
         try {
-            Method getSlot = HandledScreen.class.getDeclaredMethod("getSlotAt", double.class, double.class);
+            Method getSlot;
+            if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+                getSlot = HandledScreen.class.getDeclaredMethod("getSlotAt", double.class, double.class);
+            } else {
+                getSlot = HandledScreen.class.getDeclaredMethod("method_2386", double.class, double.class);
+            }
             getSlot.setAccessible(true);
             Slot s = (Slot) getSlot.invoke(this.inventory, x, y);
             if (s == null) return -999;
@@ -191,7 +197,12 @@ public class Inventory {
                 map.put("input", new int[] { slots - 9 - 27 - 2 });
             } else if (inventory instanceof HorseScreen) {
                 try {
-                    Field entity = HorseScreen.class.getDeclaredField("entity");
+                    Field entity;
+                    if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+                        entity = HorseScreen.class.getDeclaredField("entity");
+                    } else {
+                        entity = HorseScreen.class.getDeclaredField("field_2941");
+                    }
                     entity.setAccessible(true);
                     HorseBaseEntity h = (HorseBaseEntity) entity.get(inventory);
                     if (h.canBeSaddled()) map.put("saddle", new int[] {0});
