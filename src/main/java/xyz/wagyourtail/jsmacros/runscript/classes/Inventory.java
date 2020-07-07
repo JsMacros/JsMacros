@@ -12,6 +12,7 @@ import net.minecraft.entity.passive.AbstractDonkeyEntity;
 import net.minecraft.entity.passive.HorseBaseEntity;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
@@ -143,10 +144,10 @@ public class Inventory {
     private HashMap<String, int[]> getMapInternal() {
         HashMap<String, int[]> map = new HashMap<>();
         int slots = getTotalSlots();
-        if (this.inventory instanceof CreativeInventoryScreen) {
-            map.put("delete", new int[] {--slots});
-        }
-        if (this.inventory instanceof InventoryScreen || this.inventory instanceof CreativeInventoryScreen) {
+        if (this.inventory instanceof InventoryScreen || (this.inventory instanceof CreativeInventoryScreen && ((CreativeInventoryScreen) this.inventory).getSelectedTab() == ItemGroup.INVENTORY.getIndex())) {
+            if (this.inventory instanceof CreativeInventoryScreen) {
+                map.put("delete", new int[] {--slots});
+            } 
             map.put("hotbar", jsMacros.range(slots - 10, slots - 1)); // range(36, 45);
             map.put("offhand", new int[] { slots - 1 }); // range(45, 46);
             map.put("main", jsMacros.range(slots - 10 - 27, slots - 10)); // range(9, 36);
@@ -159,7 +160,10 @@ public class Inventory {
         } else {
             map.put("hotbar", jsMacros.range(slots - 9, slots));
             map.put("main", jsMacros.range(slots - 9 - 27, slots - 9));
-            if (inventory instanceof GenericContainerScreen || inventory instanceof Generic3x3ContainerScreen || inventory instanceof HopperScreen || inventory instanceof ShulkerBoxScreen) {
+            if (inventory instanceof CreativeInventoryScreen) {
+                map.remove("main");
+                map.put("creative", jsMacros.range(slots - 9));
+            } else if (inventory instanceof GenericContainerScreen || inventory instanceof Generic3x3ContainerScreen || inventory instanceof HopperScreen || inventory instanceof ShulkerBoxScreen) {
                 map.put("container", jsMacros.range(slots - 9 - 27));
             } else if (inventory instanceof BeaconScreen) {
                 map.put("slot", new int[] { slots - 9 - 27 - 1 });
