@@ -48,6 +48,10 @@ public class jsMacros implements ClientModInitializer {
         profile = new Profile(config.options.defaultProfile);
         keyMacrosScreen = new KeyMacrosScreen(null);
         
+        preInitLanguages();
+    }
+    
+    static public void preInitLanguages() {
         Thread t = new Thread(() -> {
             Builder build = Context.newBuilder("js");
             Context con = build.build();
