@@ -19,6 +19,7 @@ import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
 import org.python.util.PythonInterpreter;
 
+import jep.JepConfig;
 import jep.SharedInterpreter;
 import xyz.wagyourtail.jsmacros.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.profile.Profile;
@@ -31,7 +32,7 @@ public class jsMacros implements ClientModInitializer {
     public static KeyMacrosScreen keyMacrosScreen;
     public static boolean jythonFailed = false;
     public static boolean jepFailed = false;
-    public static String jythonFailStack;
+    public static String pythonFailStack;
     
     @Override
     public void onInitializeClient() {
@@ -50,6 +51,8 @@ public class jsMacros implements ClientModInitializer {
         config.loadConfig();
         profile = new Profile(config.options.defaultProfile);
         keyMacrosScreen = new KeyMacrosScreen(null);
+        
+        if (config.options.JEPSharedLibraryPath == null) config.options.JEPSharedLibraryPath = "./jep.dll";
         
         File f = new File(FabricLoader.getInstance().getGameDirectory(), config.options.JEPSharedLibraryPath);
         if (f.exists()) {
@@ -71,12 +74,15 @@ public class jsMacros implements ClientModInitializer {
             Builder build = Context.newBuilder("js");
             Context con = build.build();
             con.eval("js", "console.log('js loaded.')");
+            con.close();
             try {
                 if (config.options.enableJEP) {
                     jepFailed = true;
+                    JepConfig c = new JepConfig();
+                    c.setRedirectOutputStreams(true);
+                    SharedInterpreter.setConfig(c);
                     SharedInterpreter interp = new SharedInterpreter();
-                    interp.exec("import java.lang.System as System");
-                    interp.exec("System.out.println('jep loaded')");
+                    interp.exec("print('JEP Loaded.')");
                     interp.close();
                     jepFailed = false;
                 } else {
@@ -87,7 +93,7 @@ public class jsMacros implements ClientModInitializer {
                     jythonFailed = false;
                 }
             } catch (Exception e) {
-                jythonFailStack = e.getStackTrace().toString();
+                pythonFailStack = e.getStackTrace().toString();
                 e.printStackTrace();
             }
         });
