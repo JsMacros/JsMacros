@@ -11,7 +11,7 @@
 		"jsmacros_ChatHudMixin",
 		"jsmacros_ClientPlayerEntityMixin",
 		"jsmacros_ClientPlayNetworkHandler",
-		"jsmacros_ItemStackMixin",
+		"jsmacros_ItemDurabilityChangedCriterionMixin",
 		"jsmacros_HungerManagerMixin",
 		"jsmacros_MinecraftClientMixin",
 		"jsmacros_SoundSystemMixin"
