@@ -41,20 +41,5 @@ jobs:
         
     - uses: actions/upload-artifact@v2
       with:
-        name: ${{ steps.fname.outputs.result }}.jar
-        path: ./build/libs/${{ steps.fname.outputs.result }}.jar
-    
-    - uses: actions/upload-artifact@v2
-      with:
-        name: ${{ steps.fname.outputs.result }}-dev.jar
-        path: ./build/libs/${{ steps.fname.outputs.result }}-dev.jar
-        
-    - uses: actions/upload-artifact@v2
-      with:
-        name: ${{ steps.fname.outputs.result }}-sources.jar
-        path: ./build/libs/${{ steps.fname.outputs.result }}-sources.jar
-        
-    - uses: actions/upload-artifact@v2
-      with:
-        name: ${{ steps.fname.outputs.result }}-sources-dev.jar
-        path: ./build/libs/${{ steps.fname.outputs.result }}-sources-dev.jar
+        name: ${{ steps.fname.outputs.result }}
+        path: ./build/libs/*
