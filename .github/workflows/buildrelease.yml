@@ -39,19 +39,20 @@ jobs:
         result-encoding: string
         script: |
           const fs = require("fs")
-          return fs.readdirSync("./build/libs/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0]
+          return fs.readdirSync("./build/libs/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0].replace(".jar", "");
       
     - name: Upload to release
       uses: JasonEtco/upload-to-release@master
       with:
-        args: ./build/libs/${{ steps.fname.outputs.result }} application/jar
+        args: ./build/libs/${{ steps.fname.outputs.result }}.jar application/jar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
     - uses: actions/upload-artifact@v2
       with:
-        name: 1.16.1
+        name: ${{ steps.fname.outputs.result }}
         path: ./build/libs/*
+      
   build-1_15_2:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -80,18 +81,18 @@ jobs:
         result-encoding: string
         script: |
           const fs = require("fs")
-          return fs.readdirSync("./build/libs/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0]
+          return fs.readdirSync("./build/libs/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0].replace(".jar", "");
       
     - name: Upload to release
       uses: JasonEtco/upload-to-release@master
       with:
-        args: ./build/libs/${{ steps.fname.outputs.result }} application/jar
+        args: ./build/libs/${{ steps.fname.outputs.result }}.jar application/jar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
     - uses: actions/upload-artifact@v2
       with:
-        name: 1.15.2
+        name: ${{ steps.fname.outputs.result }}
         path: ./build/libs/*
       
   build-1_14_4:
@@ -122,16 +123,16 @@ jobs:
         result-encoding: string
         script: |
           const fs = require("fs")
-          return fs.readdirSync("./build/libs/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0]
+          return fs.readdirSync("./build/libs/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0].replace(".jar", "");
       
     - name: Upload to release
       uses: JasonEtco/upload-to-release@master
       with:
-        args: ./build/libs/${{ steps.fname.outputs.result }} application/jar
+        args: ./build/libs/${{ steps.fname.outputs.result }}.jar application/jar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
     - uses: actions/upload-artifact@v2
       with:
-        name: 1.16.1
+        name: ${{ steps.fname.outputs.result }}
         path: ./build/libs/*
