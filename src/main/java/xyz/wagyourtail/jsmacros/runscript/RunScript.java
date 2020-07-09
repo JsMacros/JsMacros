@@ -11,6 +11,7 @@ import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.Value;
 import org.python.util.PythonInterpreter;
 
+import jep.SharedInterpreter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.jsMacros;
@@ -44,13 +45,61 @@ public class RunScript {
     
     public static Thread exec(RawMacro macro, String event, HashMap<String, Object> args) {
         if (macro.scriptFile.endsWith(".py")) {
-            return execPY(macro, event, args);
+            if (jsMacros.config.options.enableJEP) return execJEP(macro, event, args);
+            else return execJython(macro, event, args);
         } else {
             return execJS(macro, event, args);
         }
     }
     
-    public static Thread execPY(RawMacro macro, String event, HashMap<String, Object> args) {
+    public static Thread execJEP(RawMacro macro, String event, HashMap<String, Object> args) {
+        Thread t = new Thread(() -> {
+            threads.putIfAbsent(macro, new ArrayList<>());
+            Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());
+            thread th = new thread(Thread.currentThread(), macro, System.currentTimeMillis());
+            threads.get(macro).add(th);
+            try {
+                File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
+                if (file.exists()) {
+                    SharedInterpreter interp = new SharedInterpreter();
+                    interp.set("event", (Object)event);
+                    interp.set("args", args);
+                    interp.set("file", file);
+                    interp.set("globalvars", new globalVarFunctions());
+                    interp.set("jsmacros", new jsMacrosFunctions());
+                    //interp.set("time", new timeFunctions());
+                    interp.set("keybind", new keybindFunctions());
+                    interp.set("chat", new chatFunctions());
+                    interp.set("world", new worldFunctions());
+                    interp.set("player", new playerFunctions());
+                    interp.set("hud", new hudFunctions());
+                    interp.exec("import os\nos.chdir('"+file.getParentFile().getCanonicalPath().replaceAll("\\\\", "/")+"')");
+                    interp.runScript(file.getCanonicalPath());
+                    interp.close();
+                }
+            } catch(Exception e) {
+                if (e.getCause() instanceof ThreadDeath) {
+                    MinecraftClient mc = MinecraftClient.getInstance();
+                    if (mc.inGameHud != null) {
+                        mc.inGameHud.getChatHud().addMessage(new LiteralText("JEP exception: java.lang.ThreadDeath"), 0);
+                    }  
+                } else {
+                    MinecraftClient mc = MinecraftClient.getInstance();
+                    if (mc.inGameHud != null) {
+                        LiteralText text = new LiteralText(e.toString());
+                        mc.inGameHud.getChatHud().addMessage(text, 0);
+                    }
+                }
+                e.printStackTrace();
+            }
+            removeThread(th);
+        });
+        
+        t.start();
+        return t;
+    }
+    
+    public static Thread execJython(RawMacro macro, String event, HashMap<String, Object> args) {
         Thread t = new Thread(() -> {
             threads.putIfAbsent(macro, new ArrayList<>());
             Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());

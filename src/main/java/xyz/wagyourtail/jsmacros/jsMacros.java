@@ -11,6 +11,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
@@ -18,6 +19,7 @@ import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
 import org.python.util.PythonInterpreter;
 
+import jep.SharedInterpreter;
 import xyz.wagyourtail.jsmacros.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 import xyz.wagyourtail.jsmacros.gui2.KeyMacrosScreen;
@@ -27,7 +29,8 @@ public class jsMacros implements ClientModInitializer {
     public static ConfigManager config = new ConfigManager();
     public static Profile profile;
     public static KeyMacrosScreen keyMacrosScreen;
-    public static boolean jythonFailed = true;
+    public static boolean jythonFailed = false;
+    public static boolean jepFailed = false;
     public static String jythonFailStack;
     
     @Override
@@ -48,6 +51,18 @@ public class jsMacros implements ClientModInitializer {
         profile = new Profile(config.options.defaultProfile);
         keyMacrosScreen = new KeyMacrosScreen(null);
         
+        File f = new File(FabricLoader.getInstance().getGameDirectory(), config.options.JEPSharedLibraryPath);
+        if (f.exists()) {
+            File fo = new File(System.getProperty("java.library.path"), f.getName());
+            if (!fo.exists()) {
+                try {
+                    FileUtils.copyFile(f, fo);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        
         preInitLanguages();
     }
     
@@ -57,10 +72,20 @@ public class jsMacros implements ClientModInitializer {
             Context con = build.build();
             con.eval("js", "console.log('js loaded.')");
             try {
-                PythonInterpreter interp = new PythonInterpreter();
-                interp.exec("print('py loaded.')");
-                interp.close();
-                jythonFailed = false;
+                if (config.options.enableJEP) {
+                    jepFailed = true;
+                    SharedInterpreter interp = new SharedInterpreter();
+                    interp.exec("import java.lang.System as System");
+                    interp.exec("System.out.println('jep loaded')");
+                    interp.close();
+                    jepFailed = false;
+                } else {
+                    jythonFailed = true;
+                    PythonInterpreter interp = new PythonInterpreter();
+                    interp.exec("print('jython loaded.')");
+                    interp.close();
+                    jythonFailed = false;
+                }
             } catch (Exception e) {
                 jythonFailStack = e.getStackTrace().toString();
                 e.printStackTrace();

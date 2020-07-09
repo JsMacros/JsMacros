@@ -59,6 +59,10 @@ dependencies {
 	implementation group: 'com.ibm.icu', name: 'icu4j', version: '64.2'
 	
 	
+	//add JEP
+	implementation 'com.github.ninia:jep:v3.9.0'
+	include 'com.github.ninia:jep:v3.9.0'
+	
 	
 	include group: 'org.graalvm.sdk', name: 'graal-sdk', version: '20.1.0'
 	include group: 'org.graalvm.js', name: 'js', version: '20.1.0'
