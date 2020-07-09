@@ -47,6 +47,11 @@ jobs:
         args: ./build/libs/${{ steps.fname.outputs.result }} application/jar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - uses: actions/upload-artifact@v2
+      with:
+        name: 1.16.1
+        path: ./build/libs/*
   build-1_15_2:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -83,6 +88,12 @@ jobs:
         args: ./build/libs/${{ steps.fname.outputs.result }} application/jar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - uses: actions/upload-artifact@v2
+      with:
+        name: 1.15.2
+        path: ./build/libs/*
+      
   build-1_14_4:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -119,3 +130,8 @@ jobs:
         args: ./build/libs/${{ steps.fname.outputs.result }} application/jar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - uses: actions/upload-artifact@v2
+      with:
+        name: 1.16.1
+        path: ./build/libs/*
