@@ -18,14 +18,19 @@ import xyz.wagyourtail.jsmacros.events.AirChangeCallback;
 import xyz.wagyourtail.jsmacros.events.DamageCallback;
 import xyz.wagyourtail.jsmacros.events.DeathCallback;
 import xyz.wagyourtail.jsmacros.events.DimensionChangeCallback;
+import xyz.wagyourtail.jsmacros.events.DisconnectCallback;
+import xyz.wagyourtail.jsmacros.events.HeldItemCallback;
 import xyz.wagyourtail.jsmacros.events.HungerChangeCallback;
 import xyz.wagyourtail.jsmacros.events.ItemDamageCallback;
 import xyz.wagyourtail.jsmacros.events.JoinCallback;
 import xyz.wagyourtail.jsmacros.events.KeyCallback;
 import xyz.wagyourtail.jsmacros.events.OpenScreenCallback;
+import xyz.wagyourtail.jsmacros.events.PlayerJoinCallback;
+import xyz.wagyourtail.jsmacros.events.PlayerLeaveCallback;
 import xyz.wagyourtail.jsmacros.events.RecieveMessageCallback;
 import xyz.wagyourtail.jsmacros.events.SendMessageCallback;
 import xyz.wagyourtail.jsmacros.events.SoundCallback;
+import xyz.wagyourtail.jsmacros.events.TitleCallback;
 import xyz.wagyourtail.jsmacros.macros.*;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
@@ -121,7 +126,20 @@ public class Profile {
                 macro.trigger("JOIN_SERVER", args);
             }
         });
+        
+        // ----- DISCONNECT ------ // 
+        registry.addEvent("DISCONNECT");
+        DisconnectCallback.EVENT.register(() -> {
+            HashMap<String, Object> args = new HashMap<>();
+            if (registry.macros.containsKey("DISCONNECT")) for (BaseMacro macro : registry.macros.get("DISCONNECT").values()) {
+                macro.trigger("DISCONNECT", args);
+            }
 
+            if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
+                macro.trigger("DISCONNECT", args);
+            }
+        });
+        
         // ----- SEND_MESSAGE -----//
         registry.addEvent("SEND_MESSAGE");
         SendMessageCallback.EVENT.register((message) -> {
@@ -172,6 +190,36 @@ public class Profile {
             return message;
         });
 
+        // ----- PLAYER JOIN ----- //
+        registry.addEvent("PLAYER_JOIN");
+        PlayerJoinCallback.EVENT.register((uuid, pName) -> {
+            HashMap<String, Object> args = new HashMap<>();
+            args.put("uuid", uuid.toString());
+            args.put("player", pName);
+            if (registry.macros.containsKey("PLAYER_JOIN")) for (BaseMacro macro : registry.macros.get("PLAYER_JOIN").values()) {
+                macro.trigger("PLAYER_JOIN", args);
+            }
+
+            if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
+                macro.trigger("PLAYER_JOIN", args);
+            }
+        });
+        
+        // ---- PLAYER LEAVE ----- //
+        registry.addEvent("PLAYER_LEAVE");
+        PlayerLeaveCallback.EVENT.register((uuid, pName) -> {
+            HashMap<String, Object> args = new HashMap<>();
+            args.put("uuid", uuid.toString());
+            args.put("player", pName);
+            if (registry.macros.containsKey("PLAYER_LEAVE")) for (BaseMacro macro : registry.macros.get("PLAYER_LEAVE").values()) {
+                macro.trigger("PLAYER_LEAVE", args);
+            }
+
+            if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
+                macro.trigger("PLAYER_LEAVE", args);
+            }
+        });
+        
         // -------- TICK --------- //
         registry.addEvent("TICK");
         ClientTickEvents.END_CLIENT_TICK.register(e -> {
@@ -208,7 +256,7 @@ public class Profile {
 
             return ActionResult.PASS;
         });
-
+        
         // ------ AIR CHANGE ------ //
         registry.addEvent("AIR_CHANGE");
         AirChangeCallback.EVENT.register((air) -> {
@@ -295,6 +343,8 @@ public class Profile {
             }
         });
 
+        
+        // ------ SOUND ------ //
         registry.addEvent("SOUND");
         SoundCallback.EVENT.register((sound) -> {
             HashMap<String, Object> args = new HashMap<>();
@@ -308,6 +358,8 @@ public class Profile {
             }
         });
 
+        
+        // ------- OPEN SCREEN ------ //
         registry.addEvent("OPEN_SCREEN");
         OpenScreenCallback.EVENT.register((screen) -> {
             HashMap<String, Object> args = new HashMap<>();
@@ -318,6 +370,35 @@ public class Profile {
 
             if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
                 macro.trigger("OPEN_SCREEN", args);
+            }
+        });
+        
+        // ------- TITLE ------- //
+        registry.addEvent("TITLE");
+        TitleCallback.EVENT.register((type, message) -> {
+            HashMap<String, Object> args = new HashMap<>();
+            args.put("type", type);
+            args.put("message", message);
+            if (registry.macros.containsKey("TITLE")) for (BaseMacro macro : registry.macros.get("TITLE").values()) {
+                macro.trigger("TITLE", args);
+            }
+
+            if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
+                macro.trigger("TITLE", args);
+            }
+        });
+        
+        // ----- HELD ITEM ----- //
+        registry.addEvent("HELD_ITEM");
+        HeldItemCallback.EVENT.register((item) -> {
+            HashMap<String, Object> args = new HashMap<>();
+            args.put("item", item);
+            if (registry.macros.containsKey("HELD_ITEM")) for (BaseMacro macro : registry.macros.get("HELD_ITEM").values()) {
+                macro.trigger("HELD_ITEM", args);
+            }
+
+            if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
+                macro.trigger("HELD_ITEM", args);
             }
         });
 
