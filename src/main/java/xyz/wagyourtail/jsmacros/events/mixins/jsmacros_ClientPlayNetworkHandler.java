@@ -71,7 +71,7 @@ class jsmacros_ClientPlayNetworkHandler {
     }
     
     @Inject(at = @At("HEAD"), method = "onHeldItemChange")
-    public void jsmacros_onHeldItemChange(HeldItemChangeS2CPacket packet) {
+    public void jsmacros_onHeldItemChange(HeldItemChangeS2CPacket packet, CallbackInfo info) {
         if (PlayerInventory.isValidHotbarIndex(packet.getSlot())) {
             HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(client.player.inventory.main.get(packet.getSlot())));
         }
