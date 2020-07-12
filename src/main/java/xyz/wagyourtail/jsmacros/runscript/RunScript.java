@@ -50,7 +50,7 @@ public class RunScript {
     
     public static Thread exec(RawMacro macro, String event, HashMap<String, Object> args, Runnable then, Consumer<String> catcher) {
         if (macro.scriptFile.endsWith(".py")) {
-            if (jsMacros.config.options.enableJEP) return execJEP(macro, event, args, then, catcher);
+            if (jsMacros.config.options.enableJEP && !macro.scriptFile.toLowerCase().endsWith("jython.py")) return execJEP(macro, event, args, then, catcher);
             else return execJython(macro, event, args, then, catcher);
         } else {
             return execJS(macro, event, args, then, catcher);
