@@ -26,6 +26,13 @@ public class ClientPlayerEntityHelper extends PlayerEntityHelper {
 	    return ((ClientPlayerEntity)e).getHungerManager().getFoodLevel();
 	}
 	
+	public ItemStackHelper getMainHand() {
+	    return new ItemStackHelper(((ClientPlayerEntity) e).inventory.getMainHandStack());
+	}
+	
+	public ItemStackHelper getOffHand() {
+	    return new ItemStackHelper(((ClientPlayerEntity) e).inventory.offHand.get(0));
+	}
 	
 	public ClientPlayerEntity getRaw() {
         return (ClientPlayerEntity) e;

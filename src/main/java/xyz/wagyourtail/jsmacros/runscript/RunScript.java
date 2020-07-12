@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
@@ -44,15 +45,21 @@ public class RunScript {
     }
     
     public static Thread exec(RawMacro macro, String event, HashMap<String, Object> args) {
+        return exec(macro, event, args, null, null);
+    }
+    
+    public static Thread exec(RawMacro macro, String event, HashMap<String, Object> args, Runnable then, Consumer<String> catcher) {
         if (macro.scriptFile.endsWith(".py")) {
-            if (jsMacros.config.options.enableJEP) return execJEP(macro, event, args);
-            else return execJython(macro, event, args);
+            if (jsMacros.config.options.enableJEP) return execJEP(macro, event, args, then, catcher);
+            else return execJython(macro, event, args, then, catcher);
         } else {
-            return execJS(macro, event, args);
+            return execJS(macro, event, args, then, catcher);
         }
     }
     
-    public static Thread execJEP(RawMacro macro, String event, HashMap<String, Object> args) {
+    
+    
+    public static Thread execJEP(RawMacro macro, String event, HashMap<String, Object> args, Runnable then, Consumer<String> catcher) {
         Thread t = new Thread(() -> {
             threads.putIfAbsent(macro, new ArrayList<>());
             Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());
@@ -76,6 +83,7 @@ public class RunScript {
                     interp.exec("import os\nos.chdir('"+file.getParentFile().getCanonicalPath().replaceAll("\\\\", "/")+"')");
                     interp.runScript(file.getCanonicalPath());
                     interp.close();
+                    if (then != null) then.run();
                 }
             } catch(Exception e) {
                 if (e.getCause() instanceof ThreadDeath) {
@@ -90,6 +98,7 @@ public class RunScript {
                         mc.inGameHud.getChatHud().addMessage(text, 0);
                     }
                 }
+                if (catcher != null) catcher.accept(e.toString());
                 e.printStackTrace();
             }
             removeThread(th);
@@ -99,7 +108,7 @@ public class RunScript {
         return t;
     }
     
-    public static Thread execJython(RawMacro macro, String event, HashMap<String, Object> args) {
+    public static Thread execJython(RawMacro macro, String event, HashMap<String, Object> args, Runnable then, Consumer<String> catcher) {
         Thread t = new Thread(() -> {
             threads.putIfAbsent(macro, new ArrayList<>());
             Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());
@@ -123,6 +132,7 @@ public class RunScript {
                     interp.exec("import os\nos.chdir('"+file.getParentFile().getCanonicalPath().replaceAll("\\\\", "/")+"')");
                     interp.execfile(file.getCanonicalPath());
                     interp.close();
+                    if (then != null) then.run();
                 }
             } catch(Exception e) {
                 if (e.getCause() instanceof ThreadDeath) {
@@ -137,6 +147,7 @@ public class RunScript {
                         mc.inGameHud.getChatHud().addMessage(text, 0);
                     }
                 }
+                if (catcher != null) catcher.accept(e.toString());
                 e.printStackTrace();
             }
             removeThread(th);
@@ -146,7 +157,7 @@ public class RunScript {
         return t;
     }
     
-    public static Thread execJS(RawMacro macro, String event, HashMap<String, Object> args) {
+    public static Thread execJS(RawMacro macro, String event, HashMap<String, Object> args, Runnable then, Consumer<String> catcher) {
         Thread t = new Thread(() -> {
             threads.putIfAbsent(macro, new ArrayList<>());
             Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());
@@ -185,6 +196,7 @@ public class RunScript {
                     //Run Script
                     
                     con.eval(language, "load(\"./"+file.getName()+"\")");
+                    if (then != null) then.run();
 //                    engine.eval(new FileReader(file));
                 }
             } catch (Exception e) {
@@ -193,6 +205,7 @@ public class RunScript {
                     LiteralText text = new LiteralText(e.toString());
                     mc.inGameHud.getChatHud().addMessage(text, 0);
                 }
+                if (catcher != null) catcher.accept(e.toString());
                 e.printStackTrace();
             }
             removeThread(th);

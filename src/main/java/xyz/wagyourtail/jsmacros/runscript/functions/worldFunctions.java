@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
 import xyz.wagyourtail.jsmacros.reflector.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.reflector.EntityHelper;
@@ -61,6 +62,21 @@ public class worldFunctions {
     public String getDimension() {
         MinecraftClient mc = MinecraftClient.getInstance();
         return mc.world.getDimensionRegistryKey().getValue().toString();
+    }
+    
+    public String getBiome() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        return Registry.BIOME.getId(mc.world.getBiome(mc.player.getBlockPos())).toString();
+    }
+    
+    public long getTime() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        return mc.world.getTime();
+    }
+    
+    public long getTimeOfDay() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        return mc.world.getTimeOfDay();
     }
     
     public int getSkyLight(int x, int y, int z) {
