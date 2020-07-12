@@ -3,6 +3,8 @@ Release: ![Build Release](https://github.com/wagyourtail/JsMacros/workflows/Buil
 
 download releases at: https://github.com/wagyourtail/JsMacros/releases
 
+[Join The Discord](https://discord.gg/P6W58J8)
+
 ## How To Use
 
 doccumentation of all features and modules can be found on the wiki.
