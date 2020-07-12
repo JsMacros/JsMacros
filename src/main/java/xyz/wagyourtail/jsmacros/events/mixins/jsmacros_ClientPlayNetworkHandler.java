@@ -8,18 +8,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.packet.s2c.play.CombatEventS2CPacket;
-import net.minecraft.network.packet.s2c.play.HeldItemChangeS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.Entry;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import xyz.wagyourtail.jsmacros.events.DeathCallback;
-import xyz.wagyourtail.jsmacros.events.HeldItemCallback;
 import xyz.wagyourtail.jsmacros.events.PlayerJoinCallback;
 import xyz.wagyourtail.jsmacros.events.PlayerLeaveCallback;
 import xyz.wagyourtail.jsmacros.events.TitleCallback;
-import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
 @Mixin(ClientPlayNetworkHandler.class)
@@ -67,13 +63,6 @@ class jsmacros_ClientPlayNetworkHandler {
         }
         if (type != null) {
             TitleCallback.EVENT.invoker().interact(type, new TextHelper(packet.getText()));
-        }
-    }
-    
-    @Inject(at = @At("HEAD"), method = "onHeldItemChange")
-    public void jsmacros_onHeldItemChange(HeldItemChangeS2CPacket packet, CallbackInfo info) {
-        if (PlayerInventory.isValidHotbarIndex(packet.getSlot())) {
-            HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(client.player.inventory.main.get(packet.getSlot())));
         }
     }
 }

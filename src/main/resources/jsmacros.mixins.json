@@ -14,7 +14,8 @@
 		"jsmacros_ItemDurabilityChangedCriterionMixin",
 		"jsmacros_HungerManagerMixin",
 		"jsmacros_MinecraftClientMixin",
-		"jsmacros_SoundSystemMixin"
+		"jsmacros_SoundSystemMixin",
+		"jsmacros_InGameHudMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
