@@ -34,6 +34,22 @@ public class ClientPlayerEntityHelper extends PlayerEntityHelper {
 	    return new ItemStackHelper(((ClientPlayerEntity) e).inventory.offHand.get(0));
 	}
 	
+	public ItemStackHelper getHeadArmor() {
+	    return new ItemStackHelper(((ClientPlayerEntity) e).inventory.getArmorStack(3));
+	}
+	
+	public ItemStackHelper getChestArmor() {
+        return new ItemStackHelper(((ClientPlayerEntity) e).inventory.getArmorStack(2));
+    }
+	
+	public ItemStackHelper getLegArmor() {
+        return new ItemStackHelper(((ClientPlayerEntity) e).inventory.getArmorStack(1));
+    }
+	
+	public ItemStackHelper getFootArmor() {
+        return new ItemStackHelper(((ClientPlayerEntity) e).inventory.getArmorStack(0));
+    }
+	
 	public ClientPlayerEntity getRaw() {
         return (ClientPlayerEntity) e;
     }
