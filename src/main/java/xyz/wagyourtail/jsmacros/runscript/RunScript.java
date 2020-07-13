@@ -65,10 +65,9 @@ public class RunScript {
             Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());
             thread th = new thread(Thread.currentThread(), macro, System.currentTimeMillis());
             threads.get(macro).add(th);
-            try {
+            try (SharedInterpreter interp = new SharedInterpreter()){
                 File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
                 if (file.exists()) {
-                    SharedInterpreter interp = new SharedInterpreter();
                     interp.set("event", (Object)event);
                     interp.set("args", args);
                     interp.set("file", file);
@@ -82,7 +81,6 @@ public class RunScript {
                     interp.set("hud", new hudFunctions());
                     interp.exec("import os\nos.chdir('"+file.getParentFile().getCanonicalPath().replaceAll("\\\\", "/")+"')");
                     interp.runScript(file.getCanonicalPath());
-                    interp.close();
                     if (then != null) then.run();
                 }
             } catch(Exception e) {
@@ -114,10 +112,9 @@ public class RunScript {
             Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());
             thread th = new thread(Thread.currentThread(), macro, System.currentTimeMillis());
             threads.get(macro).add(th);
-            try {
+            try (PythonInterpreter interp = new PythonInterpreter()) {
                 File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
                 if (file.exists()) {
-                    PythonInterpreter interp = new PythonInterpreter();
                     interp.set("event", event);
                     interp.set("args", args);
                     interp.set("file", file);
@@ -131,7 +128,6 @@ public class RunScript {
                     interp.set("hud", new hudFunctions());
                     interp.exec("import os\nos.chdir('"+file.getParentFile().getCanonicalPath().replaceAll("\\\\", "/")+"')");
                     interp.execfile(file.getCanonicalPath());
-                    interp.close();
                     if (then != null) then.run();
                 }
             } catch(Exception e) {

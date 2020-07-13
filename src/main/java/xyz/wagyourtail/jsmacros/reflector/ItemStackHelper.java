@@ -2,6 +2,8 @@ package xyz.wagyourtail.jsmacros.reflector;
 
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.registry.Registry;
 
 public class ItemStackHelper {
     private ItemStack i;
@@ -19,7 +21,7 @@ public class ItemStackHelper {
     }
     
     public String getName() {
-        return i.getName().toString();
+        return i.getName().getString();
     }
     
     public int getCount() {
@@ -28,6 +30,12 @@ public class ItemStackHelper {
     
     public int getMaxCount() {
         return i.getMaxCount();
+    }
+    
+    public String getNBT() {
+        CompoundTag tag = i.getTag();
+        if (tag != null) return tag.toString();
+        else return "";
     }
     
     public String getCreativeTab() {
@@ -39,7 +47,7 @@ public class ItemStackHelper {
     }
     
     public String getItemID() {
-        return i.getItem().toString();
+        return Registry.ITEM.getId(i.getItem()).toString();
     }
     
     public boolean isEmpty() {
