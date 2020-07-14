@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.runscript.functions;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.InputUtil.Key;
@@ -13,6 +14,11 @@ public class keybindFunctions {
         } catch (Exception e) {
             return InputUtil.UNKNOWN_KEY;
         }
+    }
+    
+    public boolean isKeyPressed(String keyName) {
+        Key key = getKeyCode(keyName);
+        return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), key.getCode());
     }
     
     public void key(String keyName, boolean keyState) {
