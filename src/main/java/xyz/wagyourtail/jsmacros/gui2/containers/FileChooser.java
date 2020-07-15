@@ -186,13 +186,14 @@ public class FileChooser extends OverlayContainer {
         for (AbstractButtonWidget b : this.buttons) {
             if (((Button) b).hovering) {
                 // border
-                fill(matricies, mouseX-3, mouseY, mouseX+textRenderer.getWidth(b.getMessage())+3, mouseY+1, 0x7F7F7F7F);
-                fill(matricies, mouseX+textRenderer.getWidth(b.getMessage())+2, mouseY-textRenderer.fontHeight - 3, mouseX+textRenderer.getWidth(b.getMessage())+3, mouseY, 0x7F7F7F7F);
+                int width = textRenderer.getWidth(b.getMessage());
+                fill(matricies, mouseX-3, mouseY, mouseX+width+3, mouseY+1, 0x7F7F7F7F);
+                fill(matricies, mouseX+width+2, mouseY-textRenderer.fontHeight - 3, mouseX+width+3, mouseY, 0x7F7F7F7F);
                 fill(matricies, mouseX-3, mouseY-textRenderer.fontHeight - 3, mouseX-2, mouseY, 0x7F7F7F7F);
-                fill(matricies, mouseX-3, mouseY-textRenderer.fontHeight - 4, mouseX+textRenderer.getWidth(b.getMessage())+3, mouseY-textRenderer.fontHeight - 3, 0x7F7F7F7F);
+                fill(matricies, mouseX-3, mouseY-textRenderer.fontHeight - 4, mouseX+width+3, mouseY-textRenderer.fontHeight - 3, 0x7F7F7F7F);
                 
                 // fill
-                fill(matricies, mouseX-2, mouseY-textRenderer.fontHeight - 3, mouseX+textRenderer.getWidth(b.getMessage())+2, mouseY, 0xFF000000);
+                fill(matricies, mouseX-2, mouseY-textRenderer.fontHeight - 3, mouseX+width+2, mouseY, 0xFF000000);
                 drawTextWithShadow(matricies, textRenderer, b.getMessage(), mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
             }
         }
