@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.runscript.classes;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import net.fabricmc.loader.api.FabricLoader;
@@ -15,6 +14,8 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import xyz.wagyourtail.jsmacros.compat.interfaces.IHorseScreen;
+import xyz.wagyourtail.jsmacros.compat.interfaces.IInventory;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 
@@ -104,22 +105,9 @@ public class Inventory {
         double x = mc.mouse.getX() * (double)mc.getWindow().getScaledWidth() / (double)mc.getWindow().getWidth();
         double y = mc.mouse.getY() * (double)mc.getWindow().getScaledHeight() / (double)mc.getWindow().getHeight();
         
-        //using reflection is annoying...
-        try {
-            Method getSlot;
-            if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-                getSlot = HandledScreen.class.getDeclaredMethod("getSlotAt", double.class, double.class);
-            } else {
-                getSlot = HandledScreen.class.getDeclaredMethod("method_2386", double.class, double.class);
-            }
-            getSlot.setAccessible(true);
-            Slot s = (Slot) getSlot.invoke(this.inventory, x, y);
-            if (s == null) return -999;
-            return this.inventory.getScreenHandler().slots.indexOf(s);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return -1;
-        }
+        Slot s = ((IInventory)this.inventory).getSlotUnder(x, y);
+        if (s == null) return -999;
+        return this.inventory.getScreenHandler().slots.indexOf(s);
     }
     
     public String getType() {
@@ -196,22 +184,11 @@ public class Inventory {
                 map.put("output", new int[] { slots - 9 - 27 - 1 });
                 map.put("input", new int[] { slots - 9 - 27 - 2 });
             } else if (inventory instanceof HorseScreen) {
-                try {
-                    Field entity;
-                    if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-                        entity = HorseScreen.class.getDeclaredField("entity");
-                    } else {
-                        entity = HorseScreen.class.getDeclaredField("field_2941");
-                    }
-                    entity.setAccessible(true);
-                    HorseBaseEntity h = (HorseBaseEntity) entity.get(inventory);
-                    if (h.canBeSaddled()) map.put("saddle", new int[] {0});
-                    if (h.canEquip()) map.put("armor", new int[] {1});
-                    if (h instanceof AbstractDonkeyEntity && ((AbstractDonkeyEntity) h).hasChest()) {
-                        map.put("container", jsMacros.range(2, slots - 9 - 27));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                HorseBaseEntity h = (HorseBaseEntity) ((IHorseScreen)this.inventory).getEntity();
+                if (h.canBeSaddled()) map.put("saddle", new int[] {0});
+                if (h.canEquip()) map.put("armor", new int[] {1});
+                if (h instanceof AbstractDonkeyEntity && ((AbstractDonkeyEntity) h).hasChest()) {
+                    map.put("container", jsMacros.range(2, slots - 9 - 27));
                 }
             } else if (inventory instanceof AnvilScreen || inventory instanceof SmithingScreen || inventory instanceof GrindstoneScreen || inventory instanceof CartographyTableScreen) {
                 map.put("output", new int[] { slots - 9 - 27 - 1 });
