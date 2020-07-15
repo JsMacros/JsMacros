@@ -1,9 +1,7 @@
 package xyz.wagyourtail.jsmacros.runscript.classes;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.network.ClientPlayerEntity;
