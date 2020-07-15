@@ -244,6 +244,12 @@ public class Profile {
 
             HashMap<String, Object> args = new HashMap<>();
             args.put("rawkey", keycode);
+            if (action == 1) {
+                if (key == 340 || key == 344) mods -= 1;
+                else if (key == 341 || key == 345) mods -= 2;
+                else if (key == 342 || key == 346) mods -= 4;
+            }
+            args.put("mods", jsMacros.getKeyModifiers(mods));
             args.put("key", keycode.getTranslationKey());
             args.put("action", action);
             if (registry.macros.containsKey("KEY")) for (BaseMacro macro : registry.macros.get("KEY").values()) {

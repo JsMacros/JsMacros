@@ -19,6 +19,7 @@ public class Button extends AbstractPressableButtonWidget {
     protected int lines;
     protected int vcenter;
     public Consumer<Button> onPress;
+    public boolean hovering = false;
     
     public Button(int x, int y, int width, int height, int color, int borderColor, int hilightColor, int textColor, Text message, Consumer<Button> onPress) {
         super(x, y, width, height, message);
@@ -62,11 +63,13 @@ public class Button extends AbstractPressableButtonWidget {
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             // fill
-            if (mouseX - x >= 0 && mouseX - x - width <= 0 && mouseY - y >= 0 && mouseY - y - height <= 0 && this.active)
+            if (mouseX - x >= 0 && mouseX - x - width <= 0 && mouseY - y >= 0 && mouseY - y - height <= 0 && this.active) {
+                hovering = true;
                 fill(matricies, x + 1, y + 1, x + width - 1, y + height - 1, hilightColor);
-            else
+            } else {
+                hovering = false;
                 fill(matricies, x + 1, y + 1, x + width - 1, y + height - 1, color);
-            
+            }
             // outline
             fill(matricies, x, y, x + 1, y + height, borderColor);
             fill(matricies, x + width - 1, y, x + width, y + height, borderColor);
@@ -76,7 +79,14 @@ public class Button extends AbstractPressableButtonWidget {
         }
     }
     
-
+    public void onClick(double mouseX, double mouseY) {
+        //super.onClick(mouseX, mouseY);
+    }
+    
+    public void onRelease(double mouseX, double mouseY) {
+        super.onClick(mouseX, mouseY);
+    }
+    
     @Override
     public void onPress() {
         if (onPress != null) onPress.accept(this);

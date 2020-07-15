@@ -108,6 +108,43 @@ public class jsMacros implements ClientModInitializer {
         }
     }
     
+    static public String getKeyModifiers(int mods) {
+        String s = "";
+        if ((mods & 1) == 1) {
+            s += "key.keyboard.left.shift";
+        }
+        if ((mods & 2) == 2) {
+            if (s.length() > 0) s += "+";
+            s += "key.keyboard.left.control";
+        }
+        if ((mods & 4) == 4) {
+            if (s.length() > 0) s += "+";
+            s += "key.keyboard.left.alt";
+        }
+        return s;
+    }
+    
+    static public int getModInt(String mods) {
+        int i = 0;
+        String[] modArr = mods.split("\\+");
+        for (String mod : modArr) {
+            switch (mod) {
+                case "key.keyboard.left.shift":
+                    i |= 1;
+                    break;
+                case "key.keyboard.left.control":
+                    i |= 2;
+                    break;
+                case "key.keyboard.left.alt":
+                    i |= 4;
+                    break;
+                default:
+            }
+        }
+        return i;
+        
+    }
+    
     static public String getScreenName(Screen s) {
         if (s == null) return null;
         if (s instanceof HandledScreen) {

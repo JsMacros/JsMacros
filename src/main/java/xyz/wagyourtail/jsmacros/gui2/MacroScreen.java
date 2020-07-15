@@ -159,14 +159,15 @@ public class MacroScreen extends Screen {
 
         topbar.render(matricies, mouseX, mouseY, delta);
 
-        for (MacroContainer macro : macros) {
-            macro.render(matricies, mouseX, mouseY, delta);
-        }
 
         for (AbstractButtonWidget b : buttons) {
             ((Button) b).render(matricies, mouseX, mouseY, delta);
         }
 
+        for (MacroContainer macro : macros) {
+            macro.render(matricies, mouseX, mouseY, delta);
+        }
+        
         drawCenteredString(matricies, this.textRenderer, jsMacros.profile.profileName, this.width * 7 / 12, 5, 0x7F7F7F);
 
         fill(matricies, this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);

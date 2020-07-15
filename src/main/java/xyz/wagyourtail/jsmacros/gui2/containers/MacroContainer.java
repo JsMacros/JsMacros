@@ -15,9 +15,9 @@ import xyz.wagyourtail.jsmacros.profile.Profile;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
-import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -64,7 +64,7 @@ public class MacroContainer extends MultiElementContainer {
             btn.setMessage(new TranslatableText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"));
         }));
 
-        keyBtn = (Button) addButton(new Button(x + w / 12 + 1, y + 1, macro.type == MacroEnum.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.type == MacroEnum.EVENT ? new LiteralText(macro.eventkey) : jsMacros.getKeyText(macro.eventkey), (btn) -> {
+        keyBtn = (Button) addButton(new Button(x + w / 12 + 1, y + 1, macro.type == MacroEnum.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.type == MacroEnum.EVENT ? new LiteralText(macro.eventkey) : buildKeyName(macro.eventkey), (btn) -> {
             if (macro.type == MacroEnum.EVENT) {
                 Profile.registry.removeMacro(macro);
                 int l = Profile.registry.events.size();
@@ -125,27 +125,30 @@ public class MacroContainer extends MultiElementContainer {
 
     }
     
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean onKey(String translationKey) {
         if (selectkey) {
-            setKey(InputUtil.Type.KEYSYM.createFromCode(keyCode).getTranslationKey());
+            setKey(translationKey);
             return false;
         }
         return true;
     }
     
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (selectkey) {
-            setKey(InputUtil.Type.MOUSE.createFromCode(button).getTranslationKey());
-            return false;
+    public static Text buildKeyName(String translationKeys) {
+        LiteralText text = new LiteralText("");
+        boolean notfirst = false;
+        for (String s : translationKeys.split("\\+")) {
+            if (notfirst) text.append("+");
+            text.append(jsMacros.getKeyText(s));
+            notfirst = true;
         }
-        return true;
+        return text;
     }
     
-    public void setKey(String translationKey) {
+    public void setKey(String translationKeys) {
         Profile.registry.removeMacro(macro);
-        macro.eventkey = translationKey;
+        macro.eventkey = translationKeys;
         Profile.registry.addMacro(macro);
-        keyBtn.setMessage(jsMacros.getKeyText(translationKey));
+        keyBtn.setMessage(buildKeyName(translationKeys));
         selectkey = false;
     }
     
@@ -182,6 +185,12 @@ public class MacroContainer extends MultiElementContainer {
             fill(matricies, x, y + height - 1, x + width, y + height, 0xFFFFFFFF);
             fill(matricies, x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
             fill(matricies, x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
+            
+            // overlay
+            if (keyBtn.hovering) {
+                fill(matricies, mouseX-2, mouseY-textRenderer.fontHeight - 3, mouseX+textRenderer.getWidth(keyBtn.getMessage())+2, mouseY, 0xFF000000);
+                drawTextWithShadow(matricies, textRenderer, keyBtn.getMessage(), mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
+            }
         }
     }
 
