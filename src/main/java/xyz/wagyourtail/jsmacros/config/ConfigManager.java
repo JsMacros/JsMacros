@@ -41,14 +41,14 @@ public class ConfigManager {
         try {
             options = gson.fromJson(new FileReader(configFile), ConfigOptions.class);
         } catch (Exception e) {
-            System.out.println(I18n.translate("jsmacros.loadconfigfail"));
+            System.out.println("Config Failed To Load.");
             e.printStackTrace();
             if (configFile.exists()) {
                 configFile.renameTo(new File(configFolder, "options.json.bak"));
             }
             saveConfig();
         }
-        System.out.println(I18n.translate("jsmacros.profilesloaded"));
+        System.out.println("Loaded Profiles:");
         for (String key : jsMacros.config.options.profiles.keySet()) {
             System.out.println("    " + key);
         }
@@ -62,7 +62,7 @@ public class ConfigManager {
             fw.write(gson.toJson(options));
             fw.close();
         } catch (Exception e) {
-            System.out.println(I18n.translate("jsmacros.saveconfigfail"));
+            System.out.println("Config Failed To Save.");
             e.printStackTrace();
         }
     }
