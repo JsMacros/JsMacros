@@ -36,6 +36,10 @@ public class jsMacrosFunctions {
         return mc.getGameVersion();
     }
 
+    public Class<?> importClass(String ClassName) throws ClassNotFoundException {
+        return Class.forName(ClassName);
+    }
+    
     public void runScript(String file) {
         runScript(file, null);
     }
