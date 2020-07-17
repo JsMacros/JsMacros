@@ -10,6 +10,7 @@ import xyz.wagyourtail.jsmacros.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
+import xyz.wagyourtail.jsmacros.reflector.OptionsHelper;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 import xyz.wagyourtail.jsmacros.runscript.RunScript.thread;
 
@@ -25,6 +26,11 @@ public class jsMacrosFunctions {
 
     public ConfigManager getConfig() {
         return jsMacros.config;
+    }
+    
+    public OptionsHelper getGameOptions() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        return new OptionsHelper(mc.options);
     }
 
     public HashMap<RawMacro, ArrayList<thread>> getRunningThreads() {
