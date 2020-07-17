@@ -1,19 +1,40 @@
 package xyz.wagyourtail.jsmacros.reflector;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.state.property.Property;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
 public class BlockDataHelper {
     private Block b;
+    private BlockState bs;
+    private BlockPos bp;
     private BlockEntity e;
     
-    public BlockDataHelper(Block b, BlockEntity e) {
-        this.b = b;
+    public BlockDataHelper(BlockState b, BlockEntity e, BlockPos bp) {
+        this.b = b.getBlock();
+        this.bp = bp;
+        this.bs = b;
         this.e = e;
+    }
+    
+    public int getX() {
+        return bp.getX();
+    }
+    
+    public int getY() {
+        return bp.getY();
+    }
+    
+    public int getZ() {
+        return bp.getZ();
     }
     
     public String getId() {
@@ -34,8 +55,20 @@ public class BlockDataHelper {
         return m;
     }
     
+    public HashMap<String, String> getBlockState() {
+        HashMap<String, String> map = new HashMap<>();
+        for (Entry<Property<?>, Comparable<?>> e : bs.getEntries().entrySet()) {
+            map.put(e.getKey().getName(), Util.getValueAsString(e.getKey(), e.getValue()));
+        }
+        return map;
+    }
+    
     public Block getRawBlock() {
         return b;
+    }
+    
+    public BlockState getRawBlockState() {
+        return bs;
     }
     
     public BlockEntity getRawBlockEntity() {

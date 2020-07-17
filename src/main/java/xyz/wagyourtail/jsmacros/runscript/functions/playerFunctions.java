@@ -33,7 +33,7 @@ public class playerFunctions {
 		BlockState b = mc.world.getBlockState(h.getBlockPos());
         BlockEntity t = mc.world.getBlockEntity(h.getBlockPos());
         if (b.getBlock().equals(Blocks.VOID_AIR)) return null;
-        return new BlockDataHelper(b.getBlock(), t);
+        return new BlockDataHelper(b, t, h.getBlockPos());
     }
     
     public EntityHelper rayTraceEntity() {

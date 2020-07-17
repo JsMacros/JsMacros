@@ -42,7 +42,7 @@ public class worldFunctions {
         BlockState b = mc.world.getBlockState(new BlockPos(x,y,z));
         BlockEntity t = mc.world.getBlockEntity(new BlockPos(x,y,z));
         if (b.getBlock().equals(Blocks.VOID_AIR)) return null;
-        return new BlockDataHelper(b.getBlock(), t);
+        return new BlockDataHelper(b, t, new BlockPos(x,y,z));
         
     }
     
