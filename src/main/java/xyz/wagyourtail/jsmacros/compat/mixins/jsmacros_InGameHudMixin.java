@@ -16,7 +16,7 @@ import xyz.wagyourtail.jsmacros.runscript.functions.hudFunctions;
 
 @Mixin(InGameHud.class)
 class jsmacros_InGameHudMixin {
-    @Inject(at = @At("HEAD"), method = "render")
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/options/GameOptions;debugEnabled"), method = "render")
     public void jsMacros_renderHud(MatrixStack matrixStack, float f, final CallbackInfo info) {
         
         for (Draw2D h : hudFunctions.overlays) {

@@ -18,6 +18,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     protected ArrayList<TextFieldWidget> textFieldWidgets;
     protected ArrayList<text> textFields;
     public Consumer<Screen> onInit;
+    public Consumer<String> catchInit;
     
     public Screen(String title, boolean dirt) {
         super(new LiteralText(title));
@@ -35,11 +36,12 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
             try {
                 onInit.accept(this);
             } catch (Exception e) {
-                if (this.client.inGameHud != null) {
-                    LiteralText text = new LiteralText(e.toString());
-                    this.client.inGameHud.getChatHud().addMessage(text);
-                }
                 e.printStackTrace();
+                try {
+                    if (catchInit != null) catchInit.accept(e.toString());
+                } catch (Exception f) {
+                    f.printStackTrace();
+                }
             }
         }
     }
