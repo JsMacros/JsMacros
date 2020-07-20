@@ -25,7 +25,9 @@ public class globalVarFunctions {
 	
 	public String getType(String name) {
 		Object i = globalRaw.get(name);
-		if (i instanceof Integer) {
+	    if (i == null) {
+	        return null;
+	    } else if (i instanceof Integer) {
 			return "Int";
 		} else if (i instanceof String) {
 			return "String";
@@ -33,8 +35,10 @@ public class globalVarFunctions {
 			return "Float";
 		} else if (i instanceof Double) {
             return "Double";
+		} else if (i instanceof Boolean) {
+		    return "Boolean";
 		} else {
-			return null;
+			return "Object";
 		}
 	}
 	
