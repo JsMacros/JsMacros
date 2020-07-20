@@ -16,6 +16,12 @@ public class globalVarFunctions {
 	public void putDouble(String name, double d) {
 	    globalRaw.put(name, Double.valueOf(d));
 	}
+	public void putBoolean(String name, boolean b) {
+	    globalRaw.put(name, Boolean.valueOf(b));
+	}
+	public void putObject(String name, Object o) {
+	    globalRaw.put(name, o);
+	}
 	
 	public String getType(String name) {
 		Object i = globalRaw.get(name);
@@ -64,6 +70,17 @@ public class globalVarFunctions {
             return null;
         }
     }
+	public Boolean getBoolean(String name) {
+        Object i = globalRaw.get(name);
+        if (i instanceof Boolean) {
+            return (Boolean) i;
+        } else {
+            return null;
+        }
+    }
+	public Object getObject(String name) {
+	    return globalRaw.get(name);
+	}
 	
 	public HashMap<String, Object> getRaw() {
 		return globalRaw;
