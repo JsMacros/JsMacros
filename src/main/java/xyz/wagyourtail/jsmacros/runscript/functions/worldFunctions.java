@@ -1,6 +1,16 @@
 package xyz.wagyourtail.jsmacros.runscript.functions;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -8,12 +18,16 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
+import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.reflector.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.reflector.EntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
@@ -87,5 +101,42 @@ public class worldFunctions {
     public int getBlockLight(int x, int y, int z) {
         MinecraftClient mc = MinecraftClient.getInstance();
         return mc.world.getLightLevel(LightType.BLOCK, new BlockPos(x, y, z));
+    }
+    
+    public void playSoundFile(String file, double volume) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
+        Clip clip = AudioSystem.getClip();
+        clip.open(AudioSystem.getAudioInputStream(new File(jsMacros.config.macroFolder, file)));
+        FloatControl gainControl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
+        float min = gainControl.getMinimum();
+        float range = gainControl.getMaximum() - min;
+        float gain = (float) ((range * volume) + min);
+        gainControl.setValue(gain);
+        clip.addLineListener(new LineListener() {
+            @Override
+            public void update(LineEvent event) {
+                if(event.getType().equals(LineEvent.Type.STOP)) {
+                    clip.close();
+                }
+            }
+        });
+        clip.start();
+    }
+    
+    public void playSound(String id) {
+        playSound(id, 1F);
+    }
+    
+    public void playSound(String id, float volume) {
+        playSound(id, volume, 0.25F);
+    }
+    
+    public void playSound(String id, float volume, float pitch) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        mc.getSoundManager().play(PositionedSoundInstance.master(Registry.SOUND_EVENT.get(new Identifier(id)), pitch, volume));
+    }
+    
+    public void playSound(String id, float volume, float pitch, double x, double y, double z) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        mc.world.playSound(x, y, z, Registry.SOUND_EVENT.get(new Identifier(id)), SoundCategory.MASTER, volume, pitch, true);
     }
 }
