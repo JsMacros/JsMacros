@@ -74,10 +74,11 @@ public class HTTPRequest {
         
         public String text() {
             if (text != null) return text;
-            return new BufferedReader(
+            text = new BufferedReader(
                     new InputStreamReader(raw, StandardCharsets.UTF_8))
                       .lines()
                       .collect(Collectors.joining("\n"));
+            return text;
         }
         
         public Map<?, ?> json() {
