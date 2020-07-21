@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.runscript.classes;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.*;
@@ -112,7 +113,7 @@ public class Inventory {
         return jsMacros.getScreenName(this.inventory);
     }
 
-    public HashMap<String, int[]> getMap() {
+    public Map<String, int[]> getMap() {
         if (map == null) {
             map = getMapInternal();
         }

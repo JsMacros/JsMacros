@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.runscript.classes;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -36,15 +37,15 @@ public class Draw2D extends DrawableHelper {
         return mc.getWindow().getScaledHeight();
     }
     
-    public ArrayList<text> getTexts() {
+    public List<text> getTexts() {
         return textFields;
     }
     
-    public ArrayList<rect> getRects() {
+    public List<rect> getRects() {
         return rectFields;
     }
     
-    public ArrayList<item> getItems() {
+    public List<item> getItems() {
         return itemFields;
     }
     

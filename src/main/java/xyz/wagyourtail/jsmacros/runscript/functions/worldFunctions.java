@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.runscript.functions;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -34,7 +35,7 @@ import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.PlayerListEntryHelper;
 
 public class worldFunctions {
-    public ArrayList<PlayerEntityHelper> getLoadedPlayers() {
+    public List<PlayerEntityHelper> getLoadedPlayers() {
         MinecraftClient mc = MinecraftClient.getInstance();
         ArrayList<PlayerEntityHelper> players = new ArrayList<>();
         for (AbstractClientPlayerEntity p : mc.world.getPlayers()) {
@@ -43,7 +44,7 @@ public class worldFunctions {
         return players;
     }
     
-    public ArrayList<PlayerListEntryHelper> getPlayers() {
+    public List<PlayerListEntryHelper> getPlayers() {
         ArrayList<PlayerListEntryHelper> players = new ArrayList<>();
         for (PlayerListEntry p : MinecraftClient.getInstance().getNetworkHandler().getPlayerList()) {
             players.add(new PlayerListEntryHelper(p));
@@ -60,7 +61,7 @@ public class worldFunctions {
         
     }
     
-    public ArrayList<EntityHelper> getEntities() {
+    public List<EntityHelper> getEntities() {
         MinecraftClient mc = MinecraftClient.getInstance();
         ArrayList<EntityHelper> entities = new ArrayList<>();
         for (Entity e : mc.world.getEntities()) {

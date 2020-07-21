@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.runscript.functions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import net.minecraft.client.MinecraftClient;
@@ -33,7 +33,7 @@ public class jsMacrosFunctions {
         return new OptionsHelper(mc.options);
     }
 
-    public HashMap<RawMacro, ArrayList<thread>> getRunningThreads() {
+    public Map<RawMacro, List<thread>> getRunningThreads() {
         return RunScript.threads;
     }
 

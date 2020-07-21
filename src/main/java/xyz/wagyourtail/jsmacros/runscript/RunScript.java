@@ -4,6 +4,8 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import org.graalvm.polyglot.Context;
@@ -28,12 +30,12 @@ import xyz.wagyourtail.jsmacros.runscript.functions.timeFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.worldFunctions;
 
 public class RunScript {
-    public static HashMap<RawMacro, ArrayList<thread>> threads = new HashMap<>();
+    public static Map<RawMacro, List<thread>> threads = new HashMap<>();
     public static String language = "js";
     
     public static ArrayList<thread> getThreads() {
         ArrayList<thread> th = new ArrayList<>();
-        for (ArrayList<thread> tl : threads.values()) {
+        for (List<thread> tl : threads.values()) {
             th.addAll(tl);
         }
         return th;

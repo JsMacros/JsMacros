@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.runscript.classes;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -58,7 +59,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         return this.height;
     }
     
-    public ArrayList<ButtonWidgetHelper> getButtonWidgets() {
+    public List<ButtonWidgetHelper> getButtonWidgets() {
         ArrayList<ButtonWidgetHelper> list = new ArrayList<ButtonWidgetHelper>();
         for (AbstractButtonWidget b : buttons) {
             list.add(new ButtonWidgetHelper((ButtonWidget)b));
@@ -66,7 +67,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         return list;
     }
     
-    public ArrayList<TextFieldWidgetHelper> getTextFields() {
+    public List<TextFieldWidgetHelper> getTextFields() {
         ArrayList<TextFieldWidgetHelper> list = new ArrayList<TextFieldWidgetHelper>();
         for (TextFieldWidget t : textFieldWidgets) {
             list.add(new TextFieldWidgetHelper(t));
@@ -75,7 +76,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     }
     
 
-    public ArrayList<text> getTexts() {
+    public List<text> getTexts() {
         return textFields;
     }
     

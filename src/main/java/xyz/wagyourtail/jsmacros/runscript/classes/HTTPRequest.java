@@ -62,7 +62,7 @@ public class HTTPRequest {
 
     public static class response {
         private InputStream raw;
-        public HashMap<String, List<String>> headers;
+        public Map<String, List<String>> headers;
         public String text;
         public int responseCode;
         
@@ -80,7 +80,7 @@ public class HTTPRequest {
                       .collect(Collectors.joining("\n"));
         }
         
-        public HashMap<?, ?> json() {
+        public Map<?, ?> json() {
             text();
             return gson.fromJson(text, HashMap.class);
         }

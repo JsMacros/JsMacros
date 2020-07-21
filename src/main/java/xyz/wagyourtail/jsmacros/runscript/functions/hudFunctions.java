@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.runscript.functions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import xyz.wagyourtail.jsmacros.runscript.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.jsMacros;
@@ -46,7 +47,7 @@ public class hudFunctions {
         overlays.remove(overlay);
     }
     
-    public ArrayList<Draw2D> listDraw2Ds() {
+    public List<Draw2D> listDraw2Ds() {
         return overlays;
     }
     
@@ -66,7 +67,7 @@ public class hudFunctions {
         renders.remove(draw);
     }
     
-    public ArrayList<Draw3D> listDraw3Ds() {
+    public List<Draw3D> listDraw3Ds() {
         return renders;
     }
     
