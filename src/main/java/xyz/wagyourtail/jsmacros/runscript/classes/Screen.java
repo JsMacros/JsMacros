@@ -135,6 +135,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     }
     
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
+        if (matricies == null) return;
         if (dirt) this.renderBackgroundTexture(0);
         else this.renderBackground(matricies, 0);
         
