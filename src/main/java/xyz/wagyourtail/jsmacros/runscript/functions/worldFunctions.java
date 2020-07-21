@@ -104,7 +104,7 @@ public class worldFunctions {
         return mc.world.getLightLevel(LightType.BLOCK, new BlockPos(x, y, z));
     }
     
-    public void playSoundFile(String file, double volume) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
+    public Clip playSoundFile(String file, double volume) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
         Clip clip = AudioSystem.getClip();
         clip.open(AudioSystem.getAudioInputStream(new File(jsMacros.config.macroFolder, file)));
         FloatControl gainControl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -121,6 +121,7 @@ public class worldFunctions {
             }
         });
         clip.start();
+        return clip;
     }
     
     public void playSound(String id) {

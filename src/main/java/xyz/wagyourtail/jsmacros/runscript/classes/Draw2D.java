@@ -67,6 +67,12 @@ public class Draw2D extends DrawableHelper {
         return r;
     }
     
+    public rect addRect(int x1, int y1, int x2, int y2, int color, int alpha) {
+        rect r = new rect(x1, y1, x2, y2, color, alpha);
+        rectFields.add(r);
+        return r;
+    }
+    
     public void removeRect(rect r) {
         rectFields.remove(r);
     }
@@ -169,15 +175,26 @@ public class Draw2D extends DrawableHelper {
         public int color;
         
         public rect(int x1, int y1, int x2, int y2, int color) {
-            this.x1 = x1;
-            this.y1 = y1;
-            this.x2 = x2;
-            this.y2 = y2;
-            this.color = color;
+            setPos(x1, y1, x2, y2);
+            setColor(color);
+        }
+        
+        public rect(int x1, int y1, int x2, int y2, int color, int alpha) {
+            setPos(x1, y1, x2, y2);
+            setColor(color, alpha);
         }
         
         public void setColor(int color) {
+            if (color <= 0xFFFFFF) color = color | 0xFF000000;
             this.color = color;
+        }
+        
+        public void setColor(int color, int alpha) {
+            this.color = color | (alpha << 24);
+        }
+        
+        public void setAlpha(int alpha) {
+            this.color = (color & 0xFFFFFF) | (alpha << 24);
         }
         
         public void setPos(int x1, int y1, int x2, int y2) {

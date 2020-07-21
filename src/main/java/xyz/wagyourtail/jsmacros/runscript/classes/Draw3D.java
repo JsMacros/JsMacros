@@ -26,6 +26,12 @@ public class Draw3D {
         return b;
     }
     
+    public box addBox(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, int fillColor, int fillAlpha, boolean fill) {
+        box b = new box(x1, y1, z1, x2, y2, z2, color, alpha, fillColor, fillAlpha, fill);
+        boxes.add(b);
+        return b;
+    }
+    
     public void removeBox(box b) {
         boxes.remove(b);
     }
@@ -36,6 +42,12 @@ public class Draw3D {
     
     public line addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color) {
         line l = new line(x1, y1, z1, x2, y2, z2, color);
+        lines.add(l);
+        return l;
+    }
+    
+    public line addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha) {
+        line l = new line(x1, y1, z1, x2, y2, z2, color, alpha);
         lines.add(l);
         return l;
     }
@@ -96,14 +108,16 @@ public class Draw3D {
         public int fillColor;
         public boolean fill;
         public box(double x1, double y1, double z1, double x2, double y2, double z2, int color, int fillColor, boolean fill) {
-            this.x1 = x1;
-            this.y1 = y1;
-            this.z1 = z1;
-            this.x2 = x2;
-            this.y2 = y2;
-            this.z2 = z2;
-            this.color = color;
-            this.fillColor = fillColor;
+            setPos(x1, y1, z1, x2, y2, z2);
+            setColor(color);
+            setFillColor(fillColor);
+            this.fill = fill;
+        }
+        
+        public box(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, int fillColor, int fillAlpha, boolean fill) {
+            setPos(x1, y1, z1, x2, y2, z2);
+            setColor(color, alpha);
+            setFillColor(fillColor, fillAlpha);
             this.fill = fill;
         }
         
@@ -116,12 +130,31 @@ public class Draw3D {
             this.z2 = z2;
         }
         
+        
+        
         public void setColor(int color) {
+            if (color <= 0xFFFFFF) color = color | 0xFF000000;
             this.color = color;
         }
         
         public void setFillColor(int fillColor) {
             this.fillColor = fillColor;
+        }
+        
+        public void setColor(int color, int alpha) {
+            this.color = color | (alpha << 24);
+        }
+        
+        public void setAlpha(int alpha) {
+            this.color = (color & 0xFFFFFF) | (alpha << 24);
+        }
+        
+        public void setFillColor(int fillColor, int alpha) {
+            this.fillColor = fillColor | (alpha << 24);
+        }
+        
+        public void setFillAlpha(int alpha) {
+            this.fillColor = (fillColor & 0xFFFFFF) | (alpha << 24);
         }
         
         public void setFill(boolean fill) {
@@ -182,13 +215,13 @@ public class Draw3D {
         public double z2;
         public int color;
         public line(double x1, double y1, double z1, double x2, double y2, double z2, int color) {
-            this.x1 = x1;
-            this.y1 = y1;
-            this.z1 = z1;
-            this.x2 = x2;
-            this.y2 = y2;
-            this.z2 = z2;
-            this.color = color;
+            setPos(x1, y1, z1, x2, y2, z2);
+            setColor(color);
+        }
+        
+        public line(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha) {
+            setPos(x1, y1, z1, x2, y2, z2);
+            setColor(color, alpha);
         }
         
         public void setPos(double x1, double y1, double z1, double x2, double y2, double z2) {
@@ -201,7 +234,16 @@ public class Draw3D {
         }
         
         public void setColor(int color) {
+            if (color <= 0xFFFFFF) color = color | 0xFF000000;
             this.color = color;
+        }
+        
+        public void setColor(int color, int alpha) {
+            this.color = color | (alpha << 24);
+        }
+        
+        public void setAlpha(int alpha) {
+            this.color = (color & 0xFFFFFF) | (alpha << 24);
         }
         
         public void render() {
