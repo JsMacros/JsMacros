@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
@@ -58,5 +59,9 @@ public class jsMacrosFunctions {
         } else {
             RunScript.exec(new RawMacro(MacroEnum.EVENT, "", file, true), "", null);
         }
+    }
+    
+    public void open(String s) {
+        Util.getOperatingSystem().open(s);
     }
 }
