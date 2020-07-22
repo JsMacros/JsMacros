@@ -20,6 +20,7 @@ import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.runscript.functions.chatFunctions;
+import xyz.wagyourtail.jsmacros.runscript.functions.fsFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.globalVarFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.hudFunctions;
 import xyz.wagyourtail.jsmacros.runscript.functions.jsMacrosFunctions;
@@ -194,6 +195,7 @@ public class RunScript {
                     binds.putMember("player", new playerFunctions());
                     binds.putMember("hud", new hudFunctions());
                     binds.putMember("request", new requestFunctions());
+                    binds.putMember("fs", new fsFunctions());
 
                     //Run Script
                     
