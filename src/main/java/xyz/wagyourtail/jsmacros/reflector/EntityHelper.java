@@ -53,6 +53,18 @@ public class EntityHelper {
         return e.getType().toString();
     }
     
+    public boolean isGlowing() {
+        return e.isGlowing();
+    }
+    
+    public boolean isInLava() {
+        return e.isInLava();
+    }
+    
+    public boolean isOnFire() {
+        return e.isOnFire();
+    }
+    
     public void setGlowing(boolean val) {
         e.setGlowing(val);
     }
