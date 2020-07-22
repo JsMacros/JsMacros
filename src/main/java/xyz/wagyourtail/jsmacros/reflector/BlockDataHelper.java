@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.reflector;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.block.Block;
@@ -45,7 +46,7 @@ public class BlockDataHelper {
         return b.getName().toString();
     }
     
-    public HashMap<String, String> getNBT() {
+    public Map<String, String> getNBT() {
         if (e == null) return null;
         HashMap<String, String> m = new HashMap<>();
         CompoundTag t = e.toInitialChunkDataTag();
@@ -55,7 +56,7 @@ public class BlockDataHelper {
         return m;
     }
     
-    public HashMap<String, String> getBlockState() {
+    public Map<String, String> getBlockState() {
         HashMap<String, String> map = new HashMap<>();
         for (Entry<Property<?>, Comparable<?>> e : bs.getEntries().entrySet()) {
             map.put(e.getKey().getName(), Util.getValueAsString(e.getKey(), e.getValue()));

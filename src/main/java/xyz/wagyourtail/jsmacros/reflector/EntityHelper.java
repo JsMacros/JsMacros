@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.reflector;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
@@ -12,7 +13,7 @@ public class EntityHelper {
         this.e = e;
     }
     
-    public HashMap<String, Double> getPos() {
+    public Map<String, Double> getPos() {
         if (e == null) return null;
         HashMap<String, Double> r = new HashMap<>();
         Vec3d pos = e.getPos();
