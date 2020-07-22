@@ -1,11 +1,13 @@
 package xyz.wagyourtail.jsmacros.runscript.functions;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
 import xyz.wagyourtail.jsmacros.runscript.classes.HTTPRequest;
 import xyz.wagyourtail.jsmacros.runscript.classes.HTTPRequest.response;
+import xyz.wagyourtail.jsmacros.runscript.classes.WebSocket;
 
 public class requestFunctions {
     public HTTPRequest create(String url) throws IOException {
@@ -30,5 +32,9 @@ public class requestFunctions {
         HTTPRequest req = new HTTPRequest(url);
         if (headers != null) req.headers = new HashMap<>(headers);
         return req.post(data);
+    }
+    
+    public WebSocket createWS(String uri) throws URISyntaxException {
+        return new WebSocket(uri);
     }
 }

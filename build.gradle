@@ -48,6 +48,8 @@ dependencies {
     
 	// https://mvnrepository.com/artifact/org.python/jython-standalone
     implementation group: 'org.python', name: 'jython-standalone', version: '2.7.2'
+	include group: 'org.python', name: 'jython-standalone', version: '2.7.2'
+
 	
 	// https://mvnrepository.com/artifact/org.graalvm.js/js
 	implementation group: 'org.graalvm.sdk', name: 'graal-sdk', version: '20.1.0'
@@ -58,18 +60,19 @@ dependencies {
 	implementation group: 'org.graalvm.regex', name: 'regex', version: '20.1.0'
 	implementation group: 'com.ibm.icu', name: 'icu4j', version: '64.2'
 	
-	
-	//add JEP
-	implementation 'com.github.ninia:jep:v3.9.0'
-	include 'com.github.ninia:jep:v3.9.0'
-	
-	
 	include group: 'org.graalvm.sdk', name: 'graal-sdk', version: '20.1.0'
 	include group: 'org.graalvm.js', name: 'js', version: '20.1.0'
 	include group: 'org.graalvm.truffle', name: 'truffle-api', version: '20.1.0'
 	include group: 'org.graalvm.regex', name: 'regex', version: '20.1.0'
 	include group: 'com.ibm.icu', name: 'icu4j', version: '64.2'
-	include group: 'org.python', name: 'jython-standalone', version: '2.7.2'
+	
+	//add JEP
+	implementation 'com.github.ninia:jep:v3.9.0'
+	include 'com.github.ninia:jep:v3.9.0'
+	
+    //websocket 
+    implementation "org.java-websocket:Java-WebSocket:1.5.1"
+    include "org.java-websocket:Java-WebSocket:1.5.1"
 	
 	//nullable not defined so...
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'
