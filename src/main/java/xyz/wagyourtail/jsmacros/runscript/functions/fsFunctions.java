@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.google.common.io.Files;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.runscript.classes.FileHandler;
 
 public class fsFunctions {
     public String[] list(String path) {
@@ -50,5 +51,9 @@ public class fsFunctions {
         String f = new File(jsMacros.config.macroFolder, path).getParentFile().getCanonicalPath().substring(jsMacros.config.macroFolder.getCanonicalPath().length());
         if (f.startsWith("/")) return "."+f;
         return f;
+    }
+    
+    public FileHandler open(String path) {
+        return new FileHandler(path);
     }
 }
