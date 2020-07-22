@@ -8,6 +8,7 @@ import java.util.Map;
 import xyz.wagyourtail.jsmacros.runscript.classes.HTTPRequest;
 import xyz.wagyourtail.jsmacros.runscript.classes.HTTPRequest.response;
 import xyz.wagyourtail.jsmacros.runscript.classes.WebSocket;
+import xyz.wagyourtail.jsmacros.runscript.classes.Websocket2;
 
 public class requestFunctions {
     public HTTPRequest create(String url) throws IOException {
@@ -36,5 +37,9 @@ public class requestFunctions {
     
     public WebSocket createWS(String uri) throws URISyntaxException {
         return new WebSocket(uri);
+    }
+    
+    public Websocket2 createWS2(String url) throws IOException {
+        return new Websocket2(url);
     }
 }

@@ -73,6 +73,8 @@ dependencies {
     //websocket 
     implementation "org.java-websocket:Java-WebSocket:1.5.1"
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    implementation "com.neovisionaries:nv-websocket-client:2.4"
+    include "com.neovisionaries:nv-websocket-client:2.4"
     include "org.java-websocket:Java-WebSocket:1.5.1"
     include group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
 	
