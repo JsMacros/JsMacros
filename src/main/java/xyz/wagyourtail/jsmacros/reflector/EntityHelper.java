@@ -52,6 +52,10 @@ public class EntityHelper {
         return e.getType().toString();
     }
     
+    public void setGlowing(boolean val) {
+        e.setGlowing(val);
+    }
+    
     public Entity getRaw() {
         return e;
     }
