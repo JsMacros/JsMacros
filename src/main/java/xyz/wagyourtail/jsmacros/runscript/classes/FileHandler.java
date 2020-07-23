@@ -27,11 +27,11 @@ public class FileHandler {
     public String read() throws IOException {
         String ret = "";
         BufferedReader in = new BufferedReader(new FileReader(f));
-        String line;
-        do {
+        String line = in.readLine();
+        while(line != null) {
+            ret += line + "\n";
             line = in.readLine();
-            if (line != null) ret += line + "\n";
-        } while(line != null);
+        }
         in.close();
         return ret;
     }

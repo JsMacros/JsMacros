@@ -20,6 +20,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     protected ArrayList<text> textFields;
     public Consumer<Screen> onInit;
     public Consumer<String> catchInit;
+    public Consumer<Screen> onClose;
     
     public Screen(String title, boolean dirt) {
         super(new LiteralText(title));
@@ -155,6 +156,14 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         this.client.keyboard.enableRepeatEvents(false);
     }
     
+    public void close() {
+        if (onClose != null) onClose.accept(this);
+        onClose();
+    }
+    
+    public void onClose() {
+        super.onClose();
+    }
     
     public static class text {
         public String text;
