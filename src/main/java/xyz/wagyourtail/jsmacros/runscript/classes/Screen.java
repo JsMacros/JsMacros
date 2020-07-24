@@ -164,15 +164,11 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     
     public void removed() {
         this.client.keyboard.enableRepeatEvents(false);
+        if (onClose != null) onClose.accept(this);
     }
     
     public void close() {
-        if (onClose != null) onClose.accept(this);
         onClose();
-    }
-    
-    public void onClose() {
-        super.onClose();
     }
     
     public static class text {
