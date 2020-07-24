@@ -23,7 +23,6 @@ public class Websocket2 extends WebSocketAdapter {
     public BiConsumer<WebSocket, WebSocketFrame> onFrame;
 
     public Websocket2(String address) throws IOException {
-        System.out.println(address);
         ws = new WebSocketFactory().createSocket(address).addListener(this);
     }
 
