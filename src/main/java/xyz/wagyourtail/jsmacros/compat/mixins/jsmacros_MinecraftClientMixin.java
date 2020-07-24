@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.compat.mixins;
 
+import java.util.ArrayList;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,7 +15,16 @@ import xyz.wagyourtail.jsmacros.runscript.functions.hudFunctions;
 class jsmacros_MinecraftClientMixin {
     @Inject(at = @At("TAIL"), method="onResolutionChanged")
     public void jsmacros_onResolutionChanged(CallbackInfo info) {
-        for (Draw2D h : hudFunctions.overlays) {
+        
+        ArrayList<Draw2D> overlays;
+        
+        try {
+            overlays = new ArrayList<>(hudFunctions.overlays);
+        } catch(Exception e) {
+            return;
+        }
+        
+        for (Draw2D h : overlays) {
             h.init();
         }
     }
