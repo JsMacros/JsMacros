@@ -20,7 +20,7 @@ class jsmacros_ScreenMixin {
         } else if (!result.equals(message)) {
             info.cancel();
             MinecraftClient mc = MinecraftClient.getInstance();
-            mc.currentScreen.sendMessage(result);
+            mc.currentScreen.sendMessage(result, true);
         }
     }
 }
