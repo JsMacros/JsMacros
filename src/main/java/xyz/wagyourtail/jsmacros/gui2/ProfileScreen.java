@@ -195,8 +195,19 @@ public class ProfileScreen extends Screen {
     }
 
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
+        if (matricies == null) return;
         this.renderBackground(matricies, 0);
 
+        ArrayList<ProfileContainer> profiles;
+        ArrayList<AbstractButtonWidget> buttons;
+        
+        try {
+            profiles = new ArrayList<>(this.profiles);
+            buttons = new ArrayList<>(this.buttons);
+        } catch (Exception e) {
+            return;
+        }
+        
         for (ProfileContainer p : profiles) {
             p.render(matricies, mouseX, mouseY, delta);
         }

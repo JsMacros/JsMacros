@@ -142,6 +142,16 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         
         this.drawCenteredText(matricies, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
         
+        ArrayList<TextFieldWidget> textFieldWidgets;
+        ArrayList<text> textFields;
+        
+        try {
+            textFieldWidgets = new ArrayList<>(this.textFieldWidgets);
+            textFields = new ArrayList<>(this.textFields);
+        } catch (Exception e) {
+            return;
+        }
+        
         for (TextFieldWidget w : textFieldWidgets) {
             w.render(matricies, mouseX, mouseY, delta);
         }

@@ -155,8 +155,20 @@ public class MacroScreen extends Screen {
     }
     
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
+        if (matricies == null) return;
         this.renderBackground(matricies, 0);
-
+        
+        ArrayList<AbstractButtonWidget> buttons;
+        ArrayList<MacroContainer> macros;
+        
+        try {
+            buttons = new ArrayList<>(this.buttons);
+            macros = new ArrayList<>(this.macros);
+        } catch(Exception e) {
+            return;
+        }
+        
+        
         topbar.render(matricies, mouseX, mouseY, delta);
 
 

@@ -62,6 +62,17 @@ public class Draw3D {
     
     public void render() {
         MinecraftClient mc  = MinecraftClient.getInstance();
+        
+        ArrayList<box> boxes;
+        ArrayList<line> lines;
+        
+        try {
+            boxes = new ArrayList<>(this.boxes);
+            lines = new ArrayList<>(this.lines);
+        } catch (Exception e) {
+            return;
+        }
+        
         //setup
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();

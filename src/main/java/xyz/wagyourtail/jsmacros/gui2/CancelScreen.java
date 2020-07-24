@@ -69,17 +69,20 @@ public class CancelScreen extends Screen {
     }
     
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
+        if (matricies == null) return;
         this.renderBackground(matricies, 0);
-        ArrayList<thread> tl = RunScript.getThreads();
-        
-        ArrayList<RunningThreadContainer> rn;
+        ArrayList<thread> tl;
+        ArrayList<RunningThreadContainer> running;
+        ArrayList<AbstractButtonWidget> buttons;
         try {
-            rn = new ArrayList<>(running);
+            tl = RunScript.getThreads();
+            running = new ArrayList<>(this.running);
+            buttons = new ArrayList<>(this.buttons);
         } catch (Exception e) {
             return;
         }
         
-        for (RunningThreadContainer r : rn) {
+        for (RunningThreadContainer r : running) {
             tl.remove(r.t);
             r.render(matricies, mouseX, mouseY, delta);
         }
