@@ -113,6 +113,9 @@ public class FileChooser extends OverlayContainer {
 
         this.addButton(new Button(x + w * 1 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.new"), (btn) -> {
             this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.filename"), "", addButton, removeButton, this::closeOverlay, (str) -> {
+                if (str.trim().equals("")) return;
+                if (str.endsWith(".jython")) str += ".py";
+                if (!(str.toLowerCase().endsWith(".py") || str.toLowerCase().endsWith(".js"))) str += ".js";
                 File f = new File(directory, str);
                 try {
                     f.createNewFile();

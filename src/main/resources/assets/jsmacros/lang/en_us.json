@@ -16,7 +16,7 @@
 	"jsmacros.confirm": "Confirm",
 	"jsmacros.select": "Select",
 	"jsmacros.rename": "Rename",
-	"jsmacros.filename": "File Name.",
+	"jsmacros.filename": "File Name, Including Extension.",
 	"jsmacros.file": "File",
 	"jsmacros.new": "New",
 	"jsmacros.openfolder": "Open Folder",
