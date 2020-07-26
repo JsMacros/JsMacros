@@ -59,6 +59,6 @@ public class ItemStackHelper {
     }
     
     public String toString() {
-        return String.format("ItemStack:{\"id\":\"%s\", \"damage\": %d, \"Count\": %d}", this.getItemID(), i.getDamage(), i.getCount());
+        return String.format("ItemStack:{\"id\":\"%s\", \"damage\": %d, \"count\": %d}", this.getItemID(), i.getDamage(), i.getCount());
     }
 }
