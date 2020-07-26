@@ -41,4 +41,8 @@ public class FileHandler {
         out.write(s);
         out.close();
     }
+    
+    public String toString() {
+        return String.format("FileHandler:{\"file\": \"%s\"}", f.getAbsolutePath());
+    }
 }

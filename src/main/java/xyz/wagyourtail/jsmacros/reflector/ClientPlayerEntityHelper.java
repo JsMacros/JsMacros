@@ -53,4 +53,8 @@ public class ClientPlayerEntityHelper extends PlayerEntityHelper {
 	public ClientPlayerEntity getRaw() {
         return (ClientPlayerEntity) e;
     }
+	
+	public String toString() {
+	    return "Client"+super.toString();
+	}
 }

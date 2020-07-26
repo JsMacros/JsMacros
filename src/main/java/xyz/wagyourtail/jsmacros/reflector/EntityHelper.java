@@ -45,7 +45,7 @@ public class EntityHelper {
     
     public String getName() {
         if (e == null) return null;
-        return e.getName().toString();
+        return e.getName().getString();
     }
     
     public String getType() {
@@ -71,5 +71,9 @@ public class EntityHelper {
     
     public Entity getRaw() {
         return e;
+    }
+    
+    public String toString() {
+        return String.format("Entity:{\"name\":\"%s\", \"type\":\"%s\"}", this.getName(), this.getType());
     }
 }

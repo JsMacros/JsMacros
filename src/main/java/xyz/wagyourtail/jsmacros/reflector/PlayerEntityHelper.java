@@ -15,4 +15,8 @@ public class PlayerEntityHelper extends EntityHelper {
     public PlayerEntity getRaw() {
         return (PlayerEntity) e;
     }
+    
+    public String toString() {
+        return "Player"+super.toString();
+    }
 }

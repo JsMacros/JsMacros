@@ -75,4 +75,8 @@ public class BlockDataHelper {
     public BlockEntity getRawBlockEntity() {
         return e;
     }
+    
+    public String toString() {
+        return String.format("BlockDataHelper:{\"x\":%d, \"y\":%d, \"z\":%d, \"id\":\"%s\"}", bp.getX(), bp.getY(), bp.getZ(), this.getId());
+    }
 }

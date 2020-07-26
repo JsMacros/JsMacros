@@ -201,5 +201,9 @@ public class Inventory {
     public HandledScreen<?> getRawContainer() {
         return this.inventory;
     }
+    
+    public String toString() {
+        return String.format("Inventory:{\"Type\": \"%s\"}", this.getType());
+    }
 
 }

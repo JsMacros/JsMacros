@@ -30,4 +30,8 @@ public class PlayerListEntryHelper {
     public PlayerListEntry getRaw() {
         return p;
     }
+    
+    public String toString() {
+        return String.format("Player:{\"uuid\": \"%s\", \"name\":\"%s\"}", this.getUUID(), this.getName());
+    }
 }

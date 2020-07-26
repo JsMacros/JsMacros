@@ -57,4 +57,8 @@ public class ItemStackHelper {
     public ItemStack getRaw() {
         return i;
     }
+    
+    public String toString() {
+        return String.format("ItemStack:{\"id\":\"%s\", \"Count\": %d}", this.getItemID(), this.getCount());
+    }
 }

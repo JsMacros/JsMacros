@@ -29,4 +29,8 @@ public abstract class BaseMacro {
     }
     
     public abstract Thread trigger(String type, HashMap<String, Object> args);
+    
+    public String toString() {
+        return macro.toString().substring(3);
+    }
 }
