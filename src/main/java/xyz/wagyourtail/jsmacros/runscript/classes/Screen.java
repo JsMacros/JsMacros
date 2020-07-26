@@ -30,6 +30,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     public BiConsumer<Pos2D, Integer> onMouseDown;
     public BiConsumer<Vec2D, Integer> onMouseDrag;
     public BiConsumer<Pos2D, Integer> onMouseUp;
+    public BiConsumer<Pos2D, Double> onScroll;
     public BiConsumer<Integer, Integer> onKeyPressed;
     public Consumer<String> catchInit;
     public Consumer<Screen> onClose;
@@ -204,6 +205,11 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (onKeyPressed != null) onKeyPressed.accept(keyCode, modifiers);
         return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+    
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        if (onScroll != null) onScroll.accept(new Pos2D(mouseX, mouseY), amount);
+        return super.mouseScrolled(mouseX, mouseY, amount);
     }
     
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
