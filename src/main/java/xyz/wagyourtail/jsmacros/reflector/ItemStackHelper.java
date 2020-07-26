@@ -61,4 +61,12 @@ public class ItemStackHelper {
     public String toString() {
         return String.format("ItemStack:{\"id\":\"%s\", \"damage\": %d, \"count\": %d}", this.getItemID(), i.getDamage(), i.getCount());
     }
+    
+    public boolean equals(ItemStackHelper ish) {
+        return i.equals(ish.getRaw());
+    }
+    
+    public boolean equals(ItemStack is) {
+        return i.equals(is);
+    }
 }

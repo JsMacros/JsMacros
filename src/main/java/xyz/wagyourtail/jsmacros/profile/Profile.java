@@ -15,6 +15,7 @@ import net.minecraft.util.ActionResult;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.*;
 import xyz.wagyourtail.jsmacros.events.AirChangeCallback;
+import xyz.wagyourtail.jsmacros.events.ArmorChangeCallback;
 import xyz.wagyourtail.jsmacros.events.DamageCallback;
 import xyz.wagyourtail.jsmacros.events.DeathCallback;
 import xyz.wagyourtail.jsmacros.events.DimensionChangeCallback;
@@ -30,6 +31,7 @@ import xyz.wagyourtail.jsmacros.events.PlayerLeaveCallback;
 import xyz.wagyourtail.jsmacros.events.RecieveMessageCallback;
 import xyz.wagyourtail.jsmacros.events.SendMessageCallback;
 import xyz.wagyourtail.jsmacros.events.SoundCallback;
+import xyz.wagyourtail.jsmacros.events.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.events.TitleCallback;
 import xyz.wagyourtail.jsmacros.macros.*;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
@@ -46,6 +48,8 @@ public class Profile {
         keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title"));
         KeyBindingHelper.registerKeyBinding(keyBinding);
 
+        TickBasedEvents.init();
+        
         initEventHandlerCallbacks();
     }
 
@@ -396,9 +400,10 @@ public class Profile {
         
         // ----- HELD ITEM ----- //
         registry.addEvent("HELD_ITEM");
-        HeldItemCallback.EVENT.register((item) -> {
+        HeldItemCallback.EVENT.register((item, offhand) -> {
             HashMap<String, Object> args = new HashMap<>();
             args.put("item", item);
+            args.put("offhand", offhand);
             if (registry.macros.containsKey("HELD_ITEM")) for (BaseMacro macro : registry.macros.get("HELD_ITEM").values()) {
                 macro.trigger("HELD_ITEM", args);
             }
@@ -408,5 +413,19 @@ public class Profile {
             }
         });
 
+        // ---- ARMOR CHANGE ---- //
+        registry.addEvent("ARMOR_CHANGE");
+        ArmorChangeCallback.EVENT.register((slot, item) -> {
+            HashMap<String, Object> args = new HashMap<>();
+            args.put("item", item);
+            args.put("slot", slot);
+            if (registry.macros.containsKey("ARMOR_CHANGE")) for (BaseMacro macro : registry.macros.get("ARMOR_CHANGE").values()) {
+                macro.trigger("ARMOR_CHANGE", args);
+            }
+
+            if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
+                macro.trigger("ARMOR_CHANGE", args);
+            }
+        });
     }
 }
