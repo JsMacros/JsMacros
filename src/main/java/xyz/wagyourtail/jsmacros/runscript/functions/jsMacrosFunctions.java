@@ -64,4 +64,9 @@ public class jsMacrosFunctions {
     public void open(String s) {
         Util.getOperatingSystem().open(s);
     }
+
+    public String getFPS() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        return mc.fpsDebugString;
+    }
 }
