@@ -187,7 +187,7 @@ public class FileChooser extends OverlayContainer {
         super.render(matricies, mouseX, mouseY, delta);
         
         for (AbstractButtonWidget b : this.buttons) {
-            if (((Button) b).hovering) {
+            if (((Button) b).hovering && !((Button) b).canRenderAllText()) {
                 // border
                 int width = textRenderer.getWidth(b.getMessage());
                 fill(matricies, mouseX-3, mouseY, mouseX+width+3, mouseY+1, 0x7F7F7F7F);
