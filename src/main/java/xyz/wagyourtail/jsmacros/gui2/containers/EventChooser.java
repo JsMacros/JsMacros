@@ -59,6 +59,7 @@ public class EventChooser extends OverlayContainer {
         for (String e : Profile.registry.events) {
             addEvent(e);
         }
+        this.selectEvent(selected);
     }
     
     public void addEvent(String eventName) {
