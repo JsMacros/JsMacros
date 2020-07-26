@@ -50,7 +50,7 @@ public class EventChooser extends OverlayContainer {
         this.addButton(new Button(x + 2, y + height - 14, w / 2, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("gui.cancel"), (btn) -> {
             this.close();
         }));
-        this.addButton(new Button(x + w / 2 + 1, y + height - 14, w / 2, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.select"), (btn) -> {
+        this.addButton(new Button(x + w / 2 + 3, y + height - 14, w / 2, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.select"), (btn) -> {
             if (this.selected != null && this.setEvent != null) {
                 this.setEvent.accept(this.selected);
                 this.close();
