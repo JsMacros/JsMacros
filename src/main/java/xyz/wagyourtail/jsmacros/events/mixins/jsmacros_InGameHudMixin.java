@@ -24,7 +24,7 @@ class jsmacros_InGameHudMixin {
     @Shadow
     private ItemStack currentStack;
     
-    @Inject(at = @At(value="FIELD", target="currentStack:Lnet/minecraft/item/ItemStack;", opcode=Opcodes.PUTFIELD), method="tick")
+    @Inject(at = @At(value="FIELD", target="Lnet/minecraft/client/gui/hud/InGameHud;currentStack:Lnet/minecraft/item/ItemStack;", opcode=Opcodes.PUTFIELD), method="tick")
     public void jsmacros_tick(CallbackInfo info) {
         
         ItemStack mainHand = null;
