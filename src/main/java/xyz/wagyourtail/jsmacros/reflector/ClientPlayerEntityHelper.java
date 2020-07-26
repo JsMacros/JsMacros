@@ -16,7 +16,7 @@ public class ClientPlayerEntityHelper extends PlayerEntityHelper {
        e.prevPitch =e.pitch;
        e.prevYaw =e.yaw;
        e.pitch = pitch;
-       e.yaw = yaw;
+       e.yaw = MathHelper.fwrapDegrees(yaw);
         if (mc.player.getVehicle() != null) {
            e.getVehicle().onPassengerLookAround(mc.player);
         }
