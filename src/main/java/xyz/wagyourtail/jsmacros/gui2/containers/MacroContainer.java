@@ -39,12 +39,14 @@ public class MacroContainer extends MultiElementContainer {
     private boolean selectkey = false;
     private Consumer<MacroContainer> onRemove;
     private Consumer<MacroContainer> openFile;
+    private Consumer<MacroContainer> setEvent;
 
-    public MacroContainer(int x, int y, int width, int height, TextRenderer textRenderer, RawMacro macro,  Consumer<AbstractButtonWidget> addButton, Consumer<MacroContainer> onRemove, Consumer<MacroContainer> openFile) {
+    public MacroContainer(int x, int y, int width, int height, TextRenderer textRenderer, RawMacro macro, Consumer<AbstractButtonWidget> addButton, Consumer<MacroContainer> onRemove, Consumer<MacroContainer> openFile, Consumer<MacroContainer>setEvent) {
         super(x, y, width, height, textRenderer, addButton);
         this.macro = macro;
         this.onRemove = onRemove;
         this.openFile = openFile;
+        this.setEvent = setEvent;
         this.mc = MinecraftClient.getInstance();
         init();
     }
@@ -66,11 +68,9 @@ public class MacroContainer extends MultiElementContainer {
 
         keyBtn = (Button) addButton(new Button(x + w / 12 + 1, y + 1, macro.type == MacroEnum.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.type == MacroEnum.EVENT ? new LiteralText(macro.eventkey) : buildKeyName(macro.eventkey), (btn) -> {
             if (macro.type == MacroEnum.EVENT) {
-                Profile.registry.removeMacro(macro);
-                int l = Profile.registry.events.size();
-                macro.eventkey = Profile.registry.events.get((Profile.registry.events.indexOf(macro.eventkey) + 1) % l);
-                Profile.registry.addMacro(macro);
-                btn.setMessage(new LiteralText(macro.eventkey));
+                if (setEvent != null) setEvent.accept(this);
+                //int l = Profile.registry.events.size();
+                //setEventType(Profile.registry.events.get((Profile.registry.events.indexOf(macro.eventkey) + 1) % l));
             } else {
                 selectkey = true;
                 btn.setMessage(new TranslatableText("jsmacros.presskey"));
@@ -104,6 +104,13 @@ public class MacroContainer extends MultiElementContainer {
         delBtn = (Button) addButton(new Button(x + w - 1, y + 1, 12, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("X"), (btn) -> {
             if (onRemove != null) onRemove.accept(this);
         }));
+    }
+    
+    public void setEventType(String type) {
+        Profile.registry.removeMacro(macro);
+        macro.eventkey = type;
+        Profile.registry.addMacro(macro);
+        keyBtn.setMessage(new LiteralText(macro.eventkey));
     }
     
     public void setFile(File f) {

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.gui2.containers.ConfirmOverlay;
+import xyz.wagyourtail.jsmacros.gui2.containers.EventChooser;
 import xyz.wagyourtail.jsmacros.gui2.containers.FileChooser;
 import xyz.wagyourtail.jsmacros.gui2.containers.MacroContainer;
 import xyz.wagyourtail.jsmacros.gui2.containers.MacroListTopbar;
@@ -68,18 +69,23 @@ public class MacroScreen extends Screen {
     }
 
     public void addMacro(RawMacro macro) {
-        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::confirmRemoveMacro, this::setFile));
+        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::confirmRemoveMacro, this::setFile, this::setEvent));
         macroScroll.setScrollPages((macros.size() * 16) / (double) Math.max(1, this.height - 40));
     }
 
     public void setFile(MacroContainer macro) {
         File f = new File(jsMacros.config.macroFolder, macro.getRawMacro().scriptFile);
-        if (!f.equals(jsMacros.config.macroFolder)) f = f.getParentFile();
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, f, this::addButton, this::removeButton, this::closeOverlay, macro::setFile));
+        File dir = jsMacros.config.macroFolder;
+        if (!f.equals(jsMacros.config.macroFolder)) dir = f.getParentFile();
+        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this::addButton, this::removeButton, this::closeOverlay, macro::setFile));
     }
-
+    
+    public void setEvent(MacroContainer macro) {
+        openOverlay(new EventChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, macro.getRawMacro().eventkey, this::addButton, this::removeButton, this::closeOverlay, macro::setEventType));
+    }
+    
     public void runFile(MacroListTopbar m) {
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, jsMacros.config.macroFolder, this::addButton, this::removeButton, this::closeOverlay,(file) -> {
+        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, jsMacros.config.macroFolder, null, this::addButton, this::removeButton, this::closeOverlay,(file) -> {
             try {
                 RunScript.exec(new RawMacro(MacroEnum.EVENT, "", file.getCanonicalPath().substring(jsMacros.config.macroFolder.getCanonicalPath().length()), true), "", null);
             } catch (IOException e) {

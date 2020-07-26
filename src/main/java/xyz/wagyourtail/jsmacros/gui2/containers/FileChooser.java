@@ -29,10 +29,11 @@ public class FileChooser extends OverlayContainer {
     private Consumer<File> setFile;
     private int topScroll;
 
-    public FileChooser(int x, int y, int width, int height, TextRenderer textRenderer, File directory, Consumer<AbstractButtonWidget> addButton, Consumer<AbstractButtonWidget> removeButton, Consumer<OverlayContainer> close, Consumer<File> setFile) {
+    public FileChooser(int x, int y, int width, int height, TextRenderer textRenderer, File directory, File selected, Consumer<AbstractButtonWidget> addButton, Consumer<AbstractButtonWidget> removeButton, Consumer<OverlayContainer> close, Consumer<File> setFile) {
         super(x, y, width, height, textRenderer, addButton, removeButton, close);
         this.setFile = setFile;
         this.directory = directory;
+        if (selected != null) this.selectFile(selected);
     }
 
     public void setDir(File dir) {
@@ -141,14 +142,19 @@ public class FileChooser extends OverlayContainer {
         fileObj file = new fileObj(f, new Button(x + 3 + (files.size() % 5 * (width - 12) / 5), topScroll + (files.size() / 5 * 12), (width - 12) / 5, 12, 0, 0, 0x7FFFFFFF, f.isDirectory() ? 0xFFFF00 : 0xFFFFFF, new LiteralText(btnText), (btn) -> {
             selectFile(f);
         }));
+        if (topScroll + (files.size() / 5 * 12) < y + 13 || topScroll + (files.size() / 5 * 12) > y + height - 27) file.btn.visible = false;
+        else file.btn.visible = true;
         files.add(file);
         this.addButton(file.btn);
-        scroll.setScrollPages((files.size() / 5 * 12) / Math.max(1, height - 27));
+        scroll.setScrollPages((Math.ceil(files.size() / 5D) * 12) /(double) Math.max(1, height - 39));
     }
 
     public void updateFilePos() {
         for (int i = 0; i < files.size(); ++i) {
-            files.get(i).btn.setPos(x + 3 + (i % 5 * (width - 12) / 5), topScroll + (i / 5 * 12), (width - 12) / 5, 12);
+            fileObj f = files.get(i);
+            if (topScroll + (i / 5 * 12) < y + 13 || topScroll + (i / 5 * 12) > y + height - 27) f.btn.visible = false;
+            else f.btn.visible = true;
+            f.btn.setPos(x + 3 + (i % 5 * (width - 12) / 5), topScroll + (i / 5 * 12), (width - 12) / 5, 12);
         }
     }
 
