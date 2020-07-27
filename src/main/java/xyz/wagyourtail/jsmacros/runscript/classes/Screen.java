@@ -5,20 +5,17 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.reflector.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.reflector.TextFieldWidgetHelper;
+import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.item;
+import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.rect;
+import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.text;
 
 public class Screen extends net.minecraft.client.gui.screen.Screen {
     private boolean dirt;
@@ -44,6 +41,8 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         super.init();
         textFieldWidgets.clear();
         textFields.clear();
+        itemFields.clear();
+        rectFields.clear();
         client.keyboard.enableRepeatEvents(true);
         if (onInit != null) {
             try {
@@ -171,14 +170,14 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         rectFields.remove(r);
     }
     
-    public item addItem(int x, int y, String id) {
-        item i = new item(y, y, id);
+    public item addItem(int x, int y, String id, boolean overlay) {
+        item i = new item(y, y, id, overlay);
         itemFields.add(i);
         return i;
     }
     
-    public item addItem(int x, int y, ItemStackHelper item) {
-        item i = new item(y, y, item);
+    public item addItem(int x, int y, ItemStackHelper item, boolean overlay) {
+        item i = new item(y, y, item, overlay);
         itemFields.add(i);
         return i;
     }
@@ -257,129 +256,6 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     
     public void close() {
         onClose();
-    }
-    
-    public static class item {
-        public int x;
-        public int y;
-        public ItemStack item;
-        
-        public item(int x, int y, String id) {
-            this.x = x;
-            this.y = y;
-            this.setItem(id, 1);
-        }
-        
-        public item(int x, int y, ItemStackHelper i) {
-            this.x = x;
-            this.y = y;
-            this.item = i.getRaw();
-        }
-        
-        public void setPos(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-        
-        public void setItem(ItemStackHelper i) {
-            this.item = i.getRaw();
-        }
-        
-        public void setItem(String id, int count) {
-            Item it = (Item)Registry.ITEM.get(new Identifier(id));
-            if (it != null) this.item = new ItemStack(it, count);
-        }
-        
-        public void render(MatrixStack matrixStack) {
-            MinecraftClient mc = MinecraftClient.getInstance();
-            if (item != null) {
-                ItemRenderer i = mc.getItemRenderer();
-                i.renderGuiItemIcon(item, x, y);
-                i.renderGuiItemOverlay(mc.textRenderer, item, x, y);
-            }
-        }
-    }
-    
-    public static class rect {
-        public int x1;
-        public int y1;
-        public int x2;
-        public int y2;
-        public int color;
-        
-        public rect(int x1, int y1, int x2, int y2, int color) {
-            setPos(x1, y1, x2, y2);
-            setColor(color);
-        }
-        
-        public rect(int x1, int y1, int x2, int y2, int color, int alpha) {
-            setPos(x1, y1, x2, y2);
-            setColor(color, alpha);
-        }
-        
-        public void setColor(int color) {
-            if (color <= 0xFFFFFF) color = color | 0xFF000000;
-            this.color = color;
-        }
-        
-        public void setColor(int color, int alpha) {
-            this.color = color | (alpha << 24);
-        }
-        
-        public void setAlpha(int alpha) {
-            this.color = (color & 0xFFFFFF) | (alpha << 24);
-        }
-        
-        public void setPos(int x1, int y1, int x2, int y2) {
-            this.x1 = x1;
-            this.y1 = y1;
-            this.x2 = x2;
-            this.y2 = y2;
-        }
-        
-        public void render(MatrixStack matrixStack) {
-            Screen.fill(matrixStack, x1, y1, x2, y2, color);
-        }
-    }
-    
-    public static class text {
-        public String text;
-        public int x;
-        public int y;
-        public int color;
-        public int width;
-        public boolean shadow;
-        
-        public text(String text, int x, int y, int color, boolean shadow) {
-            MinecraftClient mc = MinecraftClient.getInstance();
-            this.text = text;
-            this.x = x;
-            this.y = y;
-            this.color = color;
-            this.width = mc.textRenderer.getWidth(text);
-            this.shadow = shadow;
-        }
-        
-        public void setPos(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-        
-        public void setText(String text) {
-            MinecraftClient mc = MinecraftClient.getInstance();
-            this.text = text;
-            this.width = mc.textRenderer.getWidth(text);
-        }
-        
-        public int getWidth() {
-            return this.width;
-        }
-        
-        public void render(MatrixStack matricies) {
-            MinecraftClient mc = MinecraftClient.getInstance();
-            if (shadow) mc.textRenderer.drawWithShadow(matricies, text, x, y, color);
-            else mc.textRenderer.draw(matricies, text, x, y, color);
-        }
     }
     
     public class Pos2D {

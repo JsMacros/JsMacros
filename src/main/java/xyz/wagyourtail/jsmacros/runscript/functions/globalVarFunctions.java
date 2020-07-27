@@ -86,6 +86,10 @@ public class globalVarFunctions {
 	    return globalRaw.get(name);
 	}
 	
+	public void remove(String key) {
+	    globalRaw.remove(key);
+	}
+	
 	public HashMap<String, Object> getRaw() {
 		return globalRaw;
 	}
