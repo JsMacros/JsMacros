@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.reflector;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 
 public class ClientPlayerEntityHelper extends PlayerEntityHelper {
@@ -25,30 +26,6 @@ public class ClientPlayerEntityHelper extends PlayerEntityHelper {
 	public int getFoodLevel() {
 	    return ((ClientPlayerEntity)e).getHungerManager().getFoodLevel();
 	}
-	
-	public ItemStackHelper getMainHand() {
-	    return new ItemStackHelper(((ClientPlayerEntity) e).inventory.getMainHandStack());
-	}
-	
-	public ItemStackHelper getOffHand() {
-	    return new ItemStackHelper(((ClientPlayerEntity) e).inventory.offHand.get(0));
-	}
-	
-	public ItemStackHelper getHeadArmor() {
-	    return new ItemStackHelper(((ClientPlayerEntity) e).inventory.getArmorStack(3));
-	}
-	
-	public ItemStackHelper getChestArmor() {
-        return new ItemStackHelper(((ClientPlayerEntity) e).inventory.getArmorStack(2));
-    }
-	
-	public ItemStackHelper getLegArmor() {
-        return new ItemStackHelper(((ClientPlayerEntity) e).inventory.getArmorStack(1));
-    }
-	
-	public ItemStackHelper getFootArmor() {
-        return new ItemStackHelper(((ClientPlayerEntity) e).inventory.getArmorStack(0));
-    }
 	
 	public ClientPlayerEntity getRaw() {
         return (ClientPlayerEntity) e;
