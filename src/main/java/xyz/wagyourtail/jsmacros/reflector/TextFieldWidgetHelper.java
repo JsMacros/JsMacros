@@ -26,28 +26,33 @@ public class TextFieldWidgetHelper {
         return t.getText();
     }
     
-    public void setText(String text) {
+    public TextFieldWidgetHelper setText(String text) {
         t.setText(text);
+        return this;
     }
     
     public int getWidth() {
         return t.getWidth();
     }
     
-    public void setWidth(int width) {
+    public TextFieldWidgetHelper setWidth(int width) {
         t.setWidth(width);
+        return this;
     }
     
-    public void setEditableColor(int color) {
+    public TextFieldWidgetHelper setEditableColor(int color) {
         t.setEditableColor(color);
+        return this;
     }
     
-    public void setEditable(boolean edit) {
+    public TextFieldWidgetHelper setEditable(boolean edit) {
         t.setEditable(edit);
+        return this;
     }
     
-    public void setUneditableColor(int color) {
+    public TextFieldWidgetHelper setUneditableColor(int color) {
         t.setUneditableColor(color);
+        return this;
     }
     
     public TextFieldWidget getRaw() {

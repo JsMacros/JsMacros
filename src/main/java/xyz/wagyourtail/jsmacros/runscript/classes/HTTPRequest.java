@@ -26,8 +26,9 @@ public class HTTPRequest {
         this.conn = new URL(url);
     }
     
-    public void addHeader(String key, String value) {
+    public HTTPRequest addHeader(String key, String value) {
         headers.put(key, value);
+        return this;
     }
     
     public response get() throws IOException {

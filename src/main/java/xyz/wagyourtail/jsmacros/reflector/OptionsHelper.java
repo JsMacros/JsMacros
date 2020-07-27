@@ -23,16 +23,17 @@ public class OptionsHelper {
                 return 0;
         }
     }
-    public void setCloudMode(int mode) {
+    public OptionsHelper setCloudMode(int mode) {
         switch(mode) {
             case 2:
                 options.cloudRenderMode = CloudRenderMode.FANCY;
-                return;
+                return this;
             case 1:
                 options.cloudRenderMode = CloudRenderMode.FAST;
-                return;
+                return this;
             default:
                 options.cloudRenderMode = CloudRenderMode.OFF;
+                return this;
         }
     }
     public int getGraphicsMode() {
@@ -45,16 +46,17 @@ public class OptionsHelper {
                 return 0;
         }
     }
-    public void setGraphicsMode(int mode) {
+    public OptionsHelper setGraphicsMode(int mode) {
         switch(mode) {
             case 2:
                 options.graphicsMode = GraphicsMode.FABULOUS;
-                return;
+                return this;
             case 1:
                 options.graphicsMode = GraphicsMode.FANCY;
-                return;
+                return this;
             default:
                 options.graphicsMode = GraphicsMode.FAST;
+                return this;
         }
     }
     public List<String> getResourcePacks() {
@@ -73,8 +75,9 @@ public class OptionsHelper {
     public double getFov() {
         return options.fov;
     }
-    public void setFov(double fov) {
+    public OptionsHelper setFov(double fov) {
         options.fov = fov;
+        return this;
     }
     public int getRenderDistance() {
         return options.viewDistance;

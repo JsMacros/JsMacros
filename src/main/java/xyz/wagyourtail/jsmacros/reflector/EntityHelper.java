@@ -65,8 +65,9 @@ public class EntityHelper {
         return e.isOnFire();
     }
     
-    public void setGlowing(boolean val) {
+    public EntityHelper setGlowing(boolean val) {
         e.setGlowing(val);
+        return this;
     }
     
     public Entity getRaw() {

@@ -55,8 +55,9 @@ public class Draw2D extends DrawableHelper {
         
     }
     
-    public void removeText(text t) {
+    public Draw2D removeText(text t) {
         textFields.remove(t);
+        return this;
     }
     
     public rect addRect(int x1, int y1, int x2, int y2, int color) {
@@ -71,8 +72,9 @@ public class Draw2D extends DrawableHelper {
         return r;
     }
     
-    public void removeRect(rect r) {
+    public Draw2D removeRect(rect r) {
         rectFields.remove(r);
+        return this;
     }
     
     public item addItem(int x, int y, String id, boolean overlay) {
@@ -87,8 +89,9 @@ public class Draw2D extends DrawableHelper {
         return i;
     }
     
-    public void removeItem(item i) {
+    public Draw2D removeItem(item i) {
         itemFields.remove(i);
+        return this;
     }
     
     public void init() {

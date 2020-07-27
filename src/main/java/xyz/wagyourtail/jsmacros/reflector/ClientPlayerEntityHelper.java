@@ -11,16 +11,17 @@ public class ClientPlayerEntityHelper extends PlayerEntityHelper {
 		super(e);
 	}
 	
-	public void lookAt(float pitch, float yaw) {
+	public ClientPlayerEntityHelper lookAt(float pitch, float yaw) {
         pitch = MathHelper.clamp(pitch, -90.0F, 90.0F);
         MinecraftClient mc = MinecraftClient.getInstance();
-       e.prevPitch =e.pitch;
-       e.prevYaw =e.yaw;
-       e.pitch = pitch;
-       e.yaw = MathHelper.fwrapDegrees(yaw);
+        e.prevPitch =e.pitch;
+        e.prevYaw =e.yaw;
+        e.pitch = pitch;
+        e.yaw = MathHelper.fwrapDegrees(yaw);
         if (mc.player.getVehicle() != null) {
            e.getVehicle().onPassengerLookAround(mc.player);
         }
+        return this;
     }
 	
 	public int getFoodLevel() {

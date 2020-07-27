@@ -14,12 +14,14 @@ public class TextHelper {
         this.t = t;
     }
     
-    public void replaceFromJson(String json) {
+    public TextHelper replaceFromJson(String json) {
         t = Text.Serializer.fromJson(json);
+        return this;
     }
     
-    public void replaceFromString(String content) {
+    public TextHelper replaceFromString(String content) {
         t = new LiteralText(content);
+        return this;
     }
     
     public String toJson() {

@@ -18,29 +18,33 @@ public class ButtonWidgetHelper {
         return btn.y;
     }
     
-    public void setPos(int x, int y) {
+    public ButtonWidgetHelper setPos(int x, int y) {
         btn.x = x;
         btn.y = y;
+        return this;
     }
     
     public int getWidth() {
         return btn.getWidth();
     }
     
-    public void setText(String message) {
+    public ButtonWidgetHelper setText(String message) {
         btn.setMessage(new LiteralText(message));
+        return this;
     }
     
     public boolean getActive() {
         return btn.active;
     }
     
-    public void setActive(boolean t) {
+    public ButtonWidgetHelper setActive(boolean t) {
         btn.active = t;
+        return this;
     }
     
-    public void setWidth(int width) {
+    public ButtonWidgetHelper setWidth(int width) {
         btn.setWidth(width);
+        return this;
     }
     
     public ButtonWidget getRaw() {

@@ -18,10 +18,11 @@ public class FileHandler {
         f = path;
     }
     
-    public void write(String s) throws IOException {
+    public FileHandler write(String s) throws IOException {
         BufferedWriter out = new BufferedWriter(new FileWriter(f, false));
         out.write(s);
         out.close();
+        return this;
     }
     
     public String read() throws IOException {
@@ -36,10 +37,11 @@ public class FileHandler {
         return ret;
     }
     
-    public void append(String s) throws IOException {
+    public FileHandler append(String s) throws IOException {
         BufferedWriter out = new BufferedWriter(new FileWriter(f, true));
         out.write(s);
         out.close();
+        return this;
     }
     
     public String toString() {

@@ -25,20 +25,23 @@ public class PlayerAbilitiesHelper {
 		return a.creativeMode;
 	}
 	
-	public void setFlying(boolean b) {
+	public PlayerAbilitiesHelper setFlying(boolean b) {
 		a.flying = b;
+		return this;
 	}
 	
-	public void setAllowFlying(boolean b) {
+	public PlayerAbilitiesHelper setAllowFlying(boolean b) {
 		a.allowFlying = b;
+		return this;
 	}
 	
 	public float getFlySpeed() {
 		return a.getFlySpeed();
 	}
 	
-	public void setFlySpeed(float flySpeed) {
+	public PlayerAbilitiesHelper setFlySpeed(float flySpeed) {
 		a.setFlySpeed(flySpeed);
+		return this;
 	}
 	
 	public PlayerAbilities getRaw() {
