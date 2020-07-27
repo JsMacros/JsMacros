@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public class EntityHelper {
@@ -40,7 +41,7 @@ public class EntityHelper {
     }
     
     public float getYaw() {
-        return e.yaw;
+        return MathHelper.fwrapDegrees(e.yaw);
     }
     
     public String getName() {
