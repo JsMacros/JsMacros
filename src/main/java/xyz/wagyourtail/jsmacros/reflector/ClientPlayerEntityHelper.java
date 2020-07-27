@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.reflector;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 
 public class ClientPlayerEntityHelper extends PlayerEntityHelper {
