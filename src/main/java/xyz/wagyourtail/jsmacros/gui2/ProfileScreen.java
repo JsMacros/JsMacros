@@ -72,7 +72,7 @@ public class ProfileScreen extends Screen {
         }));
 
         this.addButton(new Button(this.width / 3, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.deleteprofile"), (btn) -> {
-            if (selected.pName != jsMacros.config.options.defaultProfile) this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.deleteprofile").append(new LiteralText(" \"" + jsMacros.profile.profileName+"\"")), this::addButton, this::removeButton, this::closeOverlay, (cf) -> {
+            if (!selected.pName.equals(jsMacros.config.options.defaultProfile)) this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.deleteprofile").append(new LiteralText(" \"" + jsMacros.profile.profileName+"\"")), this::addButton, this::removeButton, this::closeOverlay, (cf) -> {
                 removeProfile(selected);
                 jsMacros.profile.loadOrCreateProfile(jsMacros.config.options.defaultProfile);
                 for (ProfileContainer p : profiles) {
