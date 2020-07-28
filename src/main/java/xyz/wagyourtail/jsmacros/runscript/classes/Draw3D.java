@@ -189,7 +189,7 @@ public class Draw3D {
                 float fg = ((fillColor >> 8) & 0xFF)/255F;
                 float fb = (fillColor & 0xFF)/255F;
                 
-                buf.begin(GL11.GL_TRIANGLE_STRIP,  VertexFormats.POSITION_COLOR); 
+                buf.begin(GL11.GL_TRIANGLE_STRIP,  VertexFormats.POSITION_COLOR);
                 
                 WorldRenderer.drawBox(buf, x1, y1, z1, x2, y2, z2, fr, fg, fb, fa);
                 

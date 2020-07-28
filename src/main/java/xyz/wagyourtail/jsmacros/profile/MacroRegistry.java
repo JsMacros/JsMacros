@@ -65,7 +65,7 @@ public class MacroRegistry {
     }
     
     public void addEvent(String eventName) {
-        events.add(eventName);
+        if (!events.contains(eventName)) events.add(eventName);
     }
     
     public BaseMacro getMacro(RawMacro rawMacro) {
