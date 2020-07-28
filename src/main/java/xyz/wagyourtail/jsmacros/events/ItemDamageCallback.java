@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.events;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.item.ItemStack;
+import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 
 public interface ItemDamageCallback {
     Event<ItemDamageCallback> EVENT = EventFactory.createArrayBacked(ItemDamageCallback.class,
@@ -11,5 +11,5 @@ public interface ItemDamageCallback {
                     event.interact(stack, damage);
                 }
             });
-    void interact(ItemStack stack, int damage);
+    void interact(ItemStackHelper stack, int damage);
 }

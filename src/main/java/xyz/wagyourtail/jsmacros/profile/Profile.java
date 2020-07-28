@@ -34,8 +34,7 @@ import xyz.wagyourtail.jsmacros.events.SendMessageCallback;
 import xyz.wagyourtail.jsmacros.events.SoundCallback;
 import xyz.wagyourtail.jsmacros.events.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.events.TitleCallback;
-import xyz.wagyourtail.jsmacros.macros.*;
-import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.macros.BaseMacro;
 import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
@@ -253,7 +252,7 @@ public class Profile {
         registry.addEvent("ITEM_DAMAGE");
         ItemDamageCallback.EVENT.register((stack, damage) -> {
             HashMap<String, Object> args = new HashMap<>();
-            args.put("stack", new ItemStackHelper(stack));
+            args.put("stack", stack);
             args.put("damage", damage);
 
             triggerMacro("ITEM_DAMAGE", args);

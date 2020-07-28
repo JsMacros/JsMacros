@@ -24,30 +24,60 @@ public class TickBasedEvents {
         ClientTickEvents.END_CLIENT_TICK.register(e -> {
             if (mc.player != null && mc.player.inventory != null) {
                 PlayerInventory inv = mc.player.inventory;
-                if (!mainHand.equals(inv.getMainHandStack())) {
-                    mainHand = inv.getMainHandStack();
-                    HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(mainHand), false);
+
+                ItemStack newMainHand = inv.getMainHandStack();
+                if (!newMainHand.equals(mainHand)) {
+                    if (newMainHand.isItemEqualIgnoreDamage(mainHand) && newMainHand.getCount() == mainHand.getCount()) {
+                        ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newMainHand), newMainHand.getDamage());
+                    }
+                    HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(newMainHand), false);
+                    mainHand = newMainHand;
                 }
-                if (!offHand.equals(inv.offHand.get(0))) {
-                    offHand = inv.offHand.get(0);
-                    HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(offHand), true);
+                
+                ItemStack newOffHand = inv.offHand.get(0);
+                if (!newOffHand.equals(offHand)) {
+                    if (newOffHand.isItemEqualIgnoreDamage(offHand) && newOffHand.getCount() == offHand.getCount()) {
+                        ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newOffHand), newOffHand.getDamage());
+                    }
+                    HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(newOffHand), true);
+                    offHand = newOffHand;
                 }
-                if (!headArmor.equals(inv.getArmorStack(3))) {
-                    headArmor = inv.getArmorStack(3);
-                    ArmorChangeCallback.EVENT.invoker().interact("HEAD", new ItemStackHelper(headArmor));
+                
+                ItemStack newHeadArmor = inv.getArmorStack(3);
+                if (!newHeadArmor.equals(headArmor)) {
+                    if (newHeadArmor.isItemEqualIgnoreDamage(headArmor) && newHeadArmor.getCount() == headArmor.getCount()) {
+                        ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newHeadArmor), newHeadArmor.getDamage());
+                    }
+                    ArmorChangeCallback.EVENT.invoker().interact("HEAD", new ItemStackHelper(newHeadArmor));
+                    headArmor = newHeadArmor;
                 }
-                if (!chestArmor.equals(inv.getArmorStack(2))) {
-                    chestArmor = inv.getArmorStack(2);
-                    ArmorChangeCallback.EVENT.invoker().interact("CHEST", new ItemStackHelper(chestArmor));
+                
+                ItemStack newChestArmor = inv.getArmorStack(2);
+                if (!newChestArmor.equals(chestArmor)) {
+                    if (newChestArmor.isItemEqualIgnoreDamage(chestArmor) && newChestArmor.getCount() == chestArmor.getCount()) {
+                        ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newChestArmor), newChestArmor.getDamage());
+                    }
+                    ArmorChangeCallback.EVENT.invoker().interact("CHEST", new ItemStackHelper(newChestArmor));
+                    chestArmor = newChestArmor;
                     
                 }
-                if (!legArmor.equals(inv.getArmorStack(1))) {
-                    legArmor = inv.getArmorStack(1);
-                    ArmorChangeCallback.EVENT.invoker().interact("LEGS", new ItemStackHelper(legArmor));
+                
+                ItemStack newLegArmor = inv.getArmorStack(1);
+                if (!newLegArmor.equals(legArmor)) {
+                    if (newLegArmor.isItemEqualIgnoreDamage(legArmor) && newLegArmor.getCount() == legArmor.getCount()) {
+                        ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newLegArmor), newLegArmor.getDamage());
+                    }
+                    ArmorChangeCallback.EVENT.invoker().interact("LEGS", new ItemStackHelper(newLegArmor));
+                    legArmor = newLegArmor;
                 }
-                if (!footArmor.equals(inv.getArmorStack(0))) {
-                    footArmor = inv.getArmorStack(0);
-                    ArmorChangeCallback.EVENT.invoker().interact("FEET", new ItemStackHelper(footArmor));
+                
+                ItemStack newFootArmor = inv.getArmorStack(0);
+                if (!newFootArmor.equals(footArmor)) {
+                    if (newFootArmor.isItemEqualIgnoreDamage(footArmor) && newFootArmor.getCount() == footArmor.getCount()) {
+                        ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newFootArmor), newFootArmor.getDamage());
+                    }
+                    ArmorChangeCallback.EVENT.invoker().interact("FEET", new ItemStackHelper(newFootArmor));
+                    footArmor = newFootArmor;
                 }
             }
         });
