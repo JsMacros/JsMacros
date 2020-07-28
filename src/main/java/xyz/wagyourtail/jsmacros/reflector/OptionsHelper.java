@@ -1,15 +1,26 @@
 package xyz.wagyourtail.jsmacros.reflector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.google.common.collect.ImmutableList;
+
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.CloudRenderMode;
 import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.options.GraphicsMode;
+import net.minecraft.resource.ResourcePackManager;
+import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.util.Arm;
 
 public class OptionsHelper {
-    GameOptions options;
+    private GameOptions options;
+    private MinecraftClient mc = MinecraftClient.getInstance();
+    private ResourcePackManager<?> rpm = mc.getResourcePackManager();
+    
     public OptionsHelper(GameOptions options) {
         this.options = options;
     }
@@ -60,8 +71,35 @@ public class OptionsHelper {
         }
     }
     public List<String> getResourcePacks() {
-        return new ArrayList<>(options.resourcePacks);
+        return new ArrayList<String>(rpm.getNames());
     }
+    
+    public List<String> getEnabledResourcePacks() {
+        return new ArrayList<String>(rpm.getEnabledNames());
+    }
+    
+    public OptionsHelper setEnabledResourcePacks(String[] enabled) {
+        Collection<String> en = new ArrayList<String>(Arrays.asList(enabled).stream().distinct().collect(Collectors.toList()));
+        List<String> currentRP = ImmutableList.copyOf(options.resourcePacks);
+        rpm.setEnabledProfiles(en);
+        options.resourcePacks.clear();
+        options.incompatibleResourcePacks.clear();
+        for (ResourcePackProfile p : rpm.getEnabledProfiles()) {
+            if (!p.isPinned()) {
+                options.resourcePacks.add(p.getName());
+                if (!p.getCompatibility().isCompatible()) {
+                    options.incompatibleResourcePacks.add(p.getName());
+                }
+            }
+        }
+        options.write();
+        List<String> newRP = ImmutableList.copyOf(options.resourcePacks);
+        if (!currentRP.equals(newRP)) {
+            mc.reloadResources();
+        }
+        return this;
+    }
+    
     public boolean isRightHanded() {
         return options.mainArm == Arm.RIGHT;
     }
@@ -84,5 +122,9 @@ public class OptionsHelper {
     }
     public void setRenderDistance(int d) {
         options.viewDistance = d;
+    }
+    
+    public GameOptions getRaw() {
+        return options;
     }
 }
