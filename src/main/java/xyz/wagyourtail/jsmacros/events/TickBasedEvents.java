@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.events;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
@@ -16,12 +15,10 @@ public class TickBasedEvents {
     private static ItemStack chestArmor = ItemStack.EMPTY;
     private static ItemStack headArmor = ItemStack.EMPTY;
     
-    private static MinecraftClient mc = MinecraftClient.getInstance();
-    
     public static void init() {
         if (initialized) return;
         initialized = true;
-        ClientTickEvents.END_CLIENT_TICK.register(e -> {
+        ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             if (mc.player != null && mc.player.inventory != null) {
                 PlayerInventory inv = mc.player.inventory;
 
