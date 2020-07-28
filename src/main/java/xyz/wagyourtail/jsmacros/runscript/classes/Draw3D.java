@@ -191,6 +191,7 @@ public class Draw3D {
                 
                 buf.begin(GL11.GL_TRIANGLE_STRIP,  VertexFormats.POSITION_COLOR);
                 
+                //why'd they change it from build box to draw box... it's not calling tess.draw()
                 WorldRenderer.drawBox(buf, x1, y1, z1, x2, y2, z2, fr, fg, fb, fa);
                 
                 tess.draw();
