@@ -48,11 +48,11 @@ public class RunScript {
         }
     }
     
-    public static Thread exec(RawMacro macro, String event, HashMap<String, Object> args) {
+    public static Thread exec(RawMacro macro, String event, Map<String, Object> args) {
         return exec(macro, event, args, null, null);
     }
     
-    public static Thread exec(RawMacro macro, String event, HashMap<String, Object> args, Runnable then, Consumer<String> catcher) {
+    public static Thread exec(RawMacro macro, String event, Map<String, Object> args, Runnable then, Consumer<String> catcher) {
         if (macro.scriptFile.endsWith(".py")) {
             if (jsMacros.config.options.enableJEP && !macro.scriptFile.toLowerCase().endsWith("jython.py")) return execJEP(macro, event, args, then, catcher);
             else return execJython(macro, event, args, then, catcher);
@@ -63,7 +63,7 @@ public class RunScript {
     
     
     
-    public static Thread execJEP(RawMacro macro, String event, HashMap<String, Object> args, Runnable then, Consumer<String> catcher) {
+    public static Thread execJEP(RawMacro macro, String event, Map<String, Object> args, Runnable then, Consumer<String> catcher) {
         Thread t = new Thread(() -> {
             threads.putIfAbsent(macro, new ArrayList<>());
             Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());
@@ -111,7 +111,7 @@ public class RunScript {
         return t;
     }
     
-    public static Thread execJython(RawMacro macro, String event, HashMap<String, Object> args, Runnable then, Consumer<String> catcher) {
+    public static Thread execJython(RawMacro macro, String event, Map<String, Object> args, Runnable then, Consumer<String> catcher) {
         Thread t = new Thread(() -> {
             threads.putIfAbsent(macro, new ArrayList<>());
             Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());
@@ -159,7 +159,7 @@ public class RunScript {
         return t;
     }
     
-    public static Thread execJS(RawMacro macro, String event, HashMap<String, Object> args, Runnable then, Consumer<String> catcher) {
+    public static Thread execJS(RawMacro macro, String event, Map<String, Object> args, Runnable then, Consumer<String> catcher) {
         Thread t = new Thread(() -> {
             threads.putIfAbsent(macro, new ArrayList<>());
             Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": " + threads.get(macro).size());

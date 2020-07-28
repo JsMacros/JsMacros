@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.resource.language.I18n;
@@ -196,6 +197,8 @@ public class jsMacros implements ClientModInitializer {
             } else {
                 return s.getClass().getName();
             }
+        } else if (s instanceof ChatScreen) {
+            return "Chat Screen";
         }
         return s.getTitle().getString();
     }
