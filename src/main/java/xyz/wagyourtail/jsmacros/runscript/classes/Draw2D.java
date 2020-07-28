@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
@@ -15,9 +16,9 @@ import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.rect;
 import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.text;
 
 public class Draw2D extends DrawableHelper {
-    public ArrayList<text> textFields = new ArrayList<>();
-    public ArrayList<rect> rectFields = new ArrayList<>();
-    public ArrayList<item> itemFields = new ArrayList<>();
+    public List<text> textFields = new ArrayList<>();
+    public List<rect> rectFields = new ArrayList<>();
+    public List<item> itemFields = new ArrayList<>();
     public Consumer<Draw2D> onInit;
     public Consumer<String> catchInit;
     
@@ -116,14 +117,14 @@ public class Draw2D extends DrawableHelper {
     public void render(MatrixStack matrixStack) {
         if (matrixStack == null) return;
         
-        ArrayList<rect> rectFields;
-        ArrayList<item> itemFields;
-        ArrayList<text> textFields;
+        List<rect> rectFields;
+        List<item> itemFields;
+        List<text> textFields;
         
         try {
-            rectFields = new ArrayList<>(this.rectFields);
-            itemFields = new ArrayList<>(this.itemFields);
-            textFields = new ArrayList<>(this.textFields);
+            rectFields = ImmutableList.copyOf(this.rectFields);
+            itemFields = ImmutableList.copyOf(this.itemFields);
+            textFields = ImmutableList.copyOf(this.textFields);
         } catch(Exception e) {
             return;
         }

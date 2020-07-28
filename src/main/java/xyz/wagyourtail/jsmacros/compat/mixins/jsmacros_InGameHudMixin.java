@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.compat.mixins;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,7 +22,7 @@ class jsmacros_InGameHudMixin {
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/options/GameOptions;debugEnabled:Z"), method = "render")
     public void jsMacros_renderHud(MatrixStack matrixStack, float f, final CallbackInfo info) {
         
-        ArrayList<Draw2D> overlays;
+        List<Draw2D> overlays;
         
         try {
             overlays = new ArrayList<>(hudFunctions.overlays);

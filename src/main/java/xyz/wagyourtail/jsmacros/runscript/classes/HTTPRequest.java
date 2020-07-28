@@ -19,7 +19,7 @@ import com.google.gson.GsonBuilder;
 
 public class HTTPRequest {
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    public HashMap<String, String> headers = new HashMap<>();
+    public Map<String, String> headers = new HashMap<>();
     public URL conn;
     
     public HTTPRequest(String url) throws IOException {

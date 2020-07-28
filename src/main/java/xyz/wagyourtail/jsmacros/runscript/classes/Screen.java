@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import com.google.common.collect.ImmutableList;
+
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -19,10 +21,10 @@ import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.text;
 
 public class Screen extends net.minecraft.client.gui.screen.Screen {
     private int bgStyle = 0;
-    protected ArrayList<TextFieldWidget> textFieldWidgets = new ArrayList<>();;
-    protected ArrayList<text> textFields = new ArrayList<>();
-    protected ArrayList<rect> rectFields = new ArrayList<>();
-    protected ArrayList<item> itemFields = new ArrayList<>();
+    protected List<TextFieldWidget> textFieldWidgets = new ArrayList<>();;
+    protected List<text> textFields = new ArrayList<>();
+    protected List<rect> rectFields = new ArrayList<>();
+    protected List<item> itemFields = new ArrayList<>();
     public Consumer<Screen> onInit;
     public BiConsumer<Pos2D, Integer> onMouseDown;
     public BiConsumer<Vec2D, Integer> onMouseDrag;
@@ -72,7 +74,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     }
     
     public List<ButtonWidgetHelper> getButtonWidgets() {
-        ArrayList<ButtonWidgetHelper> list = new ArrayList<ButtonWidgetHelper>();
+        List<ButtonWidgetHelper> list = new ArrayList<ButtonWidgetHelper>();
         for (AbstractButtonWidget b : buttons) {
             list.add(new ButtonWidgetHelper((ButtonWidget)b));
         }
@@ -80,7 +82,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     }
     
     public List<TextFieldWidgetHelper> getTextFields() {
-        ArrayList<TextFieldWidgetHelper> list = new ArrayList<TextFieldWidgetHelper>();
+        List<TextFieldWidgetHelper> list = new ArrayList<TextFieldWidgetHelper>();
         for (TextFieldWidget t : textFieldWidgets) {
             list.add(new TextFieldWidgetHelper(t));
         }
@@ -224,16 +226,16 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         
         this.drawCenteredText(matricies, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
         
-        ArrayList<TextFieldWidget> textFieldWidgets;
-        ArrayList<text> textFields;
-        ArrayList<rect> rectFields;
-        ArrayList<item> itemFields;
+        List<TextFieldWidget> textFieldWidgets;
+        List<text> textFields;
+        List<rect> rectFields;
+        List<item> itemFields;
         
         try {
-            rectFields = new ArrayList<>(this.rectFields);
-            itemFields = new ArrayList<>(this.itemFields);
-            textFieldWidgets = new ArrayList<>(this.textFieldWidgets);
-            textFields = new ArrayList<>(this.textFields);
+            rectFields = ImmutableList.copyOf(this.rectFields);
+            itemFields = ImmutableList.copyOf(this.itemFields);
+            textFieldWidgets = ImmutableList.copyOf(this.textFieldWidgets);
+            textFields = ImmutableList.copyOf(this.textFields);
         } catch (Exception e) {
             return;
         }

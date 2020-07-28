@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.compat.mixins;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,7 +19,7 @@ public class jsmacros_WorldRendererMixin {
     @Inject(at = @At("TAIL"), method = "render")
     public void jsmacros_render(CallbackInfo info) {
         
-        ArrayList<Draw3D> renders;
+        List<Draw3D> renders;
         
         try {
             renders = new ArrayList<>(hudFunctions.renders);

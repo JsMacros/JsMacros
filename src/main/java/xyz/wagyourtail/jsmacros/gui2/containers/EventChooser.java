@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.gui2.containers;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 
 import net.minecraft.client.font.TextRenderer;
@@ -17,7 +18,7 @@ import xyz.wagyourtail.jsmacros.profile.Profile;
 
 public class EventChooser extends OverlayContainer {
     private String selected;
-    private ArrayList<eventObj> events = new ArrayList<>();
+    private List<eventObj> events = new ArrayList<>();
     private int topScroll;
     private Consumer<String> setEvent;
     private StringRenderable eventText;
@@ -58,7 +59,7 @@ public class EventChooser extends OverlayContainer {
             }
         }));
         
-        ArrayList<String> events = new ArrayList<>(Profile.registry.events);
+        List<String> events = new ArrayList<>(Profile.registry.events);
         Collections.sort(events);
         for (String e : events) {
             addEvent(e);

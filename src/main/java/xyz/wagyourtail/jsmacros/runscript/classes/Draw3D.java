@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
@@ -17,8 +18,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public class Draw3D {
-    public ArrayList<box> boxes = new ArrayList<>();
-    public ArrayList<line> lines = new ArrayList<>();
+    public List<box> boxes = new ArrayList<>();
+    public List<line> lines = new ArrayList<>();
     
     public box addBox(double x1, double y1, double z1, double x2, double y2, double z2, int color, int fillColor, boolean fill) {
         box b = new box(x1, y1, z1, x2, y2, z2, color, fillColor, fill);
@@ -65,12 +66,12 @@ public class Draw3D {
     public void render() {
         MinecraftClient mc  = MinecraftClient.getInstance();
         
-        ArrayList<box> boxes;
-        ArrayList<line> lines;
+        List<box> boxes;
+        List<line> lines;
         
         try {
-            boxes = new ArrayList<>(this.boxes);
-            lines = new ArrayList<>(this.lines);
+            boxes = ImmutableList.copyOf(this.boxes);
+            lines = ImmutableList.copyOf(this.lines);
         } catch (Exception e) {
             return;
         }

@@ -16,7 +16,7 @@ public class EntityHelper {
     
     public Map<String, Double> getPos() {
         if (e == null) return null;
-        HashMap<String, Double> r = new HashMap<>();
+        Map<String, Double> r = new HashMap<>();
         Vec3d pos = e.getPos();
         r.put("x", pos.x);
         r.put("y", pos.y);

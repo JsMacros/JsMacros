@@ -48,7 +48,7 @@ public class BlockDataHelper {
     
     public Map<String, String> getNBT() {
         if (e == null) return null;
-        HashMap<String, String> m = new HashMap<>();
+        Map<String, String> m = new HashMap<>();
         CompoundTag t = e.toInitialChunkDataTag();
         for (String s : t.getKeys()) {
             m.put(s, t.get(s).asString());
@@ -57,7 +57,7 @@ public class BlockDataHelper {
     }
     
     public Map<String, String> getBlockState() {
-        HashMap<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         for (Entry<Property<?>, Comparable<?>> e : bs.getEntries().entrySet()) {
             map.put(e.getKey().getName(), Util.getValueAsString(e.getKey(), e.getValue()));
         }

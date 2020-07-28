@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.function.Consumer;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
@@ -25,7 +26,7 @@ public class FileChooser extends OverlayContainer {
     private File directory;
     private StringRenderable dirname;
     private File selected;
-    private ArrayList<fileObj> files = new ArrayList<>();
+    private List<fileObj> files = new ArrayList<>();
     private Consumer<File> setFile;
     private int topScroll;
 
@@ -48,7 +49,7 @@ public class FileChooser extends OverlayContainer {
             addFile(this.directory.getParentFile(), "..");
         }
 
-        ArrayList<File> files = new ArrayList<>(Arrays.asList(directory.listFiles()));
+        List<File> files = new ArrayList<>(Arrays.asList(directory.listFiles()));
         Collections.sort(files, new sortFile());
         for (File f : files) {
             addFile(f);

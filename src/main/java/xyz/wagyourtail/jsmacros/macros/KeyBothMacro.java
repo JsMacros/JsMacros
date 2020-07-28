@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.macros;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import net.minecraft.client.util.InputUtil;
 import xyz.wagyourtail.jsmacros.jsMacros;
@@ -33,14 +33,14 @@ public class KeyBothMacro extends BaseMacro {
     }
     
     @Override
-    public Thread trigger(String type, HashMap<String, Object> args) {
+    public Thread trigger(String type, Map<String, Object> args) {
         if (check(args)) {
             return runMacro(type, args);
         }
         return null;
     }
     
-    private boolean check(HashMap<String, Object> args) {
+    private boolean check(Map<String, Object> args) {
         boolean keyState = false;
         if ((int)args.get("action") > 0) keyState = true;
         if (args.get("key").equals(key) && (jsMacros.getModInt((String)args.get("mods")) & mods) == mods)

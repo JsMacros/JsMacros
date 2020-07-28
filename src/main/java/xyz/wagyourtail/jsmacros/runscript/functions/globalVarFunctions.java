@@ -1,9 +1,10 @@
 package xyz.wagyourtail.jsmacros.runscript.functions;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class globalVarFunctions {
-	public static HashMap<String, Object> globalRaw = new HashMap<>();
+	public static Map<String, Object> globalRaw = new HashMap<>();
 	public void putInt(String name, int i) {
 		globalRaw.put(name, Integer.valueOf(i));
 	}
@@ -90,7 +91,7 @@ public class globalVarFunctions {
 	    globalRaw.remove(key);
 	}
 	
-	public HashMap<String, Object> getRaw() {
+	public Map<String, Object> getRaw() {
 		return globalRaw;
 	}
 }

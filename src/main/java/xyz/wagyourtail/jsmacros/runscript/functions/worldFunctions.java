@@ -37,7 +37,7 @@ import xyz.wagyourtail.jsmacros.reflector.PlayerListEntryHelper;
 public class worldFunctions {
     public List<PlayerEntityHelper> getLoadedPlayers() {
         MinecraftClient mc = MinecraftClient.getInstance();
-        ArrayList<PlayerEntityHelper> players = new ArrayList<>();
+        List<PlayerEntityHelper> players = new ArrayList<>();
         for (AbstractClientPlayerEntity p : mc.world.getPlayers()) {
             players.add(new PlayerEntityHelper(p));
         }
@@ -45,7 +45,7 @@ public class worldFunctions {
     }
     
     public List<PlayerListEntryHelper> getPlayers() {
-        ArrayList<PlayerListEntryHelper> players = new ArrayList<>();
+        List<PlayerListEntryHelper> players = new ArrayList<>();
         for (PlayerListEntry p : MinecraftClient.getInstance().getNetworkHandler().getPlayerList()) {
             players.add(new PlayerListEntryHelper(p));
         }
@@ -63,7 +63,7 @@ public class worldFunctions {
     
     public List<EntityHelper> getEntities() {
         MinecraftClient mc = MinecraftClient.getInstance();
-        ArrayList<EntityHelper> entities = new ArrayList<>();
+        List<EntityHelper> entities = new ArrayList<>();
         for (Entity e : mc.world.getEntities()) {
             if (e.getType() == EntityType.PLAYER) {
                 entities.add(new PlayerEntityHelper((PlayerEntity)e));

@@ -2,6 +2,8 @@ package xyz.wagyourtail.jsmacros.profile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
@@ -11,8 +13,8 @@ import xyz.wagyourtail.jsmacros.macros.KeyDownMacro;
 import xyz.wagyourtail.jsmacros.macros.KeyUpMacro;
 
 public class MacroRegistry {
-    public HashMap<String, HashMap<RawMacro, BaseMacro>> macros;
-    public ArrayList<String> events = new ArrayList<>();
+    public Map<String, Map<RawMacro, BaseMacro>> macros;
+    public List<String> events = new ArrayList<>();
     
     public void clearMacros() {
         macros = new HashMap<>();
@@ -60,7 +62,7 @@ public class MacroRegistry {
         }
     }
     
-    public HashMap<String, HashMap<RawMacro, BaseMacro>> getMacros() {
+    public Map<String, Map<RawMacro, BaseMacro>> getMacros() {
         return macros;
     }
     
@@ -69,7 +71,7 @@ public class MacroRegistry {
     }
     
     public BaseMacro getMacro(RawMacro rawMacro) {
-        for (HashMap<RawMacro, BaseMacro> eventMacros : macros.values()) {
+        for (Map<RawMacro, BaseMacro> eventMacros : macros.values()) {
             for (RawMacro macro : eventMacros.keySet()) {
                 if (rawMacro == macro) return eventMacros.get(macro);
             }

@@ -34,8 +34,8 @@ public class RunScript {
     public static Map<RawMacro, List<thread>> threads = new HashMap<>();
     public static String language = "js";
     
-    public static ArrayList<thread> getThreads() {
-        ArrayList<thread> th = new ArrayList<>();
+    public static List<thread> getThreads() {
+        List<thread> th = new ArrayList<>();
         for (List<thread> tl : threads.values()) {
             th.addAll(tl);
         }

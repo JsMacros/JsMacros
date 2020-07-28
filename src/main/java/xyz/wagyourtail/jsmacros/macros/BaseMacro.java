@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.macros;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
@@ -16,7 +16,7 @@ public abstract class BaseMacro {
         return macro;
     }
     
-    public Thread runMacro(String type, HashMap<String, Object> args) {
+    public Thread runMacro(String type, Map<String, Object> args) {
         if (macro.enabled) {
             try {
                 return RunScript.exec(macro, type, args);
@@ -28,7 +28,7 @@ public abstract class BaseMacro {
         return null;
     }
     
-    public abstract Thread trigger(String type, HashMap<String, Object> args);
+    public abstract Thread trigger(String type, Map<String, Object> args);
     
     public String toString() {
         return macro.toString().substring(3);

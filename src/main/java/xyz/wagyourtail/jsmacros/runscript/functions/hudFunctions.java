@@ -12,8 +12,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 
 public class hudFunctions {
-    public static ArrayList<Draw2D> overlays = new ArrayList<>();
-    public static ArrayList<Draw3D> renders = new ArrayList<>();
+    public static List<Draw2D> overlays = new ArrayList<>();
+    public static List<Draw3D> renders = new ArrayList<>();
     
     
     public Screen createScreen(String title, boolean dirtBG) {

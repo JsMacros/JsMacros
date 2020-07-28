@@ -2,6 +2,8 @@ package xyz.wagyourtail.jsmacros.profile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -66,7 +68,7 @@ public class Profile {
 
     private boolean loadProfile(String pName) {
         registry.clearMacros();
-        ArrayList<RawMacro> rawProfile = jsMacros.config.options.profiles.get(pName);
+        List<RawMacro> rawProfile = jsMacros.config.options.profiles.get(pName);
         if (rawProfile == null) {
             System.out.println("profile \"" + pName + "\" does not exist or is broken/null");
             return false;
@@ -76,16 +78,16 @@ public class Profile {
             registry.addMacro(rawmacro);
         }
 
-        HashMap<String, Object> args = new HashMap<>();
+        Map<String, Object> args = new HashMap<>();
         args.put("profile", pName);
         triggerMacroNoAnything("PROFILE_LOAD", args);
         
         return true;
     }
 
-    public ArrayList<RawMacro> toRawProfile() {
-        ArrayList<RawMacro> rawProf = new ArrayList<>();
-        for (HashMap<RawMacro, BaseMacro> eventMacros : registry.macros.values()) {
+    public List<RawMacro> toRawProfile() {
+        List<RawMacro> rawProf = new ArrayList<>();
+        for (Map<RawMacro, BaseMacro> eventMacros : registry.macros.values()) {
             for (RawMacro macro : eventMacros.keySet()) {
                 rawProf.add(macro);
             }
@@ -114,7 +116,7 @@ public class Profile {
     }
 
     @Deprecated
-    public HashMap<String, HashMap<RawMacro, BaseMacro>> getMacros() {
+    public Map<String, Map<RawMacro, BaseMacro>> getMacros() {
         return registry.macros;
     }
 
@@ -124,7 +126,7 @@ public class Profile {
         // -------- JOIN ---------- //
         registry.addEvent("JOIN_SERVER");
         JoinCallback.EVENT.register((conn, player) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("address", conn.getAddress().toString());
             args.put("player", new PlayerEntityHelper(player));
 
@@ -134,7 +136,7 @@ public class Profile {
         // ----- DISCONNECT ------ // 
         registry.addEvent("DISCONNECT");
         DisconnectCallback.EVENT.register(() -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
 
             triggerMacro("DISCONNECT", args);
         });
@@ -142,7 +144,7 @@ public class Profile {
         // ----- SEND_MESSAGE -----//
         registry.addEvent("SEND_MESSAGE");
         SendMessageCallback.EVENT.register((message) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("message", message);
 
             triggerMacroJoin("SEND_MESSAGE", args);
@@ -154,7 +156,7 @@ public class Profile {
         // ---- RECV_MESSAGE ---- //
         registry.addEvent("RECV_MESSAGE");
         RecieveMessageCallback.EVENT.register((message) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("message", message);
 
             triggerMacroJoin("RECV_MESSAGE", args);
@@ -166,7 +168,7 @@ public class Profile {
         // ----- PLAYER JOIN ----- //
         registry.addEvent("PLAYER_JOIN");
         PlayerJoinCallback.EVENT.register((uuid, pName) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("uuid", uuid.toString());
             args.put("player", pName);
 
@@ -176,7 +178,7 @@ public class Profile {
         // ---- PLAYER LEAVE ----- //
         registry.addEvent("PLAYER_LEAVE");
         PlayerLeaveCallback.EVENT.register((uuid, pName) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("uuid", uuid.toString());
             args.put("player", pName);
 
@@ -203,7 +205,7 @@ public class Profile {
             if (keycode == InputUtil.UNKNOWN_KEY) return ActionResult.PASS;
             if (keyBinding.matchesKey(key, scancode) && action == 1 && mc.currentScreen == null) mc.openScreen(jsMacros.keyMacrosScreen);
 
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("rawkey", keycode);
             if (action == 1) {
                 if (key == 340 || key == 344) mods -= 1;
@@ -222,7 +224,7 @@ public class Profile {
         // ------ AIR CHANGE ------ //
         registry.addEvent("AIR_CHANGE");
         AirChangeCallback.EVENT.register((air) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("air", air);
 
             triggerMacro("AIR_CHANGE", args);
@@ -231,7 +233,7 @@ public class Profile {
         // ------ DAMAGE -------- //
         registry.addEvent("DAMAGE");
         DamageCallback.EVENT.register((source, health, change) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("source", source.getName());
             args.put("health", health);
             args.put("change", change);
@@ -242,7 +244,7 @@ public class Profile {
         // ------ DEATH -------- //
         registry.addEvent("DEATH");
         DeathCallback.EVENT.register(() -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
 
             triggerMacro("DEATH", args);
         });
@@ -250,7 +252,7 @@ public class Profile {
         // ----- ITEM DAMAGE ----- //
         registry.addEvent("ITEM_DAMAGE");
         ItemDamageCallback.EVENT.register((stack, damage) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("stack", stack);
             args.put("damage", damage);
 
@@ -260,7 +262,7 @@ public class Profile {
         // ----- HUNGER CHANGE ------ //
         registry.addEvent("HUNGER_CHANGE");
         HungerChangeCallback.EVENT.register((foodLevel) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("foodLevel", foodLevel);
 
             triggerMacro("HUNGER_CHANGE", args);
@@ -269,7 +271,7 @@ public class Profile {
         // ----- DIMENSION CHANGE --- //
         registry.addEvent("DIMENSION_CHANGE");
         DimensionChangeCallback.EVENT.register((dim) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("dimension", dim);
 
             triggerMacro("DIMENSION_CHANGE", args);
@@ -279,7 +281,7 @@ public class Profile {
         // ------ SOUND ------ //
         registry.addEvent("SOUND");
         SoundCallback.EVENT.register((sound) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("sound", sound);
 
             triggerMacro("SOUND", args);
@@ -289,7 +291,7 @@ public class Profile {
         // ------- OPEN SCREEN ------ //
         registry.addEvent("OPEN_SCREEN");
         OpenScreenCallback.EVENT.register((screen) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("screen", screen);
 
             triggerMacro("OPEN_SCREEN", args);
@@ -298,7 +300,7 @@ public class Profile {
         // ------- TITLE ------- //
         registry.addEvent("TITLE");
         TitleCallback.EVENT.register((type, message) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("type", type);
             args.put("message", message);
 
@@ -308,7 +310,7 @@ public class Profile {
         // ----- HELD ITEM ----- //
         registry.addEvent("HELD_ITEM");
         HeldItemCallback.EVENT.register((item, offhand) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("item", item);
             args.put("offhand", offhand);
             
@@ -318,7 +320,7 @@ public class Profile {
         // ---- ARMOR CHANGE ---- //
         registry.addEvent("ARMOR_CHANGE");
         ArmorChangeCallback.EVENT.register((slot, item) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("item", item);
             args.put("slot", slot);
             
@@ -328,7 +330,7 @@ public class Profile {
         // ---- BOSSBAR UPDATE ---- //
         registry.addEvent("BOSSBAR_UPDATE");
         BossBarCallback.EVENT.register((type, uuid, style, color, name, percent) -> {
-            HashMap<String, Object> args = new HashMap<>();
+            Map<String, Object> args = new HashMap<>();
             args.put("type", type);
             args.put("uuid", uuid);
             args.put("style", style);
@@ -340,7 +342,7 @@ public class Profile {
         });
     }
     
-    public void triggerMacro(String macroname, HashMap<String, Object> args) {
+    public void triggerMacro(String macroname, Map<String, Object> args) {
         if (registry.macros.containsKey(macroname)) for (BaseMacro macro : registry.macros.get(macroname).values()) {
             macro.trigger(macroname, args);
         }
@@ -350,7 +352,7 @@ public class Profile {
         }
     }
     
-    public void triggerMacroJoin(String macroname, HashMap<String, Object> args) {
+    public void triggerMacroJoin(String macroname, Map<String, Object> args) {
         if (registry.macros.containsKey(macroname)) for (BaseMacro macro : registry.macros.get(macroname).values()) {
             try {
                 Thread t = macro.trigger(macroname, args);
@@ -368,7 +370,7 @@ public class Profile {
         }
     }
     
-    public void triggerMacroNoAnything(String macroname, HashMap<String, Object> args) {
+    public void triggerMacroNoAnything(String macroname, Map<String, Object> args) {
         if (registry.macros.containsKey(macroname)) for (BaseMacro macro : registry.macros.get(macroname).values()) {
             macro.trigger(macroname, args);
         }

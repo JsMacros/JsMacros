@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.macros;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 
@@ -11,7 +11,7 @@ public class EventMacro extends BaseMacro {
     }
     
     @Override
-    public Thread trigger(String type, HashMap<String, Object> args) {
+    public Thread trigger(String type, Map<String, Object> args) {
         return runMacro(type, args);
     }
 }
