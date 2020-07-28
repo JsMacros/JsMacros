@@ -18,11 +18,11 @@ import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.rect;
 import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.text;
 
 public class Screen extends net.minecraft.client.gui.screen.Screen {
-    private boolean dirt;
+    private int bgStyle = 0;
     protected ArrayList<TextFieldWidget> textFieldWidgets = new ArrayList<>();;
     protected ArrayList<text> textFields = new ArrayList<>();
-    public ArrayList<rect> rectFields = new ArrayList<>();
-    public ArrayList<item> itemFields = new ArrayList<>();
+    protected ArrayList<rect> rectFields = new ArrayList<>();
+    protected ArrayList<item> itemFields = new ArrayList<>();
     public Consumer<Screen> onInit;
     public BiConsumer<Pos2D, Integer> onMouseDown;
     public BiConsumer<Vec2D, Integer> onMouseDrag;
@@ -32,9 +32,10 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     public Consumer<String> catchInit;
     public Consumer<Screen> onClose;
     
+    
     public Screen(String title, boolean dirt) {
         super(new LiteralText(title));
-        this.dirt = dirt;
+        this.bgStyle = dirt ? 0 : 1;
     }
     
     protected void init() {
@@ -218,8 +219,8 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
         if (matricies == null) return;
-        if (dirt) this.renderBackgroundTexture(0);
-        else this.renderBackground(matricies, 0);
+        if (bgStyle == 0) this.renderBackgroundTexture(0);
+        else if (bgStyle == 1) this.renderBackground(matricies, 0);
         
         this.drawCenteredText(matricies, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
         
