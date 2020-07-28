@@ -48,7 +48,7 @@ public class FileChooser extends OverlayContainer {
             addFile(this.directory.getParentFile(), "..");
         }
 
-        ArrayList<File> files = new ArrayList<File>(Arrays.asList(directory.listFiles()));
+        ArrayList<File> files = new ArrayList<>(Arrays.asList(directory.listFiles()));
         Collections.sort(files, new sortFile());
         for (File f : files) {
             addFile(f);
