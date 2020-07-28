@@ -78,9 +78,8 @@ public class Profile {
 
         HashMap<String, Object> args = new HashMap<>();
         args.put("profile", pName);
-        if (registry.macros.containsKey("PROFILE_LOAD")) for (BaseMacro macro : registry.macros.get("PROFILE_LOAD").values()) {
-            macro.trigger("PROFILE_LOAD", args);
-        }
+        triggerMacroNoAnything("PROFILE_LOAD", args);
+        
         return true;
     }
 
