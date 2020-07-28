@@ -33,6 +33,10 @@ public class ItemStackHelper {
         return i.getMaxDamage();
     }
     
+    public String getDefaultName() {
+        return i.getItem().getName().getString();
+    }
+    
     public String getName() {
         return i.getName().getString();
     }
