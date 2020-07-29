@@ -24,7 +24,7 @@ public class TickBasedEvents {
 
                 ItemStack newMainHand = inv.getMainHandStack();
                 if (!newMainHand.equals(mainHand)) {
-                    if (newMainHand.isItemEqualIgnoreDamage(mainHand) && newMainHand.getCount() == mainHand.getCount()) {
+                    if (newMainHand.isItemEqualIgnoreDamage(mainHand) && newMainHand.getCount() == mainHand.getCount() && newMainHand.getDamage() != mainHand.getDamage()) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newMainHand), newMainHand.getDamage());
                     }
                     HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(newMainHand), false);
@@ -33,7 +33,7 @@ public class TickBasedEvents {
                 
                 ItemStack newOffHand = inv.offHand.get(0);
                 if (!newOffHand.equals(offHand)) {
-                    if (newOffHand.isItemEqualIgnoreDamage(offHand) && newOffHand.getCount() == offHand.getCount()) {
+                    if (newOffHand.isItemEqualIgnoreDamage(offHand) && newOffHand.getCount() == offHand.getCount() && newOffHand.getDamage() != offHand.getDamage()) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newOffHand), newOffHand.getDamage());
                     }
                     HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(newOffHand), true);
@@ -42,7 +42,7 @@ public class TickBasedEvents {
                 
                 ItemStack newHeadArmor = inv.getArmorStack(3);
                 if (!newHeadArmor.equals(headArmor)) {
-                    if (newHeadArmor.isItemEqualIgnoreDamage(headArmor) && newHeadArmor.getCount() == headArmor.getCount()) {
+                    if (newHeadArmor.isItemEqualIgnoreDamage(headArmor) && newHeadArmor.getCount() == headArmor.getCount() && newHeadArmor.getDamage() != headArmor.getDamage()) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newHeadArmor), newHeadArmor.getDamage());
                     }
                     ArmorChangeCallback.EVENT.invoker().interact("HEAD", new ItemStackHelper(newHeadArmor));
@@ -51,7 +51,7 @@ public class TickBasedEvents {
                 
                 ItemStack newChestArmor = inv.getArmorStack(2);
                 if (!newChestArmor.equals(chestArmor)) {
-                    if (newChestArmor.isItemEqualIgnoreDamage(chestArmor) && newChestArmor.getCount() == chestArmor.getCount()) {
+                    if (newChestArmor.isItemEqualIgnoreDamage(chestArmor) && newChestArmor.getCount() == chestArmor.getCount() && newChestArmor.getDamage() != chestArmor.getDamage()) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newChestArmor), newChestArmor.getDamage());
                     }
                     ArmorChangeCallback.EVENT.invoker().interact("CHEST", new ItemStackHelper(newChestArmor));
@@ -61,7 +61,7 @@ public class TickBasedEvents {
                 
                 ItemStack newLegArmor = inv.getArmorStack(1);
                 if (!newLegArmor.equals(legArmor)) {
-                    if (newLegArmor.isItemEqualIgnoreDamage(legArmor) && newLegArmor.getCount() == legArmor.getCount()) {
+                    if (newLegArmor.isItemEqualIgnoreDamage(legArmor) && newLegArmor.getCount() == legArmor.getCount() && newLegArmor.getDamage() != legArmor.getDamage()) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newLegArmor), newLegArmor.getDamage());
                     }
                     ArmorChangeCallback.EVENT.invoker().interact("LEGS", new ItemStackHelper(newLegArmor));
@@ -70,7 +70,7 @@ public class TickBasedEvents {
                 
                 ItemStack newFootArmor = inv.getArmorStack(0);
                 if (!newFootArmor.equals(footArmor)) {
-                    if (newFootArmor.isItemEqualIgnoreDamage(footArmor) && newFootArmor.getCount() == footArmor.getCount()) {
+                    if (newFootArmor.isItemEqualIgnoreDamage(footArmor) && newFootArmor.getCount() == footArmor.getCount() && newFootArmor.getDamage() != footArmor.getDamage()) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newFootArmor), newFootArmor.getDamage());
                     }
                     ArmorChangeCallback.EVENT.invoker().interact("FEET", new ItemStackHelper(newFootArmor));
