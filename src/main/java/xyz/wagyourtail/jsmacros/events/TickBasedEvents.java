@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.events;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 
 public class TickBasedEvents {
@@ -16,11 +17,34 @@ public class TickBasedEvents {
     private static ItemStack headArmor = ItemStack.EMPTY;
     
     public static boolean areEqual(ItemStack a, ItemStack b) {
-        return (a.isEmpty() && b.isEmpty()) || (!a.isEmpty() && !b.isEmpty() && a.isItemEqualIgnoreDamage(b) && a.getCount() == b.getCount() && a.getDamage() == b.getDamage());
+        return (a.isEmpty() && b.isEmpty()) || (!a.isEmpty() && !b.isEmpty() && a.isItemEqualIgnoreDamage(b) && a.getCount() == b.getCount() && ItemStack.areTagsEqual(a, b) && a.getDamage() == b.getDamage());
+    }
+    
+    public static boolean areTagsEqualIgnoreDamage(ItemStack a, ItemStack b) {
+        if (a.isEmpty() && b.isEmpty()) {
+            return true;
+        } else if (!a.isEmpty() && !b.isEmpty()) {
+            if (a.getTag() == null && b.getTag() == null) {
+                return true;
+            } else {
+                CompoundTag at;
+                CompoundTag bt;
+                if (a.getTag() != null) at = a.getTag().copy();
+                else at = new CompoundTag();
+                if (b.getTag() != null) bt = b.getTag().copy();
+                else bt = new CompoundTag();
+                at.remove("Damage");
+                bt.remove("Damage");
+                return at.equals(bt);
+            }
+            
+        } else {
+            return false;
+        }
     }
     
     public static boolean areEqualIgnoreDamage(ItemStack a, ItemStack b) {
-        return (a.isEmpty() && b.isEmpty()) || (!a.isEmpty() && !b.isEmpty() && a.isItemEqualIgnoreDamage(b) && a.getCount() == b.getCount());    
+        return (a.isEmpty() && b.isEmpty()) || (!a.isEmpty() && !b.isEmpty() && a.isItemEqualIgnoreDamage(b) && a.getCount() == b.getCount() && areTagsEqualIgnoreDamage(a, b));    
     }
     
     public static void init() {
