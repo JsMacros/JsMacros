@@ -6,10 +6,10 @@ import xyz.wagyourtail.jsmacros.reflector.BossBarHelper;
 
 public interface BossBarCallback {
     Event<BossBarCallback> EVENT = EventFactory.createArrayBacked(BossBarCallback.class,
-            (listeners) -> (type, bossBar) -> {
+            (listeners) -> (type, uuid, bossBar) -> {
                 for (BossBarCallback event : listeners) {
-                    event.interact(type, bossBar);
+                    event.interact(type, uuid, bossBar);
                 }
             });
-    void interact(String type, BossBarHelper bossBar);
+    void interact(String type, String uuid, BossBarHelper bossBar);
 }

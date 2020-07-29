@@ -96,7 +96,7 @@ class jsmacros_ClientPlayNetworkHandler {
             break;
         }
         
-        BossBarCallback.EVENT.invoker().interact(type, new BossBarHelper(((IBossBarHud) client.inGameHud.getBossBarHud()).getBossBars().get(packet.getUuid())));
+        BossBarCallback.EVENT.invoker().interact(type, packet.getUuid().toString(), packet.getType() == BossBarS2CPacket.Type.REMOVE ? null : new BossBarHelper(((IBossBarHud) client.inGameHud.getBossBarHud()).getBossBars().get(packet.getUuid())));
     }
 }
 
