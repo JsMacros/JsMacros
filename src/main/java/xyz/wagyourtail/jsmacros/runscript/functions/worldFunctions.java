@@ -3,7 +3,10 @@ package xyz.wagyourtail.jsmacros.runscript.functions;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -17,6 +20,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.hud.ClientBossBar;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -29,7 +33,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
 import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.compat.interfaces.IBossBarHud;
 import xyz.wagyourtail.jsmacros.reflector.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.reflector.BossBarHelper;
 import xyz.wagyourtail.jsmacros.reflector.EntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.PlayerListEntryHelper;
@@ -140,5 +146,15 @@ public class worldFunctions {
     public void playSound(String id, float volume, float pitch, double x, double y, double z) {
         MinecraftClient mc = MinecraftClient.getInstance();
         mc.world.playSound(x, y, z, Registry.SOUND_EVENT.get(new Identifier(id)), SoundCategory.MASTER, volume, pitch, true);
+    }
+    
+    public Map<String, BossBarHelper> getBossBars() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        Map<UUID, ClientBossBar> bars = ((IBossBarHud) mc.inGameHud.getBossBarHud()).getBossBars();
+        Map<String, BossBarHelper> out = new HashMap<>();
+        for (Map.Entry<UUID, ClientBossBar> e : bars.entrySet()) {
+            out.put(e.getKey().toString(), new BossBarHelper(e.getValue()));
+        }
+        return out;
     }
 }

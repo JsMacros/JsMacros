@@ -329,14 +329,10 @@ public class Profile {
         
         // ---- BOSSBAR UPDATE ---- //
         registry.addEvent("BOSSBAR_UPDATE");
-        BossBarCallback.EVENT.register((type, uuid, style, color, name, percent) -> {
+        BossBarCallback.EVENT.register((type, bossBar) -> {
             Map<String, Object> args = new HashMap<>();
             args.put("type", type);
-            args.put("uuid", uuid);
-            args.put("style", style);
-            args.put("color", color);
-            args.put("name", name);
-            args.put("percent", percent);
+            args.put("bossBar", bossBar);
             
             triggerMacro("BOSSBAR_UPDATE", args);
         });

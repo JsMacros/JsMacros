@@ -49,7 +49,8 @@ public class RenderCommon {
         }
         
         public item setItem(ItemStackHelper i) {
-            this.item = i.getRaw();
+            if (i != null) this.item = i.getRaw();
+            else this.item = null;
             return this;
         }
         

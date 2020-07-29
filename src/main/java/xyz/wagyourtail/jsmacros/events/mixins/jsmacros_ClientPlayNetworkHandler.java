@@ -13,11 +13,13 @@ import net.minecraft.network.packet.s2c.play.CombatEventS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.Entry;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
+import xyz.wagyourtail.jsmacros.compat.interfaces.IBossBarHud;
 import xyz.wagyourtail.jsmacros.events.BossBarCallback;
 import xyz.wagyourtail.jsmacros.events.DeathCallback;
 import xyz.wagyourtail.jsmacros.events.PlayerJoinCallback;
 import xyz.wagyourtail.jsmacros.events.PlayerLeaveCallback;
 import xyz.wagyourtail.jsmacros.events.TitleCallback;
+import xyz.wagyourtail.jsmacros.reflector.BossBarHelper;
 import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
 @Mixin(ClientPlayNetworkHandler.class)
@@ -68,7 +70,7 @@ class jsmacros_ClientPlayNetworkHandler {
         }
     }
     
-    @Inject(at = @At("HEAD"), method="onBossBar")
+    @Inject(at = @At("TAIL"), method="onBossBar")
     public void jsmacros_onBossBar(BossBarS2CPacket packet, CallbackInfo info) {
         String type = null;
         switch(packet.getType()) {
@@ -93,55 +95,8 @@ class jsmacros_ClientPlayNetworkHandler {
         default:
             break;
         }
-        String style = null;
-        switch (packet.getOverlay()) {
-        case NOTCHED_10:
-            style = "NOTCHED_10";
-            break;
-        case NOTCHED_12:
-            style = "NOTCHED_12";
-            break;
-        case NOTCHED_20:
-            style = "NOTCHED_20";
-            break;
-        case NOTCHED_6:
-            style = "NOTCHED_6";
-            break;
-        case PROGRESS:
-            style = "PROGRESS";
-            break;
-        default:
-            break;
-        }
-        String color = null;
-        switch (packet.getColor()) {
-        case BLUE:
-            color = "BLUE";
-            break;
-        case GREEN:
-            color = "GREEN";
-            break;
-        case PINK:
-            color = "PINK";
-            break;
-        case PURPLE:
-            color = "PURPLE";
-            break;
-        case RED:
-            color = "RED";
-            break;
-        case WHITE:
-            color = "WHITE";
-            break;
-        case YELLOW:
-            color = "YELLOW";
-            break;
-        default:
-            break;
-        }
         
-        
-        BossBarCallback.EVENT.invoker().interact(type, packet.getUuid().toString(), style, color, new TextHelper(packet.getName()), packet.getPercent());
+        BossBarCallback.EVENT.invoker().interact(type, new BossBarHelper(((IBossBarHud) client.inGameHud.getBossBarHud()).getBossBars().get(packet.getUuid())));
     }
 }
 
