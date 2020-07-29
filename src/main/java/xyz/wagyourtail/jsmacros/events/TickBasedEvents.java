@@ -15,6 +15,14 @@ public class TickBasedEvents {
     private static ItemStack chestArmor = ItemStack.EMPTY;
     private static ItemStack headArmor = ItemStack.EMPTY;
     
+    public static boolean areEqual(ItemStack a, ItemStack b) {
+        return (a.isEmpty() && b.isEmpty()) || (!a.isEmpty() && !b.isEmpty() && a.isItemEqualIgnoreDamage(b) && a.getCount() == b.getCount() && a.getDamage() == b.getDamage());
+    }
+    
+    public static boolean areEqualIgnoreDamage(ItemStack a, ItemStack b) {
+        return (a.isEmpty() && b.isEmpty()) || (!a.isEmpty() && !b.isEmpty() && a.isItemEqualIgnoreDamage(b) && a.getCount() == b.getCount());    
+    }
+    
     public static void init() {
         if (initialized) return;
         initialized = true;
@@ -23,58 +31,58 @@ public class TickBasedEvents {
                 PlayerInventory inv = mc.player.inventory;
 
                 ItemStack newMainHand = inv.getMainHandStack();
-                if (!newMainHand.equals(mainHand)) {
-                    if (newMainHand.isItemEqualIgnoreDamage(mainHand) && newMainHand.getCount() == mainHand.getCount() && newMainHand.getDamage() != mainHand.getDamage()) {
+                if (!areEqual(newMainHand, mainHand)) {
+                    if (areEqualIgnoreDamage(newMainHand, mainHand)) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newMainHand), newMainHand.getDamage());
                     }
                     HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(newMainHand), false);
-                    mainHand = newMainHand;
+                    mainHand = newMainHand.copy();
                 }
                 
                 ItemStack newOffHand = inv.offHand.get(0);
-                if (!newOffHand.equals(offHand)) {
-                    if (newOffHand.isItemEqualIgnoreDamage(offHand) && newOffHand.getCount() == offHand.getCount() && newOffHand.getDamage() != offHand.getDamage()) {
+                if (!areEqual(newOffHand, offHand)) {
+                    if (areEqualIgnoreDamage(newOffHand, offHand)) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newOffHand), newOffHand.getDamage());
                     }
                     HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(newOffHand), true);
-                    offHand = newOffHand;
+                    offHand = newOffHand.copy();
                 }
                 
                 ItemStack newHeadArmor = inv.getArmorStack(3);
-                if (!newHeadArmor.equals(headArmor)) {
-                    if (newHeadArmor.isItemEqualIgnoreDamage(headArmor) && newHeadArmor.getCount() == headArmor.getCount() && newHeadArmor.getDamage() != headArmor.getDamage()) {
+                if (!areEqual(newHeadArmor, headArmor)) {
+                    if (areEqualIgnoreDamage(newHeadArmor, headArmor)) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newHeadArmor), newHeadArmor.getDamage());
                     }
                     ArmorChangeCallback.EVENT.invoker().interact("HEAD", new ItemStackHelper(newHeadArmor));
-                    headArmor = newHeadArmor;
+                    headArmor = newHeadArmor.copy();
                 }
                 
                 ItemStack newChestArmor = inv.getArmorStack(2);
-                if (!newChestArmor.equals(chestArmor)) {
-                    if (newChestArmor.isItemEqualIgnoreDamage(chestArmor) && newChestArmor.getCount() == chestArmor.getCount() && newChestArmor.getDamage() != chestArmor.getDamage()) {
+                if (!areEqual(newChestArmor, chestArmor)) {
+                    if (areEqualIgnoreDamage(newChestArmor, chestArmor)) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newChestArmor), newChestArmor.getDamage());
                     }
                     ArmorChangeCallback.EVENT.invoker().interact("CHEST", new ItemStackHelper(newChestArmor));
-                    chestArmor = newChestArmor;
+                    chestArmor = newChestArmor.copy();
                     
                 }
                 
                 ItemStack newLegArmor = inv.getArmorStack(1);
-                if (!newLegArmor.equals(legArmor)) {
-                    if (newLegArmor.isItemEqualIgnoreDamage(legArmor) && newLegArmor.getCount() == legArmor.getCount() && newLegArmor.getDamage() != legArmor.getDamage()) {
+                if (!areEqual(newLegArmor, legArmor)) {
+                    if (areEqualIgnoreDamage(newLegArmor, legArmor)) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newLegArmor), newLegArmor.getDamage());
                     }
                     ArmorChangeCallback.EVENT.invoker().interact("LEGS", new ItemStackHelper(newLegArmor));
-                    legArmor = newLegArmor;
+                    legArmor = newLegArmor.copy();
                 }
                 
                 ItemStack newFootArmor = inv.getArmorStack(0);
-                if (!newFootArmor.equals(footArmor)) {
-                    if (newFootArmor.isItemEqualIgnoreDamage(footArmor) && newFootArmor.getCount() == footArmor.getCount() && newFootArmor.getDamage() != footArmor.getDamage()) {
+                if (!areEqual(newFootArmor, footArmor)) {
+                    if (areEqualIgnoreDamage(newFootArmor, footArmor)) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newFootArmor), newFootArmor.getDamage());
                     }
                     ArmorChangeCallback.EVENT.invoker().interact("FEET", new ItemStackHelper(newFootArmor));
-                    footArmor = newFootArmor;
+                    footArmor = newFootArmor.copy();
                 }
             }
         });

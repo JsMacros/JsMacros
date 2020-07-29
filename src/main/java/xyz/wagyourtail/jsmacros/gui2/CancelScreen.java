@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -77,8 +79,8 @@ public class CancelScreen extends Screen {
         List<AbstractButtonWidget> buttons;
         try {
             tl = RunScript.getThreads();
-            running = new ArrayList<>(this.running);
-            buttons = new ArrayList<>(this.buttons);
+            running = ImmutableList.copyOf(this.running);
+            buttons = ImmutableList.copyOf(this.buttons);
         } catch (Exception e) {
             return;
         }
@@ -107,7 +109,11 @@ public class CancelScreen extends Screen {
 
     public static class RTCSort implements Comparator<RunningThreadContainer> {
         public int compare(RunningThreadContainer arg0, RunningThreadContainer arg1) {
+            try {
             return arg0.t.t.getName().compareTo(arg1.t.t.getName());
+            } catch(NullPointerException e) {
+                return 0;
+            }
         }
 
     }

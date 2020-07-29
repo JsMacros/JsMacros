@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.gui2.containers.ConfirmOverlay;
@@ -169,8 +171,8 @@ public class MacroScreen extends Screen {
         List<MacroContainer> macros;
         
         try {
-            buttons = new ArrayList<>(this.buttons);
-            macros = new ArrayList<>(this.macros);
+            buttons = ImmutableList.copyOf(this.buttons);
+            macros = ImmutableList.copyOf(this.macros);
         } catch(Exception e) {
             return;
         }
