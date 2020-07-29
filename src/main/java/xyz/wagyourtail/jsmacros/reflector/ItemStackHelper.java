@@ -88,11 +88,11 @@ public class ItemStackHelper {
     }
     
     public boolean isItemEqual(ItemStackHelper ish) {
-        return i.isItemEqual(ish.getRaw());
+        return i.isItemEqual(ish.getRaw()) && i.getDamage() == ish.getRaw().getDamage();
     } 
     
     public boolean isItemEqual(ItemStack is) {
-        return i.isItemEqual(is);
+        return i.isItemEqual(is) && i.getDamage() == is.getDamage();
     }
     
     public boolean isItemEqualIgnoreDamage(ItemStackHelper ish) {
