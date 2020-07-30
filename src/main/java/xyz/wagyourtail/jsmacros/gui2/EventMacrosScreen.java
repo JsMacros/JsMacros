@@ -4,6 +4,10 @@ import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.client.gui.screen.Screen;
 
 public class EventMacrosScreen extends MacroScreen {
@@ -27,15 +31,23 @@ public class EventMacrosScreen extends MacroScreen {
         
         topbar.deftype = MacroEnum.EVENT;
         
+        List<RawMacro> macros = new ArrayList<>();
+        
         for (String event : Profile.registry.events) {
             if (Profile.registry.getMacros().containsKey(event))
                 for (RawMacro macro : Profile.registry.getMacros().get(event).keySet()) {
-                    if (macro.type == MacroEnum.EVENT) addMacro(macro);
+                    if (macro.type == MacroEnum.EVENT) macros.add(macro);
                 }
         }
         if (Profile.registry.getMacros().containsKey(""))
             for (RawMacro macro : Profile.registry.getMacros().get("").keySet()) {
-                addMacro(macro);
+                macros.add(macro);
             }
+        
+        Collections.sort(macros, new RawMacro.sortRawMacro());
+        
+        for (RawMacro macro : macros) {
+            addMacro(macro);
+        }
     }
 }

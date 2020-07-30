@@ -222,10 +222,8 @@ public class FileChooser extends OverlayContainer {
 
     public static class sortFile implements Comparator<File> {
         public int compare(File a, File b) {
-            if (a.isDirectory() && !b.isDirectory()) {
-                return -1;
-            } else if (!a.isDirectory() && b.isDirectory()) {
-                return 1;
+            if (a.isDirectory() ^ b.isDirectory()) {
+                return a.isDirectory() ? -1 : 1;
             } else {
                 return a.getName().compareTo(b.getName());
             }

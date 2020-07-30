@@ -7,6 +7,10 @@ import xyz.wagyourtail.jsmacros.gui2.containers.MacroContainer;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.TranslatableText;
@@ -29,8 +33,12 @@ public class KeyMacrosScreen extends MacroScreen {
             client.openScreen(new ProfileScreen(this));
         };
         
+        List<RawMacro> macros = new ArrayList<>(Profile.registry.getMacros().get("KEY").keySet()); 
+        
+        Collections.sort(macros, new RawMacro.sortRawMacro());
+        
         if (Profile.registry.getMacros().containsKey("KEY"))
-            for (RawMacro macro : Profile.registry.getMacros().get("KEY").keySet()) {
+            for (RawMacro macro : macros) {
                 if (macro.type != MacroEnum.EVENT) addMacro(macro);
             }
         

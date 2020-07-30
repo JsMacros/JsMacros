@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.config;
 
+import java.util.Comparator;
+
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 
 public class RawMacro {
@@ -20,5 +22,19 @@ public class RawMacro {
     
     public String toString() {
         return String.format("RawMacro:{\"type\": \"%s\", \"eventkey\": \"%s\", \"scriptFile\": \"%s\", \"enabled\": %b}", type.toString(), eventkey, scriptFile, enabled);
+    }
+    
+
+    public static class sortRawMacro implements Comparator<RawMacro> {
+
+        @Override
+        public int compare(RawMacro a, RawMacro b) {
+            if (a.enabled ^ b.enabled) {
+                return a.enabled ? -1 : 1;
+            } else {
+                return a.toString().compareTo(b.toString());
+            }
+        }
+        
     }
 }
