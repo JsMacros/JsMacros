@@ -7,12 +7,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+
+import org.apache.commons.io.IOUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -85,6 +88,10 @@ public class HTTPRequest {
         public Map<?, ?> json() {
             text();
             return gson.fromJson(text, HashMap.class);
+        }
+        
+        public byte[] byteArray() throws IOException {
+            return IOUtils.toByteArray(raw);
         }
     }
 }
