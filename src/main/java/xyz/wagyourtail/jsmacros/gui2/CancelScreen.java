@@ -32,7 +32,7 @@ public class CancelScreen extends Screen {
         super.init();
         topScroll = 10;
         running.clear();
-        s = this.addButton(new Scrollbar(width - 12, 5, 8, height-10, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
+        s = this.addButton(new Scrollbar(width - 12, 5, 8, height-10, 0, 0xFF000000, 0xFFFFFFFF, 1, this::onScrollbar));
     }
 
     public void addContainer(thread t) {

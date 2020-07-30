@@ -10,13 +10,19 @@ public class chatFunctions {
         if (message != null) {
             MinecraftClient mc = MinecraftClient.getInstance();
             LiteralText text = new LiteralText(message);
-            mc.inGameHud.getChatHud().addMessage(text, 0);
+            try {
+                mc.inGameHud.getChatHud().addMessage(text, 0);
+                //silently fail on removing messages if another thread broke this one...
+            } catch (IndexOutOfBoundsException e) {}
         }
     }
     
     private void logInternal(TextHelper text) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        mc.inGameHud.getChatHud().addMessage(text.getRaw(), 0);
+        try {
+            mc.inGameHud.getChatHud().addMessage(text.getRaw(), 0);
+            //silently fail on removing messages if another thread broke this one...
+        } catch (IndexOutOfBoundsException e) {}
     }
     
     // yay, auto type coercion.
