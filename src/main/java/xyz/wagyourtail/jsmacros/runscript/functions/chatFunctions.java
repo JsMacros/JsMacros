@@ -20,7 +20,7 @@ public class chatFunctions {
     }
     
     // yay, auto type coercion.
-    public void log(Object message) {
+    public synchronized void log(Object message) {
         if (message instanceof TextHelper) {
             this.logInternal((TextHelper)message);
         } else if (message != null) {

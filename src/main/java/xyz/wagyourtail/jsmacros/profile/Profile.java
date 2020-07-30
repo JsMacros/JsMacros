@@ -54,6 +54,10 @@ public class Profile {
         
         initEventHandlerCallbacks();
     }
+    
+    public MacroRegistry getRegistry() {
+        return registry;
+    }
 
     public void loadOrCreateProfile(String pName) {
         registry.clearMacros();
@@ -370,6 +374,16 @@ public class Profile {
     public void triggerMacroNoAnything(String macroname, Map<String, Object> args) {
         if (registry.macros.containsKey(macroname)) for (BaseMacro macro : registry.macros.get(macroname).values()) {
             macro.trigger(macroname, args);
+        }
+    }
+    
+    public void triggerMacroJoinNoAnything(String macroname, Map<String, Object> args) {
+        if (registry.macros.containsKey(macroname)) for (BaseMacro macro : registry.macros.get(macroname).values()) {
+            try {
+                Thread t = macro.trigger(macroname, args);
+                if (t != null) t.join();
+            } catch (InterruptedException e) {
+            }
         }
     }
 }
