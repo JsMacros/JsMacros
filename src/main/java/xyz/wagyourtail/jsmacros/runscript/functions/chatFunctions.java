@@ -1,11 +1,22 @@
 package xyz.wagyourtail.jsmacros.runscript.functions;
 
+import java.util.List;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
-public class chatFunctions {
+public class chatFunctions extends Functions {
+    
+    public chatFunctions(String libName) {
+        super(libName);
+    }
+    
+    public chatFunctions(String libName, List<String> excludeLanguages) {
+        super(libName, excludeLanguages);
+    }
+
     private void logInternal(String message) {
         if (message != null) {
             MinecraftClient mc = MinecraftClient.getInstance();

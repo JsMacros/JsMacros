@@ -11,10 +11,17 @@ import xyz.wagyourtail.jsmacros.runscript.classes.Screen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 
-public class hudFunctions {
+public class hudFunctions extends Functions {
     public static List<Draw2D> overlays = new ArrayList<>();
     public static List<Draw3D> renders = new ArrayList<>();
     
+    public hudFunctions(String libName) {
+        super(libName);
+    }
+    
+    public hudFunctions(String libName, List<String> excludeLanguages) {
+        super(libName, excludeLanguages);
+    }
     
     public Screen createScreen(String title, boolean dirtBG) {
         return new Screen(title, dirtBG);

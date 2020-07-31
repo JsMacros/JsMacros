@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.runscript.functions;
 
+import java.util.List;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -11,7 +13,16 @@ import xyz.wagyourtail.jsmacros.reflector.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.EntityHelper;
 import xyz.wagyourtail.jsmacros.runscript.classes.Inventory;
 
-public class playerFunctions {
+public class playerFunctions extends Functions {
+    
+    public playerFunctions(String libName) {
+        super(libName);
+    }
+    
+    public playerFunctions(String libName, List<String> excludeLanguages) {
+        super(libName, excludeLanguages);
+    }
+    
     public Inventory openInventory() {
         return new Inventory();
     }

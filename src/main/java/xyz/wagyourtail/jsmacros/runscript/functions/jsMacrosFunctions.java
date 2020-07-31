@@ -15,8 +15,16 @@ import xyz.wagyourtail.jsmacros.reflector.OptionsHelper;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 import xyz.wagyourtail.jsmacros.runscript.RunScript.thread;
 
-public class jsMacrosFunctions {
+public class jsMacrosFunctions extends Functions {
 
+    public jsMacrosFunctions(String libName) {
+        super(libName);
+    }
+    
+    public jsMacrosFunctions(String libName, List<String> excludeLanguages) {
+        super(libName, excludeLanguages);
+    }
+    
     public MinecraftClient getMinecraft() {
         return MinecraftClient.getInstance();
     }

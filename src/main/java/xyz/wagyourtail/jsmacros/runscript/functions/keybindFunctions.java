@@ -1,11 +1,20 @@
 package xyz.wagyourtail.jsmacros.runscript.functions;
 
+import java.util.List;
+
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.InputUtil.Key;
 
-public class keybindFunctions {
+public class keybindFunctions extends Functions {
     
+    public keybindFunctions(String libName) {
+        super(libName);
+    }
+    
+    public keybindFunctions(String libName, List<String> excludeLanguages) {
+        super(libName, excludeLanguages);
+    }
     
     public Key getKeyCode(String keyName) {
         try {

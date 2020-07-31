@@ -1,10 +1,20 @@
 package xyz.wagyourtail.jsmacros.runscript.functions;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class globalVarFunctions {
-	public static Map<String, Object> globalRaw = new HashMap<>();
+public class globalVarFunctions extends Functions {
+    public static Map<String, Object> globalRaw = new HashMap<>();
+	
+    public globalVarFunctions(String libName) {
+        super(libName);
+    }
+    
+    public globalVarFunctions(String libName, List<String> excludeLanguages) {
+        super(libName, excludeLanguages);
+    }
+    
 	public void putInt(String name, int i) {
 		globalRaw.put(name, Integer.valueOf(i));
 	}

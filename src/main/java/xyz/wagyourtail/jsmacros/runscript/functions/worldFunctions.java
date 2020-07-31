@@ -40,7 +40,16 @@ import xyz.wagyourtail.jsmacros.reflector.EntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.PlayerListEntryHelper;
 
-public class worldFunctions {
+public class worldFunctions extends Functions {
+    
+    public worldFunctions(String libName) {
+        super(libName);
+    }
+    
+    public worldFunctions(String libName, List<String> excludeLanguages) {
+        super(libName, excludeLanguages);
+    }
+    
     public List<PlayerEntityHelper> getLoadedPlayers() {
         MinecraftClient mc = MinecraftClient.getInstance();
         List<PlayerEntityHelper> players = new ArrayList<>();

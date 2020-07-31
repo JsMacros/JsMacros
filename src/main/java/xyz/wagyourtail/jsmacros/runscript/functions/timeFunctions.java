@@ -1,6 +1,17 @@
 package xyz.wagyourtail.jsmacros.runscript.functions;
 
-public class timeFunctions {
+import java.util.List;
+
+public class timeFunctions extends Functions {
+    
+    public timeFunctions(String libName) {
+        super(libName);
+    }
+    
+    public timeFunctions(String libName, List<String> excludeLanguages) {
+        super(libName, excludeLanguages);
+    }
+    
     public long time() {
         return System.currentTimeMillis();
     }

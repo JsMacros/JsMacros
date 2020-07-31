@@ -2,13 +2,23 @@ package xyz.wagyourtail.jsmacros.runscript.functions;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import com.google.common.io.Files;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.runscript.classes.FileHandler;
 
-public class fsFunctions {
+public class fsFunctions extends Functions {
+
+    public fsFunctions(String libName) {
+        super(libName);
+    }
+    
+    public fsFunctions(String libName, List<String> excludeLanguages) {
+        super(libName, excludeLanguages);
+    }
+
     public String[] list(String path) {
         return new File(jsMacros.config.macroFolder, path).list();
     }
