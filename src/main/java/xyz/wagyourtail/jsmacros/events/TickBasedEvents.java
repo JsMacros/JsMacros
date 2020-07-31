@@ -59,7 +59,7 @@ public class TickBasedEvents {
                     if (areEqualIgnoreDamage(newMainHand, mainHand)) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newMainHand), newMainHand.getDamage());
                     }
-                    HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(newMainHand), false);
+                    HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(newMainHand), new ItemStackHelper(mainHand), false);
                     mainHand = newMainHand.copy();
                 }
                 
@@ -68,7 +68,7 @@ public class TickBasedEvents {
                     if (areEqualIgnoreDamage(newOffHand, offHand)) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newOffHand), newOffHand.getDamage());
                     }
-                    HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(newOffHand), true);
+                    HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(newOffHand), new ItemStackHelper(offHand), true);
                     offHand = newOffHand.copy();
                 }
                 
@@ -77,7 +77,7 @@ public class TickBasedEvents {
                     if (areEqualIgnoreDamage(newHeadArmor, headArmor)) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newHeadArmor), newHeadArmor.getDamage());
                     }
-                    ArmorChangeCallback.EVENT.invoker().interact("HEAD", new ItemStackHelper(newHeadArmor));
+                    ArmorChangeCallback.EVENT.invoker().interact("HEAD", new ItemStackHelper(newHeadArmor), new ItemStackHelper(headArmor));
                     headArmor = newHeadArmor.copy();
                 }
                 
@@ -86,7 +86,7 @@ public class TickBasedEvents {
                     if (areEqualIgnoreDamage(newChestArmor, chestArmor)) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newChestArmor), newChestArmor.getDamage());
                     }
-                    ArmorChangeCallback.EVENT.invoker().interact("CHEST", new ItemStackHelper(newChestArmor));
+                    ArmorChangeCallback.EVENT.invoker().interact("CHEST", new ItemStackHelper(newChestArmor), new ItemStackHelper(chestArmor));
                     chestArmor = newChestArmor.copy();
                     
                 }
@@ -96,7 +96,7 @@ public class TickBasedEvents {
                     if (areEqualIgnoreDamage(newLegArmor, legArmor)) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newLegArmor), newLegArmor.getDamage());
                     }
-                    ArmorChangeCallback.EVENT.invoker().interact("LEGS", new ItemStackHelper(newLegArmor));
+                    ArmorChangeCallback.EVENT.invoker().interact("LEGS", new ItemStackHelper(newLegArmor), new ItemStackHelper(legArmor));
                     legArmor = newLegArmor.copy();
                 }
                 
@@ -105,7 +105,7 @@ public class TickBasedEvents {
                     if (areEqualIgnoreDamage(newFootArmor, footArmor)) {
                         ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newFootArmor), newFootArmor.getDamage());
                     }
-                    ArmorChangeCallback.EVENT.invoker().interact("FEET", new ItemStackHelper(newFootArmor));
+                    ArmorChangeCallback.EVENT.invoker().interact("FEET", new ItemStackHelper(newFootArmor), new ItemStackHelper(footArmor));
                     footArmor = newFootArmor.copy();
                 }
             }

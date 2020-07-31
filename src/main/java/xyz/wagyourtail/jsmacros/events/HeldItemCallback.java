@@ -6,10 +6,10 @@ import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 
 public interface HeldItemCallback {
     Event<HeldItemCallback> EVENT = EventFactory.createArrayBacked(HeldItemCallback.class,
-            (listeners) -> (slot, offhand) -> {
+            (listeners) -> (slot, oldSlot, offhand) -> {
                 for (HeldItemCallback event : listeners) {
-                    event.interact(slot, offhand);
+                    event.interact(slot, oldSlot, offhand);
                 }
             });
-    void interact(ItemStackHelper slot, boolean offhand);
+    void interact(ItemStackHelper slot, ItemStackHelper oldSlot, boolean offhand);
 }

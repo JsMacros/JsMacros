@@ -313,9 +313,10 @@ public class Profile {
         
         // ----- HELD ITEM ----- //
         registry.addEvent("HELD_ITEM");
-        HeldItemCallback.EVENT.register((item, offhand) -> {
+        HeldItemCallback.EVENT.register((item, oldItem, offhand) -> {
             Map<String, Object> args = new HashMap<>();
             args.put("item", item);
+            args.put("oldItem", oldItem);
             args.put("offhand", offhand);
             
             triggerMacro("HELD_ITEM", args);
@@ -323,9 +324,10 @@ public class Profile {
 
         // ---- ARMOR CHANGE ---- //
         registry.addEvent("ARMOR_CHANGE");
-        ArmorChangeCallback.EVENT.register((slot, item) -> {
+        ArmorChangeCallback.EVENT.register((slot, item, oldItem) -> {
             Map<String, Object> args = new HashMap<>();
             args.put("item", item);
+            args.put("oldItem", oldItem);
             args.put("slot", slot);
             
             triggerMacro("ARMOR_CHANGE", args);
