@@ -157,4 +157,9 @@ public class worldFunctions {
         }
         return out;
     }
+    
+    public boolean isChunkLoaded(int chunkX, int chunkZ) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        return mc.world.getChunkManager().isChunkLoaded(chunkX, chunkZ);
+    }
 }
