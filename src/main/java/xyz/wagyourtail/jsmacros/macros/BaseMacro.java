@@ -5,7 +5,7 @@ import java.util.Map;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 
-public abstract class BaseMacro {
+public abstract class BaseMacro implements IEventListener {
     private final RawMacro macro;
     
     public BaseMacro(RawMacro macro) {
@@ -27,8 +27,6 @@ public abstract class BaseMacro {
         }
         return null;
     }
-    
-    public abstract Thread trigger(String type, Map<String, Object> args);
     
     public String toString() {
         return macro.toString().substring(3);

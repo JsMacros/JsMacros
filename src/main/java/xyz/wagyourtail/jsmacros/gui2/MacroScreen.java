@@ -129,7 +129,7 @@ public class MacroScreen extends Screen {
     }
     
     public void removeMacro(MacroContainer macro) {
-        Profile.registry.removeMacro(macro.getRawMacro());
+        Profile.registry.removeRawMacro(macro.getRawMacro());
         for (AbstractButtonWidget b : macro.getButtons()) {
             removeButton(b);
         }

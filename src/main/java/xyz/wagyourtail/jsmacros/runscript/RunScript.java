@@ -3,6 +3,8 @@ package xyz.wagyourtail.jsmacros.runscript;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +26,7 @@ import xyz.wagyourtail.jsmacros.runscript.functions.*;
 public class RunScript {
     public static Map<RawMacro, List<thread>> threads = new HashMap<>();
     public static List<Language> languages = new ArrayList<>();
-    public static Language js;
+    public static Language defaultLang;
     public static List<Functions> standardLib = new ArrayList<>();
 
     static {
@@ -44,7 +46,7 @@ public class RunScript {
 
 
         // -------------------- JAVASCRIPT -------------------------- //
-        js = new Language() {
+        Language js = new Language() {
             @Override
             public Thread exec(RawMacro macro, String event, Map<String, Object> args, Runnable then,
                 Consumer<String> catcher) {
@@ -110,8 +112,8 @@ public class RunScript {
                 return ".js";
             }
         };
-        languages.add(js);
-
+        addLanguage(js);
+        defaultLang = js;
 
         // ------------------- JYTHON ------------------------ //
         Language jython = new Language() {
@@ -173,7 +175,7 @@ public class RunScript {
                 return jsMacros.config.options.enableJEP ? "jython.py" : ".py";
             }
         };
-        languages.add(jython);
+        addLanguage(jython);
 
 
         // -------------------- JEP -------------------------- //
@@ -235,10 +237,20 @@ public class RunScript {
                     return ".py";
                 }
             };
-            languages.add(jep);
+            addLanguage(jep);
         }
+        sortLanguages();
     }
 
+    public static void addLanguage(Language l) {
+        languages.add(l);
+    }
+    
+    public static void sortLanguages() {
+        Collections.sort(languages, new sortLanguage());
+        
+    }
+    
     public static List<thread> getThreads() {
         List<thread> th = new ArrayList<>();
         for (List<thread> tl : threads.values()) {
@@ -263,7 +275,7 @@ public class RunScript {
             if (macro.scriptFile.endsWith(language.extension()))
                 return language.exec(macro, event, args, then, catcher);
         }
-        return js.exec(macro, event, args, then, catcher);
+        return defaultLang.exec(macro, event, args, then, catcher);
     }
 
     public static class thread {
@@ -287,5 +299,15 @@ public class RunScript {
             Consumer<String> catcher);
 
         public String extension();
+    }
+    
+    public static class sortLanguage implements Comparator<Language> {
+
+        @Override
+        public int compare(Language a, Language b) {
+            if (b.extension().endsWith(a.extension())) return 1;
+            return -1;
+        }
+        
     }
 }

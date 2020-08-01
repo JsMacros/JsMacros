@@ -4,7 +4,8 @@ import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.gui2.containers.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.gui2.containers.MacroContainer;
-import xyz.wagyourtail.jsmacros.macros.MacroEnum;
+import xyz.wagyourtail.jsmacros.macros.BaseMacro;
+import xyz.wagyourtail.jsmacros.macros.IEventListener;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
 import java.util.ArrayList;
@@ -33,14 +34,18 @@ public class KeyMacrosScreen extends MacroScreen {
             client.openScreen(new ProfileScreen(this));
         };
         
-        List<RawMacro> macros = new ArrayList<>(Profile.registry.getMacros().get("KEY").keySet()); 
+        List<IEventListener> listeners = Profile.registry.getListeners().get("KEY");
+        List<RawMacro> macros = new ArrayList<>();
+        
+        for (IEventListener event : listeners) {
+            if (event instanceof BaseMacro) macros.add(((BaseMacro) event).getRawMacro());
+        }
         
         Collections.sort(macros, new RawMacro.sortRawMacro());
         
-        if (Profile.registry.getMacros().containsKey("KEY"))
-            for (RawMacro macro : macros) {
-                if (macro.type != MacroEnum.EVENT) addMacro(macro);
-            }
+        for (RawMacro macro : macros) {
+            addMacro(macro);
+        }
         
         if (jsMacros.jythonFailed) {
             this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.jythonfail"), this::addButton, this::removeButton, this::closeOverlay, (conf) -> {

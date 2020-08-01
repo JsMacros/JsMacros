@@ -59,9 +59,9 @@ public class MacroContainer extends MultiElementContainer {
         super.init();
         int w = width - 12;
         enableBtn = (Button) addButton(new Button(x + 1, y + 1, w / 12 - 1, height - 2, macro.enabled ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"), (btn) -> {
-            Profile.registry.removeMacro(macro);
+            Profile.registry.removeRawMacro(macro);
             macro.enabled = !macro.enabled;
-            Profile.registry.addMacro(macro);
+            Profile.registry.addRawMacro(macro);
             btn.setColor(macro.enabled ? 0x7000FF00 : 0x70FF0000);
             btn.setMessage(new TranslatableText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"));
         }));
@@ -77,7 +77,7 @@ public class MacroContainer extends MultiElementContainer {
             }
         }));
         if (macro.type != MacroEnum.EVENT) keyStateBtn = (Button) addButton(new Button(x + w / 4 - height, y + 1, height, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText(""), (btn) -> {
-            Profile.registry.removeMacro(macro);
+            Profile.registry.removeRawMacro(macro);
             switch(macro.type) {
             default:
             case KEY_RISING:
@@ -90,7 +90,7 @@ public class MacroContainer extends MultiElementContainer {
                 macro.type = MacroEnum.KEY_RISING;
                 break;
             }
-            Profile.registry.addMacro(macro);
+            Profile.registry.addRawMacro(macro);
         }));
 
         fileBtn = (Button) addButton(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("./"+macro.scriptFile.replaceAll("\\\\", "/")), (btn) -> {
@@ -107,16 +107,16 @@ public class MacroContainer extends MultiElementContainer {
     }
     
     public void setEventType(String type) {
-        Profile.registry.removeMacro(macro);
+        Profile.registry.removeRawMacro(macro);
         macro.eventkey = type;
-        Profile.registry.addMacro(macro);
+        Profile.registry.addRawMacro(macro);
         keyBtn.setMessage(new LiteralText(macro.eventkey));
     }
     
     public void setFile(File f) {
-        Profile.registry.removeMacro(macro);
+        Profile.registry.removeRawMacro(macro);
         macro.scriptFile = f.getAbsolutePath().substring(jsMacros.config.macroFolder.getAbsolutePath().length()+1);
-        Profile.registry.addMacro(macro);
+        Profile.registry.addRawMacro(macro);
         fileBtn.setMessage(new LiteralText("./"+macro.scriptFile.replaceAll("\\\\", "/")));
     }
 
@@ -152,9 +152,9 @@ public class MacroContainer extends MultiElementContainer {
     }
     
     public void setKey(String translationKeys) {
-        Profile.registry.removeMacro(macro);
+        Profile.registry.removeRawMacro(macro);
         macro.eventkey = translationKeys;
-        Profile.registry.addMacro(macro);
+        Profile.registry.addRawMacro(macro);
         keyBtn.setMessage(buildKeyName(translationKeys));
         selectkey = false;
     }

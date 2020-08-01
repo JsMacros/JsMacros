@@ -1,6 +1,8 @@
 package xyz.wagyourtail.jsmacros.gui2;
 
 import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.macros.BaseMacro;
+import xyz.wagyourtail.jsmacros.macros.IEventListener;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
@@ -34,14 +36,14 @@ public class EventMacrosScreen extends MacroScreen {
         List<RawMacro> macros = new ArrayList<>();
         
         for (String event : Profile.registry.events) {
-            if (Profile.registry.getMacros().containsKey(event))
-                for (RawMacro macro : Profile.registry.getMacros().get(event).keySet()) {
-                    if (macro.type == MacroEnum.EVENT) macros.add(macro);
+            if (Profile.registry.getListeners().containsKey(event))
+                for (IEventListener macro : Profile.registry.getListeners().get(event)) {
+                    if (macro instanceof BaseMacro && ((BaseMacro) macro).getRawMacro().type == MacroEnum.EVENT) macros.add(((BaseMacro) macro).getRawMacro());
                 }
         }
-        if (Profile.registry.getMacros().containsKey(""))
-            for (RawMacro macro : Profile.registry.getMacros().get("").keySet()) {
-                macros.add(macro);
+        if (Profile.registry.getListeners().containsKey(""))
+            for (IEventListener macro : Profile.registry.getListeners().get("")) {
+                if (macro instanceof BaseMacro) macros.add(((BaseMacro) macro).getRawMacro());
             }
         
         Collections.sort(macros, new RawMacro.sortRawMacro());

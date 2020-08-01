@@ -18,11 +18,12 @@ import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.events.*;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
+import xyz.wagyourtail.jsmacros.macros.IEventListener;
 import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
 public class Profile {
     public String profileName;
-    public static MacroRegistry registry = new MacroRegistry();
+    public static EventRegistry registry = new EventRegistry();
     private static KeyBinding keyBinding;
 
     public Profile(String defaultProfile) {
@@ -35,7 +36,7 @@ public class Profile {
         initEventHandlerCallbacks();
     }
     
-    public MacroRegistry getRegistry() {
+    public EventRegistry getRegistry() {
         return registry;
     }
 
@@ -59,7 +60,7 @@ public class Profile {
         }
         profileName = pName;
         for (RawMacro rawmacro : rawProfile) {
-            registry.addMacro(rawmacro);
+            registry.addRawMacro(rawmacro);
         }
 
         Map<String, Object> args = new HashMap<>();
@@ -69,29 +70,24 @@ public class Profile {
         return true;
     }
 
+    @Deprecated
     public List<RawMacro> toRawProfile() {
-        List<RawMacro> rawProf = new ArrayList<>();
-        for (Map<RawMacro, BaseMacro> eventMacros : registry.macros.values()) {
-            for (RawMacro macro : eventMacros.keySet()) {
-                rawProf.add(macro);
-            }
-        }
-        return rawProf;
+        return registry.getRawMacros();
     }
 
     public void saveProfile() {
-        jsMacros.config.options.profiles.put(profileName, toRawProfile());
+        jsMacros.config.options.profiles.put(profileName, registry.getRawMacros());
         jsMacros.config.saveConfig();
     }
 
     @Deprecated
     public void addMacro(RawMacro rawmacro) {
-        registry.addMacro(rawmacro);
+        registry.addRawMacro(rawmacro);
     }
 
     @Deprecated
     public void removeMacro(RawMacro rawmacro) {
-        if (toRawProfile().contains(rawmacro) && rawmacro != null) registry.removeMacro(rawmacro);
+        if (toRawProfile().contains(rawmacro) && rawmacro != null) registry.removeRawMacro(rawmacro);
     }
 
     @Deprecated
@@ -100,7 +96,7 @@ public class Profile {
     }
 
     @Deprecated
-    public Map<String, Map<RawMacro, BaseMacro>> getMacros() {
+    public Map<String, List<IEventListener>> getMacros() {
         return registry.macros;
     }
 
@@ -341,17 +337,17 @@ public class Profile {
     }
     
     public void triggerMacro(String macroname, Map<String, Object> args) {
-        if (registry.macros.containsKey(macroname)) for (BaseMacro macro : registry.macros.get(macroname).values()) {
+        if (registry.macros.containsKey(macroname)) for (IEventListener macro : registry.macros.get(macroname)) {
             macro.trigger(macroname, args);
         }
 
-        if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
+        if (registry.macros.containsKey("ANYTHING")) for (IEventListener macro : registry.macros.get("ANYTHING")) {
             macro.trigger(macroname, args);
         }
     }
     
     public void triggerMacroJoin(String macroname, Map<String, Object> args) {
-        if (registry.macros.containsKey(macroname)) for (BaseMacro macro : registry.macros.get(macroname).values()) {
+        if (registry.macros.containsKey(macroname)) for (IEventListener macro : registry.macros.get(macroname)) {
             try {
                 Thread t = macro.trigger(macroname, args);
                 if (t != null) t.join();
@@ -359,7 +355,7 @@ public class Profile {
             }
         }
 
-        if (registry.macros.containsKey("ANYTHING")) for (BaseMacro macro : registry.macros.get("ANYTHING").values()) {
+        if (registry.macros.containsKey("ANYTHING")) for (IEventListener macro : registry.macros.get("ANYTHING")) {
             try {
                 Thread t = macro.trigger(macroname, args);
                 if (t != null) t.join();
@@ -369,13 +365,13 @@ public class Profile {
     }
     
     public void triggerMacroNoAnything(String macroname, Map<String, Object> args) {
-        if (registry.macros.containsKey(macroname)) for (BaseMacro macro : registry.macros.get(macroname).values()) {
+        if (registry.macros.containsKey(macroname)) for (IEventListener macro : registry.macros.get(macroname)) {
             macro.trigger(macroname, args);
         }
     }
     
     public void triggerMacroJoinNoAnything(String macroname, Map<String, Object> args) {
-        if (registry.macros.containsKey(macroname)) for (BaseMacro macro : registry.macros.get(macroname).values()) {
+        if (registry.macros.containsKey(macroname)) for (IEventListener macro : registry.macros.get(macroname)) {
             try {
                 Thread t = macro.trigger(macroname, args);
                 if (t != null) t.join();
