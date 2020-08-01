@@ -21,6 +21,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.network.packet.c2s.play.UpdateSignC2SPacket;
+import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.compat.interfaces.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.events.AirChangeCallback;
 import xyz.wagyourtail.jsmacros.events.DamageCallback;
@@ -52,8 +53,13 @@ class jsmacros_ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
     public void openEditSignScreen(SignBlockEntity sign, CallbackInfo info) {
         List<String> lines = new ArrayList<String>(Arrays.asList(new String[]{"", "", "", ""}));
         if (SignEditCallback.EVENT.invoker().interact(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ())) {
+            for (int i = 0; i < 4; ++i) {
+                sign.setTextOnRow(i, new LiteralText(lines.get(i)));
+            }
+            sign.markDirty();
             networkHandler.sendPacket(new UpdateSignC2SPacket(sign.getPos(), lines.get(0), lines.get(1), lines.get(2), lines.get(3)));
             info.cancel();
+            return;
         }
         //this part to not info.cancel is here for more compatibility with other mods.
         boolean cancel = false;
