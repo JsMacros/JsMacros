@@ -9,6 +9,7 @@
         "jsmacros_WorldRendererMixin",
         "jsmacros_HandledScreenMixin",
         "jsmacros_HorseScreenMixin",
+        "jsmacros_SignEditScreenMixin",
         "jsmacros_BossBarHudMixin"
     ],
     "injectors": {

@@ -323,6 +323,21 @@ public class Profile {
             
             triggerMacro("BOSSBAR_UPDATE", args);
         });
+        
+        // ---- SIGN EDIT ------ //
+        registry.addEvent("SIGN_EDIT");
+        SignEditCallback.EVENT.register((lines, x, y, z) -> {
+            Map<String, Object> args = new HashMap<>();
+            args.put("lines", lines);
+            args.put("x", x);
+            args.put("y", y);
+            args.put("z", z);
+            args.put("close", false);
+            
+            triggerMacroJoinNoAnything("SIGN_EDIT", args);
+            
+            return (boolean) args.get("close");
+        });
     }
     
     public void triggerMacro(String macroname, Map<String, Object> args) {

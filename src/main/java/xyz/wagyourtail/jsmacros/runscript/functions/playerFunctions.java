@@ -6,8 +6,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
+
+import xyz.wagyourtail.jsmacros.compat.interfaces.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.reflector.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.reflector.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.EntityHelper;
@@ -51,5 +54,17 @@ public class playerFunctions extends Functions {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.targetedEntity != null) return new EntityHelper(mc.targetedEntity);
         else return null;
+    }
+    
+    public boolean writeSign(String l1, String l2, String l3, String l4) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        if (mc.currentScreen instanceof SignEditScreen) {
+            ((ISignEditScreen)mc.currentScreen).setLine(0, l1);
+            ((ISignEditScreen)mc.currentScreen).setLine(1, l2);
+            ((ISignEditScreen)mc.currentScreen).setLine(2, l3);
+            ((ISignEditScreen)mc.currentScreen).setLine(3, l4);
+            return true;
+        }
+        return false;
     }
 }
