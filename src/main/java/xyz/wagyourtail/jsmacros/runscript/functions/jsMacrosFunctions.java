@@ -125,7 +125,7 @@ public class jsMacrosFunctions extends Functions {
         for (IEventListener l : Profile.registry.getListeners(event)) {
             if (!(l instanceof BaseMacro)) listeners.add(l);
         }
-        return null;
+        return listeners;
     }
     
     public String getFPS() {
