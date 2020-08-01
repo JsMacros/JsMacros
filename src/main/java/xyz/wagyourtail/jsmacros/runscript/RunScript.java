@@ -48,63 +48,35 @@ public class RunScript {
         // -------------------- JAVASCRIPT -------------------------- //
         Language js = new Language() {
             @Override
-            public Thread exec(RawMacro macro, String event, Map<String, Object> args, Runnable then,
-                Consumer<String> catcher) {
-                Thread t = new Thread(() -> {
-                    threads.putIfAbsent(macro, new ArrayList<>());
-                    Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile
-                        + ": " + threads.get(macro).size());
-                    thread th = new thread(Thread.currentThread(), macro, System.currentTimeMillis());
-                    threads.get(macro).add(th);
-                    try {
-                        File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
-                        if (file.exists()) {
+            public void exec(RawMacro macro, File file, String event, Map<String, Object> args) throws Exception {
+                // Build Context
 
-                            // Build Context
+                Builder build = Context.newBuilder("js");
+                build.allowHostAccess(HostAccess.ALL);
+                build.allowHostClassLookup(s -> true);
+                build.allowAllAccess(true);
+                build.allowExperimentalOptions(true);
+                build.currentWorkingDirectory(Paths.get(file.getParent()));
+                Context con = build.build();
 
-                            Builder build = Context.newBuilder("js");
-                            build.allowHostAccess(HostAccess.ALL);
-                            build.allowHostClassLookup(s -> true);
-                            build.allowAllAccess(true);
-                            build.allowExperimentalOptions(true);
-                            build.currentWorkingDirectory(Paths.get(file.getParent()));
-                            Context con = build.build();
+                // Set Bindings
 
-                            // Set Bindings
+                Value binds = con.getBindings("js");
+                // ScriptEngine engine = GraalJSScriptEngine.create(null, build);
+                binds.putMember("event", event);
+                binds.putMember("args", args);
+                binds.putMember("file", file);
 
-                            Value binds = con.getBindings("js");
-                            // ScriptEngine engine = GraalJSScriptEngine.create(null, build);
-                            binds.putMember("event", event);
-                            binds.putMember("args", args);
-                            binds.putMember("file", file);
-
-                            for (Functions f : standardLib) {
-                                if (!f.excludeLanguages.contains(".js")) {
-                                    binds.putMember(f.libName, f);
-                                }
-                            }
-
-                            // Run Script
-
-                            con.eval("js", "load(\"./" + file.getName() + "\")");
-                            if (then != null) then.run();
-                            // engine.eval(new FileReader(file));
-                        }
-                    } catch (Exception e) {
-                        MinecraftClient mc = MinecraftClient.getInstance();
-                        if (mc.inGameHud != null) {
-                            LiteralText text = new LiteralText(e.toString());
-                            mc.inGameHud.getChatHud().addMessage(text, 0);
-                        }
-                        if (catcher != null) catcher.accept(e.toString());
-                        e.printStackTrace();
+                for (Functions f : standardLib) {
+                    if (!f.excludeLanguages.contains(".js")) {
+                        binds.putMember(f.libName, f);
                     }
-                    removeThread(th);
-                });
+                }
 
+                // Run Script
 
-                t.start();
-                return t;
+                con.eval("js", "load(\"./" + file.getName() + "\")");
+                            
             }
 
             @Override
@@ -118,56 +90,24 @@ public class RunScript {
         // ------------------- JYTHON ------------------------ //
         Language jython = new Language() {
             @Override
-            public Thread exec(RawMacro macro, String event, Map<String, Object> args, Runnable then,
-                Consumer<String> catcher) {
-                Thread t = new Thread(() -> {
-                    threads.putIfAbsent(macro, new ArrayList<>());
-                    Thread.currentThread()
-                        .setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile + ": "
-                            + threads.get(macro).size());
-                    thread th = new thread(Thread.currentThread(), macro, System.currentTimeMillis());
-                    threads.get(macro).add(th);
-                    try (PythonInterpreter interp = new PythonInterpreter()) {
-                        File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
-                        if (file.exists()) {
-                            interp.set("event", event);
-                            interp.set("args", args);
-                            interp.set("file", file);
+            public void exec(RawMacro macro, File file, String event, Map<String, Object> args) throws Exception {
+                try (PythonInterpreter interp = new PythonInterpreter()) {
+                        interp.set("event", event);
+                        interp.set("args", args);
+                        interp.set("file", file);
 
-                            for (Functions f : standardLib) {
-                                if (!f.excludeLanguages.contains("jython.py")) {
-                                    interp.set(f.libName, f);
-                                }
-                            }
-
-                            interp.exec("import os\nos.chdir('"
-                                + file.getParentFile().getCanonicalPath().replaceAll("\\\\", "/") + "')");
-                            interp.execfile(file.getCanonicalPath());
-                            if (then != null) then.run();
-                        }
-                    } catch (Exception e) {
-                        if (e.getCause() instanceof ThreadDeath) {
-                            MinecraftClient mc = MinecraftClient.getInstance();
-                            if (mc.inGameHud != null) {
-                                mc.inGameHud.getChatHud().addMessage(
-                                    new LiteralText("Jython exception: java.lang.ThreadDeath"),
-                                    0);
-                            }
-                        } else {
-                            MinecraftClient mc = MinecraftClient.getInstance();
-                            if (mc.inGameHud != null) {
-                                LiteralText text = new LiteralText(e.toString());
-                                mc.inGameHud.getChatHud().addMessage(text, 0);
+                        for (Functions f : standardLib) {
+                            if (!f.excludeLanguages.contains("jython.py")) {
+                                interp.set(f.libName, f);
                             }
                         }
-                        if (catcher != null) catcher.accept(e.toString());
-                        e.printStackTrace();
-                    }
-                    removeThread(th);
-                });
 
-                t.start();
-                return t;
+                        interp.exec("import os\nos.chdir('"
+                            + file.getParentFile().getCanonicalPath().replaceAll("\\\\", "/") + "')");
+                        interp.execfile(file.getCanonicalPath());
+                } catch (Exception e) {
+                    throw e;
+                }
             }
 
             @Override
@@ -182,54 +122,24 @@ public class RunScript {
         if (jsMacros.config.options.enableJEP) {
             Language jep = new Language() {
                 @Override
-                public Thread exec(RawMacro macro, String event, Map<String, Object> args, Runnable then,
-                    Consumer<String> catcher) {
-                    Thread t = new Thread(() -> {
-                        threads.putIfAbsent(macro, new ArrayList<>());
-                        Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " "
-                            + macro.scriptFile + ": " + threads.get(macro).size());
-                        thread th = new thread(Thread.currentThread(), macro, System.currentTimeMillis());
-                        threads.get(macro).add(th);
-                        try (SharedInterpreter interp = new SharedInterpreter()) {
-                            File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
-                            if (file.exists()) {
-                                interp.set("event", (Object) event);
-                                interp.set("args", args);
-                                interp.set("file", file);
+                public void exec(RawMacro macro, File file, String event, Map<String, Object> args) throws Exception {
+                    try (SharedInterpreter interp = new SharedInterpreter()) {
+                        interp.set("event", (Object) event);
+                        interp.set("args", args);
+                        interp.set("file", file);
 
-                                for (Functions f : standardLib) {
-                                    if (!f.excludeLanguages.contains(".py")) {
-                                        interp.set(f.libName, f);
-                                    }
-                                }
-
-                                interp.exec("import os\nos.chdir('"
-                                    + file.getParentFile().getCanonicalPath().replaceAll("\\\\", "/") + "')");
-                                interp.runScript(file.getCanonicalPath());
-                                if (then != null) then.run();
+                        for (Functions f : standardLib) {
+                            if (!f.excludeLanguages.contains(".py")) {
+                                interp.set(f.libName, f);
                             }
-                        } catch (Exception e) {
-                            if (e.getCause() instanceof ThreadDeath) {
-                                MinecraftClient mc = MinecraftClient.getInstance();
-                                if (mc.inGameHud != null) {
-                                    mc.inGameHud.getChatHud()
-                                        .addMessage(new LiteralText("JEP exception: java.lang.ThreadDeath"), 0);
-                                }
-                            } else {
-                                MinecraftClient mc = MinecraftClient.getInstance();
-                                if (mc.inGameHud != null) {
-                                    LiteralText text = new LiteralText(e.toString());
-                                    mc.inGameHud.getChatHud().addMessage(text, 0);
-                                }
-                            }
-                            if (catcher != null) catcher.accept(e.toString());
-                            e.printStackTrace();
                         }
-                        removeThread(th);
-                    });
 
-                    t.start();
-                    return t;
+                        interp.exec("import os\nos.chdir('"
+                            + file.getParentFile().getCanonicalPath().replaceAll("\\\\", "/") + "')");
+                        interp.runScript(file.getCanonicalPath());
+                    } catch(Exception e) {
+                        throw e;
+                    }
                 }
 
                 @Override
@@ -273,9 +183,9 @@ public class RunScript {
         Consumer<String> catcher) {
         for (Language language : languages) {
             if (macro.scriptFile.endsWith(language.extension()))
-                return language.exec(macro, event, args, then, catcher);
+                return language.trigger(macro, event, args, then, catcher);
         }
-        return defaultLang.exec(macro, event, args, then, catcher);
+        return defaultLang.trigger(macro, event, args, then, catcher);
     }
 
     public static class thread {
@@ -295,8 +205,41 @@ public class RunScript {
     }
 
     public static interface Language {
-        public Thread exec(RawMacro macro, String event, Map<String, Object> args, Runnable then,
-            Consumer<String> catcher);
+        
+        public default Thread trigger(RawMacro macro, String event, Map<String, Object> args, Runnable then,
+            Consumer<String> catcher) {
+            Thread t = new Thread(() -> {
+                RunScript.threads.putIfAbsent(macro, new ArrayList<>());
+                Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile
+                    + ": " + RunScript.threads.get(macro).size());
+                thread th = new thread(Thread.currentThread(), macro, System.currentTimeMillis());
+                RunScript.threads.get(macro).add(th);
+                try {
+                    File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
+                    if (file.exists()) {
+                        
+                        exec(macro, file, event, args);
+                        
+                        if (then != null) then.run();
+                    }
+                } catch (Exception e) {
+                    MinecraftClient mc = MinecraftClient.getInstance();
+                    if (mc.inGameHud != null) {
+                        LiteralText text = new LiteralText(e.toString());
+                        mc.inGameHud.getChatHud().addMessage(text, 0);
+                    }
+                    if (catcher != null) catcher.accept(e.toString());
+                    e.printStackTrace();
+                }
+                RunScript.removeThread(th);
+            });
+
+
+            t.start();
+            return t;
+        }
+        
+        public void exec(RawMacro macro, File file, String event, Map<String, Object> args) throws Exception;
 
         public String extension();
     }
