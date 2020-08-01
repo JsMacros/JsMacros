@@ -1,7 +1,9 @@
 package xyz.wagyourtail.jsmacros.runscript.functions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import net.minecraft.client.MinecraftClient;
@@ -9,6 +11,8 @@ import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.macros.BaseMacro;
+import xyz.wagyourtail.jsmacros.macros.IEventListener;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 import xyz.wagyourtail.jsmacros.reflector.OptionsHelper;
@@ -69,6 +73,61 @@ public class jsMacrosFunctions extends Functions {
         Util.getOperatingSystem().open(s);
     }
 
+    public IEventListener on(String event, BiConsumer<String, Map<String, Object>> callback) {
+        if (callback == null) return null;
+        String tname = Thread.currentThread().getName();
+        IEventListener listener = new IEventListener() {
+            @Override
+            public Thread trigger(String type, Map<String, Object> args) {
+                callback.accept(type, args);
+                return null;
+            }
+
+            @Override
+            public String toString() {
+                return String.format("EventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", tname, event);
+            }
+        };
+        Profile.registry.addListener(event, listener);
+        return listener;
+    }
+    
+    public IEventListener once(String event, BiConsumer<String, Map<String, Object>> callback) {
+        if (callback == null) return null;
+        String tname = Thread.currentThread().getName();
+        IEventListener listener = new IEventListener() {
+            @Override
+            public Thread trigger(String type, Map<String, Object> args) {
+                Profile.registry.removeListener(this);
+                callback.accept(type, args);
+                return null;
+            }
+            @Override
+            public String toString() {
+                return String.format("EventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", tname, event);
+            }
+            
+        };
+        Profile.registry.addListener(event, listener);
+        return listener;
+    }
+    
+    public boolean off(String event, IEventListener listener) {
+        return Profile.registry.removeListener(event, listener);
+    }
+    
+    public boolean off(IEventListener listener) {
+        return Profile.registry.removeListener(listener);
+    }
+    
+    public List<IEventListener> listeners(String event) {
+        List<IEventListener> listeners = new ArrayList<>();
+        for (IEventListener l : Profile.registry.getListeners(event)) {
+            if (!(l instanceof BaseMacro)) listeners.add(l);
+        }
+        return null;
+    }
+    
     public String getFPS() {
         MinecraftClient mc = MinecraftClient.getInstance();
         return mc.fpsDebugString;

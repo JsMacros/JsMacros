@@ -47,18 +47,18 @@ public class EventRegistry {
         macros.get(event).add(listener);
     }
     
-    public void removeListener(String event, IEventListener listener) {
+    public boolean removeListener(String event, IEventListener listener) {
         macros.putIfAbsent(event, new ArrayList<>());
-        macros.get(event).remove(listener);
+        return macros.get(event).remove(listener);
     }
     
-    public void removeListener(IEventListener listener) {
+    public boolean removeListener(IEventListener listener) {
         for (List<IEventListener> listeners : macros.values()) {
             if (listeners.contains(listener)) {
-                listeners.remove(listener);
-                return;
+                return listeners.remove(listener);
             }
         }
+        return false;
     }
     
     public boolean removeRawMacro(RawMacro rawmacro) {
