@@ -51,6 +51,7 @@ public class keybindFunctions extends Functions {
     }
     
     public void key(Key keyBind, boolean keyState) {
+        KeyBinding.onKeyPressed(keyBind);
         KeyBinding.setKeyPressed(keyBind, keyState);
     }
     
@@ -58,6 +59,7 @@ public class keybindFunctions extends Functions {
         MinecraftClient mc = MinecraftClient.getInstance();
         for (KeyBinding key : mc.options.keysAll) {
             if (key.getBoundKeyTranslationKey().equals(keyBind)) {
+                KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(key.getBoundKeyTranslationKey()));
                 key.setPressed(keyState);
                 return;
             }
@@ -65,6 +67,7 @@ public class keybindFunctions extends Functions {
     }
     
     public void key(KeyBinding keyBind, boolean keyState) {
+        KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(keyBind.getBoundKeyTranslationKey()));
         keyBind.setPressed(keyState);
     }
 }
