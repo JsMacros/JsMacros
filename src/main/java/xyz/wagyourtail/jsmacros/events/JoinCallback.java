@@ -2,16 +2,15 @@ package xyz.wagyourtail.jsmacros.events;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.server.network.ServerPlayerEntity;
+import xyz.wagyourtail.jsmacros.reflector.ClientPlayerEntityHelper;
 
 public interface JoinCallback {
     Event<JoinCallback> EVENT = EventFactory.createArrayBacked(JoinCallback.class, 
-        (listeners) -> (conn, player) -> {
+        (listeners) -> (address, player) -> {
             for (JoinCallback event : listeners) {
-                event.interact(conn, player);
+                event.interact(address, player);
             }
     });
     
-    void interact(ClientConnection conn, ServerPlayerEntity player);
+    void interact(String address, ClientPlayerEntityHelper player);
 }

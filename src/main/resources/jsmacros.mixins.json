@@ -6,7 +6,6 @@
 	"client": [
 		"jsmacros_KeyboardMixin",
 		"jsmacros_MouseMixin",
-		"jsmacros_PlayerManagerMixin",
 		"jsmacros_ScreenMixin",
 		"jsmacros_ChatHudMixin",
 		"jsmacros_ClientPlayerEntityMixin",

@@ -15,29 +15,9 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.ActionResult;
 import xyz.wagyourtail.jsmacros.jsMacros;
-import xyz.wagyourtail.jsmacros.config.*;
-import xyz.wagyourtail.jsmacros.events.AirChangeCallback;
-import xyz.wagyourtail.jsmacros.events.ArmorChangeCallback;
-import xyz.wagyourtail.jsmacros.events.BossBarCallback;
-import xyz.wagyourtail.jsmacros.events.DamageCallback;
-import xyz.wagyourtail.jsmacros.events.DeathCallback;
-import xyz.wagyourtail.jsmacros.events.DimensionChangeCallback;
-import xyz.wagyourtail.jsmacros.events.DisconnectCallback;
-import xyz.wagyourtail.jsmacros.events.HeldItemCallback;
-import xyz.wagyourtail.jsmacros.events.HungerChangeCallback;
-import xyz.wagyourtail.jsmacros.events.ItemDamageCallback;
-import xyz.wagyourtail.jsmacros.events.JoinCallback;
-import xyz.wagyourtail.jsmacros.events.KeyCallback;
-import xyz.wagyourtail.jsmacros.events.OpenScreenCallback;
-import xyz.wagyourtail.jsmacros.events.PlayerJoinCallback;
-import xyz.wagyourtail.jsmacros.events.PlayerLeaveCallback;
-import xyz.wagyourtail.jsmacros.events.RecieveMessageCallback;
-import xyz.wagyourtail.jsmacros.events.SendMessageCallback;
-import xyz.wagyourtail.jsmacros.events.SoundCallback;
-import xyz.wagyourtail.jsmacros.events.TickBasedEvents;
-import xyz.wagyourtail.jsmacros.events.TitleCallback;
+import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.events.*;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
-import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
 public class Profile {
@@ -129,10 +109,10 @@ public class Profile {
         
         // -------- JOIN ---------- //
         registry.addEvent("JOIN_SERVER");
-        JoinCallback.EVENT.register((conn, player) -> {
+        JoinCallback.EVENT.register((address, player) -> {
             Map<String, Object> args = new HashMap<>();
-            args.put("address", conn.getAddress().toString());
-            args.put("player", new PlayerEntityHelper(player));
+            args.put("address", address);
+            args.put("player", player);
 
             triggerMacro("JOIN_SERVER", args);
         });

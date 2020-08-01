@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
@@ -51,7 +52,7 @@ public class EntityHelper {
     
     public String getType() {
         if (e == null) return null;
-        return e.getType().toString();
+        return EntityType.getId(e.getType()).toString();
     }
     
     public boolean isGlowing() {

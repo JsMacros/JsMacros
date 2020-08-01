@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.events.mixins;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -8,18 +9,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.BossBarS2CPacket;
 import net.minecraft.network.packet.s2c.play.CombatEventS2CPacket;
+import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.Entry;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import xyz.wagyourtail.jsmacros.compat.interfaces.IBossBarHud;
 import xyz.wagyourtail.jsmacros.events.BossBarCallback;
 import xyz.wagyourtail.jsmacros.events.DeathCallback;
+import xyz.wagyourtail.jsmacros.events.JoinCallback;
 import xyz.wagyourtail.jsmacros.events.PlayerJoinCallback;
 import xyz.wagyourtail.jsmacros.events.PlayerLeaveCallback;
 import xyz.wagyourtail.jsmacros.events.TitleCallback;
 import xyz.wagyourtail.jsmacros.reflector.BossBarHelper;
+import xyz.wagyourtail.jsmacros.reflector.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
 @Mixin(ClientPlayNetworkHandler.class)
@@ -27,6 +33,11 @@ class jsmacros_ClientPlayNetworkHandler {
     
     @Shadow
     private MinecraftClient client;
+    @Shadow
+    private ClientWorld world;
+    @Shadow
+    @Final
+    private ClientConnection connection;
     
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;showsDeathScreen()Z"), method="onCombatEvent", cancellable = true)
     private void jsmacros_onDeath(final CombatEventS2CPacket packet, CallbackInfo info) {
@@ -97,6 +108,11 @@ class jsmacros_ClientPlayNetworkHandler {
         }
         
         BossBarCallback.EVENT.invoker().interact(type, packet.getUuid().toString(), packet.getType() == BossBarS2CPacket.Type.REMOVE ? null : new BossBarHelper(((IBossBarHud) client.inGameHud.getBossBarHud()).getBossBars().get(packet.getUuid())));
+    }
+    
+    @Inject(at = @At("TAIL"), method="onGameJoin")
+    public void jsmacros_onGameJoin(GameJoinS2CPacket packet, CallbackInfo info) {
+        JoinCallback.EVENT.invoker().interact(connection.getAddress().toString(), new ClientPlayerEntityHelper(client.player));
     }
 }
 

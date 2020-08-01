@@ -27,6 +27,7 @@ import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.ClientConnection;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -34,6 +35,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.compat.interfaces.IBossBarHud;
+import xyz.wagyourtail.jsmacros.compat.interfaces.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.reflector.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.reflector.BossBarHelper;
 import xyz.wagyourtail.jsmacros.reflector.EntityHelper;
@@ -41,7 +43,6 @@ import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.PlayerListEntryHelper;
 
 public class worldFunctions extends Functions {
-    
     public worldFunctions(String libName) {
         super(libName);
     }
@@ -169,6 +170,14 @@ public class worldFunctions extends Functions {
     
     public boolean isChunkLoaded(int chunkX, int chunkZ) {
         MinecraftClient mc = MinecraftClient.getInstance();
+        if (mc.world == null) return false;
         return mc.world.getChunkManager().isChunkLoaded(chunkX, chunkZ);
+    }
+    
+    public String getCurrentServerAddress() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        ClientConnection c = ((IMinecraftClient)mc).getConnection();
+        if (c == null) return null;
+        return c.getAddress().toString();
     }
 }
