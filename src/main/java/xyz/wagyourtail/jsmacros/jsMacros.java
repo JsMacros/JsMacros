@@ -77,21 +77,24 @@ public class jsMacros implements ClientModInitializer {
             con.eval("js", "console.log('js loaded.')");
             con.close();
             try {
+                jythonFailed = true;
+                try (PythonInterpreter interp = new PythonInterpreter()) {
+                    interp.exec("print('jython loaded.')");                    
+                } catch (Exception e) {
+                    throw e;
+                }
+                jythonFailed = false;
                 if (config.options.enableJEP) {
                     jepFailed = true;
                     JepConfig c = new JepConfig();
                     c.setRedirectOutputStreams(true);
                     SharedInterpreter.setConfig(c);
-                    SharedInterpreter interp = new SharedInterpreter();
-                    interp.exec("print('JEP Loaded.')");
-                    interp.close();
+                    try (SharedInterpreter interp1 = new SharedInterpreter()) {
+                        interp1.exec("print('JEP Loaded.')");
+                    } catch (Exception e) {
+                        throw e;
+                    }
                     jepFailed = false;
-                } else {
-                    jythonFailed = true;
-                    PythonInterpreter interp = new PythonInterpreter();
-                    interp.exec("print('jython loaded.')");
-                    interp.close();
-                    jythonFailed = false;
                 }
             } catch (Exception e) {
                 pythonFailStack = e.getStackTrace().toString();
