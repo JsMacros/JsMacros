@@ -18,17 +18,19 @@ import net.minecraft.client.render.WorldRenderer;
 public class jsmacros_WorldRendererMixin {
     @Inject(at = @At("TAIL"), method = "render")
     public void jsmacros_render(CallbackInfo info) {
-        
+
         List<Draw3D> renders;
-        
+
         try {
             renders = new ArrayList<>(hudFunctions.renders);
         } catch (Exception e) {
             return;
         }
-        
+
         for (Draw3D d : renders) {
-            d.render();
+            try {
+                d.render();
+            } catch (Exception e) {}
         }
     }
 }
