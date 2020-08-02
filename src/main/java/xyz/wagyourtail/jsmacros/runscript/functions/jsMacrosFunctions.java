@@ -9,12 +9,8 @@ import java.util.function.Consumer;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
-import net.minecraft.client.gui.screen.SaveLevelScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.network.ServerAddress;
-import net.minecraft.realms.RealmsBridge;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.ConfigManager;
@@ -194,22 +190,8 @@ public class jsMacrosFunctions extends Functions {
     
     public void disconnect() {
         MinecraftClient mc = MinecraftClient.getInstance();
-        boolean isSp = mc.isInSingleplayer();
-        boolean isRealms = mc.isConnectedToRealms();
-        mc.world.disconnect();
-        if (isSp) {
-           mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
-        } else {
-           mc.disconnect();
-        }
-
-        if (isSp) {
-           mc.openScreen(new TitleScreen());
-        } else if (isRealms) {
-           RealmsBridge realmsBridge = new RealmsBridge();
-           realmsBridge.switchToRealms(new TitleScreen());
-        } else {
-           mc.openScreen(new MultiplayerScreen(new TitleScreen()));
-        }
+        if (mc.world != null) mc.world.disconnect();
+        mc.joinWorld(null);
+        mc.openScreen(new TitleScreen());
     }
 }
