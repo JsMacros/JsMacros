@@ -79,8 +79,17 @@ public class jsMacrosFunctions extends Functions {
         IEventListener listener = new IEventListener() {
             @Override
             public Thread trigger(String type, Map<String, Object> args) {
-                callback.accept(type, args);
-                return null;
+                Thread t = new Thread(() -> {
+                    Thread.currentThread().setName(this.toString());
+                    try {
+                        callback.accept(type, args);                    
+                    } catch (Exception e) {
+                        Profile.registry.removeListener(this);
+                        e.printStackTrace();
+                    }
+                });
+                t.start();
+                return t;
             }
 
             @Override
@@ -99,8 +108,16 @@ public class jsMacrosFunctions extends Functions {
             @Override
             public Thread trigger(String type, Map<String, Object> args) {
                 Profile.registry.removeListener(this);
-                callback.accept(type, args);
-                return null;
+                Thread t = new Thread(() -> {
+                    Thread.currentThread().setName(this.toString());
+                    try {
+                        callback.accept(type, args);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+                t.start();
+                return t;
             }
             @Override
             public String toString() {
