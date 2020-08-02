@@ -24,7 +24,7 @@ import net.minecraft.text.TranslatableText;
 public class ProfileScreen extends Screen {
     private Screen parent;
     private int topScroll;
-    private ArrayList<ProfileContainer> profiles = new ArrayList<>();
+    private List<ProfileContainer> profiles = new ArrayList<>();
     private ProfileContainer selected;
     private Scrollbar profileScroll;
     private CheckBoxContainer disableInGui;
