@@ -1,11 +1,10 @@
 package xyz.wagyourtail.jsmacros.compat.mixins;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import com.google.common.collect.ImmutableList;
 
 import xyz.wagyourtail.jsmacros.runscript.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.runscript.functions.hudFunctions;
@@ -19,15 +18,7 @@ public class jsmacros_WorldRendererMixin {
     @Inject(at = @At("TAIL"), method = "render")
     public void jsmacros_render(CallbackInfo info) {
 
-        List<Draw3D> renders;
-
-        try {
-            renders = new ArrayList<>(hudFunctions.renders);
-        } catch (Exception e) {
-            return;
-        }
-
-        for (Draw3D d : renders) {
+        for (Draw3D d : ImmutableList.copyOf(hudFunctions.renders)) {
             try {
                 d.render();
             } catch (Exception e) {}

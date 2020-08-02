@@ -243,36 +243,20 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         
         this.drawCenteredText(matricies, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
         
-        List<TextFieldWidget> textFieldWidgets;
-        List<text> textFields;
-        List<rect> rectFields;
-        List<item> itemFields;
-        List<image> imageFields;
-        
-        try {
-            rectFields = ImmutableList.copyOf(this.rectFields);
-            itemFields = ImmutableList.copyOf(this.itemFields);
-            textFieldWidgets = ImmutableList.copyOf(this.textFieldWidgets);
-            textFields = ImmutableList.copyOf(this.textFields);
-            imageFields = ImmutableList.copyOf(this.imageFields);
-        } catch (Exception e) {
-            return;
-        }
-        
-        for (rect r : rectFields) {
+        for (rect r : ImmutableList.copyOf(this.rectFields)) {
             r.render(matricies);
         }
-        for (item i : itemFields) {
+        for (item i : ImmutableList.copyOf(this.itemFields)) {
             i.render(matricies);
         }
-        for (image i : imageFields) {
+        for (image i : ImmutableList.copyOf(this.imageFields)) {
             i.render(matricies);
         }
-        for (text t : textFields) {
+        for (text t : ImmutableList.copyOf(this.textFields)) {
             t.render(matricies);
         }
 
-        for (TextFieldWidget w : textFieldWidgets) {
+        for (TextFieldWidget w : ImmutableList.copyOf(this.textFieldWidgets)) {
             w.render(matricies, mouseX, mouseY, delta);
         }
         

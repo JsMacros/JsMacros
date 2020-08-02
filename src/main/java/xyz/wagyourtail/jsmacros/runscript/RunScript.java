@@ -16,6 +16,8 @@ import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.Value;
 import org.python.util.PythonInterpreter;
 
+import com.google.common.collect.ImmutableList;
+
 import jep.SharedInterpreter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
@@ -163,7 +165,7 @@ public class RunScript {
     
     public static List<thread> getThreads() {
         List<thread> th = new ArrayList<>();
-        for (List<thread> tl : threads.values()) {
+        for (List<thread> tl : ImmutableList.copyOf(threads.values())) {
             th.addAll(tl);
         }
         return th;

@@ -66,16 +66,6 @@ public class Draw3D {
     public void render() {
         MinecraftClient mc  = MinecraftClient.getInstance();
         
-        List<box> boxes;
-        List<line> lines;
-        
-        try {
-            boxes = ImmutableList.copyOf(this.boxes);
-            lines = ImmutableList.copyOf(this.lines);
-        } catch (Exception e) {
-            return;
-        }
-        
         //setup
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -94,11 +84,11 @@ public class Draw3D {
         RenderSystem.translated(-camPos.x, -camPos.y, -camPos.z);
         
         //render
-        for (box b : boxes) {
+        for (box b : ImmutableList.copyOf(this.boxes)) {
             b.render();
         }
         
-        for (line l : lines) {
+        for (line l : ImmutableList.copyOf(this.lines)) {
             l.render();
         }
         
