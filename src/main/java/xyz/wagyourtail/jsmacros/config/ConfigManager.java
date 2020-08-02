@@ -22,7 +22,7 @@ public class ConfigManager {
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public ConfigManager() {
-        options = new ConfigOptions(true, false, "./jep.dll", "default", new HashMap<>());
+        options = new ConfigOptions(true, "default", new HashMap<>());
         options.profiles.put("default", new ArrayList<>());
         options.profiles.get("default").add(new RawMacro(MacroEnum.KEY_RISING, "key.keyboard.j", "test.js", true));
         if (!macroFolder.exists()) {

@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.gui2;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
-import xyz.wagyourtail.jsmacros.gui2.containers.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.gui2.containers.MacroContainer;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
 import xyz.wagyourtail.jsmacros.macros.IEventListener;
@@ -14,7 +13,6 @@ import java.util.List;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.TranslatableText;
 
 public class KeyMacrosScreen extends MacroScreen {
     
@@ -45,12 +43,6 @@ public class KeyMacrosScreen extends MacroScreen {
         
         for (RawMacro macro : macros) {
             addMacro(macro);
-        }
-        
-        if (jsMacros.jythonFailed) {
-            this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.jythonfail"), this::addButton, this::removeButton, this::closeOverlay, (conf) -> {
-                jsMacros.jythonFailed = false;
-            }));
         }
     }
 

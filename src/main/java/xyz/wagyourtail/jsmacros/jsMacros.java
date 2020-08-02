@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -11,17 +10,9 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.apache.commons.io.FileUtils;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
-import org.python.util.PythonInterpreter;
 
-import jep.JepConfig;
-import jep.SharedInterpreter;
 import xyz.wagyourtail.jsmacros.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 import xyz.wagyourtail.jsmacros.gui2.KeyMacrosScreen;
@@ -31,41 +22,14 @@ public class jsMacros implements ClientModInitializer {
     public static ConfigManager config = new ConfigManager();
     public static Profile profile;
     public static KeyMacrosScreen keyMacrosScreen;
-    public static boolean jythonFailed = false;
-    public static boolean jepFailed = false;
     public static String pythonFailStack;
     
     @Override
     public void onInitializeClient() {
         
-        //janky hack mate
-        try {
-            if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
-                InputStream f = this.getClass().getClassLoader().getResourceAsStream("META-INF/jars/jython-standalone-2.7.2.jar");
-                File fi = new File(FabricLoader.getInstance().getGameDirectory(), "mods/jython-standalone-2.7.2.jar");
-                if (!fi.exists()) FileUtils.copyInputStreamToFile(f, fi);
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-        
         config.loadConfig();
         profile = new Profile(config.options.defaultProfile);
         keyMacrosScreen = new KeyMacrosScreen(null);
-        
-        if (config.options.JEPSharedLibraryPath == null) config.options.JEPSharedLibraryPath = "./jep.dll";
-        
-        File f = new File(FabricLoader.getInstance().getGameDirectory(), config.options.JEPSharedLibraryPath);
-        if (f.exists()) {
-            File fo = new File(System.getProperty("java.library.path"), f.getName());
-            if (!fo.exists()) {
-                try {
-                    FileUtils.copyFile(f, fo);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
         
         preInitLanguages();
     }
@@ -76,30 +40,6 @@ public class jsMacros implements ClientModInitializer {
             Context con = build.build();
             con.eval("js", "console.log('js loaded.')");
             con.close();
-            try {
-                jythonFailed = true;
-                try (PythonInterpreter interp = new PythonInterpreter()) {
-                    interp.exec("print('jython loaded.')");                    
-                } catch (Exception e) {
-                    throw e;
-                }
-                jythonFailed = false;
-                if (config.options.enableJEP) {
-                    jepFailed = true;
-                    JepConfig c = new JepConfig();
-                    c.setRedirectOutputStreams(true);
-                    SharedInterpreter.setConfig(c);
-                    try (SharedInterpreter interp1 = new SharedInterpreter()) {
-                        interp1.exec("print('JEP Loaded.')");
-                    } catch (Exception e) {
-                        throw e;
-                    }
-                    jepFailed = false;
-                }
-            } catch (Exception e) {
-                pythonFailStack = e.getStackTrace().toString();
-                e.printStackTrace();
-            }
         });
         t.start();
     }

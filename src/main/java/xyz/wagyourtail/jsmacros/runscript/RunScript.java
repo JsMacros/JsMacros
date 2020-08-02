@@ -14,11 +14,9 @@ import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
 import org.graalvm.polyglot.HostAccess;
 import org.graalvm.polyglot.Value;
-import org.python.util.PythonInterpreter;
 
 import com.google.common.collect.ImmutableList;
 
-import jep.SharedInterpreter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.jsMacros;
@@ -32,19 +30,16 @@ public class RunScript {
     public static List<Functions> standardLib = new ArrayList<>();
 
     static {
-        List<String> excludePython = new ArrayList<>();
-        excludePython.add(".py");
-        excludePython.add("jython.py");
         standardLib.add(new globalVarFunctions("globalvars"));
         standardLib.add(new jsMacrosFunctions("jsmacros"));
-        standardLib.add(new timeFunctions("time", excludePython));
+        standardLib.add(new timeFunctions("time"));
         standardLib.add(new keybindFunctions("keybind"));
         standardLib.add(new chatFunctions("chat"));
         standardLib.add(new worldFunctions("world"));
         standardLib.add(new playerFunctions("player"));
         standardLib.add(new hudFunctions("hud"));
         standardLib.add(new requestFunctions("request"));
-        standardLib.add(new fsFunctions("fs", excludePython));
+        standardLib.add(new fsFunctions("fs"));
 
 
         // -------------------- JAVASCRIPT -------------------------- //
@@ -88,70 +83,6 @@ public class RunScript {
         };
         addLanguage(js);
         defaultLang = js;
-
-        // ------------------- JYTHON ------------------------ //
-        Language jython = new Language() {
-            @Override
-            public void exec(RawMacro macro, File file, String event, Map<String, Object> args) throws Exception {
-                try (PythonInterpreter interp = new PythonInterpreter()) {
-                        interp.set("event", event);
-                        interp.set("args", args);
-                        interp.set("file", file);
-
-                        for (Functions f : standardLib) {
-                            if (!f.excludeLanguages.contains("jython.py")) {
-                                interp.set(f.libName, f);
-                            }
-                        }
-
-                        interp.exec("import os\nos.chdir('"
-                            + file.getParentFile().getCanonicalPath().replaceAll("\\\\", "/") + "')");
-                        interp.execfile(file.getCanonicalPath());
-                } catch (Exception e) {
-                    throw e;
-                }
-            }
-
-            @Override
-            public String extension() {
-                return jsMacros.config.options.enableJEP ? "jython.py" : ".py";
-            }
-        };
-        addLanguage(jython);
-
-
-        // -------------------- JEP -------------------------- //
-        if (jsMacros.config.options.enableJEP) {
-            Language jep = new Language() {
-                @Override
-                public void exec(RawMacro macro, File file, String event, Map<String, Object> args) throws Exception {
-                    try (SharedInterpreter interp = new SharedInterpreter()) {
-                        interp.set("event", (Object) event);
-                        interp.set("args", args);
-                        interp.set("file", file);
-
-                        for (Functions f : standardLib) {
-                            if (!f.excludeLanguages.contains(".py")) {
-                                interp.set(f.libName, f);
-                            }
-                        }
-
-                        interp.exec("import os\nos.chdir('"
-                            + file.getParentFile().getCanonicalPath().replaceAll("\\\\", "/") + "')");
-                        interp.runScript(file.getCanonicalPath());
-                    } catch(Exception e) {
-                        throw e;
-                    }
-                }
-
-                @Override
-                public String extension() {
-                    return ".py";
-                }
-            };
-            addLanguage(jep);
-        }
-        sortLanguages();
     }
 
     public static void addLanguage(Language l) {
