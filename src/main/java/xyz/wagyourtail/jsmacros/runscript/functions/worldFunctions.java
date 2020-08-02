@@ -33,6 +33,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
+import net.minecraft.world.biome.Biome;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.compat.interfaces.IBossBarHud;
 import xyz.wagyourtail.jsmacros.compat.interfaces.IMinecraftClient;
@@ -180,4 +181,12 @@ public class worldFunctions extends Functions {
         if (c == null) return null;
         return c.getAddress().toString();
     }
+    
+    public String getBiomeAt(int x, int z) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        Biome b = mc.world.getBiome(new BlockPos(x, 10, z));
+        return b.getTranslationKey();
+    }
+    
+    
 }
