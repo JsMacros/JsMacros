@@ -15,6 +15,7 @@ import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.reflector.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.reflector.TextFieldWidgetHelper;
+import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.image;
 import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.item;
 import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.rect;
 import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.text;
@@ -25,6 +26,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     protected List<text> textFields = new ArrayList<>();
     protected List<rect> rectFields = new ArrayList<>();
     protected List<item> itemFields = new ArrayList<>();
+    protected List<image> imageFields = new ArrayList<>();
     public Consumer<Screen> onInit;
     public BiConsumer<Pos2D, Integer> onMouseDown;
     public BiConsumer<Vec2D, Integer> onMouseDrag;
@@ -102,6 +104,10 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         return itemFields;
     }
     
+    public List<image> getImages() {
+        return imageFields;
+    }
+    
     public ButtonWidgetHelper addButton(int x, int y, int width, int height, String text, BiConsumer<ButtonWidgetHelper, Screen> callback) {
         ButtonWidget button = (ButtonWidget) super.addButton(new ButtonWidget(x, y, width, height, new LiteralText(text), (btn) -> {
             try {
@@ -177,6 +183,17 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         return this;
     }
     
+    public image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
+        image i = new image(x, y, width, height, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight);
+        imageFields.add(i);
+        return i;
+    }
+    
+    public Screen removeImage(image i) {
+        imageFields.remove(i);
+        return this;
+    }
+    
     public item addItem(int x, int y, String id, boolean overlay) {
         item i = new item(y, y, id, overlay);
         itemFields.add(i);
@@ -230,12 +247,14 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         List<text> textFields;
         List<rect> rectFields;
         List<item> itemFields;
+        List<image> imageFields;
         
         try {
             rectFields = ImmutableList.copyOf(this.rectFields);
             itemFields = ImmutableList.copyOf(this.itemFields);
             textFieldWidgets = ImmutableList.copyOf(this.textFieldWidgets);
             textFields = ImmutableList.copyOf(this.textFields);
+            imageFields = ImmutableList.copyOf(this.imageFields);
         } catch (Exception e) {
             return;
         }
@@ -244,6 +263,9 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
             r.render(matricies);
         }
         for (item i : itemFields) {
+            i.render(matricies);
+        }
+        for (image i : imageFields) {
             i.render(matricies);
         }
         for (text t : textFields) {
