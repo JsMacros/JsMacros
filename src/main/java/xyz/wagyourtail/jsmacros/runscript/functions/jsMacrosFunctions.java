@@ -121,7 +121,7 @@ public class jsMacrosFunctions extends Functions {
             }
             @Override
             public String toString() {
-                return String.format("EventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", tname, event);
+                return String.format("OnceEventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", tname, event);
             }
             
         };
