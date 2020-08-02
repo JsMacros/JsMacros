@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.runscript.functions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -76,18 +77,39 @@ public class jsMacrosFunctions extends Functions {
     public IEventListener on(String event, BiConsumer<String, Map<String, Object>> callback) {
         if (callback == null) return null;
         String tname = Thread.currentThread().getName();
+        Thread th = Thread.currentThread();
         IEventListener listener = new IEventListener() {
+            private LinkedBlockingQueue<Thread> tasks = new LinkedBlockingQueue<>();
+            
             @Override
             public Thread trigger(String type, Map<String, Object> args) {
                 Thread t = new Thread(() -> {
+                    while(th.isAlive());
+                    while (tasks.peek() != Thread.currentThread()) {
+                        try {
+                            tasks.peek().join();
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
                     Thread.currentThread().setName(this.toString());
                     try {
-                        callback.accept(type, args);                    
+                        callback.accept(type, args);
                     } catch (Exception e) {
                         Profile.registry.removeListener(this);
                         e.printStackTrace();
                     }
+                    try {
+                        tasks.take();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 });
+                try {
+                    tasks.put(t);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 t.start();
                 return t;
             }
@@ -104,6 +126,7 @@ public class jsMacrosFunctions extends Functions {
     public IEventListener once(String event, BiConsumer<String, Map<String, Object>> callback) {
         if (callback == null) return null;
         String tname = Thread.currentThread().getName();
+        Thread th = Thread.currentThread();
         IEventListener listener = new IEventListener() {
             @Override
             public Thread trigger(String type, Map<String, Object> args) {
@@ -111,6 +134,7 @@ public class jsMacrosFunctions extends Functions {
                 Thread t = new Thread(() -> {
                     Thread.currentThread().setName(this.toString());
                     try {
+                        while(th.isAlive());
                         callback.accept(type, args);
                     } catch (Exception e) {
                         e.printStackTrace();

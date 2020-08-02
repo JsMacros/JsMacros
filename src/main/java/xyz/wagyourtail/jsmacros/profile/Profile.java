@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.google.common.collect.ImmutableList;
+
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
@@ -337,17 +339,17 @@ public class Profile {
     }
     
     public void triggerMacro(String macroname, Map<String, Object> args) {
-        if (registry.macros.containsKey(macroname)) for (IEventListener macro : registry.macros.get(macroname)) {
+        if (registry.macros.containsKey(macroname)) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(macroname))) {
             macro.trigger(macroname, args);
         }
 
-        if (registry.macros.containsKey("ANYTHING")) for (IEventListener macro : registry.macros.get("ANYTHING")) {
+        if (registry.macros.containsKey("ANYTHING")) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get("ANYTHING"))) {
             macro.trigger(macroname, args);
         }
     }
     
     public void triggerMacroJoin(String macroname, Map<String, Object> args) {
-        if (registry.macros.containsKey(macroname)) for (IEventListener macro : registry.macros.get(macroname)) {
+        if (registry.macros.containsKey(macroname)) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(macroname))) {
             try {
                 Thread t = macro.trigger(macroname, args);
                 if (t != null) t.join();
@@ -355,7 +357,7 @@ public class Profile {
             }
         }
 
-        if (registry.macros.containsKey("ANYTHING")) for (IEventListener macro : registry.macros.get("ANYTHING")) {
+        if (registry.macros.containsKey("ANYTHING")) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get("ANYTHING"))) {
             try {
                 Thread t = macro.trigger(macroname, args);
                 if (t != null) t.join();
@@ -365,13 +367,13 @@ public class Profile {
     }
     
     public void triggerMacroNoAnything(String macroname, Map<String, Object> args) {
-        if (registry.macros.containsKey(macroname)) for (IEventListener macro : registry.macros.get(macroname)) {
+        if (registry.macros.containsKey(macroname)) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(macroname))) {
             macro.trigger(macroname, args);
         }
     }
     
     public void triggerMacroJoinNoAnything(String macroname, Map<String, Object> args) {
-        if (registry.macros.containsKey(macroname)) for (IEventListener macro : registry.macros.get(macroname)) {
+        if (registry.macros.containsKey(macroname)) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(macroname))) {
             try {
                 Thread t = macro.trigger(macroname, args);
                 if (t != null) t.join();
