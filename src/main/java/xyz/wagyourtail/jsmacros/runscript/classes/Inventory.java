@@ -205,6 +205,10 @@ public class Inventory {
         return map;
     }
 
+    public String getContainerTitle() {
+        return this.inventory.getTitle().getString();
+    }
+    
     public HandledScreen<?> getRawContainer() {
         return this.inventory;
     }

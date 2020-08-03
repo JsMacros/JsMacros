@@ -7,6 +7,7 @@ import java.util.function.BiConsumer;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
+@Deprecated
 public class WebSocket extends WebSocketClient {
     public BiConsumer<WebSocket, ServerHandshake> onOpen;
     public BiConsumer<WebSocket, String> onMessage;

@@ -11,6 +11,7 @@ import xyz.wagyourtail.jsmacros.runscript.classes.HTTPRequest.response;
 import xyz.wagyourtail.jsmacros.runscript.classes.WebSocket;
 import xyz.wagyourtail.jsmacros.runscript.classes.Websocket2;
 
+@SuppressWarnings("deprecation")
 public class requestFunctions extends Functions {
     
     public requestFunctions(String libName) {
@@ -45,6 +46,7 @@ public class requestFunctions extends Functions {
         return req.post(data);
     }
     
+    @Deprecated
     public WebSocket createWS(String uri) throws URISyntaxException {
         return new WebSocket(uri);
     }
