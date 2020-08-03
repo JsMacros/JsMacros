@@ -177,21 +177,31 @@ public class jsMacrosFunctions extends Functions {
         return mc.fpsDebugString;
     }
     
+    public String getServerAddress() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        return mc.getNetworkHandler().getConnection().getAddress().toString();
+    }
+    
     public void connect(String ip) {
         ServerAddress a = ServerAddress.parse(ip);
-        MinecraftClient mc = MinecraftClient.getInstance();
-        mc.openScreen(new ConnectScreen(null, mc, a.getAddress(), a.getPort()));
+        connect(a.getAddress(), a.getPort());
     }
     
-    public void connect(String ip, int port) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        mc.openScreen(new ConnectScreen(null, mc, ip, port));
+    public boolean connect(String ip, int port) {
+        return hudFunctions.renderTaskQueue.add(() -> {
+            MinecraftClient mc = MinecraftClient.getInstance();
+            if (mc.world != null) mc.world.disconnect();
+            mc.joinWorld(null);
+            mc.openScreen(new ConnectScreen(null, mc, ip, port));
+        });
     }
     
-    public void disconnect() {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc.world != null) mc.world.disconnect();
-        mc.joinWorld(null);
-        mc.openScreen(new TitleScreen());
+    public boolean disconnect() {
+        return hudFunctions.renderTaskQueue.add(() -> {
+            MinecraftClient mc = MinecraftClient.getInstance();
+            if (mc.world != null) mc.world.disconnect();
+            mc.joinWorld(null);
+            mc.openScreen(new TitleScreen());
+        });
     }
 }

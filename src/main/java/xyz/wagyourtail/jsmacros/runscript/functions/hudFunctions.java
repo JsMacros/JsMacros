@@ -2,6 +2,9 @@ package xyz.wagyourtail.jsmacros.runscript.functions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+
+import com.google.common.collect.Queues;
 
 import xyz.wagyourtail.jsmacros.runscript.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.jsMacros;
@@ -12,8 +15,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 
 public class hudFunctions extends Functions {
-    public static List<Draw2D> overlays = new ArrayList<>();
-    public static List<Draw3D> renders = new ArrayList<>();
+    public static final List<Draw2D> overlays = new ArrayList<>();
+    public static final List<Draw3D> renders = new ArrayList<>();
+    public static final Queue<Runnable> renderTaskQueue = Queues.newConcurrentLinkedQueue();
     
     public hudFunctions(String libName) {
         super(libName);
