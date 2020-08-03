@@ -100,7 +100,10 @@ public class FileChooser extends OverlayContainer {
             if (selected != null) {
                 this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.filename"), selected.getName(), addButton, removeButton, this::closeOverlay, setFocused, (str) -> {
                     File f = new File(directory, str);
-                    if (selected.renameTo(f)) this.setDir(directory);
+                    if (selected.renameTo(f)) {
+                        this.setDir(directory);
+                        this.selectFile(f);
+                    }
                 }));
             }
         }));
@@ -135,6 +138,7 @@ public class FileChooser extends OverlayContainer {
                 try {
                     f.createNewFile();
                     this.setDir(directory);
+                    this.selectFile(f);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
