@@ -134,8 +134,8 @@ class jsmacros_ClientPlayNetworkHandler {
         BlockUpdateCallback.EVENT.invoker().interact(new BlockDataHelper(packet.getState(), world.getBlockEntity(packet.getPos()), packet.getPos()));
     }
     
-    @Inject(at = @At("TAIL"), method="onChunkUnload")
-    public void onUnloadChunk(UnloadChunkS2CPacket packet, CallbackInfo info) {
+    @Inject(at = @At("TAIL"), method="onUnloadChunk")
+    public void jsmacros_onUnloadChunk(UnloadChunkS2CPacket packet, CallbackInfo info) {
         ChunkUnloadCallback.EVENT.invoker().interact(packet.getX(), packet.getZ());
     }
     
