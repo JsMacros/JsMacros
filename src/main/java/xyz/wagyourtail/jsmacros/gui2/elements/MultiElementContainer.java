@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.gui2.elements;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 import net.minecraft.client.font.TextRenderer;
@@ -13,7 +14,7 @@ public abstract class MultiElementContainer extends DrawableHelper {
     protected int y;
     protected int width;
     protected int height;
-    protected ArrayList<AbstractButtonWidget> buttons = new ArrayList<>();
+    protected List<AbstractButtonWidget> buttons = new ArrayList<>();
     protected Consumer<AbstractButtonWidget> addButton;
     protected TextRenderer textRenderer;
     protected boolean visible = true;
@@ -50,7 +51,7 @@ public abstract class MultiElementContainer extends DrawableHelper {
         return btn;
     }
     
-    public ArrayList<AbstractButtonWidget> getButtons() {
+    public List<AbstractButtonWidget> getButtons() {
         return buttons;
     }
     

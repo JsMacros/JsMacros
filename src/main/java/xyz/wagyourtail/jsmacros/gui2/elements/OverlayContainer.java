@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.gui2.elements;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import net.minecraft.client.font.TextRenderer;
@@ -8,7 +9,7 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class OverlayContainer extends MultiElementContainer {
-    public HashMap<AbstractButtonWidget, Boolean> savedBtnStates = new HashMap<>();
+    public Map<AbstractButtonWidget, Boolean> savedBtnStates = new HashMap<>();
     public Scrollbar scroll;
     protected Consumer<OverlayContainer> close;
     protected Consumer<AbstractButtonWidget> removeButton;
