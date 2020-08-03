@@ -31,8 +31,10 @@ public class hudFunctions extends Functions {
         return new Screen(title, dirtBG);
     }
     
-    public void openScreen(Screen s) {
-        MinecraftClient.getInstance().openScreen(s);
+    public boolean openScreen(Screen s) {
+        return renderTaskQueue.add(() -> {
+            MinecraftClient.getInstance().openScreen(s);            
+        });
     }
     
     public String getOpenScreen() {
