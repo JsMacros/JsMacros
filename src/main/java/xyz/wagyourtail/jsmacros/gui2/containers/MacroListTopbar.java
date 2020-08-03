@@ -49,6 +49,11 @@ public class MacroListTopbar extends MultiElementContainer {
         }));
     }
 
+    public void updateType(MacroEnum type) {
+        this.deftype = type;
+        this.type = I18n.translate(deftype == MacroEnum.EVENT ? "jsmacros.events" : "jsmacros.keys");
+    }
+    
     @Override
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
         fill(matricies, x, y, x + width, y + 1, 0xFFFFFFFF);

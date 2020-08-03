@@ -33,7 +33,7 @@ public class EventMacrosScreen extends MacroScreen {
             client.openScreen(new ProfileScreen(this));
         };
         
-        topbar.deftype = MacroEnum.EVENT;
+        topbar.updateType(MacroEnum.EVENT);
         
         List<RawMacro> macros = new ArrayList<>();
         
