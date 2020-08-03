@@ -58,7 +58,7 @@ public class ProfileScreen extends Screen {
         profile.active = false;
 
         this.addButton(new Button(0, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.addprofile"), (btn) -> {
-            this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), "", this::addButton, this::removeButton, this::closeOverlay, (str) -> {
+            this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), "", this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (str) -> {
                 addProfile(str);
                 if (!jsMacros.config.options.profiles.containsKey(str)) jsMacros.config.options.profiles.put(str, new ArrayList<>());
                 jsMacros.config.saveConfig();
@@ -66,7 +66,7 @@ public class ProfileScreen extends Screen {
         }));
 
         this.addButton(new Button(this.width / 6, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.renameprofile"), (btn) -> {
-            if (!selected.pName.equals(jsMacros.config.options.defaultProfile)) this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), selected.pName, this::addButton, this::removeButton, this::closeOverlay, (str) -> {
+            if (!selected.pName.equals(jsMacros.config.options.defaultProfile)) this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), selected.pName, this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (str) -> {
                 jsMacros.config.options.profiles.remove(selected.pName);
                 jsMacros.profile.profileName = str;
                 jsMacros.profile.saveProfile();

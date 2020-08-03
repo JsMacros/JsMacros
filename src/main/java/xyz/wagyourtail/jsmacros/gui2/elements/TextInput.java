@@ -159,6 +159,10 @@ public class TextInput extends Button {
         if (this.isFocused() ^ bl) this.changeFocus(true);
         return bl;
     }
+    
+    public void setSelected(boolean sel) {
+        this.setFocused(sel);
+    }
 
     protected void renderMessage(MatrixStack matricies) {
         fill(matricies, selStart, height > 9 ? y + 2 : y, Math.min(selEnd, x + width - 2), (height > 9 ? y + 2 : y) + mc.textRenderer.fontHeight, selColor);

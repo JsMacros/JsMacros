@@ -17,6 +17,7 @@ import xyz.wagyourtail.jsmacros.gui2.elements.OverlayContainer;
 import xyz.wagyourtail.jsmacros.gui2.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -30,13 +31,15 @@ public class FileChooser extends OverlayContainer {
     private File selected;
     private List<fileObj> files = new ArrayList<>();
     private Consumer<File> setFile;
+    private Consumer<Element> setFocused;
     private int topScroll;
 
-    public FileChooser(int x, int y, int width, int height, TextRenderer textRenderer, File directory, File selected, Consumer<AbstractButtonWidget> addButton, Consumer<AbstractButtonWidget> removeButton, Consumer<OverlayContainer> close, Consumer<File> setFile) {
+    public FileChooser(int x, int y, int width, int height, TextRenderer textRenderer, File directory, File selected, Consumer<AbstractButtonWidget> addButton, Consumer<AbstractButtonWidget> removeButton, Consumer<OverlayContainer> close,  Consumer<Element> setFocused, Consumer<File> setFile) {
         super(x, y, width, height, textRenderer, addButton, removeButton, close);
         this.setFile = setFile;
         this.directory = directory;
         this.selected = selected;
+        this.setFocused = setFocused;
     }
 
     public void setDir(File dir) {
@@ -95,7 +98,7 @@ public class FileChooser extends OverlayContainer {
 
         this.addButton(new Button(x + w * 3 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.rename"), (btn) -> {
             if (selected != null) {
-                this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.filename"), selected.getName(), addButton, removeButton, this::closeOverlay, (str) -> {
+                this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.filename"), selected.getName(), addButton, removeButton, this::closeOverlay, setFocused, (str) -> {
                     File f = new File(directory, str);
                     if (selected.renameTo(f)) this.setDir(directory);
                 }));
@@ -116,7 +119,7 @@ public class FileChooser extends OverlayContainer {
         }));
 
         this.addButton(new Button(x + w * 1 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.new"), (btn) -> {
-            this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.filename"), "", addButton, removeButton, this::closeOverlay, (str) -> {
+            this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.filename"), "", addButton, removeButton, this::closeOverlay, setFocused, (str) -> {
                 if (str.trim().equals("")) return;
                 boolean edit = true;
                 for (RunScript.Language language : RunScript.languages) {
