@@ -9,7 +9,6 @@ import xyz.wagyourtail.jsmacros.config.RawMacro;
 public class KeyBothMacro extends BaseMacro {
     private int mods;
     private String key;
-    private boolean prevKeyState = false;
     
     public KeyBothMacro(RawMacro macro) {
         super(macro);
@@ -41,16 +40,6 @@ public class KeyBothMacro extends BaseMacro {
     }
     
     private boolean check(Map<String, Object> args) {
-        boolean keyState = false;
-        if ((int)args.get("action") > 0) keyState = true;
-        if (args.get("key").equals(key) && (jsMacros.getModInt((String)args.get("mods")) & mods) == mods)
-            if (keyState && !prevKeyState) {
-                prevKeyState = true;
-                return true;
-            } else if (!keyState && prevKeyState) {
-                prevKeyState = false;
-                return true;
-            }
-        return false;
+        return (args.get("key").equals(key) && jsMacros.getModInt((String)args.get("mods")) == mods);
     }
 }
