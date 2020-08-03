@@ -122,7 +122,7 @@ public class Websocket2 extends WebSocketAdapter {
     }
 
     public class TaskScheduler {
-        private LinkedBlockingQueue<Runnable> tasks;
+        private LinkedBlockingQueue<Runnable> tasks = new LinkedBlockingQueue<>();
         private Thread t;
         public boolean running = true;
 
