@@ -343,10 +343,11 @@ public class Profile {
         
         // ---- CHUNK LOAD ----- //
         registry.addEvent("CHUNK_LOAD");
-        ChunkLoadCallback.EVENT.register((x, z) -> {
+        ChunkLoadCallback.EVENT.register((x, z, full) -> {
             Map<String, Object> args = new HashMap<>();
             args.put("x", x);
             args.put("z", z);
+            args.put("fullChunk", full);
             
             triggerMacro("CHUNK_LOAD", args);
         });

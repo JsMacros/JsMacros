@@ -124,9 +124,7 @@ class jsmacros_ClientPlayNetworkHandler {
     
     @Inject(at = @At("TAIL"), method="onChunkData")
     public void jsmacros_onChunkData(ChunkDataS2CPacket packet, CallbackInfo info) {
-        if (packet.isFullChunk()) {
-            ChunkLoadCallback.EVENT.invoker().interact(packet.getX(), packet.getZ());
-        }
+        ChunkLoadCallback.EVENT.invoker().interact(packet.getX(), packet.getZ(), packet.isFullChunk());
     }
     
     @Inject(at = @At("TAIL"), method="onBlockUpdate")
