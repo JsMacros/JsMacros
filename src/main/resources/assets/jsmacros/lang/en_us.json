@@ -4,6 +4,7 @@
 	"jsmacros.profilesloaded": "Profiles Loaded:",
 	"jsmacros.jythonfail": "Jython Failed to Launch.\n\n this is normal for the first launch of the mod but if it fails again please send the logs to me in the github issue page for this mod.",
 	"jsmacros.title": "JS Macros",
+	"jsmacros.menu": "JS Macros GUI",
 	"jsmacros.keys": "Keys",
 	"jsmacros.default": "Default",
 	"jsmacros.events": "Events",
