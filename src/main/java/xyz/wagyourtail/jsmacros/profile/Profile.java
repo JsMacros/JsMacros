@@ -19,6 +19,7 @@ import net.minecraft.util.ActionResult;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.events.*;
+import xyz.wagyourtail.jsmacros.gui2.MacroScreen;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
 import xyz.wagyourtail.jsmacros.macros.IEventListener;
 import xyz.wagyourtail.jsmacros.reflector.TextHelper;
@@ -64,7 +65,10 @@ public class Profile {
         for (RawMacro rawmacro : rawProfile) {
             registry.addRawMacro(rawmacro);
         }
-
+        MinecraftClient mc = MinecraftClient.getInstance();
+        if (mc.currentScreen instanceof MacroScreen) {
+            ((MacroScreen) mc.currentScreen).reload();
+        }
         Map<String, Object> args = new HashMap<>();
         args.put("profile", pName);
         triggerMacroNoAnything("PROFILE_LOAD", args);

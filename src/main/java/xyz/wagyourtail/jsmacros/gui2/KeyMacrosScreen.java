@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
 
@@ -35,7 +37,7 @@ public class KeyMacrosScreen extends MacroScreen {
         List<IEventListener> listeners = Profile.registry.getListeners().get("KEY");
         List<RawMacro> macros = new ArrayList<>();
         
-        for (IEventListener event : listeners) {
+        if (listeners != null) for (IEventListener event : ImmutableList.copyOf(listeners)) {
             if (event instanceof BaseMacro) macros.add(((BaseMacro) event).getRawMacro());
         }
         

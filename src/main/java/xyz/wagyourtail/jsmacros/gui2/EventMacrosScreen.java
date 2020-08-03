@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+
 import net.minecraft.client.gui.screen.Screen;
 
 public class EventMacrosScreen extends MacroScreen {
@@ -36,8 +38,9 @@ public class EventMacrosScreen extends MacroScreen {
         List<RawMacro> macros = new ArrayList<>();
         
         for (String event : Profile.registry.events) {
-            if (Profile.registry.getListeners().containsKey(event))
-                for (IEventListener macro : Profile.registry.getListeners().get(event)) {
+            List<IEventListener> eventListeners = Profile.registry.getListeners().get(event);
+            if (eventListeners != null) 
+                for (IEventListener macro : ImmutableList.copyOf(eventListeners)) {
                     if (macro instanceof BaseMacro && ((BaseMacro) macro).getRawMacro().type == MacroEnum.EVENT) macros.add(((BaseMacro) macro).getRawMacro());
                 }
         }
