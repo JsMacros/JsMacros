@@ -336,6 +336,35 @@ public class Profile {
             
             return (boolean) args.get("close");
         });
+        
+        // ---- CHUNK LOAD ----- //
+        registry.addEvent("CHUNK_LOAD");
+        ChunkLoadCallback.EVENT.register((x, z) -> {
+            Map<String, Object> args = new HashMap<>();
+            args.put("x", x);
+            args.put("z", z);
+            
+            triggerMacro("CHUNK_LOAD", args);
+        });
+        
+        // ---- CHUNK UNLOAD ----- //
+        registry.addEvent("CHUNK_UNLOAD");
+        ChunkUnloadCallback.EVENT.register((x, z) -> {
+            Map<String, Object> args = new HashMap<>();
+            args.put("x", x);
+            args.put("z", z);
+            
+            triggerMacro("CHUNK_UNLOAD", args);
+        });
+        
+        // ---- BLOCK UPDATE ----- //
+        registry.addEvent("BLOCK_UPDATE");
+        BlockUpdateCallback.EVENT.register((b) -> {
+            Map<String, Object> args = new HashMap<>();
+            args.put("block", b);
+            
+            triggerMacro("BLOCK_UPDATE", args);
+        });
     }
     
     public void triggerMacro(String macroname, Map<String, Object> args) {

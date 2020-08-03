@@ -33,6 +33,10 @@ public class ButtonWidgetHelper {
         return this;
     }
     
+    public String getText() {
+        return btn.getMessage().getString();
+    }
+    
     public boolean getActive() {
         return btn.active;
     }
