@@ -88,12 +88,11 @@ public class jsMacrosFunctions extends Functions {
             public Thread trigger(String type, Map<String, Object> args) {
                 Thread t = new Thread(() -> {
                     while(th.isAlive());
-                    while (tasks.peek() != Thread.currentThread()) {
+                    Thread joinable;
+                    while ((joinable = tasks.peek()) != Thread.currentThread()) {
                         try {
-                            tasks.peek().join();
-                        } catch (InterruptedException e1) {
-                            e1.printStackTrace();
-                        }
+                            joinable.join();
+                        } catch (Exception e) {}
                     }
                     Thread.currentThread().setName(this.toString());
                     try {
