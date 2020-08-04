@@ -40,7 +40,7 @@ public class RunScript {
         standardLib.add(new hudFunctions("hud"));
         standardLib.add(new requestFunctions("request"));
         standardLib.add(new fsFunctions("fs"));
-        standardLib.add(new reflectionHelper("reflection"));
+        standardLib.add(new reflectionFunctions("reflection"));
 
 
         // -------------------- JAVASCRIPT -------------------------- //

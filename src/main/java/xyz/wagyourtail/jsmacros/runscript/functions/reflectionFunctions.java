@@ -3,9 +3,9 @@ package xyz.wagyourtail.jsmacros.runscript.functions;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public class reflectionHelper extends Functions {
+public class reflectionFunctions extends Functions {
 
-    public reflectionHelper(String libName) {
+    public reflectionFunctions(String libName) {
         super(libName);
         // TODO Auto-generated constructor stub
     }
