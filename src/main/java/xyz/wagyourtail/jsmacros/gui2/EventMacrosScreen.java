@@ -49,7 +49,7 @@ public class EventMacrosScreen extends MacroScreen {
                 if (macro instanceof BaseMacro) macros.add(((BaseMacro) macro).getRawMacro());
             }
         
-        Collections.sort(macros, new RawMacro.sortRawMacro());
+        Collections.sort(macros, new RawMacro.SortByEnabled());
         
         for (RawMacro macro : macros) {
             addMacro(macro);

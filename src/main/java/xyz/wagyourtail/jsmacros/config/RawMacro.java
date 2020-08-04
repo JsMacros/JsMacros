@@ -27,9 +27,9 @@ public class RawMacro {
     public RawMacro copy(RawMacro m) {
         return new RawMacro(m.type, m.eventkey, m.scriptFile, m.enabled);
     }
-
-    public static class sortRawMacro implements Comparator<RawMacro> {
-
+    
+    
+    public static class SortByEnabled implements Comparator<RawMacro> {
         @Override
         public int compare(RawMacro a, RawMacro b) {
             if (a.enabled ^ b.enabled) {
@@ -38,6 +38,23 @@ public class RawMacro {
                 return a.toString().compareTo(b.toString());
             }
         }
-        
+    }
+    public static class SortByTriggerName implements Comparator<RawMacro> {
+        @Override
+        public int compare(RawMacro a, RawMacro b) {
+            int comp = a.eventkey.compareTo(b.eventkey);
+            if (comp != 0) return comp;
+            if (a.enabled ^ b.enabled) return a.enabled ? -1 : 1;
+            return a.toString().compareTo(b.toString());
+        }
+    }
+    public static class SortByFileName implements Comparator<RawMacro> {
+        @Override
+        public int compare(RawMacro a, RawMacro b) {
+            int comp = a.scriptFile.compareTo(b.scriptFile);
+            if (comp != 0) return comp;
+            if (a.enabled ^ b.enabled) return a.enabled ? -1 : 1;
+            return a.toString().compareTo(b.toString());
+        }
     }
 }

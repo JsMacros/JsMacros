@@ -41,7 +41,7 @@ public class KeyMacrosScreen extends MacroScreen {
             if (event instanceof BaseMacro) macros.add(((BaseMacro) event).getRawMacro());
         }
         
-        Collections.sort(macros, new RawMacro.sortRawMacro());
+        Collections.sort(macros, new RawMacro.SortByEnabled());
         
         for (RawMacro macro : macros) {
             addMacro(macro);
