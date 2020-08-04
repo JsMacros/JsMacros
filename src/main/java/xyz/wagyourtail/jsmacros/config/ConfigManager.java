@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import com.google.gson.Gson;
@@ -22,7 +23,7 @@ public class ConfigManager {
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public ConfigManager() {
-        options = new ConfigOptions(true, "default", new HashMap<>());
+        options = new ConfigOptions(true, "default", RawMacro.SortMethod.Enabled, new HashMap<>());
         options.profiles.put("default", new ArrayList<>());
         options.profiles.get("default").add(new RawMacro(MacroEnum.KEY_RISING, "key.keyboard.j", "test.js", true));
         if (!macroFolder.exists()) {
@@ -64,5 +65,22 @@ public class ConfigManager {
             System.out.println("Config Failed To Save.");
             e.printStackTrace();
         }
+    }
+    
+    public Comparator<RawMacro> getSortComparator() {
+        if (options.sortMethod == null) options.sortMethod = RawMacro.SortMethod.Enabled;
+        switch(options.sortMethod) {
+            default:
+            case Enabled:
+                return new RawMacro.SortByEnabled();
+            case FileName:
+                return new RawMacro.SortByFileName();
+            case TriggerName:
+                return new RawMacro.SortByTriggerName();
+        }
+    }
+    
+    public void setSortComparator(RawMacro.SortMethod method) {
+        options.sortMethod = method;
     }
 }

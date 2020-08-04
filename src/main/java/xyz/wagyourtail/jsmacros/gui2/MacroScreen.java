@@ -58,7 +58,7 @@ public class MacroScreen extends Screen {
 
         profileScreen = this.addButton(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.profile"), null));
 
-        topbar = new MacroListTopbar(this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer, MacroEnum.KEY_RISING, this::addButton, this::addMacro, this::runFile);
+        topbar = new MacroListTopbar(this, this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer, MacroEnum.KEY_RISING, this::addButton, this::addMacro, this::runFile);
 
         topScroll = 40;
         macroScroll = this.addButton(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));

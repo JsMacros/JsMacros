@@ -57,4 +57,10 @@ public class RawMacro {
             return a.toString().compareTo(b.toString());
         }
     }
+    
+    public static enum SortMethod {
+        Enabled,
+        TriggerName,
+        FileName
+    }
 }
