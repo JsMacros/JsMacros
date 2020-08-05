@@ -11,9 +11,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.ClientConnection;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.BossBarS2CPacket;
 import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
+import net.minecraft.network.packet.s2c.play.ChunkDeltaUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.ChunkDeltaUpdateS2CPacket.ChunkDeltaRecord;
 import net.minecraft.network.packet.s2c.play.CombatEventS2CPacket;
 import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
@@ -129,7 +132,18 @@ class jsmacros_ClientPlayNetworkHandler {
     
     @Inject(at = @At("TAIL"), method="onBlockUpdate")
     public void jsmacros_onBlockUpdate(BlockUpdateS2CPacket packet, CallbackInfo info) {
-        BlockUpdateCallback.EVENT.invoker().interact(new BlockDataHelper(packet.getState(), world.getBlockEntity(packet.getPos()), packet.getPos()));
+        BlockUpdateCallback.EVENT.invoker().interact(new BlockDataHelper(packet.getState(), world.getBlockEntity(packet.getPos()), packet.getPos()), "STATE");
+    }
+    
+    @Inject(at = @At("TAIL"), method="onChunkDeltaUpdate")
+    public void jsmacros_onChunkDeltaUpdate(ChunkDeltaUpdateS2CPacket packet, CallbackInfo info) {
+        for (ChunkDeltaRecord d : packet.getRecords()) {
+            BlockUpdateCallback.EVENT.invoker().interact(new BlockDataHelper(d.getState(), world.getBlockEntity(d.getBlockPos()), d.getBlockPos()), "STATE");
+        }
+    }
+    @Inject(at = @At("TAIL"), method="onBlockEntityUpdate")
+    public void jsmacros_onBlockEntityUpdate(BlockEntityUpdateS2CPacket packet, CallbackInfo info) {
+        BlockUpdateCallback.EVENT.invoker().interact(new BlockDataHelper(world.getBlockState(packet.getPos()), world.getBlockEntity(packet.getPos()), packet.getPos()), "ENTITY");
     }
     
     @Inject(at = @At("TAIL"), method="onUnloadChunk")

@@ -364,9 +364,10 @@ public class Profile {
         
         // ---- BLOCK UPDATE ----- //
         registry.addEvent("BLOCK_UPDATE");
-        BlockUpdateCallback.EVENT.register((b) -> {
+        BlockUpdateCallback.EVENT.register((b, type) -> {
             Map<String, Object> args = new HashMap<>();
             args.put("block", b);
+            args.put("type", type);
             
             triggerMacro("BLOCK_UPDATE", args);
         });

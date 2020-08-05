@@ -6,10 +6,10 @@ import xyz.wagyourtail.jsmacros.reflector.BlockDataHelper;
 
 public interface BlockUpdateCallback {
     Event<BlockUpdateCallback> EVENT = EventFactory.createArrayBacked(BlockUpdateCallback.class,
-            (listeners) -> (b) -> {
+            (listeners) -> (b, type) -> {
                 for (BlockUpdateCallback event : listeners) {
-                    event.interact(b);
+                    event.interact(b, type);
                 }
             });
-    void interact(BlockDataHelper b);
+    void interact(BlockDataHelper b, String type);
 }
