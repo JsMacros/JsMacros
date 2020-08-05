@@ -71,12 +71,21 @@ public class reflectionFunctions extends Functions {
     public Object invokeMethod(Method m, Object c, Object...objects) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Class<?>[] params = m.getParameterTypes();
         for (int i = 0; i < objects.length; ++i) {
-            if (params[i] == int.class) {
-                objects[i] = (int)(long)objects[i];
-            } else if (params[i] == float.class) {
-                objects[i] = (float)(double)objects[i];
+            if ((params[i] == int.class || params[i] == Integer.class) && !(objects[i] instanceof Integer)) {
+                objects[i] = ((Number)objects[i]).intValue();
+            } else if ((params[i] == float.class || params[i] == Float.class) && !(objects[i] instanceof Float)) {
+                objects[i] = ((Number)objects[i]).floatValue();
+            } else if ((params[i] == double.class || params[i] == Double.class) && !(objects[i] instanceof Double)) {
+                objects[i] = ((Number)objects[i]).doubleValue();
+            } else if ((params[i] == short.class || params[i] == Short.class) && !(objects[i] instanceof Short)) {
+                objects[i] = ((Number)objects[i]).shortValue();
+            } else if ((params[i] == long.class || params[i] == Long.class) && !(objects[i] instanceof Long)) {
+                objects[i] = ((Number)objects[i]).longValue();
+            } else if ((params[i] == char.class || params[i] == Character.class) && !(objects[i] instanceof Character)) {
+                objects[i] = (char) ((Number)objects[i]).shortValue();
+            } else if ((params[i] == byte.class || params[i] == Byte.class) && !(objects[i] instanceof Byte)) {
+                objects[i] = ((Number)objects[i]).byteValue();
             }
-            else objects[i] = params[i].cast(objects[i]);
         }
         return m.invoke(c, objects);
     }
