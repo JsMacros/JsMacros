@@ -184,8 +184,7 @@ public class worldFunctions extends Functions {
     
     public String getBiomeAt(int x, int z) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        Biome b = mc.world.getBiome(new BlockPos(x, 10, z));
-        return b.getTranslationKey();
+        return Registry.BIOME.getId(mc.world.getBiome(new BlockPos(x, 10, z))).toString();
     }
     
     
