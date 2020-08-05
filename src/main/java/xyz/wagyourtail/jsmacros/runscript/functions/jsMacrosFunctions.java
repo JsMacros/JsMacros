@@ -101,11 +101,7 @@ public class jsMacrosFunctions extends Functions {
                         Profile.registry.removeListener(this);
                         e.printStackTrace();
                     }
-                    try {
-                        tasks.take();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    tasks.poll();
                 });
                 try {
                     tasks.put(t);
