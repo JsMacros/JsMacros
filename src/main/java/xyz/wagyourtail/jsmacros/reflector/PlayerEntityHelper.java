@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.reflector;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 
 public class PlayerEntityHelper extends EntityHelper {
     
@@ -13,27 +14,39 @@ public class PlayerEntityHelper extends EntityHelper {
     }
     
     public ItemStackHelper getMainHand() {
-        return new ItemStackHelper(((PlayerEntity) e).inventory.getMainHandStack());
+        PlayerInventory i = ((PlayerEntity) e).inventory;
+        if (i == null) return null;
+        return new ItemStackHelper(i.getMainHandStack());
     }
     
     public ItemStackHelper getOffHand() {
-        return new ItemStackHelper(((PlayerEntity) e).inventory.offHand.get(0));
+        PlayerInventory i = ((PlayerEntity) e).inventory;
+        if (i == null) return null;
+        return new ItemStackHelper(i.offHand.get(0));
     }
     
     public ItemStackHelper getHeadArmor() {
-        return new ItemStackHelper(((PlayerEntity) e).inventory.getArmorStack(3));
+        PlayerInventory i = ((PlayerEntity) e).inventory;
+        if (i == null) return null;
+        return new ItemStackHelper(i.getArmorStack(3));
     }
     
     public ItemStackHelper getChestArmor() {
-        return new ItemStackHelper(((PlayerEntity) e).inventory.getArmorStack(2));
+        PlayerInventory i = ((PlayerEntity) e).inventory;
+        if (i == null) return null;
+        return new ItemStackHelper(i.getArmorStack(2));
     }
     
     public ItemStackHelper getLegArmor() {
-        return new ItemStackHelper(((PlayerEntity) e).inventory.getArmorStack(1));
+        PlayerInventory i = ((PlayerEntity) e).inventory;
+        if (i == null) return null;
+        return new ItemStackHelper(i.getArmorStack(1));
     }
     
     public ItemStackHelper getFootArmor() {
-        return new ItemStackHelper(((PlayerEntity) e).inventory.getArmorStack(0));
+        PlayerInventory i = ((PlayerEntity) e).inventory;
+        if (i == null) return null;
+        return new ItemStackHelper(i.getArmorStack(0));
     }
     
     public PlayerEntity getRaw() {
