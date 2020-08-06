@@ -22,7 +22,6 @@ public class jsMacros implements ClientModInitializer {
     public static ConfigManager config = new ConfigManager();
     public static Profile profile;
     public static KeyMacrosScreen keyMacrosScreen;
-    public static String pythonFailStack;
     
     @Override
     public void onInitializeClient() {
@@ -31,10 +30,6 @@ public class jsMacros implements ClientModInitializer {
         profile = new Profile(config.options.defaultProfile);
         keyMacrosScreen = new KeyMacrosScreen(null);
         
-        preInitLanguages();
-    }
-    
-    static public void preInitLanguages() {
         Thread t = new Thread(() -> {
             Builder build = Context.newBuilder("js");
             Context con = build.build();

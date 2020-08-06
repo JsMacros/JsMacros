@@ -38,7 +38,7 @@ public class reflectionFunctions extends Functions {
     
     public Class<?> getClass(String name, String name2) throws ClassNotFoundException {
         try {
-            return Class.forName(name);
+            return getClass(name);
         } catch (ClassNotFoundException e) {
             return Class.forName(name2);
         }
@@ -82,7 +82,7 @@ public class reflectionFunctions extends Functions {
             } else if ((params[i] == long.class || params[i] == Long.class) && !(objects[i] instanceof Long)) {
                 objects[i] = ((Number)objects[i]).longValue();
             } else if ((params[i] == char.class || params[i] == Character.class) && !(objects[i] instanceof Character)) {
-                objects[i] = (char) ((Number)objects[i]).shortValue();
+                objects[i] = (char) ((Number)objects[i]).intValue();
             } else if ((params[i] == byte.class || params[i] == Byte.class) && !(objects[i] instanceof Byte)) {
                 objects[i] = ((Number)objects[i]).byteValue();
             }
