@@ -108,6 +108,7 @@ public class Profile {
 
     private void initEventHandlerCallbacks() {
         registry.addEvent("ANYTHING");
+        registry.addEvent("PROFILE_LOAD");
         
         // -------- JOIN ---------- //
         registry.addEvent("JOIN_SERVER");
