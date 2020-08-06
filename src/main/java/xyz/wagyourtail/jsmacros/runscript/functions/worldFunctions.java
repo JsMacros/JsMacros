@@ -22,6 +22,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ClientBossBar;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.Entity;
@@ -35,7 +36,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.compat.interfaces.IBossBarHud;
-import xyz.wagyourtail.jsmacros.compat.interfaces.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.reflector.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.reflector.BossBarHelper;
 import xyz.wagyourtail.jsmacros.reflector.EntityHelper;
@@ -176,7 +176,9 @@ public class worldFunctions extends Functions {
     
     public String getCurrentServerAddress() {
         MinecraftClient mc = MinecraftClient.getInstance();
-        ClientConnection c = ((IMinecraftClient)mc).getConnection();
+        ClientPlayNetworkHandler h = mc.getNetworkHandler();
+        if (h == null) return null;
+        ClientConnection c = h.getConnection();
         if (c == null) return null;
         return c.getAddress().toString();
     }

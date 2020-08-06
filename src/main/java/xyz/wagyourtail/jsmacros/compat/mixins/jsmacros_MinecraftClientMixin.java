@@ -10,12 +10,11 @@ import com.google.common.collect.ImmutableList;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.ClientConnection;
-import xyz.wagyourtail.jsmacros.compat.interfaces.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.runscript.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.runscript.functions.hudFunctions;
 
 @Mixin(MinecraftClient.class)
-class jsmacros_MinecraftClientMixin implements IMinecraftClient {
+class jsmacros_MinecraftClientMixin {
 
     @Shadow
     private ClientConnection connection;
@@ -29,10 +28,5 @@ class jsmacros_MinecraftClientMixin implements IMinecraftClient {
                 h.init();
             } catch (Exception e) {}
         }
-    }
-
-    @Override
-    public ClientConnection getConnection() {
-        return connection;
     }
 }
