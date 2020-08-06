@@ -27,6 +27,8 @@ public class playerFunctions extends Functions {
     }
     
     public Inventory openInventory() {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        if (mc.player.inventory == null) return null;
         return new Inventory();
     }
     
