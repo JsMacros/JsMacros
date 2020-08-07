@@ -5,6 +5,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.runscript.functions.jsMacrosFunctions;
 
 public class TickBasedEvents {
     private static boolean initialized = false;
@@ -51,6 +52,9 @@ public class TickBasedEvents {
         if (initialized) return;
         initialized = true;
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
+            
+            jsMacrosFunctions.tickSynchronizer.tick();
+            
             if (mc.player != null && mc.player.inventory != null) {
                 PlayerInventory inv = mc.player.inventory;
 

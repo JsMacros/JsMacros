@@ -24,6 +24,7 @@ import xyz.wagyourtail.jsmacros.runscript.RunScript;
 import xyz.wagyourtail.jsmacros.runscript.RunScript.thread;
 
 public class jsMacrosFunctions extends Functions {
+    public static TickSync tickSynchronizer;
 
     public jsMacrosFunctions(String libName) {
         super(libName);
@@ -198,5 +199,24 @@ public class jsMacrosFunctions extends Functions {
             mc.joinWorld(null);
             mc.openScreen(new TitleScreen());
         });
+    }
+    
+    public void waitTick() throws InterruptedException {
+        tickSynchronizer.waitTick();
+    }
+    
+    public static class TickSync {
+        int tc = 0;
+        public synchronized void waitTick() throws InterruptedException {
+            int tcc = tc;
+            while (tc == tcc) {
+                this.wait();
+            }
+        }
+        
+        public synchronized void tick() {
+            ++tc;
+            this.notifyAll();
+        }
     }
 }
