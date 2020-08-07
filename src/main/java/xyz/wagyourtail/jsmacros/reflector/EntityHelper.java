@@ -1,10 +1,16 @@
 package xyz.wagyourtail.jsmacros.reflector;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.ImmutableList;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
@@ -70,6 +76,15 @@ public class EntityHelper {
     public EntityHelper setGlowing(boolean val) {
         e.setGlowing(val);
         return this;
+    }
+    
+    public List<StatusEffectHelper> getStatusEffects() {
+        if (!(e instanceof LivingEntity)) return null;
+        List<StatusEffectHelper> l = new ArrayList<>();
+        for (StatusEffectInstance i : ImmutableList.copyOf(((LivingEntity) e).getStatusEffects())) {
+            l.add(new StatusEffectHelper(i));
+        }
+        return l;
     }
     
     public Entity getRaw() {
