@@ -182,8 +182,16 @@ public class RunScript {
 
         @Override
         public int compare(Language a, Language b) {
-            if (b.extension().endsWith(a.extension())) return 1;
-            return -1;
+            String[] as = a.extension().replaceAll("\\.", " ").trim().split(" ");
+            String[] bs = b.extension().replaceAll("\\.", " ").trim().split(" ");
+            int lendif = bs.length-as.length;
+            if (lendif != 0) return lendif;
+            int comp = 0;
+            for (int i = lendif; i > -1; --i) {
+                comp = as[i].compareTo(bs[i]);
+                if (comp != 0) break;
+            }
+            return comp;
         }
         
     }
