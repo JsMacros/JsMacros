@@ -39,19 +39,19 @@ public class Draw2D extends DrawableHelper {
     }
     
     public List<text> getTexts() {
-        return textFields;
+        return ImmutableList.copyOf(textFields);
     }
     
     public List<rect> getRects() {
-        return rectFields;
+        return ImmutableList.copyOf(rectFields);
     }
     
     public List<item> getItems() {
-        return itemFields;
+        return ImmutableList.copyOf(itemFields);
     }
     
     public List<image> getImages() {
-        return imageFields;
+        return ImmutableList.copyOf(imageFields);
     }
     
     

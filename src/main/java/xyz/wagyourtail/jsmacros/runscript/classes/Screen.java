@@ -77,7 +77,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     
     public List<ButtonWidgetHelper> getButtonWidgets() {
         List<ButtonWidgetHelper> list = new ArrayList<ButtonWidgetHelper>();
-        for (AbstractButtonWidget b : buttons) {
+        for (AbstractButtonWidget b : ImmutableList.copyOf(buttons)) {
             list.add(new ButtonWidgetHelper((ButtonWidget)b));
         }
         return list;
@@ -85,7 +85,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     
     public List<TextFieldWidgetHelper> getTextFields() {
         List<TextFieldWidgetHelper> list = new ArrayList<TextFieldWidgetHelper>();
-        for (TextFieldWidget t : textFieldWidgets) {
+        for (TextFieldWidget t : ImmutableList.copyOf(textFieldWidgets)) {
             list.add(new TextFieldWidgetHelper(t));
         }
         return list;
@@ -93,19 +93,19 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     
 
     public List<text> getTexts() {
-        return textFields;
+        return ImmutableList.copyOf(textFields);
     }
     
     public List<rect> getRects() {
-        return rectFields;
+        return ImmutableList.copyOf(rectFields);
     }
     
     public List<item> getItems() {
-        return itemFields;
+        return ImmutableList.copyOf(itemFields);
     }
     
     public List<image> getImages() {
-        return imageFields;
+        return ImmutableList.copyOf(imageFields);
     }
     
     public ButtonWidgetHelper addButton(int x, int y, int width, int height, String text, BiConsumer<ButtonWidgetHelper, Screen> callback) {

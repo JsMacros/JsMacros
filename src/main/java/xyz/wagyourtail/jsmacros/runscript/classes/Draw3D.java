@@ -39,7 +39,7 @@ public class Draw3D {
     }
     
     public List<box> getBoxes() {
-        return boxes;
+        return ImmutableList.copyOf(boxes);
     }
     
     public line addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color) {
@@ -60,7 +60,7 @@ public class Draw3D {
     }
     
     public List<line> getLines() {
-        return lines;
+        return ImmutableList.copyOf(lines);
     }
     
     public void render() {
