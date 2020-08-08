@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Queues;
 
 import xyz.wagyourtail.jsmacros.runscript.classes.Draw3D;
@@ -61,7 +62,7 @@ public class hudFunctions extends Functions {
     }
     
     public List<Draw2D> listDraw2Ds() {
-        return overlays;
+        return ImmutableList.copyOf(overlays);
     }
     
     public void clearDraw2Ds() {
@@ -81,7 +82,7 @@ public class hudFunctions extends Functions {
     }
     
     public List<Draw3D> listDraw3Ds() {
-        return renders;
+        return ImmutableList.copyOf(renders);
     }
     
     public void clearDraw3Ds() {
