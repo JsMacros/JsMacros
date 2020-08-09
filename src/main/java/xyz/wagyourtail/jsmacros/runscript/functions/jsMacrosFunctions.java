@@ -7,6 +7,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import com.google.common.collect.ImmutableList;
+import com.ibm.icu.impl.locale.XCldrStub.ImmutableMap;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
@@ -52,7 +55,7 @@ public class jsMacrosFunctions extends Functions {
     }
 
     public Map<RawMacro, List<thread>> getRunningThreads() {
-        return RunScript.threads;
+        return ImmutableMap.copyOf(RunScript.threads);
     }
 
     public String mcVersion() {
@@ -162,7 +165,9 @@ public class jsMacrosFunctions extends Functions {
     
     public List<IEventListener> listeners(String event) {
         List<IEventListener> listeners = new ArrayList<>();
-        for (IEventListener l : Profile.registry.getListeners(event)) {
+        List<IEventListener> raw = Profile.registry.getListeners(event);
+        if (raw == null) return null;
+        for (IEventListener l : ImmutableList.copyOf(raw)) {
             if (!(l instanceof BaseMacro)) listeners.add(l);
         }
         return listeners;

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.ImmutableList;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -30,7 +32,7 @@ public class keybindFunctions extends Functions {
     public Map<String, String> getKeyBindings() {
         MinecraftClient mc = MinecraftClient.getInstance();
         Map<String, String> keys = new HashMap<>();
-        for (KeyBinding key : mc.options.keysAll) {
+        for (KeyBinding key : ImmutableList.copyOf(mc.options.keysAll)) {
             keys.put(key.getTranslationKey(), key.getBoundKeyTranslationKey());
         }
         return keys;

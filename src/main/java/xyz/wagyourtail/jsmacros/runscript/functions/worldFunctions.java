@@ -16,6 +16,9 @@ import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -54,7 +57,7 @@ public class worldFunctions extends Functions {
     public List<PlayerEntityHelper> getLoadedPlayers() {
         MinecraftClient mc = MinecraftClient.getInstance();
         List<PlayerEntityHelper> players = new ArrayList<>();
-        for (AbstractClientPlayerEntity p : mc.world.getPlayers()) {
+        for (AbstractClientPlayerEntity p : ImmutableList.copyOf(mc.world.getPlayers())) {
             players.add(new PlayerEntityHelper(p));
         }
         return players;
@@ -62,7 +65,7 @@ public class worldFunctions extends Functions {
     
     public List<PlayerListEntryHelper> getPlayers() {
         List<PlayerListEntryHelper> players = new ArrayList<>();
-        for (PlayerListEntry p : MinecraftClient.getInstance().getNetworkHandler().getPlayerList()) {
+        for (PlayerListEntry p : ImmutableList.copyOf(MinecraftClient.getInstance().getNetworkHandler().getPlayerList())) {
             players.add(new PlayerListEntryHelper(p));
         }
         return players;
@@ -80,7 +83,7 @@ public class worldFunctions extends Functions {
     public List<EntityHelper> getEntities() {
         MinecraftClient mc = MinecraftClient.getInstance();
         List<EntityHelper> entities = new ArrayList<>();
-        for (Entity e : mc.world.getEntities()) {
+        for (Entity e : ImmutableList.copyOf(mc.world.getEntities())) {
             if (e.getType() == EntityType.PLAYER) {
                 entities.add(new PlayerEntityHelper((PlayerEntity)e));
             } else {
@@ -160,9 +163,9 @@ public class worldFunctions extends Functions {
     
     public Map<String, BossBarHelper> getBossBars() {
         MinecraftClient mc = MinecraftClient.getInstance();
-        Map<UUID, ClientBossBar> bars = ((IBossBarHud) mc.inGameHud.getBossBarHud()).getBossBars();
+        Map<UUID, ClientBossBar> bars = ImmutableMap.copyOf(((IBossBarHud) mc.inGameHud.getBossBarHud()).getBossBars());
         Map<String, BossBarHelper> out = new HashMap<>();
-        for (Map.Entry<UUID, ClientBossBar> e : bars.entrySet()) {
+        for (Map.Entry<UUID, ClientBossBar> e : ImmutableList.copyOf(bars.entrySet())) {
             out.put(e.getKey().toString(), new BossBarHelper(e.getValue()));
         }
         return out;
