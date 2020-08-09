@@ -27,7 +27,7 @@ import xyz.wagyourtail.jsmacros.runscript.RunScript;
 import xyz.wagyourtail.jsmacros.runscript.RunScript.thread;
 
 public class jsMacrosFunctions extends Functions {
-    public static TickSync tickSynchronizer;
+    public static TickSync tickSynchronizer = new TickSync();
 
     public jsMacrosFunctions(String libName) {
         super(libName);
