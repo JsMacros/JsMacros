@@ -265,7 +265,13 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     
     public void removed() {
         this.client.keyboard.enableRepeatEvents(false);
-        if (onClose != null) onClose.accept(this);
+        if (onClose != null) {
+            try {
+                onClose.accept(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
     
     public void close() {
