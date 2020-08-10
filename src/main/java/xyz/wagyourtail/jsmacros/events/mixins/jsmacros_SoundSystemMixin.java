@@ -13,6 +13,6 @@ import xyz.wagyourtail.jsmacros.events.SoundCallback;
 public class jsmacros_SoundSystemMixin {
     @Inject(at = @At("HEAD"), method="play")
     public void jsmacros_play(SoundInstance instance, CallbackInfo info) {
-        SoundCallback.EVENT.invoker().interact(instance.getId().toString());
+        SoundCallback.EVENT.invoker().interact(instance.getId().toString(), instance.getVolume(), instance.getPitch(), instance.getX(), instance.getY(), instance.getZ());
     }
 }
