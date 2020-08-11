@@ -23,7 +23,7 @@ public class jsmacros_MinecraftClientMixin {
     @Inject(at = @At("HEAD"), method="joinWorld")
     public void jsmacros_joinWorld(ClientWorld world, CallbackInfo info) {
         if (world != null)
-            DimensionChangeCallback.EVENT.invoker().interact(world.getDimensionRegistryKey().getValue().toString());
+            DimensionChangeCallback.EVENT.invoker().interact(world.getRegistryKey().getValue().toString());
     }
     
     @Inject(at = @At("HEAD"), method="openScreen")
