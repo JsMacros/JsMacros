@@ -11,7 +11,8 @@
         "jsmacros_HorseScreenMixin",
         "jsmacros_SignEditScreenMixin",
         "jsmacros_BossBarHudMixin",
-        "jsmacros_GameRendererMixin"
+        "jsmacros_GameRendererMixin",
+        "jsmacros_ChatHudMixin"
     ],
     "injectors": {
         "defaultRequire": 1

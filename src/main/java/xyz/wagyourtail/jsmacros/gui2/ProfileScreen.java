@@ -18,7 +18,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
 public class ProfileScreen extends Screen {
@@ -29,8 +29,8 @@ public class ProfileScreen extends Screen {
     private Scrollbar profileScroll;
     private CheckBoxContainer disableInGui;
     protected OverlayContainer overlay;
-    private StringRenderable profText;
-    private StringRenderable defText;
+    private Text profText;
+    private Text defText;
 
     public ProfileScreen(Screen parent) {
         super(new TranslatableText("jsmacros.title"));
@@ -45,7 +45,7 @@ public class ProfileScreen extends Screen {
         profiles.clear();
         topScroll = 35;
 
-        client.keyboard.enableRepeatEvents(true);
+        client.keyboard.setRepeatEvents(true);
         this.addButton(new Button(0, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.keys"), (btn) -> {
             client.openScreen(parent);
         }));
@@ -212,7 +212,7 @@ public class ProfileScreen extends Screen {
         // plist topbar
         int w = this.width / 2 - 40;
         drawCenteredText(matricies, textRenderer, profText, w * 3 / 8 + 20, 24, 0xFFFFFF);
-        drawCenteredText(matricies, this.textRenderer, textRenderer.trimToWidth(defText, w / 4), w * 7 / 8 + 20, 24, 0xFFFFFF);
+        drawCenteredText(matricies, this.textRenderer, (Text) textRenderer.trimToWidth(defText, w / 4), w * 7 / 8 + 20, 24, 0xFFFFFF);
         fill(matricies, 20, 33, this.width / 2 - 20, 34, 0xFFFFFFFF);
 
         // pname
@@ -233,7 +233,7 @@ public class ProfileScreen extends Screen {
     }
 
     public void removed() {
-        client.keyboard.enableRepeatEvents(false);
+        client.keyboard.setRepeatEvents(false);
     }
 
     public boolean shouldCloseOnEsc() {

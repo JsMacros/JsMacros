@@ -51,7 +51,7 @@ public class MacroScreen extends Screen {
         children.clear();
         macros.clear();
         overlay = null;
-        client.keyboard.enableRepeatEvents(true);
+        client.keyboard.setRepeatEvents(true);
         keyScreen = this.addButton(new Button(0, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.keys"), null));
 
         eventScreen = this.addButton(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.events"), null));
@@ -194,7 +194,7 @@ public class MacroScreen extends Screen {
     }
     
     public void removed() {
-        client.keyboard.enableRepeatEvents(false);
+        client.keyboard.setRepeatEvents(false);
     }
 
     public boolean shouldCloseOnEsc() {

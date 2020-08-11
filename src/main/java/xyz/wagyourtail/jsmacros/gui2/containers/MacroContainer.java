@@ -18,7 +18,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -201,12 +201,14 @@ public class MacroContainer extends MultiElementContainer {
                 drawTextWithShadow(matricies, textRenderer, keyBtn.getMessage(), mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
             }
             if (fileBtn.hovering && !fileBtn.canRenderAllText()) {
-                List<StringRenderable> lines = textRenderer.wrapLines(fileBtn.getMessage(), this.x + this.width - mouseX);
+                List<OrderedText> lines = textRenderer.wrapLines(fileBtn.getMessage(), this.x + this.width - mouseX);
                 int top = mouseY-(textRenderer.fontHeight*lines.size())-2;
                 int width = lines.stream().map(e -> textRenderer.getWidth(e)).reduce(0, (e, t) -> Math.max(e, t));
                 fill(matricies, mouseX-2, top - 1, mouseX+width+2, mouseY, 0xFF000000);
-                for (int i = 0; i < lines.size(); ++i)
-                    this.drawCenteredText(matricies, textRenderer, lines.get(i), mouseX + width/2, top+textRenderer.fontHeight*i, 0xFFFFFF);
+                for (int i = 0; i < lines.size(); ++i) {
+                    int wi = textRenderer.getWidth(lines.get(i)) / 2;
+                    textRenderer.draw(matricies, lines.get(i), mouseX + width/2 - wi / 2, top+textRenderer.fontHeight*i, 0xFFFFFF);
+                }
             }
         }
     }

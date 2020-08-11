@@ -48,7 +48,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         textFields.clear();
         itemFields.clear();
         rectFields.clear();
-        client.keyboard.enableRepeatEvents(true);
+        client.keyboard.setRepeatEvents(true);
         if (onInit != null) {
             try {
                 onInit.accept(this);
@@ -241,7 +241,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         if (bgStyle == 0) this.renderBackgroundTexture(0);
         else if (bgStyle == 1) this.renderBackground(matricies, 0);
         
-        this.drawCenteredText(matricies, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+        drawCenteredText(matricies, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
         
         for (rect r : ImmutableList.copyOf(this.rectFields)) {
             r.render(matricies);
@@ -264,7 +264,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     }
     
     public void removed() {
-        this.client.keyboard.enableRepeatEvents(false);
+        this.client.keyboard.setRepeatEvents(false);
         if (onClose != null) {
             try {
                 onClose.accept(this);

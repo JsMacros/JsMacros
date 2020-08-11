@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AbstractPressableButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 
 public class Button extends AbstractPressableButtonWidget {
@@ -15,7 +15,7 @@ public class Button extends AbstractPressableButtonWidget {
     protected int hilightColor;
     protected MinecraftClient mc;
     protected int textColor;
-    protected List<StringRenderable> text;
+    protected List<OrderedText> text;
     protected int lines;
     protected int vcenter;
     public Consumer<Button> onPress;
@@ -60,7 +60,8 @@ public class Button extends AbstractPressableButtonWidget {
     
     protected void renderMessage(MatrixStack matricies) {
         for (int i = 0; i < lines; ++i) {
-            drawCenteredText(matricies, mc.textRenderer, text.get(i), x + width / 2, y + 2 + vcenter + (i * mc.textRenderer.fontHeight), textColor);
+            int w = mc.textRenderer.getWidth(text.get(i));
+            mc.textRenderer.draw(matricies, text.get(i), x + width / 2 - w / 2, y + 2 + vcenter + (i * mc.textRenderer.fontHeight), textColor);
         }
     }
     

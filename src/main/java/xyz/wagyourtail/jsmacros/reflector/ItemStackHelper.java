@@ -58,7 +58,7 @@ public class ItemStackHelper {
     public String getCreativeTab() {
         ItemGroup g = i.getItem().getGroup();
         if (g != null)
-            return g.getId();
+            return g.getName();
         else
             return null;
     }

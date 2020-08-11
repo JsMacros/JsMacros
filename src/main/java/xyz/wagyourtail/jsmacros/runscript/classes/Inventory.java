@@ -192,7 +192,7 @@ public class Inventory {
             } else if (inventory instanceof HorseScreen) {
                 HorseBaseEntity h = (HorseBaseEntity) ((IHorseScreen)this.inventory).getEntity();
                 if (h.canBeSaddled()) map.put("saddle", new int[] {0});
-                if (h.canEquip()) map.put("armor", new int[] {1});
+                if (h.hasArmorSlot()) map.put("armor", new int[] {1});
                 if (h instanceof AbstractDonkeyEntity && ((AbstractDonkeyEntity) h).hasChest()) {
                     map.put("container", jsMacros.range(2, slots - 9 - 27));
                 }

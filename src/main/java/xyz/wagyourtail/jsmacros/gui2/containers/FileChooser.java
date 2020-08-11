@@ -21,13 +21,13 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
 
 public class FileChooser extends OverlayContainer {
     private File directory;
-    private StringRenderable dirname;
+    private Text dirname;
     private File selected;
     private List<fileObj> files = new ArrayList<>();
     private Consumer<File> setFile;

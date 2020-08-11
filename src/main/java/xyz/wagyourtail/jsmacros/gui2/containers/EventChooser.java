@@ -11,7 +11,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.gui2.elements.Button;
 import xyz.wagyourtail.jsmacros.gui2.elements.OverlayContainer;
@@ -23,7 +23,7 @@ public class EventChooser extends OverlayContainer {
     private List<eventObj> events = new ArrayList<>();
     private int topScroll;
     private Consumer<String> setEvent;
-    private StringRenderable eventText;
+    private Text eventText;
     
     public EventChooser(int x, int y, int width, int height, TextRenderer textRenderer, String selected, Consumer<AbstractButtonWidget> addButton, Consumer<AbstractButtonWidget> removeButton, Consumer<OverlayContainer> close, Consumer<String> setEvent) {
         super(x, y, width, height, textRenderer, addButton, removeButton, close);

@@ -6,7 +6,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.gui2.elements.Button;
 import xyz.wagyourtail.jsmacros.gui2.elements.MultiElementContainer;
 
@@ -14,10 +14,10 @@ public class CheckBoxContainer extends MultiElementContainer {
     private boolean state;
     private Button checkBox;
     private Consumer<Boolean> setState;
-    public StringRenderable message;
+    public Text message;
     
     
-    public CheckBoxContainer(int x, int y, int width, int height, TextRenderer textRenderer, boolean defaultState, StringRenderable message, Consumer<AbstractButtonWidget> addButton, Consumer<Boolean> setState) {
+    public CheckBoxContainer(int x, int y, int width, int height, TextRenderer textRenderer, boolean defaultState, Text message, Consumer<AbstractButtonWidget> addButton, Consumer<Boolean> setState) {
         super(x, y, width, height, textRenderer, addButton);
         this.state = defaultState;
         this.message = message;

@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import xyz.wagyourtail.jsmacros.compat.interfaces.IChatHud;
 import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
 public class chatFunctions extends Functions {
@@ -22,7 +23,7 @@ public class chatFunctions extends Functions {
             MinecraftClient mc = MinecraftClient.getInstance();
             LiteralText text = new LiteralText(message);
             try {
-                mc.inGameHud.getChatHud().addMessage(text, 0);
+                ((IChatHud)mc.inGameHud.getChatHud()).addMessageBypass(text);
                 //silently fail on removing messages if another thread broke this one...
             } catch (IndexOutOfBoundsException e) {}
         }
@@ -31,7 +32,7 @@ public class chatFunctions extends Functions {
     private void logInternal(TextHelper text) {
         MinecraftClient mc = MinecraftClient.getInstance();
         try {
-            mc.inGameHud.getChatHud().addMessage(text.getRaw(), 0);
+            ((IChatHud)mc.inGameHud.getChatHud()).addMessageBypass(text.getRaw());
             //silently fail on removing messages if another thread broke this one...
         } catch (IndexOutOfBoundsException e) {}
     }

@@ -19,7 +19,7 @@ import net.minecraft.util.Arm;
 public class OptionsHelper {
     private GameOptions options;
     private MinecraftClient mc = MinecraftClient.getInstance();
-    private ResourcePackManager<?> rpm = mc.getResourcePackManager();
+    private ResourcePackManager rpm = mc.getResourcePackManager();
     
     public OptionsHelper(GameOptions options) {
         this.options = options;

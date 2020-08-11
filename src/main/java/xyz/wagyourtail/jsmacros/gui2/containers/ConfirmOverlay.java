@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.gui2.containers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -8,7 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.gui2.elements.Button;
@@ -16,7 +15,7 @@ import xyz.wagyourtail.jsmacros.gui2.elements.OverlayContainer;
 
 public class ConfirmOverlay extends OverlayContainer {
     private Consumer<ConfirmOverlay> accept;
-    private List<StringRenderable> text;
+    private List<OrderedText> text;
     private int lines;
     private int vcenter;
     private MinecraftClient mc;
@@ -29,7 +28,7 @@ public class ConfirmOverlay extends OverlayContainer {
     }
     
     public void setMessage(Text message) {
-        this.text = new ArrayList<>(this.mc.textRenderer.wrapLines(message, width - 6));
+        this.text = this.mc.textRenderer.wrapLines(message, width - 6);
         this.lines = Math.min(Math.max((height - 15) / mc.textRenderer.fontHeight, 1), text.size());
         this.vcenter = ((height - 15) - (lines * mc.textRenderer.fontHeight)) / 2;
     }
@@ -50,7 +49,8 @@ public class ConfirmOverlay extends OverlayContainer {
     
     protected void renderMessage(MatrixStack matricies) {
         for (int i = 0; i < lines; ++i) {
-            drawCenteredText(matricies, textRenderer, text.get(i), x + width / 2, y + 2 + vcenter + (i * mc.textRenderer.fontHeight), 0xFFFFFF);
+            int w = textRenderer.getWidth(text.get(i));
+            textRenderer.draw(matricies, text.get(i), x + width / 2 - w / 2, y + 2 + vcenter + (i * mc.textRenderer.fontHeight), 0xFFFFFF);
         }
     }
     

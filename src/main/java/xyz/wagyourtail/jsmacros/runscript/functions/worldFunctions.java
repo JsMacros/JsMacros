@@ -95,12 +95,12 @@ public class worldFunctions extends Functions {
     
     public String getDimension() {
         MinecraftClient mc = MinecraftClient.getInstance();
-        return mc.world.getDimensionRegistryKey().getValue().toString();
+        return mc.world.getRegistryKey().getValue().toString();
     }
     
     public String getBiome() {
         MinecraftClient mc = MinecraftClient.getInstance();
-        return Registry.BIOME.getId(mc.world.getBiome(mc.player.getBlockPos())).toString();
+        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(mc.player.getBlockPos())).toString();
     }
     
     public long getTime() {
@@ -188,7 +188,7 @@ public class worldFunctions extends Functions {
     
     public String getBiomeAt(int x, int z) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        return Registry.BIOME.getId(mc.world.getBiome(new BlockPos(x, 10, z))).toString();
+        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(new BlockPos(x, 10, z))).toString();
     }
     
     

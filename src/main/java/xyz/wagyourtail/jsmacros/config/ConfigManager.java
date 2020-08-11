@@ -17,7 +17,7 @@ import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 
 public class ConfigManager {
     public ConfigOptions options;
-    public File configFolder = new File(FabricLoader.getInstance().getConfigDirectory(), "jsMacros");
+    public File configFolder = new File(FabricLoader.getInstance().getConfigDir().toFile(), "jsMacros");
     public File macroFolder = new File(configFolder, "Macros");
     public File configFile = new File(configFolder, "options.json");
     private Gson gson = new GsonBuilder().setPrettyPrinting().create();

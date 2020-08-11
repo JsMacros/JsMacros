@@ -91,7 +91,7 @@ public class CancelScreen extends Screen {
     }
 
     public void removed() {
-        client.keyboard.enableRepeatEvents(false);
+        client.keyboard.setRepeatEvents(false);
     }
 
     public void onClose() {
