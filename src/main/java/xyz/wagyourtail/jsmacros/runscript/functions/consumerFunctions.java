@@ -22,13 +22,15 @@ public class consumerFunctions extends Functions {
         return new Consumer<Object>() {
             @Override
             public void accept(Object arg0) {
-                while(th.isAlive());
-                tasks.add(Thread.currentThread());
-                Thread joinable;
-                while ((joinable = tasks.peek()) != Thread.currentThread()) {
-                    try {
-                        joinable.join();
-                    } catch (Exception e) {}
+                if (th != Thread.currentThread()) {
+                    while(th.isAlive());
+                    tasks.add(Thread.currentThread());
+                    Thread joinable;
+                    while ((joinable = tasks.peek()) != Thread.currentThread()) {
+                        try {
+                            joinable.join();
+                        } catch (Exception e) {}
+                    }
                 }
                 c.accept(arg0);
                 tasks.poll();
@@ -41,13 +43,15 @@ public class consumerFunctions extends Functions {
         return new BiConsumer<Object, Object>() {
             @Override
             public void accept(Object arg0, Object arg1) {
-                while(th.isAlive());
-                tasks.add(Thread.currentThread());
-                Thread joinable;
-                while ((joinable = tasks.peek()) != Thread.currentThread()) {
-                    try {
-                        joinable.join();
-                    } catch (Exception e) {}
+                if (th != Thread.currentThread()) {
+                    while(th.isAlive());
+                    tasks.add(Thread.currentThread());
+                    Thread joinable;
+                    while ((joinable = tasks.peek()) != Thread.currentThread()) {
+                        try {
+                            joinable.join();
+                        } catch (Exception e) {}
+                    }
                 }
                 c.accept(arg0, arg1);
                 tasks.poll();
