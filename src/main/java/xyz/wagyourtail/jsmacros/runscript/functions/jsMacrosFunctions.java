@@ -24,7 +24,6 @@ import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 import xyz.wagyourtail.jsmacros.reflector.OptionsHelper;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
-import xyz.wagyourtail.jsmacros.runscript.RunScript.thread;
 
 public class jsMacrosFunctions extends Functions {
     public static TickSync tickSynchronizer = new TickSync();
@@ -54,7 +53,7 @@ public class jsMacrosFunctions extends Functions {
         return new OptionsHelper(mc.options);
     }
 
-    public Map<RawMacro, List<thread>> getRunningThreads() {
+    public Map<RawMacro, List<RunScript.thread>> getRunningThreads() {
         return ImmutableMap.copyOf(RunScript.threads);
     }
 
@@ -64,7 +63,7 @@ public class jsMacrosFunctions extends Functions {
     }
 
     public void runScript(String file) {
-        runScript(file, null);
+        runScript(file, (Consumer<String>) null);
     }
 
     public void runScript(String file, Consumer<String> callback) {
@@ -75,6 +74,30 @@ public class jsMacrosFunctions extends Functions {
         } else {
             RunScript.exec(new RawMacro(MacroEnum.EVENT, "", file, true), "", null);
         }
+    }
+    
+    public Thread runScript(String language, String script) {
+        return runScript(language, script, null);
+    }
+    
+    public Thread runScript(String language, String script, Consumer<String> callback) {
+        Thread t = new Thread(() -> {
+            RunScript.Language lang = RunScript.defaultLang;
+            for (RunScript.Language l : RunScript.languages) {
+                if (language.equals(l.extension())) {
+                    lang = l;
+                    break;
+                }
+            }
+            try {
+                lang.exec(script, null, null);
+                if (callback != null) callback.accept(null);
+            } catch (Exception | AbstractMethodError e) {
+                if (callback != null) callback.accept(e.toString());
+            }
+        });
+        t.start();
+        return t;
     }
     
     public void open(String s) {

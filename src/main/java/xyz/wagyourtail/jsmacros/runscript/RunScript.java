@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.runscript;
 
 import java.io.File;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,7 +29,7 @@ public class RunScript {
     public static List<Language> languages = new ArrayList<>();
     public static Language defaultLang;
     public static List<Functions> standardLib = new ArrayList<>();
-
+    
     static {
         standardLib.add(new globalVarFunctions("globalvars"));
         standardLib.add(new jsMacrosFunctions("jsmacros"));
@@ -46,38 +46,51 @@ public class RunScript {
 
         // -------------------- JAVASCRIPT -------------------------- //
         Language js = new Language() {
+            public Functions jsConsumerWrapper = new consumerFunctions("consumer");
+            
             @Override
             public void exec(RawMacro macro, File file, String event, Map<String, Object> args) throws Exception {
-                // Build Context
+                Map<String, Object> globals = new HashMap<>();                
+                
+                globals.put("event", event);
+                globals.put("args", args);
+                globals.put("file", file);
+
+                exec("load(\"./" + file.getName() + "\")", globals, file.getParentFile().toPath());
+                            
+            }
+
+            @Override
+            public void exec(String script, Map<String, Object> globals, Path currentDir) throws Exception {
+             // Build Context
 
                 Builder build = Context.newBuilder("js");
                 build.allowHostAccess(HostAccess.ALL);
                 build.allowHostClassLookup(s -> true);
                 build.allowAllAccess(true);
                 build.allowExperimentalOptions(true);
-                build.currentWorkingDirectory(Paths.get(file.getParent()));
+                if (currentDir != null) build.currentWorkingDirectory(currentDir);
                 Context con = build.build();
 
                 // Set Bindings
-
                 Value binds = con.getBindings("js");
-                // ScriptEngine engine = GraalJSScriptEngine.create(null, build);
-                binds.putMember("event", event);
-                binds.putMember("args", args);
-                binds.putMember("file", file);
 
+                if (globals != null) for (Map.Entry<String, Object> e : globals.entrySet()) {
+                    binds.putMember(e.getKey(), e.getValue());
+                }
+                
                 for (Functions f : standardLib) {
                     if (!f.excludeLanguages.contains(".js")) {
                         binds.putMember(f.libName, f);
                     }
                 }
+                binds.putMember(jsConsumerWrapper.libName, jsConsumerWrapper);
 
                 // Run Script
 
-                con.eval("js", "load(\"./" + file.getName() + "\")");
-                            
+                con.eval("js", script);
             }
-
+            
             @Override
             public String extension() {
                 return ".js";
@@ -175,7 +188,9 @@ public class RunScript {
         }
         
         public void exec(RawMacro macro, File file, String event, Map<String, Object> args) throws Exception;
-
+        
+        public void exec(String script, Map<String, Object> globals, Path currentDir) throws Exception;
+        
         public String extension();
     }
     
