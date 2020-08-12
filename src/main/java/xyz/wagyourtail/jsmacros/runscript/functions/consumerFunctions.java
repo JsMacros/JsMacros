@@ -5,10 +5,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import com.google.common.collect.Queues;
-
 public class consumerFunctions extends Functions {
-    public LinkedBlockingQueue<Thread> queue = Queues.newLinkedBlockingQueue();
+    private LinkedBlockingQueue<Thread> tasks = new LinkedBlockingQueue<>();
 
     public consumerFunctions(String libName) {
         super(libName);
@@ -20,35 +18,39 @@ public class consumerFunctions extends Functions {
     }
     
     public Consumer<Object> toConsumer(Consumer<Object> c) {
+        Thread th = Thread.currentThread();
         return new Consumer<Object>() {
             @Override
             public void accept(Object arg0) {
-                queue.add(Thread.currentThread());
-                Thread t = queue.peek();
-                while (t != Thread.currentThread()) try {
-                    t.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                while(th.isAlive());
+                tasks.add(Thread.currentThread());
+                Thread joinable;
+                while ((joinable = tasks.peek()) != Thread.currentThread()) {
+                    try {
+                        joinable.join();
+                    } catch (Exception e) {}
                 }
                 c.accept(arg0);
-                queue.poll();
+                tasks.poll();
             }
         };
     }
     
     public BiConsumer<Object, Object> toBiConsumer(BiConsumer<Object, Object> c) {
+        Thread th = Thread.currentThread();
         return new BiConsumer<Object, Object>() {
             @Override
             public void accept(Object arg0, Object arg1) {
-                queue.add(Thread.currentThread());
-                Thread t = queue.peek();
-                while (t != Thread.currentThread()) try {
-                    t.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                while(th.isAlive());
+                tasks.add(Thread.currentThread());
+                Thread joinable;
+                while ((joinable = tasks.peek()) != Thread.currentThread()) {
+                    try {
+                        joinable.join();
+                    } catch (Exception e) {}
                 }
                 c.accept(arg0, arg1);
-                queue.poll();
+                tasks.poll();
             }
         };
     }
