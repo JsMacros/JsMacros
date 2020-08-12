@@ -3,6 +3,8 @@ package xyz.wagyourtail.jsmacros.runscript.functions;
 import java.util.List;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.toast.SystemToast;
+import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.compat.interfaces.IChatHud;
@@ -66,6 +68,16 @@ public class chatFunctions extends Functions {
         else if (text != null) textt = new LiteralText(text.toString());
         MinecraftClient mc = MinecraftClient.getInstance();
         mc.inGameHud.setOverlayMessage(textt, tinted);
+    }
+    
+    public void toast(Object title, Object desc) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        ToastManager t = mc.getToastManager();
+        if (t != null) {
+            Text titlee = (title instanceof TextHelper) ? ((TextHelper) title).getRaw() : title != null ? new LiteralText(title.toString()) : null;
+            Text descc = (desc instanceof TextHelper) ? ((TextHelper) desc).getRaw() : desc != null ? new LiteralText(desc.toString()) : null;
+            if (titlee != null) t.add(SystemToast.create(mc, null, titlee, descc));
+        }
     }
     
     public TextHelper createTextHelperFromString(String content) {
