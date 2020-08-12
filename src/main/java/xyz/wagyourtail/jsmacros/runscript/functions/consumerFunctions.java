@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 import com.google.common.collect.Queues;
 
 public class consumerFunctions extends Functions {
-    public static LinkedBlockingQueue<Thread> queue = Queues.newLinkedBlockingQueue();
+    public LinkedBlockingQueue<Thread> queue = Queues.newLinkedBlockingQueue();
 
     public consumerFunctions(String libName) {
         super(libName);

@@ -46,7 +46,6 @@ public class RunScript {
 
         // -------------------- JAVASCRIPT -------------------------- //
         Language js = new Language() {
-            private Functions jsConsumerWrapper = new consumerFunctions("consumer");
             
             @Override
             public void exec(RawMacro macro, File file, String event, Map<String, Object> args) throws Exception {
@@ -84,7 +83,7 @@ public class RunScript {
                         binds.putMember(f.libName, f);
                     }
                 }
-                binds.putMember(jsConsumerWrapper.libName, jsConsumerWrapper);
+                binds.putMember("consumer", new consumerFunctions("consumer"));
 
                 // Run Script
 
