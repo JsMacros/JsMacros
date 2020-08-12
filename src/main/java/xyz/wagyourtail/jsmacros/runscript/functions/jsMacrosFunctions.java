@@ -201,11 +201,6 @@ public class jsMacrosFunctions extends Functions {
         return mc.fpsDebugString;
     }
     
-    public String getServerAddress() {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        return mc.getNetworkHandler().getConnection().getAddress().toString();
-    }
-    
     public void connect(String ip) {
         ServerAddress a = ServerAddress.parse(ip);
         connect(a.getAddress(), a.getPort());
