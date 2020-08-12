@@ -22,28 +22,24 @@ public class chatFunctions extends Functions {
         if (message != null) {
             MinecraftClient mc = MinecraftClient.getInstance();
             LiteralText text = new LiteralText(message);
-            try {
-                ((IChatHud)mc.inGameHud.getChatHud()).addMessageBypass(text);
-                //silently fail on removing messages if another thread broke this one...
-            } catch (IndexOutOfBoundsException e) {}
+            ((IChatHud)mc.inGameHud.getChatHud()).addMessageBypass(text);
         }
     }
     
     private void logInternal(TextHelper text) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        try {
-            ((IChatHud)mc.inGameHud.getChatHud()).addMessageBypass(text.getRaw());
-            //silently fail on removing messages if another thread broke this one...
-        } catch (IndexOutOfBoundsException e) {}
+        ((IChatHud)mc.inGameHud.getChatHud()).addMessageBypass(text.getRaw());
     }
     
     // yay, auto type coercion.
     public void log(Object message) {
-        if (message instanceof TextHelper) {
-            this.logInternal((TextHelper)message);
-        } else if (message != null) {
-            this.logInternal(message.toString());
-        }
+        hudFunctions.renderTaskQueue.add(() -> {            
+            if (message instanceof TextHelper) {
+                this.logInternal((TextHelper)message);
+            } else if (message != null) {
+                this.logInternal(message.toString());
+            }
+        });
     }
     
     public void say(String message) {
