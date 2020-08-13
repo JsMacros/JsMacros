@@ -52,6 +52,10 @@ public class Inventory {
         man.clickSlot(wID, -999, mousebutton + 1, SlotActionType.QUICK_CRAFT, player);
         return this;
     }
+    
+    public int selectedHotbarSlot() {
+        return player.inventory.selectedSlot;
+    }
 
     public Inventory closeAndDrop() {
         ItemStack held = player.inventory.getCursorStack();
