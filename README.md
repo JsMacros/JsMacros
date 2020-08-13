@@ -3,7 +3,7 @@ Release: ![Build Release](https://github.com/wagyourtail/JsMacros/workflows/Buil
 
 download releases at: https://github.com/wagyourtail/JsMacros/releases
 
-[Join The Discord](https://discord.gg/P6W58J8)
+## [Join The Discord](https://discord.gg/P6W58J8)
 
 ## How To Use
 
