@@ -9,6 +9,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.passive.AbstractDonkeyEntity;
 import net.minecraft.entity.passive.HorseBaseEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.item.ItemGroup;
@@ -53,8 +54,13 @@ public class Inventory {
         return this;
     }
     
-    public int selectedHotbarSlot() {
+    public int getSelectedHotbarSlotIndex() {
         return player.inventory.selectedSlot;
+    }
+    
+    public void setSelectedHotbarSlotIndex(int index) {
+        if (PlayerInventory.isValidHotbarIndex(index))
+            player.inventory.selectedSlot = index;
     }
 
     public Inventory closeAndDrop() {
