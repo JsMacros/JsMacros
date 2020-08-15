@@ -1,5 +1,8 @@
 package xyz.wagyourtail.jsmacros.events.mixins;
 
+import java.util.Map;
+import java.util.UUID;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -9,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -48,6 +52,10 @@ class jsmacros_ClientPlayNetworkHandler {
     @Final
     private ClientConnection connection;
     
+    @Shadow
+    @Final
+    private Map<UUID, PlayerListEntry> playerListEntries;
+    
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;showsDeathScreen()Z"), method="onCombatEvent", cancellable = true)
     private void jsmacros_onDeath(final CombatEventS2CPacket packet, CallbackInfo info) {
         DeathCallback.EVENT.invoker().interact();
@@ -55,18 +63,28 @@ class jsmacros_ClientPlayNetworkHandler {
     
     @Inject(at = @At("HEAD"), method = "onPlayerList")
     public void jsmacros_onPlayerList(PlayerListS2CPacket packet, CallbackInfo info) {
-        switch (packet.getAction()) {
-            case ADD_PLAYER:
-                for (Entry e : packet.getEntries()) {
-                    PlayerJoinCallback.EVENT.invoker().interact(e.getProfile().getId(), e.getProfile().getName());
-                }
-            case REMOVE_PLAYER:
-                for (Entry e : packet.getEntries()) {
-                    PlayerLeaveCallback.EVENT.invoker().interact(e.getProfile().getId(), e.getProfile().getName());
-                }
-            default:
-                break;
-        }
+        if (this.client.isOnThread())
+            switch (packet.getAction()) {
+                case ADD_PLAYER:
+                    for (Entry e : packet.getEntries()) {
+                        if (playerListEntries.get(e.getProfile().getId()) == null) {
+                            PlayerJoinCallback.EVENT.invoker().interact(e.getProfile().getId(), e.getProfile().getName());
+                        }
+                    }
+                    return;
+                case REMOVE_PLAYER:
+                    for (Entry e : packet.getEntries()) {
+                      if (playerListEntries.get(e.getProfile().getId()) != null) {
+                            PlayerListEntry p = playerListEntries.get(e.getProfile().getId());
+                            String name = null;
+                            if (p != null) name = p.getProfile().getName();
+                            PlayerLeaveCallback.EVENT.invoker().interact(e.getProfile().getId(), name);
+                      }
+                    }
+                    return;
+                default:
+                    return;
+            }
     }
     
     @Inject(at = @At("HEAD"), method = "onTitle")
