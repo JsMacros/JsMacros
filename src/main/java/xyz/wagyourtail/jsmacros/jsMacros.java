@@ -139,8 +139,10 @@ public class jsMacros implements ClientModInitializer {
             return "Chat";
         }
         Text t = s.getTitle();
-        if (t != null) return t.getString();
-        return null;
+        String ret = "";
+        if (t != null) ret = t.getString();
+        if (ret.equals("")) ret = "unknown";
+        return ret;
     }
     
     @Deprecated
