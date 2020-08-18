@@ -377,6 +377,26 @@ public class Profile {
             
             triggerMacro("BLOCK_UPDATE", args);
         });
+        
+        // ----- ITEM PICKUP ---- //
+        registry.addEvent("ITEM_PICKUP");
+        ItemPickupCallback.EVENT.register((item) -> {
+            Map<String, Object> args = new HashMap<>();
+            args.put("item", item);
+            
+            triggerMacro("ITEM_PICKUP", args);
+        });
+        
+        // ----- EXP CHANGE ------ //
+        registry.addEvent("EXP_CHANGE");
+        ExperienceChangeCallback.EVENT.register((progress, total, level) -> {
+            Map<String, Object> args =  new HashMap<>();
+            args.put("progress", progress);
+            args.put("total", total);
+            args.put("level", level);
+            
+            triggerMacro("EXP_CHANGE", args);
+        });
     }
     
     public void triggerMacro(String macroname, Map<String, Object> args) {

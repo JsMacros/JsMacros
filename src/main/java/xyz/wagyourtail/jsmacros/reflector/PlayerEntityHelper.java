@@ -49,6 +49,10 @@ public class PlayerEntityHelper extends EntityHelper {
         return new ItemStackHelper(i.getArmorStack(0));
     }
     
+    public int getXP() {
+        return ((PlayerEntity)e).experienceLevel;
+    }
+    
     public PlayerEntity getRaw() {
         return (PlayerEntity) e;
     }

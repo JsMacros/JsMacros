@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
 
@@ -71,6 +72,18 @@ public class EntityHelper {
     
     public boolean isOnFire() {
         return e.isOnFire();
+    }
+    
+    public EntityHelper getVehicle() {
+        Entity parent = e.getVehicle();
+        if (parent != null) return new EntityHelper(parent);
+        return null;
+    }
+    
+    public List<EntityHelper> getPassengers() {
+        List<EntityHelper> entities = e.getPassengerList().stream().map((e) -> new EntityHelper(e)).collect(Collectors.toList());
+        return entities.size() == 0 ? null : entities;
+        
     }
     
     public EntityHelper setGlowing(boolean val) {
