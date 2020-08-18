@@ -17,6 +17,9 @@
 	"entrypoints": {
 		"client": [
 			"xyz.wagyourtail.jsmacros.jsMacros"
+		],
+		"modmenu": [
+			"xyz.wagyourtail.jsmacros.ModMenuEntry"
 		]
 	},
 	"mixins": [
@@ -29,5 +32,8 @@
 	},
 	"suggests": {
 		"jython-standalone": "*"
-	}
+	},
+	"custom": {
+        "modmenu:clientsideOnly": true
+    }
 }
