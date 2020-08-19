@@ -27,5 +27,8 @@
 	"jsmacros.presskey": "- Press A Key -",
 	"jsmacros.run": "Run",
 	"jsmacros.running": "Running",
-	"jsmacros.disablewithscreen": "Disable KEY event when any screen is open."
+	"jsmacros.disablewithscreen": "Disable KEY event when any screen is open.",
+	"jsmacros.about": "About",
+	"jsmacros.aboutinfo": "JS Macros\nCreated By: WagYourTail\n\nJavascript MacroMod for Block Game.\n\nFor help, refer to the wiki on GitHub or join the Discord!",
+	"jsmacros.back": "Back"
 }

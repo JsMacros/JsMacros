@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.gui2.containers.RunningThreadContainer;
 import xyz.wagyourtail.jsmacros.gui2.elements.Button;
 import xyz.wagyourtail.jsmacros.gui2.elements.Scrollbar;
@@ -33,6 +34,10 @@ public class CancelScreen extends Screen {
         topScroll = 10;
         running.clear();
         s = this.addButton(new Scrollbar(width - 12, 5, 8, height-10, 0, 0xFF000000, 0xFFFFFFFF, 1, this::onScrollbar));
+        
+        this.addButton(new Button(0, this.height - 12, this.width / 12, 12, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.back"), (btn) -> {
+            this.onClose();
+        }));
     }
 
     public void addContainer(thread t) {

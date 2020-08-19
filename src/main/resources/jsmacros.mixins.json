@@ -2,7 +2,6 @@
 	"required": true,
 	"package": "xyz.wagyourtail.jsmacros.events.mixins",
 	"compatibilityLevel": "JAVA_8",
-	"mixins": [],
 	"client": [
 		"jsmacros_KeyboardMixin",
 		"jsmacros_MouseMixin",

@@ -13,7 +13,7 @@
 	},
 	"license": "MPL-2.0",
 	"icon": "assets/jsmacros/icon.png",
-	"environment": "*",
+	"environment": "client",
 	"entrypoints": {
 		"client": [
 			"xyz.wagyourtail.jsmacros.jsMacros"
@@ -27,11 +27,8 @@
 		"jsmacros_compat.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.7.2",
+		"fabricloader": ">=0.9.0",
 		"minecraft": "1.16.x"
-	},
-	"suggests": {
-		"jython-standalone": "*"
 	},
 	"custom": {
         "modmenu:clientsideOnly": true

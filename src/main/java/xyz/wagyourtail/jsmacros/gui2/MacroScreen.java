@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.gui2.containers.AboutOverlay;
 import xyz.wagyourtail.jsmacros.gui2.containers.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.gui2.containers.EventChooser;
 import xyz.wagyourtail.jsmacros.gui2.containers.FileChooser;
@@ -65,6 +66,10 @@ public class MacroScreen extends Screen {
     
         this.addButton(new Button(0, this.height - 12, this.width / 12, 12, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.running"), (btn) -> {
             client.openScreen(new CancelScreen(this));
+        }));
+        
+        this.addButton(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.about"), (btn) -> {
+            this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this::addButton, this::removeButton, this::closeOverlay));
         }));
     }
     

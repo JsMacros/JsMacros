@@ -2,7 +2,6 @@
     "required": true,
     "package": "xyz.wagyourtail.jsmacros.compat.mixins",
     "compatibilityLevel": "JAVA_8",
-    "mixins": [],
     "client": [
         "jsmacros_InGameHudMixin",
         "jsmacros_MinecraftClientMixin",
