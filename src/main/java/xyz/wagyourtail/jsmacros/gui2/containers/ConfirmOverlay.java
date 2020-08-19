@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.gui2.containers;
 import java.util.List;
 import java.util.function.Consumer;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -18,19 +17,17 @@ public class ConfirmOverlay extends OverlayContainer {
     private List<OrderedText> text;
     private int lines;
     private int vcenter;
-    private MinecraftClient mc;
     
     public ConfirmOverlay(int x, int y, int width, int height, TextRenderer textRenderer, Text message, Consumer<AbstractButtonWidget> addButton, Consumer<AbstractButtonWidget> removeButton, Consumer<OverlayContainer> close, Consumer<ConfirmOverlay>accept) {
         super(x, y, width, height, textRenderer, addButton, removeButton, close);
-        this.mc = MinecraftClient.getInstance();
         this.setMessage(message);
         this.accept = accept;
     }
     
     public void setMessage(Text message) {
-        this.text = this.mc.textRenderer.wrapLines(message, width - 6);
-        this.lines = Math.min(Math.max((height - 15) / mc.textRenderer.fontHeight, 1), text.size());
-        this.vcenter = ((height - 15) - (lines * mc.textRenderer.fontHeight)) / 2;
+        this.text = textRenderer.wrapLines(message, width - 6);
+        this.lines = Math.min(Math.max((height - 15) / textRenderer.fontHeight, 1), text.size());
+        this.vcenter = ((height - 15) - (lines * textRenderer.fontHeight)) / 2;
     }
     
     public void init() {
@@ -50,7 +47,7 @@ public class ConfirmOverlay extends OverlayContainer {
     protected void renderMessage(MatrixStack matricies) {
         for (int i = 0; i < lines; ++i) {
             int w = textRenderer.getWidth(text.get(i));
-            textRenderer.draw(matricies, text.get(i), x + width / 2 - w / 2, y + 2 + vcenter + (i * mc.textRenderer.fontHeight), 0xFFFFFF);
+            textRenderer.draw(matricies, text.get(i), x + width / 2 - w / 2, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF);
         }
     }
     
