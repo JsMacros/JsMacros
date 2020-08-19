@@ -19,20 +19,14 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.network.packet.c2s.play.UpdateSignC2SPacket;
-import net.minecraft.network.packet.s2c.play.ItemPickupAnimationS2CPacket;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.compat.interfaces.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.events.AirChangeCallback;
 import xyz.wagyourtail.jsmacros.events.DamageCallback;
 import xyz.wagyourtail.jsmacros.events.ExperienceChangeCallback;
-import xyz.wagyourtail.jsmacros.events.ItemPickupCallback;
 import xyz.wagyourtail.jsmacros.events.SignEditCallback;
-import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 
 @Mixin(ClientPlayerEntity.class)
 class jsmacros_ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
@@ -52,7 +46,7 @@ class jsmacros_ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
     }
     
     @Inject(at = @At("HEAD"), method="setExperience")
-    public void jsmacros_setExperience(float progress, int total, int level) {
+    public void jsmacros_setExperience(float progress, int total, int level, CallbackInfo info) {
         ExperienceChangeCallback.EVENT.invoker().interact(progress, total, level);
     }
     
@@ -89,19 +83,8 @@ class jsmacros_ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
             }
             info.cancel();
         }
-     }
-    
-    @Inject(at = @At(value=" INVOKE", target="Lnet/minecraft/client/world/ClientWorld;playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V"), method= "onItemPickupAnimation")
-    public void jsmacros_onItemPickupAnimation(ItemPickupAnimationS2CPacket packet, CallbackInfo info) {
-        Entity e = client.world.getEntityById(packet.getEntityId());
-        LivingEntity c = (LivingEntity)client.world.getEntityById(packet.getCollectorEntityId());
-        if (c == null) c = client.player;
-        if (c.equals(client.player) && e instanceof ItemEntity) {
-            ItemStackHelper item = new ItemStackHelper(((ItemEntity) e).getStack().copy());
-            item.getRaw().setCount(packet.getStackAmount());
-            ItemPickupCallback.EVENT.invoker().interact(item);
-        }
     }
+    
     
     // IGNORE
     public jsmacros_ClientPlayerEntityMixin(ClientWorld world, GameProfile profile) {

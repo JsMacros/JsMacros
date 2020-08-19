@@ -14,6 +14,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
@@ -22,6 +25,7 @@ import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
 import net.minecraft.network.packet.s2c.play.ChunkDeltaUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.CombatEventS2CPacket;
 import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
+import net.minecraft.network.packet.s2c.play.ItemPickupAnimationS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.Entry;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
@@ -32,6 +36,7 @@ import xyz.wagyourtail.jsmacros.events.BossBarCallback;
 import xyz.wagyourtail.jsmacros.events.ChunkLoadCallback;
 import xyz.wagyourtail.jsmacros.events.ChunkUnloadCallback;
 import xyz.wagyourtail.jsmacros.events.DeathCallback;
+import xyz.wagyourtail.jsmacros.events.ItemPickupCallback;
 import xyz.wagyourtail.jsmacros.events.JoinCallback;
 import xyz.wagyourtail.jsmacros.events.PlayerJoinCallback;
 import xyz.wagyourtail.jsmacros.events.PlayerLeaveCallback;
@@ -39,6 +44,7 @@ import xyz.wagyourtail.jsmacros.events.TitleCallback;
 import xyz.wagyourtail.jsmacros.reflector.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.reflector.BossBarHelper;
 import xyz.wagyourtail.jsmacros.reflector.ClientPlayerEntityHelper;
+import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
 @Mixin(ClientPlayNetworkHandler.class)
@@ -135,6 +141,19 @@ class jsmacros_ClientPlayNetworkHandler {
         }
         
         BossBarCallback.EVENT.invoker().interact(type, packet.getUuid().toString(), packet.getType() == BossBarS2CPacket.Type.REMOVE ? null : new BossBarHelper(((IBossBarHud) client.inGameHud.getBossBarHud()).getBossBars().get(packet.getUuid())));
+    }
+    
+
+    @Inject(at = @At(value="INVOKE", target="Lnet/minecraft/client/world/ClientWorld;playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V"), method= "onItemPickupAnimation")
+    public void jsmacros_onItemPickupAnimation(ItemPickupAnimationS2CPacket packet, CallbackInfo info) {
+        Entity e = client.world.getEntityById(packet.getEntityId());
+        LivingEntity c = (LivingEntity)client.world.getEntityById(packet.getCollectorEntityId());
+        if (c == null) c = client.player;
+        if (c.equals(client.player) && e instanceof ItemEntity) {
+            ItemStackHelper item = new ItemStackHelper(((ItemEntity) e).getStack().copy());
+            item.getRaw().setCount(packet.getStackAmount());
+            ItemPickupCallback.EVENT.invoker().interact(item);
+        }
     }
     
     @Inject(at = @At("TAIL"), method="onGameJoin")
