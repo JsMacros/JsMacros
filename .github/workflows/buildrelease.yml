@@ -48,7 +48,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Upload to curseforge
-      uses: itsmeow/curseforge-upload@v2'
+      uses: itsmeow/curseforge-upload@v2
       with:
         token: ${{ secrets.CF_API_KEY }}
         project_id: 403185
@@ -101,7 +101,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Upload to curseforge
-      uses: itsmeow/curseforge-upload@v2'
+      uses: itsmeow/curseforge-upload@v2
       with:
         token: ${{ secrets.CF_API_KEY }}
         project_id: 403185
@@ -154,7 +154,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Upload to curseforge
-      uses: itsmeow/curseforge-upload@v2'
+      uses: itsmeow/curseforge-upload@v2
       with:
         token: ${{ secrets.CF_API_KEY }}
         project_id: 403185
