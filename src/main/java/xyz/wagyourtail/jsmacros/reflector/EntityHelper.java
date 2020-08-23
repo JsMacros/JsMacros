@@ -8,10 +8,12 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
 
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
@@ -106,5 +108,11 @@ public class EntityHelper {
     
     public String toString() {
         return String.format("Entity:{\"name\":\"%s\", \"type\":\"%s\"}", this.getName(), this.getType());
+    }
+    
+    public static EntityHelper create(Entity e) {
+        if (e instanceof ClientPlayerEntity) return new ClientPlayerEntityHelper((ClientPlayerEntity) e);
+        if (e instanceof PlayerEntity) return new PlayerEntityHelper((PlayerEntity) e);
+        return new EntityHelper(e);
     }
 }

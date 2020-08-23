@@ -5,9 +5,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.At;
 
+import net.minecraft.client.sound.EntityTrackingSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundSystem;
+import xyz.wagyourtail.jsmacros.compat.interfaces.IEntityTrackingSoundInstance;
 import xyz.wagyourtail.jsmacros.events.SoundCallback;
+import xyz.wagyourtail.jsmacros.reflector.EntityHelper;
 
 @Mixin(SoundSystem.class)
 public class jsmacros_SoundSystemMixin {
@@ -17,6 +20,10 @@ public class jsmacros_SoundSystemMixin {
         try {
             id = instance.getId().toString();
         } catch (NullPointerException e) {}
+        EntityHelper entity = null;
+        if (instance instanceof EntityTrackingSoundInstance) {
+            entity = EntityHelper.create(((IEntityTrackingSoundInstance) instance).getEntity());
+        }
         float volume = 1.0F;
         float pitch = 1.0F;
         try {
@@ -24,6 +31,6 @@ public class jsmacros_SoundSystemMixin {
             pitch = instance.getPitch();
         } catch (NullPointerException e) {}
         
-        SoundCallback.EVENT.invoker().interact(id, volume, pitch, instance.getX(), instance.getY(), instance.getZ());
+        SoundCallback.EVENT.invoker().interact(id, volume, pitch, instance.getX(), instance.getY(), instance.getZ(), entity);
     }
 }
