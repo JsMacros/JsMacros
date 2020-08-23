@@ -1,5 +1,7 @@
 # JS Macros
-Release: ![Build Release](https://github.com/wagyourtail/JsMacros/workflows/Build%20Release/badge.svg)
+## Releases: 
+* https://www.curseforge.com/minecraft/mc-mods/jsmacros
+* Alternate Link: ![Build Release](https://github.com/wagyourtail/JsMacros/workflows/Build%20Release/badge.svg)
 
 download releases at: https://github.com/wagyourtail/JsMacros/releases
 
