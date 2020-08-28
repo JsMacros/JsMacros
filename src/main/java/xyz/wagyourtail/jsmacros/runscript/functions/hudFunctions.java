@@ -2,23 +2,19 @@ package xyz.wagyourtail.jsmacros.runscript.functions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Queues;
 
 import xyz.wagyourtail.jsmacros.runscript.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.runscript.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.runscript.classes.Screen;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 
 public class hudFunctions extends Functions {
     public static final List<Draw2D> overlays = new ArrayList<>();
     public static final List<Draw3D> renders = new ArrayList<>();
-    public static final Queue<Runnable> renderTaskQueue = Queues.newConcurrentLinkedQueue();
     
     public hudFunctions(String libName) {
         super(libName);
@@ -32,19 +28,17 @@ public class hudFunctions extends Functions {
         return new Screen(title, dirtBG);
     }
     
-    public boolean openScreen(Screen s) {
-        return renderTaskQueue.add(() -> {
-            MinecraftClient.getInstance().openScreen(s);            
+    public void openScreen(Screen s) {
+        mc.execute(() -> {
+            mc.openScreen(s);            
         });
     }
     
     public String getOpenScreen() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         return jsMacros.getScreenName(mc.currentScreen);
     }
     
     public boolean isContainer() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         return mc.currentScreen instanceof HandledScreen;
     }
     
@@ -90,12 +84,10 @@ public class hudFunctions extends Functions {
     }
     
     public double getMouseX() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         return mc.mouse.getX() * (double)mc.getWindow().getScaledWidth() / (double)mc.getWindow().getWidth();
     }
     
     public double getMouseY() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         return mc.mouse.getY() * (double)mc.getWindow().getScaledHeight() / (double)mc.getWindow().getHeight();
     }
 }

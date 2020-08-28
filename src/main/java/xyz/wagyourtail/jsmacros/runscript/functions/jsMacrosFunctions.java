@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.runscript.functions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -37,7 +36,7 @@ public class jsMacrosFunctions extends Functions {
     }
     
     public MinecraftClient getMinecraft() {
-        return MinecraftClient.getInstance();
+        return mc;
     }
 
     public Profile getProfile() {
@@ -49,7 +48,6 @@ public class jsMacrosFunctions extends Functions {
     }
     
     public OptionsHelper getGameOptions() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         return new OptionsHelper(mc.options);
     }
 
@@ -58,7 +56,6 @@ public class jsMacrosFunctions extends Functions {
     }
 
     public String mcVersion() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         return mc.getGameVersion();
     }
 
@@ -107,20 +104,11 @@ public class jsMacrosFunctions extends Functions {
     public IEventListener on(String event, BiConsumer<String, Map<String, Object>> callback) {
         if (callback == null) return null;
         String tname = Thread.currentThread().getName();
-        Thread th = Thread.currentThread();
         IEventListener listener = new IEventListener() {
-            private LinkedBlockingQueue<Thread> tasks = new LinkedBlockingQueue<>();
             
             @Override
             public Thread trigger(String type, Map<String, Object> args) {
                 Thread t = new Thread(() -> {
-                    while(th.isAlive());
-                    Thread joinable;
-                    while ((joinable = tasks.peek()) != Thread.currentThread()) {
-                        try {
-                            joinable.join();
-                        } catch (Exception e) {}
-                    }
                     Thread.currentThread().setName(this.toString());
                     try {
                         callback.accept(type, args);
@@ -128,13 +116,7 @@ public class jsMacrosFunctions extends Functions {
                         Profile.registry.removeListener(this);
                         e.printStackTrace();
                     }
-                    tasks.poll();
                 });
-                try {
-                    tasks.put(t);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 t.start();
                 return t;
             }
@@ -197,7 +179,6 @@ public class jsMacrosFunctions extends Functions {
     }
     
     public String getFPS() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         return mc.fpsDebugString;
     }
     
@@ -206,18 +187,16 @@ public class jsMacrosFunctions extends Functions {
         connect(a.getAddress(), a.getPort());
     }
     
-    public boolean connect(String ip, int port) {
-        return hudFunctions.renderTaskQueue.add(() -> {
-            MinecraftClient mc = MinecraftClient.getInstance();
+    public void connect(String ip, int port) {
+        mc.execute(() -> {
             if (mc.world != null) mc.world.disconnect();
             mc.joinWorld(null);
             mc.openScreen(new ConnectScreen(null, mc, ip, port));
         });
     }
     
-    public boolean disconnect() {
-        return hudFunctions.renderTaskQueue.add(() -> {
-            MinecraftClient mc = MinecraftClient.getInstance();
+    public void disconnect() {
+        mc.execute(() -> {
             if (mc.world != null) mc.world.disconnect();
             mc.joinWorld(null);
             mc.openScreen(new TitleScreen());

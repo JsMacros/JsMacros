@@ -22,7 +22,6 @@ public class chatFunctions extends Functions {
 
     private void logInternal(String message) {
         if (message != null) {
-            MinecraftClient mc = MinecraftClient.getInstance();
             LiteralText text = new LiteralText(message);
             ((IChatHud)mc.inGameHud.getChatHud()).addMessageBypass(text);
         }
@@ -35,7 +34,7 @@ public class chatFunctions extends Functions {
     
     // yay, auto type coercion.
     public void log(Object message) {
-        hudFunctions.renderTaskQueue.add(() -> {            
+        mc.execute(() -> {
             if (message instanceof TextHelper) {
                 this.logInternal((TextHelper)message);
             } else if (message != null) {
@@ -46,7 +45,6 @@ public class chatFunctions extends Functions {
     
     public void say(String message) {
         if (message != null) {
-            MinecraftClient mc = MinecraftClient.getInstance();
             mc.player.sendChatMessage(message);
         }
     }
@@ -58,7 +56,6 @@ public class chatFunctions extends Functions {
         else if (title != null) titlee = new LiteralText(title.toString());
         if (subtitle instanceof TextHelper) subtitlee = ((TextHelper) subtitle).getRaw();
         else if (subtitle != null) subtitlee = new LiteralText(subtitle.toString());
-        MinecraftClient mc = MinecraftClient.getInstance();
         mc.inGameHud.setTitles(titlee, subtitlee, fadeIn, remain, fadeOut);
     }
     
@@ -66,12 +63,10 @@ public class chatFunctions extends Functions {
         Text textt = null;
         if (text instanceof TextHelper) textt = ((TextHelper) text).getRaw();
         else if (text != null) textt = new LiteralText(text.toString());
-        MinecraftClient mc = MinecraftClient.getInstance();
         mc.inGameHud.setOverlayMessage(textt, tinted);
     }
     
     public void toast(Object title, Object desc) {
-        MinecraftClient mc = MinecraftClient.getInstance();
         ToastManager t = mc.getToastManager();
         if (t != null) {
             Text titlee = (title instanceof TextHelper) ? ((TextHelper) title).getRaw() : title != null ? new LiteralText(title.toString()) : null;

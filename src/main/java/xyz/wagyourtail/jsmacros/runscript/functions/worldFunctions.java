@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ClientBossBar;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -55,7 +54,6 @@ public class worldFunctions extends Functions {
     }
     
     public List<PlayerEntityHelper> getLoadedPlayers() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         List<PlayerEntityHelper> players = new ArrayList<>();
         for (AbstractClientPlayerEntity p : ImmutableList.copyOf(mc.world.getPlayers())) {
             players.add(new PlayerEntityHelper(p));
@@ -65,14 +63,13 @@ public class worldFunctions extends Functions {
     
     public List<PlayerListEntryHelper> getPlayers() {
         List<PlayerListEntryHelper> players = new ArrayList<>();
-        for (PlayerListEntry p : ImmutableList.copyOf(MinecraftClient.getInstance().getNetworkHandler().getPlayerList())) {
+        for (PlayerListEntry p : ImmutableList.copyOf(mc.getNetworkHandler().getPlayerList())) {
             players.add(new PlayerListEntryHelper(p));
         }
         return players;
     }
     
     public BlockDataHelper getBlock(int x, int y, int z) {
-        MinecraftClient mc = MinecraftClient.getInstance();
         BlockState b = mc.world.getBlockState(new BlockPos(x,y,z));
         BlockEntity t = mc.world.getBlockEntity(new BlockPos(x,y,z));
         if (b.getBlock().equals(Blocks.VOID_AIR)) return null;
@@ -81,7 +78,6 @@ public class worldFunctions extends Functions {
     }
     
     public List<EntityHelper> getEntities() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         List<EntityHelper> entities = new ArrayList<>();
         for (Entity e : ImmutableList.copyOf(mc.world.getEntities())) {
             if (e.getType() == EntityType.PLAYER) {
@@ -94,32 +90,26 @@ public class worldFunctions extends Functions {
     }
     
     public String getDimension() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         return mc.world.getRegistryKey().getValue().toString();
     }
     
     public String getBiome() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(mc.player.getBlockPos())).toString();
     }
     
     public long getTime() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         return mc.world.getTime();
     }
     
     public long getTimeOfDay() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         return mc.world.getTimeOfDay();
     }
     
     public int getSkyLight(int x, int y, int z) {
-        MinecraftClient mc = MinecraftClient.getInstance();
         return mc.world.getLightLevel(LightType.SKY, new BlockPos(x, y, z));
     }
     
     public int getBlockLight(int x, int y, int z) {
-        MinecraftClient mc = MinecraftClient.getInstance();
         return mc.world.getLightLevel(LightType.BLOCK, new BlockPos(x, y, z));
     }
     
@@ -152,17 +142,14 @@ public class worldFunctions extends Functions {
     }
     
     public void playSound(String id, float volume, float pitch) {
-        MinecraftClient mc = MinecraftClient.getInstance();
         mc.getSoundManager().play(PositionedSoundInstance.master(Registry.SOUND_EVENT.get(new Identifier(id)), pitch, volume));
     }
     
     public void playSound(String id, float volume, float pitch, double x, double y, double z) {
-        MinecraftClient mc = MinecraftClient.getInstance();
         mc.world.playSound(x, y, z, Registry.SOUND_EVENT.get(new Identifier(id)), SoundCategory.MASTER, volume, pitch, true);
     }
     
     public Map<String, BossBarHelper> getBossBars() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         Map<UUID, ClientBossBar> bars = ImmutableMap.copyOf(((IBossBarHud) mc.inGameHud.getBossBarHud()).getBossBars());
         Map<String, BossBarHelper> out = new HashMap<>();
         for (Map.Entry<UUID, ClientBossBar> e : ImmutableList.copyOf(bars.entrySet())) {
@@ -172,13 +159,11 @@ public class worldFunctions extends Functions {
     }
     
     public boolean isChunkLoaded(int chunkX, int chunkZ) {
-        MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.world == null) return false;
         return mc.world.getChunkManager().isChunkLoaded(chunkX, chunkZ);
     }
     
     public String getCurrentServerAddress() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         ClientPlayNetworkHandler h = mc.getNetworkHandler();
         if (h == null) return null;
         ClientConnection c = h.getConnection();
@@ -187,7 +172,6 @@ public class worldFunctions extends Functions {
     }
     
     public String getBiomeAt(int x, int z) {
-        MinecraftClient mc = MinecraftClient.getInstance();
         return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(new BlockPos(x, 10, z))).toString();
     }
     

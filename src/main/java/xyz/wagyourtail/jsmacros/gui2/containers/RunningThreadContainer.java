@@ -29,9 +29,10 @@ public class RunningThreadContainer extends MultiElementContainer {
     public void init() {
         super.init();
         cancelButton = (Button) this.addButton(new Button(x+1, y+1, height - 2, height - 2, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> {
-            t.t.stop();
-            RunScript.removeThread(t);
-            if (this.removeContainer != null) this.removeContainer.accept(this);
+                if (t.t != null)
+                    t.t.stop();
+                RunScript.removeThread(t);
+                if (this.removeContainer != null) this.removeContainer.accept(this);
         }));
     }
     
