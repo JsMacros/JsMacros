@@ -267,7 +267,7 @@ public class Profile {
         
         // ------ SOUND ------ //
         registry.addEvent("SOUND");
-        SoundCallback.EVENT.register((sound, volume, pitch, x, y, z, entity) -> {
+        SoundCallback.EVENT.register((sound, volume, pitch, x, y, z) -> {
             Map<String, Object> args = new HashMap<>();
             args.put("sound", sound);
             args.put("volume", volume);
@@ -275,7 +275,6 @@ public class Profile {
             args.put("x", x);
             args.put("y", y);
             args.put("z", z);
-            args.put("entity", entity);
 
             triggerMacro("SOUND", args);
         });

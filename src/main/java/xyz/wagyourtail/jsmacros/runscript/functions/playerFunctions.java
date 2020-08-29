@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.util.ScreenshotUtils;
 import net.minecraft.util.hit.BlockHitResult;
@@ -70,6 +69,13 @@ public class playerFunctions extends Functions {
 
     public void takeScreenshot(String folder, Consumer<TextHelper> callback) {
         ScreenshotUtils.saveScreenshot(new File(jsMacros.config.macroFolder, folder), mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
+            mc.getFramebuffer(), (text) -> {
+                if (callback != null) callback.accept(new TextHelper(text));
+            });
+    }
+    
+    public void takeScreenshot(String folder, String file, Consumer<TextHelper> callback) {
+        ScreenshotUtils.saveScreenshot(new File(jsMacros.config.macroFolder, folder), file, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
             mc.getFramebuffer(), (text) -> {
                 if (callback != null) callback.accept(new TextHelper(text));
             });

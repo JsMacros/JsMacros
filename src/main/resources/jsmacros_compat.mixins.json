@@ -11,8 +11,7 @@
         "jsmacros_SignEditScreenMixin",
         "jsmacros_BossBarHudMixin",
         "jsmacros_GameRendererMixin",
-        "jsmacros_ChatHudMixin",
-        "jsmacros_EntityTrackingSoundInstance"
+        "jsmacros_ChatHudMixin"
     ],
     "injectors": {
         "defaultRequire": 1
