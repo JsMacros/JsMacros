@@ -56,7 +56,12 @@ public class chatFunctions extends Functions {
         else if (title != null) titlee = new LiteralText(title.toString());
         if (subtitle instanceof TextHelper) subtitlee = ((TextHelper) subtitle).getRaw();
         else if (subtitle != null) subtitlee = new LiteralText(subtitle.toString());
-        mc.inGameHud.setTitles(titlee, subtitlee, fadeIn, remain, fadeOut);
+        if (title != null)
+            mc.inGameHud.setTitles(titlee, null, fadeIn, remain, fadeOut);
+        if (subtitle != null)
+            mc.inGameHud.setTitles(null, subtitlee, fadeIn, remain, fadeOut);
+        if (title == null && subtitle == null)
+            mc.inGameHud.setTitles(null, null, fadeIn, remain, fadeOut);
     }
     
     public void actionbar(Object text, boolean tinted) {

@@ -1,38 +1,56 @@
 package xyz.wagyourtail.jsmacros.runscript.functions;
 
+import org.apache.commons.lang3.StringUtils;
+import xyz.wagyourtail.jsmacros.jsMacros;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class reflectionFunctions extends Functions {
-
+    private Map<String, Class<?>> loadedClasses = new HashMap<>();
     public reflectionFunctions(String libName) {
         super(libName);
         // TODO Auto-generated constructor stub
     }
     
     public Class<?> getClass(String name) throws ClassNotFoundException {
-        switch (name) {
-            case "boolean":
-                return boolean.class;
-            case "byte":
-                return byte.class;
-            case "short":
-                return short.class;
-            case "int":
-                return int.class;
-            case "long":
-                return long.class;
-            case "float":
-                return float.class;
-            case "double":
-                return double.class;
-            case "char":
-                return char.class;
-            case "void":
-                return void.class;
-            default:
-                return Class.forName(name);
+        try {
+            switch (name) {
+                case "boolean":
+                    return boolean.class;
+                case "byte":
+                    return byte.class;
+                case "short":
+                    return short.class;
+                case "int":
+                    return int.class;
+                case "long":
+                    return long.class;
+                case "float":
+                    return float.class;
+                case "double":
+                    return double.class;
+                case "char":
+                    return char.class;
+                case "void":
+                    return void.class;
+                default:
+                    return Class.forName(name);
+            }
+        } catch (ClassNotFoundException e) {
+            if (loadedClasses.containsKey(name)) return loadedClasses.get(name);
+            else throw e;
         }
     }
     
@@ -88,5 +106,28 @@ public class reflectionFunctions extends Functions {
             }
         }
         return m.invoke(c, objects);
+    }
+
+    public void loadJarFile(String file) throws IOException {
+        File jarFile = new File(jsMacros.config.macroFolder, file);
+        if (!jarFile.exists()) throw new FileNotFoundException("Jar File Not Found");
+        try (URLClassLoader loader = new URLClassLoader(new URL[] {new URL("jar:file:"+jarFile.getCanonicalPath() + "!/")})) {
+            try (JarFile jar = new JarFile(jarFile)) {
+                Enumeration<JarEntry> entries = jar.entries();
+                while(entries.hasMoreElements()) {
+                    JarEntry entry = entries.nextElement();
+                    if (!entry.getName().endsWith(".class")) continue;
+                    String className = StringUtils.removeEndIgnoreCase(entry.getName().replaceAll("/", "."), ".class");
+                    try {
+                        loadedClasses.put(className, loader.loadClass(className));
+                    } catch (ClassNotFoundException e) {
+                    }
+                }
+            } catch (IOException e) {
+                throw e;
+            }
+        } catch (IOException e) {
+            throw e;
+        }
     }
 }
