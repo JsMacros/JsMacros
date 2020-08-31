@@ -127,7 +127,14 @@ public class OptionsHelper {
         options.viewDistance = d;
     }
     
-
+    public int getWidth() {
+        return mc.getWindow().getWidth();
+    }
+    
+    public int getHeight() {
+        return mc.getWindow().getHeight();
+    }
+    
     public void setWidth(int w) {
         Window win = mc.getWindow();
         GLFW.glfwSetWindowSize(win.getHandle(), w, win.getHeight());
