@@ -6,12 +6,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.lwjgl.glfw.GLFW;
+
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.CloudRenderMode;
 import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.options.GraphicsMode;
+import net.minecraft.client.util.Window;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.util.Arm;
@@ -122,6 +125,22 @@ public class OptionsHelper {
     }
     public void setRenderDistance(int d) {
         options.viewDistance = d;
+    }
+    
+
+    public void setWidth(int w) {
+        Window win = mc.getWindow();
+        GLFW.glfwSetWindowSize(win.getHandle(), w, win.getHeight());
+    }
+    
+    public void setHeight(int h) {
+        Window win = mc.getWindow();
+        GLFW.glfwSetWindowSize(win.getHandle(), win.getWidth(), h);
+    }
+    
+    public void setSize(int w, int h) {
+        Window win = mc.getWindow();
+        GLFW.glfwSetWindowSize(win.getHandle(), w, h);
     }
     
     public GameOptions getRaw() {
