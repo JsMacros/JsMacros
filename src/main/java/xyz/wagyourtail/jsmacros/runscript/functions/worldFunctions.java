@@ -115,7 +115,7 @@ public class worldFunctions extends Functions {
         return mc.world.getDifficulty().getId();
     }
     
-    public int moonPhase() {
+    public int getMoonPhase() {
         return mc.world.getMoonPhase();
     }
     
