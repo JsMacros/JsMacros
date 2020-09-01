@@ -39,6 +39,7 @@ import net.minecraft.world.LightType;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.compat.interfaces.IBossBarHud;
 import xyz.wagyourtail.jsmacros.reflector.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.reflector.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.reflector.BossBarHelper;
 import xyz.wagyourtail.jsmacros.reflector.EntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
@@ -103,6 +104,19 @@ public class worldFunctions extends Functions {
     
     public long getTimeOfDay() {
         return mc.world.getTimeOfDay();
+    }
+    
+    public BlockPosHelper getRespawnPos() {
+        if (mc.world.getDimension().isNatural()) return new BlockPosHelper( mc.world.getSpawnPos());
+        return null;
+    }
+    
+    public int getDifficulty() {
+        return mc.world.getDifficulty().getId();
+    }
+    
+    public int moonPhase() {
+        return mc.world.getMoonPhase();
     }
     
     public int getSkyLight(int x, int y, int z) {

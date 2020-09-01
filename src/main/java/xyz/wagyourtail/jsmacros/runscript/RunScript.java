@@ -202,7 +202,7 @@ public class RunScript {
             int lendif = bs.length-as.length;
             if (lendif != 0) return lendif;
             int comp = 0;
-            for (int i = lendif; i > -1; --i) {
+            for (int i = bs.length - 1; i >= 0; --i) {
                 comp = as[i].compareTo(bs[i]);
                 if (comp != 0) break;
             }

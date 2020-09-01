@@ -207,6 +207,12 @@ public class jsMacrosFunctions extends Functions {
         tickSynchronizer.waitTick();
     }
     
+    public void waitTick(int i) throws InterruptedException {
+        while (--i >= 0) {
+            tickSynchronizer.waitTick();
+        }
+    }
+    
     public static class TickSync {
         int tc = 0;
         public synchronized void waitTick() throws InterruptedException {
