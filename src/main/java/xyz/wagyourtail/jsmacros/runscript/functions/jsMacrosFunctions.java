@@ -194,7 +194,11 @@ public class jsMacrosFunctions extends Functions {
             mc.openScreen(new ConnectScreen(null, mc, ip, port));
         });
     }
-    
+
+    public void disconnect() {
+        disconnect(null);
+    }
+
     public void disconnect(Consumer<Boolean> callback) {
         mc.execute(() -> {
             boolean isWorld = mc.world != null;
