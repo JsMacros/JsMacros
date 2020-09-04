@@ -14,8 +14,8 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import xyz.wagyourtail.jsmacros.runscript.classes.common.MathHelper;
 
 public class Draw3D {
     public List<box> boxes = new ArrayList<>();
@@ -102,12 +102,7 @@ public class Draw3D {
     }
     
     public static class box {
-        public double x1;
-        public double y1;
-        public double z1;
-        public double x2;
-        public double y2;
-        public double z2;
+        public MathHelper.Vec3D pos;
         public int color;
         public int fillColor;
         public boolean fill;
@@ -126,12 +121,7 @@ public class Draw3D {
         }
         
         public void setPos(double x1, double y1, double z1, double x2, double y2, double z2) {
-            this.x1 = x1;
-            this.y1 = y1;
-            this.z1 = z1;
-            this.x2 = x2;
-            this.y2 = y2;
-            this.z2 = z2;
+            pos = new MathHelper.Vec3D(x1, y2, z1, x2, y2, z2);
         }
         
         
@@ -183,41 +173,36 @@ public class Draw3D {
                 buf.begin(GL11.GL_TRIANGLE_STRIP,  VertexFormats.POSITION_COLOR);
                 
                 //why'd they change it from build box to draw box... it's not calling tess.draw()
-                WorldRenderer.drawBox(buf, x1, y1, z1, x2, y2, z2, fr, fg, fb, fa);
+                WorldRenderer.drawBox(buf, pos.x1, pos.y1, pos.z1, pos.x2, pos.y2, pos.z2, fr, fg, fb, fa);
                 
                 tess.draw();
             }
             
             buf.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
             
-            buf.vertex(x1, y1, z1).color(r, g, b, a).next();
-            buf.vertex(x1, y1, z2).color(r, g, b, a).next();
-            buf.vertex(x2, y1, z2).color(r, g, b, a).next();
-            buf.vertex(x2, y1, z1).color(r, g, b, a).next();
-            buf.vertex(x1, y1, z1).color(r, g, b, a).next();
-            buf.vertex(x1, y2, z1).color(r, g, b, a).next();
-            buf.vertex(x2, y2, z1).color(r, g, b, a).next();
-            buf.vertex(x2, y2, z2).color(r, g, b, a).next();
-            buf.vertex(x1, y2, z2).color(r, g, b, a).next();
-            buf.vertex(x1, y2, z1).color(r, g, b, a).next();
-            buf.vertex(x1, y1, z2).color(r, g, b, 0).next();
-            buf.vertex(x1, y2, z2).color(r, g, b, a).next();
-            buf.vertex(x2, y1, z2).color(r, g, b, 0).next();
-            buf.vertex(x2, y2, z2).color(r, g, b, a).next();
-            buf.vertex(x2, y1, z1).color(r, g, b, 0).next();
-            buf.vertex(x2, y2, z1).color(r, g, b, a).next();
+            buf.vertex(pos.x1, pos.y1, pos.z1).color(r, g, b, a).next();
+            buf.vertex(pos.x1, pos.y1, pos.z2).color(r, g, b, a).next();
+            buf.vertex(pos.x2, pos.y1, pos.z2).color(r, g, b, a).next();
+            buf.vertex(pos.x2, pos.y1, pos.z1).color(r, g, b, a).next();
+            buf.vertex(pos.x1, pos.y1, pos.z1).color(r, g, b, a).next();
+            buf.vertex(pos.x1, pos.y2, pos.z1).color(r, g, b, a).next();
+            buf.vertex(pos.x2, pos.y2, pos.z1).color(r, g, b, a).next();
+            buf.vertex(pos.x2, pos.y2, pos.z2).color(r, g, b, a).next();
+            buf.vertex(pos.x1, pos.y2, pos.z2).color(r, g, b, a).next();
+            buf.vertex(pos.x1, pos.y2, pos.z1).color(r, g, b, a).next();
+            buf.vertex(pos.x1, pos.y1, pos.z2).color(r, g, b, 0).next();
+            buf.vertex(pos.x1, pos.y2, pos.z2).color(r, g, b, a).next();
+            buf.vertex(pos.x2, pos.y1, pos.z2).color(r, g, b, 0).next();
+            buf.vertex(pos.x2, pos.y2, pos.z2).color(r, g, b, a).next();
+            buf.vertex(pos.x2, pos.y1, pos.z1).color(r, g, b, 0).next();
+            buf.vertex(pos.x2, pos.y2, pos.z1).color(r, g, b, a).next();
             
             tess.draw();
         }
     }
     
     public static class line {
-        public double x1;
-        public double y1;
-        public double z1;
-        public double x2;
-        public double y2;
-        public double z2;
+        public MathHelper.Vec3D pos;
         public int color;
         public line(double x1, double y1, double z1, double x2, double y2, double z2, int color) {
             setPos(x1, y1, z1, x2, y2, z2);
@@ -230,12 +215,7 @@ public class Draw3D {
         }
         
         public void setPos(double x1, double y1, double z1, double x2, double y2, double z2) {
-            this.x1 = x1;
-            this.y1 = y1;
-            this.z1 = z1;
-            this.x2 = x2;
-            this.y2 = y2;
-            this.z2 = z2;
+            pos = new MathHelper.Vec3D(x1, y2, z1, x2, y2, z2);
         }
         
         public void setColor(int color) {
@@ -259,9 +239,9 @@ public class Draw3D {
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
             buf.begin(GL11.GL_LINE_STRIP,  VertexFormats.POSITION_COLOR);
-            buf.vertex(x1, y1, z1).color(r, g, b, a).next();
-            buf.vertex(x1, y1, z1).color(r, g, b, a).next();
-            buf.vertex(x2, y2, z2).color(r, g, b, a).next();
+            buf.vertex(pos.x1, pos.y1, pos.z1).color(r, g, b, a).next();
+            buf.vertex(pos.x1, pos.y1, pos.z1).color(r, g, b, a).next();
+            buf.vertex(pos.x2, pos.y2, pos.z2).color(r, g, b, a).next();
             tess.draw();
         }
     }

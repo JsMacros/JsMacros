@@ -14,8 +14,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import xyz.wagyourtail.jsmacros.runscript.classes.common.MathHelper;
 
 public class EntityHelper {
     protected Entity e;
@@ -24,14 +24,9 @@ public class EntityHelper {
         this.e = e;
     }
     
-    public Map<String, Double> getPos() {
+    public MathHelper.Pos3D getPos() {
         if (e == null) return null;
-        Map<String, Double> r = new HashMap<>();
-        Vec3d pos = e.getPos();
-        r.put("x", pos.x);
-        r.put("y", pos.y);
-        r.put("z", pos.z);
-        return r;
+        return new MathHelper.Pos3D(e.x, e.y, e.z);
     }
     
     public double getX() {
