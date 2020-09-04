@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.reflector;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.MathHelper;
 
@@ -12,7 +11,6 @@ public class ClientPlayerEntityHelper extends PlayerEntityHelper {
 	
 	public ClientPlayerEntityHelper lookAt(float yaw, float pitch) {
         pitch = MathHelper.clamp(pitch, -90.0F, 90.0F);
-        MinecraftClient mc = MinecraftClient.getInstance();
         e.prevPitch =e.pitch;
         e.prevYaw =e.yaw;
         e.pitch = pitch;

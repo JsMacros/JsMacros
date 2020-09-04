@@ -14,8 +14,9 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import xyz.wagyourtail.jsmacros.runscript.classes.common.MathHelper;
+import xyz.wagyourtail.jsmacros.runscript.classes.common.PositionHelper;
 
 public class Draw3D {
     public List<box> boxes = new ArrayList<>();
@@ -102,7 +103,7 @@ public class Draw3D {
     }
     
     public static class box {
-        public MathHelper.Vec3D pos;
+        public PositionHelper.Vec3D pos;
         public int color;
         public int fillColor;
         public boolean fill;
@@ -121,7 +122,7 @@ public class Draw3D {
         }
         
         public void setPos(double x1, double y1, double z1, double x2, double y2, double z2) {
-            pos = new MathHelper.Vec3D(x1, y2, z1, x2, y2, z2);
+            pos = new PositionHelper.Vec3D(x1, y2, z1, x2, y2, z2);
         }
         
         
@@ -202,7 +203,7 @@ public class Draw3D {
     }
     
     public static class line {
-        public MathHelper.Vec3D pos;
+        public PositionHelper.Vec3D pos;
         public int color;
         public line(double x1, double y1, double z1, double x2, double y2, double z2, int color) {
             setPos(x1, y1, z1, x2, y2, z2);
@@ -215,7 +216,7 @@ public class Draw3D {
         }
         
         public void setPos(double x1, double y1, double z1, double x2, double y2, double z2) {
-            pos = new MathHelper.Vec3D(x1, y2, z1, x2, y2, z2);
+            pos = new PositionHelper.Vec3D(x1, y2, z1, x2, y2, z2);
         }
         
         public void setColor(int color) {

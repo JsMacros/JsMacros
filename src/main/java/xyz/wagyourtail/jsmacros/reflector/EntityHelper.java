@@ -1,9 +1,7 @@
 package xyz.wagyourtail.jsmacros.reflector;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
@@ -14,8 +12,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
-import xyz.wagyourtail.jsmacros.runscript.classes.common.MathHelper;
+import net.minecraft.util.math.MathHelper;
+import xyz.wagyourtail.jsmacros.runscript.classes.common.PositionHelper;
 
 public class EntityHelper {
     protected Entity e;
@@ -24,9 +22,9 @@ public class EntityHelper {
         this.e = e;
     }
     
-    public MathHelper.Pos3D getPos() {
+    public PositionHelper.Pos3D getPos() {
         if (e == null) return null;
-        return new MathHelper.Pos3D(e.x, e.y, e.z);
+        return new PositionHelper.Pos3D(e.getX(), e.getY(), e.getZ());
     }
     
     public double getX() {

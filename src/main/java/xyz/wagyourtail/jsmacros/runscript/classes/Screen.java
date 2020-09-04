@@ -15,7 +15,7 @@ import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.reflector.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.reflector.TextFieldWidgetHelper;
-import xyz.wagyourtail.jsmacros.runscript.classes.common.MathHelper;
+import xyz.wagyourtail.jsmacros.runscript.classes.common.PositionHelper;
 import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.image;
 import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.item;
 import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.rect;
@@ -29,10 +29,10 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     protected List<item> itemFields = new ArrayList<>();
     protected List<image> imageFields = new ArrayList<>();
     public Consumer<Screen> onInit;
-    public BiConsumer<MathHelper.Pos2D, Integer> onMouseDown;
-    public BiConsumer<MathHelper.Vec2D, Integer> onMouseDrag;
-    public BiConsumer<MathHelper.Pos2D, Integer> onMouseUp;
-    public BiConsumer<MathHelper.Pos2D, Double> onScroll;
+    public BiConsumer<PositionHelper.Pos2D, Integer> onMouseDown;
+    public BiConsumer<PositionHelper.Vec2D, Integer> onMouseDrag;
+    public BiConsumer<PositionHelper.Pos2D, Integer> onMouseUp;
+    public BiConsumer<PositionHelper.Pos2D, Double> onScroll;
     public BiConsumer<Integer, Integer> onKeyPressed;
     public Consumer<String> catchInit;
     public Consumer<Screen> onClose;
@@ -213,17 +213,17 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     }
     
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (onMouseDown != null) onMouseDown.accept(new MathHelper.Pos2D(mouseX, mouseY), button);
+        if (onMouseDown != null) onMouseDown.accept(new PositionHelper.Pos2D(mouseX, mouseY), button);
         return super.mouseClicked(mouseX, mouseY, button);
     }
     
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if (onMouseDrag != null) onMouseDrag.accept(new MathHelper.Vec2D(mouseX, mouseY, deltaX, deltaY), button);
+        if (onMouseDrag != null) onMouseDrag.accept(new PositionHelper.Vec2D(mouseX, mouseY, deltaX, deltaY), button);
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
     
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (onMouseUp != null) onMouseUp.accept(new MathHelper.Pos2D(mouseX, mouseY), button);
+        if (onMouseUp != null) onMouseUp.accept(new PositionHelper.Pos2D(mouseX, mouseY), button);
         return super.mouseReleased(mouseX, mouseY, button);
     }
     
@@ -233,7 +233,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     }
     
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        if (onScroll != null) onScroll.accept(new MathHelper.Pos2D(mouseX, mouseY), amount);
+        if (onScroll != null) onScroll.accept(new PositionHelper.Pos2D(mouseX, mouseY), amount);
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
     
