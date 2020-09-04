@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.runscript.classes.common;
 
-public class MathHelper extends net.minecraft.util.math.MathHelper {
+public class PositionHelper {
+
     public static class Pos2D {
         public double x;
         public double y;
