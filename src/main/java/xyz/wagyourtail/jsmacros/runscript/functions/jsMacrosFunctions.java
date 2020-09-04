@@ -195,11 +195,11 @@ public class jsMacrosFunctions extends Functions {
         });
     }
     
-    public void disconnect() {
+    public void disconnect(Consumer<Boolean> callback) {
         mc.execute(() -> {
-            if (mc.world != null) mc.world.disconnect();
-            mc.joinWorld(null);
-            mc.openScreen(new TitleScreen());
+            boolean isWorld = mc.world != null;
+            if (isWorld) mc.world.disconnect();
+            if (callback != null) callback.accept(isWorld);
         });
     }
     
