@@ -20,7 +20,7 @@ public class FileHandler {
     }
     
     public FileHandler write(String s) throws IOException {
-        BufferedWriter out = new BufferedWriter(new FileWriter(f, false));
+        FileWriter out = new FileWriter(f, false);
         out.write(s);
         out.close();
         return this;
@@ -46,7 +46,7 @@ public class FileHandler {
     }
     
     public FileHandler append(String s) throws IOException {
-        BufferedWriter out = new BufferedWriter(new FileWriter(f, true));
+        FileWriter out = new FileWriter(f, true);
         out.write(s);
         out.close();
         return this;

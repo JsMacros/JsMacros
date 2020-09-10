@@ -15,23 +15,29 @@ public class globalVarFunctions extends Functions {
         super(libName, excludeLanguages);
     }
     
-	public void putInt(String name, int i) {
+	public int putInt(String name, int i) {
 		globalRaw.put(name, Integer.valueOf(i));
+		return i;
 	}
-	public void putString(String name, String str) {
+	public String putString(String name, String str) {
 		globalRaw.put(name, str);
+		return str;
 	}
-	public void putFloat(String name, float f) {
+	public float putFloat(String name, float f) {
 		globalRaw.put(name, Float.valueOf(f));
+		return f;
 	}
-	public void putDouble(String name, double d) {
+	public double putDouble(String name, double d) {
 	    globalRaw.put(name, Double.valueOf(d));
+	    return d;
 	}
-	public void putBoolean(String name, boolean b) {
+	public boolean putBoolean(String name, boolean b) {
 	    globalRaw.put(name, Boolean.valueOf(b));
+	    return b;
 	}
-	public void putObject(String name, Object o) {
+	public Object putObject(String name, Object o) {
 	    globalRaw.put(name, o);
+	    return o;
 	}
 	
 	public String getType(String name) {
