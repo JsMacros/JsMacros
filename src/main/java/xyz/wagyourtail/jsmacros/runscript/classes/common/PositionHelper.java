@@ -18,6 +18,10 @@ public class PositionHelper {
         public double getY() {
             return y;
         }
+        
+        public String toString() {
+            return String.format("%f, %f", x, y);
+        }
     }
 
     public static class Pos3D {
@@ -42,6 +46,10 @@ public class PositionHelper {
         public double getZ() {
             return z;
         }
+        
+        public String toString() {
+            return String.format("%f, %f, %f", x, y, z);
+        }
     }
 
     public static class Vec2D {
@@ -56,6 +64,10 @@ public class PositionHelper {
             this.y1 = y1;
             this.x2 = x2;
             this.y2 = y2;
+        }
+        
+        public String toString() {
+            return String.format("%f, %f -> %f, %f", x1, y1, x2, y2);
         }
     }
 
@@ -74,6 +86,10 @@ public class PositionHelper {
             this.x2 = x2;
             this.y2 = y2;
             this.z2 = z2;
+        }
+        
+        public String toString() {
+            return String.format("%f, %f, %f -> %f, %f, %f", x1, y1, z1, x2, y2, z2);
         }
     }
 
