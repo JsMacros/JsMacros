@@ -43,7 +43,7 @@ public class playerFunctions extends Functions {
     }
 
     public BlockDataHelper rayTraceBlock(double distance, boolean fluid) {
-        BlockHitResult h = (BlockHitResult) mc.player.rayTrace(distance, 0, fluid);
+        BlockHitResult h = (BlockHitResult) mc.player.raycast(distance, 0, fluid);
         if (h.getType() == HitResult.Type.MISS) return null;
         BlockState b = mc.world.getBlockState(h.getBlockPos());
         BlockEntity t = mc.world.getBlockEntity(h.getBlockPos());

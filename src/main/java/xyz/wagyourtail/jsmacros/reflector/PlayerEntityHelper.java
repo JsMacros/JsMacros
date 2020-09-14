@@ -53,6 +53,14 @@ public class PlayerEntityHelper extends EntityHelper {
         return ((PlayerEntity)e).experienceLevel;
     }
     
+    public boolean isSleeping() {
+        return ((PlayerEntity)e).isSleeping();
+    }
+    
+    public boolean isSleepingLongEnough() {
+        return ((PlayerEntity)e).isSleepingLongEnough();
+    }
+    
     public PlayerEntity getRaw() {
         return (PlayerEntity) e;
     }

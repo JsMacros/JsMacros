@@ -21,7 +21,9 @@ public class jsmacros_WorldRendererMixin {
         for (Draw3D d : ImmutableList.copyOf(hudFunctions.renders)) {
             try {
                 d.render();
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

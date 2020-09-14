@@ -11,7 +11,6 @@ import com.ibm.icu.impl.locale.XCldrStub.ImmutableMap;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
-import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.network.ServerAddress;
 import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.jsMacros;
