@@ -122,7 +122,7 @@ public class Draw3D {
         }
         
         public void setPos(double x1, double y1, double z1, double x2, double y2, double z2) {
-            pos = new PositionHelper.Vec3D(x1, y2, z1, x2, y2, z2);
+            pos = new PositionHelper.Vec3D(x1, y1, z1, x2, y2, z2);
         }
         
         
@@ -216,7 +216,7 @@ public class Draw3D {
         }
         
         public void setPos(double x1, double y1, double z1, double x2, double y2, double z2) {
-            pos = new PositionHelper.Vec3D(x1, y2, z1, x2, y2, z2);
+            pos = new PositionHelper.Vec3D(x1, y1, z1, x2, y2, z2);
         }
         
         public void setColor(int color) {
