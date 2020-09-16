@@ -23,6 +23,7 @@ import xyz.wagyourtail.jsmacros.gui2.MacroScreen;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
 import xyz.wagyourtail.jsmacros.macros.IEventListener;
 import xyz.wagyourtail.jsmacros.reflector.TextHelper;
+import xyz.wagyourtail.jsmacros.runscript.functions.keybindFunctions;
 
 public class Profile {
     public String profileName;
@@ -192,6 +193,11 @@ public class Profile {
             if (keycode == InputUtil.UNKNOWN_KEY) return ActionResult.PASS;
             if (keyBinding.matchesKey(key, scancode) && action == 1 && mc.currentScreen == null) mc.openScreen(jsMacros.keyMacrosScreen);
 
+            synchronized (keybindFunctions.pressedKeys) {
+                if (action == 1) keybindFunctions.pressedKeys.add(keycode.getTranslationKey());
+                else keybindFunctions.pressedKeys.remove(keycode.getTranslationKey());
+            }
+            
             Map<String, Object> args = new HashMap<>();
             args.put("rawkey", keycode);
             if (action == 1) {

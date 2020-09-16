@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.runscript.functions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,8 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.InputUtil.Key;
 
 public class keybindFunctions extends Functions {
+    public static final List<String> pressedKeys = new ArrayList<>();
+    
     
     public keybindFunctions(String libName) {
         super(libName);
@@ -67,5 +70,11 @@ public class keybindFunctions extends Functions {
     public void key(KeyBinding keyBind, boolean keyState) {
         if (keyState) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(keyBind.getBoundKeyTranslationKey()));
         keyBind.setPressed(keyState);
+    }
+    
+    public List<String> getPressedKeys() {
+        synchronized (pressedKeys) {
+            return new ArrayList<>(pressedKeys);
+        }
     }
 }
