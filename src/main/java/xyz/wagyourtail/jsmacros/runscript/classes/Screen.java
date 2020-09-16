@@ -156,9 +156,15 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     }
     
     public text addText(String text, int x, int y, int color, boolean shadow) {
-        text t =  new text(text, x, y, color, shadow);
+        return addText(text, x, y, color, shadow, 1, 0);
+        
+    }
+    
+    public text addText(String text, int x, int y, int color, boolean shadow, double scale, float rotation) {
+        text t = new text(text, x, y, color, shadow, scale, rotation);
         textFields.add(t);
         return t;
+        
     }
     
     public Screen removeText(text t) {
@@ -168,13 +174,17 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     
 
     public rect addRect(int x1, int y1, int x2, int y2, int color) {
-        rect r = new rect(x1, y1, x2, y2, color);
+        rect r = new rect(x1, y1, x2, y2, color, 0F);
         rectFields.add(r);
         return r;
     }
     
     public rect addRect(int x1, int y1, int x2, int y2, int color, int alpha) {
-        rect r = new rect(x1, y1, x2, y2, color, alpha);
+        return addRect(x1, y1, x2, y2, color, alpha, 0);
+    }
+    
+    public rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation) {
+        rect r = new rect(x1, y1, x2, y2, color, alpha, rotation);
         rectFields.add(r);
         return r;
     }
@@ -185,7 +195,11 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     }
     
     public image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
-        image i = new image(x, y, width, height, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight);
+        return addImage(x, y, width, height, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, 0);
+    }
+    
+    public image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
+        image i = new image(x, y, width, height, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
         imageFields.add(i);
         return i;
     }
@@ -196,13 +210,17 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
     }
     
     public item addItem(int x, int y, String id, boolean overlay) {
-        item i = new item(y, y, id, overlay);
+        return addItem(y, y, id, overlay, 1, 0);
+    }
+    
+    public item addItem(int x, int y, String id, boolean overlay, double scale, float rotation) {
+        item i = new item(y, y, id, overlay, scale, rotation);
         itemFields.add(i);
         return i;
     }
     
-    public item addItem(int x, int y, ItemStackHelper item, boolean overlay) {
-        item i = new item(y, y, item, overlay);
+    public item addItem(int x, int y, ItemStackHelper item, boolean overlay, double scale, float rotation) {
+        item i = new item(x, y, item, overlay, scale, rotation);
         itemFields.add(i);
         return i;
     }
