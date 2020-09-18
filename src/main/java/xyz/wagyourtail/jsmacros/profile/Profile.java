@@ -184,19 +184,19 @@ public class Profile {
         KeyCallback.EVENT.register((window, key, scancode, action, mods) -> {
             InputUtil.Key keycode;
             MinecraftClient mc = MinecraftClient.getInstance();
-            if (mc.currentScreen != null && jsMacros.config.options.disableKeyWhenScreenOpen) return ActionResult.PASS;
             if (key == -1 || action == 2) return ActionResult.PASS;
 
             if (key <= 7) keycode = InputUtil.Type.MOUSE.createFromCode(key);
             else keycode = InputUtil.Type.KEYSYM.createFromCode(key);
 
             if (keycode == InputUtil.UNKNOWN_KEY) return ActionResult.PASS;
-            if (keyBinding.matchesKey(key, scancode) && action == 1 && mc.currentScreen == null) mc.openScreen(jsMacros.keyMacrosScreen);
-
             synchronized (keybindFunctions.pressedKeys) {
                 if (action == 1) keybindFunctions.pressedKeys.add(keycode.getTranslationKey());
                 else keybindFunctions.pressedKeys.remove(keycode.getTranslationKey());
             }
+
+            if (mc.currentScreen != null && jsMacros.config.options.disableKeyWhenScreenOpen) return ActionResult.PASS;
+            if (keyBinding.matchesKey(key, scancode) && action == 1 && mc.currentScreen == null) mc.openScreen(jsMacros.keyMacrosScreen);
             
             Map<String, Object> args = new HashMap<>();
             args.put("rawkey", keycode);
