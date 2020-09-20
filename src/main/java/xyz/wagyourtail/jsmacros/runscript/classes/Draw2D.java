@@ -118,6 +118,10 @@ public class Draw2D extends DrawableHelper {
         return i;
     }
     
+    public item addItem(int x, int y, ItemStackHelper item, boolean overlay) {
+        return addItem(x, y, item, overlay, 1, 0);
+    }
+    
     public item addItem(int x, int y, ItemStackHelper item, boolean overlay, double scale, float rotation) {
         item i = new item(x, y, item, overlay, scale, rotation);
         itemFields.add(i);
