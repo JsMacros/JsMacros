@@ -64,6 +64,6 @@ public class fsFunctions extends Functions {
     }
     
     public FileHandler open(String path) {
-        return new FileHandler(path);
+        return new FileHandler(new File(jsMacros.config.macroFolder, path));
     }
 }
