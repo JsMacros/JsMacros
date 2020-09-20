@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.runscript.classes;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -42,6 +43,16 @@ public class FileHandler {
         }
         in.close();
         return ret;
+    }
+    
+    public byte[] readBytes() throws IOException {
+        try (FileInputStream in = new FileInputStream(f)) {
+            byte[] bytes =  new byte[(int) f.length()];
+            in.read(bytes);
+            return bytes;
+        } catch (IOException e) {
+            throw e;
+        }
     }
     
     public FileHandler append(String s) throws IOException {
