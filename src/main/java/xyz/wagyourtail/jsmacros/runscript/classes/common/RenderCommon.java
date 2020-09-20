@@ -228,7 +228,7 @@ public class RenderCommon {
             RenderSystem.translated(-x1, -y1, 0);
             Draw2D.fill(matrixStack, x1, y1, x2, y2, color);
             RenderSystem.translated(x1, y1, 0);
-            RenderSystem.rotatef(rotation, 0, 0, 1);
+            RenderSystem.rotatef(-rotation, 0, 0, 1);
             RenderSystem.translated(-x1, -y1, 0);
         }
     }
@@ -290,7 +290,7 @@ public class RenderCommon {
             else mc.textRenderer.draw(matrixStack, text, (int)(x / scale), (int)(y / scale), color);
             RenderSystem.scaled(1 / scale, 1 / scale, 1);
             RenderSystem.translated(x, y, 0);
-            RenderSystem.rotatef(rotation, 0, 0, 1);
+            RenderSystem.rotatef(-rotation, 0, 0, 1);
             RenderSystem.translated(-x, -y, 0);
         }
     }
