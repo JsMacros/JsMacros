@@ -14,7 +14,7 @@ public class jsmacros_SignEditScreenMixin implements ISignEditScreen {
 
     @Shadow
     @Final
-    private String[] field_24285;
+    private String[] text;
     
     @Shadow
     @Final
@@ -22,7 +22,7 @@ public class jsmacros_SignEditScreenMixin implements ISignEditScreen {
     
     @Override
     public void setLine(int line, String text) {
-        this.field_24285[line] = text;
+        this.text[line] = text;
         this.sign.setTextOnRow(line, new LiteralText(text));
     }
     
