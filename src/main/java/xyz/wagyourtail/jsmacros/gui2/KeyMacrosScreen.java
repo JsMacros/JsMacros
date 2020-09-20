@@ -10,6 +10,7 @@ import xyz.wagyourtail.jsmacros.profile.Profile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 
@@ -34,7 +35,7 @@ public class KeyMacrosScreen extends MacroScreen {
             client.openScreen(new ProfileScreen(this));
         };
         
-        List<IEventListener> listeners = Profile.registry.getListeners().get("KEY");
+        Set<IEventListener> listeners = Profile.registry.getListeners().get("KEY");
         List<RawMacro> macros = new ArrayList<>();
         
         if (listeners != null) for (IEventListener event : ImmutableList.copyOf(listeners)) {

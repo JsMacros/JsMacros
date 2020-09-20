@@ -2,8 +2,11 @@ package xyz.wagyourtail.jsmacros.profile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
@@ -15,8 +18,8 @@ import xyz.wagyourtail.jsmacros.macros.KeyUpMacro;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 
 public class EventRegistry {
-    public Map<String, List<IEventListener>> macros;
-    public List<String> events = new ArrayList<>();
+    public Map<String, Set<IEventListener>> macros;
+    public Set<String> events = new LinkedHashSet<>();
     
     public void clearMacros() {
         macros = new HashMap<>();
@@ -43,17 +46,17 @@ public class EventRegistry {
     }
     
     public void addListener(String event, IEventListener listener) {
-        macros.putIfAbsent(event, new ArrayList<>());
+        macros.putIfAbsent(event, new LinkedHashSet<>());
         macros.get(event).add(listener);
     }
     
     public boolean removeListener(String event, IEventListener listener) {
-        macros.putIfAbsent(event, new ArrayList<>());
+        macros.putIfAbsent(event, new LinkedHashSet<>());
         return macros.get(event).remove(listener);
     }
     
     public boolean removeListener(IEventListener listener) {
-        for (List<IEventListener> listeners : macros.values()) {
+        for (Set<IEventListener> listeners : macros.values()) {
             if (listeners.contains(listener)) {
                 return listeners.remove(listener);
             }
@@ -72,17 +75,17 @@ public class EventRegistry {
         return false;
     }
     
-    public Map<String, List<IEventListener>> getListeners() {
+    public Map<String, Set<IEventListener>> getListeners() {
         return macros;
     }
     
-    public List<IEventListener> getListeners(String key) {
+    public Set<IEventListener> getListeners(String key) {
         return macros.get(key);
     }
     
     public List<RawMacro> getRawMacros() {
         List<RawMacro> rawProf = new ArrayList<>();
-        for (List<IEventListener> eventMacros : macros.values()) {
+        for (Set<IEventListener> eventMacros : macros.values()) {
             for (IEventListener macro : eventMacros) {
                 if (macro instanceof BaseMacro) rawProf.add(((BaseMacro) macro).getRawMacro());
             }
@@ -91,11 +94,11 @@ public class EventRegistry {
     }
     
     public void addEvent(String eventName) {
-        if (!events.contains(eventName)) events.add(eventName);
+        events.add(eventName);
     }
     
     public BaseMacro getMacro(RawMacro rawMacro) {
-        for (List<IEventListener> eventMacros : macros.values()) {
+        for (Set<IEventListener> eventMacros : macros.values()) {
             for (IEventListener macro : eventMacros) {
                 if (macro instanceof BaseMacro && rawMacro == ((BaseMacro) macro).getRawMacro()) return (BaseMacro) macro;
             }

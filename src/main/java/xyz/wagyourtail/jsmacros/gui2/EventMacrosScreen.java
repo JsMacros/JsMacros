@@ -10,6 +10,7 @@ import xyz.wagyourtail.jsmacros.profile.Profile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 
@@ -39,7 +40,7 @@ public class EventMacrosScreen extends MacroScreen {
         List<RawMacro> macros = new ArrayList<>();
         
         for (String event : Profile.registry.events) {
-            List<IEventListener> eventListeners = Profile.registry.getListeners().get(event);
+            Set<IEventListener> eventListeners = Profile.registry.getListeners().get(event);
             if (eventListeners != null) 
                 for (IEventListener macro : ImmutableList.copyOf(eventListeners)) {
                     if (macro instanceof BaseMacro && ((BaseMacro) macro).getRawMacro().type == MacroEnum.EVENT) macros.add(((BaseMacro) macro).getRawMacro());

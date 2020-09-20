@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.runscript.functions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -169,7 +170,7 @@ public class jsMacrosFunctions extends Functions {
     
     public List<IEventListener> listeners(String event) {
         List<IEventListener> listeners = new ArrayList<>();
-        List<IEventListener> raw = Profile.registry.getListeners(event);
+        Set<IEventListener> raw = Profile.registry.getListeners(event);
         if (raw == null) return null;
         for (IEventListener l : ImmutableList.copyOf(raw)) {
             if (!(l instanceof BaseMacro)) listeners.add(l);
