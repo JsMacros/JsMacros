@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.compat.mixins;
+package xyz.wagyourtail.jsmacros.mixins.access;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,9 +14,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import net.minecraft.client.render.WorldRenderer;
 
 @Mixin(WorldRenderer.class)
-public class jsmacros_WorldRendererMixin {
+public class MixinWorldRenderer {
     @Inject(at = @At("TAIL"), method = "render")
-    public void jsmacros_render(CallbackInfo info) {
+    public void render(CallbackInfo info) {
 
         for (Draw3D d : ImmutableList.copyOf(hudFunctions.renders)) {
             try {

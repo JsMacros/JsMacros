@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.compat.mixins;
+package xyz.wagyourtail.jsmacros.mixins.access;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,9 +16,9 @@ import xyz.wagyourtail.jsmacros.runscript.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.runscript.functions.hudFunctions;
 
 @Mixin(InGameHud.class)
-class jsmacros_InGameHudMixin {
+class MixinInGameHud {
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/options/GameOptions;debugEnabled:Z"), method = "render")
-    public void jsMacros_renderHud(MatrixStack matrixStack, float f, final CallbackInfo info) {
+    public void renderHud(MatrixStack matrixStack, float f, final CallbackInfo info) {
 
         for (Draw2D h : ImmutableList.copyOf(hudFunctions.overlays)) {
             try {

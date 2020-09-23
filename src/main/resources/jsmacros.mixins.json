@@ -1,17 +1,25 @@
 {
 	"required": true,
-	"package": "xyz.wagyourtail.jsmacros.events.mixins",
+	"package": "xyz.wagyourtail.jsmacros.mixins",
 	"compatibilityLevel": "JAVA_8",
 	"client": [
-		"jsmacros_KeyboardMixin",
-		"jsmacros_MouseMixin",
-		"jsmacros_ScreenMixin",
-		"jsmacros_ChatHudMixin",
-		"jsmacros_ClientPlayerEntityMixin",
-		"jsmacros_ClientPlayNetworkHandler",
-		"jsmacros_HungerManagerMixin",
-		"jsmacros_MinecraftClientMixin",
-		"jsmacros_SoundSystemMixin"
+		"access.MixinInGameHud",
+		"access.MixinMinecraftClient",
+		"access.MixinWorldRenderer",
+		"access.MixinHandledScreen",
+		"access.MixinHorseScreen",
+		"access.MixinSignEditScreen",
+		"access.MixinBossBarHud",
+		"access.MixinChatHud",
+		"events.MixinKeyboard",
+		"events.MixinMouse",
+		"events.MixinScreen",
+		"events.MixinChatHud",
+		"events.MixinClientPlayerEntity",
+		"events.MixinClientPlayNetworkHandler",
+		"events.MixinHungerManager",
+		"events.MixinMinecraftClient",
+		"events.MixinSoundSystem"
 	],
 	"injectors": {
 		"defaultRequire": 1

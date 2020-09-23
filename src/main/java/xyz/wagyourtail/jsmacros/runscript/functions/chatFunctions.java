@@ -7,7 +7,7 @@ import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import xyz.wagyourtail.jsmacros.compat.interfaces.IChatHud;
+import xyz.wagyourtail.jsmacros.access.IChatHud;
 import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
 public class chatFunctions extends Functions {
@@ -23,13 +23,13 @@ public class chatFunctions extends Functions {
     private void logInternal(String message) {
         if (message != null) {
             LiteralText text = new LiteralText(message);
-            ((IChatHud)mc.inGameHud.getChatHud()).addMessageBypass(text);
+            ((IChatHud)mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
         }
     }
     
     private void logInternal(TextHelper text) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        ((IChatHud)mc.inGameHud.getChatHud()).addMessageBypass(text.getRaw());
+        ((IChatHud)mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text.getRaw());
     }
     
     // yay, auto type coercion.

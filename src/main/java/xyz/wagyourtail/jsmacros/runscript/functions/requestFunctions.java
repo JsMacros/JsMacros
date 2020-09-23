@@ -8,10 +8,8 @@ import java.util.Map;
 
 import xyz.wagyourtail.jsmacros.runscript.classes.HTTPRequest;
 import xyz.wagyourtail.jsmacros.runscript.classes.HTTPRequest.response;
-import xyz.wagyourtail.jsmacros.runscript.classes.WebSocket;
 import xyz.wagyourtail.jsmacros.runscript.classes.Websocket2;
 
-@SuppressWarnings("deprecation")
 public class requestFunctions extends Functions {
     
     public requestFunctions(String libName) {
@@ -47,8 +45,8 @@ public class requestFunctions extends Functions {
     }
     
     @Deprecated
-    public WebSocket createWS(String uri) throws URISyntaxException {
-        return new WebSocket(uri);
+    public void createWS(String uri) throws URISyntaxException {
+        throw new RuntimeException("This method has been removed.");
     }
     
     public Websocket2 createWS2(String url) throws IOException {

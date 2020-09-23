@@ -14,9 +14,9 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import xyz.wagyourtail.jsmacros.compat.interfaces.IHorseScreen;
-import xyz.wagyourtail.jsmacros.compat.interfaces.IInventory;
 import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.access.IHorseScreen;
+import xyz.wagyourtail.jsmacros.access.IInventory;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 
 public class Inventory {
@@ -121,7 +121,7 @@ public class Inventory {
         double x = mc.mouse.getX() * (double)mc.getWindow().getScaledWidth() / (double)mc.getWindow().getWidth();
         double y = mc.mouse.getY() * (double)mc.getWindow().getScaledHeight() / (double)mc.getWindow().getHeight();
         
-        Slot s = ((IInventory)this.inventory).getSlotUnder(x, y);
+        Slot s = ((IInventory)this.inventory).jsmacros_getSlotUnder(x, y);
         if (s == null) return -999;
         return this.inventory.getScreenHandler().slots.indexOf(s);
     }
@@ -200,7 +200,7 @@ public class Inventory {
                 map.put("output", new int[] { slots - 9 - 27 - 1 });
                 map.put("input", new int[] { slots - 9 - 27 - 2 });
             } else if (inventory instanceof HorseScreen) {
-                HorseBaseEntity h = (HorseBaseEntity) ((IHorseScreen)this.inventory).getEntity();
+                HorseBaseEntity h = (HorseBaseEntity) ((IHorseScreen)this.inventory).jsmacros_getEntity();
                 if (h.canBeSaddled()) map.put("saddle", new int[] {0});
                 if (h.hasArmorSlot()) map.put("armor", new int[] {1});
                 if (h instanceof AbstractDonkeyEntity && ((AbstractDonkeyEntity) h).hasChest()) {

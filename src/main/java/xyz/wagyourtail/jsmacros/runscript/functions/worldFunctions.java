@@ -37,7 +37,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
 import xyz.wagyourtail.jsmacros.jsMacros;
-import xyz.wagyourtail.jsmacros.compat.interfaces.IBossBarHud;
+import xyz.wagyourtail.jsmacros.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.reflector.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.reflector.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.reflector.BossBarHelper;
@@ -164,7 +164,7 @@ public class worldFunctions extends Functions {
     }
     
     public Map<String, BossBarHelper> getBossBars() {
-        Map<UUID, ClientBossBar> bars = ImmutableMap.copyOf(((IBossBarHud) mc.inGameHud.getBossBarHud()).getBossBars());
+        Map<UUID, ClientBossBar> bars = ImmutableMap.copyOf(((IBossBarHud) mc.inGameHud.getBossBarHud()).jsmacros_GetBossBars());
         Map<String, BossBarHelper> out = new HashMap<>();
         for (Map.Entry<UUID, ClientBossBar> e : ImmutableList.copyOf(bars.entrySet())) {
             out.put(e.getKey().toString(), new BossBarHelper(e.getValue()));

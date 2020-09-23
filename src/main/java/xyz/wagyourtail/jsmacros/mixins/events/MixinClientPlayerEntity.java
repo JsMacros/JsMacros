@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.events.mixins;
+package xyz.wagyourtail.jsmacros.mixins.events;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,14 +22,14 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.network.packet.c2s.play.UpdateSignC2SPacket;
 import net.minecraft.text.LiteralText;
-import xyz.wagyourtail.jsmacros.compat.interfaces.ISignEditScreen;
+import xyz.wagyourtail.jsmacros.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.events.AirChangeCallback;
 import xyz.wagyourtail.jsmacros.events.DamageCallback;
 import xyz.wagyourtail.jsmacros.events.ExperienceChangeCallback;
 import xyz.wagyourtail.jsmacros.events.SignEditCallback;
 
 @Mixin(ClientPlayerEntity.class)
-class jsmacros_ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
+class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     
     @Shadow
     @Final
@@ -46,17 +46,17 @@ class jsmacros_ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
     }
     
     @Inject(at = @At("HEAD"), method="setExperience")
-    public void jsmacros_setExperience(float progress, int total, int level, CallbackInfo info) {
+    public void onSetExperience(float progress, int total, int level, CallbackInfo info) {
         ExperienceChangeCallback.EVENT.invoker().interact(progress, total, level);
     }
     
     @Inject(at = @At("TAIL"), method="applyDamage")
-    private void jsmacros_applyDamage(DamageSource source, float amount, final CallbackInfo info) {
+    private void onApplyDamage(DamageSource source, float amount, final CallbackInfo info) {
         DamageCallback.EVENT.invoker().interact(source, this.getHealth(), amount);
     }
     
     @Inject(at = @At("HEAD"), method="openEditSignScreen", cancellable= true)
-    public void openEditSignScreen(SignBlockEntity sign, CallbackInfo info) {
+    public void onOpenEditSignScreen(SignBlockEntity sign, CallbackInfo info) {
         List<String> lines = new ArrayList<String>(Arrays.asList(new String[]{"", "", "", ""}));
         if (SignEditCallback.EVENT.invoker().interact(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ())) {
             for (int i = 0; i < 4; ++i) {
@@ -79,7 +79,7 @@ class jsmacros_ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
             SignEditScreen signScreen = new SignEditScreen(sign);
             client.openScreen(signScreen);
             for (int i = 0; i < 4; ++i) {
-                ((ISignEditScreen)signScreen).setLine(i, lines.get(i));
+                ((ISignEditScreen)signScreen).jsmacros_setLine(i, lines.get(i));
             }
             info.cancel();
         }
@@ -87,7 +87,7 @@ class jsmacros_ClientPlayerEntityMixin extends AbstractClientPlayerEntity {
     
     
     // IGNORE
-    public jsmacros_ClientPlayerEntityMixin(ClientWorld world, GameProfile profile) {
+    public MixinClientPlayerEntity(ClientWorld world, GameProfile profile) {
         super(world, profile);
         // TODO Auto-generated constructor stub
     }

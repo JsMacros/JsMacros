@@ -1,14 +1,14 @@
-package xyz.wagyourtail.jsmacros.compat.mixins;
+package xyz.wagyourtail.jsmacros.mixins.access;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.screen.slot.Slot;
-import xyz.wagyourtail.jsmacros.compat.interfaces.IInventory;
+import xyz.wagyourtail.jsmacros.access.IInventory;
 
 @Mixin(HandledScreen.class)
-class jsmacros_HandledScreenMixin implements IInventory {
+class MixinHandledScreen implements IInventory {
 
     @Shadow
     private Slot getSlotAt(double x, double y) {
@@ -16,7 +16,7 @@ class jsmacros_HandledScreenMixin implements IInventory {
     }
     
     @Override
-    public Slot getSlotUnder(double x, double y) {
+    public Slot jsmacros_getSlotUnder(double x, double y) {
         return getSlotAt(x, y);
     }
     

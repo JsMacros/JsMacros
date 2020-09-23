@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.jsMacros;
-import xyz.wagyourtail.jsmacros.compat.interfaces.IChatHud;
+import xyz.wagyourtail.jsmacros.access.IChatHud;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.runscript.functions.*;
 
@@ -173,7 +173,7 @@ public class RunScript {
                     MinecraftClient mc = MinecraftClient.getInstance();
                     if (mc.inGameHud != null) {
                         LiteralText text = new LiteralText(e.toString());
-                        ((IChatHud)mc.inGameHud.getChatHud()).addMessageBypass(text);
+                        ((IChatHud)mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
                     }
                     if (catcher != null) catcher.accept(e.toString());
                     e.printStackTrace();

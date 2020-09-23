@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.events.mixins;
+package xyz.wagyourtail.jsmacros.mixins.events;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,10 +12,10 @@ import xyz.wagyourtail.jsmacros.events.RecieveMessageCallback;
 import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
 @Mixin(ChatHud.class)
-class jsmacros_ChatHudMixin {
+class MixinChatHud {
 
-    @ModifyVariable(method = "addMessage", at = @At(value = "HEAD"))
-    private Text jsmacros_addChatMessage(Text text) {
+    @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;)V", at = @At(value = "HEAD"))
+    private Text modifyChatMessage(Text text) {
         if (text == null) return text;
         TextHelper result = RecieveMessageCallback.EVENT.invoker().interact(new TextHelper(text));
         if (result == null) return null;
@@ -26,7 +26,7 @@ class jsmacros_ChatHudMixin {
     }
 
     @Inject(method = "addMessage", at = @At("HEAD"), cancellable = true)
-    private void jsmacros_addChatMessage(Text text, CallbackInfo info) {
+    private void onAddChatMessage(Text text, CallbackInfo info) {
         if (text == null) {
             info.cancel();
         }

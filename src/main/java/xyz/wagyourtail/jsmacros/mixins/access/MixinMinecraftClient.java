@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.compat.mixins;
+package xyz.wagyourtail.jsmacros.mixins.access;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,13 +14,13 @@ import xyz.wagyourtail.jsmacros.runscript.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.runscript.functions.hudFunctions;
 
 @Mixin(MinecraftClient.class)
-class jsmacros_MinecraftClientMixin {
+class MixinMinecraftClient {
 
     @Shadow
     private ClientConnection connection;
 
     @Inject(at = @At("TAIL"), method = "onResolutionChanged")
-    public void jsmacros_onResolutionChanged(CallbackInfo info) {
+    public void onResolutionChanged(CallbackInfo info) {
 
 
         for (Draw2D h : ImmutableList.copyOf(hudFunctions.overlays)) {

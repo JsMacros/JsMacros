@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.events.mixins;
+package xyz.wagyourtail.jsmacros.mixins.events;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,24 +15,24 @@ import xyz.wagyourtail.jsmacros.events.DisconnectCallback;
 import xyz.wagyourtail.jsmacros.events.OpenScreenCallback;
 
 @Mixin(MinecraftClient.class)
-public class jsmacros_MinecraftClientMixin {
+public class MixinMinecraftClient {
 
     @Shadow
     public Screen currentScreen;
     
     @Inject(at = @At("HEAD"), method="joinWorld")
-    public void jsmacros_joinWorld(ClientWorld world, CallbackInfo info) {
+    public void onJoinWorld(ClientWorld world, CallbackInfo info) {
         if (world != null)
             DimensionChangeCallback.EVENT.invoker().interact(world.getRegistryKey().getValue().toString());
     }
     
     @Inject(at = @At("HEAD"), method="openScreen")
-    public void jsmacros_openScreen(Screen screen, CallbackInfo info) {
+    public void onOpenScreen(Screen screen, CallbackInfo info) {
         if (screen != currentScreen) OpenScreenCallback.EVENT.invoker().interact(jsMacros.getScreenName(screen));
     }
     
     @Inject(at = @At("TAIL"), method="disconnect")
-    public void jsmacros_disconnect(CallbackInfo info) {
+    public void onDisconnect(CallbackInfo info) {
         DisconnectCallback.EVENT.invoker().interact();
     }
 }

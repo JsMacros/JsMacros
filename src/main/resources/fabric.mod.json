@@ -23,8 +23,7 @@
 		]
 	},
 	"mixins": [
-		"jsmacros.mixins.json",
-		"jsmacros_compat.mixins.json"
+		"jsmacros.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.9.0",
