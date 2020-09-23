@@ -11,6 +11,7 @@
 		"access.MixinSignEditScreen",
 		"access.MixinBossBarHud",
 		"access.MixinChatHud",
+		"access.MixinClientPlayNetworkHandler",
 		"events.MixinKeyboard",
 		"events.MixinMouse",
 		"events.MixinScreen",

@@ -46,6 +46,8 @@ import xyz.wagyourtail.jsmacros.reflector.PlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.PlayerListEntryHelper;
 
 public class worldFunctions extends Functions {
+    public static long serverTPS = 20;
+
     public worldFunctions(String libName) {
         super(libName);
     }
@@ -189,5 +191,8 @@ public class worldFunctions extends Functions {
         return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(new BlockPos(x, 10, z))).toString();
     }
     
+    public long getServerTPS() {
+        return serverTPS;
+    }
     
 }
