@@ -119,11 +119,10 @@ public class RunScript {
 
     public static void removeThread(thread t) {
         if (threads.containsKey(t.m)) {
-            threads.get(t.m).remove(t);
-        } else {
-            for (Entry<RawMacro, List<thread>> tl : threads.entrySet()) {
-                if (tl.getValue().remove(t)) break;
-            }
+            if (threads.get(t.m).remove(t)) return;
+        }
+        for (Entry<RawMacro, List<thread>> tl : threads.entrySet()) {
+            if (tl.getValue().remove(t)) return;
         }
     }
 
