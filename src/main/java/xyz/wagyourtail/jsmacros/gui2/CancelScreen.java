@@ -16,7 +16,7 @@ import xyz.wagyourtail.jsmacros.gui2.containers.RunningThreadContainer;
 import xyz.wagyourtail.jsmacros.gui2.elements.Button;
 import xyz.wagyourtail.jsmacros.gui2.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
-import xyz.wagyourtail.jsmacros.runscript.RunScript.thread;
+import xyz.wagyourtail.jsmacros.runscript.RunScript.ScriptThreadWrapper;
 
 public class CancelScreen extends Screen {
     protected Screen parent;
@@ -40,7 +40,7 @@ public class CancelScreen extends Screen {
         }));
     }
 
-    public void addContainer(thread t) {
+    public void addContainer(ScriptThreadWrapper t) {
         running.add(new RunningThreadContainer(10, topScroll + running.size() * 15, width - 26, 13, textRenderer, this::addButton, this::removeContainer, t));
         Collections.sort(running, new RTCSort());
         s.setScrollPages(running.size() * 15 / (double)(height - 20));
@@ -79,14 +79,14 @@ public class CancelScreen extends Screen {
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
         if (matricies == null) return;
         this.renderBackground(matricies, 0);
-        List<thread> tl = RunScript.getThreads();
+        List<ScriptThreadWrapper> tl = RunScript.getThreads();
         
         for (RunningThreadContainer r : ImmutableList.copyOf(this.running)) {
             tl.remove(r.t);
             r.render(matricies, mouseX, mouseY, delta);
         }
         
-        for (thread t : tl) {
+        for (ScriptThreadWrapper t : tl) {
             addContainer(t);
         }
 

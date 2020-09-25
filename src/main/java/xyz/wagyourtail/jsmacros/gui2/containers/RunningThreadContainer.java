@@ -11,14 +11,14 @@ import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.gui2.elements.Button;
 import xyz.wagyourtail.jsmacros.gui2.elements.MultiElementContainer;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
-import xyz.wagyourtail.jsmacros.runscript.RunScript.thread;
+import xyz.wagyourtail.jsmacros.runscript.RunScript.ScriptThreadWrapper;
 
 public class RunningThreadContainer extends MultiElementContainer {
     private Consumer<RunningThreadContainer> removeContainer;
     private Button cancelButton;
-    public thread t;
+    public ScriptThreadWrapper t;
     
-    public RunningThreadContainer(int x, int y, int width, int height, TextRenderer textRenderer, Consumer<AbstractButtonWidget> addButton, Consumer<RunningThreadContainer> removeContainer, thread t) {
+    public RunningThreadContainer(int x, int y, int width, int height, TextRenderer textRenderer, Consumer<AbstractButtonWidget> addButton, Consumer<RunningThreadContainer> removeContainer, ScriptThreadWrapper t) {
         super(x, y, width, height, textRenderer, addButton);
         this.removeContainer = removeContainer;
         this.t = t;

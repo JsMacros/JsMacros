@@ -26,7 +26,7 @@ import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.runscript.functions.*;
 
 public class RunScript {
-    public static Map<RawMacro, List<thread>> threads = new HashMap<>();
+    public static Map<RawMacro, List<ScriptThreadWrapper>> threads = new HashMap<>();
     public static List<Language> languages = new ArrayList<>();
     public static Language defaultLang;
     public static List<Functions> standardLib = new ArrayList<>();
@@ -109,19 +109,19 @@ public class RunScript {
         
     }
     
-    public static List<thread> getThreads() {
-        List<thread> th = new ArrayList<>();
-        for (List<thread> tl : ImmutableList.copyOf(threads.values())) {
+    public static List<ScriptThreadWrapper> getThreads() {
+        List<ScriptThreadWrapper> th = new ArrayList<>();
+        for (List<ScriptThreadWrapper> tl : ImmutableList.copyOf(threads.values())) {
             th.addAll(tl);
         }
         return th;
     }
 
-    public static void removeThread(thread t) {
+    public static void removeThread(ScriptThreadWrapper t) {
         if (threads.containsKey(t.m)) {
             if (threads.get(t.m).remove(t)) return;
         }
-        for (Entry<RawMacro, List<thread>> tl : threads.entrySet()) {
+        for (Entry<RawMacro, List<ScriptThreadWrapper>> tl : threads.entrySet()) {
             if (tl.getValue().remove(t)) return;
         }
     }
@@ -139,12 +139,12 @@ public class RunScript {
         return defaultLang.trigger(macro, event, args, then, catcher);
     }
 
-    public static class thread {
+    public static class ScriptThreadWrapper {
         public final Thread t;
         public final RawMacro m;
         public final long startTime;
 
-        public thread(Thread t, RawMacro m, long startTime) {
+        public ScriptThreadWrapper(Thread t, RawMacro m, long startTime) {
             this.t = t;
             this.m = m;
             this.startTime = startTime;
@@ -159,14 +159,13 @@ public class RunScript {
         
         public default Thread trigger(RawMacro macro, String event, Map<String, Object> args, Runnable then,
             Consumer<String> catcher) {
-            Thread t = new Thread(() -> {
-                RawMacro staticMacro = macro.copy();
-                RunScript.threads.putIfAbsent(staticMacro, new ArrayList<>());
-                Thread.currentThread().setName(staticMacro.type.toString() + " " + staticMacro.eventkey + " " + staticMacro.scriptFile
-                    + ": " + RunScript.threads.get(staticMacro).size());
-                thread th = new thread(Thread.currentThread(), staticMacro, System.currentTimeMillis());
-                RunScript.threads.get(staticMacro).add(th);
+            
+            final RawMacro staticMacro = macro.copy();
+            final Thread t = new Thread(() -> {
+                ScriptThreadWrapper th = new ScriptThreadWrapper(Thread.currentThread(), staticMacro, System.currentTimeMillis());
                 try {
+                    RunScript.threads.putIfAbsent(staticMacro, new ArrayList<>());
+                    RunScript.threads.get(staticMacro).add(th);
                     File file = new File(jsMacros.config.macroFolder, staticMacro.scriptFile);
                     if (file.exists()) {
                         
@@ -182,11 +181,14 @@ public class RunScript {
                     }
                     if (catcher != null) catcher.accept(e.toString());
                     e.printStackTrace();
+                } finally {
+                    RunScript.removeThread(th);
                 }
-                RunScript.removeThread(th);
             });
 
-
+            t.setName(staticMacro.type.toString() + " " + staticMacro.eventkey + " " + staticMacro.scriptFile
+                + ": " + RunScript.threads.get(staticMacro).size());
+            
             t.start();
             return t;
         }

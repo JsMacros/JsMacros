@@ -51,7 +51,7 @@ public class jsMacrosFunctions extends Functions {
         return new OptionsHelper(mc.options);
     }
 
-    public Map<RawMacro, List<RunScript.thread>> getRunningThreads() {
+    public Map<RawMacro, List<RunScript.ScriptThreadWrapper>> getRunningThreads() {
         return ImmutableMap.copyOf(RunScript.threads);
     }
 
