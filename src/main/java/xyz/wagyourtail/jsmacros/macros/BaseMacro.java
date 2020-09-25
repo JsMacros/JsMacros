@@ -28,6 +28,13 @@ public abstract class BaseMacro implements IEventListener {
         return null;
     }
     
+    public boolean equals(Object o) {
+        if (o instanceof BaseMacro) {
+            return macro.equals(((BaseMacro)o).macro);
+        }
+        return super.equals(o);
+    }
+    
     public String toString() {
         return macro.toString().substring(3);
     }

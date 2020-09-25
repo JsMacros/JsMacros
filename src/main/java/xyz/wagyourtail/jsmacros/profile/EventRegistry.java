@@ -11,9 +11,7 @@ import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
 import xyz.wagyourtail.jsmacros.macros.EventMacro;
 import xyz.wagyourtail.jsmacros.macros.IEventListener;
-import xyz.wagyourtail.jsmacros.macros.KeyBothMacro;
-import xyz.wagyourtail.jsmacros.macros.KeyDownMacro;
-import xyz.wagyourtail.jsmacros.macros.KeyUpMacro;
+import xyz.wagyourtail.jsmacros.macros.KeyMacro;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 
 public class EventRegistry {
@@ -27,13 +25,9 @@ public class EventRegistry {
     public void addRawMacro(RawMacro rawmacro) {
         switch (rawmacro.type) {
             case KEY_RISING:
-                addListener("KEY", new KeyDownMacro(rawmacro));
-                return;
             case KEY_FALLING:
-                addListener("KEY", new KeyUpMacro(rawmacro));
-                return;
             case KEY_BOTH:
-                addListener("KEY", new KeyBothMacro(rawmacro));
+                addListener("KEY", new KeyMacro(rawmacro));
                 return;
             case EVENT:
                 addListener(rawmacro.eventkey, new EventMacro(rawmacro));
