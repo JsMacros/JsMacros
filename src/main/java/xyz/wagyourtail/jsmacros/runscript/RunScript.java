@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Consumer;
 
 import org.graalvm.polyglot.Context;
@@ -119,6 +120,10 @@ public class RunScript {
     public static void removeThread(thread t) {
         if (threads.containsKey(t.m)) {
             threads.get(t.m).remove(t);
+        } else {
+            for (Entry<RawMacro, List<thread>> tl : threads.entrySet()) {
+                if (tl.getValue().remove(t)) break;
+            }
         }
     }
 
@@ -136,9 +141,9 @@ public class RunScript {
     }
 
     public static class thread {
-        public Thread t;
-        public RawMacro m;
-        public long startTime;
+        public final Thread t;
+        public final RawMacro m;
+        public final long startTime;
 
         public thread(Thread t, RawMacro m, long startTime) {
             this.t = t;
@@ -156,16 +161,17 @@ public class RunScript {
         public default Thread trigger(RawMacro macro, String event, Map<String, Object> args, Runnable then,
             Consumer<String> catcher) {
             Thread t = new Thread(() -> {
-                RunScript.threads.putIfAbsent(macro, new ArrayList<>());
-                Thread.currentThread().setName(macro.type.toString() + " " + macro.eventkey + " " + macro.scriptFile
-                    + ": " + RunScript.threads.get(macro).size());
-                thread th = new thread(Thread.currentThread(), macro, System.currentTimeMillis());
-                RunScript.threads.get(macro).add(th);
+                RawMacro staticMacro = macro.copy();
+                RunScript.threads.putIfAbsent(staticMacro, new ArrayList<>());
+                Thread.currentThread().setName(staticMacro.type.toString() + " " + staticMacro.eventkey + " " + staticMacro.scriptFile
+                    + ": " + RunScript.threads.get(staticMacro).size());
+                thread th = new thread(Thread.currentThread(), staticMacro, System.currentTimeMillis());
+                RunScript.threads.get(staticMacro).add(th);
                 try {
-                    File file = new File(jsMacros.config.macroFolder, macro.scriptFile);
+                    File file = new File(jsMacros.config.macroFolder, staticMacro.scriptFile);
                     if (file.exists()) {
                         
-                        exec(macro, file, event, args);
+                        exec(staticMacro, file, event, args);
                         
                         if (then != null) then.run();
                     }

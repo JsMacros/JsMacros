@@ -24,10 +24,13 @@ public class RawMacro {
         return String.format("RawMacro:{\"type\": \"%s\", \"eventkey\": \"%s\", \"scriptFile\": \"%s\", \"enabled\": %b}", type.toString(), eventkey, scriptFile, enabled);
     }
     
-    public RawMacro copy(RawMacro m) {
+    public static RawMacro copy(RawMacro m) {
         return new RawMacro(m.type, m.eventkey, m.scriptFile, m.enabled);
     }
     
+    public RawMacro copy() {
+        return copy(this);
+    }
     
     public static class SortByEnabled implements Comparator<RawMacro> {
         @Override
