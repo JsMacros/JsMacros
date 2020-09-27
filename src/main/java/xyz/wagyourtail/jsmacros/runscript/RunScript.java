@@ -165,6 +165,8 @@ public class RunScript {
                 ScriptThreadWrapper th = new ScriptThreadWrapper(Thread.currentThread(), staticMacro, System.currentTimeMillis());
                 try {
                     RunScript.threads.putIfAbsent(staticMacro, new ArrayList<>());
+                    Thread.currentThread().setName(staticMacro.type.toString() + " " + staticMacro.eventkey + " " + staticMacro.scriptFile
+                        + ": " + RunScript.threads.get(staticMacro).size());
                     RunScript.threads.get(staticMacro).add(th);
                     File file = new File(jsMacros.config.macroFolder, staticMacro.scriptFile);
                     if (file.exists()) {
@@ -185,9 +187,6 @@ public class RunScript {
                     RunScript.removeThread(th);
                 }
             });
-
-            t.setName(staticMacro.type.toString() + " " + staticMacro.eventkey + " " + staticMacro.scriptFile
-                + ": " + RunScript.threads.get(staticMacro).size());
             
             t.start();
             return t;
