@@ -2,8 +2,6 @@ package xyz.wagyourtail.jsmacros.runscript.classes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import com.google.common.collect.ImmutableList;
 
@@ -15,6 +13,8 @@ import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.reflector.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.reflector.TextFieldWidgetHelper;
+import xyz.wagyourtail.jsmacros.runscript.classes.ConsumerWrappers.BiConsumer;
+import xyz.wagyourtail.jsmacros.runscript.classes.ConsumerWrappers.Consumer;
 import xyz.wagyourtail.jsmacros.runscript.classes.common.PositionHelper;
 import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.image;
 import xyz.wagyourtail.jsmacros.runscript.classes.common.RenderCommon.item;

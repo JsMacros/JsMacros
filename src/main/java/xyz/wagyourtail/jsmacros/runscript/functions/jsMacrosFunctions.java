@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import com.google.common.collect.ImmutableList;
 import com.ibm.icu.impl.locale.XCldrStub.ImmutableMap;
@@ -23,6 +21,8 @@ import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 import xyz.wagyourtail.jsmacros.reflector.OptionsHelper;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
+import xyz.wagyourtail.jsmacros.runscript.classes.ConsumerWrappers.BiConsumer;
+import xyz.wagyourtail.jsmacros.runscript.classes.ConsumerWrappers.Consumer;
 
 public class jsMacrosFunctions extends Functions {
     public static TickSync tickSynchronizer = new TickSync();

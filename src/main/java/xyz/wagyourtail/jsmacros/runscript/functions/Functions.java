@@ -8,7 +8,7 @@ import net.minecraft.client.MinecraftClient;
 public abstract class Functions {
     public final String libName;
     public final List<String> excludeLanguages = new ArrayList<>();
-    protected final MinecraftClient mc = MinecraftClient.getInstance();
+    protected static final MinecraftClient mc = MinecraftClient.getInstance();
     
     public Functions(String libName) {
         this(libName, null);

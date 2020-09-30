@@ -20,14 +20,14 @@ public class chatFunctions extends Functions {
         super(libName, excludeLanguages);
     }
 
-    private void logInternal(String message) {
+    public static void logInternal(String message) {
         if (message != null) {
             LiteralText text = new LiteralText(message);
             ((IChatHud)mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
         }
     }
     
-    private void logInternal(TextHelper text) {
+    public static void logInternal(TextHelper text) {
         MinecraftClient mc = MinecraftClient.getInstance();
         ((IChatHud)mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text.getRaw());
     }
@@ -36,9 +36,9 @@ public class chatFunctions extends Functions {
     public void log(Object message) {
         mc.execute(() -> {
             if (message instanceof TextHelper) {
-                this.logInternal((TextHelper)message);
+                logInternal((TextHelper)message);
             } else if (message != null) {
-                this.logInternal(message.toString());
+                logInternal(message.toString());
             }
         });
     }

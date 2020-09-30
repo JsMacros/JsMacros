@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.runscript.functions;
 
 import java.io.File;
 import java.util.List;
-import java.util.function.Consumer;
+import xyz.wagyourtail.jsmacros.runscript.classes.ConsumerWrappers.Consumer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -18,6 +18,7 @@ import xyz.wagyourtail.jsmacros.reflector.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.EntityHelper;
 import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 import xyz.wagyourtail.jsmacros.runscript.classes.Inventory;
+
 
 public class playerFunctions extends Functions {
 
