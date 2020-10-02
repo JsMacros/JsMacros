@@ -1,5 +1,8 @@
 package xyz.wagyourtail.jsmacros.mixins.access;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -8,16 +11,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
+import xyz.wagyourtail.jsmacros.access.TPSData;
 import xyz.wagyourtail.jsmacros.runscript.functions.worldFunctions;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public class MixinClientPlayNetworkHandler {
 
     @Unique
-    long lastServerTimeRecvTime = 0;
+    long lastServerTimeRecvTime = System.currentTimeMillis();
     
     @Unique
     long lastServerTimeRecvTick = 0;
+    
+    @Unique
+    List<TPSData> tpsData1M = new LinkedList<>();
+    @Unique
+    List<TPSData> tpsData5M = new LinkedList<>();
+    @Unique
+    List<TPSData> tpsData15M = new LinkedList<>();
     
     @Unique
     Object timeSync = new Object();
@@ -29,10 +40,33 @@ public class MixinClientPlayNetworkHandler {
             long tick = packet.getTime();
             long time = System.currentTimeMillis();
             if (tick != lastServerTimeRecvTick) {
-                long mspt = (time - lastServerTimeRecvTime) / (tick - lastServerTimeRecvTick);
-                worldFunctions.serverTPS = mspt * 20;
+                double mspt = (double)(time - lastServerTimeRecvTime) / (double)(tick - lastServerTimeRecvTick);
+                if (lastServerTimeRecvTick == 0) {
+                    lastServerTimeRecvTime = time;
+                    lastServerTimeRecvTick = tick;
+                    return;
+                }
+                lastServerTimeRecvTime = time;
+                lastServerTimeRecvTick = tick;
+                
+                worldFunctions.serverInstantTPS = 1000 / mspt;
+                tpsData1M.add(new TPSData(time, worldFunctions.serverInstantTPS));
+                if (time - tpsData1M.get(0).recvTime > 60000)
+                    tpsData1M.remove(0);
+                worldFunctions.server1MAverageTPS = tpsData1M.stream().reduce(0D, (res, data) -> res + data.tps, Double::sum) / (double)tpsData1M.size();
+                if (tpsData5M.size() == 0 || time - tpsData5M.get(tpsData5M.size() - 1).recvTime > 60000)
+                    tpsData5M.add(new TPSData(time, worldFunctions.server1MAverageTPS));
+                if (time - tpsData5M.get(0).recvTime > 60000 * 5)
+                    tpsData5M.remove(0);
+                worldFunctions.server5MAverageTPS = tpsData5M.stream().reduce(0D, (res, data) -> res + data.tps, Double::sum) / (double)tpsData5M.size();
+                if (tpsData15M.size() == 0 || time - tpsData15M.get(tpsData15M.size() - 1).recvTime > 60000 * 5)
+                    tpsData15M.add(new TPSData(time, worldFunctions.server5MAverageTPS));
+                if (time - tpsData15M.get(0).recvTime > 60000 * 15)
+                    tpsData15M.remove(0);
+                worldFunctions.server15MAverageTPS = tpsData15M.stream().reduce(0D, (res, data) -> res + data.tps, Double::sum) / (double)tpsData15M.size();
             }
         }
     }
+    
     
 }
