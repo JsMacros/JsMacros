@@ -24,3 +24,7 @@ bin/
 
 run/
 *.launch
+
+# javadoc
+
+doc/

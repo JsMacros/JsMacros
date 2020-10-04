@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.events;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import xyz.wagyourtail.jsmacros.reflector.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.api.helpers.BlockDataHelper;
 
 public interface BlockUpdateCallback {
     Event<BlockUpdateCallback> EVENT = EventFactory.createArrayBacked(BlockUpdateCallback.class,

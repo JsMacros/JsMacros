@@ -61,8 +61,6 @@ dependencies {
     implementation "com.neovisionaries:nv-websocket-client:2.10"
     
     include "com.neovisionaries:nv-websocket-client:2.10"
-    include "org.java-websocket:Java-WebSocket:1.5.1"
-    include group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
 	
 	//nullable not defined so...
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'
@@ -106,6 +104,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 jar {
 	from "LICENSE"
 }
+
 
 // configure the maven publication
 publishing {

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
 import xyz.wagyourtail.jsmacros.access.TPSData;
-import xyz.wagyourtail.jsmacros.runscript.functions.worldFunctions;
+import xyz.wagyourtail.jsmacros.api.functions.FWorld;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public class MixinClientPlayNetworkHandler {
@@ -49,21 +49,21 @@ public class MixinClientPlayNetworkHandler {
                 lastServerTimeRecvTime = time;
                 lastServerTimeRecvTick = tick;
                 
-                worldFunctions.serverInstantTPS = 1000 / mspt;
-                tpsData1M.add(new TPSData(time, worldFunctions.serverInstantTPS));
+                FWorld.serverInstantTPS = 1000 / mspt;
+                tpsData1M.add(new TPSData(time, FWorld.serverInstantTPS));
                 if (time - tpsData1M.get(0).recvTime > 60000)
                     tpsData1M.remove(0);
-                worldFunctions.server1MAverageTPS = tpsData1M.stream().reduce(0D, (res, data) -> res + data.tps, Double::sum) / (double)tpsData1M.size();
+                FWorld.server1MAverageTPS = tpsData1M.stream().reduce(0D, (res, data) -> res + data.tps, Double::sum) / (double)tpsData1M.size();
                 if (tpsData5M.size() == 0 || time - tpsData5M.get(tpsData5M.size() - 1).recvTime > 60000)
-                    tpsData5M.add(new TPSData(time, worldFunctions.server1MAverageTPS));
+                    tpsData5M.add(new TPSData(time, FWorld.server1MAverageTPS));
                 if (time - tpsData5M.get(0).recvTime > 60000 * 5)
                     tpsData5M.remove(0);
-                worldFunctions.server5MAverageTPS = tpsData5M.stream().reduce(0D, (res, data) -> res + data.tps, Double::sum) / (double)tpsData5M.size();
+                FWorld.server5MAverageTPS = tpsData5M.stream().reduce(0D, (res, data) -> res + data.tps, Double::sum) / (double)tpsData5M.size();
                 if (tpsData15M.size() == 0 || time - tpsData15M.get(tpsData15M.size() - 1).recvTime > 60000 * 5)
-                    tpsData15M.add(new TPSData(time, worldFunctions.server5MAverageTPS));
+                    tpsData15M.add(new TPSData(time, FWorld.server5MAverageTPS));
                 if (time - tpsData15M.get(0).recvTime > 60000 * 15)
                     tpsData15M.remove(0);
-                worldFunctions.server15MAverageTPS = tpsData15M.stream().reduce(0D, (res, data) -> res + data.tps, Double::sum) / (double)tpsData15M.size();
+                FWorld.server15MAverageTPS = tpsData15M.stream().reduce(0D, (res, data) -> res + data.tps, Double::sum) / (double)tpsData15M.size();
             }
         }
     }

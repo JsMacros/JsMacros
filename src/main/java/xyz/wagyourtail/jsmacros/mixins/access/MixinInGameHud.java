@@ -11,16 +11,16 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
-
-import xyz.wagyourtail.jsmacros.runscript.classes.Draw2D;
-import xyz.wagyourtail.jsmacros.runscript.functions.hudFunctions;
+import xyz.wagyourtail.jsmacros.api.classes.Draw2D;
+import xyz.wagyourtail.jsmacros.api.functions.FHud;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IDraw2D;
 
 @Mixin(InGameHud.class)
 class MixinInGameHud {
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/options/GameOptions;debugEnabled:Z"), method = "render")
     public void renderHud(MatrixStack matrixStack, float f, final CallbackInfo info) {
 
-        for (Draw2D h : ImmutableList.copyOf(hudFunctions.overlays)) {
+        for (IDraw2D<Draw2D> h : ImmutableList.copyOf(FHud.overlays)) {
             try {
                 h.render(matrixStack);
             } catch (Exception e) {}

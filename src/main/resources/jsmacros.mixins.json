@@ -8,6 +8,7 @@
 		"access.MixinWorldRenderer",
 		"access.MixinHandledScreen",
 		"access.MixinHorseScreen",
+		"access.MixinScreen",
 		"access.MixinSignEditScreen",
 		"access.MixinBossBarHud",
 		"access.MixinChatHud",

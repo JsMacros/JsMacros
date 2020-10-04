@@ -7,14 +7,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventRegistry;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
 import xyz.wagyourtail.jsmacros.macros.EventMacro;
-import xyz.wagyourtail.jsmacros.macros.IEventListener;
 import xyz.wagyourtail.jsmacros.macros.KeyMacro;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 
-public class EventRegistry {
+public class EventRegistry implements IEventRegistry {
     public Map<String, Set<IEventListener>> macros;
     public Set<String> events = new LinkedHashSet<>();
     

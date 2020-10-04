@@ -10,8 +10,9 @@ import com.google.common.collect.ImmutableList;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.ClientConnection;
-import xyz.wagyourtail.jsmacros.runscript.classes.Draw2D;
-import xyz.wagyourtail.jsmacros.runscript.functions.hudFunctions;
+import xyz.wagyourtail.jsmacros.api.classes.Draw2D;
+import xyz.wagyourtail.jsmacros.api.functions.FHud;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IDraw2D;
 
 @Mixin(MinecraftClient.class)
 class MixinMinecraftClient {
@@ -23,7 +24,7 @@ class MixinMinecraftClient {
     public void onResolutionChanged(CallbackInfo info) {
 
 
-        for (Draw2D h : ImmutableList.copyOf(hudFunctions.overlays)) {
+        for (IDraw2D<Draw2D> h : ImmutableList.copyOf(FHud.overlays)) {
             try {
                 h.init();
             } catch (Exception e) {}

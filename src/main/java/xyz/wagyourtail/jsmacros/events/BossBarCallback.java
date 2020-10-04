@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.events;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import xyz.wagyourtail.jsmacros.reflector.BossBarHelper;
+import xyz.wagyourtail.jsmacros.api.helpers.BossBarHelper;
 
 public interface BossBarCallback {
     Event<BossBarCallback> EVENT = EventFactory.createArrayBacked(BossBarCallback.class,

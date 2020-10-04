@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.events;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
 
 public interface ArmorChangeCallback {
     Event<ArmorChangeCallback> EVENT = EventFactory.createArrayBacked(ArmorChangeCallback.class,

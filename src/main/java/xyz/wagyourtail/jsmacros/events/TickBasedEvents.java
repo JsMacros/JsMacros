@@ -4,8 +4,8 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
-import xyz.wagyourtail.jsmacros.runscript.functions.jsMacrosFunctions;
+import xyz.wagyourtail.jsmacros.api.functions.FJsMacros;
+import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
 
 public class TickBasedEvents {
     private static boolean initialized = false;
@@ -53,7 +53,7 @@ public class TickBasedEvents {
         initialized = true;
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             
-            jsMacrosFunctions.tickSynchronizer.tick();
+            FJsMacros.tickSynchronizer.tick();
             
             if (mc.player != null && mc.player.inventory != null) {
                 PlayerInventory inv = mc.player.inventory;

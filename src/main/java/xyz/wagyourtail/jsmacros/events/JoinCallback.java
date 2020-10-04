@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.events;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import xyz.wagyourtail.jsmacros.reflector.ClientPlayerEntityHelper;
+import xyz.wagyourtail.jsmacros.api.helpers.ClientPlayerEntityHelper;
 
 public interface JoinCallback {
     Event<JoinCallback> EVENT = EventFactory.createArrayBacked(JoinCallback.class, 

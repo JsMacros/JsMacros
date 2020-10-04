@@ -13,9 +13,10 @@ import com.google.gson.GsonBuilder;
 
 import net.fabricmc.loader.api.FabricLoader;
 import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IConfig;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 
-public class ConfigManager {
+public class ConfigManager implements IConfig {
     public ConfigOptions options;
     public File configFolder = new File(FabricLoader.getInstance().getConfigDir().toFile(), "jsMacros");
     public File macroFolder = new File(configFolder, "Macros");

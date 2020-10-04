@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.macros;
 
 import java.util.Map;
 
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 

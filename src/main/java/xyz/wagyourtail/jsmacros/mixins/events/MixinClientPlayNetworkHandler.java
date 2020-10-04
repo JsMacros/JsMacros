@@ -31,6 +31,11 @@ import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.Entry;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import net.minecraft.network.packet.s2c.play.UnloadChunkS2CPacket;
 import xyz.wagyourtail.jsmacros.access.IBossBarHud;
+import xyz.wagyourtail.jsmacros.api.helpers.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.api.helpers.BossBarHelper;
+import xyz.wagyourtail.jsmacros.api.helpers.ClientPlayerEntityHelper;
+import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.events.BlockUpdateCallback;
 import xyz.wagyourtail.jsmacros.events.BossBarCallback;
 import xyz.wagyourtail.jsmacros.events.ChunkLoadCallback;
@@ -41,11 +46,6 @@ import xyz.wagyourtail.jsmacros.events.JoinCallback;
 import xyz.wagyourtail.jsmacros.events.PlayerJoinCallback;
 import xyz.wagyourtail.jsmacros.events.PlayerLeaveCallback;
 import xyz.wagyourtail.jsmacros.events.TitleCallback;
-import xyz.wagyourtail.jsmacros.reflector.BlockDataHelper;
-import xyz.wagyourtail.jsmacros.reflector.BossBarHelper;
-import xyz.wagyourtail.jsmacros.reflector.ClientPlayerEntityHelper;
-import xyz.wagyourtail.jsmacros.reflector.ItemStackHelper;
-import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
 @Mixin(ClientPlayNetworkHandler.class)
 class MixinClientPlayNetworkHandler {

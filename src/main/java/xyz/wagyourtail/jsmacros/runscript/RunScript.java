@@ -22,27 +22,30 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.access.IChatHud;
+import xyz.wagyourtail.jsmacros.api.Functions;
+import xyz.wagyourtail.jsmacros.api.functions.*;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScriptThreadWrapper;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
-import xyz.wagyourtail.jsmacros.runscript.functions.*;
 
 public class RunScript {
-    public static Map<RawMacro, List<ScriptThreadWrapper>> threads = new HashMap<>();
+    public static Map<IRawMacro, List<IScriptThreadWrapper>> threads = new HashMap<>();
     public static List<Language> languages = new ArrayList<>();
     public static Language defaultLang;
     public static List<Functions> standardLib = new ArrayList<>();
     
     static {
-        standardLib.add(new globalVarFunctions("globalvars"));
-        standardLib.add(new jsMacrosFunctions("jsmacros"));
-        standardLib.add(new timeFunctions("time"));
-        standardLib.add(new keybindFunctions("keybind"));
-        standardLib.add(new chatFunctions("chat"));
-        standardLib.add(new worldFunctions("world"));
-        standardLib.add(new playerFunctions("player"));
-        standardLib.add(new hudFunctions("hud"));
-        standardLib.add(new requestFunctions("request"));
-        standardLib.add(new fsFunctions("fs"));
-        standardLib.add(new reflectionFunctions("reflection"));
+        standardLib.add(new FGlobalVars("globalvars"));
+        standardLib.add(new FJsMacros("jsmacros"));
+        standardLib.add(new FTime("time"));
+        standardLib.add(new FKeyBind("keybind"));
+        standardLib.add(new FChat("chat"));
+        standardLib.add(new FWorld("world"));
+        standardLib.add(new FPlayer("player"));
+        standardLib.add(new FHud("hud"));
+        standardLib.add(new FRequest("request"));
+        standardLib.add(new FFS("fs"));
+        standardLib.add(new FReflection("reflection"));
 
 
         // -------------------- JAVASCRIPT -------------------------- //
@@ -50,7 +53,7 @@ public class RunScript {
             
             @Override
             public void exec(RawMacro macro, File file, String event, Map<String, Object> args) throws Exception {
-                Map<String, Object> globals = new HashMap<>();                
+                Map<String, Object> globals = new HashMap<>();          
                 
                 globals.put("event", event);
                 globals.put("args", args);
@@ -84,7 +87,7 @@ public class RunScript {
                         binds.putMember(f.libName, f);
                     }
                 }
-                binds.putMember("consumer", new consumerFunctions("consumer"));
+                binds.putMember("consumer", new FConsumer("consumer"));
 
                 // Run Script
 
@@ -109,9 +112,9 @@ public class RunScript {
         
     }
     
-    public static List<ScriptThreadWrapper> getThreads() {
-        List<ScriptThreadWrapper> th = new ArrayList<>();
-        for (List<ScriptThreadWrapper> tl : ImmutableList.copyOf(threads.values())) {
+    public static List<IScriptThreadWrapper> getThreads() {
+        List<IScriptThreadWrapper> th = new ArrayList<>();
+        for (List<IScriptThreadWrapper> tl : ImmutableList.copyOf(threads.values())) {
             th.addAll(tl);
         }
         return th;
@@ -121,7 +124,7 @@ public class RunScript {
         if (threads.containsKey(t.m)) {
             if (threads.get(t.m).remove(t)) return;
         }
-        for (Entry<RawMacro, List<ScriptThreadWrapper>> tl : threads.entrySet()) {
+        for (Entry<IRawMacro, List<IScriptThreadWrapper>> tl : threads.entrySet()) {
             if (tl.getValue().remove(t)) return;
         }
     }
@@ -139,7 +142,7 @@ public class RunScript {
         return defaultLang.trigger(macro, event, args, then, catcher);
     }
 
-    public static class ScriptThreadWrapper {
+    public static class ScriptThreadWrapper implements IScriptThreadWrapper {
         public final Thread t;
         public final RawMacro m;
         public final long startTime;
@@ -153,6 +156,21 @@ public class RunScript {
         public void start() {
             t.start();
         }
+
+        @Override
+        public Thread getThread() {
+            return t;
+        }
+
+        @Override
+        public IRawMacro getRawMacro() {
+            return m;
+        }
+
+        @Override
+        public long getStartTime() {
+            return startTime;
+        }
     }
 
     public static interface Language {
@@ -160,7 +178,7 @@ public class RunScript {
         public default Thread trigger(RawMacro macro, String event, Map<String, Object> args, Runnable then,
             Consumer<String> catcher) {
             
-            final RawMacro staticMacro = macro.copy();
+            final RawMacro staticMacro = (RawMacro) macro.copy();
             final Thread t = new Thread(() -> {
                 ScriptThreadWrapper th = new ScriptThreadWrapper(Thread.currentThread(), staticMacro, System.currentTimeMillis());
                 try {

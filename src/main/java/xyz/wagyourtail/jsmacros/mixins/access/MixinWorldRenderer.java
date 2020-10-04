@@ -6,8 +6,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.google.common.collect.ImmutableList;
 
-import xyz.wagyourtail.jsmacros.runscript.classes.Draw3D;
-import xyz.wagyourtail.jsmacros.runscript.functions.hudFunctions;
+import xyz.wagyourtail.jsmacros.api.classes.Draw3D;
+import xyz.wagyourtail.jsmacros.api.functions.FHud;
 
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -18,7 +18,7 @@ public class MixinWorldRenderer {
     @Inject(at = @At("TAIL"), method = "render")
     public void render(CallbackInfo info) {
 
-        for (Draw3D d : ImmutableList.copyOf(hudFunctions.renders)) {
+        for (Draw3D d : ImmutableList.copyOf(FHud.renders)) {
             try {
                 d.render();
             } catch (Exception e) {

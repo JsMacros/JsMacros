@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.events;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import xyz.wagyourtail.jsmacros.reflector.TextHelper;
+import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
 
 public interface RecieveMessageCallback {
     Event<RecieveMessageCallback> EVENT = EventFactory.createArrayBacked(RecieveMessageCallback.class,

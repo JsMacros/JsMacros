@@ -2,9 +2,10 @@ package xyz.wagyourtail.jsmacros.config;
 
 import java.util.Comparator;
 
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 
-public class RawMacro {
+public class RawMacro implements IRawMacro {
     public MacroEnum type;
     public String eventkey;
     public String scriptFile;
@@ -24,11 +25,11 @@ public class RawMacro {
         return String.format("RawMacro:{\"type\": \"%s\", \"eventkey\": \"%s\", \"scriptFile\": \"%s\", \"enabled\": %b}", type.toString(), eventkey, scriptFile, enabled);
     }
     
-    public static RawMacro copy(RawMacro m) {
+    public static IRawMacro copy(RawMacro m) {
         return new RawMacro(m.type, m.eventkey, m.scriptFile, m.enabled);
     }
     
-    public RawMacro copy() {
+    public IRawMacro copy() {
         return copy(this);
     }
     
@@ -65,5 +66,25 @@ public class RawMacro {
         Enabled,
         TriggerName,
         FileName
+    }
+
+    @Override
+    public MacroEnum getType() {
+        return type;
+    }
+
+    @Override
+    public String getEventKey() {
+        return eventkey;
+    }
+
+    @Override
+    public String getScriptFile() {
+        return scriptFile;
+    }
+
+    @Override
+    public boolean getEnabled() {
+        return enabled;
     }
 }

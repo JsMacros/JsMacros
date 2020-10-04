@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.text.Text;
+import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.events.RecieveMessageCallback;
-import xyz.wagyourtail.jsmacros.reflector.TextHelper;
 
 @Mixin(ChatHud.class)
 class MixinChatHud {

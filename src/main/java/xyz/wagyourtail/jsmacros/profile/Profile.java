@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -18,15 +17,15 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.ActionResult;
 import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.api.functions.FKeyBind;
+import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IProfile;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.events.*;
-import xyz.wagyourtail.jsmacros.gui2.MacroScreen;
-import xyz.wagyourtail.jsmacros.macros.BaseMacro;
-import xyz.wagyourtail.jsmacros.macros.IEventListener;
-import xyz.wagyourtail.jsmacros.reflector.TextHelper;
-import xyz.wagyourtail.jsmacros.runscript.functions.keybindFunctions;
+import xyz.wagyourtail.jsmacros.gui.MacroScreen;
 
-public class Profile {
+public class Profile implements IProfile {
     public String profileName;
     public static EventRegistry registry = new EventRegistry();
     private static KeyBinding keyBinding;
@@ -78,34 +77,9 @@ public class Profile {
         return true;
     }
 
-    @Deprecated
-    public List<RawMacro> toRawProfile() {
-        return registry.getRawMacros();
-    }
-
     public void saveProfile() {
         jsMacros.config.options.profiles.put(profileName, registry.getRawMacros());
         jsMacros.config.saveConfig();
-    }
-
-    @Deprecated
-    public void addMacro(RawMacro rawmacro) {
-        registry.addRawMacro(rawmacro);
-    }
-
-    @Deprecated
-    public void removeMacro(RawMacro rawmacro) {
-        if (toRawProfile().contains(rawmacro) && rawmacro != null) registry.removeRawMacro(rawmacro);
-    }
-
-    @Deprecated
-    public BaseMacro getMacro(RawMacro rawMacro) {
-        return registry.getMacro(rawMacro);
-    }
-
-    @Deprecated
-    public Map<String, Set<IEventListener>> getMacros() {
-        return registry.macros;
     }
 
     private void initEventHandlerCallbacks() {
@@ -191,9 +165,9 @@ public class Profile {
             else keycode = InputUtil.Type.KEYSYM.createFromCode(key);
 
             if (keycode == InputUtil.UNKNOWN_KEY) return ActionResult.PASS;
-            synchronized (keybindFunctions.pressedKeys) {
-                if (action == 1) keybindFunctions.pressedKeys.add(keycode.getTranslationKey());
-                else keybindFunctions.pressedKeys.remove(keycode.getTranslationKey());
+            synchronized (FKeyBind.pressedKeys) {
+                if (action == 1) FKeyBind.pressedKeys.add(keycode.getTranslationKey());
+                else FKeyBind.pressedKeys.remove(keycode.getTranslationKey());
             }
 
             if (mc.currentScreen != null && jsMacros.config.options.disableKeyWhenScreenOpen) return ActionResult.PASS;
