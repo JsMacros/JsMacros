@@ -169,4 +169,36 @@ public class FConsumer extends Functions {
             }
         };
     }
+    
+    /**
+     * @since 1.2.7
+     * @param c
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public Object autoWrap(Object c) {
+        if (c instanceof BiConsumer) {
+            return toBiConsumer((BiConsumer<Object, Object>) c);
+        } else if (c instanceof Consumer) {
+            return toConsumer((Consumer<Object>) c);
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * @since 1.2.7
+     * @param c
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public Object autoWrapAsync(Object c) {
+        if (c instanceof BiConsumer) {
+            return toAsyncBiConsumer((BiConsumer<Object, Object>) c);
+        } else if (c instanceof Consumer) {
+            return toAsyncConsumer((Consumer<Object>) c);
+        } else {
+            return null;
+        }
+    }
 }

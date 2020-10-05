@@ -98,12 +98,15 @@ public class EventKey implements IEvent {
         for (String mod : modArr) {
             switch (mod) {
                 case "key.keyboard.left.shift":
+                case "key.keyboard.right.shift":
                     i |= 1;
                     break;
                 case "key.keyboard.left.control":
+                case "key.keyboard.right.control":
                     i |= 2;
                     break;
                 case "key.keyboard.left.alt":
+                case "key.keyboard.right.alt":
                     i |= 4;
                     break;
                 default:

@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.api.Functions;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -34,7 +35,6 @@ public class FReflection extends Functions {
     
     public FReflection(String libName) {
         super(libName);
-        // TODO Auto-generated constructor stub
     }
     
     /**
@@ -183,25 +183,46 @@ public class FReflection extends Functions {
     public Object invokeMethod(Method m, Object c, Object...objects) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Class<?>[] params = m.getParameterTypes();
         for (int i = 0; i < objects.length; ++i) {
-            if ((params[i] == int.class || params[i] == Integer.class) && !(objects[i] instanceof Integer)) {
-                objects[i] = ((Number)objects[i]).intValue();
-            } else if ((params[i] == float.class || params[i] == Float.class) && !(objects[i] instanceof Float)) {
-                objects[i] = ((Number)objects[i]).floatValue();
-            } else if ((params[i] == double.class || params[i] == Double.class) && !(objects[i] instanceof Double)) {
-                objects[i] = ((Number)objects[i]).doubleValue();
-            } else if ((params[i] == short.class || params[i] == Short.class) && !(objects[i] instanceof Short)) {
-                objects[i] = ((Number)objects[i]).shortValue();
-            } else if ((params[i] == long.class || params[i] == Long.class) && !(objects[i] instanceof Long)) {
-                objects[i] = ((Number)objects[i]).longValue();
-            } else if ((params[i] == char.class || params[i] == Character.class) && !(objects[i] instanceof Character)) {
-                objects[i] = (char) ((Number)objects[i]).intValue();
-            } else if ((params[i] == byte.class || params[i] == Byte.class) && !(objects[i] instanceof Byte)) {
-                objects[i] = ((Number)objects[i]).byteValue();
-            }
+            objects[i] = tryAutoCastNumber(params[i], objects[i]);
         }
         return m.invoke(c, objects);
     }
 
+    /**
+     * Attempts to create a new instance of a class.
+     * You probably don't have to use this one and can just call {@code new} on a {@link java.lang.Class Class}
+     * unless you're in LUA, but then you also have the (kinda poorly doccumented, can someone find a better docs link for me) 
+     * <a href= "http://luaj.sourceforge.net/api/3.2/org/luaj/vm2/lib/jse/LuajavaLib.html">LuaJava Library</a>.
+     * 
+     * @since 1.2.7
+     * @param c
+     * @param objects
+     * @return
+     */
+    public Object newInstance(Class<?> c, Object...objects) {
+        Class<?>[] params = new Class<?>[objects.length];
+        for (int i = 0; i < objects.length; ++i) {
+            params[i] = objects[i].getClass();
+        }
+        try {
+            Constructor<?> con = c.getConstructor(params);
+            return con.newInstance(objects);
+        } catch (Exception e) {
+            for (Constructor<?> con : c.getConstructors()) {
+                if (con.getParameterTypes().length != objects.length) continue;
+                params = con.getParameterTypes();
+                Object[] tempObjects = new Object[objects.length];
+                try {
+                    for (int i = 0; i < objects.length; ++i) {
+                        tempObjects[i] = tryAutoCastNumber(params[i], objects[i]);
+                    }
+                    return con.newInstance(objects);
+                } catch (Exception ex) {}
+            }
+        }
+        throw new RuntimeException("Failed to create new instance, bad parameters?");
+    }
+    
     /**
      * Loads a jar file to be accessible with this library.
      * 
@@ -231,5 +252,24 @@ public class FReflection extends Functions {
         } catch (IOException e) {
             throw e;
         }
+    }
+    
+    protected Object tryAutoCastNumber(Class<?> returnType, Object number) {
+        if ((returnType == int.class || returnType == Integer.class) && !(number instanceof Integer)) {
+            number = ((Number) number).intValue();
+        } else if ((returnType == float.class || returnType == Float.class) && !(number instanceof Float)) {
+            number = ((Number) number).floatValue();
+        } else if ((returnType == double.class || returnType == Double.class) && !(number instanceof Double)) {
+            number = ((Number)number).doubleValue();
+        } else if ((returnType == short.class || returnType == Short.class) && !(number instanceof Short)) {
+            number = ((Number)number).shortValue();
+        } else if ((returnType == long.class || returnType == Long.class) && !(number instanceof Long)) {
+            number = ((Number)number).longValue();
+        } else if ((returnType == char.class || returnType == Character.class) && !(number instanceof Character)) {
+            number = (char) ((Number)number).intValue();
+        } else if ((returnType == byte.class || returnType == Byte.class) && !(number instanceof Byte)) {
+            number = ((Number)number).byteValue();
+        }
+        return number;
     }
 }
