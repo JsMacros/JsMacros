@@ -66,7 +66,7 @@ public class EventRegistry implements IEventRegistry {
     }
     
     public boolean removeRawMacro(RawMacro rawmacro) {
-        String event = rawmacro.type == MacroEnum.EVENT ? rawmacro.eventkey : "KEY";
+        String event = rawmacro.type == MacroEnum.EVENT ? rawmacro.eventkey : EventKey.class.getSimpleName();
         for (IEventListener macro : macros.get(event)) {
             if (macro instanceof BaseMacro && ((BaseMacro) macro).getRawMacro() == rawmacro) {
                 removeListener(event, macro);
