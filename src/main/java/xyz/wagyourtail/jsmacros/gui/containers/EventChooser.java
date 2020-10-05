@@ -70,7 +70,7 @@ public class EventChooser extends OverlayContainer {
     }
     
     public void addEvent(String eventName) {
-        eventObj e = new eventObj(eventName, new Button(x+3+(events.size() % 5 * (width - 12) / 5), topScroll + (events.size() / 5 * 12), (width - 12) / 5, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(eventName), (btn) -> {
+        eventObj e = new eventObj(eventName, new Button(x+3+(events.size() % 5 * (width - 12) / 5), topScroll + (events.size() / 5 * 12), (width - 12) / 5, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(eventName.replace("Event", "")), (btn) -> {
             selectEvent(eventName);
         }));
 

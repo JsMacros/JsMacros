@@ -29,6 +29,7 @@ public interface IProfile {
      * @since 1.2.3 [citation needed]
      * @param macroname
      * @param args
+     * @deprecated
      */
     public void triggerMacro(String macroname, Map<String, Object> args);
     
@@ -36,6 +37,7 @@ public interface IProfile {
      * @since 1.2.3 [citation needed]
      * @param macroname
      * @param args
+     * @deprecated
      */
     public void triggerMacroJoin(String macroname, Map<String, Object> args);
     
@@ -43,6 +45,7 @@ public interface IProfile {
      * @since 1.2.3 [citation needed]
      * @param macroname
      * @param args
+     * @deprecated
      */
     public void triggerMacroNoAnything(String macroname, Map<String, Object> args);
     
@@ -50,6 +53,35 @@ public interface IProfile {
      * @since 1.2.3 [citation needed]
      * @param macroname
      * @param args
+     * @deprecated
      */
     public void triggerMacroJoinNoAnything(String macroname, Map<String, Object> args);
+    
+    /**
+     * @since 1.2.7
+     * @param macroname
+     * @param event
+     */
+    public void triggerMacro(IEvent event);
+    
+    /**
+     * @since 1.2.7
+     * @param macroname
+     * @param event
+     */
+    public void triggerMacroJoin(IEvent event);
+    
+    /**
+     * @since 1.2.7
+     * @param macroname
+     * @param event
+     */
+    public void triggerMacroNoAnything(IEvent event);
+    
+    /**
+     * @since 1.2.7
+     * @param macroname
+     * @param event
+     */
+    public void triggerMacroJoinNoAnything(IEvent event);
 }

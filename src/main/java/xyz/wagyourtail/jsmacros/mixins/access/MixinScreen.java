@@ -62,6 +62,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     
     @Shadow protected abstract <T extends AbstractButtonWidget> T addButton(T button);
     @Shadow public abstract void onClose();
+    @Shadow public abstract void init();
     
     @Override
     public int getWidth() {
@@ -325,6 +326,14 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Override
     public IScreen setOnClose(MethodWrappers.Consumer<IScreen> onClose) {
         this.onClose = onClose;
+        return this;
+    }
+    
+    @Override
+    public IScreen reloadScreen() {
+        client.execute(() -> {
+            this.init();
+        });
         return this;
     }
 

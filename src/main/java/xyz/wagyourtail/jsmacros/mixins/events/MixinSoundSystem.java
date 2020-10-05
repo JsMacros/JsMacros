@@ -1,13 +1,13 @@
 package xyz.wagyourtail.jsmacros.mixins.events;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.At;
 
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundSystem;
-import xyz.wagyourtail.jsmacros.events.SoundCallback;
+import xyz.wagyourtail.jsmacros.api.events.EventSound;
 
 @Mixin(SoundSystem.class)
 public class MixinSoundSystem {
@@ -24,6 +24,6 @@ public class MixinSoundSystem {
             pitch = instance.getPitch();
         } catch (NullPointerException e) {}
         
-        SoundCallback.EVENT.invoker().interact(id, volume, pitch, instance.getX(), instance.getY(), instance.getZ());
+        new EventSound(id, volume, pitch, instance.getX(), instance.getY(), instance.getZ());
     }
 }

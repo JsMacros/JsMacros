@@ -1,22 +1,27 @@
 package xyz.wagyourtail.jsmacros.mixins.events;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.hud.ClientBossBar;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
@@ -31,21 +36,16 @@ import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.Entry;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import net.minecraft.network.packet.s2c.play.UnloadChunkS2CPacket;
 import xyz.wagyourtail.jsmacros.access.IBossBarHud;
-import xyz.wagyourtail.jsmacros.api.helpers.BlockDataHelper;
-import xyz.wagyourtail.jsmacros.api.helpers.BossBarHelper;
-import xyz.wagyourtail.jsmacros.api.helpers.ClientPlayerEntityHelper;
-import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
-import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.events.BlockUpdateCallback;
-import xyz.wagyourtail.jsmacros.events.BossBarCallback;
-import xyz.wagyourtail.jsmacros.events.ChunkLoadCallback;
-import xyz.wagyourtail.jsmacros.events.ChunkUnloadCallback;
-import xyz.wagyourtail.jsmacros.events.DeathCallback;
-import xyz.wagyourtail.jsmacros.events.ItemPickupCallback;
-import xyz.wagyourtail.jsmacros.events.JoinCallback;
-import xyz.wagyourtail.jsmacros.events.PlayerJoinCallback;
-import xyz.wagyourtail.jsmacros.events.PlayerLeaveCallback;
-import xyz.wagyourtail.jsmacros.events.TitleCallback;
+import xyz.wagyourtail.jsmacros.api.events.EventBlockUpdate;
+import xyz.wagyourtail.jsmacros.api.events.EventBossbar;
+import xyz.wagyourtail.jsmacros.api.events.EventChunkLoad;
+import xyz.wagyourtail.jsmacros.api.events.EventChunkUnload;
+import xyz.wagyourtail.jsmacros.api.events.EventDeath;
+import xyz.wagyourtail.jsmacros.api.events.EventItemPickup;
+import xyz.wagyourtail.jsmacros.api.events.EventJoinServer;
+import xyz.wagyourtail.jsmacros.api.events.EventPlayerJoin;
+import xyz.wagyourtail.jsmacros.api.events.EventPlayerLeave;
+import xyz.wagyourtail.jsmacros.api.events.EventTitle;
 
 @Mixin(ClientPlayNetworkHandler.class)
 class MixinClientPlayNetworkHandler {
@@ -65,8 +65,11 @@ class MixinClientPlayNetworkHandler {
     
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;showsDeathScreen()Z"), method="onCombatEvent", cancellable = true)
     private void onDeath(final CombatEventS2CPacket packet, CallbackInfo info) {
-        DeathCallback.EVENT.invoker().interact();
+        new EventDeath();
     }
+    
+    @Unique
+    Set<UUID> newPlayerEntries = new HashSet<>();
     
     @Inject(at = @At("HEAD"), method = "onPlayerList")
     public void onPlayerList(PlayerListS2CPacket packet, CallbackInfo info) {
@@ -74,8 +77,10 @@ class MixinClientPlayNetworkHandler {
             switch (packet.getAction()) {
                 case ADD_PLAYER:
                     for (Entry e : packet.getEntries()) {
-                        if (playerListEntries.get(e.getProfile().getId()) == null) {
-                            PlayerJoinCallback.EVENT.invoker().interact(e.getProfile().getId(), e.getProfile().getName());
+                        synchronized (newPlayerEntries) {
+                            if (playerListEntries.get(e.getProfile().getId()) == null) {
+                                newPlayerEntries.add(e.getProfile().getId());
+                            }
                         }
                     }
                     return;
@@ -83,15 +88,31 @@ class MixinClientPlayNetworkHandler {
                     for (Entry e : packet.getEntries()) {
                       if (playerListEntries.get(e.getProfile().getId()) != null) {
                             PlayerListEntry p = playerListEntries.get(e.getProfile().getId());
-                            String name = null;
-                            if (p != null) name = p.getProfile().getName();
-                            PlayerLeaveCallback.EVENT.invoker().interact(e.getProfile().getId(), name);
+                            new EventPlayerLeave(e.getProfile().getId(), p);
                       }
                     }
                     return;
                 default:
                     return;
             }
+    }
+    
+    @Inject(at = @At("TAIL"), method = "onPlayerList")
+    public void onPlayerListEnd(PlayerListS2CPacket packet, CallbackInfo info) {
+        switch (packet.getAction()) {
+            case ADD_PLAYER:
+                for (Entry e : packet.getEntries()) {
+                    synchronized (newPlayerEntries) {
+                        if (newPlayerEntries.contains(e.getProfile().getId())) {
+                            new EventPlayerJoin(e.getProfile().getId(), playerListEntries.get(e.getProfile().getId()));
+                            newPlayerEntries.remove(e.getProfile().getId());
+                        }
+                    }
+                }
+                return;
+            default:
+                return;
+        }
     }
     
     @Inject(at = @At("HEAD"), method = "onTitle")
@@ -110,8 +131,8 @@ class MixinClientPlayNetworkHandler {
             default:
                 break;
         }
-        if (type != null) {
-            TitleCallback.EVENT.invoker().interact(type, new TextHelper(packet.getText()));
+        if (type != null && packet.getText() != null) {
+            new EventTitle(type, packet.getText());
         }
     }
     
@@ -140,8 +161,9 @@ class MixinClientPlayNetworkHandler {
         default:
             break;
         }
-        
-        BossBarCallback.EVENT.invoker().interact(type, packet.getUuid().toString(), packet.getType() == BossBarS2CPacket.Type.REMOVE ? null : new BossBarHelper(((IBossBarHud) client.inGameHud.getBossBarHud()).jsmacros_GetBossBars().get(packet.getUuid())));
+        ClientBossBar bossBar = packet.getType() == BossBarS2CPacket.Type.REMOVE ? (ClientBossBar) null : 
+            ((IBossBarHud) client.inGameHud.getBossBarHud()).jsmacros_GetBossBars().get(packet.getUuid());
+        new EventBossbar(type, packet.getUuid(), bossBar);
     }
     
 
@@ -151,41 +173,41 @@ class MixinClientPlayNetworkHandler {
         LivingEntity c = (LivingEntity)client.world.getEntityById(packet.getCollectorEntityId());
         if (c == null) c = client.player;
         if (c.equals(client.player) && e instanceof ItemEntity) {
-            ItemStackHelper item = new ItemStackHelper(((ItemEntity) e).getStack().copy());
-            item.getRaw().setCount(packet.getStackAmount());
-            ItemPickupCallback.EVENT.invoker().interact(item);
+            ItemStack item = ((ItemEntity) e).getStack().copy();
+            item.setCount(packet.getStackAmount());
+            new EventItemPickup(item);
         }
     }
     
     @Inject(at = @At("TAIL"), method="onGameJoin")
     public void onGameJoin(GameJoinS2CPacket packet, CallbackInfo info) {
-        JoinCallback.EVENT.invoker().interact(connection.getAddress().toString(), new ClientPlayerEntityHelper(client.player));
+        new EventJoinServer(client.player, connection.getAddress().toString());
     }
     
     @Inject(at = @At("TAIL"), method="onChunkData")
     public void onChunkData(ChunkDataS2CPacket packet, CallbackInfo info) {
-        ChunkLoadCallback.EVENT.invoker().interact(packet.getX(), packet.getZ(), packet.isFullChunk());
+        new EventChunkLoad(packet.getX(), packet.getZ(), packet.isFullChunk());
     }
     
     @Inject(at = @At("TAIL"), method="onBlockUpdate")
     public void onBlockUpdate(BlockUpdateS2CPacket packet, CallbackInfo info) {
-        BlockUpdateCallback.EVENT.invoker().interact(new BlockDataHelper(packet.getState(), world.getBlockEntity(packet.getPos()), packet.getPos()), "STATE");
+        new EventBlockUpdate(packet.getState(), world.getBlockEntity(packet.getPos()), packet.getPos(), "STATE");
     }
     
     @Inject(at = @At("TAIL"), method="onChunkDeltaUpdate")
     public void onChunkDeltaUpdate(ChunkDeltaUpdateS2CPacket packet, CallbackInfo info) {
         packet.visitUpdates((blockPos, blockState) -> {
-            BlockUpdateCallback.EVENT.invoker().interact(new BlockDataHelper(blockState, world.getBlockEntity(blockPos), blockPos), "STATE");
+            new EventBlockUpdate(blockState, world.getBlockEntity(blockPos), blockPos, "STATE");
         });
     }
     @Inject(at = @At("TAIL"), method="onBlockEntityUpdate")
     public void onBlockEntityUpdate(BlockEntityUpdateS2CPacket packet, CallbackInfo info) {
-        BlockUpdateCallback.EVENT.invoker().interact(new BlockDataHelper(world.getBlockState(packet.getPos()), world.getBlockEntity(packet.getPos()), packet.getPos()), "ENTITY");
+        new EventBlockUpdate(world.getBlockState(packet.getPos()), world.getBlockEntity(packet.getPos()), packet.getPos(), "ENTITY");
     }
     
     @Inject(at = @At("TAIL"), method="onUnloadChunk")
     public void onUnloadChunk(UnloadChunkS2CPacket packet, CallbackInfo info) {
-        ChunkUnloadCallback.EVENT.invoker().interact(packet.getX(), packet.getZ());
+        new EventChunkUnload(packet.getX(), packet.getZ());
     }
 }
 

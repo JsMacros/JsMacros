@@ -7,14 +7,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import xyz.wagyourtail.jsmacros.events.SendMessageCallback;
+import xyz.wagyourtail.jsmacros.api.events.EventSendMessage;
 
 @Mixin(Screen.class)
 class MixinScreen {
     
     @Inject(at = @At("HEAD"), method = "sendMessage", cancellable = true)
     private void onSendMessage(String message, final CallbackInfo info) {
-        String result = SendMessageCallback.EVENT.invoker().interact(message);
+        String result = new EventSendMessage(message).message;
         if (result == null || result.equals("")) {
             info.cancel();
         } else if (!result.equals(message)) {

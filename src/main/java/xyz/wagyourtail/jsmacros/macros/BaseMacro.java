@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.macros;
 
-import java.util.Map;
-
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
@@ -17,10 +16,10 @@ public abstract class BaseMacro implements IEventListener {
         return macro;
     }
     
-    public Thread runMacro(String type, Map<String, Object> args) {
+    public Thread runMacro(IEvent event) {
         if (macro.enabled) {
             try {
-                return RunScript.exec(macro, type, args);
+                return RunScript.exec(macro, event);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;

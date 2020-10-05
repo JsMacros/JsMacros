@@ -20,6 +20,7 @@ public class TextHelper {
     
     /**
      * replace the text in this class with JSON data.
+     * @since 1.0.8
      * @param json
      * @return
      */
@@ -30,6 +31,7 @@ public class TextHelper {
     
     /**
      * replace the text in this class with {@link java.lang.String String} data.
+     * @since 1.0.8
      * @param json
      * @return
      */
@@ -39,17 +41,37 @@ public class TextHelper {
     }
     
     /**
+     * @since 1.2.7
      * @return JSON data representation.
      */
-    public String toJson() {
+    public String getJson() {
         return Text.Serializer.toJson(t);
     }
+
+    /**
+     * @since 1.2.7
+     * @return the text content.
+     */
+    public String getString() {
+        return t.getString();
+    }
+    
     
     /**
-     * @return String representation.
+     * @since 1.0.8
+     * @deprecated confusing name.
+     * @return
+     */
+    public String toJson() {
+        return getJson();
+    }
+
+    /**
+     * @since 1.0.8, this used to do the same as getString
+     * @return String representation of text helper.
      */
     public String toString() {
-        return t.getString();
+        return String.format("TextHelper:{\"text\": \"%s\"}", t.getString());
     }
     
     public Text getRaw() {

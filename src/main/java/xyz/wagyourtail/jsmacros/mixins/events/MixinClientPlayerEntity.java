@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import com.mojang.authlib.GameProfile;
 
 import net.minecraft.block.entity.SignBlockEntity;
@@ -23,10 +24,10 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.network.packet.c2s.play.UpdateSignC2SPacket;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.access.ISignEditScreen;
-import xyz.wagyourtail.jsmacros.events.AirChangeCallback;
-import xyz.wagyourtail.jsmacros.events.DamageCallback;
-import xyz.wagyourtail.jsmacros.events.ExperienceChangeCallback;
-import xyz.wagyourtail.jsmacros.events.SignEditCallback;
+import xyz.wagyourtail.jsmacros.api.events.EventAirChange;
+import xyz.wagyourtail.jsmacros.api.events.EventDamage;
+import xyz.wagyourtail.jsmacros.api.events.EventEXPChange;
+import xyz.wagyourtail.jsmacros.api.events.EventSignEdit;
 
 @Mixin(ClientPlayerEntity.class)
 class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
@@ -41,24 +42,26 @@ class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     
     @Override
     public void setAir(int air) {
-        if (air % 20 == 0) AirChangeCallback.EVENT.invoker().interact(air);
+        if (air % 20 == 0) new EventAirChange(air);
         super.setAir(air);
     }
     
     @Inject(at = @At("HEAD"), method="setExperience")
     public void onSetExperience(float progress, int total, int level, CallbackInfo info) {
-        ExperienceChangeCallback.EVENT.invoker().interact(progress, total, level);
+        new EventEXPChange(progress, total, level);
     }
     
     @Inject(at = @At("TAIL"), method="applyDamage")
     private void onApplyDamage(DamageSource source, float amount, final CallbackInfo info) {
-        DamageCallback.EVENT.invoker().interact(source, this.getHealth(), amount);
+        new EventDamage(source, this.getHealth(), amount);
     }
     
     @Inject(at = @At("HEAD"), method="openEditSignScreen", cancellable= true)
     public void onOpenEditSignScreen(SignBlockEntity sign, CallbackInfo info) {
         List<String> lines = new ArrayList<String>(Arrays.asList(new String[]{"", "", "", ""}));
-        if (SignEditCallback.EVENT.invoker().interact(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ())) {
+        EventSignEdit event = new EventSignEdit(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ());
+        lines = event.signText;
+        if (event.closeScreen) {
             for (int i = 0; i < 4; ++i) {
                 sign.setTextOnRow(i, new LiteralText(lines.get(i)));
             }

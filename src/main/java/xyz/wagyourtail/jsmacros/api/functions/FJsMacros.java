@@ -18,6 +18,7 @@ import xyz.wagyourtail.jsmacros.api.Functions;
 import xyz.wagyourtail.jsmacros.api.MethodWrappers;
 import xyz.wagyourtail.jsmacros.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IConfig;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IProfile;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
@@ -125,11 +126,11 @@ public class FJsMacros extends Functions {
      */
     public Thread runScript(String file, MethodWrappers.Consumer<String> callback) {
         if (callback != null) {
-            return RunScript.exec(new RawMacro(MacroEnum.EVENT, "", file, true), "", null, () -> {
+            return RunScript.exec(new RawMacro(MacroEnum.EVENT, "", file, true), null, () -> {
                 callback.accept(null);
             }, callback);
         } else {
-            return RunScript.exec(new RawMacro(MacroEnum.EVENT, "", file, true), "", null);
+            return RunScript.exec(new RawMacro(MacroEnum.EVENT, "", file, true), null);
         }
     }
     
@@ -199,16 +200,30 @@ public class FJsMacros extends Functions {
      * @return the listener.
      */
     public IEventListener on(String event, MethodWrappers.BiConsumer<String, Map<String, Object>> callback) {
+        throw new RuntimeException("Deprecated");
+    }
+    
+    /**
+     * Creates a listener for an event, this function can be more efficient that running a script file when used properly.
+     * 
+     * @see xyz.wagyourtai.jsmacros.api.sharedinterfaces.IEventListener
+     * 
+     * @since 1.2.7
+     * @param event
+     * @param callback
+     * @return
+     */
+    public IEventListener on(String event, MethodWrappers.Consumer<IEvent> callback) {
         if (callback == null) return null;
         String tname = Thread.currentThread().getName();
         IEventListener listener = new IEventListener() {
             
             @Override
-            public Thread trigger(String type, Map<String, Object> args) {
+            public Thread trigger(IEvent event) {
                 Thread t = new Thread(() -> {
                     Thread.currentThread().setName(this.toString());
                     try {
-                        callback.accept(type, args);
+                        callback.accept(event);
                     } catch (Exception e) {
                         Profile.registry.removeListener(this);
                         e.printStackTrace();
@@ -239,18 +254,33 @@ public class FJsMacros extends Functions {
      * @return the listener.
      */
     public IEventListener once(String event, MethodWrappers.BiConsumer<String, Map<String, Object>> callback) {
+        throw new RuntimeException("Deprecated");
+    }
+        
+    /**
+     * Creates a single-run listener for an event, this function can be more efficient that running a script file when used properly.
+     * 
+     * @see xyz.wagyourtai.jsmacros.api.sharedinterfaces.IEventListener
+     * 
+     * @since 1.2.7
+     * 
+     * @param event
+     * @param callback
+     * @return the listener.
+     */
+    public IEventListener once(String event, MethodWrappers.Consumer<IEvent> callback) {
         if (callback == null) return null;
         String tname = Thread.currentThread().getName();
         Thread th = Thread.currentThread();
         IEventListener listener = new IEventListener() {
             @Override
-            public Thread trigger(String type, Map<String, Object> args) {
+            public Thread trigger(IEvent event) {
                 Profile.registry.removeListener(this);
                 Thread t = new Thread(() -> {
                     Thread.currentThread().setName(this.toString());
                     try {
                         while(th.isAlive());
-                        callback.accept(type, args);
+                        callback.accept(event);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -46,6 +46,15 @@ import xyz.wagyourtail.jsmacros.api.helpers.EntityHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.PlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.PlayerListEntryHelper;
 
+/**
+ * 
+ * Functions for getting and using world data.
+ * 
+ * An instance of this class is passed to scripts as the {@code world} variable.
+ * 
+ * @author Wagyourtail
+ *
+ */
 public class FWorld extends Functions {
     /**
      * Don't modify.

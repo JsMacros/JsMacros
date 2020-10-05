@@ -66,9 +66,10 @@ public class FHud extends Functions {
      * 
      * @param s
      */
-    public void openScreen(Screen s) {
+    public void openScreen(IScreen s) {
+        net.minecraft.client.gui.screen.Screen screen = (net.minecraft.client.gui.screen.Screen) s;
         mc.execute(() -> {
-            mc.openScreen(s);            
+            mc.openScreen(screen);
         });
     }
     

@@ -58,7 +58,6 @@ public class ConfigManager implements IConfig {
 
     public void saveConfig() {
         try {
-            System.out.println(configFile.toString());
             FileWriter fw = new FileWriter(configFile);
             fw.write(gson.toJson(options));
             fw.close();

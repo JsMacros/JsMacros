@@ -1,9 +1,8 @@
 package xyz.wagyourtail.jsmacros.macros;
 
-import java.util.Map;
-
 import net.minecraft.client.util.InputUtil;
-import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.api.events.EventKey;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 
 public class KeyMacro extends BaseMacro {
@@ -24,23 +23,23 @@ public class KeyMacro extends BaseMacro {
                     mods += key;
                 }
             }
-            this.mods = jsMacros.getModInt(mods);
+            this.mods = EventKey.getModInt(mods);
         } catch(Exception e) {
             key = InputUtil.UNKNOWN_KEY.getTranslationKey();
         }
     }
     
     @Override
-    public Thread trigger(String type, Map<String, Object> args) {
-        if (check(args)) {
-            return runMacro(type, args);
+    public Thread trigger(IEvent event) {
+        if (check((EventKey) event)) {
+            return runMacro(event);
         }
         return null;
     }
     
-    private boolean check(Map<String, Object> args) {
-        boolean keyState = (int)args.get("action") == 1;
-        if (args.get("key").equals(key) && jsMacros.getModInt((String)args.get("mods")) == mods) {
+    private boolean check(EventKey event) {
+        boolean keyState = (int)event.action == 1;
+        if (event.key.equals(key) && EventKey.getModInt((String)event.mods) == mods) {
             switch(getRawMacro().type) {
                 case KEY_FALLING:
                     return !keyState;

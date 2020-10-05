@@ -19,21 +19,22 @@ import xyz.wagyourtail.jsmacros.profile.Profile;
 
 public class jsMacros implements ClientModInitializer {
     public static final String MOD_ID = "jsmacros";
-    public static ConfigManager config = new ConfigManager();
-    public static Profile profile;
+    public static final ConfigManager config = new ConfigManager();
+    public static final Profile profile = new Profile();
     public static KeyMacrosScreen keyMacrosScreen;
     
     @Override
     public void onInitializeClient() {
         
         config.loadConfig();
-        profile = new Profile(config.options.defaultProfile);
+        profile.init(config.options.defaultProfile);
+        
         keyMacrosScreen = new KeyMacrosScreen(null);
         
         Thread t = new Thread(() -> {
             Builder build = Context.newBuilder("js");
             Context con = build.build();
-            con.eval("js", "console.log('js loaded.')");
+            con.eval("js", "console.log('js pre-loaded.')");
             con.close();
         });
         t.start();
@@ -45,43 +46,6 @@ public class jsMacros implements ClientModInitializer {
         } catch(Exception e) {
             return new LiteralText(translationKey);
         }
-    }
-    
-    static public String getKeyModifiers(int mods) {
-        String s = "";
-        if ((mods & 1) == 1) {
-            s += "key.keyboard.left.shift";
-        }
-        if ((mods & 2) == 2) {
-            if (s.length() > 0) s += "+";
-            s += "key.keyboard.left.control";
-        }
-        if ((mods & 4) == 4) {
-            if (s.length() > 0) s += "+";
-            s += "key.keyboard.left.alt";
-        }
-        return s;
-    }
-    
-    static public int getModInt(String mods) {
-        int i = 0;
-        String[] modArr = mods.split("\\+");
-        for (String mod : modArr) {
-            switch (mod) {
-                case "key.keyboard.left.shift":
-                    i |= 1;
-                    break;
-                case "key.keyboard.left.control":
-                    i |= 2;
-                    break;
-                case "key.keyboard.left.alt":
-                    i |= 4;
-                    break;
-                default:
-            }
-        }
-        return i;
-        
     }
     
     static public String getScreenName(Screen s) {

@@ -18,6 +18,14 @@ public interface IScreen extends IDraw2D<IScreen> {
     
     
     /**
+     * @since 1.2.7
+     * @return
+     */
+    public default String getScreenClassName() {
+        return this.getClass().getSimpleName();
+    }
+    
+    /**
      * @since 1.0.5
      * @return
      */
@@ -174,5 +182,11 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @since 1.2.0
      */
     public IScreen removeItem(Item i);
+    
+    /**
+     * calls the screen's init function re-loading it.
+     * @since 1.2.7
+     */
+    public IScreen reloadScreen();
     
 }

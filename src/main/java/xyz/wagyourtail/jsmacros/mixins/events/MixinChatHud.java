@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.text.Text;
+import xyz.wagyourtail.jsmacros.api.events.EventRecvMessage;
 import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.events.RecieveMessageCallback;
 
 @Mixin(ChatHud.class)
 class MixinChatHud {
@@ -17,7 +17,7 @@ class MixinChatHud {
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;)V", at = @At(value = "HEAD"))
     private Text modifyChatMessage(Text text) {
         if (text == null) return text;
-        TextHelper result = RecieveMessageCallback.EVENT.invoker().interact(new TextHelper(text));
+        TextHelper result = new EventRecvMessage(text).text;
         if (result == null) return null;
         if (!result.getRaw().equals(text)) {
             return result.getRaw();

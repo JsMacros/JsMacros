@@ -5,35 +5,53 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.lwjgl.glfw.GLFW;
-
 import com.google.common.collect.ImmutableList;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.KeyBinding;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.util.ActionResult;
 import xyz.wagyourtail.jsmacros.jsMacros;
-import xyz.wagyourtail.jsmacros.api.functions.FKeyBind;
-import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.api.events.EventAirChange;
+import xyz.wagyourtail.jsmacros.api.events.EventArmorChange;
+import xyz.wagyourtail.jsmacros.api.events.EventBlockUpdate;
+import xyz.wagyourtail.jsmacros.api.events.EventBossbar;
+import xyz.wagyourtail.jsmacros.api.events.EventChunkLoad;
+import xyz.wagyourtail.jsmacros.api.events.EventChunkUnload;
+import xyz.wagyourtail.jsmacros.api.events.EventDamage;
+import xyz.wagyourtail.jsmacros.api.events.EventDeath;
+import xyz.wagyourtail.jsmacros.api.events.EventDimensionChange;
+import xyz.wagyourtail.jsmacros.api.events.EventDisconnect;
+import xyz.wagyourtail.jsmacros.api.events.EventEXPChange;
+import xyz.wagyourtail.jsmacros.api.events.EventHeldItemChange;
+import xyz.wagyourtail.jsmacros.api.events.EventHungerChange;
+import xyz.wagyourtail.jsmacros.api.events.EventItemDamage;
+import xyz.wagyourtail.jsmacros.api.events.EventItemPickup;
+import xyz.wagyourtail.jsmacros.api.events.EventJoinServer;
+import xyz.wagyourtail.jsmacros.api.events.EventKey;
+import xyz.wagyourtail.jsmacros.api.events.EventOpenScreen;
+import xyz.wagyourtail.jsmacros.api.events.EventPlayerJoin;
+import xyz.wagyourtail.jsmacros.api.events.EventPlayerLeave;
+import xyz.wagyourtail.jsmacros.api.events.EventProfileLoad;
+import xyz.wagyourtail.jsmacros.api.events.EventRecvMessage;
+import xyz.wagyourtail.jsmacros.api.events.EventSendMessage;
+import xyz.wagyourtail.jsmacros.api.events.EventSignEdit;
+import xyz.wagyourtail.jsmacros.api.events.EventSound;
+import xyz.wagyourtail.jsmacros.api.events.EventTick;
+import xyz.wagyourtail.jsmacros.api.events.EventTitle;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IProfile;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
-import xyz.wagyourtail.jsmacros.events.*;
+import xyz.wagyourtail.jsmacros.events.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.gui.MacroScreen;
 
 public class Profile implements IProfile {
     public String profileName;
-    public static EventRegistry registry = new EventRegistry();
-    private static KeyBinding keyBinding;
+    public static final EventRegistry registry = new EventRegistry();
 
-    public Profile(String defaultProfile) {
+    public Profile() {
+    }
+    
+    public void init(String defaultProfile) {
         loadOrCreateProfile(defaultProfile);
-        keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title"));
-        KeyBindingHelper.registerKeyBinding(keyBinding);
 
         TickBasedEvents.init();
         
@@ -72,7 +90,7 @@ public class Profile implements IProfile {
         }
         Map<String, Object> args = new HashMap<>();
         args.put("profile", pName);
-        triggerMacroNoAnything("PROFILE_LOAD", args);
+        new EventProfileLoad(this, pName);
         
         return true;
     }
@@ -84,343 +102,101 @@ public class Profile implements IProfile {
 
     private void initEventHandlerCallbacks() {
         registry.addEvent("ANYTHING");
-        registry.addEvent("PROFILE_LOAD");
+        registry.addEvent("PROFILE_LOAD", EventProfileLoad.class);
+        registry.addEvent("JOIN_SERVER", EventJoinServer.class);
+        registry.addEvent("DISCONNECT", EventDisconnect.class);
+        registry.addEvent("SEND_MESSAGE", EventSendMessage.class);
+        registry.addEvent("RECV_MESSAGE", EventRecvMessage.class);
+        registry.addEvent("PLAYER_JOIN", EventPlayerJoin.class);
+        registry.addEvent("PLAYER_LEAVE", EventPlayerLeave.class);
+        registry.addEvent("TICK", EventTick.class);
+        registry.addEvent("KEY", EventKey.class);
+        registry.addEvent("AIR_CHANGE", EventAirChange.class);
+        registry.addEvent("DAMAGE", EventDamage.class);
+        registry.addEvent("DEATH", EventDeath.class);
+        registry.addEvent("ITEM_DAMAGE", EventItemDamage.class);
+        registry.addEvent("HUNGER_CHANGE", EventHungerChange.class);
+        registry.addEvent("DIMENSION_CHANGE", EventDimensionChange.class);
+        registry.addEvent("SOUND", EventSound.class);
+        registry.addEvent("OPEN_SCREEN", EventOpenScreen.class);
+        registry.addEvent("TITLE", EventTitle.class);
+        registry.addEvent("HELD_ITEM", EventHeldItemChange.class);
+        registry.addEvent("ARMOR_CHANGE", EventArmorChange.class);
+        registry.addEvent("BOSSBAR_UPDATE", EventBossbar.class);
+        registry.addEvent("SIGN_EDIT", EventSignEdit.class);
+        registry.addEvent("CHUNK_LOAD", EventChunkLoad.class);
+        registry.addEvent("CHUNK_UNLOAD", EventChunkUnload.class);
+        registry.addEvent("BLOCK_UPDATE", EventBlockUpdate.class);
+        registry.addEvent("ITEM_PICKUP", EventItemPickup.class);
+        registry.addEvent("EXP_CHANGE", EventEXPChange.class);
         
-        // -------- JOIN ---------- //
-        registry.addEvent("JOIN_SERVER");
-        JoinCallback.EVENT.register((address, player) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("address", address);
-            args.put("player", player);
-
-            triggerMacro("JOIN_SERVER", args);
-        });
-        
-        // ----- DISCONNECT ------ // 
-        registry.addEvent("DISCONNECT");
-        DisconnectCallback.EVENT.register(() -> {
-            Map<String, Object> args = new HashMap<>();
-
-            triggerMacro("DISCONNECT", args);
-        });
-        
-        // ----- SEND_MESSAGE -----//
-        registry.addEvent("SEND_MESSAGE");
-        SendMessageCallback.EVENT.register((message) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("message", message);
-
-            triggerMacroJoin("SEND_MESSAGE", args);
-
-            message = (String) args.get("message");
-            return message;
-        });
-
-        // ---- RECV_MESSAGE ---- //
-        registry.addEvent("RECV_MESSAGE");
-        RecieveMessageCallback.EVENT.register((message) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("message", message);
-
-            triggerMacroJoin("RECV_MESSAGE", args);
-
-            message = (TextHelper) args.get("message");
-            return message;
-        });
-
-        // ----- PLAYER JOIN ----- //
-        registry.addEvent("PLAYER_JOIN");
-        PlayerJoinCallback.EVENT.register((uuid, pName) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("uuid", uuid.toString());
-            args.put("player", pName);
-
-            triggerMacro("PLAYER_JOIN", args);
-        });
-        
-        // ---- PLAYER LEAVE ----- //
-        registry.addEvent("PLAYER_LEAVE");
-        PlayerLeaveCallback.EVENT.register((uuid, pName) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("uuid", uuid.toString());
-            args.put("player", pName);
-
-            triggerMacro("PLAYER_LEAVE", args);
-        });
-        
-        // -------- TICK --------- //
-        registry.addEvent("TICK");
-        ClientTickEvents.END_CLIENT_TICK.register(e -> {
-            triggerMacroNoAnything("TICK", new HashMap<>());
-        });
-
-        // -------- KEY ----------- //
-        registry.addEvent("KEY");
-        KeyCallback.EVENT.register((window, key, scancode, action, mods) -> {
-            InputUtil.Key keycode;
-            MinecraftClient mc = MinecraftClient.getInstance();
-            if (key == -1 || action == 2) return ActionResult.PASS;
-
-            if (key <= 7) keycode = InputUtil.Type.MOUSE.createFromCode(key);
-            else keycode = InputUtil.Type.KEYSYM.createFromCode(key);
-
-            if (keycode == InputUtil.UNKNOWN_KEY) return ActionResult.PASS;
-            synchronized (FKeyBind.pressedKeys) {
-                if (action == 1) FKeyBind.pressedKeys.add(keycode.getTranslationKey());
-                else FKeyBind.pressedKeys.remove(keycode.getTranslationKey());
-            }
-
-            if (mc.currentScreen != null && jsMacros.config.options.disableKeyWhenScreenOpen) return ActionResult.PASS;
-            if (keyBinding.matchesKey(key, scancode) && action == 1 && mc.currentScreen == null) mc.openScreen(jsMacros.keyMacrosScreen);
-            
-            Map<String, Object> args = new HashMap<>();
-            args.put("rawkey", keycode);
-            if (action == 1) {
-                if (key == 340 || key == 344) mods -= 1;
-                else if (key == 341 || key == 345) mods -= 2;
-                else if (key == 342 || key == 346) mods -= 4;
-            }
-            args.put("mods", jsMacros.getKeyModifiers(mods));
-            args.put("key", keycode.getTranslationKey());
-            args.put("action", action);
-
-            triggerMacro("KEY", args);
-
-            return ActionResult.PASS;
-        });
-        
-        // ------ AIR CHANGE ------ //
-        registry.addEvent("AIR_CHANGE");
-        AirChangeCallback.EVENT.register((air) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("air", air);
-
-            triggerMacro("AIR_CHANGE", args);
-        });
-
-        // ------ DAMAGE -------- //
-        registry.addEvent("DAMAGE");
-        DamageCallback.EVENT.register((source, health, change) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("source", source.getName());
-            args.put("health", health);
-            args.put("change", change);
-
-            triggerMacro("DAMAGE", args);
-        });
-
-        // ------ DEATH -------- //
-        registry.addEvent("DEATH");
-        DeathCallback.EVENT.register(() -> {
-            Map<String, Object> args = new HashMap<>();
-
-            triggerMacro("DEATH", args);
-        });
-
-        // ----- ITEM DAMAGE ----- //
-        registry.addEvent("ITEM_DAMAGE");
-        ItemDamageCallback.EVENT.register((stack, damage) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("stack", stack);
-            args.put("damage", damage);
-
-            triggerMacro("ITEM_DAMAGE", args);
-        });
-
-        // ----- HUNGER CHANGE ------ //
-        registry.addEvent("HUNGER_CHANGE");
-        HungerChangeCallback.EVENT.register((foodLevel) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("foodLevel", foodLevel);
-
-            triggerMacro("HUNGER_CHANGE", args);
-        });
-
-        // ----- DIMENSION CHANGE --- //
-        registry.addEvent("DIMENSION_CHANGE");
-        DimensionChangeCallback.EVENT.register((dim) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("dimension", dim);
-
-            triggerMacro("DIMENSION_CHANGE", args);
-        });
-
-        
-        // ------ SOUND ------ //
-        registry.addEvent("SOUND");
-        SoundCallback.EVENT.register((sound, volume, pitch, x, y, z) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("sound", sound);
-            args.put("volume", volume);
-            args.put("pitch", pitch);
-            args.put("x", x);
-            args.put("y", y);
-            args.put("z", z);
-
-            triggerMacro("SOUND", args);
-        });
-
-        
-        // ------- OPEN SCREEN ------ //
-        registry.addEvent("OPEN_SCREEN");
-        OpenScreenCallback.EVENT.register((screen) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("screen", screen);
-
-            triggerMacro("OPEN_SCREEN", args);
-        });
-        
-        // ------- TITLE ------- //
-        registry.addEvent("TITLE");
-        TitleCallback.EVENT.register((type, message) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("type", type);
-            args.put("message", message);
-
-            triggerMacro("HELD_ITEM", args);
-        });
-        
-        // ----- HELD ITEM ----- //
-        registry.addEvent("HELD_ITEM");
-        HeldItemCallback.EVENT.register((item, oldItem, offhand) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("item", item);
-            args.put("oldItem", oldItem);
-            args.put("offhand", offhand);
-            
-            triggerMacro("HELD_ITEM", args);
-        });
-
-        // ---- ARMOR CHANGE ---- //
-        registry.addEvent("ARMOR_CHANGE");
-        ArmorChangeCallback.EVENT.register((slot, item, oldItem) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("item", item);
-            args.put("oldItem", oldItem);
-            args.put("slot", slot);
-            
-            triggerMacro("ARMOR_CHANGE", args);
-        });
-        
-        // ---- BOSSBAR UPDATE ---- //
-        registry.addEvent("BOSSBAR_UPDATE");
-        BossBarCallback.EVENT.register((type, uuid, bossBar) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("type", type);
-            args.put("bossBar", bossBar);
-            args.put("uuid", uuid);
-            
-            triggerMacro("BOSSBAR_UPDATE", args);
-        });
-        
-        // ---- SIGN EDIT ------ //
-        registry.addEvent("SIGN_EDIT");
-        SignEditCallback.EVENT.register((lines, x, y, z) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("lines", lines);
-            args.put("x", x);
-            args.put("y", y);
-            args.put("z", z);
-            args.put("close", false);
-            
-            triggerMacroJoinNoAnything("SIGN_EDIT", args);
-            
-            return (boolean) args.get("close");
-        });
-        
-        // ---- CHUNK LOAD ----- //
-        registry.addEvent("CHUNK_LOAD");
-        ChunkLoadCallback.EVENT.register((x, z, full) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("x", x);
-            args.put("z", z);
-            args.put("fullChunk", full);
-            
-            triggerMacro("CHUNK_LOAD", args);
-        });
-        
-        // ---- CHUNK UNLOAD ----- //
-        registry.addEvent("CHUNK_UNLOAD");
-        ChunkUnloadCallback.EVENT.register((x, z) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("x", x);
-            args.put("z", z);
-            
-            triggerMacro("CHUNK_UNLOAD", args);
-        });
-        
-        // ---- BLOCK UPDATE ----- //
-        registry.addEvent("BLOCK_UPDATE");
-        BlockUpdateCallback.EVENT.register((b, type) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("block", b);
-            args.put("type", type);
-            
-            triggerMacro("BLOCK_UPDATE", args);
-        });
-        
-        // ----- ITEM PICKUP ---- //
-        registry.addEvent("ITEM_PICKUP");
-        ItemPickupCallback.EVENT.register((item) -> {
-            Map<String, Object> args = new HashMap<>();
-            args.put("item", item);
-            
-            triggerMacro("ITEM_PICKUP", args);
-        });
-        
-        // ----- EXP CHANGE ------ //
-        registry.addEvent("EXP_CHANGE");
-        ExperienceChangeCallback.EVENT.register((progress, total, level) -> {
-            Map<String, Object> args =  new HashMap<>();
-            args.put("progress", progress);
-            args.put("total", total);
-            args.put("level", level);
-            
-            triggerMacro("EXP_CHANGE", args);
-        });
     }
     
+    public void triggerMacro(IEvent event) {
+        if (registry.macros.containsKey(event.getClass().getSimpleName())) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(event.getClass().getSimpleName()))) {
+            macro.trigger(event);
+        }
+
+        if (registry.macros.containsKey("ANYTHING")) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get("ANYTHING"))) {
+            macro.trigger(event);
+        }
+    }
+    
+    public void triggerMacroJoin(IEvent event) {
+        if (registry.macros.containsKey(event.getClass().getSimpleName())) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(event.getClass().getSimpleName()))) {
+            try {
+                Thread t = macro.trigger(event);
+                if (t != null) t.join();
+            } catch (InterruptedException e) {
+            }
+        }
+
+        if (registry.macros.containsKey("ANYTHING")) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get("ANYTHING"))) {
+            try {
+                Thread t = macro.trigger(event);
+                if (t != null) t.join();
+            } catch (InterruptedException e) {
+            }
+        }
+    }
+    
+    public void triggerMacroNoAnything(IEvent event) {
+        if (registry.macros.containsKey(event.getClass().getSimpleName())) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(event.getClass().getSimpleName()))) {
+            macro.trigger(event);
+        }
+    }
+    
+    public void triggerMacroJoinNoAnything(IEvent event) {
+        if (registry.macros.containsKey(event.getClass().getSimpleName())) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(event.getClass().getSimpleName()))) {
+            try {
+                Thread t = macro.trigger(event);
+                if (t != null) t.join();
+            } catch (InterruptedException e) {
+            }
+        }
+    }
+
+    @Override
+    @Deprecated
     public void triggerMacro(String macroname, Map<String, Object> args) {
-        if (registry.macros.containsKey(macroname)) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(macroname))) {
-            macro.trigger(macroname, args);
-        }
-
-        if (registry.macros.containsKey("ANYTHING")) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get("ANYTHING"))) {
-            macro.trigger(macroname, args);
-        }
+        throw new RuntimeException("Deprecated");
     }
-    
+
+    @Override
+    @Deprecated
     public void triggerMacroJoin(String macroname, Map<String, Object> args) {
-        if (registry.macros.containsKey(macroname)) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(macroname))) {
-            try {
-                Thread t = macro.trigger(macroname, args);
-                if (t != null) t.join();
-            } catch (InterruptedException e) {
-            }
-        }
+        throw new RuntimeException("Deprecated");
+    }
 
-        if (registry.macros.containsKey("ANYTHING")) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get("ANYTHING"))) {
-            try {
-                Thread t = macro.trigger(macroname, args);
-                if (t != null) t.join();
-            } catch (InterruptedException e) {
-            }
-        }
-    }
-    
+    @Override
+    @Deprecated
     public void triggerMacroNoAnything(String macroname, Map<String, Object> args) {
-        if (registry.macros.containsKey(macroname)) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(macroname))) {
-            macro.trigger(macroname, args);
-        }
+        throw new RuntimeException("Deprecated");
     }
-    
+
+    @Override
+    @Deprecated
     public void triggerMacroJoinNoAnything(String macroname, Map<String, Object> args) {
-        if (registry.macros.containsKey(macroname)) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(macroname))) {
-            try {
-                Thread t = macro.trigger(macroname, args);
-                if (t != null) t.join();
-            } catch (InterruptedException e) {
-            }
-        }
+        throw new RuntimeException("Deprecated");
     }
 }

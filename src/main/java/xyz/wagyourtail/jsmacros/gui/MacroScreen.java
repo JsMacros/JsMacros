@@ -101,7 +101,7 @@ public class MacroScreen extends Screen {
     public void runFile(MacroListTopbar m) {
         openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, jsMacros.config.macroFolder, null, this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (file) -> {
             try {
-                RunScript.exec(new RawMacro(MacroEnum.EVENT, "", file.getCanonicalPath().substring(jsMacros.config.macroFolder.getCanonicalPath().length()), true), "", null);
+                RunScript.exec(new RawMacro(MacroEnum.EVENT, "", file.getCanonicalPath().substring(jsMacros.config.macroFolder.getCanonicalPath().length()), true), null);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -23,7 +23,19 @@ import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.access.IChatHud;
 import xyz.wagyourtail.jsmacros.api.Functions;
-import xyz.wagyourtail.jsmacros.api.functions.*;
+import xyz.wagyourtail.jsmacros.api.functions.FChat;
+import xyz.wagyourtail.jsmacros.api.functions.FConsumer;
+import xyz.wagyourtail.jsmacros.api.functions.FFS;
+import xyz.wagyourtail.jsmacros.api.functions.FGlobalVars;
+import xyz.wagyourtail.jsmacros.api.functions.FHud;
+import xyz.wagyourtail.jsmacros.api.functions.FJsMacros;
+import xyz.wagyourtail.jsmacros.api.functions.FKeyBind;
+import xyz.wagyourtail.jsmacros.api.functions.FPlayer;
+import xyz.wagyourtail.jsmacros.api.functions.FReflection;
+import xyz.wagyourtail.jsmacros.api.functions.FRequest;
+import xyz.wagyourtail.jsmacros.api.functions.FTime;
+import xyz.wagyourtail.jsmacros.api.functions.FWorld;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScriptThreadWrapper;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
@@ -52,11 +64,10 @@ public class RunScript {
         Language js = new Language() {
             
             @Override
-            public void exec(RawMacro macro, File file, String event, Map<String, Object> args) throws Exception {
+            public void exec(RawMacro macro, File file, IEvent event) throws Exception {
                 Map<String, Object> globals = new HashMap<>();          
                 
                 globals.put("event", event);
-                globals.put("args", args);
                 globals.put("file", file);
 
                 exec("load(\"./" + file.getName() + "\")", globals, file.getParentFile().toPath());
@@ -129,17 +140,17 @@ public class RunScript {
         }
     }
 
-    public static Thread exec(RawMacro macro, String event, Map<String, Object> args) {
-        return exec(macro, event, args, null, null);
+    public static Thread exec(RawMacro macro, IEvent event) {
+        return exec(macro, event, null, null);
     }
 
-    public static Thread exec(RawMacro macro, String event, Map<String, Object> args, Runnable then,
+    public static Thread exec(RawMacro macro, IEvent event, Runnable then,
         Consumer<String> catcher) {
         for (Language language : languages) {
             if (macro.scriptFile.endsWith(language.extension()))
-                return language.trigger(macro, event, args, then, catcher);
+                return language.trigger(macro, event, then, catcher);
         }
-        return defaultLang.trigger(macro, event, args, then, catcher);
+        return defaultLang.trigger(macro, event, then, catcher);
     }
 
     public static class ScriptThreadWrapper implements IScriptThreadWrapper {
@@ -175,7 +186,7 @@ public class RunScript {
 
     public static interface Language {
         
-        public default Thread trigger(RawMacro macro, String event, Map<String, Object> args, Runnable then,
+        public default Thread trigger(RawMacro macro, IEvent event, Runnable then,
             Consumer<String> catcher) {
             
             final RawMacro staticMacro = (RawMacro) macro.copy();
@@ -189,7 +200,7 @@ public class RunScript {
                     File file = new File(jsMacros.config.macroFolder, staticMacro.scriptFile);
                     if (file.exists()) {
                         
-                        exec(staticMacro, file, event, args);
+                        exec(staticMacro, file, event);
                         
                         if (then != null) then.run();
                     }
@@ -210,7 +221,7 @@ public class RunScript {
             return t;
         }
         
-        public void exec(RawMacro macro, File file, String event, Map<String, Object> args) throws Exception;
+        public void exec(RawMacro macro, File file, IEvent event) throws Exception;
         
         public void exec(String script, Map<String, Object> globals, Path currentDir) throws Exception;
         

@@ -4,8 +4,11 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import xyz.wagyourtail.jsmacros.api.events.EventArmorChange;
+import xyz.wagyourtail.jsmacros.api.events.EventHeldItemChange;
+import xyz.wagyourtail.jsmacros.api.events.EventItemDamage;
+import xyz.wagyourtail.jsmacros.api.events.EventTick;
 import xyz.wagyourtail.jsmacros.api.functions.FJsMacros;
-import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
 
 public class TickBasedEvents {
     private static boolean initialized = false;
@@ -55,42 +58,44 @@ public class TickBasedEvents {
             
             FJsMacros.tickSynchronizer.tick();
             
+            new EventTick();
+            
             if (mc.player != null && mc.player.inventory != null) {
                 PlayerInventory inv = mc.player.inventory;
 
                 ItemStack newMainHand = inv.getMainHandStack();
                 if (!areEqual(newMainHand, mainHand)) {
                     if (areEqualIgnoreDamage(newMainHand, mainHand)) {
-                        ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newMainHand), newMainHand.getDamage());
+                        new EventItemDamage(newMainHand, newMainHand.getDamage());
                     }
-                    HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(newMainHand), new ItemStackHelper(mainHand), false);
+                    new EventHeldItemChange(newMainHand, mainHand, false);
                     mainHand = newMainHand.copy();
                 }
                 
                 ItemStack newOffHand = inv.offHand.get(0);
                 if (!areEqual(newOffHand, offHand)) {
                     if (areEqualIgnoreDamage(newOffHand, offHand)) {
-                        ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newOffHand), newOffHand.getDamage());
+                        new EventItemDamage(newOffHand, newOffHand.getDamage());
                     }
-                    HeldItemCallback.EVENT.invoker().interact(new ItemStackHelper(newOffHand), new ItemStackHelper(offHand), true);
+                    new EventHeldItemChange(newOffHand, offHand, true);
                     offHand = newOffHand.copy();
                 }
                 
                 ItemStack newHeadArmor = inv.getArmorStack(3);
                 if (!areEqual(newHeadArmor, headArmor)) {
                     if (areEqualIgnoreDamage(newHeadArmor, headArmor)) {
-                        ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newHeadArmor), newHeadArmor.getDamage());
+                        new EventItemDamage(newHeadArmor, newHeadArmor.getDamage());
                     }
-                    ArmorChangeCallback.EVENT.invoker().interact("HEAD", new ItemStackHelper(newHeadArmor), new ItemStackHelper(headArmor));
+                    new EventArmorChange("HEAD", newHeadArmor, headArmor);
                     headArmor = newHeadArmor.copy();
                 }
                 
                 ItemStack newChestArmor = inv.getArmorStack(2);
                 if (!areEqual(newChestArmor, chestArmor)) {
                     if (areEqualIgnoreDamage(newChestArmor, chestArmor)) {
-                        ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newChestArmor), newChestArmor.getDamage());
+                        new EventItemDamage(newChestArmor, newChestArmor.getDamage());
                     }
-                    ArmorChangeCallback.EVENT.invoker().interact("CHEST", new ItemStackHelper(newChestArmor), new ItemStackHelper(chestArmor));
+                    new EventArmorChange("CHEST", newChestArmor, chestArmor);
                     chestArmor = newChestArmor.copy();
                     
                 }
@@ -98,18 +103,18 @@ public class TickBasedEvents {
                 ItemStack newLegArmor = inv.getArmorStack(1);
                 if (!areEqual(newLegArmor, legArmor)) {
                     if (areEqualIgnoreDamage(newLegArmor, legArmor)) {
-                        ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newLegArmor), newLegArmor.getDamage());
+                        new EventItemDamage(newLegArmor, newLegArmor.getDamage());
                     }
-                    ArmorChangeCallback.EVENT.invoker().interact("LEGS", new ItemStackHelper(newLegArmor), new ItemStackHelper(legArmor));
+                    new EventArmorChange("LEGS", newLegArmor, legArmor);
                     legArmor = newLegArmor.copy();
                 }
                 
                 ItemStack newFootArmor = inv.getArmorStack(0);
                 if (!areEqual(newFootArmor, footArmor)) {
                     if (areEqualIgnoreDamage(newFootArmor, footArmor)) {
-                        ItemDamageCallback.EVENT.invoker().interact(new ItemStackHelper(newFootArmor), newFootArmor.getDamage());
+                        new EventItemDamage(newFootArmor, newFootArmor.getDamage());
                     }
-                    ArmorChangeCallback.EVENT.invoker().interact("FEET", new ItemStackHelper(newFootArmor), new ItemStackHelper(footArmor));
+                    new EventArmorChange("FEET", newFootArmor, footArmor);
                     footArmor = newFootArmor.copy();
                 }
             }
