@@ -1,6 +1,8 @@
 package xyz.wagyourtail.jsmacros.api.sharedinterfaces;
 
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import xyz.wagyourtail.jsmacros.api.helpers.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
@@ -50,10 +52,10 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param width
      * @param height
      * @param text
-     * @param callback
+     * @param callback calls your method as a {@link Consumer}<{@link ButtonWidgetHelper}>
      * @return
      */
-    public ButtonWidgetHelper addButton(int x, int y, int width, int height, String text, MethodWrapper<ButtonWidgetHelper, IScreen> callback);
+    public ButtonWidgetHelper addButton(int x, int y, int width, int height, String text, MethodWrapper<ButtonWidgetHelper, IScreen, Object> callback);
     
     /**
      * @since 1.0.5
@@ -69,10 +71,10 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param width
      * @param height
      * @param message
-     * @param onChange
+     * @param onChange calls your method as a {@link Consumer}<{@link String}>
      * @return
      */
-    public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, String message, MethodWrapper<String, IScreen> onChange);
+    public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, String message, MethodWrapper<String, IScreen, Object> onChange);
     
     /**
      * @since 1.0.5
@@ -83,45 +85,45 @@ public interface IScreen extends IDraw2D<IScreen> {
     
     /**
      * @since 1.2.7
-     * @param onMouseDown
+     * @param onMouseDown calls your method as a {@link BiConsumer}<{@link PositionCommon.Pos2D}, {@link Integer}>
      * @return
      */
-    public IScreen setOnMouseDown(MethodWrapper<PositionCommon.Pos2D, Integer> onMouseDown);
+    public IScreen setOnMouseDown(MethodWrapper<PositionCommon.Pos2D, Integer, Object> onMouseDown);
     
     /**
      * @since 1.2.7
-     * @param onMouseDrag
+     * @param onMouseDrag calls your method as a {@link BiConsumer}<{@link PositionCommon.Vec2D}, {@link Integer}>
      * @return
      */
-    public IScreen setOnMouseDrag(MethodWrapper<PositionCommon.Vec2D, Integer> onMouseDrag);
+    public IScreen setOnMouseDrag(MethodWrapper<PositionCommon.Vec2D, Integer, Object> onMouseDrag);
     
     /**
      * @since 1.2.7
-     * @param onMouseUp
+     * @param onMouseUp calls your method as a {@link BiConsumer}<{@link PositionCommon.Pos2D}, {@link Integer}>
      * @return
      */
-    public IScreen setOnMouseUp(MethodWrapper<PositionCommon.Pos2D, Integer> onMouseUp);
+    public IScreen setOnMouseUp(MethodWrapper<PositionCommon.Pos2D, Integer, Object> onMouseUp);
     
     /**
      * @since 1.2.7
-     * @param onScroll
+     * @param onScroll calls your method as a {@link BiConsumer}<{@link PositionCommon.Pos2D}, {@link Double}>
      * @return
      */
-    public IScreen setOnScroll(MethodWrapper<PositionCommon.Pos2D, Double> onScroll);
+    public IScreen setOnScroll(MethodWrapper<PositionCommon.Pos2D, Double, Object> onScroll);
     
     /**
      * @since 1.2.7
-     * @param onKeyPressed
+     * @param onKeyPressed calls your method as a {@link BiConsumer}<{@link Integer}, {@link Integer}>
      * @return
      */
-    public IScreen setOnKeyPressed(MethodWrapper<Integer, Integer> onKeyPressed);
+    public IScreen setOnKeyPressed(MethodWrapper<Integer, Integer, Object> onKeyPressed);
     
     /**
      * @since 1.2.7
-     * @param onClose
+     * @param onClose calls your method as a {@link Consumer}<{@link IScreen}>
      * @return
      */
-    public IScreen setOnClose(MethodWrapper<IScreen, Object> onClose);
+    public IScreen setOnClose(MethodWrapper<IScreen, Object, Object> onClose);
     
     /**
      * @since 1.1.9

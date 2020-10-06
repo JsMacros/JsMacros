@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.api.functions;
 
 import java.io.File;
 import java.util.List;
+import java.util.function.Consumer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -127,9 +128,9 @@ public class FPlayer extends Functions {
      * @since 1.2.6
      * 
      * @param folder
-     * @param callback
+     * @param callback calls your method as a {@link Consumer}<{@link TextHelper}>
      */
-    public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object> callback) {
+    public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object, Object> callback) {
         ScreenshotUtils.saveScreenshot(new File(jsMacros.config.macroFolder, folder), mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
             mc.getFramebuffer(), (text) -> {
                 if (callback != null) callback.accept(new TextHelper(text));
@@ -143,9 +144,9 @@ public class FPlayer extends Functions {
      * 
      * @param folder
      * @param file
-     * @param callback
+     * @param callback calls your method as a {@link Consumer}<{@link TextHelper}>
      */
-    public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object> callback) {
+    public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object> callback) {
         ScreenshotUtils.saveScreenshot(new File(jsMacros.config.macroFolder, folder), file, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
             mc.getFramebuffer(), (text) -> {
                 if (callback != null) callback.accept(new TextHelper(text));

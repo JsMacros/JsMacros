@@ -36,12 +36,27 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
      * @return
      */
     @Override
-    public MethodWrapper<Object, Object> autoWrap(Function<Object[], Object> c) {
+    public MethodWrapper<Object, Object, Object> autoWrap(Function<Object[], Object> c) {
         Thread th = Thread.currentThread();
-        return new MethodWrapper<Object, Object>() {
+        return new MethodWrapper<Object, Object, Object>() {
             
             @Override
             public void accept(Object arg0, Object arg1) {
+                apply(arg0, arg1);
+            }
+
+            @Override
+            public void accept(Object arg0) {
+                apply(arg0, null);
+            }
+
+            @Override
+            public Object apply(Object t) {
+                return this.apply(t, null);
+            }
+
+            @Override
+            public Object apply(Object t, Object u) {
                 if (th != Thread.currentThread()) {
                     while(th.isAlive()) {
                         try {
@@ -56,13 +71,24 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
                         } catch (InterruptedException e1) {}
                     }
                 }
-                c.apply(new Object[] {arg0, arg1});
+                Object retVal = c.apply(new Object[] {t, u});
                 tasks.poll();
+                return retVal;
             }
 
             @Override
-            public void accept(Object arg0) {
-                accept(arg0, null);
+            public boolean test(Object t) {
+                return (boolean) apply(t, null);
+            }
+
+            @Override
+            public void run() {
+                apply(null, null);
+            }
+
+            @Override
+            public boolean test(Object t, Object u) {
+                return (boolean) apply(t, u);
             }
         };
     }
@@ -73,9 +99,9 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
      * @return
      */
     @Override
-    public MethodWrapper<Object, Object> autoWrapAsync(Function<Object[], Object> c) {
+    public MethodWrapper<Object, Object, Object> autoWrapAsync(Function<Object[], Object> c) {
         Thread th = Thread.currentThread();
-        return new MethodWrapper<Object, Object>() {
+        return new MethodWrapper<Object, Object, Object>() {
 
             @Override
             public void accept(Object arg0, Object arg1) {
@@ -103,6 +129,47 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
             public void accept(Object t) {
                 this.accept(t, null);
             }
+
+            @Override
+            public Object apply(Object t) {
+                return apply(t, null);
+            }
+
+            @Override
+            public Object apply(Object t, Object u) {
+                if (th != Thread.currentThread()) {
+                    while(th.isAlive()) {
+                        try {
+                            th.join();
+                        } catch (InterruptedException e1) {}
+                    }
+                    tasks.add(Thread.currentThread());
+                    Thread joinable;
+                    while ((joinable = tasks.peek()) != Thread.currentThread()) {
+                        try {
+                            joinable.join();
+                        } catch (InterruptedException e1) {}
+                    }
+                }
+                Object retVal = c.apply(new Object[] {t, u});
+                tasks.poll();
+                return retVal;
+            }
+
+            @Override
+            public boolean test(Object t) {
+                return (boolean) apply(t, null);
+            }
+
+            @Override
+            public boolean test(Object t, Object u) {
+                return (boolean) apply(t, u);
+            }
+
+            @Override
+            public void run() {
+                accept(null, null);
+            }
         };
     }
     
@@ -115,7 +182,7 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
      * @return a new {@link xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.Consumer ConsumerWrappers.Consumer}
      */
     @Override
-    public MethodWrapper<Object, Object> toConsumer(Function<Object[], Object> c) {
+    public MethodWrapper<Object, Object, Object> toConsumer(Function<Object[], Object> c) {
         return autoWrap(c);
     }
     
@@ -128,7 +195,7 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
      * @return a new {@link xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.BiConsumer ConsumerWrappers.BiConsumer}
      */
     @Override
-    public MethodWrapper<Object, Object> toBiConsumer(Function<Object[], Object> c) {
+    public MethodWrapper<Object, Object, Object> toBiConsumer(Function<Object[], Object> c) {
         return autoWrap(c);
     }
     
@@ -141,7 +208,7 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
      * @return a new {@link xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.Consumer ConsumerWrappers.Consumer}
      */
     @Override
-    public MethodWrapper<Object, Object> toAsyncConsumer(Function<Object[], Object> c) {
+    public MethodWrapper<Object, Object, Object> toAsyncConsumer(Function<Object[], Object> c) {
         return autoWrapAsync(c);
     }
     
@@ -154,7 +221,7 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
      * @return a new {@link xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.BiConsumer ConsumerWrappers.BiConsumer}
      */
     @Override
-    public MethodWrapper<Object, Object> toAsyncBiConsumer(Function<Object[], Object> c) {
+    public MethodWrapper<Object, Object, Object> toAsyncBiConsumer(Function<Object[], Object> c) {
         return autoWrapAsync(c);
     }
 }

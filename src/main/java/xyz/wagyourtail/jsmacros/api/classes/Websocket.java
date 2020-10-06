@@ -21,11 +21,26 @@ import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
 public class Websocket {
 
     private WebSocket ws;
-    public MethodWrapper<WebSocket, Map<String, List<String>>> onConnect;
-    public MethodWrapper<WebSocket, String> onTextMessage;
-    public MethodWrapper<WebSocket, Disconnected> onDisconnect;
-    public MethodWrapper<WebSocket, WebSocketException> onError;
-    public MethodWrapper<WebSocket, WebSocketFrame> onFrame;
+    /**
+     * calls your method as a {@link java.util.function.Consumer BiConsumer}<{@link WebSocket}, {@link List}<{@link String}>>
+     */
+    public MethodWrapper<WebSocket, Map<String, List<String>>, Object> onConnect;
+    /**
+     * calls your method as a {@link BiConsumer}<{@link WebSocket}, {@link String}>
+     */
+    public MethodWrapper<WebSocket, String, Object> onTextMessage;
+    /**
+     * calls your method as a {@link BiConsumer}<{@link WebSocket}, {@link Disconnected}>
+     */
+    public MethodWrapper<WebSocket, Disconnected, Object> onDisconnect;
+    /**
+     * calls your method as a {@link BiConsumer}<{@link WebSocket}, {@link WebSocketException}>
+     */
+    public MethodWrapper<WebSocket, WebSocketException, Object> onError;
+    /**
+     * calls your method as a {@link BiConsumer}<{@link WebSocket}, {@link WebSocketFrame}>
+     */
+    public MethodWrapper<WebSocket, WebSocketFrame, Object> onFrame;
 
     public Websocket(String address) throws IOException {
         ws = new WebSocketFactory().createSocket(address).addListener(new WebSocketAdapter() {

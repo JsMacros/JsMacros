@@ -22,6 +22,7 @@ import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IProfile;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScriptThreadWrapper;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.events.TickSync;
 import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 import xyz.wagyourtail.jsmacros.extensionbase.ILanguage;
 import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
@@ -113,7 +114,7 @@ public class FJsMacros extends Functions {
      * @return
      */
     public Thread runScript(String file) {
-        return runScript(file, (MethodWrapper<String, Object>) null);
+        return runScript(file, (MethodWrapper<String, Object, Object>) null);
     }
 
     /**
@@ -125,7 +126,7 @@ public class FJsMacros extends Functions {
      * @param callback defaults to {@code null}
      * @return the {@link java.lang.Thread} the script is running on.
      */
-    public Thread runScript(String file, MethodWrapper<String, Object> callback) {
+    public Thread runScript(String file, MethodWrapper<String, Object, Object> callback) {
         if (callback != null) {
             return RunScript.exec(new RawMacro(MacroEnum.EVENT, "", file, true), null, () -> {
                 callback.accept(null);
@@ -158,7 +159,7 @@ public class FJsMacros extends Functions {
      * @param callback
      * @return the {@link java.lang.Thread} the script is running on.
      */
-    public Thread runScript(String language, String script, MethodWrapper<String, Object> callback) {
+    public Thread runScript(String language, String script, MethodWrapper<String, Object, Object> callback) {
         Thread t = new Thread(() -> {
             ILanguage lang = RunScript.defaultLang;
             for (ILanguage l : RunScript.languages) {
@@ -199,7 +200,7 @@ public class FJsMacros extends Functions {
      * @param callback
      * @return
      */
-    public IEventListener on(String event, MethodWrapper<IEvent, Object> callback) {
+    public IEventListener on(String event, MethodWrapper<IEvent, Object, Object> callback) {
         if (callback == null) return null;
         String tname = Thread.currentThread().getName();
         IEventListener listener = new IEventListener() {
@@ -239,7 +240,7 @@ public class FJsMacros extends Functions {
      * @param callback
      * @return the listener.
      */
-    public IEventListener once(String event, MethodWrapper<IEvent, Object> callback) {
+    public IEventListener once(String event, MethodWrapper<IEvent, Object, Object> callback) {
         if (callback == null) return null;
         String tname = Thread.currentThread().getName();
         Thread th = Thread.currentThread();
@@ -368,9 +369,9 @@ public class FJsMacros extends Functions {
      * 
      * {@code callback} defaults to {@code null}
      * 
-     * @param callback
+     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}<{@link java.lang.Boolean Boolean}>
      */
-    public void disconnect(MethodWrapper<Boolean, Object> callback) {
+    public void disconnect(MethodWrapper<Boolean, Object, Object> callback) {
         mc.execute(() -> {
             boolean isWorld = mc.world != null;
             if (isWorld) mc.world.disconnect();
@@ -400,25 +401,6 @@ public class FJsMacros extends Functions {
     public void waitTick(int i) throws InterruptedException {
         while (--i >= 0) {
             tickSynchronizer.waitTick();
-        }
-    }
-    
-    /**
-     * @author Wagyourtail
-     * Ignore this xd
-     */
-    public static class TickSync {
-        int tc = 0;
-        public synchronized void waitTick() throws InterruptedException {
-            int tcc = tc;
-            while (tc == tcc) {
-                this.wait();
-            }
-        }
-        
-        public synchronized void tick() {
-            ++tc;
-            this.notifyAll();
         }
     }
 }

@@ -43,14 +43,14 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Unique private List<RenderCommon.Rect> rectFields = new ArrayList<>();
     @Unique private List<RenderCommon.Item> itemFields = new ArrayList<>();
     @Unique private List<RenderCommon.Image> imageFields = new ArrayList<>();
-    @Unique private MethodWrapper<PositionCommon.Pos2D, Integer> onMouseDown;
-    @Unique private MethodWrapper<PositionCommon.Vec2D, Integer> onMouseDrag;
-    @Unique private MethodWrapper<PositionCommon.Pos2D, Integer> onMouseUp;
-    @Unique private MethodWrapper<PositionCommon.Pos2D, Double> onScroll;
-    @Unique private MethodWrapper<Integer, Integer> onKeyPressed;
-    @Unique private MethodWrapper<IScreen, Object> onInit;
-    @Unique private MethodWrapper<String, Object> catchInit;
-    @Unique private MethodWrapper<IScreen, Object> onClose;
+    @Unique private MethodWrapper<PositionCommon.Pos2D, Integer, Object> onMouseDown;
+    @Unique private MethodWrapper<PositionCommon.Vec2D, Integer, Object> onMouseDrag;
+    @Unique private MethodWrapper<PositionCommon.Pos2D, Integer, Object> onMouseUp;
+    @Unique private MethodWrapper<PositionCommon.Pos2D, Double, Object> onScroll;
+    @Unique private MethodWrapper<Integer, Integer, Object> onKeyPressed;
+    @Unique private MethodWrapper<IScreen, Object, Object> onInit;
+    @Unique private MethodWrapper<String, Object, Object> catchInit;
+    @Unique private MethodWrapper<IScreen, Object, Object> onClose;
     
     @Shadow public int width;
     @Shadow public int height;
@@ -225,7 +225,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public ButtonWidgetHelper addButton(int x, int y, int width, int height, String text,
-        MethodWrapper<ButtonWidgetHelper, IScreen> callback) {
+        MethodWrapper<ButtonWidgetHelper, IScreen, Object> callback) {
         ButtonWidget button = (ButtonWidget) addButton(new ButtonWidget(x, y, width, height, new LiteralText(text), (btn) -> {
             try {
                 callback.accept(new ButtonWidgetHelper(btn), this);
@@ -248,7 +248,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, String message,
-        MethodWrapper<String, IScreen> onChange) {
+        MethodWrapper<String, IScreen, Object> onChange) {
         TextFieldWidget field = new TextFieldWidget(this.textRenderer, x, y, width, height, new LiteralText(message));
         if (onChange != null) {
             field.setChangedListener(str -> {
@@ -282,49 +282,49 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public IScreen setOnMouseDown(MethodWrapper<Pos2D, Integer> onMouseDown) {
+    public IScreen setOnMouseDown(MethodWrapper<Pos2D, Integer, Object> onMouseDown) {
         this.onMouseDown = onMouseDown;
         return this;
     }
 
     @Override
-    public IScreen setOnMouseDrag(MethodWrapper<Vec2D, Integer> onMouseDrag) {
+    public IScreen setOnMouseDrag(MethodWrapper<Vec2D, Integer, Object> onMouseDrag) {
         this.onMouseDrag = onMouseDrag;
         return this;
     }
 
     @Override
-    public IScreen setOnMouseUp(MethodWrapper<Pos2D, Integer> onMouseUp) {
+    public IScreen setOnMouseUp(MethodWrapper<Pos2D, Integer, Object> onMouseUp) {
         this.onMouseUp = onMouseUp;
         return this;
     }
 
     @Override
-    public IScreen setOnScroll(MethodWrapper<Pos2D, Double> onScroll) {
+    public IScreen setOnScroll(MethodWrapper<Pos2D, Double, Object> onScroll) {
         this.onScroll = onScroll;
         return this;
     }
 
     @Override
-    public IScreen setOnKeyPressed(MethodWrapper<Integer, Integer> onKeyPressed) {
+    public IScreen setOnKeyPressed(MethodWrapper<Integer, Integer, Object> onKeyPressed) {
         this.onKeyPressed = onKeyPressed;
         return this;
     }
 
     @Override
-    public IScreen setOnInit(MethodWrapper<IScreen, Object> onInit) {
+    public IScreen setOnInit(MethodWrapper<IScreen, Object, Object> onInit) {
         this.onInit = onInit;
         return this;
     }
 
     @Override
-    public IScreen setOnFailInit(MethodWrapper<String, Object> catchInit) {
+    public IScreen setOnFailInit(MethodWrapper<String, Object, Object> catchInit) {
         this.catchInit = catchInit;
         return this;
     }
 
     @Override
-    public IScreen setOnClose(MethodWrapper<IScreen, Object> onClose) {
+    public IScreen setOnClose(MethodWrapper<IScreen, Object, Object> onClose) {
         this.onClose = onClose;
         return this;
     }

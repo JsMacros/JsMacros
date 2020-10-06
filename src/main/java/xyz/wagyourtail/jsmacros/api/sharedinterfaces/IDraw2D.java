@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.api.sharedinterfaces;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
@@ -265,17 +266,17 @@ public interface IDraw2D<T> {
 
     /**
      * @since 1.2.7
-     * @param onInit
+     * @param onInit calls your method as a {@link Consumer}<{@link T}>
      * @return
      */
-    public T setOnInit(MethodWrapper<T, Object> onInit);
+    public T setOnInit(MethodWrapper<T, Object, Object> onInit);
     
     /**
      * @since 1.2.7
-     * @param catchInit
+     * @param catchInit calls your method as a {@link Consumer}<{@link String}>
      * @return
      */
-    public T setOnFailInit(MethodWrapper<String, Object> catchInit);
+    public T setOnFailInit(MethodWrapper<String, Object, Object> catchInit);
 
     
     public void init();
