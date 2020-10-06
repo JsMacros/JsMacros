@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 import xyz.wagyourtail.jsmacros.extensionbase.IFConsumer;
@@ -19,7 +20,7 @@ import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
  * @author Wagyourtail
  *
  */
-public class FConsumer extends Functions implements IFConsumer<BiConsumer<Object, Object>, Consumer<Object>> {
+public class FConsumer extends Functions implements IFConsumer<BiConsumer<Object, Object>, Consumer<Object>, Function<Object[], Object>> {
     private LinkedBlockingQueue<Thread> tasks = new LinkedBlockingQueue<>();
 
     public FConsumer(String libName) {
@@ -36,8 +37,8 @@ public class FConsumer extends Functions implements IFConsumer<BiConsumer<Object
      * @param c
      * @return
      */
-    public MethodWrapper<Object, Object> autoWrap(BiConsumer<Object, Object> c) {
-        return toBiConsumer(c);
+    public MethodWrapper<Object, Object> autoWrap(Function<Object[], Object> c) {
+        return toBiConsumer((a, b) -> c.apply(new Object[] {a,b}));
     }
     
     /**
@@ -45,8 +46,8 @@ public class FConsumer extends Functions implements IFConsumer<BiConsumer<Object
      * @param c
      * @return
      */
-    public MethodWrapper<Object, Object> autoWrapAsync(BiConsumer<Object, Object> c) {
-        return toAsyncBiConsumer(c);
+    public MethodWrapper<Object, Object> autoWrapAsync(Function<Object[], Object> c) {
+        return toAsyncBiConsumer((a, b) -> c.apply(new Object[] {a, b}));
     }
     
     /**

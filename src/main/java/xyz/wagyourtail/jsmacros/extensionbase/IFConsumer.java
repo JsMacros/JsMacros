@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.extensionbase;
 
-public interface IFConsumer<T, U> {
+public interface IFConsumer<T, U, V> {
     
     @Deprecated
     public MethodWrapper<Object, Object> toConsumer(U c);
@@ -11,7 +11,7 @@ public interface IFConsumer<T, U> {
     @Deprecated
     public MethodWrapper<Object, Object> toAsyncBiConsumer(T c);
     
-    public MethodWrapper<Object, Object> autoWrap(T c);
-    public MethodWrapper<Object, Object> autoWrapAsync(T c);
+    public MethodWrapper<Object, Object> autoWrap(V c);
+    public MethodWrapper<Object, Object> autoWrapAsync(V c);
     
 }
