@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
 import xyz.wagyourtail.jsmacros.access.TPSData;
 import xyz.wagyourtail.jsmacros.api.functions.FWorld;
@@ -18,7 +19,7 @@ import xyz.wagyourtail.jsmacros.api.functions.FWorld;
 public class MixinClientPlayNetworkHandler {
 
     @Unique
-    long lastServerTimeRecvTime = System.currentTimeMillis();
+    long lastServerTimeRecvTime = 0;
     
     @Unique
     long lastServerTimeRecvTick = 0;
@@ -68,5 +69,15 @@ public class MixinClientPlayNetworkHandler {
         }
     }
     
+    @Inject(at = @At("TAIL"), method="onGameJoin")
+    public void onGameJoin(GameJoinS2CPacket packet, CallbackInfo info) {
+        synchronized (timeSync) {
+            lastServerTimeRecvTime = 0;
+            lastServerTimeRecvTick = 0;
     
+            tpsData1M.clear();
+            tpsData5M.clear();
+            tpsData15M.clear();
+        }
+    }
 }
