@@ -1,12 +1,20 @@
 package xyz.wagyourtail.jsmacros.extensionbase;
 
-public interface IFConsumer {
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
-//    public MethodWrappers.Consumer<Object> toConsumer(Consumer<Object> c);
-//    public MethodWrappers.BiConsumer<Object, Object> toBiConsumer(BiConsumer<Object, Object> c);
-//    public MethodWrappers.Consumer<Object> toAsyncConsumer(Consumer<Object> c);
-//    public MethodWrappers.BiConsumer<Object, Object> toAsyncBiConsumer(BiConsumer<Object, Object> c);
-//    public Object autoWrap(Object c);
-//    public Object autoWrapAsync(Object c);
+public interface IFConsumer<T> {
+    
+    @Deprecated
+    public MethodWrapper<Object, Object> toConsumer(Consumer<Object> c);
+    @Deprecated
+    public MethodWrapper<Object, Object> toBiConsumer(BiConsumer<Object, Object> c);
+    @Deprecated
+    public MethodWrapper<Object, Object> toAsyncConsumer(Consumer<Object> c);
+    @Deprecated
+    public MethodWrapper<Object, Object> toAsyncBiConsumer(BiConsumer<Object, Object> c);
+    
+    public MethodWrapper<Object, Object> autoWrap(T c);
+    public MethodWrapper<Object, Object> autoWrapAsync(T c);
     
 }
