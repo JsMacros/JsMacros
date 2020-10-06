@@ -14,8 +14,6 @@ import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.network.ServerAddress;
 import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.jsMacros;
-import xyz.wagyourtail.jsmacros.api.Functions;
-import xyz.wagyourtail.jsmacros.api.MethodWrappers;
 import xyz.wagyourtail.jsmacros.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IConfig;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
@@ -24,6 +22,9 @@ import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IProfile;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScriptThreadWrapper;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.extensionbase.Functions;
+import xyz.wagyourtail.jsmacros.extensionbase.ILanguage;
+import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
@@ -112,7 +113,7 @@ public class FJsMacros extends Functions {
      * @return
      */
     public Thread runScript(String file) {
-        return runScript(file, (MethodWrappers.Consumer<String>) null);
+        return runScript(file, (MethodWrapper<String, Object>) null);
     }
 
     /**
@@ -124,7 +125,7 @@ public class FJsMacros extends Functions {
      * @param callback defaults to {@code null}
      * @return the {@link java.lang.Thread} the script is running on.
      */
-    public Thread runScript(String file, MethodWrappers.Consumer<String> callback) {
+    public Thread runScript(String file, MethodWrapper<String, Object> callback) {
         if (callback != null) {
             return RunScript.exec(new RawMacro(MacroEnum.EVENT, "", file, true), null, () -> {
                 callback.accept(null);
@@ -157,11 +158,11 @@ public class FJsMacros extends Functions {
      * @param callback
      * @return the {@link java.lang.Thread} the script is running on.
      */
-    public Thread runScript(String language, String script, MethodWrappers.Consumer<String> callback) {
+    public Thread runScript(String language, String script, MethodWrapper<String, Object> callback) {
         Thread t = new Thread(() -> {
-            RunScript.Language lang = RunScript.defaultLang;
-            for (RunScript.Language l : RunScript.languages) {
-                if (language.equals(l.extension())) {
+            ILanguage lang = RunScript.defaultLang;
+            for (ILanguage l : RunScript.languages) {
+                if (language.equals(l.extension().replaceAll("\\.", " ").trim().replaceAll(" ", "."))) {
                     lang = l;
                     break;
                 }
@@ -187,21 +188,6 @@ public class FJsMacros extends Functions {
     public void open(String path) {
         Util.getOperatingSystem().open(new File(jsMacros.config.macroFolder, path));
     }
-
-    /**
-     * Creates a listener for an event, this function can be more efficient that running a script file when used properly.
-     * 
-     * @see xyz.wagyourtai.jsmacros.api.sharedinterfaces.IEventListener
-     * 
-     * @since 1.2.3
-     * 
-     * @param event
-     * @param callback
-     * @return the listener.
-     */
-    public IEventListener on(String event, MethodWrappers.BiConsumer<String, Map<String, Object>> callback) {
-        throw new RuntimeException("Deprecated");
-    }
     
     /**
      * Creates a listener for an event, this function can be more efficient that running a script file when used properly.
@@ -213,7 +199,7 @@ public class FJsMacros extends Functions {
      * @param callback
      * @return
      */
-    public IEventListener on(String event, MethodWrappers.Consumer<IEvent> callback) {
+    public IEventListener on(String event, MethodWrapper<IEvent, Object> callback) {
         if (callback == null) return null;
         String tname = Thread.currentThread().getName();
         IEventListener listener = new IEventListener() {
@@ -241,21 +227,6 @@ public class FJsMacros extends Functions {
         Profile.registry.addListener(event, listener);
         return listener;
     }
-    
-    /**
-     * Creates a single-run listener for an event, this function can be more efficient that running a script file when used properly.
-     * 
-     * @see xyz.wagyourtai.jsmacros.api.sharedinterfaces.IEventListener
-     * 
-     * @since 1.2.3
-     * 
-     * @param event
-     * @param callback
-     * @return the listener.
-     */
-    public IEventListener once(String event, MethodWrappers.BiConsumer<String, Map<String, Object>> callback) {
-        throw new RuntimeException("Deprecated");
-    }
         
     /**
      * Creates a single-run listener for an event, this function can be more efficient that running a script file when used properly.
@@ -268,7 +239,7 @@ public class FJsMacros extends Functions {
      * @param callback
      * @return the listener.
      */
-    public IEventListener once(String event, MethodWrappers.Consumer<IEvent> callback) {
+    public IEventListener once(String event, MethodWrapper<IEvent, Object> callback) {
         if (callback == null) return null;
         String tname = Thread.currentThread().getName();
         Thread th = Thread.currentThread();
@@ -399,7 +370,7 @@ public class FJsMacros extends Functions {
      * 
      * @param callback
      */
-    public void disconnect(MethodWrappers.Consumer<Boolean> callback) {
+    public void disconnect(MethodWrapper<Boolean, Object> callback) {
         mc.execute(() -> {
             boolean isWorld = mc.world != null;
             if (isWorld) mc.world.disconnect();

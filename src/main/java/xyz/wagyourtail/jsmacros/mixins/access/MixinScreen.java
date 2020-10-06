@@ -25,7 +25,6 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import xyz.wagyourtail.jsmacros.api.MethodWrappers;
 import xyz.wagyourtail.jsmacros.api.helpers.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.TextFieldWidgetHelper;
@@ -35,6 +34,7 @@ import xyz.wagyourtail.jsmacros.api.sharedclasses.PositionCommon.Pos2D;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.PositionCommon.Vec2D;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
 
 @Mixin(Screen.class)
 public abstract class MixinScreen extends AbstractParentElement implements IScreen {
@@ -43,14 +43,14 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Unique private List<RenderCommon.Rect> rectFields = new ArrayList<>();
     @Unique private List<RenderCommon.Item> itemFields = new ArrayList<>();
     @Unique private List<RenderCommon.Image> imageFields = new ArrayList<>();
-    @Unique private MethodWrappers.BiConsumer<PositionCommon.Pos2D, Integer> onMouseDown;
-    @Unique private MethodWrappers.BiConsumer<PositionCommon.Vec2D, Integer> onMouseDrag;
-    @Unique private MethodWrappers.BiConsumer<PositionCommon.Pos2D, Integer> onMouseUp;
-    @Unique private MethodWrappers.BiConsumer<PositionCommon.Pos2D, Double> onScroll;
-    @Unique private MethodWrappers.BiConsumer<Integer, Integer> onKeyPressed;
-    @Unique private MethodWrappers.Consumer<IScreen> onInit;
-    @Unique private MethodWrappers.Consumer<String> catchInit;
-    @Unique private MethodWrappers.Consumer<IScreen> onClose;
+    @Unique private MethodWrapper<PositionCommon.Pos2D, Integer> onMouseDown;
+    @Unique private MethodWrapper<PositionCommon.Vec2D, Integer> onMouseDrag;
+    @Unique private MethodWrapper<PositionCommon.Pos2D, Integer> onMouseUp;
+    @Unique private MethodWrapper<PositionCommon.Pos2D, Double> onScroll;
+    @Unique private MethodWrapper<Integer, Integer> onKeyPressed;
+    @Unique private MethodWrapper<IScreen, Object> onInit;
+    @Unique private MethodWrapper<String, Object> catchInit;
+    @Unique private MethodWrapper<IScreen, Object> onClose;
     
     @Shadow public int width;
     @Shadow public int height;
@@ -225,7 +225,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public ButtonWidgetHelper addButton(int x, int y, int width, int height, String text,
-        MethodWrappers.BiConsumer<ButtonWidgetHelper, IScreen> callback) {
+        MethodWrapper<ButtonWidgetHelper, IScreen> callback) {
         ButtonWidget button = (ButtonWidget) addButton(new ButtonWidget(x, y, width, height, new LiteralText(text), (btn) -> {
             try {
                 callback.accept(new ButtonWidgetHelper(btn), this);
@@ -248,7 +248,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, String message,
-        MethodWrappers.BiConsumer<String, IScreen> onChange) {
+        MethodWrapper<String, IScreen> onChange) {
         TextFieldWidget field = new TextFieldWidget(this.textRenderer, x, y, width, height, new LiteralText(message));
         if (onChange != null) {
             field.setChangedListener(str -> {
@@ -282,49 +282,49 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public IScreen setOnMouseDown(MethodWrappers.BiConsumer<Pos2D, Integer> onMouseDown) {
+    public IScreen setOnMouseDown(MethodWrapper<Pos2D, Integer> onMouseDown) {
         this.onMouseDown = onMouseDown;
         return this;
     }
 
     @Override
-    public IScreen setOnMouseDrag(MethodWrappers.BiConsumer<Vec2D, Integer> onMouseDrag) {
+    public IScreen setOnMouseDrag(MethodWrapper<Vec2D, Integer> onMouseDrag) {
         this.onMouseDrag = onMouseDrag;
         return this;
     }
 
     @Override
-    public IScreen setOnMouseUp(MethodWrappers.BiConsumer<Pos2D, Integer> onMouseUp) {
+    public IScreen setOnMouseUp(MethodWrapper<Pos2D, Integer> onMouseUp) {
         this.onMouseUp = onMouseUp;
         return this;
     }
 
     @Override
-    public IScreen setOnScroll(MethodWrappers.BiConsumer<Pos2D, Double> onScroll) {
+    public IScreen setOnScroll(MethodWrapper<Pos2D, Double> onScroll) {
         this.onScroll = onScroll;
         return this;
     }
 
     @Override
-    public IScreen setOnKeyPressed(MethodWrappers.BiConsumer<Integer, Integer> onKeyPressed) {
+    public IScreen setOnKeyPressed(MethodWrapper<Integer, Integer> onKeyPressed) {
         this.onKeyPressed = onKeyPressed;
         return this;
     }
 
     @Override
-    public IScreen setOnInit(MethodWrappers.Consumer<IScreen> onInit) {
+    public IScreen setOnInit(MethodWrapper<IScreen, Object> onInit) {
         this.onInit = onInit;
         return this;
     }
 
     @Override
-    public IScreen setOnFailInit(MethodWrappers.Consumer<String> catchInit) {
+    public IScreen setOnFailInit(MethodWrapper<String, Object> catchInit) {
         this.catchInit = catchInit;
         return this;
     }
 
     @Override
-    public IScreen setOnClose(MethodWrappers.Consumer<IScreen> onClose) {
+    public IScreen setOnClose(MethodWrapper<IScreen, Object> onClose) {
         this.onClose = onClose;
         return this;
     }

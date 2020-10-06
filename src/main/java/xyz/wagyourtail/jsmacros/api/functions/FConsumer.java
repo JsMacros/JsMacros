@@ -5,8 +5,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import xyz.wagyourtail.jsmacros.api.Functions;
-import xyz.wagyourtail.jsmacros.api.MethodWrappers;
+import xyz.wagyourtail.jsmacros.extensionbase.Functions;
+import xyz.wagyourtail.jsmacros.extensionbase.IFConsumer;
+import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
 
 /**
  * Consumer implementation for wrapping consumers to match the language spec.
@@ -18,7 +19,7 @@ import xyz.wagyourtail.jsmacros.api.MethodWrappers;
  * @author Wagyourtail
  *
  */
-public class FConsumer extends Functions {
+public class FConsumer extends Functions implements IFConsumer {
     private LinkedBlockingQueue<Thread> tasks = new LinkedBlockingQueue<>();
 
     public FConsumer(String libName) {
@@ -31,16 +32,34 @@ public class FConsumer extends Functions {
     }
     
     /**
+     * @since 1.2.7
+     * @param c
+     * @return
+     */
+    public MethodWrapper<Object, Object> autoWrap(BiConsumer<Object, Object> c) {
+        return toBiConsumer(c);
+    }
+    
+    /**
+     * @since 1.2.7
+     * @param c
+     * @return
+     */
+    public MethodWrapper<Object, Object> autoWrapAsync(BiConsumer<Object, Object> c) {
+        return toAsyncBiConsumer(c);
+    }
+    
+    /**
      * Wraps a Consumer to match the guest language requirements.
      * 
      * @since 1.2.5
-     * 
+     * @deprecated
      * @param c
-     * @return a new {@link xyz.wagyourtail.jsmacros.api.MethodWrappers.Consumer ConsumerWrappers.Consumer}
+     * @return a new {@link xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.Consumer ConsumerWrappers.Consumer}
      */
-    public MethodWrappers.Consumer<Object> toConsumer(Consumer<Object> c) {
+    public MethodWrapper<Object, Object> toConsumer(Consumer<Object> c) {
         Thread th = Thread.currentThread();
-        return new MethodWrappers.Consumer<Object>() {
+        return new MethodWrapper<Object, Object>() {
             
             @Override
             public void accept(Object arg0) {
@@ -61,6 +80,11 @@ public class FConsumer extends Functions {
                 c.accept(arg0);
                 tasks.poll();
             }
+
+            @Override
+            public void accept(Object arg0, Object arg1) {
+                this.accept(arg0);
+            }
         };
     }
     
@@ -68,13 +92,13 @@ public class FConsumer extends Functions {
      * Wraps a BiConsumer to match the guest language requirements.
      * 
      * @since 1.2.5
-     * 
+     * @deprecated
      * @param c
-     * @return a new {@link xyz.wagyourtail.jsmacros.api.MethodWrappers.BiConsumer ConsumerWrappers.BiConsumer}
+     * @return a new {@link xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.BiConsumer ConsumerWrappers.BiConsumer}
      */
-    public MethodWrappers.BiConsumer<Object, Object> toBiConsumer(BiConsumer<Object, Object> c) {
+    public MethodWrapper<Object, Object> toBiConsumer(BiConsumer<Object, Object> c) {
         Thread th = Thread.currentThread();
-        return new MethodWrappers.BiConsumer<Object, Object>() {
+        return new MethodWrapper<Object, Object>() {
             
             @Override
             public void accept(Object arg0, Object arg1) {
@@ -95,6 +119,11 @@ public class FConsumer extends Functions {
                 c.accept(arg0, arg1);
                 tasks.poll();
             }
+
+            @Override
+            public void accept(Object arg0) {
+                accept(arg0, null);
+            }
         };
     }
     
@@ -102,13 +131,13 @@ public class FConsumer extends Functions {
      * Wraps a Consumer to match the guest language requirements, without halting the thread the consumer's called in.
      * 
      * @since 1.2.5
-     * 
+     * @deprecated
      * @param c
-     * @return a new {@link xyz.wagyourtail.jsmacros.api.MethodWrappers.Consumer ConsumerWrappers.Consumer}
+     * @return a new {@link xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.Consumer ConsumerWrappers.Consumer}
      */
-    public MethodWrappers.Consumer<Object> toAsyncConsumer(Consumer<Object> c) {
+    public MethodWrapper<Object, Object> toAsyncConsumer(Consumer<Object> c) {
         Thread th = Thread.currentThread();
-        return new MethodWrappers.Consumer<Object>() {
+        return new MethodWrapper<Object, Object>() {
             
             @Override
             public void accept(Object arg0) {
@@ -131,6 +160,11 @@ public class FConsumer extends Functions {
                 });
                 t.start();
             }
+
+            @Override
+            public void accept(Object arg0, Object arg1) {
+                this.accept(arg0);
+            }
         };  
     }
     
@@ -138,13 +172,13 @@ public class FConsumer extends Functions {
      * Wraps a BiConsumer to match the guest language requirements, without halting the thread the consumer's called in.
      * 
      * @since 1.2.5
-     * 
+     * @deprecated
      * @param c
-     * @return a new {@link xyz.wagyourtail.jsmacros.api.MethodWrappers.BiConsumer ConsumerWrappers.BiConsumer}
+     * @return a new {@link xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.BiConsumer ConsumerWrappers.BiConsumer}
      */
-    public MethodWrappers.BiConsumer<Object, Object> toAsyncBiConsumer(BiConsumer<Object, Object> c) {
+    public MethodWrapper<Object, Object> toAsyncBiConsumer(BiConsumer<Object, Object> c) {
         Thread th = Thread.currentThread();
-        return new MethodWrappers.BiConsumer<Object, Object>() {
+        return new MethodWrapper<Object, Object>() {
 
             @Override
             public void accept(Object arg0, Object arg1) {
@@ -167,38 +201,11 @@ public class FConsumer extends Functions {
                 });
                 t.start();
             }
+
+            @Override
+            public void accept(Object t) {
+                this.accept(t, null);
+            }
         };
-    }
-    
-    /**
-     * @since 1.2.7
-     * @param c
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public Object autoWrap(Object c) {
-        if (c instanceof BiConsumer) {
-            return toBiConsumer((BiConsumer<Object, Object>) c);
-        } else if (c instanceof Consumer) {
-            return toConsumer((Consumer<Object>) c);
-        } else {
-            return null;
-        }
-    }
-    
-    /**
-     * @since 1.2.7
-     * @param c
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public Object autoWrapAsync(Object c) {
-        if (c instanceof BiConsumer) {
-            return toAsyncBiConsumer((BiConsumer<Object, Object>) c);
-        } else if (c instanceof Consumer) {
-            return toAsyncConsumer((Consumer<Object>) c);
-        } else {
-            return null;
-        }
     }
 }

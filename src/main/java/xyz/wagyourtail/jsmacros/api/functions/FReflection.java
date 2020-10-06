@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.api.functions;
 
 import org.apache.commons.lang3.StringUtils;
 import xyz.wagyourtail.jsmacros.jsMacros;
-import xyz.wagyourtail.jsmacros.api.Functions;
+import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 
 import java.io.File;
 import java.io.FileNotFoundException;

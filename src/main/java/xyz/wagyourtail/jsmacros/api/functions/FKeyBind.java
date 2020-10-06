@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.InputUtil.Key;
-import xyz.wagyourtail.jsmacros.api.Functions;
+import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 
 /**
  * 

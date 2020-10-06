@@ -38,13 +38,13 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.access.IBossBarHud;
-import xyz.wagyourtail.jsmacros.api.Functions;
 import xyz.wagyourtail.jsmacros.api.helpers.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.BossBarHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.EntityHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.PlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.PlayerListEntryHelper;
+import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 
 /**
  * 

@@ -3,13 +3,13 @@ package xyz.wagyourtail.jsmacros.api.sharedinterfaces;
 import java.util.List;
 
 import net.minecraft.client.util.math.MatrixStack;
-import xyz.wagyourtail.jsmacros.api.MethodWrappers;
 import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Image;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Item;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Rect;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Text;
+import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
 
 /**
  * @author Wagyourtail
@@ -268,14 +268,14 @@ public interface IDraw2D<T> {
      * @param onInit
      * @return
      */
-    public T setOnInit(MethodWrappers.Consumer<T> onInit);
+    public T setOnInit(MethodWrapper<T, Object> onInit);
     
     /**
      * @since 1.2.7
      * @param catchInit
      * @return
      */
-    public T setOnFailInit(MethodWrappers.Consumer<String> catchInit);
+    public T setOnFailInit(MethodWrapper<String, Object> catchInit);
 
     
     public void init();

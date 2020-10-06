@@ -11,11 +11,6 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.ImmutableList;
 
-import xyz.wagyourtail.jsmacros.jsMacros;
-import xyz.wagyourtail.jsmacros.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.gui.elements.OverlayContainer;
-import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
-import xyz.wagyourtail.jsmacros.runscript.RunScript;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
@@ -24,6 +19,12 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
+import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.extensionbase.ILanguage;
+import xyz.wagyourtail.jsmacros.gui.elements.Button;
+import xyz.wagyourtail.jsmacros.gui.elements.OverlayContainer;
+import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
+import xyz.wagyourtail.jsmacros.runscript.RunScript;
 
 public class FileChooser extends OverlayContainer {
     private File directory;
@@ -125,7 +126,7 @@ public class FileChooser extends OverlayContainer {
             this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.filename"), "", addButton, removeButton, this::closeOverlay, setFocused, (str) -> {
                 if (str.trim().equals("")) return;
                 boolean edit = true;
-                for (RunScript.Language language : RunScript.languages) {
+                for (ILanguage language : RunScript.languages) {
                     if (str.endsWith(language.extension())) {
                         edit = false;
                         break;

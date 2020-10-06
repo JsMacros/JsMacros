@@ -6,12 +6,12 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
-import xyz.wagyourtail.jsmacros.api.Functions;
 import xyz.wagyourtail.jsmacros.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.api.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.api.classes.Screen;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 
 /**

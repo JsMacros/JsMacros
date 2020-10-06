@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.api;
+package xyz.wagyourtail.jsmacros.extensionbase;
 
 import java.util.ArrayList;
 import java.util.List;

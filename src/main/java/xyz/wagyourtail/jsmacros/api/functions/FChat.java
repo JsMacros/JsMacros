@@ -8,8 +8,8 @@ import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.access.IChatHud;
-import xyz.wagyourtail.jsmacros.api.Functions;
 import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 
 /**
  * Functions for interacting with chat.

@@ -1,7 +1,5 @@
 package xyz.wagyourtail.jsmacros.runscript;
 
-import java.io.File;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,20 +9,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 
-import org.graalvm.polyglot.Context;
-import org.graalvm.polyglot.Context.Builder;
-import org.graalvm.polyglot.HostAccess;
-import org.graalvm.polyglot.Value;
-
 import com.google.common.collect.ImmutableList;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.LiteralText;
-import xyz.wagyourtail.jsmacros.jsMacros;
-import xyz.wagyourtail.jsmacros.access.IChatHud;
-import xyz.wagyourtail.jsmacros.api.Functions;
 import xyz.wagyourtail.jsmacros.api.functions.FChat;
-import xyz.wagyourtail.jsmacros.api.functions.FConsumer;
 import xyz.wagyourtail.jsmacros.api.functions.FFS;
 import xyz.wagyourtail.jsmacros.api.functions.FGlobalVars;
 import xyz.wagyourtail.jsmacros.api.functions.FHud;
@@ -39,11 +26,13 @@ import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScriptThreadWrapper;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.extensionbase.Functions;
+import xyz.wagyourtail.jsmacros.extensionbase.ILanguage;
 
 public class RunScript {
     public static Map<IRawMacro, List<IScriptThreadWrapper>> threads = new HashMap<>();
-    public static List<Language> languages = new ArrayList<>();
-    public static Language defaultLang;
+    public static List<ILanguage> languages = new ArrayList<>();
+    public static ILanguage defaultLang = new JavascriptLanguageDefinition();
     public static List<Functions> standardLib = new ArrayList<>();
     
     static {
@@ -59,62 +48,10 @@ public class RunScript {
         standardLib.add(new FFS("fs"));
         standardLib.add(new FReflection("reflection"));
 
-
-        // -------------------- JAVASCRIPT -------------------------- //
-        Language js = new Language() {
-            
-            @Override
-            public void exec(RawMacro macro, File file, IEvent event) throws Exception {
-                Map<String, Object> globals = new HashMap<>();          
-                
-                globals.put("event", event);
-                globals.put("file", file);
-
-                exec("load(\"./" + file.getName() + "\")", globals, file.getParentFile().toPath());
-                            
-            }
-
-            @Override
-            public void exec(String script, Map<String, Object> globals, Path currentDir) throws Exception {
-             // Build Context
-
-                Builder build = Context.newBuilder("js");
-                build.allowHostAccess(HostAccess.ALL);
-                build.allowHostClassLookup(s -> true);
-                build.allowAllAccess(true);
-                build.allowExperimentalOptions(true);
-                if (currentDir != null) build.currentWorkingDirectory(currentDir);
-                Context con = build.build();
-
-                // Set Bindings
-                Value binds = con.getBindings("js");
-
-                if (globals != null) for (Map.Entry<String, Object> e : globals.entrySet()) {
-                    binds.putMember(e.getKey(), e.getValue());
-                }
-                
-                for (Functions f : standardLib) {
-                    if (!f.excludeLanguages.contains(".js")) {
-                        binds.putMember(f.libName, f);
-                    }
-                }
-                binds.putMember("consumer", new FConsumer("consumer"));
-
-                // Run Script
-
-                con.eval("js", script);
-            }
-            
-            @Override
-            public String extension() {
-                return ".js";
-            }
-        };
-        addLanguage(js);
-        defaultLang = js;
+        addLanguage(defaultLang);
     }
 
-    public static void addLanguage(Language l) {
+    public static void addLanguage(ILanguage l) {
         languages.add(l);
     }
     
@@ -146,7 +83,7 @@ public class RunScript {
 
     public static Thread exec(RawMacro macro, IEvent event, Runnable then,
         Consumer<String> catcher) {
-        for (Language language : languages) {
+        for (ILanguage language : languages) {
             if (macro.scriptFile.endsWith(language.extension()))
                 return language.trigger(macro, event, then, catcher);
         }
@@ -183,55 +120,11 @@ public class RunScript {
             return startTime;
         }
     }
-
-    public static interface Language {
-        
-        public default Thread trigger(RawMacro macro, IEvent event, Runnable then,
-            Consumer<String> catcher) {
-            
-            final RawMacro staticMacro = (RawMacro) macro.copy();
-            final Thread t = new Thread(() -> {
-                ScriptThreadWrapper th = new ScriptThreadWrapper(Thread.currentThread(), staticMacro, System.currentTimeMillis());
-                try {
-                    RunScript.threads.putIfAbsent(staticMacro, new ArrayList<>());
-                    Thread.currentThread().setName(staticMacro.type.toString() + " " + staticMacro.eventkey + " " + staticMacro.scriptFile
-                        + ": " + RunScript.threads.get(staticMacro).size());
-                    RunScript.threads.get(staticMacro).add(th);
-                    File file = new File(jsMacros.config.macroFolder, staticMacro.scriptFile);
-                    if (file.exists()) {
-                        
-                        exec(staticMacro, file, event);
-                        
-                        if (then != null) then.run();
-                    }
-                } catch (Exception e) {
-                    MinecraftClient mc = MinecraftClient.getInstance();
-                    if (mc.inGameHud != null) {
-                        LiteralText text = new LiteralText(e.toString());
-                        ((IChatHud)mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
-                    }
-                    if (catcher != null) catcher.accept(e.toString());
-                    e.printStackTrace();
-                } finally {
-                    RunScript.removeThread(th);
-                }
-            });
-            
-            t.start();
-            return t;
-        }
-        
-        public void exec(RawMacro macro, File file, IEvent event) throws Exception;
-        
-        public void exec(String script, Map<String, Object> globals, Path currentDir) throws Exception;
-        
-        public String extension();
-    }
     
-    public static class sortLanguage implements Comparator<Language> {
+    public static class sortLanguage implements Comparator<ILanguage> {
 
         @Override
-        public int compare(Language a, Language b) {
+        public int compare(ILanguage a, ILanguage b) {
             String[] as = a.extension().replaceAll("\\.", " ").trim().split(" ");
             String[] bs = b.extension().replaceAll("\\.", " ").trim().split(" ");
             int lendif = bs.length-as.length;

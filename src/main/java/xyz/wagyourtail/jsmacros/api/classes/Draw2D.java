@@ -9,12 +9,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
-import xyz.wagyourtail.jsmacros.api.MethodWrappers;
 import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Text;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IDraw2D;
+import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
 
 /**
  * @author Wagyourtail
@@ -32,12 +32,12 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @since 1.0.5
      * @deprecated please use {@link Draw2D#setOnInit(Consumer)}
      */
-    public MethodWrappers.Consumer<Draw2D> onInit;
+    public MethodWrapper<Draw2D, Object> onInit;
     /**
      * @since 1.1.9 [citation needed]
      * @deprecated please use {@link Draw2D#setOnFailInit(Consumer)}
      */
-    public MethodWrappers.Consumer<String> catchInit;
+    public MethodWrapper<String, Object> catchInit;
     
     public MinecraftClient mc;
     
@@ -330,10 +330,10 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
 
     /**
      * @since 1.2.7
-     * @see IDraw2D#setOnInit(xyz.wagyourtail.jsmacros.api.MethodWrappers.Consumer)
+     * @see IDraw2D#setOnInit(xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.Consumer)
      */
     @Override
-    public Draw2D setOnInit(MethodWrappers.Consumer<Draw2D> onInit) {
+    public Draw2D setOnInit(MethodWrapper<Draw2D, Object> onInit) {
         this.onInit = onInit;
         return this;
     }
@@ -341,10 +341,10 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     
     /**
      * @since 1.2.7
-     * @see IDraw2D#setOnFailInit(xyz.wagyourtail.jsmacros.api.MethodWrappers.Consumer)
+     * @see IDraw2D#setOnFailInit(xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.Consumer)
      */
     @Override
-    public Draw2D setOnFailInit(MethodWrappers.Consumer<String> catchInit) {
+    public Draw2D setOnFailInit(MethodWrapper<String, Object> catchInit) {
         this.catchInit = catchInit;
         return this;
     }

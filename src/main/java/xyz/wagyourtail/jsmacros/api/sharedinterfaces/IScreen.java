@@ -2,13 +2,13 @@ package xyz.wagyourtail.jsmacros.api.sharedinterfaces;
 
 import java.util.List;
 
-import xyz.wagyourtail.jsmacros.api.MethodWrappers;
 import xyz.wagyourtail.jsmacros.api.helpers.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.TextFieldWidgetHelper;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Item;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Rect;
+import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
 
 /**
  * @author Wagyourtail
@@ -53,7 +53,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param callback
      * @return
      */
-    public ButtonWidgetHelper addButton(int x, int y, int width, int height, String text, MethodWrappers.BiConsumer<ButtonWidgetHelper, IScreen> callback);
+    public ButtonWidgetHelper addButton(int x, int y, int width, int height, String text, MethodWrapper<ButtonWidgetHelper, IScreen> callback);
     
     /**
      * @since 1.0.5
@@ -72,7 +72,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param onChange
      * @return
      */
-    public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, String message, MethodWrappers.BiConsumer<String, IScreen> onChange);
+    public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, String message, MethodWrapper<String, IScreen> onChange);
     
     /**
      * @since 1.0.5
@@ -86,42 +86,42 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param onMouseDown
      * @return
      */
-    public IScreen setOnMouseDown(MethodWrappers.BiConsumer<PositionCommon.Pos2D, Integer> onMouseDown);
+    public IScreen setOnMouseDown(MethodWrapper<PositionCommon.Pos2D, Integer> onMouseDown);
     
     /**
      * @since 1.2.7
      * @param onMouseDrag
      * @return
      */
-    public IScreen setOnMouseDrag(MethodWrappers.BiConsumer<PositionCommon.Vec2D, Integer> onMouseDrag);
+    public IScreen setOnMouseDrag(MethodWrapper<PositionCommon.Vec2D, Integer> onMouseDrag);
     
     /**
      * @since 1.2.7
      * @param onMouseUp
      * @return
      */
-    public IScreen setOnMouseUp(MethodWrappers.BiConsumer<PositionCommon.Pos2D, Integer> onMouseUp);
+    public IScreen setOnMouseUp(MethodWrapper<PositionCommon.Pos2D, Integer> onMouseUp);
     
     /**
      * @since 1.2.7
      * @param onScroll
      * @return
      */
-    public IScreen setOnScroll(MethodWrappers.BiConsumer<PositionCommon.Pos2D, Double> onScroll);
+    public IScreen setOnScroll(MethodWrapper<PositionCommon.Pos2D, Double> onScroll);
     
     /**
      * @since 1.2.7
      * @param onKeyPressed
      * @return
      */
-    public IScreen setOnKeyPressed(MethodWrappers.BiConsumer<Integer, Integer> onKeyPressed);
+    public IScreen setOnKeyPressed(MethodWrapper<Integer, Integer> onKeyPressed);
     
     /**
      * @since 1.2.7
      * @param onClose
      * @return
      */
-    public IScreen setOnClose(MethodWrappers.Consumer<IScreen> onClose);
+    public IScreen setOnClose(MethodWrapper<IScreen, Object> onClose);
     
     /**
      * @since 1.1.9

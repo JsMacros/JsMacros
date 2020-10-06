@@ -12,7 +12,7 @@ import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
-import xyz.wagyourtail.jsmacros.api.MethodWrappers;
+import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
 
 /**
  * @author Wagyourtail, R3alCl0ud
@@ -21,11 +21,11 @@ import xyz.wagyourtail.jsmacros.api.MethodWrappers;
 public class Websocket {
 
     private WebSocket ws;
-    public MethodWrappers.BiConsumer<WebSocket, Map<String, List<String>>> onConnect;
-    public MethodWrappers.BiConsumer<WebSocket, String> onTextMessage;
-    public MethodWrappers.BiConsumer<WebSocket, Disconnected> onDisconnect;
-    public MethodWrappers.BiConsumer<WebSocket, WebSocketException> onError;
-    public MethodWrappers.BiConsumer<WebSocket, WebSocketFrame> onFrame;
+    public MethodWrapper<WebSocket, Map<String, List<String>>> onConnect;
+    public MethodWrapper<WebSocket, String> onTextMessage;
+    public MethodWrapper<WebSocket, Disconnected> onDisconnect;
+    public MethodWrapper<WebSocket, WebSocketException> onError;
+    public MethodWrapper<WebSocket, WebSocketFrame> onFrame;
 
     public Websocket(String address) throws IOException {
         ws = new WebSocketFactory().createSocket(address).addListener(new WebSocketAdapter() {

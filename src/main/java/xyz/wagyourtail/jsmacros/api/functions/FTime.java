@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.api.functions;
 
 import java.util.List;
 
-import xyz.wagyourtail.jsmacros.api.Functions;
+import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 
 /**
  * 

@@ -7,8 +7,8 @@ import java.util.List;
 import com.google.common.io.Files;
 
 import xyz.wagyourtail.jsmacros.jsMacros;
-import xyz.wagyourtail.jsmacros.api.Functions;
 import xyz.wagyourtail.jsmacros.api.classes.FileHandler;
+import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 
 /**
  * Better File-System functions.
