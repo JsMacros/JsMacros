@@ -19,7 +19,7 @@ import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
  * @author Wagyourtail
  *
  */
-public class FConsumer extends Functions implements IFConsumer<BiConsumer<Object, Object>> {
+public class FConsumer extends Functions implements IFConsumer<BiConsumer<Object, Object>, Consumer<Object>> {
     private LinkedBlockingQueue<Thread> tasks = new LinkedBlockingQueue<>();
 
     public FConsumer(String libName) {
