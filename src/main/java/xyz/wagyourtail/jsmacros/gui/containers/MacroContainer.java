@@ -199,7 +199,7 @@ public class MacroContainer extends MultiElementContainer {
                 fill(matricies, mouseX-2, top - 1, mouseX+width+2, mouseY, 0xFF000000);
                 for (int i = 0; i < lines.size(); ++i) {
                     int wi = textRenderer.getWidth(lines.get(i)) / 2;
-                    textRenderer.draw(matricies, lines.get(i), mouseX + width/2 - wi / 2, top+textRenderer.fontHeight*i, 0xFFFFFF);
+                    textRenderer.draw(matricies, lines.get(i), mouseX + width/2 - wi, top+textRenderer.fontHeight*i, 0xFFFFFF);
                 }
             }
         }

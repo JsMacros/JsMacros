@@ -90,6 +90,11 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
             public boolean test(Object t, Object u) {
                 return (boolean) apply(t, u);
             }
+
+            @Override
+            public Object get() {
+                return apply(null, null);
+            }
         };
     }
     
@@ -169,6 +174,11 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
             @Override
             public void run() {
                 accept(null, null);
+            }
+
+            @Override
+            public Object get() {
+                return apply(null, null);
             }
         };
     }
