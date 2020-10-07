@@ -156,7 +156,7 @@ public class FJsMacros extends Functions {
      * 
      * @param language
      * @param script
-     * @param callback
+     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}<{@link String}>
      * @return the {@link java.lang.Thread} the script is running on.
      */
     public Thread runScript(String language, String script, MethodWrapper<String, Object, Object> callback) {
@@ -197,7 +197,7 @@ public class FJsMacros extends Functions {
      * 
      * @since 1.2.7
      * @param event
-     * @param callback
+     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}<{@link IEvent}>
      * @return
      */
     public IEventListener on(String event, MethodWrapper<IEvent, Object, Object> callback) {
@@ -237,7 +237,7 @@ public class FJsMacros extends Functions {
      * @since 1.2.7
      * 
      * @param event
-     * @param callback
+     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}<{@link IEvent}>
      * @return the listener.
      */
     public IEventListener once(String event, MethodWrapper<IEvent, Object, Object> callback) {
