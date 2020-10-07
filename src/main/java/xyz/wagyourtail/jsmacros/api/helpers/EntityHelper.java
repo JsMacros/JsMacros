@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.MathHelper;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.PositionCommon;
 
@@ -128,7 +129,16 @@ public class EntityHelper {
     }
     
     /**
+     * @since 1.2.8
+     * @return
+     */
+    public String getNBT() {
+        return e.toTag(new CompoundTag()).toString();
+    }
+    
+    /**
      * Sets whether the entity is glowing.
+     * @since 1.1.9
      * @param val
      * @return
      */
