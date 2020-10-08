@@ -24,10 +24,10 @@ import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
  * @see xyz.wagyourtail.jsmacros.api.sharedinterfaces.IDraw2D
  */
 public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
-    private List<RenderCommon.Text> textFields = new ArrayList<>();
-    private List<RenderCommon.Rect> rectFields = new ArrayList<>();
-    private List<RenderCommon.Item> itemFields = new ArrayList<>();
-    private List<RenderCommon.Image> imageFields = new ArrayList<>();
+    private final List<RenderCommon.Text> textFields = new ArrayList<>();
+    private final List<RenderCommon.Rect> rectFields = new ArrayList<>();
+    private final List<RenderCommon.Item> itemFields = new ArrayList<>();
+    private final List<RenderCommon.Image> imageFields = new ArrayList<>();
     /**
      * @since 1.0.5
      * @deprecated please use {@link Draw2D#setOnInit(Consumer)}
@@ -117,7 +117,9 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     @Override
     public RenderCommon.Text addText(String text, int x, int y, int color, boolean shadow, double scale, float rotation) {
         RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, shadow, scale, rotation);
-        textFields.add(t);
+        synchronized (textFields) {
+            textFields.add(t);
+        }
         return t;
         
     }
@@ -131,7 +133,9 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     @Override
     public Text addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, float rotation) {
         RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, shadow, scale, rotation);
-        textFields.add(t);
+        synchronized (textFields) {
+            textFields.add(t);
+        }
         return t;
     }
 
@@ -141,7 +145,9 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public Draw2D removeText(RenderCommon.Text t) {
-        textFields.remove(t);
+        synchronized (textFields) {
+            textFields.remove(t);
+        }
         return this;
     }
 
@@ -161,7 +167,9 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     @Override
     public RenderCommon.Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
         RenderCommon.Image i = new RenderCommon.Image(x, y, width, height, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
-        imageFields.add(i);
+        synchronized (imageFields) {
+            imageFields.add(i);
+        }
         return i;
     }
 
@@ -171,7 +179,9 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public Draw2D removeImage(RenderCommon.Image i) {
-        imageFields.remove(i);
+        synchronized (imageFields) {
+            imageFields.remove(i);
+        }
         return this;
     }
 
@@ -182,7 +192,9 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     @Override
     public RenderCommon.Rect addRect(int x1, int y1, int x2, int y2, int color) {
         RenderCommon.Rect r = new RenderCommon.Rect(x1, y1, x2, y2, color, 0F);
-        rectFields.add(r);
+        synchronized (rectFields) {
+            rectFields.add(r);
+        }
         return r;
     }
 
@@ -202,7 +214,9 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     @Override
     public RenderCommon.Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation) {
         RenderCommon.Rect r = new RenderCommon.Rect(x1, y1, x2, y2, color, alpha, rotation);
-        rectFields.add(r);
+        synchronized (rectFields) {
+            rectFields.add(r);
+        }
         return r;
     }
 
@@ -212,7 +226,9 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public Draw2D removeRect(RenderCommon.Rect r) {
-        rectFields.remove(r);
+        synchronized (rectFields) {
+            rectFields.remove(r);
+        }
         return this;
     }
 
@@ -241,7 +257,9 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     @Override
     public RenderCommon.Item addItem(int x, int y, String id, boolean overlay, double scale, float rotation) {
         RenderCommon.Item i = new RenderCommon.Item(x, y, id, overlay, scale, rotation);
-        itemFields.add(i);
+        synchronized (itemFields) {
+            itemFields.add(i);
+        }
         return i;
     }
 
@@ -269,7 +287,9 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     @Override
     public RenderCommon.Item addItem(int x, int y, ItemStackHelper Item, boolean overlay, double scale, float rotation) {
         RenderCommon.Item i = new RenderCommon.Item(x, y, Item, overlay, scale, rotation);
-        itemFields.add(i);
+        synchronized (itemFields) {
+            itemFields.add(i);
+        }
         return i;
     }
 
@@ -279,15 +299,23 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public Draw2D removeItem(RenderCommon.Item i) {
-        itemFields.remove(i);
+        synchronized (itemFields) {
+            itemFields.remove(i);
+        }
         return this;
     }
 
     @Override
     public void init() {
-        textFields.clear();
-        rectFields.clear();
-        itemFields.clear();
+        synchronized (textFields) {
+            textFields.clear();
+        }
+        synchronized (rectFields) {
+            rectFields.clear();
+        }
+        synchronized (itemFields) {
+            itemFields.clear();
+        }
         if (onInit != null) {
             try {
                 onInit.accept(this);
@@ -307,23 +335,31 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
         if (matrixStack == null) return;
         
         RenderSystem.pushMatrix();
-        for (RenderCommon.Rect r : ImmutableList.copyOf(this.rectFields)) {
-            r.render(matrixStack);
+        synchronized (rectFields) {
+            for (RenderCommon.Rect r : rectFields) {
+                r.render(matrixStack);
+            }
         }
         RenderSystem.popMatrix();
         RenderSystem.pushMatrix();
-        for (RenderCommon.Item i : ImmutableList.copyOf(this.itemFields)) {
-            i.render(matrixStack);
+        synchronized (itemFields) {
+            for (RenderCommon.Item i : itemFields) {
+                i.render(matrixStack);
+            }
         }
         RenderSystem.popMatrix();
         RenderSystem.pushMatrix();
-        for (RenderCommon.Image i : ImmutableList.copyOf(this.imageFields)) {
-            i.render(matrixStack);
+        synchronized (imageFields) {
+            for (RenderCommon.Image i : imageFields) {
+                i.render(matrixStack);
+            }
         }
         RenderSystem.popMatrix();
         RenderSystem.pushMatrix();
-        for (RenderCommon.Text t : ImmutableList.copyOf(this.textFields)) {
-            t.render(matrixStack);
+        synchronized (textFields) {
+            for (RenderCommon.Text t : textFields) {
+                t.render(matrixStack);
+            }
         }
         RenderSystem.popMatrix();
     }

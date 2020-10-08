@@ -341,20 +341,20 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info) {
         if (matrices == null) return;
         
-        for (RenderCommon.Rect r : ImmutableList.copyOf(this.rectFields)) {
+        for (RenderCommon.Rect r : ImmutableList.copyOf(rectFields)) {
             r.render(matrices);
         }
-        for (RenderCommon.Item i : ImmutableList.copyOf(this.itemFields)) {
+        for (RenderCommon.Item i : ImmutableList.copyOf(itemFields)) {
             i.render(matrices);
         }
-        for (RenderCommon.Image i : ImmutableList.copyOf(this.imageFields)) {
+        for (RenderCommon.Image i : ImmutableList.copyOf(imageFields)) {
             i.render(matrices);
         }
-        for (RenderCommon.Text t : ImmutableList.copyOf(this.textFields)) {
+        for (RenderCommon.Text t : ImmutableList.copyOf(textFields)) {
             t.render(matrices);
         }
 
-        for (TextFieldWidget w : ImmutableList.copyOf(this.textFieldWidgets)) {
+        for (TextFieldWidget w : ImmutableList.copyOf(textFieldWidgets)) {
             w.render(matrices, mouseX, mouseY, delta);
         }
     }

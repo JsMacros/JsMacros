@@ -147,6 +147,15 @@ public class EntityHelper {
         return this;
     }
     
+    /**
+     * Checks if the entity is still alive.
+     * @since 1.2.8
+     * @return
+     */
+    public boolean isAlive() {
+        return e.isAlive();
+    }
+    
     public Entity getRaw() {
         return e;
     }

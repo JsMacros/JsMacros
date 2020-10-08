@@ -25,8 +25,8 @@ import xyz.wagyourtail.jsmacros.api.sharedclasses.PositionCommon;
  *
  */
 public class Draw3D {
-    private List<Box> boxes = new ArrayList<>();
-    private List<Line> lines = new ArrayList<>();
+    private final List<Box> boxes = new ArrayList<>();
+    private final List<Line> lines = new ArrayList<>();
     
     /**
      * @since 1.0.6
@@ -62,7 +62,9 @@ public class Draw3D {
      */
     public Box addBox(double x1, double y1, double z1, double x2, double y2, double z2, int color, int fillColor, boolean fill) {
         Box b = new Box(x1, y1, z1, x2, y2, z2, color, fillColor, fill);
-        boxes.add(b);
+        synchronized (boxes) {
+            boxes.add(b);
+        }
         return b;
     }
     
@@ -84,7 +86,9 @@ public class Draw3D {
      */
     public Box addBox(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, int fillColor, int fillAlpha, boolean fill) {
         Box b = new Box(x1, y1, z1, x2, y2, z2, color, alpha, fillColor, fillAlpha, fill);
-        boxes.add(b);
+        synchronized (boxes) {
+            boxes.add(b);
+        }
         return b;
     }
     
@@ -95,7 +99,9 @@ public class Draw3D {
      * @return
      */
     public Draw3D removeBox(Box b) {
-        boxes.remove(b);
+        synchronized (boxes) {
+            boxes.remove(b);
+        }
         return this;
     }
     
@@ -114,7 +120,9 @@ public class Draw3D {
      */
     public Line addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color) {
         Line l = new Line(x1, y1, z1, x2, y2, z2, color);
-        lines.add(l);
+        synchronized (lines) {
+            lines.add(l);
+        }
         return l;
     }
     
@@ -133,7 +141,9 @@ public class Draw3D {
      */
     public Line addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha) {
         Line l = new Line(x1, y1, z1, x2, y2, z2, color, alpha);
-        lines.add(l);
+        synchronized (lines) {
+            lines.add(l);
+        }
         return l;
     }
     
@@ -144,7 +154,9 @@ public class Draw3D {
      * @return
      */
     public Draw3D removeLine(Line l) {
-        lines.remove(l);
+        synchronized (lines) {
+            lines.remove(l);
+        }
         return this;
     }
     
@@ -170,12 +182,16 @@ public class Draw3D {
         RenderSystem.translated(-camPos.x, -camPos.y, -camPos.z);
         
         //render
-        for (Box b : ImmutableList.copyOf(this.boxes)) {
-            b.render();
+        synchronized (boxes) {
+            for (Box b : boxes) {
+                b.render();
+            }
         }
         
-        for (Line l : ImmutableList.copyOf(this.lines)) {
-            l.render();
+        synchronized (lines) {
+            for (Line l : lines) {
+                l.render();
+            }
         }
         
         RenderSystem.popMatrix();

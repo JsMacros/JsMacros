@@ -1,10 +1,12 @@
 package xyz.wagyourtail.jsmacros.api.functions;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.api.classes.Draw3D;
@@ -12,7 +14,6 @@ import xyz.wagyourtail.jsmacros.api.classes.Screen;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.extensionbase.Functions;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
 
 /**
  * 
@@ -29,11 +30,11 @@ public class FHud extends Functions {
     /**
      * Don't touch this here
      */
-    public static final List<IDraw2D<Draw2D>> overlays = new ArrayList<>();
+    public static final Set<IDraw2D<Draw2D>> overlays = new HashSet<>();
     /**
      * Don't touch this here
      */
-    public static final List<Draw3D> renders = new ArrayList<>();
+    public static final Set<Draw3D> renders = new HashSet<>();
     
     public FHud(String libName) {
         super(libName);
@@ -128,7 +129,9 @@ public class FHud extends Functions {
      */
     public void registerDraw2D(IDraw2D<Draw2D> overlay) {
         overlay.init();
-        if (!overlays.contains(overlay)) overlays.add(overlay);
+        synchronized (overlays) {
+            overlays.add(overlay);
+        }
     }
     
     /**
@@ -141,7 +144,9 @@ public class FHud extends Functions {
      * @param overlay
      */
     public void unregisterDraw2D(Draw2D overlay) {
-        overlays.remove(overlay);
+        synchronized (overlays) {
+            overlays.remove(overlay);
+        }
     }
     
     /**
@@ -163,7 +168,9 @@ public class FHud extends Functions {
      * @see xyz.wagyourtail.jsmacros.api.sharedinterfaces.IDraw2D
      */
     public void clearDraw2Ds() {
-        overlays.clear();
+        synchronized (overlays) {
+            overlays.clear();
+        }
     }
     
     /**
@@ -187,7 +194,9 @@ public class FHud extends Functions {
      * @param overlay
      */
     public void registerDraw3D(Draw3D draw) {
-        if (!renders.contains(draw)) renders.add(draw);
+        synchronized (renders) {
+            renders.add(draw);
+        }
     }
     
     /**
@@ -200,7 +209,9 @@ public class FHud extends Functions {
      * @param overlay
      */
     public void unregisterDraw3D(Draw3D draw) {
-        renders.remove(draw);
+        synchronized (renders) {
+            renders.remove(draw);
+        }
     }
     
     /**
@@ -222,7 +233,9 @@ public class FHud extends Functions {
      * @see xyz.wagyourtail.jsmacros.api.classes.Draw3D
      */
     public void clearDraw3Ds() {
-        renders.clear();
+        synchronized (renders) {
+            renders.clear();
+        }
     }
     
     /**

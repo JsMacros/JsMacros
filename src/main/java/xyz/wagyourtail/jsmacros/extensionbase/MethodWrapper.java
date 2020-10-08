@@ -21,6 +21,7 @@ public abstract class MethodWrapper<T, U, R> implements Consumer<T>, BiConsumer<
     
     /**
      * Makes {@link Function} and {@link BiFunction} work together.
+     * Extended so it's called on every type not just those 2.
      */
     @Override
     public <V> MethodWrapper<T, U, V> andThen(Function<? super R,? extends V> after) {
@@ -30,11 +31,15 @@ public abstract class MethodWrapper<T, U, R> implements Consumer<T>, BiConsumer<
             @Override
             public void accept(T t) {
                 self.accept(t);
+                if (after instanceof MethodWrapper)
+                    ((MethodWrapper<?, ?, ?>)after).run();
             }
 
             @Override
             public void accept(T t, U u) {
                 self.accept(t, u);
+                if (after instanceof MethodWrapper)
+                    ((MethodWrapper<?, ?, ?>)after).run();
             }
 
             @Override
@@ -47,19 +52,31 @@ public abstract class MethodWrapper<T, U, R> implements Consumer<T>, BiConsumer<
                 return after.apply(self.apply(t, u));
             }
 
+            @SuppressWarnings("unchecked")
             @Override
             public boolean test(T t) {
-                return self.test(t);
+                boolean result = self.test(t);
+                if (after instanceof MethodWrapper) {
+                    return ((MethodWrapper<Boolean, ?, ?>) after).test(result);
+                }
+                return result;
             }
             
+            @SuppressWarnings("unchecked")
             @Override
             public boolean test(T arg0, U arg1) {
-                return self.test(arg0, arg1);
+                boolean result =  self.test(arg0, arg1);
+                if (after instanceof MethodWrapper) {
+                    return ((MethodWrapper<Boolean, ?, ?>) after).test(result);
+                }
+                return result;
             }
 
             @Override
             public void run() {
                 self.run();
+                if (after instanceof MethodWrapper)
+                    ((MethodWrapper<?, ?, ?>)after).run();
             }
 
             @Override

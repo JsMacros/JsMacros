@@ -39,8 +39,8 @@ public class EventMacrosScreen extends MacroScreen {
         
         List<RawMacro> macros = new ArrayList<>();
         
-        for (String event : Profile.registry.events) {
-            Set<IEventListener> eventListeners = Profile.registry.getListeners().get(event);
+        for (String event : ImmutableList.copyOf(Profile.registry.events)) {
+            Set<IEventListener> eventListeners = Profile.registry.getListeners(event);
             if (eventListeners != null) 
                 for (IEventListener macro : ImmutableList.copyOf(eventListeners)) {
                     if (macro instanceof BaseMacro && ((BaseMacro) macro).getRawMacro().type == MacroEnum.EVENT) macros.add(((BaseMacro) macro).getRawMacro());

@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.profile;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -19,15 +18,15 @@ import xyz.wagyourtail.jsmacros.macros.KeyMacro;
 import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 
 public class EventRegistry implements IEventRegistry {
-    public Map<String, Set<IEventListener>> macros;
-    public Map<String, String> oldEvents = new LinkedHashMap<>();
-    public Set<String> events = new LinkedHashSet<>();
+    public final Map<String, Set<IEventListener>> macros = new LinkedHashMap<>();
+    public final Map<String, String> oldEvents = new LinkedHashMap<>();
+    public final Set<String> events = new LinkedHashSet<>();
     
-    public void clearMacros() {
-        macros = new HashMap<>();
+    public synchronized void clearMacros() {
+        macros.clear();
     }
     
-    public void addRawMacro(RawMacro rawmacro) {
+    public synchronized void addRawMacro(RawMacro rawmacro) {
         switch (rawmacro.type) {
             case KEY_RISING:
             case KEY_FALLING:
@@ -46,17 +45,17 @@ public class EventRegistry implements IEventRegistry {
         }
     }
     
-    public void addListener(String event, IEventListener listener) {
+    public synchronized void addListener(String event, IEventListener listener) {
         macros.putIfAbsent(event, new LinkedHashSet<>());
         macros.get(event).add(listener);
     }
     
-    public boolean removeListener(String event, IEventListener listener) {
+    public synchronized boolean removeListener(String event, IEventListener listener) {
         macros.putIfAbsent(event, new LinkedHashSet<>());
         return macros.get(event).remove(listener);
     }
     
-    public boolean removeListener(IEventListener listener) {
+    public synchronized boolean removeListener(IEventListener listener) {
         for (Set<IEventListener> listeners : macros.values()) {
             if (listeners.contains(listener)) {
                 return listeners.remove(listener);
@@ -65,7 +64,7 @@ public class EventRegistry implements IEventRegistry {
         return false;
     }
     
-    public boolean removeRawMacro(RawMacro rawmacro) {
+    public synchronized boolean removeRawMacro(RawMacro rawmacro) {
         String event = rawmacro.type == MacroEnum.EVENT ? rawmacro.eventkey : EventKey.class.getSimpleName();
         for (IEventListener macro : macros.get(event)) {
             if (macro instanceof BaseMacro && ((BaseMacro) macro).getRawMacro() == rawmacro) {
@@ -76,15 +75,15 @@ public class EventRegistry implements IEventRegistry {
         return false;
     }
     
-    public Map<String, Set<IEventListener>> getListeners() {
+    public synchronized Map<String, Set<IEventListener>> getListeners() {
         return macros;
     }
     
-    public Set<IEventListener> getListeners(String key) {
+    public synchronized Set<IEventListener> getListeners(String key) {
         return macros.get(key);
     }
     
-    public List<RawMacro> getRawMacros() {
+    public synchronized List<RawMacro> getRawMacros() {
         List<RawMacro> rawProf = new ArrayList<>();
         for (Set<IEventListener> eventMacros : macros.values()) {
             for (IEventListener macro : eventMacros) {
@@ -94,20 +93,20 @@ public class EventRegistry implements IEventRegistry {
         return rawProf;
     }
     
-    public void addEvent(String eventName) {
+    public synchronized void addEvent(String eventName) {
         events.add(eventName);
     }
     
-    public void addEvent(Class<? extends IEvent> clazz) {
+    public synchronized void addEvent(Class<? extends IEvent> clazz) {
         events.add(clazz.getSimpleName());
     }
     
-    public void addEvent(String oldName, Class<? extends IEvent> clazz) {
+    public synchronized void addEvent(String oldName, Class<? extends IEvent> clazz) {
         oldEvents.put(oldName, clazz.getSimpleName());
         events.add(clazz.getSimpleName());
     }
     
-    public BaseMacro getMacro(RawMacro rawMacro) {
+    public synchronized BaseMacro getMacro(RawMacro rawMacro) {
         for (Set<IEventListener> eventMacros : macros.values()) {
             for (IEventListener macro : eventMacros) {
                 if (macro instanceof BaseMacro && rawMacro == ((BaseMacro) macro).getRawMacro()) return (BaseMacro) macro;
