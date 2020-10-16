@@ -134,6 +134,7 @@ public class FWorld extends Functions {
     }
     
     /**
+     * @since 1.1.2
      * @return the current dimension.
      */
     public String getDimension() {
@@ -141,6 +142,7 @@ public class FWorld extends Functions {
     }
     
     /**
+     * @since 1.1.5
      * @return the current biome.
      */
     public String getBiome() {
@@ -148,6 +150,7 @@ public class FWorld extends Functions {
     }
     
     /**
+     * @since 1.1.5
      * @return the current world time.
      */
     public long getTime() {
@@ -156,6 +159,7 @@ public class FWorld extends Functions {
     
     /**
      * This is supposed to be time of day, but it appears to be the same as {@link FWorld#getTime()} to me...
+     * @since 1.1.5
      * 
      * @return the current world time of day.
      */
@@ -164,6 +168,7 @@ public class FWorld extends Functions {
     }
     
     /**
+     * @since 1.2.6
      * @return respawn position.
      */
     public BlockPosHelper getRespawnPos() {
@@ -172,6 +177,7 @@ public class FWorld extends Functions {
     }
     
     /**
+     * @since 1.2.6
      * @return world difficulty as an {@link java.lang.Integer Integer}.
      */
     public int getDifficulty() {
@@ -179,6 +185,7 @@ public class FWorld extends Functions {
     }
     
     /**
+     * @since 1.2.6
      * @return moon phase as an {@link java.lang.Integer Integer}.
      */    
     public int getMoonPhase() {
@@ -186,6 +193,7 @@ public class FWorld extends Functions {
     }
     
     /**
+     * @since 1.1.2
      * @param x
      * @param y
      * @param z
@@ -196,6 +204,7 @@ public class FWorld extends Functions {
     }
     
     /**
+     * @since 1.1.2
      * @param x
      * @param y
      * @param z
@@ -207,6 +216,7 @@ public class FWorld extends Functions {
     
     /**
      * plays a sound file using javax's sound stuff.
+     * @since 1.1.7
      * 
      * @param file
      * @param volume
@@ -236,8 +246,8 @@ public class FWorld extends Functions {
     }
     
     /**
+     * @since 1.1.7
      * @see FWorld#playSound(String, float, float, double, double, double)
-     * 
      * @param id
      */
     public void playSound(String id) {
@@ -245,8 +255,8 @@ public class FWorld extends Functions {
     }
     
     /**
+     * @since 1.1.7
      * @see FWorld#playSound(String, float, float, double, double, double)
-     * 
      * @param id
      * @param volume
      */
@@ -255,8 +265,8 @@ public class FWorld extends Functions {
     }
     
     /**
+     * @since 1.1.7
      * @see FWorld#playSound(String, float, float, double, double, double)
-     * 
      * @param id
      * @param volume
      * @param pitch
@@ -267,7 +277,7 @@ public class FWorld extends Functions {
     
     /**
      * plays a minecraft sound using the internal system.
-     * 
+     * @since 1.1.7
      * @param id
      * @param volume
      * @param pitch
@@ -280,6 +290,7 @@ public class FWorld extends Functions {
     }
     
     /**
+     * @since 1.2.1
      * @return a map of boss bars by the boss bar's UUID.
      */
     public Map<String, BossBarHelper> getBossBars() {
@@ -293,7 +304,7 @@ public class FWorld extends Functions {
     
     /**
      * Check whether a chunk is within the render distance and loaded.
-     * 
+     * @since 1.2.2
      * @param chunkX
      * @param chunkZ
      * @return
@@ -304,6 +315,7 @@ public class FWorld extends Functions {
     }
     
     /**
+     * @since 1.2.2
      * @return the current server address as a string ({@code server.address/server.ip:port}).
      */
     public String getCurrentServerAddress() {
@@ -315,7 +327,7 @@ public class FWorld extends Functions {
     }
     
     /**
-     * 
+     * @since 1.2.2 [Citation Needed]
      * @param x
      * @param z
      * @return biome at specified location, only works if the block/chunk is loaded.
@@ -325,6 +337,7 @@ public class FWorld extends Functions {
     }
     
     /**
+     * @since 1.2.7
      * @return best attempt to measure and give the server tps with various timings.
      */
     public String getServerTPS() {
@@ -332,6 +345,7 @@ public class FWorld extends Functions {
     }
     
     /**
+     * @since 1.2.7
      * @return best attempt to measure and give the server tps.
      */
     public double getServerInstantTPS() {
@@ -340,6 +354,7 @@ public class FWorld extends Functions {
     
 
     /**
+     * @since 1.2.7
      * @return best attempt to measure and give the server tps over the previous 1 minute average.
      */
     public double getServer1MAverageTPS() {
@@ -348,6 +363,7 @@ public class FWorld extends Functions {
     
 
     /**
+     * @since 1.2.7
      * @return best attempt to measure and give the server tps over the previous 5 minute average.
      */
     public double getServer5MAverageTPS() {
@@ -356,6 +372,7 @@ public class FWorld extends Functions {
     
 
     /**
+     * @since 1.2.7
      * @return best attempt to measure and give the server tps over the previous 15 minute average.
      */
     public double getServer15MAverageTPS() {
