@@ -53,7 +53,15 @@ public class EntityHelper {
     public double getZ() {
         return e.getZ();
     }
-    
+
+    /**
+     * @since 1.2.8
+     * @return the current eye height offset for the entitye.
+     */
+    public double getEyeHeight() {
+        return e.getEyeHeight(e.getPose());
+    }
+
     /**
      * @since 1.0.8
      * @return the {@code pitch} value of the entity.

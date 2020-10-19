@@ -33,7 +33,7 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
     /**
      * @since 1.2.7
      * @param c
-     * @return
+     * @return a new {@link xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper MethodWrapper}
      */
     @Override
     public MethodWrapper<Object, Object, Object> autoWrap(Function<Object[], Object> c) {
@@ -101,7 +101,7 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
     /**
      * @since 1.2.7
      * @param c
-     * @return
+     * @return a new {@link xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper MethodWrapper}
      */
     @Override
     public MethodWrapper<Object, Object, Object> autoWrapAsync(Function<Object[], Object> c) {
@@ -189,7 +189,7 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
      * @since 1.2.5
      * @deprecated
      * @param c
-     * @return a new {@link xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.Consumer ConsumerWrappers.Consumer}
+     * @return
      */
     @Override
     public MethodWrapper<Object, Object, Object> toConsumer(Function<Object[], Object> c) {
@@ -202,7 +202,7 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
      * @since 1.2.5
      * @deprecated
      * @param c
-     * @return a new {@link xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.BiConsumer ConsumerWrappers.BiConsumer}
+     * @return
      */
     @Override
     public MethodWrapper<Object, Object, Object> toBiConsumer(Function<Object[], Object> c) {
@@ -215,7 +215,7 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
      * @since 1.2.5
      * @deprecated
      * @param c
-     * @return a new {@link xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.Consumer ConsumerWrappers.Consumer}
+     * @return
      */
     @Override
     public MethodWrapper<Object, Object, Object> toAsyncConsumer(Function<Object[], Object> c) {
@@ -228,7 +228,7 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
      * @since 1.2.5
      * @deprecated
      * @param c
-     * @return a new {@link xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.BiConsumer ConsumerWrappers.BiConsumer}
+     * @return
      */
     @Override
     public MethodWrapper<Object, Object, Object> toAsyncBiConsumer(Function<Object[], Object> c) {
