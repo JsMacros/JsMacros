@@ -3,15 +3,14 @@ package xyz.wagyourtail.jsmacros.config;
 import java.util.Comparator;
 
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
-import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 
 public class RawMacro implements IRawMacro {
-    public MacroEnum type;
+    public MacroType type;
     public String eventkey;
     public String scriptFile;
     public boolean enabled;
     
-    public RawMacro(MacroEnum type, String eventkey, String scriptFile, boolean enabled) {
+    public RawMacro(MacroType type, String eventkey, String scriptFile, boolean enabled) {
         this.type = type;
         this.eventkey = eventkey;
         this.scriptFile = scriptFile;
@@ -69,7 +68,7 @@ public class RawMacro implements IRawMacro {
     }
 
     @Override
-    public MacroEnum getType() {
+    public MacroType getType() {
         return type;
     }
 

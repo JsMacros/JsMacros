@@ -12,9 +12,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import net.fabricmc.loader.api.FabricLoader;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IConfig;
-import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 
 public class ConfigManager implements IConfig {
     public ConfigOptions options;
@@ -26,7 +26,7 @@ public class ConfigManager implements IConfig {
     public ConfigManager() {
         options = new ConfigOptions(true, "default", RawMacro.SortMethod.Enabled, new HashMap<>());
         options.profiles.put("default", new ArrayList<>());
-        options.profiles.get("default").add(new RawMacro(MacroEnum.KEY_RISING, "key.keyboard.j", "test.js", true));
+        options.profiles.get("default").add(new RawMacro(IRawMacro.MacroType.KEY_RISING, "key.keyboard.j", "test.js", true));
         if (!macroFolder.exists()) {
             macroFolder.mkdirs();
         }

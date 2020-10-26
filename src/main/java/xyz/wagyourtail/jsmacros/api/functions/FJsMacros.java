@@ -27,7 +27,6 @@ import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 import xyz.wagyourtail.jsmacros.extensionbase.ILanguage;
 import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
-import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 
@@ -128,11 +127,11 @@ public class FJsMacros extends Functions {
      */
     public Thread runScript(String file, MethodWrapper<String, Object, Object> callback) {
         if (callback != null) {
-            return RunScript.exec(new RawMacro(MacroEnum.EVENT, "", file, true), null, () -> {
+            return RunScript.exec(new RawMacro(IRawMacro.MacroType.EVENT, "", file, true), null, () -> {
                 callback.accept(null);
             }, callback);
         } else {
-            return RunScript.exec(new RawMacro(MacroEnum.EVENT, "", file, true), null);
+            return RunScript.exec(new RawMacro(IRawMacro.MacroType.EVENT, "", file, true), null);
         }
     }
     

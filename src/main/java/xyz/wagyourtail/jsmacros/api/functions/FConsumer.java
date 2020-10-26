@@ -39,7 +39,12 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
     public MethodWrapper<Object, Object, Object> autoWrap(Function<Object[], Object> c) {
         Thread th = Thread.currentThread();
         return new MethodWrapper<Object, Object, Object>() {
-            
+
+            @Override
+            public int compare(Object o1, Object o2) {
+                return (int) apply(o1, o2);
+            }
+
             @Override
             public void accept(Object arg0, Object arg1) {
                 apply(arg0, arg1);
@@ -107,6 +112,11 @@ public class FConsumer extends Functions implements IFConsumer<Function<Object[]
     public MethodWrapper<Object, Object, Object> autoWrapAsync(Function<Object[], Object> c) {
         Thread th = Thread.currentThread();
         return new MethodWrapper<Object, Object, Object>() {
+
+            @Override
+            public int compare(Object o1, Object o2) {
+                return (int) apply(o1, o2);
+            }
 
             @Override
             public void accept(Object arg0, Object arg1) {

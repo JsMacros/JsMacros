@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.api.sharedinterfaces;
 
-import xyz.wagyourtail.jsmacros.macros.MacroEnum;
+import xyz.wagyourtail.jsmacros.config.RawMacro;
 
 /**
  * @author Wagyourtail
@@ -12,7 +12,7 @@ public interface IRawMacro {
      * @since 1.2.7
      * @return
      */
-    public MacroEnum getType();
+    public MacroType getType();
     
     /**
      * @since 1.2.7
@@ -37,4 +37,15 @@ public interface IRawMacro {
      * @return
      */
     public IRawMacro copy();
+
+    /**
+     * @since 1.0.0 [citation needed]
+     * @author Wagyourtail
+     */
+    enum MacroType {
+        KEY_FALLING,
+        KEY_RISING,
+        KEY_BOTH,
+        EVENT
+    }
 }

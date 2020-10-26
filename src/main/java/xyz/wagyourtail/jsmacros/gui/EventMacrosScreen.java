@@ -1,10 +1,10 @@
 package xyz.wagyourtail.jsmacros.gui;
 
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
-import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class EventMacrosScreen extends MacroScreen {
             client.openScreen(new ProfileScreen(this));
         };
         
-        topbar.updateType(MacroEnum.EVENT);
+        topbar.updateType(IRawMacro.MacroType.EVENT);
         
         List<RawMacro> macros = new ArrayList<>();
         
@@ -43,7 +43,7 @@ public class EventMacrosScreen extends MacroScreen {
             Set<IEventListener> eventListeners = Profile.registry.getListeners(event);
             if (eventListeners != null) 
                 for (IEventListener macro : ImmutableList.copyOf(eventListeners)) {
-                    if (macro instanceof BaseMacro && ((BaseMacro) macro).getRawMacro().type == MacroEnum.EVENT) macros.add(((BaseMacro) macro).getRawMacro());
+                    if (macro instanceof BaseMacro && ((BaseMacro) macro).getRawMacro().type == IRawMacro.MacroType.EVENT) macros.add(((BaseMacro) macro).getRawMacro());
                 }
         }
         if (Profile.registry.getListeners().containsKey(""))

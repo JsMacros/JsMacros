@@ -21,7 +21,7 @@ public class EventSound implements IEvent {
         
         profile.triggerMacro(this);
     }
-
+    
     public String toString() {
         return String.format("%s:{\"sound\": \"%s\"}", this.getEventName(), sound);
     }

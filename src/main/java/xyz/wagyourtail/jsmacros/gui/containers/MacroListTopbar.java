@@ -2,12 +2,12 @@ package xyz.wagyourtail.jsmacros.gui.containers;
 
 import java.util.function.Consumer;
 
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.gui.MacroScreen;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.MultiElementContainer;
-import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
@@ -17,12 +17,12 @@ import net.minecraft.text.TranslatableText;
 
 public class MacroListTopbar extends MultiElementContainer {
     public MacroScreen parent;
-    public MacroEnum deftype;
+    public RawMacro.MacroType deftype;
     private Consumer<RawMacro> addMacro;
     private Consumer<MacroListTopbar> runFile;
     private Button type;
     
-    public MacroListTopbar(MacroScreen parent, int x, int y, int width, int height, TextRenderer textRenderer, MacroEnum deftype, Consumer<AbstractButtonWidget> addButton, Consumer<RawMacro> addMacro, Consumer<MacroListTopbar>runFile) {
+    public MacroListTopbar(MacroScreen parent, int x, int y, int width, int height, TextRenderer textRenderer, RawMacro.MacroType deftype, Consumer<AbstractButtonWidget> addButton, Consumer<RawMacro> addMacro, Consumer<MacroListTopbar>runFile) {
         super(x, y, width, height, textRenderer, addButton);
         this.deftype = deftype;
         this.addMacro = addMacro;
@@ -41,7 +41,7 @@ public class MacroListTopbar extends MultiElementContainer {
             parent.reload();
         }));
         
-        type = (Button) addButton(new Button(x + w / 12 + 1, y + 1, (w / 4) - (w / 12) - 1, height - 3, jsMacros.config.options.sortMethod == RawMacro.SortMethod.TriggerName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(deftype == MacroEnum.EVENT ? "jsmacros.events" : "jsmacros.keys"), (btn) -> {
+        type = (Button) addButton(new Button(x + w / 12 + 1, y + 1, (w / 4) - (w / 12) - 1, height - 3, jsMacros.config.options.sortMethod == RawMacro.SortMethod.TriggerName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(deftype == IRawMacro.MacroType.EVENT ? "jsmacros.events" : "jsmacros.keys"), (btn) -> {
             jsMacros.config.setSortComparator(RawMacro.SortMethod.TriggerName);
             parent.reload();
         }));
@@ -62,9 +62,9 @@ public class MacroListTopbar extends MultiElementContainer {
         }));
     }
 
-    public void updateType(MacroEnum type) {
+    public void updateType(RawMacro.MacroType type) {
         this.deftype = type;
-        this.type.setMessage(new TranslatableText(deftype == MacroEnum.EVENT ? "jsmacros.events" : "jsmacros.keys"));
+        this.type.setMessage(new TranslatableText(deftype == IRawMacro.MacroType.EVENT ? "jsmacros.events" : "jsmacros.keys"));
     }
     
     @Override

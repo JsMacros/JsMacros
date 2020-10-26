@@ -6,11 +6,11 @@ import java.util.function.Consumer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.MultiElementContainer;
-import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
 import net.minecraft.client.MinecraftClient;
@@ -66,25 +66,25 @@ public class MacroContainer extends MultiElementContainer {
             btn.setMessage(new TranslatableText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"));
         }));
 
-        keyBtn = (Button) addButton(new Button(x + w / 12 + 1, y + 1, macro.type == MacroEnum.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.type == MacroEnum.EVENT ? new LiteralText(macro.eventkey.replace("Event", "")) : buildKeyName(macro.eventkey), (btn) -> {
-            if (macro.type == MacroEnum.EVENT) {
+        keyBtn = (Button) addButton(new Button(x + w / 12 + 1, y + 1, macro.type == IRawMacro.MacroType.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.type == IRawMacro.MacroType.EVENT ? new LiteralText(macro.eventkey.replace("Event", "")) : buildKeyName(macro.eventkey), (btn) -> {
+            if (macro.type == IRawMacro.MacroType.EVENT) {
                 if (setEvent != null) setEvent.accept(this);
             } else {
                 selectkey = true;
                 btn.setMessage(new TranslatableText("jsmacros.presskey"));
             }
         }));
-        if (macro.type != MacroEnum.EVENT) keyStateBtn = (Button) addButton(new Button(x + w / 4 - height, y + 1, height, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText(""), (btn) -> {
+        if (macro.type != IRawMacro.MacroType.EVENT) keyStateBtn = (Button) addButton(new Button(x + w / 4 - height, y + 1, height, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText(""), (btn) -> {
             switch(macro.type) {
             default:
             case KEY_RISING:
-                macro.type = MacroEnum.KEY_FALLING;
+                macro.type = IRawMacro.MacroType.KEY_FALLING;
                 break;
             case KEY_FALLING:
-                macro.type = MacroEnum.KEY_BOTH;
+                macro.type = IRawMacro.MacroType.KEY_BOTH;
                 break;
             case KEY_BOTH:
-                macro.type = MacroEnum.KEY_RISING;
+                macro.type = IRawMacro.MacroType.KEY_RISING;
                 break;
             }
         }));
@@ -118,8 +118,8 @@ public class MacroContainer extends MultiElementContainer {
         super.setPos(x, y, width, height);
         int w = width - 12;
         enableBtn.setPos(x + 1, y + 1, w / 12 - 1, height - 2);
-        keyBtn.setPos(x + w / 12 + 1, y + 1, macro.type == MacroEnum.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2);
-        if (macro.type != MacroEnum.EVENT) keyStateBtn.setPos(x + w / 4 - height, y + 1, height, height - 2);
+        keyBtn.setPos(x + w / 12 + 1, y + 1, macro.type == IRawMacro.MacroType.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2);
+        if (macro.type != IRawMacro.MacroType.EVENT) keyStateBtn.setPos(x + w / 4 - height, y + 1, height, height - 2);
         fileBtn.setPos(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2);
         editBtn.setPos(x + w - 32, y + 1, 30, height - 2);
         delBtn.setPos(x + w - 1, y + 1, 12, height - 2);
@@ -163,7 +163,7 @@ public class MacroContainer extends MultiElementContainer {
             fill(matricies, x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
             
             // icon for keystate
-            if (macro.type != MacroEnum.EVENT) {
+            if (macro.type != IRawMacro.MacroType.EVENT) {
                 switch (macro.type) {
                 default:
                 case KEY_FALLING:

@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.extensionbase;
 
+import java.util.Comparator;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -17,16 +18,25 @@ import java.util.function.Supplier;
  * @param <U>
  * @param <R>
  */
-public abstract class MethodWrapper<T, U, R> implements Consumer<T>, BiConsumer<T, U>, Function<T, R>, BiFunction<T, U, R>, Predicate<T>, BiPredicate<T, U>, Runnable, Supplier<R> {
+public abstract class MethodWrapper<T, U, R> implements Consumer<T>, BiConsumer<T, U>, Function<T, R>, BiFunction<T, U, R>, Predicate<T>, BiPredicate<T, U>, Runnable, Supplier<R>, Comparator<T> {
     
     /**
      * Makes {@link Function} and {@link BiFunction} work together.
      * Extended so it's called on every type not just those 2.
+     * @param after put a {@link MethodWrapper} here when using in scripts.
      */
     @Override
     public <V> MethodWrapper<T, U, V> andThen(Function<? super R,? extends V> after) {
         MethodWrapper<T, U, R> self = this;
         return new MethodWrapper<T, U, V>() {
+
+            @Override
+            public int compare(T o1, T o2) {
+                int retVal = self.compare(o1, o2);
+                if (after instanceof MethodWrapper)
+                    ((MethodWrapper<?, ?, ?>)after).run();
+                return retVal;
+            }
 
             @Override
             public void accept(T t) {
@@ -94,6 +104,11 @@ public abstract class MethodWrapper<T, U, R> implements Consumer<T>, BiConsumer<
     public MethodWrapper<T, U, R> negate() {
         MethodWrapper<T, U, R> self = this;
         return new MethodWrapper<T, U, R>() {
+
+            @Override
+            public int compare(T o1, T o2) {
+                return -self.compare(o1, o2);
+            }
 
             @Override
             public void accept(T t) {

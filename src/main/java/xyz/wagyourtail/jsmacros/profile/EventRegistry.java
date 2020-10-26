@@ -11,11 +11,11 @@ import xyz.wagyourtail.jsmacros.api.events.EventKey;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventRegistry;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
 import xyz.wagyourtail.jsmacros.macros.EventMacro;
 import xyz.wagyourtail.jsmacros.macros.KeyMacro;
-import xyz.wagyourtail.jsmacros.macros.MacroEnum;
 
 public class EventRegistry implements IEventRegistry {
     public final Map<String, Set<IEventListener>> macros = new LinkedHashMap<>();
@@ -65,7 +65,7 @@ public class EventRegistry implements IEventRegistry {
     }
     
     public synchronized boolean removeRawMacro(RawMacro rawmacro) {
-        String event = rawmacro.type == MacroEnum.EVENT ? rawmacro.eventkey : EventKey.class.getSimpleName();
+        String event = rawmacro.type == IRawMacro.MacroType.EVENT ? rawmacro.eventkey : EventKey.class.getSimpleName();
         for (IEventListener macro : macros.get(event)) {
             if (macro instanceof BaseMacro && ((BaseMacro) macro).getRawMacro() == rawmacro) {
                 removeListener(event, macro);
