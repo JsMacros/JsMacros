@@ -16,7 +16,7 @@
 	"environment": "client",
 	"entrypoints": {
 		"client": [
-			"xyz.wagyourtail.jsmacros.jsMacros"
+			"xyz.wagyourtail.jsmacros.JsMacros"
 		],
 		"modmenu": [
 			"xyz.wagyourtail.jsmacros.ModMenuEntry"

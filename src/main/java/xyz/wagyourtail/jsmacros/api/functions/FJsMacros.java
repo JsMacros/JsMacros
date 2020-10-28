@@ -13,7 +13,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.network.ServerAddress;
 import net.minecraft.util.Util;
-import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IConfig;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
@@ -63,14 +63,14 @@ public class FJsMacros extends Functions {
      * @return the JsMacros profile class.
      */
     public IProfile getProfile() {
-        return jsMacros.profile;
+        return JsMacros.profile;
     }
 
     /**
      * @return the JsMacros config class.
      */
     public IConfig getConfig() {
-        return jsMacros.config;
+        return JsMacros.config;
     }
     
     /**
@@ -186,7 +186,7 @@ public class FJsMacros extends Functions {
      * @param path relative to the macro folder.
      */
     public void open(String path) {
-        Util.getOperatingSystem().open(new File(jsMacros.config.macroFolder, path));
+        Util.getOperatingSystem().open(new File(JsMacros.config.macroFolder, path));
     }
     
     /**

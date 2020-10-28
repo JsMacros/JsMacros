@@ -9,7 +9,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
-import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.functions.FKeyBind;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
 
@@ -35,7 +35,7 @@ public class EventKey implements IEvent {
         
         
         if (keyBinding.matchesKey(key, scancode) && action == 1 && mc.currentScreen == null) {
-            mc.openScreen(jsMacros.keyMacrosScreen);
+            mc.openScreen(JsMacros.keyMacrosScreen);
             return;
         }
         
@@ -46,7 +46,7 @@ public class EventKey implements IEvent {
             else FKeyBind.pressedKeys.remove(keycode.getTranslationKey());
         }
 
-        if (mc.currentScreen != null && jsMacros.config.options.disableKeyWhenScreenOpen) return;
+        if (mc.currentScreen != null && JsMacros.config.options.disableKeyWhenScreenOpen) return;
         
         Map<String, Object> args = new HashMap<>();
         args.put("rawkey", keycode);

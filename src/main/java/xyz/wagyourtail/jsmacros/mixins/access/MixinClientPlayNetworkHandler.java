@@ -32,16 +32,16 @@ public class MixinClientPlayNetworkHandler {
     List<TPSData> tpsData15M = new LinkedList<>();
     
     @Unique
-    Object timeSync = new Object();
+    private final Object timeSync = new Object();
     
     
     @Inject(at = @At("HEAD"), method="onWorldTimeUpdate")
     public void onServerTime(WorldTimeUpdateS2CPacket packet, CallbackInfo info) {
         synchronized (timeSync) {
-            long tick = packet.getTime();
-            long time = System.currentTimeMillis();
+            final long tick = packet.getTime();
+            final long time = System.currentTimeMillis();
             if (tick != lastServerTimeRecvTick) {
-                double mspt = (double)(time - lastServerTimeRecvTime) / (double)(tick - lastServerTimeRecvTick);
+                final double mspt = (double)(time - lastServerTimeRecvTime) / (double)(tick - lastServerTimeRecvTick);
                 if (lastServerTimeRecvTick == 0) {
                     lastServerTimeRecvTime = time;
                     lastServerTimeRecvTick = tick;

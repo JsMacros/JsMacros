@@ -20,7 +20,7 @@ import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
  */
 public class Websocket {
 
-    private WebSocket ws;
+    private final WebSocket ws;
     /**
      * calls your method as a {@link java.util.function.Consumer BiConsumer}<{@link WebSocket}, {@link List}<{@link String}>>
      */

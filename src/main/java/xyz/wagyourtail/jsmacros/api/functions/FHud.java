@@ -7,7 +7,7 @@ import java.util.Set;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.api.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.api.classes.Screen;
@@ -93,7 +93,7 @@ public class FHud extends Functions {
      * @return The name of the currently open screen.
      */
     public String getOpenScreenName() {
-        return jsMacros.getScreenName(mc.currentScreen);
+        return JsMacros.getScreenName(mc.currentScreen);
     }
     
     /**

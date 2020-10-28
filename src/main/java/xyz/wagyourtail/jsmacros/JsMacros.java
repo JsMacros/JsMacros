@@ -17,7 +17,7 @@ import xyz.wagyourtail.jsmacros.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.gui.KeyMacrosScreen;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
-public class jsMacros implements ClientModInitializer {
+public class JsMacros implements ClientModInitializer {
     public static final String MOD_ID = "jsmacros";
     public static final ConfigManager config = new ConfigManager();
     public static final Profile profile = new Profile();

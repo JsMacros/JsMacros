@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.gui;
 
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
-import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
@@ -51,7 +51,7 @@ public class EventMacrosScreen extends MacroScreen {
                 if (macro instanceof BaseMacro) macros.add(((BaseMacro) macro).getRawMacro());
             }
 
-        Collections.sort(macros, jsMacros.config.getSortComparator());
+        Collections.sort(macros, JsMacros.config.getSortComparator());
         
         for (RawMacro macro : macros) {
             addMacro(macro);

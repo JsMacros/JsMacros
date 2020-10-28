@@ -2,8 +2,8 @@ package xyz.wagyourtail.jsmacros.gui.containers;
 
 import java.util.function.Consumer;
 
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
-import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.gui.MacroScreen;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
@@ -36,18 +36,18 @@ public class MacroListTopbar extends MultiElementContainer {
         
         int w = width - 12;
         
-        addButton(new Button(x + 1, y + 1, w / 12 - 1, height - 3, jsMacros.config.options.sortMethod == RawMacro.SortMethod.Enabled ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.enabled"), (btn) -> {
-            jsMacros.config.setSortComparator(RawMacro.SortMethod.Enabled);
+        addButton(new Button(x + 1, y + 1, w / 12 - 1, height - 3, JsMacros.config.options.sortMethod == RawMacro.SortMethod.Enabled ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.enabled"), (btn) -> {
+            JsMacros.config.setSortComparator(RawMacro.SortMethod.Enabled);
             parent.reload();
         }));
         
-        type = (Button) addButton(new Button(x + w / 12 + 1, y + 1, (w / 4) - (w / 12) - 1, height - 3, jsMacros.config.options.sortMethod == RawMacro.SortMethod.TriggerName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(deftype == IRawMacro.MacroType.EVENT ? "jsmacros.events" : "jsmacros.keys"), (btn) -> {
-            jsMacros.config.setSortComparator(RawMacro.SortMethod.TriggerName);
+        type = (Button) addButton(new Button(x + w / 12 + 1, y + 1, (w / 4) - (w / 12) - 1, height - 3, JsMacros.config.options.sortMethod == RawMacro.SortMethod.TriggerName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(deftype == IRawMacro.MacroType.EVENT ? "jsmacros.events" : "jsmacros.keys"), (btn) -> {
+            JsMacros.config.setSortComparator(RawMacro.SortMethod.TriggerName);
             parent.reload();
         }));
         
-        addButton(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 3, jsMacros.config.options.sortMethod == RawMacro.SortMethod.FileName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.file"), (btn) -> {
-            jsMacros.config.setSortComparator(RawMacro.SortMethod.FileName);
+        addButton(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 3, JsMacros.config.options.sortMethod == RawMacro.SortMethod.FileName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.file"), (btn) -> {
+            JsMacros.config.setSortComparator(RawMacro.SortMethod.FileName);
             parent.reload();
         }));
         

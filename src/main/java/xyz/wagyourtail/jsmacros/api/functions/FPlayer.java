@@ -11,7 +11,7 @@ import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.util.ScreenshotUtils;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.api.classes.Inventory;
 import xyz.wagyourtail.jsmacros.api.helpers.BlockDataHelper;
@@ -131,7 +131,7 @@ public class FPlayer extends Functions {
      * @param callback calls your method as a {@link Consumer}<{@link TextHelper}>
      */
     public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object, Object> callback) {
-        ScreenshotUtils.saveScreenshot(new File(jsMacros.config.macroFolder, folder), mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
+        ScreenshotUtils.saveScreenshot(new File(JsMacros.config.macroFolder, folder), mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
             mc.getFramebuffer(), (text) -> {
                 if (callback != null) callback.accept(new TextHelper(text));
             });
@@ -147,7 +147,7 @@ public class FPlayer extends Functions {
      * @param callback calls your method as a {@link Consumer}<{@link TextHelper}>
      */
     public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object> callback) {
-        ScreenshotUtils.saveScreenshot(new File(jsMacros.config.macroFolder, folder), file, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
+        ScreenshotUtils.saveScreenshot(new File(JsMacros.config.macroFolder, folder), file, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
             mc.getFramebuffer(), (text) -> {
                 if (callback != null) callback.accept(new TextHelper(text));
             });

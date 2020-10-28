@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.google.common.io.Files;
 
-import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.classes.FileHandler;
 import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 
@@ -39,7 +39,7 @@ public class FFS extends Functions {
      * @return An array of file names as {@link java.lang.String Strings}.
      */
     public String[] list(String path) {
-        return new File(jsMacros.config.macroFolder, path).list();
+        return new File(JsMacros.config.macroFolder, path).list();
     }
     
     /**
@@ -51,7 +51,7 @@ public class FFS extends Functions {
      * @return
      */
     public boolean exists(String path) {
-        return new File(jsMacros.config.macroFolder, path).exists();
+        return new File(JsMacros.config.macroFolder, path).exists();
     }
     
     /**
@@ -63,7 +63,7 @@ public class FFS extends Functions {
      * @return
      */
     public boolean isDir(String path) {
-        return new File(jsMacros.config.macroFolder, path).isDirectory();
+        return new File(JsMacros.config.macroFolder, path).isDirectory();
     }
     
     /**
@@ -75,7 +75,7 @@ public class FFS extends Functions {
      * @return a {@link java.lang.String String} of the file name.
      */
     public String getName(String path) {
-        return new File(jsMacros.config.macroFolder, path).getName();
+        return new File(JsMacros.config.macroFolder, path).getName();
     }
     
     /**
@@ -87,7 +87,7 @@ public class FFS extends Functions {
      * @return a {@link java.lang.Boolean boolean} for success.
      */
     public boolean makeDir(String path) {
-        return new File(jsMacros.config.macroFolder, path).mkdir();
+        return new File(JsMacros.config.macroFolder, path).mkdir();
     }
     
     /**
@@ -100,7 +100,7 @@ public class FFS extends Functions {
      * @throws IOException
      */
     public void move(String from, String to) throws IOException {
-        Files.move(new File(jsMacros.config.macroFolder, from), new File(jsMacros.config.macroFolder, to));
+        Files.move(new File(JsMacros.config.macroFolder, from), new File(JsMacros.config.macroFolder, to));
     }
     
     /**
@@ -113,7 +113,7 @@ public class FFS extends Functions {
      * @throws IOException
      */
     public void copy(String from, String to) throws IOException {
-        Files.copy(new File(jsMacros.config.macroFolder, from), new File(jsMacros.config.macroFolder, to));
+        Files.copy(new File(JsMacros.config.macroFolder, from), new File(JsMacros.config.macroFolder, to));
     }
     
     /**
@@ -125,7 +125,7 @@ public class FFS extends Functions {
      * @return a {@link java.lang.Boolean boolean} for success.
      */
     public boolean delete(String path) {
-        return new File(jsMacros.config.macroFolder, path).delete();
+        return new File(JsMacros.config.macroFolder, path).delete();
     }
     
     /**
@@ -139,7 +139,7 @@ public class FFS extends Functions {
      * @throws IOException
      */
     public String combine(String patha, String pathb) throws IOException {
-        String f = new File(new File(jsMacros.config.macroFolder, patha), pathb).getCanonicalPath().substring(jsMacros.config.macroFolder.getCanonicalPath().length());
+        String f = new File(new File(JsMacros.config.macroFolder, patha), pathb).getCanonicalPath().substring(JsMacros.config.macroFolder.getCanonicalPath().length());
         if (f.startsWith("/")) return "."+f;
         return f;
     }
@@ -155,7 +155,7 @@ public class FFS extends Functions {
      * @throws IOException
      */
     public String getDir(String path) throws IOException {
-        String f = new File(jsMacros.config.macroFolder, path).getParentFile().getCanonicalPath().substring(jsMacros.config.macroFolder.getCanonicalPath().length());
+        String f = new File(JsMacros.config.macroFolder, path).getParentFile().getCanonicalPath().substring(JsMacros.config.macroFolder.getCanonicalPath().length());
         if (f.startsWith("/")) return "."+f;
         return f;
     }
@@ -171,6 +171,6 @@ public class FFS extends Functions {
      * @return a {@link xyz.wagyourtail.jsmacros.api.classes.FileHandler FileHandler} for the file path.
      */
     public FileHandler open(String path) {
-        return new FileHandler(new File(jsMacros.config.macroFolder, path));
+        return new FileHandler(new File(JsMacros.config.macroFolder, path));
     }
 }

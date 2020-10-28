@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
-import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.access.IChatHud;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
@@ -28,7 +28,7 @@ public interface ILanguage {
                 Thread.currentThread().setName(staticMacro.type.toString() + " " + staticMacro.eventkey + " " + staticMacro.scriptFile
                     + ": " + RunScript.threads.get(staticMacro).size());
                 RunScript.threads.get(staticMacro).add(th);
-                File file = new File(jsMacros.config.macroFolder, staticMacro.scriptFile);
+                File file = new File(JsMacros.config.macroFolder, staticMacro.scriptFile);
                 if (file.exists()) {
                     
                     exec(staticMacro, file, event);

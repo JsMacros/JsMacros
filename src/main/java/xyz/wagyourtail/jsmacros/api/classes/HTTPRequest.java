@@ -26,7 +26,7 @@ import com.google.gson.GsonBuilder;
  *
  */
 public class HTTPRequest {
-    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public Map<String, String> headers = new HashMap<>();
     public URL conn;
     
@@ -123,7 +123,8 @@ public class HTTPRequest {
         
         /**
          * Don't use this. Parse {@link Request#text()} in the guest language
-         * 
+         * @since 1.1.8
+         * @deprecated
          * @return
          */
         public Map<?, ?> json() {

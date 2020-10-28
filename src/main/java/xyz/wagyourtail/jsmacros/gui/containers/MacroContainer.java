@@ -6,8 +6,8 @@ import java.util.function.Consumer;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
-import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.MultiElementContainer;
@@ -25,11 +25,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
 public class MacroContainer extends MultiElementContainer {
-    private static final Identifier key_down_tex = new Identifier(jsMacros.MOD_ID, "resources/key_down.png");
-    private static final Identifier key_up_tex = new Identifier(jsMacros.MOD_ID, "resources/key_up.png");
-    private static final Identifier key_both_tex = new Identifier(jsMacros.MOD_ID, "resources/key_both.png");
+    private static final Identifier key_down_tex = new Identifier(JsMacros.MOD_ID, "resources/key_down.png");
+    private static final Identifier key_up_tex = new Identifier(JsMacros.MOD_ID, "resources/key_up.png");
+    private static final Identifier key_both_tex = new Identifier(JsMacros.MOD_ID, "resources/key_both.png");
     @SuppressWarnings("unused")
-    private static final Identifier event_tex = new Identifier(jsMacros.MOD_ID, "resources/event.png");
+    private static final Identifier event_tex = new Identifier(JsMacros.MOD_ID, "resources/event.png");
     private MinecraftClient mc;
     private RawMacro macro;
     private Button enableBtn;
@@ -94,7 +94,7 @@ public class MacroContainer extends MultiElementContainer {
         }));
         
         editBtn = (Button) addButton(new Button(x + w - 32, y + 1, 30, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("selectServer.edit"), (btn) -> {
-            Util.getOperatingSystem().open(new File(jsMacros.config.macroFolder, macro.scriptFile));
+            Util.getOperatingSystem().open(new File(JsMacros.config.macroFolder, macro.scriptFile));
         }));
 
         delBtn = (Button) addButton(new Button(x + w - 1, y + 1, 12, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("X"), (btn) -> {
@@ -110,7 +110,7 @@ public class MacroContainer extends MultiElementContainer {
     }
     
     public void setFile(File f) {
-        macro.scriptFile = f.getAbsolutePath().substring(jsMacros.config.macroFolder.getAbsolutePath().length()+1);
+        macro.scriptFile = f.getAbsolutePath().substring(JsMacros.config.macroFolder.getAbsolutePath().length()+1);
         fileBtn.setMessage(new LiteralText("./"+macro.scriptFile.replaceAll("\\\\", "/")));
     }
 
@@ -139,7 +139,7 @@ public class MacroContainer extends MultiElementContainer {
         boolean notfirst = false;
         for (String s : translationKeys.split("\\+")) {
             if (notfirst) text.append("+");
-            text.append(jsMacros.getKeyText(s));
+            text.append(JsMacros.getKeyText(s));
             notfirst = true;
         }
         return text;

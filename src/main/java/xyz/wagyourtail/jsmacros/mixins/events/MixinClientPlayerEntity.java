@@ -58,8 +58,8 @@ class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     
     @Inject(at = @At("HEAD"), method="openEditSignScreen", cancellable= true)
     public void onOpenEditSignScreen(SignBlockEntity sign, CallbackInfo info) {
-        List<String> lines = new ArrayList<String>(Arrays.asList(new String[]{"", "", "", ""}));
-        EventSignEdit event = new EventSignEdit(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ());
+        List<String> lines = new ArrayList<>(Arrays.asList(new String[]{"", "", "", ""}));
+        final EventSignEdit event = new EventSignEdit(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ());
         lines = event.signText;
         if (event.closeScreen) {
             for (int i = 0; i < 4; ++i) {
@@ -79,7 +79,7 @@ class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
             }
         } //else
         if (cancel) {
-            SignEditScreen signScreen = new SignEditScreen(sign);
+            final SignEditScreen signScreen = new SignEditScreen(sign);
             client.openScreen(signScreen);
             for (int i = 0; i < 4; ++i) {
                 ((ISignEditScreen)signScreen).jsmacros_setLine(i, lines.get(i));
@@ -92,7 +92,5 @@ class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     // IGNORE
     public MixinClientPlayerEntity(ClientWorld world, GameProfile profile) {
         super(world, profile);
-        // TODO Auto-generated constructor stub
     }
-    //
 }

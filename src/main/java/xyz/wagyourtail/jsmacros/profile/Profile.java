@@ -8,7 +8,7 @@ import java.util.Map;
 import com.google.common.collect.ImmutableList;
 
 import net.minecraft.client.MinecraftClient;
-import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.events.EventAirChange;
 import xyz.wagyourtail.jsmacros.api.events.EventArmorChange;
 import xyz.wagyourtail.jsmacros.api.events.EventBlockUpdate;
@@ -64,18 +64,18 @@ public class Profile implements IProfile {
 
     public void loadOrCreateProfile(String pName) {
         registry.clearMacros();
-        if (jsMacros.config.options.profiles.containsKey(pName)) {
+        if (JsMacros.config.options.profiles.containsKey(pName)) {
             loadProfile(pName);
         } else {
-            jsMacros.config.options.profiles.put(pName, new ArrayList<>());
+            JsMacros.config.options.profiles.put(pName, new ArrayList<>());
             loadProfile(pName);
-            jsMacros.config.saveConfig();
+            JsMacros.config.saveConfig();
         }
     }
 
     private boolean loadProfile(String pName) {
         registry.clearMacros();
-        List<RawMacro> rawProfile = jsMacros.config.options.profiles.get(pName);
+        final List<RawMacro> rawProfile = JsMacros.config.options.profiles.get(pName);
         if (rawProfile == null) {
             System.out.println("profile \"" + pName + "\" does not exist or is broken/null");
             return false;
@@ -84,7 +84,7 @@ public class Profile implements IProfile {
         for (RawMacro rawmacro : rawProfile) {
             registry.addRawMacro(rawmacro);
         }
-        MinecraftClient mc = MinecraftClient.getInstance();
+        final MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.currentScreen instanceof MacroScreen) {
             ((MacroScreen) mc.currentScreen).reload();
         }
@@ -96,8 +96,8 @@ public class Profile implements IProfile {
     }
 
     public void saveProfile() {
-        jsMacros.config.options.profiles.put(profileName, registry.getRawMacros());
-        jsMacros.config.saveConfig();
+        JsMacros.config.options.profiles.put(profileName, registry.getRawMacros());
+        JsMacros.config.saveConfig();
     }
 
     private void initEventHandlerCallbacks() {

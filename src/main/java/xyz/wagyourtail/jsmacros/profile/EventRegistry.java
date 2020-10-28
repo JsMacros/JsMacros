@@ -65,7 +65,7 @@ public class EventRegistry implements IEventRegistry {
     }
     
     public synchronized boolean removeRawMacro(RawMacro rawmacro) {
-        String event = rawmacro.type == IRawMacro.MacroType.EVENT ? rawmacro.eventkey : EventKey.class.getSimpleName();
+        final String event = rawmacro.type == IRawMacro.MacroType.EVENT ? rawmacro.eventkey : EventKey.class.getSimpleName();
         for (IEventListener macro : macros.get(event)) {
             if (macro instanceof BaseMacro && ((BaseMacro) macro).getRawMacro() == rawmacro) {
                 removeListener(event, macro);
@@ -84,7 +84,7 @@ public class EventRegistry implements IEventRegistry {
     }
     
     public synchronized List<RawMacro> getRawMacros() {
-        List<RawMacro> rawProf = new ArrayList<>();
+        final List<RawMacro> rawProf = new ArrayList<>();
         for (Set<IEventListener> eventMacros : macros.values()) {
             for (IEventListener macro : eventMacros) {
                 if (macro instanceof BaseMacro) rawProf.add(((BaseMacro) macro).getRawMacro());

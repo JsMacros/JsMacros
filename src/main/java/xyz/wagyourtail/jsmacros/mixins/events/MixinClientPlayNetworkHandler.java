@@ -169,7 +169,7 @@ class MixinClientPlayNetworkHandler {
 
     @Inject(at = @At(value="INVOKE", target="Lnet/minecraft/client/world/ClientWorld;playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V"), method= "onItemPickupAnimation")
     public void onItemPickupAnimation(ItemPickupAnimationS2CPacket packet, CallbackInfo info) {
-        Entity e = client.world.getEntityById(packet.getEntityId());
+        final Entity e = client.world.getEntityById(packet.getEntityId());
         LivingEntity c = (LivingEntity)client.world.getEntityById(packet.getCollectorEntityId());
         if (c == null) c = client.player;
         if (c.equals(client.player) && e instanceof ItemEntity) {

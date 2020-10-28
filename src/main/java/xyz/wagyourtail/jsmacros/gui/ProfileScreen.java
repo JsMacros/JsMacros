@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.gui;
 
-import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.gui.containers.CheckBoxContainer;
 import xyz.wagyourtail.jsmacros.gui.containers.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.gui.containers.ProfileContainer;
@@ -60,26 +60,26 @@ public class ProfileScreen extends Screen {
         this.addButton(new Button(0, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.addprofile"), (btn) -> {
             this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), "", this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (str) -> {
                 addProfile(str);
-                if (!jsMacros.config.options.profiles.containsKey(str)) jsMacros.config.options.profiles.put(str, new ArrayList<>());
-                jsMacros.config.saveConfig();
+                if (!JsMacros.config.options.profiles.containsKey(str)) JsMacros.config.options.profiles.put(str, new ArrayList<>());
+                JsMacros.config.saveConfig();
             }));
         }));
 
         this.addButton(new Button(this.width / 6, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.renameprofile"), (btn) -> {
-            if (!selected.pName.equals(jsMacros.config.options.defaultProfile)) this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), selected.pName, this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (str) -> {
-                jsMacros.config.options.profiles.remove(selected.pName);
-                jsMacros.profile.profileName = str;
-                jsMacros.profile.saveProfile();
+            if (!selected.pName.equals(JsMacros.config.options.defaultProfile)) this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), selected.pName, this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (str) -> {
+                JsMacros.config.options.profiles.remove(selected.pName);
+                JsMacros.profile.profileName = str;
+                JsMacros.profile.saveProfile();
                 selected.setProfName(str);
             }));
         }));
 
         this.addButton(new Button(this.width / 3, this.height - 20, this.width / 6, 20, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.deleteprofile"), (btn) -> {
-            if (!selected.pName.equals(jsMacros.config.options.defaultProfile)) this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.deleteprofile").append(new LiteralText(" \"" + jsMacros.profile.profileName+"\"")), this::addButton, this::removeButton, this::closeOverlay, (cf) -> {
+            if (!selected.pName.equals(JsMacros.config.options.defaultProfile)) this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.deleteprofile").append(new LiteralText(" \"" + JsMacros.profile.profileName+"\"")), this::addButton, this::removeButton, this::closeOverlay, (cf) -> {
                 removeProfile(selected);
-                jsMacros.profile.loadOrCreateProfile(jsMacros.config.options.defaultProfile);
+                JsMacros.profile.loadOrCreateProfile(JsMacros.config.options.defaultProfile);
                 for (ProfileContainer p : profiles) {
-                    if (p.pName.equals(jsMacros.config.options.defaultProfile)) {
+                    if (p.pName.equals(JsMacros.config.options.defaultProfile)) {
                         setSelected(p);
                         break;
                     }
@@ -88,11 +88,11 @@ public class ProfileScreen extends Screen {
         }));
 
         profileScroll = this.addButton(new Scrollbar(this.width / 2 - 8, 33, 8, this.height - 53, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
-        disableInGui = new CheckBoxContainer(this.width / 2 + 10, 50, this.width / 2 - 20, 12, this.textRenderer, jsMacros.config.options.disableKeyWhenScreenOpen, new TranslatableText("jsmacros.disablewithscreen"), this::addButton, (state) -> {
-            jsMacros.config.options.disableKeyWhenScreenOpen = state;
+        disableInGui = new CheckBoxContainer(this.width / 2 + 10, 50, this.width / 2 - 20, 12, this.textRenderer, JsMacros.config.options.disableKeyWhenScreenOpen, new TranslatableText("jsmacros.disablewithscreen"), this::addButton, (state) -> {
+            JsMacros.config.options.disableKeyWhenScreenOpen = state;
         });
         
-        for (String k : jsMacros.config.options.profiles.keySet()) {
+        for (String k : JsMacros.config.options.profiles.keySet()) {
             addProfile(k);
         }
     }
@@ -104,15 +104,15 @@ public class ProfileScreen extends Screen {
 //            
 //            setSelected(jsMacros.profile.profileName);
 //        })));
-        ProfileContainer pc = new ProfileContainer(20, topScroll + profiles.size() * 22, this.width / 2 - 40, 20, this.textRenderer, pName, jsMacros.config.options.defaultProfile, this::addButton, this::setSelected, this::setDefault);
+        ProfileContainer pc = new ProfileContainer(20, topScroll + profiles.size() * 22, this.width / 2 - 40, 20, this.textRenderer, pName, JsMacros.config.options.defaultProfile, this::addButton, this::setSelected, this::setDefault);
         profiles.add(pc);
         profileScroll.setScrollPages((topScroll + profiles.size() * 22) / (double) Math.max(1, this.height - 53));
-        if (pName.equals(jsMacros.profile.profileName)) setSelected(pc);
+        if (pName.equals(JsMacros.profile.profileName)) setSelected(pc);
         return pc;
     }
 
     public void removeProfile(ProfileContainer prof) {
-        jsMacros.config.options.profiles.remove(prof.pName);
+        JsMacros.config.options.profiles.remove(prof.pName);
         for (AbstractButtonWidget b : prof.getButtons()) {
             this.buttons.remove(b);
             this.children.remove(b);
@@ -123,16 +123,16 @@ public class ProfileScreen extends Screen {
 
     public void setSelected(ProfileContainer profile) {
         this.selected = profile;
-        jsMacros.profile.saveProfile();
-        jsMacros.profile.loadOrCreateProfile(profile.pName);
+        JsMacros.profile.saveProfile();
+        JsMacros.profile.loadOrCreateProfile(profile.pName);
         for (ProfileContainer p : profiles) {
             p.setSelected(profile);
         }
     }
 
     public void setDefault(ProfileContainer profile) {
-        jsMacros.config.options.defaultProfile = profile.pName;
-        jsMacros.config.saveConfig();
+        JsMacros.config.options.defaultProfile = profile.pName;
+        JsMacros.config.saveConfig();
         for (ProfileContainer p : profiles) {
             p.setDefault(profile);
         }
@@ -216,7 +216,7 @@ public class ProfileScreen extends Screen {
         fill(matricies, 20, 33, this.width / 2 - 20, 34, 0xFFFFFFFF);
 
         // pname
-        drawCenteredString(matricies, this.textRenderer, jsMacros.profile.profileName, this.width * 7 / 12, 5, 0x7F7F7F);
+        drawCenteredString(matricies, this.textRenderer, JsMacros.profile.profileName, this.width * 7 / 12, 5, 0x7F7F7F);
 
         // middle bar
         fill(matricies, this.width / 2, 22, this.width / 2 + 1, this.height - 1, 0xFFFFFFFF);
@@ -241,7 +241,7 @@ public class ProfileScreen extends Screen {
     }
 
     public void onClose() {
-        jsMacros.config.saveConfig();
+        JsMacros.config.saveConfig();
         client.openScreen(parent);
     }
 }

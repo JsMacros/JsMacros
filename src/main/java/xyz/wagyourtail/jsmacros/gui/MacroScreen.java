@@ -7,8 +7,8 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
-import xyz.wagyourtail.jsmacros.jsMacros;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.gui.containers.AboutOverlay;
 import xyz.wagyourtail.jsmacros.gui.containers.ConfirmOverlay;
@@ -88,9 +88,9 @@ public class MacroScreen extends Screen {
     }
 
     public void setFile(MacroContainer macro) {
-        File f = new File(jsMacros.config.macroFolder, macro.getRawMacro().scriptFile);
-        File dir = jsMacros.config.macroFolder;
-        if (!f.equals(jsMacros.config.macroFolder)) dir = f.getParentFile();
+        File f = new File(JsMacros.config.macroFolder, macro.getRawMacro().scriptFile);
+        File dir = JsMacros.config.macroFolder;
+        if (!f.equals(JsMacros.config.macroFolder)) dir = f.getParentFile();
         openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this::addButton, this::removeButton, this::closeOverlay, this::setFocused, macro::setFile));
     }
     
@@ -99,9 +99,9 @@ public class MacroScreen extends Screen {
     }
     
     public void runFile(MacroListTopbar m) {
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, jsMacros.config.macroFolder, null, this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (file) -> {
+        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, JsMacros.config.macroFolder, null, this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (file) -> {
             try {
-                RunScript.exec(new RawMacro(IRawMacro.MacroType.EVENT, "", file.getCanonicalPath().substring(jsMacros.config.macroFolder.getCanonicalPath().length()), true), null);
+                RunScript.exec(new RawMacro(IRawMacro.MacroType.EVENT, "", file.getCanonicalPath().substring(JsMacros.config.macroFolder.getCanonicalPath().length()), true), null);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -188,7 +188,7 @@ public class MacroScreen extends Screen {
             macro.render(matricies, mouseX, mouseY, delta);
         }
         
-        drawCenteredString(matricies, this.textRenderer, jsMacros.profile.profileName, this.width * 7 / 12, 5, 0x7F7F7F);
+        drawCenteredString(matricies, this.textRenderer, JsMacros.profile.profileName, this.width * 7 / 12, 5, 0x7F7F7F);
 
         fill(matricies, this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
         fill(matricies, this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);
@@ -208,6 +208,6 @@ public class MacroScreen extends Screen {
 
     public void onClose() {
         client.openScreen(parent);
-        jsMacros.profile.saveProfile();
+        JsMacros.profile.saveProfile();
     }
 }

@@ -36,7 +36,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
-import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.api.helpers.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.BlockPosHelper;
@@ -227,7 +227,7 @@ public class FWorld extends Functions {
      */
     public Clip playSoundFile(String file, double volume) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
         Clip clip = AudioSystem.getClip();
-        clip.open(AudioSystem.getAudioInputStream(new File(jsMacros.config.macroFolder, file)));
+        clip.open(AudioSystem.getAudioInputStream(new File(JsMacros.config.macroFolder, file)));
         FloatControl gainControl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
         float min = gainControl.getMinimum();
         float range = gainControl.getMaximum() - min;

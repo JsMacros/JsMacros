@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.api.events;
 
 import net.minecraft.client.gui.screen.Screen;
-import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScreen;
 
@@ -15,7 +15,7 @@ public class EventOpenScreen implements IEvent {
     
     public EventOpenScreen(Screen screen) {
         this.screen = (IScreen) screen;
-        this.screenName = jsMacros.getScreenName(screen);
+        this.screenName = JsMacros.getScreenName(screen);
         
         profile.triggerMacro(this);
     }

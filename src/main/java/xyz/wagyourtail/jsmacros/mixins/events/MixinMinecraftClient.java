@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.mixins.events;
 
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,7 +26,7 @@ public class MixinMinecraftClient {
             new EventDimensionChange(world.getRegistryKey().getValue().toString());
     }
     
-    @Inject(at = @At("HEAD"), method="openScreen")
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", opcode = Opcodes.PUTFIELD), method="openScreen")
     public void onOpenScreen(Screen screen, CallbackInfo info) {
         if (screen != currentScreen) new EventOpenScreen(screen);
     }

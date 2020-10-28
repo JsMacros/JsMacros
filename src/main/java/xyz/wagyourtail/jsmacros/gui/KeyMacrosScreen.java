@@ -9,7 +9,7 @@ import com.google.common.collect.ImmutableList;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
-import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.events.EventKey;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
@@ -42,7 +42,7 @@ public class KeyMacrosScreen extends MacroScreen {
             if (event instanceof BaseMacro) macros.add(((BaseMacro) event).getRawMacro());
         }
 
-        Collections.sort(macros, jsMacros.config.getSortComparator());
+        Collections.sort(macros, JsMacros.config.getSortComparator());
 
         for (RawMacro macro : macros) {
             addMacro(macro);

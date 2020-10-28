@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.api.functions;
 
 import org.apache.commons.lang3.StringUtils;
-import xyz.wagyourtail.jsmacros.jsMacros;
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 
 import java.io.File;
@@ -232,7 +232,7 @@ public class FReflection extends Functions {
      * @throws IOException
      */
     public void loadJarFile(String file) throws IOException {
-        File jarFile = new File(jsMacros.config.macroFolder, file);
+        File jarFile = new File(JsMacros.config.macroFolder, file);
         if (!jarFile.exists()) throw new FileNotFoundException("Jar File Not Found");
         try (URLClassLoader loader = new URLClassLoader(new URL[] {new URL("jar:file:"+jarFile.getCanonicalPath() + "!/")})) {
             try (JarFile jar = new JarFile(jarFile)) {

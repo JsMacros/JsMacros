@@ -125,9 +125,9 @@ public class RunScript {
 
         @Override
         public int compare(ILanguage a, ILanguage b) {
-            String[] as = a.extension().replaceAll("\\.", " ").trim().split(" ");
-            String[] bs = b.extension().replaceAll("\\.", " ").trim().split(" ");
-            int lendif = bs.length-as.length;
+            final String[] as = a.extension().replaceAll("\\.", " ").trim().split(" ");
+            final String[] bs = b.extension().replaceAll("\\.", " ").trim().split(" ");
+            final int lendif = bs.length-as.length;
             if (lendif != 0) return lendif;
             int comp = 0;
             for (int i = bs.length - 1; i >= 0; --i) {

@@ -17,7 +17,7 @@ class MixinChatHud {
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;)V", at = @At(value = "HEAD"))
     private Text modifyChatMessage(Text text) {
         if (text == null) return text;
-        TextHelper result = new EventRecvMessage(text).text;
+        final TextHelper result = new EventRecvMessage(text).text;
         if (result == null) return null;
         if (!result.getRaw().equals(text)) {
             return result.getRaw();

@@ -39,7 +39,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     public MethodWrapper<String, Object, Object> catchInit;
     
-    public MinecraftClient mc;
+    protected final MinecraftClient mc;
     
     public Draw2D() {
         this.mc = MinecraftClient.getInstance();

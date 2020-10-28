@@ -13,7 +13,7 @@ import net.minecraft.text.LiteralText;
  * @see xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScreen
  */
 public class Screen extends net.minecraft.client.gui.screen.Screen {
-    private int bgStyle = 0;
+    private final int bgStyle;
     
     
     public Screen(String title, boolean dirt) {

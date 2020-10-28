@@ -15,7 +15,7 @@ import java.io.IOException;
  *
  */
 public class FileHandler {
-    private File f;
+    private final File f;
     
     public FileHandler(String path) {
         this(new File(path));
