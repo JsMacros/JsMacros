@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.containers;
+package xyz.wagyourtail.jsmacros.gui.macros.containers;
 
 import java.io.File;
 import java.util.List;
@@ -22,7 +22,6 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 
 public class MacroContainer extends MultiElementContainer {
     private static final Identifier key_down_tex = new Identifier(JsMacros.MOD_ID, "resources/key_down.png");
@@ -42,13 +41,15 @@ public class MacroContainer extends MultiElementContainer {
     private Consumer<MacroContainer> onRemove;
     private Consumer<MacroContainer> openFile;
     private Consumer<MacroContainer> setEvent;
+    private Consumer<File> editFile;
 
-    public MacroContainer(int x, int y, int width, int height, TextRenderer textRenderer, RawMacro macro, Consumer<AbstractButtonWidget> addButton, Consumer<MacroContainer> onRemove, Consumer<MacroContainer> openFile, Consumer<MacroContainer>setEvent) {
+    public MacroContainer(int x, int y, int width, int height, TextRenderer textRenderer, RawMacro macro, Consumer<AbstractButtonWidget> addButton, Consumer<MacroContainer> onRemove, Consumer<MacroContainer> openFile, Consumer<MacroContainer>setEvent, Consumer<File> editFile) {
         super(x, y, width, height, textRenderer, addButton);
         this.macro = macro;
         this.onRemove = onRemove;
         this.openFile = openFile;
         this.setEvent = setEvent;
+        this.editFile = editFile;
         this.mc = MinecraftClient.getInstance();
         init();
     }
@@ -94,7 +95,7 @@ public class MacroContainer extends MultiElementContainer {
         }));
         
         editBtn = (Button) addButton(new Button(x + w - 32, y + 1, 30, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("selectServer.edit"), (btn) -> {
-            Util.getOperatingSystem().open(new File(JsMacros.config.macroFolder, macro.scriptFile));
+            if (editFile != null && !macro.scriptFile.equals("")) editFile.accept(new File(JsMacros.config.macroFolder, macro.scriptFile));
         }));
 
         delBtn = (Button) addButton(new Button(x + w - 1, y + 1, 12, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("X"), (btn) -> {

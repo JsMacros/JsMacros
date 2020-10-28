@@ -14,7 +14,7 @@ import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
 
 import xyz.wagyourtail.jsmacros.config.ConfigManager;
-import xyz.wagyourtail.jsmacros.gui.KeyMacrosScreen;
+import xyz.wagyourtail.jsmacros.gui.macros.KeyMacrosScreen;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
 public class JsMacros implements ClientModInitializer {

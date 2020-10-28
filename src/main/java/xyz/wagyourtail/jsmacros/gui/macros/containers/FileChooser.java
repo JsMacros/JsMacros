@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.containers;
+package xyz.wagyourtail.jsmacros.gui.macros.containers;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +21,8 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.extensionbase.ILanguage;
+import xyz.wagyourtail.jsmacros.gui.containers.ConfirmOverlay;
+import xyz.wagyourtail.jsmacros.gui.containers.TextPrompt;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.OverlayContainer;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
@@ -32,15 +34,17 @@ public class FileChooser extends OverlayContainer {
     private File selected;
     private List<fileObj> files = new ArrayList<>();
     private Consumer<File> setFile;
+    private Consumer<File> editFile;
     private Consumer<Element> setFocused;
     private int topScroll;
 
-    public FileChooser(int x, int y, int width, int height, TextRenderer textRenderer, File directory, File selected, Consumer<AbstractButtonWidget> addButton, Consumer<AbstractButtonWidget> removeButton, Consumer<OverlayContainer> close,  Consumer<Element> setFocused, Consumer<File> setFile) {
+    public FileChooser(int x, int y, int width, int height, TextRenderer textRenderer, File directory, File selected, Consumer<AbstractButtonWidget> addButton, Consumer<AbstractButtonWidget> removeButton, Consumer<OverlayContainer> close,  Consumer<Element> setFocused, Consumer<File> setFile, Consumer<File> editFile) {
         super(x, y, width, height, textRenderer, addButton, removeButton, close);
         this.setFile = setFile;
         this.directory = directory;
         this.selected = selected;
         this.setFocused = setFocused;
+        this.editFile = editFile;
     }
 
     public void setDir(File dir) {
@@ -94,7 +98,7 @@ public class FileChooser extends OverlayContainer {
         }));
 
         this.addButton(new Button(x + w * 4 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("selectWorld.edit"), (btn) -> {
-            if (this.selected != null) Util.getOperatingSystem().open(this.selected);
+            if (this.selected != null) editFile.accept(selected);
         }));
 
         this.addButton(new Button(x + w * 3 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.rename"), (btn) -> {

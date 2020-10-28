@@ -16,7 +16,7 @@ import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventRegistry;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IProfile;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.events.TickBasedEvents;
-import xyz.wagyourtail.jsmacros.gui.MacroScreen;
+import xyz.wagyourtail.jsmacros.gui.macros.MacroScreen;
 
 public class Profile implements IProfile {
     public String profileName;

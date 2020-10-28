@@ -1,9 +1,10 @@
-package xyz.wagyourtail.jsmacros.gui;
+package xyz.wagyourtail.jsmacros.gui.macros;
 
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.gui.ProfileScreen;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 

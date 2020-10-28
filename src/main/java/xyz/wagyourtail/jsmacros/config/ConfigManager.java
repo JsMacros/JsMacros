@@ -28,9 +28,7 @@ public class ConfigManager implements IConfig {
         options = new ConfigOptions(true, "default", RawMacro.SortMethod.Enabled, new HashMap<>(), new LinkedHashMap<>());
         options.profiles.put("default", new ArrayList<>());
         options.profiles.get("default").add(new RawMacro(IRawMacro.MacroType.KEY_RISING, "key.keyboard.j", "test.js", true));
-        if (!macroFolder.exists()) {
-            macroFolder.mkdirs();
-        }
+        if (!macroFolder.exists()) macroFolder.mkdirs();
         final File tf = new File(macroFolder, "test.js");
         if (!tf.exists()) try {
             tf.createNewFile();

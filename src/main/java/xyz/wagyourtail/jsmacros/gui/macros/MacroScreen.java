@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui;
+package xyz.wagyourtail.jsmacros.gui.macros;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,14 +10,16 @@ import com.google.common.collect.ImmutableList;
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.gui.BaseScreen;
+import xyz.wagyourtail.jsmacros.gui.CancelScreen;
 import xyz.wagyourtail.jsmacros.gui.containers.AboutOverlay;
 import xyz.wagyourtail.jsmacros.gui.containers.ConfirmOverlay;
-import xyz.wagyourtail.jsmacros.gui.containers.EventChooser;
-import xyz.wagyourtail.jsmacros.gui.containers.FileChooser;
-import xyz.wagyourtail.jsmacros.gui.containers.MacroContainer;
-import xyz.wagyourtail.jsmacros.gui.containers.MacroListTopbar;
+import xyz.wagyourtail.jsmacros.gui.macros.containers.EventChooser;
+import xyz.wagyourtail.jsmacros.gui.macros.containers.FileChooser;
+import xyz.wagyourtail.jsmacros.gui.macros.containers.MacroContainer;
+import xyz.wagyourtail.jsmacros.gui.macros.containers.MacroListTopbar;
+import xyz.wagyourtail.jsmacros.gui.editor.EditorScreen;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.gui.elements.OverlayContainer;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
@@ -26,8 +28,7 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
 
-public class MacroScreen extends Screen {
-    protected Screen parent;
+public class MacroScreen extends BaseScreen {
     protected MacroListTopbar topbar;
     protected Scrollbar macroScroll;
     protected List<MacroContainer> macros = new ArrayList<>();
@@ -35,24 +36,14 @@ public class MacroScreen extends Screen {
     protected Button keyScreen;
     protected Button eventScreen;
     protected Button profileScreen;
-    protected OverlayContainer overlay;
     
     public MacroScreen(Screen parent) {
-        super(new TranslatableText("jsmacros.title"));
-        this.parent = parent;
-    }
-    
-    public void reload() {
-        init();
+        super(new TranslatableText("jsmacros.title"), parent);
     }
     
     protected void init() {
         super.init();
-        buttons.clear();
-        children.clear();
         macros.clear();
-        overlay = null;
-        client.keyboard.setRepeatEvents(true);
         keyScreen = this.addButton(new Button(0, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.keys"), null));
 
         eventScreen = this.addButton(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.events"), null));
@@ -76,14 +67,12 @@ public class MacroScreen extends Screen {
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (overlay == null) {
             macroScroll.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
-        } else {
-            if (overlay.scroll != null) overlay.scroll.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
         }
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
 
     public void addMacro(RawMacro macro) {
-        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::confirmRemoveMacro, this::setFile, this::setEvent));
+        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::confirmRemoveMacro, this::setFile, this::setEvent, this::editFile));
         macroScroll.setScrollPages((macros.size() * 16) / (double) Math.max(1, this.height - 40));
     }
 
@@ -91,46 +80,21 @@ public class MacroScreen extends Screen {
         File f = new File(JsMacros.config.macroFolder, macro.getRawMacro().scriptFile);
         File dir = JsMacros.config.macroFolder;
         if (!f.equals(JsMacros.config.macroFolder)) dir = f.getParentFile();
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this::addButton, this::removeButton, this::closeOverlay, this::setFocused, macro::setFile));
+        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this::addButton, this::removeButton, this::closeOverlay, this::setFocused, macro::setFile, this::editFile));
     }
     
     public void setEvent(MacroContainer macro) {
         openOverlay(new EventChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, macro.getRawMacro().eventkey, this::addButton, this::removeButton, this::closeOverlay, macro::setEventType));
     }
     
-    public void runFile(MacroListTopbar m) {
+    public void runFile() {
         openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, JsMacros.config.macroFolder, null, this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (file) -> {
             try {
                 RunScript.exec(new RawMacro(IRawMacro.MacroType.EVENT, "", file.getCanonicalPath().substring(JsMacros.config.macroFolder.getCanonicalPath().length()), true), null);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }));
-    }
-    
-    public void openOverlay(OverlayContainer overlay) {
-        for (AbstractButtonWidget b : buttons) {
-            overlay.savedBtnStates.put(b, b.active);
-            b.active = false;
-        }
-        this.overlay = overlay;
-        overlay.init();
-    }
-
-    public void removeButton(AbstractButtonWidget btn) {
-        buttons.remove(btn);
-        children.remove(btn);
-    }
-    
-    public void closeOverlay(OverlayContainer overlay) {
-        if (overlay == null) return;
-        for (AbstractButtonWidget b : overlay.getButtons()) {
-            removeButton(b);
-        }
-        for (AbstractButtonWidget b : overlay.savedBtnStates.keySet()) {
-            b.active = overlay.savedBtnStates.get(b);
-        }
-        if (this.overlay == overlay) this.overlay = null;
+        }, this::editFile));
     }
 
     public void confirmRemoveMacro(MacroContainer macro) {
@@ -163,17 +127,12 @@ public class MacroScreen extends Screen {
 
         macroScroll.setScrollPages((macros.size() * 16) / (double) Math.max(1, this.height - 40));
     }
-    
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == 256) {
-            if (overlay != null) {
-                this.overlay.closeOverlay(this.overlay.getChildOverlay());
-                return true;
-            }
-        }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+
+    public void editFile(File file) {
+        //Util.getOperatingSystem().open(file);
+        client.openScreen(new EditorScreen(this, file));
     }
-    
+
     public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
         if (matricies == null) return;
         this.renderBackground(matricies, 0);
@@ -181,7 +140,7 @@ public class MacroScreen extends Screen {
         topbar.render(matricies, mouseX, mouseY, delta);
 
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
-            ((Button) b).render(matricies, mouseX, mouseY, delta);
+            b.render(matricies, mouseX, mouseY, delta);
         }
 
         for (MacroContainer macro : ImmutableList.copyOf(this.macros)) {
@@ -195,19 +154,11 @@ public class MacroScreen extends Screen {
         fill(matricies, this.width / 6 * 2, 0, this.width / 6 * 2 + 2, 20, 0xFFFFFFFF);
         fill(matricies, 0, 20, width, 22, 0xFFFFFFFF);
 
-        if (overlay != null) overlay.render(matricies, mouseX, mouseY, delta);
-    }
-    
-    public void removed() {
-        client.keyboard.setRepeatEvents(false);
-    }
-
-    public boolean shouldCloseOnEsc() {
-        return this.overlay == null;
+        super.render(matricies, mouseX, mouseY, delta);
     }
 
     public void onClose() {
-        client.openScreen(parent);
+        super.onClose();
         JsMacros.profile.saveProfile();
     }
 }

@@ -1,11 +1,11 @@
-package xyz.wagyourtail.jsmacros.gui.containers;
+package xyz.wagyourtail.jsmacros.gui.macros.containers;
 
 import java.util.function.Consumer;
 
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
-import xyz.wagyourtail.jsmacros.gui.MacroScreen;
+import xyz.wagyourtail.jsmacros.gui.macros.MacroScreen;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.MultiElementContainer;
 import xyz.wagyourtail.jsmacros.profile.Profile;
@@ -19,10 +19,10 @@ public class MacroListTopbar extends MultiElementContainer {
     public MacroScreen parent;
     public RawMacro.MacroType deftype;
     private Consumer<RawMacro> addMacro;
-    private Consumer<MacroListTopbar> runFile;
+    private Runnable runFile;
     private Button type;
     
-    public MacroListTopbar(MacroScreen parent, int x, int y, int width, int height, TextRenderer textRenderer, RawMacro.MacroType deftype, Consumer<AbstractButtonWidget> addButton, Consumer<RawMacro> addMacro, Consumer<MacroListTopbar>runFile) {
+    public MacroListTopbar(MacroScreen parent, int x, int y, int width, int height, TextRenderer textRenderer, RawMacro.MacroType deftype, Consumer<AbstractButtonWidget> addButton, Consumer<RawMacro> addMacro, Runnable runFile) {
         super(x, y, width, height, textRenderer, addButton);
         this.deftype = deftype;
         this.addMacro = addMacro;
@@ -52,7 +52,7 @@ public class MacroListTopbar extends MultiElementContainer {
         }));
         
         addButton(new Button(x + w - 32, y + 1, 30, height - 3, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.run"), (btn) -> {
-            if (runFile != null) runFile.accept(this);
+            if (runFile != null) runFile.run();
         }));
         
         addButton(new Button(x + w - 1, y+1, 11, height - 3, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("+"), (btn) -> {

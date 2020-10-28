@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.containers;
+package xyz.wagyourtail.jsmacros.gui.macros.containers;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +20,7 @@ import xyz.wagyourtail.jsmacros.profile.Profile;
 
 public class EventChooser extends OverlayContainer {
     private String selected;
-    private List<eventObj> events = new ArrayList<>();
+    private List<EventObj> events = new ArrayList<>();
     private int topScroll;
     private Consumer<String> setEvent;
     private Text eventText;
@@ -34,7 +34,7 @@ public class EventChooser extends OverlayContainer {
     
     public void selectEvent(String event) {
         this.selected = event;
-        for (eventObj e : events) {
+        for (EventObj e : events) {
             if (event.equals(e.event)) {
                 e.btn.setColor(0x7FFFFFFF);
             } else {
@@ -70,7 +70,7 @@ public class EventChooser extends OverlayContainer {
     }
     
     public void addEvent(String eventName) {
-        eventObj e = new eventObj(eventName, new Button(x+3+(events.size() % 5 * (width - 12) / 5), topScroll + (events.size() / 5 * 12), (width - 12) / 5, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(eventName.replace("Event", "")), (btn) -> {
+        EventObj e = new EventObj(eventName, new Button(x+3+(events.size() % 5 * (width - 12) / 5), topScroll + (events.size() / 5 * 12), (width - 12) / 5, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(eventName.replace("Event", "")), (btn) -> {
             selectEvent(eventName);
         }));
 
@@ -83,7 +83,7 @@ public class EventChooser extends OverlayContainer {
     
     public void updateEventPos() {
         for (int i = 0; i < events.size(); ++i) {
-            eventObj e = events.get(i);
+            EventObj e = events.get(i);
             if (topScroll + (i / 5 * 12) < y + 13 || topScroll + (i / 5 * 12) > y + height - 27) e.btn.visible = false;
             else e.btn.visible = true;
             e.btn.setPos(x + 3 + (i % 5 * (width - 12) / 5), topScroll + (i / 5 * 12), (width - 12) / 5, 12);
@@ -93,7 +93,7 @@ public class EventChooser extends OverlayContainer {
     public void onScrollbar(double page) {
         topScroll = y + 13 - (int) (page * (height - 27));
         int i = 0;
-        for (eventObj fi : events) {
+        for (EventObj fi : events) {
             if (topScroll + (i / 5 * 12) < y + 13 || topScroll + (i / 5 * 12) > y + height - 27) fi.btn.visible = false;
             else fi.btn.visible = true;
             fi.btn.setPos(x + 3 + (i % 5 * (width - 12) / 5), topScroll + (i / 5 * 12), (width - 12) / 5, 12);
@@ -128,11 +128,11 @@ public class EventChooser extends OverlayContainer {
     }
     
     
-    public static class eventObj {
+    public static class EventObj {
         String event;
         Button btn;
         
-        public eventObj(String event, Button btn) {
+        public EventObj(String event, Button btn) {
             this.event = event;
             this.btn = btn;
         }
