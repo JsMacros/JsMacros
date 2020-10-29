@@ -109,9 +109,7 @@ public class Profile implements IProfile {
     }
     
     public void triggerMacro(IEvent event) {
-        if (registry.macros.containsKey(event.getClass().getSimpleName())) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(event.getClass().getSimpleName()))) {
-            macro.trigger(event);
-        }
+        triggerMacroNoAnything(event);
 
         if (registry.macros.containsKey("ANYTHING")) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get("ANYTHING"))) {
             macro.trigger(event);
@@ -119,13 +117,7 @@ public class Profile implements IProfile {
     }
     
     public void triggerMacroJoin(IEvent event) {
-        if (registry.macros.containsKey(event.getClass().getSimpleName())) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(event.getClass().getSimpleName()))) {
-            try {
-                Thread t = macro.trigger(event);
-                if (t != null) t.join();
-            } catch (InterruptedException e) {
-            }
-        }
+        triggerMacroJoinNoAnything(event);
 
         if (registry.macros.containsKey("ANYTHING")) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get("ANYTHING"))) {
             try {
