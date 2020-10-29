@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.network.ServerAddress;
 import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.JsMacros;
+import xyz.wagyourtail.jsmacros.api.events.EventCustom;
 import xyz.wagyourtail.jsmacros.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IConfig;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
@@ -401,5 +402,21 @@ public class FJsMacros extends Functions {
         while (--i >= 0) {
             tickSynchronizer.waitTick();
         }
+    }
+    
+    /**
+    * create a custom event object that can trigger a event. It's recommended to use 
+    * {@code jsMacros.getProfile().getRegistry().addEvent(eventName)} to set up the event to be visible in the GUI first.
+    * 
+    * @see xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventRegistry#addEvent(String)
+    * 
+     * @param eventName name of the event. please don't use an existing one... your scripts might not like that.
+     *
+     * @since 1.2.8
+     *
+     * @return
+     */
+    public EventCustom createCustomEvent(String eventName) {
+        return new EventCustom(eventName);
     }
 }

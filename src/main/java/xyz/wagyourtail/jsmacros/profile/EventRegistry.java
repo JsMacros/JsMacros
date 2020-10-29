@@ -101,6 +101,7 @@ public class EventRegistry implements IEventRegistry {
         events.add(clazz.getSimpleName());
     }
     
+    @Deprecated
     public synchronized void addEvent(String oldName, Class<? extends IEvent> clazz) {
         oldEvents.put(oldName, clazz.getSimpleName());
         events.add(clazz.getSimpleName());

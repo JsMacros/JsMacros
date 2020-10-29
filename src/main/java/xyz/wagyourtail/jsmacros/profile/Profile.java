@@ -9,35 +9,10 @@ import com.google.common.collect.ImmutableList;
 
 import net.minecraft.client.MinecraftClient;
 import xyz.wagyourtail.jsmacros.JsMacros;
-import xyz.wagyourtail.jsmacros.api.events.EventAirChange;
-import xyz.wagyourtail.jsmacros.api.events.EventArmorChange;
-import xyz.wagyourtail.jsmacros.api.events.EventBlockUpdate;
-import xyz.wagyourtail.jsmacros.api.events.EventBossbar;
-import xyz.wagyourtail.jsmacros.api.events.EventChunkLoad;
-import xyz.wagyourtail.jsmacros.api.events.EventChunkUnload;
-import xyz.wagyourtail.jsmacros.api.events.EventDamage;
-import xyz.wagyourtail.jsmacros.api.events.EventDeath;
-import xyz.wagyourtail.jsmacros.api.events.EventDimensionChange;
-import xyz.wagyourtail.jsmacros.api.events.EventDisconnect;
-import xyz.wagyourtail.jsmacros.api.events.EventEXPChange;
-import xyz.wagyourtail.jsmacros.api.events.EventHeldItemChange;
-import xyz.wagyourtail.jsmacros.api.events.EventHungerChange;
-import xyz.wagyourtail.jsmacros.api.events.EventItemDamage;
-import xyz.wagyourtail.jsmacros.api.events.EventItemPickup;
-import xyz.wagyourtail.jsmacros.api.events.EventJoinServer;
-import xyz.wagyourtail.jsmacros.api.events.EventKey;
-import xyz.wagyourtail.jsmacros.api.events.EventOpenScreen;
-import xyz.wagyourtail.jsmacros.api.events.EventPlayerJoin;
-import xyz.wagyourtail.jsmacros.api.events.EventPlayerLeave;
-import xyz.wagyourtail.jsmacros.api.events.EventProfileLoad;
-import xyz.wagyourtail.jsmacros.api.events.EventRecvMessage;
-import xyz.wagyourtail.jsmacros.api.events.EventSendMessage;
-import xyz.wagyourtail.jsmacros.api.events.EventSignEdit;
-import xyz.wagyourtail.jsmacros.api.events.EventSound;
-import xyz.wagyourtail.jsmacros.api.events.EventTick;
-import xyz.wagyourtail.jsmacros.api.events.EventTitle;
+import xyz.wagyourtail.jsmacros.api.events.*;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventRegistry;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IProfile;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.events.TickBasedEvents;
@@ -100,6 +75,7 @@ public class Profile implements IProfile {
         JsMacros.config.saveConfig();
     }
 
+    @SuppressWarnings("deprecation")
     private void initEventHandlerCallbacks() {
         registry.addEvent("ANYTHING");
         registry.addEvent("PROFILE_LOAD", EventProfileLoad.class);
@@ -161,18 +137,38 @@ public class Profile implements IProfile {
     }
     
     public void triggerMacroNoAnything(IEvent event) {
-        if (registry.macros.containsKey(event.getClass().getSimpleName())) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(event.getClass().getSimpleName()))) {
-            macro.trigger(event);
+        if (event instanceof EventCustom) {
+            if (registry.macros.containsKey(((EventCustom) event).eventName))
+                for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(((EventCustom) event).eventName))) {
+                    macro.trigger(event);
+                }
+        } else {
+            if (registry.macros.containsKey(event.getClass().getSimpleName()))
+                for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(event.getClass().getSimpleName()))) {
+                    macro.trigger(event);
+                }
         }
     }
     
     public void triggerMacroJoinNoAnything(IEvent event) {
-        if (registry.macros.containsKey(event.getClass().getSimpleName())) for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(event.getClass().getSimpleName()))) {
-            try {
-                Thread t = macro.trigger(event);
-                if (t != null) t.join();
-            } catch (InterruptedException e) {
-            }
+        if (event instanceof EventCustom) {
+            if (registry.macros.containsKey(((EventCustom) event).eventName))
+                for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(((EventCustom) event).eventName))) {
+                    try {
+                        Thread t = macro.trigger(event);
+                        if (t != null) t.join();
+                    } catch (InterruptedException e) {
+                    }
+                }
+        } else {
+            if (registry.macros.containsKey(event.getClass().getSimpleName()))
+                for (IEventListener macro : ImmutableList.copyOf(registry.macros.get(event.getClass().getSimpleName()))) {
+                    try {
+                        Thread t = macro.trigger(event);
+                        if (t != null) t.join();
+                    } catch (InterruptedException e) {
+                    }
+                }
         }
     }
 
