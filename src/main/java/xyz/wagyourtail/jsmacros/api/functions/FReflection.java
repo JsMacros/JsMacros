@@ -261,7 +261,12 @@ public class FReflection extends Functions {
      * {@link FReflection#loadJarFile(String)} would make, or how I was previously doing it by pre-loading and caching
      * all the classes to a {@link Map}
      *
-     * @author Wagyourtail
+     * This class is a modification to
+     * <a href="https://www.source-code.biz/snippets/java/12.htm">Christian d'Heureuse's JoinClassLoader</a>, under the
+     * <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0 license</a> to change it from a Class array to a
+     * {@link Set}, to allow for modifications to the ClassLoaders contained in the classLoader.
+     *
+     * @author Wagyourtail, Christian d'Heureuse
      * @since 1.2.8
      */
     protected static class CombinedVariableClassLoader extends ClassLoader {
