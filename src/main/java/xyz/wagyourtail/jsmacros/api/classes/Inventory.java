@@ -29,9 +29,9 @@ public class Inventory {
     private ClientPlayerInteractionManager man;
     private int syncId;
     private ClientPlayerEntity player;
+    protected MinecraftClient mc = MinecraftClient.getInstance();
 
     public Inventory() {
-        MinecraftClient mc = MinecraftClient.getInstance();
         //prevent race condition
         final net.minecraft.client.gui.screen.Screen s = mc.currentScreen;
         if (s instanceof HandledScreen) {
@@ -101,7 +101,7 @@ public class Inventory {
     public Inventory closeAndDrop() {
         ItemStack held = player.inventory.getCursorStack();
         if (!held.isEmpty()) man.clickSlot(syncId, -999, 0, SlotActionType.PICKUP, player);
-        player.closeHandledScreen();
+        mc.execute(player::closeHandledScreen);
         this.inventory = null;
         return this;
     }
@@ -110,7 +110,7 @@ public class Inventory {
      * Closes the inventory, and open gui if applicable.
      */
     public void close() {
-        player.closeHandledScreen();
+        mc.execute(player::closeHandledScreen);
     }
 
     /**

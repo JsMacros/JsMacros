@@ -108,6 +108,7 @@ public class Profile implements IProfile {
         
     }
     
+    
     public void triggerMacro(IEvent event) {
         triggerMacroNoAnything(event);
 

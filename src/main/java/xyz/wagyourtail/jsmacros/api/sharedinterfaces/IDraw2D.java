@@ -266,14 +266,14 @@ public interface IDraw2D<T> {
 
     /**
      * @since 1.2.7
-     * @param onInit calls your method as a {@link Consumer}<{@link T}>
+     * @param onInit calls your method as a {@link Consumer}&lt;{@link T}&gt;
      * @return
      */
     public T setOnInit(MethodWrapper<T, Object, Object> onInit);
     
     /**
      * @since 1.2.7
-     * @param catchInit calls your method as a {@link Consumer}<{@link String}>
+     * @param catchInit calls your method as a {@link Consumer}&lt;{@link String}&gt;
      * @return
      */
     public T setOnFailInit(MethodWrapper<String, Object, Object> catchInit);

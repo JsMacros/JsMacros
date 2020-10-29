@@ -123,12 +123,12 @@ public class FPlayer extends Functions {
     }
 
     /**
-     * @see FPlayer#takeScreenshot(String, String, Consumer)
+     * @see FPlayer#takeScreenshot(String, String, MethodWrapper)
      * 
      * @since 1.2.6
      * 
      * @param folder
-     * @param callback calls your method as a {@link Consumer}<{@link TextHelper}>
+     * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
      */
     public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object, Object> callback) {
         ScreenshotUtils.saveScreenshot(new File(JsMacros.config.macroFolder, folder), mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
@@ -144,7 +144,7 @@ public class FPlayer extends Functions {
      * 
      * @param folder
      * @param file
-     * @param callback calls your method as a {@link Consumer}<{@link TextHelper}>
+     * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
      */
     public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object> callback) {
         ScreenshotUtils.saveScreenshot(new File(JsMacros.config.macroFolder, folder), file, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),

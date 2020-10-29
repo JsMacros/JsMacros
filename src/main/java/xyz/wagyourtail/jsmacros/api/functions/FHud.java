@@ -191,7 +191,7 @@ public class FHud extends Functions {
      * 
      * @see xyz.wagyourtail.jsmacros.api.classes.Draw3D
      * 
-     * @param overlay
+     * @param draw
      */
     public void registerDraw3D(Draw3D draw) {
         synchronized (renders) {
@@ -206,7 +206,7 @@ public class FHud extends Functions {
      * 
      * @see xyz.wagyourtail.jsmacros.api.classes.Draw3D
      * 
-     * @param overlay
+     * @param draw
      */
     public void unregisterDraw3D(Draw3D draw) {
         synchronized (renders) {

@@ -38,7 +38,7 @@ public class Draw3D {
     }
     
     /**
-     * @sine 1.0.6
+     * @since 1.0.6
      * 
      * @return
      */
@@ -379,7 +379,7 @@ public class Draw3D {
         }
         
         /**
-         * @sine 1.0.6
+         * @since 1.0.6
          * 
          * @param color
          */

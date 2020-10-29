@@ -22,23 +22,23 @@ public class Websocket {
 
     private final WebSocket ws;
     /**
-     * calls your method as a {@link java.util.function.Consumer BiConsumer}<{@link WebSocket}, {@link List}<{@link String}>>
+     * calls your method as a {@link java.util.function.Consumer BiConsumer}&lt;{@link WebSocket}, {@link List}&lt;{@link String}&gt;&gt;
      */
     public MethodWrapper<WebSocket, Map<String, List<String>>, Object> onConnect;
     /**
-     * calls your method as a {@link BiConsumer}<{@link WebSocket}, {@link String}>
+     * calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link WebSocket}, {@link String}&gt;
      */
     public MethodWrapper<WebSocket, String, Object> onTextMessage;
     /**
-     * calls your method as a {@link BiConsumer}<{@link WebSocket}, {@link Disconnected}>
+     * calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link WebSocket}, {@link Disconnected}&gt;
      */
     public MethodWrapper<WebSocket, Disconnected, Object> onDisconnect;
     /**
-     * calls your method as a {@link BiConsumer}<{@link WebSocket}, {@link WebSocketException}>
+     * calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link WebSocket}, {@link WebSocketException}&gt;
      */
     public MethodWrapper<WebSocket, WebSocketException, Object> onError;
     /**
-     * calls your method as a {@link BiConsumer}<{@link WebSocket}, {@link WebSocketFrame}>
+     * calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link WebSocket}, {@link WebSocketFrame}&gt;
      */
     public MethodWrapper<WebSocket, WebSocketFrame, Object> onFrame;
 

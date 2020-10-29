@@ -122,7 +122,7 @@ public class HTTPRequest {
         }
         
         /**
-         * Don't use this. Parse {@link Request#text()} in the guest language
+         * Don't use this. Parse {@link HTTPRequest.Response#text()} in the guest language
          * @since 1.1.8
          * @deprecated
          * @return

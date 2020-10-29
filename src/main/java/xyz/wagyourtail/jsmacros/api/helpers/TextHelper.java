@@ -32,7 +32,7 @@ public class TextHelper {
     /**
      * replace the text in this class with {@link java.lang.String String} data.
      * @since 1.0.8
-     * @param json
+     * @param content
      * @return
      */
     public TextHelper replaceFromString(String content) {

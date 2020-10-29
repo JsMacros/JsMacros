@@ -86,7 +86,7 @@ public class FJsMacros extends Functions {
     }
 
     /**
-     * @return a {@link java.lang.Map} of the current running threads.
+     * @return a {@link Map} of the current running threads.
      * 
      * @since 1.0.5
      * 
@@ -106,7 +106,7 @@ public class FJsMacros extends Functions {
 
     /**
      * 
-     * @see xyz.wagyourtail.jsmacros.api.functions.FJsMacros#runScript(String, MethodWrappers.Consumer)
+     * @see FJsMacros#runScript(String, String, MethodWrapper)  
      * 
      * @since 1.1.5
      * 
@@ -137,7 +137,7 @@ public class FJsMacros extends Functions {
     }
     
     /**
-     * @see xyz.wagyourtail.jsmacros.api.functions.FJsMacros#runScript(String, String, MethodWrappers.Consumer)
+     * @see FJsMacros#runScript(String, String, MethodWrapper)
      * 
      * @since 1.2.4
      * 
@@ -156,7 +156,7 @@ public class FJsMacros extends Functions {
      * 
      * @param language
      * @param script
-     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}<{@link String}>
+     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link String}&gt;
      * @return the {@link java.lang.Thread} the script is running on.
      */
     public Thread runScript(String language, String script, MethodWrapper<String, Object, Object> callback) {
@@ -193,11 +193,11 @@ public class FJsMacros extends Functions {
     /**
      * Creates a listener for an event, this function can be more efficient that running a script file when used properly.
      * 
-     * @see xyz.wagyourtai.jsmacros.api.sharedinterfaces.IEventListener
+     * @see IEventListener
      * 
      * @since 1.2.7
      * @param event
-     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}<{@link IEvent}>
+     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link IEvent}&gt;
      * @return
      */
     public IEventListener on(String event, MethodWrapper<IEvent, Object, Object> callback) {
@@ -232,12 +232,12 @@ public class FJsMacros extends Functions {
     /**
      * Creates a single-run listener for an event, this function can be more efficient that running a script file when used properly.
      * 
-     * @see xyz.wagyourtai.jsmacros.api.sharedinterfaces.IEventListener
+     * @see IEventListener
      * 
      * @since 1.2.7
      * 
      * @param event
-     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}<{@link IEvent}>
+     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link IEvent}&gt;
      * @return the listener.
      */
     public IEventListener once(String event, MethodWrapper<IEvent, Object, Object> callback) {
@@ -285,7 +285,7 @@ public class FJsMacros extends Functions {
     /**
      * Removes a {@link xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener IEventListener} from an event.
      * 
-     * @see xyz.wagyourtai.jsmacros.api.sharedinterfaces.IEventListener
+     * @see IEventListener
      * 
      * @since 1.2.3
      * 
@@ -356,7 +356,7 @@ public class FJsMacros extends Functions {
     /**
      * @since 1.2.3
      * 
-     * @see FJsMacros#disconnect(MethodWrappers.Consumer)
+     * @see FJsMacros#disconnect(MethodWrapper)
      */
     public void disconnect() {
         disconnect(null);
@@ -369,7 +369,7 @@ public class FJsMacros extends Functions {
      * 
      * {@code callback} defaults to {@code null}
      * 
-     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}<{@link java.lang.Boolean Boolean}>
+     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link java.lang.Boolean Boolean}&gt;
      */
     public void disconnect(MethodWrapper<Boolean, Object, Object> callback) {
         mc.execute(() -> {

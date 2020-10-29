@@ -30,12 +30,12 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     private final List<RenderCommon.Image> imageFields = new ArrayList<>();
     /**
      * @since 1.0.5
-     * @deprecated please use {@link Draw2D#setOnInit(Consumer)}
+     * @deprecated please use {@link Draw2D#setOnInit(MethodWrapper)}
      */
     public MethodWrapper<Draw2D, Object, Object> onInit;
     /**
      * @since 1.1.9 [citation needed]
-     * @deprecated please use {@link Draw2D#setOnFailInit(Consumer)}
+     * @deprecated please use {@link Draw2D#setOnFailInit(MethodWrapper)}
      */
     public MethodWrapper<String, Object, Object> catchInit;
     
@@ -366,8 +366,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
 
     /**
      * @since 1.2.7
-     * @see IDraw2D#setOnInit(xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.Consumer)
-     * @param onInit calls your method as a {@link java.util.function.Consumer Consumer}<{@link Draw2D}>
+     * @see IDraw2D#setOnInit(MethodWrapper)
+     * @param onInit calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link Draw2D}&gt;
      */
     @Override
     public Draw2D setOnInit(MethodWrapper<Draw2D, Object, Object> onInit) {
@@ -378,8 +378,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     
     /**
      * @since 1.2.7
-     * @see IDraw2D#setOnFailInit(xyz.wagyourtail.jsmacros.extensionbase.MethodWrappers.Consumer)
-     * @param catchInit calls your method as a {@link java.util.function.Consumer Consumer}<{@link java.lang.String String}>
+     * @see IDraw2D#setOnFailInit(MethodWrapper)
+     * @param catchInit calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link java.lang.String String}&gt;
      */
     @Override
     public Draw2D setOnFailInit(MethodWrapper<String, Object, Object> catchInit) {

@@ -71,7 +71,7 @@ public class BlockDataHelper {
     }
     
     /**
-     * @return block NBT data as a {@link java.lang.Map Map}.
+     * @return block NBT data as a {@link Map}.
      */
     public Map<String, String> getNBT() {
         if (e == null) return null;
@@ -86,7 +86,7 @@ public class BlockDataHelper {
     /**
      * @since 1.1.7
      * 
-     * @return block state data as a {@link java.lang.Map Map}.
+     * @return block state data as a {@link Map}.
      */
     public Map<String, String> getBlockState() {
         Map<String, String> map = new HashMap<>();

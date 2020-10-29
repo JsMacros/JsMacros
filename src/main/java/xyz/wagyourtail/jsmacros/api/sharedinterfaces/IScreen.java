@@ -52,7 +52,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param width
      * @param height
      * @param text
-     * @param callback calls your method as a {@link Consumer}<{@link ButtonWidgetHelper}>
+     * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
      * @return
      */
     public ButtonWidgetHelper addButton(int x, int y, int width, int height, String text, MethodWrapper<ButtonWidgetHelper, IScreen, Object> callback);
@@ -71,7 +71,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param width
      * @param height
      * @param message
-     * @param onChange calls your method as a {@link Consumer}<{@link String}>
+     * @param onChange calls your method as a {@link Consumer}&lt;{@link String}&gt;
      * @return
      */
     public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, String message, MethodWrapper<String, IScreen, Object> onChange);
@@ -85,42 +85,42 @@ public interface IScreen extends IDraw2D<IScreen> {
     
     /**
      * @since 1.2.7
-     * @param onMouseDown calls your method as a {@link BiConsumer}<{@link PositionCommon.Pos2D}, {@link Integer}>
+     * @param onMouseDown calls your method as a {@link BiConsumer}&lt;{@link PositionCommon.Pos2D}, {@link Integer}&gt;
      * @return
      */
     public IScreen setOnMouseDown(MethodWrapper<PositionCommon.Pos2D, Integer, Object> onMouseDown);
     
     /**
      * @since 1.2.7
-     * @param onMouseDrag calls your method as a {@link BiConsumer}<{@link PositionCommon.Vec2D}, {@link Integer}>
+     * @param onMouseDrag calls your method as a {@link BiConsumer}&lt;{@link PositionCommon.Vec2D}, {@link Integer}&gt;
      * @return
      */
     public IScreen setOnMouseDrag(MethodWrapper<PositionCommon.Vec2D, Integer, Object> onMouseDrag);
     
     /**
      * @since 1.2.7
-     * @param onMouseUp calls your method as a {@link BiConsumer}<{@link PositionCommon.Pos2D}, {@link Integer}>
+     * @param onMouseUp calls your method as a {@link BiConsumer}&lt;{@link PositionCommon.Pos2D}, {@link Integer}&gt;
      * @return
      */
     public IScreen setOnMouseUp(MethodWrapper<PositionCommon.Pos2D, Integer, Object> onMouseUp);
     
     /**
      * @since 1.2.7
-     * @param onScroll calls your method as a {@link BiConsumer}<{@link PositionCommon.Pos2D}, {@link Double}>
+     * @param onScroll calls your method as a {@link BiConsumer}&lt;{@link PositionCommon.Pos2D}, {@link Double}&gt;
      * @return
      */
     public IScreen setOnScroll(MethodWrapper<PositionCommon.Pos2D, Double, Object> onScroll);
     
     /**
      * @since 1.2.7
-     * @param onKeyPressed calls your method as a {@link BiConsumer}<{@link Integer}, {@link Integer}>
+     * @param onKeyPressed calls your method as a {@link BiConsumer}&lt;{@link Integer}, {@link Integer}&gt;
      * @return
      */
     public IScreen setOnKeyPressed(MethodWrapper<Integer, Integer, Object> onKeyPressed);
     
     /**
      * @since 1.2.7
-     * @param onClose calls your method as a {@link Consumer}<{@link IScreen}>
+     * @param onClose calls your method as a {@link Consumer}&lt;{@link IScreen}&gt;
      * @return
      */
     public IScreen setOnClose(MethodWrapper<IScreen, Object, Object> onClose);

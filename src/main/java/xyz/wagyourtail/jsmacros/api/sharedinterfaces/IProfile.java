@@ -59,28 +59,24 @@ public interface IProfile {
     
     /**
      * @since 1.2.7
-     * @param macroname
      * @param event
      */
     public void triggerMacro(IEvent event);
     
     /**
      * @since 1.2.7
-     * @param macroname
      * @param event
      */
     public void triggerMacroJoin(IEvent event);
     
     /**
      * @since 1.2.7
-     * @param macroname
      * @param event
      */
     public void triggerMacroNoAnything(IEvent event);
     
     /**
      * @since 1.2.7
-     * @param macroname
      * @param event
      */
     public void triggerMacroJoinNoAnything(IEvent event);
