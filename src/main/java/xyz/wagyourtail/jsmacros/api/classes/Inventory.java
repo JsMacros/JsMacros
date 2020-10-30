@@ -37,11 +37,11 @@ public class Inventory {
         if (s instanceof HandledScreen) {
             this.inventory = (HandledScreen<?>) s;
         } else {
-            this.inventory = null;
+            this.inventory = new InventoryScreen(mc.player);
         }
         this.player = mc.player;
         this.man = mc.interactionManager;
-        this.syncId = this.inventory == null ? mc.player.playerScreenHandler.syncId : this.inventory.getScreenHandler().syncId;
+        this.syncId = this.inventory.getScreenHandler().syncId;
     }
 
     /**
@@ -191,6 +191,16 @@ public class Inventory {
         if (!is2) man.clickSlot(syncId, slot1, 0, SlotActionType.PICKUP, player);
         return this;
     }
+    
+    /**
+     * @since 1.2.8
+     *
+     */
+     public void openGui() {
+        mc.execute(() -> {
+            mc.openScreen(this.inventory);
+        });
+     }
 
     /**
      * @since 1.1.3
@@ -201,7 +211,7 @@ public class Inventory {
         MinecraftClient mc = MinecraftClient.getInstance();
         double x = mc.mouse.getX() * (double)mc.getWindow().getScaledWidth() / (double)mc.getWindow().getWidth();
         double y = mc.mouse.getY() * (double)mc.getWindow().getScaledHeight() / (double)mc.getWindow().getHeight();
-        if (this.inventory == null) throw new RuntimeException("Inventory screen is not open.");
+        if (this.inventory != mc.currentScreen) throw new RuntimeException("Inventory screen is not open.");
         Slot s = ((IInventory)this.inventory).jsmacros_getSlotUnder(x, y);
         if (s == null) return -999;
         return this.inventory.getScreenHandler().slots.indexOf(s);
@@ -213,15 +223,7 @@ public class Inventory {
      * @return the part of the mapping the slot is in.
      */
     public String getType() {
-        if (this.inventory != null) {
-            return JsMacros.getScreenName(this.inventory);
-        } else {
-            if (player.isCreative()) {
-                return "Creative Inventory";
-            } else {
-                return "Survival Inventory";
-            }
-        }
+        return JsMacros.getScreenName(this.inventory);
     }
 
     /**
@@ -259,7 +261,7 @@ public class Inventory {
     private Map<String, int[]> getMapInternal() {
         Map<String, int[]> map = new HashMap<>();
         int slots = getTotalSlots();
-        if (this.inventory == null || this.inventory instanceof InventoryScreen || (this.inventory instanceof CreativeInventoryScreen && ((CreativeInventoryScreen) this.inventory).getSelectedTab() == ItemGroup.INVENTORY.getIndex())) {
+        if (this.inventory instanceof InventoryScreen || (this.inventory instanceof CreativeInventoryScreen && ((CreativeInventoryScreen) this.inventory).getSelectedTab() == ItemGroup.INVENTORY.getIndex())) {
             if (this.player.isCreative() && !(this.inventory instanceof  InventoryScreen)) {
                 map.put("delete", new int[] {--slots});
             } 
