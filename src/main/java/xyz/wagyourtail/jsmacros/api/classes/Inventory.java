@@ -262,7 +262,7 @@ public class Inventory {
         Map<String, int[]> map = new HashMap<>();
         int slots = getTotalSlots();
         if (this.inventory instanceof InventoryScreen || (this.inventory instanceof CreativeInventoryScreen && ((CreativeInventoryScreen) this.inventory).getSelectedTab() == ItemGroup.INVENTORY.getIndex())) {
-            if (this.player.isCreative() && !(this.inventory instanceof  InventoryScreen)) {
+            if (this.inventory instanceof  CreativeInventoryScreen) {
                 map.put("delete", new int[] {--slots});
             } 
             map.put("hotbar", JsMacros.range(slots - 10, slots - 1)); // range(36, 45);
