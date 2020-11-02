@@ -61,13 +61,13 @@ public class FileHandler {
      */
     public String read() throws IOException {
         String ret = "";
-        BufferedReader in = new BufferedReader(new FileReader(f));
-        String line = in.readLine();
-        while(line != null) {
-            ret += line + "\n";
-            line = in.readLine();
+        try (BufferedReader in = new BufferedReader(new FileReader(f))) {
+            String line = in.readLine();
+            while (line != null) {
+                ret += line + "\n";
+                line = in.readLine();
+            }
         }
-        in.close();
         return ret;
     }
     
@@ -113,6 +113,10 @@ public class FileHandler {
         out.write(b);
         out.close();
         return this;
+    }
+    
+    public File getFile() {
+        return f;
     }
     
     public String toString() {

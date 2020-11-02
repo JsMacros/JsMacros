@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui;
+package xyz.wagyourtail.jsmacros.gui.screens;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,6 +1,7 @@
-package xyz.wagyourtail.jsmacros.gui;
+package xyz.wagyourtail.jsmacros.gui.screens;
 
 import xyz.wagyourtail.jsmacros.JsMacros;
+import xyz.wagyourtail.jsmacros.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.gui.containers.CheckBoxContainer;
 import xyz.wagyourtail.jsmacros.gui.containers.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.gui.containers.ProfileContainer;
@@ -19,7 +20,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import xyz.wagyourtail.jsmacros.gui.macros.EventMacrosScreen;
+import xyz.wagyourtail.jsmacros.gui.screens.macros.EventMacrosScreen;
 
 public class ProfileScreen extends BaseScreen {
     private int topScroll;

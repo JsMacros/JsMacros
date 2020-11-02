@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.macros;
+package xyz.wagyourtail.jsmacros.gui.screens.macros;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,9 +12,10 @@ import net.minecraft.client.util.InputUtil;
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.events.EventKey;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
-import xyz.wagyourtail.jsmacros.gui.ProfileScreen;
-import xyz.wagyourtail.jsmacros.gui.macros.containers.MacroContainer;
+import xyz.wagyourtail.jsmacros.gui.screens.ProfileScreen;
+import xyz.wagyourtail.jsmacros.gui.screens.macros.containers.MacroContainer;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
@@ -40,7 +41,7 @@ public class KeyMacrosScreen extends MacroScreen {
         List<RawMacro> macros = new ArrayList<>();
 
         if (listeners != null) for (IEventListener event : ImmutableList.copyOf(listeners)) {
-            if (event instanceof BaseMacro) macros.add(((BaseMacro) event).getRawMacro());
+            if (event instanceof BaseMacro && ((BaseMacro) event).getRawMacro().type != IRawMacro.MacroType.EVENT) macros.add(((BaseMacro) event).getRawMacro());
         }
 
         Collections.sort(macros, JsMacros.config.getSortComparator());
@@ -62,9 +63,9 @@ public class KeyMacrosScreen extends MacroScreen {
 
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         int mods = 0;
-        if (Screen.hasShiftDown()) mods += 1;
-        if (Screen.hasControlDown()) mods += 2;
-        if (Screen.hasAltDown()) mods += 4;
+        if (hasShiftDown()) mods += 1;
+        if (hasControlDown()) mods += 2;
+        if (hasAltDown()) mods += 4;
         String translationKey = EventKey.getKeyModifiers(mods);
         if (!translationKey.equals("")) translationKey += "+";
         translationKey += InputUtil.Type.MOUSE.createFromCode(button).getTranslationKey();

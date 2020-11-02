@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.macros.containers;
+package xyz.wagyourtail.jsmacros.gui.screens.macros.containers;
 
 import java.io.File;
 import java.util.List;

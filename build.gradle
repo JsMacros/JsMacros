@@ -54,12 +54,12 @@ dependencies {
 	include group: 'org.graalvm.truffle', name: 'truffle-api', version: '20.1.0'
 	include group: 'org.graalvm.regex', name: 'regex', version: '20.1.0'
 	include group: 'com.ibm.icu', name: 'icu4j', version: '64.2'
-	
-    //websocket 
-    implementation "org.java-websocket:Java-WebSocket:1.5.1"
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+
+    implementation "io.noties:prism4j:${prism_version}"
+    include "io.noties:prism4j:${prism_version}"
+
+
     implementation "com.neovisionaries:nv-websocket-client:2.10"
-    
     include "com.neovisionaries:nv-websocket-client:2.10"
 	
 	//nullable not defined so...

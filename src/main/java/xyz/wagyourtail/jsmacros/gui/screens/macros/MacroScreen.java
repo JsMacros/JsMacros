@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.macros;
+package xyz.wagyourtail.jsmacros.gui.screens.macros;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,14 +11,14 @@ import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.gui.BaseScreen;
-import xyz.wagyourtail.jsmacros.gui.CancelScreen;
+import xyz.wagyourtail.jsmacros.gui.screens.CancelScreen;
 import xyz.wagyourtail.jsmacros.gui.containers.AboutOverlay;
 import xyz.wagyourtail.jsmacros.gui.containers.ConfirmOverlay;
-import xyz.wagyourtail.jsmacros.gui.macros.containers.EventChooser;
-import xyz.wagyourtail.jsmacros.gui.macros.containers.FileChooser;
-import xyz.wagyourtail.jsmacros.gui.macros.containers.MacroContainer;
-import xyz.wagyourtail.jsmacros.gui.macros.containers.MacroListTopbar;
-import xyz.wagyourtail.jsmacros.gui.editor.EditorScreen;
+import xyz.wagyourtail.jsmacros.gui.screens.macros.containers.EventChooser;
+import xyz.wagyourtail.jsmacros.gui.screens.macros.containers.FileChooser;
+import xyz.wagyourtail.jsmacros.gui.screens.macros.containers.MacroContainer;
+import xyz.wagyourtail.jsmacros.gui.screens.macros.containers.MacroListTopbar;
+import xyz.wagyourtail.jsmacros.gui.screens.editor.EditorScreen;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.profile.Profile;
