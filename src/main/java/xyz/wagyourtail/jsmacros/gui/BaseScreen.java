@@ -67,7 +67,7 @@ public class BaseScreen extends Screen {
     }
 
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        if (overlay.scroll != null) overlay.scroll.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
+        if (overlay!= null && overlay.scroll != null) overlay.scroll.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
 

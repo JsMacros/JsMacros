@@ -3,10 +3,7 @@ package xyz.wagyourtail.jsmacros.gui.screens.editor;
 import com.google.common.collect.Sets;
 import io.noties.prism4j.GrammarLocator;
 import io.noties.prism4j.Prism4j;
-import io.noties.prism4j.languages.Prism_clike;
-import io.noties.prism4j.languages.Prism_javascript;
-import io.noties.prism4j.languages.Prism_lua;
-import io.noties.prism4j.languages.Prism_python;
+import io.noties.prism4j.languages.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,6 +22,8 @@ public class PrismGrammarLocator implements GrammarLocator {
                 return Prism_python.create(prism4j);
             case "clike":
                 return Prism_clike.create(prism4j);
+            case "regex":
+                return Prism_regex.create(prism4j);
             default:
                 return null;
         }
