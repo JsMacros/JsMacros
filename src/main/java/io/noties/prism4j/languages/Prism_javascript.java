@@ -45,8 +45,8 @@ public class Prism_javascript {
                 true,
                 null,
                 grammar("inside",
-                    token("regex-source", pattern(compile("^(\\/)[\\s\\S]+(?=\\/[a-z]*$)"), true, false, "language-regex"
-                        /*TODO: add regex language and improve like https://github.com/noties/Prism4j/blob/master/languages/io/noties/prism4j/languages/Prism_javascript.java*/
+                    token("regex-source", pattern(compile("^(\\/)[\\s\\S]+(?=\\/[a-z]*$)"), true, false, "language-regex",
+                        GrammarUtils.require(prism4j, "regex")
                     ))
                 )
             )),

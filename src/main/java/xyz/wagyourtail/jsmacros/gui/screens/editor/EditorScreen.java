@@ -1,13 +1,12 @@
 package xyz.wagyourtail.jsmacros.gui.screens.editor;
 
-import io.noties.prism4j.AbsVisitor;
 import io.noties.prism4j.Prism4j;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
 import xyz.wagyourtail.jsmacros.api.classes.FileHandler;
 import xyz.wagyourtail.jsmacros.extensionbase.ILanguage;
 import xyz.wagyourtail.jsmacros.gui.BaseScreen;
@@ -15,6 +14,7 @@ import xyz.wagyourtail.jsmacros.runscript.RunScript;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 public class EditorScreen extends BaseScreen {
@@ -22,7 +22,9 @@ public class EditorScreen extends BaseScreen {
     public final static Style defaultStyle = Style.EMPTY.withFont(new Identifier("minecraft", "uniform"));
     protected final File file;
     protected final FileHandler handler;
+    protected List<LiteralText> compiledText = new LinkedList<>();
     public History history;
+    
     public EditorScreen(Screen parent, File file) {
         super(new LiteralText("Editor"), parent);
         this.file = file;
@@ -38,8 +40,6 @@ public class EditorScreen extends BaseScreen {
             }
         }
         compileText();
-        final List<Prism4j.Node> nodes = prism4j.tokenize("\\\\(?:x[\\da-fA-F]{2}|u[\\da-fA-F]{4}|u\\{[\\da-fA-F]+\\}|c[a-zA-Z]|0[0-7]{0,2}|[123][0-7]{2}|.)", prism4j.grammar("regex"));
-        System.out.println("test");
     }
     
     public void onChange() {
@@ -48,18 +48,9 @@ public class EditorScreen extends BaseScreen {
     
     public void compileText() {
         final List<Prism4j.Node> nodes = prism4j.tokenize(history.current, prism4j.grammar(getLanguage()));
-        final AbsVisitor visitor = new AbsVisitor() {
-            @Override
-            protected void visitText(@NotNull Prism4j.Text text) {
-        
-            }
-    
-            @Override
-            protected void visitSyntax(@NotNull Prism4j.Syntax syntax) {
-                visit(syntax.children());
-            }
-        };
-        
+        final TextStyleCompiler visitor = new TextStyleCompiler(defaultStyle.withColor(Formatting.BLACK));
+        visitor.visit(nodes);
+        compiledText = visitor.getResult();
     }
     
     public void save() {
@@ -68,11 +59,9 @@ public class EditorScreen extends BaseScreen {
     
     public String getLanguage() {
         final String fname = file.getName();
-        String ext = ".js";
-        boolean flag = true;
+        String ext = RunScript.defaultLang.extension();
         for (ILanguage l : RunScript.languages) {
             if (fname.endsWith(l.extension())) {
-                flag = false;
                 ext = l.extension();
                 break;
             }
@@ -91,7 +80,9 @@ public class EditorScreen extends BaseScreen {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
-        
+        for (int i = 0; i < compiledText.size(); ++i) {
+            textRenderer.draw(matrices, compiledText.get(i), 5, 5+i*textRenderer.fontHeight, 0xFFFFFF);
+        }
         super.render(matrices, mouseX, mouseY, delta);
     }
     
