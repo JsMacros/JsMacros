@@ -95,7 +95,7 @@ public class Prism_javascript {
         
         interpolation.patterns().add(pattern(
             compile("((?:^|[^\\\\])(?:\\\\{2})*)\\$\\{(?:[^{}]|\\{(?:[^{}]|\\{[^}]*})*})+}"),
-            false,
+            true,
             false,
             null,
             insideInterpolation
