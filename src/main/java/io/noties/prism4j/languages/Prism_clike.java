@@ -46,7 +46,7 @@ public abstract class Prism_clike {
         pattern(compile("\\b(?:if|else|while|do|for|return|in|instanceof|function|new|try|throw|catch|finally|null|break|continue)\\b"))
       ),
       token("boolean", pattern(compile("\\b(?:true|false)\\b"))),
-      token("function", pattern(compile("[a-z0-9_]+(?=\\()", Pattern.CASE_INSENSITIVE))),
+      token("function", pattern(compile("\\b[a-zA-Z_]\\w*(?=\\s*\\()" /* this is more accurate */, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE))),
       token(
         "number",
         pattern(compile("\\b0x[\\da-f]+\\b|(?:\\b\\d+\\.?\\d*|\\B\\.\\d+)(?:e[+-]?\\d+)?", Pattern.CASE_INSENSITIVE))

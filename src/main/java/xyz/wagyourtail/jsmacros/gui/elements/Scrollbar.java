@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import xyz.wagyourtail.jsmacros.gui.screens.editor.EditorContent;
 
 public class Scrollbar extends Button {
     public double scrollPages = 1;
@@ -17,11 +18,13 @@ public class Scrollbar extends Button {
         this.onChange = onChange;
         this.setScrollPages(scrollPages);
     }
-
-    public void setPos(int x, int y, int width, int height) {
+    
+    @Override
+    public Scrollbar setPos(int x, int y, int width, int height) {
         super.setPos(x, y, width, height);
         this.scrollbarHeight = (height - 2) / scrollPages;
         this.scrollDistance = height - 2 - this.scrollbarHeight;
+        return this;
     }
 
     public void setScrollPages(double scrollPages) {

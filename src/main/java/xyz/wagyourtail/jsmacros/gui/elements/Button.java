@@ -8,6 +8,7 @@ import net.minecraft.client.gui.widget.AbstractPressableButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+import xyz.wagyourtail.jsmacros.gui.screens.editor.EditorContent;
 
 public class Button extends AbstractPressableButtonWidget {
     protected int color;
@@ -32,11 +33,12 @@ public class Button extends AbstractPressableButtonWidget {
         this.onPress = onPress;
     }
     
-    public void setPos(int x, int y, int width, int height) {
+    public Button setPos(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        return this;
     }
     
     public boolean canRenderAllText() {

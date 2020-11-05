@@ -18,8 +18,7 @@ public class TextInput extends Button {
     protected int selEnd;
     public int selEndIndex;
     protected int arrowCursor;
-    protected boolean selecting;
-
+    
     public TextInput(int x, int y, int width, int height, int color, int borderColor, int hilightColor, int textColor, String message, Consumer<Button> onClick, Consumer<String> onChange) {
         super(x, y, width, height, color, borderColor, color, textColor, new LiteralText(""), onClick);
         this.selColor = hilightColor;

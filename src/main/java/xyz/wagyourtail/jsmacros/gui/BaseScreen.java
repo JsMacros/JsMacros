@@ -4,6 +4,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.gui.elements.OverlayContainer;
 
 public class BaseScreen extends Screen {
@@ -57,7 +58,7 @@ public class BaseScreen extends Screen {
     }
 
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == 256) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             if (overlay != null) {
                 this.overlay.closeOverlay(this.overlay.getChildOverlay());
                 return true;
