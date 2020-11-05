@@ -85,7 +85,7 @@ public class EditorContent extends Button {
     public void setScroll(double pages) {
         scroll = (int) (height * pages);
         int add = lineSpread - scroll % lineSpread;
-        if (scroll == 0) add = 0;
+        if (add == lineSpread) add = 0;
         firstLine = (int) Math.ceil(scroll / (double) lineSpread);
         lastLine = (int) (firstLine + (height - add) / (double) lineSpread) - 1;
     }
