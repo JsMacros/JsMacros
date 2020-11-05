@@ -46,14 +46,15 @@ public class History {
      *
      * @return is new step.
      */
-    public synchronized boolean deletePos(int position) {
-        Remove step = new Remove(position, 1, false);
+    public synchronized boolean deletePos(int position, int length) {
+        if (position == current.length()) return false;
+        Remove step = new Remove(position, length, false);
         current = step.applyStep(current);
         if (undo.size() > 0) {
             HistoryStep prev = undo.get(undo.size() - 1);
             if (prev instanceof Remove && !((Remove) prev).isBkspace && ((Remove) prev).position == position) {
                 ((Remove) prev).removed += step.removed;
-                ++((Remove) prev).length;
+                ((Remove) prev).length += length;
                 return false;
             }
         }
@@ -70,15 +71,16 @@ public class History {
      *
      * @return is new step
      */
-    public synchronized boolean bkspacePos(int position) {
-        Remove step = new Remove(position, 1, false);
+    public synchronized boolean bkspacePos(int position, int length) {
+        if (position == 0) return false;
+        Remove step = new Remove(position, length, false);
         current = step.applyStep(current);
         if (undo.size() > 0) {
             HistoryStep prev = undo.get(undo.size() - 1);
-            if (prev instanceof Remove && ((Remove) prev).isBkspace && position + 1 == ((Remove) prev).position) {
+            if (prev instanceof Remove && ((Remove) prev).isBkspace && position + length == ((Remove) prev).position) {
                 ((Remove) prev).removed = step.removed + ((Remove) prev).removed;
                 --((Remove) prev).position;
-                ++((Remove) prev).length;
+                ((Remove) prev).length += length;
                 return false;
             }
         }
@@ -90,7 +92,7 @@ public class History {
         return true;
     }
     
-    public synchronized void cutPaste(int position, int length, String content) {
+    public synchronized void replace(int position, int length, String content) {
         HistoryStep step = new Replace(position, length, content);
         current = step.applyStep(current);
         while (undo.size() >= MAX_UNDO) {

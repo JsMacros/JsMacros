@@ -13,7 +13,6 @@ import xyz.wagyourtail.jsmacros.api.classes.FileHandler;
 import xyz.wagyourtail.jsmacros.extensionbase.ILanguage;
 import xyz.wagyourtail.jsmacros.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.gui.containers.ConfirmOverlay;
-import xyz.wagyourtail.jsmacros.gui.containers.TextPrompt;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
@@ -103,6 +102,16 @@ public class EditorScreen extends BaseScreen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
         textRenderer.drawWithShadow(matrices, Language.getInstance().reorder(textRenderer.trimToWidth(fileName, width / 2)), 2, 1, 0xFFFFFF);
+        String linecol;
+        if (content.arrowEnd) {
+            linecol = String.format("%d:%d", content.selEndLine + 1, content.selEndLineIndex + 1);
+        } else {
+            linecol = String.format("%d:%d", content.selStartLine + 1, content.selStartLineIndex + 1);
+        }
+        if (content.selStartIndex != content.selEndIndex) {
+            linecol = (content.selEndIndex - content.selStartIndex) + " " + linecol;
+        }
+        textRenderer.drawWithShadow(matrices, linecol, width - textRenderer.getWidth(linecol) - 10, height - 9, 0xFFFFFF);
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
             b.render(matrices, mouseX, mouseY, delta);
         }
