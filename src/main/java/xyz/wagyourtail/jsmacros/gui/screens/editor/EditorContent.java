@@ -38,7 +38,7 @@ public class EditorContent extends Button {
     public int selEndIndex;
     
     protected int arrowCursor;
-    protected double scroll = 0;
+    protected int scroll = 0;
     
     protected int lineSpread = mc.textRenderer.fontHeight + 1;
     protected int firstLine = 0;
@@ -77,10 +77,15 @@ public class EditorContent extends Button {
         compileRenderedText();
     }
     
-    public void setScroll(double distance) {
-        scroll = distance;
-        firstLine = (int) Math.ceil(scroll / lineSpread);
+    public void setScroll(double pages) {
+        double distance = height * pages / calcTotalPages();
+        scroll = (int) distance;
+        firstLine = (int) Math.ceil(distance / lineSpread);
         lastLine = (int) (firstLine + height / (double) lineSpread) - 1;
+    }
+    
+    public double calcTotalPages() {
+        return history.current.split("\n").length / Math.floor(height / (double) lineSpread - 1);
     }
     
     public void updateSelStart(int startIndex) {
@@ -116,10 +121,12 @@ public class EditorContent extends Button {
         fill(matrices, x + 28, y, x + 29, y + height, borderColor);
         
         Style lineNumStyle = defaultStyle.withColor(TextColor.fromRgb(textColor));
-        if (renderedText != null) for (int i = firstLine; i <= lastLine && i < renderedText.length; ++i) {
-            LiteralText lineNum = (LiteralText) new LiteralText(String.format("%d.", i + 1)).setStyle(lineNumStyle);
-            mc.textRenderer.draw(matrices, lineNum, x + 28 - mc.textRenderer.getWidth(lineNum), y + i * lineSpread, 0xFFFFFF);
-            mc.textRenderer.draw(matrices, renderedText[i], x + 30, y + (lineSpread - (int) scroll % lineSpread) + i * lineSpread, 0xFFFFFF);
+        int add = lineSpread - scroll % lineSpread;
+        if (add == lineSpread) add = 0;
+        if (renderedText != null) for (int i = 0, j = firstLine; j <= lastLine && i < renderedText.length; ++i, ++j) {
+            LiteralText lineNum = (LiteralText) new LiteralText(String.format("%d.", j + 1)).setStyle(lineNumStyle);
+            mc.textRenderer.draw(matrices, lineNum, x + 28 - mc.textRenderer.getWidth(lineNum), y + add + i * lineSpread, 0xFFFFFF);
+            mc.textRenderer.draw(matrices, renderedText[j], x + 30, y + add + i * lineSpread, 0xFFFFFF);
         }
     }
     
