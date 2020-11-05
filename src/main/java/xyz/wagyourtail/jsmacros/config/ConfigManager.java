@@ -25,7 +25,7 @@ public class ConfigManager implements IConfig {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public ConfigManager() {
-        options = new ConfigOptions(true, "default", RawMacro.SortMethod.Enabled, new HashMap<>(), new LinkedHashMap<>());
+        options = new ConfigOptions(true, "default", RawMacro.SortMethod.Enabled, new HashMap<>(), new LinkedHashMap<>(), false);
         options.profiles.put("default", new ArrayList<>());
         options.profiles.get("default").add(new RawMacro(IRawMacro.MacroType.KEY_RISING, "key.keyboard.j", "test.js", true));
         if (!macroFolder.exists()) macroFolder.mkdirs();

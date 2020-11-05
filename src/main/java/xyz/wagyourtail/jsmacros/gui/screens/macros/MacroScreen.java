@@ -73,7 +73,7 @@ public class MacroScreen extends BaseScreen {
 
     public void addMacro(RawMacro macro) {
         macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::confirmRemoveMacro, this::setFile, this::setEvent, this::editFile));
-        macroScroll.setScrollPages((macros.size() * 16) / (double) Math.max(1, this.height - 40));
+        macroScroll.setScrollPages(((macros.size() + 1) * 16) / (double) Math.max(1, this.height - 40));
     }
 
     public void setFile(MacroContainer macro) {
@@ -113,7 +113,7 @@ public class MacroScreen extends BaseScreen {
     }
     
     private void onScrollbar(double page) {
-        topScroll = 40 - (int) (page * (height - 60));
+        topScroll = 40 - (int) (page * (height - 40));
         setMacroPos();
     }
     
@@ -124,8 +124,6 @@ public class MacroScreen extends BaseScreen {
             else m.setVisible(true);
             m.setPos(this.width / 12, topScroll + (i++) * 16, this.width * 5 / 6, 14);
         }
-
-        macroScroll.setScrollPages((macros.size() * 16) / (double) Math.max(1, this.height - 40));
     }
 
     public void editFile(File file) {
