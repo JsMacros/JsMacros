@@ -7,6 +7,7 @@ import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.screens.editor.hilighting.PrismGrammarLocator;
@@ -22,11 +23,8 @@ public class EditorContent extends Button {
     
     /*TODO: make py script to convert a copyleft monospaced font to png's for minecraft, or add class for on the fly from a ttf*/
     public final static Style defaultStyle = Style.EMPTY.withFont(new Identifier("jsmacros", "uniform"));
-    
+    public long textRenderTime = 0;
     private String language = "javascript";
-    
-    public boolean needSave = false;
-    public Consumer<Boolean> updateNeedSave;
     public Consumer<Double> updateScrollPages;
     public Consumer<Double> scrollToPercent;
     
@@ -48,10 +46,10 @@ public class EditorContent extends Button {
         lastLine = (int) (height / (double) lineSpread) - 1;
         this.selColor = hilightColor;
         message = message.replaceAll("\r\n", "\n"); //no, bad windows.
-        message = message.replaceAll("\t", "    "); //force 4 space, for rendering reasions.
+        message = message.replaceAll("\t", "    "); //force 4 space, for rendering reasons.
         this.history = new History(message, cursor);
-        cursor.updateSelStart(message.length(), history.current);
-        cursor.updateSelEnd(message.length(), history.current);
+        cursor.updateStartIndex(message.length(), history.current);
+        cursor.updateEndIndex(message.length(), history.current);
         cursor.dragStartIndex = message.length();
         compileRenderedText();
     }
@@ -67,6 +65,7 @@ public class EditorContent extends Button {
     }
     
     private void compileRenderedText() {
+        long time = System.currentTimeMillis();
         final List<Prism4j.Node> nodes = prism4j.tokenize(history.current, prism4j.grammar(language));
         final TextStyleCompiler visitor = new TextStyleCompiler(defaultStyle.withColor(TextColor.fromRgb(textColor)));
         visitor.visit(nodes);
@@ -74,6 +73,20 @@ public class EditorContent extends Button {
             renderedText = visitor.getResult().toArray(new LiteralText[0]);
         }
         if (updateScrollPages != null) updateScrollPages.accept(calcTotalPages());
+        textRenderTime = System.currentTimeMillis() - time;
+        scrollToCursor();
+    }
+    
+    private void scrollToCursor() {
+        if (scrollToPercent != null) {
+            int cursorLine = cursor.arrowEnd ? cursor.endLine : cursor.startLine;
+            if (cursorLine < firstLine || cursorLine > lastLine) {
+                int pagelength = lastLine - firstLine;
+                double scrollLines = history.current.split("\n", -1).length - pagelength;
+                cursorLine -= pagelength / 2;
+                scrollToPercent.accept(MathHelper.clamp(cursorLine, 0, scrollLines) / scrollLines);
+            }
+        }
     }
     
     public void setLanguage(String language) {
@@ -91,7 +104,7 @@ public class EditorContent extends Button {
     
     private double calcTotalPages() {
         if (history == null) return 1;
-        return (history.current.split("\n").length) / (Math.floor(height / (double) lineSpread) - 1D);
+        return (history.current.split("\n", -1).length) / (Math.floor(height / (double) lineSpread) - 1D);
     }
     
     private int getIndexPosition(double x, double y) {
@@ -116,12 +129,12 @@ public class EditorContent extends Button {
     }
     
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public synchronized boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.clicked(mouseX, mouseY);
         if (this.isFocused()) {
             int index = getIndexPosition(mouseX - x - 30, mouseY - y);
-            cursor.updateSelStart(index, history.current);
-            cursor.updateSelEnd(index, history.current);
+            cursor.updateStartIndex(index, history.current);
+            cursor.updateEndIndex(index, history.current);
             cursor.dragStartIndex = index;
             cursor.arrowEnd = false;
             cursor.arrowLineIndex = cursor.startLineIndex;
@@ -130,16 +143,21 @@ public class EditorContent extends Button {
     }
     
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+    public synchronized boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.isFocused()) {
             int index = getIndexPosition(mouseX - x - 30, mouseY - y);
-            if (index < cursor.dragStartIndex || (index == cursor.dragStartIndex && cursor.arrowEnd)) {
+            if (index == cursor.dragStartIndex) {
+                cursor.updateStartIndex(index, history.current);
+                cursor.updateEndIndex(index, history.current);
+            } else if (index < cursor.dragStartIndex) {
+                cursor.updateEndIndex(cursor.dragStartIndex, history.current);
                 cursor.arrowEnd = false;
-                cursor.updateSelStart(index, history.current);
+                cursor.updateStartIndex(index, history.current);
                 cursor.arrowLineIndex = cursor.startLineIndex;
             } else {
+                cursor.updateStartIndex(cursor.dragStartIndex, history.current);
                 cursor.arrowEnd = true;
-                cursor.updateSelEnd(index, history.current);
+                cursor.updateEndIndex(index, history.current);
                 cursor.arrowLineIndex = cursor.endLineIndex;
             }
         }
@@ -154,11 +172,11 @@ public class EditorContent extends Button {
     }
     
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public synchronized boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (this.isFocused()) {
             if (Screen.isSelectAll(keyCode)) {
-                cursor.updateSelStart(0, history.current);
-                cursor.updateSelEnd(history.current.length(), history.current);
+                cursor.updateStartIndex(0, history.current);
+                cursor.updateEndIndex(history.current.length(), history.current);
                 cursor.arrowEnd = true;
             } else if (Screen.isCopy(keyCode)) {
                 mc.keyboard.setClipboard(history.current.substring(cursor.startIndex, cursor.endIndex));
@@ -195,63 +213,66 @@ public class EditorContent extends Button {
                     }
                     break;
                 case GLFW.GLFW_KEY_HOME:
-                    cursor.updateSelStart(0, history.current);
-                    cursor.updateSelEnd(0, history.current);
+                    cursor.updateStartIndex(0, history.current);
+                    cursor.updateEndIndex(0, history.current);
                     if (scrollToPercent != null) scrollToPercent.accept(0D);
                     break;
                 case GLFW.GLFW_KEY_END:
-                    cursor.updateSelStart(history.current.length(), history.current);
-                    cursor.updateSelEnd(history.current.length(), history.current);
+                    cursor.updateStartIndex(history.current.length(), history.current);
+                    cursor.updateEndIndex(history.current.length(), history.current);
                     if (scrollToPercent != null) scrollToPercent.accept(1D);
                     break;
                 case GLFW.GLFW_KEY_LEFT:
                     if (Screen.hasShiftDown()) {
                         if (cursor.arrowEnd && cursor.startIndex != cursor.endIndex) {
-                            cursor.updateSelEnd(cursor.endIndex - 1, history.current);
+                            cursor.updateEndIndex(cursor.endIndex - 1, history.current);
                             cursor.arrowLineIndex = cursor.endLineIndex;
                         } else {
-                            cursor.updateSelStart(cursor.startIndex - 1, history.current);
+                            cursor.updateStartIndex(cursor.startIndex - 1, history.current);
                             cursor.arrowLineIndex = cursor.startLineIndex;
                             cursor.arrowEnd = false;
                         }
                     } else {
                         if (cursor.startIndex != cursor.endIndex) {
-                            cursor.updateSelEnd(cursor.startIndex, history.current);
+                            cursor.updateEndIndex(cursor.startIndex, history.current);
                         } else {
-                            cursor.updateSelStart(cursor.startIndex - 1, history.current);
-                            cursor.updateSelEnd(cursor.startIndex, history.current);
+                            cursor.updateStartIndex(cursor.startIndex - 1, history.current);
+                            cursor.updateEndIndex(cursor.startIndex, history.current);
                             cursor.arrowLineIndex = cursor.startLineIndex;
                         }
                     }
+                    scrollToCursor();
                     break;
                 case GLFW.GLFW_KEY_RIGHT:
                     if (Screen.hasShiftDown()) {
                         if (cursor.arrowEnd || cursor.endIndex == cursor.startIndex) {
-                            cursor.updateSelEnd(cursor.endIndex + 1, history.current);
+                            cursor.updateEndIndex(cursor.endIndex + 1, history.current);
                             cursor.arrowLineIndex = cursor.endLineIndex;
                             cursor.arrowEnd = true;
                         } else {
-                            cursor.updateSelStart(cursor.startIndex + 1, history.current);
+                            cursor.updateStartIndex(cursor.startIndex + 1, history.current);
                             cursor.arrowLineIndex = cursor.startLineIndex;
                         }
                     } else {
                         if (cursor.startIndex != cursor.endIndex) {
-                            cursor.updateSelStart(cursor.endIndex, history.current);
+                            cursor.updateStartIndex(cursor.endIndex, history.current);
                         } else {
-                            cursor.updateSelStart(cursor.startIndex + 1, history.current);
-                            cursor.updateSelEnd(cursor.startIndex, history.current);
+                            cursor.updateStartIndex(cursor.startIndex + 1, history.current);
+                            cursor.updateEndIndex(cursor.startIndex, history.current);
                             cursor.arrowLineIndex = cursor.startLineIndex;
                         }
                     }
+                    scrollToCursor();
                     break;
                 case GLFW.GLFW_KEY_UP:
                     if (Screen.hasAltDown()) {
                         history.shiftLine(cursor.startLine, cursor.endLine - cursor.startLine + 1, false);
+                        cursor.arrowEnd = false;
                         compileRenderedText();
                     } else {
                         index = 0;
-                        if (cursor.arrowEnd || cursor.startLine > 0) {
-                            String[] lines = history.current.split("\n");
+                        if (cursor.startLine > 0 || (cursor.arrowEnd && cursor.endLine > 0)) {
+                            String[] lines = history.current.split("\n", -1);
                             int line = (cursor.arrowEnd ? cursor.endLine : cursor.startLine) - 1;
                             for (int i = 0; i < line; ++i) {
                                 index += lines[i].length() + 1;
@@ -260,30 +281,32 @@ public class EditorContent extends Button {
                         }
                         if (Screen.hasShiftDown()) {
                             if (cursor.arrowEnd && index >= cursor.startIndex) {
-                                cursor.updateSelEnd(index, history.current);
+                                cursor.updateEndIndex(index, history.current);
                                 cursor.arrowEnd = true;
                             } else {
-                                cursor.updateSelStart(index, history.current);
+                                cursor.updateStartIndex(index, history.current);
                                 cursor.arrowEnd = false;
                             }
                         } else {
                             if (cursor.startIndex != cursor.endIndex) {
-                                cursor.updateSelEnd(cursor.startIndex, history.current);
+                                cursor.updateEndIndex(cursor.startIndex, history.current);
                             } else {
-                                cursor.updateSelStart(index, history.current);
-                                cursor.updateSelEnd(cursor.startIndex, history.current);
+                                cursor.updateStartIndex(index, history.current);
+                                cursor.updateEndIndex(cursor.startIndex, history.current);
                             }
                         }
                     }
+                    scrollToCursor();
                     break;
                 case GLFW.GLFW_KEY_DOWN:
                     if (Screen.hasAltDown()) {
                         history.shiftLine(cursor.startLine, cursor.endLine - cursor.startLine + 1, true);
+                        cursor.arrowEnd = true;
                         compileRenderedText();
                     } else {
                         index = 0;
-                        String[] lines = history.current.split("\n");
-                        if (!cursor.arrowEnd || cursor.endLine < lines.length - 1) {
+                        String[] lines = history.current.split("\n", -1);
+                        if (cursor.endLine < lines.length - 1 || (!cursor.arrowEnd && cursor.startLine < lines.length - 1)) {
                             int line = (cursor.arrowEnd ? cursor.endLine : cursor.startLine) + 1;
                             for (int i = 0; i < line; ++i) {
                                 index += lines[i].length() + 1;
@@ -294,49 +317,59 @@ public class EditorContent extends Button {
                         }
                         if (Screen.hasShiftDown()) {
                             if (!cursor.arrowEnd && index <= cursor.endIndex) {
-                                cursor.updateSelStart(index, history.current);
+                                cursor.updateStartIndex(index, history.current);
                                 cursor.arrowEnd = false;
                             } else {
-                                cursor.updateSelEnd(index, history.current);
+                                cursor.updateEndIndex(index, history.current);
                                 cursor.arrowEnd = true;
                             }
                         } else {
                             if (cursor.startIndex != cursor.endIndex) {
-                                cursor.updateSelStart(cursor.endIndex, history.current);
+                                cursor.updateStartIndex(cursor.endIndex, history.current);
                             } else {
-                                cursor.updateSelStart(index, history.current);
-                                cursor.updateSelEnd(cursor.startIndex, history.current);
+                                cursor.updateStartIndex(index, history.current);
+                                cursor.updateEndIndex(cursor.startIndex, history.current);
                             }
                         }
                     }
+                    scrollToCursor();
                     break;
                 case GLFW.GLFW_KEY_Z:
                     if (Screen.hasControlDown()) {
                         if (Screen.hasShiftDown()) {
                             int i = history.redo();
-                        
+                            
                             if (i != -1) {
                                 compileRenderedText();
                             }
                         } else {
                             int i = history.undo();
-    
+                            
                             if (i != -1) {
                                 compileRenderedText();
                             }
                         }
                     }
+                    break;
+                case GLFW.GLFW_KEY_Y:
+                    int i = history.redo();
+    
+                    if (i != -1) {
+                        compileRenderedText();
+                    }
+                    break;
                 default:
             }
         }
-    
+        
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
     
     @Override
-    public boolean charTyped(char chr, int keyCode) {
+    public synchronized boolean charTyped(char chr, int keyCode) {
         if (cursor.startIndex != cursor.endIndex) {
             history.replace(cursor.startIndex, cursor.endIndex - cursor.startIndex, String.valueOf(chr));
+            cursor.updateStartIndex(cursor.endIndex, history.current);
         } else {
             history.addChar(cursor.startIndex, chr);
         }

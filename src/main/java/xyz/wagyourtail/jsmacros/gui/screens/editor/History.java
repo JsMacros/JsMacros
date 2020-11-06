@@ -1,9 +1,8 @@
 package xyz.wagyourtail.jsmacros.gui.screens.editor;
 
-import net.minecraft.text.StringVisitable;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  *
@@ -12,6 +11,8 @@ public class History {
     protected int MAX_UNDO = 20;
     protected List<HistoryStep> undo = new ArrayList<>(MAX_UNDO + 1);
     protected List<HistoryStep> redo = new ArrayList<>(MAX_UNDO + 1);
+    
+    public Consumer<String> onChange;
     protected SelectCursor cursor;
     protected String current;
     
@@ -33,6 +34,7 @@ public class History {
             if (prev instanceof Add && ((Add) prev).position + ((Add) prev).added.length() == position) {
                 if (content != '\n') {
                     ((Add) prev).added += String.valueOf(content);
+                    if (onChange != null) onChange.accept(current);
                     return false;
                 }
             }
@@ -42,6 +44,7 @@ public class History {
         }
         undo.add(step);
         redo.clear();
+        if (onChange != null) onChange.accept(current);
         return true;
     }
     
@@ -59,6 +62,7 @@ public class History {
             if (prev instanceof Remove && !((Remove) prev).isBkspace && ((Remove) prev).position == position) {
                 ((Remove) prev).removed += step.removed;
                 ((Remove) prev).length += length;
+                if (onChange != null) onChange.accept(current);
                 return false;
             }
         }
@@ -67,6 +71,7 @@ public class History {
         }
         undo.add(step);
         redo.clear();
+        if (onChange != null) onChange.accept(current);
         return true;
     }
     
@@ -85,6 +90,7 @@ public class History {
                 ((Remove) prev).removed = step.removed + ((Remove) prev).removed;
                 --((Remove) prev).position;
                 ((Remove) prev).length += length;
+                if (onChange != null) onChange.accept(current);
                 return false;
             }
         }
@@ -93,6 +99,7 @@ public class History {
         }
         undo.add(step);
         redo.clear();
+        if (onChange != null) onChange.accept(current);
         return true;
     }
     
@@ -105,6 +112,7 @@ public class History {
             HistoryStep prev = undo.get(undo.size() - 1);
             if (prev instanceof ShiftLine && ((ShiftLine) prev).shiftDown == shiftDown && ((ShiftLine) prev).lineCount == lines && startLine == ((ShiftLine) prev).startLine + (shiftDown ? ((ShiftLine) prev).shiftAmmount : -((ShiftLine) prev).shiftAmmount)) {
                 ++((ShiftLine) prev).shiftAmmount;
+                if (onChange != null) onChange.accept(current);
                 return false;
             }
         }
@@ -113,6 +121,7 @@ public class History {
         }
         undo.add(step);
         redo.clear();
+        if (onChange != null) onChange.accept(current);
         return true;
     }
     
@@ -124,6 +133,7 @@ public class History {
         }
         undo.add(step);
         redo.clear();
+        if (onChange != null) onChange.accept(current);
     }
     
     /**
@@ -134,8 +144,10 @@ public class History {
             HistoryStep step = undo.remove(undo.size() - 1);
             current = step.unApplyStep(current);
             redo.add(step);
+            if (onChange != null) onChange.accept(current);
             return step.position;
         }
+        if (onChange != null) onChange.accept(current);
         return -1;
     }
     
@@ -147,8 +159,10 @@ public class History {
             HistoryStep step = redo.remove(redo.size() - 1);
             current = step.applyStep(current);
             undo.add(step);
+            if (onChange != null) onChange.accept(current);
             return step.position;
         }
+        if (onChange != null) onChange.accept(current);
         return -1;
     }
     
@@ -175,15 +189,15 @@ public class History {
         
         protected String applyStep(String input) {
             String result = input.substring(0, position) + added + input.substring(position);
-            cursor.updateSelStart(position + added.length(), result);
-            cursor.updateSelEnd(position + added.length(), result);
+            cursor.updateStartIndex(position + added.length(), result);
+            cursor.updateEndIndex(position + added.length(), result);
             return result;
         }
         
         protected String unApplyStep(String input) {
             String result = input.substring(0, position) + input.substring(position + added.length());
-            cursor.updateSelStart(position, result);
-            cursor.updateSelEnd(position, result);
+            cursor.updateStartIndex(position, result);
+            cursor.updateEndIndex(position, result);
             return result;
         }
         
@@ -203,15 +217,15 @@ public class History {
         protected String applyStep(String input) {
             removed = input.substring(position, position + length);
             String result = input.substring(0, position) + input.substring(position + length);
-            cursor.updateSelStart(position, result);
-            cursor.updateSelEnd(position, result);
+            cursor.updateStartIndex(position, result);
+            cursor.updateEndIndex(position, result);
             return result;
         }
         
         protected String unApplyStep(String input) {
             String result = input.substring(0, position) + removed + input.substring(position);
-            cursor.updateSelStart(position, result);
-            cursor.updateSelEnd(position + length, result);
+            cursor.updateStartIndex(position, result);
+            cursor.updateEndIndex(position + length, result);
             if (isBkspace) cursor.arrowEnd = true;
             else cursor.arrowEnd = false;
             return result;
@@ -234,15 +248,15 @@ public class History {
         protected String applyStep(String input) {
             oldContent = input.substring(position, position + length);
             String result = input.substring(0, position) + newContent + input.substring(position + length);
-            cursor.updateSelStart(position, result);
-            cursor.updateSelEnd(position + newContent.length(), result);
+            cursor.updateStartIndex(position, result);
+            cursor.updateEndIndex(position + newContent.length(), result);
             return result;
         }
         
         protected String unApplyStep(String input) {
             String result = input.substring(0, position) + oldContent + input.substring(position + newContent.length());
-            cursor.updateSelStart(position, result);
-            cursor.updateSelEnd(position + oldContent.length(), result);
+            cursor.updateStartIndex(position, result);
+            cursor.updateEndIndex(position + oldContent.length(), result);
             return result;
         }
         
@@ -293,8 +307,8 @@ public class History {
                     shifted[i] = lines[i];
                 }
                 String result = String.join("\n", shifted);
-                cursor.updateSelStart(startIndex, result);
-                cursor.updateSelEnd(--endIndex, result);
+                cursor.updateStartIndex(startIndex, result);
+                cursor.updateEndIndex(--endIndex, result);
                 return result;
             } else {
                 int i;
@@ -315,8 +329,8 @@ public class History {
                     shifted[i] = lines[i];
                 }
                 String result = String.join("\n", shifted);
-                cursor.updateSelStart(startIndex, result);
-                cursor.updateSelEnd(--endIndex, result);
+                cursor.updateStartIndex(startIndex, result);
+                cursor.updateEndIndex(--endIndex, result);
                 return result;
             }
         }

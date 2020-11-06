@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.gui.screens.editor;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -10,22 +11,22 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Language;
 import org.jetbrains.annotations.NotNull;
 import xyz.wagyourtail.jsmacros.api.classes.FileHandler;
-import xyz.wagyourtail.jsmacros.extensionbase.ILanguage;
 import xyz.wagyourtail.jsmacros.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.gui.containers.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
-import xyz.wagyourtail.jsmacros.runscript.RunScript;
 
 import java.io.File;
 import java.io.IOException;
 
 public class EditorScreen extends BaseScreen {
     protected final File file;
+    protected String savedString;
     protected final Text fileName;
     protected final FileHandler handler;
     protected final EditorContent content;
     protected final Scrollbar scrollbar;
+    protected Button saveBtn;
     
     public EditorScreen(Screen parent, @NotNull File file) {
         super(new LiteralText("Editor"), parent);
@@ -36,12 +37,13 @@ public class EditorScreen extends BaseScreen {
             try {
                 content = handler.read();
             } catch (IOException e) {
-                content = "An unexpected error has occured:\n\n" + e.toString();
+                content = I18n.translate("jsmacros.erroropening") + e.toString();
                 handler = null;
             }
         } else {
             content = "";
         }
+        savedString = content;
         this.fileName = new LiteralText(file.getName());
         
         this.handler = handler;
@@ -49,46 +51,62 @@ public class EditorScreen extends BaseScreen {
         this.content.setLanguage(getDefaultLanguage());
         this.scrollbar = new Scrollbar(0, 0, 0, 0, 0, 0xFF000000, 0xFFFFFFFF, 1, this.content::setScroll);
         this.content.updateScrollPages = scrollbar::setScrollPages;
+        this.content.scrollToPercent = scrollbar::scrollToPercent;
     }
     
     public void init() {
         super.init();
         int width = this.width - 20;
-        addButton(content.setPos(0, 12, width, height - 22));
-        addButton(scrollbar.setPos(width + 5, 12, 10, height - 22));
+        addButton(content.setPos(0, 12, width, height - 24));
+        addButton(scrollbar.setPos(width + 5, 12, 10, height - 24));
         
-        Button saveBtn = addButton(new Button(width / 2, 0, width / 6, 12, content.needSave ? 0xFFA0A000 : 0xFF00A000, 0xFF000000, content.needSave ? 0xFF707000 : 0xFF007000, 0xFFFFFF, new TranslatableText("jsmacros.save"), (btn) -> {
-            try {
-                handler.write(content.history.current);
-            } catch (IOException e) {
-                openOverlay(new ConfirmOverlay(this.width / 4, height / 4, this.width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.errorsaving").append(new LiteralText("\n\n" + e.getMessage())), this::addButton, this::removeButton, this::closeOverlay, null));
+        saveBtn = addButton(new Button(width / 2, 0, width / 6, 12, savedString.equals(content.history.current) ? 0xFF00A000 : 0xFFA0A000, 0xFF000000, savedString.equals(content) ? 0xFF007000 : 0xFF707000, 0xFFFFFF, new TranslatableText("jsmacros.save"), this::save));
+        
+        content.history.onChange = (content) -> {
+            if (savedString.equals(content)) {
+                saveBtn.setColor(0xFF00A000);
+                saveBtn.setHilightColor(0xFF707000);
+            } else {
+                saveBtn.setColor(0xFFA0A000);
+                saveBtn.setHilightColor(0xFF007000);
             }
-        }));
-        
-        content.updateNeedSave = (sav) -> {
-            saveBtn.setColor(sav ? 0xFFA0A000 : 0xFF00A000);
-            saveBtn.setHilightColor(sav ? 0xFF707000 : 0xFF007000);
         };
     }
     
-    public String getDefaultLanguage() {
-        final String fname = file.getName();
-        String ext = RunScript.defaultLang.extension();
-        for (ILanguage l : RunScript.languages) {
-            if (fname.endsWith(l.extension())) {
-                ext = l.extension();
-                break;
-            }
+    public void save(Button btn) {
+        String current = content.history.current;
+        try {
+            handler.write(current);
+            savedString = current;
+            saveBtn.setColor(0xFF00A000);
+            saveBtn.setHilightColor(0xFF707000);
+        } catch (IOException e) {
+            openOverlay(new ConfirmOverlay(this.width / 4, height / 4, this.width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.errorsaving").append(new LiteralText("\n\n" + e.getMessage())), this::addButton, this::removeButton, this::closeOverlay, null));
         }
+    }
+    
+    public String getDefaultLanguage() {
+        final String[] fname = file.getName().split("\\.", -1);
+        String ext = fname[fname.length - 1];
+        
         switch (ext) {
             case ".py":
-            case "jython.py":
                 return "python";
             case ".lua":
                 return "lua";
+            case ".json":
+                return "json";
             default:
                 return "javascript";
         }
+    }
+    
+    public boolean mouseReleased(double mouseX, double mouseY, int btn) {
+        if (overlay == null && content != null && !content.isFocused()) {
+            setFocused(content);
+            content.changeFocus(true);
+        }
+        return super.mouseReleased(mouseX, mouseY, btn);
     }
     
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
@@ -111,6 +129,7 @@ public class EditorScreen extends BaseScreen {
         if (content.cursor.startIndex != content.cursor.endIndex) {
             linecol = (content.cursor.endIndex - content.cursor.startIndex) + " " + linecol;
         }
+        textRenderer.drawWithShadow(matrices, String.format("%d ms", (int) content.textRenderTime), 2, height - 9, 0xFFFFFF);
         textRenderer.drawWithShadow(matrices, linecol, width - textRenderer.getWidth(linecol) - 10, height - 9, 0xFFFFFF);
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
             b.render(matrices, mouseX, mouseY, delta);

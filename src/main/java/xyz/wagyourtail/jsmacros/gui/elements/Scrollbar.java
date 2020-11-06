@@ -44,6 +44,11 @@ public class Scrollbar extends Button {
         }
     }
     
+    public void scrollToPercent(double percent) {
+        scrollAmmount = scrollDistance * percent;
+        onChange();
+    }
+    
     public void onClick(double mouseX, double mouseY) {
         if (this.active) {
             double mpos = mouseY - y - 1;
@@ -83,4 +88,5 @@ public class Scrollbar extends Button {
             fill(matricies, x + 1, y + height - 1, x + width - 1, y + height, borderColor);
         }
     }
+    
 }

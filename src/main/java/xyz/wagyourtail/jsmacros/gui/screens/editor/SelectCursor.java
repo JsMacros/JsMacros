@@ -29,7 +29,7 @@ public class SelectCursor {
         this.defaultStyle = defaultStyle;
     }
     
-    public synchronized void updateSelStart(int startIndex, String current) {
+    public synchronized void updateStartIndex(int startIndex, String current) {
         this.startIndex = MathHelper.clamp(startIndex, 0, current.length());
         String[] prev = current.substring(0, this.startIndex).split("\n", -1);
         startLine = prev.length - 1;
@@ -37,7 +37,7 @@ public class SelectCursor {
         startLineIndex = prev[startLine].length();
     }
     
-    public synchronized void updateSelEnd(int endIndex, String current) {
+    public synchronized void updateEndIndex(int endIndex, String current) {
         this.endIndex = MathHelper.clamp(endIndex, 0, current.length());
         String[] prev = current.substring(0, this.endIndex).split("\n", -1);
         endLine = prev.length - 1;
