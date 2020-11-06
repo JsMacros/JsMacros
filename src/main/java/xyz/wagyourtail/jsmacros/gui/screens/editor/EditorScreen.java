@@ -87,14 +87,14 @@ public class EditorScreen extends BaseScreen {
     
     public String getDefaultLanguage() {
         final String[] fname = file.getName().split("\\.", -1);
-        String ext = fname[fname.length - 1];
+        String ext = fname[fname.length - 1].toLowerCase();
         
         switch (ext) {
-            case ".py":
+            case "py":
                 return "python";
-            case ".lua":
+            case "lua":
                 return "lua";
-            case ".json":
+            case "json":
                 return "json";
             default:
                 return "javascript";

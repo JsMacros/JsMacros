@@ -358,6 +358,13 @@ public class EditorContent extends Button {
                         compileRenderedText();
                     }
                     break;
+                case GLFW.GLFW_KEY_ENTER:
+                    if (cursor.startIndex != cursor.endIndex) {
+                        history.replace(cursor.startIndex, cursor.endIndex - cursor.startIndex, "\n");
+                        cursor.updateStartIndex(cursor.endIndex, history.current);
+                    } else {
+                        history.addChar(cursor.startIndex, '\n');
+                    }
                 default:
             }
         }
