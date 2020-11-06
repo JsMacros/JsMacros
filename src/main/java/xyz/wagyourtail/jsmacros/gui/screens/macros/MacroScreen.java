@@ -156,7 +156,7 @@ public class MacroScreen extends BaseScreen {
     }
 
     public void onClose() {
-        super.onClose();
         JsMacros.profile.saveProfile();
+        super.onClose();
     }
 }

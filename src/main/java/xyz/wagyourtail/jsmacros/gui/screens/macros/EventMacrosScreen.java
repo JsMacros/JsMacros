@@ -29,7 +29,7 @@ public class EventMacrosScreen extends MacroScreen {
         eventScreen.setColor(0x4FFFFFFF);
         
         keyScreen.onPress = (btn) -> {
-            client.openScreen(this.parent);
+            this.openParent();
         };
 
         profileScreen.onPress = (btn) -> {

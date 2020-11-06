@@ -45,7 +45,7 @@ public class ProfileScreen extends BaseScreen {
 
         client.keyboard.setRepeatEvents(true);
         this.addButton(new Button(0, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.keys"), (btn) -> {
-            client.openScreen(parent);
+            this.openParent();
         }));
 
         this.addButton(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.events"), (btn) -> {

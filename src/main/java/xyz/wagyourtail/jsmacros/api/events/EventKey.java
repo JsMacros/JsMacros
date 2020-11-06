@@ -35,7 +35,7 @@ public class EventKey implements IEvent {
         
         
         if (keyBinding.matchesKey(key, scancode) && action == 1 && mc.currentScreen == null) {
-            mc.openScreen(JsMacros.keyMacrosScreen);
+            mc.openScreen(JsMacros.prevScreen);
             return;
         }
         

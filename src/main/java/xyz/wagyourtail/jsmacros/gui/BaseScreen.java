@@ -5,6 +5,7 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
+import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.gui.elements.OverlayContainer;
 
 public class BaseScreen extends Screen {
@@ -25,6 +26,7 @@ public class BaseScreen extends Screen {
         buttons.clear();
         children.clear();
         overlay = null;
+        JsMacros.prevScreen = this;
         client.keyboard.setRepeatEvents(true);
     }
 
@@ -81,6 +83,13 @@ public class BaseScreen extends Screen {
     }
 
     public void onClose() {
+        if (client.world == null)
+            openParent();
+        else
+            client.openScreen(null);
+    }
+    
+    public void openParent() {
         client.openScreen(parent);
     }
 }

@@ -13,21 +13,20 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScriptThreadWrapper;
+import xyz.wagyourtail.jsmacros.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.gui.containers.RunningThreadContainer;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 import xyz.wagyourtail.jsmacros.runscript.RunScript.ScriptThreadWrapper;
 
-public class CancelScreen extends Screen {
-    protected Screen parent;
+public class CancelScreen extends BaseScreen {
     private int topScroll;
     private Scrollbar s;
     private List<RunningThreadContainer> running = new ArrayList<>();
 
     public CancelScreen(Screen parent) {
-        super(new LiteralText("Cancel"));
-        this.parent = parent;
+        super(new LiteralText("Cancel"), parent);
     }
 
     public void init() {
@@ -101,7 +100,7 @@ public class CancelScreen extends Screen {
     }
 
     public void onClose() {
-        client.openScreen(parent);
+        this.openParent();
     }
 
     public static class RTCSort implements Comparator<RunningThreadContainer> {

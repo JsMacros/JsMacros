@@ -103,13 +103,13 @@ public class EditorScreen extends BaseScreen {
         renderBackground(matrices);
         textRenderer.drawWithShadow(matrices, Language.getInstance().reorder(textRenderer.trimToWidth(fileName, width / 2)), 2, 1, 0xFFFFFF);
         String linecol;
-        if (content.arrowEnd) {
-            linecol = String.format("%d:%d", content.selEndLine + 1, content.selEndLineIndex + 1);
+        if (content.cursor.arrowEnd) {
+            linecol = String.format("%d:%d", content.cursor.endLine + 1, content.cursor.endLineIndex + 1);
         } else {
-            linecol = String.format("%d:%d", content.selStartLine + 1, content.selStartLineIndex + 1);
+            linecol = String.format("%d:%d", content.cursor.startLine + 1, content.cursor.startLineIndex + 1);
         }
-        if (content.selStartIndex != content.selEndIndex) {
-            linecol = (content.selEndIndex - content.selStartIndex) + " " + linecol;
+        if (content.cursor.startIndex != content.cursor.endIndex) {
+            linecol = (content.cursor.endIndex - content.cursor.startIndex) + " " + linecol;
         }
         textRenderer.drawWithShadow(matrices, linecol, width - textRenderer.getWidth(linecol) - 10, height - 9, 0xFFFFFF);
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
