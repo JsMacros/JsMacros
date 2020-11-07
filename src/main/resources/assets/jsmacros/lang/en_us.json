@@ -30,5 +30,9 @@
 	"jsmacros.disablewithscreen": "Disable KEY event when any screen is open.",
 	"jsmacros.about": "About",
 	"jsmacros.aboutinfo": "JS Macros\nCreated By: WagYourTail\n\nJavascript MacroMod for Block Game.\n\nFor help, refer to the wiki on GitHub or join the Discord!",
-	"jsmacros.back": "Back"
+	"jsmacros.back": "Back",
+	"jsmacros.erroropening": "There was an error opening the file... \n\n",
+	"jsmacros.save": "Save",
+	"jsmacros.errorsaving": "An error occured while trying to save... \n\n",
+	"jsmacros.nosave": "Are you sure you'd like to exit without saving?"
 }

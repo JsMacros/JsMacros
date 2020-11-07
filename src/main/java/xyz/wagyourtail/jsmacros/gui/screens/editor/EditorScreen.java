@@ -8,7 +8,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Language;
 import org.jetbrains.annotations.NotNull;
 import xyz.wagyourtail.jsmacros.api.classes.FileHandler;
 import xyz.wagyourtail.jsmacros.gui.BaseScreen;
@@ -23,7 +22,8 @@ import java.io.IOException;
 public class EditorScreen extends BaseScreen {
     protected final File file;
     protected String savedString;
-    protected final Text fileName;
+    protected Text fileName = new LiteralText("");
+    protected String lineCol = "";
     protected final FileHandler handler;
     protected final EditorContent content;
     protected final Scrollbar scrollbar;
@@ -45,10 +45,9 @@ public class EditorScreen extends BaseScreen {
             content = "";
         }
         savedString = content;
-        this.fileName = new LiteralText(textRenderer.trimToWidth(file.getName(), (width - 10) / 2));
         
         this.handler = handler;
-        this.content = new EditorContent(0, 0, 0, 0, 0xFF2B2B2B, 0xFF707070, 0xFF33508F, 0xD8D8D8, content);
+        this.content = new EditorContent(0, 0, 0, 0, 0xFF2B2B2B, 0xFF707070, 0xFF33508F, 0xD8D8D8, content, this::save);
         this.content.setLanguage(getDefaultLanguage());
         this.scrollbar = new Scrollbar(0, 0, 0, 0, 0, 0xFF000000, 0xFFFFFFFF, 1, this.content::setScroll);
         this.content.updateScrollPages = scrollbar::setScrollPages;
@@ -61,16 +60,21 @@ public class EditorScreen extends BaseScreen {
         addButton(content.setPos(0, 12, width, height - 24));
         addButton(scrollbar.setPos(width, 12, 10, height - 24));
         
-        saveBtn = addButton(new Button(width / 2, 0, width / 6, 12, needSave() ? 0xFFA0A000 : 0xFF00A000, 0xFF000000, needSave() ? 0xFF707000 : 0xFF007000, 0xFFFFFF, new TranslatableText("jsmacros.save"), this::save));
+        saveBtn = addButton(new Button(width / 2, 0, width / 6, 12, needSave() ? 0xFFA0A000 : 0xFF00A000, 0xFF000000, needSave() ? 0xFF707000 : 0xFF007000, 0xFFFFFF, new TranslatableText("jsmacros.save"), (btn) -> save()));
         
         content.history.onChange = (content) -> {
             if (savedString.equals(content)) {
                 saveBtn.setColor(0xFF00A000);
-                saveBtn.setHilightColor(0xFF707000);
+                saveBtn.setHilightColor(0xFF007000);
             } else {
                 saveBtn.setColor(0xFFA0A000);
-                saveBtn.setHilightColor(0xFF007000);
+                saveBtn.setHilightColor(0xFF707000);
             }
+        };
+    
+        content.cursor.onChange = (cursor) -> {
+            lineCol = (content.cursor.startIndex != content.cursor.endIndex ? (content.cursor.endIndex - content.cursor.startIndex) + " " : "") +
+                (content.cursor.arrowEnd ? String.format("%d:%d", content.cursor.endLine + 1, content.cursor.endLineIndex + 1) : String.format("%d:%d", content.cursor.startLine + 1, content.cursor.startLineIndex + 1));
         };
         
         addButton(new Button(width, 0, 10, 12,0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> {
@@ -97,21 +101,25 @@ public class EditorScreen extends BaseScreen {
                     break;
             }
         }));
+        
+        this.fileName = new LiteralText(textRenderer.trimToWidth(file.getName(), (width - 10) / 2));
     }
     
     public boolean needSave() {
         return !savedString.equals(content.history.current);
     }
     
-    public void save(Button btn) {
-        String current = content.history.current;
-        try {
-            handler.write(current);
-            savedString = current;
-            saveBtn.setColor(0xFF00A000);
-            saveBtn.setHilightColor(0xFF707000);
-        } catch (IOException e) {
-            openOverlay(new ConfirmOverlay(this.width / 4, height / 4, this.width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.errorsaving").append(new LiteralText("\n\n" + e.getMessage())), this::addButton, this::removeButton, this::closeOverlay, null));
+    public void save() {
+        if (needSave()) {
+            String current = content.history.current;
+            try {
+                handler.write(current);
+                savedString = current;
+                saveBtn.setColor(0xFF00A000);
+                saveBtn.setHilightColor(0xFF707000);
+            } catch (IOException e) {
+                openOverlay(new ConfirmOverlay(this.width / 4, height / 4, this.width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.errorsaving").append(new LiteralText("\n\n" + e.getMessage())), this::addButton, this::removeButton, this::closeOverlay, null));
+            }
         }
     }
     
@@ -149,18 +157,12 @@ public class EditorScreen extends BaseScreen {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
-        textRenderer.drawWithShadow(matrices, fileName, 2, 1, 0xFFFFFF);
-        String linecol;
-        if (content.cursor.arrowEnd) {
-            linecol = String.format("%d:%d", content.cursor.endLine + 1, content.cursor.endLineIndex + 1);
-        } else {
-            linecol = String.format("%d:%d", content.cursor.startLine + 1, content.cursor.startLineIndex + 1);
-        }
-        if (content.cursor.startIndex != content.cursor.endIndex) {
-            linecol = (content.cursor.endIndex - content.cursor.startIndex) + " " + linecol;
-        }
-        textRenderer.drawWithShadow(matrices, String.format("%d ms", (int) content.textRenderTime), 2, height - 9, 0xFFFFFF);
-        textRenderer.drawWithShadow(matrices, linecol, width - textRenderer.getWidth(linecol) - (width - 10) / 8 - 2, height - 9, 0xFFFFFF);
+        
+        textRenderer.drawWithShadow(matrices, fileName, 2, 2, 0xFFFFFF);
+        
+        textRenderer.drawWithShadow(matrices, String.format("%d ms", (int) content.textRenderTime), 2, height - 10, 0xFFFFFF);
+        textRenderer.drawWithShadow(matrices, lineCol, width - textRenderer.getWidth(lineCol) - (width - 10) / 8 - 2, height - 10, 0xFFFFFF);
+        
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
             b.render(matrices, mouseX, mouseY, delta);
         }
@@ -171,7 +173,7 @@ public class EditorScreen extends BaseScreen {
     @Override
     public void openParent() {
         if (needSave()) {
-            openOverlay(new ConfirmOverlay(this.width  / 4, height / 4, this.width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.nosave"), this::addButton, this::removeButton, this::closeOverlay, (container) -> {
+            openOverlay(new ConfirmOverlay(width  / 4, height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.nosave"), this::addButton, this::removeButton, this::closeOverlay, (container) -> {
                 super.openParent();
             }));
         } else {

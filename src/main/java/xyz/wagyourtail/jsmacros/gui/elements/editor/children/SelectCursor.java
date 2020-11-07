@@ -5,8 +5,11 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.util.math.MathHelper;
 
+import java.util.function.Consumer;
+
 public class SelectCursor {
     private MinecraftClient mc = MinecraftClient.getInstance();
+    public Consumer<SelectCursor> onChange;
     private Style defaultStyle;
     public int startLine = 0;
     public int endLine = 0;
@@ -35,6 +38,7 @@ public class SelectCursor {
         startLine = prev.length - 1;
         startCol = mc.textRenderer.getWidth(new LiteralText(prev[startLine]).setStyle(defaultStyle)) - 1;
         startLineIndex = prev[startLine].length();
+        if (onChange != null) onChange.accept(this);
     }
     
     public synchronized void updateEndIndex(int endIndex, String current) {
@@ -43,5 +47,6 @@ public class SelectCursor {
         endLine = prev.length - 1;
         endCol = mc.textRenderer.getWidth(new LiteralText(prev[endLine]).setStyle(defaultStyle));
         endLineIndex = prev[endLine].length();
+        if (onChange != null) onChange.accept(this);
     }
 }

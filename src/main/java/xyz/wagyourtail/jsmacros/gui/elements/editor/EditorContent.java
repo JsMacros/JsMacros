@@ -29,6 +29,7 @@ public class EditorContent extends Button {
     public String language = "javascript";
     public Consumer<Double> updateScrollPages;
     public Consumer<Double> scrollToPercent;
+    public Runnable save;
     
     protected LiteralText[] renderedText = new LiteralText[0];
     public final History history;
@@ -43,10 +44,11 @@ public class EditorContent extends Button {
     protected int firstLine = 0;
     protected int lastLine;
     
-    public EditorContent(int x, int y, int width, int height, int color, int borderColor, int hilightColor, int textColor, String message) {
+    public EditorContent(int x, int y, int width, int height, int color, int borderColor, int hilightColor, int textColor, String message, Runnable save) {
         super(x, y, width, height, color, borderColor, hilightColor, textColor, new LiteralText(""), null);
         lastLine = (int) (height / (double) lineSpread) - 1;
         this.selColor = hilightColor;
+        this.save = save;
         message = message.replaceAll("\r\n", "\n"); //no, bad windows.
         message = message.replaceAll("\t", "    "); //force 4 space, for rendering reasons.
         this.history = new History(message, cursor);
@@ -360,6 +362,10 @@ public class EditorContent extends Button {
                         compileRenderedText();
                     }
                     break;
+                case GLFW.GLFW_KEY_S:
+                    if (Screen.hasControlDown()) {
+                    
+                    }
                 case GLFW.GLFW_KEY_ENTER:
                     if (cursor.startIndex != cursor.endIndex) {
                         history.replace(cursor.startIndex, cursor.endIndex - cursor.startIndex, "\n");
