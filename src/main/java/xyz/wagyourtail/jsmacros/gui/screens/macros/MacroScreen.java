@@ -1,33 +1,31 @@
 package xyz.wagyourtail.jsmacros.gui.screens.macros;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
-
-import org.jetbrains.annotations.NotNull;
-import xyz.wagyourtail.jsmacros.JsMacros;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
-import xyz.wagyourtail.jsmacros.config.RawMacro;
-import xyz.wagyourtail.jsmacros.gui.BaseScreen;
-import xyz.wagyourtail.jsmacros.gui.screens.CancelScreen;
-import xyz.wagyourtail.jsmacros.gui.elements.overlays.AboutOverlay;
-import xyz.wagyourtail.jsmacros.gui.elements.overlays.ConfirmOverlay;
-import xyz.wagyourtail.jsmacros.gui.elements.overlays.EventChooser;
-import xyz.wagyourtail.jsmacros.gui.elements.overlays.FileChooser;
-import xyz.wagyourtail.jsmacros.gui.elements.containers.MacroContainer;
-import xyz.wagyourtail.jsmacros.gui.elements.containers.MacroListTopbar;
-import xyz.wagyourtail.jsmacros.gui.screens.editor.EditorScreen;
-import xyz.wagyourtail.jsmacros.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
-import xyz.wagyourtail.jsmacros.profile.Profile;
-import xyz.wagyourtail.jsmacros.runscript.RunScript;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
+import xyz.wagyourtail.jsmacros.JsMacros;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
+import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.gui.BaseScreen;
+import xyz.wagyourtail.jsmacros.gui.elements.Button;
+import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
+import xyz.wagyourtail.jsmacros.gui.elements.containers.MacroContainer;
+import xyz.wagyourtail.jsmacros.gui.elements.containers.MacroListTopbar;
+import xyz.wagyourtail.jsmacros.gui.elements.overlays.AboutOverlay;
+import xyz.wagyourtail.jsmacros.gui.elements.overlays.ConfirmOverlay;
+import xyz.wagyourtail.jsmacros.gui.elements.overlays.EventChooser;
+import xyz.wagyourtail.jsmacros.gui.elements.overlays.FileChooser;
+import xyz.wagyourtail.jsmacros.gui.screens.CancelScreen;
+import xyz.wagyourtail.jsmacros.gui.screens.editor.EditorScreen;
+import xyz.wagyourtail.jsmacros.profile.Profile;
+import xyz.wagyourtail.jsmacros.runscript.RunScript;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MacroScreen extends BaseScreen {
     protected MacroListTopbar topbar;

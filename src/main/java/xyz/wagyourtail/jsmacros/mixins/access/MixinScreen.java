@@ -1,19 +1,6 @@
 package xyz.wagyourtail.jsmacros.mixins.access;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.AbstractParentElement;
@@ -25,6 +12,14 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.wagyourtail.jsmacros.api.helpers.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.TextFieldWidgetHelper;
@@ -35,6 +30,9 @@ import xyz.wagyourtail.jsmacros.api.sharedclasses.PositionCommon.Vec2D;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Mixin(Screen.class)
 public abstract class MixinScreen extends AbstractParentElement implements IScreen {

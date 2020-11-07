@@ -1,16 +1,12 @@
 package io.noties.prism4j.languages;
 
-import io.noties.prism4j.GrammarUtils;
-import org.jetbrains.annotations.NotNull;
-
 import io.noties.prism4j.Prism4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.noties.prism4j.Prism4j.grammar;
-import static io.noties.prism4j.Prism4j.pattern;
-import static io.noties.prism4j.Prism4j.token;
+import static io.noties.prism4j.Prism4j.*;
 import static java.util.regex.Pattern.*;
 
 /**

@@ -1,26 +1,24 @@
 package xyz.wagyourtail.jsmacros.gui.screens;
 
-import xyz.wagyourtail.jsmacros.JsMacros;
-import xyz.wagyourtail.jsmacros.gui.BaseScreen;
-import xyz.wagyourtail.jsmacros.gui.elements.containers.CheckBoxContainer;
-import xyz.wagyourtail.jsmacros.gui.elements.overlays.ConfirmOverlay;
-import xyz.wagyourtail.jsmacros.gui.elements.containers.ProfileContainer;
-import xyz.wagyourtail.jsmacros.gui.elements.overlays.TextPrompt;
-import xyz.wagyourtail.jsmacros.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import xyz.wagyourtail.jsmacros.JsMacros;
+import xyz.wagyourtail.jsmacros.gui.BaseScreen;
+import xyz.wagyourtail.jsmacros.gui.elements.Button;
+import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
+import xyz.wagyourtail.jsmacros.gui.elements.containers.CheckBoxContainer;
+import xyz.wagyourtail.jsmacros.gui.elements.containers.ProfileContainer;
+import xyz.wagyourtail.jsmacros.gui.elements.overlays.ConfirmOverlay;
+import xyz.wagyourtail.jsmacros.gui.elements.overlays.TextPrompt;
 import xyz.wagyourtail.jsmacros.gui.screens.macros.EventMacrosScreen;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileScreen extends BaseScreen {
     private int topScroll;

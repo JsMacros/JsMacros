@@ -1,14 +1,13 @@
 package xyz.wagyourtail.jsmacros.api.functions;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import com.google.common.io.Files;
-
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.classes.FileHandler;
 import xyz.wagyourtail.jsmacros.extensionbase.Functions;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Better File-System functions.

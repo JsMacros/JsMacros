@@ -3,7 +3,10 @@ package xyz.wagyourtail.jsmacros.gui.elements.editor;
 import io.noties.prism4j.Prism4j;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.*;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.OrderedText;
+import net.minecraft.text.Style;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
@@ -17,8 +20,6 @@ import xyz.wagyourtail.jsmacros.gui.elements.editor.children.TextStyleCompiler;
 
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class EditorContent extends Button {
     private final static Prism4j prism4j = new Prism4j(new PrismGrammarLocator());

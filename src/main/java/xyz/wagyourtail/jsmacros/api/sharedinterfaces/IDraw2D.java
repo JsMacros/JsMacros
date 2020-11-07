@@ -1,8 +1,5 @@
 package xyz.wagyourtail.jsmacros.api.sharedinterfaces;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
@@ -11,6 +8,9 @@ import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Item;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Rect;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Text;
 import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author Wagyourtail

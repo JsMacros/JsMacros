@@ -9,10 +9,8 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
-
 import xyz.wagyourtail.jsmacros.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.gui.screens.macros.KeyMacrosScreen;

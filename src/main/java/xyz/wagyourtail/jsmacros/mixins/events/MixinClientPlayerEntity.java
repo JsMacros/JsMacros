@@ -1,18 +1,6 @@
 package xyz.wagyourtail.jsmacros.mixins.events;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import com.mojang.authlib.GameProfile;
-
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
@@ -23,11 +11,21 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.network.packet.c2s.play.UpdateSignC2SPacket;
 import net.minecraft.text.LiteralText;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.api.events.EventAirChange;
 import xyz.wagyourtail.jsmacros.api.events.EventDamage;
 import xyz.wagyourtail.jsmacros.api.events.EventEXPChange;
 import xyz.wagyourtail.jsmacros.api.events.EventSignEdit;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Mixin(ClientPlayerEntity.class)
 class MixinClientPlayerEntity extends AbstractClientPlayerEntity {

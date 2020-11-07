@@ -1,13 +1,13 @@
 package xyz.wagyourtail.jsmacros.gui.elements.containers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class MultiElementContainer extends DrawableHelper {
     protected int x;

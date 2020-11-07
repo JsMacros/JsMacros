@@ -1,12 +1,6 @@
 package xyz.wagyourtail.jsmacros.gui.screens;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -14,11 +8,16 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScriptThreadWrapper;
 import xyz.wagyourtail.jsmacros.gui.BaseScreen;
-import xyz.wagyourtail.jsmacros.gui.elements.containers.RunningThreadContainer;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
+import xyz.wagyourtail.jsmacros.gui.elements.containers.RunningThreadContainer;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 import xyz.wagyourtail.jsmacros.runscript.RunScript.ScriptThreadWrapper;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class CancelScreen extends BaseScreen {
     private int topScroll;

@@ -1,16 +1,15 @@
 package xyz.wagyourtail.jsmacros.gui.elements.containers;
 
-import java.util.function.Consumer;
-
-import org.apache.commons.lang3.time.DurationFormatUtils;
-
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 import xyz.wagyourtail.jsmacros.runscript.RunScript.ScriptThreadWrapper;
+
+import java.util.function.Consumer;
 
 public class RunningThreadContainer extends MultiElementContainer {
     private Consumer<RunningThreadContainer> removeContainer;

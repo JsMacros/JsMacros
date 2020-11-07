@@ -1,10 +1,9 @@
 package xyz.wagyourtail.jsmacros.mixins.access;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.text.Text;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import xyz.wagyourtail.jsmacros.access.IChatHud;
 
 @Mixin(ChatHud.class)

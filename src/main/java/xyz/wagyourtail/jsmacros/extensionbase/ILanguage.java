@@ -1,11 +1,5 @@
 package xyz.wagyourtail.jsmacros.extensionbase;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.function.Consumer;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.JsMacros;
@@ -14,6 +8,12 @@ import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 import xyz.wagyourtail.jsmacros.runscript.RunScript.ScriptThreadWrapper;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public interface ILanguage {
     

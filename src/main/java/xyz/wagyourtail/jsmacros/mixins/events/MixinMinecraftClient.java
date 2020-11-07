@@ -1,15 +1,14 @@
 package xyz.wagyourtail.jsmacros.mixins.events;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.world.ClientWorld;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.world.ClientWorld;
 import xyz.wagyourtail.jsmacros.api.events.EventDimensionChange;
 import xyz.wagyourtail.jsmacros.api.events.EventDisconnect;
 import xyz.wagyourtail.jsmacros.api.events.EventOpenScreen;

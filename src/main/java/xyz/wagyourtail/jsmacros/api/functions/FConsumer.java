@@ -1,12 +1,12 @@
 package xyz.wagyourtail.jsmacros.api.functions;
 
-import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.function.Function;
-
 import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 import xyz.wagyourtail.jsmacros.extensionbase.IFConsumer;
 import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
+
+import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Function;
 
 /**
  * Consumer implementation for wrapping consumers to match the language spec.

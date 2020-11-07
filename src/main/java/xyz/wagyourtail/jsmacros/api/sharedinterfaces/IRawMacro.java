@@ -1,7 +1,5 @@
 package xyz.wagyourtail.jsmacros.api.sharedinterfaces;
 
-import xyz.wagyourtail.jsmacros.config.RawMacro;
-
 /**
  * @author Wagyourtail
  * @since 1.2.7

@@ -1,11 +1,10 @@
 package xyz.wagyourtail.jsmacros.mixins.events;
 
+import net.minecraft.client.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import net.minecraft.client.Keyboard;
 import xyz.wagyourtail.jsmacros.api.events.EventKey;
 
 @Mixin(Keyboard.class)

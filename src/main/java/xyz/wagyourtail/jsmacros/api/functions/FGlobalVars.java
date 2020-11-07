@@ -1,10 +1,10 @@
 package xyz.wagyourtail.jsmacros.api.functions;
 
+import xyz.wagyourtail.jsmacros.extensionbase.Functions;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 
 /**
  * "Global" variables for passing to other contexts.

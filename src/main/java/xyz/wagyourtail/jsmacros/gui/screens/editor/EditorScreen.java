@@ -12,10 +12,10 @@ import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.api.classes.FileHandler;
 import xyz.wagyourtail.jsmacros.gui.BaseScreen;
-import xyz.wagyourtail.jsmacros.gui.elements.overlays.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.gui.elements.editor.EditorContent;
+import xyz.wagyourtail.jsmacros.gui.elements.overlays.ConfirmOverlay;
 
 import java.io.File;
 import java.io.IOException;

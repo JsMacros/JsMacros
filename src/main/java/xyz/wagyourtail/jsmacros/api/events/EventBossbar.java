@@ -1,10 +1,10 @@
 package xyz.wagyourtail.jsmacros.api.events;
 
-import java.util.UUID;
-
 import net.minecraft.client.gui.hud.ClientBossBar;
 import xyz.wagyourtail.jsmacros.api.helpers.BossBarHelper;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+
+import java.util.UUID;
 
 /**
  * @author Wagyourtail

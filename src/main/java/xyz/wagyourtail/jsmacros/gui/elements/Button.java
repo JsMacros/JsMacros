@@ -1,13 +1,13 @@
 package xyz.wagyourtail.jsmacros.gui.elements;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AbstractPressableButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 public class Button extends AbstractPressableButtonWidget {
     protected int color;

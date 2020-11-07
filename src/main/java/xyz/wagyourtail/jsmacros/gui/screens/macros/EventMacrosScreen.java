@@ -1,8 +1,10 @@
 package xyz.wagyourtail.jsmacros.gui.screens.macros;
 
+import com.google.common.collect.ImmutableList;
+import net.minecraft.client.gui.screen.Screen;
 import xyz.wagyourtail.jsmacros.JsMacros;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.gui.screens.ProfileScreen;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
@@ -12,10 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
-import com.google.common.collect.ImmutableList;
-
-import net.minecraft.client.gui.screen.Screen;
 
 public class EventMacrosScreen extends MacroScreen {
     

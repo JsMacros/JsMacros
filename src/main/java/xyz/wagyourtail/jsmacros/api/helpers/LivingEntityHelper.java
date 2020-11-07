@@ -1,13 +1,12 @@
 package xyz.wagyourtail.jsmacros.api.helpers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LivingEntityHelper extends EntityHelper {
 

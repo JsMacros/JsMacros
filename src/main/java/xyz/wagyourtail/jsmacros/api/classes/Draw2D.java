@@ -1,11 +1,7 @@
 package xyz.wagyourtail.jsmacros.api.classes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
@@ -15,6 +11,9 @@ import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Text;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Wagyourtail

@@ -1,18 +1,12 @@
 package xyz.wagyourtail.jsmacros.api.functions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.InputUtil.Key;
 import xyz.wagyourtail.jsmacros.extensionbase.Functions;
+
+import java.util.*;
 
 /**
  * 

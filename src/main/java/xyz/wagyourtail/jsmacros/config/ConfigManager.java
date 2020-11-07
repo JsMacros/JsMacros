@@ -1,5 +1,12 @@
 package xyz.wagyourtail.jsmacros.config;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.fabricmc.loader.api.FabricLoader;
+import xyz.wagyourtail.jsmacros.JsMacros;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IConfig;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -8,14 +15,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import net.fabricmc.loader.api.FabricLoader;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
-import xyz.wagyourtail.jsmacros.JsMacros;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IConfig;
 
 public class ConfigManager implements IConfig {
     public ConfigOptions options;

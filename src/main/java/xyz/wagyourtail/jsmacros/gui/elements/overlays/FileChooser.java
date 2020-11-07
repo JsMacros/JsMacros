@@ -1,16 +1,6 @@
 package xyz.wagyourtail.jsmacros.gui.elements.overlays;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Consumer;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
@@ -24,6 +14,11 @@ import xyz.wagyourtail.jsmacros.extensionbase.ILanguage;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class FileChooser extends OverlayContainer {
     private File directory;

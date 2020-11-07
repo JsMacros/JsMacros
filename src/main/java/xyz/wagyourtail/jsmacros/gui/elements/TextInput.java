@@ -1,13 +1,12 @@
 package xyz.wagyourtail.jsmacros.gui.elements;
 
-import java.util.function.Consumer;
-
-import org.lwjgl.glfw.GLFW;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import org.lwjgl.glfw.GLFW;
+
+import java.util.function.Consumer;
 
 public class TextInput extends Button {
     public Consumer<String> onChange;

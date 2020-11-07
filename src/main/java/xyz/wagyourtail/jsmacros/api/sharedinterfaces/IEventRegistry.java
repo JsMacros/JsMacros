@@ -1,10 +1,10 @@
 package xyz.wagyourtail.jsmacros.api.sharedinterfaces;
 
+import xyz.wagyourtail.jsmacros.config.RawMacro;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import xyz.wagyourtail.jsmacros.config.RawMacro;
 
 /**
  * @author Wagyourtail

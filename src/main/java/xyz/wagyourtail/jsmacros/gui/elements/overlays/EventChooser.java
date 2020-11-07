@@ -1,12 +1,6 @@
 package xyz.wagyourtail.jsmacros.gui.elements.overlays;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Consumer;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -16,6 +10,11 @@ import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.profile.Profile;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class EventChooser extends OverlayContainer {
     private String selected;

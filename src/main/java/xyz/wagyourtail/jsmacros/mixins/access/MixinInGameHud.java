@@ -1,14 +1,12 @@
 package xyz.wagyourtail.jsmacros.mixins.access;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import com.mojang.blaze3d.systems.RenderSystem;
-
-import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.api.functions.FHud;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IDraw2D;

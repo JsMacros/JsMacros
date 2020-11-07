@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.api.helpers;
 
 import com.mojang.authlib.GameProfile;
-
 import net.minecraft.client.network.PlayerListEntry;
 
 /**
