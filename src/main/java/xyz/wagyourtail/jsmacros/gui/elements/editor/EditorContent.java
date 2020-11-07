@@ -10,8 +10,10 @@ import net.minecraft.util.Language;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.gui.screens.editor.hilighting.PrismGrammarLocator;
-import xyz.wagyourtail.jsmacros.gui.screens.editor.hilighting.TextStyleCompiler;
+import xyz.wagyourtail.jsmacros.gui.elements.editor.children.History;
+import xyz.wagyourtail.jsmacros.gui.elements.editor.children.PrismGrammarLocator;
+import xyz.wagyourtail.jsmacros.gui.elements.editor.children.SelectCursor;
+import xyz.wagyourtail.jsmacros.gui.elements.editor.children.TextStyleCompiler;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -24,7 +26,7 @@ public class EditorContent extends Button {
     /*TODO: make py script to convert a copyleft monospaced font to png's for minecraft, or add class for on the fly from a ttf*/
     public final static Style defaultStyle = Style.EMPTY.withFont(new Identifier("jsmacros", "uniform"));
     public long textRenderTime = 0;
-    private String language = "javascript";
+    public String language = "javascript";
     public Consumer<Double> updateScrollPages;
     public Consumer<Double> scrollToPercent;
     
@@ -89,7 +91,7 @@ public class EditorContent extends Button {
         }
     }
     
-    public void setLanguage(String language) {
+    public synchronized void setLanguage(String language) {
         this.language = language;
         compileRenderedText();
     }

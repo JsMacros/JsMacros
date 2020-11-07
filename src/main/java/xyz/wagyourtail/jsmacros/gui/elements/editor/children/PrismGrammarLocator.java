@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.screens.editor.hilighting;
+package xyz.wagyourtail.jsmacros.gui.elements.editor.children;
 
 import com.google.common.collect.Sets;
 import io.noties.prism4j.GrammarLocator;

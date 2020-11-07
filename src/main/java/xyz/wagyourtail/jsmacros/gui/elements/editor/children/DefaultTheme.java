@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.screens.editor.hilighting;
+package xyz.wagyourtail.jsmacros.gui.elements.editor.children;
 
 import net.minecraft.text.TextColor;
 

@@ -61,7 +61,7 @@ public class EditorScreen extends BaseScreen {
         addButton(content.setPos(0, 12, width, height - 24));
         addButton(scrollbar.setPos(width + 5, 12, 10, height - 24));
         
-        saveBtn = addButton(new Button(width / 2, 0, width / 6, 12, savedString.equals(content.history.current) ? 0xFF00A000 : 0xFFA0A000, 0xFF000000, savedString.equals(content) ? 0xFF007000 : 0xFF707000, 0xFFFFFF, new TranslatableText("jsmacros.save"), this::save));
+        saveBtn = addButton(new Button(width / 2, 0, width / 6, 12, needSave() ? 0xFF00A000 : 0xFFA0A000, 0xFF000000, needSave() ? 0xFF007000 : 0xFF707000, 0xFFFFFF, new TranslatableText("jsmacros.save"), this::save));
         
         content.history.onChange = (content) -> {
             if (savedString.equals(content)) {
@@ -72,6 +72,35 @@ public class EditorScreen extends BaseScreen {
                 saveBtn.setHilightColor(0xFF007000);
             }
         };
+        
+        addButton(new Button(width + 5, 0, 10, 10,0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> {
+            openParent();
+        }));
+        
+        addButton(new Button(this.width - width / 6, height - 12, width / 6, 12, 0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new LiteralText(getDefaultLanguage()), (btn) -> {
+            switch (content.language) {
+                case "python":
+                    content.setLanguage("lua");
+                    btn.setMessage(new LiteralText("lua"));
+                    break;
+                case "lua":
+                    content.setLanguage("json");
+                    btn.setMessage(new LiteralText("json"));
+                    break;
+                case "json":
+                    content.setLanguage("javascript");
+                    btn.setMessage(new LiteralText("javascript"));
+                    break;
+                default:
+                    content.setLanguage("python");
+                    btn.setMessage(new LiteralText("python"));
+                    break;
+            }
+        }));
+    }
+    
+    public boolean needSave() {
+        return savedString.equals(content.history.current);
     }
     
     public void save(Button btn) {
@@ -139,4 +168,14 @@ public class EditorScreen extends BaseScreen {
         super.render(matrices, mouseX, mouseY, delta);
     }
     
+    @Override
+    public void openParent() {
+        if (needSave()) {
+            openOverlay(new ConfirmOverlay(this.width  / 4, height / 4, this.width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.nosave"), this::addButton, this::removeButton, this::closeOverlay, (container) -> {
+                super.openParent();
+            }));
+        } else {
+            super.openParent();
+        }
+    }
 }
