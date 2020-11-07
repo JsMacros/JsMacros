@@ -104,6 +104,10 @@ public class EditorScreen extends BaseScreen {
         }));
         
         this.fileName = new LiteralText(textRenderer.trimToWidth(file.getName(), (width - 10) / 2));
+        if (overlay == null && !content.isFocused()) {
+            setFocused(content);
+            content.changeFocus(true);
+        }
     }
     
     public boolean needSave() {
@@ -141,7 +145,7 @@ public class EditorScreen extends BaseScreen {
     }
     
     public boolean mouseReleased(double mouseX, double mouseY, int btn) {
-        if (overlay == null && content != null && !content.isFocused()) {
+        if (overlay == null && !content.isFocused()) {
             setFocused(content);
             content.changeFocus(true);
         }
