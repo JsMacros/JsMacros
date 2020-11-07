@@ -17,6 +17,8 @@ import xyz.wagyourtail.jsmacros.gui.elements.editor.children.TextStyleCompiler;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EditorContent extends Button {
     private final static Prism4j prism4j = new Prism4j(new PrismGrammarLocator());
@@ -132,13 +134,28 @@ public class EditorContent extends Button {
         return count;
     }
     
+    public void selectWordAtCursor() {
+        String currentLine = history.current.split("\n", -1)[cursor.startLine];
+        String[] startWords = currentLine.substring(0, cursor.startLineIndex).split("\\b");
+        int dStart = -startWords[startWords.length - 1].length();
+        String[] endWords = currentLine.substring(cursor.startLineIndex, currentLine.length()).split("\\b");
+        int dEnd = endWords[0].length();
+        int currentIndex = cursor.startIndex;
+        cursor.updateStartIndex(currentIndex + dStart, history.current);
+        cursor.updateEndIndex(currentIndex + dEnd, history.current);
+    }
+    
     @Override
     public synchronized boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.clicked(mouseX, mouseY);
         if (this.isFocused()) {
-            int index = getIndexPosition(mouseX - x - 30, mouseY - y);
-            cursor.updateStartIndex(index, history.current);
-            cursor.updateEndIndex(index, history.current);
+            int index = getIndexPosition(mouseX - x - 30, mouseY - y + 1);
+            if (cursor.startIndex == index && cursor.endIndex == index) {
+                selectWordAtCursor();
+            } else {
+                cursor.updateStartIndex(index, history.current);
+                cursor.updateEndIndex(index, history.current);
+            }
             cursor.dragStartIndex = index;
             cursor.arrowEnd = false;
             cursor.arrowLineIndex = cursor.startLineIndex;
@@ -418,6 +435,7 @@ public class EditorContent extends Button {
         Style lineNumStyle = defaultStyle.withColor(TextColor.fromRgb(textColor));
         int add = lineSpread - scroll % lineSpread;
         if (add == lineSpread) add = 0;
+        int y = this.y + 1;
         synchronized (renderedText) {
             if (renderedText != null)
                 for (int i = 0, j = firstLine; j <= lastLine && j < renderedText.length; ++i, ++j) {
