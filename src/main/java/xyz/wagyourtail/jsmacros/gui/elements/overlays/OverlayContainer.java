@@ -54,28 +54,28 @@ public abstract class OverlayContainer extends MultiElementContainer {
         this.close.accept(this);
     }
     
-    public void renderBackground(MatrixStack matricies) {
+    public void renderBackground(MatrixStack matrices) {
         // black bg
-        fill(matricies, x, y, x + width, y + height, 0xFF000000);
+        fill(matrices, x, y, x + width, y + height, 0xFF000000);
         // 2 layer border
-        fill(matricies, x, y, x + width, y + 1, 0x7F7F7F7F);
-        fill(matricies, x, y + height - 1, x + width, y + height, 0x7F7F7F7F);
-        fill(matricies, x, y + 1, x + 1, y + height - 1, 0x7F7F7F7F);
-        fill(matricies, x + width - 1, y + 1, x + width, y + height - 1, 0x7F7F7F7F);
+        fill(matrices, x, y, x + width, y + 1, 0x7F7F7F7F);
+        fill(matrices, x, y + height - 1, x + width, y + height, 0x7F7F7F7F);
+        fill(matrices, x, y + 1, x + 1, y + height - 1, 0x7F7F7F7F);
+        fill(matrices, x + width - 1, y + 1, x + width, y + height - 1, 0x7F7F7F7F);
 
-        fill(matricies, x + 1, y + 1, x + width - 1, y + 2, 0xFFFFFFFF);
-        fill(matricies, x + 1, y + height - 2, x + width - 1, y + height - 1, 0xFFFFFFFF);
-        fill(matricies, x + 1, y + 1, x + 2, y + height - 1, 0xFFFFFFFF);
-        fill(matricies, x + width - 2, y + 1, x + width - 1, y + height - 1, 0xFFFFFFFF);
+        fill(matrices, x + 1, y + 1, x + width - 1, y + 2, 0xFFFFFFFF);
+        fill(matrices, x + 1, y + height - 2, x + width - 1, y + height - 1, 0xFFFFFFFF);
+        fill(matrices, x + 1, y + 1, x + 2, y + height - 1, 0xFFFFFFFF);
+        fill(matrices, x + width - 2, y + 1, x + width - 1, y + height - 1, 0xFFFFFFFF);
 
     }
     
     @Override
-    public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         for (AbstractButtonWidget btn : buttons) {
-            btn.render(matricies, mouseX, mouseY, delta);
+            btn.render(matrices, mouseX, mouseY, delta);
         }
-        if (this.overlay != null) this.overlay.render(matricies, mouseX, mouseY, delta);
+        if (this.overlay != null) this.overlay.render(matrices, mouseX, mouseY, delta);
     }
 
 }

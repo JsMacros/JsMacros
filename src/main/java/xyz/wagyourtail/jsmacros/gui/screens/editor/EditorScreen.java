@@ -45,7 +45,7 @@ public class EditorScreen extends BaseScreen {
             content = "";
         }
         savedString = content;
-        this.fileName = new LiteralText(file.getName());
+        this.fileName = new LiteralText(textRenderer.trimToWidth(file.getName(), (width - 10) / 2));
         
         this.handler = handler;
         this.content = new EditorContent(0, 0, 0, 0, 0xFF2B2B2B, 0xFF707070, 0xFF33508F, 0xD8D8D8, content);
@@ -57,11 +57,11 @@ public class EditorScreen extends BaseScreen {
     
     public void init() {
         super.init();
-        int width = this.width - 20;
+        int width = this.width - 10;
         addButton(content.setPos(0, 12, width, height - 24));
-        addButton(scrollbar.setPos(width + 5, 12, 10, height - 24));
+        addButton(scrollbar.setPos(width, 12, 10, height - 24));
         
-        saveBtn = addButton(new Button(width / 2, 0, width / 6, 12, needSave() ? 0xFF00A000 : 0xFFA0A000, 0xFF000000, needSave() ? 0xFF007000 : 0xFF707000, 0xFFFFFF, new TranslatableText("jsmacros.save"), this::save));
+        saveBtn = addButton(new Button(width / 2, 0, width / 6, 12, needSave() ? 0xFFA0A000 : 0xFF00A000, 0xFF000000, needSave() ? 0xFF707000 : 0xFF007000, 0xFFFFFF, new TranslatableText("jsmacros.save"), this::save));
         
         content.history.onChange = (content) -> {
             if (savedString.equals(content)) {
@@ -73,11 +73,11 @@ public class EditorScreen extends BaseScreen {
             }
         };
         
-        addButton(new Button(width + 5, 0, 10, 10,0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> {
+        addButton(new Button(width, 0, 10, 12,0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> {
             openParent();
         }));
         
-        addButton(new Button(this.width - width / 6, height - 12, width / 6, 12, 0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new LiteralText(getDefaultLanguage()), (btn) -> {
+        addButton(new Button(this.width - width / 8, height - 12, width / 8, 12, 0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new LiteralText(getDefaultLanguage()), (btn) -> {
             switch (content.language) {
                 case "python":
                     content.setLanguage("lua");
@@ -100,7 +100,7 @@ public class EditorScreen extends BaseScreen {
     }
     
     public boolean needSave() {
-        return savedString.equals(content.history.current);
+        return !savedString.equals(content.history.current);
     }
     
     public void save(Button btn) {
@@ -149,7 +149,7 @@ public class EditorScreen extends BaseScreen {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
-        textRenderer.drawWithShadow(matrices, Language.getInstance().reorder(textRenderer.trimToWidth(fileName, width / 2)), 2, 1, 0xFFFFFF);
+        textRenderer.drawWithShadow(matrices, fileName, 2, 1, 0xFFFFFF);
         String linecol;
         if (content.cursor.arrowEnd) {
             linecol = String.format("%d:%d", content.cursor.endLine + 1, content.cursor.endLineIndex + 1);
@@ -160,7 +160,7 @@ public class EditorScreen extends BaseScreen {
             linecol = (content.cursor.endIndex - content.cursor.startIndex) + " " + linecol;
         }
         textRenderer.drawWithShadow(matrices, String.format("%d ms", (int) content.textRenderTime), 2, height - 9, 0xFFFFFF);
-        textRenderer.drawWithShadow(matrices, linecol, width - textRenderer.getWidth(linecol) - 10, height - 9, 0xFFFFFF);
+        textRenderer.drawWithShadow(matrices, linecol, width - textRenderer.getWidth(linecol) - (width - 10) / 8 - 2, height - 9, 0xFFFFFF);
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
             b.render(matrices, mouseX, mouseY, delta);
         }

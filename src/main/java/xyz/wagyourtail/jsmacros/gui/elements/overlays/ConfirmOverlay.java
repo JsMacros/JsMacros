@@ -43,10 +43,10 @@ public class ConfirmOverlay extends OverlayContainer {
         
     }
     
-    protected void renderMessage(MatrixStack matricies) {
+    protected void renderMessage(MatrixStack matrices) {
         for (int i = 0; i < lines; ++i) {
             int w = textRenderer.getWidth(text.get(i));
-            textRenderer.draw(matricies, text.get(i), x + width / 2 - w / 2, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF);
+            textRenderer.draw(matrices, text.get(i), x + width / 2 - w / 2, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF);
         }
     }
     

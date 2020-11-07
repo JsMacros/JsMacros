@@ -39,7 +39,7 @@ public class CheckBoxContainer extends MultiElementContainer {
     }
 
     @Override
-    public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             textRenderer.drawTrimmed(message, x+height, y+2, width-height-2, 0xFFFFFF);
         }

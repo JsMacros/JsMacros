@@ -393,6 +393,10 @@ public class EditorContent extends Button {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         fill(matrices, x, y, x + width, y + height, color);
         fill(matrices, x + 28, y, x + 29, y + height, borderColor);
+        fill(matrices, x, y, x + 1, y + height, borderColor);
+        fill(matrices, x + width - 1, y, x + width, y + height, borderColor);
+        fill(matrices, x + 1, y, x + width - 1, y + 1, borderColor);
+        fill(matrices, x + 1, y + height - 1, x + width - 1, y + height, borderColor);
         
         Style lineNumStyle = defaultStyle.withColor(TextColor.fromRgb(textColor));
         int add = lineSpread - scroll % lineSpread;

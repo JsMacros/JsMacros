@@ -156,39 +156,39 @@ public class ProfileScreen extends BaseScreen {
         children.remove(btn);
     }
 
-    public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
-        if (matricies == null) return;
-        this.renderBackground(matricies, 0);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if (matrices == null) return;
+        this.renderBackground(matrices, 0);
         
         for (ProfileContainer p : ImmutableList.copyOf(this.profiles)) {
-            p.render(matricies, mouseX, mouseY, delta);
+            p.render(matrices, mouseX, mouseY, delta);
         }
 
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
-            b.render(matricies, mouseX, mouseY, delta);
+            b.render(matrices, mouseX, mouseY, delta);
         }
 
         // plist topbar
         int w = this.width / 2 - 40;
-        drawCenteredText(matricies, textRenderer, profText, w * 3 / 8 + 20, 24, 0xFFFFFF);
-        drawCenteredText(matricies, this.textRenderer, (Text) textRenderer.trimToWidth(defText, w / 4), w * 7 / 8 + 20, 24, 0xFFFFFF);
-        fill(matricies, 20, 33, this.width / 2 - 20, 34, 0xFFFFFFFF);
+        drawCenteredText(matrices, textRenderer, profText, w * 3 / 8 + 20, 24, 0xFFFFFF);
+        drawCenteredText(matrices, this.textRenderer, (Text) textRenderer.trimToWidth(defText, w / 4), w * 7 / 8 + 20, 24, 0xFFFFFF);
+        fill(matrices, 20, 33, this.width / 2 - 20, 34, 0xFFFFFFFF);
 
         // pname
-        drawCenteredString(matricies, this.textRenderer, JsMacros.profile.profileName, this.width * 7 / 12, 5, 0x7F7F7F);
+        drawCenteredString(matrices, this.textRenderer, JsMacros.profile.profileName, this.width * 7 / 12, 5, 0x7F7F7F);
 
         // middle bar
-        fill(matricies, this.width / 2, 22, this.width / 2 + 1, this.height - 1, 0xFFFFFFFF);
+        fill(matrices, this.width / 2, 22, this.width / 2 + 1, this.height - 1, 0xFFFFFFFF);
 
-        disableInGui.render(matricies, mouseX, mouseY, delta);
+        disableInGui.render(matrices, mouseX, mouseY, delta);
         
         // top stuff
-        fill(matricies, this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
-        fill(matricies, this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);
-        fill(matricies, this.width / 6 * 2, 0, this.width / 6 * 2 + 2, 20, 0xFFFFFFFF);
-        fill(matricies, 0, 20, width, 22, 0xFFFFFFFF);
+        fill(matrices, this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
+        fill(matrices, this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);
+        fill(matrices, this.width / 6 * 2, 0, this.width / 6 * 2 + 2, 20, 0xFFFFFFFF);
+        fill(matrices, 0, 20, width, 22, 0xFFFFFFFF);
 
-        super.render(matricies, mouseX, mouseY, delta);
+        super.render(matrices, mouseX, mouseY, delta);
     }
 
     public void removed() {

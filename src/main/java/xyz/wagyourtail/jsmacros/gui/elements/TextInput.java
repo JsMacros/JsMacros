@@ -163,8 +163,8 @@ public class TextInput extends Button {
         this.setFocused(sel);
     }
 
-    protected void renderMessage(MatrixStack matricies) {
-        fill(matricies, selStart, height > 9 ? y + 2 : y, Math.min(selEnd, x + width - 2), (height > 9 ? y + 2 : y) + mc.textRenderer.fontHeight, selColor);
-        drawStringWithShadow(matricies, mc.textRenderer, mc.textRenderer.trimToWidth(content, width - 4), x + 2, height > 9 ? y + 2 : y, textColor);
+    protected void renderMessage(MatrixStack matrices) {
+        fill(matrices, selStart, height > 9 ? y + 2 : y, Math.min(selEnd, x + width - 2), (height > 9 ? y + 2 : y) + mc.textRenderer.fontHeight, selColor);
+        drawStringWithShadow(matrices, mc.textRenderer, mc.textRenderer.trimToWidth(content, width - 4), x + 2, height > 9 ? y + 2 : y, textColor);
     }
 }

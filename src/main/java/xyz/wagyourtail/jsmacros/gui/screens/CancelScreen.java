@@ -76,14 +76,14 @@ public class CancelScreen extends BaseScreen {
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
     
-    public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
-        if (matricies == null) return;
-        this.renderBackground(matricies, 0);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if (matrices == null) return;
+        this.renderBackground(matrices, 0);
         List<IScriptThreadWrapper> tl = RunScript.getThreads();
         
         for (RunningThreadContainer r : ImmutableList.copyOf(this.running)) {
             tl.remove(r.t);
-            r.render(matricies, mouseX, mouseY, delta);
+            r.render(matrices, mouseX, mouseY, delta);
         }
         
         for (IScriptThreadWrapper t : tl) {
@@ -91,7 +91,7 @@ public class CancelScreen extends BaseScreen {
         }
 
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
-            ((Button) b).render(matricies, mouseX, mouseY, delta);
+            ((Button) b).render(matrices, mouseX, mouseY, delta);
         }
     }
 

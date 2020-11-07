@@ -74,8 +74,8 @@ public class BaseScreen extends Screen {
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
 
-    public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
-        if (overlay != null) overlay.render(matricies, mouseX, mouseY, delta);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if (overlay != null) overlay.render(matrices, mouseX, mouseY, delta);
     }
 
     public boolean shouldCloseOnEsc() {

@@ -51,22 +51,22 @@ public class AboutOverlay extends OverlayContainer {
         this.vcenter = ((height - 12) - (lines * textRenderer.fontHeight)) / 2;
     }
     
-    protected void renderMessage(MatrixStack matricies) {
+    protected void renderMessage(MatrixStack matrices) {
         for (int i = 0; i < lines; ++i) {
             int w = textRenderer.getWidth(text.get(i));
-            textRenderer.draw(matricies, text.get(i), x + width / 2 - w / 2, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF);
+            textRenderer.draw(matrices, text.get(i), x + width / 2 - w / 2, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF);
         }
     }
     
-    public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
-        renderBackground(matricies);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        renderBackground(matrices);
         
         textRenderer.drawTrimmed(new TranslatableText("jsmacros.about"), x + 3, y + 3, width - 14, 0xFFFFFF);
-        renderMessage(matricies);
+        renderMessage(matrices);
         
-        fill(matricies, x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
-        fill(matricies, x + 2, y + height - 15, x + width - 2, y + height - 14, 0xFFFFFFFF);
-        super.render(matricies, mouseX, mouseY, delta);
+        fill(matrices, x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
+        fill(matrices, x + 2, y + height - 15, x + width - 2, y + height - 14, 0xFFFFFFFF);
+        super.render(matrices, mouseX, mouseY, delta);
         
     }
 }

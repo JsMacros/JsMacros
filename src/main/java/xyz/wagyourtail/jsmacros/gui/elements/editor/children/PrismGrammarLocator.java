@@ -24,6 +24,8 @@ public class PrismGrammarLocator implements GrammarLocator {
                 return Prism_clike.create(prism4j);
             case "regex":
                 return Prism_regex.create(prism4j);
+            case "json":
+                return Prism_json.create(prism4j);
             default:
                 return null;
         }
@@ -32,7 +34,7 @@ public class PrismGrammarLocator implements GrammarLocator {
     @NotNull
     @Override
     public Set<String> languages() {
-        return Sets.newHashSet("javascript", "lua", "python");
+        return Sets.newHashSet("javascript", "lua", "python", "json", "regex");
     }
     
 }

@@ -61,13 +61,13 @@ public class ProfileContainer extends MultiElementContainer {
     }
 
     @Override
-    public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             // border
-            fill(matricies, x, y, x + width, y + 1, 0xFFFFFFFF);
-            fill(matricies, x, y + height - 1, x + width, y + height, 0xFFFFFFFF);
-            fill(matricies, x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
-            fill(matricies, x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
+            fill(matrices, x, y, x + width, y + 1, 0xFFFFFFFF);
+            fill(matrices, x, y + height - 1, x + width, y + height, 0xFFFFFFFF);
+            fill(matrices, x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
+            fill(matrices, x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
         }
     }
 
