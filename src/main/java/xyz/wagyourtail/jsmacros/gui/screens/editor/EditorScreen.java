@@ -12,9 +12,10 @@ import net.minecraft.util.Language;
 import org.jetbrains.annotations.NotNull;
 import xyz.wagyourtail.jsmacros.api.classes.FileHandler;
 import xyz.wagyourtail.jsmacros.gui.BaseScreen;
-import xyz.wagyourtail.jsmacros.gui.containers.ConfirmOverlay;
+import xyz.wagyourtail.jsmacros.gui.elements.overlays.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
+import xyz.wagyourtail.jsmacros.gui.elements.editor.EditorContent;
 
 import java.io.File;
 import java.io.IOException;

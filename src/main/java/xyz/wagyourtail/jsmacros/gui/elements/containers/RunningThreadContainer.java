@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.containers;
+package xyz.wagyourtail.jsmacros.gui.elements.containers;
 
 import java.util.function.Consumer;
 
@@ -9,7 +9,6 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.gui.elements.MultiElementContainer;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 import xyz.wagyourtail.jsmacros.runscript.RunScript.ScriptThreadWrapper;
 

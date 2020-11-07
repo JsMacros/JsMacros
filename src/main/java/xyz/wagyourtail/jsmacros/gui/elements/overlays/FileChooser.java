@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.screens.macros.containers;
+package xyz.wagyourtail.jsmacros.gui.elements.overlays;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,10 +21,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.extensionbase.ILanguage;
-import xyz.wagyourtail.jsmacros.gui.containers.ConfirmOverlay;
-import xyz.wagyourtail.jsmacros.gui.containers.TextPrompt;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.gui.elements.OverlayContainer;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 

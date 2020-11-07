@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.screens.editor;
+package xyz.wagyourtail.jsmacros.gui.elements.editor;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
@@ -8,22 +8,22 @@ import net.minecraft.util.math.MathHelper;
 public class SelectCursor {
     private MinecraftClient mc = MinecraftClient.getInstance();
     private Style defaultStyle;
-    int startLine = 0;
-    int endLine = 0;
+    public int startLine = 0;
+    public int endLine = 0;
     
-    int startIndex = 0;
-    int endIndex = 0;
+    public int startIndex = 0;
+    public int endIndex = 0;
     
-    int startLineIndex = 0;
-    int endLineIndex = 0;
+    public int startLineIndex = 0;
+    public int endLineIndex = 0;
     
-    protected int dragStartIndex = 0;
+    public int dragStartIndex = 0;
     
-    int arrowLineIndex = 0;
-    boolean arrowEnd = false;
+    public int arrowLineIndex = 0;
+    public boolean arrowEnd = false;
     
-    int startCol = 0;
-    int endCol = 0;
+    public int startCol = 0;
+    public int endCol = 0;
     
     public SelectCursor(Style defaultStyle) {
         this.defaultStyle = defaultStyle;

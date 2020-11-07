@@ -23,10 +23,19 @@ public class Prism_python {
     
     @NotNull
     public static Prism4j.Grammar create(@NotNull Prism4j prism4j) {
+    
+        final Prism4j.Token interpolation = token("interpolation");
+    
         final Prism4j.Grammar py = grammar("python",
             token("comment", pattern(
                 compile("(^|[^\\\\])#.*"),
                 true
+            )),
+            token("string-interpolation", pattern(compile("(?:f|rf|fr)(?:(\"\"\"|''')[\\s\\S]*?\\1|(\"|')(?:\\\\.|(?!\\2)[^\\\\\\r\\n])*\\2)", CASE_INSENSITIVE), false, true, null,
+                grammar("inside",
+                    interpolation,
+                    token("string", pattern(compile("[\\s\\S]+")))
+                )
             )),
             token("triple-quoted-string", pattern(
                 compile("(?:[rub]|rb|br)?(\"\"\"|''')[\\s\\S]*?\\1", CASE_INSENSITIVE),
@@ -61,21 +70,10 @@ public class Prism_python {
             token("operator", pattern(compile("[-+%=]=?|!=|\\*\\*?=?|\\/\\/?=?|<[<=>]?|>[=>]?|[&|^~]"))),
             token("punctuation", pattern(compile("[{}\\[\\];(),.:]")))
         );
-    
-        final Prism4j.Token interpolation = token("interpolation");
-        
-        GrammarUtils.insertBeforeToken(py, "triple-quoted-string",
-            token("string-interpolation", pattern(compile("(?:f|rf|fr)(?:(\"\"\"|''')[\\s\\S]*?\\1|(\"|')(?:\\\\.|(?!\\2)[^\\\\\\r\\n])*\\2)", CASE_INSENSITIVE), false, true, null,
-                grammar("inside",
-                    interpolation,
-                    token("string", pattern(compile("[\\s\\S]+")))
-                )
-            ))
-        );
         
         final Prism4j.Grammar insideInterpolation;
         {
-            final List<Prism4j.Token> tokens = new ArrayList<>(py.tokens().size() + 2);
+            final List<Prism4j.Token> tokens = new ArrayList<>(py.tokens().size() + 3);
             tokens.add(token(
                 "format-spec",
                 pattern(compile("(:)[^:(){}]+(?=}$)"), true)
@@ -83,6 +81,10 @@ public class Prism_python {
             tokens.add(token(
                 "conversion-option",
                 pattern(compile("![sra](?=[:}]$)"), false, false, "punctuation")
+            ));
+            tokens.add(token(
+                "interpolation-punctuation",
+                pattern(compile("^\\{|}$"), false, false, "punctuation")
             ));
             tokens.addAll(py.tokens());
             insideInterpolation = grammar("inside", tokens);

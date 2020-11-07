@@ -6,7 +6,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.JsMacros;
-import xyz.wagyourtail.jsmacros.gui.elements.OverlayContainer;
+import xyz.wagyourtail.jsmacros.gui.elements.overlays.OverlayContainer;
 
 public class BaseScreen extends Screen {
     protected Screen parent;

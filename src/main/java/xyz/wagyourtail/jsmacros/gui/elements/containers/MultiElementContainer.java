@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.elements;
+package xyz.wagyourtail.jsmacros.gui.elements.containers;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,10 +2,10 @@ package xyz.wagyourtail.jsmacros.gui.screens;
 
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.gui.BaseScreen;
-import xyz.wagyourtail.jsmacros.gui.containers.CheckBoxContainer;
-import xyz.wagyourtail.jsmacros.gui.containers.ConfirmOverlay;
-import xyz.wagyourtail.jsmacros.gui.containers.ProfileContainer;
-import xyz.wagyourtail.jsmacros.gui.containers.TextPrompt;
+import xyz.wagyourtail.jsmacros.gui.elements.containers.CheckBoxContainer;
+import xyz.wagyourtail.jsmacros.gui.elements.overlays.ConfirmOverlay;
+import xyz.wagyourtail.jsmacros.gui.elements.containers.ProfileContainer;
+import xyz.wagyourtail.jsmacros.gui.elements.overlays.TextPrompt;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
 

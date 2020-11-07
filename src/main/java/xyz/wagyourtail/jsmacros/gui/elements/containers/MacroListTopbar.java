@@ -1,13 +1,13 @@
-package xyz.wagyourtail.jsmacros.gui.screens.macros.containers;
+package xyz.wagyourtail.jsmacros.gui.elements.containers;
 
 import java.util.function.Consumer;
 
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
-import xyz.wagyourtail.jsmacros.gui.screens.macros.MacroScreen;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.gui.elements.MultiElementContainer;
+import xyz.wagyourtail.jsmacros.gui.screens.macros.MacroScreen;
+import xyz.wagyourtail.jsmacros.gui.elements.containers.MultiElementContainer;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;

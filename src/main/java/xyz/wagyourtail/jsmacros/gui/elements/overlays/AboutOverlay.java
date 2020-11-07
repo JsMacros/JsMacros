@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.containers;
+package xyz.wagyourtail.jsmacros.gui.elements.overlays;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -12,7 +12,6 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.gui.elements.OverlayContainer;
 
 public class AboutOverlay extends OverlayContainer {
     private List<OrderedText> text;

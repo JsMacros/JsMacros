@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.screens.editor;
+package xyz.wagyourtail.jsmacros.gui.elements.editor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ public class History {
     
     public Consumer<String> onChange;
     protected SelectCursor cursor;
-    protected String current;
+    public String current;
     
     public History(String start, SelectCursor cursor) {
         this.current = start;

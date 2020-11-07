@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.containers;
+package xyz.wagyourtail.jsmacros.gui.elements.overlays;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -10,7 +10,6 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.gui.elements.OverlayContainer;
 
 public class ConfirmOverlay extends OverlayContainer {
     private Consumer<ConfirmOverlay> accept;

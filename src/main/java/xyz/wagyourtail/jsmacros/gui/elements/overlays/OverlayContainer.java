@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.elements;
+package xyz.wagyourtail.jsmacros.gui.elements.overlays;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,8 +7,10 @@ import java.util.function.Consumer;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
+import xyz.wagyourtail.jsmacros.gui.elements.containers.MultiElementContainer;
 
-public class OverlayContainer extends MultiElementContainer {
+public abstract class OverlayContainer extends MultiElementContainer {
     public Map<AbstractButtonWidget, Boolean> savedBtnStates = new HashMap<>();
     public Scrollbar scroll;
     protected Consumer<OverlayContainer> close;

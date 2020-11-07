@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.screens.editor;
+package xyz.wagyourtail.jsmacros.gui.elements.editor;
 
 import io.noties.prism4j.Prism4j;
 import net.minecraft.client.gui.screen.Screen;
@@ -29,8 +29,8 @@ public class EditorContent extends Button {
     public Consumer<Double> scrollToPercent;
     
     protected LiteralText[] renderedText = new LiteralText[0];
-    protected History history;
-    protected SelectCursor cursor = new SelectCursor(defaultStyle);
+    public final History history;
+    public final SelectCursor cursor = new SelectCursor(defaultStyle);
     
     protected int selColor;
     
@@ -365,6 +365,8 @@ public class EditorContent extends Button {
                     } else {
                         history.addChar(cursor.startIndex, '\n');
                     }
+    
+                    compileRenderedText();
                 default:
             }
         }

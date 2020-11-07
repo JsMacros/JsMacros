@@ -4,7 +4,6 @@ import java.util.function.Consumer;
 
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import xyz.wagyourtail.jsmacros.gui.screens.editor.EditorContent;
 
 public class Scrollbar extends Button {
     public double scrollPages = 1;
