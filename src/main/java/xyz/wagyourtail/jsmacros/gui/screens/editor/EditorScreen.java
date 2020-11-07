@@ -77,11 +77,11 @@ public class EditorScreen extends BaseScreen {
                 (content.cursor.arrowEnd ? String.format("%d:%d", content.cursor.endLine + 1, content.cursor.endLineIndex + 1) : String.format("%d:%d", content.cursor.startLine + 1, content.cursor.startLineIndex + 1));
         };
         
-        addButton(new Button(width, 0, 10, 12,0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> {
+        addButton(new Button(width, 0, 10, 12,0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> {
             openParent();
         }));
         
-        addButton(new Button(this.width - width / 8, height - 12, width / 8, 12, 0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new LiteralText(getDefaultLanguage()), (btn) -> {
+        addButton(new Button(this.width - width / 8, height - 12, width / 8, 12, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(getDefaultLanguage()), (btn) -> {
             switch (content.language) {
                 case "python":
                     content.setLanguage("lua");
