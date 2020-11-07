@@ -376,6 +376,16 @@ public class EditorContent extends Button {
                     }
     
                     compileRenderedText();
+                    break;
+                case GLFW.GLFW_KEY_TAB:
+                    if (cursor.startIndex != cursor.endIndex || Screen.hasShiftDown()) {
+                        history.tabLines(cursor.startLine, cursor.endLine - cursor.startLine + 1, Screen.hasShiftDown());
+                    } else {
+                        history.addChar(cursor.startIndex, '\t');
+                    }
+    
+                    compileRenderedText();
+                    break;
                 default:
             }
         }

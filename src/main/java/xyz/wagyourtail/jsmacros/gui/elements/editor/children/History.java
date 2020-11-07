@@ -27,13 +27,13 @@ public class History {
      * @return is new step.
      */
     public synchronized boolean addChar(int position, char content) {
-        Add step = new Add(position, String.valueOf(content), cursor);
+        Add step = new Add(position, content == '\t' ? "    " : String.valueOf(content), cursor);
         current = step.applyStep(current);
         if (undo.size() > 0) {
             HistoryStep prev = undo.get(undo.size() - 1);
             if (prev instanceof Add && ((Add) prev).position + ((Add) prev).added.length() == position) {
                 if (content != '\n') {
-                    ((Add) prev).added += String.valueOf(content);
+                    ((Add) prev).added += step.added;
                     if (onChange != null) onChange.accept(current);
                     return false;
                 }
@@ -104,7 +104,7 @@ public class History {
     }
     
     public synchronized boolean shiftLine(int startLine, int lines, boolean shiftDown) {
-        if (startLine + lines == current.split("\n").length && shiftDown
+        if (startLine + lines == current.split("\n", -1).length && shiftDown
             || startLine == 0 && !shiftDown) return false;
         ShiftLine step = new ShiftLine(startLine, lines, 1, shiftDown, cursor);
         current = step.applyStep(current);
@@ -126,7 +126,18 @@ public class History {
     }
     
     public synchronized void replace(int position, int length, String content) {
-        HistoryStep step = new Replace(position, length, content, cursor);
+        Replace step = new Replace(position, length, content, cursor);
+        current = step.applyStep(current);
+        while (undo.size() >= MAX_UNDO) {
+            undo.remove(0);
+        }
+        undo.add(step);
+        redo.clear();
+        if (onChange != null) onChange.accept(current);
+    }
+    
+    public synchronized void tabLines(int startLine, int lineCount, boolean reverse) {
+        TabLines step = new TabLines(startLine, lineCount, reverse, cursor);
         current = step.applyStep(current);
         while (undo.size() >= MAX_UNDO) {
             undo.remove(0);
@@ -285,7 +296,7 @@ public class History {
         }
         
         private String shift(String input, int startLine, int lineCount, int shiftAmmount, boolean shiftDown) {
-            String[] lines = input.split("\n");
+            String[] lines = input.split("\n", -1);
             String[] shifted = new String[lines.length];
             if (shiftDown) {
                 int i;
@@ -336,4 +347,47 @@ public class History {
         }
     }
     
+    protected static class TabLines extends HistoryStep {
+        int startLine;
+        int lineCount;
+        boolean reversed;
+        
+        public TabLines(int startLine, int lineCount, boolean reversed, SelectCursor cursor) {
+            this.startLine = startLine;
+            this.lineCount = lineCount;
+            this.reversed = reversed;
+            this.cursor = cursor;
+        }
+    
+        @Override
+        protected String applyStep(String input) {
+            return tab(input, startLine, lineCount, reversed);
+        }
+    
+        @Override
+        protected String unApplyStep(String input) {
+            return tab(input, startLine, lineCount, !reversed);
+        }
+        
+        private String tab(String input, int startLine, int lineCount, boolean reversed) {
+            String[] lines = input.split("\n", -1);
+            int startIndex = 0;
+            for (int i = 0; i < startLine; ++i) {
+                startIndex += lines[i].length() + 1;
+            }
+            int endIndex = startIndex;
+            for (int i = startLine; i < startLine + lineCount; ++i) {
+                if (reversed) {
+                    lines[i] = lines[i].replaceFirst("^ {0,4}", "");
+                } else {
+                    lines[i] = "    " + lines[i];
+                }
+                endIndex += lines[i].length() + 1;
+            }
+            String result = String.join("\n", lines);
+            cursor.updateStartIndex(startIndex, result);
+            cursor.updateEndIndex(--endIndex, result);
+            return result;
+        }
+    }
 }

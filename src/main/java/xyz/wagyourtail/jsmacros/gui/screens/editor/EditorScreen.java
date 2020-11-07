@@ -9,6 +9,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.api.classes.FileHandler;
 import xyz.wagyourtail.jsmacros.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.gui.elements.overlays.ConfirmOverlay;
@@ -168,6 +169,14 @@ public class EditorScreen extends BaseScreen {
         }
         
         super.render(matrices, mouseX, mouseY, delta);
+    }
+    
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_TAB) {
+            return this.getFocused() != null && this.getFocused().keyPressed(keyCode, scanCode, modifiers);
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
     
     @Override
