@@ -1,8 +1,5 @@
 package xyz.wagyourtail.jsmacros.api.classes;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -10,14 +7,17 @@ import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.passive.AbstractDonkeyEntity;
 import net.minecraft.entity.passive.HorseBaseEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.access.IInventory;
 import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Wagyourtail

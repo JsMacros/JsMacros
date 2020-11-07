@@ -1,6 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.containers;
-
-import java.util.function.Consumer;
+package xyz.wagyourtail.jsmacros.gui.elements.overlays;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Element;
@@ -9,8 +7,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.gui.elements.OverlayContainer;
 import xyz.wagyourtail.jsmacros.gui.elements.TextInput;
+
+import java.util.function.Consumer;
 
 public class TextPrompt extends OverlayContainer {
     private Text message;

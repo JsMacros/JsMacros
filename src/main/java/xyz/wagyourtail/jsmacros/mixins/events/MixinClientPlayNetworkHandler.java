@@ -1,18 +1,5 @@
 package xyz.wagyourtail.jsmacros.mixins.events;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ClientBossBar;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -23,29 +10,22 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
-import net.minecraft.network.packet.s2c.play.BossBarS2CPacket;
-import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
-import net.minecraft.network.packet.s2c.play.ChunkDeltaUpdateS2CPacket;
-import net.minecraft.network.packet.s2c.play.CombatEventS2CPacket;
-import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
-import net.minecraft.network.packet.s2c.play.ItemPickupAnimationS2CPacket;
-import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
+import net.minecraft.network.packet.s2c.play.*;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.Entry;
-import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
-import net.minecraft.network.packet.s2c.play.UnloadChunkS2CPacket;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.access.IBossBarHud;
-import xyz.wagyourtail.jsmacros.api.events.EventBlockUpdate;
-import xyz.wagyourtail.jsmacros.api.events.EventBossbar;
-import xyz.wagyourtail.jsmacros.api.events.EventChunkLoad;
-import xyz.wagyourtail.jsmacros.api.events.EventChunkUnload;
-import xyz.wagyourtail.jsmacros.api.events.EventDeath;
-import xyz.wagyourtail.jsmacros.api.events.EventItemPickup;
-import xyz.wagyourtail.jsmacros.api.events.EventJoinServer;
-import xyz.wagyourtail.jsmacros.api.events.EventPlayerJoin;
-import xyz.wagyourtail.jsmacros.api.events.EventPlayerLeave;
-import xyz.wagyourtail.jsmacros.api.events.EventTitle;
+import xyz.wagyourtail.jsmacros.api.events.*;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 @Mixin(ClientPlayNetworkHandler.class)
 class MixinClientPlayNetworkHandler {

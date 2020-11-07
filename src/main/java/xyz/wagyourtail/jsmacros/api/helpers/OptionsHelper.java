@@ -1,15 +1,6 @@
 package xyz.wagyourtail.jsmacros.api.helpers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.lwjgl.glfw.GLFW;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.CloudRenderMode;
 import net.minecraft.client.options.GameOptions;
@@ -18,6 +9,13 @@ import net.minecraft.client.util.Window;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.util.Arm;
+import org.lwjgl.glfw.GLFW;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Wagyourtail

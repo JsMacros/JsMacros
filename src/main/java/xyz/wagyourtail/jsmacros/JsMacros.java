@@ -9,19 +9,18 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
-
 import xyz.wagyourtail.jsmacros.config.ConfigManager;
-import xyz.wagyourtail.jsmacros.gui.KeyMacrosScreen;
+import xyz.wagyourtail.jsmacros.gui.BaseScreen;
+import xyz.wagyourtail.jsmacros.gui.screens.macros.KeyMacrosScreen;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 
 public class JsMacros implements ClientModInitializer {
     public static final String MOD_ID = "jsmacros";
     public static final ConfigManager config = new ConfigManager();
     public static final Profile profile = new Profile();
-    public static KeyMacrosScreen keyMacrosScreen;
+    public static BaseScreen prevScreen;
     
     @Override
     public void onInitializeClient() {
@@ -29,7 +28,7 @@ public class JsMacros implements ClientModInitializer {
         config.loadConfig();
         profile.init(config.options.defaultProfile);
         
-        keyMacrosScreen = new KeyMacrosScreen(null);
+        prevScreen = new KeyMacrosScreen(null);
         
         Thread t = new Thread(() -> {
             Builder build = Context.newBuilder("js");

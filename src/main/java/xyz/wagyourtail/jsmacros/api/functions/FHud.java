@@ -1,11 +1,6 @@
 package xyz.wagyourtail.jsmacros.api.functions;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.classes.Draw2D;
@@ -14,6 +9,10 @@ import xyz.wagyourtail.jsmacros.api.classes.Screen;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.extensionbase.Functions;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 

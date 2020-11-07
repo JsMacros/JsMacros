@@ -1,22 +1,20 @@
 package xyz.wagyourtail.jsmacros.profile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.MinecraftClient;
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.events.*;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventRegistry;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IProfile;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.events.TickBasedEvents;
-import xyz.wagyourtail.jsmacros.gui.MacroScreen;
+import xyz.wagyourtail.jsmacros.gui.screens.macros.MacroScreen;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Profile implements IProfile {
     public String profileName;

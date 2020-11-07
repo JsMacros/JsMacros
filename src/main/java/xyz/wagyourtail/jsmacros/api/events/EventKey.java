@@ -1,17 +1,16 @@
 package xyz.wagyourtail.jsmacros.api.events;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.lwjgl.glfw.GLFW;
-
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
+import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.functions.FKeyBind;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Wagyourtail
@@ -35,7 +34,7 @@ public class EventKey implements IEvent {
         
         
         if (keyBinding.matchesKey(key, scancode) && action == 1 && mc.currentScreen == null) {
-            mc.openScreen(JsMacros.keyMacrosScreen);
+            mc.openScreen(JsMacros.prevScreen);
             return;
         }
         

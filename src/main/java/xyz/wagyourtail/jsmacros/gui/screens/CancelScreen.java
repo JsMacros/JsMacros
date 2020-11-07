@@ -1,33 +1,31 @@
-package xyz.wagyourtail.jsmacros.gui;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+package xyz.wagyourtail.jsmacros.gui.screens;
 
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScriptThreadWrapper;
-import xyz.wagyourtail.jsmacros.gui.containers.RunningThreadContainer;
+import xyz.wagyourtail.jsmacros.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
+import xyz.wagyourtail.jsmacros.gui.elements.containers.RunningThreadContainer;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
 import xyz.wagyourtail.jsmacros.runscript.RunScript.ScriptThreadWrapper;
 
-public class CancelScreen extends Screen {
-    protected Screen parent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class CancelScreen extends BaseScreen {
     private int topScroll;
     private Scrollbar s;
     private List<RunningThreadContainer> running = new ArrayList<>();
 
     public CancelScreen(Screen parent) {
-        super(new LiteralText("Cancel"));
-        this.parent = parent;
+        super(new LiteralText("Cancel"), parent);
     }
 
     public void init() {
@@ -77,14 +75,14 @@ public class CancelScreen extends Screen {
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
     
-    public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
-        if (matricies == null) return;
-        this.renderBackground(matricies, 0);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if (matrices == null) return;
+        this.renderBackground(matrices, 0);
         List<IScriptThreadWrapper> tl = RunScript.getThreads();
         
         for (RunningThreadContainer r : ImmutableList.copyOf(this.running)) {
             tl.remove(r.t);
-            r.render(matricies, mouseX, mouseY, delta);
+            r.render(matrices, mouseX, mouseY, delta);
         }
         
         for (IScriptThreadWrapper t : tl) {
@@ -92,7 +90,7 @@ public class CancelScreen extends Screen {
         }
 
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
-            ((Button) b).render(matricies, mouseX, mouseY, delta);
+            ((Button) b).render(matrices, mouseX, mouseY, delta);
         }
     }
 
@@ -101,7 +99,7 @@ public class CancelScreen extends Screen {
     }
 
     public void onClose() {
-        client.openScreen(parent);
+        this.openParent();
     }
 
     public static class RTCSort implements Comparator<RunningThreadContainer> {

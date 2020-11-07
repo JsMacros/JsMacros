@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.config;
 
-import java.util.Comparator;
-
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
+
+import java.util.Comparator;
 
 public class RawMacro implements IRawMacro {
     public MacroType type;

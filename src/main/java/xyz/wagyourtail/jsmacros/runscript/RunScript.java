@@ -1,33 +1,17 @@
 package xyz.wagyourtail.jsmacros.runscript;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Consumer;
-
 import com.google.common.collect.ImmutableList;
-
-import xyz.wagyourtail.jsmacros.api.functions.FChat;
-import xyz.wagyourtail.jsmacros.api.functions.FFS;
-import xyz.wagyourtail.jsmacros.api.functions.FGlobalVars;
-import xyz.wagyourtail.jsmacros.api.functions.FHud;
-import xyz.wagyourtail.jsmacros.api.functions.FJsMacros;
-import xyz.wagyourtail.jsmacros.api.functions.FKeyBind;
-import xyz.wagyourtail.jsmacros.api.functions.FPlayer;
-import xyz.wagyourtail.jsmacros.api.functions.FReflection;
-import xyz.wagyourtail.jsmacros.api.functions.FRequest;
-import xyz.wagyourtail.jsmacros.api.functions.FTime;
-import xyz.wagyourtail.jsmacros.api.functions.FWorld;
+import xyz.wagyourtail.jsmacros.api.functions.*;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScriptThreadWrapper;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 import xyz.wagyourtail.jsmacros.extensionbase.ILanguage;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.function.Consumer;
 
 public class RunScript {
     public static Map<IRawMacro, List<IScriptThreadWrapper>> threads = new HashMap<>();

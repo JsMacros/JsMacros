@@ -1,12 +1,5 @@
 package xyz.wagyourtail.jsmacros.profile;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import xyz.wagyourtail.jsmacros.api.events.EventKey;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
@@ -16,6 +9,8 @@ import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
 import xyz.wagyourtail.jsmacros.macros.EventMacro;
 import xyz.wagyourtail.jsmacros.macros.KeyMacro;
+
+import java.util.*;
 
 public class EventRegistry implements IEventRegistry {
     public final Map<String, Set<IEventListener>> macros = new LinkedHashMap<>();

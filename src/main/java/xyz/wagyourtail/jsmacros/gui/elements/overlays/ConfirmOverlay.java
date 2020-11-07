@@ -1,7 +1,4 @@
-package xyz.wagyourtail.jsmacros.gui.containers;
-
-import java.util.List;
-import java.util.function.Consumer;
+package xyz.wagyourtail.jsmacros.gui.elements.overlays;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
@@ -10,7 +7,9 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.gui.elements.OverlayContainer;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 public class ConfirmOverlay extends OverlayContainer {
     private Consumer<ConfirmOverlay> accept;
@@ -44,10 +43,10 @@ public class ConfirmOverlay extends OverlayContainer {
         
     }
     
-    protected void renderMessage(MatrixStack matricies) {
+    protected void renderMessage(MatrixStack matrices) {
         for (int i = 0; i < lines; ++i) {
             int w = textRenderer.getWidth(text.get(i));
-            textRenderer.draw(matricies, text.get(i), x + width / 2 - w / 2, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF);
+            textRenderer.draw(matrices, text.get(i), x + width / 2 - w / 2, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF);
         }
     }
     

@@ -1,9 +1,5 @@
 package xyz.wagyourtail.jsmacros.api.functions;
 
-import java.io.File;
-import java.util.List;
-import java.util.function.Consumer;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -20,6 +16,10 @@ import xyz.wagyourtail.jsmacros.api.helpers.EntityHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
+
+import java.io.File;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * 

@@ -1,5 +1,12 @@
 package xyz.wagyourtail.jsmacros.config;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.fabricmc.loader.api.FabricLoader;
+import xyz.wagyourtail.jsmacros.JsMacros;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IConfig;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -9,14 +16,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import net.fabricmc.loader.api.FabricLoader;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
-import xyz.wagyourtail.jsmacros.JsMacros;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IConfig;
-
 public class ConfigManager implements IConfig {
     public ConfigOptions options;
     public final File configFolder = new File(FabricLoader.getInstance().getConfigDir().toFile(), "jsMacros");
@@ -25,12 +24,10 @@ public class ConfigManager implements IConfig {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public ConfigManager() {
-        options = new ConfigOptions(true, "default", RawMacro.SortMethod.Enabled, new HashMap<>(), new LinkedHashMap<>());
+        options = new ConfigOptions(true, "default", RawMacro.SortMethod.Enabled, new HashMap<>(), new LinkedHashMap<>(), false);
         options.profiles.put("default", new ArrayList<>());
         options.profiles.get("default").add(new RawMacro(IRawMacro.MacroType.KEY_RISING, "key.keyboard.j", "test.js", true));
-        if (!macroFolder.exists()) {
-            macroFolder.mkdirs();
-        }
+        if (!macroFolder.exists()) macroFolder.mkdirs();
         final File tf = new File(macroFolder, "test.js");
         if (!tf.exists()) try {
             tf.createNewFile();

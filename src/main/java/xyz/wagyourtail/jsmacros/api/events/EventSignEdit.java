@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.api.events;
 
-import java.util.List;
-
 import xyz.wagyourtail.jsmacros.api.sharedclasses.PositionCommon.Pos3D;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+
+import java.util.List;
 
 /**
  * @author Wagyourtail

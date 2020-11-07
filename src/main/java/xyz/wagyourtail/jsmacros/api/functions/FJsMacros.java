@@ -1,14 +1,7 @@
 package xyz.wagyourtail.jsmacros.api.functions;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.common.collect.ImmutableList;
 import com.ibm.icu.impl.locale.XCldrStub.ImmutableMap;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.network.ServerAddress;
@@ -16,12 +9,7 @@ import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.events.EventCustom;
 import xyz.wagyourtail.jsmacros.api.helpers.OptionsHelper;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IConfig;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IProfile;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScriptThreadWrapper;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.*;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
 import xyz.wagyourtail.jsmacros.events.TickSync;
 import xyz.wagyourtail.jsmacros.extensionbase.Functions;
@@ -30,6 +18,12 @@ import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
 import xyz.wagyourtail.jsmacros.profile.Profile;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Functions I didn't know where to put or interact directly with JsMacros or Events.

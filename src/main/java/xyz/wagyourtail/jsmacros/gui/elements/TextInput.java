@@ -1,13 +1,12 @@
 package xyz.wagyourtail.jsmacros.gui.elements;
 
-import java.util.function.Consumer;
-
-import org.lwjgl.glfw.GLFW;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import org.lwjgl.glfw.GLFW;
+
+import java.util.function.Consumer;
 
 public class TextInput extends Button {
     public Consumer<String> onChange;
@@ -18,8 +17,7 @@ public class TextInput extends Button {
     protected int selEnd;
     public int selEndIndex;
     protected int arrowCursor;
-    protected boolean selecting;
-
+    
     public TextInput(int x, int y, int width, int height, int color, int borderColor, int hilightColor, int textColor, String message, Consumer<Button> onClick, Consumer<String> onChange) {
         super(x, y, width, height, color, borderColor, color, textColor, new LiteralText(""), onClick);
         this.selColor = hilightColor;
@@ -164,8 +162,8 @@ public class TextInput extends Button {
         this.setFocused(sel);
     }
 
-    protected void renderMessage(MatrixStack matricies) {
-        fill(matricies, selStart, height > 9 ? y + 2 : y, Math.min(selEnd, x + width - 2), (height > 9 ? y + 2 : y) + mc.textRenderer.fontHeight, selColor);
-        drawStringWithShadow(matricies, mc.textRenderer, mc.textRenderer.trimToWidth(content, width - 4), x + 2, height > 9 ? y + 2 : y, textColor);
+    protected void renderMessage(MatrixStack matrices) {
+        fill(matrices, selStart, height > 9 ? y + 2 : y, Math.min(selEnd, x + width - 2), (height > 9 ? y + 2 : y) + mc.textRenderer.fontHeight, selColor);
+        drawStringWithShadow(matrices, mc.textRenderer, mc.textRenderer.trimToWidth(content, width - 4), x + 2, height > 9 ? y + 2 : y, textColor);
     }
 }

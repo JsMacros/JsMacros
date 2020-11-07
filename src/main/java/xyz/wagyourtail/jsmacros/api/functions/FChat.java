@@ -1,7 +1,5 @@
 package xyz.wagyourtail.jsmacros.api.functions;
 
-import java.util.List;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
@@ -10,6 +8,8 @@ import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.access.IChatHud;
 import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.extensionbase.Functions;
+
+import java.util.List;
 
 /**
  * Functions for interacting with chat.

@@ -1,14 +1,14 @@
 package xyz.wagyourtail.jsmacros.api.functions;
 
+import xyz.wagyourtail.jsmacros.api.classes.HTTPRequest;
+import xyz.wagyourtail.jsmacros.api.classes.HTTPRequest.Response;
+import xyz.wagyourtail.jsmacros.api.classes.Websocket;
+import xyz.wagyourtail.jsmacros.extensionbase.Functions;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import xyz.wagyourtail.jsmacros.api.classes.HTTPRequest;
-import xyz.wagyourtail.jsmacros.api.classes.Websocket;
-import xyz.wagyourtail.jsmacros.api.classes.HTTPRequest.Response;
-import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 
 /**
  * 

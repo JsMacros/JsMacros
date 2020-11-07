@@ -1,18 +1,13 @@
 package xyz.wagyourtail.jsmacros.api.classes;
 
+import com.neovisionaries.ws.client.*;
+import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-
-import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketAdapter;
-import com.neovisionaries.ws.client.WebSocketException;
-import com.neovisionaries.ws.client.WebSocketFactory;
-import com.neovisionaries.ws.client.WebSocketFrame;
-
-import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
 
 /**
  * @author Wagyourtail, R3alCl0ud

@@ -1,12 +1,11 @@
 package xyz.wagyourtail.jsmacros.mixins.access;
 
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.text.LiteralText;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import xyz.wagyourtail.jsmacros.access.ISignEditScreen;
 
 @Mixin(SignEditScreen.class)

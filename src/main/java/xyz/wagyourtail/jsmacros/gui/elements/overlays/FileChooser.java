@@ -1,16 +1,6 @@
-package xyz.wagyourtail.jsmacros.gui.containers;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Consumer;
+package xyz.wagyourtail.jsmacros.gui.elements.overlays;
 
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
@@ -22,9 +12,13 @@ import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.extensionbase.ILanguage;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.gui.elements.OverlayContainer;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.runscript.RunScript;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class FileChooser extends OverlayContainer {
     private File directory;
@@ -32,15 +26,17 @@ public class FileChooser extends OverlayContainer {
     private File selected;
     private List<fileObj> files = new ArrayList<>();
     private Consumer<File> setFile;
+    private Consumer<File> editFile;
     private Consumer<Element> setFocused;
     private int topScroll;
 
-    public FileChooser(int x, int y, int width, int height, TextRenderer textRenderer, File directory, File selected, Consumer<AbstractButtonWidget> addButton, Consumer<AbstractButtonWidget> removeButton, Consumer<OverlayContainer> close,  Consumer<Element> setFocused, Consumer<File> setFile) {
+    public FileChooser(int x, int y, int width, int height, TextRenderer textRenderer, File directory, File selected, Consumer<AbstractButtonWidget> addButton, Consumer<AbstractButtonWidget> removeButton, Consumer<OverlayContainer> close,  Consumer<Element> setFocused, Consumer<File> setFile, Consumer<File> editFile) {
         super(x, y, width, height, textRenderer, addButton, removeButton, close);
         this.setFile = setFile;
         this.directory = directory;
         this.selected = selected;
         this.setFocused = setFocused;
+        this.editFile = editFile;
     }
 
     public void setDir(File dir) {
@@ -94,7 +90,7 @@ public class FileChooser extends OverlayContainer {
         }));
 
         this.addButton(new Button(x + w * 4 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("selectWorld.edit"), (btn) -> {
-            if (this.selected != null) Util.getOperatingSystem().open(this.selected);
+            if (this.selected != null) editFile.accept(selected);
         }));
 
         this.addButton(new Button(x + w * 3 / 6 + 2, y + height - 14, w / 6, 12, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.rename"), (btn) -> {
@@ -202,28 +198,28 @@ public class FileChooser extends OverlayContainer {
         }
     }
 
-    public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
-        renderBackground(matricies);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        renderBackground(matrices);
 
         textRenderer.drawTrimmed(this.dirname, x + 3, y + 3, width - 14, 0xFFFFFF);
 
-        fill(matricies, x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
-        fill(matricies, x + 2, y + height - 15, x + width - 2, y + height - 14, 0xFFFFFFFF);
+        fill(matrices, x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
+        fill(matrices, x + 2, y + height - 15, x + width - 2, y + height - 14, 0xFFFFFFFF);
 //        textRenderer.draw(, mouseX, mouseY, color, shadow, matrix, vertexConsumers, seeThrough, backgroundColor, light)
-        super.render(matricies, mouseX, mouseY, delta);
+        super.render(matrices, mouseX, mouseY, delta);
         
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
             if (((Button) b).hovering && !((Button) b).canRenderAllText()) {
                 // border
                 int width = textRenderer.getWidth(b.getMessage());
-                fill(matricies, mouseX-3, mouseY, mouseX+width+3, mouseY+1, 0x7F7F7F7F);
-                fill(matricies, mouseX+width+2, mouseY-textRenderer.fontHeight - 3, mouseX+width+3, mouseY, 0x7F7F7F7F);
-                fill(matricies, mouseX-3, mouseY-textRenderer.fontHeight - 3, mouseX-2, mouseY, 0x7F7F7F7F);
-                fill(matricies, mouseX-3, mouseY-textRenderer.fontHeight - 4, mouseX+width+3, mouseY-textRenderer.fontHeight - 3, 0x7F7F7F7F);
+                fill(matrices, mouseX-3, mouseY, mouseX+width+3, mouseY+1, 0x7F7F7F7F);
+                fill(matrices, mouseX+width+2, mouseY-textRenderer.fontHeight - 3, mouseX+width+3, mouseY, 0x7F7F7F7F);
+                fill(matrices, mouseX-3, mouseY-textRenderer.fontHeight - 3, mouseX-2, mouseY, 0x7F7F7F7F);
+                fill(matrices, mouseX-3, mouseY-textRenderer.fontHeight - 4, mouseX+width+3, mouseY-textRenderer.fontHeight - 3, 0x7F7F7F7F);
                 
                 // fill
-                fill(matricies, mouseX-2, mouseY-textRenderer.fontHeight - 3, mouseX+width+2, mouseY, 0xFF000000);
-                drawTextWithShadow(matricies, textRenderer, b.getMessage(), mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
+                fill(matrices, mouseX-2, mouseY-textRenderer.fontHeight - 3, mouseX+width+2, mouseY, 0xFF000000);
+                drawTextWithShadow(matrices, textRenderer, b.getMessage(), mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
             }
         }
     }

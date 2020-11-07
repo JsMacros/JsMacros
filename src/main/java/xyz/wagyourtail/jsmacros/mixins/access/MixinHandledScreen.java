@@ -1,10 +1,9 @@
 package xyz.wagyourtail.jsmacros.mixins.access;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.screen.slot.Slot;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import xyz.wagyourtail.jsmacros.access.IInventory;
 
 @Mixin(HandledScreen.class)

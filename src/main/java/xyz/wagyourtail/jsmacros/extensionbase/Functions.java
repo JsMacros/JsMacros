@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.extensionbase;
 
+import net.minecraft.client.MinecraftClient;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.client.MinecraftClient;
 
 /**
  * Base Function class.

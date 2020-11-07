@@ -1,21 +1,22 @@
-package xyz.wagyourtail.jsmacros.gui;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+package xyz.wagyourtail.jsmacros.gui.screens.macros;
 
 import com.google.common.collect.ImmutableList;
-
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.events.EventKey;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
+import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
 import xyz.wagyourtail.jsmacros.config.RawMacro;
-import xyz.wagyourtail.jsmacros.gui.containers.MacroContainer;
+import xyz.wagyourtail.jsmacros.gui.elements.containers.MacroContainer;
+import xyz.wagyourtail.jsmacros.gui.screens.ProfileScreen;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
 import xyz.wagyourtail.jsmacros.profile.Profile;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 public class KeyMacrosScreen extends MacroScreen {
 
@@ -39,7 +40,7 @@ public class KeyMacrosScreen extends MacroScreen {
         List<RawMacro> macros = new ArrayList<>();
 
         if (listeners != null) for (IEventListener event : ImmutableList.copyOf(listeners)) {
-            if (event instanceof BaseMacro) macros.add(((BaseMacro) event).getRawMacro());
+            if (event instanceof BaseMacro && ((BaseMacro) event).getRawMacro().type != IRawMacro.MacroType.EVENT) macros.add(((BaseMacro) event).getRawMacro());
         }
 
         Collections.sort(macros, JsMacros.config.getSortComparator());

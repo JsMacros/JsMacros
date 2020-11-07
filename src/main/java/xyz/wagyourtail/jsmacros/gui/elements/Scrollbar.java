@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.gui.elements;
 
-import java.util.function.Consumer;
-
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+
+import java.util.function.Consumer;
 
 public class Scrollbar extends Button {
     public double scrollPages = 1;
@@ -17,28 +17,48 @@ public class Scrollbar extends Button {
         this.onChange = onChange;
         this.setScrollPages(scrollPages);
     }
-
-    public void setPos(int x, int y, int width, int height) {
+    
+    @Override
+    public Scrollbar setPos(int x, int y, int width, int height) {
         super.setPos(x, y, width, height);
-        this.scrollbarHeight = (height - 2) / scrollPages;
-        this.scrollDistance = height - 2 - this.scrollbarHeight;
+        this.scrollbarHeight = (height - 2) / (scrollPages + 1);
+        double oldDistance = this.scrollDistance;
+        this.scrollDistance = Math.max(height - 2 - this.scrollbarHeight, 1);
+        this.scrollAmmount = this.scrollAmmount / oldDistance * scrollDistance;
+        return this;
     }
 
     public void setScrollPages(double scrollPages) {
-        this.scrollPages = scrollPages;
-        this.scrollbarHeight = (int) Math.ceil((height - 2) / scrollPages);
-        this.scrollDistance = height - 2 - this.scrollbarHeight;
+        this.scrollPages = Math.max(scrollPages - 1, 0);
+        this.scrollbarHeight = (int) Math.ceil((height - 2) / Math.max(1, scrollPages));
+        this.scrollDistance = Math.max(height - 2 - this.scrollbarHeight, 1);
+        if (scrollPages < 1) {
+            scrollAmmount = 0;
+            onChange();
+            this.active = false;
+            this.visible = false;
+        } else {
+            this.active = true;
+            this.visible = true;
+        }
+    }
+    
+    public void scrollToPercent(double percent) {
+        scrollAmmount = scrollDistance * percent;
+        onChange();
     }
     
     public void onClick(double mouseX, double mouseY) {
-        double mpos = mouseY - y - 1;
-        if (mpos < scrollAmmount) {
-            scrollAmmount = Math.max(mpos- (scrollbarHeight / 2), 0);
-            onChange();
-        }
-        if (mpos > (scrollAmmount + scrollbarHeight)) {
-            scrollAmmount = Math.min(mpos- (scrollbarHeight / 2), scrollDistance);
-            onChange();
+        if (this.active) {
+            double mpos = mouseY - y - 1;
+            if (mpos < scrollAmmount) {
+                scrollAmmount = Math.max(mpos - (scrollbarHeight / 2), 0);
+                onChange();
+            }
+            if (mpos > (scrollAmmount + scrollbarHeight)) {
+                scrollAmmount = Math.min(mpos - (scrollbarHeight / 2), scrollDistance);
+                onChange();
+            }
         }
     }
     
@@ -54,17 +74,18 @@ public class Scrollbar extends Button {
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
-    public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
-        if (scrollPages > 1) {
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if (this.visible) {
             // mainpart
-            fill(matricies, x + 1, (int) (y + 1 + scrollAmmount), x + width - 1, (int) (y + 1 + scrollAmmount + scrollbarHeight), hilightColor);
+            fill(matrices, x + 1, (int) (y + 1 + scrollAmmount), x + width - 1, (int) (y + 1 + scrollAmmount + scrollbarHeight), hilightColor);
 
             // outline and back
-            fill(matricies, x + 1, y + 1, x + width - 1, y + height - 1, color);
-            fill(matricies, x, y, x + 1, y + height, borderColor);
-            fill(matricies, x + width - 1, y, x + width, y + height, borderColor);
-            fill(matricies, x + 1, y, x + width - 1, y + 1, borderColor);
-            fill(matricies, x + 1, y + height - 1, x + width - 1, y + height, borderColor);
+            fill(matrices, x + 1, y + 1, x + width - 1, y + height - 1, color);
+            fill(matrices, x, y, x + 1, y + height, borderColor);
+            fill(matrices, x + width - 1, y, x + width, y + height, borderColor);
+            fill(matrices, x + 1, y, x + width - 1, y + 1, borderColor);
+            fill(matrices, x + 1, y + height - 1, x + width - 1, y + height, borderColor);
         }
     }
+    
 }

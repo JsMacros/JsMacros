@@ -1,12 +1,6 @@
 package xyz.wagyourtail.jsmacros.api.classes;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * @author Wagyourtail
@@ -26,6 +20,8 @@ public class FileHandler {
     }
     
     /**
+     *
+     * writes a string to the file. this is a destructive operation that replaces the file contents.
      * @since 1.1.8
      * 
      * @param s
@@ -33,13 +29,14 @@ public class FileHandler {
      * @throws IOException
      */
     public FileHandler write(String s) throws IOException {
-        FileWriter out = new FileWriter(f, false);
-        out.write(s);
-        out.close();
+        try (FileWriter out = new FileWriter(f, false)) {
+            out.write(s);
+        }
         return this;
     }
     
     /**
+     * writes a byte array to the file. this is a destructive operation that replaces the file contents.
      * @since 1.1.8
      * 
      * @param b
@@ -47,9 +44,9 @@ public class FileHandler {
      * @throws IOException
      */
     public FileHandler write(byte[] b) throws IOException {
-        FileOutputStream out = new FileOutputStream(f,false);
-        out.write(b);
-        out.close();
+        try (FileOutputStream out = new FileOutputStream(f,false)) {
+            out.write(b);
+        }
         return this;
     }
     
@@ -61,13 +58,13 @@ public class FileHandler {
      */
     public String read() throws IOException {
         String ret = "";
-        BufferedReader in = new BufferedReader(new FileReader(f));
-        String line = in.readLine();
-        while(line != null) {
-            ret += line + "\n";
-            line = in.readLine();
+        try (BufferedReader in = new BufferedReader(new FileReader(f))) {
+            String line = in.readLine();
+            while (line != null) {
+                ret += line + "\n";
+                line = in.readLine();
+            }
         }
-        in.close();
         return ret;
     }
     
@@ -82,8 +79,6 @@ public class FileHandler {
             byte[] bytes =  new byte[(int) f.length()];
             in.read(bytes);
             return bytes;
-        } catch (IOException e) {
-            throw e;
         }
     }
     
@@ -95,9 +90,9 @@ public class FileHandler {
      * @throws IOException
      */
     public FileHandler append(String s) throws IOException {
-        FileWriter out = new FileWriter(f, true);
-        out.write(s);
-        out.close();
+        try (FileWriter out = new FileWriter(f, true)) {
+            out.write(s);
+        }
         return this;
     }
     
@@ -109,10 +104,14 @@ public class FileHandler {
      * @throws IOException
      */
     public FileHandler append(byte[] b) throws IOException {
-        FileOutputStream out = new FileOutputStream(f,true);
-        out.write(b);
-        out.close();
+        try (FileOutputStream out = new FileOutputStream(f,true)) {
+            out.write(b);
+        }
         return this;
+    }
+    
+    public File getFile() {
+        return f;
     }
     
     public String toString() {

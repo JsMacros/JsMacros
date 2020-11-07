@@ -1,8 +1,5 @@
 package xyz.wagyourtail.jsmacros.api.helpers;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -11,6 +8,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.MathHelper;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.PositionCommon;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Wagyourtail

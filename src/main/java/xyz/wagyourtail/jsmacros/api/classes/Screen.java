@@ -21,13 +21,13 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         this.bgStyle = dirt ? 0 : 1;
     }
     
-    public void render(MatrixStack matricies, int mouseX, int mouseY, float delta) {
-        if (matricies == null) return;
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if (matrices == null) return;
         if (bgStyle == 0) this.renderBackgroundTexture(0);
-        else if (bgStyle == 1) this.renderBackground(matricies, 0);
+        else if (bgStyle == 1) this.renderBackground(matrices, 0);
         
-        drawCenteredText(matricies, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+        drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
         
-        super.render(matricies, mouseX, mouseY, delta);
+        super.render(matrices, mouseX, mouseY, delta);
     }
 }

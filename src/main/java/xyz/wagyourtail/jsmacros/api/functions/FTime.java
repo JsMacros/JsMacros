@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.api.functions;
 
-import java.util.List;
-
 import xyz.wagyourtail.jsmacros.extensionbase.Functions;
+
+import java.util.List;
 
 /**
  * 
