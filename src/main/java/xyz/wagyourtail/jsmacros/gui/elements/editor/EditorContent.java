@@ -364,8 +364,9 @@ public class EditorContent extends Button {
                     break;
                 case GLFW.GLFW_KEY_S:
                     if (Screen.hasControlDown()) {
-                    
+                        if (save != null) save.run();
                     }
+                    break;
                 case GLFW.GLFW_KEY_ENTER:
                     if (cursor.startIndex != cursor.endIndex) {
                         history.replace(cursor.startIndex, cursor.endIndex - cursor.startIndex, "\n");
