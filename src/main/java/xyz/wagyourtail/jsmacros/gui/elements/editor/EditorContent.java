@@ -71,13 +71,17 @@ public class EditorContent extends Button {
         return this;
     }
     
-    private void compileRenderedText() {
+    private synchronized void compileRenderedText() {
         long time = System.currentTimeMillis();
-        final List<Prism4j.Node> nodes = prism4j.tokenize(history.current, prism4j.grammar(language));
-        final TextStyleCompiler visitor = new TextStyleCompiler(defaultStyle.withColor(TextColor.fromRgb(textColor)));
-        visitor.visit(nodes);
-        synchronized (renderedText) {
-            renderedText = visitor.getResult().toArray(new LiteralText[0]);
+        if (!history.current.equals("")) {
+            final List<Prism4j.Node> nodes = prism4j.tokenize(history.current, prism4j.grammar(language));
+            final TextStyleCompiler visitor = new TextStyleCompiler(defaultStyle.withColor(TextColor.fromRgb(textColor)));
+            visitor.visit(nodes);
+            synchronized (renderedText) {
+                renderedText = visitor.getResult().toArray(new LiteralText[0]);
+            }
+        } else {
+            renderedText = new LiteralText[] {new LiteralText("")};
         }
         if (updateScrollPages != null) updateScrollPages.accept(calcTotalPages());
         textRenderTime = System.currentTimeMillis() - time;
