@@ -27,12 +27,16 @@ public class History {
      * @return is new step.
      */
     public synchronized boolean addChar(int position, char content) {
-        Add step = new Add(position, content == '\t' ? "    " : String.valueOf(content), cursor);
+        return add(position, content == '\t' ? "    " : String.valueOf(content));
+    }
+    
+    public synchronized boolean add(int position, String content) {
+        Add step = new Add(position, content, cursor);
         current = step.applyStep(current);
         if (undo.size() > 0) {
             HistoryStep prev = undo.get(undo.size() - 1);
             if (prev instanceof Add && ((Add) prev).position + ((Add) prev).added.length() == position) {
-                if (content != '\n') {
+                if (!content.startsWith("\n")) {
                     ((Add) prev).added += step.added;
                     if (onChange != null) onChange.accept(current);
                     return false;
@@ -46,6 +50,7 @@ public class History {
         redo.clear();
         if (onChange != null) onChange.accept(current);
         return true;
+    
     }
     
     /**

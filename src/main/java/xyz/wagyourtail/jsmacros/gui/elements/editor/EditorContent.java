@@ -390,11 +390,12 @@ public class EditorContent extends Button {
                     }
                     break;
                 case GLFW.GLFW_KEY_ENTER:
+                    String startSpaces = history.current.split("\n", -1)[cursor.startLine].split("[^\\s]", -1)[0];
                     if (cursor.startIndex != cursor.endIndex) {
-                        history.replace(cursor.startIndex, cursor.endIndex - cursor.startIndex, "\n");
+                        history.replace(cursor.startIndex, cursor.endIndex - cursor.startIndex, "\n" + startSpaces);
                         cursor.updateStartIndex(cursor.endIndex, history.current);
                     } else {
-                        history.addChar(cursor.startIndex, '\n');
+                        history.add(cursor.startIndex, "\n" + startSpaces);
                     }
     
                     compileRenderedText();
