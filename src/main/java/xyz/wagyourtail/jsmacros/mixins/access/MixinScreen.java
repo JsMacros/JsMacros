@@ -329,9 +329,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     
     @Override
     public IScreen reloadScreen() {
-        client.execute(() -> {
-            this.init();
-        });
+        client.openScreen((Screen) (Object) this);
         return this;
     }
 

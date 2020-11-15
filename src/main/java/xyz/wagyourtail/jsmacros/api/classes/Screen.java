@@ -5,6 +5,7 @@ import net.minecraft.text.LiteralText;
 
 /**
  * just go look at {@link xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScreen IScreen}
+ * since all the methods are done through a mixin...
  * 
  * @author Wagyourtail
  * 
