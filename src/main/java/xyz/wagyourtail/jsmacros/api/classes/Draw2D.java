@@ -3,17 +3,16 @@ package xyz.wagyourtail.jsmacros.api.classes;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon;
-import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Text;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Wagyourtail
@@ -23,10 +22,7 @@ import java.util.List;
  * @see xyz.wagyourtail.jsmacros.api.sharedinterfaces.IDraw2D
  */
 public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
-    private final List<RenderCommon.Text> textFields = new ArrayList<>();
-    private final List<RenderCommon.Rect> rectFields = new ArrayList<>();
-    private final List<RenderCommon.Item> itemFields = new ArrayList<>();
-    private final List<RenderCommon.Image> imageFields = new ArrayList<>();
+    private final Set<Drawable> elements = new LinkedHashSet<>();
     /**
      * @since 1.0.5
      * @deprecated please use {@link Draw2D#setOnInit(MethodWrapper)}
@@ -68,7 +64,13 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public List<RenderCommon.Text> getTexts() {
-        return ImmutableList.copyOf(textFields);
+        List<RenderCommon.Text> list = new LinkedList<>();
+        synchronized (elements) {
+            for (Drawable e : elements) {
+                if (e instanceof RenderCommon.Text) list.add((RenderCommon.Text) e);
+            }
+        }
+        return list;
     }
 
     /**
@@ -77,7 +79,13 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public List<RenderCommon.Rect> getRects() {
-        return ImmutableList.copyOf(rectFields);
+        List<RenderCommon.Rect> list = new LinkedList<>();
+        synchronized (elements) {
+            for (Drawable e : elements) {
+                if (e instanceof RenderCommon.Rect) list.add((RenderCommon.Rect) e);
+            }
+        }
+        return list;
     }
 
     /**
@@ -86,7 +94,13 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public List<RenderCommon.Item> getItems() {
-        return ImmutableList.copyOf(itemFields);
+        List<RenderCommon.Item> list = new LinkedList<>();
+        synchronized (elements) {
+            for (Drawable e : elements) {
+                if (e instanceof RenderCommon.Item) list.add((RenderCommon.Item) e);
+            }
+        }
+        return list;
     }
 
     /**
@@ -95,10 +109,37 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public List<RenderCommon.Image> getImages() {
-        return ImmutableList.copyOf(imageFields);
+        List<RenderCommon.Image> list = new LinkedList<>();
+        synchronized (elements) {
+            for (Drawable e : elements) {
+                if (e instanceof RenderCommon.Image) list.add((RenderCommon.Image) e);
+            }
+        }
+        return list;
     }
     
-
+    @Override
+    public List<Drawable> getElements() {
+        return ImmutableList.copyOf(elements);
+    }
+    
+    @Override
+    public Draw2D removeElement(Drawable e) {
+        synchronized (elements) {
+            elements.remove(e);
+        }
+        return this;
+    }
+    
+    @Override
+    public Drawable reAddElement(Drawable e) {
+        synchronized (elements) {
+            elements.add(e);
+        }
+        return e;
+    }
+    
+    
     /**
      * @since 1.0.5
      * @see IDraw2D#addText(String, int, int, int, boolean)
@@ -116,8 +157,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     @Override
     public RenderCommon.Text addText(String text, int x, int y, int color, boolean shadow, double scale, float rotation) {
         RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, shadow, scale, rotation);
-        synchronized (textFields) {
-            textFields.add(t);
+        synchronized (elements) {
+            elements.add(t);
         }
         return t;
         
@@ -125,15 +166,15 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     
 
     @Override
-    public Text addText(TextHelper text, int x, int y, int color, boolean shadow) {
+    public RenderCommon.Text addText(TextHelper text, int x, int y, int color, boolean shadow) {
         return addText(text, x, y, color, shadow, 1, 0);
     }
 
     @Override
-    public Text addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, float rotation) {
+    public RenderCommon.Text addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, float rotation) {
         RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, shadow, scale, rotation);
-        synchronized (textFields) {
-            textFields.add(t);
+        synchronized (elements) {
+            elements.add(t);
         }
         return t;
     }
@@ -144,8 +185,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public Draw2D removeText(RenderCommon.Text t) {
-        synchronized (textFields) {
-            textFields.remove(t);
+        synchronized (elements) {
+            elements.remove(t);
         }
         return this;
     }
@@ -166,8 +207,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     @Override
     public RenderCommon.Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
         RenderCommon.Image i = new RenderCommon.Image(x, y, width, height, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
-        synchronized (imageFields) {
-            imageFields.add(i);
+        synchronized (elements) {
+            elements.add(i);
         }
         return i;
     }
@@ -178,8 +219,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public Draw2D removeImage(RenderCommon.Image i) {
-        synchronized (imageFields) {
-            imageFields.remove(i);
+        synchronized (elements) {
+            elements.remove(i);
         }
         return this;
     }
@@ -191,8 +232,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     @Override
     public RenderCommon.Rect addRect(int x1, int y1, int x2, int y2, int color) {
         RenderCommon.Rect r = new RenderCommon.Rect(x1, y1, x2, y2, color, 0F);
-        synchronized (rectFields) {
-            rectFields.add(r);
+        synchronized (elements) {
+            elements.add(r);
         }
         return r;
     }
@@ -213,8 +254,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     @Override
     public RenderCommon.Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation) {
         RenderCommon.Rect r = new RenderCommon.Rect(x1, y1, x2, y2, color, alpha, rotation);
-        synchronized (rectFields) {
-            rectFields.add(r);
+        synchronized (elements) {
+            elements.add(r);
         }
         return r;
     }
@@ -225,8 +266,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public Draw2D removeRect(RenderCommon.Rect r) {
-        synchronized (rectFields) {
-            rectFields.remove(r);
+        synchronized (elements) {
+            elements.remove(r);
         }
         return this;
     }
@@ -256,8 +297,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     @Override
     public RenderCommon.Item addItem(int x, int y, String id, boolean overlay, double scale, float rotation) {
         RenderCommon.Item i = new RenderCommon.Item(x, y, id, overlay, scale, rotation);
-        synchronized (itemFields) {
-            itemFields.add(i);
+        synchronized (elements) {
+            elements.add(i);
         }
         return i;
     }
@@ -286,8 +327,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     @Override
     public RenderCommon.Item addItem(int x, int y, ItemStackHelper Item, boolean overlay, double scale, float rotation) {
         RenderCommon.Item i = new RenderCommon.Item(x, y, Item, overlay, scale, rotation);
-        synchronized (itemFields) {
-            itemFields.add(i);
+        synchronized (elements) {
+            elements.add(i);
         }
         return i;
     }
@@ -298,22 +339,16 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public Draw2D removeItem(RenderCommon.Item i) {
-        synchronized (itemFields) {
-            itemFields.remove(i);
+        synchronized (elements) {
+            elements.remove(i);
         }
         return this;
     }
 
     @Override
     public void init() {
-        synchronized (textFields) {
-            textFields.clear();
-        }
-        synchronized (rectFields) {
-            rectFields.clear();
-        }
-        synchronized (itemFields) {
-            itemFields.clear();
+        synchronized (elements) {
+            elements.clear();
         }
         if (onInit != null) {
             try {
@@ -334,31 +369,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
         if (matrixStack == null) return;
         
         RenderSystem.pushMatrix();
-        synchronized (rectFields) {
-            for (RenderCommon.Rect r : rectFields) {
-                r.render(matrixStack);
-            }
-        }
-        RenderSystem.popMatrix();
-        RenderSystem.pushMatrix();
-        synchronized (itemFields) {
-            for (RenderCommon.Item i : itemFields) {
-                i.render(matrixStack);
-            }
-        }
-        RenderSystem.popMatrix();
-        RenderSystem.pushMatrix();
-        synchronized (imageFields) {
-            for (RenderCommon.Image i : imageFields) {
-                i.render(matrixStack);
-            }
-        }
-        RenderSystem.popMatrix();
-        RenderSystem.pushMatrix();
-        synchronized (textFields) {
-            for (RenderCommon.Text t : textFields) {
-                t.render(matrixStack);
-            }
+        for (Drawable e : elements) {
+            e.render(matrixStack, 0, 0, 0);
         }
         RenderSystem.popMatrix();
     }

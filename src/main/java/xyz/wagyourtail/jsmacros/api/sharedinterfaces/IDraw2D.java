@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.api.sharedinterfaces;
 
+import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
@@ -34,25 +35,49 @@ public interface IDraw2D<T> {
      * @since 1.2.7
      * @return text elements
      */
+     @Deprecated
     public List<Text> getTexts();
     
     /**
      * @since 1.2.7
      * @return rect elements
      */
+     @Deprecated
     public List<Rect> getRects();
     
     /**
      * @since 1.2.7
      * @return item elements
      */
+     @Deprecated
     public List<Item> getItems();
     
     /**
      * @since 1.2.7
      * @return image elements
      */
+     @Deprecated
     public List<Image> getImages();
+    
+    /**
+    * @since 1.2.9
+     * @return a read only copy of the list of all elements added by scripts.
+     */
+    public List<Drawable> getElements();
+    
+    /**
+    * removes any element regardless of type.
+    * @since 1.2.9
+     * @return
+     */
+    public T removeElement(Drawable e);
+    
+    /**
+    * re-add an element you removed with {@link #removeElement(Drawable)}
+    * @since 1.2.9
+     * @return
+     */
+    public Drawable reAddElement(Drawable e);
     
     /**
      * @since 1.2.7
@@ -108,6 +133,7 @@ public interface IDraw2D<T> {
      * @param t
      * @return
      */
+     @Deprecated
     public T removeText(Text t);
     
     /**
@@ -150,6 +176,7 @@ public interface IDraw2D<T> {
      * @param i
      * @return
      */
+     @Deprecated
     public T removeImage(Image i);
     
     /**
@@ -193,6 +220,7 @@ public interface IDraw2D<T> {
      * @param r
      * @return
      */
+     @Deprecated
     public T removeRect(Rect r);
     
     /**
@@ -262,6 +290,7 @@ public interface IDraw2D<T> {
      * @param i
      * @return
      */
+     @Deprecated
     public T removeItem(Item i);
 
     /**

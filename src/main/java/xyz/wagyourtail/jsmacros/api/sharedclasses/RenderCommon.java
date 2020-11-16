@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.api.sharedclasses;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -25,7 +26,7 @@ public class RenderCommon {
      * @author Wagyourtail
      * @since 1.0.5
      */
-    public static class Item {
+    public static class Item implements Drawable {
         public ItemStack item;
         public String ovText;
         public boolean overlay;
@@ -136,8 +137,9 @@ public class RenderCommon {
         public ItemStackHelper getItem() {
             return new ItemStackHelper(item);
         }
-        
-        public void render(MatrixStack matrixStack) {
+    
+        @Override
+        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             RenderSystem.translated(x, y, 0);
             RenderSystem.rotatef(rotation, 0, 0, 1);
             RenderSystem.translated(-x, -y, 0);
@@ -152,13 +154,14 @@ public class RenderCommon {
             RenderSystem.translated(x, y, 0);
             RenderSystem.scaled(1 / scale, 1 / scale, 1);
         }
+    
     }
     
     /**
      * @author Wagyourtail
      * @since 1.2.3
      */
-    public static class Image {
+    public static class Image implements Drawable {
         private Identifier imageid;
         public float rotation;
         public int x;
@@ -238,26 +241,28 @@ public class RenderCommon {
         public String getImage() {
             return imageid.toString();
         }
-        
-        public void render(MatrixStack matrixStack) {
+    
+        @Override
+        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             RenderSystem.translated(x, y, 0);
             RenderSystem.rotatef(rotation, 0, 0, 1);
             RenderSystem.translated(-x, -y, 0);
             mc.getTextureManager().bindTexture(imageid);
             RenderSystem.enableBlend();
-            DrawableHelper.drawTexture(matrixStack, x, y, width, height, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight);
+            DrawableHelper.drawTexture(matrices, x, y, width, height, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight);
             RenderSystem.disableBlend();
             RenderSystem.translated(-x, -y, 0);
             RenderSystem.rotatef(-rotation, 0, 0, 1);
             RenderSystem.translated(x, y, 0);
         }
+    
     }
     
     /**
      * @author Wagyourtail
      * @since 1.0.5
      */
-    public static class Rect {
+    public static class Rect implements Drawable {
         public float rotation;
         public int x1;
         public int y1;
@@ -334,23 +339,25 @@ public class RenderCommon {
             this.rotation = MathHelper.fwrapDegrees(rotation);
             return this;
         }
-        
-        public void render(MatrixStack matrixStack) {
+    
+        @Override
+        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             RenderSystem.translated(x1, y1, 0);
             RenderSystem.rotatef(rotation, 0, 0, 1);
             RenderSystem.translated(-x1, -y1, 0);
-            Draw2D.fill(matrixStack, x1, y1, x2, y2, color);
+            Draw2D.fill(matrices, x1, y1, x2, y2, color);
             RenderSystem.translated(x1, y1, 0);
             RenderSystem.rotatef(-rotation, 0, 0, 1);
             RenderSystem.translated(-x1, -y1, 0);
         }
+    
     }
     
     /**
      * @author Wagyourtail
      * @since 1.0.5
      */
-    public static class Text {
+    public static class Text implements Drawable {
         public net.minecraft.text.Text text;
         public double scale;
         public float rotation;
@@ -453,18 +460,20 @@ public class RenderCommon {
         public int getWidth() {
             return this.width;
         }
-        
-        public void render(MatrixStack matrixStack) {
+    
+        @Override
+        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             RenderSystem.translated(x, y, 0);
             RenderSystem.rotatef(rotation, 0, 0, 1);
             RenderSystem.translated(-x, -y, 0);
             RenderSystem.scaled(scale, scale, 1);
-            if (shadow) mc.textRenderer.drawWithShadow(matrixStack, text, (int)(x / scale), (int)(y / scale), color);
-            else mc.textRenderer.draw(matrixStack, text, (int)(x / scale), (int)(y / scale), color);
+            if (shadow) mc.textRenderer.drawWithShadow(matrices, text, (int)(x / scale), (int)(y / scale), color);
+            else mc.textRenderer.draw(matrices, text, (int)(x / scale), (int)(y / scale), color);
             RenderSystem.scaled(1 / scale, 1 / scale, 1);
             RenderSystem.translated(x, y, 0);
             RenderSystem.rotatef(-rotation, 0, 0, 1);
             RenderSystem.translated(-x, -y, 0);
         }
+    
     }
 }

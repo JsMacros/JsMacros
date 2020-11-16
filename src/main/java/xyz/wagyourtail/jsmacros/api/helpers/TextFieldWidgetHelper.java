@@ -1,12 +1,14 @@
 package xyz.wagyourtail.jsmacros.api.helpers;
 
+import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.util.math.MatrixStack;
 
 /**
  * @author Wagyourtail
  * @since 1.0.5
  */
-public class TextFieldWidgetHelper {
+public class TextFieldWidgetHelper implements Drawable {
     private TextFieldWidget t;
     
     public TextFieldWidgetHelper(TextFieldWidget t) {
@@ -112,4 +114,10 @@ public class TextFieldWidgetHelper {
     public TextFieldWidget getRaw() {
         return t;
     }
+    
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        t.render(matrices, mouseX, mouseY, delta);
+    }
+    
 }

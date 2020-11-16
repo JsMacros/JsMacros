@@ -37,12 +37,14 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @since 1.0.5
      * @return
      */
+     @Deprecated
     public List<ButtonWidgetHelper> getButtonWidgets();
     
     /**
      * @since 1.0.5
      * @return
      */
+     @Deprecated
     public List<TextFieldWidgetHelper> getTextFields();
     
     /**
@@ -62,6 +64,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param btn
      * @return
      */
+     @Deprecated
     public IScreen removeButton(ButtonWidgetHelper btn);
     
     /**
@@ -81,6 +84,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param inp
      * @return
      */
+     @Deprecated
     public IScreen removeTextInput(TextFieldWidgetHelper inp);
     
     /**
@@ -148,6 +152,7 @@ public interface IScreen extends IDraw2D<IScreen> {
     /**
     * @since 1.2.0
      */
+     @Deprecated
     public IScreen removeRect(Rect r);
     
     /**
@@ -183,6 +188,7 @@ public interface IScreen extends IDraw2D<IScreen> {
     /**
      * @since 1.2.0
      */
+     @Deprecated
     public IScreen removeItem(Item i);
     
     /**
