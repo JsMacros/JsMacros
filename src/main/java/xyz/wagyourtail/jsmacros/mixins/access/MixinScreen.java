@@ -53,7 +53,6 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Shadow protected MinecraftClient client;
     @Shadow protected TextRenderer textRenderer;
     @Shadow @Final protected List<Element> children;
-    @Shadow @Final protected List<AbstractButtonWidget> buttons;
     
     @Shadow protected abstract <T extends AbstractButtonWidget> T addButton(T button);
     @Shadow public abstract void onClose();
@@ -145,7 +144,6 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         synchronized (elements) {
             elements.remove(e);
             if (e instanceof ButtonWidgetHelper) children.remove(((ButtonWidgetHelper) e).getRaw());
-            if (e instanceof TextFieldWidgetHelper) children.remove(((TextFieldWidgetHelper) e).getRaw());
         }
         return this;
     }
@@ -155,7 +153,6 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         synchronized (elements) {
             elements.add(e);
             if (e instanceof ButtonWidgetHelper) children.add(((ButtonWidgetHelper) e).getRaw());
-            if (e instanceof TextFieldWidgetHelper) children.add(((TextFieldWidgetHelper) e).getRaw());
         }
         return e;
     }
@@ -319,7 +316,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public IScreen removeButton(ButtonWidgetHelper btn) {
         synchronized (elements) {
             elements.remove(btn);
-            this.buttons.remove(btn.getRaw());
+            this.children.remove(btn.getRaw());
         }
         return this;
     }

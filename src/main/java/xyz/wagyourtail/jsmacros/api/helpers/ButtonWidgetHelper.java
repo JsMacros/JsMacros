@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.api.helpers;
 
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 
@@ -10,9 +10,9 @@ import net.minecraft.text.LiteralText;
  * @since 1.0.5
  */
 public class ButtonWidgetHelper implements Drawable {
-    private ButtonWidget btn;
+    protected final AbstractButtonWidget btn;
     
-    public ButtonWidgetHelper(ButtonWidget btn) {
+    public ButtonWidgetHelper(AbstractButtonWidget btn) {
         this.btn = btn;
     }
     
@@ -113,7 +113,7 @@ public class ButtonWidgetHelper implements Drawable {
         return this;
     }
     
-    public ButtonWidget getRaw() {
+    public AbstractButtonWidget getRaw() {
         return btn;
     }
     
