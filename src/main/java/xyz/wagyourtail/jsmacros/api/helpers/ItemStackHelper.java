@@ -97,7 +97,7 @@ public class ItemStackHelper {
     public String getNBT() {
         CompoundTag tag = i.getTag();
         if (tag != null) return tag.toString();
-        else return "";
+        else return "{}";
     }
     
     /**
