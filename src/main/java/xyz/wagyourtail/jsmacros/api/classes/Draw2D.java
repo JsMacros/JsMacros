@@ -369,8 +369,10 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
         if (matrixStack == null) return;
         
         RenderSystem.pushMatrix();
-        for (Drawable e : elements) {
-            e.render(matrixStack, 0, 0, 0);
+        synchronized (elements) {
+            for (Drawable e : elements) {
+                e.render(matrixStack, 0, 0, 0);
+            }
         }
         RenderSystem.popMatrix();
     }
