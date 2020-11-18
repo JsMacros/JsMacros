@@ -11,10 +11,11 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.jsmacros.JsMacros;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
-import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.core.event.IEventTrigger;
+import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
+import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
+import xyz.wagyourtail.jsmacros.core.RunScript;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.profile.Profile;
 
 import java.io.File;
 import java.util.List;
@@ -27,7 +28,7 @@ public class MacroContainer extends MultiElementContainer {
     @SuppressWarnings("unused")
     private static final Identifier event_tex = new Identifier(JsMacros.MOD_ID, "resources/event.png");
     private MinecraftClient mc;
-    private RawMacro macro;
+    private ScriptTrigger macro;
     private Button enableBtn;
     private Button keyBtn;
     private Button fileBtn;
@@ -40,7 +41,7 @@ public class MacroContainer extends MultiElementContainer {
     private Consumer<MacroContainer> setEvent;
     private Consumer<File> editFile;
 
-    public MacroContainer(int x, int y, int width, int height, TextRenderer textRenderer, RawMacro macro, Consumer<AbstractButtonWidget> addButton, Consumer<MacroContainer> onRemove, Consumer<MacroContainer> openFile, Consumer<MacroContainer>setEvent, Consumer<File> editFile) {
+    public MacroContainer(int x, int y, int width, int height, TextRenderer textRenderer, ScriptTrigger macro, Consumer<AbstractButtonWidget> addButton, Consumer<MacroContainer> onRemove, Consumer<MacroContainer> openFile, Consumer<MacroContainer>setEvent, Consumer<File> editFile) {
         super(x, y, width, height, textRenderer, addButton);
         this.macro = macro;
         this.onRemove = onRemove;
@@ -51,7 +52,7 @@ public class MacroContainer extends MultiElementContainer {
         init();
     }
     
-    public RawMacro getRawMacro() {
+    public ScriptTrigger getRawMacro() {
         return macro;
     }
     
@@ -64,25 +65,25 @@ public class MacroContainer extends MultiElementContainer {
             btn.setMessage(new TranslatableText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"));
         }));
 
-        keyBtn = (Button) addButton(new Button(x + w / 12 + 1, y + 1, macro.type == IRawMacro.MacroType.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.type == IRawMacro.MacroType.EVENT ? new LiteralText(macro.eventkey.replace("Event", "")) : buildKeyName(macro.eventkey), (btn) -> {
-            if (macro.type == IRawMacro.MacroType.EVENT) {
+        keyBtn = (Button) addButton(new Button(x + w / 12 + 1, y + 1, macro.triggerType == IEventTrigger.TriggerType.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.triggerType == IEventTrigger.TriggerType.EVENT ? new LiteralText(macro.event.replace("Event", "")) : buildKeyName(macro.event), (btn) -> {
+            if (macro.triggerType == IEventTrigger.TriggerType.EVENT) {
                 if (setEvent != null) setEvent.accept(this);
             } else {
                 selectkey = true;
                 btn.setMessage(new TranslatableText("jsmacros.presskey"));
             }
         }));
-        if (macro.type != IRawMacro.MacroType.EVENT) keyStateBtn = (Button) addButton(new Button(x + w / 4 - height, y + 1, height, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText(""), (btn) -> {
-            switch(macro.type) {
+        if (macro.triggerType != IEventTrigger.TriggerType.EVENT) keyStateBtn = (Button) addButton(new Button(x + w / 4 - height, y + 1, height, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText(""), (btn) -> {
+            switch(macro.triggerType) {
             default:
             case KEY_RISING:
-                macro.type = IRawMacro.MacroType.KEY_FALLING;
+                macro.triggerType = IEventTrigger.TriggerType.KEY_FALLING;
                 break;
             case KEY_FALLING:
-                macro.type = IRawMacro.MacroType.KEY_BOTH;
+                macro.triggerType = IEventTrigger.TriggerType.KEY_BOTH;
                 break;
             case KEY_BOTH:
-                macro.type = IRawMacro.MacroType.KEY_RISING;
+                macro.triggerType = IEventTrigger.TriggerType.KEY_RISING;
                 break;
             }
         }));
@@ -92,7 +93,7 @@ public class MacroContainer extends MultiElementContainer {
         }));
         
         editBtn = (Button) addButton(new Button(x + w - 32, y + 1, 30, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("selectServer.edit"), (btn) -> {
-            if (editFile != null && !macro.scriptFile.equals("")) editFile.accept(new File(JsMacros.config.macroFolder, macro.scriptFile));
+            if (editFile != null && !macro.scriptFile.equals("")) editFile.accept(new File(ConfigManager.INSTANCE.macroFolder, macro.scriptFile));
         }));
 
         delBtn = (Button) addButton(new Button(x + w - 1, y + 1, 12, height - 2, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("X"), (btn) -> {
@@ -101,14 +102,14 @@ public class MacroContainer extends MultiElementContainer {
     }
     
     public void setEventType(String type) {
-        Profile.registry.removeRawMacro(macro);
-        macro.eventkey = type;
-        Profile.registry.addRawMacro(macro);
-        keyBtn.setMessage(new LiteralText(macro.eventkey.replace("Event", "")));
+        RunScript.eventRegistry.removeRawMacro(macro);
+        macro.event = type;
+        RunScript.eventRegistry.addRawMacro(macro);
+        keyBtn.setMessage(new LiteralText(macro.event.replace("Event", "")));
     }
     
     public void setFile(File f) {
-        macro.scriptFile = f.getAbsolutePath().substring(JsMacros.config.macroFolder.getAbsolutePath().length()+1);
+        macro.scriptFile = f.getAbsolutePath().substring(ConfigManager.INSTANCE.macroFolder.getAbsolutePath().length()+1);
         fileBtn.setMessage(new LiteralText("./"+macro.scriptFile.replaceAll("\\\\", "/")));
     }
 
@@ -116,8 +117,8 @@ public class MacroContainer extends MultiElementContainer {
         super.setPos(x, y, width, height);
         int w = width - 12;
         enableBtn.setPos(x + 1, y + 1, w / 12 - 1, height - 2);
-        keyBtn.setPos(x + w / 12 + 1, y + 1, macro.type == IRawMacro.MacroType.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2);
-        if (macro.type != IRawMacro.MacroType.EVENT) keyStateBtn.setPos(x + w / 4 - height, y + 1, height, height - 2);
+        keyBtn.setPos(x + w / 12 + 1, y + 1, macro.triggerType == IEventTrigger.TriggerType.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2);
+        if (macro.triggerType != IEventTrigger.TriggerType.EVENT) keyStateBtn.setPos(x + w / 4 - height, y + 1, height, height - 2);
         fileBtn.setPos(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2);
         editBtn.setPos(x + w - 32, y + 1, 30, height - 2);
         delBtn.setPos(x + w - 1, y + 1, 12, height - 2);
@@ -144,9 +145,9 @@ public class MacroContainer extends MultiElementContainer {
     }
     
     public void setKey(String translationKeys) {
-        Profile.registry.removeRawMacro(macro);
-        macro.eventkey = translationKeys;
-        Profile.registry.addRawMacro(macro);
+        RunScript.eventRegistry.removeRawMacro(macro);
+        macro.event = translationKeys;
+        RunScript.eventRegistry.addRawMacro(macro);
         keyBtn.setMessage(buildKeyName(translationKeys));
         selectkey = false;
     }
@@ -161,8 +162,8 @@ public class MacroContainer extends MultiElementContainer {
             fill(matrices, x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
             
             // icon for keystate
-            if (macro.type != IRawMacro.MacroType.EVENT) {
-                switch (macro.type) {
+            if (macro.triggerType != IEventTrigger.TriggerType.EVENT) {
+                switch (macro.triggerType) {
                 default:
                 case KEY_FALLING:
                     this.mc.getTextureManager().bindTexture(key_up_tex);

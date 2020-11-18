@@ -1,12 +1,14 @@
 package xyz.wagyourtail.jsmacros.api.events;
 
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventDisconnect implements IEvent {
+ @Event(value = "Disconnect", oldName = "DISCONNECT")
+public class EventDisconnect implements BaseEvent {
     
     public EventDisconnect() {
         profile.triggerMacro(this);

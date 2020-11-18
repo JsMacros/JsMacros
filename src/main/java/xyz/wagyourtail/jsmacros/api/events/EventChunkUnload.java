@@ -1,12 +1,14 @@
 package xyz.wagyourtail.jsmacros.api.events;
 
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventChunkUnload implements IEvent {
+ @Event(value = "ChunkUnload", oldName = "CHUNK_UNLOAD")
+public class EventChunkUnload implements BaseEvent {
     public final int x;
     public final int z;
     

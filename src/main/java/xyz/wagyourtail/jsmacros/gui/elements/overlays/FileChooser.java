@@ -9,11 +9,11 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
-import xyz.wagyourtail.jsmacros.JsMacros;
-import xyz.wagyourtail.jsmacros.extensionbase.ILanguage;
+import xyz.wagyourtail.jsmacros.core.ILanguage;
+import xyz.wagyourtail.jsmacros.core.RunScript;
+import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
-import xyz.wagyourtail.jsmacros.runscript.RunScript;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,9 +45,9 @@ public class FileChooser extends OverlayContainer {
         }
         files.clear();
         this.directory = dir;
-        this.dirname = new LiteralText("." + dir.getAbsolutePath().substring(JsMacros.config.macroFolder.getAbsolutePath().length()).replaceAll("\\\\", "/"));
+        this.dirname = new LiteralText("." + dir.getAbsolutePath().substring(ConfigManager.INSTANCE.macroFolder.getAbsolutePath().length()).replaceAll("\\\\", "/"));
 
-        if (!this.directory.equals(JsMacros.config.macroFolder)) {
+        if (!this.directory.equals(ConfigManager.INSTANCE.macroFolder)) {
             addFile(this.directory.getParentFile(), "..");
         }
 

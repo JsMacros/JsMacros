@@ -1,12 +1,14 @@
 package xyz.wagyourtail.jsmacros.api.events;
 
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventDimensionChange implements IEvent {
+ @Event(value = "DimensionChange", oldName = "DIMENSION_CHANGE")
+public class EventDimensionChange implements BaseEvent {
     public final String dimension;
     
     public EventDimensionChange(String dimension) {

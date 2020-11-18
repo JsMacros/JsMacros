@@ -2,13 +2,15 @@ package xyz.wagyourtail.jsmacros.api.events;
 
 import net.minecraft.entity.damage.DamageSource;
 import xyz.wagyourtail.jsmacros.api.helpers.EntityHelper;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventDamage implements IEvent {
+ @Event(value = "Damage", oldName = "DAMAGE")
+public class EventDamage implements BaseEvent {
     public final EntityHelper attacker;
     public final String source;
     public final float health;

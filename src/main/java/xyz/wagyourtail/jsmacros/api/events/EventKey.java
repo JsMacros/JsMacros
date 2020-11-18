@@ -1,13 +1,16 @@
 package xyz.wagyourtail.jsmacros.api.events;
 
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.functions.FKeyBind;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +19,9 @@ import java.util.Map;
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventKey implements IEvent {
+ @Event(value = "Key", oldName = "KEY")
+public class EventKey implements BaseEvent {
+    static final MinecraftClient mc = MinecraftClient.getInstance();
     private static KeyBinding keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title")));
     public final int action;
     public final String key;
@@ -45,7 +50,7 @@ public class EventKey implements IEvent {
             else FKeyBind.pressedKeys.remove(keycode.getTranslationKey());
         }
 
-        if (mc.currentScreen != null && JsMacros.config.options.disableKeyWhenScreenOpen) return;
+        if (mc.currentScreen != null && ConfigManager.INSTANCE.options.disableKeyWhenScreenOpen) return;
         
         Map<String, Object> args = new HashMap<>();
         args.put("rawkey", keycode);

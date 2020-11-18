@@ -2,7 +2,8 @@ package xyz.wagyourtail.jsmacros.api.events;
 
 import net.minecraft.client.gui.hud.ClientBossBar;
 import xyz.wagyourtail.jsmacros.api.helpers.BossBarHelper;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 import java.util.UUID;
 
@@ -10,7 +11,8 @@ import java.util.UUID;
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventBossbar implements IEvent {
+ @Event(value = "Bossbar", oldName = "BOSSBAR_UPDATE")
+public class EventBossbar implements BaseEvent {
     public final BossBarHelper bossBar;
     public final String uuid;
     public final String type;

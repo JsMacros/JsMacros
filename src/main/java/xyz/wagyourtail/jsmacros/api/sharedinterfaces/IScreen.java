@@ -6,7 +6,7 @@ import xyz.wagyourtail.jsmacros.api.helpers.TextFieldWidgetHelper;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Item;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Rect;
-import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.List;
 import java.util.function.BiConsumer;

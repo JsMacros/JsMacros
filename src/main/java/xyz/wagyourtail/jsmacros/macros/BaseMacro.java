@@ -1,22 +1,22 @@
 package xyz.wagyourtail.jsmacros.macros;
 
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
-import xyz.wagyourtail.jsmacros.config.RawMacro;
-import xyz.wagyourtail.jsmacros.runscript.RunScript;
+import xyz.wagyourtail.jsmacros.core.event.IEventListener;
+import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
+import xyz.wagyourtail.jsmacros.core.RunScript;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 
 public abstract class BaseMacro implements IEventListener {
-    private final RawMacro macro;
+    private final ScriptTrigger macro;
     
-    public BaseMacro(RawMacro macro) {
+    public BaseMacro(ScriptTrigger macro) {
         this.macro = macro;
     }
     
-    public RawMacro getRawMacro() {
+    public ScriptTrigger getRawMacro() {
         return macro;
     }
     
-    public Thread runMacro(IEvent event) {
+    public Thread runMacro(BaseEvent event) {
         if (macro.enabled) {
             try {
                 return RunScript.exec(macro, event);

@@ -1,13 +1,15 @@
 package xyz.wagyourtail.jsmacros.api.events;
 
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IProfile;
+import xyz.wagyourtail.jsmacros.core.IProfile;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventProfileLoad implements IEvent {
+ @Event(value = "ProfileLoad", oldName = "PROFILE_LOAD")
+public class EventProfileLoad implements BaseEvent {
     public final String profileName;
     
     public EventProfileLoad(IProfile profile, String profileName) {

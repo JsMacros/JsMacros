@@ -5,9 +5,9 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import org.apache.commons.lang3.time.DurationFormatUtils;
+import xyz.wagyourtail.jsmacros.core.RunScript;
+import xyz.wagyourtail.jsmacros.core.RunScript.ScriptThreadWrapper;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.runscript.RunScript;
-import xyz.wagyourtail.jsmacros.runscript.RunScript.ScriptThreadWrapper;
 
 import java.util.function.Consumer;
 

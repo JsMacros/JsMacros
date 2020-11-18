@@ -5,9 +5,10 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
-import xyz.wagyourtail.jsmacros.JsMacros;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
-import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.core.event.IEventTrigger;
+import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
+import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
+import xyz.wagyourtail.jsmacros.core.RunScript;
 import xyz.wagyourtail.jsmacros.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
@@ -19,8 +20,6 @@ import xyz.wagyourtail.jsmacros.gui.elements.overlays.EventChooser;
 import xyz.wagyourtail.jsmacros.gui.elements.overlays.FileChooser;
 import xyz.wagyourtail.jsmacros.gui.screens.CancelScreen;
 import xyz.wagyourtail.jsmacros.gui.screens.editor.EditorScreen;
-import xyz.wagyourtail.jsmacros.profile.Profile;
-import xyz.wagyourtail.jsmacros.runscript.RunScript;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +48,7 @@ public class MacroScreen extends BaseScreen {
 
         profileScreen = this.addButton(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.profile"), null));
 
-        topbar = new MacroListTopbar(this, this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer, IRawMacro.MacroType.KEY_RISING, this::addButton, this::addMacro, this::runFile);
+        topbar = new MacroListTopbar(this, this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer, IEventTrigger.TriggerType.KEY_RISING, this::addButton, this::addMacro, this::runFile);
 
         topScroll = 40;
         macroScroll = this.addButton(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
@@ -70,26 +69,26 @@ public class MacroScreen extends BaseScreen {
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
 
-    public void addMacro(RawMacro macro) {
+    public void addMacro(ScriptTrigger macro) {
         macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this::addButton, this::confirmRemoveMacro, this::setFile, this::setEvent, this::editFile));
         macroScroll.setScrollPages(((macros.size() + 1) * 16) / (double) Math.max(1, this.height - 40));
     }
 
     public void setFile(MacroContainer macro) {
-        File f = new File(JsMacros.config.macroFolder, macro.getRawMacro().scriptFile);
-        File dir = JsMacros.config.macroFolder;
-        if (!f.equals(JsMacros.config.macroFolder)) dir = f.getParentFile();
+        File f = new File(ConfigManager.INSTANCE.macroFolder, macro.getRawMacro().scriptFile);
+        File dir = ConfigManager.INSTANCE.macroFolder;
+        if (!f.equals(ConfigManager.INSTANCE.macroFolder)) dir = f.getParentFile();
         openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this::addButton, this::removeButton, this::closeOverlay, this::setFocused, macro::setFile, this::editFile));
     }
     
     public void setEvent(MacroContainer macro) {
-        openOverlay(new EventChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, macro.getRawMacro().eventkey, this::addButton, this::removeButton, this::closeOverlay, macro::setEventType));
+        openOverlay(new EventChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, macro.getRawMacro().event, this::addButton, this::removeButton, this::closeOverlay, macro::setEventType));
     }
     
     public void runFile() {
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, JsMacros.config.macroFolder, null, this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (file) -> {
+        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, ConfigManager.INSTANCE.macroFolder, null, this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (file) -> {
             try {
-                RunScript.exec(new RawMacro(IRawMacro.MacroType.EVENT, "", file.getCanonicalPath().substring(JsMacros.config.macroFolder.getCanonicalPath().length()), true), null);
+                RunScript.exec(new ScriptTrigger(IEventTrigger.TriggerType.EVENT, "", file.getCanonicalPath().substring(ConfigManager.INSTANCE.macroFolder.getCanonicalPath().length()), true), null);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -103,7 +102,7 @@ public class MacroScreen extends BaseScreen {
     }
     
     public void removeMacro(MacroContainer macro) {
-        Profile.registry.removeRawMacro(macro.getRawMacro());
+        RunScript.eventRegistry.removeRawMacro(macro.getRawMacro());
         for (AbstractButtonWidget b : macro.getButtons()) {
             removeButton(b);
         }
@@ -145,7 +144,7 @@ public class MacroScreen extends BaseScreen {
             macro.render(matrices, mouseX, mouseY, delta);
         }
         
-        drawCenteredString(matrices, this.textRenderer, JsMacros.profile.profileName, this.width * 7 / 12, 5, 0x7F7F7F);
+        drawCenteredString(matrices, this.textRenderer, ConfigManager.PROFILE.getCurrentProfileName(), this.width * 7 / 12, 5, 0x7F7F7F);
 
         fill(matrices, this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
         fill(matrices, this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);
@@ -156,7 +155,7 @@ public class MacroScreen extends BaseScreen {
     }
 
     public void onClose() {
-        JsMacros.profile.saveProfile();
+        ConfigManager.PROFILE.saveProfile();
         super.onClose();
     }
 }

@@ -7,9 +7,8 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.access.IChatHud;
 import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.extensionbase.Functions;
-
-import java.util.List;
+import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
+import xyz.wagyourtail.jsmacros.core.library.Library;
 
 /**
  * Functions for interacting with chat.
@@ -17,18 +16,10 @@ import java.util.List;
  * An instance of this class is passed to scripts as the {@code chat} variable.
  * 
  * @author Wagyourtail
- *
  */
-public class FChat extends Functions {
-    
-    public FChat(String libName) {
-        super(libName);
-    }
-    
-    public FChat(String libName, List<String> excludeLanguages) {
-        super(libName, excludeLanguages);
-    }
-    
+ @Library("chat")
+public class FChat implements BaseLibrary {
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
     /**
      * Log to player chat.
      * 

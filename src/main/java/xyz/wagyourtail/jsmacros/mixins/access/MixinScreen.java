@@ -21,7 +21,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.wagyourtail.jsmacros.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.api.helpers.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.TextFieldWidgetHelper;
@@ -31,9 +30,12 @@ import xyz.wagyourtail.jsmacros.api.sharedclasses.PositionCommon.Pos2D;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.PositionCommon.Vec2D;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScreen;
-import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 @Mixin(Screen.class)
 public abstract class MixinScreen extends AbstractParentElement implements IScreen {

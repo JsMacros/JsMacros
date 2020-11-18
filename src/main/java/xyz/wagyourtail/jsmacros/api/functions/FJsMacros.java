@@ -6,18 +6,20 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.network.ServerAddress;
 import net.minecraft.util.Util;
-import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.events.EventCustom;
 import xyz.wagyourtail.jsmacros.api.helpers.OptionsHelper;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.*;
-import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.core.*;
+import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
+import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.IEventListener;
+import xyz.wagyourtail.jsmacros.core.event.IEventRegistry;
+import xyz.wagyourtail.jsmacros.core.event.IEventTrigger;
+import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
+import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.events.TickSync;
-import xyz.wagyourtail.jsmacros.extensionbase.Functions;
-import xyz.wagyourtail.jsmacros.extensionbase.ILanguage;
-import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
-import xyz.wagyourtail.jsmacros.profile.Profile;
-import xyz.wagyourtail.jsmacros.runscript.RunScript;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,22 +33,15 @@ import java.util.Set;
  * An instance of this class is passed to scripts as the {@code jsmacros} variable.
  * 
  * @author Wagyourtail
- *
  */
-public class FJsMacros extends Functions {
+ @Library("jsmacros")
+public class FJsMacros implements BaseLibrary {
+    
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
     /**
      * Don't touch this plz xd.
      */
     public static TickSync tickSynchronizer = new TickSync();
-
-    public FJsMacros(String libName) {
-        super(libName);
-    }
-    
-    public FJsMacros(String libName, List<String> excludeLanguages) {
-        super(libName, excludeLanguages);
-    }
-    
     /**
      * @return the raw minecraft client class, it may be useful to use <a href="https://wagyourtail.xyz/Projects/Minecraft%20Mappings%20Viewer/App">Minecraft Mappings Viewer</a> for this.
      */
@@ -58,14 +53,14 @@ public class FJsMacros extends Functions {
      * @return the JsMacros profile class.
      */
     public IProfile getProfile() {
-        return JsMacros.profile;
+        return ConfigManager.PROFILE;
     }
 
     /**
      * @return the JsMacros config class.
      */
-    public IConfig getConfig() {
-        return JsMacros.config;
+    public ConfigManager getConfig() {
+        return ConfigManager.INSTANCE;
     }
     
     /**
@@ -85,7 +80,7 @@ public class FJsMacros extends Functions {
      * @since 1.0.5
      * 
      */
-    public Map<IRawMacro, List<IScriptThreadWrapper>> getRunningThreads() {
+    public Map<IEventTrigger, List<IScriptThreadWrapper>> getRunningThreads() {
         return ImmutableMap.copyOf(RunScript.threads);
     }
 
@@ -108,7 +103,7 @@ public class FJsMacros extends Functions {
      * @return
      */
     public Thread runScript(String file) {
-        return runScript(file, (MethodWrapper<String, Object, Object>) null);
+        return runScript(file, (MethodWrapper<Throwable, Object, Object>) null);
     }
 
     /**
@@ -120,13 +115,13 @@ public class FJsMacros extends Functions {
      * @param callback defaults to {@code null}
      * @return the {@link java.lang.Thread} the script is running on.
      */
-    public Thread runScript(String file, MethodWrapper<String, Object, Object> callback) {
+    public Thread runScript(String file, MethodWrapper<Throwable, Object, Object> callback) {
         if (callback != null) {
-            return RunScript.exec(new RawMacro(IRawMacro.MacroType.EVENT, "", file, true), null, () -> {
+            return RunScript.exec(new ScriptTrigger(IEventTrigger.TriggerType.EVENT, "", file, true), null, () -> {
                 callback.accept(null);
             }, callback);
         } else {
-            return RunScript.exec(new RawMacro(IRawMacro.MacroType.EVENT, "", file, true), null);
+            return RunScript.exec(new ScriptTrigger(IEventTrigger.TriggerType.EVENT, "", file, true), null);
         }
     }
     
@@ -181,7 +176,7 @@ public class FJsMacros extends Functions {
      * @param path relative to the macro folder.
      */
     public void open(String path) {
-        Util.getOperatingSystem().open(new File(JsMacros.config.macroFolder, path));
+        Util.getOperatingSystem().open(new File(ConfigManager.INSTANCE.macroFolder, path));
     }
     
     /**
@@ -191,22 +186,22 @@ public class FJsMacros extends Functions {
      * 
      * @since 1.2.7
      * @param event
-     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link IEvent}&gt;
+     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link BaseEvent}&gt;
      * @return
      */
-    public IEventListener on(String event, MethodWrapper<IEvent, Object, Object> callback) {
+    public IEventListener on(String event, MethodWrapper<BaseEvent, Object, Object> callback) {
         if (callback == null) return null;
         String tname = Thread.currentThread().getName();
         IEventListener listener = new IEventListener() {
             
             @Override
-            public Thread trigger(IEvent event) {
+            public Thread trigger(BaseEvent event) {
                 Thread t = new Thread(() -> {
                     Thread.currentThread().setName(this.toString());
                     try {
                         callback.accept(event);
                     } catch (Exception e) {
-                        Profile.registry.removeListener(this);
+                        RunScript.eventRegistry.removeListener(this);
                         e.printStackTrace();
                     }
                 });
@@ -219,7 +214,7 @@ public class FJsMacros extends Functions {
                 return String.format("EventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", tname, event);
             }
         };
-        Profile.registry.addListener(event, listener);
+        RunScript.eventRegistry.addListener(event, listener);
         return listener;
     }
         
@@ -231,17 +226,17 @@ public class FJsMacros extends Functions {
      * @since 1.2.7
      * 
      * @param event
-     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link IEvent}&gt;
+     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link BaseEvent}&gt;
      * @return the listener.
      */
-    public IEventListener once(String event, MethodWrapper<IEvent, Object, Object> callback) {
+    public IEventListener once(String event, MethodWrapper<BaseEvent, Object, Object> callback) {
         if (callback == null) return null;
         String tname = Thread.currentThread().getName();
         Thread th = Thread.currentThread();
         IEventListener listener = new IEventListener() {
             @Override
-            public Thread trigger(IEvent event) {
-                Profile.registry.removeListener(this);
+            public Thread trigger(BaseEvent event) {
+                RunScript.eventRegistry.removeListener(this);
                 Thread t = new Thread(() -> {
                     Thread.currentThread().setName(this.toString());
                     try {
@@ -260,7 +255,7 @@ public class FJsMacros extends Functions {
             }
             
         };
-        Profile.registry.addListener(event, listener);
+        RunScript.eventRegistry.addListener(event, listener);
         return listener;
     }
     
@@ -273,11 +268,11 @@ public class FJsMacros extends Functions {
      * @return
      */
     public boolean off(IEventListener listener) {
-        return Profile.registry.removeListener(listener);
+        return RunScript.eventRegistry.removeListener(listener);
     }
     
     /**
-     * Removes a {@link xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener IEventListener} from an event.
+     * Removes a {@link IEventListener IEventListener} from an event.
      * 
      * @see IEventListener
      * 
@@ -288,7 +283,7 @@ public class FJsMacros extends Functions {
      * @return
      */
     public boolean off(String event, IEventListener listener) {
-        return Profile.registry.removeListener(event, listener);
+        return RunScript.eventRegistry.removeListener(event, listener);
     }
     
     
@@ -301,7 +296,7 @@ public class FJsMacros extends Functions {
      */
     public List<IEventListener> listeners(String event) {
         List<IEventListener> listeners = new ArrayList<>();
-        Set<IEventListener> raw = Profile.registry.getListeners(event);
+        Set<IEventListener> raw = RunScript.eventRegistry.getListeners(event);
         if (raw == null) return null;
         for (IEventListener l : ImmutableList.copyOf(raw)) {
             if (!(l instanceof BaseMacro)) listeners.add(l);
@@ -402,7 +397,7 @@ public class FJsMacros extends Functions {
     * create a custom event object that can trigger a event. It's recommended to use 
     * {@code jsMacros.getProfile().getRegistry().addEvent(eventName)} to set up the event to be visible in the GUI first.
     * 
-    * @see xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventRegistry#addEvent(String)
+    * @see IEventRegistry#addEvent(String)
     * 
      * @param eventName name of the event. please don't use an existing one... your scripts might not like that.
      *

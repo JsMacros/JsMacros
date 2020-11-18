@@ -10,9 +10,12 @@ import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IDraw2D;
-import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Wagyourtail

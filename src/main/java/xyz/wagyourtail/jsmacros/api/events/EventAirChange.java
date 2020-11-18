@@ -1,12 +1,14 @@
 package xyz.wagyourtail.jsmacros.api.events;
 
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventAirChange implements IEvent {
+ @Event(value = "AirChange", oldName = "AIR_CHANGE")
+public class EventAirChange implements BaseEvent {
     public final int air;
     
     public EventAirChange(int air) {

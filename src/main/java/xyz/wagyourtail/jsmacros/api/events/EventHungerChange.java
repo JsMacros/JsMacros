@@ -1,12 +1,14 @@
 package xyz.wagyourtail.jsmacros.api.events;
 
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventHungerChange implements IEvent {
+ @Event(value = "HungerChange", oldName = "HUNGER_CHANGE")
+public class EventHungerChange implements BaseEvent {
     public final int foodLevel;
     
     public EventHungerChange(int foodLevel) {

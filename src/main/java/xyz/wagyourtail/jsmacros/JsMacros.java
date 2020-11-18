@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -11,22 +12,23 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
-import xyz.wagyourtail.jsmacros.config.ConfigManager;
+import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.gui.screens.macros.KeyMacrosScreen;
-import xyz.wagyourtail.jsmacros.profile.Profile;
+
+import java.io.File;
 
 public class JsMacros implements ClientModInitializer {
     public static final String MOD_ID = "jsmacros";
-    public static final ConfigManager config = new ConfigManager();
-    public static final Profile profile = new Profile();
     public static BaseScreen prevScreen;
     
     @Override
     public void onInitializeClient() {
-        
-        config.loadConfig();
-        profile.init(config.options.defaultProfile);
+        final File configFolder = new File(FabricLoader.getInstance().getConfigDir().toFile(), "jsMacros");
+        ConfigManager.INSTANCE = new ConfigManager(configFolder, new File(configFolder, "Macros"));
+        ConfigManager.INSTANCE.loadConfig();
+        ConfigManager.PROFILE = new Profile();
+        ConfigManager.PROFILE.init(ConfigManager.INSTANCE.options.defaultProfile);
         
         prevScreen = new KeyMacrosScreen(null);
         

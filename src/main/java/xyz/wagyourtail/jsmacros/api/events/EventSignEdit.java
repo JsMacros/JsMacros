@@ -1,7 +1,8 @@
 package xyz.wagyourtail.jsmacros.api.events;
 
 import xyz.wagyourtail.jsmacros.api.sharedclasses.PositionCommon.Pos3D;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 import java.util.List;
 
@@ -9,7 +10,8 @@ import java.util.List;
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventSignEdit implements IEvent {
+ @Event(value = "SignEdit", oldName = "SIGN_EDIT")
+public class EventSignEdit implements BaseEvent {
     public final Pos3D pos;
     public boolean closeScreen = false;
     public List<String> signText;

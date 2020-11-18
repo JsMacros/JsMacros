@@ -2,7 +2,8 @@ package xyz.wagyourtail.jsmacros.api.events;
 
 import net.minecraft.client.network.PlayerListEntry;
 import xyz.wagyourtail.jsmacros.api.helpers.PlayerListEntryHelper;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 import java.util.UUID;
 
@@ -10,7 +11,8 @@ import java.util.UUID;
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventPlayerJoin implements IEvent {
+ @Event(value = "PlayerJoin", oldName = "PLAYER_JOIN")
+public class EventPlayerJoin implements BaseEvent {
     public final String UUID;
     public final PlayerListEntryHelper player;
     

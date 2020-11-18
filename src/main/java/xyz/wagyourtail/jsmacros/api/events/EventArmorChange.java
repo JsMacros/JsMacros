@@ -2,13 +2,15 @@ package xyz.wagyourtail.jsmacros.api.events;
 
 import net.minecraft.item.ItemStack;
 import xyz.wagyourtail.jsmacros.api.helpers.ItemStackHelper;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventArmorChange implements IEvent {
+ @Event(value = "ArmorChange", oldName = "ARMOR_CHANGE")
+public class EventArmorChange implements BaseEvent {
     public final String slot;
     public final ItemStackHelper item;
     public final ItemStackHelper oldItem;

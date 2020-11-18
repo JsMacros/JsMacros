@@ -6,13 +6,13 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScriptThreadWrapper;
+import xyz.wagyourtail.jsmacros.core.IScriptThreadWrapper;
+import xyz.wagyourtail.jsmacros.core.RunScript;
+import xyz.wagyourtail.jsmacros.core.RunScript.ScriptThreadWrapper;
 import xyz.wagyourtail.jsmacros.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.gui.elements.containers.RunningThreadContainer;
-import xyz.wagyourtail.jsmacros.runscript.RunScript;
-import xyz.wagyourtail.jsmacros.runscript.RunScript.ScriptThreadWrapper;
 
 import java.util.ArrayList;
 import java.util.Collections;

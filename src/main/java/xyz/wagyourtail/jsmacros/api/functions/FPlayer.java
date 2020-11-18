@@ -3,22 +3,23 @@ package xyz.wagyourtail.jsmacros.api.functions;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.util.ScreenshotUtils;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.api.classes.Inventory;
 import xyz.wagyourtail.jsmacros.api.helpers.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.EntityHelper;
 import xyz.wagyourtail.jsmacros.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.extensionbase.Functions;
-import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
+import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
+import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.io.File;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -28,18 +29,10 @@ import java.util.function.Consumer;
  * An instance of this class is passed to scripts as the {@code player} variable.
  * 
  * @author Wagyourtail
- *
  */
-public class FPlayer extends Functions {
-
-    public FPlayer(String libName) {
-        super(libName);
-    }
-
-    public FPlayer(String libName, List<String> excludeLanguages) {
-        super(libName, excludeLanguages);
-    }
-
+ @Library("player")
+public class FPlayer implements BaseLibrary {
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
     /**
      * @see xyz.wagyourtail.jsmacros.api.classes.Inventory
      * 
@@ -131,7 +124,7 @@ public class FPlayer extends Functions {
      * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
      */
     public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object, Object> callback) {
-        ScreenshotUtils.saveScreenshot(new File(JsMacros.config.macroFolder, folder), mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
+        ScreenshotUtils.saveScreenshot(new File(ConfigManager.INSTANCE.macroFolder, folder), mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
             mc.getFramebuffer(), (text) -> {
                 if (callback != null) callback.accept(new TextHelper(text));
             });
@@ -147,7 +140,7 @@ public class FPlayer extends Functions {
      * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
      */
     public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object> callback) {
-        ScreenshotUtils.saveScreenshot(new File(JsMacros.config.macroFolder, folder), file, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
+        ScreenshotUtils.saveScreenshot(new File(ConfigManager.INSTANCE.macroFolder, folder), file, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
             mc.getFramebuffer(), (text) -> {
                 if (callback != null) callback.accept(new TextHelper(text));
             });

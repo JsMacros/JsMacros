@@ -1,16 +1,16 @@
 package xyz.wagyourtail.jsmacros.macros;
 
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
-import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 
 public class EventMacro extends BaseMacro {
     
-    public EventMacro(RawMacro macro) {
+    public EventMacro(ScriptTrigger macro) {
         super(macro);
     }
     
     @Override
-    public Thread trigger(IEvent event) {
+    public Thread trigger(BaseEvent event) {
         return runMacro(event);
     }
 }

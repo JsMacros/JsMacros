@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.api.functions;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.classes.Draw2D;
@@ -8,7 +9,8 @@ import xyz.wagyourtail.jsmacros.api.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.api.classes.Screen;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IScreen;
-import xyz.wagyourtail.jsmacros.extensionbase.Functions;
+import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
+import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import java.util.HashSet;
 import java.util.List;
@@ -23,9 +25,11 @@ import java.util.Set;
  * @since 1.0.5
  * 
  * @author Wagyourtail
- *
  */
-public class FHud extends Functions {
+ @Library("hud")
+public class FHud implements BaseLibrary {
+    
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
     /**
      * Don't touch this here
      */
@@ -34,14 +38,6 @@ public class FHud extends Functions {
      * Don't touch this here
      */
     public static final Set<Draw3D> renders = new HashSet<>();
-    
-    public FHud(String libName) {
-        super(libName);
-    }
-    
-    public FHud(String libName, List<String> excludeLanguages) {
-        super(libName, excludeLanguages);
-    }
     
     /**
      * 

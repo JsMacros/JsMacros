@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.api.functions;
 
-import xyz.wagyourtail.jsmacros.extensionbase.Functions;
 
-import java.util.List;
+import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
+import xyz.wagyourtail.jsmacros.core.library.Library;
 
 /**
  * 
@@ -11,17 +11,9 @@ import java.util.List;
  * An instance of this class is passed to scripts as the {@code time} variable.
  * 
  * @author Wagyourtail
- *
  */
-public class FTime extends Functions {
-    
-    public FTime(String libName) {
-        super(libName);
-    }
-    
-    public FTime(String libName, List<String> excludeLanguages) {
-        super(libName, excludeLanguages);
-    }
+ @Library("time")
+public class FTime implements BaseLibrary {
     
     /**
      * @return current time in MS.

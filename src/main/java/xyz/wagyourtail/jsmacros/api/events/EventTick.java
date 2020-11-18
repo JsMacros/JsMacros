@@ -1,12 +1,14 @@
 package xyz.wagyourtail.jsmacros.api.events;
 
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventTick implements IEvent {
+ @Event(value = "Tick", oldName = "TICK")
+public class EventTick implements BaseEvent {
 
     public EventTick() {
         profile.triggerMacroNoAnything(this);

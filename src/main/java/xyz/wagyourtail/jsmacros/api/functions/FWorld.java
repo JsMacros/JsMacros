@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ClientBossBar;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -19,10 +20,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
-import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.api.helpers.*;
-import xyz.wagyourtail.jsmacros.extensionbase.Functions;
+import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
+import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
+import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import javax.sound.sampled.*;
 import java.io.File;
@@ -36,9 +38,11 @@ import java.util.*;
  * An instance of this class is passed to scripts as the {@code world} variable.
  * 
  * @author Wagyourtail
- *
  */
-public class FWorld extends Functions {
+ @Library("world")
+public class FWorld implements BaseLibrary {
+    
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
     /**
      * Don't modify.
      */
@@ -56,14 +60,6 @@ public class FWorld extends Functions {
      */
     public static double server15MAverageTPS = 20;
 
-    public FWorld(String libName) {
-        super(libName);
-    }
-    
-    public FWorld(String libName, List<String> excludeLanguages) {
-        super(libName, excludeLanguages);
-    }
-    
     /**
      * @return players within render distance.
      */
@@ -210,7 +206,7 @@ public class FWorld extends Functions {
      */
     public Clip playSoundFile(String file, double volume) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
         Clip clip = AudioSystem.getClip();
-        clip.open(AudioSystem.getAudioInputStream(new File(JsMacros.config.macroFolder, file)));
+        clip.open(AudioSystem.getAudioInputStream(new File(ConfigManager.INSTANCE.macroFolder, file)));
         FloatControl gainControl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
         float min = gainControl.getMinimum();
         float range = gainControl.getMaximum() - min;

@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Image;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Item;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Rect;
 import xyz.wagyourtail.jsmacros.api.sharedclasses.RenderCommon.Text;
-import xyz.wagyourtail.jsmacros.extensionbase.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.List;
 import java.util.function.Consumer;

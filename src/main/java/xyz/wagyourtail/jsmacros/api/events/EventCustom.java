@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.api.events;
 
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +11,8 @@ import java.util.Map;
  * @author Wagyourtail
  * @since 1.2.8
  */
-public class EventCustom implements IEvent {
+ @Event("Custom")
+public class EventCustom implements BaseEvent {
     protected Map<String, Object> args = new HashMap<>();
     public String eventName;
     

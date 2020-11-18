@@ -7,9 +7,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import xyz.wagyourtail.jsmacros.core.RunScript;
 import xyz.wagyourtail.jsmacros.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.gui.elements.Scrollbar;
-import xyz.wagyourtail.jsmacros.profile.Profile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,7 +59,7 @@ public class EventChooser extends OverlayContainer {
             }
         }));
         
-        List<String> events = new ArrayList<>(Profile.registry.events);
+        List<String> events = new ArrayList<>(RunScript.eventRegistry.events);
         Collections.sort(events);
         for (String e : events) {
             addEvent(e);

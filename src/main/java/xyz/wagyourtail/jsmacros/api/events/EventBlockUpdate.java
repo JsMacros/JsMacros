@@ -4,13 +4,15 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import xyz.wagyourtail.jsmacros.api.helpers.BlockDataHelper;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventBlockUpdate implements IEvent {
+ @Event(value = "BlockUpdate", oldName = "BLOCK_UPDATE")
+public class EventBlockUpdate implements BaseEvent {
     public final BlockDataHelper block;
     public final String updateType;
     

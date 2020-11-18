@@ -2,13 +2,15 @@ package xyz.wagyourtail.jsmacros.api.events;
 
 import net.minecraft.client.network.ClientPlayerEntity;
 import xyz.wagyourtail.jsmacros.api.helpers.ClientPlayerEntityHelper;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventJoinServer implements IEvent {
+ @Event(value = "JoinServer", oldName = "JOIN_SERVER")
+public class EventJoinServer implements BaseEvent {
     public final ClientPlayerEntityHelper player;
     public final String address;
     

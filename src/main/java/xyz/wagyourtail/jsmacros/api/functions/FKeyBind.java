@@ -1,10 +1,12 @@
 package xyz.wagyourtail.jsmacros.api.functions;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.InputUtil.Key;
-import xyz.wagyourtail.jsmacros.extensionbase.Functions;
+import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
+import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import java.util.*;
 
@@ -15,22 +17,14 @@ import java.util.*;
  * An instance of this class is passed to scripts as the {@code keybind} variable.
  * 
  * @author Wagyourtail
- *
  */
-public class FKeyBind extends Functions {
+ @Library("keybind")
+public class FKeyBind implements BaseLibrary {
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
     /**
      * Don't modify
      */
     public static final Set<String> pressedKeys = new HashSet<>();
-    
-    
-    public FKeyBind(String libName) {
-        super(libName);
-    }
-    
-    public FKeyBind(String libName, List<String> excludeLanguages) {
-        super(libName, excludeLanguages);
-    }
     
     /**
      * Dont use this one... get the raw minecraft keycode class.

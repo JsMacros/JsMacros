@@ -1,12 +1,14 @@
 package xyz.wagyourtail.jsmacros.api.events;
 
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
  * @author Wagyourtail
  * @since 1.2.7
  */
-public class EventChunkLoad implements IEvent {
+ @Event(value = "ChunkLoad", oldName = "CHUNK_LOAD")
+public class EventChunkLoad implements BaseEvent {
     public final int x;
     public final int z;
     public final boolean isFull;

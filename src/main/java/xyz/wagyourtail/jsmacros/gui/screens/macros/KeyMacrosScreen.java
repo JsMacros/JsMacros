@@ -3,15 +3,15 @@ package xyz.wagyourtail.jsmacros.gui.screens.macros;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
-import xyz.wagyourtail.jsmacros.JsMacros;
 import xyz.wagyourtail.jsmacros.api.events.EventKey;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEventListener;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IRawMacro;
-import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.core.event.IEventListener;
+import xyz.wagyourtail.jsmacros.core.event.IEventTrigger;
+import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
+import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
+import xyz.wagyourtail.jsmacros.core.RunScript;
 import xyz.wagyourtail.jsmacros.gui.elements.containers.MacroContainer;
 import xyz.wagyourtail.jsmacros.gui.screens.ProfileScreen;
 import xyz.wagyourtail.jsmacros.macros.BaseMacro;
-import xyz.wagyourtail.jsmacros.profile.Profile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,16 +36,16 @@ public class KeyMacrosScreen extends MacroScreen {
             client.openScreen(new ProfileScreen(this));
         };
 
-        Set<IEventListener> listeners = Profile.registry.getListeners().get(EventKey.class.getSimpleName());
-        List<RawMacro> macros = new ArrayList<>();
+        Set<IEventListener> listeners = RunScript.eventRegistry.getListeners().get(EventKey.class.getSimpleName());
+        List<ScriptTrigger> macros = new ArrayList<>();
 
         if (listeners != null) for (IEventListener event : ImmutableList.copyOf(listeners)) {
-            if (event instanceof BaseMacro && ((BaseMacro) event).getRawMacro().type != IRawMacro.MacroType.EVENT) macros.add(((BaseMacro) event).getRawMacro());
+            if (event instanceof BaseMacro && ((BaseMacro) event).getRawMacro().triggerType != IEventTrigger.TriggerType.EVENT) macros.add(((BaseMacro) event).getRawMacro());
         }
 
-        Collections.sort(macros, JsMacros.config.getSortComparator());
+        Collections.sort(macros, ConfigManager.INSTANCE.getSortComparator());
 
-        for (RawMacro macro : macros) {
+        for (ScriptTrigger macro : macros) {
             addMacro(macro);
         }
     }

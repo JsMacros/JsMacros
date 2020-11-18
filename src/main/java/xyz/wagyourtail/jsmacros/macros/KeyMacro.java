@@ -2,19 +2,19 @@ package xyz.wagyourtail.jsmacros.macros;
 
 import net.minecraft.client.util.InputUtil;
 import xyz.wagyourtail.jsmacros.api.events.EventKey;
-import xyz.wagyourtail.jsmacros.api.sharedinterfaces.IEvent;
-import xyz.wagyourtail.jsmacros.config.RawMacro;
+import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 
 public class KeyMacro extends BaseMacro {
     private int mods;
     private String key;
     
-    public KeyMacro(RawMacro macro) {
+    public KeyMacro(ScriptTrigger macro) {
         super(macro);
         String mods = "";
         this.mods = 0;
         try {
-            String[] comb = macro.eventkey.split("\\+");
+            String[] comb = macro.event.split("\\+");
             int i = 0;
             for (String key : comb) {
                 if (++i == comb.length) this.key = key;
@@ -30,7 +30,7 @@ public class KeyMacro extends BaseMacro {
     }
     
     @Override
-    public Thread trigger(IEvent event) {
+    public Thread trigger(BaseEvent event) {
         if (check((EventKey) event)) {
             return runMacro(event);
         }
@@ -40,7 +40,7 @@ public class KeyMacro extends BaseMacro {
     private boolean check(EventKey event) {
         boolean keyState = (int)event.action == 1;
         if (event.key.equals(key) && EventKey.getModInt((String)event.mods) == mods) {
-            switch(getRawMacro().type) {
+            switch(getRawMacro().triggerType) {
                 case KEY_FALLING:
                     return !keyState;
                 case KEY_RISING:
