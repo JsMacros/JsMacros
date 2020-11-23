@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import com.google.common.io.Files;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
-import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
@@ -19,7 +19,7 @@ import java.io.IOException;
  * @author Wagyourtail
  */
  @Library("fs")
-public class FFS implements BaseLibrary {
+public class FFS extends BaseLibrary {
 
     /**
      * List files in path.
@@ -30,7 +30,7 @@ public class FFS implements BaseLibrary {
      * @return An array of file names as {@link java.lang.String Strings}.
      */
     public String[] list(String path) {
-        return new File(ConfigManager.INSTANCE.macroFolder, path).list();
+        return new File(Core.instance.config.macroFolder, path).list();
     }
     
     /**
@@ -42,7 +42,7 @@ public class FFS implements BaseLibrary {
      * @return
      */
     public boolean exists(String path) {
-        return new File(ConfigManager.INSTANCE.macroFolder, path).exists();
+        return new File(Core.instance.config.macroFolder, path).exists();
     }
     
     /**
@@ -54,7 +54,7 @@ public class FFS implements BaseLibrary {
      * @return
      */
     public boolean isDir(String path) {
-        return new File(ConfigManager.INSTANCE.macroFolder, path).isDirectory();
+        return new File(Core.instance.config.macroFolder, path).isDirectory();
     }
     
     /**
@@ -66,7 +66,7 @@ public class FFS implements BaseLibrary {
      * @return a {@link java.lang.String String} of the file name.
      */
     public String getName(String path) {
-        return new File(ConfigManager.INSTANCE.macroFolder, path).getName();
+        return new File(Core.instance.config.macroFolder, path).getName();
     }
     
     /**
@@ -78,7 +78,7 @@ public class FFS implements BaseLibrary {
      * @return a {@link java.lang.Boolean boolean} for success.
      */
     public boolean makeDir(String path) {
-        return new File(ConfigManager.INSTANCE.macroFolder, path).mkdir();
+        return new File(Core.instance.config.macroFolder, path).mkdir();
     }
     
     /**
@@ -91,7 +91,7 @@ public class FFS implements BaseLibrary {
      * @throws IOException
      */
     public void move(String from, String to) throws IOException {
-        Files.move(new File(ConfigManager.INSTANCE.macroFolder, from), new File(ConfigManager.INSTANCE.macroFolder, to));
+        Files.move(new File(Core.instance.config.macroFolder, from), new File(Core.instance.config.macroFolder, to));
     }
     
     /**
@@ -104,7 +104,7 @@ public class FFS implements BaseLibrary {
      * @throws IOException
      */
     public void copy(String from, String to) throws IOException {
-        Files.copy(new File(ConfigManager.INSTANCE.macroFolder, from), new File(ConfigManager.INSTANCE.macroFolder, to));
+        Files.copy(new File(Core.instance.config.macroFolder, from), new File(Core.instance.config.macroFolder, to));
     }
     
     /**
@@ -116,7 +116,7 @@ public class FFS implements BaseLibrary {
      * @return a {@link java.lang.Boolean boolean} for success.
      */
     public boolean unlink(String path) {
-        return new File(ConfigManager.INSTANCE.macroFolder, path).delete();
+        return new File(Core.instance.config.macroFolder, path).delete();
     }
     
     /**
@@ -130,7 +130,7 @@ public class FFS implements BaseLibrary {
      * @throws IOException
      */
     public String combine(String patha, String pathb) throws IOException {
-        String f = new File(new File(ConfigManager.INSTANCE.macroFolder, patha), pathb).getCanonicalPath().substring(ConfigManager.INSTANCE.macroFolder.getCanonicalPath().length());
+        String f = new File(new File(Core.instance.config.macroFolder, patha), pathb).getCanonicalPath().substring(Core.instance.config.macroFolder.getCanonicalPath().length());
         if (f.startsWith("/")) return "."+f;
         return f;
     }
@@ -146,7 +146,7 @@ public class FFS implements BaseLibrary {
      * @throws IOException
      */
     public String getDir(String path) throws IOException {
-        String f = new File(ConfigManager.INSTANCE.macroFolder, path).getParentFile().getCanonicalPath().substring(ConfigManager.INSTANCE.macroFolder.getCanonicalPath().length());
+        String f = new File(Core.instance.config.macroFolder, path).getParentFile().getCanonicalPath().substring(Core.instance.config.macroFolder.getCanonicalPath().length());
         if (f.startsWith("/")) return "."+f;
         return f;
     }
@@ -162,6 +162,6 @@ public class FFS implements BaseLibrary {
      * @return a {@link FileHandler FileHandler} for the file path.
      */
     public FileHandler open(String path) {
-        return new FileHandler(new File(ConfigManager.INSTANCE.macroFolder, path));
+        return new FileHandler(new File(Core.instance.config.macroFolder, path));
     }
 }

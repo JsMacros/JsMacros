@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.core.library;
 
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
-public interface IFConsumer<T, U, V> extends BaseLibrary {
+public interface IFConsumer<T, U, V> {
     
     @Deprecated
     public <A, B, R> MethodWrapper<A, B, R> toConsumer(U c);

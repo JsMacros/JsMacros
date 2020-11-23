@@ -11,6 +11,9 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
+	flatDir {
+		dirs 'libs'
+	}
     mavenCentral()
     maven {
         name "Modmuss50 Repository"
@@ -38,17 +41,16 @@ dependencies {
     include "net.fabricmc.fabric-api:fabric-key-binding-api-v1:${project.key_bind_api_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-resource-loader-v0:${resource_loader_version}"
     include "net.fabricmc.fabric-api:fabric-resource-loader-v0:${project.resource_loader_version}"
-    
-	
+
 	// https://mvnrepository.com/artifact/org.graalvm.js/js
 	implementation group: 'org.graalvm.sdk', name: 'graal-sdk', version: '20.1.0'
 	implementation group: 'org.graalvm.js', name: 'js', version: '20.1.0'
-	
+
 	//these ones are needed to build the mod because doesn't auto include sub-dependencies
 	implementation group: 'org.graalvm.truffle', name: 'truffle-api', version: '20.1.0'
 	implementation group: 'org.graalvm.regex', name: 'regex', version: '20.1.0'
 	implementation group: 'com.ibm.icu', name: 'icu4j', version: '64.2'
-	
+
 	include group: 'org.graalvm.sdk', name: 'graal-sdk', version: '20.1.0'
 	include group: 'org.graalvm.js', name: 'js', version: '20.1.0'
 	include group: 'org.graalvm.truffle', name: 'truffle-api', version: '20.1.0'

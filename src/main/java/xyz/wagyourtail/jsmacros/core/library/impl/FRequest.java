@@ -21,7 +21,7 @@ import java.util.Map;
  * @author Wagyourtail
  */
  @Library("request")
-public class FRequest implements BaseLibrary {
+public class FRequest extends BaseLibrary {
     
     /**
      * create a HTTPRequest handler to the specified URL

@@ -1,3 +1,3 @@
 package xyz.wagyourtail.jsmacros.core.library;
 
-public interface BaseLibrary {}
+public abstract class BaseLibrary {}

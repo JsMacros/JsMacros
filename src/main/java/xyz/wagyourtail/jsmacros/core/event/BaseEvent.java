@@ -1,12 +1,12 @@
 package xyz.wagyourtail.jsmacros.core.event;
 
-import xyz.wagyourtail.jsmacros.core.IProfile;
-import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
+import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
+import xyz.wagyourtail.jsmacros.core.Core;
 
 public interface BaseEvent {
-    static final IProfile profile = ConfigManager.PROFILE;
+    static final BaseProfile profile = Core.instance.profile;
     
     default String getEventName() {
-        return "Event"+this.getClass().getAnnotation(Event.class).value();
+        return this.getClass().getAnnotation(Event.class).value();
     }
 }

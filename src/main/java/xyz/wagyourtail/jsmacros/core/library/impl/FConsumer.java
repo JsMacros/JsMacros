@@ -17,10 +17,10 @@ import java.util.function.Function;
  * 
  * @author Wagyourtail
  */
- @Library(value = "consumer", onlyAllow = ".js")
-public class FConsumer implements IFConsumer<Function<Object[], Object>, Function<Object[], Object>, Function<Object[], Object>> {
+ @Library(value = "consumer", onlyAllow = ".js", perExec = true)
+public class FConsumer extends BaseLibrary implements IFConsumer<Function<Object[], Object>, Function<Object[], Object>, Function<Object[], Object>> {
     
-    private LinkedBlockingQueue<Thread> tasks = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<Thread> tasks = new LinkedBlockingQueue<>();
 
     /**
      * @since 1.2.7

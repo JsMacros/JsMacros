@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
-import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
@@ -26,7 +26,7 @@ import java.util.*;
  * @since 1.2.3
  */
  @Library("reflection")
-public class FReflection implements BaseLibrary {
+public class FReflection extends BaseLibrary {
     private static final CombinedVariableClassLoader classLoader = new CombinedVariableClassLoader(FReflection.class.getClassLoader());
     
     /**
@@ -228,7 +228,7 @@ public class FReflection implements BaseLibrary {
      * @since 1.2.6
      */
     public boolean loadJarFile(String file) throws IOException {
-        File jarFile = new File(ConfigManager.INSTANCE.macroFolder, file);
+        File jarFile = new File(Core.instance.config.macroFolder, file);
         if (!jarFile.exists()) throw new FileNotFoundException("Jar File Not Found");
         return classLoader.addClassLoader(new URLClassLoader(new URL[] {new URL("jar:file:" + jarFile.getCanonicalPath() + "!/")}));
     }

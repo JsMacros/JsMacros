@@ -2,8 +2,8 @@ package xyz.wagyourtail.jsmacros.core.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import xyz.wagyourtail.jsmacros.core.IProfile;
-import xyz.wagyourtail.jsmacros.core.event.IEventTrigger;
+import xyz.wagyourtail.jsmacros.core.event.Event;
+import xyz.wagyourtail.jsmacros.core.event.impl.EventProfileLoad;
 
 import java.io.File;
 import java.io.FileReader;
@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class ConfigManager {
-    public static ConfigManager INSTANCE;
-    public static IProfile PROFILE;
     public ConfigOptions options;
     public final File configFolder;
     public final File macroFolder;
@@ -26,7 +24,7 @@ public class ConfigManager {
     public ConfigManager(File configFolder, File macroFolder) {
         options = new ConfigOptions(true, "default", ScriptTrigger.SortMethod.Enabled, new HashMap<>(), new LinkedHashMap<>(), false);
         options.profiles.put("default", new ArrayList<>());
-        options.profiles.get("default").add(new ScriptTrigger(IEventTrigger.TriggerType.KEY_RISING, "key.keyboard.j", "test.js", true));
+        options.profiles.get("default").add(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventProfileLoad.class.getAnnotation(Event.class).value(), "index.js", true));
         this.configFolder = configFolder;
         this.macroFolder = macroFolder;
         this.configFile = new File(configFolder, "options.json");
@@ -53,7 +51,7 @@ public class ConfigManager {
             saveConfig();
         }
         System.out.println("Loaded Profiles:");
-        for (String key : INSTANCE.options.profiles.keySet()) {
+        for (String key : options.profiles.keySet()) {
             System.out.println("    " + key);
         }
 

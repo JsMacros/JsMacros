@@ -1,10 +1,8 @@
 package xyz.wagyourtail.jsmacros.core.config;
 
-import xyz.wagyourtail.jsmacros.core.event.IEventTrigger;
-
 import java.util.Comparator;
 
-public class ScriptTrigger implements IEventTrigger {
+public class ScriptTrigger {
     public TriggerType triggerType;
     public String event;
     public String scriptFile;
@@ -24,12 +22,23 @@ public class ScriptTrigger implements IEventTrigger {
         return String.format("RawMacro:{\"type\": \"%s\", \"eventkey\": \"%s\", \"scriptFile\": \"%s\", \"enabled\": %b}", triggerType.toString(), event, scriptFile, enabled);
     }
     
-    public static IEventTrigger copy(ScriptTrigger m) {
+    public static ScriptTrigger copy(ScriptTrigger m) {
         return new ScriptTrigger(m.triggerType, m.event, m.scriptFile, m.enabled);
     }
     
-    public IEventTrigger copy() {
+    public ScriptTrigger copy() {
         return copy(this);
+    }
+    
+    /**
+     * @since 1.0.0 [citation needed]
+     * @author Wagyourtail
+     */
+    public static enum TriggerType {
+        KEY_FALLING,
+        KEY_RISING,
+        KEY_BOTH,
+        EVENT
     }
     
     public static class SortByEnabled implements Comparator<ScriptTrigger> {
@@ -66,23 +75,35 @@ public class ScriptTrigger implements IEventTrigger {
         TriggerName,
         FileName
     }
-
-    @Override
+    
+    /**
+     * @since 1.2.7
+     * @return
+     */
     public TriggerType getTriggerType() {
         return triggerType;
     }
-
-    @Override
+    
+    /**
+     * @since 1.2.7
+     * @return
+     */
     public String getEvent() {
         return event;
     }
-
-    @Override
+    
+    /**
+     * @since 1.2.7
+     * @return
+     */
     public String getScriptFile() {
         return scriptFile;
     }
-
-    @Override
+    
+    /**
+     * @since 1.2.7
+     * @return
+     */
     public boolean getEnabled() {
         return enabled;
     }

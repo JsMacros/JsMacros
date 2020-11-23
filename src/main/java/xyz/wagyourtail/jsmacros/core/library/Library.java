@@ -14,4 +14,5 @@ import java.lang.annotation.*;
 public @interface Library {
     String value();
     String[] onlyAllow() default {};
+    boolean perExec() default false;
 }
