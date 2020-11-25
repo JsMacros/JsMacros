@@ -92,8 +92,8 @@ public class HTTPRequest {
      */
     public static class Response {
         private InputStream raw;
+        private String text;
         public Map<String, List<String>> headers;
-        public String text;
         public int responseCode;
         
         public Response(InputStream inputStream, int responseCode, Map<String, List<String>> headers) {

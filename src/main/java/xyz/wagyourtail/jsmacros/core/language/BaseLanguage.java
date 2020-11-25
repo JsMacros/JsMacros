@@ -1,9 +1,10 @@
 package xyz.wagyourtail.jsmacros.core.language;
 
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.config.ScriptThreadWrapper;
+import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -54,6 +55,10 @@ public abstract class BaseLanguage {
         
         t.start();
         return t;
+    }
+    
+    public Map<String, BaseLibrary> retrieveLibs(Object context) {
+        return runner.libraryRegistry.getLibraries(this, context, Thread.currentThread());
     }
     
     /**

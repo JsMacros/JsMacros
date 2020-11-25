@@ -14,6 +14,26 @@ import java.util.function.*;
  */
 public abstract class MethodWrapper<T, U, R> implements Consumer<T>, BiConsumer<T, U>, Function<T, R>, BiFunction<T, U, R>, Predicate<T>, BiPredicate<T, U>, Runnable, Supplier<R>, Comparator<T> {
     
+    @Override
+    public abstract void accept(T t);
+    
+    @Override
+    public abstract void accept(T t, U u);
+    
+    @Override
+    public abstract R apply(T t);
+    
+    @Override
+    public abstract R apply(T t, U u);
+    
+    @Override
+    public abstract boolean test(T t);
+    
+    @Override
+    public abstract boolean test(T t, U u);
+    
+    
+    
     /**
      * Makes {@link Function} and {@link BiFunction} work together.
      * Extended so it's called on every type not just those 2.

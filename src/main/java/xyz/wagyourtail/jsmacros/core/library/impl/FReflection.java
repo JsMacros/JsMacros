@@ -158,10 +158,10 @@ public class FReflection extends BaseLibrary {
     }
     
     /**
-     * Invoke a method on an object (can be {@code null}) with auto type coercion for numbers.
+     * Invoke a method on an object with auto type coercion for numbers.
      *
-     * @param m
-     * @param c
+     * @param m method
+     * @param c object (can be {@code null} for statics)
      * @param objects
      *
      * @return
@@ -192,13 +192,13 @@ public class FReflection extends BaseLibrary {
      *
      * @since 1.2.7
      */
-    public Object newInstance(Class<?> c, Object... objects) {
+    public <T> T newInstance(Class<T> c, Object... objects) {
         Class<?>[] params = new Class<?>[objects.length];
         for (int i = 0; i < objects.length; ++i) {
             params[i] = objects[i].getClass();
         }
         try {
-            Constructor<?> con = c.getConstructor(params);
+            Constructor<T> con = c.getConstructor(params);
             return con.newInstance(objects);
         } catch (Exception e) {
             for (Constructor<?> con : c.getConstructors()) {
@@ -209,7 +209,7 @@ public class FReflection extends BaseLibrary {
                     for (int i = 0; i < objects.length; ++i) {
                         tempObjects[i] = tryAutoCastNumber(params[i], objects[i]);
                     }
-                    return con.newInstance(tempObjects);
+                    return (T) con.newInstance(tempObjects);
                 } catch (Exception ignored) {
                 }
             }
@@ -262,7 +262,7 @@ public class FReflection extends BaseLibrary {
      * This class is a modification to
      * <a href="https://www.source-code.biz/snippets/java/12.htm">Christian d'Heureuse's JoinClassLoader</a>, under the
      * <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0 license</a> to change it from a Class array to a
-     * {@link Set}, to allow for modifications to the ClassLoaders contained in the classLoader.
+     * {@link Set}, to allow for modifications to the {@link ClassLoader ClassLoaders} contained in the classLoader.
      *
      * @author Wagyourtail, Christian d'Heureuse
      * @since 1.2.8

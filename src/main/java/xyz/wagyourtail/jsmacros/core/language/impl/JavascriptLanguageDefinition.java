@@ -22,7 +22,8 @@ public class JavascriptLanguageDefinition extends BaseLanguage {
         .allowHostClassLookup(s -> true)
         .allowAllAccess(true)
         .allowIO(true)
-        .allowExperimentalOptions(true);
+        .allowExperimentalOptions(true)
+        .option("js.commonjs-require", "true");
     
     public JavascriptLanguageDefinition(String extension, Core runner) {
         super(extension, runner);
@@ -40,7 +41,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage {
         
         if (globals != null) globals.forEach(binds::putMember);
         
-        runner.libraryRegistry.getLibraries(extension).forEach(binds::putMember);
+        retrieveLibs(con).forEach(binds::putMember);
         
         return con;
     }

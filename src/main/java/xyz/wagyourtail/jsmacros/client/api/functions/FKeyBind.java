@@ -86,7 +86,7 @@ public class FKeyBind extends BaseLibrary {
      * @param keyBind
      * @param keyState
      */
-    public void key(Key keyBind, boolean keyState) {
+    protected void key(Key keyBind, boolean keyState) {
         if (keyState) KeyBinding.onKeyPressed(keyBind);
         KeyBinding.setKeyPressed(keyBind, keyState);
     }
@@ -117,7 +117,7 @@ public class FKeyBind extends BaseLibrary {
      * @param keyBind
      * @param keyState
      */
-    public void key(KeyBinding keyBind, boolean keyState) {
+    protected void key(KeyBinding keyBind, boolean keyState) {
         if (keyState) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(keyBind.getBoundKeyTranslationKey()));
         keyBind.setPressed(keyState);
     }

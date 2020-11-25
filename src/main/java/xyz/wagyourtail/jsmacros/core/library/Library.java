@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.library;
 
+import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
+
 import java.lang.annotation.*;
 
 /**
@@ -13,6 +15,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Library {
     String value();
-    String[] onlyAllow() default {};
-    boolean perExec() default false;
+    Class<? extends BaseLanguage>[] languages() default {};
 }

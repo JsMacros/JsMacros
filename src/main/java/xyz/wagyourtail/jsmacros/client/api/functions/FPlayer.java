@@ -116,10 +116,9 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
-     * @see FPlayer#takeScreenshot(String, String, MethodWrapper)
-     * 
+     * @see #takeScreenshot(String, String, MethodWrapper)
+     *
      * @since 1.2.6
-     * 
      * @param folder
      * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
      */
@@ -132,7 +131,9 @@ public class FPlayer extends BaseLibrary {
     
     /**
      * Take a screenshot and save to a file.
-     * 
+     *
+     * {@code file} is the optional one, typescript doesn't like it not being the last one that's optional
+     *
      * @since 1.2.6
      * 
      * @param folder

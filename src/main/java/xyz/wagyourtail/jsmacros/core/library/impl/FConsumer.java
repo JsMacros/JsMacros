@@ -1,33 +1,25 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
-import xyz.wagyourtail.jsmacros.core.library.Library;
-import xyz.wagyourtail.jsmacros.core.library.IFConsumer;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
+import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
+import xyz.wagyourtail.jsmacros.core.library.IFConsumer;
+import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.core.library.PerExecLanguageLibrary;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Function;
 
-/**
- * Consumer implementation for wrapping consumers to match the language spec.
- * 
- * An instance of this class is passed to scripts as the {@code consumer} variable.
- * 
- * @since 1.2.5
- * 
- * @author Wagyourtail
- */
- @Library(value = "consumer", onlyAllow = ".js", perExec = true)
-public class FConsumer extends BaseLibrary implements IFConsumer<Function<Object[], Object>, Function<Object[], Object>, Function<Object[], Object>> {
+
+ @Library(value = "consumer", languages = JavascriptLanguageDefinition.class)
+public class FConsumer extends PerExecLanguageLibrary<IFConsumer> implements IFConsumer<Function<Object[], Object>, Function<Object[], Object>, Function<Object[], Object>> {
     
     private final LinkedBlockingQueue<Thread> tasks = new LinkedBlockingQueue<>();
-
-    /**
-     * @since 1.2.7
-     * @param c
-     * @custom.replaceParams c: (arg0: A, arg1?: B) => R
-     * @return a new {@link MethodWrapper MethodWrapper}
-     */
+    
+    public FConsumer(Class<? extends BaseLanguage> language, Object context, Thread thread) {
+        super(language, context, thread);
+    }
+    
     @Override
     public <A, B, R> MethodWrapper<A, B, R> autoWrap(Function<Object[], Object> c) {
         Thread th = Thread.currentThread();
@@ -96,12 +88,6 @@ public class FConsumer extends BaseLibrary implements IFConsumer<Function<Object
         };
     }
     
-    /**
-     * @since 1.2.7
-     * @param c
-     * @custom.replaceParams c: (arg0: A, arg1?: B) => R
-     * @return a new {@link MethodWrapper MethodWrapper}
-     */
     @Override
     public <A, B, R> MethodWrapper<A, B, R> autoWrapAsync(Function<Object[], Object> c) {
         Thread th = Thread.currentThread();
@@ -187,57 +173,21 @@ public class FConsumer extends BaseLibrary implements IFConsumer<Function<Object
         };
     }
     
-    /**
-     * Wraps a Consumer to match the guest language requirements.
-     * 
-     * @since 1.2.5
-     * @deprecated
-     * @param c
-     * @custom.replaceParams c: (arg0: A, arg1?: B) => R
-     * @return
-     */
     @Override
     public <A, B, R> MethodWrapper<A, B, R> toConsumer(Function<Object[], Object> c) {
         return autoWrap(c);
     }
     
-    /**
-     * Wraps a BiConsumer to match the guest language requirements.
-     * 
-     * @since 1.2.5
-     * @deprecated
-     * @param c
-     * @custom.replaceParams c: (arg0: A, arg1?: B) => R
-     * @return
-     */
     @Override
     public <A, B, R> MethodWrapper<A, B, R> toBiConsumer(Function<Object[], Object> c) {
         return autoWrap(c);
     }
     
-    /**
-     * Wraps a Consumer to match the guest language requirements, without halting the thread the consumer's called in.
-     * 
-     * @since 1.2.5
-     * @deprecated
-     * @param c
-     * @custom.replaceParams c: (arg0: A, arg1?: B) => R
-     * @return
-     */
     @Override
     public <A, B, R> MethodWrapper<A, B, R> toAsyncConsumer(Function<Object[], Object> c) {
         return autoWrapAsync(c);
     }
     
-    /**
-     * Wraps a BiConsumer to match the guest language requirements, without halting the thread the consumer's called in.
-     * 
-     * @since 1.2.5
-     * @deprecated
-     * @param c
-     * @custom.replaceParams c: (arg0: A, arg1?: B) => R
-     * @return
-     */
     @Override
     public <A, B, R> MethodWrapper<A, B, R> toAsyncBiConsumer(Function<Object[], Object> c) {
         return autoWrapAsync(c);
