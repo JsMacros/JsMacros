@@ -90,7 +90,7 @@ public abstract class BaseEventRegistry {
     }
     
     /**
-     * @see IEventTrigger
+     * @see ScriptTrigger
      * @since 1.1.2 [citation needed]
      * @return
      */
@@ -108,6 +108,7 @@ public abstract class BaseEventRegistry {
         if (clazz.isAnnotationPresent(Event.class)) {
             Event e = clazz.getAnnotation(Event.class);
             if (!e.oldName().equals("")) oldEvents.put(e.oldName(), e.value());
+            oldEvents.put(clazz.getSimpleName(), e.value());
             events.add(e.value());
         } else {
             throw new RuntimeException("Tried to add event that doesn't have proper event annotation, " + clazz.getSimpleName());
