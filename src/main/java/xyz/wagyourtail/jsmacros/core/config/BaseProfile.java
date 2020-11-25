@@ -158,8 +158,8 @@ public abstract class BaseProfile {
     }
     
     public void init(String defaultProfile) {
-        loadOrCreateProfile(defaultProfile);
         initRegistries();
+        loadOrCreateProfile(defaultProfile);
     }
     
     public abstract String getCurrentProfileName();
