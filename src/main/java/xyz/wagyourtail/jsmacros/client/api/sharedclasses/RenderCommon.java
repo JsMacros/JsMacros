@@ -140,18 +140,18 @@ public class RenderCommon {
     
         @Override
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+            RenderSystem.scaled(scale, scale, 1);
             RenderSystem.translated(x, y, 0);
             RenderSystem.rotatef(rotation, 0, 0, 1);
             RenderSystem.translated(-x, -y, 0);
-            RenderSystem.scaled(scale, scale, 1);
             if (item != null) {
                 ItemRenderer i = mc.getItemRenderer();
                 i.renderGuiItemIcon(item, x, y);
                 if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, x, y, ovText);
             }
-            RenderSystem.translated(-x, -y, 0);
-            RenderSystem.rotatef(-rotation, 0, 0, 1);
             RenderSystem.translated(x, y, 0);
+            RenderSystem.rotatef(-rotation, 0, 0, 1);
+            RenderSystem.translated(-x, -y, 0);
             RenderSystem.scaled(1 / scale, 1 / scale, 1);
         }
     
@@ -463,16 +463,16 @@ public class RenderCommon {
     
         @Override
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+            RenderSystem.scaled(scale, scale, 1);
             RenderSystem.translated(x, y, 0);
             RenderSystem.rotatef(rotation, 0, 0, 1);
             RenderSystem.translated(-x, -y, 0);
-            RenderSystem.scaled(scale, scale, 1);
             if (shadow) mc.textRenderer.drawWithShadow(matrices, text, (int)(x / scale), (int)(y / scale), color);
             else mc.textRenderer.draw(matrices, text, (int)(x / scale), (int)(y / scale), color);
-            RenderSystem.scaled(1 / scale, 1 / scale, 1);
             RenderSystem.translated(x, y, 0);
             RenderSystem.rotatef(-rotation, 0, 0, 1);
             RenderSystem.translated(-x, -y, 0);
+            RenderSystem.scaled(1 / scale, 1 / scale, 1);
         }
     
     }
