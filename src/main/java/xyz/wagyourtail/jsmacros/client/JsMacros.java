@@ -22,12 +22,12 @@ import java.io.File;
 public class JsMacros implements ClientModInitializer {
     public static final String MOD_ID = "jsmacros";
     public static BaseScreen prevScreen;
+    protected static final File configFolder = new File(FabricLoader.getInstance().getConfigDir().toFile(), "jsMacros");
+    
+    public static final Core core = Core.createInstance(EventRegistry::new, Profile::new, () -> new ConfigManager(configFolder, new File(configFolder, "Macros")));
     
     @Override
     public void onInitializeClient() {
-        final File configFolder = new File(FabricLoader.getInstance().getConfigDir().toFile(), "jsMacros");
-    
-        Core.createInstance(EventRegistry::new, Profile::new, () -> new ConfigManager(configFolder, new File(configFolder, "Macros")));
         
         prevScreen = new KeyMacrosScreen(null);
         
