@@ -11,7 +11,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
-import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 
@@ -345,7 +344,7 @@ public class RenderCommon {
             RenderSystem.translated(x1, y1, 0);
             RenderSystem.rotatef(rotation, 0, 0, 1);
             RenderSystem.translated(-x1, -y1, 0);
-            Draw2D.fill(matrices, x1, y1, x2, y2, color);
+            DrawableHelper.fill(matrices, x1, y1, x2, y2, color);
             RenderSystem.translated(x1, y1, 0);
             RenderSystem.rotatef(-rotation, 0, 0, 1);
             RenderSystem.translated(-x1, -y1, 0);

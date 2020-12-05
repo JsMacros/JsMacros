@@ -98,6 +98,14 @@ public class FWorld extends BaseLibrary {
     }
     
     /**
+    * @since 1.2.9
+     * @return a helper for the scoreboards provided to the client.
+     */
+    public ScoreboardsHelper getScoreboards() {
+        return new ScoreboardsHelper(mc.world.getScoreboard());
+    }
+    
+    /**
      * @return all entities in the render distance.
      */
     public List<EntityHelper> getEntities() {
