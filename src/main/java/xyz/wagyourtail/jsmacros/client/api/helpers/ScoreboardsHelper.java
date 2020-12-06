@@ -19,7 +19,7 @@ public class ScoreboardsHelper {
     
     /**
      * @param index
-     *
+     * @since 1.2.9
      * @return
      */
     public ScoreboardObjectiveHelper getObjectiveForTeamColorIndex(int index) {
@@ -32,7 +32,7 @@ public class ScoreboardsHelper {
     * {@code 0} is tablist, {@code 1} or {@code 3 + getPlayerTeamColorIndex()} is sidebar, {@code 2} should be tab list.
     * therefore max slot number is 18.
      * @param slot
-     *
+     * @since 1.2.9
      * @return
      */
     public ScoreboardObjectiveHelper getObjectiveSlot(int slot) {
@@ -43,7 +43,7 @@ public class ScoreboardsHelper {
     
     /**
      * @param entity
-     *
+     * @since 1.2.9
      * @return
      */
     public int getPlayerTeamColorIndex(PlayerEntityHelper entity) {
@@ -57,6 +57,7 @@ public class ScoreboardsHelper {
     }
     
     /**
+     * @since 1.2.9
      * @return the {@link ScoreboardObjectiveHelper} for the currently displayed sidebar scoreboard.
      */
     public ScoreboardObjectiveHelper getCurrentScoreboard() {

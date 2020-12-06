@@ -14,6 +14,7 @@ import net.minecraft.screen.slot.SlotActionType;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
+import xyz.wagyourtail.jsmacros.client.api.functions.FClient;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 
 import java.util.HashMap;
@@ -115,7 +116,8 @@ public class Inventory {
 
     /**
      * simulates a shift-click on a slot.
-     * 
+     * It should be safe to chain these without {@link FClient#waitTick()} at least for a bunch of the same item.
+     *
      * @param slot
      * @return
      */
@@ -164,7 +166,7 @@ public class Inventory {
     }
 
     /**
-     * does that double click on a slot thingy to move all of a type into/out-of a chest.
+     * Does that double click thingy to turn a incomplete stack pickup into a complete stack pickup if you have more in your inventory.
      * 
      * @param slot
      * @return

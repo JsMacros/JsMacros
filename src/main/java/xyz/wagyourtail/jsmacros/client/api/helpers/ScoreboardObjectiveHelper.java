@@ -6,6 +6,10 @@ import net.minecraft.scoreboard.ScoreboardPlayerScore;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * @author Wagyourtail
+ * @since 1.2.9
+ */
 public class ScoreboardObjectiveHelper {
     ScoreboardObjective o;
     
@@ -26,6 +30,7 @@ public class ScoreboardObjectiveHelper {
     
     /**
      * @return name of scoreboard
+     * @since 1.2.9
      */
     public String getName() {
         return o.getName();
@@ -33,6 +38,7 @@ public class ScoreboardObjectiveHelper {
     
     /**
      * @return name of scoreboard
+     * @since 1.2.9
      */
     public TextHelper getDisplayName() {
         return new TextHelper(o.getDisplayName());
