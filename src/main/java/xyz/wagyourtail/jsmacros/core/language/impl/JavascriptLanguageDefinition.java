@@ -11,6 +11,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -29,10 +30,11 @@ public class JavascriptLanguageDefinition extends BaseLanguage {
         super(extension, runner);
     }
     
-    private Context buildContext(Path currentDir, Map<String, Object> globals) {
+    private Context buildContext(Path currentDir, Map<String, Object> globals) throws IOException {
         if (runner.config.options.extraJsOptions == null)
             runner.config.options.extraJsOptions = new LinkedHashMap<>();
         build.options(runner.config.options.extraJsOptions);
+        build.option("js.commonjs-require-cwd", currentDir.toFile().getCanonicalPath());
         if (currentDir != null) build.currentWorkingDirectory(currentDir);
         final Context con = build.build();
         

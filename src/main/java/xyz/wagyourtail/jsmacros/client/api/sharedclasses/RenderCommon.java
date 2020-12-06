@@ -145,8 +145,8 @@ public class RenderCommon {
             RenderSystem.translated(-x, -y, 0);
             if (item != null) {
                 ItemRenderer i = mc.getItemRenderer();
-                i.renderGuiItemIcon(item, x, y);
-                if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, x, y, ovText);
+                i.renderGuiItemIcon(item,(int) (x / scale), (int) (y / scale));
+                if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, (int) (x / scale), (int) (y / scale), ovText);
             }
             RenderSystem.translated(x, y, 0);
             RenderSystem.rotatef(-rotation, 0, 0, 1);
