@@ -6,6 +6,9 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.Team;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
 * @since 1.2.9
  * @author Wagyourtail
@@ -50,6 +53,37 @@ public class ScoreboardsHelper {
         return getPlayerTeamColorIndex(entity.getRaw());
     }
     
+    /**
+     * @since 1.3.0
+     * @return
+     */
+    public List<TeamHelper> getTeams() {
+        return s.getTeams().stream().map(TeamHelper::new).collect(Collectors.toList());
+    }
+    
+    /**
+     * @param p
+     * @since 1.3.0
+     * @return
+     */
+    public TeamHelper getPlayerTeam(PlayerEntityHelper p) {
+        return new TeamHelper(getPlayerTeam(p.getRaw()));
+    }
+    
+    /**
+     * @param p
+     * @since 1.3.0
+     * @return
+     */
+    protected Team getPlayerTeam(PlayerEntity p) {
+        return s.getPlayerTeam(p.getEntityName());
+    }
+    
+    /**
+     * @param entity
+     * @since 1.2.9
+     * @return
+     */
     protected int getPlayerTeamColorIndex(PlayerEntity entity) {
         Team t = s.getPlayerTeam(entity.getEntityName());
         if (t == null) return -1;
