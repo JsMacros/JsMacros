@@ -103,7 +103,7 @@ public class FKeyBind extends BaseLibrary {
      */
     public void keyBind(String keyBind, boolean keyState) {
         for (KeyBinding key : mc.options.keysAll) {
-            if (key.getBoundKeyTranslationKey().equals(keyBind)) {
+            if (key.getTranslationKey().equals(keyBind)) {
                 if (keyState) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(key.getBoundKeyTranslationKey()));
                 key.setPressed(keyState);
                 return;
