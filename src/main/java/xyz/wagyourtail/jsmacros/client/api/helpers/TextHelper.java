@@ -7,15 +7,14 @@ import net.minecraft.text.Text;
  * @author Wagyourtail
  * @since 1.0.8
  */
-public class TextHelper {
-    Text t;
+public class TextHelper extends BaseHelper<Text> {
     
     public TextHelper(String json) {
-        t = Text.Serializer.fromJson(json);
+        super(Text.Serializer.fromJson(json));
     }
     
     public TextHelper(Text t) {
-        this.t = t;
+        super(t);
     }
     
     /**
@@ -25,7 +24,7 @@ public class TextHelper {
      * @return
      */
     public TextHelper replaceFromJson(String json) {
-        t = Text.Serializer.fromJson(json);
+        base = Text.Serializer.fromJson(json);
         return this;
     }
     
@@ -36,7 +35,7 @@ public class TextHelper {
      * @return
      */
     public TextHelper replaceFromString(String content) {
-        t = new LiteralText(content);
+        base = new LiteralText(content);
         return this;
     }
     
@@ -45,7 +44,7 @@ public class TextHelper {
      * @return JSON data representation.
      */
     public String getJson() {
-        return Text.Serializer.toJson(t);
+        return Text.Serializer.toJson(base);
     }
 
     /**
@@ -53,7 +52,7 @@ public class TextHelper {
      * @return the text content.
      */
     public String getString() {
-        return t.getString();
+        return base.getString();
     }
     
     
@@ -71,10 +70,6 @@ public class TextHelper {
      * @return String representation of text helper.
      */
     public String toString() {
-        return String.format("TextHelper:{\"text\": \"%s\"}", t.getString());
-    }
-    
-    public Text getRaw() {
-        return t;
+        return String.format("TextHelper:{\"text\": \"%s\"}", base.getString());
     }
 }

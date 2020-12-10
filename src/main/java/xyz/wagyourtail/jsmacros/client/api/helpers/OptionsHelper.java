@@ -21,20 +21,20 @@ import java.util.stream.Collectors;
  * @author Wagyourtail
  * @since 1.1.7
  */
-public class OptionsHelper {
-    private GameOptions options;
+public class OptionsHelper extends BaseHelper<GameOptions> {
+    
     private MinecraftClient mc = MinecraftClient.getInstance();
     private ResourcePackManager rpm = mc.getResourcePackManager();
     
     public OptionsHelper(GameOptions options) {
-        this.options = options;
+        super(options);
     }
     /**
      * @since 1.1.7
      * @return 0: off, 2: fancy
      */
     public int getCloudMode() {
-        switch (options.getCloudRenderMode()) {
+        switch (base.getCloudRenderMode()) {
             case FANCY:
                 return 2;
             case FAST:
@@ -51,13 +51,13 @@ public class OptionsHelper {
     public OptionsHelper setCloudMode(int mode) {
         switch(mode) {
             case 2:
-                options.cloudRenderMode = CloudRenderMode.FANCY;
+                base.cloudRenderMode = CloudRenderMode.FANCY;
                 return this;
             case 1:
-                options.cloudRenderMode = CloudRenderMode.FAST;
+                base.cloudRenderMode = CloudRenderMode.FAST;
                 return this;
             default:
-                options.cloudRenderMode = CloudRenderMode.OFF;
+                base.cloudRenderMode = CloudRenderMode.OFF;
                 return this;
         }
     }
@@ -66,7 +66,7 @@ public class OptionsHelper {
      * @return
      */
     public int getGraphicsMode() {
-        switch (options.graphicsMode) {
+        switch (base.graphicsMode) {
             case FABULOUS:
                 return 2;
             case FANCY:
@@ -83,13 +83,13 @@ public class OptionsHelper {
     public OptionsHelper setGraphicsMode(int mode) {
         switch(mode) {
             case 2:
-                options.graphicsMode = GraphicsMode.FABULOUS;
+                base.graphicsMode = GraphicsMode.FABULOUS;
                 return this;
             case 1:
-                options.graphicsMode = GraphicsMode.FANCY;
+                base.graphicsMode = GraphicsMode.FANCY;
                 return this;
             default:
-                options.graphicsMode = GraphicsMode.FAST;
+                base.graphicsMode = GraphicsMode.FAST;
                 return this;
         }
     }
@@ -118,20 +118,20 @@ public class OptionsHelper {
      */
     public OptionsHelper setEnabledResourcePacks(String[] enabled) {
         Collection<String> en = new ArrayList<String>(Arrays.asList(enabled).stream().distinct().collect(Collectors.toList()));
-        List<String> currentRP = ImmutableList.copyOf(options.resourcePacks);
+        List<String> currentRP = ImmutableList.copyOf(base.resourcePacks);
         rpm.setEnabledProfiles(en);
-        options.resourcePacks.clear();
-        options.incompatibleResourcePacks.clear();
+        base.resourcePacks.clear();
+        base.incompatibleResourcePacks.clear();
         for (ResourcePackProfile p : rpm.getEnabledProfiles()) {
             if (!p.isPinned()) {
-                options.resourcePacks.add(p.getName());
+                base.resourcePacks.add(p.getName());
                 if (!p.getCompatibility().isCompatible()) {
-                    options.incompatibleResourcePacks.add(p.getName());
+                    base.incompatibleResourcePacks.add(p.getName());
                 }
             }
         }
-        options.write();
-        List<String> newRP = ImmutableList.copyOf(options.resourcePacks);
+        base.write();
+        List<String> newRP = ImmutableList.copyOf(base.resourcePacks);
         if (!currentRP.equals(newRP)) {
             mc.reloadResources();
         }
@@ -143,7 +143,7 @@ public class OptionsHelper {
      * @return
      */
     public boolean isRightHanded() {
-        return options.mainArm == Arm.RIGHT;
+        return base.mainArm == Arm.RIGHT;
     }
     
     /**
@@ -152,9 +152,9 @@ public class OptionsHelper {
      */
     public void setRightHanded(boolean val) {
         if (val) {
-            options.mainArm = Arm.RIGHT;
+            base.mainArm = Arm.RIGHT;
         } else {
-            options.mainArm = Arm.LEFT;
+            base.mainArm = Arm.LEFT;
         }
     }
     
@@ -163,7 +163,7 @@ public class OptionsHelper {
      * @return
      */
     public double getFov() {
-        return options.fov;
+        return base.fov;
     }
     
     /**
@@ -172,7 +172,7 @@ public class OptionsHelper {
      * @return
      */
     public OptionsHelper setFov(double fov) {
-        options.fov = fov;
+        base.fov = fov;
         return this;
     }
     
@@ -181,7 +181,7 @@ public class OptionsHelper {
      * @return
      */
     public int getRenderDistance() {
-        return options.viewDistance;
+        return base.viewDistance;
     }
     
     /**
@@ -189,7 +189,7 @@ public class OptionsHelper {
      * @param d
      */
     public void setRenderDistance(int d) {
-        options.viewDistance = d;
+        base.viewDistance = d;
     }
     
     /**
@@ -234,9 +234,5 @@ public class OptionsHelper {
     public void setSize(int w, int h) {
         Window win = mc.getWindow();
         GLFW.glfwSetWindowSize(win.getHandle(), w, h);
-    }
-    
-    public GameOptions getRaw() {
-        return options;
     }
 }

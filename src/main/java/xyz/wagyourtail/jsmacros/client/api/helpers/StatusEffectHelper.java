@@ -7,11 +7,10 @@ import net.minecraft.util.registry.Registry;
  * @author Wagyourtail
  * @since 1.2.4
  */
-public class StatusEffectHelper {
-    private StatusEffectInstance s;
+public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     
     public StatusEffectHelper(StatusEffectInstance s) {
-        this.s = s;
+        super(s);
     }
     
     /**
@@ -19,7 +18,7 @@ public class StatusEffectHelper {
      * @return
      */
     public String getId() {
-        return Registry.STATUS_EFFECT.getId(s.getEffectType()).toString();
+        return Registry.STATUS_EFFECT.getId(base.getEffectType()).toString();
     }
     
     /**
@@ -27,7 +26,7 @@ public class StatusEffectHelper {
      * @return
      */
     public int getStrength() {
-        return s.getAmplifier();
+        return base.getAmplifier();
     }
     
     /**
@@ -35,10 +34,6 @@ public class StatusEffectHelper {
      * @return
      */
     public int getTime() {
-        return s.getDuration();
-    }
-    
-    public StatusEffectInstance getRaw() {
-        return s;
+        return base.getDuration();
     }
 }

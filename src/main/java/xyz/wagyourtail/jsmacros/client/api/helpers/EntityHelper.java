@@ -16,18 +16,17 @@ import java.util.stream.Collectors;
  * @author Wagyourtail
  *
  */
-public class EntityHelper {
-    protected Entity e;
+public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     
-    public EntityHelper(Entity e) {
-        this.e = e;
+    public EntityHelper(T e) {
+        super(e);
     }
     
     /**
      * @return entity position.
      */
     public PositionCommon.Pos3D getPos() {
-        return new PositionCommon.Pos3D(e.getX(), e.getY(), e.getZ());
+        return new PositionCommon.Pos3D(base.getX(), base.getY(), base.getZ());
     }
     
     /**
@@ -35,7 +34,7 @@ public class EntityHelper {
      * @return the {@code x} value of the entity.
      */
     public double getX() {
-        return e.getX();
+        return base.getX();
     }
 
     /**
@@ -43,7 +42,7 @@ public class EntityHelper {
      * @return the {@code y} value of the entity.
      */
     public double getY() {
-        return e.getY();
+        return base.getY();
     }
     
     /**
@@ -51,7 +50,7 @@ public class EntityHelper {
      * @return the {@code z} value of the entity.
      */
     public double getZ() {
-        return e.getZ();
+        return base.getZ();
     }
 
     /**
@@ -59,7 +58,7 @@ public class EntityHelper {
      * @return the current eye height offset for the entitye.
      */
     public double getEyeHeight() {
-        return e.getEyeHeight(e.getPose());
+        return base.getEyeHeight(base.getPose());
     }
 
     /**
@@ -67,7 +66,7 @@ public class EntityHelper {
      * @return the {@code pitch} value of the entity.
      */
     public float getPitch() {
-        return e.pitch;
+        return base.pitch;
     }
     
     /**
@@ -75,21 +74,21 @@ public class EntityHelper {
      * @return the {@code yaw} value of the entity.
      */
     public float getYaw() {
-        return MathHelper.fwrapDegrees(e.yaw);
+        return MathHelper.fwrapDegrees(base.yaw);
     }
     
     /**
      * @return the name of the entity.
      */
     public String getName() {
-        return e.getName().getString();
+        return base.getName().getString();
     }
     
     /**
      * @return the type of the entity.
      */
     public String getType() {
-        return EntityType.getId(e.getType()).toString();
+        return EntityType.getId(base.getType()).toString();
     }
     
     /**
@@ -97,7 +96,7 @@ public class EntityHelper {
      * @return if the entity has the glowing effect.
      */
     public boolean isGlowing() {
-        return e.isGlowing();
+        return base.isGlowing();
     }
     
     /**
@@ -105,7 +104,7 @@ public class EntityHelper {
      * @return if the entity is in lava.
      */
     public boolean isInLava() {
-        return e.isInLava();
+        return base.isInLava();
     }
     
     /**
@@ -113,7 +112,7 @@ public class EntityHelper {
      * @return if the entity is on fire.
      */
     public boolean isOnFire() {
-        return e.isOnFire();
+        return base.isOnFire();
     }
     
     /**
@@ -121,7 +120,7 @@ public class EntityHelper {
      * @return the vehicle of the entity.
      */
     public EntityHelper getVehicle() {
-        Entity parent = e.getVehicle();
+        Entity parent = base.getVehicle();
         if (parent != null) return new EntityHelper(parent);
         return null;
     }
@@ -131,7 +130,7 @@ public class EntityHelper {
      * @return the entity passengers.
      */
     public List<EntityHelper> getPassengers() {
-        List<EntityHelper> entities = e.getPassengerList().stream().map((e) -> new EntityHelper(e)).collect(Collectors.toList());
+        List<EntityHelper> entities = base.getPassengerList().stream().map((e) -> new EntityHelper(e)).collect(Collectors.toList());
         return entities.size() == 0 ? null : entities;
         
     }
@@ -141,7 +140,7 @@ public class EntityHelper {
      * @return
      */
     public String getNBT() {
-        return e.toTag(new CompoundTag()).toString();
+        return base.toTag(new CompoundTag()).toString();
     }
     
     /**
@@ -151,7 +150,7 @@ public class EntityHelper {
      * @return
      */
     public EntityHelper setGlowing(boolean val) {
-        e.setGlowing(val);
+        base.setGlowing(val);
         return this;
     }
     
@@ -161,11 +160,7 @@ public class EntityHelper {
      * @return
      */
     public boolean isAlive() {
-        return e.isAlive();
-    }
-    
-    public Entity getRaw() {
-        return e;
+        return base.isAlive();
     }
     
     public String toString() {
@@ -174,8 +169,8 @@ public class EntityHelper {
     
     public static EntityHelper create(Entity e) {
         if (e instanceof ClientPlayerEntity) return new ClientPlayerEntityHelper((ClientPlayerEntity) e);
-        if (e instanceof PlayerEntity) return new PlayerEntityHelper((PlayerEntity) e);
-        if (e instanceof LivingEntity) return new LivingEntityHelper((LivingEntity) e);
-        return new EntityHelper(e);
+        if (e instanceof PlayerEntity) return new PlayerEntityHelper<>((PlayerEntity) e);
+        if (e instanceof LivingEntity) return new LivingEntityHelper<>((LivingEntity) e);
+        return new EntityHelper<>(e);
     }
 }

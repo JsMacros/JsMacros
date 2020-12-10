@@ -9,9 +9,9 @@ import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
  * @see xyz.wagyourtail.jsmacros.client.api.helpers.PlayerEntityHelper
  * @since 1.0.3
  */
-public class ClientPlayerEntityHelper extends PlayerEntityHelper {
+public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends PlayerEntityHelper<T> {
 
-    public ClientPlayerEntityHelper(ClientPlayerEntity e) {
+    public ClientPlayerEntityHelper(T e) {
         super(e);
     }
 
@@ -23,12 +23,12 @@ public class ClientPlayerEntityHelper extends PlayerEntityHelper {
      */
     public ClientPlayerEntityHelper lookAt(float yaw, float pitch) {
         pitch = MathHelper.clamp(pitch, -90.0F, 90.0F);
-        e.prevPitch = e.pitch;
-        e.prevYaw = e.yaw;
-        e.pitch = pitch;
-        e.yaw = MathHelper.fwrapDegrees(yaw);
-        if (e.getVehicle() != null) {
-            e.getVehicle().onPassengerLookAround(e);
+        base.prevPitch = base.pitch;
+        base.prevYaw = base.yaw;
+        base.pitch = pitch;
+        base.yaw = MathHelper.fwrapDegrees(yaw);
+        if (base.getVehicle() != null) {
+            base.getVehicle().onPassengerLookAround(base);
         }
         return this;
     }
@@ -43,7 +43,7 @@ public class ClientPlayerEntityHelper extends PlayerEntityHelper {
      * @since 1.2.8
      */
     public ClientPlayerEntityHelper lookAt(double x, double y, double z) {
-        PositionCommon.Vec3D vec = new PositionCommon.Vec3D(e.getX(), e.getY() + e.getEyeHeight(e.getPose()), e.getZ(), x, y, z);
+        PositionCommon.Vec3D vec = new PositionCommon.Vec3D(base.getX(), base.getY() + base.getEyeHeight(base.getPose()), base.getZ(), x, y, z);
         lookAt(vec.getYaw(), vec.getPitch());
         return this;
     }
@@ -53,13 +53,9 @@ public class ClientPlayerEntityHelper extends PlayerEntityHelper {
      * @since 1.1.2
      */
     public int getFoodLevel() {
-        return ((ClientPlayerEntity) e).getHungerManager().getFoodLevel();
+        return base.getHungerManager().getFoodLevel();
     }
-
-    public ClientPlayerEntity getRaw() {
-        return (ClientPlayerEntity) e;
-    }
-
+    
     public String toString() {
         return "Client" + super.toString();
     }

@@ -6,11 +6,10 @@ import net.minecraft.entity.player.PlayerAbilities;
  * @author Wagyourtail
  * @since 1.0.3
  */
-public class PlayerAbilitiesHelper {
-	protected PlayerAbilities a;
+public class PlayerAbilitiesHelper extends BaseHelper<PlayerAbilities> {
 	
 	public PlayerAbilitiesHelper(PlayerAbilities a) {
-		this.a = a;
+		super(a);
 	}
 	
 	/**
@@ -18,7 +17,7 @@ public class PlayerAbilitiesHelper {
 	 * @return whether the player can be damaged.
 	 */
 	public boolean getInvulnerable() {
-		return a.invulnerable;
+		return base.invulnerable;
 	}
 	
 	/**
@@ -26,7 +25,7 @@ public class PlayerAbilitiesHelper {
 	 * @return if the player is currently flying.
 	 */
 	public boolean getFlying() {
-		return a.flying;
+		return base.flying;
 	}
 	
 	/**
@@ -34,7 +33,7 @@ public class PlayerAbilitiesHelper {
 	 * @return if the player is allowed to fly.
 	 */
 	public boolean getAllowFlying() {
-		return a.allowFlying;
+		return base.allowFlying;
 	}
 	
 	/**
@@ -42,7 +41,7 @@ public class PlayerAbilitiesHelper {
 	 * @return if the player is in creative.
 	 */
 	public boolean getCreativeMode() {
-		return a.creativeMode;
+		return base.creativeMode;
 	}
 	
 	/**
@@ -53,7 +52,7 @@ public class PlayerAbilitiesHelper {
 	 * @return
 	 */
 	public PlayerAbilitiesHelper setFlying(boolean b) {
-		a.flying = b;
+		base.flying = b;
 		return this;
 	}
 	
@@ -65,7 +64,7 @@ public class PlayerAbilitiesHelper {
 	 * @return
 	 */
 	public PlayerAbilitiesHelper setAllowFlying(boolean b) {
-		a.allowFlying = b;
+		base.allowFlying = b;
 		return this;
 	}
 	
@@ -74,7 +73,7 @@ public class PlayerAbilitiesHelper {
 	 * @return the player fly speed multiplier.
 	 */
 	public float getFlySpeed() {
-		return a.getFlySpeed();
+		return base.getFlySpeed();
 	}
 	
 	/**
@@ -85,11 +84,7 @@ public class PlayerAbilitiesHelper {
 	 * @return
 	 */
 	public PlayerAbilitiesHelper setFlySpeed(float flySpeed) {
-		a.setFlySpeed(flySpeed);
+		base.setFlySpeed(flySpeed);
 		return this;
-	}
-	
-	public PlayerAbilities getRaw() {
-		return a;
 	}
 }

@@ -9,11 +9,10 @@ import net.minecraft.text.LiteralText;
  * @author Wagyourtail
  * @since 1.0.5
  */
-public class ButtonWidgetHelper implements Drawable {
-    protected final AbstractButtonWidget btn;
+public class ButtonWidgetHelper<T extends AbstractButtonWidget> extends BaseHelper<T> implements Drawable {
     
-    public ButtonWidgetHelper(AbstractButtonWidget btn) {
-        this.btn = btn;
+    public ButtonWidgetHelper(T btn) {
+        super(btn);
     }
     
     /**
@@ -21,7 +20,7 @@ public class ButtonWidgetHelper implements Drawable {
      * @return the {@code x} coordinate of the button.
      */
     public int getX() {
-        return btn.x;
+        return base.x;
     }
 
     /**
@@ -29,7 +28,7 @@ public class ButtonWidgetHelper implements Drawable {
      * @return the {@code y} coordinate of the button.
      */
     public int getY() {
-        return btn.y;
+        return base.y;
     }
     
     /**
@@ -42,8 +41,8 @@ public class ButtonWidgetHelper implements Drawable {
      * @return
      */
     public ButtonWidgetHelper setPos(int x, int y) {
-        btn.x = x;
-        btn.y = y;
+        base.x = x;
+        base.y = y;
         return this;
     }
     
@@ -53,7 +52,7 @@ public class ButtonWidgetHelper implements Drawable {
      * @return
      */
     public int getWidth() {
-        return btn.getWidth();
+        return base.getWidth();
     }
     
     /**
@@ -65,7 +64,7 @@ public class ButtonWidgetHelper implements Drawable {
      * @return
      */
     public ButtonWidgetHelper setText(String message) {
-        btn.setMessage(new LiteralText(message));
+        base.setMessage(new LiteralText(message));
         return this;
     }
     
@@ -75,7 +74,7 @@ public class ButtonWidgetHelper implements Drawable {
      * @return current button text.
      */
     public String getText() {
-        return btn.getMessage().getString();
+        return base.getMessage().getString();
     }
     
     /**
@@ -84,7 +83,7 @@ public class ButtonWidgetHelper implements Drawable {
      * @return button clickable state.
      */
     public boolean getActive() {
-        return btn.active;
+        return base.active;
     }
     
     /**
@@ -96,7 +95,7 @@ public class ButtonWidgetHelper implements Drawable {
      * @return
      */
     public ButtonWidgetHelper setActive(boolean t) {
-        btn.active = t;
+        base.active = t;
         return this;
     }
     
@@ -109,17 +108,13 @@ public class ButtonWidgetHelper implements Drawable {
      * @return
      */
     public ButtonWidgetHelper setWidth(int width) {
-        btn.setWidth(width);
+        base.setWidth(width);
         return this;
-    }
-    
-    public AbstractButtonWidget getRaw() {
-        return btn;
     }
     
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        btn.render(matrices, mouseX, mouseY, delta);
+        base.render(matrices, mouseX, mouseY, delta);
     }
     
 }

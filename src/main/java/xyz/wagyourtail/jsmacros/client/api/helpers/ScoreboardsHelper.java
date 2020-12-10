@@ -13,11 +13,10 @@ import java.util.stream.Collectors;
 * @since 1.2.9
  * @author Wagyourtail
  */
-public class ScoreboardsHelper {
-    private Scoreboard s;
+public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
     
     public ScoreboardsHelper(Scoreboard board) {
-        s = board;
+        super(board);
     }
     
     /**
@@ -27,7 +26,7 @@ public class ScoreboardsHelper {
      */
     public ScoreboardObjectiveHelper getObjectiveForTeamColorIndex(int index) {
         ScoreboardObjective obj = null;
-        if (index >= 0) obj = s.getObjectiveForSlot(index + 3);
+        if (index >= 0) obj = base.getObjectiveForSlot(index + 3);
         return obj == null ? null : new ScoreboardObjectiveHelper(obj);
     }
     
@@ -40,7 +39,7 @@ public class ScoreboardsHelper {
      */
     public ScoreboardObjectiveHelper getObjectiveSlot(int slot) {
         ScoreboardObjective obj = null;
-        if (slot >= 0) obj = s.getObjectiveForSlot(slot);
+        if (slot >= 0) obj = base.getObjectiveForSlot(slot);
         return obj == null ? null : new ScoreboardObjectiveHelper(obj);
     }
     
@@ -49,7 +48,7 @@ public class ScoreboardsHelper {
      * @since 1.2.9
      * @return
      */
-    public int getPlayerTeamColorIndex(PlayerEntityHelper entity) {
+    public int getPlayerTeamColorIndex(PlayerEntityHelper<PlayerEntity> entity) {
         return getPlayerTeamColorIndex(entity.getRaw());
     }
     
@@ -58,7 +57,7 @@ public class ScoreboardsHelper {
      * @return
      */
     public List<TeamHelper> getTeams() {
-        return s.getTeams().stream().map(TeamHelper::new).collect(Collectors.toList());
+        return base.getTeams().stream().map(TeamHelper::new).collect(Collectors.toList());
     }
     
     /**
@@ -66,7 +65,7 @@ public class ScoreboardsHelper {
      * @since 1.3.0
      * @return
      */
-    public TeamHelper getPlayerTeam(PlayerEntityHelper p) {
+    public TeamHelper getPlayerTeam(PlayerEntityHelper<PlayerEntity> p) {
         return new TeamHelper(getPlayerTeam(p.getRaw()));
     }
     
@@ -76,7 +75,7 @@ public class ScoreboardsHelper {
      * @return
      */
     protected Team getPlayerTeam(PlayerEntity p) {
-        return s.getPlayerTeam(p.getEntityName());
+        return base.getPlayerTeam(p.getEntityName());
     }
     
     /**
@@ -85,7 +84,7 @@ public class ScoreboardsHelper {
      * @return
      */
     protected int getPlayerTeamColorIndex(PlayerEntity entity) {
-        Team t = s.getPlayerTeam(entity.getEntityName());
+        Team t = base.getPlayerTeam(entity.getEntityName());
         if (t == null) return -1;
         return t.getColor().getColorIndex();
     }
@@ -100,9 +99,5 @@ public class ScoreboardsHelper {
         ScoreboardObjectiveHelper h = getObjectiveForTeamColorIndex(color);
         if (h == null) h = getObjectiveSlot(1);
         return h;
-    }
-    
-    public Scoreboard getRaw() {
-        return s;
     }
 }

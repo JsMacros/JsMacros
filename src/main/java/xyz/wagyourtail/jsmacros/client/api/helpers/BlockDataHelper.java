@@ -16,16 +16,15 @@ import java.util.Map.Entry;
 /**
  * @author Wagyourtail
  */
-public class BlockDataHelper {
+public class BlockDataHelper extends BaseHelper<BlockState> {
     private Block b;
-    private BlockState bs;
     private BlockPos bp;
     private BlockEntity e;
     
     public BlockDataHelper(BlockState b, BlockEntity e, BlockPos bp) {
+        super(b);
         this.b = b.getBlock();
         this.bp = bp;
-        this.bs = b;
         this.e = e;
     }
     
@@ -90,7 +89,7 @@ public class BlockDataHelper {
      */
     public Map<String, String> getBlockState() {
         Map<String, String> map = new HashMap<>();
-        for (Entry<Property<?>, Comparable<?>> e : bs.getEntries().entrySet()) {
+        for (Entry<Property<?>, Comparable<?>> e : base.getEntries().entrySet()) {
             map.put(e.getKey().getName(), Util.getValueAsString(e.getKey(), e.getValue()));
         }
         return map;
@@ -111,7 +110,7 @@ public class BlockDataHelper {
     
     
     public BlockState getRawBlockState() {
-        return bs;
+        return base;
     }
     
     public BlockEntity getRawBlockEntity() {

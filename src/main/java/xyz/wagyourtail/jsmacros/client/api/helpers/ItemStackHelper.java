@@ -9,11 +9,10 @@ import net.minecraft.util.registry.Registry;
  * @author Wagyourtail
  *
  */
-public class ItemStackHelper {
-    private ItemStack i;
+public class ItemStackHelper extends BaseHelper<ItemStack> {
     
     public ItemStackHelper(ItemStack i) {
-        this.i = i;
+        super(i);
     }
     
     /**
@@ -27,7 +26,7 @@ public class ItemStackHelper {
      * @return
      */
     public ItemStackHelper setDamage(int damage) {
-        i.setDamage(damage);
+        base.setDamage(damage);
         return this;
     }
     
@@ -36,7 +35,7 @@ public class ItemStackHelper {
      * @return
      */
     public boolean isDamageable() {
-        return i.isDamageable();
+        return base.isDamageable();
     }
     
     /**
@@ -44,21 +43,21 @@ public class ItemStackHelper {
      * @return
      */
     public boolean isEnchantable() {
-        return i.isEnchantable();
+        return base.isEnchantable();
     }
     
     /**
      * @return
      */
     public int getDamage() {
-        return i.getDamage();
+        return base.getDamage();
     }
     
     /**
      * @return
      */
     public int getMaxDamage() {
-        return i.getMaxDamage();
+        return base.getMaxDamage();
     }
     
     /**
@@ -66,28 +65,28 @@ public class ItemStackHelper {
      * @return
      */
     public String getDefaultName() {
-        return i.getItem().getName().getString();
+        return base.getItem().getName().getString();
     }
     
     /**
      * @return
      */
     public String getName() {
-        return i.getName().getString();
+        return base.getName().getString();
     }
     
     /**
      * @return
      */
     public int getCount() {
-        return i.getCount();
+        return base.getCount();
     }
     
     /**
      * @return
      */
     public int getMaxCount() {
-        return i.getMaxCount();
+        return base.getMaxCount();
     }
     
     /**
@@ -95,7 +94,7 @@ public class ItemStackHelper {
      * @return
      */
     public String getNBT() {
-        CompoundTag tag = i.getTag();
+        CompoundTag tag = base.getTag();
         if (tag != null) return tag.toString();
         else return "{}";
     }
@@ -105,7 +104,7 @@ public class ItemStackHelper {
      * @return
      */
     public String getCreativeTab() {
-        ItemGroup g = i.getItem().getGroup();
+        ItemGroup g = base.getItem().getGroup();
         if (g != null)
             return g.getName();
         else
@@ -116,22 +115,18 @@ public class ItemStackHelper {
      * @return
      */
     public String getItemID() {
-        return Registry.ITEM.getId(i.getItem()).toString();
+        return Registry.ITEM.getId(base.getItem()).toString();
     }
     
     /**
      * @return
      */
     public boolean isEmpty() {
-        return i.isEmpty();
-    }
-    
-    public ItemStack getRaw() {
-        return i;
+        return base.isEmpty();
     }
     
     public String toString() {
-        return String.format("ItemStack:{\"id\":\"%s\", \"damage\": %d, \"count\": %d}", this.getItemID(), i.getDamage(), i.getCount());
+        return String.format("ItemStack:{\"id\":\"%s\", \"damage\": %d, \"count\": %d}", this.getItemID(), base.getDamage(), base.getCount());
     }
     
     /**
@@ -140,7 +135,7 @@ public class ItemStackHelper {
      * @return
      */
     public boolean equals(ItemStackHelper ish) {
-        return i.equals(ish.getRaw());
+        return base.equals(ish.getRaw());
     }
     
     /**
@@ -149,7 +144,7 @@ public class ItemStackHelper {
      * @return
      */
     public boolean equals(ItemStack is) {
-        return i.equals(is);
+        return base.equals(is);
     }
     
     /**
@@ -158,7 +153,7 @@ public class ItemStackHelper {
      * @return
      */
     public boolean isItemEqual(ItemStackHelper ish) {
-        return i.isItemEqual(ish.getRaw()) && i.getDamage() == ish.getRaw().getDamage();
+        return base.isItemEqual(ish.getRaw()) && base.getDamage() == ish.getRaw().getDamage();
     } 
     
     /**
@@ -167,7 +162,7 @@ public class ItemStackHelper {
      * @return
      */
     public boolean isItemEqual(ItemStack is) {
-        return i.isItemEqual(is) && i.getDamage() == is.getDamage();
+        return base.isItemEqual(is) && base.getDamage() == is.getDamage();
     }
     
     /**
@@ -176,7 +171,7 @@ public class ItemStackHelper {
      * @return
      */
     public boolean isItemEqualIgnoreDamage(ItemStackHelper ish) {
-        return i.isItemEqualIgnoreDamage(ish.getRaw());
+        return base.isItemEqualIgnoreDamage(ish.getRaw());
     }
     
     /**
@@ -185,7 +180,7 @@ public class ItemStackHelper {
      * @return
      */
     public boolean isItemEqualIgnoreDamage(ItemStack is) {
-        return i.isItemEqualIgnoreDamage(is);
+        return base.isItemEqualIgnoreDamage(is);
     }
     
     /**
@@ -194,7 +189,7 @@ public class ItemStackHelper {
      * @return
      */
     public boolean isNBTEqual(ItemStackHelper ish) {
-        return ItemStack.areTagsEqual(i, ish.getRaw());
+        return ItemStack.areTagsEqual(base, ish.getRaw());
     }
     
     /**
@@ -203,7 +198,7 @@ public class ItemStackHelper {
      * @return
      */
     public boolean isNBTEqual(ItemStack is) {
-        return ItemStack.areTagsEqual(i, is);
+        return ItemStack.areTagsEqual(base, is);
     }
     
     /**
@@ -211,6 +206,6 @@ public class ItemStackHelper {
      * @return
      */
     public ItemStackHelper copy() {
-        return new ItemStackHelper(i.copy());
+        return new ItemStackHelper(base.copy());
     }
 }

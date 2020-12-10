@@ -6,10 +6,10 @@ import net.minecraft.entity.boss.BossBar;
  * @author Wagyourtail
  * @since 1.2.1
  */
-public class BossBarHelper {
-    private BossBar b;
+public class BossBarHelper extends BaseHelper<BossBar> {
+
     public BossBarHelper(BossBar b) {
-        this.b = b;
+        super(b);
     }
     
     /**
@@ -17,7 +17,7 @@ public class BossBarHelper {
      * @return boss bar uuid.
      */
     public String getUUID() {
-        return b.getUuid().toString();
+        return base.getUuid().toString();
     }
     
     /**
@@ -25,7 +25,7 @@ public class BossBarHelper {
      * @return percent of boss bar remaining.
      */
     public float getPercent() {
-        return b.getPercent();
+        return base.getPercent();
     }
     
     /**
@@ -34,7 +34,7 @@ public class BossBarHelper {
      */
     public String getColor() {
         String color = null;
-        switch (b.getColor()) {
+        switch (base.getColor()) {
             case BLUE:
                 color = "BLUE";
                 break;
@@ -68,7 +68,7 @@ public class BossBarHelper {
      */
     public String getStyle() {
         String style = null;
-        switch (b.getOverlay()) {
+        switch (base.getOverlay()) {
         case NOTCHED_10:
             style = "NOTCHED_10";
             break;
@@ -95,14 +95,10 @@ public class BossBarHelper {
      * @return name of boss bar
      */
     public TextHelper getName() {
-        return new TextHelper(b.getName());
-    }
-    
-    public BossBar getRaw() {
-        return b;
+        return new TextHelper(base.getName());
     }
     
     public String toString() {
-        return String.format("BossBar:{\"name:\":\"%s\", \"percent\":%f}", b.getName().getString(), b.getPercent());
+        return String.format("BossBar:{\"name:\":\"%s\", \"percent\":%f}", base.getName().getString(), base.getPercent());
     }
 }

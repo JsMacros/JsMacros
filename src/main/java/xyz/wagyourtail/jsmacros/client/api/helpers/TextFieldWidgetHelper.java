@@ -6,7 +6,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
  * @author Wagyourtail
  * @since 1.0.5
  */
-public class TextFieldWidgetHelper extends ButtonWidgetHelper {
+public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     public TextFieldWidgetHelper(TextFieldWidget t) {
         super(t);
     }
@@ -16,7 +16,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper {
      * @return the currently entered {@link java.lang.String String}.
      */
     public String getText() {
-        return ((TextFieldWidget)btn).getText();
+        return base.getText();
     }
     
     /**
@@ -27,7 +27,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper {
      * @return
      */
     public TextFieldWidgetHelper setText(String text) {
-        ((TextFieldWidget)btn).setText(text);
+        base.setText(text);
         return this;
     }
     
@@ -39,7 +39,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper {
      * @return
      */
     public TextFieldWidgetHelper setEditableColor(int color) {
-        ((TextFieldWidget)btn).setEditableColor(color);
+        base.setEditableColor(color);
         return this;
     }
     
@@ -49,7 +49,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper {
      * @return
      */
     public TextFieldWidgetHelper setEditable(boolean edit) {
-        ((TextFieldWidget)btn).setEditable(edit);
+        base.setEditable(edit);
         return this;
     }
     
@@ -59,7 +59,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper {
      * @return
      */
     public TextFieldWidgetHelper setUneditableColor(int color) {
-        ((TextFieldWidget)btn).setUneditableColor(color);
+        base.setUneditableColor(color);
         return this;
     }
 }

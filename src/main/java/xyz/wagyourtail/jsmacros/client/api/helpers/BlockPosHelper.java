@@ -6,11 +6,11 @@ import net.minecraft.util.math.BlockPos;
  * @author Wagyourtail
  * @since 1.2.6
  */
-public class BlockPosHelper {
-    private BlockPos b;
+public class BlockPosHelper extends BaseHelper<BlockPos> {
+    private BlockPos base;
     
     public BlockPosHelper(BlockPos b) {
-        this.b = b;
+        super(b);
     }
     
     /**
@@ -18,7 +18,7 @@ public class BlockPosHelper {
      * @return the {@code x} value of the block.
      */
     public int getX() {
-        return b.getX();
+        return base.getX();
     }
     
     /**
@@ -26,7 +26,7 @@ public class BlockPosHelper {
      * @return the {@code y} value of the block.
      */
     public int getY() {
-        return b.getY();
+        return base.getY();
     }
     
     /**
@@ -34,10 +34,10 @@ public class BlockPosHelper {
      * @return the {@code z} value of the block.
      */
     public int getZ() {
-        return b.getZ();
+        return base.getZ();
     }
     
     public String toString() {
-        return String.format("BlockPosHelper:{\"x\": %d, \"y\": %d, \"z\": %d}", b.getX(), b.getY(), b.getZ());
+        return String.format("BlockPosHelper:{\"x\": %d, \"y\": %d, \"z\": %d}", base.getX(), base.getY(), base.getZ());
     }
 }

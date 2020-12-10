@@ -8,18 +8,19 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LivingEntityHelper extends EntityHelper {
+public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> {
 
-    public LivingEntityHelper(LivingEntity e) {
+    public LivingEntityHelper(T e) {
         super(e);
     }
 
     /**
+     * @since 1.2.7
      * @return entity status effects.
      */
     public List<StatusEffectHelper> getStatusEffects() {
         List<StatusEffectHelper> l = new ArrayList<>();
-        for (StatusEffectInstance i : ImmutableList.copyOf(((LivingEntity) e).getStatusEffects())) {
+        for (StatusEffectInstance i : ImmutableList.copyOf(base.getStatusEffects())) {
             l.add(new StatusEffectHelper(i));
         }
         return l;
@@ -31,7 +32,7 @@ public class LivingEntityHelper extends EntityHelper {
      * @return the item in the entity's main hand.
      */
     public ItemStackHelper getMainHand() {
-        return new ItemStackHelper(((LivingEntity) e).getEquippedStack(EquipmentSlot.MAINHAND));
+        return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.MAINHAND));
     }
     
     /**
@@ -39,7 +40,7 @@ public class LivingEntityHelper extends EntityHelper {
      * @return the item in the entity's off hand.
      */
     public ItemStackHelper getOffHand() {
-        return new ItemStackHelper(((LivingEntity) e).getEquippedStack(EquipmentSlot.OFFHAND));
+        return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.OFFHAND));
     }
     
     /**
@@ -47,7 +48,7 @@ public class LivingEntityHelper extends EntityHelper {
      * @return the item in the entity's head armor slot.
      */
     public ItemStackHelper getHeadArmor() {
-        return new ItemStackHelper(((LivingEntity) e).getEquippedStack(EquipmentSlot.HEAD));
+        return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.HEAD));
     }
     
     /**
@@ -55,7 +56,7 @@ public class LivingEntityHelper extends EntityHelper {
      * @return the item in the entity's chest armor slot.
      */
     public ItemStackHelper getChestArmor() {
-        return new ItemStackHelper(((LivingEntity) e).getEquippedStack(EquipmentSlot.CHEST));
+        return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.CHEST));
     }
     
     /**
@@ -63,7 +64,7 @@ public class LivingEntityHelper extends EntityHelper {
      * @return the item in the entity's leg armor slot.
      */
     public ItemStackHelper getLegArmor() {
-        return new ItemStackHelper(((LivingEntity) e).getEquippedStack(EquipmentSlot.LEGS));
+        return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.LEGS));
     }
     
     /**
@@ -71,7 +72,7 @@ public class LivingEntityHelper extends EntityHelper {
      * @return the item in the entity's foot armor slot.
      */
     public ItemStackHelper getFootArmor() {
-        return new ItemStackHelper(((LivingEntity) e).getEquippedStack(EquipmentSlot.FEET));
+        return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.FEET));
     }
     
     /**
@@ -79,7 +80,7 @@ public class LivingEntityHelper extends EntityHelper {
      * @return if the entity is in a bed.
      */
     public boolean isSleeping() {
-        return ((LivingEntity) e).isSleeping();
+        return base.isSleeping();
     }
     
 }

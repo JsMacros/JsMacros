@@ -7,11 +7,10 @@ import net.minecraft.client.network.PlayerListEntry;
  * @author Wagyourtail
  * @since 1.0.2
  */
-public class PlayerListEntryHelper {
-    private PlayerListEntry p;
+public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
     
     public PlayerListEntryHelper(PlayerListEntry p) {
-        this.p = p;
+        super(p);
     }
     
     /**
@@ -19,7 +18,7 @@ public class PlayerListEntryHelper {
      * @return
      */
     public String getUUID() {
-        GameProfile prof = p.getProfile();
+        GameProfile prof = base.getProfile();
         if (prof == null) return null;
         return prof.getId().toString();
     }
@@ -29,7 +28,7 @@ public class PlayerListEntryHelper {
      * @return
      */
     public String getName() {
-        GameProfile prof = p.getProfile();
+        GameProfile prof = base.getProfile();
         if (prof == null) return null;
         return prof.getName();
     }
@@ -39,11 +38,7 @@ public class PlayerListEntryHelper {
      * @return
      */
     public TextHelper getDisplayText() {
-        return new TextHelper(p.getDisplayName());
-    }
-    
-    public PlayerListEntry getRaw() {
-        return p;
+        return new TextHelper(base.getDisplayName());
     }
     
     public String toString() {

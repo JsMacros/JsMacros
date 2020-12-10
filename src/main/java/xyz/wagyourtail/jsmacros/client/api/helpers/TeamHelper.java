@@ -9,11 +9,9 @@ import java.util.List;
  * @author Wagyourtail
  * @since 1.3.0
  */
-public class TeamHelper {
-    private Team t;
-
+public class TeamHelper extends BaseHelper<Team> {
     public TeamHelper(Team t) {
-        this.t = t;
+        super(t);
     }
     
     /**
@@ -21,7 +19,7 @@ public class TeamHelper {
      * @return
      */
     public String getName() {
-        return t.getName();
+        return base.getName();
     }
     
     /**
@@ -29,7 +27,7 @@ public class TeamHelper {
      * @return
      */
     public TextHelper getDisplayName() {
-        return new TextHelper(t.getDisplayName());
+        return new TextHelper(base.getDisplayName());
     }
     
     /**
@@ -37,7 +35,7 @@ public class TeamHelper {
      * @return
      */
     public List<String> getPlayerList() {
-        return new ArrayList<>(t.getPlayerList());
+        return new ArrayList<>(base.getPlayerList());
     }
     
     /**
@@ -45,7 +43,7 @@ public class TeamHelper {
      * @return
      */
     public int getColor() {
-        return t.getColor().getColorIndex();
+        return base.getColor().getColorIndex();
     }
     
     /**
@@ -53,7 +51,7 @@ public class TeamHelper {
      * @return
      */
     public TextHelper getPrefix() {
-        return new TextHelper(t.getPrefix());
+        return new TextHelper(base.getPrefix());
     }
     
     /**
@@ -61,7 +59,7 @@ public class TeamHelper {
      * @return
      */
     public TextHelper getSuffix() {
-        return new TextHelper(t.getSuffix());
+        return new TextHelper(base.getSuffix());
     }
     
     /**
@@ -69,7 +67,7 @@ public class TeamHelper {
      * @return
      */
     public String getCollisionRule() {
-        return t.getCollisionRule().toString();
+        return base.getCollisionRule().toString();
     }
     
     /**
@@ -77,7 +75,7 @@ public class TeamHelper {
      * @return
      */
     public boolean isFriendlyFire() {
-        return t.isFriendlyFireAllowed();
+        return base.isFriendlyFireAllowed();
     }
     
     /**
@@ -85,7 +83,7 @@ public class TeamHelper {
      * @return
      */
     public boolean showFriendlyInvisibles() {
-        return t.shouldShowFriendlyInvisibles();
+        return base.shouldShowFriendlyInvisibles();
     }
     
     /**
@@ -93,7 +91,7 @@ public class TeamHelper {
      * @return
      */
     public String nametagVisibility() {
-        return t.getNameTagVisibilityRule().toString();
+        return base.getNameTagVisibilityRule().toString();
     }
     
     /**
@@ -101,10 +99,6 @@ public class TeamHelper {
      * @return
      */
     public String deathMessageVisibility() {
-        return t.getDeathMessageVisibilityRule().toString();
-    }
-    
-    public Team getRaw() {
-        return t;
+        return base.getDeathMessageVisibilityRule().toString();
     }
 }

@@ -10,11 +10,10 @@ import java.util.Map;
  * @author Wagyourtail
  * @since 1.2.9
  */
-public class ScoreboardObjectiveHelper {
-    ScoreboardObjective o;
+public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
     
     public ScoreboardObjectiveHelper(ScoreboardObjective o) {
-        this.o = o;
+        super(o);
     }
     
     /**
@@ -22,7 +21,7 @@ public class ScoreboardObjectiveHelper {
      */
     public Map<String, Integer> getPlayerScores() {
         Map<String, Integer> scores  = new LinkedHashMap<>();
-        for (ScoreboardPlayerScore pl : o.getScoreboard().getAllPlayerScores(o)) {
+        for (ScoreboardPlayerScore pl : base.getScoreboard().getAllPlayerScores(base)) {
             scores.put(pl.getPlayerName(), pl.getScore());
         }
         return scores;
@@ -33,7 +32,7 @@ public class ScoreboardObjectiveHelper {
      * @since 1.2.9
      */
     public String getName() {
-        return o.getName();
+        return base.getName();
     }
     
     /**
@@ -41,10 +40,6 @@ public class ScoreboardObjectiveHelper {
      * @since 1.2.9
      */
     public TextHelper getDisplayName() {
-        return new TextHelper(o.getDisplayName());
-    }
-    
-    public ScoreboardObjective getRaw() {
-        return o;
+        return new TextHelper(base.getDisplayName());
     }
 }

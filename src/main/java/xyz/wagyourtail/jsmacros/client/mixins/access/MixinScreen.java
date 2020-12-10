@@ -154,7 +154,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public Drawable reAddElement(Drawable e) {
         synchronized (elements) {
             elements.add(e);
-            if (e instanceof ButtonWidgetHelper) children.add(((ButtonWidgetHelper) e).getRaw());
+            if (e instanceof ButtonWidgetHelper) children.add(((ButtonWidgetHelper<?>) e).getRaw());
         }
         return e;
     }

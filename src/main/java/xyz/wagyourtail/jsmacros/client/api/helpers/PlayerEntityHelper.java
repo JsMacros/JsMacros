@@ -5,9 +5,9 @@ import net.minecraft.entity.player.PlayerEntity;
 /**
  * @author Wagyourtail
  */
-public class PlayerEntityHelper extends LivingEntityHelper {
+public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelper<T> {
     
-    public PlayerEntityHelper(PlayerEntity e) {
+    public PlayerEntityHelper(T e) {
         super(e);
     }
     
@@ -17,7 +17,7 @@ public class PlayerEntityHelper extends LivingEntityHelper {
      * @return
      */
     public PlayerAbilitiesHelper getAbilities() {
-    	return new PlayerAbilitiesHelper(((PlayerEntity)e).abilities);
+    	return new PlayerAbilitiesHelper(base.abilities);
     }
     
     
@@ -68,7 +68,7 @@ public class PlayerEntityHelper extends LivingEntityHelper {
      * @return
      */
     public int getXP() {
-        return ((PlayerEntity)e).experienceLevel;
+        return base.experienceLevel;
     }
     
     /**
@@ -84,11 +84,7 @@ public class PlayerEntityHelper extends LivingEntityHelper {
      * @return if the player has slept the minimum ammount of time to pass the night.
      */
     public boolean isSleepingLongEnough() {
-        return ((PlayerEntity)e).isSleepingLongEnough();
-    }
-    
-    public PlayerEntity getRaw() {
-        return (PlayerEntity) e;
+        return base.isSleepingLongEnough();
     }
     
     public String toString() {
