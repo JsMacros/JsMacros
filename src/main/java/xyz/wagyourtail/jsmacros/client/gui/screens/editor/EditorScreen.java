@@ -82,7 +82,7 @@ public class EditorScreen extends BaseScreen {
             openParent();
         }));
         
-        addButton(new Button(this.width - width / 8, height - 12, width / 8, 12, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(getDefaultLanguage()), (btn) -> {
+        addButton(new Button(this.width - width / 8, height - 12, width / 8, 12, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(content.language), (btn) -> {
             switch (content.language) {
                 case "python":
                     content.setLanguage("lua");
