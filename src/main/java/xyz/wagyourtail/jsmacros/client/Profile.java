@@ -45,9 +45,12 @@ public class Profile extends BaseProfile {
     public void logError(Throwable ex) {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.inGameHud != null) {
-            LiteralText text = new LiteralText(ex.toString());
-            ((IChatHud)mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
+            mc.execute(() -> {
+                LiteralText text = new LiteralText(ex.toString());
+                ((IChatHud)mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
+            });
         }
+        ex.printStackTrace();
     }
     
     public void initRegistries() {

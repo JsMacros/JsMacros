@@ -30,6 +30,7 @@ import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon.Vec2D;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.LinkedHashSet;
@@ -299,11 +300,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             try {
                 callback.accept(new ButtonWidgetHelper(btn), this);
             } catch (Exception e) {
-                if (this.client.inGameHud != null) {
-                    LiteralText te = new LiteralText(e.toString());
-                    this.client.inGameHud.getChatHud().addMessage(te);
-                }
-                e.printStackTrace();
+                Core.instance.profile.logError(e);
             }
         });
         ButtonWidgetHelper b = new ButtonWidgetHelper(button);
@@ -332,11 +329,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
                 try {
                     onChange.accept(str, this);
                 } catch (Exception e) {
-                    if (this.client.inGameHud != null) {
-                        LiteralText text = new LiteralText(e.toString());
-                        this.client.inGameHud.getChatHud().addMessage(text);
-                    }
-                    e.printStackTrace();
+                    Core.instance.profile.logError(e);
                 }
             });
         }
@@ -487,11 +480,11 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             try {
                 onInit.accept(this);
             } catch (Exception e) {
-                e.printStackTrace();
                 try {
                     if (catchInit != null) catchInit.accept(e.toString());
+                    else throw e;
                 } catch (Exception f) {
-                    f.printStackTrace();
+                    Core.instance.profile.logError(f);
                 }
             }
         }
@@ -503,7 +496,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             try {
                 onClose.accept(this);
             } catch (Exception e) {
-                e.printStackTrace();
+                Core.instance.profile.logError(e);
             }
         }
     }

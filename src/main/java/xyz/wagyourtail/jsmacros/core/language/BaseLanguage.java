@@ -47,7 +47,6 @@ public abstract class BaseLanguage {
             } catch (Exception e) {
                 runner.profile.logError(e);
                 if (catcher != null) catcher.accept(e);
-                e.printStackTrace();
             } finally {
                 runner.removeThread(th);
             }
