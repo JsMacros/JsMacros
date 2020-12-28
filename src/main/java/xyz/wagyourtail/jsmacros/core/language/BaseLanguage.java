@@ -45,8 +45,12 @@ public abstract class BaseLanguage {
                     if (then != null) then.run();
                 }
             } catch (Exception e) {
-                runner.profile.logError(e);
-                if (catcher != null) catcher.accept(e);
+                try {
+                    if (catcher != null) catcher.accept(e);
+                    else throw e;
+                } catch (Exception f) {
+                    runner.profile.logError(f);
+                }
             } finally {
                 runner.removeThread(th);
             }
