@@ -35,5 +35,6 @@
 	"jsmacros.save": "Save",
 	"jsmacros.errorsaving": "An error occured while trying to save... \n\n",
 	"jsmacros.nosave": "Are you sure you'd like to exit without saving?",
-	"jsmacros.clicktoview": "Click to view in editor."
+	"jsmacros.clicktoview": "Click to view in editor.",
+	"jsmacros.errorerror": "AN ERROR WITH ERROR MESSAGE PARSING HAS OCCURRED"
 }

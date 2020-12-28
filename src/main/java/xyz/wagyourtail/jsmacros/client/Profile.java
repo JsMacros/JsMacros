@@ -25,9 +25,7 @@ public class Profile extends BaseProfile {
         boolean val = super.loadProfile(profileName);
         final MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.currentScreen instanceof MacroScreen) {
-            mc.execute(() -> {
-                ((MacroScreen) mc.currentScreen).reload();
-            });
+            mc.execute(() -> ((MacroScreen) mc.currentScreen).reload());
         }
         return val;
     }
@@ -39,7 +37,12 @@ public class Profile extends BaseProfile {
             BaseWrappedException<?> e = runner.wrapException(ex);
             Text text = compileError(e);
             mc.execute(() -> {
-                ((IChatHud)mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
+                try {
+                    ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
+                } catch (Throwable t) {
+                    ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new TranslatableText("jsmacros.errorerror").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
+                    t.printStackTrace();
+                }
             });
         }
         ex.printStackTrace();
@@ -58,9 +61,7 @@ public class Profile extends BaseProfile {
                     BaseWrappedException.GuestLocation loc = (BaseWrappedException.GuestLocation) head.location;
                     locationStyle = locationStyle.withHoverEvent(
                         new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("jsmacros.clicktoview"))
-                    ).withClickEvent(new CustomClickEvent(() -> {
-                        EditorScreen.openAndScroll(loc.file, loc.startIndex, loc.endIndex);
-                    }));
+                    ).withClickEvent(new CustomClickEvent(() -> EditorScreen.openAndScroll(loc.file, loc.startIndex, loc.endIndex)));
                 }
                 line.append(new LiteralText(" (" + head.location.toString() + ")").setStyle(locationStyle));
             }

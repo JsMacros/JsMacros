@@ -70,7 +70,18 @@ public class JavascriptLanguageDefinition extends BaseLanguage {
             if (pos != null) {
                 loc = new BaseWrappedException.GuestLocation(new File(pos.getSource().getPath()), pos.getCharIndex(), pos.getCharEndIndex(), pos.getStartLine(), pos.getStartColumn());
             }
-            return new BaseWrappedException<>(ex, ex.getMessage(), loc, frames.hasNext() ? internalWrap(frames.next(), frames) : null);
+            String message = ex.getMessage();
+            if (message == null) {
+                if (((PolyglotException) ex).isHostException()) {
+                    message = ((PolyglotException) ex).asHostException().getMessage();
+                    if (message == null) {
+                        message = ((PolyglotException) ex).asHostException().getClass().getName();
+                    }
+                } else {
+                    message = "Unknown Exception";
+                }
+            }
+            return new BaseWrappedException<>(ex, message, loc, frames.hasNext() ? internalWrap(frames.next(), frames) : null);
         }
         return null;
     }
