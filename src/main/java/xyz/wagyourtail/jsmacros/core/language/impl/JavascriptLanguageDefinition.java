@@ -81,6 +81,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage {
             SourceSection pos = current.getSourceLocation();
             return new BaseWrappedException<>(current, " at " + current.getRootName(), new BaseWrappedException.GuestLocation(new File(pos.getSource().getPath()), pos.getCharIndex(), pos.getCharEndIndex(), pos.getStartLine(), pos.getStartColumn()), frames.hasNext() ? internalWrap(frames.next(), frames) : null);
         }
+        if (current.toHostFrame().getClassName().equals("org.graalvm.polyglot.Context") && current.toHostFrame().getMethodName().equals("eval")) return null;
         return BaseWrappedException.wrapHostElement(current.toHostFrame(), frames.hasNext() ? internalWrap(frames.next(), frames) : null);
     }
 }
