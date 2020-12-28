@@ -235,4 +235,20 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         Window win = mc.getWindow();
         GLFW.glfwSetWindowSize(win.getHandle(), w, h);
     }
+    
+    /**
+     * @since 1.3.0
+     * normal values for gamam are between {@code 0} and {@code 1}
+     */
+    public double getGamma() {
+        return mc.options.gamma;
+    }
+    
+    /**
+     * @since 1.3.0
+     * normal values for gamam are between {@code 0} and {@code 1}
+     */
+    public void setGamma(double gamma) {
+        mc.options.gamma = gamma;
+    }
 }

@@ -88,6 +88,15 @@ public abstract class BaseLanguage {
      */
     public abstract void exec(String script, Map<String, Object> globals, Path currentDir) throws Exception;
     
+    /**
+     * @param ex
+     * @since 1.3.0
+     * @return
+     */
+    public BaseWrappedException<?> wrapException(Throwable ex) {
+        return null;
+    }
+    
     @Deprecated
     public String extension() {
         return extension;

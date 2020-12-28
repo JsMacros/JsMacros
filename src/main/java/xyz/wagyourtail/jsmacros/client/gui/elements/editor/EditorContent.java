@@ -88,7 +88,7 @@ public class EditorContent extends Button {
         scrollToCursor();
     }
     
-    private void scrollToCursor() {
+    public void scrollToCursor() {
         if (scrollToPercent != null) {
             int cursorLine = cursor.arrowEnd ? cursor.endLine : cursor.startLine;
             if (cursorLine < firstLine || cursorLine > lastLine) {

@@ -11,7 +11,9 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextFieldWidgetHelper;
@@ -498,6 +501,17 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             } catch (Exception e) {
                 Core.instance.profile.logError(e);
             }
+        }
+    }
+    
+    //TODO: switch to enum extention with mixin 9.0 or whenever Mumfrey gets around to it
+    @Inject(at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "handleTextClick", cancellable = true)
+    public void handleCustomClickEvent(Style style, CallbackInfoReturnable<Boolean> cir) {
+        ClickEvent clickEvent = style.getClickEvent();
+        if (clickEvent instanceof CustomClickEvent) {
+            ((CustomClickEvent) clickEvent).getEvent().run();
+            cir.setReturnValue(true);
+            cir.cancel();
         }
     }
 }

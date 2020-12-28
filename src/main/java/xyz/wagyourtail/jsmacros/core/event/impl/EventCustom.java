@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.event.impl;
 
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
@@ -262,4 +263,11 @@ public class EventCustom implements BaseEvent {
         return args.get(name);
     }
     
+    /**
+     * registers event so you can see it in the gui
+     * @since 1.3.0
+     */
+    public void registerEvent() {
+        Core.instance.eventRegistry.addEvent(eventName);
+    }
 }

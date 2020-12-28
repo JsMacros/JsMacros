@@ -1,34 +1,23 @@
 package xyz.wagyourtail.jsmacros.client;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.*;
+import net.minecraft.util.Formatting;
+import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.client.api.events.*;
 import xyz.wagyourtail.jsmacros.client.api.functions.*;
+import xyz.wagyourtail.jsmacros.client.gui.screens.editor.EditorScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.macros.MacroScreen;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
-import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
+import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 
 public class Profile extends BaseProfile {
-    public String profileName;
     
     public Profile(Core runner) {
         super(runner);
-    }
-    
-    public void init(String defaultProfile) {
-        super.init(defaultProfile);
-    }
-    
-    @Override
-    public String getCurrentProfileName() {
-        return profileName;
-    }
-    
-    @Override
-    public void renameCurrentProfile(String profile) {
-        profileName = profile;
     }
     
     @Override
@@ -36,7 +25,9 @@ public class Profile extends BaseProfile {
         boolean val = super.loadProfile(profileName);
         final MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.currentScreen instanceof MacroScreen) {
-            ((MacroScreen) mc.currentScreen).reload();
+            mc.execute(() -> {
+                ((MacroScreen) mc.currentScreen).reload();
+            });
         }
         return val;
     }
@@ -45,12 +36,38 @@ public class Profile extends BaseProfile {
     public void logError(Throwable ex) {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.inGameHud != null) {
+            BaseWrappedException<?> e = runner.wrapException(ex);
+            Text text = compileError(e);
             mc.execute(() -> {
-                LiteralText text = new LiteralText(ex.toString());
                 ((IChatHud)mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
             });
         }
         ex.printStackTrace();
+    }
+    
+    private Text compileError(BaseWrappedException<?> ex) {
+        if (ex == null) return null;
+        BaseWrappedException<?> head = ex;
+        LiteralText text = new LiteralText("");
+        do {
+            String message = head.message;
+            MutableText line = new LiteralText(message).setStyle(Style.EMPTY.withColor(Formatting.RED));
+            if (head.location != null) {
+                Style locationStyle = Style.EMPTY.withColor(Formatting.GOLD);
+                if (head.location instanceof BaseWrappedException.GuestLocation) {
+                    BaseWrappedException.GuestLocation loc = (BaseWrappedException.GuestLocation) head.location;
+                    locationStyle = locationStyle.withHoverEvent(
+                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("jsmacros.clicktoview"))
+                    ).withClickEvent(new CustomClickEvent(() -> {
+                        EditorScreen.openAndScroll(loc.file, loc.startIndex, loc.endIndex);
+                    }));
+                }
+                line.append(new LiteralText(" (" + head.location.toString() + ")").setStyle(locationStyle));
+            }
+            if ((head = head.next) != null) line.append("\n");
+            text.append(line);
+        } while (head != null);
+        return text;
     }
     
     public void initRegistries() {

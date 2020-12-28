@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public abstract class BaseProfile {
     protected final Core runner;
-    
+    public String profileName;
     
     public BaseProfile(Core runner) {
         this.runner = runner;
@@ -162,10 +162,13 @@ public abstract class BaseProfile {
         loadOrCreateProfile(defaultProfile);
     }
     
-    public abstract String getCurrentProfileName();
+    public String getCurrentProfileName() {
+        return profileName;
+    }
     
-    public abstract void renameCurrentProfile(String profile);
-    
+    public void renameCurrentProfile(String profile) {
+        profileName = profile;
+    }
     /**
      * Don't invoke from a script, extend to add more.
      */

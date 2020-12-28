@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
+import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.core.library.LibraryRegistry;
 
@@ -90,6 +91,20 @@ public class Core {
                 return language.trigger(macro, event, then, catcher);
         }
         return defaultLang.trigger(macro, event, then, catcher);
+    }
+    
+    public BaseWrappedException<?> wrapException(Throwable ex) {
+        if (ex == null) return null;
+        for (BaseLanguage lang : languages) {
+            BaseWrappedException<?> e = lang.wrapException(ex);
+            if (e != null) return e;
+        }
+        Iterator<StackTraceElement> elements = Arrays.stream(ex.getStackTrace()).iterator();
+        return new BaseWrappedException<>(ex, ex.getMessage(), null, elements.hasNext() ? wrapHostInternal(elements.next(), elements) : null);
+    }
+    
+    private BaseWrappedException<StackTraceElement> wrapHostInternal(StackTraceElement e, Iterator<StackTraceElement> elements) {
+        return BaseWrappedException.wrapHostElement(e, elements.hasNext() ? wrapHostInternal(elements.next(), elements) : null);
     }
     
     public static class sortLanguage implements Comparator<BaseLanguage> {

@@ -34,5 +34,6 @@
 	"jsmacros.erroropening": "There was an error opening the file... \n\n",
 	"jsmacros.save": "Save",
 	"jsmacros.errorsaving": "An error occured while trying to save... \n\n",
-	"jsmacros.nosave": "Are you sure you'd like to exit without saving?"
+	"jsmacros.nosave": "Are you sure you'd like to exit without saving?",
+	"jsmacros.clicktoview": "Click to view in editor."
 }

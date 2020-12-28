@@ -275,7 +275,7 @@ public class FJsMacros extends BaseLibrary {
     
     /**
     * create a custom event object that can trigger a event. It's recommended to use 
-    * {@code jsMacros.getProfile().getRegistry().addEvent(eventName)} to set up the event to be visible in the GUI first.
+    * {@link EventCustom#registerEvent()} to set up the event to be visible in the GUI.
     * 
     * @see BaseEventRegistry#addEvent(String)
     * 

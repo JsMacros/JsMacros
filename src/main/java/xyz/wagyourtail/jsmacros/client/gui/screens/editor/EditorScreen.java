@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens.editor;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.resource.language.I18n;
@@ -10,6 +11,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
 import xyz.wagyourtail.jsmacros.client.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
@@ -26,7 +28,7 @@ public class EditorScreen extends BaseScreen {
     protected Text fileName = new LiteralText("");
     protected String lineCol = "";
     protected final FileHandler handler;
-    protected final EditorContent content;
+    public final EditorContent content;
     protected final Scrollbar scrollbar;
     protected Button saveBtn;
     
@@ -55,6 +57,27 @@ public class EditorScreen extends BaseScreen {
         this.content.scrollToPercent = scrollbar::scrollToPercent;
     }
     
+    public static void openAndScroll(@NotNull File file, int startIndex, int endIndex) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        mc.execute(() -> {
+            EditorScreen screen;
+            try {
+                if (JsMacros.prevScreen instanceof EditorScreen &&
+                    ((EditorScreen) JsMacros.prevScreen).file.getCanonicalPath().equals(file.getCanonicalPath())) {
+                    screen = (EditorScreen) JsMacros.prevScreen;
+                } else {
+                    screen = new EditorScreen(JsMacros.prevScreen, file);
+                }
+                mc.openScreen(screen);
+                screen.content.cursor.updateStartIndex(startIndex, screen.content.history.current);
+                screen.content.cursor.updateEndIndex(endIndex, screen.content.history.current);
+                screen.content.scrollToCursor();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+    
     public void init() {
         super.init();
         int width = this.width - 10;
@@ -73,14 +96,10 @@ public class EditorScreen extends BaseScreen {
             }
         };
     
-        content.cursor.onChange = (cursor) -> {
-            lineCol = (content.cursor.startIndex != content.cursor.endIndex ? (content.cursor.endIndex - content.cursor.startIndex) + " " : "") +
-                (content.cursor.arrowEnd ? String.format("%d:%d", content.cursor.endLine + 1, content.cursor.endLineIndex + 1) : String.format("%d:%d", content.cursor.startLine + 1, content.cursor.startLineIndex + 1));
-        };
+        content.cursor.onChange = (cursor) -> lineCol = (content.cursor.startIndex != content.cursor.endIndex ? (content.cursor.endIndex - content.cursor.startIndex) + " " : "") +
+            (content.cursor.arrowEnd ? String.format("%d:%d", content.cursor.endLine + 1, content.cursor.endLineIndex + 1) : String.format("%d:%d", content.cursor.startLine + 1, content.cursor.startLineIndex + 1));
         
-        addButton(new Button(width, 0, 10, 12,0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> {
-            openParent();
-        }));
+        addButton(new Button(width, 0, 10, 12,0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> openParent()));
         
         addButton(new Button(this.width - width / 8, height - 12, width / 8, 12, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(content.language), (btn) -> {
             switch (content.language) {
@@ -166,7 +185,7 @@ public class EditorScreen extends BaseScreen {
         textRenderer.drawWithShadow(matrices, fileName, 2, 2, 0xFFFFFF);
         
         textRenderer.drawWithShadow(matrices, String.format("%d ms", (int) content.textRenderTime), 2, height - 10, 0xFFFFFF);
-        textRenderer.drawWithShadow(matrices, lineCol, width - textRenderer.getWidth(lineCol) - (width - 10) / 8 - 2, height - 10, 0xFFFFFF);
+        textRenderer.drawWithShadow(matrices, lineCol, width - textRenderer.getWidth(lineCol) - (width - 10) / 8F - 2, height - 10, 0xFFFFFF);
         
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
             b.render(matrices, mouseX, mouseY, delta);
@@ -177,6 +196,10 @@ public class EditorScreen extends BaseScreen {
     
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (overlay == null && !content.isFocused()) {
+            setFocused(content);
+            content.changeFocus(true);
+        }
         if (keyCode == GLFW.GLFW_KEY_TAB) {
             return this.getFocused() != null && this.getFocused().keyPressed(keyCode, scanCode, modifiers);
         }
@@ -186,9 +209,7 @@ public class EditorScreen extends BaseScreen {
     @Override
     public void openParent() {
         if (needSave()) {
-            openOverlay(new ConfirmOverlay(width  / 4, height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.nosave"), this::addButton, this::removeButton, this::closeOverlay, (container) -> {
-                super.openParent();
-            }));
+            openOverlay(new ConfirmOverlay(width  / 4, height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.nosave"), this::addButton, this::removeButton, this::closeOverlay, (container) -> super.openParent()));
         } else {
             super.openParent();
         }
