@@ -100,7 +100,12 @@ public class Core {
             if (e != null) return e;
         }
         Iterator<StackTraceElement> elements = Arrays.stream(ex.getStackTrace()).iterator();
-        return new BaseWrappedException<>(ex, ex.getMessage(), null, elements.hasNext() ? wrapHostInternal(elements.next(), elements) : null);
+        String message = ex.getClass().getName();
+        String intMessage = ex.getMessage();
+        if (intMessage != null) {
+            message += ": " + intMessage;
+        }
+        return new BaseWrappedException<>(ex, message, null, elements.hasNext() ? wrapHostInternal(elements.next(), elements) : null);
     }
     
     private BaseWrappedException<StackTraceElement> wrapHostInternal(StackTraceElement e, Iterator<StackTraceElement> elements) {

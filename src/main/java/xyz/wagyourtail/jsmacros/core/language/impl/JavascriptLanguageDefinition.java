@@ -30,8 +30,12 @@ public class JavascriptLanguageDefinition extends BaseLanguage {
         if (runner.config.options.extraJsOptions == null)
             runner.config.options.extraJsOptions = new LinkedHashMap<>();
         build.options(runner.config.options.extraJsOptions);
+        if (currentDir == null) {
+            currentDir = runner.config.macroFolder.toPath();
+        }
+        build.currentWorkingDirectory(currentDir);
         build.option("js.commonjs-require-cwd", currentDir.toFile().getCanonicalPath());
-        if (currentDir != null) build.currentWorkingDirectory(currentDir);
+        
         final Context con = build.build();
         
         // Set Bindings

@@ -15,8 +15,13 @@ public class BaseWrappedException<T> {
         this.next = next;
     }
     
+    private static String unQualifyClassName(String name) {
+        String[] parts = name.split("\\.");
+        return parts[parts.length-1];
+    }
+    
     public static BaseWrappedException<StackTraceElement> wrapHostElement(StackTraceElement t, BaseWrappedException<?> next) {
-        String message = " at " + t.getClassName() + "." + t.getMethodName();
+        String message = " at " + unQualifyClassName(t.getClassName()) + "." + t.getMethodName();
         HostLocation loc = new HostLocation(t.isNativeMethod() ? "Native Method" : (t.getFileName() != null && t.getLineNumber() >= 0 ?
             t.getFileName() + " " + t.getLineNumber() + ":?" :
             (t.getFileName() != null ?  t.getFileName() : "Unknown Source")));
