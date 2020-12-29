@@ -94,15 +94,15 @@ public class EditorScreen extends BaseScreen {
                 String[] lines = screen.content.history.current.split("\n", -1);
                 int lineIndex = 0;
                 int max = Math.min(lines.length - 1, line - 1);
-                for (int i = 0; i < max - 1; ++i) {
+                for (int i = 0; i < max; ++i) {
                     lineIndex += lines[i].length() + 1;
                 }
                 int startIndex;
                 if (col == -1) startIndex = lineIndex;
                 else startIndex = lineIndex + Math.min(lines[max].length(), col);
                 screen.content.cursor.updateStartIndex(startIndex, screen.content.history.current);
-                if (endCol == -1) startIndex = lineIndex + lines[max].length() + 1;
-                else startIndex = lineIndex + Math.min(lines[max].length() + 1, endCol);
+                if (endCol == -1) startIndex = lineIndex + lines[max].length();
+                else startIndex = lineIndex + Math.min(lines[max].length(), endCol);
                 screen.content.cursor.updateEndIndex(startIndex, screen.content.history.current);
                 screen.content.scrollToCursor();
             } catch (IOException e) {
