@@ -57,8 +57,9 @@ public class EditorScreen extends BaseScreen {
         this.content.scrollToPercent = scrollbar::scrollToPercent;
     }
     
-    public static void openAndScroll(@NotNull File file, int startIndex, int endIndex) {
+    public static void openAndScrollToIndex(@NotNull File file, int startIndex, int endIndex) {
         MinecraftClient mc = MinecraftClient.getInstance();
+        int finalEndIndex = endIndex == -1 ? startIndex : endIndex;
         mc.execute(() -> {
             EditorScreen screen;
             try {
@@ -70,7 +71,39 @@ public class EditorScreen extends BaseScreen {
                 }
                 mc.openScreen(screen);
                 screen.content.cursor.updateStartIndex(startIndex, screen.content.history.current);
-                screen.content.cursor.updateEndIndex(endIndex, screen.content.history.current);
+                screen.content.cursor.updateEndIndex(finalEndIndex, screen.content.history.current);
+                screen.content.scrollToCursor();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+    
+    public static void openAndScrollToLine(@NotNull File file, int line, int col, int endCol) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        mc.execute(() -> {
+            EditorScreen screen;
+            try {
+                if (JsMacros.prevScreen instanceof EditorScreen &&
+                    ((EditorScreen) JsMacros.prevScreen).file.getCanonicalPath().equals(file.getCanonicalPath())) {
+                    screen = (EditorScreen) JsMacros.prevScreen;
+                } else {
+                    screen = new EditorScreen(JsMacros.prevScreen, file);
+                }
+                mc.openScreen(screen);
+                String[] lines = screen.content.history.current.split("\n", -1);
+                int lineIndex = 0;
+                int max = Math.min(lines.length - 1, line - 1);
+                for (int i = 0; i < max - 1; ++i) {
+                    lineIndex += lines[i].length() + 1;
+                }
+                int startIndex;
+                if (col == -1) startIndex = lineIndex;
+                else startIndex = lineIndex + Math.min(lines[max].length(), col);
+                screen.content.cursor.updateStartIndex(startIndex, screen.content.history.current);
+                if (endCol == -1) startIndex = lineIndex + lines[max].length() + 1;
+                else startIndex = lineIndex + Math.min(lines[max].length() + 1, endCol);
+                screen.content.cursor.updateEndIndex(startIndex, screen.content.history.current);
                 screen.content.scrollToCursor();
             } catch (IOException e) {
                 e.printStackTrace();

@@ -61,7 +61,15 @@ public class Profile extends BaseProfile {
                     BaseWrappedException.GuestLocation loc = (BaseWrappedException.GuestLocation) head.location;
                     locationStyle = locationStyle.withHoverEvent(
                         new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("jsmacros.clicktoview"))
-                    ).withClickEvent(new CustomClickEvent(() -> EditorScreen.openAndScroll(loc.file, loc.startIndex, loc.endIndex)));
+                    ).withClickEvent(new CustomClickEvent(() -> {
+                        if (loc.startIndex > -1) {
+                            EditorScreen.openAndScrollToIndex(loc.file, loc.startIndex, loc.endIndex);
+                        } else if (loc.line > -1) {
+                            EditorScreen.openAndScrollToLine(loc.file, loc.line, loc.column, -1);
+                        } else {
+                            EditorScreen.openAndScrollToIndex(loc.file, 0, 0);
+                        }
+                    }));
                 }
                 line.append(new LiteralText(" (" + head.location.toString() + ")").setStyle(locationStyle));
             }
