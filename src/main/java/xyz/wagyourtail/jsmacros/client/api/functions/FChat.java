@@ -151,6 +151,7 @@ public class FChat extends BaseLibrary {
     
     /**
      * @see TextBuilder
+     * @since 1.3.0
      * @return a new builder
      */
     public TextBuilder createTextBuilder() {
