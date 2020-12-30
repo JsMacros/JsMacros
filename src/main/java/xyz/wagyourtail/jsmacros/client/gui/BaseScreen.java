@@ -8,7 +8,7 @@ import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.gui.elements.overlays.OverlayContainer;
 
-public class BaseScreen extends Screen {
+public abstract class BaseScreen extends Screen {
     protected Screen parent;
     protected OverlayContainer overlay;
 
