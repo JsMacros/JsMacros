@@ -58,6 +58,7 @@ public class FChat extends BaseLibrary {
      */
     public void say(String message) {
         if (message != null) {
+            assert mc.player != null;
             mc.player.sendChatMessage(message);
         }
     }
@@ -97,6 +98,7 @@ public class FChat extends BaseLibrary {
      * @param tinted
      */
     public void actionbar(Object text, boolean tinted) {
+        assert mc.inGameHud != null;
         Text textt = null;
         if (text instanceof TextHelper) textt = ((TextHelper) text).getRaw();
         else if (text != null) textt = new LiteralText(text.toString());

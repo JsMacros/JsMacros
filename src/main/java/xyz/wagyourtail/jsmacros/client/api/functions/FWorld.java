@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
@@ -32,7 +33,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * 
+ *
  * Functions for getting and using world data.
  * 
  * An instance of this class is passed to scripts as the {@code world} variable.
@@ -59,14 +60,24 @@ public class FWorld extends BaseLibrary {
      * Don't modify.
      */
     public static double server15MAverageTPS = 20;
+    
+    /**
+     * returns whether a world is currently loaded
+     * @since 1.3.0
+     * @return
+     */
+    public boolean isWorldLoaded() {
+        return mc.world == null;
+    }
 
     /**
      * @return players within render distance.
      */
-    public List<PlayerEntityHelper> getLoadedPlayers() {
-        List<PlayerEntityHelper> players = new ArrayList<>();
+    public List<PlayerEntityHelper<PlayerEntity>> getLoadedPlayers() {
+        assert mc.world != null;
+        List<PlayerEntityHelper<PlayerEntity>> players = new ArrayList<>();
         for (AbstractClientPlayerEntity p : ImmutableList.copyOf(mc.world.getPlayers())) {
-            players.add(new PlayerEntityHelper(p));
+            players.add(new PlayerEntityHelper<>(p));
         }
         return players;
     }
@@ -75,8 +86,10 @@ public class FWorld extends BaseLibrary {
      * @return players on the tablist.
      */
     public List<PlayerListEntryHelper> getPlayers() {
+        ClientPlayNetworkHandler handler = mc.getNetworkHandler();
+        assert handler != null;
         List<PlayerListEntryHelper> players = new ArrayList<>();
-        for (PlayerListEntry p : ImmutableList.copyOf(mc.getNetworkHandler().getPlayerList())) {
+        for (PlayerListEntry p : ImmutableList.copyOf(handler.getPlayerList())) {
             players.add(new PlayerListEntryHelper(p));
         }
         return players;
@@ -90,6 +103,7 @@ public class FWorld extends BaseLibrary {
      * @return The block at that position.
      */
     public BlockDataHelper getBlock(int x, int y, int z) {
+        assert mc.world != null;
         BlockState b = mc.world.getBlockState(new BlockPos(x,y,z));
         BlockEntity t = mc.world.getBlockEntity(new BlockPos(x,y,z));
         if (b.getBlock().equals(Blocks.VOID_AIR)) return null;
@@ -102,19 +116,21 @@ public class FWorld extends BaseLibrary {
      * @return a helper for the scoreboards provided to the client.
      */
     public ScoreboardsHelper getScoreboards() {
+        assert mc.world != null;
         return new ScoreboardsHelper(mc.world.getScoreboard());
     }
     
     /**
      * @return all entities in the render distance.
      */
-    public List<EntityHelper> getEntities() {
-        List<EntityHelper> entities = new ArrayList<>();
+    public List<EntityHelper<?>> getEntities() {
+        assert mc.world != null;
+        List<EntityHelper<?>> entities = new ArrayList<>();
         for (Entity e : ImmutableList.copyOf(mc.world.getEntities())) {
             if (e.getType() == EntityType.PLAYER) {
-                entities.add(new PlayerEntityHelper((PlayerEntity)e));
+                entities.add(new PlayerEntityHelper<>((PlayerEntity)e));
             } else {
-                entities.add(new EntityHelper(e));
+                entities.add(new EntityHelper<>(e));
             }
         }
         return entities;
@@ -125,6 +141,7 @@ public class FWorld extends BaseLibrary {
      * @return the current dimension.
      */
     public String getDimension() {
+        assert mc.world != null;
         return mc.world.getRegistryKey().getValue().toString();
     }
     
@@ -133,6 +150,7 @@ public class FWorld extends BaseLibrary {
      * @return the current biome.
      */
     public String getBiome() {
+        assert mc.world != null;
         return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(mc.player.getBlockPos())).toString();
     }
     
@@ -141,6 +159,7 @@ public class FWorld extends BaseLibrary {
      * @return the current world time.
      */
     public long getTime() {
+        assert mc.world != null;
         return mc.world.getTime();
     }
     
@@ -151,6 +170,7 @@ public class FWorld extends BaseLibrary {
      * @return the current world time of day.
      */
     public long getTimeOfDay() {
+        assert mc.world != null;
         return mc.world.getTimeOfDay();
     }
     
@@ -159,6 +179,7 @@ public class FWorld extends BaseLibrary {
      * @return respawn position.
      */
     public BlockPosHelper getRespawnPos() {
+        assert mc.world != null;
         if (mc.world.getDimension().isNatural()) return new BlockPosHelper( mc.world.getSpawnPos());
         return null;
     }
@@ -168,6 +189,7 @@ public class FWorld extends BaseLibrary {
      * @return world difficulty as an {@link java.lang.Integer Integer}.
      */
     public int getDifficulty() {
+        assert mc.world != null;
         return mc.world.getDifficulty().getId();
     }
     
@@ -176,6 +198,7 @@ public class FWorld extends BaseLibrary {
      * @return moon phase as an {@link java.lang.Integer Integer}.
      */    
     public int getMoonPhase() {
+        assert mc.world != null;
         return mc.world.getMoonPhase();
     }
     
@@ -187,6 +210,7 @@ public class FWorld extends BaseLibrary {
      * @return sky light as an {@link java.lang.Integer Integer}.
      */
     public int getSkyLight(int x, int y, int z) {
+        assert mc.world != null;
         return mc.world.getLightLevel(LightType.SKY, new BlockPos(x, y, z));
     }
     
@@ -198,6 +222,7 @@ public class FWorld extends BaseLibrary {
      * @return block light as an {@link java.lang.Integer Integer}.
      */
     public int getBlockLight(int x, int y, int z) {
+        assert mc.world != null;
         return mc.world.getLightLevel(LightType.BLOCK, new BlockPos(x, y, z));
     }
     
@@ -220,12 +245,9 @@ public class FWorld extends BaseLibrary {
         float range = gainControl.getMaximum() - min;
         float gain = (float) ((range * volume) + min);
         gainControl.setValue(gain);
-        clip.addLineListener(new LineListener() {
-            @Override
-            public void update(LineEvent event) {
-                if(event.getType().equals(LineEvent.Type.STOP)) {
-                    clip.close();
-                }
+        clip.addLineListener(event -> {
+            if(event.getType().equals(LineEvent.Type.STOP)) {
+                clip.close();
             }
         });
         clip.start();
@@ -259,7 +281,9 @@ public class FWorld extends BaseLibrary {
      * @param pitch
      */
     public void playSound(String id, float volume, float pitch) {
-        mc.getSoundManager().play(PositionedSoundInstance.master(Registry.SOUND_EVENT.get(new Identifier(id)), pitch, volume));
+        SoundEvent sound = Registry.SOUND_EVENT.get(new Identifier(id));
+        assert sound != null;
+        mc.getSoundManager().play(PositionedSoundInstance.master(sound, pitch, volume));
     }
     
     /**
@@ -273,7 +297,10 @@ public class FWorld extends BaseLibrary {
      * @param z
      */
     public void playSound(String id, float volume, float pitch, double x, double y, double z) {
-        mc.world.playSound(x, y, z, Registry.SOUND_EVENT.get(new Identifier(id)), SoundCategory.MASTER, volume, pitch, true);
+        assert mc.world != null;
+        SoundEvent sound = Registry.SOUND_EVENT.get(new Identifier(id));
+        assert sound != null;
+        mc.world.playSound(x, y, z, sound, SoundCategory.MASTER, volume, pitch, true);
     }
     
     /**
@@ -281,6 +308,7 @@ public class FWorld extends BaseLibrary {
      * @return a map of boss bars by the boss bar's UUID.
      */
     public Map<String, BossBarHelper> getBossBars() {
+        assert mc.inGameHud != null;
         Map<UUID, ClientBossBar> bars = ImmutableMap.copyOf(((IBossBarHud) mc.inGameHud.getBossBarHud()).jsmacros_GetBossBars());
         Map<String, BossBarHelper> out = new HashMap<>();
         for (Map.Entry<UUID, ClientBossBar> e : ImmutableList.copyOf(bars.entrySet())) {
@@ -320,6 +348,7 @@ public class FWorld extends BaseLibrary {
      * @return biome at specified location, only works if the block/chunk is loaded.
      */
     public String getBiomeAt(int x, int z) {
+        assert mc.world != null;
         return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(new BlockPos(x, 10, z))).toString();
     }
     

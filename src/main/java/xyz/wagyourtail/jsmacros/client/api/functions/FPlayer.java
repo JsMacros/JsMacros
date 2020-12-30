@@ -1,12 +1,13 @@
 package xyz.wagyourtail.jsmacros.client.api.functions;
 
-import xyz.wagyourtail.jsmacros.core.Core;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.ScreenshotUtils;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
@@ -15,9 +16,10 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
-import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.io.File;
 import java.util.function.Consumer;
@@ -39,7 +41,7 @@ public class FPlayer extends BaseLibrary {
      * @return the Inventory handler
      */
     public Inventory openInventory() {
-        if (mc.player.inventory == null) return null;
+        assert mc.player != null && mc.player.inventory != null;
         return new Inventory();
     }
 
@@ -50,8 +52,9 @@ public class FPlayer extends BaseLibrary {
      * 
      * @return the player entity wrapper.
      */
-    public ClientPlayerEntityHelper getPlayer() {
-        return new ClientPlayerEntityHelper(mc.player);
+    public ClientPlayerEntityHelper<ClientPlayerEntity> getPlayer() {
+        assert mc.player != null;
+        return new ClientPlayerEntityHelper<>(mc.player);
     }
 
     /**
@@ -60,6 +63,7 @@ public class FPlayer extends BaseLibrary {
      * @return the player's current gamemode.
      */
     public String getGameMode() {
+        assert mc.interactionManager != null;
         return mc.interactionManager.getCurrentGameMode().toString();
     }
 
@@ -73,6 +77,8 @@ public class FPlayer extends BaseLibrary {
      * @return the block/liquid the player is currently looking at.
      */
     public BlockDataHelper rayTraceBlock(double distance, boolean fluid) {
+        assert mc.world != null;
+        assert mc.player != null;
         BlockHitResult h = (BlockHitResult) mc.player.raycast(distance, 0, fluid);
         if (h.getType() == HitResult.Type.MISS) return null;
         BlockState b = mc.world.getBlockState(h.getBlockPos());
@@ -88,8 +94,8 @@ public class FPlayer extends BaseLibrary {
      * 
      * @return the entity the player is currently looking at.
      */
-    public EntityHelper rayTraceEntity() {
-        if (mc.targetedEntity != null) return new EntityHelper(mc.targetedEntity);
+    public EntityHelper<Entity> rayTraceEntity() {
+        if (mc.targetedEntity != null) return new EntityHelper<>(mc.targetedEntity);
         else return null;
     }
 
@@ -123,6 +129,7 @@ public class FPlayer extends BaseLibrary {
      * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
      */
     public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object, Object> callback) {
+        assert folder != null;
         ScreenshotUtils.saveScreenshot(new File(Core.instance.config.macroFolder, folder), mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
             mc.getFramebuffer(), (text) -> {
                 if (callback != null) callback.accept(new TextHelper(text));
@@ -141,6 +148,7 @@ public class FPlayer extends BaseLibrary {
      * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
      */
     public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object> callback) {
+        assert folder != null && file != null;
         ScreenshotUtils.saveScreenshot(new File(Core.instance.config.macroFolder, folder), file, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
             mc.getFramebuffer(), (text) -> {
                 if (callback != null) callback.accept(new TextHelper(text));
