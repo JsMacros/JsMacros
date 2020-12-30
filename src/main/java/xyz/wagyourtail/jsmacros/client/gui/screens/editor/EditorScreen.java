@@ -156,10 +156,6 @@ public class EditorScreen extends BaseScreen {
         }));
         
         this.fileName = new LiteralText(textRenderer.trimToWidth(file.getName(), (width - 10) / 2));
-        if (overlay == null && !content.isFocused()) {
-            setFocused(content);
-            content.changeFocus(true);
-        }
     }
     
     public boolean needSave() {
@@ -228,11 +224,16 @@ public class EditorScreen extends BaseScreen {
     }
     
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyReleased(int keycode, int scanCode, int modifiers) {
         if (overlay == null && (!content.isFocused() || getFocused() != content)) {
             setFocused(content);
             content.changeFocus(true);
         }
+        return super.keyReleased(keycode, scanCode, modifiers);
+    }
+    
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_TAB) {
             return this.getFocused() != null && this.getFocused().keyPressed(keyCode, scanCode, modifiers);
         }

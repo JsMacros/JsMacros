@@ -7,7 +7,7 @@ public class CustomClickEvent extends ClickEvent {
     
     public CustomClickEvent(Runnable event) {
         //TODO: switch to enum extention with mixin 9.0 or whenever Mumfrey gets around to it
-        super(null, "");
+        super(null, null);
         this.event = event;
     }
     

@@ -85,8 +85,10 @@ public class BaseScreen extends Screen {
     public void onClose() {
         if (client.world == null)
             openParent();
-        else
+        else {
+            setFocused(null);
             client.openScreen(null);
+        }
     }
     
     public void openParent() {

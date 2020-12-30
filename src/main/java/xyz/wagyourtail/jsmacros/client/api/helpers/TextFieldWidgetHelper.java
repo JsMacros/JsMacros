@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.gui.widget.TextFieldWidget;
 
-/**
+/**F
  * @author Wagyourtail
  * @since 1.0.5
  */
