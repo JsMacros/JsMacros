@@ -6,6 +6,7 @@ import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
+import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
@@ -146,5 +147,13 @@ public class FChat extends BaseLibrary {
      */
     public TextHelper createTextHelperFromJSON(String json) {
         return new TextHelper(json);
+    }
+    
+    /**
+     * @see TextBuilder
+     * @return a new builder
+     */
+    public TextBuilder createTextBuilder() {
+        return new TextBuilder();
     }
 }
