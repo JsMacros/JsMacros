@@ -14,5 +14,4 @@ public class CustomClickEvent extends ClickEvent {
     public Runnable getEvent() {
         return event;
     }
-    
 }

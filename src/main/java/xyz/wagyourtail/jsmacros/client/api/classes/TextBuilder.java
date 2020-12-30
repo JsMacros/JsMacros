@@ -17,7 +17,7 @@ import java.util.List;
 
 
 /**
- * usage: {@code builder.append("hello,").withColor(0xc).append(" World").withColor(0x6)}
+ * usage: {@code builder.append("hello,").withColor(0xc).append(" World!").withColor(0x6)}
  * @author Wagyourtail
  * @since 1.3.0
  */
