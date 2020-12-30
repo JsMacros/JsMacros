@@ -217,8 +217,9 @@ public class EditorContent extends Button {
                 
                 compileRenderedText();
             }
-            
+            String startSpaces;
             int index;
+            double currentPage;
             switch (keyCode) {
                 case GLFW.GLFW_KEY_BACKSPACE:
                     if (cursor.startIndex != cursor.endIndex) {
@@ -239,14 +240,24 @@ public class EditorContent extends Button {
                     }
                     break;
                 case GLFW.GLFW_KEY_HOME:
-                    cursor.updateStartIndex(0, history.current);
-                    cursor.updateEndIndex(0, history.current);
-                    if (scrollToPercent != null) scrollToPercent.accept(0D);
+                    startSpaces = history.current.split("\n", -1)[cursor.startLine].split("[^\\s]", -1)[0];
+                    if (cursor.startLineIndex <= startSpaces.length()) {
+                        cursor.updateStartIndex(cursor.startIndex - cursor.startLineIndex, history.current);
+                    } else {
+                        cursor.updateStartIndex(cursor.startIndex - cursor.startLineIndex + startSpaces.length(), history.current);
+                    }
+                    cursor.updateEndIndex(cursor.startIndex, history.current);
+//                    cursor.updateStartIndex(0, history.current);
+//                    cursor.updateEndIndex(0, history.current);
+//                    if (scrollToPercent != null) scrollToPercent.accept(0D);
                     break;
                 case GLFW.GLFW_KEY_END:
-                    cursor.updateStartIndex(history.current.length(), history.current);
-                    cursor.updateEndIndex(history.current.length(), history.current);
-                    if (scrollToPercent != null) scrollToPercent.accept(1D);
+                    int endLineLength = history.current.split("\n", -1)[cursor.endLine].length();
+                    cursor.updateEndIndex(cursor.endIndex+(endLineLength - cursor.endLineIndex), history.current);
+                    cursor.updateStartIndex(cursor.endIndex, history.current);
+//                    cursor.updateStartIndex(history.current.length(), history.current);
+//                    cursor.updateEndIndex(history.current.length(), history.current);
+//                    if (scrollToPercent != null) scrollToPercent.accept(1D);
                     break;
                 case GLFW.GLFW_KEY_LEFT:
                     if (Screen.hasShiftDown()) {
@@ -390,7 +401,7 @@ public class EditorContent extends Button {
                     }
                     break;
                 case GLFW.GLFW_KEY_ENTER:
-                    String startSpaces = history.current.split("\n", -1)[cursor.startLine].split("[^\\s]", -1)[0];
+                    startSpaces = history.current.split("\n", -1)[cursor.startLine].split("[^\\s]", -1)[0];
                     if (cursor.startIndex != cursor.endIndex) {
                         history.replace(cursor.startIndex, cursor.endIndex - cursor.startIndex, "\n" + startSpaces);
                         cursor.updateStartIndex(cursor.endIndex, history.current);
@@ -408,6 +419,14 @@ public class EditorContent extends Button {
                     }
     
                     compileRenderedText();
+                    break;
+                case GLFW.GLFW_KEY_PAGE_UP:
+                    currentPage = scroll / (0.0D + height);
+                    scrollToPercent.accept(MathHelper.clamp((currentPage - 1)/(calcTotalPages() - 1), 0, 1));
+                    break;
+                case GLFW.GLFW_KEY_PAGE_DOWN:
+                    currentPage = scroll / (0.0D + height);
+                    scrollToPercent.accept(MathHelper.clamp((currentPage + 1)/(calcTotalPages() - 1), 0, 1));
                     break;
                 default:
             }

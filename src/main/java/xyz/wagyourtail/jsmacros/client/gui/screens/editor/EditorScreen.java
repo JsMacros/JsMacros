@@ -197,7 +197,7 @@ public class EditorScreen extends BaseScreen {
     }
     
     public boolean mouseReleased(double mouseX, double mouseY, int btn) {
-        if (overlay == null && !content.isFocused()) {
+        if (overlay == null && (!content.isFocused() || getFocused() != content)) {
             setFocused(content);
             content.changeFocus(true);
         }
@@ -229,7 +229,7 @@ public class EditorScreen extends BaseScreen {
     
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (overlay == null && !content.isFocused()) {
+        if (overlay == null && (!content.isFocused() || getFocused() != content)) {
             setFocused(content);
             content.changeFocus(true);
         }

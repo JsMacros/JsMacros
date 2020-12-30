@@ -47,6 +47,7 @@ public class BaseWrappedException<T> {
         }
         
         public String toString() {
+            if (column == -1) return String.format("%s %d:?", file.getName(), line);
             return String.format("%s %d:%d", file.getName(), line, column);
         }
     }

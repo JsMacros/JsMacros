@@ -32,9 +32,17 @@ public class Profile extends BaseProfile {
     
     @Override
     public void logError(Throwable ex) {
+        ex.printStackTrace();
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.inGameHud != null) {
-            BaseWrappedException<?> e = runner.wrapException(ex);
+            BaseWrappedException<?> e;
+            try {
+                e = runner.wrapException(ex);
+            } catch (Throwable t) {
+                t.printStackTrace();
+                mc.execute(() -> ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new TranslatableText("jsmacros.errorerror").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED))));
+                return;
+            }
             Text text = compileError(e);
             mc.execute(() -> {
                 try {
@@ -45,7 +53,6 @@ public class Profile extends BaseProfile {
                 }
             });
         }
-        ex.printStackTrace();
     }
     
     private Text compileError(BaseWrappedException<?> ex) {
