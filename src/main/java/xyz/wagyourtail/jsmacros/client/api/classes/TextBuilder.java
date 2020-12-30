@@ -59,7 +59,7 @@ public class TextBuilder {
      * @return
      */
     public TextBuilder withColor(int color) {
-        self.setStyle(self.getStyle().withColor(Formatting.byColorIndex(color)));
+        self.styled(style -> style.withColor(Formatting.byColorIndex(color)));
         return this;
     }
     
@@ -80,7 +80,7 @@ public class TextBuilder {
         if (italic) formattings.add(Formatting.ITALIC);
         if (strikethrough) formattings.add(Formatting.STRIKETHROUGH);
         if (magic) formattings.add(Formatting.OBFUSCATED);
-        self.setStyle(self.getStyle().withFormatting(formattings.toArray(new Formatting[0])));
+        self.styled(style -> style.withFormatting(formattings.toArray(new Formatting[0])));
         return this;
     }
     
@@ -91,7 +91,7 @@ public class TextBuilder {
      * @return
      */
     public TextBuilder withShowTextHover(TextHelper text) {
-        self.setStyle(self.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, text.getRaw())));
+        self.styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, text.getRaw())));
         return this;
     }
     
@@ -102,7 +102,7 @@ public class TextBuilder {
      * @return
      */
     public TextBuilder withShowItemHover(ItemStackHelper item) {
-        self.setStyle(self.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new HoverEvent.ItemStackContent(item.getRaw()))));
+        self.styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new HoverEvent.ItemStackContent(item.getRaw()))));
         return this;
     }
     
@@ -114,7 +114,7 @@ public class TextBuilder {
      */
     public TextBuilder withShowEntityHover(EntityHelper<Entity> entity) {
         Entity raw = entity.getRaw();
-        self.setStyle(self.getStyle().withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ENTITY, new HoverEvent.EntityContent(raw.getType(), raw.getUuid(), raw.getName()))));
+        self.styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ENTITY, new HoverEvent.EntityContent(raw.getType(), raw.getUuid(), raw.getName()))));
         return this;
     }
     
@@ -125,7 +125,7 @@ public class TextBuilder {
      * @return
      */
     public TextBuilder withCustomClickEvent(MethodWrapper<Object, Object, Object> action) {
-        self.setStyle(self.getStyle().withClickEvent(new CustomClickEvent(action)));
+        self.styled(style -> style.withClickEvent(new CustomClickEvent(action)));
         return this;
     }
     
@@ -139,7 +139,7 @@ public class TextBuilder {
     public TextBuilder withClickEvent(String action, String value) {
         ClickEvent.Action clickAction = ClickEvent.Action.byName(action);
         assert action != null;
-        self.setStyle(self.getStyle().withClickEvent(new ClickEvent(clickAction, value)));
+        self.styled(style -> style.withClickEvent(new ClickEvent(clickAction, value)));
         return this;
     }
     
