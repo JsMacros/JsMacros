@@ -155,15 +155,33 @@ public class EditorContent extends Button {
         this.clicked(mouseX, mouseY);
         if (this.isFocused()) {
             int index = getIndexPosition(mouseX - x - 30, mouseY - y + 1);
-            if (cursor.startIndex == index && cursor.endIndex == index) {
-                selectWordAtCursor();
+            if (Screen.hasShiftDown()) {
+                if (index < cursor.dragStartIndex) {
+                    cursor.updateEndIndex(cursor.dragStartIndex, history.current);
+                    cursor.updateStartIndex(index, history.current);
+                    cursor.arrowEnd = false;
+                    cursor.arrowLineIndex = cursor.startLineIndex;
+                } else {
+                    cursor.updateStartIndex(cursor.dragStartIndex, history.current);
+                    cursor.updateEndIndex(index, history.current);
+                    cursor.arrowEnd = true;
+                    cursor.arrowLineIndex = cursor.endLineIndex;
+                }
             } else {
-                cursor.updateStartIndex(index, history.current);
-                cursor.updateEndIndex(index, history.current);
+                if (cursor.startIndex == index && cursor.endIndex == index) {
+                    selectWordAtCursor();
+                    cursor.dragStartIndex = index;
+                    cursor.arrowEnd = false;
+                    cursor.arrowLineIndex = cursor.startLineIndex;
+                } else {
+                    cursor.updateStartIndex(index, history.current);
+                    cursor.updateEndIndex(index, history.current);
+                    cursor.dragStartIndex = index;
+                    cursor.arrowEnd = false;
+                    cursor.arrowLineIndex = cursor.startLineIndex;
+                }
             }
-            cursor.dragStartIndex = index;
-            cursor.arrowEnd = false;
-            cursor.arrowLineIndex = cursor.startLineIndex;
+            
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }

@@ -119,7 +119,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.1.8 [citation needed]
      * @return the vehicle of the entity.
      */
-    public EntityHelper getVehicle() {
+    public EntityHelper<T> getVehicle() {
         Entity parent = base.getVehicle();
         if (parent != null) return new EntityHelper(parent);
         return null;
@@ -129,8 +129,8 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.1.8 [citation needed]
      * @return the entity passengers.
      */
-    public List<EntityHelper> getPassengers() {
-        List<EntityHelper> entities = base.getPassengerList().stream().map((e) -> new EntityHelper(e)).collect(Collectors.toList());
+    public List<EntityHelper<?>> getPassengers() {
+        List<EntityHelper<?>> entities = base.getPassengerList().stream().map(EntityHelper::create).collect(Collectors.toList());
         return entities.size() == 0 ? null : entities;
         
     }
@@ -149,7 +149,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @param val
      * @return
      */
-    public EntityHelper setGlowing(boolean val) {
+    public EntityHelper<T> setGlowing(boolean val) {
         base.setGlowing(val);
         return this;
     }
@@ -167,8 +167,8 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         return String.format("Entity:{\"name\":\"%s\", \"type\":\"%s\"}", this.getName(), this.getType());
     }
     
-    public static EntityHelper create(Entity e) {
-        if (e instanceof ClientPlayerEntity) return new ClientPlayerEntityHelper((ClientPlayerEntity) e);
+    public static EntityHelper<?> create(Entity e) {
+        if (e instanceof ClientPlayerEntity) return new ClientPlayerEntityHelper<>((ClientPlayerEntity) e);
         if (e instanceof PlayerEntity) return new PlayerEntityHelper<>((PlayerEntity) e);
         if (e instanceof LivingEntity) return new LivingEntityHelper<>((LivingEntity) e);
         return new EntityHelper<>(e);

@@ -21,7 +21,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      * @since 1.0.3
      */
-    public ClientPlayerEntityHelper lookAt(float yaw, float pitch) {
+    public ClientPlayerEntityHelper<T> lookAt(float yaw, float pitch) {
         pitch = MathHelper.clamp(pitch, -90.0F, 90.0F);
         base.prevPitch = base.pitch;
         base.prevYaw = base.yaw;
@@ -42,7 +42,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      * @since 1.2.8
      */
-    public ClientPlayerEntityHelper lookAt(double x, double y, double z) {
+    public ClientPlayerEntityHelper<T> lookAt(double x, double y, double z) {
         PositionCommon.Vec3D vec = new PositionCommon.Vec3D(base.getX(), base.getY() + base.getEyeHeight(base.getPose()), base.getZ(), x, y, z);
         lookAt(vec.getYaw(), vec.getPitch());
         return this;

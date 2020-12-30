@@ -40,7 +40,7 @@ public class ButtonWidgetHelper<T extends AbstractButtonWidget> extends BaseHelp
      * @param y
      * @return
      */
-    public ButtonWidgetHelper setPos(int x, int y) {
+    public ButtonWidgetHelper<T> setPos(int x, int y) {
         base.x = x;
         base.y = y;
         return this;
@@ -63,7 +63,7 @@ public class ButtonWidgetHelper<T extends AbstractButtonWidget> extends BaseHelp
      * @param message
      * @return
      */
-    public ButtonWidgetHelper setText(String message) {
+    public ButtonWidgetHelper<T> setText(String message) {
         base.setMessage(new LiteralText(message));
         return this;
     }
@@ -94,7 +94,7 @@ public class ButtonWidgetHelper<T extends AbstractButtonWidget> extends BaseHelp
      * @param t
      * @return
      */
-    public ButtonWidgetHelper setActive(boolean t) {
+    public ButtonWidgetHelper<T> setActive(boolean t) {
         base.active = t;
         return this;
     }
@@ -107,7 +107,7 @@ public class ButtonWidgetHelper<T extends AbstractButtonWidget> extends BaseHelp
      * @param width
      * @return
      */
-    public ButtonWidgetHelper setWidth(int width) {
+    public ButtonWidgetHelper<T> setWidth(int width) {
         base.setWidth(width);
         return this;
     }
