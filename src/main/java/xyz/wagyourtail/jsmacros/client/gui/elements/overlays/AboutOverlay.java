@@ -29,8 +29,8 @@ public class AboutOverlay extends OverlayContainer {
             this.close();
         }));
         
-        this.addButton(new Button(x + 2, y + height - 14, w / 3, 12, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("GitHub"), (btn) -> {
-            Util.getOperatingSystem().open("https://github.com/wagyourtail/JsMacros/wiki");
+        this.addButton(new Button(x + 2, y + height - 14, w / 3, 12, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Website"), (btn) -> {
+            Util.getOperatingSystem().open("https://jsmacros.wagyourtail.xyz");
         }));
         
         this.addButton(new Button(x + w / 3 + 2, y + height - 14, w / 3, 12, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Discord"), (btn) -> {

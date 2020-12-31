@@ -100,18 +100,6 @@ jobs:
           args: ./build/libs/${{ steps.fname.outputs.result }}.jar application/jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload to curseforge
-        uses: itsmeow/curseforge-upload@v2
-        with:
-          token: ${{ secrets.CF_API_KEY }}
-          project_id: 403185
-          game_endpoint: minecraft
-          file_path: ./build/libs/${{ steps.fname.outputs.result }}.jar
-          changelog: See the github release for changes.
-          display_name: ${{ steps.fname.outputs.result }}
-          game_versions: 70886:1.16.1,2:Java 8,68441:Fabric
-          release_type: release
-          relations: modmenu:optionalDependency
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.fname.outputs.result }}

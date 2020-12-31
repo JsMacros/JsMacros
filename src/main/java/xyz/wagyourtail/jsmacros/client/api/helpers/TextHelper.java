@@ -66,7 +66,7 @@ public class TextHelper extends BaseHelper<Text> {
     }
 
     /**
-     * @since 1.0.8, this used to do the same as getString
+     * @since 1.0.8, this used to do the same as {@link #getString}
      * @return String representation of text helper.
      */
     public String toString() {
