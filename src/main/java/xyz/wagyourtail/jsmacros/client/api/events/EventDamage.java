@@ -11,7 +11,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
  @Event(value = "Damage", oldName = "DAMAGE")
 public class EventDamage implements BaseEvent {
-    public final EntityHelper attacker;
+    public final EntityHelper<?> attacker;
     public final String source;
     public final float health;
     public final float change;
