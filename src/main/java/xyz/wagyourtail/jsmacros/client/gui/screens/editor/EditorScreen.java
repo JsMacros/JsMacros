@@ -145,9 +145,12 @@ public class EditorScreen extends BaseScreen {
                     btn.setMessage(new LiteralText("json"));
                     break;
                 case "json":
+                    content.setLanguage("ruby");
+                    btn.setMessage(new LiteralText("ruby"));
+                    break;
+                case "ruby":
                     content.setLanguage("javascript");
                     btn.setMessage(new LiteralText("javascript"));
-                    break;
                 default:
                     content.setLanguage("python");
                     btn.setMessage(new LiteralText("python"));
@@ -187,6 +190,8 @@ public class EditorScreen extends BaseScreen {
                 return "lua";
             case "json":
                 return "json";
+            case "rb":
+                return "ruby";
             default:
                 return "javascript";
         }
