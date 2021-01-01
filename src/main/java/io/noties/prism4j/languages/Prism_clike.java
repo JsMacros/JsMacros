@@ -10,7 +10,8 @@ import static java.util.regex.Pattern.compile;
 
 /**
  * This class is from <a href="https://github.com/noties/Prism4j">Prism4j</a>
- * under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0 license</a>
+ * under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0 license</a>'
+ * updated to match upstream
  */
 @SuppressWarnings("unused")
 public abstract class Prism_clike {
@@ -21,7 +22,7 @@ public abstract class Prism_clike {
       "clike",
       token(
         "comment",
-        pattern(compile("(^|[^\\\\])\\/\\*[\\s\\S]*?(?:\\*\\/|$)"), true),
+        pattern(compile("(^|[^\\\\])\\/\\*[\\s\\S]*?(?:\\*\\/|$)"), true, true),
         pattern(compile("(^|[^\\\\:])\\/\\/.*"), true, true)
       ),
       token(
@@ -31,7 +32,7 @@ public abstract class Prism_clike {
       token(
         "class-name",
         pattern(
-          compile("((?:\\b(?:class|interface|extends|implements|trait|instanceof|new)\\s+)|(?:catch\\s+\\())[\\w.\\\\]+"),
+          compile("(\\b(?:class|interface|extends|implements|trait|instanceof|new)\\s+|\\bcatch\\s+\\()[\\w.\\\\]+", Pattern.CASE_INSENSITIVE),
           true,
           false,
           null,
@@ -46,7 +47,7 @@ public abstract class Prism_clike {
       token("function", pattern(compile("\\b[a-zA-Z_]\\w*(?=\\s*\\()" /* this is more accurate */, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE))),
       token(
         "number",
-        pattern(compile("\\b0x[\\da-f]+\\b|(?:\\b\\d+\\.?\\d*|\\B\\.\\d+)(?:e[+-]?\\d+)?", Pattern.CASE_INSENSITIVE))
+        pattern(compile("\\b0x[\\da-f]+\\b|(?:\\b\\d+(?:\\.\\d*)?|\\B\\.\\d+)(?:e[+-]?\\d+)?", Pattern.CASE_INSENSITIVE))
       ),
       token("operator", pattern(compile("--?|\\+\\+?|!=?=?|<=?|>=?|==?=?|&&?|\\|\\|?|\\?|\\*|\\/|~|\\^|%"))),
       token("punctuation", pattern(compile("[{}\\[\\];(),.:]")))

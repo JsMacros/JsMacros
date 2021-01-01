@@ -47,7 +47,7 @@ public class Prism_regex {
                 ),
                 pattern(compile("\\)"), false, false, "punctuation")
             ),
-            token("quantifier", pattern(compile("(?:[+*?]|\\{(?:\\d+,?\\d*)\\})[?+]?"), false, false, "number")),
+            token("quantifier", pattern(compile("(?:[+*?]|\\{\\d+(?:,\\d*)?\\})[?+]?"), false, false, "number")),
             token("alternation", pattern(compile("\\|"), false, false, "keyword"))
         );
     }
