@@ -151,6 +151,7 @@ public class EditorScreen extends BaseScreen {
                 case "ruby":
                     content.setLanguage("javascript");
                     btn.setMessage(new LiteralText("javascript"));
+                    break;
                 default:
                     content.setLanguage("python");
                     btn.setMessage(new LiteralText("python"));
