@@ -100,4 +100,8 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
         if (h == null) h = getObjectiveSlot(1);
         return h;
     }
+    
+    public String toString() {
+        return String.format("Scoreboard:{\"current\":%s}", getCurrentScoreboard().toString());
+    }
 }

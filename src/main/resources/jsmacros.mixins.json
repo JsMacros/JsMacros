@@ -10,6 +10,8 @@
 		"access.MixinHorseScreen",
 		"access.MixinInGameHud",
 		"access.MixinMinecraftClient",
+		"access.MixinRecipeBookResults",
+		"access.MixinRecipeBookWidget",
 		"access.MixinScreen",
 		"access.MixinSignEditScreen",
 		"access.MixinWorldRenderer",

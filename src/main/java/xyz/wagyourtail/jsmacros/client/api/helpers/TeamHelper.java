@@ -101,4 +101,8 @@ public class TeamHelper extends BaseHelper<Team> {
     public String deathMessageVisibility() {
         return base.getDeathMessageVisibilityRule().toString();
     }
+    
+    public String toString() {
+        return String.format("Team:{\"name\":\"%s\"}", getDisplayName().toString());
+    }
 }
