@@ -27,7 +27,7 @@ public class EventCustom implements BaseEvent {
     
     /**
      * Triggers the event.
-     *
+     * Try not to cause infinite looping by triggering the same {@link EventCustom} from its own listeners.
      * @since 1.2.8
      */
     public void trigger() {
@@ -49,7 +49,8 @@ public class EventCustom implements BaseEvent {
     
     /**
      * Triggers the event and waits for it to complete.
-     *
+     * In languages with threading issues (js/jep) this may cause circular waiting when triggered from the same thread as
+     * the {@code jsmacros.on} registration for the event
      * @since 1.2.8
      */
     public void triggerJoin() {
