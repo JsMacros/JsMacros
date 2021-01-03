@@ -37,7 +37,7 @@ public class EventCustom implements BaseEvent {
     /**
      * trigger the event listeners, then run {@code callback} when they finish.
      * @since 1.3.1
-     * @param callback used as a {@Link runnable}, so no args, no return value.
+     * @param callback used as a {@Link Runnable}, so no args, no return value.
      */
     public void trigger(MethodWrapper<Object, Object, Object> callback) {
         Thread t = new Thread(() -> {
