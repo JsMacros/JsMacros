@@ -85,6 +85,11 @@ public class FConsumer extends PerExecLanguageLibrary<IFConsumer> implements IFC
             public R get() {
                 return apply(null, null);
             }
+            
+            @Override
+            public boolean preventSameThreadJoin() {
+                return true;
+            }
         };
     }
     

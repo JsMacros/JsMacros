@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.core;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Comparator;
 import java.util.function.*;
 
@@ -32,15 +34,18 @@ public abstract class MethodWrapper<T, U, R> implements Consumer<T>, BiConsumer<
     @Override
     public abstract boolean test(T t, U u);
     
-    
+    public boolean preventSameThreadJoin() {
+        return false;
+    }
     
     /**
      * Makes {@link Function} and {@link BiFunction} work together.
      * Extended so it's called on every type not just those 2.
      * @param after put a {@link MethodWrapper} here when using in scripts.
      */
+    @NotNull
     @Override
-    public <V> MethodWrapper<T, U, V> andThen(Function<? super R,? extends V> after) {
+    public <V> MethodWrapper<T, U, V> andThen(@NotNull Function<? super R,? extends V> after) {
         MethodWrapper<T, U, R> self = this;
         return new MethodWrapper<T, U, V>() {
 
@@ -95,7 +100,14 @@ public abstract class MethodWrapper<T, U, R> implements Consumer<T>, BiConsumer<
                 }
                 return result;
             }
-
+    
+            @Override
+            public boolean preventSameThreadJoin() {
+                boolean afterPrevent = false;
+                if (after instanceof MethodWrapper) afterPrevent = ((MethodWrapper<?, ?, ?>) after).preventSameThreadJoin();
+                return self.preventSameThreadJoin() || afterPrevent;
+            }
+    
             @Override
             public void run() {
                 self.run();
@@ -153,7 +165,12 @@ public abstract class MethodWrapper<T, U, R> implements Consumer<T>, BiConsumer<
             public boolean test(T t, U u) {
                 return !self.test(t, u);
             }
-
+    
+            @Override
+            public boolean preventSameThreadJoin() {
+                return self.preventSameThreadJoin();
+            }
+    
             @Override
             public void run() {
                 self.run();

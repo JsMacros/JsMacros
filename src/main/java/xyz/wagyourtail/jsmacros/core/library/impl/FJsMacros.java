@@ -160,8 +160,8 @@ public class FJsMacros extends BaseLibrary {
      */
     public IEventListener on(String event, MethodWrapper<BaseEvent, Object, Object> callback) {
         if (callback == null) return null;
-        String tname = Thread.currentThread().getName();
-        IEventListener listener = new IEventListener() {
+        Thread th = Thread.currentThread();
+        IEventListener listener = new ScriptEventListener() {
             
             @Override
             public Thread trigger(BaseEvent event) {
@@ -171,16 +171,26 @@ public class FJsMacros extends BaseLibrary {
                         callback.accept(event);
                     } catch (Exception e) {
                         Core.instance.eventRegistry.removeListener(this);
-                        e.printStackTrace();
+                        Core.instance.profile.logError(e);
                     }
                 });
                 t.start();
                 return t;
             }
-
+    
+            @Override
+            public Thread getCreator() {
+                return th;
+            }
+    
+            @Override
+            public MethodWrapper<?, ?, ?> getWrapper() {
+                return callback;
+            }
+    
             @Override
             public String toString() {
-                return String.format("EventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", tname, event);
+                return String.format("ScriptEventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", th.getName(), event);
             }
         };
         Core.instance.eventRegistry.addListener(event, listener);
@@ -200,27 +210,36 @@ public class FJsMacros extends BaseLibrary {
      */
     public IEventListener once(String event, MethodWrapper<BaseEvent, Object, Object> callback) {
         if (callback == null) return null;
-        String tname = Thread.currentThread().getName();
         Thread th = Thread.currentThread();
-        IEventListener listener = new IEventListener() {
+        IEventListener listener = new ScriptEventListener() {
             @Override
             public Thread trigger(BaseEvent event) {
                 Core.instance.eventRegistry.removeListener(this);
                 Thread t = new Thread(() -> {
                     Thread.currentThread().setName(this.toString());
                     try {
-                        while(th.isAlive());
                         callback.accept(event);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Core.instance.profile.logError(e);
                     }
                 });
                 t.start();
                 return t;
             }
+    
+            @Override
+            public Thread getCreator() {
+                return th;
+            }
+    
+            @Override
+            public MethodWrapper<?, ?, ?> getWrapper() {
+                return callback;
+            }
+    
             @Override
             public String toString() {
-                return String.format("OnceEventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", tname, event);
+                return String.format("OnceScriptEventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", th.getName(), event);
             }
             
         };
@@ -287,5 +306,11 @@ public class FJsMacros extends BaseLibrary {
      */
     public EventCustom createCustomEvent(String eventName) {
         return new EventCustom(eventName);
+    }
+    
+    public interface ScriptEventListener extends IEventListener {
+        Thread getCreator();
+        
+        MethodWrapper<?,?,?> getWrapper();
     }
 }

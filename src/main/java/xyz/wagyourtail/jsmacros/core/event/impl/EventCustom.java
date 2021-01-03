@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.event.impl;
 
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
@@ -31,6 +32,19 @@ public class EventCustom implements BaseEvent {
      */
     public void trigger() {
         profile.triggerEventNoAnything(this);
+    }
+    
+    /**
+     * trigger the event listeners, then run {@code callback} when they finish.
+     * @since 1.3.1
+     * @param callback used as a {@Link runnable}, so no args, no return value.
+     */
+    public void trigger(MethodWrapper<Object, Object, Object> callback) {
+        Thread t = new Thread(() -> {
+            profile.triggerEventJoinNoAnything(this);
+            callback.run();
+        });
+        t.start();
     }
     
     /**

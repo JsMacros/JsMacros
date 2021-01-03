@@ -17,12 +17,9 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
-
-import java.util.HashSet;
-import java.util.Set;
+import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 
 public class Profile extends BaseProfile {
-    public Set<Thread> joinedThreadStack = new HashSet<>();
     
     public Profile(Core runner) {
         super(runner);
@@ -44,17 +41,24 @@ public class Profile extends BaseProfile {
         triggerEventJoinNoAnything(event);
     
         if (runner.eventRegistry.listeners.containsKey("ANYTHING")) for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get("ANYTHING"))) {
-            Thread t = null;
-            try {
-                t = macro.trigger(event);
-                if (joinedMain) {
-                    joinedThreadStack.add(t);
-                }
-                if (t != null) t.join();
-            } catch (InterruptedException e) {
-            } finally {
-                joinedThreadStack.remove(t);
+            runJoinedEventListener(event, joinedMain, macro);
+        }
+    }
+    
+    private void runJoinedEventListener(BaseEvent event, boolean joinedMain, IEventListener macroListener) {
+        if (macroListener instanceof FJsMacros.ScriptEventListener && ((FJsMacros.ScriptEventListener) macroListener).getCreator() == Thread.currentThread() && ((FJsMacros.ScriptEventListener) macroListener).getWrapper().preventSameThreadJoin()) {
+            throw new IllegalThreadStateException("Cannot join" + macroListener.toString() + "on same thread as it's creation.");
+        }
+        Thread t = null;
+        try {
+            t = macroListener.trigger(event);
+            if (joinedMain) {
+                joinedThreadStack.add(t);
             }
+            if (t != null) t.join();
+        } catch (InterruptedException e) {
+        } finally {
+            joinedThreadStack.remove(t);
         }
     }
     
@@ -64,32 +68,12 @@ public class Profile extends BaseProfile {
         if (event instanceof EventCustom) {
             if (runner.eventRegistry.listeners.containsKey(((EventCustom) event).eventName))
                 for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get(((EventCustom) event).eventName))) {
-                    Thread t = null;
-                    try {
-                        t = macro.trigger(event);
-                        if (joinedMain) {
-                            joinedThreadStack.add(t);
-                        }
-                        if (t != null) t.join();
-                    } catch (InterruptedException e) {
-                    } finally {
-                        joinedThreadStack.remove(t);
-                    }
+                    runJoinedEventListener(event, joinedMain, macro);
                 }
         } else {
             if (runner.eventRegistry.listeners.containsKey(event.getEventName()))
                 for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get(event.getEventName()))) {
-                    Thread t = null;
-                    try {
-                        t = macro.trigger(event);
-                        if (joinedMain) {
-                            joinedThreadStack.add(t);
-                        }
-                        if (t != null) t.join();
-                    } catch (InterruptedException e) {
-                    } finally {
-                        joinedThreadStack.remove(t);
-                    }
+                    runJoinedEventListener(event, joinedMain, macro);
                 }
         }
     }

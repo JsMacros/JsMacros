@@ -9,10 +9,7 @@ import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventProfileLoad;
 import xyz.wagyourtail.jsmacros.core.library.impl.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Wagyourtail
@@ -20,6 +17,7 @@ import java.util.Map;
  */
 public abstract class BaseProfile {
     protected final Core runner;
+    public final Set<Thread> joinedThreadStack = new HashSet<>();
     public String profileName;
     
     public BaseProfile(Core runner) {
