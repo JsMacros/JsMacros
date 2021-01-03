@@ -101,17 +101,7 @@ public abstract class BaseProfile {
      * @since 1.2.7
      * @param event
      */
-    public void triggerEventJoin(BaseEvent event) {
-        triggerEventJoinNoAnything(event);
-    
-        if (runner.eventRegistry.listeners.containsKey("ANYTHING")) for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get("ANYTHING"))) {
-            try {
-                Thread t = macro.trigger(event);
-                if (t != null) t.join();
-            } catch (InterruptedException e) {
-            }
-        }
-    }
+    public abstract void triggerEventJoin(BaseEvent event);
     
     /**
      * @since 1.2.7
@@ -135,27 +125,7 @@ public abstract class BaseProfile {
      * @since 1.2.7
      * @param event
      */
-    public void triggerEventJoinNoAnything(BaseEvent event) {
-        if (event instanceof EventCustom) {
-            if (runner.eventRegistry.listeners.containsKey(((EventCustom) event).eventName))
-                for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get(((EventCustom) event).eventName))) {
-                    try {
-                        Thread t = macro.trigger(event);
-                        if (t != null) t.join();
-                    } catch (InterruptedException e) {
-                    }
-                }
-        } else {
-            if (runner.eventRegistry.listeners.containsKey(event.getEventName()))
-                for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get(event.getEventName()))) {
-                    try {
-                        Thread t = macro.trigger(event);
-                        if (t != null) t.join();
-                    } catch (InterruptedException e) {
-                    }
-                }
-        }
-    }
+    public abstract void triggerEventJoinNoAnything(BaseEvent event);
     
     public void init(String defaultProfile) {
         initRegistries();

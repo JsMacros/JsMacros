@@ -3,6 +3,8 @@ package xyz.wagyourtail.jsmacros.client.api.functions;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.network.ServerAddress;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.Profile;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.client.tick.TickSync;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -123,18 +125,24 @@ public class FClient extends BaseLibrary {
      * @throws InterruptedException
      */
     public void waitTick() throws InterruptedException {
+        if (((Profile)JsMacros.core.profile).joinedThread == Thread.currentThread()) {
+            throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined!");
+        }
         tickSynchronizer.waitTick();
     }
     
     /**
      * waits the specified number of client ticks.
-     *
+     * don't use this on an event that the main thread waits on (joins)... that'll cause circular waiting.
      * @since 1.2.6
      *
      * @param i
      * @throws InterruptedException
      */
     public void waitTick(int i) throws InterruptedException {
+        if (((Profile)JsMacros.core.profile).joinedThread == Thread.currentThread()) {
+            throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined!");
+        }
         while (--i >= 0) {
             tickSynchronizer.waitTick();
         }

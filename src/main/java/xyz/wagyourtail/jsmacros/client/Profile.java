@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
@@ -12,9 +13,13 @@ import xyz.wagyourtail.jsmacros.client.gui.screens.macros.MacroScreen;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.IEventListener;
+import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 
 public class Profile extends BaseProfile {
+    public Thread joinedThread = null;
     
     public Profile(Core runner) {
         super(runner);
@@ -28,6 +33,53 @@ public class Profile extends BaseProfile {
             mc.execute(() -> ((MacroScreen) mc.currentScreen).reload());
         }
         return val;
+    }
+    
+    @Override
+    public void triggerEventJoin(BaseEvent event) {
+        boolean onMcThread = MinecraftClient.getInstance().isOnThread();
+        triggerEventJoinNoAnything(event);
+    
+        if (runner.eventRegistry.listeners.containsKey("ANYTHING")) for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get("ANYTHING"))) {
+            try {
+                Thread t = macro.trigger(event);
+                if (onMcThread) {
+                    joinedThread = t;
+                }
+                if (t != null) t.join();
+            } catch (InterruptedException e) {
+            }
+        }
+    }
+    
+    @Override
+    public void triggerEventJoinNoAnything(BaseEvent event) {
+        boolean onMcThread = MinecraftClient.getInstance().isOnThread();
+        if (event instanceof EventCustom) {
+            if (runner.eventRegistry.listeners.containsKey(((EventCustom) event).eventName))
+                for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get(((EventCustom) event).eventName))) {
+                    try {
+                        Thread t = macro.trigger(event);
+                        if (onMcThread) {
+                            joinedThread = t;
+                        }
+                        if (t != null) t.join();
+                    } catch (InterruptedException e) {
+                    }
+                }
+        } else {
+            if (runner.eventRegistry.listeners.containsKey(event.getEventName()))
+                for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get(event.getEventName()))) {
+                    try {
+                        Thread t = macro.trigger(event);
+                        if (onMcThread) {
+                            joinedThread = t;
+                        }
+                        if (t != null) t.join();
+                    } catch (InterruptedException e) {
+                    }
+                }
+        }
     }
     
     @Override

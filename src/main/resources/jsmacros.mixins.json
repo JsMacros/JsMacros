@@ -14,6 +14,7 @@
 		"access.MixinRecipeBookWidget",
 		"access.MixinScreen",
 		"access.MixinSignEditScreen",
+		"access.MixinStyleSerializer",
 		"access.MixinWorldRenderer",
 		"events.MixinChatHud",
 		"events.MixinClientPlayerEntity",
@@ -27,8 +28,5 @@
 	],
 	"injectors": {
 		"defaultRequire": 1
-	},
-	"mixins": [
-		"access.MixinStyleSerializer"
-	]
+	}
 }
