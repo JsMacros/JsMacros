@@ -47,7 +47,7 @@ public class Profile extends BaseProfile {
     
     private void runJoinedEventListener(BaseEvent event, boolean joinedMain, IEventListener macroListener) {
         if (macroListener instanceof FJsMacros.ScriptEventListener && ((FJsMacros.ScriptEventListener) macroListener).getCreator() == Thread.currentThread() && ((FJsMacros.ScriptEventListener) macroListener).getWrapper().preventSameThreadJoin()) {
-            throw new IllegalThreadStateException("Cannot join" + macroListener.toString() + "on same thread as it's creation.");
+            throw new IllegalThreadStateException("Cannot join " + macroListener.toString() + " on same thread as it's creation.");
         }
         Thread t = null;
         try {
