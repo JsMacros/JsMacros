@@ -32,6 +32,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
     
     /**
+     * probably not a good idea run this if you were in a crafting table on {@code player.openInventory()} and it's closed now...
      * @since 1.3.1
      * @param craftAll
      */

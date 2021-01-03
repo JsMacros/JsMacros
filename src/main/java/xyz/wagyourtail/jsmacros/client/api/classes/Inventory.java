@@ -269,7 +269,11 @@ public class Inventory {
         return null;
     }
     
-    public List<RecipeHelper> getCraftableRecipies() {
+    /**
+     * @since 1.3.1
+     * @return all craftable recipes
+     */
+    public List<RecipeHelper> getCraftableRecipes() {
         Stream<Recipe<?>> recipes;
         RecipeBookResults res;
         if (inventory instanceof CraftingScreen) {
@@ -282,7 +286,7 @@ public class Inventory {
             return null;
         }
         List<RecipeResultCollection> result = ((IRecipeBookResults) res).getResultCollections();
-        recipes = result.stream().flatMap(e -> e.getResults(true).stream());
+        recipes = result.stream().flatMap(e -> e.getRecipes(true).stream());
         return recipes.map(e -> new RecipeHelper(e, syncId)).collect(Collectors.toList());
     }
     
