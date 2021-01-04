@@ -1,21 +1,18 @@
 package xyz.wagyourtail.jsmacros.client.api.events;
 
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import xyz.wagyourtail.jsmacros.client.gui.BaseScreen;
-import xyz.wagyourtail.jsmacros.core.Core;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.functions.FKeyBind;
+import xyz.wagyourtail.jsmacros.client.gui.BaseScreen;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Wagyourtail
@@ -58,8 +55,6 @@ public class EventKey implements BaseEvent {
             if (mc.currentScreen.getFocused() instanceof TextFieldWidget) return;
         }
         
-        Map<String, Object> args = new HashMap<>();
-        args.put("rawkey", keycode);
         if (action == 1) {
             if (key == 340 || key == 344) mods -= 1;
             else if (key == 341 || key == 345) mods -= 2;
