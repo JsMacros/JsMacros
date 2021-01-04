@@ -8,13 +8,12 @@ import net.minecraft.client.options.GraphicsMode;
 import net.minecraft.client.util.Window;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Arm;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
  * @since 1.1.7
  */
 public class OptionsHelper extends BaseHelper<GameOptions> {
-    
+    private static final Map<String, SoundCategory> SOUND_CATEGORY_MAP = Arrays.stream(SoundCategory.values()).collect(Collectors.toMap(SoundCategory::getName, Function.identity()));
     private MinecraftClient mc = MinecraftClient.getInstance();
     private ResourcePackManager rpm = mc.getResourcePackManager();
     
@@ -241,14 +240,54 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * normal values for gamam are between {@code 0} and {@code 1}
      */
     public double getGamma() {
-        return mc.options.gamma;
+        return base.gamma;
     }
     
     /**
      * @since 1.3.0
-     * normal values for gamam are between {@code 0} and {@code 1}
+     * normal values for gamma are between {@code 0} and {@code 1}
      */
     public void setGamma(double gamma) {
-        mc.options.gamma = gamma;
+        base.gamma = gamma;
+    }
+    
+    /**
+     * @since 1.3.1
+     * @param vol
+     */
+    public void setVolume(double vol) {
+        base.setSoundVolume(SoundCategory.MASTER, (float) vol);
+    }
+    
+    /**
+     * set volume by category.
+     *
+     * @since 1.3.1
+     * @param category
+     * @param volume
+     */
+    public void setVolume(String category, double volume) {
+        base.setSoundVolume(SOUND_CATEGORY_MAP.get(category), (float) volume);
+    }
+    
+    /**
+     * @Since 1.3.1
+     * @return
+     */
+    public Map<String, Float> getVolumes() {
+        Map<String, Float> volumes = new HashMap<>();
+        for (SoundCategory category : SoundCategory.values()) {
+            volumes.put(category.getName(), base.getSoundVolume(category));
+        }
+        return volumes;
+    }
+    
+    /**
+     * @param category
+     * @since 1.3.1
+     * @return
+     */
+    public float getVolume(String category) {
+        return base.getSoundVolume(SOUND_CATEGORY_MAP.get(category));
     }
 }
