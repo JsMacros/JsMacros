@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.events;
 
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import xyz.wagyourtail.jsmacros.client.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
@@ -50,7 +52,11 @@ public class EventKey implements BaseEvent {
             else FKeyBind.pressedKeys.remove(keycode.getTranslationKey());
         }
 
-        if (mc.currentScreen != null && Core.instance.config.options.disableKeyWhenScreenOpen) return;
+        if (mc.currentScreen != null) {
+            if (Core.instance.config.options.disableKeyWhenScreenOpen) return;
+            if (mc.currentScreen instanceof BaseScreen) return;
+            if (mc.currentScreen.getFocused() instanceof TextFieldWidget) return;
+        }
         
         Map<String, Object> args = new HashMap<>();
         args.put("rawkey", keycode);
