@@ -12,11 +12,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
+import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.elements.editor.children.History;
 import xyz.wagyourtail.jsmacros.client.gui.elements.editor.children.PrismGrammarLocator;
 import xyz.wagyourtail.jsmacros.client.gui.elements.editor.children.SelectCursor;
 import xyz.wagyourtail.jsmacros.client.gui.elements.editor.children.TextStyleCompiler;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 
 import java.util.List;
 import java.util.function.Consumer;

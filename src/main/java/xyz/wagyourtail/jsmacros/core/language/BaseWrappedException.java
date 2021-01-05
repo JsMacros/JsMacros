@@ -6,7 +6,7 @@ public class BaseWrappedException<T> {
     public final T stackFrame;
     public final SourceLocation location;
     public final String message;
-    public final BaseWrappedException next;
+    public final BaseWrappedException<?> next;
     
     public BaseWrappedException(T exception, String message, SourceLocation location, BaseWrappedException<?> next) {
         this.stackFrame = exception;
