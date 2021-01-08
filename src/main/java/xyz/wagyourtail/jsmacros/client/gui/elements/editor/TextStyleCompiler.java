@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.gui.elements.editor.children;
+package xyz.wagyourtail.jsmacros.client.gui.elements.editor;
 
 import io.noties.prism4j.AbsVisitor;
 import io.noties.prism4j.Prism4j;

@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.gui.elements.editor.children;
+package xyz.wagyourtail.jsmacros.client.gui.elements.editor;
 
 import com.google.common.collect.Sets;
 import io.noties.prism4j.GrammarLocator;

@@ -10,6 +10,7 @@ import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.functions.FKeyBind;
 import xyz.wagyourtail.jsmacros.client.gui.BaseScreen;
+import xyz.wagyourtail.jsmacros.client.gui.screens.editor.EditorScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -38,6 +39,9 @@ public class EventKey implements BaseEvent {
         
         
         if (keyBinding.matchesKey(key, scancode) && action == 1 && mc.currentScreen == null) {
+            if (JsMacros.prevScreen instanceof EditorScreen) {
+                ((EditorScreen) JsMacros.prevScreen).blockFirst = true;
+            }
             mc.openScreen(JsMacros.prevScreen);
             return;
         }
