@@ -586,6 +586,7 @@ public class EditorScreen extends BaseScreen {
     
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int btn) {
+        setFocused(null);
         int index = getIndexPosition(mouseX - 30, mouseY - 12 + 1);
         if (Screen.hasShiftDown()) {
             if (index < cursor.dragStartIndex) {
@@ -610,7 +611,7 @@ public class EditorScreen extends BaseScreen {
             cursor.arrowEnd = false;
             cursor.arrowLineIndex = cursor.startLineIndex;
         }
-        return super.mouseReleased(mouseX, mouseY, btn);
+        return super.mouseClicked(mouseX, mouseY, btn);
     }
     
     private int getIndexPosition(double x, double y) {
@@ -648,20 +649,22 @@ public class EditorScreen extends BaseScreen {
     
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        int index = getIndexPosition(mouseX - 30, mouseY - 12);
-        if (index == cursor.dragStartIndex) {
-            cursor.updateStartIndex(index, history.current);
-            cursor.updateEndIndex(index, history.current);
-        } else if (index < cursor.dragStartIndex) {
-            cursor.updateEndIndex(cursor.dragStartIndex, history.current);
-            cursor.arrowEnd = false;
-            cursor.updateStartIndex(index, history.current);
-            cursor.arrowLineIndex = cursor.startLineIndex;
-        } else {
-            cursor.updateStartIndex(cursor.dragStartIndex, history.current);
-            cursor.arrowEnd = true;
-            cursor.updateEndIndex(index, history.current);
-            cursor.arrowLineIndex = cursor.endLineIndex;
+        if (getFocused() != scrollbar) {
+            int index = getIndexPosition(mouseX - 30, mouseY - 12);
+            if (index == cursor.dragStartIndex) {
+                cursor.updateStartIndex(index, history.current);
+                cursor.updateEndIndex(index, history.current);
+            } else if (index < cursor.dragStartIndex) {
+                cursor.updateEndIndex(cursor.dragStartIndex, history.current);
+                cursor.arrowEnd = false;
+                cursor.updateStartIndex(index, history.current);
+                cursor.arrowLineIndex = cursor.startLineIndex;
+            } else {
+                cursor.updateStartIndex(cursor.dragStartIndex, history.current);
+                cursor.arrowEnd = true;
+                cursor.updateEndIndex(index, history.current);
+                cursor.arrowLineIndex = cursor.endLineIndex;
+            }
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
