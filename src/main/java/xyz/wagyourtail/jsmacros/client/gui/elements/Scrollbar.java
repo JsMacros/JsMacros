@@ -1,26 +1,35 @@
 package xyz.wagyourtail.jsmacros.client.gui.elements;
 
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 
 import java.util.function.Consumer;
 
-public class Scrollbar extends Button {
-    public double scrollPages = 1;
-    public double scrollAmmount = 0;
-    public double scrollbarHeight;
-    public double scrollDistance;
-    public Consumer<Double> onChange;
+public class Scrollbar extends AbstractButtonWidget {
+    protected double scrollPages = 1;
+    protected double scrollAmmount = 0;
+    protected double scrollbarHeight;
+    protected double scrollDistance;
+    protected int color;
+    protected int borderColor;
+    protected int hilightColor;
+    protected Consumer<Double> onChange;
 
     public Scrollbar(int x, int y, int width, int height, int color, int borderColor, int hilightColor, double scrollPages, Consumer<Double> onChange) {
-        super(x, y, width, height, color, borderColor, hilightColor, 0, new LiteralText(""), null);
+        super(x, y, width, height, new LiteralText(""));
+        this.color = color;
+        this.borderColor = borderColor;
+        this.hilightColor = hilightColor;
         this.onChange = onChange;
         this.setScrollPages(scrollPages);
     }
     
-    @Override
     public Scrollbar setPos(int x, int y, int width, int height) {
-        super.setPos(x, y, width, height);
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
         this.scrollbarHeight = (height - 2) / (scrollPages + 1);
         double oldDistance = this.scrollDistance;
         this.scrollDistance = Math.max(height - 2 - this.scrollbarHeight, 1);

@@ -26,7 +26,7 @@ public class RunningThreadContainer extends MultiElementContainer {
     @SuppressWarnings("deprecation")
     public void init() {
         super.init();
-        cancelButton = (Button) this.addButton(new Button(x+1, y+1, height - 2, height - 2, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> {
+        cancelButton = (Button) this.addButton(new Button(x+1, y+1, height - 2, height - 2, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> {
                 if (t.t != null)
                     t.t.stop();
                 Core.instance.removeThread(t);

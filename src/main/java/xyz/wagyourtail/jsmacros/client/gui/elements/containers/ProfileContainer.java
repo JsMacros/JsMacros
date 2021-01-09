@@ -26,11 +26,11 @@ public class ProfileContainer extends MultiElementContainer {
     }
 
     public void init() {
-        selectButton = (Button) this.addButton(new Button(x + 1, y + 1, width * 3 / 4 - 2, height - 2, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(pName), (btn) -> {
+        selectButton = (Button) this.addButton(new Button(x + 1, y + 1, width * 3 / 4 - 2, height - 2, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(pName), (btn) -> {
             if (setSelected != null) setSelected.accept(this);
         }));
 
-        defaultButton = (Button) this.addButton(new Button(x + width * 3 / 4 - 1, y + 1, width / 4, height - 2, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(defaultProfile ? "X" : ""), (btn) -> {
+        defaultButton = (Button) this.addButton(new Button(x + width * 3 / 4 - 1, y + 1, width / 4, height - 2, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(defaultProfile ? "X" : ""), (btn) -> {
             if (setDefault != null) setDefault.accept(this);
         }));
     }

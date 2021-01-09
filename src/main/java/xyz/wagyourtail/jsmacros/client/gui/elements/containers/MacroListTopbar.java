@@ -33,26 +33,26 @@ public class MacroListTopbar extends MultiElementContainer {
         
         int w = width - 12;
         
-        addButton(new Button(x + 1, y + 1, w / 12 - 1, height - 3, Core.instance.config.options.sortMethod == ScriptTrigger.SortMethod.Enabled ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.enabled"), (btn) -> {
+        addButton(new Button(x + 1, y + 1, w / 12 - 1, height - 3, textRenderer, Core.instance.config.options.sortMethod == ScriptTrigger.SortMethod.Enabled ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.enabled"), (btn) -> {
             Core.instance.config.setSortComparator(ScriptTrigger.SortMethod.Enabled);
             parent.reload();
         }));
         
-        type = (Button) addButton(new Button(x + w / 12 + 1, y + 1, (w / 4) - (w / 12) - 1, height - 3, Core.instance.config.options.sortMethod == ScriptTrigger.SortMethod.TriggerName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(deftype == ScriptTrigger.TriggerType.EVENT ? "jsmacros.events" : "jsmacros.keys"), (btn) -> {
+        type = (Button) addButton(new Button(x + w / 12 + 1, y + 1, (w / 4) - (w / 12) - 1, height - 3, textRenderer, Core.instance.config.options.sortMethod == ScriptTrigger.SortMethod.TriggerName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(deftype == ScriptTrigger.TriggerType.EVENT ? "jsmacros.events" : "jsmacros.keys"), (btn) -> {
             Core.instance.config.setSortComparator(ScriptTrigger.SortMethod.TriggerName);
             parent.reload();
         }));
         
-        addButton(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 3, Core.instance.config.options.sortMethod == ScriptTrigger.SortMethod.FileName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.file"), (btn) -> {
+        addButton(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 3, textRenderer, Core.instance.config.options.sortMethod == ScriptTrigger.SortMethod.FileName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.file"), (btn) -> {
             Core.instance.config.setSortComparator(ScriptTrigger.SortMethod.FileName);
             parent.reload();
         }));
         
-        addButton(new Button(x + w - 32, y + 1, 30, height - 3, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.run"), (btn) -> {
+        addButton(new Button(x + w - 32, y + 1, 30, height - 3, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.run"), (btn) -> {
             if (runFile != null) runFile.run();
         }));
         
-        addButton(new Button(x + w - 1, y+1, 11, height - 3, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("+"), (btn) -> {
+        addButton(new Button(x + w - 1, y+1, 11, height - 3, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("+"), (btn) -> {
             ScriptTrigger macro = new ScriptTrigger(deftype, "", "", false);
             Core.instance.eventRegistry.addScriptTrigger(macro);
             addMacro.accept(macro);

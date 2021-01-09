@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.gui.elements.editor;
+package xyz.wagyourtail.jsmacros.client.gui.editor;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;

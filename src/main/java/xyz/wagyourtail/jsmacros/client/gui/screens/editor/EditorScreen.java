@@ -18,10 +18,10 @@ import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
-import xyz.wagyourtail.jsmacros.client.gui.elements.editor.History;
-import xyz.wagyourtail.jsmacros.client.gui.elements.editor.PrismGrammarLocator;
-import xyz.wagyourtail.jsmacros.client.gui.elements.editor.SelectCursor;
-import xyz.wagyourtail.jsmacros.client.gui.elements.editor.TextStyleCompiler;
+import xyz.wagyourtail.jsmacros.client.gui.editor.History;
+import xyz.wagyourtail.jsmacros.client.gui.editor.PrismGrammarLocator;
+import xyz.wagyourtail.jsmacros.client.gui.editor.SelectCursor;
+import xyz.wagyourtail.jsmacros.client.gui.editor.TextStyleCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.elements.overlays.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
 
@@ -170,7 +170,7 @@ public class EditorScreen extends BaseScreen {
         int width = this.width - 10;
         
         scrollbar = addButton(new Scrollbar(width, 12, 10, height - 24, 0, 0xFF000000, 0xFFFFFFFF, 1, this::setScroll));
-        saveBtn = addButton(new Button(width / 2, 0, width / 6, 12, needSave() ? 0xFFA0A000 : 0xFF00A000, 0xFF000000, needSave() ? 0xFF707000 : 0xFF007000, 0xFFFFFF, new TranslatableText("jsmacros.save"), (btn) -> save()));
+        saveBtn = addButton(new Button(width / 2, 0, width / 6, 12, textRenderer, needSave() ? 0xFFA0A000 : 0xFF00A000, 0xFF000000, needSave() ? 0xFF707000 : 0xFF007000, 0xFFFFFF, new TranslatableText("jsmacros.save"), (btn) -> save()));
         
         history.onChange = (content) -> {
             if (savedString.equals(content)) {
@@ -185,9 +185,9 @@ public class EditorScreen extends BaseScreen {
         cursor.onChange = (cursor) -> lineCol = (cursor.startIndex != cursor.endIndex ? (cursor.endIndex - cursor.startIndex) + " " : "") +
             (cursor.arrowEnd ? String.format("%d:%d", cursor.endLine + 1, cursor.endLineIndex + 1) : String.format("%d:%d", cursor.startLine + 1, cursor.startLineIndex + 1));
         
-        addButton(new Button(width, 0, 10, 12, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> openParent()));
+        addButton(new Button(width, 0, 10, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> openParent()));
         
-        addButton(new Button(this.width - width / 8, height - 12, width / 8, 12, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(language), (btn) -> {
+        addButton(new Button(this.width - width / 8, height - 12, width / 8, 12, textRenderer,0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(language), (btn) -> {
             switch (language) {
                 case "python":
                     setLanguage("lua");

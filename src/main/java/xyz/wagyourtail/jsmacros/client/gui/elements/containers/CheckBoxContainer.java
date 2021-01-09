@@ -27,7 +27,7 @@ public class CheckBoxContainer extends MultiElementContainer {
     public void init() {
         super.init();
         
-        checkBox = (Button) this.addButton(new Button(x, y, height, height, 0, 0xFF000000,0x7FFFFFFF, 0xFFFFFF, new LiteralText(state ? "\u2713" : ""), btn -> {
+        checkBox = (Button) this.addButton(new Button(x, y, height, height, textRenderer, 0, 0xFF000000,0x7FFFFFFF, 0xFFFFFF, new LiteralText(state ? "\u2713" : ""), btn -> {
             state = !state;
             if (setState != null) setState.accept(state);
             btn.setMessage(new LiteralText(state ? "\u2713" : ""));
