@@ -74,9 +74,9 @@ public class EditorScreen extends BaseScreen {
         this.handler = handler;
         this.language = getDefaultLanguage();
         this.history = new History(content.replaceAll("\r\n", "\n").replaceAll("\t", "    "), cursor);
-        cursor.updateStartIndex(history.current.length(), history.current);
-        cursor.updateEndIndex(history.current.length(), history.current);
-        cursor.dragStartIndex = history.current.length();
+        cursor.updateStartIndex(0, history.current);
+        cursor.updateEndIndex(0, history.current);
+        cursor.dragStartIndex = 0;
     }
     
     public String getDefaultLanguage() {
@@ -109,24 +109,13 @@ public class EditorScreen extends BaseScreen {
                 } else {
                     screen = new EditorScreen(JsMacros.prevScreen, file);
                 }
-                mc.openScreen(screen);
                 screen.cursor.updateStartIndex(startIndex, screen.history.current);
                 screen.cursor.updateEndIndex(finalEndIndex, screen.history.current);
-                screen.scrollToCursor();
+                mc.openScreen(screen);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
-    }
-    
-    public void scrollToCursor() {
-        int cursorLine = cursor.arrowEnd ? cursor.endLine : cursor.startLine;
-        if (cursorLine < firstLine || cursorLine > lastLine) {
-            int pagelength = lastLine - firstLine;
-            double scrollLines = history.current.split("\n", -1).length - pagelength;
-            cursorLine -= pagelength / 2;
-            scrollbar.scrollToPercent(MathHelper.clamp(cursorLine, 0, scrollLines) / scrollLines);
-        }
     }
     
     public static void openAndScrollToLine(@NotNull File file, int line, int col, int endCol) {
@@ -140,7 +129,6 @@ public class EditorScreen extends BaseScreen {
                 } else {
                     screen = new EditorScreen(JsMacros.prevScreen, file);
                 }
-                mc.openScreen(screen);
                 String[] lines = screen.history.current.split("\n", -1);
                 int lineIndex = 0;
                 int max = Math.min(lines.length - 1, line - 1);
@@ -154,7 +142,7 @@ public class EditorScreen extends BaseScreen {
                 if (endCol == -1) startIndex = lineIndex + lines[max].length();
                 else startIndex = lineIndex + Math.min(lines[max].length(), endCol);
                 screen.cursor.updateEndIndex(startIndex, screen.history.current);
-                screen.scrollToCursor();
+                mc.openScreen(screen);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -226,6 +214,8 @@ public class EditorScreen extends BaseScreen {
         
         this.fileName = new LiteralText(textRenderer.trimToWidth(file.getName(), (width - 10) / 2));
         compileRenderedText();
+        setScroll(0);
+        scrollToCursor();
     }
     
     @Override
@@ -481,11 +471,23 @@ public class EditorScreen extends BaseScreen {
                 renderedText = visitor.getResult().toArray(new LiteralText[0]);
             }
         } else {
-            renderedText = new LiteralText[] {new LiteralText("")};
+            synchronized (renderedText) {
+                renderedText = new LiteralText[] {new LiteralText("")};
+            }
         }
         this.scrollbar.setScrollPages(calcTotalPages());
         textRenderTime = System.currentTimeMillis() - time;
         scrollToCursor();
+    }
+    
+    public void scrollToCursor() {
+        int cursorLine = cursor.arrowEnd ? cursor.endLine : cursor.startLine;
+        if (cursorLine < firstLine || cursorLine > lastLine) {
+            int pagelength = lastLine - firstLine;
+            double scrollLines = history.current.split("\n", -1).length - pagelength;
+            cursorLine -= pagelength / 2;
+            scrollbar.scrollToPercent(MathHelper.clamp(cursorLine, 0, scrollLines) / scrollLines);
+        }
     }
     
     private double calcTotalPages() {
