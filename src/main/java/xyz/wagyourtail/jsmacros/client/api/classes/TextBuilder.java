@@ -1,10 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.HoverEvent;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
@@ -31,35 +28,53 @@ public class TextBuilder {
     
     /**
      * move on to next section and set it's text.
-     * @param text
+     * @param text a {@Link String}, {@Link TextHelper} or {@Link TextBuilder}
      * @since 1.3.0
      * @return
      */
-    public TextBuilder append(String text) {
-        head.append(self = new LiteralText(text));
+    public TextBuilder append(Object text) {
+        if (text instanceof TextHelper) {
+            appendInternal((TextHelper) text);
+        } else if (text instanceof TextBuilder) {
+            appendInternal(((TextBuilder) text).build());
+        } else {
+            appendInternal(text.toString());
+        }
         return this;
     }
     
-    /**
-     * move on to next section and set it's text.
-     * @param helper
-     * @since 1.3.0
-     * @return
-     */
-    public TextBuilder append(TextHelper helper) {
+    private void appendInternal(String text) {
+        head.append(self = new LiteralText(text));
+    }
+    
+    private void appendInternal(TextHelper helper) {
         assert helper.getRaw() instanceof MutableText;
         head.append(self = (MutableText) helper.getRaw());
-        return this;
     }
     
     /**
-     * set current section's color
+     * set current section's color by color code as hex, like {@code 0x6} for gold
+     * and {@code 0xc} for red.
      * @param color
      * @since 1.3.0
      * @return
      */
     public TextBuilder withColor(int color) {
         self.styled(style -> style.withColor(Formatting.byColorIndex(color)));
+        return this;
+    }
+    
+    /**
+     * Only available in {@code 1.16+}, add text with custom colors.
+     * @since 1.3.1
+     * @param r red {@code 0-255}
+     * @param g green {@code 0-255}
+     * @param b blue {@code 0-255}
+     *
+     * @return
+     */
+    public TextBuilder withColor(int r, int g, int b) {
+        self.styled(style -> style.withColor(TextColor.fromRgb(r<<16 + g<<8 + b)));
         return this;
     }
     

@@ -23,13 +23,13 @@ public class Button extends AbstractPressableButtonWidget {
     
     public Button(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int hilightColor, int textColor, Text message, Consumer<Button> onPress) {
         super(x, y, width, height, message);
+        this.textRenderer = textRenderer;
         this.color = color;
         this.borderColor = borderColor;
         this.hilightColor = hilightColor;
         this.textColor = textColor;
-        this.setMessage(message);
         this.onPress = onPress;
-        this.textRenderer = textRenderer;
+        this.setMessage(message);
     }
     
     public Button setPos(int x, int y, int width, int height) {
