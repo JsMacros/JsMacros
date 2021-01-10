@@ -221,22 +221,31 @@ public class EditorScreen extends BaseScreen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         assert client != null;
+        if (overlay == null) {
+            setFocused(null);
+        }
         if (Screen.isSelectAll(keyCode)) {
             cursor.updateStartIndex(0, history.current);
             cursor.updateEndIndex(history.current.length(), history.current);
             cursor.arrowEnd = true;
+    
+            return true;
         } else if (Screen.isCopy(keyCode)) {
             client.keyboard.setClipboard(history.current.substring(cursor.startIndex, cursor.endIndex));
+            
+            return true;
         } else if (Screen.isPaste(keyCode)) {
             String pasteContent = client.keyboard.getClipboard();
             history.replace(cursor.startIndex, cursor.endIndex - cursor.startIndex, pasteContent);
             
             compileRenderedText();
+            return true;
         } else if (Screen.isCut(keyCode)) {
             client.keyboard.setClipboard(history.current.substring(cursor.startIndex, cursor.endIndex));
             history.replace(cursor.startIndex, cursor.endIndex - cursor.startIndex, "");
             
             compileRenderedText();
+            return true;
         }
         String startSpaces;
         int index;
@@ -250,7 +259,7 @@ public class EditorScreen extends BaseScreen {
                     history.bkspacePos(cursor.startIndex - 1, 1);
                     compileRenderedText();
                 }
-                break;
+                return true;
             case GLFW.GLFW_KEY_DELETE:
                 if (cursor.startIndex != cursor.endIndex) {
                     history.deletePos(cursor.startIndex, cursor.endIndex - cursor.startIndex);
@@ -259,7 +268,7 @@ public class EditorScreen extends BaseScreen {
                     history.deletePos(cursor.startIndex, 1);
                     compileRenderedText();
                 }
-                break;
+                return true;
             case GLFW.GLFW_KEY_HOME:
                 startSpaces = history.current.split("\n", -1)[cursor.startLine].split("[^\\s]", -1)[0];
                 if (cursor.startLineIndex <= startSpaces.length()) {
@@ -275,7 +284,7 @@ public class EditorScreen extends BaseScreen {
                     cursor.updateEndIndex(0, history.current);
                     if (scrollToPercent != null) scrollToPercent.accept(0D);
 */
-                break;
+                return true;
             case GLFW.GLFW_KEY_END:
                 int endLineLength = history.current.split("\n", -1)[cursor.endLine].length();
                 cursor.updateEndIndex(cursor.endIndex + (endLineLength - cursor.endLineIndex), history.current);
@@ -287,7 +296,7 @@ public class EditorScreen extends BaseScreen {
                     cursor.updateEndIndex(history.current.length(), history.current);
                     if (scrollToPercent != null) scrollToPercent.accept(1D);
 */
-                break;
+                return true;
             case GLFW.GLFW_KEY_LEFT:
                 if (Screen.hasShiftDown()) {
                     if (cursor.arrowEnd && cursor.startIndex != cursor.endIndex) {
@@ -308,7 +317,7 @@ public class EditorScreen extends BaseScreen {
                     }
                 }
                 scrollToCursor();
-                break;
+                return true;
             case GLFW.GLFW_KEY_RIGHT:
                 if (Screen.hasShiftDown()) {
                     if (cursor.arrowEnd || cursor.endIndex == cursor.startIndex) {
@@ -329,7 +338,7 @@ public class EditorScreen extends BaseScreen {
                     }
                 }
                 scrollToCursor();
-                break;
+                return true;
             case GLFW.GLFW_KEY_UP:
                 if (Screen.hasAltDown()) {
                     history.shiftLine(cursor.startLine, cursor.endLine - cursor.startLine + 1, false);
@@ -361,7 +370,7 @@ public class EditorScreen extends BaseScreen {
                     }
                 }
                 scrollToCursor();
-                break;
+                return true;
             case GLFW.GLFW_KEY_DOWN:
                 if (Screen.hasAltDown()) {
                     history.shiftLine(cursor.startLine, cursor.endLine - cursor.startLine + 1, true);
@@ -397,7 +406,7 @@ public class EditorScreen extends BaseScreen {
                     }
                 }
                 scrollToCursor();
-                break;
+                return true;
             case GLFW.GLFW_KEY_Z:
                 if (Screen.hasControlDown()) {
                     if (Screen.hasShiftDown()) {
@@ -414,19 +423,19 @@ public class EditorScreen extends BaseScreen {
                         }
                     }
                 }
-                break;
+                return true;
             case GLFW.GLFW_KEY_Y:
                 int i = history.redo();
                 
                 if (i != -1) {
                     compileRenderedText();
                 }
-                break;
+                return true;
             case GLFW.GLFW_KEY_S:
                 if (Screen.hasControlDown()) {
                     save();
                 }
-                break;
+                return true;
             case GLFW.GLFW_KEY_ENTER:
                 startSpaces = history.current.split("\n", -1)[cursor.startLine].split("[^\\s]", -1)[0];
                 if (cursor.startIndex != cursor.endIndex) {
@@ -437,16 +446,15 @@ public class EditorScreen extends BaseScreen {
                 }
                 
                 compileRenderedText();
-                break;
+                return true;
             case GLFW.GLFW_KEY_TAB:
                 if (cursor.startIndex != cursor.endIndex || Screen.hasShiftDown()) {
                     history.tabLines(cursor.startLine, cursor.endLine - cursor.startLine + 1, Screen.hasShiftDown());
                 } else {
                     history.addChar(cursor.startIndex, '\t');
                 }
-                
                 compileRenderedText();
-                break;
+                return true;
             case GLFW.GLFW_KEY_PAGE_UP:
                 currentPage = scroll / (height - 24.0D);
                 scrollbar.scrollToPercent(MathHelper.clamp((currentPage - 1) / (calcTotalPages() - 1), 0, 1));
@@ -454,7 +462,7 @@ public class EditorScreen extends BaseScreen {
             case GLFW.GLFW_KEY_PAGE_DOWN:
                 currentPage = scroll / (height - 24.0D);
                 scrollbar.scrollToPercent(MathHelper.clamp((currentPage + 1) / (calcTotalPages() - 1), 0, 1));
-                break;
+                return true;
             default:
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -673,6 +681,9 @@ public class EditorScreen extends BaseScreen {
     
     @Override
     public synchronized boolean charTyped(char chr, int keyCode) {
+        if (overlay == null) {
+            setFocused(null);
+        }
         if (blockFirst) {
             blockFirst = false;
         } else {
