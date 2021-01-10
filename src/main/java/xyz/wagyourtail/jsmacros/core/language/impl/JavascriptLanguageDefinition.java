@@ -69,11 +69,6 @@ public class JavascriptLanguageDefinition extends BaseLanguage {
     public BaseWrappedException<?> wrapException(Throwable ex) {
         if (ex instanceof PolyglotException) {
             Iterator<PolyglotException.StackFrame> frames = ((PolyglotException) ex).getPolyglotStackTrace().iterator();
-            SourceSection pos = ((PolyglotException) ex).getSourceLocation();
-            BaseWrappedException.SourceLocation loc = null;
-            if (pos != null) {
-                loc = new BaseWrappedException.GuestLocation(new File(pos.getSource().getPath()), pos.getCharIndex(), pos.getCharEndIndex(), pos.getStartLine(), pos.getStartColumn());
-            }
             String message;
             if (((PolyglotException) ex).isHostException()) {
                 message = ((PolyglotException) ex).asHostException().getClass().getName();
@@ -87,7 +82,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage {
                     message = "UnknownGuestException";
                 }
             }
-            return new BaseWrappedException<>(ex, message, loc, frames.hasNext() ? internalWrap(frames.next(), frames) : null);
+            return new BaseWrappedException<>(ex, message, wrapLocation(((PolyglotException) ex).getSourceLocation()), frames.hasNext() ? internalWrap(frames.next(), frames) : null);
         }
         return null;
     }
@@ -95,10 +90,21 @@ public class JavascriptLanguageDefinition extends BaseLanguage {
     private BaseWrappedException<?> internalWrap(PolyglotException.StackFrame current, Iterator<PolyglotException.StackFrame> frames) {
         if (current == null) return null;
         if (current.isGuestFrame()) {
-            SourceSection pos = current.getSourceLocation();
-            return new BaseWrappedException<>(current, " at " + current.getRootName(), new BaseWrappedException.GuestLocation(new File(pos.getSource().getPath()), pos.getCharIndex(), pos.getCharEndIndex(), pos.getStartLine(), pos.getStartColumn()), frames.hasNext() ? internalWrap(frames.next(), frames) : null);
+            return new BaseWrappedException<>(current, " at " + current.getRootName(), wrapLocation(current.getSourceLocation()), frames.hasNext() ? internalWrap(frames.next(), frames) : null);
         }
         if (current.toHostFrame().getClassName().equals("org.graalvm.polyglot.Context") && current.toHostFrame().getMethodName().equals("eval")) return null;
         return BaseWrappedException.wrapHostElement(current.toHostFrame(), frames.hasNext() ? internalWrap(frames.next(), frames) : null);
+    }
+    
+    private BaseWrappedException.SourceLocation wrapLocation(SourceSection pos) {
+        BaseWrappedException.SourceLocation loc = null;
+        if (pos != null) {
+            if (pos.getSource().getPath() != null) {
+                loc = new BaseWrappedException.GuestLocation(new File(pos.getSource().getPath()), pos.getCharIndex(), pos.getCharEndIndex(), pos.getStartLine(), pos.getStartColumn());
+            } else {
+                loc = new BaseWrappedException.HostLocation(String.format("%s %d:%d", pos.getSource().getName(), pos.getStartLine(), pos.getStartColumn()));
+            }
+        }
+        return loc;
     }
 }
