@@ -11,33 +11,33 @@ import java.util.stream.Collectors;
  * @author Wagyourtail
  */
  @SuppressWarnings("unused")
-public class StringTrie implements Collection<String> {
-    private Map<String, StringTrie> children = new HashMap<>();
+public class StringHashTrie implements Collection<String> {
+    private Map<String, StringHashTrie> children = new HashMap<>();
     private final Set<String> leafs = new HashSet<>();
     private int keyLength;
-    private StringTrie parent;
+    private StringHashTrie parent;
     private String key;
     
-    private StringTrie(String initialLeaf, StringTrie parent, String key) {
+    private StringHashTrie(String initialLeaf, StringHashTrie parent, String key) {
         this.keyLength = initialLeaf.length();
         leafs.add(initialLeaf);
         this.parent = parent;
         this.key = key;
     }
     
-    private StringTrie(int keyLength, String childKey, StringTrie initialChild, StringTrie parent, String key) {
+    private StringHashTrie(int keyLength, String childKey, StringHashTrie initialChild, StringHashTrie parent, String key) {
         this.keyLength = keyLength;
         this.children.put(childKey, initialChild);
         this.parent = parent;
         this.key = key;
     }
-    public StringTrie() {
+    public StringHashTrie() {
         this.parent = null;
     }
     
     @Override
     public int size() {
-        Optional<Integer> childrenSize = children.values().stream().map(StringTrie::size).reduce(Integer::sum);
+        Optional<Integer> childrenSize = children.values().stream().map(StringHashTrie::size).reduce(Integer::sum);
         return leafs.size() + childrenSize.orElse(0);
     }
     
@@ -52,7 +52,7 @@ public class StringTrie implements Collection<String> {
             if (((String) o).length() <= keyLength) {
                 return leafs.contains(o);
             } else {
-                StringTrie child = children.get(((String) o).substring(0, keyLength));
+                StringHashTrie child = children.get(((String) o).substring(0, keyLength));
                 if (child != null) {
                     return child.contains(((String) o).substring(keyLength));
                 }
@@ -116,7 +116,7 @@ public class StringTrie implements Collection<String> {
                         }
                     }
                 }
-                children.put(newKey, new StringTrie(s.substring(keyLength), this, newKey));
+                children.put(newKey, new StringHashTrie(s.substring(keyLength), this, newKey));
                 return true;
             }
         }
@@ -130,8 +130,8 @@ public class StringTrie implements Collection<String> {
     }
     
     /**
-     * this can make the StringTrie sparse, this can cause extra steps in lookup that are no longer needed,
-     * at some point it would be best to rebase the StringTrie with {@code new StringTrie().addAll(current.getAll())}
+     * this can make the StringHashTrie sparse, this can cause extra steps in lookup that are no longer needed,
+     * at some point it would be best to rebase the StringHashTrie with {@code new StringHashTrie().addAll(current.getAll())}
      *
      * @param o
      *
@@ -148,7 +148,7 @@ public class StringTrie implements Collection<String> {
                     return true;
                 }
             } else {
-                StringTrie trie = children.get(((String) o).substring(0, keyLength));
+                StringHashTrie trie = children.get(((String) o).substring(0, keyLength));
                 if (trie != null) {
                     return trie.remove(((String) o).substring(keyLength));
                 }
@@ -219,7 +219,7 @@ public class StringTrie implements Collection<String> {
         if (prefix.length() > keyLength) {
             String start = prefix.substring(0, keyLength);
             String rest = prefix.substring(keyLength);
-            StringTrie next = children.get(start);
+            StringHashTrie next = children.get(start);
             if (next != null) {
                 return next.getAllWithPrefix(rest).stream().map(e -> start + e).collect(Collectors.toSet());
             } else {
@@ -250,22 +250,22 @@ public class StringTrie implements Collection<String> {
     
     private void rekey(int newKeyLength) {
         int innerKeyLength = keyLength - newKeyLength;
-        Map<String, StringTrie> newMap = new HashMap<>();
+        Map<String, StringHashTrie> newMap = new HashMap<>();
         for (String key : children.keySet()) {
             String newKey = key.substring(0, newKeyLength);
             String childKey = key.substring(newKeyLength);
-            StringTrie innerChild = children.get(key);
+            StringHashTrie innerChild = children.get(key);
             if (innerChild.children.size() == 0 && innerChild.leafs.size() == 1) {
-                newMap.put(newKey, new StringTrie(childKey + innerChild.leafs.toArray()[0], this, newKey));
+                newMap.put(newKey, new StringHashTrie(childKey + innerChild.leafs.toArray()[0], this, newKey));
             } else {
-                innerChild.parent = newMap.put(newKey, new StringTrie(innerKeyLength, childKey, innerChild, this, newKey));
+                innerChild.parent = newMap.put(newKey, new StringHashTrie(innerKeyLength, childKey, innerChild, this, newKey));
                 innerChild.key = childKey;
             }
         }
         leafs.removeIf(leaf -> {
             if (leaf.length() > newKeyLength) {
                 String newKey = leaf.substring(0, newKeyLength);
-                newMap.put(newKey, new StringTrie(leaf.substring(newKeyLength), this, newKey));
+                newMap.put(newKey, new StringHashTrie(leaf.substring(newKeyLength), this, newKey));
                 return true;
             }
             return false;
@@ -276,7 +276,7 @@ public class StringTrie implements Collection<String> {
     
     private String jsonChildrenString() {
         StringBuilder builder = new StringBuilder("{");
-        for (Map.Entry<String, StringTrie> entry : children.entrySet()) {
+        for (Map.Entry<String, StringHashTrie> entry : children.entrySet()) {
             builder.append("\"").append(entry.getKey()).append("\":").append(entry.getValue().toString()).append(", ");
         }
         builder.setLength(Math.max(1, builder.length()-2));
