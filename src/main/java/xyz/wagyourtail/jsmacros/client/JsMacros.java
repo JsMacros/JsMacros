@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client;
 
+import xyz.wagyourtail.jsmacros.client.config.ClientConfigOptions;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 import net.fabricmc.api.ClientModInitializer;
@@ -24,7 +25,7 @@ public class JsMacros implements ClientModInitializer {
     public static BaseScreen prevScreen;
     protected static final File configFolder = new File(FabricLoader.getInstance().getConfigDir().toFile(), "jsMacros");
     
-    public static final Core core = Core.createInstance(EventRegistry::new, Profile::new, () -> new ConfigManager(configFolder, new File(configFolder, "Macros")));
+    public static final Core<ClientConfigOptions> core = Core.createInstance(EventRegistry::new, Profile::new, () -> new ConfigManager<>(configFolder, new File(configFolder, "Macros"), ClientConfigOptions.class));
     
     @Override
     public void onInitializeClient() {

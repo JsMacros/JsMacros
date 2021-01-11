@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.gui.screens.macros;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.screen.Screen;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.gui.screens.ProfileScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
@@ -48,7 +49,7 @@ public class EventMacrosScreen extends MacroScreen {
                 if (macro instanceof BaseListener) macros.add(((BaseListener) macro).getRawTrigger());
             }
 
-        Collections.sort(macros, Core.instance.config.getSortComparator());
+        Collections.sort(macros, JsMacros.core.config.options.getSortComparator());
         
         for (ScriptTrigger macro : macros) {
             addMacro(macro);

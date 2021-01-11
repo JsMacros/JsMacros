@@ -74,12 +74,6 @@ public class ScriptTrigger {
         }
     }
     
-    public static enum SortMethod {
-        Enabled,
-        TriggerName,
-        FileName
-    }
-    
     /**
      * @since 1.2.7
      * @return

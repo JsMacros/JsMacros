@@ -5,6 +5,8 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.config.ClientConfigOptions;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.client.gui.screens.macros.MacroScreen;
@@ -33,18 +35,18 @@ public class MacroListTopbar extends MultiElementContainer {
         
         int w = width - 12;
         
-        addButton(new Button(x + 1, y + 1, w / 12 - 1, height - 3, textRenderer, Core.instance.config.options.sortMethod == ScriptTrigger.SortMethod.Enabled ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.enabled"), (btn) -> {
-            Core.instance.config.setSortComparator(ScriptTrigger.SortMethod.Enabled);
+        addButton(new Button(x + 1, y + 1, w / 12 - 1, height - 3, textRenderer, JsMacros.core.config.options.sortMethod == ClientConfigOptions.SortMethod.Enabled ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.enabled"), (btn) -> {
+            JsMacros.core.config.options.setSortComparator(ClientConfigOptions.SortMethod.Enabled);
             parent.reload();
         }));
         
-        type = (Button) addButton(new Button(x + w / 12 + 1, y + 1, (w / 4) - (w / 12) - 1, height - 3, textRenderer, Core.instance.config.options.sortMethod == ScriptTrigger.SortMethod.TriggerName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(deftype == ScriptTrigger.TriggerType.EVENT ? "jsmacros.events" : "jsmacros.keys"), (btn) -> {
-            Core.instance.config.setSortComparator(ScriptTrigger.SortMethod.TriggerName);
+        type = (Button) addButton(new Button(x + w / 12 + 1, y + 1, (w / 4) - (w / 12) - 1, height - 3, textRenderer, JsMacros.core.config.options.sortMethod == ClientConfigOptions.SortMethod.TriggerName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(deftype == ScriptTrigger.TriggerType.EVENT ? "jsmacros.events" : "jsmacros.keys"), (btn) -> {
+            JsMacros.core.config.options.setSortComparator(ClientConfigOptions.SortMethod.TriggerName);
             parent.reload();
         }));
         
-        addButton(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 3, textRenderer, Core.instance.config.options.sortMethod == ScriptTrigger.SortMethod.FileName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.file"), (btn) -> {
-            Core.instance.config.setSortComparator(ScriptTrigger.SortMethod.FileName);
+        addButton(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 3, textRenderer, JsMacros.core.config.options.sortMethod == ClientConfigOptions.SortMethod.FileName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.file"), (btn) -> {
+            JsMacros.core.config.options.setSortComparator(ClientConfigOptions.SortMethod.FileName);
             parent.reload();
         }));
         

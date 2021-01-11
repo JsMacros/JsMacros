@@ -2,44 +2,47 @@ package xyz.wagyourtail.jsmacros.core.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import xyz.wagyourtail.jsmacros.core.event.Event;
-import xyz.wagyourtail.jsmacros.core.event.impl.EventProfileLoad;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
-public class ConfigManager {
-    public ConfigOptions options;
+public class ConfigManager<T extends ConfigOptions> {
+    private Class<T> optionsClass;
+    public T options;
     public final File configFolder;
     public final File macroFolder;
     public final File configFile;
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public ConfigManager(File configFolder, File macroFolder) {
-        options = new ConfigOptions(true, "default", ScriptTrigger.SortMethod.Enabled, new HashMap<>(), new LinkedHashMap<>(), false);
-        options.profiles.put("default", new ArrayList<>());
-        options.profiles.get("default").add(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventProfileLoad.class.getAnnotation(Event.class).value(), "index.js", true));
+    public ConfigManager(File configFolder, File macroFolder, Class<T> configClass) {
         this.configFolder = configFolder;
         this.macroFolder = macroFolder;
+        if (!configFolder.exists()) {
+            configFolder.mkdirs();
+        }
         this.configFile = new File(configFolder, "options.json");
-        if (!macroFolder.exists()) macroFolder.mkdirs();
-        final File tf = new File(macroFolder, "test.js");
-        if (!tf.exists()) try {
-            tf.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!macroFolder.exists()) {
+            macroFolder.mkdirs();
+            final File tf = new File(macroFolder, "index.js");
+            if (!tf.exists()) try {
+                tf.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        optionsClass = configClass;
+        try {
+            loadConfig();
+        } catch (IllegalAccessException | InstantiationException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public void loadConfig() {
+    public void loadConfig() throws IllegalAccessException, InstantiationException {
         try {
-            options = gson.fromJson(new FileReader(configFile), ConfigOptions.class);
+            options = gson.fromJson(new FileReader(configFile), optionsClass);
         } catch (Exception e) {
             System.out.println("Config Failed To Load.");
             e.printStackTrace();
@@ -48,6 +51,7 @@ public class ConfigManager {
                 if (back.exists()) back.delete();
                 configFile.renameTo(back);
             }
+            options = optionsClass.newInstance();
             saveConfig();
         }
         System.out.println("Loaded Profiles:");
@@ -66,22 +70,5 @@ public class ConfigManager {
             System.out.println("Config Failed To Save.");
             e.printStackTrace();
         }
-    }
-    
-    public Comparator<ScriptTrigger> getSortComparator() {
-        if (options.sortMethod == null) options.sortMethod = ScriptTrigger.SortMethod.Enabled;
-        switch(options.sortMethod) {
-            default:
-            case Enabled:
-                return new ScriptTrigger.SortByEnabled();
-            case FileName:
-                return new ScriptTrigger.SortByFileName();
-            case TriggerName:
-                return new ScriptTrigger.SortByTriggerName();
-        }
-    }
-    
-    public void setSortComparator(ScriptTrigger.SortMethod method) {
-        options.sortMethod = method;
     }
 }

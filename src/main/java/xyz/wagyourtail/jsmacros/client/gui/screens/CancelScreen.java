@@ -89,7 +89,7 @@ public class CancelScreen extends BaseScreen {
         }
 
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
-            ((Button) b).render(matrices, mouseX, mouseY, delta);
+            b.render(matrices, mouseX, mouseY, delta);
         }
     }
 

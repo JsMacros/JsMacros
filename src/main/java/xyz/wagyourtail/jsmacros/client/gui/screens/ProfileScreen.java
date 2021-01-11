@@ -1,14 +1,13 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
-import xyz.wagyourtail.jsmacros.core.Core;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import xyz.wagyourtail.jsmacros.client.gui.screens.macros.EventMacrosScreen;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
@@ -16,6 +15,8 @@ import xyz.wagyourtail.jsmacros.client.gui.elements.containers.CheckBoxContainer
 import xyz.wagyourtail.jsmacros.client.gui.elements.containers.ProfileContainer;
 import xyz.wagyourtail.jsmacros.client.gui.elements.overlays.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.elements.overlays.TextPrompt;
+import xyz.wagyourtail.jsmacros.client.gui.screens.macros.EventMacrosScreen;
+import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,8 +85,8 @@ public class ProfileScreen extends BaseScreen {
         }));
 
         profileScroll = this.addButton(new Scrollbar(this.width / 2 - 8, 33, 8, this.height - 53, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
-        disableInGui = new CheckBoxContainer(this.width / 2 + 10, 50, this.width / 2 - 20, 12, this.textRenderer, Core.instance.config.options.disableKeyWhenScreenOpen, new TranslatableText("jsmacros.disablewithscreen"), this::addButton, (state) -> {
-            Core.instance.config.options.disableKeyWhenScreenOpen = state;
+        disableInGui = new CheckBoxContainer(this.width / 2 + 10, 50, this.width / 2 - 20, 12, this.textRenderer, JsMacros.core.config.options.disableKeyWhenScreenOpen, new TranslatableText("jsmacros.disablewithscreen"), this::addButton, (state) -> {
+            JsMacros.core.config.options.disableKeyWhenScreenOpen = state;
         });
         
         for (String k : Core.instance.config.options.profiles.keySet()) {
