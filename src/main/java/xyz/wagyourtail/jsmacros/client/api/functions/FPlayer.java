@@ -10,6 +10,7 @@ import net.minecraft.client.util.ScreenshotUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.world.GameMode;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper;
@@ -64,7 +65,9 @@ public class FPlayer extends BaseLibrary {
      */
     public String getGameMode() {
         assert mc.interactionManager != null;
-        return mc.interactionManager.getCurrentGameMode().toString();
+        GameMode mode = mc.interactionManager.getCurrentGameMode();
+        if (mode == null) mode = GameMode.NOT_SET;
+        return mode.getName();
     }
 
     /**

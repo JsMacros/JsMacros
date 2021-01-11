@@ -40,8 +40,8 @@ public class KeyListener extends BaseListener {
     }
     
     private boolean check(EventKey event) {
-        boolean keyState = (int)event.action == 1;
-        if (event.key.equals(key) && EventKey.getModInt(event.mods) == mods) {
+        boolean keyState = event.action == 1;
+        if (event.key.equals(key) && (EventKey.getModInt(event.mods) & mods) == mods) {
             switch(getRawTrigger().triggerType) {
                 case KEY_FALLING:
                     return !keyState;
