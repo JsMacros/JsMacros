@@ -18,6 +18,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
  * @author Wagyourtail
  * @since 1.2.3
  */
+@SuppressWarnings("unused")
 public class RenderCommon {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     
@@ -82,7 +83,7 @@ public class RenderCommon {
          * @return
          */
         public Item setRotation(float rotation) {
-            this.rotation = MathHelper.fwrapDegrees(rotation);
+            this.rotation = MathHelper.wrapDegrees(rotation);
             return this;
         }
         
@@ -124,8 +125,8 @@ public class RenderCommon {
          * @return
          */
         public Item setItem(String id, int count) {
-            net.minecraft.item.Item it = (net.minecraft.item.Item)Registry.ITEM.get(new Identifier(id));
-            if (it != null) this.item = new ItemStack(it, count);
+            net.minecraft.item.Item it = Registry.ITEM.get(new Identifier(id));
+            this.item = new ItemStack(it, count);
             return this;
         }
         
@@ -209,7 +210,7 @@ public class RenderCommon {
          * @return
          */
         public Image setRotation(float rotation) {
-            this.rotation = MathHelper.fwrapDegrees(rotation);
+            this.rotation = MathHelper.wrapDegrees(rotation);
             return this;
         }
         
@@ -272,13 +273,13 @@ public class RenderCommon {
         public Rect(int x1, int y1, int x2, int y2, int color, float rotation) {
             setPos(x1, y1, x2, y2);
             setColor(color);
-            this.rotation = MathHelper.fwrapDegrees(rotation);
+            this.rotation = MathHelper.wrapDegrees(rotation);
         }
         
         public Rect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation) {
             setPos(x1, y1, x2, y2);
             setColor(color, alpha);
-            this.rotation = MathHelper.fwrapDegrees(rotation);
+            this.rotation = MathHelper.wrapDegrees(rotation);
         }
         
         /**
@@ -335,7 +336,7 @@ public class RenderCommon {
          * @return
          */
         public Rect setRotation(float rotation) {
-            this.rotation = MathHelper.fwrapDegrees(rotation);
+            this.rotation = MathHelper.wrapDegrees(rotation);
             return this;
         }
     
@@ -374,7 +375,7 @@ public class RenderCommon {
             this.width = mc.textRenderer.getWidth(text);
             this.shadow = shadow;
             this.scale = scale;
-            this.rotation = MathHelper.fwrapDegrees(rotation);
+            this.rotation = MathHelper.wrapDegrees(rotation);
         }
         
         public Text(TextHelper text, int x, int y, int color, boolean shadow, double scale, float rotation) {
@@ -385,7 +386,7 @@ public class RenderCommon {
             this.width = mc.textRenderer.getWidth(this.text);
             this.shadow = shadow;
             this.scale = scale;
-            this.rotation = MathHelper.fwrapDegrees(rotation);
+            this.rotation = MathHelper.wrapDegrees(rotation);
         }
         
         /**
@@ -406,7 +407,7 @@ public class RenderCommon {
          * @return
          */
         public Text setRotation(float rotation) {
-            this.rotation = MathHelper.fwrapDegrees(rotation);
+            this.rotation = MathHelper.wrapDegrees(rotation);
             return this;
         }
         

@@ -18,13 +18,14 @@ import java.util.List;
  * @since 1.0.6
  *
  */
+ @SuppressWarnings("unused")
 public class Draw3D {
     private final List<Box> boxes = new ArrayList<>();
     private final List<Line> lines = new ArrayList<>();
     
     /**
      * @since 1.0.6
-     * 
+     *
      * @return
      */
     public List<Box> getBoxes() {
@@ -33,7 +34,7 @@ public class Draw3D {
     
     /**
      * @since 1.0.6
-     * 
+     *
      * @return
      */
     public List<Line> getLines() {
@@ -42,7 +43,7 @@ public class Draw3D {
     
     /**
      * @since 1.0.6
-     * 
+     *
      * @param x1
      * @param y1
      * @param z1
@@ -64,7 +65,7 @@ public class Draw3D {
     
     /**
      * @since 1.1.8
-     * 
+     *
      * @param x1
      * @param y1
      * @param z1
@@ -88,7 +89,7 @@ public class Draw3D {
     
     /**
      * @since 1.0.6
-     * 
+     *
      * @param b
      * @return
      */
@@ -102,7 +103,7 @@ public class Draw3D {
     
     /**
      * @since 1.0.6
-     * 
+     *
      * @param x1
      * @param y1
      * @param z1
@@ -122,7 +123,7 @@ public class Draw3D {
     
     /**
      * @since 1.1.8
-     * 
+     *
      * @param x1
      * @param y1
      * @param z1
@@ -143,7 +144,7 @@ public class Draw3D {
     
     /**
      * @since 1.0.6
-     * 
+     *
      * @param l
      * @return
      */

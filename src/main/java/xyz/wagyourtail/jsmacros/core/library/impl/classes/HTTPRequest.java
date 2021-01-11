@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  * @since 1.1.8
  *
  */
+ @SuppressWarnings("unused")
 public class HTTPRequest {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public Map<String, String> headers = new HashMap<>();
@@ -91,7 +92,7 @@ public class HTTPRequest {
      *
      */
     public static class Response {
-        private InputStream raw;
+        private final InputStream raw;
         private String text;
         public Map<String, List<String>> headers;
         public int responseCode;
@@ -122,9 +123,9 @@ public class HTTPRequest {
          * @deprecated
          * @return
          */
-        public Map<?, ?> json() {
+        public Object json() {
             text();
-            return gson.fromJson(text, HashMap.class);
+            return null;
         }
         
         /**

@@ -1,27 +1,26 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
-import xyz.wagyourtail.jsmacros.core.config.ScriptThreadWrapper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.client.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.client.gui.elements.containers.RunningThreadContainer;
+import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.config.ScriptThreadWrapper;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 public class CancelScreen extends BaseScreen {
     private int topScroll;
     private Scrollbar s;
-    private List<RunningThreadContainer> running = new ArrayList<>();
+    private final List<RunningThreadContainer> running = new ArrayList<>();
 
     public CancelScreen(Screen parent) {
         super(new LiteralText("Cancel"), parent);
@@ -33,14 +32,12 @@ public class CancelScreen extends BaseScreen {
         running.clear();
         s = this.addButton(new Scrollbar(width - 12, 5, 8, height-10, 0, 0xFF000000, 0xFFFFFFFF, 1, this::onScrollbar));
         
-        this.addButton(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.back"), (btn) -> {
-            this.onClose();
-        }));
+        this.addButton(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.back"), (btn) -> this.onClose()));
     }
 
     public void addContainer(ScriptThreadWrapper t) {
         running.add(new RunningThreadContainer(10, topScroll + running.size() * 15, width - 26, 13, textRenderer, this::addButton, this::removeContainer, t));
-        Collections.sort(running, new RTCSort());
+        running.sort(new RTCSort());
         s.setScrollPages(running.size() * 15 / (double)(height - 20));
     }
 
@@ -85,7 +82,7 @@ public class CancelScreen extends BaseScreen {
         }
         
         for (ScriptThreadWrapper t : tl) {
-            addContainer((ScriptThreadWrapper) t);
+            addContainer(t);
         }
 
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
@@ -94,6 +91,7 @@ public class CancelScreen extends BaseScreen {
     }
 
     public void removed() {
+        assert client != null;
         client.keyboard.setRepeatEvents(false);
     }
 

@@ -13,6 +13,7 @@ import java.util.Map;
  * @author Wagyourtail, R3alCl0ud
  *
  */
+ @SuppressWarnings("unused")
 public class Websocket {
 
     private final WebSocket ws;
@@ -40,7 +41,7 @@ public class Websocket {
     public Websocket(String address) throws IOException {
         ws = new WebSocketFactory().createSocket(address).addListener(new WebSocketAdapter() {
             @Override
-            public void onConnected(WebSocket ws, Map<String, List<String>> headers) throws Exception {
+            public void onConnected(WebSocket ws, Map<String, List<String>> headers) {
                 if (onConnect != null)
                     onConnect.accept(ws, headers);
             }

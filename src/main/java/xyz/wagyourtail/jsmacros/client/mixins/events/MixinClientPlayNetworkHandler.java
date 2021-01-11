@@ -49,7 +49,7 @@ class MixinClientPlayNetworkHandler {
     }
     
     @Unique
-    Set<UUID> newPlayerEntries = new HashSet<>();
+    private final Set<UUID> newPlayerEntries = new HashSet<>();
     
     @Inject(at = @At("HEAD"), method = "onPlayerList")
     public void onPlayerList(PlayerListS2CPacket packet, CallbackInfo info) {
@@ -73,25 +73,20 @@ class MixinClientPlayNetworkHandler {
                     }
                     return;
                 default:
-                    return;
             }
     }
     
     @Inject(at = @At("TAIL"), method = "onPlayerList")
     public void onPlayerListEnd(PlayerListS2CPacket packet, CallbackInfo info) {
-        switch (packet.getAction()) {
-            case ADD_PLAYER:
-                for (Entry e : packet.getEntries()) {
-                    synchronized (newPlayerEntries) {
-                        if (newPlayerEntries.contains(e.getProfile().getId())) {
-                            new EventPlayerJoin(e.getProfile().getId(), playerListEntries.get(e.getProfile().getId()));
-                            newPlayerEntries.remove(e.getProfile().getId());
-                        }
+        if (packet.getAction() == PlayerListS2CPacket.Action.ADD_PLAYER) {
+            for (Entry e : packet.getEntries()) {
+                synchronized (newPlayerEntries) {
+                    if (newPlayerEntries.contains(e.getProfile().getId())) {
+                        new EventPlayerJoin(e.getProfile().getId(), playerListEntries.get(e.getProfile().getId()));
+                        newPlayerEntries.remove(e.getProfile().getId());
                     }
                 }
-                return;
-            default:
-                return;
+            }
         }
     }
     
@@ -141,7 +136,7 @@ class MixinClientPlayNetworkHandler {
         default:
             break;
         }
-        ClientBossBar bossBar = packet.getType() == BossBarS2CPacket.Type.REMOVE ? (ClientBossBar) null : 
+        ClientBossBar bossBar = packet.getType() == BossBarS2CPacket.Type.REMOVE ? null :
             ((IBossBarHud) client.inGameHud.getBossBarHud()).jsmacros_GetBossBars().get(packet.getUuid());
         new EventBossbar(type, packet.getUuid(), bossBar);
     }
@@ -149,9 +144,11 @@ class MixinClientPlayNetworkHandler {
 
     @Inject(at = @At(value="INVOKE", target="Lnet/minecraft/client/world/ClientWorld;playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V"), method= "onItemPickupAnimation")
     public void onItemPickupAnimation(ItemPickupAnimationS2CPacket packet, CallbackInfo info) {
+        assert client.world != null;
         final Entity e = client.world.getEntityById(packet.getEntityId());
         LivingEntity c = (LivingEntity)client.world.getEntityById(packet.getCollectorEntityId());
         if (c == null) c = client.player;
+        assert c != null;
         if (c.equals(client.player) && e instanceof ItemEntity) {
             ItemStack item = ((ItemEntity) e).getStack().copy();
             item.setCount(packet.getStackAmount());
@@ -176,10 +173,9 @@ class MixinClientPlayNetworkHandler {
     
     @Inject(at = @At("TAIL"), method="onChunkDeltaUpdate")
     public void onChunkDeltaUpdate(ChunkDeltaUpdateS2CPacket packet, CallbackInfo info) {
-        packet.visitUpdates((blockPos, blockState) -> {
-            new EventBlockUpdate(blockState, world.getBlockEntity(blockPos), blockPos, "STATE");
-        });
+        packet.visitUpdates((blockPos, blockState) -> new EventBlockUpdate(blockState, world.getBlockEntity(blockPos), blockPos, "STATE"));
     }
+    
     @Inject(at = @At("TAIL"), method="onBlockEntityUpdate")
     public void onBlockEntityUpdate(BlockEntityUpdateS2CPacket packet, CallbackInfo info) {
         new EventBlockUpdate(world.getBlockState(packet.getPos()), world.getBlockEntity(packet.getPos()), packet.getPos(), "ENTITY");

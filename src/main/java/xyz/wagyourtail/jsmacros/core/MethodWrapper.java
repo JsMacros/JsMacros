@@ -126,6 +126,7 @@ public abstract class MethodWrapper<T, U, R> implements Consumer<T>, BiConsumer<
     /**
      * Makes {@link Predicate} and {@link BiPredicate} work together
      */
+    @NotNull
     @Override
     public MethodWrapper<T, U, R> negate() {
         MethodWrapper<T, U, R> self = this;

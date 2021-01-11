@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 * @since 1.2.9
  * @author Wagyourtail
  */
+@SuppressWarnings("unused")
 public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
     
     public ScoreboardsHelper(Scoreboard board) {

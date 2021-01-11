@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DefaultTheme extends TextTheme {
-    private static Map<String, TextColor> theme = new HashMap<>();
+    private static final Map<String, TextColor> theme = new HashMap<>();
     static {
         // JS
         theme.put("keyword", TextColor.fromRgb(0xCC7832));

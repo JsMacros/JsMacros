@@ -2,8 +2,6 @@ package xyz.wagyourtail.jsmacros.core.config;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Comparator;
-
 public class ScriptTrigger {
     @SerializedName(value = "triggerType", alternate = "type")
     public TriggerType triggerType;
@@ -43,35 +41,6 @@ public class ScriptTrigger {
         KEY_RISING,
         KEY_BOTH,
         EVENT
-    }
-    
-    public static class SortByEnabled implements Comparator<ScriptTrigger> {
-        @Override
-        public int compare(ScriptTrigger a, ScriptTrigger b) {
-            if (a.enabled ^ b.enabled) {
-                return a.enabled ? -1 : 1;
-            } else {
-                return a.toString().compareTo(b.toString());
-            }
-        }
-    }
-    public static class SortByTriggerName implements Comparator<ScriptTrigger> {
-        @Override
-        public int compare(ScriptTrigger a, ScriptTrigger b) {
-            int comp = a.event.compareTo(b.event);
-            if (comp != 0) return comp;
-            if (a.enabled ^ b.enabled) return a.enabled ? -1 : 1;
-            return a.toString().compareTo(b.toString());
-        }
-    }
-    public static class SortByFileName implements Comparator<ScriptTrigger> {
-        @Override
-        public int compare(ScriptTrigger a, ScriptTrigger b) {
-            int comp = a.scriptFile.compareTo(b.scriptFile);
-            if (comp != 0) return comp;
-            if (a.enabled ^ b.enabled) return a.enabled ? -1 : 1;
-            return a.toString().compareTo(b.toString());
-        }
     }
     
     /**

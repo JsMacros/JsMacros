@@ -9,8 +9,8 @@ import java.util.Map;
 public class LibraryRegistry {
     
     public final Map<Library, BaseLibrary> libraries = new LinkedHashMap<>();
-    public final Map<Library, Class<? extends BaseLibrary>> perExec = new LinkedHashMap();
-    public final Map<Class<? extends BaseLanguage>, Map<Library, PerLanguageLibrary<?>>> perLanguage = new LinkedHashMap<>();
+    public final Map<Library, Class<? extends BaseLibrary>> perExec = new LinkedHashMap<>();
+    public final Map<Class<? extends BaseLanguage>, Map<Library, PerLanguageLibrary>> perLanguage = new LinkedHashMap<>();
     public final Map<Class<? extends BaseLanguage>, Map<Library, Class<? extends PerExecLanguageLibrary>>> perExecLanguage = new LinkedHashMap<>();
     
     public LibraryRegistry() {
@@ -19,12 +19,11 @@ public class LibraryRegistry {
     public Map<String, BaseLibrary> getLibraries(BaseLanguage language, Object context, Thread thread) {
         Map<String, BaseLibrary> libs = new LinkedHashMap<>();
         for (Map.Entry<Library, BaseLibrary> lib : libraries.entrySet()) {
-            if (lib.getKey().languages().length > 0 && Arrays.stream(lib.getKey().languages()).noneMatch(e -> e.equals(language.getClass()))) continue;
-            else libs.put(lib.getKey().value(), lib.getValue());
+            if (lib.getKey().languages().length == 0 || !Arrays.stream(lib.getKey().languages()).noneMatch(e -> e.equals(language.getClass())))
+                libs.put(lib.getKey().value(), lib.getValue());
         }
         for (Map.Entry<Library, Class<? extends BaseLibrary>> lib : perExec.entrySet()) {
-            if (lib.getKey().languages().length > 0 && Arrays.stream(lib.getKey().languages()).noneMatch(e -> e.equals(language.getClass()))) continue;
-            else {
+            if (lib.getKey().languages().length == 0 || !Arrays.stream(lib.getKey().languages()).noneMatch(e -> e.equals(language.getClass()))) {
                 try {
                     libs.put(lib.getKey().value(), lib.getValue().newInstance());
                 } catch (Exception e) {
@@ -32,7 +31,7 @@ public class LibraryRegistry {
                 }
             }
         }
-        for (Map.Entry<Library, PerLanguageLibrary<?>> lib : perLanguage.getOrDefault(language.getClass(), new LinkedHashMap<>()).entrySet()) {
+        for (Map.Entry<Library, PerLanguageLibrary> lib : perLanguage.getOrDefault(language.getClass(), new LinkedHashMap<>()).entrySet()) {
             libs.put(lib.getKey().value(), lib.getValue());
         }
         
@@ -64,7 +63,7 @@ public class LibraryRegistry {
                 for (Class<? extends BaseLanguage> lang : ann.languages()) {
                     if (!perLanguage.containsKey(lang)) perLanguage.put(lang, new LinkedHashMap<>());
                     try {
-                        perLanguage.get(lang).put(ann, clazz.asSubclass(PerLanguageLibrary.class).getConstructor(BaseLanguage.class).newInstance(lang));
+                        perLanguage.get(lang).put(ann, clazz.asSubclass(PerLanguageLibrary.class).getConstructor(Class.class).newInstance(lang));
                     } catch (Exception e) {
                         throw new RuntimeException("Failed to instantiate library, ", e);
                     }

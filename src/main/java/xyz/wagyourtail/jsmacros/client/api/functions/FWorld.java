@@ -41,6 +41,7 @@ import java.util.*;
  * @author Wagyourtail
  */
  @Library("world")
+ @SuppressWarnings("unused")
 public class FWorld extends BaseLibrary {
     
     private static final MinecraftClient mc = MinecraftClient.getInstance();

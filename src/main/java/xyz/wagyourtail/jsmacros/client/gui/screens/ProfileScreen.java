@@ -36,31 +36,26 @@ public class ProfileScreen extends BaseScreen {
 
     protected void init() {
         super.init();
+        assert client != null;
         profText = new TranslatableText("jsmacros.profile");
         defText = new TranslatableText("jsmacros.default");
         
         profiles.clear();
         topScroll = 35;
-
+    
         client.keyboard.setRepeatEvents(true);
-        this.addButton(new Button(0, 0, this.width / 6 - 1, 20, textRenderer,0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.keys"), (btn) -> {
-            this.openParent();
-        }));
+        this.addButton(new Button(0, 0, this.width / 6 - 1, 20, textRenderer,0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.keys"), (btn) -> this.openParent()));
 
-        this.addButton(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.events"), (btn) -> {
-            client.openScreen(new EventMacrosScreen(parent));
-        }));
+        this.addButton(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.events"), (btn) -> client.openScreen(new EventMacrosScreen(parent))));
 
         Button profile = this.addButton(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer,0x4FFFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.profile"), null));
         profile.active = false;
 
-        this.addButton(new Button(0, this.height - 20, this.width / 6, 20, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.addprofile"), (btn) -> {
-            this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), "", this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (str) -> {
-                addProfile(str);
-                if (!Core.instance.config.options.profiles.containsKey(str)) Core.instance.config.options.profiles.put(str, new ArrayList<>());
-                Core.instance.config.saveConfig();
-            }));
-        }));
+        this.addButton(new Button(0, this.height - 20, this.width / 6, 20, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.addprofile"), (btn) -> this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), "", this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (str) -> {
+            addProfile(str);
+            if (!Core.instance.config.options.profiles.containsKey(str)) Core.instance.config.options.profiles.put(str, new ArrayList<>());
+            Core.instance.config.saveConfig();
+        }))));
 
         this.addButton(new Button(this.width / 6, this.height - 20, this.width / 6, 20, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.renameprofile"), (btn) -> {
             if (!selected.pName.equals(Core.instance.config.options.defaultProfile)) this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), selected.pName, this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (str) -> {
@@ -85,9 +80,7 @@ public class ProfileScreen extends BaseScreen {
         }));
 
         profileScroll = this.addButton(new Scrollbar(this.width / 2 - 8, 33, 8, this.height - 53, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
-        disableInGui = new CheckBoxContainer(this.width / 2 + 10, 50, this.width / 2 - 20, 12, this.textRenderer, JsMacros.core.config.options.disableKeyWhenScreenOpen, new TranslatableText("jsmacros.disablewithscreen"), this::addButton, (state) -> {
-            JsMacros.core.config.options.disableKeyWhenScreenOpen = state;
-        });
+        disableInGui = new CheckBoxContainer(this.width / 2 + 10, 50, this.width / 2 - 20, 12, this.textRenderer, JsMacros.core.config.options.disableKeyWhenScreenOpen, new TranslatableText("jsmacros.disablewithscreen"), this::addButton, (state) -> JsMacros.core.config.options.disableKeyWhenScreenOpen = state);
         
         for (String k : Core.instance.config.options.profiles.keySet()) {
             addProfile(k);
@@ -191,6 +184,7 @@ public class ProfileScreen extends BaseScreen {
     }
 
     public void removed() {
+        assert client != null;
         client.keyboard.setRepeatEvents(false);
     }
 

@@ -17,6 +17,7 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
  * @author Wagyourtail
  */
 @Library("client")
+@SuppressWarnings("unused")
 public class FClient extends BaseLibrary {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     /**

@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  * @author Wagyourtail
  *
  */
+@SuppressWarnings("unused")
 public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     
     public EntityHelper(T e) {
@@ -74,7 +75,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the {@code yaw} value of the entity.
      */
     public float getYaw() {
-        return MathHelper.fwrapDegrees(base.yaw);
+        return MathHelper.wrapDegrees(base.yaw);
     }
     
     /**
@@ -119,9 +120,9 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.1.8 [citation needed]
      * @return the vehicle of the entity.
      */
-    public EntityHelper<T> getVehicle() {
+    public EntityHelper<?> getVehicle() {
         Entity parent = base.getVehicle();
-        if (parent != null) return new EntityHelper(parent);
+        if (parent != null) return EntityHelper.create(parent);
         return null;
     }
     

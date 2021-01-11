@@ -16,11 +16,11 @@ import java.util.*;
  * @since 1.2.7
  */
 public abstract class BaseProfile {
-    protected final Core runner;
+    protected final Core<?> runner;
     public final Set<Thread> joinedThreadStack = new HashSet<>();
     public String profileName;
     
-    public BaseProfile(Core runner) {
+    public BaseProfile(Core<?> runner) {
         this.runner = runner;
     }
     
@@ -52,7 +52,7 @@ public abstract class BaseProfile {
     
     /**
     *
-    * @Since 1.0.3 [citation needed]
+    * @since 1.0.3 [citation needed]
      * @param pName
      *
      * @return
@@ -68,8 +68,6 @@ public abstract class BaseProfile {
         for (ScriptTrigger rawmacro : rawProfile) {
             runner.eventRegistry.addScriptTrigger(rawmacro);
         }
-        Map<String, Object> args = new HashMap<>();
-        args.put("profile", pName);
         new EventProfileLoad(this, pName);
         
         return true;

@@ -112,8 +112,8 @@ public class Core<T extends ConfigOptions> {
 
         @Override
         public int compare(BaseLanguage a, BaseLanguage b) {
-            final String[] as = a.extension().replaceAll("\\.", " ").trim().split(" ");
-            final String[] bs = b.extension().replaceAll("\\.", " ").trim().split(" ");
+            final String[] as = a.extension.replaceAll("\\.", " ").trim().split(" ");
+            final String[] bs = b.extension.replaceAll("\\.", " ").trim().split(" ");
             final int lendif = bs.length-as.length;
             if (lendif != 0) return lendif;
             int comp = 0;

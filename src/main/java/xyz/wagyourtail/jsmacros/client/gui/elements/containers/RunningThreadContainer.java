@@ -12,7 +12,7 @@ import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import java.util.function.Consumer;
 
 public class RunningThreadContainer extends MultiElementContainer {
-    private Consumer<RunningThreadContainer> removeContainer;
+    private final Consumer<RunningThreadContainer> removeContainer;
     private Button cancelButton;
     public ScriptThreadWrapper t;
     

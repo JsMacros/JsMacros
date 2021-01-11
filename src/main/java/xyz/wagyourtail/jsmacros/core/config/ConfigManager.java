@@ -9,12 +9,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class ConfigManager<T extends ConfigOptions> {
-    private Class<T> optionsClass;
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private final Class<T> optionsClass;
     public T options;
     public final File configFolder;
     public final File macroFolder;
     public final File configFile;
-    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public ConfigManager(File configFolder, File macroFolder, Class<T> configClass) {
         this.configFolder = configFolder;

@@ -19,6 +19,7 @@ import java.io.IOException;
  * @author Wagyourtail
  */
  @Library("fs")
+ @SuppressWarnings("unused")
 public class FFS extends BaseLibrary {
 
     /**

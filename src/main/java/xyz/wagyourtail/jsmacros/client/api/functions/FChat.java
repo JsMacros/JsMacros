@@ -19,6 +19,7 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
  * @author Wagyourtail
  */
  @Library("chat")
+ @SuppressWarnings("unused")
 public class FChat extends BaseLibrary {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     /**

@@ -7,6 +7,7 @@ import net.minecraft.util.registry.Registry;
  * @author Wagyourtail
  * @since 1.2.4
  */
+@SuppressWarnings("unused")
 public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     
     public StatusEffectHelper(StatusEffectInstance s) {

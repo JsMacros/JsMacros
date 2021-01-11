@@ -12,8 +12,8 @@ public class ProfileContainer extends MultiElementContainer {
     private Button selectButton;
     private Button defaultButton;
     public String pName;
-    private Consumer<ProfileContainer> setSelected;
-    private Consumer<ProfileContainer> setDefault;
+    private final Consumer<ProfileContainer> setSelected;
+    private final Consumer<ProfileContainer> setDefault;
     private boolean defaultProfile;
 
     public ProfileContainer(int x, int y, int width, int height, TextRenderer textRenderer, String pName, String defaultProfile, Consumer<AbstractButtonWidget> addButton, Consumer<ProfileContainer> setSelected, Consumer<ProfileContainer> setDefault) {

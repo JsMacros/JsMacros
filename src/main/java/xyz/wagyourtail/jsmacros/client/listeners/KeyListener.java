@@ -11,9 +11,9 @@ public class KeyListener extends BaseListener {
     private int mods;
     private String key;
     
-    public KeyListener(ScriptTrigger macro, Core runner) {
+    public KeyListener(ScriptTrigger macro, Core<?> runner) {
         super(macro, runner);
-        String mods = "";
+        StringBuilder mods = new StringBuilder();
         this.mods = 0;
         try {
             String[] comb = macro.event.split("\\+");
@@ -21,11 +21,11 @@ public class KeyListener extends BaseListener {
             for (String key : comb) {
                 if (++i == comb.length) this.key = key;
                 else {
-                    if (i > 1) mods += "+";
-                    mods += key;
+                    if (i > 1) mods.append("+");
+                    mods.append(key);
                 }
             }
-            this.mods = EventKey.getModInt(mods);
+            this.mods = EventKey.getModInt(mods.toString());
         } catch(Exception e) {
             key = InputUtil.UNKNOWN_KEY.getTranslationKey();
         }

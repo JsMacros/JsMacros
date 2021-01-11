@@ -9,6 +9,7 @@ import net.minecraft.text.LiteralText;
  * @author Wagyourtail
  * @since 1.0.5
  */
+@SuppressWarnings("unused")
 public class ButtonWidgetHelper<T extends AbstractButtonWidget> extends BaseHelper<T> implements Drawable {
     
     public ButtonWidgetHelper(T btn) {

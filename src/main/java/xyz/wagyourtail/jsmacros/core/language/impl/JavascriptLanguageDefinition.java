@@ -22,7 +22,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage {
         .allowExperimentalOptions(true)
         .option("js.commonjs-require", "true");
     
-    public JavascriptLanguageDefinition(String extension, Core runner) {
+    public JavascriptLanguageDefinition(String extension, Core<?> runner) {
         super(extension, runner);
     }
     

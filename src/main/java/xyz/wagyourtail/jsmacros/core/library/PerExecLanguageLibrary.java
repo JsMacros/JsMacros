@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.core.library;
 
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 
-public class PerExecLanguageLibrary<T> extends BaseLibrary {
+public class PerExecLanguageLibrary extends BaseLibrary {
     protected Class<? extends BaseLanguage> language;
     protected Object context;
     protected Thread thread;

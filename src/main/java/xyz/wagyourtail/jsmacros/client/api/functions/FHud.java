@@ -27,6 +27,7 @@ import java.util.Set;
  * @author Wagyourtail
  */
  @Library("hud")
+ @SuppressWarnings("unused")
 public class FHud extends BaseLibrary {
     
     private static final MinecraftClient mc = MinecraftClient.getInstance();
@@ -123,7 +124,7 @@ public class FHud extends BaseLibrary {
      * @param overlay
      */
     public void registerDraw2D(IDraw2D<Draw2D> overlay) {
-        overlay.init();
+        ((Draw2D) overlay).init();
         synchronized (overlays) {
             overlays.add(overlay);
         }

@@ -6,6 +6,7 @@ import net.minecraft.entity.boss.BossBar;
  * @author Wagyourtail
  * @since 1.2.1
  */
+@SuppressWarnings("unused")
 public class BossBarHelper extends BaseHelper<BossBar> {
 
     public BossBarHelper(BossBar b) {

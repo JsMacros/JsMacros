@@ -42,9 +42,7 @@ public class TextStyleCompiler extends AbsVisitor {
     protected void appendChildResult(List<LiteralText> childResult) {
         LiteralText first = childResult.remove(0);
         result.get(result.size() - 1).append(first);
-        for (LiteralText line : childResult) {
-            result.add(line);
-        }
+        result.addAll(childResult);
     }
     
     protected TextColor colorForSyntax(String name, String alias) {

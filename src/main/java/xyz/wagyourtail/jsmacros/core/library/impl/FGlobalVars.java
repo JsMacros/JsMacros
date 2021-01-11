@@ -16,6 +16,7 @@ import java.util.Map;
  * @author Wagyourtail
  */
  @Library("globalvars")
+ @SuppressWarnings("unused")
 public class FGlobalVars extends BaseLibrary {
     public static Map<String, Object> globalRaw = new HashMap<>();
 	
@@ -29,7 +30,7 @@ public class FGlobalVars extends BaseLibrary {
 	 * @return
 	 */
 	public int putInt(String name, int i) {
-		globalRaw.put(name, Integer.valueOf(i));
+		globalRaw.put(name, i);
 		return i;
 	}
 	
@@ -57,7 +58,7 @@ public class FGlobalVars extends BaseLibrary {
 	 * @return
 	 */
 	public float putFloat(String name, float f) {
-		globalRaw.put(name, Float.valueOf(f));
+		globalRaw.put(name, f);
 		return f;
 	}
 	
@@ -71,7 +72,7 @@ public class FGlobalVars extends BaseLibrary {
 	 * @return
 	 */
 	public double putDouble(String name, double d) {
-	    globalRaw.put(name, Double.valueOf(d));
+	    globalRaw.put(name, d);
 	    return d;
 	}
 	
@@ -85,7 +86,7 @@ public class FGlobalVars extends BaseLibrary {
 	 * @return
 	 */
 	public boolean putBoolean(String name, boolean b) {
-	    globalRaw.put(name, Boolean.valueOf(b));
+	    globalRaw.put(name, b);
 	    return b;
 	}
 	

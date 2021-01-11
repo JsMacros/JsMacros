@@ -9,6 +9,7 @@ import java.util.List;
  * @author Wagyourtail
  * @since 1.3.0
  */
+@SuppressWarnings("unused")
 public class TeamHelper extends BaseHelper<Team> {
     public TeamHelper(Team t) {
         super(t);

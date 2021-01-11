@@ -13,11 +13,11 @@ import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import java.util.function.Consumer;
 
 public class TextPrompt extends OverlayContainer {
-    private Text message;
-    private Consumer<String> accept;
-    private Consumer<Element> setFocused;
+    private final Text message;
+    private final Consumer<String> accept;
+    private final Consumer<Element> setFocused;
     private TextInput ti;
-    private String defText;
+    private final String defText;
 
     public TextPrompt(int x, int y, int width, int height, TextRenderer textRenderer, Text message, String defaultText, Consumer<AbstractButtonWidget> addButton, Consumer<AbstractButtonWidget> removeButton, Consumer<OverlayContainer> close, Consumer<Element> setFocused, Consumer<String> accept) {
         super(x, y, width, height, textRenderer, addButton, removeButton, close);
@@ -33,9 +33,7 @@ public class TextPrompt extends OverlayContainer {
 
         ti = (TextInput) this.addButton(new TextInput(x + 3, y + 25, w - 2, 14, textRenderer, 0xFF101010, 0, 0xFF4040FF, 0xFFFFFF, defText, null, null));
         
-        this.addButton(new Button(x + 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("gui.cancel"), (btn) -> {
-            close();
-        }));
+        this.addButton(new Button(x + 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("gui.cancel"), (btn) -> close()));
 
         this.addButton(new Button(x + w / 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.confirm"), (btn) -> {
             if (this.accept != null) this.accept.accept(ti.content);
@@ -48,7 +46,7 @@ public class TextPrompt extends OverlayContainer {
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
-        DrawableHelper.drawCenteredText(matrices, textRenderer, (Text) message, x + width / 2, y + 5, 0xFFFFFF);
+        DrawableHelper.drawCenteredText(matrices, textRenderer, message, x + width / 2, y + 5, 0xFFFFFF);
         super.render(matrices, mouseX, mouseY, delta);
     }
 

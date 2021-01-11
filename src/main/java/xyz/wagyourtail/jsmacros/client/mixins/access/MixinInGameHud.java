@@ -20,7 +20,7 @@ class MixinInGameHud {
             for (IDraw2D<Draw2D> h : FHud.overlays) {
                 try {
                     h.render(matrixStack);
-                } catch (Exception e) {}
+                } catch (Exception ignored) {}
             }
         }
 

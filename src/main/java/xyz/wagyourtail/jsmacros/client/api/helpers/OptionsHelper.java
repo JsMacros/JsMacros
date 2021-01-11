@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  * @author Wagyourtail
  * @since 1.1.7
  */
+@SuppressWarnings("unused")
 public class OptionsHelper extends BaseHelper<GameOptions> {
     private static final Map<String, SoundCategory> SOUND_CATEGORY_MAP = Arrays.stream(SoundCategory.values()).collect(Collectors.toMap(SoundCategory::getName, Function.identity()));
     private MinecraftClient mc = MinecraftClient.getInstance();

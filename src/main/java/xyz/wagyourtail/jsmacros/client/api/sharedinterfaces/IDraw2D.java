@@ -23,61 +23,61 @@ public interface IDraw2D<T> {
      * @since 1.2.7
      * @return screen width
      */
-    public int getWidth();
+    int getWidth();
     
     /**
      * @since 1.2.7
      * @return screen height
      */
-    public int getHeight();
+    int getHeight();
     
     /**
      * @since 1.2.7
      * @return text elements
      */
      @Deprecated
-    public List<Text> getTexts();
+    List<Text> getTexts();
     
     /**
      * @since 1.2.7
      * @return rect elements
      */
      @Deprecated
-    public List<Rect> getRects();
+    List<Rect> getRects();
     
     /**
      * @since 1.2.7
      * @return item elements
      */
      @Deprecated
-    public List<Item> getItems();
+    List<Item> getItems();
     
     /**
      * @since 1.2.7
      * @return image elements
      */
      @Deprecated
-    public List<Image> getImages();
+    List<Image> getImages();
     
     /**
     * @since 1.2.9
      * @return a read only copy of the list of all elements added by scripts.
      */
-    public List<Drawable> getElements();
+    List<Drawable> getElements();
     
     /**
     * removes any element regardless of type.
     * @since 1.2.9
      * @return
      */
-    public T removeElement(Drawable e);
+    T removeElement(Drawable e);
     
     /**
     * re-add an element you removed with {@link #removeElement(Drawable)}
     * @since 1.2.9
      * @return
      */
-    public Drawable reAddElement(Drawable e);
+    Drawable reAddElement(Drawable e);
     
     /**
      * @since 1.2.7
@@ -88,31 +88,7 @@ public interface IDraw2D<T> {
      * @param shadow
      * @return
      */
-    public Text addText(String text, int x, int y, int color, boolean shadow);
-    
-    /**
-     * @since 1.2.7
-     * @param text
-     * @param x
-     * @param y
-     * @param color
-     * @param shadow
-     * @param scale
-     * @param rotation
-     * @return
-     */
-    public Text addText(String text, int x, int y, int color, boolean shadow, double scale, float rotation);
-    
-    /**
-     * @since 1.2.7
-     * @param text
-     * @param x
-     * @param y
-     * @param color
-     * @param shadow
-     * @return
-     */
-    public Text addText(TextHelper text, int x, int y, int color, boolean shadow);
+    Text addText(String text, int x, int y, int color, boolean shadow);
     
     /**
      * @since 1.2.7
@@ -125,7 +101,31 @@ public interface IDraw2D<T> {
      * @param rotation
      * @return
      */
-    public Text addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, float rotation);
+    Text addText(String text, int x, int y, int color, boolean shadow, double scale, float rotation);
+    
+    /**
+     * @since 1.2.7
+     * @param text
+     * @param x
+     * @param y
+     * @param color
+     * @param shadow
+     * @return
+     */
+    Text addText(TextHelper text, int x, int y, int color, boolean shadow);
+    
+    /**
+     * @since 1.2.7
+     * @param text
+     * @param x
+     * @param y
+     * @param color
+     * @param shadow
+     * @param scale
+     * @param rotation
+     * @return
+     */
+    Text addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, float rotation);
     
     
     /**
@@ -134,7 +134,7 @@ public interface IDraw2D<T> {
      * @return
      */
      @Deprecated
-    public T removeText(Text t);
+    T removeText(Text t);
     
     /**
      * @since 1.2.7
@@ -151,7 +151,7 @@ public interface IDraw2D<T> {
      * @param textureHeight
      * @return
      */
-    public Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight);
+    Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight);
     
     /**
      * @since 1.2.7
@@ -169,7 +169,7 @@ public interface IDraw2D<T> {
      * @param rotation
      * @return
      */
-    public Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation);
+    Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation);
     
     /**
      * @since 1.2.7
@@ -177,7 +177,7 @@ public interface IDraw2D<T> {
      * @return
      */
      @Deprecated
-    public T removeImage(Image i);
+    T removeImage(Image i);
     
     /**
      * @since 1.2.7
@@ -188,7 +188,7 @@ public interface IDraw2D<T> {
      * @param color
      * @return
      */
-    public Rect addRect(int x1, int y1, int x2, int y2, int color);
+    Rect addRect(int x1, int y1, int x2, int y2, int color);
     
     /**
      * @since 1.2.7
@@ -200,7 +200,7 @@ public interface IDraw2D<T> {
      * @param alpha
      * @return
      */
-    public Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha);
+    Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha);
     
     /**
      * @since 1.2.7
@@ -213,7 +213,7 @@ public interface IDraw2D<T> {
      * @param rotation
      * @return
      */
-    public Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation);
+    Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation);
     
     /**
      * @since 1.2.7
@@ -221,7 +221,7 @@ public interface IDraw2D<T> {
      * @return
      */
      @Deprecated
-    public T removeRect(Rect r);
+    T removeRect(Rect r);
     
     /**
      * @since 1.2.7
@@ -230,7 +230,7 @@ public interface IDraw2D<T> {
      * @param id
      * @return
      */
-    public Item addItem(int x, int y, String id);
+    Item addItem(int x, int y, String id);
     
     /**
      * @since 1.2.7
@@ -240,7 +240,7 @@ public interface IDraw2D<T> {
      * @param overlay
      * @return
      */
-    public Item addItem(int x, int y, String id, boolean overlay);
+    Item addItem(int x, int y, String id, boolean overlay);
     
     /**
      * @since 1.2.7
@@ -252,7 +252,7 @@ public interface IDraw2D<T> {
      * @param rotation
      * @return
      */
-    public Item addItem(int x, int y, String id, boolean overlay, double scale, float rotation);
+    Item addItem(int x, int y, String id, boolean overlay, double scale, float rotation);
     
     /**
      * @since 1.2.7
@@ -261,7 +261,7 @@ public interface IDraw2D<T> {
      * @param item
      * @return
      */
-    public Item addItem(int x, int y, ItemStackHelper item);
+    Item addItem(int x, int y, ItemStackHelper item);
     
     /**
      * @since 1.2.7
@@ -271,7 +271,7 @@ public interface IDraw2D<T> {
      * @param overlay
      * @return
      */
-    public Item addItem(int x, int y, ItemStackHelper item, boolean overlay);
+    Item addItem(int x, int y, ItemStackHelper item, boolean overlay);
     
     /**
      * @since 1.2.7
@@ -283,7 +283,7 @@ public interface IDraw2D<T> {
      * @param rotation
      * @return
      */
-    public Item addItem(int x, int y, ItemStackHelper item, boolean overlay, double scale, float rotation);
+    Item addItem(int x, int y, ItemStackHelper item, boolean overlay, double scale, float rotation);
     
     /**
      * @since 1.2.7
@@ -291,23 +291,21 @@ public interface IDraw2D<T> {
      * @return
      */
      @Deprecated
-    public T removeItem(Item i);
+    T removeItem(Item i);
 
     /**
      * @since 1.2.7
      * @param onInit calls your method as a {@link Consumer}&lt;{@link T}&gt;
      * @return
      */
-    public T setOnInit(MethodWrapper<T, Object, Object> onInit);
+    T setOnInit(MethodWrapper<T, Object, Object> onInit);
     
     /**
      * @since 1.2.7
      * @param catchInit calls your method as a {@link Consumer}&lt;{@link String}&gt;
      * @return
      */
-    public T setOnFailInit(MethodWrapper<String, Object, Object> catchInit);
-
+    T setOnFailInit(MethodWrapper<String, Object, Object> catchInit);
     
-    public void init();
-    public void render(MatrixStack matrixStack);
+    void render(MatrixStack matrixStack);
 }

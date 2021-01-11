@@ -16,10 +16,11 @@ import java.util.Map.Entry;
 /**
  * @author Wagyourtail
  */
+@SuppressWarnings("unused")
 public class BlockDataHelper extends BaseHelper<BlockState> {
-    private Block b;
-    private BlockPos bp;
-    private BlockEntity e;
+    private final Block b;
+    private final BlockPos bp;
+    private final BlockEntity e;
     
     public BlockDataHelper(BlockState b, BlockEntity e, BlockPos bp) {
         super(b);

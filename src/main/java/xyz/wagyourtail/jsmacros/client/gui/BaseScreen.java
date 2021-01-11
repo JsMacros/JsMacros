@@ -22,6 +22,7 @@ public abstract class BaseScreen extends Screen {
     }
 
     protected void init() {
+        assert client != null;
         super.init();
         buttons.clear();
         children.clear();
@@ -31,6 +32,7 @@ public abstract class BaseScreen extends Screen {
     }
 
     public void removed() {
+        assert client != null;
         client.keyboard.setRepeatEvents(false);
     }
 
@@ -83,6 +85,7 @@ public abstract class BaseScreen extends Screen {
     }
 
     public void onClose() {
+        assert client != null;
         if (client.world == null)
             openParent();
         else {
@@ -92,6 +95,7 @@ public abstract class BaseScreen extends Screen {
     }
     
     public void openParent() {
+        assert client != null;
         client.openScreen(parent);
     }
 }

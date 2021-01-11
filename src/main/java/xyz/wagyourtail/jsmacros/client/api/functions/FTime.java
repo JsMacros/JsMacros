@@ -13,6 +13,7 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
  * @author Wagyourtail
  */
  @Library("time")
+ @SuppressWarnings("unused")
 public class FTime extends BaseLibrary {
     
     /**

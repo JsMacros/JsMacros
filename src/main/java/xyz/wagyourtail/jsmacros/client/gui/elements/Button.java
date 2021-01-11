@@ -40,8 +40,8 @@ public class Button extends AbstractPressableButtonWidget {
         return this;
     }
     
-    public boolean canRenderAllText() {
-        return this.textLines.size() <= this.visibleLines;
+    public boolean cantRenderAllText() {
+        return this.textLines.size() > this.visibleLines;
     }
     
     public void setMessage(Text message) {
@@ -62,7 +62,7 @@ public class Button extends AbstractPressableButtonWidget {
     protected void renderMessage(MatrixStack matrices) {
         for (int i = 0; i < visibleLines; ++i) {
             int w = textRenderer.getWidth(textLines.get(i));
-            textRenderer.draw(matrices, textLines.get(i), x + width / 2 - w / 2, y + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
+            textRenderer.draw(matrices, textLines.get(i), x + width / 2F - w / 2F, y + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
         }
     }
     

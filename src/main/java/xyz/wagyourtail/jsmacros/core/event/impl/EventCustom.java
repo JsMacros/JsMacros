@@ -14,6 +14,7 @@ import java.util.Map;
  * @since 1.2.8
  */
  @Event("Custom")
+ @SuppressWarnings("unused")
 public class EventCustom implements BaseEvent {
     protected Map<String, Object> args = new HashMap<>();
     public String eventName;
@@ -68,7 +69,7 @@ public class EventCustom implements BaseEvent {
      * @since 1.2.8
      */
     public int putInt(String name, int i) {
-        args.put(name, Integer.valueOf(i));
+        args.put(name, i);
         return i;
     }
     
@@ -98,7 +99,7 @@ public class EventCustom implements BaseEvent {
      * @since 1.2.8
      */
     public float putFloat(String name, float f) {
-        args.put(name, Float.valueOf(f));
+        args.put(name, f);
         return f;
     }
     
@@ -113,7 +114,7 @@ public class EventCustom implements BaseEvent {
      * @since 1.2.8
      */
     public double putDouble(String name, double d) {
-        args.put(name, Double.valueOf(d));
+        args.put(name, d);
         return d;
     }
     
@@ -128,7 +129,7 @@ public class EventCustom implements BaseEvent {
      * @since 1.2.8
      */
     public boolean putBoolean(String name, boolean b) {
-        args.put(name, Boolean.valueOf(b));
+        args.put(name, b);
         return b;
     }
     

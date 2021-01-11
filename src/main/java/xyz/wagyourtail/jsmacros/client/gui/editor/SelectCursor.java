@@ -8,9 +8,9 @@ import net.minecraft.util.math.MathHelper;
 import java.util.function.Consumer;
 
 public class SelectCursor {
-    private MinecraftClient mc = MinecraftClient.getInstance();
+    private final MinecraftClient mc = MinecraftClient.getInstance();
     public Consumer<SelectCursor> onChange;
-    private Style defaultStyle;
+    private final Style defaultStyle;
     public int startLine = 0;
     public int endLine = 0;
     

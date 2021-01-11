@@ -30,7 +30,7 @@ public class MixinMinecraftClient {
         if (screen != currentScreen) new EventOpenScreen(screen);
     }
     
-    @Inject(at = @At("TAIL"), method="disconnect")
+    @Inject(at = @At("TAIL"), method="disconnect()V")
     public void onDisconnect(CallbackInfo info) {
         new EventDisconnect();
     }

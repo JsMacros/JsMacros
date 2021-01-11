@@ -132,7 +132,7 @@ public class TextInput extends Button {
                 if (arrowCursor < content.length()) if (arrowCursor < selEndIndex) {
                     updateSelStart(++arrowCursor);
                     if (ctrl) updateSelEnd(selStartIndex);
-                } else if (arrowCursor >= selEndIndex) {
+                } else {
                     updateSelEnd(++arrowCursor);
                     if (ctrl) updateSelStart(selEndIndex);
                 }

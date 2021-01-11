@@ -10,6 +10,7 @@ import java.util.Map;
  * @author Wagyourtail
  * @since 1.2.9
  */
+@SuppressWarnings("unused")
 public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
     
     public ScoreboardObjectiveHelper(ScoreboardObjective o) {

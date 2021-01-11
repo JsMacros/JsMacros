@@ -9,6 +9,7 @@ import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
  * @see xyz.wagyourtail.jsmacros.client.api.helpers.PlayerEntityHelper
  * @since 1.0.3
  */
+@SuppressWarnings("unused")
 public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends PlayerEntityHelper<T> {
 
     public ClientPlayerEntityHelper(T e) {
@@ -26,7 +27,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         base.prevPitch = base.pitch;
         base.prevYaw = base.yaw;
         base.pitch = pitch;
-        base.yaw = MathHelper.fwrapDegrees(yaw);
+        base.yaw = MathHelper.wrapDegrees(yaw);
         if (base.getVehicle() != null) {
             base.getVehicle().onPassengerLookAround(base);
         }

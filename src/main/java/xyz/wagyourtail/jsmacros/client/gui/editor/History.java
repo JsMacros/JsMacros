@@ -35,7 +35,7 @@ public class History {
         current = step.applyStep(current);
         if (undo.size() > 0) {
             HistoryStep prev = undo.get(undo.size() - 1);
-            if (prev instanceof Add && ((Add) prev).position + ((Add) prev).added.length() == position) {
+            if (prev instanceof Add && prev.position + ((Add) prev).added.length() == position) {
                 if (!content.startsWith("\n")) {
                     ((Add) prev).added += step.added;
                     if (onChange != null) onChange.accept(current);
@@ -64,7 +64,7 @@ public class History {
         current = step.applyStep(current);
         if (undo.size() > 0) {
             HistoryStep prev = undo.get(undo.size() - 1);
-            if (prev instanceof Remove && !((Remove) prev).isBkspace && ((Remove) prev).position == position) {
+            if (prev instanceof Remove && !((Remove) prev).isBkspace && prev.position == position) {
                 ((Remove) prev).removed += step.removed;
                 ((Remove) prev).length += length;
                 if (onChange != null) onChange.accept(current);
@@ -91,9 +91,9 @@ public class History {
         current = step.applyStep(current);
         if (undo.size() > 0) {
             HistoryStep prev = undo.get(undo.size() - 1);
-            if (prev instanceof Remove && ((Remove) prev).isBkspace && position + length == ((Remove) prev).position) {
+            if (prev instanceof Remove && ((Remove) prev).isBkspace && position + length == prev.position) {
                 ((Remove) prev).removed = step.removed + ((Remove) prev).removed;
-                --((Remove) prev).position;
+                --prev.position;
                 ((Remove) prev).length += length;
                 if (onChange != null) onChange.accept(current);
                 return false;
@@ -220,7 +220,7 @@ public class History {
     }
     
     protected static class Remove extends HistoryStep {
-        boolean isBkspace = false;
+        boolean isBkspace;
         int length;
         String removed;
         protected Remove(int position, int length, boolean isBkspace, SelectCursor cursor) {
@@ -242,8 +242,7 @@ public class History {
             String result = input.substring(0, position) + removed + input.substring(position);
             cursor.updateStartIndex(position, result);
             cursor.updateEndIndex(position + length, result);
-            if (isBkspace) cursor.arrowEnd = true;
-            else cursor.arrowEnd = false;
+            cursor.arrowEnd = isBkspace;
             return result;
         }
         
@@ -303,9 +302,10 @@ public class History {
         private String shift(String input, int startLine, int lineCount, int shiftAmmount, boolean shiftDown) {
             String[] lines = input.split("\n", -1);
             String[] shifted = new String[lines.length];
+            int i;
+            int startIndex = 0;
+            int endIndex;
             if (shiftDown) {
-                int i;
-                int startIndex = 0;
                 for (i = 0; i < startLine; ++i) {
                     shifted[i] = lines[i];
                     startIndex += shifted[i].length() + 1;
@@ -314,26 +314,17 @@ public class History {
                     shifted[i] = lines[startLine + lineCount + j];
                     startIndex += shifted[i].length() + 1;
                 }
-                int endIndex = startIndex;
+                endIndex = startIndex;
                 for (int j = 0; j < lineCount; ++j, ++i) {
                     shifted[i] = lines[startLine + j];
                     endIndex += shifted[i].length() + 1;
                 }
-                for (; i < lines.length; ++i) {
-                    shifted[i] = lines[i];
-                }
-                String result = String.join("\n", shifted);
-                cursor.updateStartIndex(startIndex, result);
-                cursor.updateEndIndex(--endIndex, result);
-                return result;
             } else {
-                int i;
-                int startIndex = 0;
                 for (i = 0; i < startLine - shiftAmmount; ++i) {
                     shifted[i] = lines[i];
                     startIndex += shifted[i].length() + 1;
                 }
-                int endIndex = startIndex;
+                endIndex = startIndex;
                 for (int j = 0; j < lineCount; ++j, ++i) {
                     shifted[i] = lines[startLine + j];
                     endIndex += shifted[i].length() + 1;
@@ -341,14 +332,14 @@ public class History {
                 for (int j = startLine - shiftAmmount; j < startLine; ++j, ++i) {
                     shifted[i] = lines[j];
                 }
-                for (; i < lines.length; ++i) {
-                    shifted[i] = lines[i];
-                }
-                String result = String.join("\n", shifted);
-                cursor.updateStartIndex(startIndex, result);
-                cursor.updateEndIndex(--endIndex, result);
-                return result;
             }
+            for (; i < lines.length; ++i) {
+                shifted[i] = lines[i];
+            }
+            String result = String.join("\n", shifted);
+            cursor.updateStartIndex(startIndex, result);
+            cursor.updateEndIndex(--endIndex, result);
+            return result;
         }
     }
     

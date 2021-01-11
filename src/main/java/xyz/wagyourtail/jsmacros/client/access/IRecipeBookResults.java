@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface IRecipeBookResults {
     
-    public List<RecipeResultCollection> getResultCollections();
+    List<RecipeResultCollection> getResultCollections();
     
 }

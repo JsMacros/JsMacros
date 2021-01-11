@@ -6,5 +6,5 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface IBossBarHud {
-    public Map<UUID, ClientBossBar> jsmacros_GetBossBars();
+    Map<UUID, ClientBossBar> jsmacros_GetBossBars();
 }

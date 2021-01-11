@@ -32,6 +32,7 @@ import java.util.Set;
  * @author Wagyourtail
  */
  @Library("jsmacros")
+ @SuppressWarnings("unused")
 public class FJsMacros extends BaseLibrary {
     
     /**
@@ -42,9 +43,9 @@ public class FJsMacros extends BaseLibrary {
     }
 
     /**
-     * @return the JsMacros config class.
+     * @return the JsMacros config management class.
      */
-    public ConfigManager getConfig() {
+    public ConfigManager<?> getConfig() {
         return Core.instance.config;
     }
     
@@ -86,9 +87,7 @@ public class FJsMacros extends BaseLibrary {
      */
     public Thread runScript(String file, MethodWrapper<Throwable, Object, Object> callback) {
         if (callback != null) {
-            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null, () -> {
-                callback.accept(null);
-            }, callback);
+            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null, () -> callback.accept(null), callback);
         } else {
             return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null);
         }

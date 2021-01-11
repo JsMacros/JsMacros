@@ -8,6 +8,7 @@ import java.io.*;
  * @since 1.1.8
  *
  */
+@SuppressWarnings("unused")
 public class FileHandler {
     private final File f;
     

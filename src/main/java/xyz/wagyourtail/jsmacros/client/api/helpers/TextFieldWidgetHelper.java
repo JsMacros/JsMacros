@@ -6,6 +6,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
  * @author Wagyourtail
  * @since 1.0.5
  */
+@SuppressWarnings("unused")
 public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     public TextFieldWidgetHelper(TextFieldWidget t) {
         super(t);

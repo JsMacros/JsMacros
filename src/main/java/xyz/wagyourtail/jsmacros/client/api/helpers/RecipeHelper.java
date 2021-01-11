@@ -7,6 +7,7 @@ import net.minecraft.recipe.Recipe;
  * @author Wagyourtail
  * @since 1.3.1
  */
+@SuppressWarnings("unused")
 public class RecipeHelper extends BaseHelper<Recipe<?>> {
     protected int syncId;
     

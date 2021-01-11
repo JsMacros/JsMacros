@@ -185,11 +185,11 @@ public class MacroContainer extends MultiElementContainer {
             fill(matrices, x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
             
             // overlay
-            if (keyBtn.hovering && !keyBtn.canRenderAllText()) {
+            if (keyBtn.hovering && keyBtn.cantRenderAllText()) {
                 fill(matrices, mouseX-2, mouseY-textRenderer.fontHeight - 3, mouseX+textRenderer.getWidth(keyBtn.getMessage())+2, mouseY, 0xFF000000);
                 drawTextWithShadow(matrices, textRenderer, keyBtn.getMessage(), mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
             }
-            if (fileBtn.hovering && !fileBtn.canRenderAllText()) {
+            if (fileBtn.hovering && fileBtn.cantRenderAllText()) {
                 List<OrderedText> lines = textRenderer.wrapLines(fileBtn.getMessage(), this.x + this.width - mouseX);
                 int top = mouseY-(textRenderer.fontHeight*lines.size())-2;
                 int width = lines.stream().map(e -> textRenderer.getWidth(e)).reduce(0, (e, t) -> Math.max(e, t));

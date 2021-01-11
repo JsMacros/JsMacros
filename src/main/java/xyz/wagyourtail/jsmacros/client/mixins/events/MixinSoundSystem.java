@@ -10,7 +10,7 @@ import xyz.wagyourtail.jsmacros.client.api.events.EventSound;
 
 @Mixin(SoundSystem.class)
 public class MixinSoundSystem {
-    @Inject(at = @At("HEAD"), method="play")
+    @Inject(at = @At("HEAD"), method="play(Lnet/minecraft/client/sound/SoundInstance;)V")
     public void onPlay(SoundInstance instance, CallbackInfo info) {
         String id = null;
         try {

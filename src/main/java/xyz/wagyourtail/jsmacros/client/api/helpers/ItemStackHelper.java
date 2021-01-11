@@ -9,6 +9,7 @@ import net.minecraft.util.registry.Registry;
  * @author Wagyourtail
  *
  */
+@SuppressWarnings("unused")
 public class ItemStackHelper extends BaseHelper<ItemStack> {
     
     public ItemStackHelper(ItemStack i) {

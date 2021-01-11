@@ -8,6 +8,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> {
 
     public LivingEntityHelper(T e) {

@@ -20,11 +20,11 @@ public class ClientConfigOptions extends ConfigOptions {
         switch(this.sortMethod) {
             default:
             case Enabled:
-                return new ScriptTrigger.SortByEnabled();
+                return new SortByEnabled();
             case FileName:
-                return new ScriptTrigger.SortByFileName();
+                return new SortByFileName();
             case TriggerName:
-                return new ScriptTrigger.SortByTriggerName();
+                return new SortByTriggerName();
         }
     }
     
@@ -32,10 +32,41 @@ public class ClientConfigOptions extends ConfigOptions {
         this.sortMethod = method;
     }
     
-    public static enum SortMethod {
+    public enum SortMethod {
         Enabled,
         TriggerName,
         FileName
+    }
+    
+    public static class SortByEnabled implements Comparator<ScriptTrigger> {
+        @Override
+        public int compare(ScriptTrigger a, ScriptTrigger b) {
+            if (a.enabled ^ b.enabled) {
+                return a.enabled ? -1 : 1;
+            } else {
+                return a.toString().compareTo(b.toString());
+            }
+        }
+    }
+    
+    public static class SortByTriggerName implements Comparator<ScriptTrigger> {
+        @Override
+        public int compare(ScriptTrigger a, ScriptTrigger b) {
+            int comp = a.event.compareTo(b.event);
+            if (comp != 0) return comp;
+            if (a.enabled ^ b.enabled) return a.enabled ? -1 : 1;
+            return a.toString().compareTo(b.toString());
+        }
+    }
+    
+    public static class SortByFileName implements Comparator<ScriptTrigger> {
+        @Override
+        public int compare(ScriptTrigger a, ScriptTrigger b) {
+            int comp = a.scriptFile.compareTo(b.scriptFile);
+            if (comp != 0) return comp;
+            if (a.enabled ^ b.enabled) return a.enabled ? -1 : 1;
+            return a.toString().compareTo(b.toString());
+        }
     }
     
 }

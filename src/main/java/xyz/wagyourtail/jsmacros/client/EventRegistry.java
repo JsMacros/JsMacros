@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class EventRegistry extends BaseEventRegistry {
     
-    public EventRegistry(Core runner) {
+    public EventRegistry(Core<?> runner) {
         super(runner);
     }
     
@@ -30,8 +30,7 @@ public class EventRegistry extends BaseEventRegistry {
                 addListener(rawmacro.event, new EventListener(rawmacro, runner));
                 return;
             default:
-                System.out.println("Failed To Add: Unknown macro type for file " + rawmacro.scriptFile.toString());
-                return;
+                System.out.println("Failed To Add: Unknown macro type for file " + rawmacro.scriptFile);
         }
     }
     

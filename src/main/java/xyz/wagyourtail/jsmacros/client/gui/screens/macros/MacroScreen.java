@@ -52,12 +52,11 @@ public class MacroScreen extends BaseScreen {
         macroScroll = this.addButton(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
     
         this.addButton(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.running"), (btn) -> {
+            assert client != null;
             client.openScreen(new CancelScreen(this));
         }));
         
-        this.addButton(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.about"), (btn) -> {
-            this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this::addButton, this::removeButton, this::closeOverlay));
-        }));
+        this.addButton(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this::addButton, this::removeButton, this::closeOverlay))));
     }
     
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
@@ -94,9 +93,7 @@ public class MacroScreen extends BaseScreen {
     }
 
     public void confirmRemoveMacro(MacroContainer macro) {
-        openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, this.textRenderer, new TranslatableText("jsmacros.confirmdeletemacro"), this::addButton, this::removeButton, this::closeOverlay, (conf) -> {
-            removeMacro(macro);
-        }));
+        openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, this.textRenderer, new TranslatableText("jsmacros.confirmdeletemacro"), this::addButton, this::removeButton, this::closeOverlay, (conf) -> removeMacro(macro)));
     }
     
     public void removeMacro(MacroContainer macro) {
@@ -116,14 +113,14 @@ public class MacroScreen extends BaseScreen {
     public void setMacroPos() {
         int i = 0;
         for (MacroContainer m : macros) {
-            if (topScroll + i * 16 < 40) m.setVisible(false);
-            else m.setVisible(true);
+            m.setVisible(topScroll + i * 16 >= 40);
             m.setPos(this.width / 12, topScroll + (i++) * 16, this.width * 5 / 6, 14);
         }
     }
 
     public void editFile(File file) {
         if (file != null && file.exists() && file.isFile()) {
+            assert client != null;
             client.openScreen(new EditorScreen(this, file));
         }
     }

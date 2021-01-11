@@ -33,23 +33,25 @@ import java.util.stream.Stream;
  * @author Wagyourtail
  *
  */
+ @SuppressWarnings("unused")
 public class Inventory {
     private HandledScreen<?> inventory;
     private Map<String, int[]> map;
-    private ClientPlayerInteractionManager man;
-    private int syncId;
-    private ClientPlayerEntity player;
+    private final ClientPlayerInteractionManager man;
+    private final int syncId;
+    private final ClientPlayerEntity player;
     protected MinecraftClient mc = MinecraftClient.getInstance();
 
     public Inventory() {
+        this.player = mc.player;
+        assert player != null;
         //prevent race condition
         final net.minecraft.client.gui.screen.Screen s = mc.currentScreen;
         if (s instanceof HandledScreen) {
             this.inventory = (HandledScreen<?>) s;
         } else {
-            this.inventory = new InventoryScreen(mc.player);
+            this.inventory = new InventoryScreen(player);
         }
-        this.player = mc.player;
         this.man = mc.interactionManager;
         this.syncId = this.inventory.getScreenHandler().syncId;
     }

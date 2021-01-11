@@ -24,7 +24,7 @@ class MixinChatHud {
         else return text;
     }
 
-    @Inject(method = "addMessage", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "addMessage(Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
     private void onAddChatMessage(Text text, CallbackInfo info) {
         if (text == null) {
             info.cancel();

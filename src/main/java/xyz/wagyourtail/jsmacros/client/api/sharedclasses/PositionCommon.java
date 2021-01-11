@@ -6,6 +6,7 @@ import net.minecraft.util.math.MathHelper;
  * @author Wagyourtail
  * @since 1.2.6 [citation needed]
  */
+@SuppressWarnings("unused")
 public class PositionCommon {
 
     /**

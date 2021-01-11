@@ -13,7 +13,7 @@ public class ModMenuEntry implements ModMenuApi {
         return jsmacrosscreenfactory;
     }
     
-    public class JsMacroScreen implements ConfigScreenFactory<MacroScreen> {
+    public static class JsMacroScreen implements ConfigScreenFactory<MacroScreen> {
         @Override
         public MacroScreen create(Screen parent) {
             return new KeyMacrosScreen(parent);

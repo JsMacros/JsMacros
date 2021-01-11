@@ -7,6 +7,7 @@ import net.minecraft.text.Text;
  * @author Wagyourtail
  * @since 1.0.8
  */
+@SuppressWarnings("unused")
 public class TextHelper extends BaseHelper<Text> {
     
     public TextHelper(String json) {

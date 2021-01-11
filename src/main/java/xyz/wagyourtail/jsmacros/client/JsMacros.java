@@ -75,8 +75,6 @@ public class JsMacros implements ClientModInitializer {
                 return "Grindstone";
             } else if (s instanceof HopperScreen) {
                 return "Hopper";
-            } else if (s instanceof LecternScreen) {
-                return "Lectern";
             } else if (s instanceof LoomScreen) {
                 return "Loom";
             } else if (s instanceof MerchantScreen) {

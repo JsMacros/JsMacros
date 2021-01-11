@@ -26,6 +26,7 @@ import java.util.*;
  * @since 1.2.3
  */
  @Library("reflection")
+ @SuppressWarnings("unused")
 public class FReflection extends BaseLibrary {
     private static final CombinedVariableClassLoader classLoader = new CombinedVariableClassLoader(FReflection.class.getClassLoader());
     

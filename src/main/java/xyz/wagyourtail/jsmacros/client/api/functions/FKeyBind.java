@@ -19,6 +19,7 @@ import java.util.*;
  * @author Wagyourtail
  */
  @Library("keybind")
+ @SuppressWarnings("unused")
 public class FKeyBind extends BaseLibrary {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     /**

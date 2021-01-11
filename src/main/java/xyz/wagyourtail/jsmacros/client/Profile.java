@@ -21,7 +21,7 @@ import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 
 public class Profile extends BaseProfile {
     
-    public Profile(Core runner) {
+    public Profile(Core<?> runner) {
         super(runner);
     }
     
@@ -56,7 +56,7 @@ public class Profile extends BaseProfile {
                 joinedThreadStack.add(t);
             }
             if (t != null) t.join();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
         } finally {
             joinedThreadStack.remove(t);
         }

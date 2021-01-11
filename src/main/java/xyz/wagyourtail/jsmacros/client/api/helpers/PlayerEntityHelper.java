@@ -5,6 +5,7 @@ import net.minecraft.entity.player.PlayerEntity;
 /**
  * @author Wagyourtail
  */
+@SuppressWarnings("unused")
 public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelper<T> {
     
     public PlayerEntityHelper(T e) {

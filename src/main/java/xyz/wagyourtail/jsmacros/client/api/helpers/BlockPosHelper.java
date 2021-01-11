@@ -6,8 +6,8 @@ import net.minecraft.util.math.BlockPos;
  * @author Wagyourtail
  * @since 1.2.6
  */
+@SuppressWarnings("unused")
 public class BlockPosHelper extends BaseHelper<BlockPos> {
-    private BlockPos base;
     
     public BlockPosHelper(BlockPos b) {
         super(b);

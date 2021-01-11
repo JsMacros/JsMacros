@@ -110,7 +110,7 @@ public class EventChooser extends OverlayContainer {
         super.render(matrices, mouseX, mouseY, delta);
         
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
-            if (b instanceof Button && ((Button) b).hovering && !((Button) b).canRenderAllText()) {
+            if (b instanceof Button && ((Button) b).hovering && ((Button) b).cantRenderAllText()) {
                 // border
                 int width = textRenderer.getWidth(b.getMessage());
                 fill(matrices, mouseX-3, mouseY, mouseX+width+3, mouseY+1, 0x7F7F7F7F);

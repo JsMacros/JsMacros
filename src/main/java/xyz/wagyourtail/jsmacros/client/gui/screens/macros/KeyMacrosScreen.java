@@ -14,7 +14,6 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -29,10 +28,12 @@ public class KeyMacrosScreen extends MacroScreen {
         keyScreen.setColor(0x4FFFFFFF);
 
         eventScreen.onPress = (btn) -> {
+            assert client != null;
             client.openScreen(new EventMacrosScreen(this));
         };
 
         profileScreen.onPress = (btn) -> {
+            assert client != null;
             client.openScreen(new ProfileScreen(this));
         };
 
@@ -43,7 +44,7 @@ public class KeyMacrosScreen extends MacroScreen {
             if (event instanceof BaseListener && ((BaseListener) event).getRawTrigger().triggerType != ScriptTrigger.TriggerType.EVENT) macros.add(((BaseListener) event).getRawTrigger());
         }
 
-        Collections.sort(macros, JsMacros.core.config.options.getSortComparator());
+        macros.sort(JsMacros.core.config.options.getSortComparator());
 
         for (ScriptTrigger macro : macros) {
             addMacro(macro);

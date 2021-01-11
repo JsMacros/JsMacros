@@ -62,7 +62,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     
     @Shadow protected abstract <T extends AbstractButtonWidget> T addButton(T button);
     @Shadow public abstract void onClose();
-    @Shadow public abstract void init();
+    @Shadow protected abstract void init();
     
     @Override
     public int getWidth() {
@@ -130,11 +130,11 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
     
     @Override
-    public List<ButtonWidgetHelper> getButtonWidgets() {
-        List<ButtonWidgetHelper> list = new LinkedList<>();
+    public List<ButtonWidgetHelper<?>> getButtonWidgets() {
+        List<ButtonWidgetHelper<?>> list = new LinkedList<>();
         synchronized (elements) {
             for (Drawable e : elements) {
-                if (e instanceof ButtonWidgetHelper) list.add((ButtonWidgetHelper) e);
+                if (e instanceof ButtonWidgetHelper) list.add((ButtonWidgetHelper<?>) e);
             }
         }
         return list;
@@ -149,7 +149,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public IScreen removeElement(Drawable e) {
         synchronized (elements) {
             elements.remove(e);
-            if (e instanceof ButtonWidgetHelper) children.remove(((ButtonWidgetHelper) e).getRaw());
+            if (e instanceof ButtonWidgetHelper) children.remove(((ButtonWidgetHelper<?>) e).getRaw());
         }
         return this;
     }
@@ -257,12 +257,12 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public RenderCommon.Item addItem(int x, int y, String id, boolean overlay) {
-        return addItem(y, y, id, overlay, 1, 0);
+        return addItem(x, y, id, overlay, 1, 0);
     }
 
     @Override
     public RenderCommon.Item addItem(int x, int y, String id, boolean overlay, double scale, float rotation) {
-        RenderCommon.Item i = new RenderCommon.Item(y, y, id, overlay, scale, rotation);
+        RenderCommon.Item i = new RenderCommon.Item(x, y, id, overlay, scale, rotation);
         synchronized (elements) {
             elements.remove(i);
         }
@@ -297,16 +297,16 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public ButtonWidgetHelper addButton(int x, int y, int width, int height, String text,
-        MethodWrapper<ButtonWidgetHelper, IScreen, Object> callback) {
-        ButtonWidget button = (ButtonWidget) new ButtonWidget(x, y, width, height, new LiteralText(text), (btn) -> {
+    public ButtonWidgetHelper<?> addButton(int x, int y, int width, int height, String text,
+        MethodWrapper<ButtonWidgetHelper<?>, IScreen, Object> callback) {
+        ButtonWidget button = new ButtonWidget(x, y, width, height, new LiteralText(text), (btn) -> {
             try {
-                callback.accept(new ButtonWidgetHelper(btn), this);
+                callback.accept(new ButtonWidgetHelper<>(btn), this);
             } catch (Exception e) {
                 Core.instance.profile.logError(e);
             }
         });
-        ButtonWidgetHelper b = new ButtonWidgetHelper(button);
+        ButtonWidgetHelper<?> b = new ButtonWidgetHelper<>(button);
         synchronized (elements) {
             elements.add(b);
             children.add(button);
@@ -315,7 +315,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public IScreen removeButton(ButtonWidgetHelper btn) {
+    public IScreen removeButton(ButtonWidgetHelper<?> btn) {
         synchronized (elements) {
             elements.remove(btn);
             this.children.remove(btn.getRaw());

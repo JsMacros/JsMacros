@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 public class CheckBoxContainer extends MultiElementContainer {
     private boolean state;
     private Button checkBox;
-    private Consumer<Boolean> setState;
+    private final Consumer<Boolean> setState;
     public Text message;
     
     

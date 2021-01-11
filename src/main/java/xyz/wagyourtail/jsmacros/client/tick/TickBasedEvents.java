@@ -20,8 +20,8 @@ public class TickBasedEvents {
     private static ItemStack chestArmor = ItemStack.EMPTY;
     private static ItemStack headArmor = ItemStack.EMPTY;
     
-    public static boolean areEqual(ItemStack a, ItemStack b) {
-        return (a.isEmpty() && b.isEmpty()) || (!a.isEmpty() && !b.isEmpty() && a.isItemEqualIgnoreDamage(b) && a.getCount() == b.getCount() && ItemStack.areTagsEqual(a, b) && a.getDamage() == b.getDamage());
+    public static boolean areNotEqual(ItemStack a, ItemStack b) {
+        return (!a.isEmpty() || !b.isEmpty()) && (a.isEmpty() || b.isEmpty() || !a.isItemEqualIgnoreDamage(b) || a.getCount() != b.getCount() || !ItemStack.areTagsEqual(a, b) || a.getDamage() != b.getDamage());
     }
     
     public static boolean areTagsEqualIgnoreDamage(ItemStack a, ItemStack b) {
@@ -64,7 +64,7 @@ public class TickBasedEvents {
                 PlayerInventory inv = mc.player.inventory;
 
                 ItemStack newMainHand = inv.getMainHandStack();
-                if (!areEqual(newMainHand, mainHand)) {
+                if (areNotEqual(newMainHand, mainHand)) {
                     if (areEqualIgnoreDamage(newMainHand, mainHand)) {
                         new EventItemDamage(newMainHand, newMainHand.getDamage());
                     }
@@ -73,7 +73,7 @@ public class TickBasedEvents {
                 }
                 
                 ItemStack newOffHand = inv.offHand.get(0);
-                if (!areEqual(newOffHand, offHand)) {
+                if (areNotEqual(newOffHand, offHand)) {
                     if (areEqualIgnoreDamage(newOffHand, offHand)) {
                         new EventItemDamage(newOffHand, newOffHand.getDamage());
                     }
@@ -82,7 +82,7 @@ public class TickBasedEvents {
                 }
                 
                 ItemStack newHeadArmor = inv.getArmorStack(3);
-                if (!areEqual(newHeadArmor, headArmor)) {
+                if (areNotEqual(newHeadArmor, headArmor)) {
                     if (areEqualIgnoreDamage(newHeadArmor, headArmor)) {
                         new EventItemDamage(newHeadArmor, newHeadArmor.getDamage());
                     }
@@ -91,7 +91,7 @@ public class TickBasedEvents {
                 }
                 
                 ItemStack newChestArmor = inv.getArmorStack(2);
-                if (!areEqual(newChestArmor, chestArmor)) {
+                if (areNotEqual(newChestArmor, chestArmor)) {
                     if (areEqualIgnoreDamage(newChestArmor, chestArmor)) {
                         new EventItemDamage(newChestArmor, newChestArmor.getDamage());
                     }
@@ -101,7 +101,7 @@ public class TickBasedEvents {
                 }
                 
                 ItemStack newLegArmor = inv.getArmorStack(1);
-                if (!areEqual(newLegArmor, legArmor)) {
+                if (areNotEqual(newLegArmor, legArmor)) {
                     if (areEqualIgnoreDamage(newLegArmor, legArmor)) {
                         new EventItemDamage(newLegArmor, newLegArmor.getDamage());
                     }
@@ -110,7 +110,7 @@ public class TickBasedEvents {
                 }
                 
                 ItemStack newFootArmor = inv.getArmorStack(0);
-                if (!areEqual(newFootArmor, footArmor)) {
+                if (areNotEqual(newFootArmor, footArmor)) {
                     if (areEqualIgnoreDamage(newFootArmor, footArmor)) {
                         new EventItemDamage(newFootArmor, newFootArmor.getDamage());
                     }

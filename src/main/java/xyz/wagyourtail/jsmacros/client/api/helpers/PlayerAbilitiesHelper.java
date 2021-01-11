@@ -6,6 +6,7 @@ import net.minecraft.entity.player.PlayerAbilities;
  * @author Wagyourtail
  * @since 1.0.3
  */
+@SuppressWarnings("unused")
 public class PlayerAbilitiesHelper extends BaseHelper<PlayerAbilities> {
 	
 	public PlayerAbilitiesHelper(PlayerAbilities a) {

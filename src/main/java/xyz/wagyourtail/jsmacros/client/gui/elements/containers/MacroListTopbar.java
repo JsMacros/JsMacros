@@ -17,8 +17,8 @@ import java.util.function.Consumer;
 public class MacroListTopbar extends MultiElementContainer {
     public MacroScreen parent;
     public ScriptTrigger.TriggerType deftype;
-    private Consumer<ScriptTrigger> addMacro;
-    private Runnable runFile;
+    private final Consumer<ScriptTrigger> addMacro;
+    private final Runnable runFile;
     private Button type;
     
     public MacroListTopbar(MacroScreen parent, int x, int y, int width, int height, TextRenderer textRenderer, ScriptTrigger.TriggerType deftype, Consumer<AbstractButtonWidget> addButton, Consumer<ScriptTrigger> addMacro, Runnable runFile) {

@@ -12,7 +12,8 @@ import java.util.function.Function;
 
 
  @Library(value = "consumer", languages = JavascriptLanguageDefinition.class)
-public class FConsumer extends PerExecLanguageLibrary<IFConsumer> implements IFConsumer<Function<Object[], Object>, Function<Object[], Object>, Function<Object[], Object>> {
+ @SuppressWarnings("unused")
+public class FConsumer extends PerExecLanguageLibrary implements IFConsumer<Function<Object[], Object>, Function<Object[], Object>, Function<Object[], Object>> {
     
     private final LinkedBlockingQueue<Thread> tasks = new LinkedBlockingQueue<>();
     
@@ -51,14 +52,14 @@ public class FConsumer extends PerExecLanguageLibrary<IFConsumer> implements IFC
                     while(th.isAlive()) {
                         try {
                             th.join();
-                        } catch (InterruptedException e1) {}
+                        } catch (InterruptedException ignored) {}
                     }
                     tasks.add(Thread.currentThread());
                     Thread joinable;
                     while ((joinable = tasks.peek()) != Thread.currentThread()) {
                         try {
                             joinable.join();
-                        } catch (InterruptedException e1) {}
+                        } catch (InterruptedException ignored) {}
                     }
                 }
                 Object retVal = c.apply(new Object[] {t, u});
@@ -109,14 +110,15 @@ public class FConsumer extends PerExecLanguageLibrary<IFConsumer> implements IFC
                     while(th.isAlive()) {
                         try {
                             th.join();
-                        } catch (InterruptedException e1) {}
+                        } catch (InterruptedException ignored) {}
                     }
                     tasks.add(Thread.currentThread());
                     Thread joinable;
                     while ((joinable = tasks.peek()) != Thread.currentThread()) {
                         try {
+                            assert joinable != null;
                             joinable.join();
-                        } catch (InterruptedException e1) {}
+                        } catch (InterruptedException ignored) {}
                     }
                     c.apply(new Object[] {arg0, arg1});
                     tasks.poll();
@@ -141,14 +143,14 @@ public class FConsumer extends PerExecLanguageLibrary<IFConsumer> implements IFC
                     while(th.isAlive()) {
                         try {
                             th.join();
-                        } catch (InterruptedException e1) {}
+                        } catch (InterruptedException ignored) {}
                     }
                     tasks.add(Thread.currentThread());
                     Thread joinable;
                     while ((joinable = tasks.peek()) != Thread.currentThread()) {
                         try {
                             joinable.join();
-                        } catch (InterruptedException e1) {}
+                        } catch (InterruptedException ignored) {}
                     }
                 }
                 Object retVal = c.apply(new Object[] {t, u});

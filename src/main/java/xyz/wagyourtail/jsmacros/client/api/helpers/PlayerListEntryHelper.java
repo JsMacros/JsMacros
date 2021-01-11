@@ -7,6 +7,7 @@ import net.minecraft.client.network.PlayerListEntry;
  * @author Wagyourtail
  * @since 1.0.2
  */
+@SuppressWarnings("unused")
 public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
     
     public PlayerListEntryHelper(PlayerListEntry p) {

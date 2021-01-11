@@ -14,7 +14,7 @@ abstract class MixinScreen {
     @Shadow
     public abstract void sendMessage(String message, boolean toHud);
 
-    @Inject(at = @At("HEAD"), method = "sendMessage", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "sendMessage(Ljava/lang/String;)V", cancellable = true)
     private void onSendMessage(String message, final CallbackInfo info) {
         final String result = new EventSendMessage(message).message;
         if (result == null || result.equals("")) {

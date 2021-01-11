@@ -24,6 +24,7 @@ import java.util.Set;
  *
  * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
  */
+@SuppressWarnings("deprecation")
 public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     private final Set<Drawable> elements = new LinkedHashSet<>();
     /**
@@ -347,8 +348,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
         }
         return this;
     }
-
-    @Override
+    
     public void init() {
         synchronized (elements) {
             elements.clear();

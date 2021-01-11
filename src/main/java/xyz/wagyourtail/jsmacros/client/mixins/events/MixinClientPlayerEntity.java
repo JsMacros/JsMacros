@@ -56,7 +56,7 @@ class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     
     @Inject(at = @At("HEAD"), method="openEditSignScreen", cancellable= true)
     public void onOpenEditSignScreen(SignBlockEntity sign, CallbackInfo info) {
-        List<String> lines = new ArrayList<>(Arrays.asList(new String[]{"", "", "", ""}));
+        List<String> lines = new ArrayList<>(Arrays.asList("", "", "", ""));
         final EventSignEdit event = new EventSignEdit(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ());
         lines = event.signText;
         if (event.closeScreen) {

@@ -18,6 +18,7 @@ import java.util.List;
  * @author Wagyourtail
  * @since 1.3.0
  */
+@SuppressWarnings("unused")
 public class TextBuilder {
     private final LiteralText head = new LiteralText("");
     private MutableText self = head;

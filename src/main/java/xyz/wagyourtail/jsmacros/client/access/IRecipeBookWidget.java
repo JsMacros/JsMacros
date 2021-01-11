@@ -4,5 +4,5 @@ import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
 
 public interface IRecipeBookWidget {
 
-    public RecipeBookResults getResults();
+    RecipeBookResults getResults();
 }
