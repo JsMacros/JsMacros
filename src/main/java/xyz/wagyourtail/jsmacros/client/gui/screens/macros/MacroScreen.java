@@ -5,8 +5,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
-import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.client.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
@@ -18,6 +16,8 @@ import xyz.wagyourtail.jsmacros.client.gui.elements.overlays.EventChooser;
 import xyz.wagyourtail.jsmacros.client.gui.elements.overlays.FileChooser;
 import xyz.wagyourtail.jsmacros.client.gui.screens.CancelScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.editor.EditorScreen;
+import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 
 import java.io.File;
 import java.io.IOException;

@@ -7,8 +7,8 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import xyz.wagyourtail.jsmacros.client.gui.elements.TextInput;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
+import xyz.wagyourtail.jsmacros.client.gui.elements.TextInput;
 
 import java.util.function.Consumer;
 

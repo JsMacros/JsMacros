@@ -1,8 +1,5 @@
 package xyz.wagyourtail.jsmacros.client;
 
-import xyz.wagyourtail.jsmacros.client.config.ClientConfigOptions;
-import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -15,8 +12,11 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
+import xyz.wagyourtail.jsmacros.client.config.ClientConfigOptions;
 import xyz.wagyourtail.jsmacros.client.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.macros.KeyMacrosScreen;
+import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 
 import java.io.File;
 

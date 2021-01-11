@@ -1,10 +1,10 @@
 package xyz.wagyourtail.jsmacros.client;
 
+import xyz.wagyourtail.jsmacros.client.api.events.EventKey;
+import xyz.wagyourtail.jsmacros.client.listeners.KeyListener;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.*;
-import xyz.wagyourtail.jsmacros.client.api.events.EventKey;
-import xyz.wagyourtail.jsmacros.client.listeners.KeyListener;
 
 import java.util.ArrayList;
 import java.util.List;

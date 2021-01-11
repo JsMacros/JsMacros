@@ -2,9 +2,9 @@ package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import com.google.common.io.Files;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
 
 import java.io.File;
 import java.io.IOException;

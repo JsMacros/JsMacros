@@ -1,13 +1,13 @@
 package xyz.wagyourtail.jsmacros.client.gui.elements.containers;
 
-import xyz.wagyourtail.jsmacros.core.config.ScriptThreadWrapper;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import org.apache.commons.lang3.time.DurationFormatUtils;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
+import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.config.ScriptThreadWrapper;
 
 import java.util.function.Consumer;
 

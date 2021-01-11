@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.gui.elements.overlays;
 
 import com.google.common.collect.ImmutableList;
-import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
@@ -10,9 +9,10 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
+import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 
 import java.io.File;
 import java.io.IOException;

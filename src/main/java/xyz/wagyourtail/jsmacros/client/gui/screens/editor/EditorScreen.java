@@ -16,12 +16,12 @@ import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.gui.BaseScreen;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.client.gui.editor.History;
 import xyz.wagyourtail.jsmacros.client.gui.editor.PrismGrammarLocator;
 import xyz.wagyourtail.jsmacros.client.gui.editor.SelectCursor;
 import xyz.wagyourtail.jsmacros.client.gui.editor.TextStyleCompiler;
+import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
+import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.client.gui.elements.overlays.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
 

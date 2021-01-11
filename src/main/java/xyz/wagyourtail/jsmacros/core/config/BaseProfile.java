@@ -9,7 +9,10 @@ import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventProfileLoad;
 import xyz.wagyourtail.jsmacros.core.library.impl.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Wagyourtail

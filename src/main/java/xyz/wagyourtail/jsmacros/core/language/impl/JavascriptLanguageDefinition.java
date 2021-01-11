@@ -11,7 +11,10 @@ import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class JavascriptLanguageDefinition extends BaseLanguage {
     private static final Builder build = Context.newBuilder("js")

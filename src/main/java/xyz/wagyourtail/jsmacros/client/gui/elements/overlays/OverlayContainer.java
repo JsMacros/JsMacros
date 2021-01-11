@@ -3,8 +3,8 @@ package xyz.wagyourtail.jsmacros.client.gui.elements.overlays;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import xyz.wagyourtail.jsmacros.client.gui.elements.containers.MultiElementContainer;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
+import xyz.wagyourtail.jsmacros.client.gui.elements.containers.MultiElementContainer;
 
 import java.util.HashMap;
 import java.util.Map;

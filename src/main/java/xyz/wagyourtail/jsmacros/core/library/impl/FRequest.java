@@ -1,10 +1,10 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
+import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
+import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.HTTPRequest;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.HTTPRequest.Response;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.Websocket;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
-import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import java.io.IOException;
 import java.util.HashMap;

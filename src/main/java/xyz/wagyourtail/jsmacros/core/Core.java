@@ -2,8 +2,8 @@ package xyz.wagyourtail.jsmacros.core;
 
 import com.google.common.collect.ImmutableList;
 import xyz.wagyourtail.jsmacros.core.config.*;
-import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;

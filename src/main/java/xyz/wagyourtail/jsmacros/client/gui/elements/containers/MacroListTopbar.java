@@ -7,10 +7,10 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigOptions;
-import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
-import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.client.gui.screens.macros.MacroScreen;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
+import xyz.wagyourtail.jsmacros.client.gui.screens.macros.MacroScreen;
+import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 
 import java.util.function.Consumer;
 
