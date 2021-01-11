@@ -67,7 +67,7 @@ public class FWorld extends BaseLibrary {
      * @return
      */
     public boolean isWorldLoaded() {
-        return mc.world == null;
+        return mc.world != null;
     }
 
     /**
