@@ -315,12 +315,17 @@ public class Draw3D {
                 float fg = ((fillColor >> 8) & 0xFF)/255F;
                 float fb = (fillColor & 0xFF)/255F;
                 
+                //1.15+ culls insides
+                RenderSystem.disableCull();
+                
                 buf.begin(GL11.GL_TRIANGLE_STRIP,  VertexFormats.POSITION_COLOR);
                 
                 //why'd they change it from build box to draw box... it's not calling tess.draw()
                 WorldRenderer.drawBox(buf, pos.x1, pos.y1, pos.z1, pos.x2, pos.y2, pos.z2, fr, fg, fb, fa);
                 
                 tess.draw();
+                
+                RenderSystem.enableCull();
             }
             
             buf.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);

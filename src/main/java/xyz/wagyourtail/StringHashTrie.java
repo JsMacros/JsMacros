@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 /**
  * Is this even faster than just iterating through a LinkedHashSet / HashSet at this point?
+ * also should the node-length just always be 1?
  * @author Wagyourtail
  */
  @SuppressWarnings("unused")

@@ -15,7 +15,7 @@
 		"access.MixinScreen",
 		"access.MixinSignEditScreen",
 		"access.MixinStyleSerializer",
-		"access.MixinWorldRenderer",
+		"access.MixinGameRenderer",
 		"events.MixinChatHud",
 		"events.MixinClientPlayerEntity",
 		"events.MixinClientPlayNetworkHandler",
