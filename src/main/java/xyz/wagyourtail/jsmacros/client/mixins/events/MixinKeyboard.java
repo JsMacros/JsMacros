@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.wagyourtail.jsmacros.client.api.events.EventKey;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventKey;
 
 @Mixin(Keyboard.class)
 class MixinKeyboard {

@@ -6,10 +6,9 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
-import xyz.wagyourtail.jsmacros.client.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
-import xyz.wagyourtail.jsmacros.client.gui.elements.containers.RunningThreadContainer;
+import xyz.wagyourtail.jsmacros.client.gui.containers.RunningThreadContainer;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptThreadWrapper;
 
@@ -36,7 +35,7 @@ public class CancelScreen extends BaseScreen {
     }
 
     public void addContainer(ScriptThreadWrapper t) {
-        running.add(new RunningThreadContainer(10, topScroll + running.size() * 15, width - 26, 13, textRenderer, this::addButton, this::removeContainer, t));
+        running.add(new RunningThreadContainer(10, topScroll + running.size() * 15, width - 26, 13, textRenderer, this, t));
         running.sort(new RTCSort());
         s.setScrollPages(running.size() * 15 / (double)(height - 20));
     }

@@ -9,9 +9,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.wagyourtail.jsmacros.client.api.events.EventDimensionChange;
-import xyz.wagyourtail.jsmacros.client.api.events.EventDisconnect;
-import xyz.wagyourtail.jsmacros.client.api.events.EventOpenScreen;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventDimensionChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventDisconnect;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventOpenScreen;
 
 @Mixin(MinecraftClient.class)
 public class MixinMinecraftClient {

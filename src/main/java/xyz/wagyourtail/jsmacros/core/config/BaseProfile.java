@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.config;
 
 import com.google.common.collect.ImmutableList;
+import org.apache.logging.log4j.Logger;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
@@ -20,11 +21,13 @@ import java.util.Set;
  */
 public abstract class BaseProfile {
     protected final Core<?> runner;
+    public final Logger LOGGER;
     public final Set<Thread> joinedThreadStack = new HashSet<>();
     public String profileName;
     
-    public BaseProfile(Core<?> runner) {
+    public BaseProfile(Core<?> runner, Logger logger) {
         this.runner = runner;
+        this.LOGGER = logger;
     }
     
     public abstract void logError(Throwable ex);
@@ -64,7 +67,7 @@ public abstract class BaseProfile {
         runner.eventRegistry.clearMacros();
         final List<ScriptTrigger> rawProfile = runner.config.options.profiles.get(pName);
         if (rawProfile == null) {
-            System.out.println("profile \"" + pName + "\" does not exist or is broken/null");
+            LOGGER.warn("profile \"" + pName + "\" does not exist or is broken/null");
             return false;
         }
         renameCurrentProfile(pName);

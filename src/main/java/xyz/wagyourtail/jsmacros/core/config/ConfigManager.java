@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.core.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileReader;
@@ -15,10 +16,12 @@ public class ConfigManager<T extends ConfigOptions> {
     public final File configFolder;
     public final File macroFolder;
     public final File configFile;
+    public final Logger LOGGER;
 
-    public ConfigManager(File configFolder, File macroFolder, Class<T> configClass) {
+    public ConfigManager(File configFolder, File macroFolder, Class<T> configClass, Logger logger) {
         this.configFolder = configFolder;
         this.macroFolder = macroFolder;
+        this.LOGGER = logger;
         if (!configFolder.exists()) {
             configFolder.mkdirs();
         }
@@ -44,7 +47,7 @@ public class ConfigManager<T extends ConfigOptions> {
         try {
             options = gson.fromJson(new FileReader(configFile), optionsClass);
         } catch (Exception e) {
-            System.out.println("Config Failed To Load.");
+            LOGGER.error("Config Failed To Load.");
             e.printStackTrace();
             if (configFile.exists()) {
                 final File back = new File(configFolder, "options.json.bak");
@@ -54,9 +57,9 @@ public class ConfigManager<T extends ConfigOptions> {
             options = optionsClass.newInstance();
             saveConfig();
         }
-        System.out.println("Loaded Profiles:");
+        LOGGER.info("Loaded Profiles:");
         for (String key : options.profiles.keySet()) {
-            System.out.println("    " + key);
+            LOGGER.info("    " + key);
         }
 
     }
@@ -67,7 +70,7 @@ public class ConfigManager<T extends ConfigOptions> {
             fw.write(gson.toJson(options));
             fw.close();
         } catch (Exception e) {
-            System.out.println("Config Failed To Save.");
+            LOGGER.error("Config Failed To Save.");
             e.printStackTrace();
         }
     }

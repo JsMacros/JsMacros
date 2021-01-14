@@ -10,11 +10,15 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigOptions;
-import xyz.wagyourtail.jsmacros.client.gui.BaseScreen;
-import xyz.wagyourtail.jsmacros.client.gui.screens.macros.KeyMacrosScreen;
+import xyz.wagyourtail.jsmacros.client.config.Profile;
+import xyz.wagyourtail.jsmacros.client.event.EventRegistry;
+import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
+import xyz.wagyourtail.jsmacros.client.gui.screens.KeyMacrosScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 
@@ -22,10 +26,11 @@ import java.io.File;
 
 public class JsMacros implements ClientModInitializer {
     public static final String MOD_ID = "jsmacros";
+    public static final Logger LOGGER  = LogManager.getLogger();
     public static BaseScreen prevScreen;
     protected static final File configFolder = new File(FabricLoader.getInstance().getConfigDir().toFile(), "jsMacros");
     
-    public static final Core<ClientConfigOptions> core = Core.createInstance(EventRegistry::new, Profile::new, () -> new ConfigManager<>(configFolder, new File(configFolder, "Macros"), ClientConfigOptions.class));
+    public static final Core<ClientConfigOptions> core = Core.createInstance(EventRegistry::new, Profile::new, () -> new ConfigManager<>(configFolder, new File(configFolder, "Macros"), ClientConfigOptions.class, LOGGER));
     
     @Override
     public void onInitializeClient() {
@@ -39,6 +44,10 @@ public class JsMacros implements ClientModInitializer {
             con.close();
         });
         t.start();
+        
+        if (FabricLoader.getInstance().isModLoaded("modmenu"))
+            LOGGER.info("mOd 'JsMaCrOs' UsEs tHe mOdMeNu:cLiEnTsIdEoNlY CuStOm vAlUe uNnEcEsSaRiLy, As iT CaN Be iNfErReD FrOm tHe mOd's dEcLaReD EnViRoNmEnT.");
+        
     }
 
     static public Text getKeyText(String translationKey) {

@@ -1,18 +1,65 @@
 package xyz.wagyourtail.jsmacros.client.config;
 
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ConfigOptions;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ClientConfigOptions extends ConfigOptions {
     public SortMethod sortMethod;
     public boolean disableKeyWhenScreenOpen;
+    public Map<String, short[]> editorTheme;
+    
+    public Map<String, String> linterOverrides;
     
     public ClientConfigOptions() {
         super();
         this.sortMethod = SortMethod.Enabled;
         this.disableKeyWhenScreenOpen = true;
+    }
+    
+    public Map<String, String> getLinterOverrides() {
+        if (linterOverrides == null) {
+            linterOverrides = new HashMap<>();
+            Core.instance.config.saveConfig();
+        }
+        return linterOverrides;
+    }
+    
+    public Map<String, short[]> getThemeData() {
+        if (editorTheme == null) {
+            editorTheme = new HashMap<>();
+            // JS
+            editorTheme.put("keyword", new short[] {0xCC, 0x78, 0x32});
+            editorTheme.put("number",  new short[] {0x79, 0xAB, 0xFF});
+            editorTheme.put("function-variable", new short[] {0x79, 0xAB, 0xFF});
+            editorTheme.put("function", new short[] {0xA2, 0xEA, 0x22});
+            editorTheme.put("operator", new short[] {0xD8, 0xD8, 0xD8});
+            editorTheme.put("string", new short[] {0x12, 0xD4, 0x89});
+            editorTheme.put("comment", new short[] {0xA0, 0xA0, 0xA0});
+            editorTheme.put("constant", new short[] {0x21, 0xB4, 0x3E});
+            editorTheme.put("class-name", new short[] {0x21, 0xB4, 0x3E});
+            editorTheme.put("boolean", new short[] {0xFF, 0xE2, 0x00});
+            editorTheme.put("punctuation", new short[] {0xD8, 0xD8, 0xD8});
+            editorTheme.put("interpolation-punctuation", new short[] {0xCC, 0x78, 0x32});
+    
+            //py
+            editorTheme.put("builtin", new short[] {0x21, 0xB4, 0x3E});
+            editorTheme.put("format-spec", new short[] {0xCC, 0x78, 0x32});
+    
+            //regex
+            editorTheme.put("regex", new short[] {0x12, 0xD4, 0x89});
+            editorTheme.put("charset-negation", new short[] {0xCC, 0x78, 0x32});
+            editorTheme.put("charset-punctuation", new short[] {0xD8, 0xD8, 0xD8});
+            editorTheme.put("escape", new short[]  {0xFF, 0xE2, 0x00});
+            editorTheme.put("charclass", new short[] {0xFF, 0xE2, 0x00});
+            editorTheme.put("quantifier", new short[] {0x79, 0xAB, 0xFF});
+            Core.instance.config.saveConfig();
+        }
+        return editorTheme;
     }
     
     public Comparator<ScriptTrigger> getSortComparator() {

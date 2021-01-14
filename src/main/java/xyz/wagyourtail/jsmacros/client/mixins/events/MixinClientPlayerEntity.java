@@ -18,10 +18,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
-import xyz.wagyourtail.jsmacros.client.api.events.EventAirChange;
-import xyz.wagyourtail.jsmacros.client.api.events.EventDamage;
-import xyz.wagyourtail.jsmacros.client.api.events.EventEXPChange;
-import xyz.wagyourtail.jsmacros.client.api.events.EventSignEdit;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventAirChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventDamage;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventEXPChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventSignEdit;
 
 import java.util.ArrayList;
 import java.util.Arrays;

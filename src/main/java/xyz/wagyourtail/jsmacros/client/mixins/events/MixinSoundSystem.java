@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.wagyourtail.jsmacros.client.api.events.EventSound;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventSound;
 
 @Mixin(SoundSystem.class)
 public class MixinSoundSystem {

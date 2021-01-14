@@ -19,7 +19,7 @@ import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookResults;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
-import xyz.wagyourtail.jsmacros.client.api.functions.FClient;
+import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.RecipeHelper;
 

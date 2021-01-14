@@ -4,11 +4,11 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import xyz.wagyourtail.jsmacros.client.api.events.EventArmorChange;
-import xyz.wagyourtail.jsmacros.client.api.events.EventHeldItemChange;
-import xyz.wagyourtail.jsmacros.client.api.events.EventItemDamage;
-import xyz.wagyourtail.jsmacros.client.api.events.EventTick;
-import xyz.wagyourtail.jsmacros.client.api.functions.FClient;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventArmorChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventHeldItemChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventItemDamage;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventTick;
+import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 
 public class TickBasedEvents {
     private static boolean initialized = false;

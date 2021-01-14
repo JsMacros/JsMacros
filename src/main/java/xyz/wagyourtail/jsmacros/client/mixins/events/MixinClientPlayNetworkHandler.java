@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
-import xyz.wagyourtail.jsmacros.client.api.events.*;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
 
 import java.util.HashSet;
 import java.util.Map;

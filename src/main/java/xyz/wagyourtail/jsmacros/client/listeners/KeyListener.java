@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.listeners;
 
 import net.minecraft.client.util.InputUtil;
-import xyz.wagyourtail.jsmacros.client.api.events.EventKey;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventKey;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;

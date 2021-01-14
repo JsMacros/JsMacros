@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.access.TPSData;
-import xyz.wagyourtail.jsmacros.client.api.functions.FWorld;
+import xyz.wagyourtail.jsmacros.client.api.library.impl.FWorld;
 
 import java.util.LinkedList;
 import java.util.List;

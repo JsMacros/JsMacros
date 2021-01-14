@@ -8,14 +8,12 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.gui.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
-import xyz.wagyourtail.jsmacros.client.gui.elements.containers.CheckBoxContainer;
-import xyz.wagyourtail.jsmacros.client.gui.elements.containers.ProfileContainer;
-import xyz.wagyourtail.jsmacros.client.gui.elements.overlays.ConfirmOverlay;
-import xyz.wagyourtail.jsmacros.client.gui.elements.overlays.TextPrompt;
-import xyz.wagyourtail.jsmacros.client.gui.screens.macros.EventMacrosScreen;
+import xyz.wagyourtail.jsmacros.client.gui.containers.CheckBoxContainer;
+import xyz.wagyourtail.jsmacros.client.gui.containers.ProfileContainer;
+import xyz.wagyourtail.jsmacros.client.gui.overlays.ConfirmOverlay;
+import xyz.wagyourtail.jsmacros.client.gui.overlays.TextPrompt;
 import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.ArrayList;
@@ -51,14 +49,14 @@ public class ProfileScreen extends BaseScreen {
         Button profile = this.addButton(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer,0x4FFFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.profile"), null));
         profile.active = false;
 
-        this.addButton(new Button(0, this.height - 20, this.width / 6, 20, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.addprofile"), (btn) -> this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), "", this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (str) -> {
+        this.addButton(new Button(0, this.height - 20, this.width / 6, 20, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.addprofile"), (btn) -> this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), "", this, (str) -> {
             addProfile(str);
             if (!Core.instance.config.options.profiles.containsKey(str)) Core.instance.config.options.profiles.put(str, new ArrayList<>());
             Core.instance.config.saveConfig();
         }))));
 
         this.addButton(new Button(this.width / 6, this.height - 20, this.width / 6, 20, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.renameprofile"), (btn) -> {
-            if (!selected.pName.equals(Core.instance.config.options.defaultProfile)) this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), selected.pName, this::addButton, this::removeButton, this::closeOverlay, this::setFocused, (str) -> {
+            if (!selected.pName.equals(Core.instance.config.options.defaultProfile)) this.openOverlay(new TextPrompt(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.profilename"), selected.pName, this, (str) -> {
                 Core.instance.config.options.profiles.remove(selected.pName);
                 Core.instance.profile.renameCurrentProfile(str);
                 Core.instance.profile.saveProfile();
@@ -67,7 +65,7 @@ public class ProfileScreen extends BaseScreen {
         }));
 
         this.addButton(new Button(this.width / 3, this.height - 20, this.width / 6, 20, textRenderer,0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.deleteprofile"), (btn) -> {
-            if (!selected.pName.equals(Core.instance.config.options.defaultProfile)) this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.deleteprofile").append(new LiteralText(" \"" + Core.instance.profile.getCurrentProfileName()+"\"")), this::addButton, this::removeButton, this::closeOverlay, (cf) -> {
+            if (!selected.pName.equals(Core.instance.config.options.defaultProfile)) this.openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.deleteprofile").append(new LiteralText(" \"" + Core.instance.profile.getCurrentProfileName()+"\"")), this, (cf) -> {
                 removeProfile(selected);
                 Core.instance.profile.loadOrCreateProfile(Core.instance.config.options.defaultProfile);
                 for (ProfileContainer p : profiles) {
@@ -88,7 +86,7 @@ public class ProfileScreen extends BaseScreen {
     }
 
     public void addProfile(String pName) {
-        ProfileContainer pc = new ProfileContainer(20, topScroll + profiles.size() * 22, this.width / 2 - 40, 20, this.textRenderer, pName, Core.instance.config.options.defaultProfile, this::addButton, this::setSelected, this::setDefault);
+        ProfileContainer pc = new ProfileContainer(20, topScroll + profiles.size() * 22, this.width / 2 - 40, 20, this.textRenderer, pName, Core.instance.config.options.defaultProfile, this);
         profiles.add(pc);
         profileScroll.setScrollPages((topScroll + profiles.size() * 22) / (double) Math.max(1, this.height - 53));
         if (pName.equals(Core.instance.profile.getCurrentProfileName())) setSelected(pc);
