@@ -11,10 +11,7 @@ import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Wagyourtail
@@ -50,7 +47,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
         if (getRClickActions == null) return new HashMap<>();
         // lets force this cast, because runtime shouldn't have issues
         Map<String, Runnable> results = (Map) getRClickActions.apply(index);
-        if (results == null) return new HashMap<>();
+        if (results == null) return new LinkedHashMap<>();
         return results;
     }
     

@@ -9,10 +9,7 @@ import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.Prism;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCodeCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DefaultCodeCompiler extends AbstractRenderCodeCompiler {
     private static final Prism prism = new Prism();
@@ -38,7 +35,7 @@ public class DefaultCodeCompiler extends AbstractRenderCodeCompiler {
     @NotNull
     @Override
     public Map<String, Runnable> getRightClickOptions(int index) {
-        return new HashMap<>();
+        return new LinkedHashMap<>();
     }
     
     @NotNull

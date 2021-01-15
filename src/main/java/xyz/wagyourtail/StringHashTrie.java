@@ -216,6 +216,11 @@ public class StringHashTrie implements Collection<String> {
         children.clear();
     }
     
+    /**
+     * @param prefix
+     *
+     * @return all elements that start with the given prefix
+     */
     public Set<String> getAllWithPrefix(String prefix) {
         if (prefix.length() > keyLength) {
             String start = prefix.substring(0, keyLength);
@@ -243,6 +248,10 @@ public class StringHashTrie implements Collection<String> {
         }
     }
     
+    /**
+     * all contained elements as a {@link Set}
+     * @return
+     */
     public Set<String> getAll() {
         Set<String> results = new HashSet<>(leafs);
         children.forEach((k,v) -> results.addAll(v.getAll().stream().map(e -> k + e).collect(Collectors.toSet())));

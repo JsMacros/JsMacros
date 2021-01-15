@@ -55,6 +55,14 @@ public abstract class OverlayContainer extends MultiElementContainer<IOverlayPar
         if (overlay != null) overlay.onClick(mouseX, mouseY, button);
     }
     
+    /**
+     * @return true if should be handled by overlay
+     */
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (overlay != null) overlay.keyPressed(keyCode, scanCode, modifiers);
+        return false;
+    }
+    
     public void close() {
         parent.closeOverlay(this);
     }

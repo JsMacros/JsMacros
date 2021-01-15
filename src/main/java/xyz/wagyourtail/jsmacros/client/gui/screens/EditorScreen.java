@@ -22,11 +22,14 @@ import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.scriptimpl.Script
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.ConfirmOverlay;
+import xyz.wagyourtail.jsmacros.client.gui.overlays.SelectorDropdownOverlay;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class EditorScreen extends BaseScreen {
     private final static OrderedText ellipses = new LiteralText("...").formatted(Formatting.DARK_GRAY).asOrderedText();
@@ -253,6 +256,8 @@ public class EditorScreen extends BaseScreen {
         assert client != null;
         if (overlay == null) {
             setFocused(null);
+        } else if (overlay.keyPressed(keyCode, scanCode, modifiers)) {
+            return true;
         }
         if (Screen.isSelectAll(keyCode)) {
             cursor.updateStartIndex(0, history.current);
@@ -610,31 +615,49 @@ public class EditorScreen extends BaseScreen {
         boolean handled = super.mouseClicked(mouseX, mouseY, btn);
         if (!handled) {
             int index = getIndexPosition(mouseX - 30, mouseY - 12 + 1);
-            if (Screen.hasShiftDown()) {
-                if (index < cursor.dragStartIndex) {
-                    cursor.updateEndIndex(cursor.dragStartIndex, history.current);
-                    cursor.updateStartIndex(index, history.current);
+            if (btn != 1 || (cursor.startIndex > index || cursor.endIndex < index)) {
+                if (Screen.hasShiftDown()) {
+                    if (index < cursor.dragStartIndex) {
+                        cursor.updateEndIndex(cursor.dragStartIndex, history.current);
+                        cursor.updateStartIndex(index, history.current);
+                        cursor.arrowEnd = false;
+                        cursor.arrowLineIndex = cursor.startLineIndex;
+                    } else {
+                        cursor.updateStartIndex(cursor.dragStartIndex, history.current);
+                        cursor.updateEndIndex(index, history.current);
+                        cursor.arrowEnd = true;
+                        cursor.arrowLineIndex = cursor.endLineIndex;
+                    }
+                } else {
+                    if (cursor.startIndex == index && cursor.endIndex == index) {
+                        selectWordAtCursor();
+                    } else {
+                        cursor.updateStartIndex(index, history.current);
+                        cursor.updateEndIndex(index, history.current);
+                    }
+                    cursor.dragStartIndex = index;
                     cursor.arrowEnd = false;
                     cursor.arrowLineIndex = cursor.startLineIndex;
-                } else {
-                    cursor.updateStartIndex(cursor.dragStartIndex, history.current);
-                    cursor.updateEndIndex(index, history.current);
-                    cursor.arrowEnd = true;
-                    cursor.arrowLineIndex = cursor.endLineIndex;
                 }
-            } else {
-                if (cursor.startIndex == index && cursor.endIndex == index) {
-                    selectWordAtCursor();
-                } else {
-                    cursor.updateStartIndex(index, history.current);
-                    cursor.updateEndIndex(index, history.current);
-                }
-                cursor.dragStartIndex = index;
-                cursor.arrowEnd = false;
-                cursor.arrowLineIndex = cursor.startLineIndex;
+            }
+            if (btn == 1) {
+                openRClickMenu(index, (int) mouseX, (int) mouseY);
             }
         }
         return handled;
+    }
+    
+    private void openRClickMenu(int index, int mouseX, int mouseY) {
+        Map<String, Runnable> options = new LinkedHashMap<>();
+        if (cursor.startIndex != cursor.endIndex) {
+            options.put("cut", this::cutToClipboard);
+            options.put("copy", this::copyToClipboard);
+        }
+        options.put("paste", this::pasteFromClipboard);
+        options.putAll(codeCompiler.getRightClickOptions(index));
+        openOverlay(new SelectorDropdownOverlay(mouseX, mouseY, 100, (textRenderer.fontHeight + 1) * options.size() + 4, options.keySet().stream().map(LiteralText::new).collect(Collectors.toList()), textRenderer, this, (i) -> {
+            options.values().toArray(new Runnable[0])[i].run();
+        }));
     }
     
     private int getIndexPosition(double x, double y) {
@@ -672,7 +695,7 @@ public class EditorScreen extends BaseScreen {
     
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if (getFocused() != scrollbar) {
+        if (!(getFocused() instanceof Scrollbar) && button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             int index = getIndexPosition(mouseX - 30, mouseY - 12);
             if (index == cursor.dragStartIndex) {
                 cursor.updateStartIndex(index, history.current);

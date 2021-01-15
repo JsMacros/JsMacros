@@ -13,10 +13,7 @@ import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * "hidden" event for script based code style compiling / linting tasks.
@@ -70,10 +67,10 @@ public class CodeCompileEvent implements BaseEvent {
     /**
      * Easy access to the {@link Map} object for use with {@link #rightClickActions}
      *
-     * @return specifically a {@link HashMap}
+     * @return specifically a {@link LinkedHashMap}
      */
     public Map<?, ?> createMap() {
-        return new HashMap<>();
+        return new LinkedHashMap<>();
     }
     
     /**
