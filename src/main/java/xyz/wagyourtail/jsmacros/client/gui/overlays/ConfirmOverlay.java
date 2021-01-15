@@ -14,12 +14,18 @@ public class ConfirmOverlay extends OverlayContainer {
     private Consumer<ConfirmOverlay> accept;
     private List<OrderedText> text;
     private int lines;
+    public boolean hcenter = true;
     private int vcenter;
     
     public ConfirmOverlay(int x, int y, int width, int height, TextRenderer textRenderer, Text message, IOverlayParent parent, Consumer<ConfirmOverlay>accept) {
         super(x, y, width, height, textRenderer, parent);
         this.setMessage(message);
         this.accept = accept;
+    }
+    
+    public ConfirmOverlay(int x, int y, int width, int height, boolean hcenter, TextRenderer textRenderer, Text message, IOverlayParent parent, Consumer<ConfirmOverlay>accept) {
+        this(x, y, width, height, textRenderer, message, parent, accept);
+        this.hcenter = hcenter;
     }
     
     public void setMessage(Text message) {
@@ -45,7 +51,8 @@ public class ConfirmOverlay extends OverlayContainer {
     protected void renderMessage(MatrixStack matrices) {
         for (int i = 0; i < lines; ++i) {
             int w = textRenderer.getWidth(text.get(i));
-            textRenderer.draw(matrices, text.get(i), x + width / 2 - w / 2, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF);
+            float centeredX = hcenter ? x + width / 2F - w / 2F : x + 3;
+            textRenderer.draw(matrices, text.get(i), centeredX, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF);
         }
     }
     

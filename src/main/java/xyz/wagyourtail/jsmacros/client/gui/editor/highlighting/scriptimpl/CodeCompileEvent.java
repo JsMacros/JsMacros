@@ -12,8 +12,12 @@ import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl.TextStyleCom
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * "hidden" event for script based code style compiling / linting tasks.
@@ -22,8 +26,9 @@ import java.util.*;
  * @author Wagyourtail
  * @since 1.3.1
  */
-public class CodeCompileEvent implements BaseEvent {
-    private static final Prism prism = new Prism();
+ @Event("CodeRender")
+ @SuppressWarnings("unused")
+ public class CodeCompileEvent implements BaseEvent {
     public final SelectCursor cursor;
     public final String code;
     public final String language;
@@ -61,7 +66,7 @@ public class CodeCompileEvent implements BaseEvent {
      *     peek at the code of {@link TextStyleCompiler} for the default impl for walking the node tree.
      */
     public List<Prism4j.Node> genPrismNodes() {
-        return prism.getNodes(code, language);
+        return Prism.getNodes(code, language);
     }
     
     /**
@@ -82,14 +87,23 @@ public class CodeCompileEvent implements BaseEvent {
         return new TextBuilder();
     }
     
+    
+    public AutoCompleteSuggestion createSuggestion(int startIndex, String suggestion) {
+        return createSuggestion(startIndex, suggestion, null);
+    }
+    
     /**
      * @param startIndex index that is where the suggestion starts from before the already typed part
      * @param suggestion complete suggestion including the already typed part
+     * @param displayText how the text should be displayed in the dropdown, default is suggestion text
      *
-     * @return
+     * @return a new suggestion object
      */
-    public AutoCompleteSuggestion createSuggestion(int startIndex, String suggestion) {
-        return new AutoCompleteSuggestion(startIndex, suggestion);
+    public AutoCompleteSuggestion createSuggestion(int startIndex, String suggestion, TextHelper displayText) {
+        if (displayText == null) {
+            return new AutoCompleteSuggestion(startIndex, suggestion);
+        }
+        return new AutoCompleteSuggestion(startIndex, suggestion, displayText.getRaw());
     }
     
     /**

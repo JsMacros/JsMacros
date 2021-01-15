@@ -7,16 +7,19 @@ import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class TextStyleCompiler extends AbsVisitor {
     private final Style defaultStyle;
-    private final TextTheme theme = new TextTheme();
+    private final Map<String, short[]> themeData;
     private final List<LiteralText> result = new LinkedList<>();
     
-    public TextStyleCompiler(Style defaultStyle) {
+    public TextStyleCompiler(Style defaultStyle, Map<String, short[]> themeData) {
         this.defaultStyle = defaultStyle;
+        this.themeData = themeData;
         result.add((LiteralText) new LiteralText("").setStyle(defaultStyle));
     }
     
@@ -34,7 +37,7 @@ public class TextStyleCompiler extends AbsVisitor {
     protected void visitSyntax(@NotNull Prism4j.Syntax syntax) {
         TextColor update = colorForSyntax(syntax.type(), syntax.alias());
         Style newStyle = update == null ? defaultStyle : defaultStyle.withColor(update);
-        final TextStyleCompiler child = new TextStyleCompiler(newStyle);
+        final TextStyleCompiler child = new TextStyleCompiler(newStyle, themeData);
         child.visit(syntax.children());
         appendChildResult(child.getResult());
     }
@@ -46,14 +49,20 @@ public class TextStyleCompiler extends AbsVisitor {
     }
     
     protected TextColor colorForSyntax(String name, String alias) {
-        TextColor val = theme.getColorForToken(name);
+        TextColor val = getColorForToken(name);
         if (val != null) return val;
-        else val = theme.getColorForToken(alias);
+        else val = getColorForToken(alias);
         return val;
     }
     
-    
     public List<LiteralText> getResult() {
         return result;
+    }
+    
+    @Nullable
+    protected TextColor getColorForToken(@Nullable String name) {
+        if (!themeData.containsKey(name)) return null;
+        short[] color = themeData.get(name);
+        return TextColor.fromRgb((color[0] & 255) << 16 | (color[1] & 255) << 8 | (color[2] & 255));
     }
 }

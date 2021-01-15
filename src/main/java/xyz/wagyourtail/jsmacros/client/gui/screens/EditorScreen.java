@@ -51,6 +51,7 @@ public class EditorScreen extends BaseScreen {
     protected int lastLine;
     public boolean blockFirst = false;
     public long textRenderTime = 0;
+    protected char prevChar = '\0';
     public String language;
     public AbstractRenderCodeCompiler codeCompiler;
     
@@ -194,8 +195,11 @@ public class EditorScreen extends BaseScreen {
             }
         };
         
-        cursor.onChange = (cursor) -> lineCol = (cursor.startIndex != cursor.endIndex ? (cursor.endIndex - cursor.startIndex) + " " : "") +
-            (cursor.arrowEnd ? String.format("%d:%d", cursor.endLine + 1, cursor.endLineIndex + 1) : String.format("%d:%d", cursor.startLine + 1, cursor.startLineIndex + 1));
+        cursor.onChange = (cursor) -> {
+            lineCol = (cursor.startIndex != cursor.endIndex ? (cursor.endIndex - cursor.startIndex) + " " : "") +
+                (cursor.arrowEnd ? String.format("%d:%d", cursor.endLine + 1, cursor.endLineIndex + 1) : String.format("%d:%d", cursor.startLine + 1, cursor.startLineIndex + 1));
+            prevChar = '\0';
+        };
         
         addButton(new Button(width, 0, 10, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> openParent()));
         
@@ -499,8 +503,8 @@ public class EditorScreen extends BaseScreen {
     private synchronized void compileRenderedText() {
         long time = System.currentTimeMillis();
         codeCompiler.recompileRenderedText(history.current);
-        this.scrollbar.setScrollPages(calcTotalPages());
         textRenderTime = System.currentTimeMillis() - time;
+        this.scrollbar.setScrollPages(calcTotalPages());
         scrollToCursor();
     }
     
@@ -727,8 +731,34 @@ public class EditorScreen extends BaseScreen {
                 history.replace(cursor.startIndex, cursor.endIndex - cursor.startIndex, String.valueOf(chr));
                 cursor.updateStartIndex(cursor.endIndex, history.current);
             } else {
-                history.addChar(cursor.startIndex, chr);
+                if ((chr == ']' && prevChar == '[') ||
+                    (chr == '}' && prevChar == '{') ||
+                    (chr == ')' && prevChar == '(')) {
+                    cursor.updateEndIndex(cursor.startIndex + 1, history.current);
+                    cursor.updateStartIndex(cursor.endIndex, history.current);
+                } else {
+                    history.addChar(cursor.startIndex, chr);
+                }
             }
+            switch (chr) {
+                case '[':
+                    history.addChar(cursor.startIndex, ']');
+                    cursor.updateStartIndex(cursor.startIndex - 1, history.current);
+                    cursor.updateEndIndex(cursor.startIndex, history.current);
+                    break;
+                case '{':
+                    history.addChar(cursor.startIndex, '}');
+                    cursor.updateStartIndex(cursor.startIndex - 1, history.current);
+                    cursor.updateEndIndex(cursor.startIndex, history.current);
+                    break;
+                case '(':
+                    history.addChar(cursor.startIndex, ')');
+                    cursor.updateStartIndex(cursor.startIndex - 1, history.current);
+                    cursor.updateEndIndex(cursor.startIndex, history.current);
+                    break;
+                default:
+            }
+            prevChar = chr;
             compileRenderedText();
         }
         return false;

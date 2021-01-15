@@ -15,6 +15,8 @@ public class ClientConfigOptions extends ConfigOptions {
     
     public Map<String, String> linterOverrides;
     
+    public int editorHistorySize = 20;
+    
     public ClientConfigOptions() {
         super();
         this.sortMethod = SortMethod.Enabled;

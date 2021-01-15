@@ -87,6 +87,7 @@ public class StringHashTrie implements Collection<String> {
             return true;
         }
         if (s.length() <= keyLength || children.size() == 0) {
+            if (leafs.contains(s)) return false;
             for (int i = Math.min(s.length(), keyLength); i > 0; --i) {
                 for (String key : leafs) {
                     if (key.length() >= i && key.substring(0, i).equals(s.substring(0, i))) {
