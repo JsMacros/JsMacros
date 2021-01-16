@@ -33,8 +33,7 @@ import java.util.stream.Collectors;
 
 public class EditorScreen extends BaseScreen {
     private final static OrderedText ellipses = new LiteralText("...").formatted(Formatting.DARK_GRAY).asOrderedText();
-    /*TODO: make py script to convert a copyleft monospaced font to png's for minecraft, or add class for on the fly from a ttf*/
-    public final static Style defaultStyle = Style.EMPTY.withFont(new Identifier("jsmacros", "uniform"));
+    public static Style defaultStyle = Style.EMPTY.withFont(new Identifier("jsmacros", "ubuntumono"));
     protected final File file;
     protected final FileHandler handler;
     public final History history;
@@ -172,6 +171,7 @@ public class EditorScreen extends BaseScreen {
         super.init();
         assert client != null;
         
+        defaultStyle = Style.EMPTY.withFont(new Identifier(JsMacros.core.config.options.editorFont));
         
         ellipsesWidth = client.textRenderer.getWidth(ellipses);
         lineSpread = client.textRenderer.fontHeight + 1;

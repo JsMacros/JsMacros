@@ -1,0 +1,3 @@
+https://www.reddit.com/r/Minecraft/comments/8yjroi/how_to_add_a_ttf_font_to_your_resource_pack/
+
+you may have to mess with the "size" and "shift" until the text renderer fits each glyph properly...

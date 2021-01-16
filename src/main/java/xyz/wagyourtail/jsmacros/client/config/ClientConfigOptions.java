@@ -12,20 +12,21 @@ public class ClientConfigOptions extends ConfigOptions {
     public SortMethod sortMethod = SortMethod.Enabled;
     public boolean disableKeyWhenScreenOpen = true;
     public Map<String, short[]> editorTheme = null;
-    public Map<String, String> linterOverrides = null;
+    public Map<String, String> editorLinterOverrides = null;
     public int editorHistorySize = 20;
     public boolean editorSuggestions = true;
+    public String editorFont = "jsmacros:ubuntumono";
     
     public ClientConfigOptions() {
         super();
     }
     
     public Map<String, String> getLinterOverrides() {
-        if (linterOverrides == null) {
-            linterOverrides = new HashMap<>();
+        if (editorLinterOverrides == null) {
+            editorLinterOverrides = new HashMap<>();
             Core.instance.config.saveConfig();
         }
-        return linterOverrides;
+        return editorLinterOverrides;
     }
     
     public Map<String, short[]> getThemeData() {
