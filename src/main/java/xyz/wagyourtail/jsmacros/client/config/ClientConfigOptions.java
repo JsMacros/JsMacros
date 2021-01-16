@@ -15,7 +15,7 @@ public class ClientConfigOptions extends ConfigOptions {
     public Map<String, String> editorLinterOverrides = null;
     public int editorHistorySize = 20;
     public boolean editorSuggestions = true;
-    public String editorFont = "jsmacros:ubuntumono";
+    public String editorFont = "jsmacros:jetbrainsmono";
     
     public ClientConfigOptions() {
         super();
