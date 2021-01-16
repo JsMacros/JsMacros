@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.gui.overlays;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
@@ -17,7 +18,7 @@ public class SelectorDropdownOverlay extends OverlayContainer {
     private final Collection<Text> choices;
     private final List<Button> scrollChoices = new LinkedList<>();
     private final Consumer<Integer> onChoice;
-    private int selected = -1;
+    protected int selected = -1;
     private final double pages;
     
     public SelectorDropdownOverlay(int x, int y, int width, int height, Collection<Text> choices, TextRenderer textRenderer, IOverlayParent parent, Consumer<Integer> onChoice) {
@@ -36,10 +37,12 @@ public class SelectorDropdownOverlay extends OverlayContainer {
         int scrollwidth = pages <= 1 ? width - 4 : width - 10;
         for (Text choice : choices) {
             final int finalPos = pos;
-            scrollChoices.add(this.addButton(new Button(x + 2, y + pos * lineHeight + 2, scrollwidth, lineHeight, textRenderer, 0, 0xFF000000, 0x4FFFFFFF, 0xFFFFFFFF, choice, (b) -> {
+            Button ch = this.addButton(new Button(x + 2, y + pos * lineHeight + 2, scrollwidth, lineHeight, textRenderer, 0, 0xFF000000, 0x4FFFFFFF, 0xFFFFFFFF, choice, (b) -> {
                 if (onChoice != null) onChoice.accept(finalPos);
                 close();
-            })));
+            }));
+            ch.horizCenter = false;
+            scrollChoices.add(ch);
             pos += 1;
         }
         
@@ -62,22 +65,21 @@ public class SelectorDropdownOverlay extends OverlayContainer {
         if (mouseX < x || mouseX > x + width || mouseY < y || mouseY > y + height) close();
     }
     
+    public void setSelected(int sel) {
+        if (selected != -1) scrollChoices.get(selected).forceHover = false;
+        selected = MathHelper.clamp(sel, -1, scrollChoices.size() - 1);
+        if (selected != -1) scrollChoices.get(selected).forceHover = true;
+    }
+    
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         switch (keyCode) {
             case GLFW.GLFW_KEY_UP:
-                if (selected > -1) {
-                    if (selected < choices.size() - 1) scrollChoices.get(selected).forceHover = false;
-                    --selected;
-                    if (selected != -1) scrollChoices.get(selected).forceHover = true;
-                }
+                if (selected == -1) return false;
+                setSelected(selected - 1);
                 return true;
             case GLFW.GLFW_KEY_DOWN:
-                if (selected < choices.size() - 1) {
-                    if (selected != -1) scrollChoices.get(selected).forceHover = false;
-                    ++selected;
-                    scrollChoices.get(selected).forceHover = true;
-                }
+                setSelected(selected + 1);
                 return true;
             case GLFW.GLFW_KEY_ENTER:
                 if (onChoice != null) onChoice.accept(selected);

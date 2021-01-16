@@ -17,6 +17,7 @@ import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.gui.editor.History;
 import xyz.wagyourtail.jsmacros.client.gui.editor.SelectCursor;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCodeCompiler;
+import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSuggestion;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl.DefaultCodeCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.scriptimpl.ScriptCodeCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
@@ -27,8 +28,7 @@ import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EditorScreen extends BaseScreen {
@@ -51,7 +51,7 @@ public class EditorScreen extends BaseScreen {
     protected int lastLine;
     public boolean blockFirst = false;
     public long textRenderTime = 0;
-    protected char prevChar = '\0';
+    public char prevChar = '\0';
     public String language;
     public AbstractRenderCodeCompiler codeCompiler;
     
@@ -179,6 +179,8 @@ public class EditorScreen extends BaseScreen {
         
         scrollbar = addButton(new Scrollbar(width, 12, 10, height - 24, 0, 0xFF000000, 0xFFFFFFFF, 1, this::setScroll));
         saveBtn = addButton(new Button(width / 2, 0, width / 6, 12, textRenderer, needSave() ? 0xFFA0A000 : 0xFF00A000, 0xFF000000, needSave() ? 0xFF707000 : 0xFF007000, 0xFFFFFF, new TranslatableText("jsmacros.save"), (btn) -> save()));
+        addButton(new Button(width * 4 / 6, 0, width / 6, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.close"), (btn) -> openParent()));
+        addButton(new Button(width, 0, 10, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(client.world == null ? "X" : "-"), (btn) -> onClose()));
         
         if (language == null)
             setLanguage(getDefaultLanguage());
@@ -199,9 +201,11 @@ public class EditorScreen extends BaseScreen {
             lineCol = (cursor.startIndex != cursor.endIndex ? (cursor.endIndex - cursor.startIndex) + " " : "") +
                 (cursor.arrowEnd ? String.format("%d:%d", cursor.endLine + 1, cursor.endLineIndex + 1) : String.format("%d:%d", cursor.startLine + 1, cursor.startLineIndex + 1));
             prevChar = '\0';
+            if (overlay instanceof SelectorDropdownOverlay) {
+                closeOverlay(overlay);
+            }
         };
         
-        addButton(new Button(width, 0, 10, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> openParent()));
         
         addButton(new Button(this.width - width / 8, height - 12, width / 8, 12, textRenderer,0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(language), (btn) -> {
             switch (language) {
@@ -503,6 +507,41 @@ public class EditorScreen extends BaseScreen {
     private synchronized void compileRenderedText() {
         long time = System.currentTimeMillis();
         codeCompiler.recompileRenderedText(history.current);
+        List<AutoCompleteSuggestion> suggestionList = codeCompiler.getSuggestions();
+    
+    
+        if (overlay instanceof SelectorDropdownOverlay) {
+            closeOverlay(overlay);
+        }
+        
+        if (suggestionList.size() > 0 && JsMacros.core.config.options.editorSuggestions) {
+            suggestionList.sort(Comparator.comparing(a -> a.suggestion));
+            int startIndex = cursor.startIndex;
+            int maxWidth = 0;
+            List<Text> displayList = new LinkedList<>();
+            for (AutoCompleteSuggestion sug : suggestionList) {
+                if (sug.startIndex < startIndex) startIndex = sug.startIndex;
+                int width = textRenderer.getWidth(sug.displayText);
+                if (width > maxWidth) maxWidth = width;
+                displayList.add(sug.displayText);
+            }
+            String[] lines = history.current.substring(0, startIndex).split("\n", -1);
+            int startCol = textRenderer.getWidth(new LiteralText(lines[lines.length - 1]).setStyle(defaultStyle));
+            int add = lineSpread - scroll % lineSpread;
+            if (add == lineSpread) add = 0;
+            int startRow = (lines.length - firstLine + 1) * lineSpread + add;
+            
+            openOverlay(
+                new SelectorDropdownOverlay(startCol + 30, startRow, maxWidth + 8, suggestionList.size() * lineSpread + 4, displayList, textRenderer, this, (i) -> {
+                    if (i == -1) return;
+                    AutoCompleteSuggestion selected = suggestionList.get(i);
+                    String completion = selected.suggestion.substring(cursor.startIndex - selected.startIndex);
+                    history.add(cursor.startIndex, completion);
+                    compileRenderedText();
+                })
+            );
+            ((SelectorDropdownOverlay) overlay).setSelected(0);
+        }
         textRenderTime = System.currentTimeMillis() - time;
         this.scrollbar.setScrollPages(calcTotalPages());
         scrollToCursor();
@@ -659,9 +698,7 @@ public class EditorScreen extends BaseScreen {
         }
         options.put("paste", this::pasteFromClipboard);
         options.putAll(codeCompiler.getRightClickOptions(index));
-        openOverlay(new SelectorDropdownOverlay(mouseX, mouseY, 100, (textRenderer.fontHeight + 1) * options.size() + 4, options.keySet().stream().map(LiteralText::new).collect(Collectors.toList()), textRenderer, this, (i) -> {
-            options.values().toArray(new Runnable[0])[i].run();
-        }));
+        openOverlay(new SelectorDropdownOverlay(mouseX, mouseY, 100, (textRenderer.fontHeight + 1) * options.size() + 4, options.keySet().stream().map(LiteralText::new).collect(Collectors.toList()), textRenderer, this, i -> options.values().toArray(new Runnable[0])[i].run()));
     }
     
     private int getIndexPosition(double x, double y) {

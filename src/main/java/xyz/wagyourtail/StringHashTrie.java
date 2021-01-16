@@ -240,7 +240,7 @@ public class StringHashTrie implements Collection<String> {
             }
             for (String key : children.keySet()) {
                 if (key.startsWith(prefix)) {
-                    return children.get(key).getAll().stream().map(e -> prefix + e).collect(Collectors.toSet());
+                    return children.get(key).getAll().stream().map(e -> key + e).collect(Collectors.toSet());
                 }
             }
             return new HashSet<>();

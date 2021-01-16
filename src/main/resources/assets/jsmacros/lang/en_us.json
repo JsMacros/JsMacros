@@ -2,7 +2,6 @@
 	"jsmacros.loadconfigfail": "load config failed, backing up old file if exists.",
 	"jsmacros.saveconfigfail": "save config failed",
 	"jsmacros.profilesloaded": "Profiles Loaded:",
-	"jsmacros.jythonfail": "Jython Failed to Launch.\n\n this is normal for the first launch of the mod but if it fails again please send the logs to me in the github issue page for this mod.",
 	"jsmacros.title": "JS Macros",
 	"jsmacros.menu": "JS Macros GUI",
 	"jsmacros.keys": "Keys",
@@ -36,5 +35,6 @@
 	"jsmacros.errorsaving": "An error occured while trying to save... \n\n",
 	"jsmacros.nosave": "Are you sure you'd like to exit without saving?",
 	"jsmacros.clicktoview": "Click to view in editor.",
-	"jsmacros.errorerror": "AN ERROR WITH ERROR MESSAGE PARSING HAS OCCURRED"
+	"jsmacros.errorerror": "AN ERROR WITH ERROR MESSAGE PARSING HAS OCCURRED",
+	"jsmacros.close": "Close"
 }

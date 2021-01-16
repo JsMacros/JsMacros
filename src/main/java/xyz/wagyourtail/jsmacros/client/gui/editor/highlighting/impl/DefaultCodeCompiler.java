@@ -39,10 +39,10 @@ public class DefaultCodeCompiler extends AbstractRenderCodeCompiler {
         }
         
         // suggestion compile
-        if (screen.cursor.startIndex != screen.cursor.endIndex) {
+        if (screen.cursor.startIndex != screen.cursor.endIndex || !JsMacros.core.config.options.editorSuggestions || screen.prevChar == '\0') {
             suggestions = new LinkedList<>();
         } else {
-            String line = screen.history.current.split("\n", -1)[screen.cursor.startLine].substring(0, screen.cursor.startLineIndex);
+            String line = text.split("\n", -1)[screen.cursor.startLine].substring(0, screen.cursor.startLineIndex);
             Matcher m = Pattern.compile(String.format("[\\w%s]+$", language.equals("lua") ? ":" : ".")).matcher(line);
             if (m.find()) {
                 String start = m.group();

@@ -9,18 +9,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ClientConfigOptions extends ConfigOptions {
-    public SortMethod sortMethod;
-    public boolean disableKeyWhenScreenOpen;
-    public Map<String, short[]> editorTheme;
-    
-    public Map<String, String> linterOverrides;
-    
+    public SortMethod sortMethod = SortMethod.Enabled;
+    public boolean disableKeyWhenScreenOpen = true;
+    public Map<String, short[]> editorTheme = null;
+    public Map<String, String> linterOverrides = null;
     public int editorHistorySize = 20;
+    public boolean editorSuggestions = true;
     
     public ClientConfigOptions() {
         super();
-        this.sortMethod = SortMethod.Enabled;
-        this.disableKeyWhenScreenOpen = true;
     }
     
     public Map<String, String> getLinterOverrides() {

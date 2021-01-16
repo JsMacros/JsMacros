@@ -18,6 +18,7 @@ public class Button extends AbstractPressableButtonWidget {
     protected List<OrderedText> textLines;
     protected int visibleLines;
     protected int verticalCenter;
+    public boolean horizCenter = true;
     public Consumer<Button> onPress;
     public boolean hovering = false;
     public boolean forceHover = false;
@@ -63,7 +64,7 @@ public class Button extends AbstractPressableButtonWidget {
     protected void renderMessage(MatrixStack matrices) {
         for (int i = 0; i < visibleLines; ++i) {
             int w = textRenderer.getWidth(textLines.get(i));
-            textRenderer.draw(matrices, textLines.get(i), x + width / 2F - w / 2F, y + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
+            textRenderer.draw(matrices, textLines.get(i), horizCenter ? x + width / 2F - w / 2F : x + 1, y + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
         }
     }
     
