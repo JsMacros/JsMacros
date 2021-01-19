@@ -34,12 +34,6 @@ public abstract class OverlayContainer extends MultiElementContainer<IOverlayPar
         overlay.init();
     }
     
-    // remapper needs because jank
-    @Override
-    public <T extends AbstractButtonWidget> T addButton(T btn) {
-        return super.addButton(btn);
-    }
-    
     public OverlayContainer getChildOverlay() {
         if (overlay != null) return overlay.getChildOverlay();
         else return this;

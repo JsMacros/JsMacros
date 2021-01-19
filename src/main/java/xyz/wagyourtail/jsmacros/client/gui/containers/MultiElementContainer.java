@@ -8,7 +8,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MultiElementContainer<T extends IContainerParent> extends DrawableHelper {
+public abstract class MultiElementContainer<T extends IContainerParent> extends DrawableHelper implements IContainerParent {
     protected int x;
     protected int y;
     protected int width;
