@@ -312,7 +312,8 @@ public class EditorScreen extends BaseScreen {
                 } else {
                     cursor.updateStartIndex(cursor.startIndex - cursor.startLineIndex + startSpaces.length(), history.current);
                 }
-                cursor.updateEndIndex(cursor.startIndex, history.current);
+                if (!Screen.hasShiftDown())
+                    cursor.updateEndIndex(cursor.startIndex, history.current);
 /*
                     //home to start of file impl
                     
@@ -324,7 +325,8 @@ public class EditorScreen extends BaseScreen {
             case GLFW.GLFW_KEY_END:
                 int endLineLength = history.current.split("\n", -1)[cursor.endLine].length();
                 cursor.updateEndIndex(cursor.endIndex + (endLineLength - cursor.endLineIndex), history.current);
-                cursor.updateStartIndex(cursor.endIndex, history.current);
+                if (!Screen.hasShiftDown())
+                    cursor.updateStartIndex(cursor.endIndex, history.current);
 /*
                     //end to end of file impl
 

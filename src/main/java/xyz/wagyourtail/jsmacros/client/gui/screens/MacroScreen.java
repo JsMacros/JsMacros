@@ -29,6 +29,8 @@ public class MacroScreen extends BaseScreen {
     protected Button keyScreen;
     protected Button eventScreen;
     protected Button profileScreen;
+    protected Button runningBtn;
+    protected Button aboutBtn;
     
     public MacroScreen(Screen parent) {
         super(new TranslatableText("jsmacros.title"), parent);
@@ -48,12 +50,12 @@ public class MacroScreen extends BaseScreen {
         topScroll = 40;
         macroScroll = this.addButton(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
     
-        this.addButton(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.running"), (btn) -> {
+        runningBtn = this.addButton(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.running"), (btn) -> {
             assert client != null;
             client.openScreen(new CancelScreen(this));
         }));
         
-        this.addButton(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this))));
+        aboutBtn = this.addButton(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this))));
     }
     
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
