@@ -68,62 +68,62 @@ public interface IDraw2D<T> {
     /**
     * removes any element regardless of type.
     * @since 1.2.9
-     * @return
+     * @return self for chaining
      */
     T removeElement(Drawable e);
     
     /**
     * re-add an element you removed with {@link #removeElement(Drawable)}
     * @since 1.2.9
-     * @return
+     * @return self for chaining
      */
     Drawable reAddElement(Drawable e);
     
     /**
      * @since 1.2.7
      * @param text
-     * @param x
-     * @param y
-     * @param color
-     * @param shadow
-     * @return
+     * @param x screen x
+     * @param y screen y
+     * @param color text color
+     * @param shadow include shadow layer
+     * @return added text
      */
     Text addText(String text, int x, int y, int color, boolean shadow);
     
     /**
      * @since 1.2.7
      * @param text
-     * @param x
-     * @param y
-     * @param color
-     * @param shadow
-     * @param scale
-     * @param rotation
-     * @return
+     * @param x screen x
+     * @param y screen y
+     * @param color text color
+     * @param shadow include shadow layer
+     * @param scale text scale (as float)
+     * @param rotation text rotation (as degrees)
+     * @return added text
      */
     Text addText(String text, int x, int y, int color, boolean shadow, double scale, float rotation);
     
     /**
      * @since 1.2.7
      * @param text
-     * @param x
-     * @param y
-     * @param color
-     * @param shadow
-     * @return
+     * @param x screen x
+     * @param y screen y
+     * @param color text color
+     * @param shadow include shadow layer
+     * @return added text
      */
     Text addText(TextHelper text, int x, int y, int color, boolean shadow);
     
     /**
      * @since 1.2.7
      * @param text
-     * @param x
-     * @param y
-     * @param color
-     * @param shadow
-     * @param scale
-     * @param rotation
-     * @return
+     * @param x screen x
+     * @param y screen y
+     * @param color text color
+     * @param shadow include shadow layer
+     * @param scale text scale (as float)
+     * @param rotation text rotation (as degrees)
+     * @return added text
      */
     Text addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, float rotation);
     
@@ -131,50 +131,50 @@ public interface IDraw2D<T> {
     /**
      * @since 1.2.7
      * @param t
-     * @return
+     * @return self for chaining
      */
      @Deprecated
     T removeText(Text t);
     
     /**
      * @since 1.2.7
-     * @param x
-     * @param y
-     * @param width
-     * @param height
-     * @param id
-     * @param imageX
-     * @param imageY
-     * @param regionWidth
-     * @param regionHeight
-     * @param textureWidth
-     * @param textureHeight
-     * @return
+     * @param x screen x, top left corner
+     * @param y screen y, top left corner
+     * @param width width on screen
+     * @param height height on screen
+     * @param id image id, in the form {@code minecraft:textures} path'd as found in texture packs, ie {@code assets/minecraft/textures/gui/recipe_book.png} becomes {@code minecraft:textures/gui/recipe_book.png}
+     * @param imageX the left-most coordinate of the texture region
+     * @param imageY the top-most coordinate of the texture region
+     * @param regionWidth the width the texture region
+     * @param regionHeight the height the texture region
+     * @param textureWidth the width of the entire texture
+     * @param textureHeight the height of the entire texture
+     * @return added image
      */
     Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight);
     
     /**
      * @since 1.2.7
-     * @param x
-     * @param y
-     * @param width
-     * @param height
-     * @param id
-     * @param imageX
-     * @param imageY
-     * @param regionWidth
-     * @param regionHeight
-     * @param textureWidth
-     * @param textureHeight
-     * @param rotation
-     * @return
+     * @param x screen x, top left corner
+     * @param y screen y, top left corner
+     * @param width width on screen
+     * @param height height on screen
+     * @param id image id, in the form {@code minecraft:textures} path'd as found in texture packs, ie {@code assets/minecraft/textures/gui/recipe_book.png} becomes {@code minecraft:textures/gui/recipe_book.png}
+     * @param imageX the left-most coordinate of the texture region
+     * @param imageY the top-most coordinate of the texture region
+     * @param regionWidth the width the texture region
+     * @param regionHeight the height the texture region
+     * @param textureWidth the width of the entire texture
+     * @param textureHeight the height of the entire texture
+     * @param rotation the rotation of the texture (as degrees)
+     * @return added image
      */
     Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation);
     
     /**
      * @since 1.2.7
      * @param i
-     * @return
+     * @return self for chaining
      */
      @Deprecated
     T removeImage(Image i);
@@ -185,8 +185,8 @@ public interface IDraw2D<T> {
      * @param y1
      * @param x2
      * @param y2
-     * @param color
-     * @return
+     * @param color as hex, with alpha channel
+     * @return added rect
      */
     Rect addRect(int x1, int y1, int x2, int y2, int color);
     
@@ -196,9 +196,9 @@ public interface IDraw2D<T> {
      * @param y1
      * @param x2
      * @param y2
-     * @param color
-     * @param alpha
-     * @return
+     * @param color as hex
+     * @param alpha alpha channel 0-255
+     * @return added rect
      */
     Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha);
     
@@ -208,87 +208,87 @@ public interface IDraw2D<T> {
      * @param y1
      * @param x2
      * @param y2
-     * @param color
-     * @param alpha
-     * @param rotation
-     * @return
+     * @param color as hex
+     * @param alpha alpha channel 0-255
+     * @param rotation as degrees
+     * @return added rect
      */
     Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation);
     
     /**
      * @since 1.2.7
      * @param r
-     * @return
+     * @return self for chaining
      */
      @Deprecated
     T removeRect(Rect r);
     
     /**
      * @since 1.2.7
-     * @param x
-     * @param y
-     * @param id
-     * @return
+     * @param x left most corner
+     * @param y top most corner
+     * @param id item id
+     * @return added item
      */
     Item addItem(int x, int y, String id);
     
     /**
      * @since 1.2.7
-     * @param x
-     * @param y
-     * @param id
-     * @param overlay
-     * @return
+     * @param x left most corner
+     * @param y top most corner
+     * @param id item id
+     * @param overlay should include overlay health and count
+     * @return added item
      */
     Item addItem(int x, int y, String id, boolean overlay);
     
     /**
      * @since 1.2.7
-     * @param x
-     * @param y
-     * @param id
-     * @param overlay
-     * @param scale
-     * @param rotation
-     * @return
+     * @param x left most corner
+     * @param y top most corner
+     * @param id item id
+     * @param overlay should include overlay health and count
+     * @param scale scale of item
+     * @param rotation rotation of item
+     * @return added item
      */
     Item addItem(int x, int y, String id, boolean overlay, double scale, float rotation);
     
     /**
      * @since 1.2.7
-     * @param x
-     * @param y
-     * @param item
-     * @return
+     * @param x left most corner
+     * @param y top most corner
+     * @param item from inventory as helper
+     * @return added item
      */
     Item addItem(int x, int y, ItemStackHelper item);
     
     /**
      * @since 1.2.7
-     * @param x
-     * @param y
-     * @param item
-     * @param overlay
-     * @return
+     * @param x left most corner
+     * @param y top most corner
+     * @param item from inventory as helper
+     * @param overlay should include overlay health and count
+     * @return added item
      */
     Item addItem(int x, int y, ItemStackHelper item, boolean overlay);
     
     /**
      * @since 1.2.7
-     * @param x
-     * @param y
-     * @param item
-     * @param overlay
-     * @param scale
-     * @param rotation
-     * @return
+     * @param x left most corner
+     * @param y top most corner
+     * @param item from inventory as helper
+     * @param overlay should include overlay health and count
+     * @param scale scale of item
+     * @param rotation rotation of item
+     * @return added item
      */
     Item addItem(int x, int y, ItemStackHelper item, boolean overlay, double scale, float rotation);
     
     /**
      * @since 1.2.7
      * @param i
-     * @return
+     * @return self for chaining
      */
      @Deprecated
     T removeItem(Item i);
@@ -296,14 +296,14 @@ public interface IDraw2D<T> {
     /**
      * @since 1.2.7
      * @param onInit calls your method as a {@link Consumer}&lt;{@link T}&gt;
-     * @return
+     * @return self for chaining
      */
     T setOnInit(MethodWrapper<T, Object, Object> onInit);
     
     /**
      * @since 1.2.7
      * @param catchInit calls your method as a {@link Consumer}&lt;{@link String}&gt;
-     * @return
+     * @return self for chaining
      */
     T setOnFailInit(MethodWrapper<String, Object, Object> catchInit);
     
