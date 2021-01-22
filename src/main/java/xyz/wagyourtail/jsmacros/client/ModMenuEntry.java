@@ -3,8 +3,7 @@ package xyz.wagyourtail.jsmacros.client;
 import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;
 import net.minecraft.client.gui.screen.Screen;
-import xyz.wagyourtail.jsmacros.client.gui.screens.KeyMacrosScreen;
-import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
+import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
 
 public class ModMenuEntry implements ModMenuApi {
     private final JsMacroScreen jsmacrosscreenfactory = new JsMacroScreen();
@@ -13,10 +12,10 @@ public class ModMenuEntry implements ModMenuApi {
         return jsmacrosscreenfactory;
     }
     
-    public static class JsMacroScreen implements ConfigScreenFactory<MacroScreen> {
+    public static class JsMacroScreen implements ConfigScreenFactory<BaseScreen> {
         @Override
-        public MacroScreen create(Screen parent) {
-            return new KeyMacrosScreen(parent);
+        public BaseScreen create(Screen parent) {
+            return JsMacros.prevScreen;
         }
     }
 }

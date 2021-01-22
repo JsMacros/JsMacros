@@ -17,7 +17,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class JavascriptLanguageDefinition extends BaseLanguage {
+    private static final Engine engine = Engine.create();
     private static final Builder build = Context.newBuilder("js")
+        .engine(engine)
         .allowHostAccess(HostAccess.ALL)
         .allowHostClassLookup(s -> true)
         .allowAllAccess(true)

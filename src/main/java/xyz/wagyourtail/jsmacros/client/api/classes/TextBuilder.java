@@ -66,7 +66,7 @@ public class TextBuilder {
     }
     
     /**
-     * Only available in {@code 1.16+}, add text with custom colors.
+     * Add text with custom colors.
      * @since 1.3.1
      * @param r red {@code 0-255}
      * @param g green {@code 0-255}
@@ -75,7 +75,7 @@ public class TextBuilder {
      * @return
      */
     public TextBuilder withColor(int r, int g, int b) {
-        self.styled(style -> style.withColor(TextColor.fromRgb(r<<16 + g<<8 + b)));
+        self.styled(style -> style.withColor(TextColor.fromRgb((r & 255) << 16 + (g & 255) << 8 + (b & 255))));
         return this;
     }
     
