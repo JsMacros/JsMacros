@@ -41,7 +41,12 @@ public abstract class OverlayContainer extends MultiElementContainer<IOverlayPar
     
     public void closeOverlay(OverlayContainer overlay) {
         if (this.overlay != null && this.overlay == overlay) {
-            parent.closeOverlay(overlay);
+            for (AbstractButtonWidget b : overlay.getButtons()) {
+                removeButton(b);
+            }
+            for (AbstractButtonWidget b : overlay.savedBtnStates.keySet()) {
+                b.active = overlay.savedBtnStates.get(b);
+            }
             this.overlay = null;
         }
         else parent.closeOverlay(overlay);

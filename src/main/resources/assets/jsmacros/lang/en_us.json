@@ -16,6 +16,7 @@
 	"jsmacros.confirm": "Confirm",
 	"jsmacros.select": "Select",
 	"jsmacros.rename": "Rename",
+	"jsmacros.remove": "Remove",
 	"jsmacros.filename": "File Name, Including Extension.",
 	"jsmacros.file": "File",
 	"jsmacros.new": "New",
@@ -36,5 +37,6 @@
 	"jsmacros.nosave": "Are you sure you'd like to exit without saving?",
 	"jsmacros.clicktoview": "Click to view in editor.",
 	"jsmacros.errorerror": "AN ERROR WITH ERROR MESSAGE PARSING HAS OCCURRED",
-	"jsmacros.close": "Close"
+	"jsmacros.close": "Close",
+	"jsmacros.add": "Add"
 }
