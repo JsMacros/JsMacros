@@ -161,7 +161,11 @@ public class ProfileScreen extends BaseScreen {
         // plist topbar
         int w = this.width / 2 - 40;
         drawCenteredText(matrices, textRenderer, profText, w * 3 / 8 + 20, 24, 0xFFFFFF);
-        drawCenteredText(matrices, this.textRenderer, (Text) textRenderer.trimToWidth(defText, w / 4), w * 7 / 8 + 20, 24, 0xFFFFFF);
+        if (textRenderer.getWidth(defText) > w / 4) {
+            textRenderer.drawTrimmed(defText, w * 3 / 4 + 10, 24, w / 4, 0xFFFFFF);
+        } else {
+            drawCenteredText(matrices, this.textRenderer, defText, w * 7 / 8 + 20, 24, 0xFFFFFF);
+        }
         fill(matrices, 20, 33, this.width / 2 - 20, 34, 0xFFFFFFFF);
 
         // pname

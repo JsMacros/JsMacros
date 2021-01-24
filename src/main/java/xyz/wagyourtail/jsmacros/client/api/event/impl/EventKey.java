@@ -2,6 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
@@ -55,7 +57,8 @@ public class EventKey implements BaseEvent {
         if (mc.currentScreen != null) {
             if (JsMacros.core.config.options.disableKeyWhenScreenOpen) return;
             if (mc.currentScreen instanceof BaseScreen) return;
-            if (mc.currentScreen.getFocused() instanceof TextFieldWidget) return;
+            Element focused = mc.currentScreen.getFocused();
+            if (focused instanceof TextFieldWidget || focused instanceof RecipeBookWidget) return;
         }
         
         if (action == 1) {
