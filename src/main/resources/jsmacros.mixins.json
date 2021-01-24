@@ -12,6 +12,7 @@
         "access.MixinHorseScreen",
         "access.MixinInGameHud",
         "access.MixinMinecraftClient",
+        "access.MixinPlayerListHud",
         "access.MixinRecipeBookResults",
         "access.MixinRecipeBookWidget",
         "access.MixinScreen",

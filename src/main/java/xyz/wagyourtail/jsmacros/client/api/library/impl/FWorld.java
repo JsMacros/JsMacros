@@ -17,11 +17,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
+import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
@@ -359,6 +361,26 @@ public class FWorld extends BaseLibrary {
      */
     public String getServerTPS() {
         return String.format("%.2f, 1M: %.1f, 5M: %.1f, 15M: %.1f", serverInstantTPS, server1MAverageTPS, server5MAverageTPS, server15MAverageTPS);
+    }
+    
+    /**
+     * @since 1.3.1
+     * @return text helper for the top part of the tab list (above the players)
+     */
+    public TextHelper getTabListHeader() {
+        Text header = ((IPlayerListHud)mc.inGameHud.getPlayerListWidget()).getHeader();
+        if (header != null) return new TextHelper(header);
+        return null;
+    }
+    
+    /**
+     * @since 1.3.1
+     * @return  text helper for the bottom part of the tab list (below the players)
+     */
+    public TextHelper getTabListFooter() {
+        Text footer = ((IPlayerListHud)mc.inGameHud.getPlayerListWidget()).getFooter();
+        if (footer != null) return new TextHelper(footer);
+        return null;
     }
     
     /**
