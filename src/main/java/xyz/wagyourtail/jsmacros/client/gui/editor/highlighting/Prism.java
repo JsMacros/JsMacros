@@ -38,6 +38,8 @@ public class Prism implements GrammarLocator {
                 return Prism_json.create(prism4j);
             case "ruby":
                 return Prism_ruby.create(prism4j);
+            case "typescript":
+                return Prism_typescript.create(prism4j);
             default:
                 return null;
         }

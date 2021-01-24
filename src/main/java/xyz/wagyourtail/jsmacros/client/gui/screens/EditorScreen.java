@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
@@ -206,30 +207,14 @@ public class EditorScreen extends BaseScreen {
             }
         };
         
+        final List<String> langs = Lists.newArrayList("javascript", "json", "lua", "python", "ruby", "typescript");
         
         addButton(new Button(this.width - width / 8, height - 12, width / 8, 12, textRenderer,0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(language), (btn) -> {
-            switch (language) {
-                case "python":
-                    setLanguage("lua");
-                    btn.setMessage(new LiteralText("lua"));
-                    break;
-                case "lua":
-                    setLanguage("json");
-                    btn.setMessage(new LiteralText("json"));
-                    break;
-                case "json":
-                    setLanguage("ruby");
-                    btn.setMessage(new LiteralText("ruby"));
-                    break;
-                case "ruby":
-                    setLanguage("javascript");
-                    btn.setMessage(new LiteralText("javascript"));
-                    break;
-                default:
-                    setLanguage("python");
-                    btn.setMessage(new LiteralText("python"));
-                    break;
-            }
+            int height = langs.size() * (textRenderer.fontHeight + 1) + 4;
+            openOverlay(new SelectorDropdownOverlay(btn.x, btn.y - height, btn.getWidth(), height, langs.stream().map(LiteralText::new).collect(Collectors.toList()), textRenderer, this, (i) -> {
+                setLanguage(langs.get(i));
+                btn.setMessage(new LiteralText(langs.get(i)));
+            }));
         }));
         
         this.fileName = new LiteralText(textRenderer.trimToWidth(file.getName(), (width - 10) / 2));

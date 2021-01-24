@@ -67,9 +67,7 @@ public class StringListOverlay extends OverlayContainer {
     
     public void addItem(String name) {
         int index = listItems.size();
-        listItems.add(new Button(x+3+(list.size() % 5 * (width - 12) / 5), topScroll + (list.size() / 5 * 12), (width - 12) / 5, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(name), (btn) -> {
-            setSelected(index);
-        }));
+        listItems.add(new Button(x+3+(list.size() % 5 * (width - 12) / 5), topScroll + (list.size() / 5 * 12), (width - 12) / 5, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(name), (btn) -> setSelected(index)));
     }
     
     public void setSelected(int index) {
@@ -100,13 +98,13 @@ public class StringListOverlay extends OverlayContainer {
             if (b instanceof Button && ((Button) b).hovering && ((Button) b).cantRenderAllText()) {
                 // border
                 int width = textRenderer.getWidth(b.getMessage());
-                fill(matrices, mouseX-3, mouseY, mouseX+width+3, mouseY+1, 0x7F7F7F7F);
-                fill(matrices, mouseX+width+2, mouseY-textRenderer.fontHeight - 3, mouseX+width+3, mouseY, 0x7F7F7F7F);
+                fill(matrices, mouseX - 3, mouseY, mouseX + width + 3, mouseY + 1, 0x7F7F7F7F);
+                fill(matrices, mouseX+width+2, mouseY-textRenderer.fontHeight - 3, mouseX + width + 3, mouseY, 0x7F7F7F7F);
                 fill(matrices, mouseX-3, mouseY-textRenderer.fontHeight - 3, mouseX-2, mouseY, 0x7F7F7F7F);
-                fill(matrices, mouseX-3, mouseY-textRenderer.fontHeight - 4, mouseX+width+3, mouseY-textRenderer.fontHeight - 3, 0x7F7F7F7F);
+                fill(matrices, mouseX-3, mouseY-textRenderer.fontHeight - 4, mouseX+width+3, mouseY - textRenderer.fontHeight - 3, 0x7F7F7F7F);
                 
                 // fill
-                fill(matrices, mouseX-2, mouseY-textRenderer.fontHeight - 3, mouseX+width+2, mouseY, 0xFF000000);
+                fill(matrices, mouseX-2, mouseY - textRenderer.fontHeight - 3, mouseX+width+2, mouseY, 0xFF000000);
                 drawTextWithShadow(matrices, textRenderer, b.getMessage(), mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
             }
         }
