@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.network.PlayerListEntry;
+import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
  * @author Wagyourtail

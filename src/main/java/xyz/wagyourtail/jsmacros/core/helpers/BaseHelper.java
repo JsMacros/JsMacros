@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.api.helpers;
+package xyz.wagyourtail.jsmacros.core.helpers;
 
 public abstract class BaseHelper<T> {
     protected T base;

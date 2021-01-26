@@ -5,6 +5,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.Team;
+import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;
 import java.util.stream.Collectors;

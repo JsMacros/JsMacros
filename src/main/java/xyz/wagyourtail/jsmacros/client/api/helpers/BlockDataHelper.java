@@ -8,6 +8,7 @@ import net.minecraft.state.property.Property;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
+import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.HashMap;
 import java.util.Map;

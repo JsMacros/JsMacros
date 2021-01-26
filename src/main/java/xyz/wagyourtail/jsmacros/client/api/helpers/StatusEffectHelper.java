@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.util.registry.Registry;
+import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
  * @author Wagyourtail

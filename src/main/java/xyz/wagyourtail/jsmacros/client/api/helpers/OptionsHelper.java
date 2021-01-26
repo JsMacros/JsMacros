@@ -11,6 +11,7 @@ import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Arm;
 import org.lwjgl.glfw.GLFW;
+import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.*;
 import java.util.function.Function;

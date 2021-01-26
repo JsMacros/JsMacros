@@ -3,11 +3,9 @@ package xyz.wagyourtail.jsmacros.core.library.impl;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.core.classes.Mappings;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -29,6 +27,7 @@ import java.util.*;
  @SuppressWarnings("unused")
 public class FReflection extends BaseLibrary {
     private static final CombinedVariableClassLoader classLoader = new CombinedVariableClassLoader(FReflection.class.getClassLoader());
+    private static Mappings remapper = null;
     
     /**
      * @param name name of class like {@code path.to.class}
@@ -254,6 +253,26 @@ public class FReflection extends BaseLibrary {
     }
     
     /**
+     * @since 1.3.1
+     * @return the previous mapping helper generated with {@link #loadMappingHelper(String)}
+     */
+    public Mappings loadCurrentMappingHelper() {
+        return remapper;
+    }
+    
+    /**
+     * @param urlorfile a url or file path the the yarn mappings {@code -v2.jar} file, or {@code .tiny} file. for example {@code https://maven.fabricmc.net/net/fabricmc/yarn/1.16.5%2Bbuild.3/yarn-1.16.5%2Bbuild.3-v2.jar}, if same url/path as previous this will load from cache.
+     * @since 1.3.1
+     * @return the associated mapping helper.
+     */
+    public Mappings loadMappingHelper(String urlorfile) {
+        if (remapper != null && remapper.mappingsource.equals(urlorfile)) {
+            return remapper;
+        }
+        return remapper = new Mappings(urlorfile);
+    }
+    
+    /**
      * I know this is probably bad practice, but lets be real, this whole library is bad practice, So I can make it
      * worse, right? at least this should work better than {@code try/catch}'ing using
      * {@link ClassLoader#loadClass(String)} to search through every {@link URLClassLoader} that
@@ -344,7 +363,6 @@ public class FReflection extends BaseLibrary {
             }
             return vector.elements();
         }
-        
     }
     
 }

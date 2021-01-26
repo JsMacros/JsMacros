@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.ScoreboardPlayerScore;
+import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

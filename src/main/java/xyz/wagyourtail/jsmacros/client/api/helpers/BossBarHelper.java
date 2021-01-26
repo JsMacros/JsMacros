@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.entity.boss.BossBar;
+import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
  * @author Wagyourtail

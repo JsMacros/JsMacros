@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.recipe.Recipe;
+import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
  * @author Wagyourtail
