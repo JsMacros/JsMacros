@@ -260,6 +260,17 @@ public class FReflection extends BaseLibrary {
         return remapper;
     }
     
+    
+    /**
+     * @param o class you want the name of
+     * @since 1.3.1
+     * @return the fully qualified class name (with "."'s not "/"'s)
+     */
+    public String getClassName(Object o) {
+        if (o instanceof Class) return ((Class<?>) o).getCanonicalName();
+        else return o.getClass().getCanonicalName();
+    }
+    
     /**
      * @param urlorfile a url or file path the the yarn mappings {@code -v2.jar} file, or {@code .tiny} file. for example {@code https://maven.fabricmc.net/net/fabricmc/yarn/1.16.5%2Bbuild.3/yarn-1.16.5%2Bbuild.3-v2.jar}, if same url/path as previous this will load from cache.
      * @since 1.3.1

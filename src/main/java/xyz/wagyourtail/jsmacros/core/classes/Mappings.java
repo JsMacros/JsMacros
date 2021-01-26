@@ -19,6 +19,7 @@ import java.util.zip.ZipInputStream;
  * @author Wagyourtail
  * @since 1.3.1
  */
+ @SuppressWarnings("unused")
 public class Mappings {
     public final String mappingsource;
     public final Map<String, ClassData> intMappings = new LinkedHashMap<>();
@@ -58,20 +59,21 @@ public class Mappings {
         ClassData currentClass = null;
         for (String line : rawmappings.split("\n")) {
             try {
-                String[] parts = line.trim().split("\\s+");
-                switch (parts[0]) {
-                    case "c":
-                        intMappings.put(parts[1], currentClass = new ClassData(parts[2]));
-                        break;
-                    case "m":
-                        assert currentClass != null;
-                        currentClass.methods.computeIfAbsent(parts[1], (e) -> new LinkedList<>()).add(new MethodData(parts[3], parts[2]));
-                        break;
-                    case "f":
-                        assert currentClass != null;
-                        currentClass.fields.put(parts[1], parts[3]);
-                        break;
-                    default:
+                String[] parts = line.split("\\s+", -1);
+                if (parts[0].equals("c")) {
+                    intMappings.put(parts[1], currentClass = new ClassData(parts[2]));
+                } else {
+                    switch (parts[1]) {
+                        case "m":
+                            assert currentClass != null;
+                            currentClass.methods.computeIfAbsent(parts[3], (e) -> new LinkedList<>()).add(new MethodData(parts[4], parts[2]));
+                            break;
+                        case "f":
+                            assert currentClass != null;
+                            currentClass.fields.put(parts[3], parts[4]);
+                            break;
+                        default:
+                    }
                 }
             } catch (IndexOutOfBoundsException ignored) {}
         }
@@ -88,7 +90,7 @@ public class Mappings {
             for (Map.Entry<String, List<MethodData>> method : clazz.getValue().methods.entrySet()) {
                 for (MethodData md : method.getValue()) {
                     Matcher m = methodParts.matcher(md.sig);
-                    if (!m.find()) throw new RuntimeException("failed to reverse mappings, method signature invalid");
+                    if (!m.find()) throw new RuntimeException(String.format("failed to reverse mappings, method signature \"%s\" invalid", md.sig));
                     String params = m.group(1);
                     String ret = m.group(2);
                     String namedname = md.name;
@@ -122,7 +124,7 @@ public class Mappings {
     /**
      * @return mappings from Intermediary to Named
      * @since 1.3.1
-     * @throws IOException
+     * @throws IOException will throw if malformed url/path
      */
     public Map<String, ClassData> getMappings() throws IOException {
         if (intMappings.isEmpty()) loadMappings();
@@ -132,7 +134,7 @@ public class Mappings {
     /**
      * @return mappings from Named to Intermediary
      * @since 1.3.1
-     * @throws IOException
+     * @throws IOException will throw if malformed url/path
      */
     public Map<String, ClassData> getReversedMappings() throws IOException {
         if (namedMappings.isEmpty()) reverseMappings();
