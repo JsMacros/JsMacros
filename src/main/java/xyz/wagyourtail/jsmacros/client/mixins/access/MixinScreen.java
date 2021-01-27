@@ -228,7 +228,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public RenderCommon.Rect addRect(int x1, int y1, int x2, int y2, int color) {
         RenderCommon.Rect r = new RenderCommon.Rect(x1, y1, x2, y2, color, 0F);
         synchronized (elements) {
-            elements.remove(r);
+            elements.add(r);
         }
         return r;
     }
@@ -242,7 +242,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public RenderCommon.Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation) {
         RenderCommon.Rect r = new RenderCommon.Rect(x1, y1, x2, y2, color, alpha, rotation);
         synchronized (elements) {
-            elements.remove(r);
+            elements.add(r);
         }
         return r;
     }
@@ -264,7 +264,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public RenderCommon.Item addItem(int x, int y, String id, boolean overlay, double scale, float rotation) {
         RenderCommon.Item i = new RenderCommon.Item(x, y, id, overlay, scale, rotation);
         synchronized (elements) {
-            elements.remove(i);
+            elements.add(i);
         }
         return i;
     }
@@ -278,7 +278,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public RenderCommon.Item addItem(int x, int y, ItemStackHelper item, boolean overlay, double scale, float rotation) {
         RenderCommon.Item i = new RenderCommon.Item(x, y, item, overlay, scale, rotation);
         synchronized (elements) {
-            elements.remove(i);
+            elements.add(i);
         }
         return i;
     }
