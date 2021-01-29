@@ -4,6 +4,8 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import xyz.wagyourtail.jsmacros.client.gui.overlays.IOverlayParent;
+import xyz.wagyourtail.jsmacros.client.gui.overlays.OverlayContainer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +61,27 @@ public abstract class MultiElementContainer<T extends IContainerParent> extends 
         this.y = y;
         this.width = width;
         this.height = height;
+    }
+    
+    @Override
+    public void openOverlay(OverlayContainer overlay) {
+        parent.openOverlay(overlay);
+    }
+    
+    @Override
+    public void openOverlay(OverlayContainer overlay, boolean disableButtons) {
+        parent.openOverlay(overlay, disableButtons);
+    }
+    
+    @Override
+    public void removeButton(AbstractButtonWidget button) {
+        this.buttons.remove(button);
+        parent.removeButton(button);
+    }
+    
+    @Override
+    public IOverlayParent getFirstOverlayParent() {
+        return parent.getFirstOverlayParent();
     }
     
     public abstract void render(MatrixStack matrices, int mouseX, int mouseY, float delta);

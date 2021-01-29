@@ -20,20 +20,35 @@ public abstract class OverlayContainer extends MultiElementContainer<IOverlayPar
         super(x, y, width, height, textRenderer, parent);
     }
     
+    @Override
     public void removeButton(AbstractButtonWidget btn) {
         this.buttons.remove(btn);
         parent.removeButton(btn);
     }
     
+    @Override
     public void openOverlay(OverlayContainer overlay) {
-        for (AbstractButtonWidget b : buttons) {
-            overlay.savedBtnStates.put(b, b.active);
-            b.active = false;
+        openOverlay(overlay, true);
+    }
+    
+    @Override
+    public IOverlayParent getFirstOverlayParent() {
+        return this;
+    }
+    
+    @Override
+    public void openOverlay(OverlayContainer overlay, boolean disableButtons) {
+        if (disableButtons) {
+            for (AbstractButtonWidget b : buttons) {
+                overlay.savedBtnStates.put(b, b.active);
+                b.active = false;
+            }
         }
         this.overlay = overlay;
         overlay.init();
     }
     
+    @Override
     public OverlayContainer getChildOverlay() {
         if (overlay != null) return overlay.getChildOverlay();
         else return this;

@@ -78,7 +78,7 @@ public class ProfileScreen extends BaseScreen {
         }));
 
         profileScroll = this.addButton(new Scrollbar(this.width / 2 - 8, 33, 8, this.height - 53, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
-        disableInGui = new CheckBoxContainer(this.width / 2 + 10, 50, this.width / 2 - 20, 12, this.textRenderer, JsMacros.core.config.options.disableKeyWhenScreenOpen, new TranslatableText("jsmacros.disablewithscreen"), this::addButton, (state) -> JsMacros.core.config.options.disableKeyWhenScreenOpen = state);
+        disableInGui = new CheckBoxContainer(this.width / 2 + 10, 50, this.width / 2 - 20, 12, this.textRenderer, JsMacros.core.config.options.disableKeyWhenScreenOpen, new TranslatableText("jsmacros.disablewithscreen"), this, (state) -> JsMacros.core.config.options.disableKeyWhenScreenOpen = state);
         
         for (String k : Core.instance.config.options.profiles.keySet()) {
             addProfile(k);
@@ -140,7 +140,7 @@ public class ProfileScreen extends BaseScreen {
         topScroll = 35 - (int) (page * (height - 60));
         updateBtnPos();
     }
-
+    
     public void removeButton(AbstractButtonWidget btn) {
         buttons.remove(btn);
         children.remove(btn);
