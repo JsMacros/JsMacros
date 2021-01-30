@@ -24,14 +24,29 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     }
     
     /**
-     * set the currently entered {@link java.lang.String String}.
      *
      * @since 1.0.5
      * @param text
      * @return
      */
     public TextFieldWidgetHelper setText(String text) throws InterruptedException {
-        final Semaphore waiter = new Semaphore(0);
+        setText(text, true);
+        return this;
+    }
+    
+    /**
+     * set the currently entered {@link java.lang.String String}.
+     *
+     * @param text
+     * @param await
+     *
+     * @return
+     * @since 1.3.1
+     *
+     * @throws InterruptedException
+     */
+    public TextFieldWidgetHelper setText(String text, boolean await) throws InterruptedException {
+        final Semaphore waiter = new Semaphore(await ? 0 : 1);
         MinecraftClient.getInstance().execute(() -> {
             base.setText(text);
             waiter.release();

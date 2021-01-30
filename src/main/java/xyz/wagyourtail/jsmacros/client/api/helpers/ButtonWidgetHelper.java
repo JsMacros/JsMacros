@@ -137,14 +137,26 @@ public class ButtonWidgetHelper<T extends AbstractButtonWidget> extends BaseHelp
      * clicks button
      * @since 1.3.1
      */
-    public void click() throws InterruptedException {
-        final Semaphore waiter = new Semaphore(0);
+    public ButtonWidgetHelper<T> click() throws InterruptedException {
+        click(true);
+        return this;
+    }
+    
+    /**
+     * clicks button
+     *
+     * @param await should wait for button to finish clicking.
+     * @since 1.3.1
+     */
+    public ButtonWidgetHelper<T> click(boolean await) throws InterruptedException {
+        final Semaphore waiter = new Semaphore(await ? 0 : 1);
         MinecraftClient.getInstance().execute(() -> {
             base.mouseClicked(base.x, base.y, 0);
             base.mouseReleased(base.x, base.y, 0);
             waiter.release();
         });
         waiter.acquire();
+        return this;
     }
     
     @Override
