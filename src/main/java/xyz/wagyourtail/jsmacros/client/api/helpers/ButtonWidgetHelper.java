@@ -138,8 +138,7 @@ public class ButtonWidgetHelper<T extends AbstractButtonWidget> extends BaseHelp
      * @since 1.3.1
      */
     public void click() throws InterruptedException {
-        final Semaphore waiter = new Semaphore(1);
-        waiter.acquire();
+        final Semaphore waiter = new Semaphore(0);
         MinecraftClient.getInstance().execute(() -> {
             base.mouseClicked(base.x, base.y, 0);
             base.mouseReleased(base.x, base.y, 0);

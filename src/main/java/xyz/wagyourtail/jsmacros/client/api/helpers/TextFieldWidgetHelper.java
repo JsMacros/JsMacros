@@ -25,14 +25,13 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     
     /**
      * set the currently entered {@link java.lang.String String}.
-     * 
+     *
      * @since 1.0.5
      * @param text
      * @return
      */
     public TextFieldWidgetHelper setText(String text) throws InterruptedException {
-        final Semaphore waiter = new Semaphore(1);
-        waiter.acquire();
+        final Semaphore waiter = new Semaphore(0);
         MinecraftClient.getInstance().execute(() -> {
             base.setText(text);
             waiter.release();
