@@ -56,7 +56,27 @@ public class Draw3D {
      * @return The {@link Box} you added.
      */
     public Box addBox(double x1, double y1, double z1, double x2, double y2, double z2, int color, int fillColor, boolean fill) {
-        Box b = new Box(x1, y1, z1, x2, y2, z2, color, fillColor, fill);
+        return addBox(x1, y1, z1, x2, y2, z2, color, fillColor, fill, false);
+    }
+    
+    /**
+    * @since 1.3.1
+    *
+     * @param x1
+     * @param y1
+     * @param z1
+     * @param x2
+     * @param y2
+     * @param z2
+     * @param color
+     * @param fillColor
+     * @param fill
+     * @param cull
+     *
+     * @return
+     */
+    public Box addBox(double x1, double y1, double z1, double x2, double y2, double z2, int color, int fillColor, boolean fill, boolean cull) {
+        Box b = new Box(x1, y1, z1, x2, y2, z2, color, fillColor, fill, cull);
         synchronized (boxes) {
             boxes.add(b);
         }
@@ -80,7 +100,12 @@ public class Draw3D {
      * @return the {@link Box} you added.
      */
     public Box addBox(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, int fillColor, int fillAlpha, boolean fill) {
-        Box b = new Box(x1, y1, z1, x2, y2, z2, color, alpha, fillColor, fillAlpha, fill);
+        return addBox(x1, y1, z1, x2, y2, z2, color, alpha, fillColor, fillAlpha, fill, false);
+    }
+    
+    
+    public Box addBox(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, int fillColor, int fillAlpha, boolean fill, boolean cull) {
+        Box b = new Box(x1, y1, z1, x2, y2, z2, color, alpha, fillColor, fillAlpha, fill, cull);
         synchronized (boxes) {
             boxes.add(b);
         }
@@ -114,7 +139,27 @@ public class Draw3D {
      * @return the {@link Line} you added.
      */
     public Line addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color) {
-        Line l = new Line(x1, y1, z1, x2, y2, z2, color);
+        return addLine(x1, y1, z1, x2, y2, z2, color, false);
+    }
+    
+    
+    /**
+    *
+    * @since 1.3.1
+    *
+     * @param x1
+     * @param y1
+     * @param z1
+     * @param x2
+     * @param y2
+     * @param z2
+     * @param color
+     * @param cull
+     *
+     * @return
+     */
+    public Line addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color, boolean cull) {
+        Line l = new Line(x1, y1, z1, x2, y2, z2, color, cull);
         synchronized (lines) {
             lines.add(l);
         }
@@ -134,8 +179,29 @@ public class Draw3D {
      * @param alpha
      * @return the {@link Line} you added.
      */
+
     public Line addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha) {
-        Line l = new Line(x1, y1, z1, x2, y2, z2, color, alpha);
+        return addLine(x1, y1, z1, x2, y2, z2, color, alpha, false);
+    }
+    
+    /**
+    *
+    * @since 1.3.1
+    *
+     * @param x1
+     * @param y1
+     * @param z1
+     * @param x2
+     * @param y2
+     * @param z2
+     * @param color
+     * @param alpha
+     * @param cull
+     *
+     * @return
+     */
+    public Line addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, boolean cull) {
+        Line l = new Line(x1, y1, z1, x2, y2, z2, color, alpha, cull);
         synchronized (lines) {
             lines.add(l);
         }
@@ -164,7 +230,6 @@ public class Draw3D {
         RenderSystem.defaultBlendFunc();
         RenderSystem.lineWidth(2.5F);
         RenderSystem.disableTexture();
-        RenderSystem.disableDepthTest();
         RenderSystem.matrixMode(5889);
         
         RenderSystem.pushMatrix();
@@ -193,7 +258,6 @@ public class Draw3D {
         
         //reset
         RenderSystem.matrixMode(5888);
-        RenderSystem.enableDepthTest();
         RenderSystem.enableTexture();
         RenderSystem.disableBlend();
     }
@@ -203,19 +267,22 @@ public class Draw3D {
         public int color;
         public int fillColor;
         public boolean fill;
+        public boolean cull;
         
-        public Box(double x1, double y1, double z1, double x2, double y2, double z2, int color, int fillColor, boolean fill) {
+        public Box(double x1, double y1, double z1, double x2, double y2, double z2, int color, int fillColor, boolean fill, boolean cull) {
             setPos(x1, y1, z1, x2, y2, z2);
             setColor(color);
             setFillColor(fillColor);
             this.fill = fill;
+            this.cull = cull;
         }
         
-        public Box(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, int fillColor, int fillAlpha, boolean fill) {
+        public Box(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, int fillColor, int fillAlpha, boolean fill, boolean cull) {
             setPos(x1, y1, z1, x2, y2, z2);
             setColor(color, alpha);
             setFillColor(fillColor, fillAlpha);
             this.fill = fill;
+            this.cull = cull;
         }
         
         /**
@@ -301,10 +368,13 @@ public class Draw3D {
         }
         
         public void render() {
+            final boolean cull = !this.cull;
             int a = (color >> 24) & 0xFF;
             int r = (color >> 16) & 0xFF;
             int g = (color >> 8) & 0xFF;
             int b = color & 0xFF;
+            
+            if (cull) RenderSystem.disableDepthTest();
             
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
@@ -348,20 +418,25 @@ public class Draw3D {
             buf.vertex(pos.x2, pos.y2, pos.z1).color(r, g, b, a).next();
             
             tess.draw();
+            
+            if (cull) RenderSystem.enableDepthTest();
         }
     }
     
     public static class Line {
         public PositionCommon.Vec3D pos;
         public int color;
-        public Line(double x1, double y1, double z1, double x2, double y2, double z2, int color) {
+        public boolean cull;
+        public Line(double x1, double y1, double z1, double x2, double y2, double z2, int color, boolean cull) {
             setPos(x1, y1, z1, x2, y2, z2);
             setColor(color);
+            this.cull = cull;
         }
         
-        public Line(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha) {
+        public Line(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, boolean cull) {
             setPos(x1, y1, z1, x2, y2, z2);
             setColor(color, alpha);
+            this.cull = cull;
         }
                 
         /**
@@ -408,6 +483,9 @@ public class Draw3D {
         }
         
         public void render() {
+            final boolean cull = !this.cull;
+            if (cull) RenderSystem.disableDepthTest();
+        
             int a = (color >> 24) & 0xFF;
             int r = (color >> 16) & 0xFF;
             int g = (color >> 8) & 0xFF;
@@ -419,6 +497,8 @@ public class Draw3D {
             buf.vertex(pos.x1, pos.y1, pos.z1).color(r, g, b, a).next();
             buf.vertex(pos.x2, pos.y2, pos.z2).color(r, g, b, a).next();
             tess.draw();
+            
+            if (cull) RenderSystem.enableDepthTest();
         }
     }
 }

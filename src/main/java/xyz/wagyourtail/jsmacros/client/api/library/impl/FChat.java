@@ -11,6 +11,8 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
+import java.util.concurrent.Semaphore;
+
 /**
  * Functions for interacting with chat.
  * 
@@ -29,14 +31,27 @@ public class FChat extends BaseLibrary {
      * 
      * @param message
      */
-    public void log(Object message) {
+    public void log(Object message) throws InterruptedException {
+        log(message, false);
+    }
+    
+    /**
+     * @param message
+     * @param await should wait for message to actually be sent to chat to continue.
+     *
+     * @throws InterruptedException
+     */
+    public void log(Object message, boolean await) throws InterruptedException {
+        final Semaphore semaphore = new Semaphore(0);
         mc.execute(() -> {
             if (message instanceof TextHelper) {
                 logInternal((TextHelper)message);
             } else if (message != null) {
                 logInternal(message.toString());
             }
+            semaphore.release();
         });
+        semaphore.acquire();
     }
     
     private static void logInternal(String message) {
