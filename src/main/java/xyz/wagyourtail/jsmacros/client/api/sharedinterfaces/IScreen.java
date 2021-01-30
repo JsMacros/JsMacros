@@ -34,17 +34,17 @@ public interface IScreen extends IDraw2D<IScreen> {
     String getTitleText();
     
     /**
+     * in {@code 1.3.1} updated to work with all button widgets not just ones added by scripts.
      * @since 1.0.5
      * @return
      */
-     @Deprecated
     List<ButtonWidgetHelper<?>> getButtonWidgets();
     
     /**
+     * in {@code 1.3.1} updated to work with all text fields not just ones added by scripts.
      * @since 1.0.5
      * @return
      */
-     @Deprecated
     List<TextFieldWidgetHelper> getTextFields();
     
     /**

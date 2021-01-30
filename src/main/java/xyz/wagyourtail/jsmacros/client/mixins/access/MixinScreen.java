@@ -64,6 +64,8 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Shadow public abstract void onClose();
     @Shadow protected abstract void init();
     
+    @Shadow @Final protected List<AbstractButtonWidget> buttons;
+    
     @Override
     public int getWidth() {
         return width;
@@ -121,9 +123,9 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Override
     public List<TextFieldWidgetHelper> getTextFields() {
         List<TextFieldWidgetHelper> list = new LinkedList<>();
-        synchronized (elements) {
-            for (Drawable e : elements) {
-                if (e instanceof TextFieldWidgetHelper) list.add((TextFieldWidgetHelper) e);
+        synchronized (buttons) {
+            for (Drawable e : buttons) {
+                if (e instanceof TextFieldWidget) list.add(new TextFieldWidgetHelper((TextFieldWidget)e));
             }
         }
         return list;
@@ -132,9 +134,9 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Override
     public List<ButtonWidgetHelper<?>> getButtonWidgets() {
         List<ButtonWidgetHelper<?>> list = new LinkedList<>();
-        synchronized (elements) {
-            for (Drawable e : elements) {
-                if (e instanceof ButtonWidgetHelper) list.add((ButtonWidgetHelper<?>) e);
+        synchronized (buttons) {
+            for (Drawable e : buttons) {
+                if (e instanceof ButtonWidget) list.add(new ButtonWidgetHelper<>((ButtonWidget)e));
             }
         }
         return list;

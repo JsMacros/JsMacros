@@ -1,6 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+
+import java.util.concurrent.Semaphore;
 
 /**F
  * @author Wagyourtail
@@ -27,8 +30,14 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
      * @param text
      * @return
      */
-    public TextFieldWidgetHelper setText(String text) {
-        base.setText(text);
+    public TextFieldWidgetHelper setText(String text) throws InterruptedException {
+        final Semaphore waiter = new Semaphore(1);
+        waiter.acquire();
+        MinecraftClient.getInstance().execute(() -> {
+            base.setText(text);
+            waiter.release();
+        });
+        waiter.acquire();
         return this;
     }
     

@@ -1,10 +1,13 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+
+import java.util.concurrent.Semaphore;
 
 /**
  * @author Wagyourtail
@@ -57,26 +60,42 @@ public class ButtonWidgetHelper<T extends AbstractButtonWidget> extends BaseHelp
         return base.getWidth();
     }
     
+    
     /**
      * change the text.
-     * 
-     * @since 1.0.5
-     * 
-     * @param message
+     *
+     * @since 1.0.5, renamed from {@code setText} in 1.3.1
+     * @deprecated only deprecated in buttonWidgetHelper for confusing name.
+     *
+     * @param label
      * @return
      */
-    public ButtonWidgetHelper<T> setText(String message) {
-        base.setMessage(new LiteralText(message));
+    public ButtonWidgetHelper<T> setLabel(String label) {
+        base.setMessage(new LiteralText(label));
         return this;
     }
     
     /**
-     * @since 1.2.3
+     * change the text.
+     *
+     * @since 1.3.1
+     *
+     * @param helper
+     *
+     * @return
+     */
+    public ButtonWidgetHelper<T> setLabel(TextHelper helper) {
+        base.setMessage(helper.getRaw());
+        return this;
+    }
+    
+    /**
+     * @since 1.2.3, renamed fro {@code getText} in 1.3.1
      * 
      * @return current button text.
      */
-    public String getText() {
-        return base.getMessage().getString();
+    public TextHelper getLabel() {
+        return new TextHelper(base.getMessage());
     }
     
     /**
@@ -112,6 +131,21 @@ public class ButtonWidgetHelper<T extends AbstractButtonWidget> extends BaseHelp
     public ButtonWidgetHelper<T> setWidth(int width) {
         base.setWidth(width);
         return this;
+    }
+    
+    /**
+     * clicks button
+     * @since 1.3.1
+     */
+    public void click() throws InterruptedException {
+        final Semaphore waiter = new Semaphore(1);
+        waiter.acquire();
+        MinecraftClient.getInstance().execute(() -> {
+            base.mouseClicked(base.x, base.y, 0);
+            base.mouseReleased(base.x, base.y, 0);
+            waiter.release();
+        });
+        waiter.acquire();
     }
     
     @Override
