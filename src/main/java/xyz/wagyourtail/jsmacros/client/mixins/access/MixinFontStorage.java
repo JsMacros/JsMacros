@@ -8,9 +8,7 @@ import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
@@ -47,6 +45,7 @@ public abstract class MixinFontStorage {
     }
     
     // allow ttf space to be loaded
+    @Group(name = "getGlyphOF", min = 1, max = 1)
     @ModifyArg(method = "getGlyph", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;computeIfAbsent(ILjava/util/function/IntFunction;)Ljava/lang/Object;", remap = false))
     private IntFunction<Glyph> modifyLambda(IntFunction<Glyph> original) {
         return (ix) -> {
@@ -55,6 +54,15 @@ public abstract class MixinFontStorage {
             if (ix == 32 && g == null) return SPACE;
             return g;
         };
+    }
+    
+    @Group(name = "getGlyphOF", min = 1, max = 1)
+    @ModifyVariable(method = "getGlyph", at = @At(value = "STORE", ordinal = 1), ordinal = 0)
+    private Glyph redirectGlyphOF(Glyph space, int charIn) {
+        Glyph g = this.getRenderableGlyph(charIn);
+        // null check is for below inject which makes get return null if it hits non ttf font on space char
+        if (charIn == 32 && g == null) return SPACE;
+        return g;
     }
     
     // return null if space and not TTF, see above method

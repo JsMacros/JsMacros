@@ -42,7 +42,7 @@ public class FChat extends BaseLibrary {
      * @throws InterruptedException
      */
     public void log(Object message, boolean await) throws InterruptedException {
-        final Semaphore semaphore = new Semaphore(0);
+        final Semaphore semaphore = new Semaphore(await ? 0 : 1);
         mc.execute(() -> {
             if (message instanceof TextHelper) {
                 logInternal((TextHelper)message);

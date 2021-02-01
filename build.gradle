@@ -70,6 +70,7 @@ dependencies {
 	modImplementation("io.github.prospector:modmenu:${project.mod_menu_version}") {
         transitive = false
     }
+	//modImplementation('com.github.chocohead:optifabric:llama-SNAPSHOT')
 }
 
 processResources {
