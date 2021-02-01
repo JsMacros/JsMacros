@@ -5,6 +5,7 @@ import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.concurrent.Semaphore;
@@ -149,6 +150,10 @@ public class ButtonWidgetHelper<T extends AbstractButtonWidget> extends BaseHelp
      * @since 1.3.1
      */
     public ButtonWidgetHelper<T> click(boolean await) throws InterruptedException {
+        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || JsMacros.core.profile.joinedThreadStack.contains(Thread.currentThread());
+        if (joinedMain && await) {
+            throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined!");
+        }
         final Semaphore waiter = new Semaphore(await ? 0 : 1);
         MinecraftClient.getInstance().execute(() -> {
             base.mouseClicked(base.x, base.y, 0);
