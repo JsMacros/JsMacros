@@ -29,7 +29,7 @@ public class TextBuilder {
     
     /**
      * move on to next section and set it's text.
-     * @param text a {@Link String}, {@Link TextHelper} or {@Link TextBuilder}
+     * @param text a {@link String}, {@link TextHelper} or {@link TextBuilder}
      * @since 1.3.0
      * @return
      */
