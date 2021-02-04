@@ -381,6 +381,10 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     }
 
     /**
+     *
+     * init function, called when window is resized or screen/draw2d is registered.
+     * clears all previous elements when called.
+     *
      * @since 1.2.7
      * @see IDraw2D#setOnInit(MethodWrapper)
      * @param onInit calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link Draw2D}&gt;
@@ -393,6 +397,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
 
     
     /**
+     *
      * @since 1.2.7
      * @see IDraw2D#setOnFailInit(MethodWrapper)
      * @param catchInit calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link java.lang.String String}&gt;
