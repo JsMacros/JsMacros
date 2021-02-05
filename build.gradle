@@ -117,6 +117,7 @@ javadoc {
 	options.tags = [ "custom.replaceParams" ]
 	source = sourceSets.main.allJava
 	classpath = sourceSets.main.compileClasspath
+	destinationDir = new File(project.buildDir, "docs/docs")
 	options {
 		links 'https://docs.oracle.com/javase/8/docs/api/'
 	}

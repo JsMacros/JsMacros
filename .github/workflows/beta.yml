@@ -44,9 +44,9 @@ jobs:
         result-encoding: string
         script: |
           const fs = require("fs")
-          return fs.readdirSync("./build/libs/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0].replace(".jar", "");
+          return fs.readdirSync("./dist/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0].replace(".jar", "");
         
     - uses: actions/upload-artifact@v2
       with:
         name: ${{ steps.fname.outputs.result }}
-        path: ./build/libs/*
+        path: ./dist/**/*
