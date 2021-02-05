@@ -123,22 +123,23 @@ javadoc {
 	}
 }
 
-task copyTSEnv(type: Copy) {
-	from new File(project.rootDir, "graalts")
-	into new File(project.buildDir, "docs/typescript")
-}
-
-task generateTSDoc(type: Javadoc, dependsOn: copyTSEnv) {
+task generateTSDoc(type: Javadoc) {
 	source = sourceSets.main.allJava
 	classpath = sourceSets.main.compileClasspath
 	destinationDir = new File(project.buildDir, "docs/typescript/headers/")
 	options.doclet = "xyz.wagyourtail.tsdoclet.Main"
 	options.docletpath new File(project.rootDir, "buildSrc/build/libs/buildSrc.jar")
 }
+
+task copyTSEnv(type: Copy, dependsOn: generateTSDoc) {
+	from new File(project.rootDir, "graalts")
+	into new File(project.buildDir, "docs/typescript")
+}
+
 task createDist(type: Copy, dependsOn: javadoc) {
 	from(new File(project.buildDir, "docs"), new File(project.buildDir, "libs"))
 	into new File(project.rootDir, "dist")
 }
 
-javadoc.dependsOn(generateTSDoc)
+javadoc.dependsOn(copyTSEnv)
 build.finalizedBy(createDist)

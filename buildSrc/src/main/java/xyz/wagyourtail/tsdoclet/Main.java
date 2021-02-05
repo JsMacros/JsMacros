@@ -21,7 +21,6 @@ public class Main {
     public static RootDoc root;
 
     public static boolean start (RootDoc root) {
-        System.out.println("start");
         Main.root = root;
         outputTS = new FileHandler(new File(outDir, "JsMacros.d.ts"));
         
@@ -148,24 +147,6 @@ public class Main {
     
     public static void genEvent(ClassDoc event, String name, String oldName) {
         events.add(new EventParser(event, name, oldName));
-    }
-    
-    public static void deleteFolder(File folder) throws IOException {
-        if (!folder.exists()) return;
-        if (!folder.isDirectory()) if (!folder.delete()) throw new IOException("failed to delete " + folder.getAbsolutePath());
-        else {
-            File[] files = folder.listFiles();
-            if (files != null) { //some JVMs return null for empty dirs
-                for (File f : files) {
-                    if (f.isDirectory()) {
-                        deleteFolder(f);
-                    } else {
-                        if (!f.delete()) throw new IOException("failed to delete " + f.getAbsolutePath());
-                    }
-                }
-            }
-            if (!folder.delete()) throw new IOException("failed to delete " + folder.getAbsolutePath());
-        }
     }
     
     public static LanguageVersion languageVersion() {
