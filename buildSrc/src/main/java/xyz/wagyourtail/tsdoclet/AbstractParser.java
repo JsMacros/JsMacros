@@ -1,7 +1,6 @@
 package xyz.wagyourtail.tsdoclet;
 
 import com.sun.javadoc.*;
-import javafx.util.Pair;
 import xyz.wagyourtail.tsdoclet.parsers.ClassParser;
 
 import java.util.*;
