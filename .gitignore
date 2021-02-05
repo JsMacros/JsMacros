@@ -4,6 +4,7 @@
 build/
 out/
 build/classes/
+dist/
 
 # idea
 

@@ -9,7 +9,6 @@ buildscript {
 plugins {
 	id 'java'
 	id 'fabric-loom' version '0.5-SNAPSHOT'
-	id 'maven-publish'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -123,45 +122,22 @@ javadoc {
 	}
 }
 
-task generateTSDoc(type: Javadoc) {
-	source = sourceSets.main.allJava
-	classpath = sourceSets.main.compileClasspath
-	destinationDir = new File(project.buildDir, "docs")
-	options.doclet = "xyz.wagyourtail.tsdoclet.Main"
-	options.docletpath new File(project.rootDir, "buildSrc/build/libs/buildSrc.jar")
-}
-
-task copyTSEnv(type: Copy, dependsOn: generateTSDoc) {
+task copyTSEnv(type: Copy) {
 	from new File(project.rootDir, "graalts")
 	into new File(project.buildDir, "docs/typescript")
 }
 
-task moveTS(dependsOn: copyTSEnv) {
-	def dest = new File(project.buildDir, "docs/typescript/headers/JsMacros.d.ts")
-	if (dest.exists() && !dest.delete()) throw new RuntimeException("Failed to delete old ts")
-	new File(project.buildDir, "docs/JsMacros.d.ts")
-	.renameTo(dest)
+task generateTSDoc(type: Javadoc, dependsOn: copyTSEnv) {
+	source = sourceSets.main.allJava
+	classpath = sourceSets.main.compileClasspath
+	destinationDir = new File(project.buildDir, "docs/typescript/headers/")
+	options.doclet = "xyz.wagyourtail.tsdoclet.Main"
+	options.docletpath new File(project.rootDir, "buildSrc/build/libs/buildSrc.jar")
+}
+task createDist(type: Copy, dependsOn: javadoc) {
+	from(new File(project.buildDir, "docs"), new File(project.buildDir, "libs"))
+	into new File(project.rootDir, "dist")
 }
 
-javadoc.dependsOn(moveTS)
-
-// configure the maven publication
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			// add all the jars that should be included when publishing to maven
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
-		}
-	}
-
-	// select the repositories you want to publish to
-	repositories {
-		// uncomment to publish to the local maven
-		// mavenLocal()
-	}
-}
+javadoc.dependsOn(generateTSDoc)
+build.finalizedBy(createDist)

@@ -24,15 +24,14 @@ public class Main {
         System.out.println("start");
         Main.root = root;
         outputTS = new FileHandler(new File(outDir, "JsMacros.d.ts"));
-        //clear version folder
-        try {
-            deleteFolder(outDir);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+        
         if (!outDir.exists() && !outDir.mkdirs()) {
             System.err.println("Failed to create version dir");
+            return false;
+        }
+    
+        if (outputTS.getFile().exists() && !outputTS.getFile().delete()) {
+            System.err.println("Failed to remove old ts output");
             return false;
         }
     
