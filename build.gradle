@@ -1,3 +1,11 @@
+import org.gradle.internal.jvm.Jvm
+
+buildscript {
+	dependencies {
+		classpath files(Jvm.current().toolsJar)
+	}
+}
+
 plugins {
 	id 'java'
 	id 'fabric-loom' version '0.5-SNAPSHOT'
@@ -106,14 +114,20 @@ jar {
 	from "LICENSE"
 }
 
-task generateTSDoc(type: Javadoc) {
+javadoc {
+	options.tags = [ "custom.replaceParams" ]
 	source = sourceSets.main.allJava
-	destinationDir = new File(project.buildDir, "docs2")
 	classpath = sourceSets.main.compileClasspath
 	options {
 		links 'https://docs.oracle.com/javase/8/docs/api/'
 	}
-	//options.docletpath = File(project.rootDir, "buildSrc/build/libs/buildSrc.jar")
+}
+
+task generateTSDoc(type: Javadoc) {
+	source = sourceSets.main.allJava
+	destinationDir = new File(project.buildDir, "tsdocs")
+	options.doclet = "xyz.wagyourtail.tsdoclet.Main"
+	options.docletpath new File(project.rootDir, "buildSrc/build/libs/buildSrc.jar")
 }
 
 // configure the maven publication

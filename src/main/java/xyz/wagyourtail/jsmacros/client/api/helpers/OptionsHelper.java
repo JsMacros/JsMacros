@@ -273,7 +273,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     }
     
     /**
-     * @Since 1.3.1
+     * @since 1.3.1
      * @return
      */
     public Map<String, Float> getVolumes() {

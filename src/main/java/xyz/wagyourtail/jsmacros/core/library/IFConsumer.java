@@ -36,7 +36,7 @@ public interface IFConsumer<T, U, V> {
      * @since 1.2.5
      * @deprecated
      * @param c
-     * @custom.replaceParams c: (arg0?: A, arg1?: B) => R
+     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return
      */
     @Deprecated
@@ -48,7 +48,7 @@ public interface IFConsumer<T, U, V> {
      * @since 1.2.5
      * @deprecated
      * @param c
-     * @custom.replaceParams c: (arg0?: A, arg1?: B) => R
+     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return
      */
     @Deprecated
@@ -60,7 +60,7 @@ public interface IFConsumer<T, U, V> {
      * @since 1.2.5
      * @deprecated
      * @param c
-     * @custom.replaceParams c: (arg0?: A, arg1?: B) => R
+     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return
      */
     @Deprecated
@@ -72,7 +72,7 @@ public interface IFConsumer<T, U, V> {
      * @since 1.2.5
      * @deprecated
      * @param c
-     * @custom.replaceParams c: (arg0?: A, arg1?: B) => R
+     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return
      */
     @Deprecated
@@ -81,7 +81,7 @@ public interface IFConsumer<T, U, V> {
     /**
      * @since 1.2.7
      * @param c
-     * @custom.replaceParams c: (arg0?: A, arg1?: B) => R
+     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return a new {@link MethodWrapper MethodWrapper}
      */
     public <A, B, R> MethodWrapper<A, B, R> autoWrap(V c);
@@ -89,7 +89,7 @@ public interface IFConsumer<T, U, V> {
     /**
      * @since 1.2.7
      * @param c
-     * @custom.replaceParams c: (arg0?: A, arg1?: B) => R
+     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return a new {@link MethodWrapper MethodWrapper}
      */
     public <A, B, R> MethodWrapper<A, B, R> autoWrapAsync(V c);
