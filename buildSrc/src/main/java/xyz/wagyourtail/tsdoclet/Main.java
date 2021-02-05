@@ -13,7 +13,6 @@ import java.util.*;
 public class Main {
     public static File outDir;
     public static FileHandler outputTS;
-    public static String version = null;
     
     public static final List<LibraryParser> libs = new LinkedList<>();
     public static final Map<String, Set<ClassParser>> classes = new LinkedHashMap<>();
@@ -22,8 +21,8 @@ public class Main {
     public static RootDoc root;
 
     public static boolean start (RootDoc root) {
+        System.out.println("start");
         Main.root = root;
-        outDir = new File(outDir, version);
         outputTS = new FileHandler(new File(outDir, "JsMacros.d.ts"));
         //clear version folder
         try {
@@ -120,7 +119,7 @@ public class Main {
     public static int optionLength(String var0) {
         if (var0.equals("-d")) return 2;
         else if (var0.equals("-v")) return 2;
-        else return 0;
+        else return 2;
     }
     
     public static boolean validOptions(String[][] options, DocErrorReporter reporter) {
@@ -139,15 +138,8 @@ public class Main {
                 } else {
                     return outDir.mkdirs();
                 }
-            } else if (option[0].equals("-v")) {
-                if (version != null) {
-                    reporter.printError("tried to set version more than once");
-                    return false;
-                }
-                version = option[1];
             }
         }
-        if (version == null) version = "1.0";
         return true;
     }
     

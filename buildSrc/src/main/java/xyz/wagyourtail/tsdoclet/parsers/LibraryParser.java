@@ -8,9 +8,7 @@ public class LibraryParser extends AbstractParser {
     final String libName;
     
     public LibraryParser(ClassDoc clazz, String libName) {
-        super ((clazz.subclassOf(clazz.findClass("xyz.wagyourtail.jsmacros.core.library.PerExecLanguageLibrary")) ||
-            clazz.subclassOf(clazz.findClass("xyz.wagyourtail.jsmacros.core.library.PerLanguageLibrary"))) ?
-            clazz.superclassType().asParameterizedType().typeArguments()[0].asClassDoc() : clazz);
+        super (clazz);
         this.libName = libName;
     }
     

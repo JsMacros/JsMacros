@@ -125,10 +125,25 @@ javadoc {
 
 task generateTSDoc(type: Javadoc) {
 	source = sourceSets.main.allJava
-	destinationDir = new File(project.buildDir, "tsdocs")
+	classpath = sourceSets.main.compileClasspath
+	destinationDir = new File(project.buildDir, "docs")
 	options.doclet = "xyz.wagyourtail.tsdoclet.Main"
 	options.docletpath new File(project.rootDir, "buildSrc/build/libs/buildSrc.jar")
 }
+
+task copyTSEnv(type: Copy, dependsOn: generateTSDoc) {
+	from new File(project.rootDir, "graalts")
+	into new File(project.buildDir, "docs/typescript")
+}
+
+task moveTS(dependsOn: copyTSEnv) {
+	def dest = new File(project.buildDir, "docs/typescript/headers/JsMacros.d.ts")
+	if (dest.exists() && !dest.delete()) throw new RuntimeException("Failed to delete old ts")
+	new File(project.buildDir, "docs/JsMacros.d.ts")
+	.renameTo(dest)
+}
+
+javadoc.dependsOn(moveTS)
 
 // configure the maven publication
 publishing {
