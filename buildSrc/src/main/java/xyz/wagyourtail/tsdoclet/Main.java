@@ -1,6 +1,7 @@
 package xyz.wagyourtail.tsdoclet;
 
 import com.sun.javadoc.*;
+import xyz.wagyourtail.FileHandler;
 import xyz.wagyourtail.tsdoclet.parsers.ClassParser;
 import xyz.wagyourtail.tsdoclet.parsers.EventParser;
 import xyz.wagyourtail.tsdoclet.parsers.LibraryParser;
@@ -17,12 +18,12 @@ public class Main {
     public static final List<LibraryParser> libs = new LinkedList<>();
     public static final Map<String, Set<ClassParser>> classes = new LinkedHashMap<>();
     public static final List<EventParser> events = new LinkedList<>();
-    
+    public static String version;
     public static RootDoc root;
 
     public static boolean start (RootDoc root) {
         Main.root = root;
-        outputTS = new FileHandler(new File(outDir, "JsMacros.d.ts"));
+        outputTS = new FileHandler(new File(outDir, "JsMacros-" + version + ".d.ts"));
         
         if (!outDir.exists() && !outDir.mkdirs()) {
             System.err.println("Failed to create version dir");
@@ -116,7 +117,6 @@ public class Main {
     }
     public static int optionLength(String var0) {
         if (var0.equals("-d")) return 2;
-        else if (var0.equals("-v")) return 2;
         else return 2;
     }
     
@@ -136,6 +136,12 @@ public class Main {
                 } else {
                     return outDir.mkdirs();
                 }
+            } else if (option[0].equals("-v")) {
+                if (version != null) {
+                    reporter.printError("version set more than once");
+                    return false;
+                }
+                version = option[1];
             }
         }
         return true;

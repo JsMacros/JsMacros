@@ -129,11 +129,24 @@ task generateTSDoc(type: Javadoc) {
 	destinationDir = new File(project.buildDir, "docs/typescript/headers/")
 	options.doclet = "xyz.wagyourtail.tsdoclet.Main"
 	options.docletpath new File(project.rootDir, "buildSrc/build/libs/buildSrc.jar")
+	options.addStringOption "v", version
 }
 
 task copyTSEnv(type: Copy, dependsOn: generateTSDoc) {
 	from new File(project.rootDir, "graalts")
 	into new File(project.buildDir, "docs/typescript")
+}
+
+task generateWebDoc(type: Javadoc) {
+	source = sourceSets.main.allJava
+	classpath = sourceSets.main.compileClasspath
+	destinationDir = new File(project.buildDir, "docs/web/")
+	options.doclet = "xyz.wagyourtail.webdoclet.Main"
+	options.docletpath new File(project.rootDir, "buildSrc/build/libs/buildSrc.jar")
+	options.addStringOption "v", version
+	options {
+		links 'https://docs.oracle.com/javase/8/docs/api/'
+	}
 }
 
 task createDist(type: Copy, dependsOn: javadoc) {

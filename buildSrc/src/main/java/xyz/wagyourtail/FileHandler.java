@@ -1,4 +1,4 @@
-package xyz.wagyourtail.tsdoclet;
+package xyz.wagyourtail;
 
 import java.io.*;
 
