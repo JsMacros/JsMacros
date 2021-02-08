@@ -6,8 +6,8 @@ public class XMLBuilder {
     public final Map<String, String> options = new HashMap<>();
     public final List<Object> children = new LinkedList<>();
     public final String type;
-    public final boolean inline;
-    public final boolean startNewLine;
+    public boolean inline;
+    public boolean startNewLine;
     
     public XMLBuilder(String type) {
         this.type = type;
@@ -43,7 +43,7 @@ public class XMLBuilder {
         return this;
     }
     
-    public XMLBuilder appendChild(Object ...children) {
+    public XMLBuilder append(Object ...children) {
         this.children.addAll(Arrays.asList(children));
         return this;
     }

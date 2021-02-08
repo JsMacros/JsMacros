@@ -1,12 +1,12 @@
 package xyz.wagyourtail.tsdoclet.parsers;
 
 import com.sun.javadoc.*;
-import xyz.wagyourtail.tsdoclet.AbstractParser;
+import xyz.wagyourtail.tsdoclet.AbstractTSParser;
 
-public class EventParser extends AbstractParser {
+public class EventTSParser extends AbstractTSParser {
     public final String name;
     final String oldName;
-    public EventParser(ClassDoc clazz, String name, String oldName) {
+    public EventTSParser(ClassDoc clazz, String name, String oldName) {
         super(clazz);
         this.name = name;
         this.oldName = oldName;
@@ -16,7 +16,7 @@ public class EventParser extends AbstractParser {
     public String genTypeScript() {
         StringBuilder s = new StringBuilder("\t");
         Tag[] classtags = clazz.inlineTags();
-        if (classtags.length > 0) s.append(AbstractParser.genCommentTypeScript(classtags, false, 1)).append("\t");
+        if (classtags.length > 0) s.append(AbstractTSParser.genCommentTypeScript(classtags, false, 1)).append("\t");
         s.append("export interface ").append(name).append(" extends BaseEvent {");
         
         s.append(insertEachLine(genFieldTS(), "\t\t"));

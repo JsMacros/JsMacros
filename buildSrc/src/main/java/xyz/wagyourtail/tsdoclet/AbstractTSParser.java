@@ -1,16 +1,16 @@
 package xyz.wagyourtail.tsdoclet;
 
 import com.sun.javadoc.*;
-import xyz.wagyourtail.tsdoclet.parsers.ClassParser;
+import xyz.wagyourtail.tsdoclet.parsers.ClassTSParser;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class AbstractParser {
+public abstract class AbstractTSParser {
     public final ClassDoc clazz;
 
-    public AbstractParser(ClassDoc clazz) {
+    public AbstractTSParser(ClassDoc clazz) {
         this.clazz = clazz;
     }
 
@@ -21,10 +21,10 @@ public abstract class AbstractParser {
         for (FieldDoc field : clazz.fields()) {
             Tag[] tags = field.inlineTags();
             s.append("\n");
-            s.append(AbstractParser.genCommentTypeScript(tags, field.isStatic(),1));
+            s.append(AbstractTSParser.genCommentTypeScript(tags, field.isStatic(),1));
             if (field.isFinal()) s.append("readonly ");
             s.append(field.name());
-            s.append(": ").append(AbstractParser.parseType(field.type()));
+            s.append(": ").append(AbstractTSParser.parseType(field.type()));
         }
         s.append("\n");
         return s.toString();
@@ -46,14 +46,14 @@ public abstract class AbstractParser {
         
             Tag[] tags = entry.getValue().stream().flatMap(e -> Arrays.stream(e.inlineTags())).toArray(Tag[]::new);
         
-            s.append(AbstractParser.genCommentTypeScript(tags, entry.getValue().get(0).isStatic(), 0));
+            s.append(AbstractTSParser.genCommentTypeScript(tags, entry.getValue().get(0).isStatic(), 0));
             if (export) s.append("export function ");
             s.append(entry.getKey());
             
             Optional<MethodDoc> met = entry.getValue().stream().filter(e -> e.typeParameters().length > 0).findFirst();
             if (met.isPresent()) {
                 TypeVariable[] types = met.get().typeParameters();
-                s.append("<").append(Arrays.stream(types).map(AbstractParser::parseType).collect(Collectors.joining(", "))).append(">");
+                s.append("<").append(Arrays.stream(types).map(AbstractTSParser::parseType).collect(Collectors.joining(", "))).append(">");
             }
             s.append(genMethodTypeScript(entry.getValue()));
             s.append("\n");
@@ -64,7 +64,7 @@ public abstract class AbstractParser {
     public static String parseType(Type type) {
         ParameterizedType ptype = type.asParameterizedType();
         if (ptype != null && !ptype.qualifiedTypeName().startsWith("net.minecraft")) {
-            List<String> types = Arrays.stream(ptype.typeArguments()).map(AbstractParser::parseType).collect(Collectors.toList());
+            List<String> types = Arrays.stream(ptype.typeArguments()).map(AbstractTSParser::parseType).collect(Collectors.toList());
             return arrayize(transformType(ptype) + "<" + String.join(", ", types) + ">", ptype.dimension());
         }
         return arrayize(transformType(type), type.dimension());
@@ -119,11 +119,11 @@ public abstract class AbstractParser {
                 case "void":
                     return "void";
                 default:
-                    ClassParser.addClass(type);
+                    ClassTSParser.addClass(type);
                     return "Java." + type.qualifiedTypeName().replace("java.lang.", "");
             }
         }
-        ClassParser.addClass(type);
+        ClassTSParser.addClass(type);
         return "Java." + type.qualifiedTypeName().replace(".function.", "._function.");
     }
     

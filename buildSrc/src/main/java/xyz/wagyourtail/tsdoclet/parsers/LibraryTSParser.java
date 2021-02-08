@@ -2,12 +2,12 @@ package xyz.wagyourtail.tsdoclet.parsers;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.Tag;
-import xyz.wagyourtail.tsdoclet.AbstractParser;
+import xyz.wagyourtail.tsdoclet.AbstractTSParser;
 
-public class LibraryParser extends AbstractParser {
+public class LibraryTSParser extends AbstractTSParser {
     final String libName;
     
-    public LibraryParser(ClassDoc clazz, String libName) {
+    public LibraryTSParser(ClassDoc clazz, String libName) {
         super (clazz);
         this.libName = libName;
     }
@@ -15,7 +15,7 @@ public class LibraryParser extends AbstractParser {
     public String genTypeScript() {
         StringBuilder s = new StringBuilder();
         Tag[] classtags = clazz.inlineTags();
-        if (classtags.length > 0) s.append(AbstractParser.genCommentTypeScript(classtags, false, 0));
+        if (classtags.length > 0) s.append(AbstractTSParser.genCommentTypeScript(classtags, false, 0));
         s.append("declare namespace ").append(libName).append(" {\n");
         
         s.append(insertEachLine(genMethodTS(true), "\t"));

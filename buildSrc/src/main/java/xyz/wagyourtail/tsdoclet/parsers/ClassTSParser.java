@@ -1,12 +1,12 @@
 package xyz.wagyourtail.tsdoclet.parsers;
 
 import com.sun.javadoc.*;
-import xyz.wagyourtail.tsdoclet.AbstractParser;
+import xyz.wagyourtail.tsdoclet.AbstractTSParser;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ClassParser extends AbstractParser {
+public class ClassTSParser extends AbstractTSParser {
     public static Package topLevelPackage = new Package("Java", null);
     
     public final String pkg;
@@ -15,7 +15,7 @@ public class ClassParser extends AbstractParser {
     
     public final static String[] predefinedClasses = new String[]{"java.util.Collection", "java.util.List", "java.util.Map", "java.util.Set", "java.io.File", "java.net.URL", "java.net.URI", "java.lang.Object", "java.lang.Class", "java.lang.Throwable", "java.io.Serializable", "java.lang.StackTraceElement"};
     
-    protected ClassParser(ClassDoc clazz, String cname, String pkg) {
+    protected ClassTSParser(ClassDoc clazz, String cname, String pkg) {
         super(clazz);
         this.pkg = pkg;
         this.cname = cname;
@@ -26,11 +26,11 @@ public class ClassParser extends AbstractParser {
         if (cachedTS != null) return cachedTS;
         StringBuilder s = new StringBuilder();
         Tag[] classtags = clazz.inlineTags();
-        if (classtags.length > 0) s.append(AbstractParser.genCommentTypeScript(classtags, false,1));
+        if (classtags.length > 0) s.append(AbstractTSParser.genCommentTypeScript(classtags, false,1));
         s.append("export interface ").append(cname);
         TypeVariable[] params = clazz.typeParameters();
         if (params.length > 0) {
-            s.append("<").append(Arrays.stream(params).map(AbstractParser::parseType).collect(Collectors.joining(", "))).append(">");
+            s.append("<").append(Arrays.stream(params).map(AbstractTSParser::parseType).collect(Collectors.joining(", "))).append(">");
         }
         s.append(" extends ");
         if (clazz.superclass() == null || clazz.superclass().qualifiedTypeName().equals("java.lang.Object")) {
@@ -42,7 +42,7 @@ public class ClassParser extends AbstractParser {
             if (parsed.startsWith("Java")) s.append(parsed);
             else s.append("Java.Object");
         }
-        String[] interf = Arrays.stream(clazz.interfaceTypes()).map(AbstractParser::parseType).filter(e -> e.startsWith("Java")).toArray(String[]::new);
+        String[] interf = Arrays.stream(clazz.interfaceTypes()).map(AbstractTSParser::parseType).filter(e -> e.startsWith("Java")).toArray(String[]::new);
         if (interf.length > 0) {
             s.append(", ").append(String.join(", ", interf));
         }
@@ -58,8 +58,8 @@ public class ClassParser extends AbstractParser {
     
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ClassParser) {
-            return ((ClassParser) obj).clazz.equals(clazz);
+        if (obj instanceof ClassTSParser) {
+            return ((ClassTSParser) obj).clazz.equals(clazz);
         }
         return false;
     }
@@ -81,7 +81,7 @@ public class ClassParser extends AbstractParser {
     
     public static class Package {
         public boolean dirty = true;
-        Map<String, ClassParser> classes = new LinkedHashMap<>();
+        Map<String, ClassTSParser> classes = new LinkedHashMap<>();
         Map<String, Package> children = new LinkedHashMap<>();
         final Package parent;
         final String packageName;
@@ -95,10 +95,10 @@ public class ClassParser extends AbstractParser {
             if (Arrays.stream(predefinedClasses).anyMatch(e -> e.equals(ctype.qualifiedTypeName()))) return;
             ClassDoc clazz = ctype.asClassDoc();
             String cname = ctype.simpleTypeName();
-            String cpackage = ClassParser.getPackage(ctype);
+            String cpackage = ClassTSParser.getPackage(ctype);
             if (!classes.containsKey(cname)) {
                 markDirty();
-                classes.put(cname, new ClassParser(clazz, cname, cpackage));
+                classes.put(cname, new ClassTSParser(clazz, cname, cpackage));
             }
         }
         
@@ -121,7 +121,7 @@ public class ClassParser extends AbstractParser {
         
         public TSPackage genTypeScript() {
             dirty = false;
-            List<String> cls = new LinkedList<>(classes.values()).stream().map(ClassParser::genTypeScript).collect(Collectors.toList());
+            List<String> cls = new LinkedList<>(classes.values()).stream().map(ClassTSParser::genTypeScript).collect(Collectors.toList());
             List<TSPackage> chd = new LinkedList<>(children.values()).stream().map(Package::genTypeScript).collect(Collectors.toList());
             return new TSPackage(packageName, cls, chd);
         }
@@ -143,7 +143,7 @@ public class ClassParser extends AbstractParser {
                 children.get(0).pkgName = pkgName + "." + children.get(0).pkgName;
                 return children.get(0).genTypeScript();
             }
-            return "export namespace " + pkgName + " {\n" + AbstractParser.insertEachLine(String.join("\n", interfaces) + "\n" +
+            return "export namespace " + pkgName + " {\n" + AbstractTSParser.insertEachLine(String.join("\n", interfaces) + "\n" +
             children.stream().map(e -> e.genTypeScript() + "\n").collect(Collectors.joining()), "\t") + "\n}";
         }
     }

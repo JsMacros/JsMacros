@@ -1,20 +1,15 @@
 package xyz.wagyourtail.webdoclet;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.DocErrorReporter;
-import com.sun.javadoc.LanguageVersion;
-import com.sun.javadoc.RootDoc;
+import com.sun.javadoc.*;
 import xyz.wagyourtail.FileHandler;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+@SuppressWarnings("unused")
 public class Main {
     public static File outDir;
     /**
@@ -28,28 +23,20 @@ public class Main {
         try {
             //create package-list
             Set<String> packages = new LinkedHashSet<>();
+            Set<ClassDoc> classes = new LinkedHashSet<>();
             for (ClassDoc clazz : root.specifiedClasses()) {
                 packages.add(clazz.containingPackage().name());
+                classes.add(clazz);
+            }
+            for (PackageDoc pkg : root.specifiedPackages()) {
+                packages.add(pkg.name());
+                classes.addAll(Arrays.asList(pkg.allClasses()));
             }
             StringBuilder pkglist = new StringBuilder();
             for (String pkg : packages) {
                 if (!externalPackages.containsKey(pkg)) pkglist.append(pkg).append("\n");
             }
             new FileHandler(new File(outDir, "package-list")).write(pkglist.toString());
-    
-            XMLBuilder dom = new XMLBuilder("html").appendChild(
-                new XMLBuilder("head"),
-                new XMLBuilder("body").appendChild(
-                    new XMLBuilder("h1", true, true).appendChild("test"),
-                    new XMLBuilder("p").addStringOption("class", "content").appendChild(
-                        "this is a test body, ",
-                        new XMLBuilder("a", true).addStringOption("href", "example.com").appendChild(
-                            "goto example.com"
-                        ),
-                        ".",
-                        new XMLBuilder("h2", true, true).appendChild("heading")
-                    )));
-            System.out.println(dom.toString());
             
             return true;
         } catch (Exception e) {

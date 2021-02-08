@@ -2,9 +2,9 @@ package xyz.wagyourtail.tsdoclet;
 
 import com.sun.javadoc.*;
 import xyz.wagyourtail.FileHandler;
-import xyz.wagyourtail.tsdoclet.parsers.ClassParser;
-import xyz.wagyourtail.tsdoclet.parsers.EventParser;
-import xyz.wagyourtail.tsdoclet.parsers.LibraryParser;
+import xyz.wagyourtail.tsdoclet.parsers.ClassTSParser;
+import xyz.wagyourtail.tsdoclet.parsers.EventTSParser;
+import xyz.wagyourtail.tsdoclet.parsers.LibraryTSParser;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,9 +15,9 @@ public class Main {
     public static File outDir;
     public static FileHandler outputTS;
     
-    public static final List<LibraryParser> libs = new LinkedList<>();
-    public static final Map<String, Set<ClassParser>> classes = new LinkedHashMap<>();
-    public static final List<EventParser> events = new LinkedList<>();
+    public static final List<LibraryTSParser> libs = new LinkedList<>();
+    public static final Map<String, Set<ClassTSParser>> classes = new LinkedHashMap<>();
+    public static final List<EventTSParser> events = new LinkedList<>();
     public static String version;
     public static RootDoc root;
 
@@ -76,7 +76,7 @@ public class Main {
             return false;
         }
         
-        for (EventParser event : events) {
+        for (EventTSParser event : events) {
             try {
                 outputTS.append("\n\n" + event.genTypeScript());
             } catch (IOException e) {
@@ -92,7 +92,7 @@ public class Main {
             return false;
         }
     
-        for (LibraryParser lib : libs) {
+        for (LibraryTSParser lib : libs) {
             try {
                 outputTS.append("\n\n" + lib.genTypeScript());
             } catch (IOException e) {
@@ -101,9 +101,9 @@ public class Main {
             }
         }
     
-        ClassParser.TSPackage pkg = null;
-        while (ClassParser.topLevelPackage.dirty) {
-            pkg = ClassParser.topLevelPackage.genTypeScript();
+        ClassTSParser.TSPackage pkg = null;
+        while (ClassTSParser.topLevelPackage.dirty) {
+            pkg = ClassTSParser.topLevelPackage.genTypeScript();
         }
     
         try {
@@ -148,11 +148,11 @@ public class Main {
     }
     
     public static void genLib(ClassDoc lib, String libName) {
-        libs.add(new LibraryParser(lib, libName));
+        libs.add(new LibraryTSParser(lib, libName));
     }
     
     public static void genEvent(ClassDoc event, String name, String oldName) {
-        events.add(new EventParser(event, name, oldName));
+        events.add(new EventTSParser(event, name, oldName));
     }
     
     public static LanguageVersion languageVersion() {
