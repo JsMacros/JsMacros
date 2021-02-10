@@ -149,10 +149,15 @@ task generateWebDoc(type: Javadoc) {
 	}
 }
 
-task createDist(type: Copy, dependsOn: javadoc) {
+task copyWebDoc(type: Copy, dependsOn: generateWebDoc) {
+	from new File(project.rootDir, "webdoc")
+	into new File(project.buildDir, "docs/web")
+}
+
+task createDist(type: Copy, dependsOn: copyWebDoc) {
 	from(new File(project.buildDir, "docs"), new File(project.buildDir, "libs"))
 	into new File(project.rootDir, "dist")
 }
 
-javadoc.dependsOn(copyTSEnv)
+generateWebDoc.dependsOn(copyTSEnv)
 build.finalizedBy(createDist)

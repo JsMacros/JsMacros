@@ -53,17 +53,17 @@ public class XMLBuilder {
             builder.append(" ").append(option.getKey());
             if (option.getValue() != null) builder.append("=").append(option.getValue());
         }
+        builder.append(">");
         if (children.isEmpty()) {
-            builder.append(" />");
+            builder.append("</").append(type).append(">");
         } else {
-            builder.append(">");
             boolean inline = this.inline;
             for (Object rawChild : children) {
                 if (rawChild instanceof XMLBuilder) {
                     XMLBuilder child = (XMLBuilder) rawChild;
                     builder.append((inline || child.inline) && !child.startNewLine ? "" : "\n    ").append(tabIn(child.toString(), child.inline));
                     inline = child.inline;
-                } else {
+                } else if (rawChild != null) {
                     builder.append(inline ? "" : "\n    ").append(tabIn(rawChild.toString(), inline));
                     inline = this.inline;
                 }

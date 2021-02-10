@@ -246,7 +246,6 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @since 1.1.8
      * @see IDraw2D#addRect(int, int, int, int, int, int)
      */
-    @Override
     public RenderCommon.Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha) {
         return addRect(x1, y1, x2, y2, color, alpha, 0);
     }

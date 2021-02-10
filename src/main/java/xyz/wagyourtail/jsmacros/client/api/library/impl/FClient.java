@@ -15,6 +15,7 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
 *
 * Functions that interact with minecraft that don't fit into their own module.
  * @author Wagyourtail
+ * @since 1.2.9
  */
 @Library("client")
 @SuppressWarnings("unused")
