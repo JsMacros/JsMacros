@@ -105,7 +105,7 @@ public class Main {
                     "<!DOCTYPE html>\n" +
                     new XMLBuilder("html").append(
                         new XMLBuilder("head").append(
-                            new XMLBuilder("link", true, true).addStringOption("rel", "stylesheet").addStringOption("href", upDir + "index.css")
+                            new XMLBuilder("link", true, true).addStringOption("rel", "stylesheet").addStringOption("href", upDir + "content.css")
                         ),
                         new XMLBuilder("body").append(
                             WebParser.parseClass(clazz)

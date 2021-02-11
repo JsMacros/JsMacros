@@ -9,12 +9,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class WebParser {
-
+    
+    // TODO: parse enums correctly
     public static XMLBuilder parseClass(ClassDoc clazz) {
         XMLBuilder builder = new XMLBuilder("main").addStringOption("class", "classDoc");
         XMLBuilder constructors = null;
         XMLBuilder cname;
-        builder.append(cname = new XMLBuilder("h1", true, true).addStringOption("class", "classTitle").append(clazz.typeName()));
+        builder.append(cname = new XMLBuilder("h2", true, true).addStringOption("class", "classTitle").append(clazz.typeName()));
         
         Type[] ptypes = clazz.typeParameters();
         if (ptypes.length > 0) {
@@ -31,7 +32,7 @@ public class WebParser {
         builder.append(createFlags(clazz, false));
         if (clazz.superclassType() != null || clazz.interfaces().length > 0) {
             XMLBuilder ext;
-            builder.append(ext = new XMLBuilder("h3", true, true).addStringOption("class", "classExtends"));
+            builder.append(ext = new XMLBuilder("h4", true, true).addStringOption("class", "classExtends"));
             if (clazz.superclassType() != null) {
                 ext.append("extends ");
                 ext.append(parseType(clazz, clazz.superclassType()));
@@ -59,7 +60,7 @@ public class WebParser {
             if (!constructor.isPublic()) continue;
             if (flag) {
                 flag = false;
-                builder.append(new XMLBuilder("h2", true, true).append("Constructors"));
+                builder.append(new XMLBuilder("h3", true, true).append("Constructors"));
                 builder.append(constructors = new XMLBuilder("div").addStringOption("class", "constructorDoc"));
             }
             constructors.append(parseConstructor(clazz, constructor));
@@ -77,9 +78,9 @@ public class WebParser {
             if (!field.isPublic()) continue;
             if (flag) {
                 flag = false;
-                builder.append(new XMLBuilder("h2", true, true).append("Fields"));
+                builder.append(new XMLBuilder("h3", true, true).append("Fields"));
                 builder.append(fields = new XMLBuilder("div").addStringOption("class", "fieldDoc"));
-                shorts.append(fieldShorts = new XMLBuilder("div").addStringOption("class", "fieldShorts").append(new XMLBuilder("h3").append("Fields")));
+                shorts.append(fieldShorts = new XMLBuilder("div").addStringOption("class", "fieldShorts").append(new XMLBuilder("h4").append("Fields")));
             }
             fields.append(parseField(clazz, field));
             fieldShorts.append(
@@ -96,9 +97,9 @@ public class WebParser {
             if (!method.isPublic()) continue;
             if (flag) {
                 flag = false;
-                builder.append(new XMLBuilder("h2", true, true).append("Methods"));
+                builder.append(new XMLBuilder("h3", true, true).append("Methods"));
                 builder.append(methods = new XMLBuilder("div").addStringOption("class", "methodDoc"));
-                shorts.append(methodShorts = new XMLBuilder("div").addStringOption("class", "methodShorts").append(new XMLBuilder("h3").append("Methods")));
+                shorts.append(methodShorts = new XMLBuilder("div").addStringOption("class", "methodShorts").append(new XMLBuilder("h4").append("Methods")));
             }
             methods.append(parseMethod(clazz, method));
             methodShorts.append(
@@ -170,6 +171,7 @@ public class WebParser {
             builder.append(parseType(currentClass, types[i]));
             builder.append(">");
         }
+        builder.append(type.dimension());
         return builder;
     }
     
@@ -255,7 +257,7 @@ public class WebParser {
     // TODO: inherit javadoc from super-class interfaces
     public static XMLBuilder parseMethod(ClassDoc currentClass, MethodDoc methodDoc) {
         XMLBuilder method = new XMLBuilder("div").addStringOption("class", "constructor classItem").addStringOption("id", memberId(methodDoc));
-        method.append(new XMLBuilder("h3", true).addStringOption("class", "methodTitle classItemTitle").append(
+        method.append(new XMLBuilder("h4", true).addStringOption("class", "methodTitle classItemTitle").append(
             "." + methodDoc.name() + "(",
             new XMLBuilder("div", true).addStringOption("class", "methodParams").append(Arrays.stream(methodDoc.parameters()).map(Parameter::name).collect(Collectors.joining(", "))),
             ")"
@@ -321,7 +323,7 @@ public class WebParser {
         }
         XMLBuilder returnVal;
         method.append(returnVal = new XMLBuilder("div").addStringOption("class", "methodReturn classItemType").append(
-            new XMLBuilder("h4", true, true).addStringOption("class", "methodReturnTitle classItemTypeTitle").append("Returns: ", parseType(currentClass, methodDoc.returnType()))
+            new XMLBuilder("h5", true, true).addStringOption("class", "methodReturnTitle classItemTypeTitle").append("Returns: ", parseType(currentClass, methodDoc.returnType()))
         ));
         superMethod = methodDoc;
         do {
@@ -352,7 +354,7 @@ public class WebParser {
     
     public static XMLBuilder parseConstructor(ClassDoc currentClass, ConstructorDoc constructorDoc) {
         XMLBuilder constructor = new XMLBuilder("div").addStringOption("class", "constructor classItem").addStringOption("id", memberId(constructorDoc));
-        constructor.append(new XMLBuilder("h3", true).addStringOption("class", "constructorTitle classItemTitle").append(
+        constructor.append(new XMLBuilder("h4", true).addStringOption("class", "constructorTitle classItemTitle").append(
             "new " + currentClass.typeName() + "(",
             new XMLBuilder("div", true).addStringOption("class", "constructorParams").append(Arrays.stream(constructorDoc.parameters()).map(Parameter::name).collect(Collectors.joining(", "))),
             ")"
@@ -395,7 +397,7 @@ public class WebParser {
     
     public static XMLBuilder parseField(ClassDoc currentClass, FieldDoc fieldDoc) {
         XMLBuilder field = new XMLBuilder("div").addStringOption("class", "field classItem").addStringOption("id", memberId(fieldDoc));
-        field.append(new XMLBuilder("h3", true).addStringOption("class", "fieldTitle classItemTitle").append(
+        field.append(new XMLBuilder("h4", true).addStringOption("class", "fieldTitle classItemTitle").append(
             "." + fieldDoc.name()
         ));
         field.append(createFlags(fieldDoc, false));
@@ -410,7 +412,7 @@ public class WebParser {
         field.append(sinceXML);
         field.append(new XMLBuilder("div").addStringOption("class", "fieldDesc classItemDesc").append(createDescription(currentClass, fieldDoc.inlineTags())));
         field.append(new XMLBuilder("div").addStringOption("class", "methodReturn classItemType").append(
-            new XMLBuilder("h4", true, true).addStringOption("class", "fieldTypeTitle classItemTypeTitle").append("Type: ", parseType(currentClass, fieldDoc.type()))
+            new XMLBuilder("h5", true, true).addStringOption("class", "fieldTypeTitle classItemTypeTitle").append("Type: ", parseType(currentClass, fieldDoc.type()))
         ));
         return field;
     }
