@@ -144,6 +144,7 @@ task generateWebDoc(type: Javadoc) {
 	options.doclet = "xyz.wagyourtail.webdoclet.Main"
 	options.docletpath new File(project.rootDir, "buildSrc/build/libs/buildSrc.jar")
 	options.addStringOption "v", version
+	options.addStringOption "mcv", project.minecraft_version
 	options {
 		links 'https://docs.oracle.com/javase/8/docs/api/'
 	}

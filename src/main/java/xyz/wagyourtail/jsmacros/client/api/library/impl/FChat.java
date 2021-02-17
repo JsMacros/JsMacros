@@ -44,19 +44,24 @@ public class FChat extends BaseLibrary {
      */
     public void log(Object message, boolean await) throws InterruptedException {
         boolean joinedMain = MinecraftClient.getInstance().isOnThread() || JsMacros.core.profile.joinedThreadStack.contains(Thread.currentThread());
-        if (joinedMain && await) {
-            throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined!");
-        }
-        final Semaphore semaphore = new Semaphore(await ? 0 : 1);
-        mc.execute(() -> {
+        if (joinedMain) {
             if (message instanceof TextHelper) {
                 logInternal((TextHelper)message);
             } else if (message != null) {
                 logInternal(message.toString());
             }
-            semaphore.release();
-        });
-        semaphore.acquire();
+        } else {
+            final Semaphore semaphore = new Semaphore(await ? 0 : 1);
+            mc.execute(() -> {
+                if (message instanceof TextHelper) {
+                    logInternal((TextHelper) message);
+                } else if (message != null) {
+                    logInternal(message.toString());
+                }
+                semaphore.release();
+            });
+            semaphore.acquire();
+        }
     }
     
     private static void logInternal(String message) {
@@ -78,10 +83,33 @@ public class FChat extends BaseLibrary {
      * 
      * @param message
      */
-    public void say(String message) {
-        if (message != null) {
+     public void say(String message) throws InterruptedException {
+        say(message, false);
+     }
+    
+    /**
+    * Say to server as player.
+    *
+     * @param message
+     * @param await
+     * @since 1.3.1
+     *
+     * @throws InterruptedException
+     */
+    public void say(String message, boolean await) throws InterruptedException {
+        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || JsMacros.core.profile.joinedThreadStack.contains(Thread.currentThread());
+        if (message == null) return;
+        if (joinedMain) {
             assert mc.player != null;
             mc.player.sendChatMessage(message);
+        } else {
+            final Semaphore semaphore = new Semaphore(await ? 0 : 1);
+            mc.execute(() -> {
+                assert mc.player != null;
+                mc.player.sendChatMessage(message);
+                semaphore.release();
+            });
+            semaphore.acquire();
         }
     }
     

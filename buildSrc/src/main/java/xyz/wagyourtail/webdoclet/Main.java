@@ -18,6 +18,7 @@ public class Main {
      * use with {@code + "ClassName.html"} to get final url.
      */
      public static String version;
+     public static String mappingViewerBaseURL;
     public static Map<String, String> externalPackages = new HashMap<>();
     public static Set<String> internalPackages = new LinkedHashSet<>();
     
@@ -57,19 +58,24 @@ public class Main {
                 }
             }
             new FileHandler(new File(outDir, "package-list")).write(pkglist.toString());
+            /* spec
+             * C <searchname> <linkname> <?group> <?alias>
+             * F <fieldname> <fieldlink>
+             * M <methodname> <methodlink>
+             */
             StringBuilder searchList = new StringBuilder();
             
             for (ClassDoc clazz : classes) {
                 Optional<AnnotationDesc> eventAnnotation = Arrays.stream(clazz.annotations()).filter(e -> e.annotationType().simpleTypeName().equals("Event")).findFirst();
                 Optional<AnnotationDesc> libraryAnnotation = Arrays.stream(clazz.annotations()).filter(e -> e.annotationType().simpleTypeName().equals("Library")).findFirst();
+                searchList.append("C ").append(clazz.typeName()).append(" ").append(clazz.containingPackage().name().replaceAll("\\.", "/")).append("/").append(clazz.typeName());
                 if (eventAnnotation.isPresent()) {
-                    searchList.append("E ");
+                    searchList.append(" Event");
                 } else if (libraryAnnotation.isPresent()) {
-                    searchList.append("L ");
+                    searchList.append(" Library");
                 } else {
-                    searchList.append("C ");
+                    searchList.append(" Class");
                 }
-                searchList.append(clazz.typeName()).append(" ").append(clazz.containingPackage().name().replaceAll("\\.", "/")).append("/").append(clazz.typeName());
                 if (eventAnnotation.isPresent()) {
                     for (AnnotationDesc.ElementValuePair ep : eventAnnotation.get().elementValues()) {
                         if (ep.element().name().equals("value")) {
@@ -159,6 +165,11 @@ public class Main {
                     return false;
                 }
                 version = option[1];
+            } else if (option[0].equals("-mcv")) {
+                if (mappingViewerBaseURL != null) {
+                    reporter.printError("mc version set more than once");
+                }
+                mappingViewerBaseURL = "https://wagyourtail.xyz/Projects/Minecraft%20Mappings%20Viewer/App?mapping=yarn,yarnIntermediary&version=" + option[1] + "&class=";
             }
         }
         return true;

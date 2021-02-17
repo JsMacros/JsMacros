@@ -254,7 +254,7 @@ public class WebParser {
         return flags;
     }
     
-    // TODO: inherit javadoc from super-class interfaces
+    // TODO: inherit javadoc from super-class's interfaces
     public static XMLBuilder parseMethod(ClassDoc currentClass, MethodDoc methodDoc) {
         XMLBuilder method = new XMLBuilder("div").addStringOption("class", "constructor classItem").addStringOption("id", memberId(methodDoc));
         method.append(new XMLBuilder("h4", true).addStringOption("class", "methodTitle classItemTitle").append(
