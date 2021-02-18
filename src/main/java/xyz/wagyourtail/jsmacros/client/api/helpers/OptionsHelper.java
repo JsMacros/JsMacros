@@ -285,6 +285,25 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     }
     
     /**
+     * sets gui scale, {@code 0} for auto.
+     *
+     * @since 1.3.1
+     * @param scale
+     */
+    public void setGuiScale(int scale) {
+        base.guiScale = scale;
+        mc.execute(mc::onResolutionChanged);
+    }
+    
+    /**
+     * @since 1.3.1
+     * @return gui scale, {@code 0} for auto.
+     */
+    public int getGuiScale() {
+        return base.guiScale;
+    }
+    
+    /**
      * @param category
      * @since 1.3.1
      * @return
