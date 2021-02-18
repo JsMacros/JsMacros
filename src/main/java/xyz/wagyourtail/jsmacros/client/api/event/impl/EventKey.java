@@ -10,6 +10,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FKeyBind;
 import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
@@ -58,7 +59,8 @@ public class EventKey implements BaseEvent {
             if (JsMacros.core.config.options.disableKeyWhenScreenOpen) return;
             if (mc.currentScreen instanceof BaseScreen) return;
             Element focused = mc.currentScreen.getFocused();
-            if (focused instanceof TextFieldWidget || focused instanceof RecipeBookWidget) return;
+            if (focused instanceof TextFieldWidget) return;
+            if (focused instanceof RecipeBookWidget && ((IRecipeBookWidget)focused).isSearching()) return;
         }
         
         if (action == 1) {

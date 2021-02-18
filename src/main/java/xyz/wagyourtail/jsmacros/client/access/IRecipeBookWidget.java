@@ -5,4 +5,8 @@ import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
 public interface IRecipeBookWidget {
 
     RecipeBookResults getResults();
+    
+    boolean isSearching();
+    
+    void refreshResultList();
 }

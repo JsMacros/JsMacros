@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+</head>
+<body>
+    <label for="search" class="searchContainer">
+        <input id="search" type="search" placeholder="search for classes/fields/methods">
+    </label>
+    <main class="searchResults">
+        <link itemprop="stylesheet" href="search.css"/>
+        <div id="classGroupChecks">
+            <label for="classesCheck">Classes</label>
+            <input type="checkbox" id="classesCheck" name="classes" />
+
+            <label for="eventsCheck">Events</label>
+            <input type="checkbox" id="eventsCheck" name="events" />
+
+            <label for="librariesCheck">Libraries</label>
+            <input type="checkbox" id="librariesCheck" name="libraries" />
+        </div>
+        <div id="methodFieldChecks">
+            <label for="methodsCheck">Fields</label>
+            <input type="checkbox" id="methodsCheck" name="methods" />
+
+            <label for="fieldsCheck">Fields</label>
+            <input type="checkbox" id="fieldsCheck" name="fields" />
+        </div>
+        <script src="search.js"></script>
+    </main>
+</body>
+</html>

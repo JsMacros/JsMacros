@@ -8,15 +8,27 @@ import org.spongepowered.asm.mixin.Shadow;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
 
 @Mixin(RecipeBookWidget.class)
-public class MixinRecipeBookWidget implements IRecipeBookWidget {
+public abstract class MixinRecipeBookWidget implements IRecipeBookWidget {
     @Shadow
     @Final
     private RecipeBookResults recipesArea;
     
+    @Shadow private boolean searching;
+    
+    @Shadow protected abstract void refreshResults(boolean resetCurrentPage);
     
     @Override
     public RecipeBookResults getResults() {
         return recipesArea;
     }
     
+    @Override
+    public boolean isSearching() {
+        return searching;
+    }
+    
+    @Override
+    public void refreshResultList() {
+        refreshResults(false);
+    }
 }

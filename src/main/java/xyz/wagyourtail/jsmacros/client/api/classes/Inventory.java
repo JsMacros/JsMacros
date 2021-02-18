@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
+import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
@@ -12,6 +13,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
@@ -19,9 +21,9 @@ import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookResults;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
-import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.RecipeHelper;
+import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 
 import java.util.HashMap;
 import java.util.List;
@@ -278,15 +280,21 @@ public class Inventory {
     public List<RecipeHelper> getCraftableRecipes() {
         Stream<Recipe<?>> recipes;
         RecipeBookResults res;
+        IRecipeBookWidget recipeBookWidget;
         if (inventory instanceof CraftingScreen) {
-            res = ((IRecipeBookWidget)((CraftingScreen)inventory).getRecipeBookWidget()).getResults();
+            recipeBookWidget = (IRecipeBookWidget) ((CraftingScreen)inventory).getRecipeBookWidget();
         } else if (inventory instanceof InventoryScreen) {
-            res = ((IRecipeBookWidget)((InventoryScreen)inventory).getRecipeBookWidget()).getResults();
+            recipeBookWidget = (IRecipeBookWidget) ((InventoryScreen)inventory).getRecipeBookWidget();
         } else if (inventory instanceof AbstractFurnaceScreen) {
-            res = ((IRecipeBookWidget)((AbstractFurnaceScreen<?>)inventory).getRecipeBookWidget()).getResults();
+            recipeBookWidget = (IRecipeBookWidget) ((AbstractFurnaceScreen<?>)inventory).getRecipeBookWidget();
         } else {
             return null;
         }
+        if (mc.currentScreen != inventory) {
+            ((RecipeBookWidget)recipeBookWidget).initialize(0, 0, mc, true, (AbstractRecipeScreenHandler<?>) inventory.getScreenHandler());
+        }
+        recipeBookWidget.refreshResultList();
+        res = recipeBookWidget.getResults();
         List<RecipeResultCollection> result = ((IRecipeBookResults) res).getResultCollections();
         recipes = result.stream().flatMap(e -> e.getRecipes(true).stream());
         return recipes.map(e -> new RecipeHelper(e, syncId)).collect(Collectors.toList());
