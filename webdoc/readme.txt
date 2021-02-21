@@ -1,0 +1,1 @@
+if you are viewing the docs locally, please make sure to use some kind of webserver as otherwise the pane-in-pane `index.html` page won't work at all.
