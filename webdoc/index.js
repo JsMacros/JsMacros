@@ -32,7 +32,8 @@ async function openMain(url) {
     const text = await req.text();
     const parser = new DOMParser();
     const doc = parser.parseFromString(text, "text/html").getElementsByTagName("main")[0];
-    mainContent.setAttribute("class", doc.getAttribute("class"));
+    const cname = doc.getAttribute("class");
+    mainContent.setAttribute("class", cname);
     mainContent.innerHTML = doc.innerHTML;
     for (const a of mainContent.getElementsByTagName("a")) {
         if (!a.hasAttribute("target") && !a.getAttribute("href")?.startsWith("#")) {
@@ -40,12 +41,14 @@ async function openMain(url) {
             frameLink(a);
         }
     }
+    if (cname == "searchMain") {
+        updateClassGroups();
+    }
 }
 
 async function searchBox(val) {
     if (mainContent.getAttribute("class") != "searchMain") {
         await openMain("./search.html");
-        updateClassGroups();
     }
     await searchF(val);
     for (const resultItem of document.getElementsByClassName("resultItem")) {
