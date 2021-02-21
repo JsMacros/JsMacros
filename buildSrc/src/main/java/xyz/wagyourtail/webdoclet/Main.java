@@ -111,7 +111,7 @@ public class Main {
                     "<!DOCTYPE html>\n" +
                     new XMLBuilder("html").append(
                         new XMLBuilder("head").append(
-                            new XMLBuilder("link", true, true).addStringOption("rel", "stylesheet").addStringOption("href", upDir + "content.css")
+                            new XMLBuilder("link", true, true).addStringOption("rel", "stylesheet").addStringOption("href", upDir + "classContent.css")
                         ),
                         new XMLBuilder("body").append(
                             WebParser.parseClass(clazz)
@@ -169,7 +169,7 @@ public class Main {
                 if (mappingViewerBaseURL != null) {
                     reporter.printError("mc version set more than once");
                 }
-                mappingViewerBaseURL = "https://wagyourtail.xyz/Projects/Minecraft%20Mappings%20Viewer/App?mapping=yarn,yarnIntermediary&version=" + option[1] + "&class=";
+                mappingViewerBaseURL = "https://wagyourtail.xyz/Projects/Minecraft%20Mappings%20Viewer/App?mapping=yarn,yarnIntermediary&version=" + option[1] + "&search=";
             }
         }
         return true;

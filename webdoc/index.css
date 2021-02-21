@@ -1,0 +1,70 @@
+body {
+    font-family: 'Montserrat', monospace;
+}
+
+.topNav {
+    background-color: #ACACAC;
+    display: flex;
+    align-content: stretch;
+    flex-wrap: wrap;
+}
+
+.topNav h1 {
+    display: block;
+    width: 100%;
+    padding-left: 10px;
+}
+
+.versionContainer {
+    padding: 10px;
+}
+
+.searchContainer {
+    margin-left: auto;
+    padding: 10px;
+}
+
+body > div {
+    display: grid;
+    grid-template-columns: min-content auto;
+}
+
+#content {
+    padding: 5px;
+    width: 100%;
+}
+
+.sideNav {
+    padding: 0px 5px;
+    background-color: #BCBCBC;
+    height: 100%;
+}
+
+#footer {
+    background-color: #ACACAC;
+    display: flex;
+    align-items: center;
+}
+
+#footer a {
+    padding: 10px;
+}
+
+#footer h4 {
+    display: inline-block;
+    margin: 0px;
+    padding: 10px;
+    margin-left: auto;
+}
+
+#Loading {
+    text-align: center;
+}
+
+#classLists a {
+    display: block;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0;
+    color: #0066FF;
+}

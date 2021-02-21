@@ -1,0 +1,89 @@
+.searchMain {
+    font-family: 'Montserrat', monospace;
+}
+
+.resultItem a {
+    display: inline-block;
+    text-decoration: none;
+    margin: 0;
+    color: #0066FF;
+}
+
+.SearchCheck {
+    box-sizing: border-box;
+    appearance: none;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    padding: 1px;
+    background: none;
+    margin-bottom: 1px;
+    background-clip: content-box;
+    border: 1px solid #c8c8c8;
+    border-radius: 4px;
+    cursor: pointer;
+    vertical-align: bottom;
+    transition: border-color .3s,background-color .3s,color .3s;
+}
+
+.SearchCheck:checked {
+    border-color: #0066FF;
+    background-color: #0066FF;
+}
+
+.resultItem {
+    padding: 5px 0px;
+}
+
+#classGroupChecks,#methodFieldChecks {
+    display: inline-block;
+}
+
+#classGroupChecks div {
+    display: inline-block;
+    padding: 0px 20px;
+}
+
+
+#methodFieldChecks div {
+    display: inline-block;
+    padding: 0px 20px;
+}
+
+#searchResults {
+    border-top: 1px solid black;
+    padding-top: 10px;
+}
+
+.flags {
+    display: inline-block;
+    padding-right: 5px;
+}
+
+.flag {
+    display: inline-block;
+    background-color: #0066FF;
+    padding: 5px;
+    border-radius: 5px;
+    color: white;
+}
+
+#EventCheck:checked,.EventFlag {
+    border-color: #7E481C;
+    background-color: #7E481C;
+}
+
+#LibraryCheck:checked,.LibraryFlag {
+    border-color: #3BB143;
+    background-color: #3BB143;
+}
+
+#fieldsCheck:checked,.FieldFlag {
+    border-color: #DE3163;
+    background-color: #DE3163;
+}
+
+#methodsCheck:checked,.MethodFlag {
+    border-color: #FD6A0A;
+    background-color: #FD6A0A;
+}

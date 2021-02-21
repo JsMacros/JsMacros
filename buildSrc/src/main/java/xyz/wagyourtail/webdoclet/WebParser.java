@@ -1,6 +1,7 @@
 package xyz.wagyourtail.webdoclet;
 
 import com.sun.javadoc.*;
+import xyz.wagyourtail.Pair;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -112,12 +113,14 @@ public class WebParser {
         return builder;
     }
     
-    public static String getURL(ClassDoc currentClass, @Nullable Type type, @Nullable MemberDoc method) {
+    public static Pair<String, Boolean> getURL(ClassDoc currentClass, @Nullable Type type, @Nullable MemberDoc method) {
         if (type != null) {
-            if (type.isPrimitive()) return "";
+            if (type.isPrimitive()) return new Pair<>("", false);
             String pkg = type.asClassDoc().containingPackage().name();
             if (Main.externalPackages.containsKey(pkg)) {
-                return Main.externalPackages.get(pkg) + type.typeName() + ".html";
+                return new Pair<>(Main.externalPackages.get(pkg) + type.typeName() + ".html", true);
+            } else if (pkg.startsWith("com.mojang") || pkg.startsWith("net.minecraft")) {
+                return new Pair<>(Main.mappingViewerBaseURL + pkg.replaceAll("\\.", "/") + "/" + type.typeName(), true);
             } else if (Main.internalPackages.contains(pkg)) {
                 StringBuilder url = new StringBuilder();
                 if (!currentClass.qualifiedTypeName().equals(type.qualifiedTypeName())) {
@@ -131,18 +134,18 @@ public class WebParser {
                 if (method != null) {
                     url.append("#").append(memberId(method));
                 }
-                if (url.length() == 0) return "";
-                return url.toString();
+                if (url.length() == 0) return new Pair<>("", false);
+                return new Pair<>(url.toString(), false);
             } else {
-                return "";
+                return new Pair<>("", false);
             }
         } else {
             String url = "";
             if (method != null) {
                 url += "#" + memberId(method);
             }
-            if (url.isEmpty()) return "";
-            return url;
+            if (url.isEmpty()) return new Pair<>("", false);
+            return new Pair<>(url, false);
         }
     }
     
@@ -153,8 +156,11 @@ public class WebParser {
     public static XMLBuilder parseType(ClassDoc currentClass, Type type) {
         XMLBuilder builder = new XMLBuilder("div", true).addStringOption("class", "typeParameter");
         XMLBuilder typeLink;
-        builder.append(typeLink = new XMLBuilder(isGenericType(type) || type.isPrimitive() ? "p" : "a", true).addStringOption("href", getURL(currentClass, type, null)).append(type.typeName()));
-        
+        Pair<String, Boolean> url = getURL(currentClass, type, null);
+        builder.append(typeLink = new XMLBuilder(isGenericType(type) || type.isPrimitive() ? "p" : "a", true).addStringOption("href", url.getKey()).append(type.typeName()));
+        if (url.getValue()) {
+            typeLink.addStringOption("target", "_blank");
+        }
         if (type.isPrimitive() || isGenericType(type)) typeLink.addStringOption("class", "type primitiveType");
         else if (typeLink.options.get("href").equals("\"\"")) typeLink.addStringOption("class", "type deadType");
         else typeLink.addStringOption("class", "type");
@@ -178,8 +184,11 @@ public class WebParser {
     // TODO: make package @see/@link labels work too
     public static XMLBuilder parseSee(ClassDoc currentClass, SeeTag tag) {
         XMLBuilder builder = new XMLBuilder("a", true).addStringOption("class", "type");
-        builder.addStringOption("href", getURL(currentClass, tag.referencedClass(), tag.referencedMember()));
-        
+        Pair<String, Boolean> url = getURL(currentClass, tag.referencedClass(), tag.referencedMember());
+        builder.addStringOption("href", url.getKey());
+        if (url.getValue()) {
+            builder.addStringOption("target", "_blank");
+        }
         if (builder.options.get("href").equals("\"\"")) builder.addStringOption("class", "type deadType");
         else builder.addStringOption("class", "type");
         

@@ -1,4 +1,4 @@
-package xyz.wagyourtail.tsdoclet;
+package xyz.wagyourtail;
 
 public class Pair<T, U> {
     T key;

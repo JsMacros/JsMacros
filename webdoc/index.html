@@ -5,6 +5,7 @@
         <title>JsMacros Docs</title>
         <link rel="stylesheet" href="index.css"/>
         <link rel="stylesheet" href="classContent.css"/>
+        <link rel="stylesheet" href="search.css"/>
     </head>
     <body>
         <header>
@@ -17,32 +18,26 @@
                     </select>
                 </label>
                 <label for="search" class="searchContainer">
-                    <input id="search" type="search" placeholder="search for classes/fields/methods">
+                    <input id="search" type="search" placeholder="search for classes/fields/methods" onkeyup="searchBox(this.value)" />
                 </label>
             </div>
         </header>
         <div>
             <div class="sideNav">
                 <nav id="mainNav">
-                    <h4>General</h4>
+                    <h3>General</h3>
                     <div id="generalListLinks">
 
                     </div>
-                    <h4>Examples</h4>
+                    <h3>Examples</h3>
                     <div id="exampleListLinks">
 
                     </div>
-                    <h4>Classes</h4>
-                    <div id="classListLinks">
+                    <h3>Classes</h3>
+                    <div id="classLists">
 
                     </div>
                 </nav>
-                <footer id="footer">
-                    <a href="https://discord.gg/P6W58J8">Discord</a>
-                    <a href="https://github.com/wagyourtail/JsMacros">Github</a>
-                    <a href="https://ko-fi.com/wagyourtail">Donate</a>
-                    <h4>Wagyourtail 2021</h4>
-                </footer>
             </div>
             <main id="content">
                 <div id="Loading">
@@ -52,7 +47,14 @@
                     <h2>This page requires javascript to work properly.</h2>
                 </noscript>
             </main>
-            <script src="index.js"></script>
         </div>
+        <footer id="footer">
+            <a href="https://discord.gg/P6W58J8">Discord</a>
+            <a href="https://github.com/wagyourtail/JsMacros">Github</a>
+            <a href="https://ko-fi.com/wagyourtail">Donate</a>
+            <h4>Wagyourtail 2021</h4>
+        </footer>
+        <script src="search.js"></script>
+        <script src="index.js"></script>
     </body>
 </html>
