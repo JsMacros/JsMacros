@@ -29,7 +29,7 @@ body > div {
     grid-template-columns: min-content auto;
 }
 
-#content {
+#mainContent {
     padding: 5px;
     width: 100%;
 }
