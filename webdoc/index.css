@@ -19,6 +19,14 @@ body {
     padding: 10px;
 }
 
+#mainNav a {
+    display: block;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0;
+    color: #0066FF;
+}
+
 .searchContainer {
     margin-left: auto;
     padding: 10px;

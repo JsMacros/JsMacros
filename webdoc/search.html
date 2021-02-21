@@ -32,5 +32,8 @@
         <div id="searchResults"></div>
     </main>
     <script src="search.js"></script>
+    <script>
+        loadingSearchMap.then(updateClassGroups).then(() => searchF(search.value));
+    </script>
 </body>
 </html>

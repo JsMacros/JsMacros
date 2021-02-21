@@ -23,6 +23,7 @@ function frameLink(a) {
 }
 
 async function openMain(url) {
+    url = url.replace(/https?:\/\/.+?\//, "/");
     window.history.replaceState({}, '', `${window.location.href.split('?')[0]}?${url}`);
     const req = await fetch(url);
     if (req.status != 200) {

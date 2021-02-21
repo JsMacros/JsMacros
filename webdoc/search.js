@@ -12,7 +12,7 @@ async function reloadSearchMap() {
         const text = (await res.text()).split("\n");
         for (const line of text) {
             if (line == "") continue;
-            const parts = line.split(/\s+/);
+            const parts = line.split("\t");
             switch (parts[0]) {
                 case "C":
                     searchMaps.classes.set(parts[4] ?? parts[1], {name: parts[1], url:parts[2], group:parts[3] ?? "Class"});
@@ -53,6 +53,9 @@ async function reloadSearchMap() {
     } else {
         alert(`error ${res.status}\n${res.statusText}`);
     }
+    searchMaps.classes = new Map([...searchMaps.classes.entries()].sort());
+    searchMaps.methods = new Map([...searchMaps.methods.entries()].sort());
+    searchMaps.fields = new Map([...searchMaps.fields.entries()].sort());
     classGroups.add("Class");
 }
 

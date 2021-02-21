@@ -59,47 +59,47 @@ public class Main {
             }
             new FileHandler(new File(outDir, "package-list")).write(pkglist.toString());
             /* spec
-             * C <searchname> <linkname> <?group> <?alias>
-             * F <fieldname> <fieldlink>
-             * M <methodname> <methodlink>
+             * C\t<searchname>\t<linkname>\t<?group>\t<?alias>
+             * F\t<fieldname>\t<fieldlink>
+             * M\t<methodname>\t<methodlink>
              */
             StringBuilder searchList = new StringBuilder();
             
             for (ClassDoc clazz : classes) {
                 Optional<AnnotationDesc> eventAnnotation = Arrays.stream(clazz.annotations()).filter(e -> e.annotationType().simpleTypeName().equals("Event")).findFirst();
                 Optional<AnnotationDesc> libraryAnnotation = Arrays.stream(clazz.annotations()).filter(e -> e.annotationType().simpleTypeName().equals("Library")).findFirst();
-                searchList.append("C ").append(clazz.typeName()).append(" ").append(clazz.containingPackage().name().replaceAll("\\.", "/")).append("/").append(clazz.typeName());
+                searchList.append("C\t").append(clazz.typeName()).append("\t").append(clazz.containingPackage().name().replaceAll("\\.", "/")).append("/").append(clazz.typeName());
                 if (eventAnnotation.isPresent()) {
-                    searchList.append(" Event");
+                    searchList.append("\tEvent");
                 } else if (libraryAnnotation.isPresent()) {
-                    searchList.append(" Library");
+                    searchList.append("\tLibrary");
                 } else {
-                    searchList.append(" Class");
+                    searchList.append("\tClass");
                 }
                 if (eventAnnotation.isPresent()) {
                     for (AnnotationDesc.ElementValuePair ep : eventAnnotation.get().elementValues()) {
                         if (ep.element().name().equals("value")) {
-                            searchList.append(" ").append(ep.value().value().toString());
+                            searchList.append("\t").append(ep.value().value().toString());
                         }
                     }
                 } else if (libraryAnnotation.isPresent()) {
                     for (AnnotationDesc.ElementValuePair ep : libraryAnnotation.get().elementValues()) {
                         if (ep.element().name().equals("value")) {
-                            searchList.append(" ").append(ep.value().value().toString());
+                            searchList.append("\t").append(ep.value().value().toString());
                         }
                     }
                 }
                 searchList.append("\n");
                 for (FieldDoc field : clazz.fields()) {
-                    searchList.append("F ").append(clazz.typeName()).append("#").append(field.name());
-                    searchList.append(" ");
+                    searchList.append("F\t").append(clazz.typeName()).append("#").append(field.name());
+                    searchList.append("\t");
                     searchList.append(clazz.containingPackage().name().replaceAll("\\.", "/")).append("/").append(clazz.typeName()).append("#").append(WebParser.memberId(field));
                     searchList.append("\n");
                     
                 }
                 for (MethodDoc method : clazz.methods()) {
-                    searchList.append("M ").append(clazz.typeName()).append("#").append(method.name()).append("(").append(Arrays.stream(method.parameters()).map(Parameter::name).collect(Collectors.joining(", ")));
-                    searchList.append(") ");
+                    searchList.append("M\t").append(clazz.typeName()).append("#").append(method.name()).append("(").append(Arrays.stream(method.parameters()).map(Parameter::name).collect(Collectors.joining(", ")));
+                    searchList.append(")\t");
                     searchList.append(clazz.containingPackage().name().replaceAll("\\.", "/")).append("/").append(clazz.typeName()).append("#").append(WebParser.memberId(method));
                     searchList.append("\n");
                 }
