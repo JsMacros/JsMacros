@@ -174,7 +174,7 @@ public class WebParser {
                 builder.append(parseType(currentClass, types[i]));
                 builder.append(", ");
             }
-            builder.append(parseType(currentClass, types[i]));
+            if (types.length > 0) builder.append(parseType(currentClass, types[i]));
             builder.append(">");
         }
         builder.append(type.dimension());
