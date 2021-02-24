@@ -1,11 +1,13 @@
 package xyz.wagyourtail.jsmacros.client;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.*;
+import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.LiteralText;
@@ -14,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
+import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigOptions;
 import xyz.wagyourtail.jsmacros.client.config.Profile;
 import xyz.wagyourtail.jsmacros.client.event.EventRegistry;
@@ -27,6 +30,7 @@ import java.io.File;
 public class JsMacros implements ClientModInitializer {
     public static final String MOD_ID = "jsmacros";
     public static final Logger LOGGER  = LogManager.getLogger();
+    public static KeyBinding keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title")));
     public static BaseScreen prevScreen;
     protected static final File configFolder = new File(FabricLoader.getInstance().getConfigDir().toFile(), "jsMacros");
     

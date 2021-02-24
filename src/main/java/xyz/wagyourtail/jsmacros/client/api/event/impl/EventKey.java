@@ -1,14 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.options.KeyBinding;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
-import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FKeyBind;
@@ -24,7 +20,6 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  @Event(value = "Key", oldName = "KEY")
 public class EventKey implements BaseEvent {
     static final MinecraftClient mc = MinecraftClient.getInstance();
-    private static KeyBinding keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title")));
     public final int action;
     public final String key;
     public final String mods;
@@ -40,7 +35,7 @@ public class EventKey implements BaseEvent {
         this.mods = getKeyModifiers(mods);
         
         
-        if (keyBinding.matchesKey(key, scancode) && action == 1 && mc.currentScreen == null) {
+        if (JsMacros.keyBinding.matchesKey(key, scancode) && action == 1 && mc.currentScreen == null) {
             if (JsMacros.prevScreen instanceof EditorScreen) {
                 ((EditorScreen) JsMacros.prevScreen).blockFirst = true;
             }
