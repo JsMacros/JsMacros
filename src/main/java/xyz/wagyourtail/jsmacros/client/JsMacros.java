@@ -30,7 +30,7 @@ import java.io.File;
 public class JsMacros implements ClientModInitializer {
     public static final String MOD_ID = "jsmacros";
     public static final Logger LOGGER  = LogManager.getLogger();
-    public static KeyBinding keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title")));
+    public static KeyBinding keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title"));
     public static BaseScreen prevScreen;
     protected static final File configFolder = new File(FabricLoader.getInstance().getConfigDir().toFile(), "jsMacros");
     
@@ -38,7 +38,7 @@ public class JsMacros implements ClientModInitializer {
     
     @Override
     public void onInitializeClient() {
-        
+        KeyBindingHelper.registerKeyBinding(keyBinding);
         prevScreen = new KeyMacrosScreen(null);
         
         Thread t = new Thread(() -> {
