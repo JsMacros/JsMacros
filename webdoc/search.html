@@ -4,17 +4,24 @@
     <meta charset="UTF-8">
     <title>Search</title>
     <link rel="stylesheet" href="search.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <label for="versionSelect" class="versionContainer">
-        Docs Version:
-        <select id="versionSelect">
-            <option value="1.3.1">1.3.1</option>
-        </select>
-    </label>
-    <label for="search" class="searchContainer">
-        <input id="search" type="search" placeholder="search for classes/fields/methods" onkeyup="searchF(this.value)">
-    </label>
+    <header>
+        <a href="../../../">
+            <----- Return to main JsMacros docs page.
+        </a>
+        <label for="versionSelect" class="versionContainer">
+            Docs Version:
+            <select id="versionSelect">
+                <option value="1.3.1">1.3.1</option>
+            </select>
+        </label>
+        <label for="search" class="searchContainer">
+            <input id="search" type="search" placeholder="search for classes/fields/methods" onkeyup="searchF(this.value)">
+        </label>
+    </header>
     <main class="searchMain">
         <div id="classGroupChecks">
         </div>

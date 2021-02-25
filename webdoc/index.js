@@ -28,6 +28,7 @@ async function openMain(url) {
     const req = await fetch(url);
     if (req.status != 200) {
         alert(`failed to load ${req.status}: \n${req.statusText}`);
+        return;
     }
     const text = await req.text();
     const parser = new DOMParser();

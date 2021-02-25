@@ -44,7 +44,7 @@ body > div {
 
 #mainContent {
     padding: 5px;
-    width: 100%;
+    width: calc(100% - 10px);
 }
 
 .sideNav {
