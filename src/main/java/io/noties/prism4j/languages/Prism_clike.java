@@ -9,8 +9,8 @@ import static io.noties.prism4j.Prism4j.*;
 import static java.util.regex.Pattern.compile;
 
 /**
- * This class is from <a href="https://github.com/noties/Prism4j">Prism4j</a>
- * under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0 license</a>'
+ * This class is from <a target="_blank" href="https://github.com/noties/Prism4j">Prism4j</a>
+ * under the <a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0 license</a>
  * updated to match upstream
  */
 @SuppressWarnings("unused")

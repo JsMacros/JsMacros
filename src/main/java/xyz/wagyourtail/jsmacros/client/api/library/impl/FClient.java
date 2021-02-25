@@ -29,7 +29,7 @@ public class FClient extends BaseLibrary {
     /**
     *
     * @since 1.0.0 (was in the {@code jsmacros} library until 1.2.9)
-     * @return the raw minecraft client class, it may be useful to use <a href="https://wagyourtail.xyz/Projects/Minecraft%20Mappings%20Viewer/App">Minecraft Mappings Viewer</a> for this.
+     * @return the raw minecraft client class, it may be useful to use <a target="_blank" href="https://wagyourtail.xyz/Projects/Minecraft%20Mappings%20Viewer/App">Minecraft Mappings Viewer</a> for this.
      */
     public MinecraftClient getMinecraft() {
         return mc;

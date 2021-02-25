@@ -183,7 +183,7 @@ public class FReflection extends BaseLibrary {
      * Attempts to create a new instance of a class. You probably don't have to use this one and can just call {@code
      * new} on a {@link java.lang.Class Class} unless you're in LUA, but then you also have the (kinda poorly
      * doccumented, can someone find a better docs link for me)
-     * <a href= "http://luaj.sourceforge.net/api/3.2/org/luaj/vm2/lib/jse/LuajavaLib.html">LuaJava Library</a>.
+     * <a target="_blank" href= "http://luaj.sourceforge.net/api/3.2/org/luaj/vm2/lib/jse/LuajavaLib.html">LuaJava Library</a>.
      *
      * @param c
      * @param objects
@@ -291,8 +291,8 @@ public class FReflection extends BaseLibrary {
      * all the classes to a {@link Map}
      *
      * This class is a modification to
-     * <a href="https://www.source-code.biz/snippets/java/12.htm">Christian d'Heureuse's JoinClassLoader</a>, under the
-     * <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0 license</a> to change it from a Class array to a
+     * <a target="_blank" href="https://www.source-code.biz/snippets/java/12.htm">Christian d'Heureuse's JoinClassLoader</a>, under the
+     * <a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0 license</a> to change it from a Class array to a
      * {@link Set}, to allow for modifications to the {@link ClassLoader ClassLoaders} contained in the classLoader.
      *
      * @author Wagyourtail, Christian d'Heureuse

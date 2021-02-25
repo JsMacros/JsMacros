@@ -61,7 +61,7 @@ import java.util.Map;
     }
     
     /**
-     * @return <a href="https://github.com/noties/Prism4j/blob/75ac3dae6f8eff5b1b0396df3b806f44ce86c484/prism4j/src/main/java/io/noties/prism4j/Prism4j.java#L54">Prism4j's
+     * @return <a target="_blank" href="https://github.com/noties/Prism4j/blob/75ac3dae6f8eff5b1b0396df3b806f44ce86c484/prism4j/src/main/java/io/noties/prism4j/Prism4j.java#L54">Prism4j's
      *     node list</a> you don't have to use it but if you're not compiling your own...
      *     peek at the code of {@link TextStyleCompiler} for the default impl for walking the node tree.
      */
