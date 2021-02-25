@@ -1,5 +1,14 @@
+body {
+    font-family: Sans-Serif, serif;
+    margin: 0;
+}
+
+code {
+    font-family: monospace;
+}
+
 .searchMain {
-    font-family: 'Montserrat', monospace;
+    font-family: Sans-Serif, serif;
 }
 
 .resultItem a {

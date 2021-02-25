@@ -24,7 +24,7 @@ function frameLink(a) {
 
 async function openMain(url) {
     url = url.replace(/https?:\/\/.+?\//, "/");
-    window.history.replaceState({}, '', `${window.location.href.split('?')[0]}?${url}`);
+    window.history.replaceState({}, '', `${window.location.href.split('?')[0].replace(/#.*\??/, "")}?${url}`);
     const req = await fetch(url);
     if (req.status != 200) {
         alert(`failed to load ${req.status}: \n${req.statusText}`);
@@ -44,6 +44,15 @@ async function openMain(url) {
     if (cname == "searchMain") {
         updateClassGroups();
     }
+    const scroll = url.split("#")[1];
+    if (scroll) {
+        window.scrollTo(window.scrollX, document.getElementById(scroll).offsetTop);
+        console.log(document.getElementById(scroll).offsetTop);
+        console.log(scroll);
+    } else {
+        window.scrollTo(window.scrollX, 0);
+    }
+    mainNav.parentElement.style.display = null;
 }
 
 async function searchBox(val) {
@@ -58,5 +67,14 @@ async function searchBox(val) {
 
 loadingSearchMap.then(populateClassSidebar).then(() => {
     const rawParams = window.location.search?.substring(1) || "general.html";
-    openMain(rawParams);
+    const scroll = window.location.href.split("?")[1]?.split("#")[1];
+    openMain(scroll ? `${rawParams}#${scroll}` : rawParams);
 });
+
+menuBtn.onclick = () => {
+    if (mainNav.parentElement.style.display) {
+        mainNav.parentElement.style.display = null;
+    } else {
+        mainNav.parentElement.style.display = "block";
+    }
+}

@@ -1,6 +1,12 @@
 .classDoc {
-    font-family: 'Montserrat', monospace;
+    font-family: Sans-Serif, serif;
+    margin: 0;
 }
+
+code {
+    font-family: monospace;
+}
+
 
 .classDoc code {
     background-color: #C0C0C0;

@@ -1,5 +1,10 @@
 body {
-    font-family: 'Montserrat', monospace;
+    font-family: Sans-Serif, serif;
+    margin: 0;
+}
+
+code {
+    font-family: monospace;
 }
 
 .topNav {
@@ -75,4 +80,43 @@ body > div {
     font-weight: bold;
     margin: 0;
     color: #0066FF;
+}
+
+#menuBtn {
+    display: none;
+}
+
+@media screen and (max-width: 900px) {
+    .topNav {
+        display: grid;
+        grid-template-columns: auto auto;
+    }
+    .sideNav {
+        position: absolute;
+        float: left;
+        display: none;
+        background-color: rgba(0,0,0,0);
+    }
+    #mainNav {
+        background-color: #BCBCBC;
+        padding: 5px;
+    }
+    #mainNav a {
+        margin: 10px;
+    }
+    #mainContent {
+        width: 100%;
+    }
+    body > div {
+        display: block;
+    }
+    .topNav h1 {
+        float: left;
+        width: auto;
+    }
+    #menuBtn {
+        display: block;
+        float: right;
+        margin: 10px;
+    }
 }

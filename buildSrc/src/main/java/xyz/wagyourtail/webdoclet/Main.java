@@ -66,6 +66,7 @@ public class Main {
             StringBuilder searchList = new StringBuilder();
             
             for (ClassDoc clazz : classes) {
+                if (!clazz.isPublic()) continue;
                 Optional<AnnotationDesc> eventAnnotation = Arrays.stream(clazz.annotations()).filter(e -> e.annotationType().simpleTypeName().equals("Event")).findFirst();
                 Optional<AnnotationDesc> libraryAnnotation = Arrays.stream(clazz.annotations()).filter(e -> e.annotationType().simpleTypeName().equals("Library")).findFirst();
                 searchList.append("C\t").append(clazz.typeName()).append("\t").append(clazz.containingPackage().name().replaceAll("\\.", "/")).append("/").append(clazz.typeName());
@@ -114,6 +115,11 @@ public class Main {
                             new XMLBuilder("link", true, true).addStringOption("rel", "stylesheet").addStringOption("href", upDir + "classContent.css")
                         ),
                         new XMLBuilder("body").append(
+                            new XMLBuilder("header").append(
+                                new XMLBuilder("a").addStringOption("href", upDir.toString()).append(
+                                    "<----- Return to main JsMacros docs page."
+                                )
+                            ),
                             WebParser.parseClass(clazz)
                         )
                     ).toString()
