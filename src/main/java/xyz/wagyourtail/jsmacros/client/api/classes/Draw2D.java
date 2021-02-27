@@ -156,11 +156,11 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
 
     /**
      * @since 1.2.6
-     * @see IDraw2D#addText(String, int, int, int, boolean, double, float)
+     * @see IDraw2D#addText(String, int, int, int, boolean, double, double)
      */
     @Override
-    public RenderCommon.Text addText(String text, int x, int y, int color, boolean shadow, double scale, float rotation) {
-        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, shadow, scale, rotation);
+    public RenderCommon.Text addText(String text, int x, int y, int color, boolean shadow, double scale, double rotation) {
+        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, shadow, scale, (float) rotation);
         synchronized (elements) {
             elements.add(t);
         }
@@ -175,8 +175,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     }
 
     @Override
-    public RenderCommon.Text addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, float rotation) {
-        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, shadow, scale, rotation);
+    public RenderCommon.Text addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, double rotation) {
+        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, shadow, scale, (float) rotation);
         synchronized (elements) {
             elements.add(t);
         }
@@ -206,11 +206,11 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
 
     /**
      * @since 1.2.6
-     * @see IDraw2D#addImage(int, int, int, int, String, int, int, int, int, int, int, float)
+     * @see IDraw2D#addImage(int, int, int, int, String, int, int, int, int, int, int, double)
      */
     @Override
-    public RenderCommon.Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
-        RenderCommon.Image i = new RenderCommon.Image(x, y, width, height, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
+    public RenderCommon.Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
+        RenderCommon.Image i = new RenderCommon.Image(x, y, width, height, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation);
         synchronized (elements) {
             elements.add(i);
         }
@@ -252,11 +252,11 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
 
     /**
      * @since 1.2.6
-     * @see IDraw2D#addRect(int, int, int, int, int, int, float)
+     * @see IDraw2D#addRect(int, int, int, int, int, int, double)
      */
     @Override
-    public RenderCommon.Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation) {
-        RenderCommon.Rect r = new RenderCommon.Rect(x1, y1, x2, y2, color, alpha, rotation);
+    public RenderCommon.Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, double rotation) {
+        RenderCommon.Rect r = new RenderCommon.Rect(x1, y1, x2, y2, color, alpha, (float) rotation);
         synchronized (elements) {
             elements.add(r);
         }
@@ -295,11 +295,11 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
 
     /**
      * @since 1.2.0
-     * @see IDraw2D#addItem(int, int, String, boolean, double, float)
+     * @see IDraw2D#addItem(int, int, String, boolean, double, double)
      */
     @Override
-    public RenderCommon.Item addItem(int x, int y, String id, boolean overlay, double scale, float rotation) {
-        RenderCommon.Item i = new RenderCommon.Item(x, y, id, overlay, scale, rotation);
+    public RenderCommon.Item addItem(int x, int y, String id, boolean overlay, double scale, double rotation) {
+        RenderCommon.Item i = new RenderCommon.Item(x, y, id, overlay, scale, (float) rotation);
         synchronized (elements) {
             elements.add(i);
         }
@@ -325,11 +325,11 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
 
     /**
      * @since 1.2.6
-     * @see IDraw2D#addItem(int, int, ItemStackHelper, boolean, double, float)
+     * @see IDraw2D#addItem(int, int, ItemStackHelper, boolean, double, double)
      */
     @Override
-    public RenderCommon.Item addItem(int x, int y, ItemStackHelper Item, boolean overlay, double scale, float rotation) {
-        RenderCommon.Item i = new RenderCommon.Item(x, y, Item, overlay, scale, rotation);
+    public RenderCommon.Item addItem(int x, int y, ItemStackHelper Item, boolean overlay, double scale, double rotation) {
+        RenderCommon.Item i = new RenderCommon.Item(x, y, Item, overlay, scale, (float) rotation);
         synchronized (elements) {
             elements.add(i);
         }

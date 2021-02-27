@@ -171,8 +171,8 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public RenderCommon.Text addText(String text, int x, int y, int color, boolean shadow, double scale, float rotation) {
-        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, shadow, scale, rotation);
+    public RenderCommon.Text addText(String text, int x, int y, int color, boolean shadow, double scale, double rotation) {
+        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, shadow, scale, (float) rotation);
         synchronized (elements) {
             elements.add(t);
         }
@@ -186,8 +186,8 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public RenderCommon.Text addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, float rotation) {
-        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, shadow, scale, rotation);
+    public RenderCommon.Text addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, double rotation) {
+        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, shadow, scale, (float) rotation);
         synchronized (elements) {
             elements.add(t);
         }
@@ -210,8 +210,8 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public RenderCommon.Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth,
-        int regionHeight, int textureWidth, int textureHeight, float rotation) {
-        RenderCommon.Image i = new RenderCommon.Image(x, y, width, height, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
+        int regionHeight, int textureWidth, int textureHeight, double rotation) {
+        RenderCommon.Image i = new RenderCommon.Image(x, y, width, height, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation);
         synchronized (elements) {
             elements.add(i);
         }

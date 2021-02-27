@@ -97,11 +97,11 @@ public interface IDraw2D<T> {
      * @param y screen y
      * @param color text color
      * @param shadow include shadow layer
-     * @param scale text scale (as float)
+     * @param scale text scale (as double)
      * @param rotation text rotation (as degrees)
      * @return added text
      */
-    Text addText(String text, int x, int y, int color, boolean shadow, double scale, float rotation);
+    Text addText(String text, int x, int y, int color, boolean shadow, double scale, double rotation);
     
     /**
      * @since 1.2.7
@@ -121,11 +121,11 @@ public interface IDraw2D<T> {
      * @param y screen y
      * @param color text color
      * @param shadow include shadow layer
-     * @param scale text scale (as float)
+     * @param scale text scale (as double)
      * @param rotation text rotation (as degrees)
      * @return added text
      */
-    Text addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, float rotation);
+    Text addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, double rotation);
     
     
     /**
@@ -169,7 +169,7 @@ public interface IDraw2D<T> {
      * @param rotation the rotation of the texture (as degrees)
      * @return added image
      */
-    Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation);
+    Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation);
     
     /**
      * @since 1.2.7
@@ -213,7 +213,7 @@ public interface IDraw2D<T> {
      * @param rotation as degrees
      * @return added rect
      */
-    Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation);
+    Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, double rotation);
     
     /**
      * @since 1.2.7
@@ -252,7 +252,7 @@ public interface IDraw2D<T> {
      * @param rotation rotation of item
      * @return added item
      */
-    Item addItem(int x, int y, String id, boolean overlay, double scale, float rotation);
+    Item addItem(int x, int y, String id, boolean overlay, double scale, double rotation);
     
     /**
      * @since 1.2.7
@@ -283,7 +283,7 @@ public interface IDraw2D<T> {
      * @param rotation rotation of item
      * @return added item
      */
-    Item addItem(int x, int y, ItemStackHelper item, boolean overlay, double scale, float rotation);
+    Item addItem(int x, int y, ItemStackHelper item, boolean overlay, double scale, double rotation);
     
     /**
      * @since 1.2.7

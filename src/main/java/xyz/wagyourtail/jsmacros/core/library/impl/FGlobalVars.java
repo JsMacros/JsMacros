@@ -49,20 +49,6 @@ public class FGlobalVars extends BaseLibrary {
 	}
 	
 	/**
-	 * put a Float into the global variable space.
-	 * 
-	 * @since 1.0.4
-	 * 
-	 * @param name
-	 * @param f
-	 * @return
-	 */
-	public float putFloat(String name, float f) {
-		globalRaw.put(name, f);
-		return f;
-	}
-	
-	/**
 	 * put a Double into the global variable space.
 	 * 
 	 * @since 1.0.8
@@ -120,8 +106,6 @@ public class FGlobalVars extends BaseLibrary {
 			return "Int";
 		} else if (i instanceof String) {
 			return "String";
-		} else if (i instanceof Float) {
-			return "Float";
 		} else if (i instanceof Double) {
             return "Double";
 		} else if (i instanceof Boolean) {
@@ -165,22 +149,6 @@ public class FGlobalVars extends BaseLibrary {
 		}
 	}
 	
-	/**
-	 * Gets a Float from the global variable space.
-	 * 
-	 * @since 1.0.4
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public Float getFloat(String name) {
-		Object i = globalRaw.get(name);
-		if (i instanceof Float) {
-			return (Float) i;
-		} else {
-			return null;
-		}
-	}
 	
 	/**
 	 * Gets a Double from the global variable space.
@@ -192,7 +160,7 @@ public class FGlobalVars extends BaseLibrary {
 	 */
 	public Double getDouble(String name) {
         Object i = globalRaw.get(name);
-        if (i instanceof Float) {
+        if (i instanceof Double) {
             return (Double) i;
         } else {
             return null;

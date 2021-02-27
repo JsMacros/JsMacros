@@ -244,8 +244,8 @@ public class FWorld extends BaseLibrary {
         Clip clip = AudioSystem.getClip();
         clip.open(AudioSystem.getAudioInputStream(new File(Core.instance.config.macroFolder, file)));
         FloatControl gainControl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
-        float min = gainControl.getMinimum();
-        float range = gainControl.getMaximum() - min;
+        double min = gainControl.getMinimum();
+        double range = gainControl.getMaximum() - min;
         float gain = (float) ((range * volume) + min);
         gainControl.setValue(gain);
         clip.addLineListener(event -> {
@@ -259,7 +259,7 @@ public class FWorld extends BaseLibrary {
     
     /**
      * @since 1.1.7
-     * @see FWorld#playSound(String, float, float, double, double, double)
+     * @see FWorld#playSound(String, double, double, double, double, double)
      * @param id
      */
     public void playSound(String id) {
@@ -268,25 +268,25 @@ public class FWorld extends BaseLibrary {
     
     /**
      * @since 1.1.7
-     * @see FWorld#playSound(String, float, float, double, double, double)
+     * @see FWorld#playSound(String, double, double, double, double, double)
      * @param id
      * @param volume
      */
-    public void playSound(String id, float volume) {
+    public void playSound(String id, double volume) {
         playSound(id, volume, 0.25F);
     }
     
     /**
      * @since 1.1.7
-     * @see FWorld#playSound(String, float, float, double, double, double)
+     * @see FWorld#playSound(String, double, double, double, double, double)
      * @param id
      * @param volume
      * @param pitch
      */
-    public void playSound(String id, float volume, float pitch) {
+    public void playSound(String id, double volume, double pitch) {
         SoundEvent sound = Registry.SOUND_EVENT.get(new Identifier(id));
         assert sound != null;
-        mc.getSoundManager().play(PositionedSoundInstance.master(sound, pitch, volume));
+        mc.getSoundManager().play(PositionedSoundInstance.master(sound, (float) pitch, (float) volume));
     }
     
     /**
@@ -299,11 +299,11 @@ public class FWorld extends BaseLibrary {
      * @param y
      * @param z
      */
-    public void playSound(String id, float volume, float pitch, double x, double y, double z) {
+    public void playSound(String id, double volume, double pitch, double x, double y, double z) {
         assert mc.world != null;
         SoundEvent sound = Registry.SOUND_EVENT.get(new Identifier(id));
         assert sound != null;
-        mc.world.playSound(x, y, z, sound, SoundCategory.MASTER, volume, pitch, true);
+        mc.world.playSound(x, y, z, sound, SoundCategory.MASTER, (float) volume, (float) pitch, true);
     }
     
     /**

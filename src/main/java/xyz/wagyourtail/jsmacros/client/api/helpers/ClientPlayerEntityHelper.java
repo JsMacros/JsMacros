@@ -22,12 +22,12 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      * @since 1.0.3
      */
-    public ClientPlayerEntityHelper<T> lookAt(float yaw, float pitch) {
+    public ClientPlayerEntityHelper<T> lookAt(double yaw, double pitch) {
         pitch = MathHelper.clamp(pitch, -90.0F, 90.0F);
         base.prevPitch = base.pitch;
         base.prevYaw = base.yaw;
-        base.pitch = pitch;
-        base.yaw = MathHelper.wrapDegrees(yaw);
+        base.pitch = (float)pitch;
+        base.yaw = MathHelper.wrapDegrees((float)yaw);
         if (base.getVehicle() != null) {
             base.getVehicle().onPassengerLookAround(base);
         }

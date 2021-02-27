@@ -85,8 +85,8 @@ public class PlayerAbilitiesHelper extends BaseHelper<PlayerAbilities> {
 	 * @param flySpeed
 	 * @return
 	 */
-	public PlayerAbilitiesHelper setFlySpeed(float flySpeed) {
-		base.setFlySpeed(flySpeed);
+	public PlayerAbilitiesHelper setFlySpeed(double flySpeed) {
+		base.setFlySpeed((float)flySpeed);
 		return this;
 	}
 }

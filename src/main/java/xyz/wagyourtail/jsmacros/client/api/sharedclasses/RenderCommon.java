@@ -82,8 +82,8 @@ public class RenderCommon {
          * @param rotation
          * @return
          */
-        public Item setRotation(float rotation) {
-            this.rotation = MathHelper.wrapDegrees(rotation);
+        public Item setRotation(double rotation) {
+            this.rotation = MathHelper.wrapDegrees((float)rotation);
             return this;
         }
         
@@ -209,8 +209,8 @@ public class RenderCommon {
          * @param rotation
          * @return
          */
-        public Image setRotation(float rotation) {
-            this.rotation = MathHelper.wrapDegrees(rotation);
+        public Image setRotation(double rotation) {
+            this.rotation = MathHelper.wrapDegrees((float) rotation);
             return this;
         }
         
@@ -335,8 +335,8 @@ public class RenderCommon {
          * @param rotation
          * @return
          */
-        public Rect setRotation(float rotation) {
-            this.rotation = MathHelper.wrapDegrees(rotation);
+        public Rect setRotation(double rotation) {
+            this.rotation = MathHelper.wrapDegrees((float) rotation);
             return this;
         }
     
@@ -406,8 +406,8 @@ public class RenderCommon {
          * @param rotation
          * @return
          */
-        public Text setRotation(float rotation) {
-            this.rotation = MathHelper.wrapDegrees(rotation);
+        public Text setRotation(double rotation) {
+            this.rotation = MathHelper.wrapDegrees((float) rotation);
             return this;
         }
         

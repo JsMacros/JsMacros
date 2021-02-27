@@ -89,21 +89,6 @@ public class EventCustom implements BaseEvent {
     }
     
     /**
-     * put a Float into the event.
-     *
-     * @param name
-     * @param f
-     *
-     * @return
-     *
-     * @since 1.2.8
-     */
-    public float putFloat(String name, float f) {
-        args.put(name, f);
-        return f;
-    }
-    
-    /**
      * put a Double into the event.
      *
      * @param name
@@ -165,8 +150,6 @@ public class EventCustom implements BaseEvent {
             return "Int";
         } else if (i instanceof String) {
             return "String";
-        } else if (i instanceof Float) {
-            return "Float";
         } else if (i instanceof Double) {
             return "Double";
         } else if (i instanceof Boolean) {
@@ -213,24 +196,6 @@ public class EventCustom implements BaseEvent {
     }
     
     /**
-     * Gets a Float from the event.
-     *
-     * @param name
-     *
-     * @return
-     *
-     * @since 1.2.8
-     */
-    public Float getFloat(String name) {
-        Object i = args.get(name);
-        if (i instanceof Float) {
-            return (Float) i;
-        } else {
-            return null;
-        }
-    }
-    
-    /**
      * Gets a Double from the event.
      *
      * @param name
@@ -241,7 +206,7 @@ public class EventCustom implements BaseEvent {
      */
     public Double getDouble(String name) {
         Object i = args.get(name);
-        if (i instanceof Float) {
+        if (i instanceof Double) {
             return (Double) i;
         } else {
             return null;
