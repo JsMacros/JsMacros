@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.LinkedList;
@@ -141,7 +142,13 @@ public class TextBuilder {
      * @return
      */
     public TextBuilder withCustomClickEvent(MethodWrapper<Object, Object, Object> action) {
-        self.styled(style -> style.withClickEvent(new CustomClickEvent(action)));
+        self.styled(style -> style.withClickEvent(new CustomClickEvent(() -> new Thread(() -> {
+            try {
+                action.run();
+            } catch (Exception ex) {
+                Core.instance.profile.logError(ex);
+            }
+        }).start())));
         return this;
     }
     
