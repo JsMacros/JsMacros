@@ -22,7 +22,7 @@ public class Core<T extends ConfigOptions> {
     public final BaseProfile profile;
     public final ConfigManager<T> config;
     public final LibraryRegistry libraryRegistry = new LibraryRegistry();
-    public final Map<ScriptTrigger, List<ScriptThreadWrapper>> threads = new HashMap<>();
+    public final Map<ScriptTrigger, Set<ScriptThreadWrapper>> threads = new HashMap<>();
     public final List<BaseLanguage> languages = new ArrayList<>();
     public BaseLanguage defaultLang = new JavascriptLanguageDefinition(".js", this);
     
@@ -61,7 +61,7 @@ public class Core<T extends ConfigOptions> {
     
     public List<ScriptThreadWrapper> getThreads() {
         List<ScriptThreadWrapper> th = new ArrayList<>();
-        for (List<ScriptThreadWrapper> tl : ImmutableList.copyOf(threads.values())) {
+        for (Set<ScriptThreadWrapper> tl : ImmutableList.copyOf(threads.values())) {
             th.addAll(tl);
         }
         return th;
@@ -71,7 +71,7 @@ public class Core<T extends ConfigOptions> {
         if (threads.containsKey(t.m)) {
             if (threads.get(t.m).remove(t)) return;
         }
-        for (Entry<ScriptTrigger, List<ScriptThreadWrapper>> tl : threads.entrySet()) {
+        for (Entry<ScriptTrigger, Set<ScriptThreadWrapper>> tl : threads.entrySet()) {
             if (tl.getValue().remove(t)) return;
         }
     }

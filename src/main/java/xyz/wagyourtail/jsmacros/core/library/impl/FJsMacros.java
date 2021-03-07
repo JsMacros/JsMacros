@@ -19,10 +19,7 @@ import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Functions that interact directly with JsMacros or Events.
@@ -57,7 +54,7 @@ public class FJsMacros extends BaseLibrary {
      * @since 1.0.5
      * 
      */
-    public Map<ScriptTrigger, List<ScriptThreadWrapper>> getRunningThreads() {
+    public Map<ScriptTrigger, Set<ScriptThreadWrapper>> getRunningThreads() {
         return ImmutableMap.copyOf(Core.instance.threads);
     }
 
@@ -117,7 +114,12 @@ public class FJsMacros extends BaseLibrary {
      * @return the {@link java.lang.Thread} the script is running on.
      */
     public Thread runScript(String language, String script, MethodWrapper<String, Object, Object> callback) {
+        Thread ct = Thread.currentThread();
         Thread t = new Thread(() -> {
+            Core.instance.threads.putIfAbsent(null, new HashSet<>());
+            ScriptThreadWrapper th = new ScriptThreadWrapper(Thread.currentThread(), null, System.currentTimeMillis());
+            Thread.currentThread().setName(String.format("RunScript:{\"creator\":\"%s\"}", ct.getName()));
+            Core.instance.threads.get(null).add(th);
             BaseLanguage lang = Core.instance.defaultLang;
             for (BaseLanguage l : Core.instance.languages) {
                 if (language.equals(l.extension.replaceAll("\\.", " ").trim().replaceAll(" ", "."))) {
@@ -130,6 +132,8 @@ public class FJsMacros extends BaseLibrary {
                 if (callback != null) callback.accept(null);
             } catch (Exception | AbstractMethodError e) {
                 if (callback != null) callback.accept(e.toString());
+            } finally {
+                Core.instance.threads.get(null).remove(th);
             }
         });
         t.start();
@@ -165,12 +169,17 @@ public class FJsMacros extends BaseLibrary {
             @Override
             public Thread trigger(BaseEvent event) {
                 Thread t = new Thread(() -> {
+                    Core.instance.threads.putIfAbsent(null, new HashSet<>());
+                    ScriptThreadWrapper th = new ScriptThreadWrapper(Thread.currentThread(), null, System.currentTimeMillis());
+                    Core.instance.threads.get(null).add(th);
                     Thread.currentThread().setName(this.toString());
                     try {
                         callback.accept(event);
                     } catch (Exception e) {
                         Core.instance.eventRegistry.removeListener(this);
                         Core.instance.profile.logError(e);
+                    } finally {
+                        Core.instance.removeThread(th);
                     }
                 });
                 t.start();
@@ -215,11 +224,16 @@ public class FJsMacros extends BaseLibrary {
             public Thread trigger(BaseEvent event) {
                 Core.instance.eventRegistry.removeListener(this);
                 Thread t = new Thread(() -> {
+                    Core.instance.threads.putIfAbsent(null, new HashSet<>());
+                    ScriptThreadWrapper th = new ScriptThreadWrapper(Thread.currentThread(), null, System.currentTimeMillis());
+                    Core.instance.threads.get(null).add(th);
                     Thread.currentThread().setName(this.toString());
                     try {
                         callback.accept(event);
                     } catch (Exception e) {
                         Core.instance.profile.logError(e);
+                    } finally {
+                        Core.instance.removeThread(th);
                     }
                 });
                 t.start();

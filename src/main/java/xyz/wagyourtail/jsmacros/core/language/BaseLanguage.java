@@ -9,6 +9,7 @@ import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -30,12 +31,17 @@ public abstract class BaseLanguage {
                           Consumer<Throwable> catcher) {
         
         final ScriptTrigger staticMacro = macro.copy();
+        final Thread ct = Thread.currentThread();
         final Thread t = new Thread(() -> {
             ScriptThreadWrapper th = new ScriptThreadWrapper(Thread.currentThread(), staticMacro, System.currentTimeMillis());
             try {
-                runner.threads.putIfAbsent(staticMacro, new ArrayList<>());
-                Thread.currentThread().setName(staticMacro.triggerType.toString() + " " + staticMacro.event + " " + staticMacro.scriptFile
-                    + ": " + runner.threads.get(staticMacro).size());
+                runner.threads.putIfAbsent(staticMacro, new HashSet<>());
+                if (event == null) {
+                    Thread.currentThread().setName(String.format("RunScript:{\"creator\":\"%s\"}", ct.getName()));
+                } else {
+                    Thread.currentThread().setName(staticMacro.triggerType.toString() + " " + staticMacro.event + " " + staticMacro.scriptFile
+                        + ": " + runner.threads.get(staticMacro).size());
+                }
                 runner.threads.get(staticMacro).add(th);
                 File file = new File(runner.config.macroFolder, staticMacro.scriptFile);
                 if (file.exists()) {
