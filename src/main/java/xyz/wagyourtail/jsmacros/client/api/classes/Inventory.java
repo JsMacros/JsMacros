@@ -36,26 +36,33 @@ import java.util.stream.Stream;
  *
  */
  @SuppressWarnings("unused")
-public class Inventory {
-    private HandledScreen<?> inventory;
-    private Map<String, int[]> map;
-    private final ClientPlayerInteractionManager man;
-    private final int syncId;
-    private final ClientPlayerEntity player;
-    protected MinecraftClient mc = MinecraftClient.getInstance();
+public class Inventory<T extends HandledScreen<?>> {
+    protected T inventory;
+    protected Map<String, int[]> map;
+    protected final ClientPlayerInteractionManager man;
+    protected final int syncId;
+    protected final ClientPlayerEntity player;
+    protected static MinecraftClient mc = MinecraftClient.getInstance();
 
-    public Inventory() {
-        this.player = mc.player;
-        assert player != null;
+    public static Inventory<?> create() {
         //prevent race condition
         final net.minecraft.client.gui.screen.Screen s = mc.currentScreen;
         if (s instanceof HandledScreen) {
-            this.inventory = (HandledScreen<?>) s;
+            if (s instanceof MerchantScreen) return new VillagerInventory((MerchantScreen) s);
+            if (s instanceof EnchantmentScreen) return new EnchantInventory((EnchantmentScreen) s);
+            return new Inventory<>((HandledScreen<?>) s);
         } else {
-            this.inventory = new InventoryScreen(player);
+            assert mc.player != null;
+            return new Inventory<>(new InventoryScreen(mc.player));
         }
+    }
+
+    protected Inventory(T inventory) {
+        this.inventory = inventory;
+        this.player = mc.player;
+        assert player != null;
         this.man = mc.interactionManager;
-        this.syncId = this.inventory.getScreenHandler().syncId;
+        this.syncId = inventory.getScreenHandler().syncId;
     }
 
     /**
@@ -65,7 +72,7 @@ public class Inventory {
      * @param mousebutton
      * @return
      */
-    public Inventory click(int slot, int mousebutton) {
+    public Inventory<T> click(int slot, int mousebutton) {
         SlotActionType act = mousebutton == 2 ? SlotActionType.CLONE : SlotActionType.PICKUP;
         man.clickSlot(syncId, slot, mousebutton, act, player);
         return this;
@@ -78,7 +85,7 @@ public class Inventory {
      * @param mousebutton
      * @return
      */
-    public Inventory dragClick(int[] slots, int mousebutton) {
+    public Inventory<T> dragClick(int[] slots, int mousebutton) {
         mousebutton = mousebutton == 0 ? 1 : 5;
         man.clickSlot(syncId, -999, mousebutton - 1, SlotActionType.QUICK_CRAFT, player); // start drag click
         for (int i : slots) {
@@ -112,7 +119,7 @@ public class Inventory {
      * 
      * @return
      */
-    public Inventory closeAndDrop() {
+    public Inventory<T> closeAndDrop() {
         ItemStack held = player.inventory.getCursorStack();
         if (!held.isEmpty()) man.clickSlot(syncId, -999, 0, SlotActionType.PICKUP, player);
         mc.execute(player::closeHandledScreen);
@@ -134,7 +141,7 @@ public class Inventory {
      * @param slot
      * @return
      */
-    public Inventory quick(int slot) {
+    public Inventory<T> quick(int slot) {
         man.clickSlot(syncId, slot, 0, SlotActionType.QUICK_MOVE, player);
         return this;
     }
@@ -170,7 +177,7 @@ public class Inventory {
      * @return
      * @throws Exception
      */
-    public Inventory split(int slot1, int slot2) throws Exception {
+    public Inventory<T> split(int slot1, int slot2) throws Exception {
         if (slot1 == slot2) throw new Exception("must be 2 different slots.");
         if (!getSlot(slot1).isEmpty() || !getSlot(slot2).isEmpty()) throw new Exception("slots must be empty.");
         man.clickSlot(syncId, slot1, 1, SlotActionType.PICKUP, player);
@@ -184,7 +191,7 @@ public class Inventory {
      * @param slot
      * @return
      */
-    public Inventory grabAll(int slot) {
+    public Inventory<T> grabAll(int slot) {
         man.clickSlot(syncId, slot, 0, SlotActionType.PICKUP, player);
         man.clickSlot(syncId, slot, 0, SlotActionType.PICKUP_ALL, player);
         return this;
@@ -197,7 +204,7 @@ public class Inventory {
      * @param slot2
      * @return
      */
-    public Inventory swap(int slot1, int slot2) {
+    public Inventory<T> swap(int slot1, int slot2) {
         boolean is1 = getSlot(slot1).isEmpty();
         boolean is2 = getSlot(slot2).isEmpty();
         if (is1 && is2) return this;
@@ -212,9 +219,7 @@ public class Inventory {
      *
      */
      public void openGui() {
-        mc.execute(() -> {
-            mc.openScreen(this.inventory);
-        });
+        mc.execute(() -> mc.openScreen(this.inventory));
      }
 
     /**
@@ -355,7 +360,7 @@ public class Inventory {
                 if (h instanceof AbstractDonkeyEntity && ((AbstractDonkeyEntity) h).hasChest()) {
                     map.put("container", JsMacros.range(2, slots - 9 - 27));
                 }
-            } else if (inventory instanceof AnvilScreen || inventory instanceof SmithingScreen || inventory instanceof GrindstoneScreen || inventory instanceof CartographyTableScreen) {
+            } else if (inventory instanceof AnvilScreen || inventory instanceof  MerchantScreen || inventory instanceof SmithingScreen || inventory instanceof GrindstoneScreen || inventory instanceof CartographyTableScreen) {
                 map.put("output", new int[] { slots - 9 - 27 - 1 });
                 map.put("input", JsMacros.range(slots - 9 - 27 - 1));
             }
@@ -373,7 +378,7 @@ public class Inventory {
         return this.inventory.getTitle().getString();
     }
     
-    public HandledScreen<?> getRawContainer() {
+    public T getRawContainer() {
         return this.inventory;
     }
     

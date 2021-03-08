@@ -44,7 +44,7 @@ public class FPlayer extends BaseLibrary {
      */
     public Inventory openInventory() {
         assert mc.player != null && mc.player.inventory != null;
-        return new Inventory();
+        return Inventory.create();
     }
 
     /**

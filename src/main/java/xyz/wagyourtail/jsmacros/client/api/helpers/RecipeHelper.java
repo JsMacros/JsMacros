@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.recipe.Recipe;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -34,14 +35,15 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
     
     /**
-     * probably not a good idea run this if you were in a crafting table on {@code player.openInventory()} and it's closed now...
      * @since 1.3.1
      * @param craftAll
      */
     public void craft(boolean craftAll) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        assert mc.interactionManager != null;
-        mc.interactionManager.clickRecipe(syncId, base, craftAll);
+        if (mc.currentScreen instanceof HandledScreen && ((HandledScreen<?>) mc.currentScreen).getScreenHandler().syncId == syncId) {
+            assert mc.interactionManager != null;
+            mc.interactionManager.clickRecipe(syncId, base, craftAll);
+        }
     }
     
     public String toString() {
