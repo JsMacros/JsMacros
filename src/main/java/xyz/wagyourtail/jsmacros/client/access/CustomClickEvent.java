@@ -11,6 +11,11 @@ public class CustomClickEvent extends ClickEvent {
         this.event = event;
     }
     
+    @Override
+    public int hashCode() {
+        return event.hashCode();
+    }
+    
     public Runnable getEvent() {
         return event;
     }
