@@ -21,11 +21,11 @@ public class Main {
      public static String mappingViewerBaseURL;
     public static Map<String, String> externalPackages = new HashMap<>();
     public static Set<String> internalPackages = new LinkedHashSet<>();
+    public static Set<ClassDoc> classes = new LinkedHashSet<>();
     
     public static boolean start(RootDoc root) {
         try {
             //create package-list
-            Set<ClassDoc> classes = new LinkedHashSet<>();
             for (ClassDoc clazz : root.specifiedClasses()) {
                 internalPackages.add(clazz.containingPackage().name());
                 classes.add(clazz);

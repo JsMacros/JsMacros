@@ -5,6 +5,7 @@ import xyz.wagyourtail.Pair;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,6 +16,13 @@ public class WebParser {
     public static XMLBuilder parseClass(ClassDoc clazz) {
         XMLBuilder builder = new XMLBuilder("main").addStringOption("class", "classDoc");
         XMLBuilder constructors = null;
+        XMLBuilder subClasses;
+        builder.append(subClasses = new XMLBuilder("div").addStringOption("id", "subClasses"));
+        for (ClassDoc otherClazz : Main.classes.stream().sorted(Comparator.comparing(Type::typeName)).collect(Collectors.toList())) {
+            if (otherClazz.subclassOf(clazz) && otherClazz.superclass() == clazz || Arrays.stream(otherClazz.interfaces()).anyMatch(e -> e == clazz)) {
+                subClasses.append(parseType(clazz, otherClazz), " ");
+            }
+        }
         XMLBuilder cname;
         builder.append(cname = new XMLBuilder("h2", true, true).addStringOption("class", "classTitle").append(clazz.typeName()));
         
@@ -45,6 +53,7 @@ public class WebParser {
                 }
             }
         }
+        
         Tag[] since;
         XMLBuilder sinceXML;
         if ((since = clazz.tags("@since")).length > 0) {
@@ -57,6 +66,7 @@ public class WebParser {
         builder.append(createDescription(clazz, clazz.inlineTags()));
         
         boolean flag = true;
+        
         for (ConstructorDoc constructor : clazz.constructors()) {
             if (!constructor.isPublic()) continue;
             if (flag) {
@@ -75,7 +85,7 @@ public class WebParser {
         
         XMLBuilder fields = null;
         flag = true;
-        for (FieldDoc field : clazz.fields()) {
+        for (FieldDoc field : (clazz.isEnum() ? clazz.enumConstants() : clazz.fields())) {
             if (!field.isPublic()) continue;
             if (flag) {
                 flag = false;
@@ -248,6 +258,16 @@ public class WebParser {
         if (member.isStatic()) {
             flags.append(
                 new XMLBuilder("div", true, true).addStringOption("class", "flag staticFlag").append(shortFlags ? "S" : "Static")
+            );
+        }
+        if (member.isInterface()) {
+            flags.append(
+                new XMLBuilder("div", true, true).addStringOption("class", "flag interfaceFlag").append(shortFlags ? "I" : "Interface")
+            );
+        }
+        if (member.isEnum()) {
+            flags.append(
+                new XMLBuilder("div", true, true).addStringOption("class", "flag enumFlag").append(shortFlags ? "E" : "Enum")
             );
         }
         if ((member instanceof ClassDoc && !member.isInterface() && ((ClassDoc) member).isAbstract()) || (member instanceof MethodDoc && !member.containingClass().isInterface() && ((MethodDoc) member).isAbstract())) {
