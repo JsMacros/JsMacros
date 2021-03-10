@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 public class WebParser {
     
-    // TODO: parse enums correctly
     public static XMLBuilder parseClass(ClassDoc clazz) {
         XMLBuilder builder = new XMLBuilder("main").addStringOption("class", "classDoc");
         XMLBuilder constructors = null;
