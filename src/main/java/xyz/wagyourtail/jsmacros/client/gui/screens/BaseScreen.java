@@ -24,6 +24,7 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
         init();
     }
 
+    @Override
     protected void init() {
         assert client != null;
         super.init();
@@ -34,11 +35,13 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
         client.keyboard.setRepeatEvents(true);
     }
 
+    @Override
     public void removed() {
         assert client != null;
         client.keyboard.setRepeatEvents(false);
     }
     
+    @Override
     public void openOverlay(OverlayContainer overlay) {
         openOverlay(overlay, true);
     }
@@ -53,6 +56,7 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
         return null;
     }
     
+    @Override
     public void openOverlay(OverlayContainer overlay, boolean disableButtons) {
         if (disableButtons) {
             for (AbstractButtonWidget b : buttons) {
@@ -92,6 +96,7 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
         super.setFocused(focused);
     }
     
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
             if (overlay != null) {
@@ -102,24 +107,29 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
+    @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (overlay!= null && overlay.scroll != null) overlay.scroll.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
     
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (overlay != null) overlay.onClick(mouseX, mouseY, button);
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (overlay != null) overlay.render(matrices, mouseX, mouseY, delta);
     }
 
+    @Override
     public boolean shouldCloseOnEsc() {
         return this.overlay == null;
     }
 
+    @Override
     public void onClose() {
         assert client != null;
         if (client.world == null)

@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.core.language.impl;
 import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.Context.Builder;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
@@ -27,14 +28,14 @@ public class JavascriptLanguageDefinition extends BaseLanguage {
         .allowExperimentalOptions(true)
         .option("js.commonjs-require", "true");
     
-    public JavascriptLanguageDefinition(String extension, Core<?> runner) {
+    public JavascriptLanguageDefinition(String extension, Core runner) {
         super(extension, runner);
     }
     
     private Context buildContext(Path currentDir, Map<String, Object> globals) throws IOException {
-        if (runner.config.options.extraJsOptions == null)
-            runner.config.options.extraJsOptions = new LinkedHashMap<>();
-        build.options(runner.config.options.extraJsOptions);
+        if (runner.config.getOptions(CoreConfigV2.class).extraJsOptions == null)
+            runner.config.getOptions(CoreConfigV2.class).extraJsOptions = new LinkedHashMap<>();
+        build.options(runner.config.getOptions(CoreConfigV2.class).extraJsOptions);
         if (currentDir == null) {
             currentDir = runner.config.macroFolder.toPath();
         }

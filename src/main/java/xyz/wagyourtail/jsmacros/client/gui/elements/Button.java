@@ -46,6 +46,11 @@ public class Button extends AbstractPressableButtonWidget {
         return this.textLines.size() > this.visibleLines;
     }
     
+    protected void setMessageSuper(Text message) {
+        super.setMessage(message);
+    }
+    
+    @Override
     public void setMessage(Text message) {
         super.setMessage(message);
         this.textLines = textRenderer.wrapLines(message, width - 4);
@@ -68,6 +73,7 @@ public class Button extends AbstractPressableButtonWidget {
         }
     }
     
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             // fill
@@ -87,10 +93,12 @@ public class Button extends AbstractPressableButtonWidget {
         }
     }
     
+    @Override
     public void onClick(double mouseX, double mouseY) {
         //super.onClick(mouseX, mouseY);
     }
     
+    @Override
     public void onRelease(double mouseX, double mouseY) {
         super.onClick(mouseX, mouseY);
     }

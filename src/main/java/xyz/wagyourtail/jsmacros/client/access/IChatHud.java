@@ -4,5 +4,5 @@ import net.minecraft.text.Text;
 
 public interface IChatHud {
     
-    public void jsmacros_addMessageBypass(Text message);
+    void jsmacros_addMessageBypass(Text message);
 }

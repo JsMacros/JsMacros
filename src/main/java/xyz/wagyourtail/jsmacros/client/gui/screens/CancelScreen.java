@@ -25,6 +25,7 @@ public class CancelScreen extends BaseScreen {
         super(new LiteralText("Cancel"), parent);
     }
 
+    @Override
     public void init() {
         super.init();
         topScroll = 10;
@@ -65,11 +66,13 @@ public class CancelScreen extends BaseScreen {
         }
     }
     
+    @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         s.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
     
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (matrices == null) return;
         this.renderBackground(matrices, 0);
@@ -89,16 +92,19 @@ public class CancelScreen extends BaseScreen {
         }
     }
 
+    @Override
     public void removed() {
         assert client != null;
         client.keyboard.setRepeatEvents(false);
     }
 
+    @Override
     public void onClose() {
         this.openParent();
     }
 
     public static class RTCSort implements Comparator<RunningThreadContainer> {
+        @Override
         public int compare(RunningThreadContainer arg0, RunningThreadContainer arg1) {
             try {
             return arg0.t.t.getName().compareTo(arg1.t.t.getName());

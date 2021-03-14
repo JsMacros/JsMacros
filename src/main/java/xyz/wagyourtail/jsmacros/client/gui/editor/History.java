@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.editor;
 
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.function.Consumer;
  *
  */
 public class History {
-    protected int MAX_UNDO = JsMacros.core.config.options.editorHistorySize;
+    protected int MAX_UNDO = JsMacros.core.config.getOptions(ClientConfigV2.class).editorHistorySize;
     protected List<HistoryStep> undo = new ArrayList<>(MAX_UNDO + 1);
     protected List<HistoryStep> redo = new ArrayList<>(MAX_UNDO + 1);
     

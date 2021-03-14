@@ -46,6 +46,7 @@ public abstract class MultiElementContainer<T extends IContainerParent> extends 
         this.visible = visible;
     }
     
+    @Override
     public <T extends AbstractButtonWidget> T addButton(T btn) {
         buttons.add(btn);
         parent.addButton(btn);

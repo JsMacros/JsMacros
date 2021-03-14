@@ -15,6 +15,7 @@ import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.editor.History;
 import xyz.wagyourtail.jsmacros.client.gui.editor.SelectCursor;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCodeCompiler;
@@ -25,6 +26,7 @@ import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.SelectorDropdownOverlay;
+import xyz.wagyourtail.jsmacros.client.gui.overlays.settings.SettingsOverlay;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
 
 import java.io.File;
@@ -33,7 +35,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class EditorScreen extends BaseScreen {
-    private final static OrderedText ellipses = new LiteralText("...").formatted(Formatting.DARK_GRAY).asOrderedText();
+    private static final OrderedText ellipses = new LiteralText("...").formatted(Formatting.DARK_GRAY).asOrderedText();
+    public static final List<String> langs = Lists.newArrayList("javascript", "json", "lua", "python", "ruby", "typescript");
     public static Style defaultStyle = Style.EMPTY.withFont(new Identifier("jsmacros", "ubuntumono"));
     protected final File file;
     protected final FileHandler handler;
@@ -159,7 +162,7 @@ public class EditorScreen extends BaseScreen {
     
     public synchronized void setLanguage(String language) {
         this.language = language;
-        Map<String, String> linterOverrides = JsMacros.core.config.options.getLinterOverrides();
+        Map<String, String> linterOverrides = JsMacros.core.config.getOptions(ClientConfigV2.class).editorLinterOverrides;
         if (linterOverrides.containsKey(language)) {
             this.codeCompiler = new ScriptCodeCompiler(language, this, linterOverrides.get(language));
         } else {
@@ -168,11 +171,12 @@ public class EditorScreen extends BaseScreen {
         compileRenderedText();
     }
     
+    @Override
     public void init() {
         super.init();
         assert client != null;
         
-        defaultStyle = Style.EMPTY.withFont(new Identifier(JsMacros.core.config.options.editorFont));
+        defaultStyle = Style.EMPTY.withFont(new Identifier(JsMacros.core.config.getOptions(ClientConfigV2.class).editorFont));
         
         ellipsesWidth = client.textRenderer.getWidth(ellipses);
         lineSpread = client.textRenderer.fontHeight + 1;
@@ -207,7 +211,6 @@ public class EditorScreen extends BaseScreen {
             }
         };
         
-        final List<String> langs = Lists.newArrayList("javascript", "json", "lua", "python", "ruby", "typescript");
         
         addButton(new Button(this.width - width / 8, height - 12, width / 8, 12, textRenderer,0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(language), (btn) -> {
             int height = langs.size() * (textRenderer.fontHeight + 1) + 4;
@@ -215,6 +218,10 @@ public class EditorScreen extends BaseScreen {
                 setLanguage(langs.get(i));
                 btn.setMessage(new LiteralText(langs.get(i)));
             }));
+        }));
+        
+        addButton(new Button(this.width - width / 4, height - 12, width / 8, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.settings"), (btn) -> {
+            openOverlay(new SettingsOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this));
         }));
         
         this.fileName = new LiteralText(textRenderer.trimToWidth(file.getName(), (width - 10) / 2));
@@ -501,7 +508,7 @@ public class EditorScreen extends BaseScreen {
             closeOverlay(overlay);
         }
         
-        if (suggestionList.size() > 0 && JsMacros.core.config.options.editorSuggestions) {
+        if (suggestionList.size() > 0 && JsMacros.core.config.getOptions(ClientConfigV2.class).editorSuggestions) {
             suggestionList.sort(Comparator.comparing(a -> a.suggestion));
             int startIndex = cursor.startIndex;
             int maxWidth = 0;
@@ -567,6 +574,7 @@ public class EditorScreen extends BaseScreen {
         return !savedString.equals(history.current);
     }
     
+    @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (overlay == null && scrollbar != null) {
             scrollbar.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);

@@ -26,7 +26,7 @@ public class TextPrompt extends OverlayContainer {
         super.init();
         int w = width - 4;
 
-        ti = (TextInput) this.addButton(new TextInput(x + 3, y + 25, w - 2, 14, textRenderer, 0xFF101010, 0, 0xFF4040FF, 0xFFFFFF, defText, null, null));
+        ti = this.addButton(new TextInput(x + 3, y + 25, w - 2, 14, textRenderer, 0xFF101010, 0, 0xFF4040FF, 0xFFFFFF, defText, null, null));
         
         this.addButton(new Button(x + 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("gui.cancel"), (btn) -> close()));
 

@@ -36,7 +36,7 @@ public class ScriptTrigger {
      * @since 1.0.0 [citation needed]
      * @author Wagyourtail
      */
-    public static enum TriggerType {
+    public enum TriggerType {
         KEY_FALLING,
         KEY_RISING,
         KEY_BOTH,

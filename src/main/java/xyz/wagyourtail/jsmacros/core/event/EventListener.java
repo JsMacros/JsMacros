@@ -5,7 +5,7 @@ import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 
 public class EventListener extends BaseListener {
     
-    public EventListener(ScriptTrigger macro, Core<?> runner) {
+    public EventListener(ScriptTrigger macro, Core runner) {
         super(macro, runner);
     }
     

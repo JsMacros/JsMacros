@@ -81,6 +81,7 @@ public class PositionCommon {
             return String.format("%f, %f, %f", x, y, z);
         }
 
+        @Override
         public Vec3D toVector() {
             return new Vec3D(ZERO, this);
         }

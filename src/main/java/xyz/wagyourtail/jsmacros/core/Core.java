@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core;
 
 import com.google.common.collect.ImmutableList;
+import org.apache.logging.log4j.Logger;
 import xyz.wagyourtail.jsmacros.core.config.*;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
@@ -9,27 +10,28 @@ import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.core.library.LibraryRegistry;
 
+import java.io.File;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Core<T extends ConfigOptions> {
-    public static Core<?> instance;
+public class Core {
+    public static Core instance;
     
     public final BaseEventRegistry eventRegistry;
     public final BaseProfile profile;
-    public final ConfigManager<T> config;
+    public final ConfigManager config;
     public final LibraryRegistry libraryRegistry = new LibraryRegistry();
     public final Map<ScriptTrigger, Set<ScriptThreadWrapper>> threads = new HashMap<>();
     public final List<BaseLanguage> languages = new ArrayList<>();
     public BaseLanguage defaultLang = new JavascriptLanguageDefinition(".js", this);
     
-    protected Core(Function<Core<?>, BaseEventRegistry> eventRegistryFunction, Function<Core<?>, BaseProfile> profileFunction, Supplier<ConfigManager<T>> configManagerSupplier) {
+    protected Core(Function<Core, BaseEventRegistry> eventRegistryFunction, Function<Core, BaseProfile> profileFunction, File configFolder, File macroFolder, Logger logger) {
         eventRegistry = eventRegistryFunction.apply(this);
         profile = profileFunction.apply(this);
-        config = configManagerSupplier.get();
+        config = new ConfigManager(configFolder, macroFolder, logger);
         addLanguage(defaultLang);
     }
     
@@ -39,15 +41,17 @@ public class Core<T extends ConfigOptions> {
     *
      * @param eventRegistryFunction
      * @param profileFunction
-     * @param configManagerSupplier
      *
+     * @param configFolder
+     * @param macroFolder
+     * @param logger
      * @return
      */
-    public static <U extends ConfigOptions> Core<U> createInstance(Function<Core<?>, BaseEventRegistry> eventRegistryFunction, Function<Core<?>, BaseProfile> profileFunction, Supplier<ConfigManager<U>> configManagerSupplier) {
+    public static Core createInstance(Function<Core, BaseEventRegistry> eventRegistryFunction, Function<Core, BaseProfile> profileFunction, File configFolder, File macroFolder, Logger logger) {
         if (instance != null) throw new RuntimeException("Can't declare RunScript instance more than once");
-        instance = new Core<>(eventRegistryFunction, profileFunction, configManagerSupplier);
-        instance.profile.init(instance.config.options.defaultProfile);
-        return (Core<U>) instance;
+        instance = new Core(eventRegistryFunction, profileFunction, configFolder, macroFolder, logger);
+        instance.profile.init(instance.config.getOptions(CoreConfigV2.class).defaultProfile);
+        return instance;
     }
 
     public void addLanguage(BaseLanguage l) {

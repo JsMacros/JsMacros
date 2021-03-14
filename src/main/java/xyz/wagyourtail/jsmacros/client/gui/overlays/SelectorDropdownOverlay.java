@@ -61,6 +61,7 @@ public class SelectorDropdownOverlay extends OverlayContainer {
         }
     }
     
+    @Override
     public void onClick(double mouseX, double mouseY, int button) {
         if (mouseX < x || mouseX > x + width || mouseY < y || mouseY > y + height) close();
     }

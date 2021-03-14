@@ -45,6 +45,7 @@ public class TextInput extends Button {
         else selEnd = x + 3 + textRenderer.getWidth(content.substring(0, endIndex));
     }
 
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.clicked(mouseX, mouseY);
         if (this.isFocused()) {
@@ -56,6 +57,7 @@ public class TextInput extends Button {
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
+    @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.isFocused()) {
             int pos = textRenderer.trimToWidth(content, (int) (mouseX - x - 2)).length();
@@ -72,6 +74,7 @@ public class TextInput extends Button {
 
     }
 
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         boolean ctrl;
         if (this.isFocused()) {
@@ -143,6 +146,7 @@ public class TextInput extends Button {
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
+    @Override
     public boolean charTyped(char chr, int keyCode) {
         if (selEndIndex < selStartIndex) swapStartEnd();
         content = content.substring(0, selStartIndex) + chr + content.substring(selEndIndex);
@@ -153,6 +157,7 @@ public class TextInput extends Button {
         return false;
     }
 
+    @Override
     public boolean clicked(double mouseX, double mouseY) {
         boolean bl = super.clicked(mouseX, mouseY);
         if (this.isFocused() ^ bl) this.changeFocus(true);
@@ -163,6 +168,7 @@ public class TextInput extends Button {
         this.setFocused(sel);
     }
 
+    @Override
     protected void renderMessage(MatrixStack matrices) {
         fill(matrices, selStart, height > 9 ? y + 2 : y, Math.min(selEnd, x + width - 2), (height > 9 ? y + 2 : y) + textRenderer.fontHeight, selColor);
         drawStringWithShadow(matrices, textRenderer, textRenderer.trimToWidth(content, width - 4), x + 2, height > 9 ? y + 2 : y, textColor);

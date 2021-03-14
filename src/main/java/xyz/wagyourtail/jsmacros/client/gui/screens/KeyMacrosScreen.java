@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.InputUtil;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventKey;
+import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroContainer;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
@@ -43,7 +44,7 @@ public class KeyMacrosScreen extends MacroScreen {
             if (event instanceof BaseListener && ((BaseListener) event).getRawTrigger().triggerType != ScriptTrigger.TriggerType.EVENT) macros.add(((BaseListener) event).getRawTrigger());
         }
 
-        macros.sort(JsMacros.core.config.options.getSortComparator());
+        macros.sort(JsMacros.core.config.getOptions(ClientConfigV2.class).getSortComparator());
 
         for (ScriptTrigger macro : macros) {
             addMacro(macro);

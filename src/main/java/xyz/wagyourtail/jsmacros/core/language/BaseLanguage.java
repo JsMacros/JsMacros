@@ -20,9 +20,9 @@ import java.util.function.Consumer;
  */
 public abstract class BaseLanguage {
     public final String extension;
-    protected final Core<?> runner;
+    protected final Core runner;
     
-    public BaseLanguage(String extension, Core<?> runner) {
+    public BaseLanguage(String extension, Core runner) {
         this.extension = extension;
         this.runner = runner;
     }

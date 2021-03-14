@@ -23,8 +23,8 @@ public class FileChooser extends OverlayContainer {
     private Text dirname;
     private File selected;
     private final List<fileObj> files = new ArrayList<>();
-    private Consumer<File> setFile;
-    private Consumer<File> editFile;
+    private final Consumer<File> setFile;
+    private final Consumer<File> editFile;
     private int topScroll;
 
     public FileChooser(int x, int y, int width, int height, TextRenderer textRenderer, File directory, File selected, IOverlayParent parent, Consumer<File> setFile, Consumer<File> editFile) {
@@ -48,7 +48,7 @@ public class FileChooser extends OverlayContainer {
         }
 
         List<File> files = new ArrayList<>(Arrays.asList(directory.listFiles()));
-        Collections.sort(files, new sortFile());
+        files.sort(new sortFile());
         for (File f : files) {
             addFile(f);
         }
@@ -69,14 +69,13 @@ public class FileChooser extends OverlayContainer {
         }
     }
 
+    @Override
     public void init() {
         super.init();
         int w = width - 4;
         topScroll = y + 13;
-        this.addButton(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> {
-            this.close();
-        }));
-        scroll = (Scrollbar) this.addButton(new Scrollbar(x + width - 10, y + 13, 8, height - 28, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
+        this.addButton(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> this.close()));
+        scroll = this.addButton(new Scrollbar(x + width - 10, y + 13, 8, height - 28, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
 
         this.addButton(new Button(x + w * 5 / 6 + 2, y + height - 14, w / 6, 12, textRenderer,0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.select"), (btn) -> {
             if (this.selected != null && this.setFile != null) {
@@ -114,29 +113,27 @@ public class FileChooser extends OverlayContainer {
             }
         }));
 
-        this.addButton(new Button(x + w * 1 / 6 + 2, y + height - 14, w / 6, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.new"), (btn) -> {
-            this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.filename"), "", this, (str) -> {
-                if (str.trim().equals("")) return;
-                boolean edit = true;
-                for (BaseLanguage language : Core.instance.languages) {
-                    if (str.endsWith(language.extension)) {
-                        edit = false;
-                        break;
-                    }
+        this.addButton(new Button(x + w / 6 + 2, y + height - 14, w / 6, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.new"), (btn) -> this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.filename"), "", this, (str) -> {
+            if (str.trim().equals("")) return;
+            boolean edit = true;
+            for (BaseLanguage language : Core.instance.languages) {
+                if (str.endsWith(language.extension)) {
+                    edit = false;
+                    break;
                 }
-                if (edit) {
-                    str += Core.instance.defaultLang.extension;
-                }
-                File f = new File(directory, str);
-                try {
-                    f.createNewFile();
-                    this.setDir(directory);
-                    this.selectFile(f);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }));
-        }));
+            }
+            if (edit) {
+                str += Core.instance.defaultLang.extension;
+            }
+            File f = new File(directory, str);
+            try {
+                f.createNewFile();
+                this.setDir(directory);
+                this.selectFile(f);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }))));
 
         this.addButton(new Button(x + 2, y + height - 14, w / 6, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.openfolder"), (btn) -> {
             Util.getOperatingSystem().open(directory);
@@ -154,8 +151,7 @@ public class FileChooser extends OverlayContainer {
         fileObj file = new fileObj(f, new Button(x + 3 + (files.size() % 5 * (width - 12) / 5), topScroll + (files.size() / 5 * 12), (width - 12) / 5, 12, textRenderer, 0, 0, 0x7FFFFFFF, f.isDirectory() ? 0xFFFF00 : 0xFFFFFF, new LiteralText(btnText), (btn) -> {
             selectFile(f);
         }));
-        if (topScroll + (files.size() / 5 * 12) < y + 13 || topScroll + (files.size() / 5 * 12) > y + height - 27) file.btn.visible = false;
-        else file.btn.visible = true;
+        file.btn.visible = topScroll + (files.size() / 5 * 12) >= y + 13 && topScroll + (files.size() / 5 * 12) <= y + height - 27;
         files.add(file);
         this.addButton(file.btn);
         scroll.setScrollPages((Math.ceil(files.size() / 5D) * 12) /(double) Math.max(1, height - 39));
@@ -164,8 +160,7 @@ public class FileChooser extends OverlayContainer {
     public void updateFilePos() {
         for (int i = 0; i < files.size(); ++i) {
             fileObj f = files.get(i);
-            if (topScroll + (i / 5 * 12) < y + 13 || topScroll + (i / 5 * 12) > y + height - 27) f.btn.visible = false;
-            else f.btn.visible = true;
+            f.btn.visible = topScroll + (i / 5 * 12) >= y + 13 && topScroll + (i / 5 * 12) <= y + height - 27;
             f.btn.setPos(x + 3 + (i % 5 * (width - 12) / 5), topScroll + (i / 5 * 12), (width - 12) / 5, 12);
         }
     }
@@ -187,13 +182,13 @@ public class FileChooser extends OverlayContainer {
         topScroll = y + 13 - (int) (page * (height - 27));
         int i = 0;
         for (fileObj fi : files) {
-            if (topScroll + (i / 5 * 12) < y + 13 || topScroll + (i / 5 * 12) > y + height - 27) fi.btn.visible = false;
-            else fi.btn.visible = true;
+            fi.btn.visible = topScroll + (i / 5 * 12) >= y + 13 && topScroll + (i / 5 * 12) <= y + height - 27;
             fi.btn.setPos(x + 3 + (i % 5 * (width - 12) / 5), topScroll + (i / 5 * 12), (width - 12) / 5, 12);
             ++i;
         }
     }
 
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
 
@@ -231,6 +226,7 @@ public class FileChooser extends OverlayContainer {
     }
 
     public static class sortFile implements Comparator<File> {
+        @Override
         public int compare(File a, File b) {
             if (a.isDirectory() ^ b.isDirectory()) {
                 return a.isDirectory() ? -1 : 1;

@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class OptionsHelper extends BaseHelper<GameOptions> {
     private static final Map<String, SoundCategory> SOUND_CATEGORY_MAP = Arrays.stream(SoundCategory.values()).collect(Collectors.toMap(SoundCategory::getName, Function.identity()));
-    private MinecraftClient mc = MinecraftClient.getInstance();
-    private ResourcePackManager rpm = mc.getResourcePackManager();
+    private final MinecraftClient mc = MinecraftClient.getInstance();
+    private final ResourcePackManager rpm = mc.getResourcePackManager();
     
     public OptionsHelper(GameOptions options) {
         super(options);

@@ -80,6 +80,7 @@ public class StringHashTrie implements Collection<String> {
         return getAll().toArray(a);
     }
     
+    @Override
     public synchronized boolean add(String s) {
         if (children.size() == 0 && leafs.size() == 0) {
             this.keyLength = s.length();

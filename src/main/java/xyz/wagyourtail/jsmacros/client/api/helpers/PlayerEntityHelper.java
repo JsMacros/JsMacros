@@ -25,6 +25,7 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
     /**
      * @since 1.2.0
      */
+    @Override
     public ItemStackHelper getMainHand() {
         return super.getMainHand();
     }
@@ -32,6 +33,7 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
     /**
      * @since 1.2.0
      */
+    @Override
     public ItemStackHelper getOffHand() {
         return super.getOffHand();
     }
@@ -39,6 +41,7 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
     /**
      * @since 1.2.0
      */
+    @Override
     public ItemStackHelper getHeadArmor() {
         return super.getHeadArmor();
     }
@@ -46,6 +49,7 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
     /**
      * @since 1.2.0
      */
+    @Override
     public ItemStackHelper getChestArmor() {
         return super.getChestArmor();
     }
@@ -53,6 +57,7 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
     /**
      * @since 1.2.0
      */
+    @Override
     public ItemStackHelper getLegArmor() {
         return super.getLegArmor();
     }
@@ -60,6 +65,7 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
     /**
      * @since 1.2.0
      */
+    @Override
     public ItemStackHelper getFootArmor() {
         return super.getFootArmor();
     }
@@ -76,6 +82,7 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
      * @since 1.2.5 [citation needed]
      * @return
      */
+    @Override
     public boolean isSleeping() {
         return super.isSleeping();
     }

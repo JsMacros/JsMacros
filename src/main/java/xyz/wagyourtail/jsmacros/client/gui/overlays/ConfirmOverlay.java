@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class ConfirmOverlay extends OverlayContainer {
-    private Consumer<ConfirmOverlay> accept;
+    private final Consumer<ConfirmOverlay> accept;
     private List<OrderedText> text;
     private int lines;
     public boolean hcenter = true;

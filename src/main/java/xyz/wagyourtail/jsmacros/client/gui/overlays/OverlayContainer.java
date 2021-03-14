@@ -54,6 +54,7 @@ public abstract class OverlayContainer extends MultiElementContainer<IOverlayPar
         else return this;
     }
     
+    @Override
     public void closeOverlay(OverlayContainer overlay) {
         if (this.overlay != null && this.overlay == overlay) {
             for (AbstractButtonWidget b : overlay.getButtons()) {
@@ -67,6 +68,7 @@ public abstract class OverlayContainer extends MultiElementContainer<IOverlayPar
         else parent.closeOverlay(overlay);
     }
     
+    @Override
     public void setFocused(@Nullable Element focused) {
         parent.setFocused(focused);
     }

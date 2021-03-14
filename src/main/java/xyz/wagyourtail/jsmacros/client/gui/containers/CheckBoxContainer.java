@@ -23,6 +23,7 @@ public class CheckBoxContainer extends MultiElementContainer<IContainerParent> {
         this.init();
     }
     
+    @Override
     public void init() {
         super.init();
         
@@ -33,6 +34,7 @@ public class CheckBoxContainer extends MultiElementContainer<IContainerParent> {
         }));
     }
     
+    @Override
     public void setPos(int x, int y, int width, int height) {
         checkBox.setPos(x+1, y+1, height-2, height-2);
     }

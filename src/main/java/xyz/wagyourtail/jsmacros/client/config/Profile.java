@@ -22,7 +22,7 @@ import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 
 public class Profile extends BaseProfile {
     
-    public Profile(Core<?> runner) {
+    public Profile(Core runner) {
         super(runner, JsMacros.LOGGER);
     }
     

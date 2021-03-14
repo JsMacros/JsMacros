@@ -10,13 +10,13 @@ import java.util.*;
  * @since 1.2.7
  */
 public abstract class BaseEventRegistry {
-    protected final Core<?> runner;
+    protected final Core runner;
     public final Map<String, Set<IEventListener>> listeners = new LinkedHashMap<>();
     public final Map<String, String> oldEvents = new LinkedHashMap<>();
     
     public final Set<String> events = new LinkedHashSet<>();
     
-    public BaseEventRegistry(Core<?> runner) {
+    public BaseEventRegistry(Core runner) {
         this.runner = runner;
     }
     

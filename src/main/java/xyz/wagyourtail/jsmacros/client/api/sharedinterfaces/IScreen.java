@@ -137,6 +137,7 @@ public interface IScreen extends IDraw2D<IScreen> {
     /**
      * @since 1.2.0
      */
+    @Override
     Rect addRect(int x1, int y1, int x2, int y2, int color);
     
     /**
@@ -153,17 +154,20 @@ public interface IScreen extends IDraw2D<IScreen> {
     /**
     * @since 1.2.0
      */
+     @Override
      @Deprecated
     IScreen removeRect(Rect r);
     
     /**
      * @since 1.2.0
      */
+    @Override
     Item addItem(int x, int y, String id);
     
     /**
      * @since 1.2.0
      */
+    @Override
     Item addItem(int x, int y, String id, boolean overlay);
     
     /**
@@ -174,11 +178,13 @@ public interface IScreen extends IDraw2D<IScreen> {
     /**
      * @since 1.2.0
      */
+    @Override
     Item addItem(int x, int y, ItemStackHelper item);
     
     /**
      * @since 1.2.0
      */
+    @Override
     Item addItem(int x, int y, ItemStackHelper item, boolean overlay);
     
     /**
@@ -189,6 +195,7 @@ public interface IScreen extends IDraw2D<IScreen> {
     /**
      * @since 1.2.0
      */
+     @Override
      @Deprecated
     IScreen removeItem(Item i);
     

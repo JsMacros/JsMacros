@@ -5,7 +5,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.config.ClientConfigOptions;
+import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
+import xyz.wagyourtail.jsmacros.client.config.Sorting;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -27,18 +28,18 @@ public class MacroListTopbar extends MultiElementContainer<MacroScreen> {
         
         int w = width - 12;
         
-        addButton(new Button(x + 1, y + 1, w / 12 - 1, height - 3, textRenderer, JsMacros.core.config.options.sortMethod == ClientConfigOptions.SortMethod.Enabled ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.enabled"), (btn) -> {
-            JsMacros.core.config.options.setSortComparator(ClientConfigOptions.SortMethod.Enabled);
+        addButton(new Button(x + 1, y + 1, w / 12 - 1, height - 3, textRenderer, JsMacros.core.config.getOptions(ClientConfigV2.class).sortMethod == Sorting.MacroSortMethod.Enabled ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.enabled"), (btn) -> {
+            JsMacros.core.config.getOptions(ClientConfigV2.class).sortMethod = Sorting.MacroSortMethod.Enabled;
             parent.reload();
         }));
         
-        type = addButton(new Button(x + w / 12 + 1, y + 1, (w / 4) - (w / 12) - 1, height - 3, textRenderer, JsMacros.core.config.options.sortMethod == ClientConfigOptions.SortMethod.TriggerName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(deftype == ScriptTrigger.TriggerType.EVENT ? "jsmacros.events" : "jsmacros.keys"), (btn) -> {
-            JsMacros.core.config.options.setSortComparator(ClientConfigOptions.SortMethod.TriggerName);
+        type = addButton(new Button(x + w / 12 + 1, y + 1, (w / 4) - (w / 12) - 1, height - 3, textRenderer, JsMacros.core.config.getOptions(ClientConfigV2.class).sortMethod == Sorting.MacroSortMethod.TriggerName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(deftype == ScriptTrigger.TriggerType.EVENT ? "jsmacros.events" : "jsmacros.keys"), (btn) -> {
+            JsMacros.core.config.getOptions(ClientConfigV2.class).sortMethod = Sorting.MacroSortMethod.TriggerName;
             parent.reload();
         }));
         
-        addButton(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 3, textRenderer, JsMacros.core.config.options.sortMethod == ClientConfigOptions.SortMethod.FileName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.file"), (btn) -> {
-            JsMacros.core.config.options.setSortComparator(ClientConfigOptions.SortMethod.FileName);
+        addButton(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 3, textRenderer, JsMacros.core.config.getOptions(ClientConfigV2.class).sortMethod == Sorting.MacroSortMethod.FileName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.file"), (btn) -> {
+            JsMacros.core.config.getOptions(ClientConfigV2.class).sortMethod = Sorting.MacroSortMethod.FileName;
             parent.reload();
         }));
         

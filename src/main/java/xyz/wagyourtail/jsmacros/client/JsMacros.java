@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
 import org.lwjgl.glfw.GLFW;
-import xyz.wagyourtail.jsmacros.client.config.ClientConfigOptions;
+import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.config.Profile;
 import xyz.wagyourtail.jsmacros.client.event.EventRegistry;
 import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
@@ -26,6 +26,7 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
 public class JsMacros implements ClientModInitializer {
     public static final String MOD_ID = "jsmacros";
@@ -34,10 +35,15 @@ public class JsMacros implements ClientModInitializer {
     public static BaseScreen prevScreen;
     protected static final File configFolder = new File(FabricLoader.getInstance().getConfigDir().toFile(), "jsMacros");
     
-    public static final Core<ClientConfigOptions> core = Core.createInstance(EventRegistry::new, Profile::new, () -> new ConfigManager<>(configFolder, new File(configFolder, "Macros"), ClientConfigOptions.class, LOGGER));
+    public static final Core core = Core.createInstance(EventRegistry::new, Profile::new, configFolder, new File(configFolder, "Macros"), LOGGER);
     
     @Override
     public void onInitializeClient() {
+        try {
+            core.config.addOptions("client", ClientConfigV2.class);
+        } catch (IllegalAccessException | InstantiationException e) {
+            e.printStackTrace();
+        }
         KeyBindingHelper.registerKeyBinding(keyBinding);
         prevScreen = new KeyMacrosScreen(null);
         

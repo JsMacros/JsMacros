@@ -16,16 +16,14 @@ import java.util.function.Consumer;
 public class ListContainer extends MultiElementContainer<IContainerParent> {
     private final List<Text> list;
     private final List<Button> listItems = new LinkedList<>();
-    private final Text title;
     private Scrollbar scroll;
     private int topScroll;
     private int selected = -1;
     public Consumer<Integer> onSelect;
     
-    public ListContainer(int x, int y, int width, int height, TextRenderer textRenderer, Text title, List<Text> list, IOverlayParent parent, Consumer<Integer> onSelect) {
+    public ListContainer(int x, int y, int width, int height, TextRenderer textRenderer, List<Text> list, IOverlayParent parent, Consumer<Integer> onSelect) {
         super(x, y, width, height, textRenderer, parent);
         this.list = list;
-        this.title = title;
         this.onSelect = onSelect;
     }
     
@@ -62,11 +60,6 @@ public class ListContainer extends MultiElementContainer<IContainerParent> {
     }
     
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        
-        textRenderer.drawTrimmed(title, x + 3, y + 3, width - 14, 0xFFFFFF);
-        
-        fill(matrices, x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
-        fill(matrices, x + 2, y + height - 15, x + width - 2, y + height - 14, 0xFFFFFFFF);
         
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
             if (b instanceof Button && ((Button) b).hovering && ((Button) b).cantRenderAllText()) {

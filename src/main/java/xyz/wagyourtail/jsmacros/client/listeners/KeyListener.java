@@ -11,7 +11,7 @@ public class KeyListener extends BaseListener {
     private int mods;
     private String key;
     
-    public KeyListener(ScriptTrigger macro, Core<?> runner) {
+    public KeyListener(ScriptTrigger macro, Core runner) {
         super(macro, runner);
         StringBuilder mods = new StringBuilder();
         this.mods = 0;

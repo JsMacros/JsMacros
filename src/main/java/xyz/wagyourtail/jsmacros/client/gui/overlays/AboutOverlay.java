@@ -20,6 +20,7 @@ public class AboutOverlay extends OverlayContainer {
         super(x, y, width, height, textRenderer, parent);
     }
     
+    @Override
     public void init() {
         super.init();
         int w = width - 4;
@@ -48,6 +49,7 @@ public class AboutOverlay extends OverlayContainer {
         }
     }
     
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
         

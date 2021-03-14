@@ -18,10 +18,10 @@ import java.util.function.Consumer;
 
 public class EventChooser extends OverlayContainer {
     private String selected;
-    private List<EventObj> events = new ArrayList<>();
+    private final List<EventObj> events = new ArrayList<>();
     private int topScroll;
-    private Consumer<String> setEvent;
-    private Text eventText;
+    private final Consumer<String> setEvent;
+    private final Text eventText;
     
     public EventChooser(int x, int y, int width, int height, TextRenderer textRenderer, String selected, IOverlayParent parent, Consumer<String> setEvent) {
         super(x, y, width, height, textRenderer, parent);
@@ -48,7 +48,7 @@ public class EventChooser extends OverlayContainer {
         this.addButton(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> {
             this.close();
         }));
-        scroll = (Scrollbar) this.addButton(new Scrollbar(x + width - 10, y + 13, 8, height - 28, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
+        scroll = this.addButton(new Scrollbar(x + width - 10, y + 13, 8, height - 28, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
         this.addButton(new Button(x + 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("gui.cancel"), (btn) -> {
             this.close();
         }));
@@ -71,9 +71,8 @@ public class EventChooser extends OverlayContainer {
         EventObj e = new EventObj(eventName, new Button(x+3+(events.size() % 5 * (width - 12) / 5), topScroll + (events.size() / 5 * 12), (width - 12) / 5, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(eventName.replace("Event", "")), (btn) -> {
             selectEvent(eventName);
         }));
-
-        if (topScroll + (events.size() / 5 * 12) < y + 13 || topScroll + (events.size() / 5 * 12) > y + height - 27) e.btn.visible = false;
-        else e.btn.visible = true;
+    
+        e.btn.visible = topScroll + (events.size() / 5 * 12) >= y + 13 && topScroll + (events.size() / 5 * 12) <= y + height - 27;
         events.add(e);
         this.addButton(e.btn);
         scroll.setScrollPages((Math.ceil(events.size() / 5D) * 12) /(double) Math.max(1, height - 39));
@@ -82,8 +81,7 @@ public class EventChooser extends OverlayContainer {
     public void updateEventPos() {
         for (int i = 0; i < events.size(); ++i) {
             EventObj e = events.get(i);
-            if (topScroll + (i / 5 * 12) < y + 13 || topScroll + (i / 5 * 12) > y + height - 27) e.btn.visible = false;
-            else e.btn.visible = true;
+            e.btn.visible = topScroll + (i / 5 * 12) >= y + 13 && topScroll + (i / 5 * 12) <= y + height - 27;
             e.btn.setPos(x + 3 + (i % 5 * (width - 12) / 5), topScroll + (i / 5 * 12), (width - 12) / 5, 12);
         }
     }
@@ -92,8 +90,7 @@ public class EventChooser extends OverlayContainer {
         topScroll = y + 13 - (int) (page * (height - 27));
         int i = 0;
         for (EventObj fi : events) {
-            if (topScroll + (i / 5 * 12) < y + 13 || topScroll + (i / 5 * 12) > y + height - 27) fi.btn.visible = false;
-            else fi.btn.visible = true;
+            fi.btn.visible = topScroll + (i / 5 * 12) >= y + 13 && topScroll + (i / 5 * 12) <= y + height - 27;
             fi.btn.setPos(x + 3 + (i % 5 * (width - 12) / 5), topScroll + (i / 5 * 12), (width - 12) / 5, 12);
             ++i;
         }

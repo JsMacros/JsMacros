@@ -87,9 +87,8 @@ body > div {
 }
 
 @media screen and (max-width: 900px) {
-    .topNav {
-        display: grid;
-        grid-template-columns: auto auto;
+    .topNav h1 {
+        width: 100%;
     }
     .sideNav {
         position: absolute;
@@ -116,7 +115,9 @@ body > div {
     }
     #menuBtn {
         display: block;
-        float: right;
+        position: absolute;
+        right: 1%;
+        top: 1%;
         margin: 10px;
     }
 }

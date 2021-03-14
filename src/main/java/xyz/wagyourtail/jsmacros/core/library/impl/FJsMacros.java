@@ -42,7 +42,7 @@ public class FJsMacros extends BaseLibrary {
     /**
      * @return the JsMacros config management class.
      */
-    public ConfigManager<?> getConfig() {
+    public ConfigManager getConfig() {
         return Core.instance.config;
     }
     

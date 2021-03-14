@@ -36,6 +36,7 @@ public class MacroScreen extends BaseScreen {
         super(new TranslatableText("jsmacros.title"), parent);
     }
     
+    @Override
     protected void init() {
         super.init();
         macros.clear();
@@ -58,6 +59,7 @@ public class MacroScreen extends BaseScreen {
         aboutBtn = this.addButton(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this))));
     }
     
+    @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (overlay == null) {
             macroScroll.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
@@ -124,6 +126,7 @@ public class MacroScreen extends BaseScreen {
         }
     }
 
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (matrices == null) return;
         this.renderBackground(matrices, 0);
@@ -148,6 +151,7 @@ public class MacroScreen extends BaseScreen {
         super.render(matrices, mouseX, mouseY, delta);
     }
 
+    @Override
     public void onClose() {
         Core.instance.profile.saveProfile();
         super.onClose();

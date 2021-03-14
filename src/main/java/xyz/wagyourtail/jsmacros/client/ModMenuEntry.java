@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
 public class ModMenuEntry implements ModMenuApi {
     private final JsMacroScreen jsmacrosscreenfactory = new JsMacroScreen();
     
+    @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return jsmacrosscreenfactory;
     }

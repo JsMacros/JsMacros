@@ -57,6 +57,7 @@ public class Scrollbar extends AbstractButtonWidget {
         onChange();
     }
     
+    @Override
     public void onClick(double mouseX, double mouseY) {
         if (this.active) {
             double mpos = mouseY - y - 1;
@@ -75,6 +76,7 @@ public class Scrollbar extends AbstractButtonWidget {
         if (onChange != null) onChange.accept(scrollPages * scrollAmmount / scrollDistance);
     }
     
+    @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         scrollAmmount += deltaY;
         if (scrollAmmount > scrollDistance) scrollAmmount = scrollDistance;
@@ -83,6 +85,7 @@ public class Scrollbar extends AbstractButtonWidget {
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             // mainpart

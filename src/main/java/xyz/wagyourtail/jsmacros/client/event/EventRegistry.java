@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class EventRegistry extends BaseEventRegistry {
     
-    public EventRegistry(Core<?> runner) {
+    public EventRegistry(Core runner) {
         super(runner);
     }
     

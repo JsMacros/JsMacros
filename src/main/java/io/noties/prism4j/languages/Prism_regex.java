@@ -11,7 +11,7 @@ import static java.util.regex.Pattern.compile;
 public class Prism_regex {
     @NotNull
     public static Prism4j.Grammar create(@NotNull Prism4j prism4j) {
-        return prism4j.grammar("regex",
+        return grammar("regex",
             token("charset", pattern(compile("((?:^|[^\\\\])(?:\\\\\\\\)*)\\[(?:[^\\\\\\]]|\\\\[\\s\\S])*\\]"), true, false, null,
                 grammar("inside",
                     token("charset-negation", pattern(compile("(^\\[)\\^"), true, false, "operator")),

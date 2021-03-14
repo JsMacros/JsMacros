@@ -19,6 +19,7 @@ public class ProfileContainer extends MultiElementContainer<ProfileScreen> {
         this.init();
     }
 
+    @Override
     public void init() {
         selectButton = this.addButton(new Button(x + 1, y + 1, width * 3 / 4 - 2, height - 2, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(pName), (btn) -> {
             parent.setSelected(this);
@@ -48,6 +49,7 @@ public class ProfileContainer extends MultiElementContainer<ProfileScreen> {
         }
     }
 
+    @Override
     public void setPos(int x, int y, int width, int height) {
         super.setPos(x, y, width, height);
         selectButton.setPos(x + 1, y + 1, width * 3 / 4 - 2, height - 2);

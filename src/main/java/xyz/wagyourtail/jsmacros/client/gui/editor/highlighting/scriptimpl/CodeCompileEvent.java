@@ -5,6 +5,7 @@ import xyz.wagyourtail.StringHashTrie;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.editor.SelectCursor;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSuggestion;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.Prism;
@@ -127,7 +128,7 @@ import java.util.Map;
      *     to {@link TextBuilder#withColor(int)}
      */
     public Map<String, short[]> getThemeData() {
-        return JsMacros.core.config.options.getThemeData();
+        return JsMacros.core.config.getOptions(ClientConfigV2.class).getThemeData();
     }
     
 }

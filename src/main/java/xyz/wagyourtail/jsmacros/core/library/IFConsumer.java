@@ -40,7 +40,7 @@ public interface IFConsumer<T, U, V> {
      * @return
      */
     @Deprecated
-    public <A, B, R> MethodWrapper<A, B, R> toConsumer(U c);
+    <A, B, R> MethodWrapper<A, B, R> toConsumer(U c);
     
     /**
      * Wraps a BiConsumer to match the guest language requirements.
@@ -52,7 +52,7 @@ public interface IFConsumer<T, U, V> {
      * @return
      */
     @Deprecated
-    public <A, B, R> MethodWrapper<A, B, R> toBiConsumer(T c);
+    <A, B, R> MethodWrapper<A, B, R> toBiConsumer(T c);
     
     /**
      * Wraps a Consumer to match the guest language requirements, without halting the thread the consumer's called in.
@@ -64,7 +64,7 @@ public interface IFConsumer<T, U, V> {
      * @return
      */
     @Deprecated
-    public <A, B, R> MethodWrapper<A, B, R> toAsyncConsumer(U c);
+    <A, B, R> MethodWrapper<A, B, R> toAsyncConsumer(U c);
     
     /**
      * Wraps a BiConsumer to match the guest language requirements, without halting the thread the consumer's called in.
@@ -76,7 +76,7 @@ public interface IFConsumer<T, U, V> {
      * @return
      */
     @Deprecated
-    public <A, B, R> MethodWrapper<A, B, R> toAsyncBiConsumer(T c);
+    <A, B, R> MethodWrapper<A, B, R> toAsyncBiConsumer(T c);
     
     /**
      * @since 1.2.7
@@ -84,7 +84,7 @@ public interface IFConsumer<T, U, V> {
      * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return a new {@link MethodWrapper MethodWrapper}
      */
-    public <A, B, R> MethodWrapper<A, B, R> autoWrap(V c);
+    <A, B, R> MethodWrapper<A, B, R> autoWrap(V c);
     
     /**
      * @since 1.2.7
@@ -92,7 +92,7 @@ public interface IFConsumer<T, U, V> {
      * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return a new {@link MethodWrapper MethodWrapper}
      */
-    public <A, B, R> MethodWrapper<A, B, R> autoWrapAsync(V c);
+    <A, B, R> MethodWrapper<A, B, R> autoWrapAsync(V c);
     
     /**
      * only important for JEP... stops the instance
@@ -100,5 +100,5 @@ public interface IFConsumer<T, U, V> {
      * @since 1.2.2
      *
      */
-    public default void stop() {}
+    default void stop() {}
 }

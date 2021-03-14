@@ -38,5 +38,6 @@
 	"jsmacros.clicktoview": "Click to view in editor.",
 	"jsmacros.errorerror": "AN ERROR WITH ERROR MESSAGE PARSING HAS OCCURRED",
 	"jsmacros.close": "Close",
-	"jsmacros.add": "Add"
+	"jsmacros.add": "Add",
+	"jsmacros.settings": "Settings"
 }

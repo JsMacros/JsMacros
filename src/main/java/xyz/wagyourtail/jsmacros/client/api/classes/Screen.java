@@ -22,6 +22,7 @@ public class Screen extends net.minecraft.client.gui.screen.Screen {
         this.bgStyle = dirt ? 0 : 1;
     }
     
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (matrices == null) return;
         if (bgStyle == 0) this.renderBackgroundTexture(0);

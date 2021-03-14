@@ -8,9 +8,9 @@ import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
  */
 public abstract class BaseListener implements IEventListener {
     protected final ScriptTrigger trigger;
-    protected final Core<?> runner;
+    protected final Core runner;
     
-    public BaseListener(ScriptTrigger trigger, Core<?> runner) {
+    public BaseListener(ScriptTrigger trigger, Core runner) {
         this.trigger = trigger;
         this.runner = runner;
     }

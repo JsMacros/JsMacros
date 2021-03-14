@@ -20,12 +20,12 @@ import java.util.Set;
  * @since 1.2.7
  */
 public abstract class BaseProfile {
-    protected final Core<?> runner;
+    protected final Core runner;
     public final Logger LOGGER;
     public final Set<Thread> joinedThreadStack = new HashSet<>();
     public String profileName;
     
-    public BaseProfile(Core<?> runner, Logger logger) {
+    public BaseProfile(Core runner, Logger logger) {
         this.runner = runner;
         this.LOGGER = logger;
     }
@@ -47,10 +47,10 @@ public abstract class BaseProfile {
      */
     public void loadOrCreateProfile(String profileName) {
         runner.eventRegistry.clearMacros();
-        if (runner.config.options.profiles.containsKey(profileName)) {
+        if (runner.config.getOptions(CoreConfigV2.class).profiles.containsKey(profileName)) {
             loadProfile(profileName);
         } else {
-            runner.config.options.profiles.put(profileName, new ArrayList<>());
+            runner.config.getOptions(CoreConfigV2.class).profiles.put(profileName, new ArrayList<>());
             loadProfile(profileName);
             runner.config.saveConfig();
         }
@@ -65,7 +65,7 @@ public abstract class BaseProfile {
      */
     public boolean loadProfile(String pName) {
         runner.eventRegistry.clearMacros();
-        final List<ScriptTrigger> rawProfile = runner.config.options.profiles.get(pName);
+        final List<ScriptTrigger> rawProfile = runner.config.getOptions(CoreConfigV2.class).profiles.get(pName);
         if (rawProfile == null) {
             LOGGER.warn("profile \"" + pName + "\" does not exist or is broken/null");
             return false;
@@ -83,7 +83,7 @@ public abstract class BaseProfile {
      * @since 1.0.8 [citation needed]
      */
     public void saveProfile() {
-        runner.config.options.profiles.put(getCurrentProfileName(), runner.eventRegistry.getScriptTriggers());
+        runner.config.getOptions(CoreConfigV2.class).profiles.put(getCurrentProfileName(), runner.eventRegistry.getScriptTriggers());
         runner.config.saveConfig();
     }
     

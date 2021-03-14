@@ -14,6 +14,7 @@ public class MixinRecipeBookResults implements IRecipeBookResults {
     @Shadow
     private List<RecipeResultCollection> resultCollections;
     
+    @Override
     public List<RecipeResultCollection> getResultCollections() {
         return resultCollections;
     }
