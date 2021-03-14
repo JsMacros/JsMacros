@@ -590,7 +590,7 @@ public class EditorScreen extends BaseScreen {
         textRenderer.drawWithShadow(matrices, fileName, 2, 2, 0xFFFFFF);
         
         textRenderer.drawWithShadow(matrices, String.format("%d ms", (int) textRenderTime), 2, height - 10, 0xFFFFFF);
-        textRenderer.drawWithShadow(matrices, lineCol, width - textRenderer.getWidth(lineCol) - (width - 10) / 8F - 2, height - 10, 0xFFFFFF);
+        textRenderer.drawWithShadow(matrices, lineCol, width - textRenderer.getWidth(lineCol) - (width - 10) / 4F - 2, height - 10, 0xFFFFFF);
         
         fill(matrices, 0, 12, width - 10, height - 12, 0xFF2B2B2B);
         fill(matrices, 28, 12, 29, height - 12, 0xFF707070);

@@ -34,6 +34,7 @@ public class ProfileScreen extends BaseScreen {
         super(new TranslatableText("jsmacros.title"), parent);
     }
 
+    @Override
     protected void init() {
         super.init();
         assert client != null;
@@ -131,6 +132,7 @@ public class ProfileScreen extends BaseScreen {
         }
     }
 
+    @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (overlay == null) {
             profileScroll.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
@@ -143,11 +145,13 @@ public class ProfileScreen extends BaseScreen {
         updateBtnPos();
     }
     
+    @Override
     public void removeButton(AbstractButtonWidget btn) {
         buttons.remove(btn);
         children.remove(btn);
     }
 
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (matrices == null) return;
         this.renderBackground(matrices, 0);
@@ -187,11 +191,13 @@ public class ProfileScreen extends BaseScreen {
         super.render(matrices, mouseX, mouseY, delta);
     }
 
+    @Override
     public void removed() {
         assert client != null;
         client.keyboard.setRepeatEvents(false);
     }
 
+    @Override
     public void onClose() {
         Core.instance.config.saveConfig();
         super.onClose();

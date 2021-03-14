@@ -20,6 +20,7 @@ public class EventMacrosScreen extends MacroScreen {
         this.parent = parent;
     }
     
+    @Override
     protected void init() {
         super.init();
         eventScreen.setColor(0x4FFFFFFF);

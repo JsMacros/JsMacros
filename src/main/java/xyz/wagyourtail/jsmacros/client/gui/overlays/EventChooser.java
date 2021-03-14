@@ -41,6 +41,7 @@ public class EventChooser extends OverlayContainer {
         }
     }
     
+    @Override
     public void init() {
         super.init();
         int w = width - 4;
@@ -96,6 +97,7 @@ public class EventChooser extends OverlayContainer {
         }
     }
     
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
 

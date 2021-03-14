@@ -23,6 +23,7 @@ public class MacroListTopbar extends MultiElementContainer<MacroScreen> {
         init();
     }
 
+    @Override
     public void init() {
         super.init();
         

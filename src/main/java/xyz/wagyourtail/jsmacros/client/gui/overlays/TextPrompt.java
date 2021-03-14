@@ -22,6 +22,7 @@ public class TextPrompt extends OverlayContainer {
         this.defText = defaultText == null ? "" : defaultText;
     }
 
+    @Override
     public void init() {
         super.init();
         int w = width - 4;
@@ -39,6 +40,7 @@ public class TextPrompt extends OverlayContainer {
         ti.setSelected(true);
     }
 
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
         drawCenteredText(matrices, textRenderer, message, x + width / 2, y + 5, 0xFFFFFF);

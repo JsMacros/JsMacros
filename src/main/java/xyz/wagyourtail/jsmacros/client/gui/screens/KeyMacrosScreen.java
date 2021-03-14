@@ -23,6 +23,7 @@ public class KeyMacrosScreen extends MacroScreen {
         super(parent);
     }
 
+    @Override
     public void init() {
         super.init();
         keyScreen.setColor(0x4FFFFFFF);
@@ -51,6 +52,7 @@ public class KeyMacrosScreen extends MacroScreen {
         }
     }
 
+    @Override
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         String translationKey = EventKey.getKeyModifiers(modifiers);
         if (!translationKey.equals("")) translationKey += "+";
@@ -61,6 +63,7 @@ public class KeyMacrosScreen extends MacroScreen {
         return super.keyReleased(keyCode, scanCode, modifiers);
     }
 
+    @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         int mods = 0;
         if (hasShiftDown()) mods += 1;

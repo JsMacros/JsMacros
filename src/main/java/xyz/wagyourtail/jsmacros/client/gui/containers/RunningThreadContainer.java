@@ -19,6 +19,7 @@ public class RunningThreadContainer extends MultiElementContainer<CancelScreen> 
         init();
     }
     
+    @Override
     @SuppressWarnings("deprecation")
     public void init() {
         super.init();
@@ -30,6 +31,7 @@ public class RunningThreadContainer extends MultiElementContainer<CancelScreen> 
         }));
     }
     
+    @Override
     public void setPos(int x, int y, int width, int height) {
         super.setPos(x, y, width, height);
         cancelButton.setPos(x+1, y+1, height - 2, height - 2);

@@ -206,6 +206,7 @@ public class History {
             this.cursor = cursor;
         }
         
+        @Override
         protected String applyStep(String input) {
             String result = input.substring(0, position) + added + input.substring(position);
             cursor.updateStartIndex(position + added.length(), result);
@@ -213,6 +214,7 @@ public class History {
             return result;
         }
         
+        @Override
         protected String unApplyStep(String input) {
             String result = input.substring(0, position) + input.substring(position + added.length());
             cursor.updateStartIndex(position, result);
@@ -233,6 +235,7 @@ public class History {
             this.cursor = cursor;
         }
         
+        @Override
         protected String applyStep(String input) {
             removed = input.substring(position, position + length);
             String result = input.substring(0, position) + input.substring(position + length);
@@ -241,6 +244,7 @@ public class History {
             return result;
         }
         
+        @Override
         protected String unApplyStep(String input) {
             String result = input.substring(0, position) + removed + input.substring(position);
             cursor.updateStartIndex(position, result);
@@ -263,6 +267,7 @@ public class History {
             this.cursor = cursor;
         }
         
+        @Override
         protected String applyStep(String input) {
             oldContent = input.substring(position, position + length);
             String result = input.substring(0, position) + newContent + input.substring(position + length);
@@ -271,6 +276,7 @@ public class History {
             return result;
         }
         
+        @Override
         protected String unApplyStep(String input) {
             String result = input.substring(0, position) + oldContent + input.substring(position + newContent.length());
             cursor.updateStartIndex(position, result);
@@ -294,10 +300,12 @@ public class History {
             this.cursor = cursor;
         }
         
+        @Override
         protected String applyStep(String input) {
             return shift(input, startLine, lineCount, shiftAmmount, shiftDown);
         }
         
+        @Override
         protected String unApplyStep(String input) {
             return shift(input, shiftDown ? startLine + shiftAmmount : startLine - shiftAmmount, lineCount, shiftAmmount, !shiftDown);
         }

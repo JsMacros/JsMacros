@@ -45,6 +45,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
         return macro;
     }
     
+    @Override
     public void init() {
         super.init();
         int w = width - 12;
@@ -102,6 +103,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
         fileBtn.setMessage(new LiteralText("./"+macro.scriptFile.replaceAll("\\\\", "/")));
     }
 
+    @Override
     public void setPos(int x, int y, int width, int height) {
         super.setPos(x, y, width, height);
         int w = width - 12;

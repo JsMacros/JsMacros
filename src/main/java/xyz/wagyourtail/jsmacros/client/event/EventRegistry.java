@@ -17,6 +17,7 @@ public class EventRegistry extends BaseEventRegistry {
         super(runner);
     }
     
+    @Override
     public synchronized void addScriptTrigger(ScriptTrigger rawmacro) {
         switch (rawmacro.triggerType) {
             case KEY_RISING:
@@ -36,6 +37,7 @@ public class EventRegistry extends BaseEventRegistry {
     }
     
     
+    @Override
     public synchronized boolean removeScriptTrigger(ScriptTrigger rawmacro) {
         final String event = rawmacro.triggerType == ScriptTrigger.TriggerType.EVENT ? rawmacro.event : EventKey.class.getAnnotation(Event.class).value();
         for (IEventListener macro : listeners.get(event)) {
@@ -47,6 +49,7 @@ public class EventRegistry extends BaseEventRegistry {
         return false;
     }
     
+    @Override
     public synchronized List<ScriptTrigger> getScriptTriggers() {
         final List<ScriptTrigger> rawProf = new ArrayList<>();
         for (Set<IEventListener> eventMacros : listeners.values()) {

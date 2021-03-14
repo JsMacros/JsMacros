@@ -135,6 +135,7 @@ public class Profile extends BaseProfile {
         return text;
     }
     
+    @Override
     public void initRegistries() {
         super.initRegistries();
     

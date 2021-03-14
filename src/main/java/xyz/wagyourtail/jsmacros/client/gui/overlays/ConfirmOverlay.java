@@ -34,6 +34,7 @@ public class ConfirmOverlay extends OverlayContainer {
         this.vcenter = ((height - 15) - (lines * textRenderer.fontHeight)) / 2;
     }
     
+    @Override
     public void init() {
         super.init();
         
@@ -56,6 +57,7 @@ public class ConfirmOverlay extends OverlayContainer {
         }
     }
     
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
         fill(matrices, x + 1, y + height - 13, x + width - 1, y + height - 12, 0xFFFFFFFF);
