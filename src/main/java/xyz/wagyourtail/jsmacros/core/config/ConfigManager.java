@@ -13,8 +13,8 @@ import java.util.Map;
 
 public class ConfigManager {
     protected final static Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    protected final Map<String, Class<?>> optionClasses = new LinkedHashMap<>();
-    protected final Map<Class<?>, Object> options = new LinkedHashMap<>();
+    public final Map<String, Class<?>> optionClasses = new LinkedHashMap<>();
+    public final Map<Class<?>, Object> options = new LinkedHashMap<>();
     public final File configFolder;
     public final File macroFolder;
     public final File configFile;

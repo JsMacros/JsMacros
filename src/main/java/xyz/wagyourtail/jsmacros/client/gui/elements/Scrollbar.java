@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 
 public class Scrollbar extends AbstractButtonWidget {
     protected double scrollPages = 1;
-    protected double scrollAmmount = 0;
+    protected double scrollAmount = 0;
     protected double scrollbarHeight;
     protected double scrollDistance;
     protected int color;
@@ -33,7 +33,7 @@ public class Scrollbar extends AbstractButtonWidget {
         this.scrollbarHeight = (height - 2) / (scrollPages + 1);
         double oldDistance = this.scrollDistance;
         this.scrollDistance = Math.max(height - 2 - this.scrollbarHeight, 1);
-        this.scrollAmmount = this.scrollAmmount / oldDistance * scrollDistance;
+        this.scrollAmount = this.scrollAmount / oldDistance * scrollDistance;
         return this;
     }
 
@@ -42,7 +42,7 @@ public class Scrollbar extends AbstractButtonWidget {
         this.scrollbarHeight = (int) Math.ceil((height - 2) / Math.max(1, scrollPages));
         this.scrollDistance = Math.max(height - 2 - this.scrollbarHeight, 1);
         if (scrollPages < 1) {
-            scrollAmmount = 0;
+            scrollAmount = 0;
             onChange();
             this.active = false;
             this.visible = false;
@@ -53,7 +53,7 @@ public class Scrollbar extends AbstractButtonWidget {
     }
     
     public void scrollToPercent(double percent) {
-        scrollAmmount = scrollDistance * percent;
+        scrollAmount = scrollDistance * percent;
         onChange();
     }
     
@@ -61,26 +61,26 @@ public class Scrollbar extends AbstractButtonWidget {
     public void onClick(double mouseX, double mouseY) {
         if (this.active) {
             double mpos = mouseY - y - 1;
-            if (mpos < scrollAmmount) {
-                scrollAmmount = Math.max(mpos - (scrollbarHeight / 2), 0);
+            if (mpos < scrollAmount) {
+                scrollAmount = Math.max(mpos - (scrollbarHeight / 2), 0);
                 onChange();
             }
-            if (mpos > (scrollAmmount + scrollbarHeight)) {
-                scrollAmmount = Math.min(mpos - (scrollbarHeight / 2), scrollDistance);
+            if (mpos > (scrollAmount + scrollbarHeight)) {
+                scrollAmount = Math.min(mpos - (scrollbarHeight / 2), scrollDistance);
                 onChange();
             }
         }
     }
     
     public void onChange() {
-        if (onChange != null) onChange.accept(scrollPages * scrollAmmount / scrollDistance);
+        if (onChange != null) onChange.accept(scrollPages * scrollAmount / scrollDistance);
     }
     
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        scrollAmmount += deltaY;
-        if (scrollAmmount > scrollDistance) scrollAmmount = scrollDistance;
-        if (scrollAmmount < 0) scrollAmmount = 0;
+        scrollAmount += deltaY;
+        if (scrollAmount > scrollDistance) scrollAmount = scrollDistance;
+        if (scrollAmount < 0) scrollAmount = 0;
         onChange();
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
@@ -89,7 +89,7 @@ public class Scrollbar extends AbstractButtonWidget {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             // mainpart
-            fill(matrices, x + 1, (int) (y + 1 + scrollAmmount), x + width - 1, (int) (y + 1 + scrollAmmount + scrollbarHeight), hilightColor);
+            fill(matrices, x + 1, (int) (y + 1 + scrollAmount), x + width - 1, (int) (y + 1 + scrollAmount + scrollbarHeight), hilightColor);
 
             // outline and back
             fill(matrices, x + 1, y + 1, x + width - 1, y + height - 1, color);
