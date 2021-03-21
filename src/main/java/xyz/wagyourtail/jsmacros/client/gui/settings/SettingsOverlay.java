@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings;
 
+import com.google.common.collect.Lists;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -14,14 +15,12 @@ import xyz.wagyourtail.jsmacros.core.config.Option;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SettingsOverlay extends OverlayContainer {
     private final Text title = new TranslatableText("jsmacros.settings");
     private CategoryTreeContainer sections;
+    private AbstractSettingGroupContainer category;
     private final SettingTree settings = new SettingTree();
     public SettingsOverlay(int x, int y, int width, int height, TextRenderer textRenderer, IOverlayParent parent) {
         super(x, y, width, height, textRenderer, parent);
@@ -39,7 +38,7 @@ public class SettingsOverlay extends OverlayContainer {
                         if (!option.setter().equals("")) {
                             setter = clazz.getDeclaredMethod(option.setter(), f.getType());
                         }
-                        settings.addChild(option.group(), new SettingField(option, Core.instance.config.getOptions(clazz), f, getter, setter));
+                        settings.addChild(option.group(), new SettingField<>(option, Core.instance.config.getOptions(clazz), f, getter, setter, f.getType()));
                     } catch (NoSuchMethodException e) {
                         e.printStackTrace();
                     }
@@ -54,7 +53,7 @@ public class SettingsOverlay extends OverlayContainer {
                         if (!option.setter().equals("")) {
                             setter = clazz.getDeclaredMethod(option.setter(), m.getReturnType());
                         }
-                        settings.addChild(option.group(), new SettingField(option, Core.instance.config.getOptions(clazz), null, m, setter));
+                        settings.addChild(option.group(), new SettingField<>(option, Core.instance.config.getOptions(clazz), null, m, setter, m.getReturnType()));
                     } catch (NoSuchMethodException e) {
                         e.printStackTrace();
                     }
@@ -76,8 +75,27 @@ public class SettingsOverlay extends OverlayContainer {
         }
     }
     
+    public void clearCategory() {
+        if (category != null) {
+            category.getButtons().forEach(this::removeButton);
+            category = null;
+        }
+    }
+    
     public void selectCategory(String[] category) {
-        System.out.println(String.join(", ", category));
+        int w = width - 4;
+        clearCategory();
+        List<SettingField<?>> settings = this.settings.getSettings(category);
+        if (settings.size() != 1 || settings.get(0).isSimple()) {
+            this.category = new SettingGroupContainer(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
+            for (SettingField<?> field : settings) {
+                this.category.addSetting(field);
+            }
+        } else {
+            if (settings.get(0).option.type().value().equals("color")) {
+            
+            }
+        }
     }
     
     @Override
@@ -93,20 +111,25 @@ public class SettingsOverlay extends OverlayContainer {
         //sep
         fill(matrices, x + w / 3, y + 13, x + w / 3 + 1, y + height, 0xFFFFFFFF);
         
+        if (category != null) {
+            category.render(matrices, mouseX, mouseY, delta);
+        }
+        
         super.render(matrices, mouseX, mouseY, delta);
     }
     
     static class SettingTree {
         Map<String, SettingTree> children = new HashMap<>();
-        List<SettingField> settings = new LinkedList<>();
+        List<SettingField<?>> settings = new LinkedList<>();
         
-        void addChild(String[] group, SettingField field) {
+        void addChild(String[] group, SettingField<?> field) {
             if (group.length > 0) {
                 String[] childGroup = new String[group.length - 1];
                 System.arraycopy(group, 1, childGroup, 0, childGroup.length);
-                addChild(childGroup, field);
+                children.computeIfAbsent(group[0], (key) -> new SettingTree()).addChild(childGroup, field);
+            } else {
+                settings.add(field);
             }
-            settings.add(field);
         }
         
         public List<String[]> groups() {
@@ -125,24 +148,35 @@ public class SettingsOverlay extends OverlayContainer {
             }
             return new LinkedList<>();
         }
+        
+        public List<SettingField<?>> getSettings(String[] group) {
+            if (group.length > 0) {
+                String[] childGroup = new String[group.length - 1];
+                System.arraycopy(group, 1, childGroup, 0, childGroup.length);
+                return children.get(group[0]).getSettings(childGroup);
+            }
+            return settings;
+        }
     }
     
-    static class SettingField {
-        final Option option;
+    public static class SettingField<T> {
+        public final Class<T> type;
+        public final Option option;
         final Object containingClass;
         final Field field;
         final Method getter;
         final Method setter;
         
-        public SettingField(Option option, Object containingClass, Field f, Method getter, Method setter) {
+        public SettingField(Option option, Object containingClass, Field f, Method getter, Method setter, Class<T> type) {
             this.option = option;
             this.containingClass = containingClass;
             this.field = f;
             this.getter = getter;
             this.setter = setter;
+            this.type = type;
         }
         
-        public void set(Object o) throws IllegalAccessException, InvocationTargetException {
+        public void set(T o) throws IllegalAccessException, InvocationTargetException {
             if (setter == null) {
                 field.set(containingClass, o);
             } else {
@@ -150,12 +184,30 @@ public class SettingsOverlay extends OverlayContainer {
             }
         }
         
-        public Object get() throws IllegalAccessException, InvocationTargetException {
+        @SuppressWarnings("unchecked")
+        public T get() throws IllegalAccessException, InvocationTargetException {
             if (getter == null) {
-                return field.get(containingClass);
+                return (T) field.get(containingClass);
             } else {
-                return getter.invoke(containingClass);
+                return (T) getter.invoke(containingClass);
             }
+        }
+        
+        public boolean hasOptions() {
+            return !option.options().equals("") || type.isEnum();
+        }
+        
+        @SuppressWarnings("unchecked")
+        public List<T> getOptions() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+            if (!option.options().equals(""))
+                return (List<T>) containingClass.getClass().getDeclaredMethod(option.options()).invoke(containingClass);
+            if (type.isEnum())
+                return Lists.newArrayList(type.getEnumConstants());
+            return null;
+        }
+        
+        public boolean isSimple() {
+            return !List.class.isAssignableFrom(type) && !Map.class.isAssignableFrom(type) && !type.isArray();
         }
     }
 }

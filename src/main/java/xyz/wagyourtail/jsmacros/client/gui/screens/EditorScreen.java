@@ -651,7 +651,7 @@ public class EditorScreen extends BaseScreen {
     public boolean mouseClicked(double mouseX, double mouseY, int btn) {
         setFocused(null);
         boolean handled = super.mouseClicked(mouseX, mouseY, btn);
-        if (!handled) {
+        if (!handled && overlay == null) {
             int index = getIndexPosition(mouseX - 30, mouseY - 12 + 1);
             if (btn != 1 || (cursor.startIndex > index || cursor.endIndex < index)) {
                 if (Screen.hasShiftDown()) {
@@ -731,7 +731,7 @@ public class EditorScreen extends BaseScreen {
     
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if (!(getFocused() instanceof Scrollbar) && button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (!(getFocused() instanceof Scrollbar) && button == GLFW.GLFW_MOUSE_BUTTON_LEFT && overlay == null) {
             int index = getIndexPosition(mouseX - 30, mouseY - 12);
             if (index == cursor.dragStartIndex) {
                 cursor.updateStartIndex(index, history.current);
@@ -755,6 +755,8 @@ public class EditorScreen extends BaseScreen {
     public synchronized boolean charTyped(char chr, int keyCode) {
         if (overlay == null) {
             setFocused(null);
+        } else {
+            return super.charTyped(chr, keyCode);
         }
         if (blockFirst) {
             blockFirst = false;

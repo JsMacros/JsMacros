@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;

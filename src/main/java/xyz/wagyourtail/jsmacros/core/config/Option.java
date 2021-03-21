@@ -11,5 +11,5 @@ public @interface Option {
     String setter() default "";
     String getter() default "";
     String options() default "";
-    String type() default "primitive";
+    OptionType type() default @OptionType;
 }

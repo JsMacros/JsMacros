@@ -12,6 +12,7 @@ public class AnnotatedCheckBox extends Button {
     public AnnotatedCheckBox(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int hilightColor, int textColor, Text message, boolean initialValue, Consumer<Button> onPress) {
         super(x, y, width, height, textRenderer, color, borderColor, hilightColor, textColor, message, onPress);
         value = initialValue;
+        horizCenter = false;
     }
     
     @Override
@@ -49,7 +50,9 @@ public class AnnotatedCheckBox extends Button {
                 fill(matrices, x + width - height + 1, y + 1, x + width - 1, y + height - 1, hilightColor);
             } else {
                 hovering = false;
-                fill(matrices, x + width - height + 1, y + 1, x + width - 1, y + height - 1, color);
+                if (value) {
+                    fill(matrices, x + width - height + 1, y + 1, x + width - 1, y + height - 1, color);
+                }
             }
             // outline
             fill(matrices, x + width - height, y, x + width - height + 1, y + height, borderColor);

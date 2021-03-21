@@ -11,6 +11,7 @@ import java.util.function.Consumer;
 
 public class TextInput extends Button {
     public Consumer<String> onChange;
+    public String mask = ".*";
     public String content;
     protected int selColor;
     protected int selStart;
@@ -149,7 +150,10 @@ public class TextInput extends Button {
     @Override
     public boolean charTyped(char chr, int keyCode) {
         if (selEndIndex < selStartIndex) swapStartEnd();
-        content = content.substring(0, selStartIndex) + chr + content.substring(selEndIndex);
+        String newContent = content.substring(0, selStartIndex) + chr + content.substring(selEndIndex);
+        if (newContent.matches(mask)) {
+            content = newContent;
+        }
         if (onChange != null) onChange.accept(content);
         updateSelStart(selStartIndex + 1);
         arrowCursor = selStartIndex;

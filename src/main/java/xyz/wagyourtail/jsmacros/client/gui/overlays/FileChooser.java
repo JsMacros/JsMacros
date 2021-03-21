@@ -22,6 +22,7 @@ public class FileChooser extends OverlayContainer {
     private File directory;
     private Text dirname;
     private File selected;
+    public File root = Core.instance.config.macroFolder;
     private final List<fileObj> files = new ArrayList<>();
     private final Consumer<File> setFile;
     private final Consumer<File> editFile;
@@ -41,9 +42,9 @@ public class FileChooser extends OverlayContainer {
         }
         files.clear();
         this.directory = dir;
-        this.dirname = new LiteralText("." + dir.getAbsolutePath().substring(Core.instance.config.macroFolder.getAbsolutePath().length()).replaceAll("\\\\", "/"));
+        this.dirname = new LiteralText("." + dir.getAbsolutePath().substring(root.getAbsolutePath().length()).replaceAll("\\\\", "/"));
 
-        if (!this.directory.equals(Core.instance.config.macroFolder)) {
+        if (!this.directory.equals(root)) {
             addFile(this.directory.getParentFile(), "..");
         }
 

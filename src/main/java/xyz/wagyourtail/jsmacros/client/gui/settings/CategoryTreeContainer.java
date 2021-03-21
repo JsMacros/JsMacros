@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.gui.settings;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MultiElementContainer;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
@@ -61,7 +62,11 @@ public class CategoryTreeContainer extends MultiElementContainer<SettingsOverlay
             }
             ++index;
         }
-        wrapper.btn = addButton(new Button(x, y + topScroll, width - 8, textRenderer.fontHeight + 3, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText(category[category.length - 1]), (btn) -> {
+        StringBuilder start = new StringBuilder();
+        for (int i = 1; i < category.length; ++i) {
+            start.append(">");
+        }
+        wrapper.btn = addButton(new Button(x, y + topScroll, width - 8, textRenderer.fontHeight + 3, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(start.toString()).append(new TranslatableText(category[category.length - 1])), (btn) -> {
             parent.selectCategory(category);
             for (String child : head.getCategory(category).children.keySet()) {
                 String[] childCategory = new String[category.length + 1];

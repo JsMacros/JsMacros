@@ -9,13 +9,13 @@ import xyz.wagyourtail.jsmacros.core.event.impl.EventProfileLoad;
 import java.util.*;
 
 public class CoreConfigV2 {
-    @Option(translationKey = "Default Profile", group = "profile", options = "profileOptions")
+    @Option(translationKey = "jsmacros.defaultprofile", group = "jsmacros.settings.profile", options = "profileOptions")
     public String defaultProfile = "default";
     
-    @Option(translationKey = "Profiles", group = {"profile", "list"}, type = "profilemap")
+    @Option(translationKey = "jsmacros.profiles", group = {"jsmacros.settings.profile", "jsmacros.settings.profile.list"}, type = @OptionType("profile"))
     public Map<String, List<ScriptTrigger>> profiles = new HashMap<>();
     
-    @Option(translationKey = "Extra Js Options", group = {"languages", "js"}, type = "stringmap")
+    @Option(translationKey = "jsmacros.extrajsoptions", group = {"jsmacros.settings.languages", "jsmacros.settings.languages.javascript", "jsmacros.settings.languages.javascript.graaloptions"})
     public Map<String, String> extraJsOptions = new HashMap<>();
     
     public CoreConfigV2() {
@@ -24,7 +24,7 @@ public class CoreConfigV2 {
     }
     
     //"synthetic" option
-    @Option(translationKey = "Current Profile", group = "general", setter = "setCurrentProfile", options = "profileOptions")
+    @Option(translationKey = "jsmacros.currentprofile", group = "jsmacros.settings.profile", setter = "setCurrentProfile", options = "profileOptions")
     public String getCurrentProfile() {
         return Core.instance.profile.getCurrentProfileName();
     }
@@ -33,8 +33,8 @@ public class CoreConfigV2 {
         Core.instance.profile.loadOrCreateProfile(pname);
     }
     
-    public Set<String> profileOptions() {
-        return profiles.keySet();
+    public List<String> profileOptions() {
+        return new ArrayList<>(profiles.keySet());
     }
     
     

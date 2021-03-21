@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.Option;
+import xyz.wagyourtail.jsmacros.core.config.OptionType;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 
 import java.util.Comparator;
@@ -13,25 +14,25 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientConfigV2 {
-    @Option(translationKey = "Sort Method", group = "gui")
+    @Option(translationKey = "jsmacros.sort", group = "jsmacros.settings.gui")
     public Sorting.MacroSortMethod sortMethod = Sorting.MacroSortMethod.Enabled;
     
-    @Option(translationKey = "Disable KeyEvent when screens are open", group = "general")
+    @Option(translationKey = "jsmacros.disablewithscreen", group = "jsmacros.settings.general")
     public boolean disableKeyWhenScreenOpen = true;
     
-    @Option(translationKey = "Editor Theme", group = {"editor", "color"}, getter = "getThemeData", type = "colormap")
+    @Option(translationKey = "jsmacros.theme", group = {"jsmacros.settings.editor", "jsmacros.settings.editor.color"}, getter = "getThemeData", type = @OptionType("color"))
     public Map<String, short[]> editorTheme = null;
     
-    @Option(translationKey = "Linter Override Scripts", group = "editor", options = "languages", type = "stringmap")
+    @Option(translationKey = "jsmacros.linteroverrides", group = {"jsmacros.settings.editor", "jsmacros.settings.editor.linter"}, options = "languages", type = @OptionType("file"))
     public Map<String, String> editorLinterOverrides = new HashMap<>();
     
-    @Option(translationKey = "History Size", group = "editor")
+    @Option(translationKey = "jsmacros.history", group = "jsmacros.settings.editor")
     public int editorHistorySize = 20;
     
-    @Option(translationKey = "Suggest Autocomplete", group = "editor")
+    @Option(translationKey = "jsmacros.autocomplete", group = "jsmacros.settings.editor")
     public boolean editorSuggestions = true;
     
-    @Option(translationKey = "Font", group = "editor")
+    @Option(translationKey = "jsmacros.font", group = "jsmacros.settings.editor")
     public String editorFont = "jsmacros:jetbrainsmono";
     
     public List<String> languages() {

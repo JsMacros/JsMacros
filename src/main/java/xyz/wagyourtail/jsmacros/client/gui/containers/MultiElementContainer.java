@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MultiElementContainer<T extends IContainerParent> extends DrawableHelper implements IContainerParent {
-    protected int x;
-    protected int y;
-    protected int width;
-    protected int height;
+    public int x;
+    public int y;
+    public int width;
+    public int height;
     protected List<AbstractButtonWidget> buttons = new ArrayList<>();
     protected T parent;
     protected TextRenderer textRenderer;
