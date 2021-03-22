@@ -2,7 +2,9 @@ package xyz.wagyourtail.jsmacros.client.gui.settings;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MultiElementContainer;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractMapSettingContainer<T> extends AbstractSettingGroupContainer {
     public SettingsOverlay.SettingField<Map<String, T>> setting;
+    public Text settingName;
     public final Map<String, MapSettingEntry> map = new HashMap<>();
     public int topScroll = 0;
     public int totalHeight = 0;
@@ -32,7 +35,7 @@ public abstract class AbstractMapSettingContainer<T> extends AbstractSettingGrou
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void init() {
         super.init();
-        scroll = addButton(new Scrollbar(x + width - 10, y, 10, height - 10, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
+        scroll = addButton(new Scrollbar(x + width - 10, y + 12, 10, height - 22, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
         addButton(new Button(x + width - 10, y + height - 10, 10, 10, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("+"), (btn) -> {
             if (setting.hasOptions()) {
                 try {
@@ -55,8 +58,8 @@ public abstract class AbstractMapSettingContainer<T> extends AbstractSettingGrou
         int width = this.width - 12;
         while (it.hasNext()) {
             MapSettingEntry current = map.get(it.next());
-            current.setPos(x, y + height - topScroll, width, current.height);
-            current.setVisible(current.y >= y && current.y + current.height <= y + this.height);
+            current.setPos(x, y + 12 + height - topScroll, width, current.height);
+            current.setVisible(current.y >= y + 12 && current.y + current.height <= y + this.height + 2);
             height += current.height;
         }
     }
@@ -68,27 +71,46 @@ public abstract class AbstractMapSettingContainer<T> extends AbstractSettingGrou
     public abstract void addField(String key, T value);
     
     public void removeField(String key) throws InvocationTargetException, IllegalAccessException {
-        totalHeight -= map.remove(key).height;
-        scroll.setScrollPages(totalHeight / (double) height);
         setting.get().remove(key);
+        MapSettingEntry ent = map.remove(key);
+        ent.getButtons().forEach(this::removeButton);
+        totalHeight -= ent.height;
+        scroll.setScrollPages(totalHeight / (double) height);
+        if (scroll.active) {
+            scroll.scrollToPercent(0);
+        } else {
+            onScrollbar(0);
+        }
     }
     
     public void changeValue(String key, T newValue) throws InvocationTargetException, IllegalAccessException {
-        map.get(key).setValue(newValue);
         setting.get().put(key, newValue);
+        map.get(key).setValue(newValue);
     }
     
     public void changeKey(String key, String newKey) throws InvocationTargetException, IllegalAccessException {
-        map.get(key).setKey(newKey);
         Map<String, T> setting = this.setting.get();
         setting.put(newKey, setting.remove(key));
+        map.get(key).setKey(newKey);
     }
     
     @Override
     @SuppressWarnings("unchecked")
     public void addSetting(SettingsOverlay.SettingField<?> setting) {
         this.setting = (SettingsOverlay.SettingField<Map<String, T>>) setting;
+        this.settingName = new TranslatableText(setting.option.translationKey());
         map.clear();
+        try {
+            this.setting.get().forEach(this::addField);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        drawCenteredText(matrices, textRenderer, settingName, x + width / 2, y + 1, 0xFFFFFF);
+        fill(matrices, x, y + 10, x+width,y + 11,0xFFFFFFFF);
     }
     
     public abstract class MapSettingEntry extends MultiElementContainer<AbstractMapSettingContainer<T>> {

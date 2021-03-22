@@ -91,8 +91,20 @@ public class SettingsOverlay extends OverlayContainer {
         if (settings.size() != 1 || settings.get(0).isSimple()) {
             this.category = new SettingGroupContainer(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
         } else {
-            if (settings.get(0).option.type().value().equals("color")) {
-                this.category = new ColorMapSettings(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
+            if (settings.get(0).type == Map.class) {
+                String typeVal = settings.get(0).option.type().value();
+                if (typeVal.equals("color")) {
+                    this.category = new ColorMapSettings(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
+                }
+                if (typeVal.equals("string")) {
+                    this.category = new StringMapSettings(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
+                }
+                if (typeVal.equals("file")) {
+                    this.category = new FileMapSettings(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
+                }
+                if (typeVal.equals("profile")) {
+                    this.category = new ProfileSettings(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
+                }
             }
         }
         if (this.category != null) {
@@ -108,6 +120,12 @@ public class SettingsOverlay extends OverlayContainer {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
         int w = width - 4;
+        
+        if (mouseX < x + w / 3) {
+            scroll = sections.scroll;
+        } else if (category != null) {
+            scroll = category.scroll;
+        }
         
         sections.render(matrices, mouseX, mouseY, delta);
         

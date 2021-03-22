@@ -15,7 +15,7 @@ public class CoreConfigV2 {
     @Option(translationKey = "jsmacros.profiles", group = {"jsmacros.settings.profile", "jsmacros.settings.profile.list"}, type = @OptionType("profile"))
     public Map<String, List<ScriptTrigger>> profiles = new HashMap<>();
     
-    @Option(translationKey = "jsmacros.extrajsoptions", group = {"jsmacros.settings.languages", "jsmacros.settings.languages.javascript", "jsmacros.settings.languages.javascript.graaloptions"})
+    @Option(translationKey = "jsmacros.extrajsoptions", group = {"jsmacros.settings.languages", "jsmacros.settings.languages.javascript", "jsmacros.settings.languages.javascript.graaloptions"}, type = @OptionType("string"))
     public Map<String, String> extraJsOptions = new HashMap<>();
     
     public CoreConfigV2() {

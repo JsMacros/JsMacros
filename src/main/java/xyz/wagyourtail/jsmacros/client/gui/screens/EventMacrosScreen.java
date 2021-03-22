@@ -26,11 +26,6 @@ public class EventMacrosScreen extends MacroScreen {
         eventScreen.setColor(0x4FFFFFFF);
         
         keyScreen.onPress = (btn) -> this.openParent();
-
-        profileScreen.onPress = (btn) -> {
-            assert client != null;
-            client.openScreen(new ProfileScreen(this));
-        };
         
         topbar.updateType(ScriptTrigger.TriggerType.EVENT);
         

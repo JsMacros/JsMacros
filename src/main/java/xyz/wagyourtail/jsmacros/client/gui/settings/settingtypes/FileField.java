@@ -20,7 +20,7 @@ public class FileField extends AbstractSettingType<String> {
         super(x, y, width, textRenderer.fontHeight + 2, textRenderer, parent, field);
     }
     
-    private File getTopLevel() {
+    public static File getTopLevel(SettingsOverlay.SettingField<?> setting) {
         for (String option : setting.option.type().options()) {
             if (option.startsWith("topLevel=")) {
                 switch (option.replace("topLevel=", "")) {
@@ -38,20 +38,15 @@ public class FileField extends AbstractSettingType<String> {
         return Core.instance.config.macroFolder;
     }
     
-    private File getSelectedFile() throws InvocationTargetException, IllegalAccessException {
-        return new File(getTopLevel(), setting.get());
-    }
-    
     @Override
     public void init() {
         super.init();
         try {
             this.addButton(new Button(x + width / 2, y, width / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(setting.get()), (btn) -> {
-                SettingsOverlay parent = (SettingsOverlay) getFirstOverlayParent();
                 try {
-                    parent.openOverlay(new FileChooser(parent.x, parent.y, parent.width, parent.height, textRenderer, getTopLevel(), getSelectedFile(), parent, (file) -> {
+                    parent.openOverlay(new FileChooser(parent.x, parent.y, parent.width, parent.height, textRenderer, getTopLevel(setting), new File(getTopLevel(setting), setting.get()), getFirstOverlayParent(), (file) -> {
                         try {
-                            setting.set("." + file.getAbsolutePath().substring(getTopLevel().getAbsolutePath().length()).replaceAll("\\\\", "/"));
+                            setting.set("." + file.getAbsolutePath().substring(getTopLevel(setting).getAbsolutePath().length()).replaceAll("\\\\", "/"));
                         } catch (IllegalAccessException | InvocationTargetException e) {
                             e.printStackTrace();
                         }

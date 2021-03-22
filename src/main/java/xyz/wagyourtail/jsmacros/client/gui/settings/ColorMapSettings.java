@@ -17,19 +17,9 @@ public class ColorMapSettings extends AbstractMapSettingContainer<short[]> {
     }
     
     @Override
-    public void addSetting(SettingsOverlay.SettingField<?> setting) {
-        super.addSetting(setting);
-        try {
-            this.setting.get().forEach(this::addField);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    
-    @Override
     public void addField(String key, short[] value) {
         if (map.containsKey(key)) return;
-        ColorEntry entry = new ColorEntry(x, y + totalHeight - topScroll, width - 12, textRenderer, this, key, value);
+        ColorEntry entry = new ColorEntry(x, y + 12 + totalHeight - topScroll, width - 12, textRenderer, this, key, value);
         map.put(key, entry);
         totalHeight +=  entry.height;
         scroll.setScrollPages(totalHeight / (double) height);
@@ -38,11 +28,6 @@ public class ColorMapSettings extends AbstractMapSettingContainer<short[]> {
         } else {
             onScrollbar(0);
         }
-    }
-    
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-    
     }
     
     public class ColorEntry extends AbstractMapSettingContainer<short[]>.MapSettingEntry {
@@ -79,11 +64,11 @@ public class ColorMapSettings extends AbstractMapSettingContainer<short[]> {
                 int width = ColorMapSettings.this.width;
                 int height = ColorMapSettings.this.height;
                 TextPrompt prompt = new TextPrompt(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.setvalue"), convertColorToString(value), getFirstOverlayParent(), (str) -> {
-                    short[] newVal = convertStringToColor(str);
-                    btn.setColor(convertColorToInt(newVal));
-                    btn.setMessage(new LiteralText(str));
                     try {
+                        short[] newVal = convertStringToColor(str);
                         changeValue(key, newVal);
+                        btn.setColor(convertColorToInt(newVal));
+                        btn.setMessage(new LiteralText(str));
                     } catch (InvocationTargetException | IllegalAccessException e) {
                         e.printStackTrace();
                     }

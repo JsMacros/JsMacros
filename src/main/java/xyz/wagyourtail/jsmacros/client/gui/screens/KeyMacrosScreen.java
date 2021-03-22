@@ -33,11 +33,6 @@ public class KeyMacrosScreen extends MacroScreen {
             client.openScreen(new EventMacrosScreen(this));
         };
 
-        profileScreen.onPress = (btn) -> {
-            assert client != null;
-            client.openScreen(new ProfileScreen(this));
-        };
-
         Set<IEventListener> listeners = Core.instance.eventRegistry.getListeners().get(EventKey.class.getAnnotation(Event.class).value());
         List<ScriptTrigger> macros = new ArrayList<>();
 

@@ -13,6 +13,7 @@ import xyz.wagyourtail.jsmacros.client.gui.overlays.AboutOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.EventChooser;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.FileChooser;
+import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 
@@ -28,7 +29,6 @@ public class MacroScreen extends BaseScreen {
     protected int topScroll;
     protected Button keyScreen;
     protected Button eventScreen;
-    protected Button profileScreen;
     protected Button runningBtn;
     protected Button aboutBtn;
     
@@ -44,7 +44,9 @@ public class MacroScreen extends BaseScreen {
 
         eventScreen = this.addButton(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.events"), null));
 
-        profileScreen = this.addButton(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.profile"), null));
+        this.addButton(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.settings"), (btn) -> {
+            openOverlay(new SettingsOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this));
+        }));
 
         topbar = new MacroListTopbar(this, this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer, ScriptTrigger.TriggerType.KEY_RISING);
 
