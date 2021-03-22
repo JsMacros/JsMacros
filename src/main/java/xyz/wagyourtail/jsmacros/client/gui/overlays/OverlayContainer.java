@@ -63,6 +63,7 @@ public abstract class OverlayContainer extends MultiElementContainer<IOverlayPar
             for (AbstractButtonWidget b : overlay.savedBtnStates.keySet()) {
                 b.active = overlay.savedBtnStates.get(b);
             }
+            overlay.onClose();
             this.overlay = null;
         }
         else parent.closeOverlay(overlay);
@@ -88,6 +89,8 @@ public abstract class OverlayContainer extends MultiElementContainer<IOverlayPar
     public void close() {
         parent.closeOverlay(this);
     }
+    
+    public void onClose() {}
     
     public void renderBackground(MatrixStack matrices) {
         // black bg

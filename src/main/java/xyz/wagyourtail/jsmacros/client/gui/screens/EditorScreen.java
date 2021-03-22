@@ -256,8 +256,8 @@ public class EditorScreen extends BaseScreen {
         assert client != null;
         if (overlay == null) {
             setFocused(null);
-        } else if (overlay.keyPressed(keyCode, scanCode, modifiers)) {
-            return true;
+        } else {
+            return super.keyPressed(keyCode, scanCode, modifiers);
         }
         if (Screen.isSelectAll(keyCode)) {
             cursor.updateStartIndex(0, history.current);

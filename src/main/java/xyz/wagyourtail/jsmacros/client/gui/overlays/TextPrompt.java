@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 public class TextPrompt extends OverlayContainer {
     private final Text message;
     private final Consumer<String> accept;
-    private TextInput ti;
+    public TextInput ti;
     private final String defText;
 
     public TextPrompt(int x, int y, int width, int height, TextRenderer textRenderer, Text message, String defaultText, IOverlayParent parent, Consumer<String> accept) {

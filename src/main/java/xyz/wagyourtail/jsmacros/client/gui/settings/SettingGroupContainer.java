@@ -23,6 +23,14 @@ public class SettingGroupContainer extends AbstractSettingGroupContainer {
     }
     
     public void onScrollbar(double page) {
+        topScroll = (int) (page * height);
+        int settingHeight = 0;
+        int x = this.x + 1;
+        int width = this.width - 12;
+        for (AbstractSettingType<?> setting : settings) {
+            setting.setPos(x, y + settingHeight - topScroll, width, setting.height);
+            settingHeight += setting.height;
+        }
     }
     
     @Override
@@ -58,7 +66,7 @@ public class SettingGroupContainer extends AbstractSettingGroupContainer {
             } else {
                 type = new OptionsField(x, y, width, textRenderer, this, (SettingsOverlay.SettingField<Object>) setting);
             }
-        } else if (setting.option.type().value().equals("file")) {
+        } else if (setting.option.type().value().equals("file") && setting.type == String.class) {
             type = new FileField(x, y, width, textRenderer, this, (SettingsOverlay.SettingField<String>) setting);
         }
         

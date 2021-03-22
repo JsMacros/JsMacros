@@ -153,11 +153,11 @@ public class TextInput extends Button {
         String newContent = content.substring(0, selStartIndex) + chr + content.substring(selEndIndex);
         if (newContent.matches(mask)) {
             content = newContent;
+            if (onChange != null) onChange.accept(content);
+            updateSelStart(selStartIndex + 1);
+            arrowCursor = selStartIndex;
+            updateSelEnd(arrowCursor);
         }
-        if (onChange != null) onChange.accept(content);
-        updateSelStart(selStartIndex + 1);
-        arrowCursor = selStartIndex;
-        updateSelEnd(arrowCursor);
         return false;
     }
 

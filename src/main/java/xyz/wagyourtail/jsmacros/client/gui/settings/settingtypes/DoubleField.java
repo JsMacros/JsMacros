@@ -1,7 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings.settingtypes;
 
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.OrderedText;
 import xyz.wagyourtail.jsmacros.client.gui.elements.TextInput;
 import xyz.wagyourtail.jsmacros.client.gui.settings.AbstractSettingGroupContainer;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
@@ -32,8 +34,16 @@ public class DoubleField extends AbstractSettingType<Double> {
     }
     
     @Override
+    public void setPos(int x, int y, int width, int height) {
+        super.setPos(x, y, width, height);
+        for (AbstractButtonWidget btn : buttons) {
+            btn.y = y;
+        }
+    }
+    
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        textRenderer.drawTrimmed(settingName, x, y + 1, width / 2, 0xFFFFFF);
+        textRenderer.draw(matrices, trimmed(settingName, width / 2), x, y + 1, 0xFFFFFF);
     }
     
 }

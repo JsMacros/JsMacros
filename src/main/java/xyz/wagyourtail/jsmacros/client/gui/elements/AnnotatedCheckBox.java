@@ -41,9 +41,9 @@ public class AnnotatedCheckBox extends Button {
     
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderMessage(matrices);
-        
         if (this.visible) {
+            this.renderMessage(matrices);
+        
             // fill
             if (mouseX - x >= 0 && mouseX - x - width <= 0 && mouseY - y >= 0 && mouseY - y - height <= 0 && this.active || forceHover) {
                 hovering = true;

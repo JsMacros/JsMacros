@@ -34,7 +34,7 @@ public class CategoryTreeContainer extends MultiElementContainer<SettingsOverlay
     }
     
     public void onScrollbar(double page) {
-        topScroll -= page * height;
+        topScroll = (int) (page * height);
         updateButtonPositions();
     }
     
@@ -66,7 +66,7 @@ public class CategoryTreeContainer extends MultiElementContainer<SettingsOverlay
         for (int i = 1; i < category.length; ++i) {
             start.append(">");
         }
-        wrapper.btn = addButton(new Button(x, y + topScroll, width - 8, textRenderer.fontHeight + 3, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(start.toString()).append(new TranslatableText(category[category.length - 1])), (btn) -> {
+        wrapper.btn = addButton(new Button(x, y - topScroll, width - 8, textRenderer.fontHeight + 3, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(start.toString()).append(new TranslatableText(category[category.length - 1])), (btn) -> {
             parent.selectCategory(category);
             for (String child : head.getCategory(category).children.keySet()) {
                 String[] childCategory = new String[category.length + 1];
@@ -84,9 +84,8 @@ public class CategoryTreeContainer extends MultiElementContainer<SettingsOverlay
     private void updateButtonPositions() {
         int i = 0;
         for (ButtonWrapper btn : options) {
-            int scrollAmt = topScroll + i * (textRenderer.fontHeight + 3);
-            btn.btn.visible = scrollAmt >= 0 && scrollAmt <= height;
-            btn.btn.setPos(x, y + scrollAmt, width - 8, textRenderer.fontHeight + 3);
+            btn.btn.setPos(x, y - topScroll + i * (textRenderer.fontHeight + 3), width - 8, textRenderer.fontHeight + 3);
+            btn.btn.visible = btn.btn.y >= y && btn.btn.y + btn.btn.getHeight() <= y + height;
             ++i;
         }
     }

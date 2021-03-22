@@ -85,8 +85,6 @@ public class ClientConfigV2 {
         }
     }
     
-    
-    
     @Deprecated
     public void fromV1(JsonObject v1) {
         sortMethod = Sorting.MacroSortMethod.valueOf(v1.get("sortMethod").getAsString());

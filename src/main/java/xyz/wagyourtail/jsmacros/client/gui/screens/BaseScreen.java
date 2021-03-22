@@ -77,6 +77,7 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
         for (AbstractButtonWidget b : overlay.savedBtnStates.keySet()) {
             b.active = overlay.savedBtnStates.get(b);
         }
+        overlay.onClose();
         if (this.overlay == overlay) this.overlay = null;
     }
 

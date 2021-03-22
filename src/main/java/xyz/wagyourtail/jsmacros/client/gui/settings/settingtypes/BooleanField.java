@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings.settingtypes;
 
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.client.gui.elements.AnnotatedCheckBox;
 import xyz.wagyourtail.jsmacros.client.gui.settings.AbstractSettingGroupContainer;
@@ -28,6 +29,14 @@ public class BooleanField  extends AbstractSettingType<Boolean> {
             }));
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
+        }
+    }
+    
+    @Override
+    public void setPos(int x, int y, int width, int height) {
+        super.setPos(x, y, width, height);
+        for (AbstractButtonWidget btn : buttons) {
+            btn.y = y;
         }
     }
     

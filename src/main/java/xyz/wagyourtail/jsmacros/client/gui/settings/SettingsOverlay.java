@@ -7,9 +7,11 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
+import xyz.wagyourtail.jsmacros.client.gui.overlays.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.IOverlayParent;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.OverlayContainer;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.core.config.Option;
 
 import java.lang.reflect.Field;
@@ -88,13 +90,17 @@ public class SettingsOverlay extends OverlayContainer {
         List<SettingField<?>> settings = this.settings.getSettings(category);
         if (settings.size() != 1 || settings.get(0).isSimple()) {
             this.category = new SettingGroupContainer(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
+        } else {
+            if (settings.get(0).option.type().value().equals("color")) {
+                this.category = new ColorMapSettings(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
+            }
+        }
+        if (this.category != null) {
             for (SettingField<?> field : settings) {
                 this.category.addSetting(field);
             }
         } else {
-            if (settings.get(0).option.type().value().equals("color")) {
-            
-            }
+            openOverlay(new ConfirmOverlay(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.failedsettinggroup"), this, null));
         }
     }
     
@@ -157,6 +163,11 @@ public class SettingsOverlay extends OverlayContainer {
             }
             return settings;
         }
+    }
+    
+    @Override
+    public void onClose() {
+        Core.instance.config.saveConfig();
     }
     
     public static class SettingField<T> {
