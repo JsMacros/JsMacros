@@ -10,14 +10,17 @@ import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.IOverlayParent;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.OverlayContainer;
+import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.core.config.Option;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class SettingsOverlay extends OverlayContainer {
     private final Text title = new TranslatableText("jsmacros.settings");
@@ -184,8 +187,17 @@ public class SettingsOverlay extends OverlayContainer {
     }
     
     @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        super.keyPressed(keyCode, scanCode, modifiers);
+        return true;
+    }
+    
+    @Override
     public void onClose() {
         Core.instance.config.saveConfig();
+        IOverlayParent parent = this.parent;
+        while (!(parent instanceof BaseScreen)) parent = ((OverlayContainer)parent).parent;
+        ((BaseScreen)parent).updateSettings();
     }
     
     public static class SettingField<T> {

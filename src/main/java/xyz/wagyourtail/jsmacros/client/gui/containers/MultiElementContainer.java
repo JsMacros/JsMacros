@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MultiElementContainer<T extends IContainerParent> extends DrawableHelper implements IContainerParent {
+    protected List<AbstractButtonWidget> buttons = new ArrayList<>();
+    protected TextRenderer textRenderer;
+    protected boolean visible = true;
+    public final T parent;
     public int x;
     public int y;
     public int width;
     public int height;
-    protected List<AbstractButtonWidget> buttons = new ArrayList<>();
-    protected T parent;
-    protected TextRenderer textRenderer;
-    protected boolean visible = true;
     
     public MultiElementContainer(int x, int y, int width, int height, TextRenderer textRenderer, T parent) {
         this.textRenderer = textRenderer;

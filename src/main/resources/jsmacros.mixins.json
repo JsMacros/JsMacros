@@ -6,6 +6,7 @@
     "access.MixinBossBarHud",
     "access.MixinChatHud",
     "access.MixinClientPlayNetworkHandler",
+    "access.MixinFontManager",
     "access.MixinFontStorage",
     "access.MixinGameRenderer",
     "access.MixinHandledScreen",
@@ -32,6 +33,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": []
+  }
 }

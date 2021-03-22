@@ -19,7 +19,6 @@ public class MacroListTopbar extends MultiElementContainer<MacroScreen> {
     public MacroListTopbar(MacroScreen parent, int x, int y, int width, int height, TextRenderer textRenderer, ScriptTrigger.TriggerType deftype) {
         super(x, y, width, height, textRenderer, parent);
         this.deftype = deftype;
-        this.parent = parent;
         init();
     }
 

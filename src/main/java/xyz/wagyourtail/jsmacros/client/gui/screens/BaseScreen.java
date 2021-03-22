@@ -130,6 +130,8 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
         return this.overlay == null;
     }
 
+    public void updateSettings() {}
+
     @Override
     public void onClose() {
         assert client != null;

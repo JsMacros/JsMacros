@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 public class SelectCursor {
     private final MinecraftClient mc = MinecraftClient.getInstance();
     public Consumer<SelectCursor> onChange;
-    private final Style defaultStyle;
+    public Style defaultStyle;
     public int startLine = 0;
     public int endLine = 0;
     

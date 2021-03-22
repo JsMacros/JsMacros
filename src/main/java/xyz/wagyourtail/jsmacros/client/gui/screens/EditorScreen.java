@@ -41,7 +41,7 @@ public class EditorScreen extends BaseScreen {
     protected final File file;
     protected final FileHandler handler;
     public final History history;
-    public final SelectCursor cursor = new SelectCursor(defaultStyle);
+    public final SelectCursor cursor;
     private int ellipsesWidth;
     protected String savedString;
     protected Text fileName = new LiteralText("");
@@ -76,7 +76,12 @@ public class EditorScreen extends BaseScreen {
         savedString = content;
         
         this.handler = handler;
+        defaultStyle = Style.EMPTY.withFont(new Identifier(JsMacros.core.config.getOptions(ClientConfigV2.class).editorFont));
+        
+        cursor = new SelectCursor(defaultStyle);
+        
         this.history = new History(content.replaceAll("\r\n", "\n").replaceAll("\t", "    "), cursor);
+        
         cursor.updateStartIndex(0, history.current);
         cursor.updateEndIndex(0, history.current);
         cursor.dragStartIndex = 0;
@@ -176,8 +181,6 @@ public class EditorScreen extends BaseScreen {
         super.init();
         assert client != null;
         
-        defaultStyle = Style.EMPTY.withFont(new Identifier(JsMacros.core.config.getOptions(ClientConfigV2.class).editorFont));
-        
         ellipsesWidth = client.textRenderer.getWidth(ellipses);
         lineSpread = client.textRenderer.fontHeight + 1;
         int width = this.width - 10;
@@ -256,8 +259,8 @@ public class EditorScreen extends BaseScreen {
         assert client != null;
         if (overlay == null) {
             setFocused(null);
-        } else {
-            return super.keyPressed(keyCode, scanCode, modifiers);
+        } else if (overlay.keyPressed(keyCode, scanCode, modifiers)) {
+            return true;
         }
         if (Screen.isSelectAll(keyCode)) {
             cursor.updateStartIndex(0, history.current);
@@ -752,10 +755,19 @@ public class EditorScreen extends BaseScreen {
     }
     
     @Override
+    public void updateSettings() {
+        defaultStyle = Style.EMPTY.withFont(new Identifier(JsMacros.core.config.getOptions(ClientConfigV2.class).editorFont));
+        cursor.defaultStyle = defaultStyle;
+        cursor.updateStartIndex(cursor.startIndex, history.current);
+        cursor.updateEndIndex(cursor.endIndex, history.current);
+        setLanguage(language);
+    }
+    
+    @Override
     public synchronized boolean charTyped(char chr, int keyCode) {
         if (overlay == null) {
             setFocused(null);
-        } else {
+        } else if (overlay instanceof SettingsOverlay) {
             return super.charTyped(chr, keyCode);
         }
         if (blockFirst) {

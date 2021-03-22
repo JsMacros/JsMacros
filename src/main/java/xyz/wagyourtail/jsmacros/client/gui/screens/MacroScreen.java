@@ -152,7 +152,12 @@ public class MacroScreen extends BaseScreen {
 
         super.render(matrices, mouseX, mouseY, delta);
     }
-
+    
+    @Override
+    public void updateSettings() {
+        reload();
+    }
+    
     @Override
     public void onClose() {
         Core.instance.profile.saveProfile();
