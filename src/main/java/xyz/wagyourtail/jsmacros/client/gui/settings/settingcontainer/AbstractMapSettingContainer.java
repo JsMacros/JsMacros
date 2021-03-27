@@ -5,7 +5,6 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MultiElementContainer;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
@@ -23,10 +22,10 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public abstract class AbstractMapSettingContainer<T> extends AbstractSettingContainer {
+public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettingContainer.MapSettingEntry<T>> extends AbstractSettingContainer {
     public SettingsOverlay.SettingField<Map<String, T>> setting;
     public OrderedText settingName;
-    public final Map<String, MapSettingEntry> map = new HashMap<>();
+    public final Map<String, U> map = new HashMap<>();
     public int topScroll = 0;
     public int totalHeight = 0;
     public Supplier<T> defaultValue = () -> null;
@@ -43,7 +42,7 @@ public abstract class AbstractMapSettingContainer<T> extends AbstractSettingCont
             if (setting.hasOptions()) {
                 try {
                     List<String> options = ((List<String>) (List) setting.getOptions()).stream().filter(e -> !map.containsKey(e)).collect(Collectors.toList());
-                    openOverlay(new SelectorDropdownOverlay(x + width - 10, y + height, width / 2, options.size() * textRenderer.fontHeight + 4, options.stream().map(LiteralText::new).collect(Collectors.toList()), textRenderer, getFirstOverlayParent(), (i) -> newField(options.get(i))));
+                    openOverlay(new SelectorDropdownOverlay(x, y + 10, width / 2, options.size() * textRenderer.fontHeight + 4, options.stream().map(LiteralText::new).collect(Collectors.toList()), textRenderer, getFirstOverlayParent(), (i) -> newField(options.get(i))));
                 } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -60,7 +59,7 @@ public abstract class AbstractMapSettingContainer<T> extends AbstractSettingCont
         int x = this.x + 1;
         int width = this.width - 12;
         while (it.hasNext()) {
-            MapSettingEntry current = map.get(it.next());
+            MapSettingEntry<T> current = map.get(it.next());
             current.setPos(x, y + 12 + height - topScroll, width, current.height);
             current.setVisible(current.y >= y + 12 && current.y + current.height <= y + this.height + 2);
             height += current.height;
@@ -75,7 +74,7 @@ public abstract class AbstractMapSettingContainer<T> extends AbstractSettingCont
     
     public void removeField(String key) throws InvocationTargetException, IllegalAccessException {
         setting.get().remove(key);
-        MapSettingEntry ent = map.remove(key);
+        MapSettingEntry<T> ent = map.remove(key);
         ent.getButtons().forEach(this::removeButton);
         totalHeight -= ent.height;
         scroll.setScrollPages(totalHeight / (double) height);
@@ -116,12 +115,12 @@ public abstract class AbstractMapSettingContainer<T> extends AbstractSettingCont
         fill(matrices, x, y + 10, x+width,y + 11,0xFFFFFFFF);
     }
     
-    public abstract class MapSettingEntry extends MultiElementContainer<AbstractMapSettingContainer<T>> {
+    public static abstract class MapSettingEntry<T> extends MultiElementContainer<AbstractMapSettingContainer<T, MapSettingEntry<T>>> {
         protected String key;
         protected Button keyBtn;
         protected T value;
     
-        public MapSettingEntry(int x, int y, int width, TextRenderer textRenderer, AbstractMapSettingContainer<T> parent, String key, T value) {
+        public MapSettingEntry(int x, int y, int width, TextRenderer textRenderer, AbstractMapSettingContainer<T, MapSettingEntry<T>> parent, String key, T value) {
             super(x, y, width, textRenderer.fontHeight + 2, textRenderer, parent);
             this.key = key;
             this.value = value;
@@ -134,21 +133,21 @@ public abstract class AbstractMapSettingContainer<T> extends AbstractSettingCont
             super.init();
             int w = width - height;
             keyBtn = addButton(new Button(x, y, w / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(key), (btn) -> {
-                if (setting.hasOptions()) {
+                if (parent.setting.hasOptions()) {
                     try {
-                        List<String> options = ((List<String>) (List) setting.getOptions()).stream().filter(e -> !map.containsKey(e)).collect(Collectors.toList());
+                        List<String> options = ((List<String>) (List) parent.setting.getOptions()).stream().filter(e -> !parent.map.containsKey(e)).collect(Collectors.toList());
                         openOverlay(new SelectorDropdownOverlay(x, y + height, w / 2, options.size() * textRenderer.fontHeight + 4, options.stream().map(LiteralText::new).collect(Collectors.toList()), textRenderer, getFirstOverlayParent(), (i) -> setKey(options.get(i))));
                     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
                 } else {
-                    int x = AbstractMapSettingContainer.this.x;
-                    int y = AbstractMapSettingContainer.this.y;
-                    int width = AbstractMapSettingContainer.this.width;
-                    int height = AbstractMapSettingContainer.this.height;
+                    int x = parent.x;
+                    int y = parent.y;
+                    int width = parent.width;
+                    int height = parent.height;
                     openOverlay(new TextPrompt(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.setkey"), key, getFirstOverlayParent(), (newKey) -> {
                         try {
-                            changeKey(key, newKey);
+                            parent.changeKey(key, newKey);
                         } catch (InvocationTargetException | IllegalAccessException e) {
                             e.printStackTrace();
                         }
@@ -157,7 +156,7 @@ public abstract class AbstractMapSettingContainer<T> extends AbstractSettingCont
             }));
             addButton(new Button(x + w, y, height, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> {
                 try {
-                    removeField(key);
+                    parent.removeField(key);
                 } catch (InvocationTargetException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -173,14 +172,19 @@ public abstract class AbstractMapSettingContainer<T> extends AbstractSettingCont
         }
         
         public void setKey(String newKey) {
-            map.remove(key);
+            parent.map.remove(key);
             this.key = newKey;
             keyBtn.setMessage(new LiteralText(this.key));
-            map.put(key, this);
+            parent.map.put(key, this);
         }
         
         public void setValue(T newValue) {
             this.value = newValue;
+        }
+        
+        @Override
+        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        
         }
     }
 }

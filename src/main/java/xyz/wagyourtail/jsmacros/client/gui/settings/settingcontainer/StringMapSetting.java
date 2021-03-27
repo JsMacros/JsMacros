@@ -10,7 +10,7 @@ import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class StringMapSetting extends AbstractMapSettingContainer<String> {
+public class StringMapSetting extends AbstractMapSettingContainer<String, StringMapSetting.StringEntry> {
     public StringMapSetting(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
         super(x, y, width, height, textRenderer, parent, group);
         defaultValue = () -> "";
@@ -30,10 +30,10 @@ public class StringMapSetting extends AbstractMapSettingContainer<String> {
         }
     }
     
-    public class StringEntry extends AbstractMapSettingContainer<String>.MapSettingEntry {
+    public static class StringEntry extends AbstractMapSettingContainer.MapSettingEntry<String> {
     
-        public StringEntry(int x, int y, int width, TextRenderer textRenderer, AbstractMapSettingContainer<String> parent, String key, String value) {
-            super(x, y, width, textRenderer, parent, key, value);
+        public StringEntry(int x, int y, int width, TextRenderer textRenderer, StringMapSetting parent, String key, String value) {
+            super(x, y, width, textRenderer, (AbstractMapSettingContainer) parent, key, value);
         }
     
         @Override
@@ -41,13 +41,13 @@ public class StringMapSetting extends AbstractMapSettingContainer<String> {
             super.init();
             int w = width - height;
             addButton(new Button(x + w / 2, y, w / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(value), (btn) -> {
-                int x = StringMapSetting.this.x;
-                int y = StringMapSetting.this.y;
-                int width = StringMapSetting.this.width;
-                int height = StringMapSetting.this.height;
+                int x = parent.x;
+                int y = parent.y;
+                int width = parent.width;
+                int height = parent.height;
                 openOverlay(new TextPrompt(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.setvalue"), value, getFirstOverlayParent(), (str) -> {
                     try {
-                        changeValue(key, str);
+                        parent.changeValue(key, str);
                         btn.setMessage(new LiteralText(str));
                     } catch (InvocationTargetException | IllegalAccessException e) {
                         e.printStackTrace();
@@ -55,11 +55,5 @@ public class StringMapSetting extends AbstractMapSettingContainer<String> {
                 }));
             }));
         }
-    
-        @Override
-        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        
-        }
-    
     }
 }

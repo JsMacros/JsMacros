@@ -10,7 +10,7 @@ import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class ColorMapSetting extends AbstractMapSettingContainer<short[]> {
+public class ColorMapSetting extends AbstractMapSettingContainer<short[], ColorMapSetting.ColorEntry> {
     
     public ColorMapSetting(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
         super(x, y, width, height, textRenderer, parent, group);
@@ -31,10 +31,10 @@ public class ColorMapSetting extends AbstractMapSettingContainer<short[]> {
         }
     }
     
-    public class ColorEntry extends AbstractMapSettingContainer<short[]>.MapSettingEntry {
+    public static class ColorEntry extends AbstractMapSettingContainer.MapSettingEntry<short[]> {
         
-        public ColorEntry(int x, int y, int width, TextRenderer textRenderer, AbstractMapSettingContainer<short[]> parent, String key, short[] value) {
-            super(x, y, width, textRenderer, parent, key, value);
+        public ColorEntry(int x, int y, int width, TextRenderer textRenderer, ColorMapSetting parent, String key, short[] value) {
+            super(x, y, width, textRenderer, (AbstractMapSettingContainer) parent, key, value);
         }
     
         public String convertColorToString(short[] color) {
@@ -60,14 +60,14 @@ public class ColorMapSetting extends AbstractMapSettingContainer<short[]> {
             int w = width - height;
             this.addButton(new AnnotatedCheckBox(x + w / 2, y, w / 2, height, textRenderer, convertColorToInt(value), 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(convertColorToString(value)), true, (btn) -> {
                 ((AnnotatedCheckBox)btn).value = true;
-                int x = ColorMapSetting.this.x;
-                int y = ColorMapSetting.this.y;
-                int width = ColorMapSetting.this.width;
-                int height = ColorMapSetting.this.height;
+                int x = parent.x;
+                int y = parent.y;
+                int width = parent.width;
+                int height = parent.height;
                 TextPrompt prompt = new TextPrompt(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.setvalue"), convertColorToString(value), getFirstOverlayParent(), (str) -> {
                     try {
                         short[] newVal = convertStringToColor(str);
-                        changeValue(key, newVal);
+                        parent.changeValue(key, newVal);
                         btn.setColor(convertColorToInt(newVal));
                         btn.setMessage(new LiteralText(str));
                     } catch (InvocationTargetException | IllegalAccessException e) {
@@ -78,12 +78,6 @@ public class ColorMapSetting extends AbstractMapSettingContainer<short[]> {
                 prompt.ti.mask = "#[\\da-fA-F]{0,6}";
             }));
         }
-    
-        @Override
-        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        
-        }
-    
     }
     
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ProfileSetting extends AbstractMapSettingContainer<List<ScriptTrigger>> {
+public class ProfileSetting extends AbstractMapSettingContainer<List<ScriptTrigger>, ProfileSetting.ProfileEntry> {
     
     
     public ProfileSetting(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
@@ -59,10 +59,10 @@ public class ProfileSetting extends AbstractMapSettingContainer<List<ScriptTrigg
         }
     }
     
-    public class ProfileEntry extends AbstractMapSettingContainer<List<ScriptTrigger>>.MapSettingEntry {
+    public static class ProfileEntry extends AbstractMapSettingContainer.MapSettingEntry<List<ScriptTrigger>> {
     
-        public ProfileEntry(int x, int y, int width, TextRenderer textRenderer, AbstractMapSettingContainer<List<ScriptTrigger>> parent, String key, List<ScriptTrigger> value) {
-            super(x, y, width, textRenderer, parent, key, value);
+        public ProfileEntry(int x, int y, int width, TextRenderer textRenderer, ProfileSetting parent, String key, List<ScriptTrigger> value) {
+            super(x, y, width, textRenderer, (AbstractMapSettingContainer) parent, key, value);
         }
     
         @Override
@@ -71,11 +71,5 @@ public class ProfileSetting extends AbstractMapSettingContainer<List<ScriptTrigg
             int w = width - height;
             buttons.get(0).setWidth(w);
         }
-    
-        @Override
-        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        
-        }
-    
     }
 }

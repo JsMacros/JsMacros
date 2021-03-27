@@ -11,7 +11,7 @@ import xyz.wagyourtail.jsmacros.client.gui.settings.settingfields.FileField;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
-public class FileMapSetting extends AbstractMapSettingContainer<String> {
+public class FileMapSetting extends AbstractMapSettingContainer<String, FileMapSetting.FileEntry> {
     
     public FileMapSetting(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
         super(x, y, width, height, textRenderer, parent, group);
@@ -32,10 +32,10 @@ public class FileMapSetting extends AbstractMapSettingContainer<String> {
         }
     }
     
-    public class FileEntry extends AbstractMapSettingContainer<String>.MapSettingEntry {
+    public static class FileEntry extends AbstractMapSettingContainer.MapSettingEntry<String> {
     
-        public FileEntry(int x, int y, int width, TextRenderer textRenderer, AbstractMapSettingContainer<String> parent, String key, String value) {
-            super(x, y, width, textRenderer, parent, key, value);
+        public FileEntry(int x, int y, int width, TextRenderer textRenderer, FileMapSetting parent, String key, String value) {
+            super(x, y, width, textRenderer, (AbstractMapSettingContainer) parent, key, value);
         }
     
         @Override
@@ -43,10 +43,10 @@ public class FileMapSetting extends AbstractMapSettingContainer<String> {
             super.init();
             int w = width - height;
             addButton(new Button(x + w / 2, y, w / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(value), (btn) -> {
-                parent.openOverlay(new FileChooser(parent.x, parent.y, parent.width, parent.height, textRenderer, FileField.getTopLevel(setting), new File(FileField.getTopLevel(setting), value), getFirstOverlayParent(), (file) -> {
-                    String newVal = "." + file.getAbsolutePath().substring(FileField.getTopLevel(setting).getAbsolutePath().length()).replaceAll("\\\\", "/");
+                parent.openOverlay(new FileChooser(parent.x, parent.y, parent.width, parent.height, textRenderer, FileField.getTopLevel(parent.setting), new File(FileField.getTopLevel(parent.setting), value), getFirstOverlayParent(), (file) -> {
+                    String newVal = "." + file.getAbsolutePath().substring(FileField.getTopLevel(parent.setting).getAbsolutePath().length()).replaceAll("\\\\", "/");
                     try {
-                        changeValue(key, newVal);
+                        parent.changeValue(key, newVal);
                         btn.setMessage(new LiteralText(newVal));
                     } catch (InvocationTargetException | IllegalAccessException e) {
                         e.printStackTrace();
@@ -54,11 +54,5 @@ public class FileMapSetting extends AbstractMapSettingContainer<String> {
                 }, file -> {}));
             }));
         }
-    
-        @Override
-        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        
-        }
-    
     }
 }
