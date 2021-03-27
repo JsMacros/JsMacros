@@ -1,9 +1,10 @@
-package xyz.wagyourtail.jsmacros.client.gui.settings;
+package xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MultiElementContainer;
@@ -11,6 +12,8 @@ import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.SelectorDropdownOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.TextPrompt;
+import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
+import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -20,9 +23,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public abstract class AbstractMapSettingContainer<T> extends AbstractSettingGroupContainer {
+public abstract class AbstractMapSettingContainer<T> extends AbstractSettingContainer {
     public SettingsOverlay.SettingField<Map<String, T>> setting;
-    public Text settingName;
+    public OrderedText settingName;
     public final Map<String, MapSettingEntry> map = new HashMap<>();
     public int topScroll = 0;
     public int totalHeight = 0;
@@ -35,8 +38,8 @@ public abstract class AbstractMapSettingContainer<T> extends AbstractSettingGrou
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void init() {
         super.init();
-        scroll = addButton(new Scrollbar(x + width - 10, y + 12, 10, height - 22, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
-        addButton(new Button(x + width - 10, y + height - 10, 10, 10, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("+"), (btn) -> {
+        scroll = addButton(new Scrollbar(x + width - 10, y + 12, 10, height - 12, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
+        addButton(new Button(x, y, 40, 10, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.add"), (btn) -> {
             if (setting.hasOptions()) {
                 try {
                     List<String> options = ((List<String>) (List) setting.getOptions()).stream().filter(e -> !map.containsKey(e)).collect(Collectors.toList());
@@ -98,7 +101,7 @@ public abstract class AbstractMapSettingContainer<T> extends AbstractSettingGrou
     @SuppressWarnings("unchecked")
     public void addSetting(SettingsOverlay.SettingField<?> setting) {
         this.setting = (SettingsOverlay.SettingField<Map<String, T>>) setting;
-        this.settingName = new TranslatableText(setting.option.translationKey());
+        this.settingName = BaseScreen.trimmed(textRenderer, new TranslatableText(setting.option.translationKey()), width - 40);
         map.clear();
         try {
             this.setting.get().forEach(this::addField);
@@ -109,7 +112,7 @@ public abstract class AbstractMapSettingContainer<T> extends AbstractSettingGrou
     
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        drawCenteredText(matrices, textRenderer, settingName, x + width / 2, y + 1, 0xFFFFFF);
+        textRenderer.draw(matrices, settingName, x + width / 2F - textRenderer.getWidth(settingName) / 2F + 20, y + 1, 0xFFFFFF);
         fill(matrices, x, y + 10, x+width,y + 11,0xFFFFFFFF);
     }
     

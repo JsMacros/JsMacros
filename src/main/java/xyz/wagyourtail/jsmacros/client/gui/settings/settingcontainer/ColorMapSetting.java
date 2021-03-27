@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.gui.settings;
+package xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -6,12 +6,13 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.gui.elements.AnnotatedCheckBox;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.TextPrompt;
+import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class ColorMapSettings extends AbstractMapSettingContainer<short[]> {
+public class ColorMapSetting extends AbstractMapSettingContainer<short[]> {
     
-    public ColorMapSettings(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
+    public ColorMapSetting(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
         super(x, y, width, height, textRenderer, parent, group);
         defaultValue = () -> new short[3];
     }
@@ -59,10 +60,10 @@ public class ColorMapSettings extends AbstractMapSettingContainer<short[]> {
             int w = width - height;
             this.addButton(new AnnotatedCheckBox(x + w / 2, y, w / 2, height, textRenderer, convertColorToInt(value), 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(convertColorToString(value)), true, (btn) -> {
                 ((AnnotatedCheckBox)btn).value = true;
-                int x = ColorMapSettings.this.x;
-                int y = ColorMapSettings.this.y;
-                int width = ColorMapSettings.this.width;
-                int height = ColorMapSettings.this.height;
+                int x = ColorMapSetting.this.x;
+                int y = ColorMapSetting.this.y;
+                int width = ColorMapSetting.this.width;
+                int height = ColorMapSetting.this.height;
                 TextPrompt prompt = new TextPrompt(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.setvalue"), convertColorToString(value), getFirstOverlayParent(), (str) -> {
                     try {
                         short[] newVal = convertStringToColor(str);

@@ -1,19 +1,20 @@
-package xyz.wagyourtail.jsmacros.client.gui.settings;
+package xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
-import xyz.wagyourtail.jsmacros.client.gui.settings.settingtypes.*;
+import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
+import xyz.wagyourtail.jsmacros.client.gui.settings.settingfields.*;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class SettingGroupContainer extends AbstractSettingGroupContainer {
-    private final List<AbstractSettingType<?>> settings = new LinkedList<>();
+public class PrimitiveSettingGroup extends AbstractSettingContainer {
+    private final List<AbstractSettingField<?>> settings = new LinkedList<>();
     int topScroll = 0;
     int settingHeight = 0;
     
-    public SettingGroupContainer(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
+    public PrimitiveSettingGroup(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
         super(x, y, width, height, textRenderer, parent, group);
     }
     
@@ -27,7 +28,7 @@ public class SettingGroupContainer extends AbstractSettingGroupContainer {
         int settingHeight = 0;
         int x = this.x + 1;
         int width = this.width - 12;
-        for (AbstractSettingType<?> setting : settings) {
+        for (AbstractSettingField<?> setting : settings) {
             setting.setPos(x, y + settingHeight - topScroll, width, setting.height);
             settingHeight += setting.height;
         }
@@ -35,7 +36,7 @@ public class SettingGroupContainer extends AbstractSettingGroupContainer {
     
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        for (AbstractSettingType<?> setting : settings) {
+        for (AbstractSettingField<?> setting : settings) {
             setting.render(matrices, mouseX, mouseY, delta);
         }
     }
@@ -44,7 +45,7 @@ public class SettingGroupContainer extends AbstractSettingGroupContainer {
     @Override
     public void addSetting(SettingsOverlay.SettingField<?> setting) {
         if (!setting.isSimple()) throw new RuntimeException("non-simple settings should get their own group!");
-        AbstractSettingType<?> type = null;
+        AbstractSettingField<?> type = null;
         int x = this.x + 1;
         int y = this.y + settingHeight - topScroll;
         int width = this.width - 12;

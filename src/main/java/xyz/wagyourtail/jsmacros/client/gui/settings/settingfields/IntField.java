@@ -1,17 +1,18 @@
-package xyz.wagyourtail.jsmacros.client.gui.settings.settingtypes;
+package xyz.wagyourtail.jsmacros.client.gui.settings.settingfields;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.client.gui.elements.TextInput;
-import xyz.wagyourtail.jsmacros.client.gui.settings.AbstractSettingGroupContainer;
+import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
+import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.AbstractSettingContainer;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class IntField extends AbstractSettingType<Integer> {
+public class IntField extends AbstractSettingField<Integer> {
     
-    public IntField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingGroupContainer parent, SettingsOverlay.SettingField<Integer> field) {
+    public IntField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<Integer> field) {
         super(x, y, width, textRenderer.fontHeight + 2, textRenderer, parent, field);
     }
     
@@ -42,7 +43,7 @@ public class IntField extends AbstractSettingType<Integer> {
     
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        textRenderer.draw(matrices, trimmed(settingName, width / 2), x, y + 1, 0xFFFFFF);
+        textRenderer.draw(matrices, BaseScreen.trimmed(textRenderer, settingName, width / 2), x, y + 1, 0xFFFFFF);
     }
     
 }

@@ -8,153 +8,147 @@ import xyz.wagyourtail.jsmacros.client.gui.containers.MultiElementContainer;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-public class CategoryTreeContainer extends MultiElementContainer<SettingsOverlay> {
+public class CategoryTreeContainer extends MultiElementContainer<ICategoryTreeParent> implements ICategoryTreeParent {
+    public final String category;
     public Scrollbar scroll;
-    private int topScroll;
-    private final CategoryTree head = new CategoryTree("head");
-    private final List<ButtonWrapper> options = new LinkedList<>();
+    public Map<String, CategoryTreeContainer> children = new HashMap<>();
+    private boolean showChildren;
+    public Button expandBtn;
+    public Button showBtn;
+    public boolean isHead;
+    public int topScroll;
+    public int btnHeight;
     
-    public CategoryTreeContainer(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent) {
+    private CategoryTreeContainer(int x, int y, int width, int height, TextRenderer textRenderer, ICategoryTreeParent parent, String category) {
         super(x, y, width, height, textRenderer, parent);
-        init();
+        this.isHead = false;
+        this.showChildren = false;
+        this.category = category;
+        this.btnHeight = textRenderer.fontHeight + 2;
+    }
+    
+    public CategoryTreeContainer(int x, int y, int width, int height, TextRenderer textRenderer, ICategoryTreeParent parent) {
+        super(x, y, width, height, textRenderer, parent);
+        this.isHead = true;
+        this.showChildren = true;
+        this.category = "HEAD";
+        this.btnHeight = 0;
+    }
+    
+    public CategoryTreeContainer addCategory(String... category) {
+        if (category.length > 0) {
+            String[] childCategory = new String[category.length - 1];
+            System.arraycopy(category, 1, childCategory, 0, childCategory.length);
+            CategoryTreeContainer newChild = children.computeIfAbsent(category[0], (cat) -> new CategoryTreeContainer(x + (isHead ? 0 : btnHeight / 2), y, width - (isHead ? 8 : btnHeight / 2), btnHeight, textRenderer, this, cat)).addCategory(childCategory);
+            if (isHead) {
+                if (scroll != null) scroll.setScrollPages(children.values().stream().map(e -> e.height).reduce(Integer::sum).orElse(0) / (double) height);
+                updateOffsets();
+            }
+            return newChild;
+        }
+        return this;
+    }
+    
+    @Override
+    public void selectCategory(String... category) {
+        if (isHead) {
+            parent.selectCategory(category);
+            return;
+        }
+        String[] childCategory = new String[category.length + 1];
+        childCategory[0] = this.category;
+        System.arraycopy(category, 0, childCategory, 1, category.length);
+        parent.selectCategory(childCategory);
+    }
+    
+    public void updateOffsets() {
+        if (isHead) {
+            int maxHeight = updateOffsets(y, y, y + height, showChildren);
+            if (scroll != null) scroll.setScrollPages((maxHeight + 4) / (double)height);
+        } else {
+            getHead().updateOffsets();
+        }
+    }
+    
+    private int updateOffsets(int y, int minShow, int maxShow, boolean parentShowChildren) {
+        this.y = y;
+        if (this.expandBtn != null) {
+            this.expandBtn.y = y;
+            if (y < minShow || y + btnHeight > maxShow) this.expandBtn.visible = false;
+            else this.expandBtn.visible = parentShowChildren;
+        }
+        if (this.showBtn != null) {
+            this.showBtn.y = y;
+            if (y < minShow || y + btnHeight > maxShow) this.showBtn.visible = false;
+            else this.showBtn.visible = parentShowChildren;
+        }
+        if (!this.isHead) this.height = btnHeight;
+        int top = isHead ? y - topScroll : y + btnHeight;
+        Iterator<CategoryTreeContainer> iterator = children.keySet().stream().sorted().map(e -> children.get(e)).iterator();
+        while (iterator.hasNext()) {
+            CategoryTreeContainer child = iterator.next();
+            
+            if (showChildren) {
+                if (!this.isHead) this.height += child.height;
+                top += child.updateOffsets(top, minShow, maxShow, showChildren);
+            }
+        }
+        return top - y + topScroll;
     }
     
     @Override
     public void init() {
-        super.init();
-        scroll = addButton(new Scrollbar(x + width - 8, y, 8, height, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
-        topScroll = 0;
+        if (this.isHead) {
+            topScroll = 0;
+            scroll = addButton(new Scrollbar(x + width - 8, y, 8, height, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
+            for (CategoryTreeContainer child : children.values()) {
+                child.initChild(showChildren);
+            }
+            updateOffsets();
+        } else {
+            throw new RuntimeException("attempted to init non-head of category tree");
+        }
+    }
+    
+    private void initChild(boolean show) {
+        if (children.size() > 0) {
+            expandBtn = addButton(new Button(x, y, btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(">"), (btn) -> this.toggleExpand()));
+            expandBtn.visible = show;
+        }
+        showBtn = addButton(new Button(x + btnHeight, y, width - btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText(category), (btn) -> this.selectCategory()));
+        showBtn.visible = show;
+        showBtn.horizCenter = false;
+        
+        for (CategoryTreeContainer child : children.values()) {
+            child.initChild(showChildren);
+        }
+    }
+    
+    private void toggleExpand() {
+        showChildren = !showChildren;
+        expandBtn.setMessage(new LiteralText(showChildren ? "<" : ">"));
+        updateOffsets();
+    }
+    
+    private CategoryTreeContainer getHead() {
+        if (!this.isHead) return ((CategoryTreeContainer) parent).getHead();
+        return this;
+    }
+    
+    public void onScrollbar(double page) {
+        int newTopScroll = (int) (height * page);
+        if (newTopScroll != topScroll) {
+            topScroll = newTopScroll;
+            updateOffsets();
+        }
     }
     
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-    
-    }
-    
-    public void onScrollbar(double page) {
-        topScroll = (int) (page * height);
-        updateButtonPositions();
-    }
-    
-    public void addCategory(String... category) {
-        if (!head.hasChild(category[0])) {
-            head.addChild(category);
-            toggleBtnForCategory(category[0]);
-        } else {
-            head.addChild(category);
-        }
-    }
-    
-    private void toggleBtnForCategory(String... category) {
-        ButtonWrapper wrapper = new ButtonWrapper(category);
-        int index = 0;
-        for (ButtonWrapper w : options) {
-            int result = Objects.compare(w.category, category, new StringArrayComparator());
-            if (result > 0) {
-                break;
-            } else if (result == 0) {
-                removeButton(w.btn);
-                options.remove(w);
-                updateButtonPositions();
-                return;
-            }
-            ++index;
-        }
-        StringBuilder start = new StringBuilder();
-        for (int i = 1; i < category.length; ++i) {
-            start.append(">");
-        }
-        wrapper.btn = addButton(new Button(x, y - topScroll, width - 8, textRenderer.fontHeight + 3, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(start.toString()).append(new TranslatableText(category[category.length - 1])), (btn) -> {
-            parent.selectCategory(category);
-            for (String child : head.getCategory(category).children.keySet()) {
-                String[] childCategory = new String[category.length + 1];
-                System.arraycopy(category, 0, childCategory, 0, category.length);
-                childCategory[category.length] = child;
-                toggleBtnForCategory(childCategory);
-            }
-        }));
-        wrapper.btn.horizCenter = false;
-        options.add(index, wrapper);
-        scroll.setScrollPages(options.size() * (float) (textRenderer.fontHeight + 3) / (float) height);
-        updateButtonPositions();
-    }
-    
-    private void updateButtonPositions() {
-        int i = 0;
-        for (ButtonWrapper btn : options) {
-            btn.btn.setPos(x, y - topScroll + i * (textRenderer.fontHeight + 3), width - 8, textRenderer.fontHeight + 3);
-            btn.btn.visible = btn.btn.y >= y && btn.btn.y + btn.btn.getHeight() <= y + height;
-            ++i;
-        }
-    }
-    
-    static class ButtonWrapper {
-        String[] category;
-        Button btn;
-        
-        ButtonWrapper(String... category) {
-            this.category = category;
-        }
-    }
-    
-    static class CategoryTree {
-        String option;
-        Map<String, CategoryTree> children = new HashMap<>();
-        
-        CategoryTree(String category) {
-            option = category;
-        }
-        
-        boolean hasChildren() {
-            return !children.isEmpty();
-        }
-        
-        void addChild(String... child) {
-            if (child.length > 0) {
-                String[] computeChild = new String[child.length - 1];
-                System.arraycopy(child, 1, computeChild, 0, child.length - 1);
-                children.computeIfAbsent(child[0], CategoryTree::new).addChild(computeChild);
-            }
-        }
-        
-        boolean hasChild(String... child) {
-            if (children.containsKey(child[0])) {
-                if (child.length > 1) {
-                    String[] computeChild = new String[child.length - 1];
-                    System.arraycopy(child, 1, computeChild, 0, child.length - 1);
-                    return children.get(child[0]).hasChild(computeChild);
-                }
-                return true;
-            }
-            return false;
-        }
-        
-        CategoryTree getCategory(String ...child) {
-            if (children.containsKey(child[0])) {
-                if (child.length > 1) {
-                    String[] computeChild = new String[child.length - 1];
-                    System.arraycopy(child, 1, computeChild, 0, child.length - 1);
-                    return children.get(child[0]).getCategory(computeChild);
-                }
-                return children.get(child[0]);
-            }
-            return null;
-        }
-    }
-    
-    static class StringArrayComparator implements Comparator<String[]> {
-    
-        @Override
-        public int compare(String[] o1, String[] o2) {
-            int min = Math.min(o1.length, o2.length);
-            for (int i = 0; i < min; ++i) {
-                int j = o1[i].compareTo(o2[i]);
-                if (j != 0) return j;
-            }
-            return o1.length - o2.length;
-        }
     
     }
     

@@ -11,21 +11,19 @@ import xyz.wagyourtail.jsmacros.client.gui.overlays.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.IOverlayParent;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.OverlayContainer;
 import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
+import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.*;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.Option;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class SettingsOverlay extends OverlayContainer {
+public class SettingsOverlay extends OverlayContainer implements ICategoryTreeParent {
     private final Text title = new TranslatableText("jsmacros.settings");
     private CategoryTreeContainer sections;
-    private AbstractSettingGroupContainer category;
+    private AbstractSettingContainer category;
     private final SettingTree settings = new SettingTree();
     public SettingsOverlay(int x, int y, int width, int height, TextRenderer textRenderer, IOverlayParent parent) {
         super(x, y, width, height, textRenderer, parent);
@@ -78,6 +76,8 @@ public class SettingsOverlay extends OverlayContainer {
         for (String[] group : settings.groups()) {
             sections.addCategory(group);
         }
+        
+        sections.init();
     }
     
     public void clearCategory() {
@@ -87,26 +87,27 @@ public class SettingsOverlay extends OverlayContainer {
         }
     }
     
+    @Override
     public void selectCategory(String[] category) {
         int w = width - 4;
         clearCategory();
         List<SettingField<?>> settings = this.settings.getSettings(category);
         if (settings.size() != 1 || settings.get(0).isSimple()) {
-            this.category = new SettingGroupContainer(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
+            this.category = new PrimitiveSettingGroup(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
         } else {
             if (settings.get(0).type == Map.class) {
                 String typeVal = settings.get(0).option.type().value();
                 if (typeVal.equals("color")) {
-                    this.category = new ColorMapSettings(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
+                    this.category = new ColorMapSetting(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
                 }
                 if (typeVal.equals("string")) {
-                    this.category = new StringMapSettings(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
+                    this.category = new StringMapSetting(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
                 }
                 if (typeVal.equals("file")) {
-                    this.category = new FileMapSettings(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
+                    this.category = new FileMapSetting(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
                 }
                 if (typeVal.equals("profile")) {
-                    this.category = new ProfileSettings(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
+                    this.category = new ProfileSetting(x + 3 + w / 3, y + 13, 2 * w / 3, height - 17, textRenderer, this, category);
                 }
             }
         }

@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.gui.settings;
+package xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -6,11 +6,12 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.TextPrompt;
+import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class StringMapSettings extends AbstractMapSettingContainer<String> {
-    public StringMapSettings(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
+public class StringMapSetting extends AbstractMapSettingContainer<String> {
+    public StringMapSetting(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
         super(x, y, width, height, textRenderer, parent, group);
         defaultValue = () -> "";
     }
@@ -40,10 +41,10 @@ public class StringMapSettings extends AbstractMapSettingContainer<String> {
             super.init();
             int w = width - height;
             addButton(new Button(x + w / 2, y, w / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(value), (btn) -> {
-                int x = StringMapSettings.this.x;
-                int y = StringMapSettings.this.y;
-                int width = StringMapSettings.this.width;
-                int height = StringMapSettings.this.height;
+                int x = StringMapSetting.this.x;
+                int y = StringMapSetting.this.y;
+                int width = StringMapSetting.this.width;
+                int height = StringMapSetting.this.height;
                 openOverlay(new TextPrompt(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.setvalue"), value, getFirstOverlayParent(), (str) -> {
                     try {
                         changeValue(key, str);

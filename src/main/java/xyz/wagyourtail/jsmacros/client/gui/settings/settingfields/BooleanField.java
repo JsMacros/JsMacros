@@ -1,18 +1,18 @@
-package xyz.wagyourtail.jsmacros.client.gui.settings.settingtypes;
+package xyz.wagyourtail.jsmacros.client.gui.settings.settingfields;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.client.gui.elements.AnnotatedCheckBox;
-import xyz.wagyourtail.jsmacros.client.gui.settings.AbstractSettingGroupContainer;
+import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.AbstractSettingContainer;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class BooleanField  extends AbstractSettingType<Boolean> {
+public class BooleanField  extends AbstractSettingField<Boolean> {
     
     
-    public BooleanField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingGroupContainer parent, SettingsOverlay.SettingField<Boolean> field) {
+    public BooleanField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<Boolean> field) {
         super(x, y, width, textRenderer.fontHeight + 2, textRenderer, parent, field);
     }
     

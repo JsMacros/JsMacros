@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.gui.settings.settingtypes;
+package xyz.wagyourtail.jsmacros.client.gui.settings.settingfields;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
@@ -7,16 +7,17 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.SelectorDropdownOverlay;
-import xyz.wagyourtail.jsmacros.client.gui.settings.AbstractSettingGroupContainer;
+import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
+import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.AbstractSettingContainer;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class OptionsField extends AbstractSettingType<Object> {
+public class OptionsField extends AbstractSettingField<Object> {
     
-    public OptionsField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingGroupContainer parent, SettingsOverlay.SettingField<Object> field) {
+    public OptionsField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<Object> field) {
         super(x, y, width, textRenderer.fontHeight + 2, textRenderer, parent, field);
     }
     
@@ -51,7 +52,7 @@ public class OptionsField extends AbstractSettingType<Object> {
     
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        textRenderer.draw(matrices, trimmed(settingName, width / 2), x, y + 1, 0xFFFFFF);
+        textRenderer.draw(matrices, BaseScreen.trimmed(textRenderer, settingName, width / 2), x, y + 1, 0xFFFFFF);
     }
     
 }

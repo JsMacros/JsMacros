@@ -1,18 +1,18 @@
-package xyz.wagyourtail.jsmacros.client.gui.settings.settingtypes;
+package xyz.wagyourtail.jsmacros.client.gui.settings.settingfields;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.OrderedText;
 import xyz.wagyourtail.jsmacros.client.gui.elements.TextInput;
-import xyz.wagyourtail.jsmacros.client.gui.settings.AbstractSettingGroupContainer;
+import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
+import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.AbstractSettingContainer;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class DoubleField extends AbstractSettingType<Double> {
+public class StringField extends AbstractSettingField<String> {
     
-    public DoubleField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingGroupContainer parent, SettingsOverlay.SettingField<Double> field) {
+    public StringField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<String> field) {
         super(x, y, width, textRenderer.fontHeight + 2, textRenderer, parent, field);
     }
     
@@ -20,14 +20,13 @@ public class DoubleField extends AbstractSettingType<Double> {
     public void init() {
         super.init();
         try {
-            TextInput doubleIn = addButton(new TextInput(x + width / 2, y, width / 2, height, textRenderer, 0xFF101010, 0, 0xFF4040FF, 0xFFFFFF, setting.get().toString(), null, (value) -> {
+            addButton(new TextInput(x + width/2, y, width / 2, height, textRenderer, 0xFF101010, 0, 0xFF4040FF, 0xFFFFFF, setting.get(), null, (value) -> {
                 try {
-                    setting.set(Double.parseDouble(value));
+                    setting.set(value);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
             }));
-            doubleIn.mask = "\\d*(\\.\\d*)";
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
@@ -43,7 +42,7 @@ public class DoubleField extends AbstractSettingType<Double> {
     
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        textRenderer.draw(matrices, trimmed(settingName, width / 2), x, y + 1, 0xFFFFFF);
+        textRenderer.draw(matrices, BaseScreen.trimmed(textRenderer, settingName, width / 2), x, y + 1, 0xFFFFFF);
     }
     
 }

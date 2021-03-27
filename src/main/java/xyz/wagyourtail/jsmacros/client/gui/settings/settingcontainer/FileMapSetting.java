@@ -1,18 +1,19 @@
-package xyz.wagyourtail.jsmacros.client.gui.settings;
+package xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.FileChooser;
-import xyz.wagyourtail.jsmacros.client.gui.settings.settingtypes.FileField;
+import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
+import xyz.wagyourtail.jsmacros.client.gui.settings.settingfields.FileField;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
-public class FileMapSettings extends AbstractMapSettingContainer<String> {
+public class FileMapSetting extends AbstractMapSettingContainer<String> {
     
-    public FileMapSettings(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
+    public FileMapSetting(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
         super(x, y, width, height, textRenderer, parent, group);
         defaultValue = () -> "./";
     }

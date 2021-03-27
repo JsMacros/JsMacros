@@ -1,17 +1,18 @@
-package xyz.wagyourtail.jsmacros.client.gui.settings.settingtypes;
+package xyz.wagyourtail.jsmacros.client.gui.settings.settingfields;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.client.gui.elements.TextInput;
-import xyz.wagyourtail.jsmacros.client.gui.settings.AbstractSettingGroupContainer;
+import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
+import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.AbstractSettingContainer;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class FloatField extends AbstractSettingType<Float> {
+public class LongField extends AbstractSettingField<Long> {
     
-    public FloatField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingGroupContainer parent, SettingsOverlay.SettingField<Float> field) {
+    public LongField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<Long> field) {
         super(x, y, width, textRenderer.fontHeight + 2, textRenderer, parent, field);
     }
     
@@ -19,14 +20,14 @@ public class FloatField extends AbstractSettingType<Float> {
     public void init() {
         super.init();
         try {
-            TextInput floatIn = addButton(new TextInput(x + width / 2, y, width / 2, height, textRenderer, 0xFF101010, 0, 0xFF4040FF, 0xFFFFFF, setting.get().toString(), null, (value) -> {
+            TextInput longIn = addButton(new TextInput(x + width/2, y, width / 2, height, textRenderer, 0xFF101010, 0, 0xFF4040FF, 0xFFFFFF, setting.get().toString(), null, (value) -> {
                 try {
-                    setting.set(Float.parseFloat(value));
+                    setting.set(Long.parseLong(value));
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
                 }
             }));
-            floatIn.mask = "\\d*(\\.\\d*)";
+            longIn.mask = "\\d*";
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
@@ -42,7 +43,7 @@ public class FloatField extends AbstractSettingType<Float> {
     
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        textRenderer.draw(matrices, trimmed(settingName, width / 2), x, y + 1, 0xFFFFFF);
+        textRenderer.draw(matrices, BaseScreen.trimmed(textRenderer, settingName, width / 2), x, y + 1, 0xFFFFFF);
     }
     
 }
