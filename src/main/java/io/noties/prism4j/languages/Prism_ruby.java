@@ -55,7 +55,7 @@ public class Prism_ruby {
         
         GrammarUtils.insertBeforeToken(ruby, "keyword",
             token("regex",
-                pattern(compile("%r(?:([^a-zA-Z0-9\\s{(\\[<])(?:(?!\\1)[^\\\\]|\\\\[\\s\\S])*\\1[gim]{0,3}|\\((?:[^()\\\\]|\\\\[\\s\\S])*\\)[gim]{0,3}|\\{(?:[^#{}\\\\]|#(?:\\{[^}]+\\})?|\\\\[\\s\\S])*\\}[gim]{0,3}|\\[(?:[^\\[\\]\\\\]|\\\\[\\s\\S])*\\][gim]{0,3}|<(?:[^<>\\\\]|\\\\[\\s\\S])*>[gim]{0,3})"),
+                pattern(compile("%r(?:([^a-zA-Z0-9\\s{(\\[<])(?:(?!\\1)[^\\\\]|\\\\[\\s\\S])*\\1|\\((?:[^()\\\\]|\\\\[\\s\\S])*\\)|\\{(?:[^#{}\\\\]|#(?:\\{[^}]+\\})?|\\\\[\\s\\S])*\\}|\\[(?:[^\\[\\]\\\\]|\\\\[\\s\\S])*\\]|<(?:[^<>\\\\]|\\\\[\\s\\S])*>)[egimnosux]{0,6}"),
                     false,
                     true,
                     null,
@@ -63,7 +63,14 @@ public class Prism_ruby {
                         interpolation
                     )
                 ),
-                pattern(compile("(^|[^/])\\/(?!\\/)(?:\\[[^\\r\\n\\]]+\\]|\\\\.|[^\\[/\\\\\\r\\n])+\\/[gim]{0,3}(?=\\s*(?:$|[\\r\\n,.;\\})]))"), true, true)
+                pattern(compile("(^|[^/])\\/(?!\\/)(?:\\[[^\\r\\n\\]]+\\]|\\\\.|[^\\[/\\\\\\r\\n])+\\/[egimnosux]{0,6}(?=\\s*(?:$|[\\r\\n,.;})#]))"),
+                    true,
+                    true,
+                    null,
+                    grammar("inside",
+                        interpolation
+                    )
+                )
             ),
             token("variable", pattern(compile("[@$]+[a-zA-Z_]\\w*(?:[?!]|\\b)"))),
             token("symbol", pattern(compile("(^|[^:]):[a-zA-Z_]\\w*(?:[?!]|\\b)"), true)),

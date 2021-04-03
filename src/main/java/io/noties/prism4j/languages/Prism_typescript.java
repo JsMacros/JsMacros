@@ -32,6 +32,14 @@ public class Prism_typescript {
         typeInside.tokens().remove(GrammarUtils.findToken(typeInside, "class-name"));
         
         GrammarUtils.insertBeforeToken(ts, "function",
+            token("decorator",
+                pattern(compile("@[$\\w\\xA0-\\uFFFF]+"), false, false, null,
+                    grammar("inside",
+                        token("at", pattern(compile("^@"), false, false, "operator")),
+                        token("function", pattern(compile("^[\\s\\S]+")))
+                    )
+                )
+            ),
             token("generic-function", pattern(compile("#?(?!\\s)[_$a-zA-Z\\xA0-\\uFFFF](?:(?!\\s)[$\\w\\xA0-\\uFFFF])*\\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>(?=\\s*\\()"), false, true, null,
                 grammar("inside",
                     token("function", pattern(compile("^#?(?!\\s)[_$a-zA-Z\\xA0-\\uFFFF](?:(?!\\s)[$\\w\\xA0-\\uFFFF])*"))),
