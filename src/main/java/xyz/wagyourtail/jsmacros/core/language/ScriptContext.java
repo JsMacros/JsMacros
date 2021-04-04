@@ -4,7 +4,11 @@ import java.lang.ref.WeakReference;
 
 public abstract class ScriptContext<T> {
     public final long startTime = System.currentTimeMillis();
-    public WeakReference<T> context = null;
+    protected WeakReference<T> context = null;
+    
+    public WeakReference<T> getContext() {
+        return context;
+    }
     
     public void setContext(T context) {
         if (this.context != null) throw new RuntimeException("Context already set");

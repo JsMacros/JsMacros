@@ -1,8 +1,8 @@
 package xyz.wagyourtail;
 
 public class Pair<T, U> {
-    T t;
-    U u;
+    private T t;
+    private U u;
     
     public Pair(T t, U u) {
         this.t = t;

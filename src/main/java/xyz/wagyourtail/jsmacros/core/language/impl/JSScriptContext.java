@@ -3,8 +3,6 @@ package xyz.wagyourtail.jsmacros.core.language.impl;
 import org.graalvm.polyglot.Context;
 import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 
-import java.lang.ref.WeakReference;
-
 public class JSScriptContext extends ScriptContext<Context> {
     boolean closed = false;
     
