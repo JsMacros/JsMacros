@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
+import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
@@ -18,7 +19,10 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
+import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
+
+import java.util.concurrent.Semaphore;
 
 public class Profile extends BaseProfile {
     
@@ -38,7 +42,7 @@ public class Profile extends BaseProfile {
     
     @Override
     public void triggerEventJoin(BaseEvent event) {
-        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || joinedThreadStack.contains(Thread.currentThread());
+        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || joinedContextStack.contains(Core.instance.threadContext.get(Thread.currentThread()));
         triggerEventJoinNoAnything(event);
     
         if (runner.eventRegistry.listeners.containsKey("ANYTHING")) for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get("ANYTHING"))) {
@@ -46,26 +50,9 @@ public class Profile extends BaseProfile {
         }
     }
     
-    private void runJoinedEventListener(BaseEvent event, boolean joinedMain, IEventListener macroListener) {
-        if (macroListener instanceof FJsMacros.ScriptEventListener && ((FJsMacros.ScriptEventListener) macroListener).getCreator() == Thread.currentThread() && ((FJsMacros.ScriptEventListener) macroListener).getWrapper().preventSameThreadJoin()) {
-            throw new IllegalThreadStateException("Cannot join " + macroListener.toString() + " on same thread as it's creation.");
-        }
-        Thread t = null;
-        try {
-            t = macroListener.trigger(event);
-            if (joinedMain) {
-                joinedThreadStack.add(t);
-            }
-            if (t != null) t.join();
-        } catch (InterruptedException ignored) {
-        } finally {
-            joinedThreadStack.remove(t);
-        }
-    }
-    
     @Override
     public void triggerEventJoinNoAnything(BaseEvent event) {
-        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || joinedThreadStack.contains(Thread.currentThread());
+        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || joinedContextStack.contains(Core.instance.threadContext.get(Thread.currentThread()));
         if (event instanceof EventCustom) {
             if (runner.eventRegistry.listeners.containsKey(((EventCustom) event).eventName))
                 for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get(((EventCustom) event).eventName))) {
@@ -76,6 +63,22 @@ public class Profile extends BaseProfile {
                 for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get(event.getEventName()))) {
                     runJoinedEventListener(event, joinedMain, macro);
                 }
+        }
+    }
+    
+    private void runJoinedEventListener(BaseEvent event, boolean joinedMain, IEventListener macroListener) {
+        if (macroListener instanceof FJsMacros.ScriptEventListener && ((FJsMacros.ScriptEventListener) macroListener).getCreator() == Thread.currentThread() && ((FJsMacros.ScriptEventListener) macroListener).getWrapper().preventSameThreadJoin()) {
+            throw new IllegalThreadStateException("Cannot join " + macroListener.toString() + " on same thread as it's creation.");
+        }
+        Pair<? extends ScriptContext<?>, Semaphore> t = macroListener.trigger(event);
+        try {
+            if (joinedMain) {
+                joinedContextStack.add(t.getT());
+            }
+            t.getU().acquire();
+        } catch (InterruptedException ignored) {
+        } finally {
+            joinedContextStack.remove(t.getT());
         }
     }
     

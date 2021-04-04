@@ -1,8 +1,10 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
+import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.core.library.IFConsumer;
 import xyz.wagyourtail.jsmacros.core.library.Library;
@@ -18,13 +20,14 @@ public class FConsumer extends PerExecLanguageLibrary implements IFConsumer<Func
     
     private final LinkedBlockingQueue<Thread> tasks = new LinkedBlockingQueue<>();
     
-    public FConsumer(Class<? extends BaseLanguage> language, Object context, Thread thread) {
+    public FConsumer(Class<? extends BaseLanguage<?>> language, Object context, Thread thread) {
         super(language, context, thread);
     }
     
     @Override
     public <A, B, R> MethodWrapper<A, B, R> autoWrap(Function<Object[], Object> c) {
         Thread th = Thread.currentThread();
+        ScriptContext<?> ctx = Core.instance.threadContext.get(th);
         return new MethodWrapper<A, B, R>() {
 
             @Override
@@ -63,8 +66,14 @@ public class FConsumer extends PerExecLanguageLibrary implements IFConsumer<Func
                         } catch (InterruptedException ignored) {}
                     }
                 }
-                Object retVal = c.apply(new Object[] {t, u});
-                tasks.poll();
+                Core.instance.threadContext.put(Thread.currentThread(), ctx);
+                Object retVal = null;
+                try {
+                    c.apply(new Object[] {t, u});
+                } finally {
+                    Core.instance.threadContext.remove(Thread.currentThread());
+                    tasks.poll();
+                }
                 return (R) retVal;
             }
 
@@ -98,6 +107,7 @@ public class FConsumer extends PerExecLanguageLibrary implements IFConsumer<Func
     @Override
     public <A, B, R> MethodWrapper<A, B, R> autoWrapAsync(Function<Object[], Object> c) {
         Thread th = Thread.currentThread();
+        ScriptContext<?> ctx = Core.instance.threadContext.get(th);
         return new MethodWrapper<A, B, R>() {
 
             @Override
@@ -121,9 +131,12 @@ public class FConsumer extends PerExecLanguageLibrary implements IFConsumer<Func
                             joinable.join();
                         } catch (InterruptedException ignored) {}
                     }
-                    c.apply(new Object[] {arg0, arg1});
-                    tasks.poll();
-                    
+                    Core.instance.threadContext.put(Thread.currentThread(), ctx);
+                    try {
+                        c.apply(new Object[] {arg0, arg1});
+                    } finally {
+                        tasks.poll();
+                    }
                 });
                 t.start();
             }
@@ -154,8 +167,14 @@ public class FConsumer extends PerExecLanguageLibrary implements IFConsumer<Func
                         } catch (InterruptedException ignored) {}
                     }
                 }
-                Object retVal = c.apply(new Object[] {t, u});
-                tasks.poll();
+                Core.instance.threadContext.put(Thread.currentThread(), ctx);
+                Object retVal = null;
+                try {
+                    c.apply(new Object[] {t, u});
+                } finally {
+                    Core.instance.threadContext.remove(Thread.currentThread());
+                    tasks.poll();
+                }
                 return (R) retVal;
             }
 

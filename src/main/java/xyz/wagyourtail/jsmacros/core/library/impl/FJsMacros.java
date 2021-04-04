@@ -1,13 +1,12 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import com.google.common.collect.ImmutableList;
-import com.ibm.icu.impl.locale.XCldrStub.ImmutableMap;
 import net.minecraft.util.Util;
+import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
-import xyz.wagyourtail.jsmacros.core.config.ScriptThreadWrapper;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
@@ -15,11 +14,16 @@ import xyz.wagyourtail.jsmacros.core.event.BaseListener;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
+import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Semaphore;
 
 /**
  * Functions that interact directly with JsMacros or Events.
@@ -54,11 +58,14 @@ public class FJsMacros extends BaseLibrary {
      * @since 1.0.5
      * 
      */
-    public Map<ScriptTrigger, Set<ScriptThreadWrapper>> getRunningThreads() {
-        return ImmutableMap.copyOf(Core.instance.threads);
+     @Deprecated
+    public Map<ScriptTrigger, Set<Object>> getRunningThreads() {
+        throw new RuntimeException("Deprecated");
     }
 
-    
+    public List<ScriptContext<?>> getOpenContexts() {
+        return ImmutableList.copyOf(Core.instance.contexts.keySet());
+    }
 
     /**
      * 
@@ -69,7 +76,7 @@ public class FJsMacros extends BaseLibrary {
      * @param file
      * @return
      */
-    public Thread runScript(String file) {
+    public ScriptContext<?> runScript(String file) {
         return runScript(file, (MethodWrapper<Throwable, Object, Object>) null);
     }
 
@@ -80,13 +87,13 @@ public class FJsMacros extends BaseLibrary {
      * 
      * @param file relative to the macro folder.
      * @param callback defaults to {@code null}
-     * @return the {@link java.lang.Thread} the script is running on.
+     * @return the {@link ScriptContext} the script is running on.
      */
-    public Thread runScript(String file, MethodWrapper<Throwable, Object, Object> callback) {
+    public ScriptContext<?> runScript(String file, MethodWrapper<Throwable, Object, Object> callback) {
         if (callback != null) {
-            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null, () -> callback.accept(null), callback);
+            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null, () -> callback.accept(null), callback).getT();
         } else {
-            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null);
+            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null).getT();
         }
     }
     
@@ -99,7 +106,7 @@ public class FJsMacros extends BaseLibrary {
      * @param script
      * @return
      */
-    public Thread runScript(String language, String script) {
+    public ScriptContext<?> runScript(String language, String script) {
         return runScript(language, script, null);
     }
     
@@ -111,33 +118,17 @@ public class FJsMacros extends BaseLibrary {
      * @param language
      * @param script
      * @param callback calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link String}&gt;
-     * @return the {@link java.lang.Thread} the script is running on.
+     * @return the {@link ScriptContext} the script is running on.
      */
-    public Thread runScript(String language, String script, MethodWrapper<String, Object, Object> callback) {
-        Thread ct = Thread.currentThread();
-        Thread t = new Thread(() -> {
-            Core.instance.threads.putIfAbsent(null, new HashSet<>());
-            ScriptThreadWrapper th = new ScriptThreadWrapper(Thread.currentThread(), null, System.currentTimeMillis());
-            Thread.currentThread().setName(String.format("RunScript:{\"creator\":\"%s\"}", ct.getName()));
-            Core.instance.threads.get(null).add(th);
-            BaseLanguage lang = Core.instance.defaultLang;
-            for (BaseLanguage l : Core.instance.languages) {
-                if (language.equals(l.extension.replaceAll("\\.", " ").trim().replaceAll(" ", "."))) {
-                    lang = l;
-                    break;
-                }
+    public ScriptContext<?> runScript(String language, String script, MethodWrapper<Throwable, Object, Object> callback) {
+        BaseLanguage<?> lang = Core.instance.defaultLang;
+        for (BaseLanguage<?> l : Core.instance.languages) {
+            if (language.equals(l.extension.replaceAll("\\.", " ").trim().replaceAll(" ", "."))) {
+                lang = l;
+                break;
             }
-            try {
-                lang.exec(script, null, null);
-                if (callback != null) callback.accept(null);
-            } catch (Exception | AbstractMethodError e) {
-                if (callback != null) callback.accept(e.toString());
-            } finally {
-                Core.instance.threads.get(null).remove(th);
-            }
-        });
-        t.start();
-        return t;
+        }
+        return lang.trigger(script, callback == null ? null : () -> callback.accept(null), callback).getT();
     }
     
     /**
@@ -164,26 +155,26 @@ public class FJsMacros extends BaseLibrary {
     public IEventListener on(String event, MethodWrapper<BaseEvent, Object, Object> callback) {
         if (callback == null) return null;
         Thread th = Thread.currentThread();
+        ScriptContext<?> ctx = Core.instance.threadContext.get(th);
         IEventListener listener = new ScriptEventListener() {
             
             @Override
-            public Thread trigger(BaseEvent event) {
+            public Pair<ScriptContext<?>, Semaphore> trigger(BaseEvent event) {
+                Pair<ScriptContext<?>, Semaphore> p = new Pair<>(ctx, new Semaphore(0));
                 Thread t = new Thread(() -> {
-                    Core.instance.threads.putIfAbsent(null, new HashSet<>());
-                    ScriptThreadWrapper th = new ScriptThreadWrapper(Thread.currentThread(), null, System.currentTimeMillis());
-                    Core.instance.threads.get(null).add(th);
                     Thread.currentThread().setName(this.toString());
+                    
                     try {
                         callback.accept(event);
                     } catch (Exception e) {
                         Core.instance.eventRegistry.removeListener(this);
                         Core.instance.profile.logError(e);
                     } finally {
-                        Core.instance.removeThread(th);
+                        p.getU().release();
                     }
                 });
                 t.start();
-                return t;
+                return p;
             }
     
             @Override
@@ -219,25 +210,24 @@ public class FJsMacros extends BaseLibrary {
     public IEventListener once(String event, MethodWrapper<BaseEvent, Object, Object> callback) {
         if (callback == null) return null;
         Thread th = Thread.currentThread();
+        ScriptContext<?> ctx = Core.instance.threadContext.get(th);
         IEventListener listener = new ScriptEventListener() {
             @Override
-            public Thread trigger(BaseEvent event) {
+            public Pair<ScriptContext<?>, Semaphore> trigger(BaseEvent event) {
                 Core.instance.eventRegistry.removeListener(this);
+                Pair<ScriptContext<?>, Semaphore> p = new Pair<>(ctx, new Semaphore(0));
                 Thread t = new Thread(() -> {
-                    Core.instance.threads.putIfAbsent(null, new HashSet<>());
-                    ScriptThreadWrapper th = new ScriptThreadWrapper(Thread.currentThread(), null, System.currentTimeMillis());
-                    Core.instance.threads.get(null).add(th);
                     Thread.currentThread().setName(this.toString());
                     try {
                         callback.accept(event);
                     } catch (Exception e) {
                         Core.instance.profile.logError(e);
                     } finally {
-                        Core.instance.removeThread(th);
+                        p.getU().release();
                     }
                 });
                 t.start();
-                return t;
+                return p;
             }
     
             @Override

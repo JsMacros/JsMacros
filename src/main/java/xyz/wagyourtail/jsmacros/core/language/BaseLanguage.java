@@ -1,16 +1,15 @@
 package xyz.wagyourtail.jsmacros.core.language;
 
+import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.config.ScriptThreadWrapper;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
 
 /**
@@ -18,7 +17,7 @@ import java.util.function.Consumer;
  *
  * @since 1.1.3
  */
-public abstract class BaseLanguage {
+public abstract class BaseLanguage<T> {
     public final String extension;
     protected final Core runner;
     
@@ -27,26 +26,24 @@ public abstract class BaseLanguage {
         this.runner = runner;
     }
     
-    public Thread trigger(ScriptTrigger macro, BaseEvent event, Runnable then,
+    public Pair<ScriptContext<T>, Semaphore> trigger(ScriptTrigger macro, BaseEvent event, Runnable then,
                           Consumer<Throwable> catcher) {
         
         final ScriptTrigger staticMacro = macro.copy();
         final Thread ct = Thread.currentThread();
+        Pair<ScriptContext<T>, Semaphore> ctx = new Pair<>(createContext(), new Semaphore(0));
         final Thread t = new Thread(() -> {
-            ScriptThreadWrapper th = new ScriptThreadWrapper(Thread.currentThread(), staticMacro, System.currentTimeMillis());
             try {
-                runner.threads.putIfAbsent(staticMacro, new HashSet<>());
                 if (event == null) {
                     Thread.currentThread().setName(String.format("RunScript:{\"creator\":\"%s\"}", ct.getName()));
                 } else {
-                    Thread.currentThread().setName(staticMacro.triggerType.toString() + " " + staticMacro.event + " " + staticMacro.scriptFile
-                        + ": " + runner.threads.get(staticMacro).size());
+                    Thread.currentThread().setName(String.format("Script:{\"trigger\":\"%s\", \"event\":\"%s\", \"file\":\"%s\"}", staticMacro.triggerType, staticMacro.event, staticMacro.scriptFile));
                 }
-                runner.threads.get(staticMacro).add(th);
                 File file = new File(runner.config.macroFolder, staticMacro.scriptFile);
                 if (file.exists()) {
-                    
-                    exec(staticMacro, file, event);
+                    runner.contexts.put(ctx.getT(), Thread.currentThread().getName());
+                    runner.threadContext.put(Thread.currentThread(), ctx.getT());
+                    exec(ctx, staticMacro, file, event);
                     
                     if (then != null) then.run();
                 }
@@ -57,13 +54,36 @@ public abstract class BaseLanguage {
                 } catch (Exception f) {
                     runner.profile.logError(f);
                 }
-            } finally {
-                runner.removeThread(th);
             }
         });
         
         t.start();
-        return t;
+        return ctx;
+    }
+    
+    public Pair<ScriptContext<T>, Semaphore> trigger(String script, Runnable then, Consumer<Throwable> catcher) {
+        final Thread ct = Thread.currentThread();
+        Pair<ScriptContext<T>, Semaphore> ctx = new Pair<>(createContext(), new Semaphore(0));
+        final Thread t = new Thread(() -> {
+            try {
+                Thread.currentThread().setName(String.format("RunScript:{\"creator\":\"%s\", \"start\":\"%d\"}", ct.getName(), System.currentTimeMillis()));
+                runner.contexts.put(ctx.getT(), Thread.currentThread().getName());
+                runner.threadContext.put(Thread.currentThread(), ctx.getT());
+                exec(ctx, script, null, null);
+    
+                if (then != null) then.run();
+            } catch (Exception e) {
+                try {
+                    if (catcher != null) catcher.accept(e);
+                    else throw e;
+                } catch (Exception f) {
+                    runner.profile.logError(f);
+                }
+            }
+        });
+        t.start();
+        
+        return ctx;
     }
     
     public Map<String, BaseLibrary> retrieveLibs(Object context) {
@@ -80,7 +100,7 @@ public abstract class BaseLanguage {
      * @throws Exception
      * @since 1.2.7 [citation needed]
      */
-    public abstract void exec(ScriptTrigger macro, File file, BaseEvent event) throws Exception;
+    protected abstract void exec(Pair<ScriptContext<T>, Semaphore> ctx, ScriptTrigger macro, File file, BaseEvent event) throws Exception;
     
     /**
      * run a string based script with this.
@@ -92,7 +112,7 @@ public abstract class BaseLanguage {
      * @throws Exception
      * @since 1.2.7 [citation needed]
      */
-    public abstract void exec(String script, Map<String, Object> globals, Path currentDir) throws Exception;
+    protected abstract void exec(Pair<ScriptContext<T>, Semaphore> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception;
     
     /**
      * @param ex
@@ -102,6 +122,8 @@ public abstract class BaseLanguage {
     public BaseWrappedException<?> wrapException(Throwable ex) {
         return null;
     }
+    
+    public abstract ScriptContext<T> createContext();
     
     @Deprecated
     public String extension() {

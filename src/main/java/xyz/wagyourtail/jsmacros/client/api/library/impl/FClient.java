@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.config.Profile;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.client.tick.TickSync;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
@@ -127,7 +128,7 @@ public class FClient extends BaseLibrary {
      * @throws InterruptedException
      */
     public void waitTick() throws InterruptedException {
-        if (JsMacros.core.profile.joinedThreadStack.contains(Thread.currentThread())) {
+        if (JsMacros.core.profile.joinedContextStack.contains(Core.instance.threadContext.get(Thread.currentThread()))) {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined!");
         }
         tickSynchronizer.waitTick();
@@ -142,7 +143,7 @@ public class FClient extends BaseLibrary {
      * @throws InterruptedException
      */
     public void waitTick(int i) throws InterruptedException {
-        if (JsMacros.core.profile.joinedThreadStack.contains(Thread.currentThread())) {
+        if (JsMacros.core.profile.joinedContextStack.contains(Core.instance.threadContext.get(Thread.currentThread()))) {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined!");
         }
         while (--i >= 0) {

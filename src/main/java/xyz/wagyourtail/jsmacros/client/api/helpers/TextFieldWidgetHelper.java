@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.concurrent.Semaphore;
 
@@ -47,7 +48,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
      * @throws InterruptedException
      */
     public TextFieldWidgetHelper setText(String text, boolean await) throws InterruptedException {
-        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || JsMacros.core.profile.joinedThreadStack.contains(Thread.currentThread());
+        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || JsMacros.core.profile.joinedContextStack.contains(Core.instance.threadContext.get(Thread.currentThread()));
         if (joinedMain && await) {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined!");
         }

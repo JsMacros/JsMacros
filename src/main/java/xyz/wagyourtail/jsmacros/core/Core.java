@@ -1,18 +1,23 @@
 package xyz.wagyourtail.jsmacros.core;
 
-import com.google.common.collect.ImmutableList;
 import org.apache.logging.log4j.Logger;
-import xyz.wagyourtail.jsmacros.core.config.*;
+import xyz.wagyourtail.Pair;
+import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
+import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
+import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
+import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
+import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
+import xyz.wagyourtail.jsmacros.core.language.impl.JSScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.core.library.LibraryRegistry;
 
 import java.io.File;
 import java.util.*;
-import java.util.Map.Entry;
+import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -24,9 +29,10 @@ public class Core {
     public final BaseProfile profile;
     public final ConfigManager config;
     public final LibraryRegistry libraryRegistry = new LibraryRegistry();
-    public final Map<ScriptTrigger, Set<ScriptThreadWrapper>> threads = new HashMap<>();
-    public final List<BaseLanguage> languages = new ArrayList<>();
-    public BaseLanguage defaultLang = new JavascriptLanguageDefinition(".js", this);
+    public final Map<ScriptContext<?>, String> contexts = new WeakHashMap<>();
+    public final Map<Thread, ScriptContext<?>> threadContext = new WeakHashMap<>();
+    public final List<BaseLanguage<?>> languages = new ArrayList<>();
+    public BaseLanguage<?> defaultLang = new JavascriptLanguageDefinition(".js", this);
     
     protected Core(Function<Core, BaseEventRegistry> eventRegistryFunction, Function<Core, BaseProfile> profileFunction, File configFolder, File macroFolder, Logger logger) {
         eventRegistry = eventRegistryFunction.apply(this);
@@ -54,7 +60,7 @@ public class Core {
         return instance;
     }
 
-    public void addLanguage(BaseLanguage l) {
+    public void addLanguage(BaseLanguage<?> l) {
         languages.add(l);
     }
     
@@ -63,30 +69,23 @@ public class Core {
         
     }
     
-    public List<ScriptThreadWrapper> getThreads() {
-        List<ScriptThreadWrapper> th = new ArrayList<>();
-        for (Set<ScriptThreadWrapper> tl : ImmutableList.copyOf(threads.values())) {
-            th.addAll(tl);
-        }
-        return th;
+    @Deprecated
+    public List<?> getThreads() {
+        throw new RuntimeException("Deprecated");
     }
 
-    public void removeThread(ScriptThreadWrapper t) {
-        if (threads.containsKey(t.m)) {
-            if (threads.get(t.m).remove(t)) return;
-        }
-        for (Entry<ScriptTrigger, Set<ScriptThreadWrapper>> tl : threads.entrySet()) {
-            if (tl.getValue().remove(t)) return;
-        }
+    @Deprecated
+    public void removeThread(Object t) {
+        throw new RuntimeException("Deprecated");
     }
 
-    public Thread exec(ScriptTrigger macro, BaseEvent event) {
+    public Pair<? extends ScriptContext<?>, Semaphore> exec(ScriptTrigger macro, BaseEvent event) {
         return exec(macro, event, null, null);
     }
 
-    public Thread exec(ScriptTrigger macro, BaseEvent event, Runnable then,
-                              Consumer<Throwable> catcher) {
-        for (BaseLanguage language : languages) {
+    public Pair<? extends ScriptContext<?>, Semaphore> exec(ScriptTrigger macro, BaseEvent event, Runnable then,
+                                                            Consumer<Throwable> catcher) {
+        for (BaseLanguage<?> language : languages) {
             if (macro.scriptFile.endsWith(language.extension))
                 return language.trigger(macro, event, then, catcher);
         }
@@ -95,7 +94,7 @@ public class Core {
     
     public BaseWrappedException<?> wrapException(Throwable ex) {
         if (ex == null) return null;
-        for (BaseLanguage lang : languages) {
+        for (BaseLanguage<?> lang : languages) {
             BaseWrappedException<?> e = lang.wrapException(ex);
             if (e != null) return e;
         }

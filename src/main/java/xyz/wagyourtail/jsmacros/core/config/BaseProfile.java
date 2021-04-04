@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventProfileLoad;
+import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.impl.*;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.Set;
 public abstract class BaseProfile {
     protected final Core runner;
     public final Logger LOGGER;
-    public final Set<Thread> joinedThreadStack = new HashSet<>();
+    public final Set<ScriptContext<?>> joinedContextStack = new HashSet<>();
     public String profileName;
     
     public BaseProfile(Core runner, Logger logger) {

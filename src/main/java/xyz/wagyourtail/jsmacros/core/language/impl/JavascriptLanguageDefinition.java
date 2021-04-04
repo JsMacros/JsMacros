@@ -2,12 +2,14 @@ package xyz.wagyourtail.jsmacros.core.language.impl;
 
 import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.Context.Builder;
+import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
+import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,8 +18,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
-public class JavascriptLanguageDefinition extends BaseLanguage {
+public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     private static final Engine engine = Engine.create();
     private static final Builder build = Context.newBuilder("js")
         .engine(engine)
@@ -55,20 +58,30 @@ public class JavascriptLanguageDefinition extends BaseLanguage {
     }
     
     @Override
-    public void exec(ScriptTrigger macro, File file, BaseEvent event) throws Exception {
+    protected void exec(Pair<ScriptContext<Context>, Semaphore> ctx, ScriptTrigger macro, File file, BaseEvent event) throws Exception {
         Map<String, Object> globals = new HashMap<>();
         
         globals.put("event", event);
         globals.put("file", file);
         
         final Context con = buildContext(file.getParentFile().toPath(), globals);
-        con.eval(Source.newBuilder("js", file).build());
+        ctx.getT().setContext(con);
+        try {
+            con.eval(Source.newBuilder("js", file).build());
+        } finally {
+            ctx.getU().release();
+        }
     }
     
     @Override
-    public void exec(String script, Map<String, Object> globals, Path currentDir) throws Exception {
+    protected void exec(Pair<ScriptContext<Context>, Semaphore> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception {
         final Context con = buildContext(currentDir, globals);
-        con.eval("js", script);
+        ctx.getT().setContext(con);
+        try {
+            con.eval("js", script);
+        } finally {
+            ctx.getU().release();
+        }
     }
     
     @Override
@@ -91,6 +104,11 @@ public class JavascriptLanguageDefinition extends BaseLanguage {
             return new BaseWrappedException<>(ex, message, wrapLocation(((PolyglotException) ex).getSourceLocation()), frames.hasNext() ? internalWrap(frames.next(), frames) : null);
         }
         return null;
+    }
+    
+    @Override
+    public JSScriptContext createContext() {
+        return new JSScriptContext();
     }
     
     private BaseWrappedException<?> internalWrap(PolyglotException.StackFrame current, Iterator<PolyglotException.StackFrame> frames) {

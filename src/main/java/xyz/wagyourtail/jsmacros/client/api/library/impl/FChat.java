@@ -9,6 +9,7 @@ import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
@@ -43,7 +44,7 @@ public class FChat extends BaseLibrary {
      * @throws InterruptedException
      */
     public void log(Object message, boolean await) throws InterruptedException {
-        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || JsMacros.core.profile.joinedThreadStack.contains(Thread.currentThread());
+        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || JsMacros.core.profile.joinedContextStack.contains(Core.instance.threadContext.get(Thread.currentThread()));
         if (joinedMain) {
             if (message instanceof TextHelper) {
                 logInternal((TextHelper)message);
@@ -97,7 +98,7 @@ public class FChat extends BaseLibrary {
      * @throws InterruptedException
      */
     public void say(String message, boolean await) throws InterruptedException {
-        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || JsMacros.core.profile.joinedThreadStack.contains(Thread.currentThread());
+        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || JsMacros.core.profile.joinedContextStack.contains(Core.instance.threadContext.get(Thread.currentThread()));
         if (message == null) return;
         if (joinedMain) {
             assert mc.player != null;

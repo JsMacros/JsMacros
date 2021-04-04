@@ -6,6 +6,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
+import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCodeCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSuggestion;
@@ -13,10 +14,12 @@ import xyz.wagyourtail.jsmacros.client.gui.overlays.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
+import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 /**
  * @author Wagyourtail
@@ -35,7 +38,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
     @Override
     public void recompileRenderedText(@NotNull String text) {
         CodeCompileEvent compileEvent = new CodeCompileEvent(text, language, screen);
-        Thread t = JsMacros.core.exec(scriptTrigger, compileEvent, null, (ex) -> {
+        Pair<? extends ScriptContext<?>, Semaphore> t = JsMacros.core.exec(scriptTrigger, compileEvent, null, (ex) -> {
             TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
             StringWriter st = new StringWriter();
             ex.printStackTrace(new PrintWriter(st));
@@ -44,7 +47,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
         });
         if (t != null) {
             try {
-                t.join();
+                t.getU().acquire();
             } catch (InterruptedException ignored) {
             }
         }
