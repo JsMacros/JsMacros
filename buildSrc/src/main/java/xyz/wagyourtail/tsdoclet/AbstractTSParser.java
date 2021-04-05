@@ -20,6 +20,7 @@ public abstract class AbstractTSParser {
     public String genFieldTS() {
         StringBuilder s = new StringBuilder();
         for (FieldDoc field : clazz.fields()) {
+            if (!field.isPublic()) continue;
             Tag[] tags = field.inlineTags();
             s.append("\n");
             s.append(AbstractTSParser.genCommentTypeScript(tags, field.isStatic(),1));
@@ -35,6 +36,7 @@ public abstract class AbstractTSParser {
         StringBuilder s = new StringBuilder();
         Map<String, List<MethodDoc>> methods = new LinkedHashMap<>();
         for (MethodDoc method : clazz.methods()) {
+            if (!method.isPublic()) continue;
             if (methods.containsKey(method.name())) {
                 methods.get(method.name()).add(method);
             } else {

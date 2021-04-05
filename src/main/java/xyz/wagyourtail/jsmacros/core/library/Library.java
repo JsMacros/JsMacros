@@ -15,5 +15,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Library {
     String value();
-    Class<? extends BaseLanguage>[] languages() default {};
+    Class<? extends BaseLanguage<?>>[] languages() default {};
 }

@@ -12,6 +12,7 @@ public class LibraryTSParser extends AbstractTSParser {
         this.libName = libName;
     }
     
+    @Override
     public String genTypeScript() {
         StringBuilder s = new StringBuilder();
         Tag[] classtags = clazz.inlineTags();
