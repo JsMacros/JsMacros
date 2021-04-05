@@ -76,7 +76,7 @@ public class Profile extends BaseProfile {
             if (joinedMain) {
                 joinedThreadStack.add(t.getLockThread());
             }
-            t.getLock().acquire();
+            t.awaitLock();
         } catch (InterruptedException ignored) {
         } finally {
             joinedThreadStack.remove(t.getLockThread());

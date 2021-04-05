@@ -32,7 +32,7 @@ public abstract class BaseLanguage<T> {
         
         final ScriptTrigger staticMacro = macro.copy();
         final Thread ct = Thread.currentThread();
-        ContextContainer<T> ctx = new ContextContainer<>(createContext(), new Semaphore(0));
+        ContextContainer<T> ctx = new ContextContainer<>(createContext());
         final Thread t = new Thread(() -> {
             try {
                 if (event == null) {
@@ -56,7 +56,7 @@ public abstract class BaseLanguage<T> {
                     runner.profile.logError(f);
                 }
             } finally {
-                ctx.getLock().release();
+                ctx.releaseLock();
             }
         });
         
@@ -67,7 +67,7 @@ public abstract class BaseLanguage<T> {
     
     public ContextContainer<T> trigger(String script, Runnable then, Consumer<Throwable> catcher) {
         final Thread ct = Thread.currentThread();
-        ContextContainer<T> ctx = new ContextContainer<>(createContext(), new Semaphore(0));
+        ContextContainer<T> ctx = new ContextContainer<>(createContext());
         final Thread t = new Thread(() -> {
             try {
                 Thread.currentThread().setName(String.format("RunScript:{\"creator\":\"%s\", \"start\":\"%d\"}", ct.getName(), System.currentTimeMillis()));
@@ -84,7 +84,7 @@ public abstract class BaseLanguage<T> {
                     runner.profile.logError(f);
                 }
             } finally {
-                ctx.getLock().release();
+                ctx.releaseLock();
             }
         });
         t.start();

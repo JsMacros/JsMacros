@@ -5,11 +5,10 @@ import java.util.concurrent.Semaphore;
 public class ContextContainer<T> {
     private final ScriptContext<T> ctx;
     private Thread lockThread;
-    private final Semaphore lock;
+    private final Semaphore lock = new Semaphore(0);
     
-    public ContextContainer(ScriptContext<T> ctx, Semaphore lock) {
+    public ContextContainer(ScriptContext<T> ctx) {
         this.ctx = ctx;
-        this.lock = lock;
     }
     
     public void setLockThread(Thread lockThread) {
@@ -25,13 +24,20 @@ public class ContextContainer<T> {
         return lockThread;
     }
     
+    /**
+     * DO NOT USE IN A SCRIPT PLEASE, MAKE YOUR OWN MUTEX/SEMAPHORES
+     * @throws InterruptedException
+     */
+    public void awaitLock() throws InterruptedException {
+        lock.acquire();
+    }
     
     /**
-     * can be released early in a script or language impl.
+     * can be released earlier in a script or language impl.
      * @return semaphore used for synchronous stuff,
      */
-    public Semaphore getLock() {
-        return lock;
+    public void releaseLock() {
+        lock.release();
     }
     
 }

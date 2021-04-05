@@ -48,7 +48,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
         });
         if (t != null) {
             try {
-                t.getLock().acquire();
+                t.awaitLock();
             } catch (InterruptedException ignored) {
             }
         }

@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.util.Util;
-import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Semaphore;
 
 /**
  * Functions that interact directly with JsMacros or Events.
@@ -161,7 +159,7 @@ public class FJsMacros extends BaseLibrary {
             
             @Override
             public ContextContainer<?> trigger(BaseEvent event) {
-                ContextContainer<?> p = new ContextContainer<>(ctx, new Semaphore(0));
+                ContextContainer<?> p = new ContextContainer<>(ctx);
                 Thread t = new Thread(() -> {
                     Thread.currentThread().setName(this.toString());
                     
@@ -171,7 +169,7 @@ public class FJsMacros extends BaseLibrary {
                         Core.instance.eventRegistry.removeListener(this);
                         Core.instance.profile.logError(e);
                     } finally {
-                        p.getLock().release();
+                        p.releaseLock();
                     }
                 });
                 t.start();
@@ -217,7 +215,7 @@ public class FJsMacros extends BaseLibrary {
             @Override
             public ContextContainer<?> trigger(BaseEvent event) {
                 Core.instance.eventRegistry.removeListener(this);
-                ContextContainer<?> p = new ContextContainer<>(ctx, new Semaphore(0));
+                ContextContainer<?> p = new ContextContainer<>(ctx);
                 Thread t = new Thread(() -> {
                     Thread.currentThread().setName(this.toString());
                     try {
@@ -225,7 +223,7 @@ public class FJsMacros extends BaseLibrary {
                     } catch (Exception e) {
                         Core.instance.profile.logError(e);
                     } finally {
-                        p.getLock().release();
+                        p.releaseLock();
                     }
                 });
                 t.start();
