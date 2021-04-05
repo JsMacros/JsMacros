@@ -65,7 +65,8 @@ public class Main {
     
         try {
             outputTS.append("declare const event: Events.BaseEvent;\n" +
-                             "declare const file: Java.java.io.File\n\n" +
+                             "declare const file: Java.java.io.File;\n" +
+                             "declare const context: Java.xyz.wagyourtail.jsmacros.core.language.ContextContainer<any>;\n\n" +
                              
                              "declare namespace Events {\n" +
                                 "\texport interface BaseEvent extends Java.Object {\n" +

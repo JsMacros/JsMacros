@@ -73,10 +73,9 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     
     @Override
     protected void exec(ContextContainer<Context> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception {
-        final Context con = buildContext(currentDir, globals);
-    
         globals.put("context", ctx);
         
+        final Context con = buildContext(currentDir, globals);
         ctx.getCtx().setContext(con);
         con.eval("js", script);
     }

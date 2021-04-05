@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
@@ -72,7 +73,7 @@ public abstract class BaseLanguage<T> {
                 Thread.currentThread().setName(String.format("RunScript:{\"creator\":\"%s\", \"start\":\"%d\"}", ct.getName(), System.currentTimeMillis()));
                 runner.contexts.put(ctx.getCtx(), Thread.currentThread().getName());
                 runner.threadContext.put(Thread.currentThread(), ctx.getCtx());
-                exec(ctx, script, null, null);
+                exec(ctx, script, new HashMap<>(), null);
     
                 if (then != null) then.run();
             } catch (Exception e) {
