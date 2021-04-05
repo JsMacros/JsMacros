@@ -34,9 +34,18 @@ public abstract class MethodWrapper<T, U, R> implements Consumer<T>, BiConsumer<
     @Override
     public abstract boolean test(T t, U u);
     
+    /**
+     * override to return true if the method can't join to the thread it was wrapped/created in, ie for languages that don't allow multithreading.
+     */
     public boolean preventSameThreadJoin() {
         return false;
     }
+    
+    /**
+     * make return something to override the thread set in {@link xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros#on(String, MethodWrapper)}
+     * (hi jep)
+     */
+    public Thread overrideThread() { return null; }
     
     /**
      * Makes {@link Function} and {@link BiFunction} work together.

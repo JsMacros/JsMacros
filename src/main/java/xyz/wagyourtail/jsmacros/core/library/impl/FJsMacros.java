@@ -172,8 +172,9 @@ public class FJsMacros extends BaseLibrary {
                         p.releaseLock();
                     }
                 });
+                Thread ot = callback.overrideThread();
+                p.setLockThread(ot == null ? t : ot);
                 t.start();
-                p.setLockThread(t);
                 return p;
             }
     
@@ -226,8 +227,9 @@ public class FJsMacros extends BaseLibrary {
                         p.releaseLock();
                     }
                 });
+                Thread ot = callback.overrideThread();
+                p.setLockThread(ot == null ? t : ot);
                 t.start();
-                p.setLockThread(t);
                 return p;
             }
     

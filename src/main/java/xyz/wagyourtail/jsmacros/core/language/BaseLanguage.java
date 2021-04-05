@@ -59,9 +59,8 @@ public abstract class BaseLanguage<T> {
                 ctx.releaseLock();
             }
         });
-        
-        t.start();
         ctx.setLockThread(t);
+        t.start();
         return ctx;
     }
     
@@ -87,8 +86,8 @@ public abstract class BaseLanguage<T> {
                 ctx.releaseLock();
             }
         });
-        t.start();
         ctx.setLockThread(t);
+        t.start();
         return ctx;
     }
     
