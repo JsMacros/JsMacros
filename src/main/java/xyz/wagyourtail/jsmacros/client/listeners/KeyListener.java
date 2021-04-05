@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.BaseListener;
+import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
 import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 
 import java.util.concurrent.Semaphore;
@@ -36,7 +37,7 @@ public class KeyListener extends BaseListener {
     }
     
     @Override
-    public Pair<? extends ScriptContext<?>, Semaphore> trigger(BaseEvent event) {
+    public ContextContainer<?> trigger(BaseEvent event) {
         if (check((EventKey) event)) {
             return runScript(event);
         }

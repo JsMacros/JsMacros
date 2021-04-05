@@ -14,6 +14,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseListener;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
+import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
 import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
@@ -76,7 +77,7 @@ public class FJsMacros extends BaseLibrary {
      * @param file
      * @return
      */
-    public ScriptContext<?> runScript(String file) {
+    public ContextContainer<?> runScript(String file) {
         return runScript(file, (MethodWrapper<Throwable, Object, Object>) null);
     }
 
@@ -87,13 +88,13 @@ public class FJsMacros extends BaseLibrary {
      * 
      * @param file relative to the macro folder.
      * @param callback defaults to {@code null}
-     * @return the {@link ScriptContext} the script is running on.
+     * @return the {@link ContextContainer} the script is running on.
      */
-    public ScriptContext<?> runScript(String file, MethodWrapper<Throwable, Object, Object> callback) {
+    public ContextContainer<?> runScript(String file, MethodWrapper<Throwable, Object, Object> callback) {
         if (callback != null) {
-            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null, () -> callback.accept(null), callback).getT();
+            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null, () -> callback.accept(null), callback);
         } else {
-            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null).getT();
+            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null);
         }
     }
     
@@ -106,7 +107,7 @@ public class FJsMacros extends BaseLibrary {
      * @param script
      * @return
      */
-    public ScriptContext<?> runScript(String language, String script) {
+    public ContextContainer<?> runScript(String language, String script) {
         return runScript(language, script, null);
     }
     
@@ -118,9 +119,9 @@ public class FJsMacros extends BaseLibrary {
      * @param language
      * @param script
      * @param callback calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link String}&gt;
-     * @return the {@link ScriptContext} the script is running on.
+     * @return the {@link ContextContainer} the script is running on.
      */
-    public ScriptContext<?> runScript(String language, String script, MethodWrapper<Throwable, Object, Object> callback) {
+    public ContextContainer<?> runScript(String language, String script, MethodWrapper<Throwable, Object, Object> callback) {
         BaseLanguage<?> lang = Core.instance.defaultLang;
         for (BaseLanguage<?> l : Core.instance.languages) {
             if (language.equals(l.extension.replaceAll("\\.", " ").trim().replaceAll(" ", "."))) {
@@ -128,7 +129,7 @@ public class FJsMacros extends BaseLibrary {
                 break;
             }
         }
-        return lang.trigger(script, callback == null ? null : () -> callback.accept(null), callback).getT();
+        return lang.trigger(script, callback == null ? null : () -> callback.accept(null), callback);
     }
     
     /**
@@ -159,8 +160,8 @@ public class FJsMacros extends BaseLibrary {
         IEventListener listener = new ScriptEventListener() {
             
             @Override
-            public Pair<ScriptContext<?>, Semaphore> trigger(BaseEvent event) {
-                Pair<ScriptContext<?>, Semaphore> p = new Pair<>(ctx, new Semaphore(0));
+            public ContextContainer<?> trigger(BaseEvent event) {
+                ContextContainer<?> p = new ContextContainer<>(ctx, new Semaphore(0));
                 Thread t = new Thread(() -> {
                     Thread.currentThread().setName(this.toString());
                     
@@ -170,10 +171,11 @@ public class FJsMacros extends BaseLibrary {
                         Core.instance.eventRegistry.removeListener(this);
                         Core.instance.profile.logError(e);
                     } finally {
-                        p.getU().release();
+                        p.getLock().release();
                     }
                 });
                 t.start();
+                p.setLockThread(t);
                 return p;
             }
     
@@ -213,9 +215,9 @@ public class FJsMacros extends BaseLibrary {
         ScriptContext<?> ctx = Core.instance.threadContext.get(th);
         IEventListener listener = new ScriptEventListener() {
             @Override
-            public Pair<ScriptContext<?>, Semaphore> trigger(BaseEvent event) {
+            public ContextContainer<?> trigger(BaseEvent event) {
                 Core.instance.eventRegistry.removeListener(this);
-                Pair<ScriptContext<?>, Semaphore> p = new Pair<>(ctx, new Semaphore(0));
+                ContextContainer<?> p = new ContextContainer<>(ctx, new Semaphore(0));
                 Thread t = new Thread(() -> {
                     Thread.currentThread().setName(this.toString());
                     try {
@@ -223,10 +225,11 @@ public class FJsMacros extends BaseLibrary {
                     } catch (Exception e) {
                         Core.instance.profile.logError(e);
                     } finally {
-                        p.getU().release();
+                        p.getLock().release();
                     }
                 });
                 t.start();
+                p.setLockThread(t);
                 return p;
             }
     

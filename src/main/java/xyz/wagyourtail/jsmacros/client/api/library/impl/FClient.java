@@ -128,7 +128,7 @@ public class FClient extends BaseLibrary {
      * @throws InterruptedException
      */
     public void waitTick() throws InterruptedException {
-        if (JsMacros.core.profile.joinedContextStack.contains(Core.instance.threadContext.get(Thread.currentThread()))) {
+        if (JsMacros.core.profile.joinedThreadStack.contains(Thread.currentThread())) {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined!");
         }
         tickSynchronizer.waitTick();
@@ -143,7 +143,7 @@ public class FClient extends BaseLibrary {
      * @throws InterruptedException
      */
     public void waitTick(int i) throws InterruptedException {
-        if (JsMacros.core.profile.joinedContextStack.contains(Core.instance.threadContext.get(Thread.currentThread()))) {
+        if (JsMacros.core.profile.joinedThreadStack.contains(Thread.currentThread())) {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined!");
         }
         while (--i >= 0) {

@@ -14,6 +14,7 @@ import xyz.wagyourtail.jsmacros.client.gui.overlays.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
+import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
 import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 
 import java.io.PrintWriter;
@@ -38,7 +39,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
     @Override
     public void recompileRenderedText(@NotNull String text) {
         CodeCompileEvent compileEvent = new CodeCompileEvent(text, language, screen);
-        Pair<? extends ScriptContext<?>, Semaphore> t = JsMacros.core.exec(scriptTrigger, compileEvent, null, (ex) -> {
+        ContextContainer<?> t = JsMacros.core.exec(scriptTrigger, compileEvent, null, (ex) -> {
             TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
             StringWriter st = new StringWriter();
             ex.printStackTrace(new PrintWriter(st));
@@ -47,7 +48,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
         });
         if (t != null) {
             try {
-                t.getU().acquire();
+                t.getLock().acquire();
             } catch (InterruptedException ignored) {
             }
         }

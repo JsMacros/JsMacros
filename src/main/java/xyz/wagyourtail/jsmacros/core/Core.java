@@ -10,8 +10,8 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
+import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
 import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
-import xyz.wagyourtail.jsmacros.core.language.impl.JSScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.core.library.LibraryRegistry;
 
@@ -79,12 +79,12 @@ public class Core {
         throw new RuntimeException("Deprecated");
     }
 
-    public Pair<? extends ScriptContext<?>, Semaphore> exec(ScriptTrigger macro, BaseEvent event) {
+    public ContextContainer<?> exec(ScriptTrigger macro, BaseEvent event) {
         return exec(macro, event, null, null);
     }
 
-    public Pair<? extends ScriptContext<?>, Semaphore> exec(ScriptTrigger macro, BaseEvent event, Runnable then,
-                                                            Consumer<Throwable> catcher) {
+    public ContextContainer<?> exec(ScriptTrigger macro, BaseEvent event, Runnable then,
+                                    Consumer<Throwable> catcher) {
         for (BaseLanguage<?> language : languages) {
             if (macro.scriptFile.endsWith(language.extension))
                 return language.trigger(macro, event, then, catcher);

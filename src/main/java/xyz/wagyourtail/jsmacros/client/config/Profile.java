@@ -19,6 +19,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
+import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
 import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 
@@ -42,7 +43,7 @@ public class Profile extends BaseProfile {
     
     @Override
     public void triggerEventJoin(BaseEvent event) {
-        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || joinedContextStack.contains(Core.instance.threadContext.get(Thread.currentThread()));
+        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || joinedThreadStack.contains(Thread.currentThread());
         triggerEventJoinNoAnything(event);
     
         if (runner.eventRegistry.listeners.containsKey("ANYTHING")) for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get("ANYTHING"))) {
@@ -52,7 +53,7 @@ public class Profile extends BaseProfile {
     
     @Override
     public void triggerEventJoinNoAnything(BaseEvent event) {
-        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || joinedContextStack.contains(Core.instance.threadContext.get(Thread.currentThread()));
+        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || joinedThreadStack.contains(Thread.currentThread());
         if (event instanceof EventCustom) {
             if (runner.eventRegistry.listeners.containsKey(((EventCustom) event).eventName))
                 for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get(((EventCustom) event).eventName))) {
@@ -70,15 +71,15 @@ public class Profile extends BaseProfile {
         if (macroListener instanceof FJsMacros.ScriptEventListener && ((FJsMacros.ScriptEventListener) macroListener).getCreator() == Thread.currentThread() && ((FJsMacros.ScriptEventListener) macroListener).getWrapper().preventSameThreadJoin()) {
             throw new IllegalThreadStateException("Cannot join " + macroListener.toString() + " on same thread as it's creation.");
         }
-        Pair<? extends ScriptContext<?>, Semaphore> t = macroListener.trigger(event);
+        ContextContainer<?> t = macroListener.trigger(event);
         try {
             if (joinedMain) {
-                joinedContextStack.add(t.getT());
+                joinedThreadStack.add(t.getLockThread());
             }
-            t.getU().acquire();
+            t.getLock().acquire();
         } catch (InterruptedException ignored) {
         } finally {
-            joinedContextStack.remove(t.getT());
+            joinedThreadStack.remove(t.getLockThread());
         }
     }
     

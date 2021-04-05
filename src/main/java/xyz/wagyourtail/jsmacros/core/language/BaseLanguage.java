@@ -26,12 +26,12 @@ public abstract class BaseLanguage<T> {
         this.runner = runner;
     }
     
-    public Pair<ScriptContext<T>, Semaphore> trigger(ScriptTrigger macro, BaseEvent event, Runnable then,
+    public ContextContainer<T> trigger(ScriptTrigger macro, BaseEvent event, Runnable then,
                           Consumer<Throwable> catcher) {
         
         final ScriptTrigger staticMacro = macro.copy();
         final Thread ct = Thread.currentThread();
-        Pair<ScriptContext<T>, Semaphore> ctx = new Pair<>(createContext(), new Semaphore(0));
+        ContextContainer<T> ctx = new ContextContainer<>(createContext(), new Semaphore(0));
         final Thread t = new Thread(() -> {
             try {
                 if (event == null) {
@@ -41,8 +41,8 @@ public abstract class BaseLanguage<T> {
                 }
                 File file = new File(runner.config.macroFolder, staticMacro.scriptFile);
                 if (file.exists()) {
-                    runner.contexts.put(ctx.getT(), Thread.currentThread().getName());
-                    runner.threadContext.put(Thread.currentThread(), ctx.getT());
+                    runner.contexts.put(ctx.getCtx(), Thread.currentThread().getName());
+                    runner.threadContext.put(Thread.currentThread(), ctx.getCtx());
                     exec(ctx, staticMacro, file, event);
                     
                     if (then != null) then.run();
@@ -54,21 +54,24 @@ public abstract class BaseLanguage<T> {
                 } catch (Exception f) {
                     runner.profile.logError(f);
                 }
+            } finally {
+                ctx.getLock().release();
             }
         });
         
         t.start();
+        ctx.setLockThread(t);
         return ctx;
     }
     
-    public Pair<ScriptContext<T>, Semaphore> trigger(String script, Runnable then, Consumer<Throwable> catcher) {
+    public ContextContainer<T> trigger(String script, Runnable then, Consumer<Throwable> catcher) {
         final Thread ct = Thread.currentThread();
-        Pair<ScriptContext<T>, Semaphore> ctx = new Pair<>(createContext(), new Semaphore(0));
+        ContextContainer<T> ctx = new ContextContainer<>(createContext(), new Semaphore(0));
         final Thread t = new Thread(() -> {
             try {
                 Thread.currentThread().setName(String.format("RunScript:{\"creator\":\"%s\", \"start\":\"%d\"}", ct.getName(), System.currentTimeMillis()));
-                runner.contexts.put(ctx.getT(), Thread.currentThread().getName());
-                runner.threadContext.put(Thread.currentThread(), ctx.getT());
+                runner.contexts.put(ctx.getCtx(), Thread.currentThread().getName());
+                runner.threadContext.put(Thread.currentThread(), ctx.getCtx());
                 exec(ctx, script, null, null);
     
                 if (then != null) then.run();
@@ -79,10 +82,12 @@ public abstract class BaseLanguage<T> {
                 } catch (Exception f) {
                     runner.profile.logError(f);
                 }
+            } finally {
+                ctx.getLock().release();
             }
         });
         t.start();
-        
+        ctx.setLockThread(t);
         return ctx;
     }
     
@@ -100,7 +105,7 @@ public abstract class BaseLanguage<T> {
      * @throws Exception
      * @since 1.2.7 [citation needed]
      */
-    protected abstract void exec(Pair<ScriptContext<T>, Semaphore> ctx, ScriptTrigger macro, File file, BaseEvent event) throws Exception;
+    protected abstract void exec(ContextContainer<T> ctx, ScriptTrigger macro, File file, BaseEvent event) throws Exception;
     
     /**
      * run a string based script with this.
@@ -112,7 +117,7 @@ public abstract class BaseLanguage<T> {
      * @throws Exception
      * @since 1.2.7 [citation needed]
      */
-    protected abstract void exec(Pair<ScriptContext<T>, Semaphore> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception;
+    protected abstract void exec(ContextContainer<T> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception;
     
     /**
      * @param ex

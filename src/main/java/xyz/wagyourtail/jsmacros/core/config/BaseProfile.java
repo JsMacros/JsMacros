@@ -23,7 +23,7 @@ import java.util.Set;
 public abstract class BaseProfile {
     protected final Core runner;
     public final Logger LOGGER;
-    public final Set<ScriptContext<?>> joinedContextStack = new HashSet<>();
+    public final Set<Thread> joinedThreadStack = new HashSet<>();
     public String profileName;
     
     public BaseProfile(Core runner, Logger logger) {

@@ -9,6 +9,7 @@ import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
+import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
 import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 
 import java.io.File;
@@ -58,30 +59,26 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     }
     
     @Override
-    protected void exec(Pair<ScriptContext<Context>, Semaphore> ctx, ScriptTrigger macro, File file, BaseEvent event) throws Exception {
+    protected void exec(ContextContainer<Context> ctx, ScriptTrigger macro, File file, BaseEvent event) throws Exception {
         Map<String, Object> globals = new HashMap<>();
         
         globals.put("event", event);
         globals.put("file", file);
+        globals.put("context", ctx);
         
         final Context con = buildContext(file.getParentFile().toPath(), globals);
-        ctx.getT().setContext(con);
-        try {
-            con.eval(Source.newBuilder("js", file).build());
-        } finally {
-            ctx.getU().release();
-        }
+        ctx.getCtx().setContext(con);
+        con.eval(Source.newBuilder("js", file).build());
     }
     
     @Override
-    protected void exec(Pair<ScriptContext<Context>, Semaphore> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception {
+    protected void exec(ContextContainer<Context> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception {
         final Context con = buildContext(currentDir, globals);
-        ctx.getT().setContext(con);
-        try {
-            con.eval("js", script);
-        } finally {
-            ctx.getU().release();
-        }
+    
+        globals.put("context", ctx);
+        
+        ctx.getCtx().setContext(con);
+        con.eval("js", script);
     }
     
     @Override
