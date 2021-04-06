@@ -1,13 +1,13 @@
 
 function populateClassSidebar() {
     classLists.innerHTML = "";
-    for (const key of classGroups) {
+    for (const key of Array.from(classGroups).sort().reverse()) {
         const h4 = document.createElement("h4");
         h4.innerHTML = key;
         classLists.appendChild(h4);
         const div = document.createElement("div");
         div.setAttribute("id", `${key}List`);
-        classLists.appendChild(div);
+        classLists.appendChild(div);    
     }
     for (const [name, clazz] of searchMaps.classes) {
         const a = document.createElement("a");
