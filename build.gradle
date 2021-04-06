@@ -114,7 +114,7 @@ jar {
 }
 
 javadoc {
-	options.tags = [ "custom.replaceParams" ]
+	options.tags = [ "@custom.replaceParams" ]
 	source = sourceSets.main.allJava
 	classpath = sourceSets.main.compileClasspath
 	destinationDir = new File(project.buildDir, "docs/docs")

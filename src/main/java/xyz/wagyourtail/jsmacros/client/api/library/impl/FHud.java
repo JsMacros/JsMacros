@@ -26,7 +26,7 @@ import java.util.Set;
  * 
  * @author Wagyourtail
  */
- @Library("hud")
+ @Library("Hud")
  @SuppressWarnings("unused")
 public class FHud extends BaseLibrary {
     

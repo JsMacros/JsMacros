@@ -31,7 +31,7 @@ import java.util.Set;
  * 
  * @author Wagyourtail
  */
- @Library("jsmacros")
+ @Library("JsMacros")
  @SuppressWarnings("unused")
 public class FJsMacros extends BaseLibrary {
     

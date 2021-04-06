@@ -1,12 +1,13 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
-import xyz.wagyourtail.jsmacros.client.JsMacros;
+import org.graalvm.polyglot.Context;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
+import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
 import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
-import xyz.wagyourtail.jsmacros.core.library.IFConsumer;
+import xyz.wagyourtail.jsmacros.core.library.IFWrapper;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLanguageLibrary;
 
@@ -14,18 +15,24 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Function;
 
 
- @Library(value = "consumer", languages = JavascriptLanguageDefinition.class)
+@Library(value = "JavaWrapper", languages = JavascriptLanguageDefinition.class)
  @SuppressWarnings("unused")
-public class FConsumer extends PerExecLanguageLibrary implements IFConsumer<Function<Object[], Object>, Function<Object[], Object>, Function<Object[], Object>> {
+public class FWrapper extends PerExecLanguageLibrary implements IFWrapper<Function<Object[], Object>> {
     
     private final LinkedBlockingQueue<Thread> tasks = new LinkedBlockingQueue<>();
     
-    public FConsumer(Class<? extends BaseLanguage<?>> language, Object context, Thread thread) {
-        super(language, context, thread);
+    public FWrapper(ContextContainer<Context> ctx, Class<? extends BaseLanguage<?>> language) {
+        super(ctx, language);
     }
     
+    /**
+     * @since 1.3.2
+     * @param c
+     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
+     * @return a new {@link MethodWrapper MethodWrapper}
+     */
     @Override
-    public <A, B, R> MethodWrapper<A, B, R> autoWrap(Function<Object[], Object> c) {
+    public <A, B, R> MethodWrapper<A, B, R> methodToJava(Function<Object[], Object> c) {
         Thread th = Thread.currentThread();
         ScriptContext<?> ctx = Core.instance.threadContext.get(th);
         return new MethodWrapper<A, B, R>() {
@@ -104,8 +111,14 @@ public class FConsumer extends PerExecLanguageLibrary implements IFConsumer<Func
         };
     }
     
+    /**
+     * @since 1.3.2
+     * @param c
+     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
+     * @return a new {@link MethodWrapper MethodWrapper}
+     */
     @Override
-    public <A, B, R> MethodWrapper<A, B, R> autoWrapAsync(Function<Object[], Object> c) {
+    public <A, B, R> MethodWrapper<A, B, R> methodToJavaAsync(Function<Object[], Object> c) {
         Thread th = Thread.currentThread();
         ScriptContext<?> ctx = Core.instance.threadContext.get(th);
         return new MethodWrapper<A, B, R>() {
@@ -200,23 +213,16 @@ public class FConsumer extends PerExecLanguageLibrary implements IFConsumer<Func
         };
     }
     
+    /**
+     * Close the current context, more important in JEP as they won't close themselves if you use other functions in
+     * this class
+     *
+     * @since 1.2.2
+     *
+     */
     @Override
-    public <A, B, R> MethodWrapper<A, B, R> toConsumer(Function<Object[], Object> c) {
-        return autoWrap(c);
+    public void stop() {
+        ctx.getCtx().closeContext();
     }
     
-    @Override
-    public <A, B, R> MethodWrapper<A, B, R> toBiConsumer(Function<Object[], Object> c) {
-        return autoWrap(c);
-    }
-    
-    @Override
-    public <A, B, R> MethodWrapper<A, B, R> toAsyncConsumer(Function<Object[], Object> c) {
-        return autoWrapAsync(c);
-    }
-    
-    @Override
-    public <A, B, R> MethodWrapper<A, B, R> toAsyncBiConsumer(Function<Object[], Object> c) {
-        return autoWrapAsync(c);
-    }
 }

@@ -15,7 +15,7 @@ import java.util.Map;
  * 
  * @author Wagyourtail
  */
- @Library("globalvars")
+ @Library("GlobalVars")
  @SuppressWarnings("unused")
 public class FGlobalVars extends BaseLibrary {
     public static Map<String, Object> globalRaw = new HashMap<>();

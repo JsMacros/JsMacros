@@ -91,8 +91,8 @@ public abstract class BaseLanguage<T> {
         return ctx;
     }
     
-    public Map<String, BaseLibrary> retrieveLibs(Object context) {
-        return runner.libraryRegistry.getLibraries(this, context, Thread.currentThread());
+    public Map<String, BaseLibrary> retrieveLibs(ContextContainer<T> context) {
+        return runner.libraryRegistry.getLibraries(this, context);
     }
     
     /**

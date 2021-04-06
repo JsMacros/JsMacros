@@ -20,7 +20,7 @@ import java.util.Map;
  * 
  * @author Wagyourtail
  */
- @Library("request")
+ @Library("Request")
 public class FRequest extends BaseLibrary {
     
     /**

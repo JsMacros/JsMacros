@@ -33,7 +33,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
         super(extension, runner);
     }
     
-    private Context buildContext(Path currentDir, Map<String, Object> globals) throws IOException {
+    private Context buildContext(Path currentDir, Map<String, Object> globals, ContextContainer<Context> ctx) throws IOException {
         if (runner.config.getOptions(CoreConfigV2.class).extraJsOptions == null)
             runner.config.getOptions(CoreConfigV2.class).extraJsOptions = new LinkedHashMap<>();
         build.options(runner.config.getOptions(CoreConfigV2.class).extraJsOptions);
@@ -50,7 +50,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
         
         if (globals != null) globals.forEach(binds::putMember);
         
-        retrieveLibs(con).forEach(binds::putMember);
+        retrieveLibs(ctx).forEach(binds::putMember);
         
         return con;
     }
@@ -63,7 +63,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
         globals.put("file", file);
         globals.put("context", ctx);
         
-        final Context con = buildContext(file.getParentFile().toPath(), globals);
+        final Context con = buildContext(file.getParentFile().toPath(), globals, ctx);
         ctx.getCtx().setContext(con);
         con.eval(Source.newBuilder("js", file).build());
     }
@@ -72,7 +72,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     protected void exec(ContextContainer<Context> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception {
         globals.put("context", ctx);
         
-        final Context con = buildContext(currentDir, globals);
+        final Context con = buildContext(currentDir, globals, ctx);
         ctx.getCtx().setContext(con);
         con.eval("js", script);
     }

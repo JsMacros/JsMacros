@@ -17,6 +17,10 @@ public abstract class AbstractTSParser {
 
     public abstract String genTypeScript();
 
+    public static String fixGTLT(String s) {
+        return s.replaceAll("&gt;", ">").replaceAll("&lt;", "<");
+    }
+
     public String genFieldTS() {
         StringBuilder s = new StringBuilder();
         for (FieldDoc field : clazz.fields()) {
@@ -134,13 +138,15 @@ public abstract class AbstractTSParser {
         MethodDoc firstDoc = methods.get(0);
         StringBuilder s = new StringBuilder("(");
         boolean customParamsFlag = true;
+        
         for (Tag ann : firstDoc.tags()) {
             if (ann.kind().equals("@custom.replaceParams")) {
-                s.append(ann.text());
+                s.append(fixGTLT(ann.text()));
                 customParamsFlag = false;
                 break;
             }
         }
+        
         if (customParamsFlag) {
             List<Pair<String, List<Parameter>>> params = new ArrayList<>();
             for (MethodDoc method : methods) {
@@ -186,11 +192,11 @@ public abstract class AbstractTSParser {
         for (Tag t : inline) {
             if (t.name().equals("@link")) {
                 String[] stuff = t.text().split("\\s+");
-                comment.append(stuff[stuff.length - 1]);
+                comment.append(fixGTLT(stuff[stuff.length - 1]));
             } else if (t.name().equals("@code")) {
-                comment.append("`").append(t.text()).append("`");
+                comment.append("`").append(fixGTLT(t.text())).append("`");
             } else {
-                comment.append(t.text());
+                comment.append(fixGTLT(t.text()));
             }
         }
         if (isStatic) comment.append(inline.length > 0 ? "\n\nstatic" : "static");

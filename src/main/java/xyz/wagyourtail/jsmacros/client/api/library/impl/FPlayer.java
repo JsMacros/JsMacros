@@ -33,7 +33,7 @@ import java.util.function.Consumer;
  * 
  * @author Wagyourtail
  */
- @Library("player")
+ @Library("Player")
  @SuppressWarnings("unused")
 public class FPlayer extends BaseLibrary {
     private static final MinecraftClient mc = MinecraftClient.getInstance();

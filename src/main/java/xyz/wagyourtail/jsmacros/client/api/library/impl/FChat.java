@@ -22,7 +22,7 @@ import java.util.concurrent.Semaphore;
  * 
  * @author Wagyourtail
  */
- @Library("chat")
+ @Library("Chat")
  @SuppressWarnings("unused")
 public class FChat extends BaseLibrary {
     private static final MinecraftClient mc = MinecraftClient.getInstance();

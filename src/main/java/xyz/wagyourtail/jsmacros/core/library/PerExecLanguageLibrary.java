@@ -1,15 +1,14 @@
 package xyz.wagyourtail.jsmacros.core.library;
 
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
+import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
 
 public class PerExecLanguageLibrary extends BaseLibrary {
-    protected Class<? extends BaseLanguage> language;
-    protected Object context;
-    protected Thread thread;
+    protected final ContextContainer<?> ctx;
+    protected final Class<? extends BaseLanguage<?>> language;
     
-    public PerExecLanguageLibrary(Class<? extends BaseLanguage> language, Object context, Thread thread) {
+    public PerExecLanguageLibrary(ContextContainer<?> context, Class<? extends BaseLanguage<?>> language) {
         this.language = language;
-        this.context = context;
-        this.thread = thread;
+        this.ctx = context;
     }
 }

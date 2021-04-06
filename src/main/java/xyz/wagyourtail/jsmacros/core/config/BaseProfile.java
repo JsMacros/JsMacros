@@ -8,7 +8,6 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventProfileLoad;
-import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.impl.*;
 
 import java.util.ArrayList;
@@ -150,7 +149,7 @@ public abstract class BaseProfile {
         runner.eventRegistry.addEvent(EventProfileLoad.class);
     
         runner.libraryRegistry.addLibrary(FJsMacros.class);
-        runner.libraryRegistry.addLibrary(FConsumer.class);
+        runner.libraryRegistry.addLibrary(FWrapper.class);
         runner.libraryRegistry.addLibrary(FFS.class);
         runner.libraryRegistry.addLibrary(FGlobalVars.class);
         runner.libraryRegistry.addLibrary(FReflection.class);

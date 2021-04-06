@@ -42,7 +42,7 @@ import java.util.*;
  * 
  * @author Wagyourtail
  */
- @Library("world")
+ @Library("World")
  @SuppressWarnings("unused")
 public class FWorld extends BaseLibrary {
     
