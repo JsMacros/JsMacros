@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  * Better File-System functions.
  * 
- * An instance of this class is passed to scripts as the {@code fs} variable.
+ * An instance of this class is passed to scripts as the {@code FS} variable.
  * 
  * @since 1.1.8
  * 

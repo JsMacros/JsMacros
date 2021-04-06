@@ -27,7 +27,7 @@ import java.util.Set;
 /**
  * Functions that interact directly with JsMacros or Events.
  * 
- * An instance of this class is passed to scripts as the {@code jsmacros} variable.
+ * An instance of this class is passed to scripts as the {@code JsMacros} variable.
  * 
  * @author Wagyourtail
  */

@@ -18,7 +18,7 @@ import java.util.concurrent.Semaphore;
 /**
  * Functions for interacting with chat.
  * 
- * An instance of this class is passed to scripts as the {@code chat} variable.
+ * An instance of this class is passed to scripts as the {@code Chat} variable.
  * 
  * @author Wagyourtail
  */

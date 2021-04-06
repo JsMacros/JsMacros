@@ -14,7 +14,7 @@ import java.util.Map;
  * 
  * Functions for getting and using raw java classes, methods and functions.
  * 
- * An instance of this class is passed to scripts as the {@code request} variable.
+ * An instance of this class is passed to scripts as the {@code Request} variable.
  * 
  * @since 1.1.8
  * 

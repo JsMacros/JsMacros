@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.core.library;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 /**
- * Consumer implementation for wrapping consumers to match the language spec.
+ * {@link FunctionalInterface} implementation for wrapping methods to match the language spec.
  *
  * An instance of this class is passed to scripts as the {@code consumer} variable.
  *
@@ -24,7 +24,7 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
  * no limitations
  *
  *
- * @since 1.2.5
+ * @since 1.2.5, re-named from {@code consumer} in 1.3.2
  *
  * @author Wagyourtail
  */

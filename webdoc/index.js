@@ -66,6 +66,11 @@ async function searchBox(val) {
     }
 }
 
+async function changeVersion() {
+    reloadSearchMap().then(populateClassSidebar);
+    openMain("general.html");
+}
+
 loadingSearchMap.then(populateClassSidebar).then(() => {
     const rawParams = window.location.search?.substring(1) || "general.html";
     const scroll = window.location.href.split("?")[1]?.split("#")[1];

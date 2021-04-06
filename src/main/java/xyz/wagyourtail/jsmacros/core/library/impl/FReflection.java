@@ -18,7 +18,7 @@ import java.util.*;
 /**
  * Functions for getting and using raw java classes, methods and functions.
  *
- * An instance of this class is passed to scripts as the {@code reflection} variable.
+ * An instance of this class is passed to scripts as the {@code Reflection} variable.
  *
  * @author Wagyourtail
  * @since 1.2.3

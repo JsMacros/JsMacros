@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * "Global" variables for passing to other contexts.
  * 
- * An instance of this class is passed to scripts as the {@code globalvars} variable.
+ * An instance of this class is passed to scripts as the {@code GlobalVars} variable.
  * 
  * @since 1.0.4
  * 

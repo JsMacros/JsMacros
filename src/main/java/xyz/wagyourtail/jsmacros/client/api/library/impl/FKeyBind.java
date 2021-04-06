@@ -14,7 +14,7 @@ import java.util.*;
  * 
  * Functions for getting and modifying key pressed states.
  * 
- * An instance of this class is passed to scripts as the {@code keybind} variable.
+ * An instance of this class is passed to scripts as the {@code KeyBind} variable.
  * 
  * @author Wagyourtail
  */

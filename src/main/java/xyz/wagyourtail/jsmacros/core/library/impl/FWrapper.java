@@ -15,13 +15,39 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Function;
 
 
+/**
+ * {@link FunctionalInterface} implementation for wrapping methods to match the language spec.
+ *
+ * An instance of this class is passed to scripts as the {@code JavaWrapper} variable.
+ *
+ * Javascript:
+ * language spec requires that only one thread can hold an instance of the language at a time,
+ * so this implementation uses a non-preemptive queue for the threads that call the resulting {@link MethodWrapper MethodWrappers}.
+ *
+ * JEP:
+ * language spec requires everything to be on the same thread, on the java end, so all calls to {@link MethodWrapper MethodWrappers}
+ * call back to JEP's starting thread and wait for the call to complete. This means that JEP can sometimes have trouble
+ * closing properly, so if you use any {@link MethodWrapper MethodWrappers}, be sure to call FConsumer#stop(), to close the process,
+ * otherwise it's a memory leak.
+ *
+ * Jython:
+ * no limitations
+ *
+ * LUA:
+ * no limitations
+ *
+ *
+ * @since 1.2.5, re-named from {@code consumer} in 1.3.2
+ *
+ * @author Wagyourtail
+ */
 @Library(value = "JavaWrapper", languages = JavascriptLanguageDefinition.class)
  @SuppressWarnings("unused")
-public class FWrapper extends PerExecLanguageLibrary implements IFWrapper<Function<Object[], Object>> {
+public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapper<Function<Object[], Object>> {
     
     private final LinkedBlockingQueue<Thread> tasks = new LinkedBlockingQueue<>();
     
-    public FWrapper(ContextContainer<Context> ctx, Class<? extends BaseLanguage<?>> language) {
+    public FWrapper(ContextContainer<Context> ctx, Class<? extends BaseLanguage<Context>> language) {
         super(ctx, language);
     }
     
@@ -34,7 +60,6 @@ public class FWrapper extends PerExecLanguageLibrary implements IFWrapper<Functi
     @Override
     public <A, B, R> MethodWrapper<A, B, R> methodToJava(Function<Object[], Object> c) {
         Thread th = Thread.currentThread();
-        ScriptContext<?> ctx = Core.instance.threadContext.get(th);
         return new MethodWrapper<A, B, R>() {
 
             @Override
@@ -73,7 +98,7 @@ public class FWrapper extends PerExecLanguageLibrary implements IFWrapper<Functi
                         } catch (InterruptedException ignored) {}
                     }
                 }
-                Core.instance.threadContext.put(Thread.currentThread(), ctx);
+                Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
                 Object retVal = null;
                 try {
                     c.apply(new Object[] {t, u});
@@ -120,7 +145,6 @@ public class FWrapper extends PerExecLanguageLibrary implements IFWrapper<Functi
     @Override
     public <A, B, R> MethodWrapper<A, B, R> methodToJavaAsync(Function<Object[], Object> c) {
         Thread th = Thread.currentThread();
-        ScriptContext<?> ctx = Core.instance.threadContext.get(th);
         return new MethodWrapper<A, B, R>() {
 
             @Override
@@ -144,7 +168,7 @@ public class FWrapper extends PerExecLanguageLibrary implements IFWrapper<Functi
                             joinable.join();
                         } catch (InterruptedException ignored) {}
                     }
-                    Core.instance.threadContext.put(Thread.currentThread(), ctx);
+                    Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
                     try {
                         c.apply(new Object[] {arg0, arg1});
                     } finally {
@@ -180,7 +204,7 @@ public class FWrapper extends PerExecLanguageLibrary implements IFWrapper<Functi
                         } catch (InterruptedException ignored) {}
                     }
                 }
-                Core.instance.threadContext.put(Thread.currentThread(), ctx);
+                Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
                 Object retVal = null;
                 try {
                     c.apply(new Object[] {t, u});

@@ -38,7 +38,7 @@ import java.util.*;
  *
  * Functions for getting and using world data.
  * 
- * An instance of this class is passed to scripts as the {@code world} variable.
+ * An instance of this class is passed to scripts as the {@code World} variable.
  * 
  * @author Wagyourtail
  */

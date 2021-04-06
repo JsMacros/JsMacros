@@ -15,6 +15,8 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
 /**
 *
 * Functions that interact with minecraft that don't fit into their own module.
+*
+ * An instance of this class is passed to scripts as the {@code Client} variable.
  * @author Wagyourtail
  * @since 1.2.9
  */

@@ -29,7 +29,7 @@ import java.util.function.Consumer;
  * 
  * Functions for getting and modifying the player's state.
  * 
- * An instance of this class is passed to scripts as the {@code player} variable.
+ * An instance of this class is passed to scripts as the {@code Player} variable.
  * 
  * @author Wagyourtail
  */

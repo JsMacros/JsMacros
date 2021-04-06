@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
  * 
  * Functions for getting and using raw java classes, methods and functions.
  * 
- * An instance of this class is passed to scripts as the {@code time} variable.
+ * An instance of this class is passed to scripts as the {@code Time} variable.
  * 
  * @author Wagyourtail
  */

@@ -20,7 +20,7 @@ import java.util.Set;
  * 
  * Functions for displaying stuff in 2 to 3 dimensions
  * 
- * An instance of this class is passed to scripts as the {@code hud} variable.
+ * An instance of this class is passed to scripts as the {@code Hud} variable.
  * 
  * @since 1.0.5
  * 
