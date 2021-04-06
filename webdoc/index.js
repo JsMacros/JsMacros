@@ -7,7 +7,7 @@ function populateClassSidebar() {
         classLists.appendChild(h4);
         const div = document.createElement("div");
         div.setAttribute("id", `${key}List`);
-        classLists.appendChild(div);    
+        classLists.appendChild(div);
     }
     for (const [name, clazz] of searchMaps.classes) {
         const a = document.createElement("a");

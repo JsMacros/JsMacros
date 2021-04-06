@@ -66,14 +66,16 @@ public class WebParser {
         
         boolean flag = true;
         
-        for (ConstructorDoc constructor : clazz.constructors()) {
-            if (!constructor.isPublic()) continue;
-            if (flag) {
-                flag = false;
-                builder.append(new XMLBuilder("h3", true, true).append("Constructors"));
-                builder.append(constructors = new XMLBuilder("div").addStringOption("class", "constructorDoc"));
+        if (Arrays.stream(clazz.annotations()).noneMatch(e -> e.annotationType().simpleTypeName().equals("Library"))) {
+            for (ConstructorDoc constructor : clazz.constructors()) {
+                if (!constructor.isPublic()) continue;
+                if (flag) {
+                    flag = false;
+                    builder.append(new XMLBuilder("h3", true, true).append("Constructors"));
+                    builder.append(constructors = new XMLBuilder("div").addStringOption("class", "constructorDoc"));
+                }
+                constructors.append(parseConstructor(clazz, constructor));
             }
-            constructors.append(parseConstructor(clazz, constructor));
         }
         
         XMLBuilder shorts;
