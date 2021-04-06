@@ -230,7 +230,7 @@ public class FReflection extends BaseLibrary {
     public boolean loadJarFile(String file) throws IOException {
         File jarFile = new File(Core.instance.config.macroFolder, file);
         if (!jarFile.exists()) throw new FileNotFoundException("Jar File Not Found");
-        return classLoader.addClassLoader(new URLClassLoader(new URL[] {new URL("jar:file:" + jarFile.getCanonicalPath() + "!/")}));
+        return classLoader.addClassLoader(jarFile, new URLClassLoader(new URL[] {new URL("jar:file:" + jarFile.getCanonicalPath() + "!/")}));
     }
     
     protected Object tryAutoCastNumber(Class<?> returnType, Object number) {
@@ -299,14 +299,18 @@ public class FReflection extends BaseLibrary {
      * @since 1.2.8
      */
     protected static class CombinedVariableClassLoader extends ClassLoader {
-        private final Set<ClassLoader> siblingDelegates = new LinkedHashSet<>();
+        private final Map<File, ClassLoader> siblingDelegates = new LinkedHashMap<>();
         
         public CombinedVariableClassLoader(ClassLoader parent) {
             super(parent);
         }
         
-        public boolean addClassLoader(ClassLoader loader) {
-            return siblingDelegates.add(loader);
+        public boolean addClassLoader(File jarPath, ClassLoader loader) throws IOException {
+            return siblingDelegates.putIfAbsent(jarPath.getCanonicalFile(), loader) == null;
+        }
+        
+        public boolean hasJar(File path) throws IOException {
+            return siblingDelegates.containsKey(path.getCanonicalFile());
         }
         
         @Override
@@ -354,7 +358,7 @@ public class FReflection extends BaseLibrary {
         
         @Override
         protected URL findResource(String name) {
-            for (ClassLoader delegate : siblingDelegates) {
+            for (ClassLoader delegate : siblingDelegates.values()) {
                 URL resource = delegate.getResource(name);
                 if (resource != null) {
                     return resource;
@@ -366,7 +370,7 @@ public class FReflection extends BaseLibrary {
         @Override
         protected Enumeration<URL> findResources(String name) throws IOException {
             Vector<URL> vector = new Vector<>();
-            for (ClassLoader delegate : siblingDelegates) {
+            for (ClassLoader delegate : siblingDelegates.values()) {
                 Enumeration<URL> enumeration = delegate.getResources(name);
                 while (enumeration.hasMoreElements()) {
                     vector.add(enumeration.nextElement());
