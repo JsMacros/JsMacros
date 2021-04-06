@@ -59,7 +59,7 @@ public class FReflection extends BaseLibrary {
             case "void":
                 return void.class;
             default:
-                return classLoader.loadClass(name);
+                return Class.forName(name, true, classLoader);
         }
     }
     

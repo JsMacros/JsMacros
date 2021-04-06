@@ -45,13 +45,16 @@ public class FileField extends AbstractSettingField<String> {
         try {
             this.addButton(new Button(x + width / 2, y, width / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(setting.get()), (btn) -> {
                 try {
-                    parent.openOverlay(new FileChooser(parent.x, parent.y, parent.width, parent.height, textRenderer, getTopLevel(setting), new File(getTopLevel(setting), setting.get()), getFirstOverlayParent(), (file) -> {
+                    File current = new File(getTopLevel(setting), setting.get());
+                    FileChooser fc = new FileChooser(parent.x, parent.y, parent.width, parent.height, textRenderer, current.getParentFile(), current, getFirstOverlayParent(), (file) -> {
                         try {
                             setting.set("." + file.getAbsolutePath().substring(getTopLevel(setting).getAbsolutePath().length()).replaceAll("\\\\", "/"));
                         } catch (IllegalAccessException | InvocationTargetException e) {
                             e.printStackTrace();
                         }
-                    }, file -> {}));
+                    }, file -> {});
+                    fc.root = getTopLevel(setting);
+                    parent.openOverlay(fc);
                 } catch (InvocationTargetException | IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }

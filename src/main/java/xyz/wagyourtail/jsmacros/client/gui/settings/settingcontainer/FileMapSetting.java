@@ -43,7 +43,8 @@ public class FileMapSetting extends AbstractMapSettingContainer<String, FileMapS
             super.init();
             int w = width - height;
             addButton(new Button(x + w / 2, y, w / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(value), (btn) -> {
-                parent.openOverlay(new FileChooser(parent.x, parent.y, parent.width, parent.height, textRenderer, FileField.getTopLevel(parent.setting), new File(FileField.getTopLevel(parent.setting), value), getFirstOverlayParent(), (file) -> {
+                File current = new File(FileField.getTopLevel(parent.setting), value);
+                FileChooser fc = new FileChooser(parent.x, parent.y, parent.width, parent.height, textRenderer, current.getParentFile(), current, getFirstOverlayParent(), (file) -> {
                     String newVal = "." + file.getAbsolutePath().substring(FileField.getTopLevel(parent.setting).getAbsolutePath().length()).replaceAll("\\\\", "/");
                     try {
                         parent.changeValue(key, newVal);
@@ -51,7 +52,9 @@ public class FileMapSetting extends AbstractMapSettingContainer<String, FileMapS
                     } catch (InvocationTargetException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
-                }, file -> {}));
+                }, file -> {});
+                fc.root = FileField.getTopLevel(parent.setting);
+                parent.openOverlay(fc);
             }));
         }
     }

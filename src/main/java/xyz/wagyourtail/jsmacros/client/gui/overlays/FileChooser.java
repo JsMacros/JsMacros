@@ -41,6 +41,14 @@ public class FileChooser extends OverlayContainer {
             this.removeButton(f.btn);
         }
         files.clear();
+        
+        if (!dir.exists()) {
+            if (!dir.mkdirs()) {
+                setDir(root);
+                return;
+            }
+        }
+        
         this.directory = dir;
         this.dirname = new LiteralText("." + dir.getAbsolutePath().substring(root.getAbsolutePath().length()).replaceAll("\\\\", "/"));
 
