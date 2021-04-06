@@ -229,6 +229,7 @@ public class FReflection extends BaseLibrary {
      */
     public boolean loadJarFile(String file) throws IOException {
         File jarFile = new File(Core.instance.config.macroFolder, file);
+        if (classLoader.hasJar(jarFile)) return true;
         if (!jarFile.exists()) throw new FileNotFoundException("Jar File Not Found");
         return classLoader.addClassLoader(jarFile, new URLClassLoader(new URL[] {new URL("jar:file:" + jarFile.getCanonicalPath() + "!/")}));
     }
