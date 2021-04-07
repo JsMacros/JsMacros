@@ -1,11 +1,11 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import org.graalvm.polyglot.Context;
+import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
-import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.core.library.IFWrapper;
 import xyz.wagyourtail.jsmacros.core.library.Library;
@@ -45,7 +45,7 @@ import java.util.function.Function;
  @SuppressWarnings("unused")
 public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapper<Function<Object[], Object>> {
     
-    private final LinkedBlockingQueue<Thread> tasks = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<Pair<Thread, Boolean>> tasks = new LinkedBlockingQueue<>();
     
     public FWrapper(ContextContainer<Context> ctx, Class<? extends BaseLanguage<Context>> language) {
         super(ctx, language);
@@ -90,12 +90,17 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                             th.join();
                         } catch (InterruptedException ignored) {}
                     }
-                    tasks.add(Thread.currentThread());
-                    Thread joinable;
-                    while ((joinable = tasks.peek()) != Thread.currentThread()) {
+                    tasks.add(new Pair<>(Thread.currentThread(), true));
+                    Pair<Thread, Boolean> joinable = tasks.peek();
+                    while (joinable.getT() != Thread.currentThread()) {
                         try {
-                            joinable.join();
+                            synchronized (joinable) {
+                                if (joinable.getU()) {
+                                    joinable.wait();
+                                }
+                            }
                         } catch (InterruptedException ignored) {}
+                        joinable = tasks.peek();
                     }
                 }
                 Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
@@ -104,7 +109,11 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     c.apply(new Object[] {t, u});
                 } finally {
                     Core.instance.threadContext.remove(Thread.currentThread());
-                    tasks.poll();
+                    Pair<Thread, Boolean> ct = tasks.poll();
+                    synchronized (ct) {
+                        ct.setU(false);
+                        ct.notifyAll();
+                    }
                 }
                 return (R) retVal;
             }
@@ -160,19 +169,27 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                             th.join();
                         } catch (InterruptedException ignored) {}
                     }
-                    tasks.add(Thread.currentThread());
-                    Thread joinable;
-                    while ((joinable = tasks.peek()) != Thread.currentThread()) {
+                    tasks.add(new Pair<>(Thread.currentThread(), true));
+                    Pair<Thread, Boolean> joinable = tasks.peek();
+                    while (joinable.getT() != Thread.currentThread()) {
                         try {
-                            assert joinable != null;
-                            joinable.join();
+                            synchronized (joinable) {
+                                if (joinable.getU()) {
+                                    joinable.wait();
+                                }
+                            }
                         } catch (InterruptedException ignored) {}
+                        joinable = tasks.peek();
                     }
                     Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
                     try {
                         c.apply(new Object[] {arg0, arg1});
                     } finally {
-                        tasks.poll();
+                        Pair<Thread, Boolean> ct = tasks.poll();
+                        synchronized (ct) {
+                            ct.setU(false);
+                            ct.notifyAll();
+                        }
                     }
                 });
                 t.start();
@@ -196,12 +213,17 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                             th.join();
                         } catch (InterruptedException ignored) {}
                     }
-                    tasks.add(Thread.currentThread());
-                    Thread joinable;
-                    while ((joinable = tasks.peek()) != Thread.currentThread()) {
+                    tasks.add(new Pair<>(Thread.currentThread(), true));
+                    Pair<Thread, Boolean> joinable = tasks.peek();
+                    while (joinable.getT() != Thread.currentThread()) {
                         try {
-                            joinable.join();
+                            synchronized (joinable) {
+                                if (joinable.getU()) {
+                                    joinable.wait();
+                                }
+                            }
                         } catch (InterruptedException ignored) {}
+                        joinable = tasks.peek();
                     }
                 }
                 Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
@@ -210,7 +232,11 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     c.apply(new Object[] {t, u});
                 } finally {
                     Core.instance.threadContext.remove(Thread.currentThread());
-                    tasks.poll();
+                    Pair<Thread, Boolean> ct = tasks.poll();
+                    synchronized (ct) {
+                        ct.setU(false);
+                        ct.notifyAll();
+                    }
                 }
                 return (R) retVal;
             }
