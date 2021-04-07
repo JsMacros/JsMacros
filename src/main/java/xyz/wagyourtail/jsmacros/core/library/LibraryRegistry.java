@@ -20,10 +20,29 @@ public class LibraryRegistry {
     
     public Map<String, BaseLibrary> getLibraries(BaseLanguage<?> language, ContextContainer<?> context) {
         Map<String, BaseLibrary> libs = new LinkedHashMap<>();
+        libs.putAll(getOnceLibraries(language));
+        libs.putAll(getPerExecLibraries(language, context));
+        return libs;
+    }
+    
+    public Map<String, BaseLibrary> getOnceLibraries(BaseLanguage<?> language) {
+        Map<String, BaseLibrary> libs = new LinkedHashMap<>();
+        
         for (Map.Entry<Library, BaseLibrary> lib : libraries.entrySet()) {
             if (lib.getKey().languages().length == 0 || Arrays.stream(lib.getKey().languages()).anyMatch(e -> e.equals(language.getClass())))
                 libs.put(lib.getKey().value(), lib.getValue());
         }
+        
+        for (Map.Entry<Library, PerLanguageLibrary> lib : perLanguage.getOrDefault(language.getClass(), new LinkedHashMap<>()).entrySet()) {
+            libs.put(lib.getKey().value(), lib.getValue());
+        }
+        
+        return libs;
+    }
+    
+    public Map<String, BaseLibrary> getPerExecLibraries(BaseLanguage<?> language, ContextContainer<?> context) {
+        Map<String, BaseLibrary> libs = new LinkedHashMap<>();
+        
         for (Map.Entry<Library, Class<? extends PerExecLibrary>> lib : perExec.entrySet()) {
             if (lib.getKey().languages().length == 0 || Arrays.stream(lib.getKey().languages()).anyMatch(e -> e.equals(language.getClass()))) {
                 try {
@@ -33,10 +52,7 @@ public class LibraryRegistry {
                 }
             }
         }
-        for (Map.Entry<Library, PerLanguageLibrary> lib : perLanguage.getOrDefault(language.getClass(), new LinkedHashMap<>()).entrySet()) {
-            libs.put(lib.getKey().value(), lib.getValue());
-        }
-        
+    
         for (Map.Entry<Library, Class<? extends PerExecLanguageLibrary>> lib : perExecLanguage.getOrDefault(language.getClass(), new LinkedHashMap<>()).entrySet()) {
             if (Arrays.stream(lib.getKey().languages()).anyMatch(e -> e.equals(language.getClass()))) {
                 try {
