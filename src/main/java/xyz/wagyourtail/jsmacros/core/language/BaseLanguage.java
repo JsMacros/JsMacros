@@ -95,6 +95,14 @@ public abstract class BaseLanguage<T> {
         return runner.libraryRegistry.getLibraries(this, context);
     }
     
+    public Map<String, BaseLibrary> retrieveOnceLibs() {
+        return runner.libraryRegistry.getOnceLibraries(this);
+    }
+    
+    public Map<String, BaseLibrary> retrievePerExecLibs(ContextContainer<T> context) {
+        return runner.libraryRegistry.getPerExecLibraries(this, context);
+    }
+    
     /**
      * run a script trigger/file with this.
      *
