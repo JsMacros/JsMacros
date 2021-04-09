@@ -42,12 +42,22 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
             if (setting.hasOptions()) {
                 try {
                     List<String> options = ((List<String>) (List) setting.getOptions()).stream().filter(e -> !map.containsKey(e)).collect(Collectors.toList());
-                    openOverlay(new SelectorDropdownOverlay(x, y + 10, width / 2, options.size() * textRenderer.fontHeight + 4, options.stream().map(LiteralText::new).collect(Collectors.toList()), textRenderer, getFirstOverlayParent(), (i) -> newField(options.get(i))));
+                    openOverlay(new SelectorDropdownOverlay(x, y + 10, width / 2, options.size() * textRenderer.fontHeight + 4, options.stream().map(LiteralText::new).collect(Collectors.toList()), textRenderer, getFirstOverlayParent(), (i) -> {
+                        try {
+                            newField(options.get(i));
+                        } catch (InvocationTargetException | IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }));
                 } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
             } else {
-                newField("");
+                try {
+                    newField("");
+                } catch (InvocationTargetException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         }));
     }
@@ -66,7 +76,8 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
         }
     }
     
-    public void newField(String key) {
+    public void newField(String key) throws InvocationTargetException, IllegalAccessException {
+        setting.get().put(key, defaultValue.get());
         addField(key, defaultValue.get());
     }
     
