@@ -22,11 +22,15 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 public class RenderCommon {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     
+    public static interface RenderElement extends Drawable {
+        int getZIndex();
+    }
+    
     /**
      * @author Wagyourtail
      * @since 1.0.5
      */
-    public static class Item implements Drawable {
+    public static class Item implements RenderElement {
         public ItemStack item;
         public String ovText;
         public boolean overlay;
@@ -34,23 +38,26 @@ public class RenderCommon {
         public float rotation;
         public int x;
         public int y;
+        public int zIndex;
         
-        public Item(int x, int y, String id, boolean overlay, double scale, float rotation) {
+        public Item(int x, int y, int zIndex, String id, boolean overlay, double scale, float rotation) {
             this.x = x;
             this.y = y;
             this.setItem(id, 1);
             this.overlay = overlay;
             this.scale = scale;
             this.rotation = rotation;
+            this.zIndex = zIndex;
         }
         
-        public Item(int x, int y, ItemStackHelper i, boolean overlay, double scale, float rotation) {
+        public Item(int x, int y, int zIndex, ItemStackHelper i, boolean overlay, double scale, float rotation) {
             this.x = x;
             this.y = y;
             this.item = i.getRaw();
             this.overlay = overlay;
             this.scale = scale;
             this.rotation = rotation;
+            this.zIndex = zIndex;
         }
         
         /**
@@ -155,13 +162,18 @@ public class RenderCommon {
             RenderSystem.scaled(1 / scale, 1 / scale, 1);
         }
     
+        @Override
+        public int getZIndex() {
+            return zIndex;
+        }
+    
     }
     
     /**
      * @author Wagyourtail
      * @since 1.2.3
      */
-    public static class Image implements Drawable {
+    public static class Image implements RenderElement {
         private Identifier imageid;
         public float rotation;
         public int x;
@@ -174,12 +186,14 @@ public class RenderCommon {
         public int regionHeight;
         public int textureWidth;
         public int textureHeight;
+        public int zIndex;
         
-        public Image(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
+        public Image(int x, int y, int width, int height, int zIndex, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
             this.x = x;
             this.y = y;
             this.width = width;
             this.height = height;
+            this.zIndex = zIndex;
             this.imageX = imageX;
             this.imageY = imageY;
             this.regionWidth = regionWidth;
@@ -256,30 +270,38 @@ public class RenderCommon {
             RenderSystem.translated(x, y, 0);
         }
     
+        @Override
+        public int getZIndex() {
+            return zIndex;
+        }
+    
     }
     
     /**
      * @author Wagyourtail
      * @since 1.0.5
      */
-    public static class Rect implements Drawable {
+    public static class Rect implements RenderElement {
         public float rotation;
         public int x1;
         public int y1;
         public int x2;
         public int y2;
         public int color;
+        public int zIndex;
         
-        public Rect(int x1, int y1, int x2, int y2, int color, float rotation) {
+        public Rect(int x1, int y1, int x2, int y2, int color, float rotation, int zIndex) {
             setPos(x1, y1, x2, y2);
             setColor(color);
             this.rotation = MathHelper.wrapDegrees(rotation);
+            this.zIndex = zIndex;
         }
         
-        public Rect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation) {
+        public Rect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation, int zIndex) {
             setPos(x1, y1, x2, y2);
             setColor(color, alpha);
             this.rotation = MathHelper.wrapDegrees(rotation);
+            this.zIndex = zIndex;
         }
         
         /**
@@ -351,13 +373,18 @@ public class RenderCommon {
             RenderSystem.translated(-x1, -y1, 0);
         }
     
+        @Override
+        public int getZIndex() {
+            return zIndex;
+        }
+    
     }
     
     /**
      * @author Wagyourtail
      * @since 1.0.5
      */
-    public static class Text implements Drawable {
+    public static class Text implements RenderElement {
         public net.minecraft.text.Text text;
         public double scale;
         public float rotation;
@@ -366,8 +393,9 @@ public class RenderCommon {
         public int color;
         public int width;
         public boolean shadow;
+        public int zIndex;
         
-        public Text(String text, int x, int y, int color, boolean shadow, double scale, float rotation) {
+        public Text(String text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
             this.text = new LiteralText(text);
             this.x = x;
             this.y = y;
@@ -376,9 +404,10 @@ public class RenderCommon {
             this.shadow = shadow;
             this.scale = scale;
             this.rotation = MathHelper.wrapDegrees(rotation);
+            this.zIndex = zIndex;
         }
         
-        public Text(TextHelper text, int x, int y, int color, boolean shadow, double scale, float rotation) {
+        public Text(TextHelper text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
             this.text = text.getRaw();
             this.x = x;
             this.y = y;
@@ -387,6 +416,7 @@ public class RenderCommon {
             this.shadow = shadow;
             this.scale = scale;
             this.rotation = MathHelper.wrapDegrees(rotation);
+            this.zIndex = zIndex;
         }
         
         /**
@@ -473,6 +503,11 @@ public class RenderCommon {
             RenderSystem.rotatef(-rotation, 0, 0, 1);
             RenderSystem.translated(-x, -y, 0);
             RenderSystem.scaled(1 / scale, 1 / scale, 1);
+        }
+    
+        @Override
+        public int getZIndex() {
+            return zIndex;
         }
     
     }

@@ -60,6 +60,19 @@ public interface IScreen extends IDraw2D<IScreen> {
     ButtonWidgetHelper<?> addButton(int x, int y, int width, int height, String text, MethodWrapper<ButtonWidgetHelper<?>, IScreen, Object> callback);
     
     /**
+     * @since 1.4.0
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param zIndex
+     * @param text
+     * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
+     * @return
+     */
+    ButtonWidgetHelper<?> addButton(int x, int y, int width, int height, int zIndex, String text, MethodWrapper<ButtonWidgetHelper<?>, IScreen, Object> callback);
+    
+    /**
      * @since 1.0.5
      * @param btn
      * @return
@@ -78,6 +91,19 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @return
      */
     TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, String message, MethodWrapper<String, IScreen, Object> onChange);
+    
+    /**
+     * @since 1.0.5
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param zIndex
+     * @param message
+     * @param onChange calls your method as a {@link Consumer}&lt;{@link String}&gt;
+     * @return
+     */
+    TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, int zIndex, String message, MethodWrapper<String, IScreen, Object> onChange);
     
     /**
      * @since 1.0.5
@@ -149,7 +175,7 @@ public interface IScreen extends IDraw2D<IScreen> {
     /**
      * @since 1.2.0
      */
-    Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation);
+    Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, double rotation);
     
     /**
     * @since 1.2.0
@@ -173,7 +199,7 @@ public interface IScreen extends IDraw2D<IScreen> {
     /**
      * @since 1.2.0
      */
-    Item addItem(int x, int y, String id, boolean overlay, double scale, float rotation);
+    Item addItem(int x, int y, String id, boolean overlay, double scale, double rotation);
     
     /**
      * @since 1.2.0
@@ -190,7 +216,7 @@ public interface IScreen extends IDraw2D<IScreen> {
     /**
      * @since 1.2.0
      */
-    Item addItem(int x, int y, ItemStackHelper item, boolean overlay, double scale, float rotation);
+    Item addItem(int x, int y, ItemStackHelper item, boolean overlay, double scale, double rotation);
     
     /**
      * @since 1.2.0

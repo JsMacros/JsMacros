@@ -6,6 +6,7 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -16,10 +17,17 @@ import java.util.concurrent.Semaphore;
  * @since 1.0.5
  */
 @SuppressWarnings("unused")
-public class ButtonWidgetHelper<T extends AbstractButtonWidget> extends BaseHelper<T> implements Drawable {
+public class ButtonWidgetHelper<T extends AbstractButtonWidget> extends BaseHelper<T> implements RenderCommon.RenderElement {
+    public int zIndex;
     
     public ButtonWidgetHelper(T btn) {
         super(btn);
+        zIndex = 0;
+    }
+    
+    public ButtonWidgetHelper(T btn, int zIndex) {
+        super(btn);
+        this.zIndex = zIndex;
     }
     
     /**
@@ -168,6 +176,11 @@ public class ButtonWidgetHelper<T extends AbstractButtonWidget> extends BaseHelp
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         base.render(matrices, mouseX, mouseY, delta);
+    }
+    
+    @Override
+    public int getZIndex() {
+        return zIndex;
     }
     
 }

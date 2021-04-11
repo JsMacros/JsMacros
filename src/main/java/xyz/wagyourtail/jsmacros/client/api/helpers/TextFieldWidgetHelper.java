@@ -17,6 +17,10 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
         super(t);
     }
     
+    public TextFieldWidgetHelper(TextFieldWidget t, int zIndex) {
+        super(t, zIndex);
+    }
+    
     /**
      * @since 1.0.5
      * @return the currently entered {@link java.lang.String String}.

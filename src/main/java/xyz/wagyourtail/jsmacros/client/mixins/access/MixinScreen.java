@@ -36,14 +36,13 @@ import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Mixin(Screen.class)
 public abstract class MixinScreen extends AbstractParentElement implements IScreen {
-    @Unique private final Set<Drawable> elements = new LinkedHashSet<>();
+    @Unique private final Set<RenderCommon.RenderElement> elements = new LinkedHashSet<>();
     @Unique private MethodWrapper<PositionCommon.Pos2D, Integer, Object> onMouseDown;
     @Unique private MethodWrapper<PositionCommon.Vec2D, Integer, Object> onMouseDrag;
     @Unique private MethodWrapper<PositionCommon.Pos2D, Integer, Object> onMouseUp;
@@ -65,6 +64,10 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Shadow protected abstract void init();
     
     @Shadow @Final protected List<AbstractButtonWidget> buttons;
+    
+    @Shadow public abstract void tick();
+    
+    @Shadow public abstract boolean shouldCloseOnEsc();
     
     @Override
     public int getWidth() {
@@ -122,33 +125,47 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public List<TextFieldWidgetHelper> getTextFields() {
-        List<TextFieldWidgetHelper> list = new LinkedList<>();
-        synchronized (buttons) {
-            for (Drawable e : buttons) {
-                if (e instanceof TextFieldWidget) list.add(new TextFieldWidgetHelper((TextFieldWidget)e));
+        Map<AbstractButtonWidget, TextFieldWidgetHelper> btns = new LinkedHashMap<>();
+        for (RenderCommon.RenderElement el : elements) {
+            if (el instanceof TextFieldWidgetHelper) {
+                btns.put(((TextFieldWidgetHelper) el).getRaw(), (TextFieldWidgetHelper) el);
             }
         }
-        return list;
+        synchronized (buttons) {
+            for (AbstractButtonWidget e : buttons) {
+                if (e instanceof TextFieldWidget && !btns.containsKey(e)) {
+                    btns.put(e, new TextFieldWidgetHelper((TextFieldWidget) e));
+                }
+            }
+        }
+        return ImmutableList.copyOf(btns.values());
     }
     
     @Override
     public List<ButtonWidgetHelper<?>> getButtonWidgets() {
-        List<ButtonWidgetHelper<?>> list = new LinkedList<>();
-        synchronized (buttons) {
-            for (Drawable e : buttons) {
-                if (e instanceof ButtonWidget) list.add(new ButtonWidgetHelper<>((ButtonWidget)e));
+        Map<AbstractButtonWidget, ButtonWidgetHelper<?>> btns = new LinkedHashMap<>();
+        for (RenderCommon.RenderElement el : elements) {
+            if (el instanceof ButtonWidgetHelper) {
+                btns.put(((ButtonWidgetHelper<?>) el).getRaw(), (ButtonWidgetHelper<?>) el);
             }
         }
-        return list;
+        synchronized (buttons) {
+            for (AbstractButtonWidget e : buttons) {
+                if (!(e instanceof TextFieldWidget) && !btns.containsKey(e)) {
+                    btns.put(e, new ButtonWidgetHelper<>(e));
+                }
+            }
+        }
+        return ImmutableList.copyOf(btns.values());
     }
     
     @Override
-    public List<Drawable> getElements() {
+    public List<RenderCommon.RenderElement> getElements() {
         return ImmutableList.copyOf(elements);
     }
     
     @Override
-    public IScreen removeElement(Drawable e) {
+    public IScreen removeElement(RenderCommon.RenderElement e) {
         synchronized (elements) {
             elements.remove(e);
             if (e instanceof ButtonWidgetHelper) children.remove(((ButtonWidgetHelper<?>) e).getRaw());
@@ -157,7 +174,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
     
     @Override
-    public Drawable reAddElement(Drawable e) {
+    public RenderCommon.RenderElement reAddElement(RenderCommon.RenderElement e) {
         synchronized (elements) {
             elements.add(e);
             if (e instanceof ButtonWidgetHelper) children.add(((ButtonWidgetHelper<?>) e).getRaw());
@@ -167,33 +184,53 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     
     @Override
     public RenderCommon.Text addText(String text, int x, int y, int color, boolean shadow) {
-        return addText(text, x, y, color, shadow, 1, 0);
+        return addText(text, x, y, color, 0, shadow, 1, 0);
     }
-
+    
+    @Override
+    public RenderCommon.Text addText(String text, int x, int y, int color, int zIndex, boolean shadow) {
+        return addText(text, x, y, color, zIndex, shadow, 1, 0);
+    }
+    
     @Override
     public RenderCommon.Text addText(String text, int x, int y, int color, boolean shadow, double scale, double rotation) {
-        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, shadow, scale, (float) rotation);
+        return addText(text, x, y, color, 0, shadow, scale, rotation);
+    }
+    
+    @Override
+    public RenderCommon.Text addText(String text, int x, int y, int color, int zIndex, boolean shadow, double scale, double rotation) {
+        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, zIndex, shadow, scale, (float) rotation);
         synchronized (elements) {
             elements.add(t);
         }
         return t;
     }
     
-
+    
     @Override
     public RenderCommon.Text addText(TextHelper text, int x, int y, int color, boolean shadow) {
-        return addText(text, x, y, color, shadow, 1, 0);
+        return addText(text, x, y, color, 0, shadow, 1, 0);
     }
-
+    
+    @Override
+    public RenderCommon.Text addText(TextHelper text, int x, int y, int color, int zIndex, boolean shadow) {
+        return addText(text, x, y, color, zIndex, shadow, 1, 0);
+    }
+    
     @Override
     public RenderCommon.Text addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, double rotation) {
-        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, shadow, scale, (float) rotation);
+        return addText(text, x, y, color, 0, shadow, scale, rotation);
+    }
+    
+    @Override
+    public RenderCommon.Text addText(TextHelper text, int x, int y, int color, int zIndex, boolean shadow, double scale, double rotation) {
+        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, zIndex, shadow, scale, (float) rotation);
         synchronized (elements) {
             elements.add(t);
         }
         return t;
     }
-
+    
     @Override
     public IScreen removeText(RenderCommon.Text t) {
         synchronized (elements) {
@@ -205,19 +242,29 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Override
     public RenderCommon.Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth,
         int regionHeight, int textureWidth, int textureHeight) {
-        return addImage(x, y, width, height, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, 0);
+        return addImage(x, y, width, height, 0, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, 0);
     }
-
+    
+    @Override
+    public RenderCommon.Image addImage(int x, int y, int width, int height, int zIndex, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
+        return addImage(x, y, width, height, zIndex, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, 0);
+    }
+    
     @Override
     public RenderCommon.Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth,
         int regionHeight, int textureWidth, int textureHeight, double rotation) {
-        RenderCommon.Image i = new RenderCommon.Image(x, y, width, height, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation);
+        return addImage(x, y, width, height, 0, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
+    }
+    
+    @Override
+    public RenderCommon.Image addImage(int x, int y, int width, int height, int zIndex, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
+        RenderCommon.Image i = new RenderCommon.Image(x, y, width, height, zIndex, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation);
         synchronized (elements) {
             elements.add(i);
         }
         return i;
     }
-
+    
     @Override
     public IScreen removeImage(RenderCommon.Image i) {
         synchronized (elements) {
@@ -228,7 +275,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public RenderCommon.Rect addRect(int x1, int y1, int x2, int y2, int color) {
-        RenderCommon.Rect r = new RenderCommon.Rect(x1, y1, x2, y2, color, 0F);
+        RenderCommon.Rect r = new RenderCommon.Rect(x1, y1, x2, y2, color, 0F, 0);
         synchronized (elements) {
             elements.add(r);
         }
@@ -237,12 +284,18 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public RenderCommon.Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha) {
-        return addRect(x1, y1, x2, y2, color, alpha, 0);
+        return addRect(x1, y1, x2, y2, color, alpha, 0, 0);
     }
-
+    
+    
     @Override
-    public RenderCommon.Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation) {
-        RenderCommon.Rect r = new RenderCommon.Rect(x1, y1, x2, y2, color, alpha, rotation);
+    public RenderCommon.Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, double rotation) {
+        return addRect(x1, y1, x2, y2, color, alpha, rotation, 0);
+    }
+    
+    @Override
+    public RenderCommon.Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, double rotation, int zIndex) {
+        RenderCommon.Rect r = new RenderCommon.Rect(x1, y1, x2, y2, color, alpha, (float) rotation, zIndex);
         synchronized (elements) {
             elements.add(r);
         }
@@ -256,29 +309,69 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
         return this;
     }
-
+    
+    @Override
+    public RenderCommon.Item addItem(int x, int y, String id) {
+        return addItem(x, y, 0, id, true, 1, 0);
+    }
+    
+    @Override
+    public RenderCommon.Item addItem(int x, int y, int zIndex, String id) {
+        return addItem(x, y, zIndex, id, true, 1, 0);
+    }
+    
     @Override
     public RenderCommon.Item addItem(int x, int y, String id, boolean overlay) {
-        return addItem(x, y, id, overlay, 1, 0);
+        return addItem(x, y, 0, id, overlay, 1, 0);
     }
-
+    
     @Override
-    public RenderCommon.Item addItem(int x, int y, String id, boolean overlay, double scale, float rotation) {
-        RenderCommon.Item i = new RenderCommon.Item(x, y, id, overlay, scale, rotation);
+    public RenderCommon.Item addItem(int x, int y, int zIndex, String id, boolean overlay) {
+        return addItem(x, y, zIndex, id, overlay, 1, 0);
+    }
+    
+    @Override
+    public RenderCommon.Item addItem(int x, int y, String id, boolean overlay, double scale, double rotation) {
+        return addItem(x, y, 0, id, overlay, scale, rotation);
+    }
+    
+    @Override
+    public RenderCommon.Item addItem(int x, int y, int zIndex, String id, boolean overlay, double scale, double rotation) {
+        RenderCommon.Item i = new RenderCommon.Item(x, y, zIndex, id, overlay, scale, (float) rotation);
         synchronized (elements) {
             elements.add(i);
         }
         return i;
     }
-
+    
+    @Override
+    public RenderCommon.Item addItem(int x, int y, ItemStackHelper item) {
+        return addItem(x, y, 0, item, true, 1, 0);
+    }
+    
+    @Override
+    public RenderCommon.Item addItem(int x, int y, int zIndex, ItemStackHelper item) {
+        return addItem(x, y, zIndex, item, true, 1, 0);
+    }
+    
     @Override
     public RenderCommon.Item addItem(int x, int y, ItemStackHelper item, boolean overlay) {
-        return addItem(x, y, item, overlay, 1, 0);
+        return addItem(x, y, 0, item, overlay, 1, 0);
     }
-
+    
     @Override
-    public RenderCommon.Item addItem(int x, int y, ItemStackHelper item, boolean overlay, double scale, float rotation) {
-        RenderCommon.Item i = new RenderCommon.Item(x, y, item, overlay, scale, rotation);
+    public RenderCommon.Item addItem(int x, int y, int zIndex, ItemStackHelper item, boolean overlay) {
+        return addItem(x, y, zIndex, item, overlay, 1, 0);
+    }
+    
+    @Override
+    public RenderCommon.Item addItem(int x, int y, ItemStackHelper item, boolean overlay, double scale, double rotation) {
+        return addItem(x, y, 0, item, overlay, scale, rotation);
+    }
+    
+    @Override
+    public RenderCommon.Item addItem(int x, int y, int zIndex, ItemStackHelper item, boolean overlay, double scale, double rotation) {
+        RenderCommon.Item i = new RenderCommon.Item(x, y, zIndex, item, overlay, scale, (float) rotation);
         synchronized (elements) {
             elements.add(i);
         }
@@ -292,7 +385,12 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
         return this;
     }
-
+    
+    @Override
+    public String getScreenClassName() {
+        return IScreen.super.getScreenClassName();
+    }
+    
     @Override
     public String getTitleText() {
         return title.getString();
@@ -301,21 +399,27 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Override
     public ButtonWidgetHelper<?> addButton(int x, int y, int width, int height, String text,
         MethodWrapper<ButtonWidgetHelper<?>, IScreen, Object> callback) {
+        return addButton(x, y, width, height, 0, text, callback);
+    }
+    
+    @Override
+    public ButtonWidgetHelper<?> addButton(int x, int y, int width, int height, int zIndex, String text, MethodWrapper<ButtonWidgetHelper<?>, IScreen, Object> callback) {
+        AtomicReference<ButtonWidgetHelper<?>> b = new AtomicReference<>(null);
         ButtonWidget button = new ButtonWidget(x, y, width, height, new LiteralText(text), (btn) -> {
             try {
-                callback.accept(new ButtonWidgetHelper<>(btn), this);
+                callback.accept(b.get(), this);
             } catch (Exception e) {
                 Core.instance.profile.logError(e);
             }
         });
-        ButtonWidgetHelper<?> b = new ButtonWidgetHelper<>(button);
+        b.set(new ButtonWidgetHelper<>(button, zIndex));
         synchronized (elements) {
-            elements.add(b);
+            elements.add(b.get());
             children.add(button);
         }
-        return b;
+        return b.get();
     }
-
+    
     @Override
     public IScreen removeButton(ButtonWidgetHelper<?> btn) {
         synchronized (elements) {
@@ -328,6 +432,11 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Override
     public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, String message,
         MethodWrapper<String, IScreen, Object> onChange) {
+        return addTextInput(x, y, width, height, 0, message, onChange);
+    }
+    
+    @Override
+    public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, int zIndex, String message, MethodWrapper<String, IScreen, Object> onChange) {
         TextFieldWidget field = new TextFieldWidget(this.textRenderer, x, y, width, height, new LiteralText(message));
         if (onChange != null) {
             field.setChangedListener(str -> {
@@ -338,14 +447,14 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
                 }
             });
         }
-        TextFieldWidgetHelper w = new TextFieldWidgetHelper(field);
+        TextFieldWidgetHelper w = new TextFieldWidgetHelper(field, zIndex);
         synchronized (elements) {
             elements.add(w);
             children.add(field);
         }
         return w;
     }
-
+    
     @Override
     public IScreen removeTextInput(TextFieldWidgetHelper inp) {
         synchronized (elements) {
@@ -402,7 +511,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         this.catchInit = catchInit;
         return this;
     }
-
+    
     @Override
     public IScreen setOnClose(MethodWrapper<IScreen, Object, Object> onClose) {
         this.onClose = onClose;
@@ -420,8 +529,9 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         if (matrices == null) return;
         
         synchronized (elements) {
-            for (Drawable element : elements) {
-                element.render(matrices, mouseX, mouseY, delta);
+            Iterator<RenderCommon.RenderElement> iter = elements.stream().sorted(Comparator.comparingInt(RenderCommon.RenderElement::getZIndex)).iterator();
+            while (iter.hasNext()) {
+                iter.next().render(matrices, mouseX, mouseY, delta);
             }
         }
     }
