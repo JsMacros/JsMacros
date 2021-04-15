@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import net.minecraft.client.input.Input;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
@@ -55,6 +56,14 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      */
     public int getFoodLevel() {
         return base.getHungerManager().getFoodLevel();
+    }
+
+    /**
+     * @since 1.3.1
+     * @return the {@code input} values of the entity.
+     */
+    public Input getInput() {
+        return base.input;
     }
     
     public String toString() {

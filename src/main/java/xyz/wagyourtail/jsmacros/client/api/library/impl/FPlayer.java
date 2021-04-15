@@ -10,19 +10,27 @@ import net.minecraft.client.util.ScreenshotUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
+import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
+import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.movement.MovementDummy;
+import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -33,10 +41,11 @@ import java.util.function.Consumer;
  * 
  * @author Wagyourtail
  */
- @Library("Player")
- @SuppressWarnings("unused")
+@Library("Player")
+@SuppressWarnings("unused")
 public class FPlayer extends BaseLibrary {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
+
     /**
      * @see xyz.wagyourtail.jsmacros.client.api.classes.Inventory
      * 
@@ -157,5 +166,116 @@ public class FPlayer extends BaseLibrary {
             mc.getFramebuffer(), (text) -> {
                 if (callback != null) callback.accept(new TextHelper(text));
             });
+    }
+
+    /**
+     * Creates a new PlayerInput object.
+     *
+     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput PlayerInput}.
+     * @see xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput
+     * @since 1.3.2
+     */
+    public PlayerInput createPlayerInput() {
+        return new PlayerInput();
+    }
+
+    /**
+     * Creates a new {@code PlayerInput} object with the current inputs of the player.
+     *
+     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput PlayerInput} with the current inputs.
+     * @see xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput
+     * @since 1.3.2
+     */
+    public PlayerInput getCurrentPlayerInput() {
+        return new PlayerInput(mc.player.input, mc.player.yaw, mc.player.pitch, mc.player.isSprinting());
+    }
+
+    /**
+     * Adds a new {@code PlayerInput} to {@code MovementQueue} to be executed
+     *
+     * @param input the PlayerInput to be executed
+     * @see xyz.wagyourtail.jsmacros.client.movement.MovementQueue
+     * @since 1.3.2
+     */
+    public void addInput(PlayerInput input) {
+        MovementQueue.append(input, mc.player);
+    }
+
+    /**
+     * Adds multiple new {@code PlayerInput} to {@code MovementQueue} to be executed
+     *
+     * @param inputs the PlayerInputs to be executed
+     * @see xyz.wagyourtail.jsmacros.client.movement.MovementQueue
+     * @since 1.3.2
+     */
+    public void addInputs(List<PlayerInput> inputs) {
+        for (PlayerInput input : inputs) {
+            addInput(input);
+        }
+    }
+
+    /**
+     * Predicts where one tick with a {@code PlayerInput} as input would lead to.
+     *
+     * @param input the PlayerInput for the prediction
+     * @param draw  whether to visualize the result or not
+     * @return the position after the input
+     * @since 1.3.2
+     */
+    public Vec3d predictInput(PlayerInput input, boolean draw) {
+        return predictInputs(Arrays.asList(input), draw).get(0);
+    }
+
+    /**
+     * Predicts where each {@code PlayerInput} executed in a row would lead
+     *
+     * @param inputs the PlayerInputs for each tick for the prediction
+     * @param draw   whether to visualize the result or not
+     * @return the position after each input
+     * @since 1.3.2
+     */
+    public List<Vec3d> predictInputs(List<PlayerInput> inputs, boolean draw) {
+        MovementDummy dummy = new MovementDummy(mc.player);
+        List<Vec3d> predictions = new ArrayList<>();
+        for (PlayerInput input : inputs) {
+            predictions.add(dummy.applyInput(input));
+        }
+        if (draw) {
+            Draw3D predPoints = new Draw3D();
+            for (Vec3d point : predictions) {
+                predPoints.addPoint(point, 0.01, 0xff9500);
+
+            }
+            synchronized (FHud.renders) {
+                FHud.renders.add(predPoints);
+            }
+        }
+        return predictions;
+    }
+
+    /**
+     * Adds a forward movement with a relative yaw value to the MovementQueue.
+     *
+     * @param yaw the relative yaw for the player
+     * @since 1.3.2
+     */
+    public void moveForward(float yaw) {
+        PlayerInput input = new PlayerInput();
+        input.movementForward = 1.0F;
+        input.yaw = getPlayer().getYaw() + yaw;
+        addInput(input);
+    }
+
+    /**
+     * Adds a backward movement with a relative yaw value to the MovementQueue.
+     *
+     * @param yaw the relative yaw for the player
+     * @since 1.3.2
+     */
+    public void moveBackward(float yaw) {
+        PlayerInput input = new PlayerInput();
+        input.movementForward = -1.0F;
+        input.yaw = getPlayer().getYaw() + yaw;
+        addInput(input);
     }
 }

@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
+import net.minecraft.client.input.Input;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -18,10 +19,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
+import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventAirChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventDamage;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventEXPChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventSignEdit;
+import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,15 +32,18 @@ import java.util.List;
 
 @Mixin(ClientPlayerEntity.class)
 class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
-    
+
     @Shadow
     @Final
     protected MinecraftClient client;
-    
+
+    @Shadow
+    public Input input;
+
     @Shadow
     @Final
     public ClientPlayNetworkHandler networkHandler;
-    
+
     @Override
     public void setAir(int air) {
         if (air % 20 == 0) new EventAirChange(air);
@@ -80,13 +86,27 @@ class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
             final SignEditScreen signScreen = new SignEditScreen(sign);
             client.openScreen(signScreen);
             for (int i = 0; i < 4; ++i) {
-                ((ISignEditScreen)signScreen).jsmacros_setLine(i, lines.get(i));
+                ((ISignEditScreen) signScreen).jsmacros_setLine(i, lines.get(i));
             }
             info.cancel();
         }
     }
-    
-    
+
+    @Inject(method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/tutorial/TutorialManager;onMovement(Lnet/minecraft/client/input/Input;)V"))
+    public void overwriteInputs(CallbackInfo ci) {
+        PlayerInput moveInput = MovementQueue.tick(client.player);
+        if (moveInput == null) {
+            return;
+        }
+        this.input.movementForward = moveInput.movementForward;
+        this.input.movementSideways = moveInput.movementSideways;
+        this.input.jumping = moveInput.jumping;
+        this.input.sneaking = moveInput.sneaking;
+        this.client.options.keySprint.setPressed(moveInput.sprinting);
+        this.yaw = moveInput.yaw;
+        this.pitch = moveInput.pitch;
+    }
+
     // IGNORE
     public MixinClientPlayerEntity(ClientWorld world, GameProfile profile) {
         super(world, profile);
