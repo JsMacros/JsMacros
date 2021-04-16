@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.event;
 
+import com.google.common.collect.ImmutableSet;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 
@@ -11,7 +12,7 @@ import java.util.*;
  */
 public abstract class BaseEventRegistry {
     protected final Core runner;
-    public final Map<String, Set<IEventListener>> listeners = new LinkedHashMap<>();
+    protected final Map<String, Set<IEventListener>> listeners = new LinkedHashMap<>();
     public final Map<String, String> oldEvents = new LinkedHashMap<>();
     
     public final Set<String> events = new LinkedHashSet<>();
@@ -86,7 +87,7 @@ public abstract class BaseEventRegistry {
      * @return
      */
     public synchronized Set<IEventListener> getListeners(String key) {
-        return listeners.get(key);
+        return ImmutableSet.copyOf(listeners.computeIfAbsent(key, (k)->new LinkedHashSet<>()));
     }
     
     /**

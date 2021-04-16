@@ -94,7 +94,7 @@ public abstract class BaseProfile {
     public void triggerEvent(BaseEvent event) {
         triggerEventNoAnything(event);
     
-        if (runner.eventRegistry.listeners.containsKey("ANYTHING")) for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get("ANYTHING"))) {
+        for (IEventListener macro : runner.eventRegistry.getListeners("ANYTHING")) {
             macro.trigger(event);
         }
     }
@@ -111,15 +111,13 @@ public abstract class BaseProfile {
      */
     public void triggerEventNoAnything(BaseEvent event) {
         if (event instanceof EventCustom) {
-            if (runner.eventRegistry.listeners.containsKey(((EventCustom) event).eventName))
-                for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get(((EventCustom) event).eventName))) {
-                    macro.trigger(event);
-                }
+            for (IEventListener macro : runner.eventRegistry.getListeners(((EventCustom) event).eventName)) {
+                macro.trigger(event);
+            }
         } else {
-            if (runner.eventRegistry.listeners.containsKey(event.getEventName()))
-                for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get(event.getEventName()))) {
-                    macro.trigger(event);
-                }
+            for (IEventListener macro : runner.eventRegistry.getListeners(event.getEventName())) {
+                macro.trigger(event);
+            }
         }
     }
     

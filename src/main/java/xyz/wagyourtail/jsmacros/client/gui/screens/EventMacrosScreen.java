@@ -32,9 +32,7 @@ public class EventMacrosScreen extends MacroScreen {
         List<ScriptTrigger> macros = new ArrayList<>();
         
         for (String event : ImmutableList.copyOf(Core.instance.eventRegistry.events)) {
-            Set<IEventListener> eventListeners = Core.instance.eventRegistry.getListeners(event);
-            if (eventListeners != null) 
-                for (IEventListener macro : ImmutableList.copyOf(eventListeners)) {
+                for (IEventListener macro : Core.instance.eventRegistry.getListeners(event)) {
                     if (macro instanceof BaseListener && ((BaseListener) macro).getRawTrigger().triggerType == ScriptTrigger.TriggerType.EVENT) macros.add(((BaseListener) macro).getRawTrigger());
                 }
         }

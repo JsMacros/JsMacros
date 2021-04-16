@@ -290,9 +290,7 @@ public class FJsMacros extends BaseLibrary {
      */
     public List<IEventListener> listeners(String event) {
         List<IEventListener> listeners = new ArrayList<>();
-        Set<IEventListener> raw = Core.instance.eventRegistry.getListeners(event);
-        if (raw == null) return null;
-        for (IEventListener l : ImmutableList.copyOf(raw)) {
+        for (IEventListener l : Core.instance.eventRegistry.getListeners(event)) {
             if (!(l instanceof BaseListener)) listeners.add(l);
         }
         return listeners;

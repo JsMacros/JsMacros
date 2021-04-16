@@ -46,7 +46,7 @@ public class Profile extends BaseProfile {
         boolean joinedMain = MinecraftClient.getInstance().isOnThread() || joinedThreadStack.contains(Thread.currentThread());
         triggerEventJoinNoAnything(event);
     
-        if (runner.eventRegistry.listeners.containsKey("ANYTHING")) for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get("ANYTHING"))) {
+        for (IEventListener macro : runner.eventRegistry.getListeners("ANYTHING")) {
             runJoinedEventListener(event, joinedMain, macro);
         }
     }
@@ -55,15 +55,13 @@ public class Profile extends BaseProfile {
     public void triggerEventJoinNoAnything(BaseEvent event) {
         boolean joinedMain = MinecraftClient.getInstance().isOnThread() || joinedThreadStack.contains(Thread.currentThread());
         if (event instanceof EventCustom) {
-            if (runner.eventRegistry.listeners.containsKey(((EventCustom) event).eventName))
-                for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get(((EventCustom) event).eventName))) {
-                    runJoinedEventListener(event, joinedMain, macro);
-                }
+            for (IEventListener macro : runner.eventRegistry.getListeners(((EventCustom) event).eventName)) {
+                runJoinedEventListener(event, joinedMain, macro);
+            }
         } else {
-            if (runner.eventRegistry.listeners.containsKey(event.getEventName()))
-                for (IEventListener macro : ImmutableList.copyOf(runner.eventRegistry.listeners.get(event.getEventName()))) {
-                    runJoinedEventListener(event, joinedMain, macro);
-                }
+            for (IEventListener macro : runner.eventRegistry.getListeners(event.getEventName())) {
+                runJoinedEventListener(event, joinedMain, macro);
+            }
         }
     }
     
