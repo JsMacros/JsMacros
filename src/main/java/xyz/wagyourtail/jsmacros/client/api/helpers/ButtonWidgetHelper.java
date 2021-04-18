@@ -159,7 +159,7 @@ public class ButtonWidgetHelper<T extends AbstractButtonWidget> extends BaseHelp
      * @since 1.3.1
      */
     public ButtonWidgetHelper<T> click(boolean await) throws InterruptedException {
-        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || JsMacros.core.profile.joinedThreadStack.contains(Thread.currentThread());
+        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || Core.instance.profile.joinedThreadStack.contains(Thread.currentThread());
         if (joinedMain && await) {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined!");
         }

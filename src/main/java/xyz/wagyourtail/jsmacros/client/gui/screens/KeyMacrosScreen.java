@@ -40,7 +40,7 @@ public class KeyMacrosScreen extends MacroScreen {
             if (event instanceof BaseListener && ((BaseListener) event).getRawTrigger().triggerType != ScriptTrigger.TriggerType.EVENT) macros.add(((BaseListener) event).getRawTrigger());
         }
 
-        macros.sort(JsMacros.core.config.getOptions(ClientConfigV2.class).getSortComparator());
+        macros.sort(Core.instance.config.getOptions(ClientConfigV2.class).getSortComparator());
 
         for (ScriptTrigger macro : macros) {
             addMacro(macro);

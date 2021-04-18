@@ -11,6 +11,7 @@ import xyz.wagyourtail.jsmacros.client.api.library.impl.FKeyBind;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -53,7 +54,7 @@ public class EventKey implements BaseEvent {
         }
 
         if (mc.currentScreen != null) {
-            if (JsMacros.core.config.getOptions(ClientConfigV2.class).disableKeyWhenScreenOpen) return;
+            if (Core.instance.config.getOptions(ClientConfigV2.class).disableKeyWhenScreenOpen) return;
             if (mc.currentScreen instanceof BaseScreen) return;
             Element focused = mc.currentScreen.getFocused();
             if (focused instanceof TextFieldWidget) return;

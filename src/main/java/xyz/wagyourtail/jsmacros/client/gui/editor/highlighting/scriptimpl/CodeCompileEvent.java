@@ -11,6 +11,7 @@ import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSugge
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.Prism;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl.TextStyleCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -128,7 +129,7 @@ import java.util.Map;
      *     to {@link TextBuilder#withColor(int)}
      */
     public Map<String, short[]> getThemeData() {
-        return JsMacros.core.config.getOptions(ClientConfigV2.class).getThemeData();
+        return Core.instance.config.getOptions(ClientConfigV2.class).getThemeData();
     }
     
 }

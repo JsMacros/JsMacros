@@ -27,6 +27,7 @@ import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.SelectorDropdownOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
 
 import java.io.File;
@@ -76,7 +77,7 @@ public class EditorScreen extends BaseScreen {
         savedString = content;
         
         this.handler = handler;
-        defaultStyle = Style.EMPTY.withFont(new Identifier(JsMacros.core.config.getOptions(ClientConfigV2.class).editorFont));
+        defaultStyle = Style.EMPTY.withFont(new Identifier(Core.instance.config.getOptions(ClientConfigV2.class).editorFont));
         
         cursor = new SelectCursor(defaultStyle);
         
@@ -167,7 +168,7 @@ public class EditorScreen extends BaseScreen {
     
     public synchronized void setLanguage(String language) {
         this.language = language;
-        Map<String, String> linterOverrides = JsMacros.core.config.getOptions(ClientConfigV2.class).editorLinterOverrides;
+        Map<String, String> linterOverrides = Core.instance.config.getOptions(ClientConfigV2.class).editorLinterOverrides;
         if (linterOverrides.containsKey(language)) {
             this.codeCompiler = new ScriptCodeCompiler(language, this, linterOverrides.get(language));
         } else {
@@ -511,7 +512,7 @@ public class EditorScreen extends BaseScreen {
             closeOverlay(overlay);
         }
         
-        if (suggestionList.size() > 0 && JsMacros.core.config.getOptions(ClientConfigV2.class).editorSuggestions) {
+        if (suggestionList.size() > 0 && Core.instance.config.getOptions(ClientConfigV2.class).editorSuggestions) {
             suggestionList.sort(Comparator.comparing(a -> a.suggestion));
             int startIndex = cursor.startIndex;
             int maxWidth = 0;
@@ -756,7 +757,7 @@ public class EditorScreen extends BaseScreen {
     
     @Override
     public void updateSettings() {
-        defaultStyle = Style.EMPTY.withFont(new Identifier(JsMacros.core.config.getOptions(ClientConfigV2.class).editorFont));
+        defaultStyle = Style.EMPTY.withFont(new Identifier(Core.instance.config.getOptions(ClientConfigV2.class).editorFont));
         cursor.defaultStyle = defaultStyle;
         cursor.updateStartIndex(cursor.startIndex, history.current);
         cursor.updateEndIndex(cursor.endIndex, history.current);

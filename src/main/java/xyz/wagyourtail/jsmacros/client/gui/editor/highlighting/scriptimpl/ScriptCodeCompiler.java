@@ -12,6 +12,7 @@ import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCod
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSuggestion;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
@@ -39,7 +40,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
     @Override
     public void recompileRenderedText(@NotNull String text) {
         CodeCompileEvent compileEvent = new CodeCompileEvent(text, language, screen);
-        ContextContainer<?> t = JsMacros.core.exec(scriptTrigger, compileEvent, null, (ex) -> {
+        ContextContainer<?> t = Core.instance.exec(scriptTrigger, compileEvent, null, (ex) -> {
             TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
             StringWriter st = new StringWriter();
             ex.printStackTrace(new PrintWriter(st));

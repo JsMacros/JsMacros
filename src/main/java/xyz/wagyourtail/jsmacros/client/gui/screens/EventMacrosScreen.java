@@ -41,7 +41,7 @@ public class EventMacrosScreen extends MacroScreen {
                 if (macro instanceof BaseListener) macros.add(((BaseListener) macro).getRawTrigger());
             }
 
-        macros.sort(JsMacros.core.config.getOptions(ClientConfigV2.class).getSortComparator());
+        macros.sort(Core.instance.config.getOptions(ClientConfigV2.class).getSortComparator());
         
         for (ScriptTrigger macro : macros) {
             addMacro(macro);
