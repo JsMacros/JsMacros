@@ -9,6 +9,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
+import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     private static final Engine engine = Engine.create();
@@ -33,7 +35,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
         super(extension, runner);
     }
     
-    private Context buildContext(Path currentDir, Map<String, Object> globals, ContextContainer<Context> ctx) throws IOException {
+    protected Context buildContext(Path currentDir, Map<String, Object> globals, Map<String, BaseLibrary> libs, ContextContainer<Context> ctx) throws IOException {
         if (runner.config.getOptions(CoreConfigV2.class).extraJsOptions == null)
             runner.config.getOptions(CoreConfigV2.class).extraJsOptions = new LinkedHashMap<>();
         build.options(runner.config.getOptions(CoreConfigV2.class).extraJsOptions);
@@ -49,9 +51,9 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
         final Value binds = con.getBindings("js");
         
         if (globals != null) globals.forEach(binds::putMember);
-        
-        retrieveLibs(ctx).forEach(binds::putMember);
-        
+
+        libs.forEach(binds::putMember);
+
         return con;
     }
     
@@ -63,7 +65,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
         globals.put("file", file);
         globals.put("context", ctx);
         
-        final Context con = buildContext(file.getParentFile().toPath(), globals, ctx);
+        final Context con = buildContext(file.getParentFile().toPath(), globals, retrieveLibs(ctx), ctx);
         ctx.getCtx().setContext(con);
         con.eval(Source.newBuilder("js", file).build());
     }
@@ -72,7 +74,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     protected void exec(ContextContainer<Context> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception {
         globals.put("context", ctx);
         
-        final Context con = buildContext(currentDir, globals, ctx);
+        final Context con = buildContext(currentDir, globals, retrieveLibs(ctx), ctx);
         ctx.getCtx().setContext(con);
         con.eval("js", script);
     }

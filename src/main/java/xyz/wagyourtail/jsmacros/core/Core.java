@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.core;
 
 import org.apache.logging.log4j.Logger;
-import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
@@ -17,7 +16,6 @@ import xyz.wagyourtail.jsmacros.core.library.LibraryRegistry;
 
 import java.io.File;
 import java.util.*;
-import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -42,9 +40,9 @@ public class Core {
     }
     
     /**
-    * start by running this function, supplying implementations of {@link BaseEventRegistry} and {@link BaseProfile} and a {@link Supplier} for
-    * creating the config manager with the folder paths it needs.
-    *
+     * start by running this function, supplying implementations of {@link BaseEventRegistry} and {@link BaseProfile} and a {@link Supplier} for
+     * creating the config manager with the folder paths it needs.
+     *
      * @param eventRegistryFunction
      * @param profileFunction
      *
@@ -65,18 +63,8 @@ public class Core {
     }
     
     public void sortLanguages() {
-        languages.sort(new sortLanguage());
+        languages.sort(new SortLanguage());
         
-    }
-    
-    @Deprecated
-    public List<?> getThreads() {
-        throw new RuntimeException("Deprecated");
-    }
-
-    @Deprecated
-    public void removeThread(Object t) {
-        throw new RuntimeException("Deprecated");
     }
 
     public ContextContainer<?> exec(ScriptTrigger macro, BaseEvent event) {
@@ -111,7 +99,7 @@ public class Core {
         return BaseWrappedException.wrapHostElement(e, elements.hasNext() ? wrapHostInternal(elements.next(), elements) : null);
     }
     
-    public static class sortLanguage implements Comparator<BaseLanguage> {
+    public static class SortLanguage implements Comparator<BaseLanguage> {
 
         @Override
         public int compare(BaseLanguage a, BaseLanguage b) {
