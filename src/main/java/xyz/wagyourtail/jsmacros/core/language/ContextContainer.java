@@ -5,7 +5,7 @@ import java.util.concurrent.Semaphore;
 public class ContextContainer<T> {
     private final ScriptContext<T> ctx;
     private Thread lockThread;
-    private final Semaphore lock = new Semaphore(0);
+    private boolean locked = true;
     
     public ContextContainer(ScriptContext<T> ctx) {
         this.ctx = ctx;
@@ -25,19 +25,21 @@ public class ContextContainer<T> {
     }
     
     /**
-     * DO NOT USE IN A SCRIPT PLEASE, MAKE YOUR OWN MUTEX/SEMAPHORES
      * @throws InterruptedException
      */
-    public void awaitLock() throws InterruptedException {
-        lock.acquire();
+    public synchronized void awaitLock() throws InterruptedException {
+        if (locked) {
+            this.wait();
+        }
     }
     
     /**
      * can be released earlier in a script or language impl.
      * @return semaphore used for synchronous stuff,
      */
-    public void releaseLock() {
-        lock.release();
+    public synchronized void releaseLock() {
+        locked = false;
+        this.notifyAll();
     }
     
 }
