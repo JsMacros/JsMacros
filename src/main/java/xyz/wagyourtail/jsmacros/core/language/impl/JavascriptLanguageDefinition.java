@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     private static final Engine engine = Engine.create();
@@ -35,10 +34,8 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
         super(extension, runner);
     }
     
-    protected Context buildContext(Path currentDir, Map<String, Object> globals, Map<String, BaseLibrary> libs, ContextContainer<Context> ctx) throws IOException {
-        if (runner.config.getOptions(CoreConfigV2.class).extraJsOptions == null)
-            runner.config.getOptions(CoreConfigV2.class).extraJsOptions = new LinkedHashMap<>();
-        build.options(runner.config.getOptions(CoreConfigV2.class).extraJsOptions);
+    protected Context buildContext(Path currentDir, Map<String, String> extraJsOptions, Map<String, Object> globals, Map<String, BaseLibrary> libs) throws IOException {
+        build.options(extraJsOptions);
         if (currentDir == null) {
             currentDir = runner.config.macroFolder.toPath();
         }
@@ -64,19 +61,31 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
         globals.put("event", event);
         globals.put("file", file);
         globals.put("context", ctx);
-        
-        final Context con = buildContext(file.getParentFile().toPath(), globals, retrieveLibs(ctx), ctx);
+
+        final CoreConfigV2 conf = runner.config.getOptions(CoreConfigV2.class);
+        if (conf.extraJsOptions == null)
+            conf.extraJsOptions = new LinkedHashMap<>();
+
+        final Context con = buildContext(file.getParentFile().toPath(), conf.extraJsOptions, globals, retrieveLibs(ctx));
         ctx.getCtx().setContext(con);
+        con.enter();
         con.eval(Source.newBuilder("js", file).build());
+        con.leave();
     }
     
     @Override
     protected void exec(ContextContainer<Context> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception {
         globals.put("context", ctx);
-        
-        final Context con = buildContext(currentDir, globals, retrieveLibs(ctx), ctx);
+
+        final CoreConfigV2 conf = runner.config.getOptions(CoreConfigV2.class);
+        if (conf.extraJsOptions == null)
+            conf.extraJsOptions = new LinkedHashMap<>();
+
+        final Context con = buildContext(currentDir, conf.extraJsOptions, globals, retrieveLibs(ctx));
         ctx.getCtx().setContext(con);
+        con.enter();
         con.eval("js", script);
+        con.leave();
     }
     
     @Override

@@ -22,12 +22,15 @@ import java.util.function.Function;
  *
  * Javascript:
  * language spec requires that only one thread can hold an instance of the language at a time,
- * so this implementation uses a non-preemptive queue for the threads that call the resulting {@link MethodWrapper MethodWrappers}.
+ * so this implementation uses a non-preemptive queue for the threads that call the resulting {@link MethodWrapper
+ * MethodWrappers}.
  *
  * JEP:
- * language spec requires everything to be on the same thread, on the java end, so all calls to {@link MethodWrapper MethodWrappers}
+ * language spec requires everything to be on the same thread, on the java end, so all calls to {@link MethodWrapper
+ * MethodWrappers}
  * call back to JEP's starting thread and wait for the call to complete. This means that JEP can sometimes have trouble
- * closing properly, so if you use any {@link MethodWrapper MethodWrappers}, be sure to call FConsumer#stop(), to close the process,
+ * closing properly, so if you use any {@link MethodWrapper MethodWrappers}, be sure to call FConsumer#stop(), to close
+ * the process,
  * otherwise it's a memory leak.
  *
  * Jython:
@@ -36,26 +39,25 @@ import java.util.function.Function;
  * LUA:
  * no limitations
  *
- *
- * @since 1.2.5, re-named from {@code consumer} in 1.3.2
- *
  * @author Wagyourtail
+ * @since 1.2.5, re-named from {@code consumer} in 1.3.2
  */
 @Library(value = "JavaWrapper", languages = JavascriptLanguageDefinition.class)
- @SuppressWarnings("unused")
+@SuppressWarnings("unused")
 public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapper<Function<Object[], Object>> {
-    
+
     private final LinkedBlockingQueue<Pair<Thread, Boolean>> tasks = new LinkedBlockingQueue<>();
-    
+
     public FWrapper(ContextContainer<Context> ctx, Class<? extends BaseLanguage<Context>> language) {
         super(ctx, language);
     }
-    
+
     /**
-     * @since 1.3.2
      * @param c
-     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
+     *
      * @return a new {@link MethodWrapper MethodWrapper}
+     *
+     * @since 1.3.2
      */
     @Override
     public <A, B, R> MethodWrapper<A, B, R> methodToJava(Function<Object[], Object> c) {
@@ -84,38 +86,47 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
             @Override
             public R apply(Object t, Object u) {
-                if (th != Thread.currentThread()) {
-                    while(th.isAlive()) {
-                        try {
-                            th.join();
-                        } catch (InterruptedException ignored) {}
-                    }
-                    tasks.add(new Pair<>(Thread.currentThread(), true));
-                    Pair<Thread, Boolean> joinable = tasks.peek();
-                    while (joinable.getT() != Thread.currentThread()) {
-                        try {
-                            synchronized (joinable) {
-                                if (joinable.getU()) {
-                                    joinable.wait();
-                                }
-                            }
-                        } catch (InterruptedException ignored) {}
-                        joinable = tasks.peek();
-                    }
-                }
-                Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
-                Object retVal = null;
                 try {
-                    c.apply(new Object[] {t, u});
-                } finally {
-                    Core.instance.threadContext.remove(Thread.currentThread());
-                    Pair<Thread, Boolean> ct = tasks.poll();
-                    synchronized (ct) {
-                        ct.setU(false);
-                        ct.notifyAll();
+                    if (th != Thread.currentThread()) {
+                        while (th.isAlive()) {
+                            try {
+                                th.join();
+                            } catch (InterruptedException ignored) {
+                            }
+                        }
+                        tasks.put(new Pair<>(Thread.currentThread(), true));
+                        Pair<Thread, Boolean> joinable = tasks.peek();
+                        while (joinable.getT() != Thread.currentThread()) {
+                            try {
+                                synchronized (joinable) {
+                                    if (joinable.getU()) {
+                                        joinable.wait();
+                                    }
+                                }
+                            } catch (InterruptedException ignored) {
+                            }
+                            joinable = tasks.peek();
+                        }
                     }
+                    Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
+                    ctx.getCtx().getContext().get().enter();
+                    Object retVal = null;
+                    try {
+                        c.apply(new Object[] {t, u});
+                    } finally {
+                        ctx.getCtx().getContext().get().leave();
+                        Core.instance.threadContext.remove(Thread.currentThread());
+                        Pair<Thread, Boolean> ct = tasks.poll();
+                        synchronized (ct) {
+                            ct.setU(false);
+                            ct.notifyAll();
+                        }
+                    }
+                    return (R) retVal;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                return (R) retVal;
+                return null;
             }
 
             @Override
@@ -137,19 +148,20 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
             public R get() {
                 return apply(null, null);
             }
-            
+
             @Override
             public boolean preventSameThreadJoin() {
                 return true;
             }
         };
     }
-    
+
     /**
-     * @since 1.3.2
      * @param c
-     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
+     *
      * @return a new {@link MethodWrapper MethodWrapper}
+     *
+     * @since 1.3.2
      */
     @Override
     public <A, B, R> MethodWrapper<A, B, R> methodToJavaAsync(Function<Object[], Object> c) {
@@ -164,32 +176,41 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
             @Override
             public void accept(Object arg0, Object arg1) {
                 Thread t = new Thread(() -> {
-                    while(th.isAlive()) {
-                        try {
-                            th.join();
-                        } catch (InterruptedException ignored) {}
-                    }
-                    tasks.add(new Pair<>(Thread.currentThread(), true));
-                    Pair<Thread, Boolean> joinable = tasks.peek();
-                    while (joinable.getT() != Thread.currentThread()) {
-                        try {
-                            synchronized (joinable) {
-                                if (joinable.getU()) {
-                                    joinable.wait();
-                                }
-                            }
-                        } catch (InterruptedException ignored) {}
-                        joinable = tasks.peek();
-                    }
-                    Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
                     try {
-                        c.apply(new Object[] {arg0, arg1});
-                    } finally {
-                        Pair<Thread, Boolean> ct = tasks.poll();
-                        synchronized (ct) {
-                            ct.setU(false);
-                            ct.notifyAll();
+                        while (th.isAlive()) {
+                            try {
+                                th.join();
+                            } catch (InterruptedException ignored) {
+                            }
                         }
+                        tasks.put(new Pair<>(Thread.currentThread(), true));
+
+                        Pair<Thread, Boolean> joinable = tasks.peek();
+                        while (joinable.getT() != Thread.currentThread()) {
+                            try {
+                                synchronized (joinable) {
+                                    if (joinable.getU()) {
+                                        joinable.wait();
+                                    }
+                                }
+                            } catch (InterruptedException ignored) {
+                            }
+                            joinable = tasks.peek();
+                        }
+                        Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
+                        ctx.getCtx().getContext().get().enter();
+                        try {
+                            c.apply(new Object[] {arg0, arg1});
+                        } finally {
+                            ctx.getCtx().getContext().get().leave();
+                            Pair<Thread, Boolean> ct = tasks.poll();
+                            synchronized (ct) {
+                                ct.setU(false);
+                                ct.notifyAll();
+                            }
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 });
                 t.start();
@@ -207,38 +228,47 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
             @Override
             public R apply(Object t, Object u) {
-                if (th != Thread.currentThread()) {
-                    while(th.isAlive()) {
-                        try {
-                            th.join();
-                        } catch (InterruptedException ignored) {}
-                    }
-                    tasks.add(new Pair<>(Thread.currentThread(), true));
-                    Pair<Thread, Boolean> joinable = tasks.peek();
-                    while (joinable.getT() != Thread.currentThread()) {
-                        try {
-                            synchronized (joinable) {
-                                if (joinable.getU()) {
-                                    joinable.wait();
-                                }
-                            }
-                        } catch (InterruptedException ignored) {}
-                        joinable = tasks.peek();
-                    }
-                }
-                Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
-                Object retVal = null;
                 try {
-                    c.apply(new Object[] {t, u});
-                } finally {
-                    Core.instance.threadContext.remove(Thread.currentThread());
-                    Pair<Thread, Boolean> ct = tasks.poll();
-                    synchronized (ct) {
-                        ct.setU(false);
-                        ct.notifyAll();
+                    if (th != Thread.currentThread()) {
+                        while (th.isAlive()) {
+                            try {
+                                th.join();
+                            } catch (InterruptedException ignored) {
+                            }
+                        }
+                        tasks.put(new Pair<>(Thread.currentThread(), true));
+                        Pair<Thread, Boolean> joinable = tasks.peek();
+                        while (joinable.getT() != Thread.currentThread()) {
+                            try {
+                                synchronized (joinable) {
+                                    if (joinable.getU()) {
+                                        joinable.wait();
+                                    }
+                                }
+                            } catch (InterruptedException ignored) {
+                            }
+                            joinable = tasks.peek();
+                        }
                     }
+                    Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
+                    ctx.getCtx().getContext().get().enter();
+                    Object retVal = null;
+                    try {
+                        c.apply(new Object[] {t, u});
+                    } finally {
+                        ctx.getCtx().getContext().get().leave();
+                        Core.instance.threadContext.remove(Thread.currentThread());
+                        Pair<Thread, Boolean> ct = tasks.poll();
+                        synchronized (ct) {
+                            ct.setU(false);
+                            ct.notifyAll();
+                        }
+                    }
+                    return (R) retVal;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                return (R) retVal;
+                return null;
             }
 
             @Override
@@ -262,17 +292,16 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
             }
         };
     }
-    
+
     /**
      * Close the current context, more important in JEP as they won't close themselves if you use other functions in
      * this class
      *
      * @since 1.2.2
-     *
      */
     @Override
     public void stop() {
         ctx.getCtx().closeContext();
     }
-    
+
 }
