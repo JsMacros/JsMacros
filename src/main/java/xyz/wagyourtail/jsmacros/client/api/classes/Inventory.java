@@ -33,7 +33,7 @@ import java.util.stream.Stream;
 
 /**
  * @author Wagyourtail
- *
+ * @since 1.0.8
  */
  @SuppressWarnings("unused")
 public class Inventory<T extends HandledScreen<?>> {
@@ -44,6 +44,10 @@ public class Inventory<T extends HandledScreen<?>> {
     protected final ClientPlayerEntity player;
     protected static MinecraftClient mc = MinecraftClient.getInstance();
 
+    /**
+     * don't call from scripts
+     * @return
+     */
     public static Inventory<?> create() {
         //prevent race condition
         final net.minecraft.client.gui.screen.Screen s = mc.currentScreen;

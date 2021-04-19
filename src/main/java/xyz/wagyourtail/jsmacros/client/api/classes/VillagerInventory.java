@@ -8,6 +8,9 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.TradeOfferHelper;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @since 1.3.1
+ */
 @SuppressWarnings("unused")
 public class VillagerInventory extends Inventory<MerchantScreen> {
     
@@ -21,6 +24,8 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
      * @param index
      *
      * @return self for chaining
+     *
+     * @since 1.3.1
      */
     public VillagerInventory selectTrade(int index) {
         ((IMerchantScreen)inventory).selectIndex(index);
@@ -29,6 +34,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
     
     /**
      * @return
+     * @since 1.3.1
      */
     public int getExperience() {
         return inventory.getScreenHandler().getExperience();
@@ -36,6 +42,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
     
     /**
      * @return
+     * @since 1.3.1
      */
     public int getLevelProgress() {
         return inventory.getScreenHandler().getLevelProgress();
@@ -43,6 +50,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
     
     /**
      * @return
+     * @since 1.3.1
      */
     public int getMerchantRewardedExperience() {
         return inventory.getScreenHandler().getMerchantRewardedExperience();
@@ -50,6 +58,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
     
     /**
      * @return
+     * @since 1.3.1
      */
     public boolean canRefreshTrades() {
         return inventory.getScreenHandler().canRefreshTrades();
@@ -57,6 +66,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
     
     /**
      * @return
+     * @since 1.3.1
      */
     public boolean isLeveled() {
         return inventory.getScreenHandler().isLeveled();
@@ -64,6 +74,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
     
     /**
      * @return list of trade offers
+     * @since 1.3.1
      */
     public List<TradeOfferHelper> getTrades() {
         List<TradeOfferHelper> offers = new LinkedList<>();

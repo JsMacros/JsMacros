@@ -5,6 +5,9 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 
+/**
+ * @since 1.3.1
+ */
 public class EnchantInventory extends Inventory<EnchantmentScreen> {
     
     protected EnchantInventory(EnchantmentScreen inventory) {
@@ -13,6 +16,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
     
     /**
      * @return xp level required to do enchantments
+     * @since 1.3.1
      */
     public int[] getRequiredLevels() {
         return inventory.getScreenHandler().enchantmentPower;
@@ -20,6 +24,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
     
     /**
      * @return list of enchantments text.
+     * @since 1.3.1
      */
     public TextHelper[] getEnchantments() {
         TextHelper[] enchants = new TextHelper[3];
@@ -34,6 +39,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
     
     /**
      * @return id for enchantments
+     * @since 1.3.1
      */
     public String[] getEnchantmentIds() {
         String[] enchants = new String[3];
@@ -48,6 +54,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
     
     /**
      * @return level of enchantments
+     * @since 1.3.1
      */
     public int[] getEnchantmentLevels() {
         return inventory.getScreenHandler().enchantmentLevel;
@@ -58,6 +65,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
     *
      * @param index
      * @return success
+     * @since 1.3.1
      */
     public boolean doEnchant(int index) {
         assert mc.interactionManager != null;
