@@ -117,6 +117,22 @@ public class PlayerInput {
     }
 
     /**
+     * Creates a clone {@code PlayerInput} Object
+     *
+     * @param input the {@code PlayerInput} object to be cloned
+     * @since 1.4.x
+     */
+    public PlayerInput(PlayerInput input) {
+        this.movementForward = input.movementForward;
+        this.movementSideways = input.movementSideways;
+        this.yaw = input.yaw;
+        this.pitch = input.pitch;
+        this.jumping = input.jumping;
+        this.sneaking = input.sneaking;
+        this.sprinting = input.sprinting;
+    }
+
+    /**
      * Parses each row of CSV string into a {@code PlayerInput}.
      * The capitalization of the header doesn't matter.<br>
      * About the columns:
@@ -155,7 +171,6 @@ public class PlayerInput {
         return output;
 
     }
-
 
     /**
      * Parses a JSON string into a {@code PlayerInput} Object
@@ -260,5 +275,10 @@ public class PlayerInput {
                 ", sneaking=" + sneaking +
                 ", sprinting=" + sprinting +
                 '}';
+    }
+
+    @Override
+    public PlayerInput clone() {
+        return new PlayerInput(this);
     }
 }

@@ -31,36 +31,42 @@ import java.util.Arrays;
 import java.util.List;
 
 @Mixin(ClientPlayerEntity.class)
-class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
+abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
 
+    @Shadow
+    public Input input;
+    @Shadow
+    @Final
+    public ClientPlayNetworkHandler networkHandler;
     @Shadow
     @Final
     protected MinecraftClient client;
 
-    @Shadow
-    public Input input;
+    // IGNORE
+    public MixinClientPlayerEntity(ClientWorld world, GameProfile profile) {
+        super(world, profile);
+    }
 
     @Shadow
-    @Final
-    public ClientPlayNetworkHandler networkHandler;
+    public abstract boolean shouldSlowDown();
 
     @Override
     public void setAir(int air) {
         if (air % 20 == 0) new EventAirChange(air);
         super.setAir(air);
     }
-    
-    @Inject(at = @At("HEAD"), method="setExperience")
+
+    @Inject(at = @At("HEAD"), method = "setExperience")
     public void onSetExperience(float progress, int total, int level, CallbackInfo info) {
         new EventEXPChange(progress, total, level);
     }
-    
-    @Inject(at = @At("TAIL"), method="applyDamage")
+
+    @Inject(at = @At("TAIL"), method = "applyDamage")
     private void onApplyDamage(DamageSource source, float amount, final CallbackInfo info) {
         new EventDamage(source, this.getHealth(), amount);
     }
-    
-    @Inject(at = @At("HEAD"), method="openEditSignScreen", cancellable= true)
+
+    @Inject(at = @At("HEAD"), method = "openEditSignScreen", cancellable = true)
     public void onOpenEditSignScreen(SignBlockEntity sign, CallbackInfo info) {
         List<String> lines = new ArrayList<>(Arrays.asList("", "", "", ""));
         final EventSignEdit event = new EventSignEdit(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ());
@@ -105,10 +111,11 @@ class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         this.client.options.keySprint.setPressed(moveInput.sprinting);
         this.yaw = moveInput.yaw;
         this.pitch = moveInput.pitch;
-    }
 
-    // IGNORE
-    public MixinClientPlayerEntity(ClientWorld world, GameProfile profile) {
-        super(world, profile);
+        if (this.shouldSlowDown()) {
+            // Don't ask me, this is the way minecraft does it.
+            this.input.movementSideways = (float) ((double) this.input.movementSideways * 0.3D);
+            this.input.movementForward = (float) ((double) this.input.movementForward * 0.3D);
+        }
     }
 }

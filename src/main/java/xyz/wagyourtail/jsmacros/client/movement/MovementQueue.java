@@ -29,7 +29,7 @@ public class MovementQueue {
         if (predictions.size() > 0) {
             diff = new Vec3d(player.getX() - predictions.get(0).getX(), player.getY() - predictions.get(0).getY(), player.getZ() - predictions.get(0).getZ());
             if (diff.length() > 0.01D) {
-                LOGGER.debug("Pred of by x={}, y={}, z={}", diff.getX(), diff.getY(), diff.getZ());
+                LOGGER.info("Pred of by x={}, y={}, z={}", diff.getX(), diff.getY(), diff.getZ());
                 LOGGER.debug("Player pos x={}, y={}, z={}", player.getX(), player.getY(), player.getZ());
                 Draw3D shape = new Draw3D();
                 shape.addPoint(player.getX(), player.getY(), player.getZ(), 0.02, 0xde070a);
@@ -79,6 +79,8 @@ public class MovementQueue {
     public static void append(PlayerInput input, ClientPlayerEntity newPlayer) {
         reCalcPredictions = true;
         player = newPlayer;
-        queue.add(input);
+        // We do the clone step here, since somewhere one could maybe change the input
+        // and we don't want that to affect us.
+        queue.add(input.clone());
     }
 }

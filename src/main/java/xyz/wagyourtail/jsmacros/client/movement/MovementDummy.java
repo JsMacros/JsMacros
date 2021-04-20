@@ -1,6 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.movement;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -23,15 +25,16 @@ public class MovementDummy extends LivingEntity {
     private int jumpingCooldown;
 
     public MovementDummy(ClientPlayerEntity player) {
-        this(player.getEntityWorld(), player.getPos(), player.getVelocity(), player.getBoundingBox(), player.isOnGround(), player.isSprinting());
+        this(player.getEntityWorld(), player.getPos(), player.getVelocity(), player.getBoundingBox(), player.isOnGround(), player.isSprinting(), player.isSneaking());
     }
 
-    public MovementDummy(World world, Vec3d pos, Vec3d velocity, Box hitBox, boolean onGround, boolean isSprinting) {
+    public MovementDummy(World world, Vec3d pos, Vec3d velocity, Box hitBox, boolean onGround, boolean isSprinting, boolean isSneaking) {
         super(EntityType.PLAYER, world);
         this.setPos(pos.getX(), pos.getY(), pos.getZ());
         this.setVelocity(velocity);
         this.setBoundingBox(hitBox);
         this.setSprinting(isSprinting);
+        this.setSneaking(isSneaking);
         this.stepHeight = 0.6F;
         this.onGround = onGround;
         this.coordsHistory.add(this.getPos());
@@ -39,7 +42,7 @@ public class MovementDummy extends LivingEntity {
     }
 
     public Vec3d applyInput(PlayerInput input) {
-        this.currentInput = input;
+        this.currentInput = input.clone();
         this.yaw = currentInput.yaw;
 
         Vec3d velocity = this.getVelocity();
@@ -59,6 +62,14 @@ public class MovementDummy extends LivingEntity {
         }
         this.setVelocity(velX, velY, velZ);
 
+        /** Sneaking start **/
+        if (this.isSneaking() && this.wouldPoseNotCollide(EntityPose.CROUCHING)) {
+            // Yeah this looks dumb, but that is the way minecraft does it
+            this.currentInput.movementSideways = (float) ((double) this.currentInput.movementSideways * 0.3D);
+            this.currentInput.movementForward = (float) ((double) this.currentInput.movementForward * 0.3D);
+        }
+        this.setSneaking(this.currentInput.sneaking);
+        /** Sneaking end **/
 
         /** Sprinting start **/
         boolean hasHungerToSprint = true;
@@ -92,6 +103,24 @@ public class MovementDummy extends LivingEntity {
         this.flyingSpeed = this.isSprinting() ? 0.026F : 0.02F;
 
         return this.getPos();
+    }
+
+    /**
+     * We have to do this "inject" since the the applyClimbingSpeed() method
+     * in LivingEntity is checking if we are a PlayerEntity, we want to apply the outcome of this check,
+     * so this is why we need to set the y-velocity to 0.<p>
+     */
+    @Override
+    public Vec3d method_26318(Vec3d movementInput, float f) {
+        if (this.isClimbing() && this.getVelocity().getY() < 0.0D && !this.getBlockState().isOf(Blocks.SCAFFOLDING) && this.isHoldingOntoLadder()) {
+            this.setVelocity(this.getVelocity().getX(), 0, this.getVelocity().getZ());
+        }
+        return super.method_26318(movementInput, f);
+    }
+
+    @Override
+    protected boolean canClimb() {
+        return !this.onGround || !this.isSneaking();
     }
 
     @Override
