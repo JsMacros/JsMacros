@@ -59,7 +59,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
-     * @since 1.3.1
+     * @since 1.4.x
      * @return the {@code input} values of the entity.
      */
     public Input getInput() {

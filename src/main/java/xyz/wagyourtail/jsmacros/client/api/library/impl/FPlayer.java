@@ -29,12 +29,11 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * 
  * Functions for getting and modifying the player's state.
  * 
  * An instance of this class is passed to scripts as the {@code Player} variable.
@@ -173,7 +172,7 @@ public class FPlayer extends BaseLibrary {
      *
      * @return a new {@link xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput PlayerInput}.
      * @see xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput
-     * @since 1.3.2
+     * @since 1.4.x
      */
     public PlayerInput createPlayerInput() {
         return new PlayerInput();
@@ -184,7 +183,7 @@ public class FPlayer extends BaseLibrary {
      *
      * @return a new {@link xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput PlayerInput} with the current inputs.
      * @see xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput
-     * @since 1.3.2
+     * @since 1.4.x
      */
     public PlayerInput getCurrentPlayerInput() {
         return new PlayerInput(mc.player.input, mc.player.yaw, mc.player.pitch, mc.player.isSprinting());
@@ -195,7 +194,7 @@ public class FPlayer extends BaseLibrary {
      *
      * @param input the PlayerInput to be executed
      * @see xyz.wagyourtail.jsmacros.client.movement.MovementQueue
-     * @since 1.3.2
+     * @since 1.4.x
      */
     public void addInput(PlayerInput input) {
         MovementQueue.append(input, mc.player);
@@ -206,7 +205,7 @@ public class FPlayer extends BaseLibrary {
      *
      * @param inputs the PlayerInputs to be executed
      * @see xyz.wagyourtail.jsmacros.client.movement.MovementQueue
-     * @since 1.3.2
+     * @since 1.4.x
      */
     public void addInputs(List<PlayerInput> inputs) {
         for (PlayerInput input : inputs) {
@@ -220,10 +219,10 @@ public class FPlayer extends BaseLibrary {
      * @param input the PlayerInput for the prediction
      * @param draw  whether to visualize the result or not
      * @return the position after the input
-     * @since 1.3.2
+     * @since 1.4.x
      */
     public Vec3d predictInput(PlayerInput input, boolean draw) {
-        return predictInputs(Arrays.asList(input), draw).get(0);
+        return predictInputs(Collections.singletonList(input), draw).get(0);
     }
 
     /**
@@ -232,7 +231,7 @@ public class FPlayer extends BaseLibrary {
      * @param inputs the PlayerInputs for each tick for the prediction
      * @param draw   whether to visualize the result or not
      * @return the position after each input
-     * @since 1.3.2
+     * @since 1.4.x
      */
     public List<Vec3d> predictInputs(List<PlayerInput> inputs, boolean draw) {
         MovementDummy dummy = new MovementDummy(mc.player);
@@ -257,7 +256,7 @@ public class FPlayer extends BaseLibrary {
      * Adds a forward movement with a relative yaw value to the MovementQueue.
      *
      * @param yaw the relative yaw for the player
-     * @since 1.3.2
+     * @since 1.4.x
      */
     public void moveForward(float yaw) {
         PlayerInput input = new PlayerInput();
@@ -270,7 +269,7 @@ public class FPlayer extends BaseLibrary {
      * Adds a backward movement with a relative yaw value to the MovementQueue.
      *
      * @param yaw the relative yaw for the player
-     * @since 1.3.2
+     * @since 1.4.x
      */
     public void moveBackward(float yaw) {
         PlayerInput input = new PlayerInput();
