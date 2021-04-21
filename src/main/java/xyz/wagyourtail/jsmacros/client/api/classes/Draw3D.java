@@ -229,7 +229,7 @@ public class Draw3D {
      * @param color  point color
      * @return the {@link Box} generated, and visualized
      * @see Draw3D.Box
-     * @since 1.3.2
+     * @since 1.4.0
      */
     public Box addPoint(Vec3d point, double radius, int color) {
         return addPoint(point.getX(), point.getY(), point.getZ(), radius, color);
@@ -245,7 +245,7 @@ public class Draw3D {
      * @param color  point color
      * @return the {@link Box} generated, and visualized
      * @see Draw3D.Box
-     * @since 1.3.2
+     * @since 1.4.0
      */
     public Box addPoint(double x, double y, double z, double radius, int color) {
         return addBox(x - radius, y - radius, z - radius, x + radius, y + radius, z + radius, color, color, true, false);
@@ -263,7 +263,7 @@ public class Draw3D {
      * @param cull   whether to cull the point or not
      * @return the {@link Box} generated, and visualized
      * @see Draw3D.Box
-     * @since 1.3.2
+     * @since 1.4.0
      */
     public Box addPoint(double x, double y, double z, double radius, int color, int alpha, boolean cull) {
         return addBox(x - radius, y - radius, z - radius, x + radius, y + radius, z + radius, color, color, alpha, alpha, true, cull);

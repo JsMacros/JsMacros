@@ -14,10 +14,11 @@ import java.util.stream.Collectors;
  * An object, that combines all possible player inputs
  *
  * @author NotSomeBot
- * @since 1.4.x
+ * @since 1.4.0
  */
 @SuppressWarnings("unused")
 public class PlayerInput {
+    private static final Gson gson = new Gson();
     public float movementForward;
     public float movementSideways;
     public float yaw;
@@ -30,7 +31,7 @@ public class PlayerInput {
      * Creates a new {@code PlayerInput} Object with all values set either to 0 or false
      *
      * @see #PlayerInput(float, float, float, float, boolean, boolean, boolean)
-     * @since 1.4.x
+     * @since 1.4.0
      */
     public PlayerInput() {
         this(0.0F, 0.0F, 0.0F, 0.0F, false, false, false);
@@ -43,7 +44,7 @@ public class PlayerInput {
      * @param movementSideways 1 = left input (A); 0 = no input; -1 = right input (D)
      * @param yaw              yaw of the player
      * @see #PlayerInput(float, float, float, float, boolean, boolean, boolean)
-     * @since 1.4.x
+     * @since 1.4.0
      */
     public PlayerInput(float movementForward, float movementSideways, float yaw) {
         this(movementForward, movementSideways, yaw, 0.0, false, false, false);
@@ -57,7 +58,7 @@ public class PlayerInput {
      * @param jumping         jump input
      * @param sprinting       sprint input
      * @see #PlayerInput(float, float, float, float, boolean, boolean, boolean)
-     * @since 1.4.x
+     * @since 1.4.0
      */
     public PlayerInput(float movementForward, float yaw, boolean jumping, boolean sprinting) {
         this(movementForward, 0.0F, yaw, 0.0, jumping, false, sprinting);
@@ -71,7 +72,7 @@ public class PlayerInput {
      * @param pitch     pitch of the player
      * @param sprinting sprint input
      * @see #PlayerInput(float, float, float, float, boolean, boolean, boolean)
-     * @since 1.4.x
+     * @since 1.4.0
      */
     public PlayerInput(Input input, float yaw, float pitch, boolean sprinting) {
         this(input.movementForward, input.movementSideways, yaw, pitch, input.jumping, input.sneaking, sprinting);
@@ -88,7 +89,7 @@ public class PlayerInput {
      * @param sneaking         sneak input
      * @param sprinting        sprint input
      * @see #PlayerInput(float, float, float, float, boolean, boolean, boolean)
-     * @since 1.4.x
+     * @since 1.4.0
      */
     public PlayerInput(double movementForward, double movementSideways, double yaw, double pitch, boolean jumping, boolean sneaking, boolean sprinting) {
         this((float) movementForward, (float) movementSideways, (float) yaw, (float) pitch, jumping, sneaking, sprinting);
@@ -104,7 +105,7 @@ public class PlayerInput {
      * @param jumping          jump input
      * @param sneaking         sneak input
      * @param sprinting        sprint input
-     * @since 1.4.x
+     * @since 1.4.0
      */
     public PlayerInput(float movementForward, float movementSideways, float yaw, float pitch, boolean jumping, boolean sneaking, boolean sprinting) {
         this.movementForward = movementForward;
@@ -120,7 +121,7 @@ public class PlayerInput {
      * Creates a clone {@code PlayerInput} Object
      *
      * @param input the {@code PlayerInput} object to be cloned
-     * @since 1.4.x
+     * @since 1.4.0
      */
     public PlayerInput(PlayerInput input) {
         this.movementForward = input.movementForward;
@@ -150,7 +151,7 @@ public class PlayerInput {
      * @param csv CSV string to be parsed
      * @param sep separation between the values
      * @return {@code List<PlayerInput>} Each row parsed as a {@code PlayerInput}
-     * @since 1.4.x
+     * @since 1.4.0
      */
     public static List<PlayerInput> fromCsv(String csv, String sep) {
         String[] rows = csv.split("\n");
@@ -180,11 +181,11 @@ public class PlayerInput {
      * @param json JSON string to be parsed
      * @return The JSON parsed into a {@code PlayerInput}
      * @see #fromCsv(String, String)
-     * @since 1.4.x
+     * @since 1.4.0
      */
     public static PlayerInput fromJson(String json) {
         Map<String, String> map = new HashMap<>();
-        map = (Map<String, String>) new Gson().fromJson(json, map.getClass());
+        map = (Map<String, String>) gson.fromJson(json, map.getClass());
         map = map.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().toLowerCase().replace("\"", ""), e -> e.getValue().replace("\"", "")));
         return fromMap(map);
     }
@@ -196,7 +197,7 @@ public class PlayerInput {
      * @param input Map to be converted
      * @return The map converted into a {@code PlayerInput}
      * @see #fromCsv(String, String)
-     * @since 1.4.x
+     * @since 1.4.0
      */
     private static PlayerInput fromMap(Map<String, String> input) {
         return new PlayerInput(
@@ -221,7 +222,7 @@ public class PlayerInput {
      * @param wasd     whether to convert {@code movementForward/Sideways} into {@code WASD} values
      * @param varNames whether to include variable Names(=JSON) or not(=CSV)
      * @return The {@code PlayerInput} object as a string
-     * @since 1.4.x
+     * @since 1.4.0
      */
     public String toString(boolean wasd, boolean varNames) {
         StringBuilder stringBuilder = new StringBuilder();
