@@ -22,11 +22,10 @@ import xyz.wagyourtail.jsmacros.client.config.Profile;
 import xyz.wagyourtail.jsmacros.client.event.EventRegistry;
 import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.KeyMacrosScreen;
+import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 
 public class JsMacros implements ClientModInitializer {
     public static final String MOD_ID = "jsmacros";
@@ -54,6 +53,9 @@ public class JsMacros implements ClientModInitializer {
             con.close();
         });
         t.start();
+
+        // Init MovementQueue
+        MovementQueue.clear();
         
         if (FabricLoader.getInstance().isModLoaded("modmenu"))
             LOGGER.info("mOd 'JsMaCrOs' UsEs tHe mOdMeNu:cLiEnTsIdEoNlY CuStOm vAlUe uNnEcEsSaRiLy, As iT CaN Be iNfErReD FrOm tHe mOd's dEcLaReD EnViRoNmEnT.");

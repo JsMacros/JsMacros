@@ -5,6 +5,7 @@ import net.minecraft.util.math.Vec3d;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import static xyz.wagyourtail.jsmacros.client.JsMacros.LOGGER;
 public class MovementQueue {
     private static final List<PlayerInput> queue = new ArrayList<>();
     private static final List<Vec3d> predictions = new ArrayList<>();
+    public static Draw3D predPoints = new Draw3D();
     private static ClientPlayerEntity player;
     private static int queuePos = 0;
     private static boolean reCalcPredictions;
@@ -31,11 +33,7 @@ public class MovementQueue {
             if (diff.length() > 0.01D) {
                 LOGGER.debug("Pred of by x={}, y={}, z={}", diff.getX(), diff.getY(), diff.getZ());
                 LOGGER.debug("Player pos x={}, y={}, z={}", player.getX(), player.getY(), player.getZ());
-                Draw3D shape = new Draw3D();
-                shape.addPoint(player.getX(), player.getY(), player.getZ(), 0.02, 0xde070a);
-                synchronized (FHud.renders) {
-                    FHud.renders.add(shape);
-                }
+                predPoints.addPoint(player.getX(), player.getY(), player.getZ(), 0.02, 0xde070a);
                 reCalcPredictions = true;
             } else {
                 LOGGER.debug("No Diff");
@@ -69,11 +67,7 @@ public class MovementQueue {
     }
 
     private static void drawPredictions() {
-        Draw3D predPoints = new Draw3D();
-        predictions.forEach(point -> predPoints.addPoint(point, 0.01, 0xffd000));
-        synchronized (FHud.renders) {
-            FHud.renders.add(predPoints);
-        }
+        predictions.forEach(point -> predPoints.addPoint(new PositionCommon.Pos3D(point.getX(), point.getY(), point.getZ()), 0.01, 0xffd000));
     }
 
     public static void append(PlayerInput input, ClientPlayerEntity newPlayer) {
@@ -87,6 +81,15 @@ public class MovementQueue {
     public static void clear() {
         queue.clear();
         predictions.clear();
+        if (FHud.renders.contains(predPoints)) {
+            synchronized (FHud.renders) {
+                FHud.renders.remove(predPoints);
+            }
+        }
+        predPoints = new Draw3D();
+        synchronized (FHud.renders) {
+            FHud.renders.add(predPoints);
+        }
         queuePos = 0;
     }
 }

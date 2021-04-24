@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.sharedclasses;
 
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * @author Wagyourtail
@@ -59,6 +60,10 @@ public class PositionCommon {
     public static class Pos3D extends Pos2D {
         public static final Pos3D ZERO = new Pos3D(0, 0, 0);
         public double z;
+
+        public Pos3D(Vec3d vec) {
+            this(vec.getX(), vec.getY(), vec.getZ());
+        }
 
         public Pos3D(double x, double y, double z) {
             super(x, y);

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import net.minecraft.client.input.Input;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -135,55 +136,52 @@ public class PlayerInput {
 
     /**
      * Parses each row of CSV string into a {@code PlayerInput}.
-     * The capitalization of the header doesn't matter.<br>
+     * The capitalization of the header matters.<br>
      * About the columns:
      * <ul>
-     *   <li>Either {@code movementForward} and {@code movementSideways} as a number<br>
-     *   OR {@code WASD} each as their own boolean column MUST be present</li>
-     *   <li>{@code yaw} and {@code pitch} are if not present defaulted to 0.0</li>
-     *   <li>{@code jumping}, {@code sneaking} and {@code sprinting} have to be boolean<br>
-     *   and can also be accepted without the {@code ing} at the end</li>
+     *   <li> {@code movementForward} and {@code movementSideways} as a number</li>
+     *   <li>{@code yaw} and {@code pitch} as an absolute number</li>
+     *   <li>{@code jumping}, {@code sneaking} and {@code sprinting} have to be boolean</li>
      * </ul>
      * <p>
-     * The {@code sep} must be exactly what is between each value, including spaces.<br>
-     * Sidenote: macros and recordings from the mod MPK can be used.
+     * The separation must be a "," it's a csv...(but spaces don't matter)<br>
+     * Quoted values don't work
      *
      * @param csv CSV string to be parsed
-     * @param sep separation between the values
      * @return {@code List<PlayerInput>} Each row parsed as a {@code PlayerInput}
+     * @see #PlayerInput(float, float, float, float, boolean, boolean, boolean)
      * @since 1.4.0
      */
-    public static List<PlayerInput> fromCsv(String csv, String sep) {
-        String[] rows = csv.split("\n");
+    public static List<PlayerInput> fromCsv(String csv) throws NoSuchFieldException, IllegalAccessException {
+        String[] rows = csv.replace(" ", "").split("\n");
         List<PlayerInput> output = new ArrayList<>();
-        String[] headers = rows[0].split(sep);
+        String[] headers = rows[0].split(",");
         String[] row;
         Map<String, String> mappedRow;
         for (int rowNo = 1; rowNo < rows.length; rowNo++) {
-            row = rows[rowNo].split(sep);
+            row = rows[rowNo].split(",");
             if (row.length == headers.length) {
                 mappedRow = new HashMap<>();
                 for (int i = 0; i < row.length; i++) {
-                    mappedRow.put(headers[i].toLowerCase(), row[i]);
+                    mappedRow.put(headers[i], row[i]);
                 }
                 output.add(fromMap(mappedRow));
             }
         }
         return output;
-
     }
 
     /**
      * Parses a JSON string into a {@code PlayerInput} Object
      * For details see {@code PlayerInput.fromCsv()}, on what has to be present.<br>
-     * Capitalization of the keys doesn't matter.
+     * Capitalization of the keys matters.
      *
      * @param json JSON string to be parsed
      * @return The JSON parsed into a {@code PlayerInput}
-     * @see #fromCsv(String, String)
+     * @see #fromCsv(String)
      * @since 1.4.0
      */
-    public static PlayerInput fromJson(String json) {
+    public static PlayerInput fromJson(String json) throws NoSuchFieldException, IllegalAccessException {
         Map<String, String> map = new HashMap<>();
         map = (Map<String, String>) gson.fromJson(json, map.getClass());
         map = map.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().toLowerCase().replace("\"", ""), e -> e.getValue().replace("\"", "")));
@@ -196,19 +194,17 @@ public class PlayerInput {
      *
      * @param input Map to be converted
      * @return The map converted into a {@code PlayerInput}
-     * @see #fromCsv(String, String)
+     * @see #fromCsv(String)
      * @since 1.4.0
      */
-    private static PlayerInput fromMap(Map<String, String> input) {
-        return new PlayerInput(
-                input.get("movementforward") != null ? Float.parseFloat(input.get("movementforward")) : input.get("w").equals(input.get("s")) ? 0.0F : (Boolean.parseBoolean(input.get("w")) ? 1.0F : -1.0F),
-                input.get("movementsideways") != null ? Float.parseFloat(input.get("movementsideways")) : input.get("a").equals(input.get("d")) ? 0.0F : (Boolean.parseBoolean(input.get("a")) ? 1.0F : -1.0F),
-                input.get("yaw") != null ? Float.parseFloat(input.get("yaw")) : 0.0f,
-                input.get("pitch") != null ? Float.parseFloat(input.get("pitch")) : 0.0f,
-                input.get("jumping") != null ? Boolean.parseBoolean(input.get("jumping")) : input.get("jump") != null && Boolean.parseBoolean(input.get("jump")),
-                input.get("sneaking") != null ? Boolean.parseBoolean(input.get("sneaking")) : input.get("sneak") != null && Boolean.parseBoolean(input.get("sneak")),
-                input.get("sprinting") != null ? Boolean.parseBoolean(input.get("sprinting")) : input.get("sprint") != null && Boolean.parseBoolean(input.get("sprint"))
-        );
+    private static PlayerInput fromMap(Map<String, String> input) throws NoSuchFieldException, IllegalAccessException {
+        PlayerInput playerInput = new PlayerInput();
+        for (Map.Entry<String, String> entry : input.entrySet()) {
+            Field field = PlayerInput.class.getDeclaredField(entry.getKey());
+            if (Modifier.isPrivate(field.getModifiers())) throw new IllegalAccessException();
+            field.set(playerInput, entry.getValue());
+        }
+        return playerInput;
     }
 
     /**
@@ -219,30 +215,15 @@ public class PlayerInput {
      * The output can be converted into a PlayerInput object again by using either
      * {@code fromCsv(String, String)} or {@code fromJson(String)}.
      *
-     * @param wasd     whether to convert {@code movementForward/Sideways} into {@code WASD} values
      * @param varNames whether to include variable Names(=JSON) or not(=CSV)
      * @return The {@code PlayerInput} object as a string
      * @since 1.4.0
      */
-    public String toString(boolean wasd, boolean varNames) {
+    public String toString(boolean varNames) {
         StringBuilder stringBuilder = new StringBuilder();
-        if (wasd) {
-            stringBuilder.append(varNames ? "\"W\": " : "");
-            stringBuilder.append(this.movementForward == 1.0F ? "true" : "false");
-            stringBuilder.append(varNames ? " \"A\": " : ", ");
-            stringBuilder.append(this.movementSideways == 1.0F ? "true" : "false");
-            stringBuilder.append(varNames ? " \"S\": " : ", ");
-            stringBuilder.append(this.movementForward == -1.0F ? "true" : "false");
-            stringBuilder.append(varNames ? " \"D\": " : ", ");
-            stringBuilder.append(this.movementSideways == -1.0F ? "true" : "false");
-            stringBuilder.append(", ");
-        }
 
         for (Field field : this.getClass().getDeclaredFields()) {
             field.setAccessible(true);
-            if (wasd && (field.getName().equals("movementForward") || field.getName().equals("movementSideways"))) {
-                continue;
-            }
 
             if (varNames) {
                 stringBuilder.append("\"");
@@ -267,15 +248,25 @@ public class PlayerInput {
 
     @Override
     public String toString() {
-        return "PlayerInput{" +
-                "movementForward=" + movementForward +
-                ", movementSideways=" + movementSideways +
-                ", yaw=" + yaw +
-                ", pitch=" + pitch +
-                ", jumping=" + jumping +
-                ", sneaking=" + sneaking +
-                ", sprinting=" + sprinting +
-                '}';
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("PlayerInput{");
+        String prefix = "";
+        for (Field field : PlayerInput.class.getDeclaredFields()) {
+            if (Modifier.isPrivate(field.getModifiers())) continue;
+            try {
+                stringBuilder
+                        .append(prefix)
+                        .append(field.getName())
+                        .append("=")
+                        .append(field.get(this));
+                prefix = ", ";
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        stringBuilder.append("}");
+
+        return stringBuilder.toString();
     }
 
     @Override

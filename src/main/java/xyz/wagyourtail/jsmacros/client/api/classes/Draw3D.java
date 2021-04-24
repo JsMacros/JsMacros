@@ -231,7 +231,7 @@ public class Draw3D {
      * @see Draw3D.Box
      * @since 1.4.0
      */
-    public Box addPoint(Vec3d point, double radius, int color) {
+    public Box addPoint(PositionCommon.Pos3D point, double radius, int color) {
         return addPoint(point.getX(), point.getY(), point.getZ(), radius, color);
     }
 

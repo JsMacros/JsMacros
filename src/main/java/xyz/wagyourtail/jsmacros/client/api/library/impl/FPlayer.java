@@ -10,16 +10,15 @@ import net.minecraft.client.util.ScreenshotUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
-import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.movement.MovementDummy;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -35,7 +34,7 @@ import java.util.function.Consumer;
 
 /**
  * Functions for getting and modifying the player's state.
- * <p>
+ *
  * An instance of this class is passed to scripts as the {@code Player} variable.
  *
  * @author Wagyourtail
@@ -175,6 +174,7 @@ public class FPlayer extends BaseLibrary {
      * @since 1.4.0
      */
     public PlayerInput getCurrentPlayerInput() {
+        assert mc.player != null;
         return new PlayerInput(mc.player.input, mc.player.yaw, mc.player.pitch, mc.player.isSprinting());
     }
 
@@ -220,7 +220,7 @@ public class FPlayer extends BaseLibrary {
      * @see #predictInput(PlayerInput, boolean)
      * @since 1.4.0
      */
-    public Vec3d predictInput(PlayerInput input) {
+    public PositionCommon.Pos3D predictInput(PlayerInput input) {
         return predictInput(input, false);
     }
 
@@ -232,7 +232,7 @@ public class FPlayer extends BaseLibrary {
      * @return the position after the input
      * @since 1.4.0
      */
-    public Vec3d predictInput(PlayerInput input, boolean draw) {
+    public PositionCommon.Pos3D predictInput(PlayerInput input, boolean draw) {
         return predictInputs(Collections.singletonList(input), draw).get(0);
     }
 
@@ -245,7 +245,7 @@ public class FPlayer extends BaseLibrary {
      * @see #predictInputs(List, boolean)
      * @since 1.4.0
      */
-    public List<Vec3d> predictInputs(List<PlayerInput> inputs) {
+    public List<PositionCommon.Pos3D> predictInputs(List<PlayerInput> inputs) {
         return predictInputs(inputs, false);
     }
 
@@ -257,20 +257,16 @@ public class FPlayer extends BaseLibrary {
      * @return the position after each input
      * @since 1.4.0
      */
-    public List<Vec3d> predictInputs(List<PlayerInput> inputs, boolean draw) {
+    public List<PositionCommon.Pos3D> predictInputs(List<PlayerInput> inputs, boolean draw) {
+        assert mc.player != null;
         MovementDummy dummy = new MovementDummy(mc.player);
-        List<Vec3d> predictions = new ArrayList<>();
+        List<PositionCommon.Pos3D> predictions = new ArrayList<>();
         for (PlayerInput input : inputs) {
-            predictions.add(dummy.applyInput(input));
+            predictions.add(new PositionCommon.Pos3D(dummy.applyInput(input)));
         }
         if (draw) {
-            Draw3D predPoints = new Draw3D();
-            for (Vec3d point : predictions) {
-                predPoints.addPoint(point, 0.01, 0xff9500);
-
-            }
-            synchronized (FHud.renders) {
-                FHud.renders.add(predPoints);
+            for (PositionCommon.Pos3D point : predictions) {
+                MovementQueue.predPoints.addPoint(point, 0.01, 0xff9500);
             }
         }
         return predictions;
