@@ -2,6 +2,10 @@ package xyz.wagyourtail.jsmacros.core.language;
 
 import java.util.concurrent.Semaphore;
 
+/**
+ * @param <T>
+ * @since 1.4.0
+ */
 public class ContextContainer<T> {
     private final ScriptContext<T> ctx;
     private Thread lockThread;
@@ -25,7 +29,9 @@ public class ContextContainer<T> {
     }
     
     /**
+    * careful with this one it can cause deadlocks if used in scripts incorrectly.
      * @throws InterruptedException
+     * @since 1.4.0
      */
     public synchronized void awaitLock() throws InterruptedException {
         if (locked) {
@@ -35,6 +41,7 @@ public class ContextContainer<T> {
     
     /**
     * can be released earlier in a script or language impl.
+    * @since 1.4.0
      */
     public synchronized void releaseLock() {
         locked = false;
