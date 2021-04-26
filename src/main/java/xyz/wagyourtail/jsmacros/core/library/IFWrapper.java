@@ -31,7 +31,7 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 public interface IFWrapper<T> {
     
     /**
-     * @since 1.3.2
+     * @since 1.4.0
      * @param c
      * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return a new {@link MethodWrapper MethodWrapper}
@@ -39,13 +39,13 @@ public interface IFWrapper<T> {
     <A, B, R> MethodWrapper<A, B, R> methodToJava(T c);
     
     /**
-     * @since 1.3.2
+     * @since 1.4.0
      * @param c
      * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return a new {@link MethodWrapper MethodWrapper}
      */
     <A, B, R> MethodWrapper<A, B, R> methodToJavaAsync(T c);
-    
+
     /**
      * Close the current context, more important in JEP as they won't close themselves if you use other functions in
      * this class

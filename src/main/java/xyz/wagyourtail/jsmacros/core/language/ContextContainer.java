@@ -34,8 +34,7 @@ public class ContextContainer<T> {
     }
     
     /**
-     * can be released earlier in a script or language impl.
-     * @return semaphore used for synchronous stuff,
+    * INTERNAL USE ONLY
      */
     public synchronized void releaseLock() {
         locked = false;

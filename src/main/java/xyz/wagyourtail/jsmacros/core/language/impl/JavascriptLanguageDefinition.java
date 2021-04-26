@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.core.language.impl;
 
 import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.Context.Builder;
+import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
@@ -10,6 +11,7 @@ import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
+import xyz.wagyourtail.jsmacros.core.library.impl.FWrapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,11 +68,15 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
         if (conf.extraJsOptions == null)
             conf.extraJsOptions = new LinkedHashMap<>();
 
-        final Context con = buildContext(file.getParentFile().toPath(), conf.extraJsOptions, globals, retrieveLibs(ctx));
+        Map<String, BaseLibrary> lib = retrieveLibs(ctx);
+
+        final Context con = buildContext(file.getParentFile().toPath(), conf.extraJsOptions, globals, lib);
         ctx.getCtx().setContext(con);
         con.enter();
         con.eval(Source.newBuilder("js", file).build());
         con.leave();
+
+        ((FWrapper) lib.get("JavaWrapper")).tasks.poll().release();
     }
     
     @Override
@@ -81,11 +87,15 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
         if (conf.extraJsOptions == null)
             conf.extraJsOptions = new LinkedHashMap<>();
 
-        final Context con = buildContext(currentDir, conf.extraJsOptions, globals, retrieveLibs(ctx));
+        Map<String, BaseLibrary> lib = retrieveLibs(ctx);
+
+        final Context con = buildContext(currentDir, conf.extraJsOptions, globals, lib);
         ctx.getCtx().setContext(con);
         con.enter();
         con.eval("js", script);
         con.leave();
+
+        ((FWrapper) lib.get("JavaWrapper")).tasks.poll().release();
     }
     
     @Override
