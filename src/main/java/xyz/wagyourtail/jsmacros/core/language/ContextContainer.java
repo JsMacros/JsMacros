@@ -34,7 +34,7 @@ public class ContextContainer<T> {
     }
     
     /**
-    * INTERNAL USE ONLY
+    * can be released earlier in a script or language impl.
      */
     public synchronized void releaseLock() {
         locked = false;
