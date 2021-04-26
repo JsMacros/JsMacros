@@ -62,6 +62,10 @@ public class FJsMacros extends BaseLibrary {
         throw new RuntimeException("Deprecated");
     }
 
+    /**
+     * @return list of non-garbage-collected ScriptContext's
+     * @since 1.4.0
+     */
     public List<ScriptContext<?>> getOpenContexts() {
         return ImmutableList.copyOf(Core.instance.contexts.keySet());
     }

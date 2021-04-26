@@ -167,6 +167,76 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
+     * Creates a new PlayerInput object.
+     *
+     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput PlayerInput}.
+     * @see xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput
+     * @since 1.4.0
+     */
+    public PlayerInput createPlayerInput(double movementForward, double movementSideways, double yaw) {
+        return new PlayerInput((float)movementForward, (float)movementSideways, (float)yaw);
+    }
+
+    /**
+     * Creates a new PlayerInput object.
+     *
+     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput PlayerInput}.
+     * @see xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput
+     * @since 1.4.0
+     */
+    public PlayerInput createPlayerInput(double movementForward, double yaw, boolean jumping, boolean sprinting) {
+        return new PlayerInput((float)movementForward, (float)yaw, jumping, sprinting);
+    }
+
+    /**
+     * Creates a new PlayerInput object.
+     *
+     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput PlayerInput}.
+     * @see xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput
+     * @since 1.4.0
+     */
+    public PlayerInput createPlayerInput(double movementForward, double movementSideways, double yaw, double pitch, boolean jumping, boolean sneaking, boolean sprinting) {
+        return new PlayerInput(movementForward, movementSideways, yaw, pitch, jumping, sneaking, sprinting);
+    }
+
+
+    /**
+     * Parses each row of CSV string into a {@code PlayerInput}.
+     * The capitalization of the header matters.<br>
+     * About the columns:
+     * <ul>
+     *   <li> {@code movementForward} and {@code movementSideways} as a number</li>
+     *   <li>{@code yaw} and {@code pitch} as an absolute number</li>
+     *   <li>{@code jumping}, {@code sneaking} and {@code sprinting} have to be boolean</li>
+     * </ul>
+     * <p>
+     * The separation must be a "," it's a csv...(but spaces don't matter)<br>
+     * Quoted values don't work
+     *
+     * @param csv CSV string to be parsed
+     * @return {@code List<PlayerInput>} Each row parsed as a {@code PlayerInput}
+     * @see PlayerInput#PlayerInput(float, float, float, float, boolean, boolean, boolean)
+     * @since 1.4.0
+     */
+    public List<PlayerInput> createPlayerInputsFromCsv(String csv) throws NoSuchFieldException, IllegalAccessException {
+        return PlayerInput.fromCsv(csv);
+    }
+
+    /**
+     * Parses a JSON string into a {@code PlayerInput} Object
+     * For details see {@code PlayerInput.fromCsv()}, on what has to be present.<br>
+     * Capitalization of the keys matters.
+     *
+     * @param json JSON string to be parsed
+     * @return The JSON parsed into a {@code PlayerInput}
+     * @see #createPlayerInputsFromCsv(String)
+     * @since 1.4.0
+     */
+    public PlayerInput createPlayerInputsFromJson(String json) throws NoSuchFieldException, IllegalAccessException {
+        return PlayerInput.fromJson(json);
+    }
+
+    /**
      * Creates a new {@code PlayerInput} object with the current inputs of the player.
      *
      * @return a new {@link xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput PlayerInput} with the current inputs.
