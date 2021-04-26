@@ -220,20 +220,68 @@ public class Draw3D {
         }
         return this;
     }
-    
-    
+
+    /**
+     * Draws a cube({@link Box}) with a specific radius({@code side length = 2*radius})
+     *
+     * @param point  the center point
+     * @param radius 1/2 of the side length of the cube
+     * @param color  point color
+     * @return the {@link Box} generated, and visualized
+     * @see Draw3D.Box
+     * @since 1.4.0
+     */
+    public Box addPoint(PositionCommon.Pos3D point, double radius, int color) {
+        return addPoint(point.getX(), point.getY(), point.getZ(), radius, color);
+    }
+
+    /**
+     * Draws a cube({@link Box}) with a specific radius({@code side length = 2*radius})
+     *
+     * @param x      x value of the center point
+     * @param y      y value of the center point
+     * @param z      z value of the center point
+     * @param radius 1/2 of the side length of the cube
+     * @param color  point color
+     * @return the {@link Box} generated, and visualized
+     * @see Draw3D.Box
+     * @since 1.4.0
+     */
+    public Box addPoint(double x, double y, double z, double radius, int color) {
+        return addBox(x - radius, y - radius, z - radius, x + radius, y + radius, z + radius, color, color, true, false);
+    }
+
+    /**
+     * Draws a cube({@link Box}) with a specific radius({@code side length = 2*radius})
+     *
+     * @param x      x value of the center point
+     * @param y      y value of the center point
+     * @param z      z value of the center point
+     * @param radius 1/2 of the side length of the cube
+     * @param color  point color
+     * @param alpha  alpha of the point
+     * @param cull   whether to cull the point or not
+     * @return the {@link Box} generated, and visualized
+     * @see Draw3D.Box
+     * @since 1.4.0
+     */
+    public Box addPoint(double x, double y, double z, double radius, int color, int alpha, boolean cull) {
+        return addBox(x - radius, y - radius, z - radius, x + radius, y + radius, z + radius, color, color, alpha, alpha, true, cull);
+    }
+
+
     public void render() {
-        MinecraftClient mc  = MinecraftClient.getInstance();
-        
+        MinecraftClient mc = MinecraftClient.getInstance();
+
         //setup
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.lineWidth(2.5F);
         RenderSystem.disableTexture();
         RenderSystem.matrixMode(5889);
-        
+
         RenderSystem.pushMatrix();
-        
+
         // offsetRender
         Camera camera = mc.gameRenderer.getCamera();
         Vec3d camPos = camera.getPos();
@@ -298,9 +346,9 @@ public class Draw3D {
         public void setPos(double x1, double y1, double z1, double x2, double y2, double z2) {
             pos = new PositionCommon.Vec3D(x1, y1, z1, x2, y2, z2);
         }
-        
-        
-        
+
+
+
         /**
          * @since 1.0.6
          * 

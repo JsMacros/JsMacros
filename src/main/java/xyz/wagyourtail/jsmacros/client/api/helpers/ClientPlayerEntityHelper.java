@@ -56,7 +56,8 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     public int getFoodLevel() {
         return base.getHungerManager().getFoodLevel();
     }
-    
+
+
     public String toString() {
         return "Client" + super.toString();
     }
