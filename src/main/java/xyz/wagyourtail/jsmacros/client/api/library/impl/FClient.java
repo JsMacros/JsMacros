@@ -37,7 +37,16 @@ public class FClient extends BaseLibrary {
     public MinecraftClient getMinecraft() {
         return mc;
     }
-    
+
+    /**
+     * Run your task on the main minecraft thread
+     * @param runnable task to run
+     * @since 1.4.0
+     */
+    public void runOnMainThread(MethodWrapper<Object, Object, Object> runnable) {
+        mc.execute(runnable);
+    }
+
     /**
      * @see xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper
      *
