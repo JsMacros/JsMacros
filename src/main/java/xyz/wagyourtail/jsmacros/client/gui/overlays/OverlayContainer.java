@@ -38,6 +38,10 @@ public abstract class OverlayContainer extends MultiElementContainer<IOverlayPar
     
     @Override
     public void openOverlay(OverlayContainer overlay, boolean disableButtons) {
+        if (this.overlay != null) {
+            this.overlay.openOverlay(overlay, disableButtons);
+            return;
+        }
         if (disableButtons) {
             for (AbstractButtonWidget b : buttons) {
                 overlay.savedBtnStates.put(b, b.active);

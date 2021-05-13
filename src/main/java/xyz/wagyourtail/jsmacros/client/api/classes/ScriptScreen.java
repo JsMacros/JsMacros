@@ -2,6 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.classes;
 
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
 
 /**
  * just go look at {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen IScreen}
@@ -13,15 +15,19 @@ import net.minecraft.text.LiteralText;
  * 
  * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen
  */
-public class Screen extends net.minecraft.client.gui.screen.Screen {
+public class ScriptScreen extends BaseScreen {
     private final int bgStyle;
     
     
-    public Screen(String title, boolean dirt) {
-        super(new LiteralText(title));
+    public ScriptScreen(String title, boolean dirt) {
+        super(new LiteralText(title), null);
         this.bgStyle = dirt ? 0 : 1;
     }
-    
+
+    public void setParent(IScreen parent) {
+        this.parent = (net.minecraft.client.gui.screen.Screen) parent;
+    }
+
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (matrices == null) return;

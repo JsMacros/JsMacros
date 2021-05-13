@@ -6,7 +6,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.Screen;
+import xyz.wagyourtail.jsmacros.client.api.classes.ScriptScreen;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
@@ -51,7 +51,7 @@ public class FHud extends BaseLibrary {
      * @return a new {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen IScreen} Object.
      */
     public IScreen createScreen(String title, boolean dirtBG) {
-        return (IScreen) new Screen(title, dirtBG);
+        return (IScreen) new ScriptScreen(title, dirtBG);
     }
     
     /**

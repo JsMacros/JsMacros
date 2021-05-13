@@ -53,6 +53,7 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
     public void openOverlay(OverlayContainer overlay) {
         openOverlay(overlay, true);
     }
+
     @Override
     public IOverlayParent getFirstOverlayParent() {
         return this;
@@ -66,6 +67,10 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
     
     @Override
     public void openOverlay(OverlayContainer overlay, boolean disableButtons) {
+        if (this.overlay != null) {
+            this.overlay.openOverlay(overlay, disableButtons);
+            return;
+        }
         if (disableButtons) {
             for (AbstractButtonWidget b : buttons) {
                 overlay.savedBtnStates.put(b, b.active);
