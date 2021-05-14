@@ -58,6 +58,7 @@ public class Main {
                 }
             }
             new FileHandler(new File(outDir, "package-list")).write(pkglist.toString());
+
             /* spec
              * C\t<searchname>\t<linkname>\t<?group>\t<?alias>
              * F\t<fieldname>\t<fieldlink>

@@ -166,7 +166,7 @@ public abstract class AbstractParser {
         for (DocTree docTree : tree.getFullBody()) {
             switch (docTree.getKind()) {
                 case LINK, LINK_PLAIN -> {
-                    String referenceString = ((LinkTree) docTree).getReference().toString().split("\\(")[0];
+                    String referenceString = ((LinkTree) docTree).getReference().getSignature().split("\\(")[0];
                     s.append("{@link ");
                     if (referenceString.startsWith("#")) {
                         s.append(referenceString);
