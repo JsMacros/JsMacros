@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import org.graalvm.polyglot.Context;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
@@ -60,11 +61,13 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
     /**
      * @param c
      *
+     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return a new {@link MethodWrapper MethodWrapper}
      *
      * @since 1.3.2
      */
     @Override
+    @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R")
     public <A, B, R> MethodWrapper<A, B, R> methodToJava(Function<Object[], Object> c) {
         return new MethodWrapper<A, B, R>() {
 
@@ -152,11 +155,13 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
     /**
      * @param c
      *
+     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return a new {@link MethodWrapper MethodWrapper}
      *
      * @since 1.3.2
      */
     @Override
+    @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R")
     public <A, B, R> MethodWrapper<A, B, R> methodToJavaAsync(Function<Object[], Object> c) {
         return new MethodWrapper<A, B, R>() {
 

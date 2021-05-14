@@ -1,14 +1,6 @@
-import org.gradle.internal.jvm.Jvm
-
-buildscript {
-	dependencies {
-		classpath files(Jvm.current().toolsJar)
-	}
-}
-
 plugins {
 	id 'java'
-	id 'fabric-loom' version '0.5-SNAPSHOT'
+	id 'fabric-loom' version '0.7-SNAPSHOT'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -29,9 +21,6 @@ repositories {
     }
     maven { url 'https://jitpack.io' }
 
-}
-
-minecraft {
 }
 
 dependencies {
@@ -84,13 +73,8 @@ dependencies {
 processResources {
 	inputs.property "version", project.version
 
-	from(sourceSets.main.resources.srcDirs) {
-		include "fabric.mod.json"
+	filesMatching("fabric.mod.json") {
 		expand "version": project.version
-	}
-
-	from(sourceSets.main.resources.srcDirs) {
-		exclude "fabric.mod.json"
 	}
 }
 
@@ -99,6 +83,12 @@ processResources {
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
+
+	//TODO: remove in 1.17?
+	def targetVersion = 8
+	if (JavaVersion.current().isJava9Compatible()) {
+		it.options.release = targetVersion
+	}
 }
 
 // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
@@ -109,8 +99,17 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	from sourceSets.main.allSource
 }
 
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
+}
+
 jar {
-	from "LICENSE"
+	from("LICENSE") {
+		rename { "${it}_${project.archivesBaseName}"}
+	}
 }
 
 javadoc {
@@ -127,7 +126,7 @@ task generateTSDoc(type: Javadoc) {
 	source = sourceSets.main.allJava
 	classpath = sourceSets.main.compileClasspath
 	destinationDir = new File(project.buildDir, "docs/typescript/headers/")
-	options.doclet = "xyz.wagyourtail.tsdoclet.Main"
+	options.doclet = "xyz.wagyourtail.doclet.tsdoclet.Main"
 	options.docletpath new File(project.rootDir, "buildSrc/build/libs/buildSrc.jar")
 	options.addStringOption "v", version
 }
@@ -141,7 +140,7 @@ task generateWebDoc(type: Javadoc) {
 	source = sourceSets.main.allJava
 	classpath = sourceSets.main.compileClasspath
 	destinationDir = new File(project.buildDir, "docs/web/")
-	options.doclet = "xyz.wagyourtail.webdoclet.Main"
+	options.doclet = "xyz.wagyourtail.doclet.webdoclet.Main"
 	options.docletpath new File(project.rootDir, "buildSrc/build/libs/buildSrc.jar")
 	options.addStringOption "v", version
 	options.addStringOption "mcv", project.minecraft_version

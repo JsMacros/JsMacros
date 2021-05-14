@@ -33,7 +33,6 @@ public interface IFWrapper<T> {
     /**
      * @since 1.4.0
      * @param c
-     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return a new {@link MethodWrapper MethodWrapper}
      */
     <A, B, R> MethodWrapper<A, B, R> methodToJava(T c);
@@ -41,7 +40,6 @@ public interface IFWrapper<T> {
     /**
      * @since 1.4.0
      * @param c
-     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return a new {@link MethodWrapper MethodWrapper}
      */
     <A, B, R> MethodWrapper<A, B, R> methodToJavaAsync(T c);
