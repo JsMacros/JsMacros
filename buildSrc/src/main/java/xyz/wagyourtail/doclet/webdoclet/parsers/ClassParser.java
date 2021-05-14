@@ -270,7 +270,7 @@ public class ClassParser {
     private Pair<String, Boolean> getURL(Element type) {
         if (type.asType().getKind().isPrimitive()) return new Pair<>("", false);
         Element clazz = type;
-        while (!(type instanceof TypeElement)) {
+        while (!(clazz instanceof TypeElement)) {
             clazz = clazz.getEnclosingElement();
         }
         if (!clazz.equals(this.type)) {
