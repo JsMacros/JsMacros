@@ -24,6 +24,7 @@ public abstract class AbstractParser {
     public String genFields(Set<Element> fields) {
         final StringBuilder s = new StringBuilder();
         for (Element field : fields) {
+            if (!field.getModifiers().contains(Modifier.PUBLIC)) continue;
             s.append(genField(field)).append("\n");
         }
         return s.toString();
@@ -32,6 +33,7 @@ public abstract class AbstractParser {
     public String genMethods(Set<Element> methods) {
         final StringBuilder s = new StringBuilder();
         for (Element method : methods) {
+            if (!method.getModifiers().contains(Modifier.PUBLIC)) continue;
             s.append(genMethod((ExecutableElement) method)).append("\n");
         }
         return s.toString();

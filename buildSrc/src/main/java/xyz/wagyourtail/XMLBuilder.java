@@ -39,13 +39,11 @@ public class XMLBuilder {
     }
 
     public XMLBuilder setID(String id) {
-        options.put("id", id);
-        return this;
+        return addStringOption("id", id);
     }
 
     public XMLBuilder setClass(String clazz) {
-        options.put("class", clazz);
-        return this;
+        return addStringOption("class", clazz);
     }
 
     public XMLBuilder addStringOption(String key, String option) {

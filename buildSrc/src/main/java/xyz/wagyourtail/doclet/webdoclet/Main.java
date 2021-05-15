@@ -66,8 +66,10 @@ public class Main implements Doclet {
         treeUtils = environment.getDocTrees();
         elementUtils = environment.getElementUtils();
 
+        File outDir = new File(OutputDirectory.outputDir, Version.version);
+
         try {
-            if (!OutputDirectory.outputDir.exists() && !OutputDirectory.outputDir.mkdirs()) {
+            if (!outDir.exists() && !outDir.mkdirs()) {
                 reporter.print(Diagnostic.Kind.ERROR, "Failed to create version dir\n");
                 return false;
             }
@@ -79,7 +81,7 @@ public class Main implements Doclet {
                 pkgList.append(e.getQualifiedName()).append("\n");
             });
             pkgList.setLength(pkgList.length() - 1);
-            new FileHandler(new File(OutputDirectory.outputDir, "package-list")).write(pkgList.toString());
+            new FileHandler(new File(outDir, "package-list")).write(pkgList.toString());
 
             elements.stream().filter(e -> e instanceof TypeElement).map(e -> (TypeElement) e).forEach(e -> {
                 AnnotationMirror mirror = e.getAnnotationMirrors().stream().filter(a -> a.getAnnotationType().asElement().getSimpleName().toString().equals("Event")).findFirst().orElse(null);
@@ -99,9 +101,18 @@ public class Main implements Doclet {
                 internalClasses.put(e, new ClassParser(e, "Class", null));
             });
 
+            StringBuilder searchList = new StringBuilder();
             for (ClassParser value : internalClasses.values()) {
-                value.genXML();
+                searchList.append(value.genSearchData());
+                File out = new File(outDir, value.getPathPart() + ".html");
+                File parent = out.getParentFile();
+                if (!parent.exists() && !parent.mkdirs()) {
+                    reporter.print(Diagnostic.Kind.ERROR, "Failed to create package dir " + parent + "\n");
+                    return false;
+                }
+                new FileHandler(out).write(value.genXML());
             }
+            new FileHandler(new File(outDir, "search-list")).write(searchList.toString());
 
 
 
