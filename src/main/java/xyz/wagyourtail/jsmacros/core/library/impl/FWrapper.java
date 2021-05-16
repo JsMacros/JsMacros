@@ -261,7 +261,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
     /**
      * JS only, puts current task at end of queue.
-     *
+     * use with caution, don't accidentally cause circular waiting.
      * @throws InterruptedException
      */
     public void deferCurrentTask() throws InterruptedException {

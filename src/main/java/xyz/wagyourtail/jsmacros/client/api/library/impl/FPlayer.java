@@ -48,7 +48,7 @@ public class FPlayer extends BaseLibrary {
      * @return the Inventory handler
      * @see xyz.wagyourtail.jsmacros.client.api.classes.Inventory
      */
-    public Inventory openInventory() {
+    public Inventory<?> openInventory() {
         assert mc.player != null && mc.player.inventory != null;
         return Inventory.create();
     }
