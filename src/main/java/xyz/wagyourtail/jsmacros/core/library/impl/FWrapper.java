@@ -39,7 +39,7 @@ import java.util.function.Function;
  * no limitations
  *
  * @author Wagyourtail
- * @since 1.2.5, re-named from {@code consumer} in 1.3.2
+ * @since 1.2.5, re-named from {@code consumer} in 1.4.0
  */
 @Library(value = "JavaWrapper", languages = JavascriptLanguageDefinition.class)
 @SuppressWarnings("unused")

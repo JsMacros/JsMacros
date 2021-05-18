@@ -47,6 +47,34 @@ public class Prism_ruby {
                     true,
                     null,
                     grammar("inside", interpolation)
+                ),
+                pattern(compile("<<[-~]?([a-z_]\\w*)[\\r\\n](?:.*[\\r\\n])*?[\\t ]*\\1", CASE_INSENSITIVE),
+                    false,
+                    true,
+                    "heredoc-string",
+                    grammar("inside",
+                        token("delimiter", pattern(compile("^<<[-~]?[a-z_]\\w*|[a-z_]\\w*$", CASE_INSENSITIVE),
+                                false,
+                                false,
+                                "symbol",
+                                grammar("inside", token("punctuation", pattern(compile("^<<[-~]?"))))
+                            )
+                        ),
+                        interpolation
+                    )
+                ),
+                pattern(compile("<<[-~]?'([a-z_]\\w*)'[\\r\\n](?:.*[\\r\\n])*?[\\t ]*\\1", CASE_INSENSITIVE),
+                    false,
+                    true,
+                    "heredoc-string",
+                    grammar("inside",
+                        token("delimiter", pattern(compile("^<<[-~]?'[a-z_]\\w*'|[a-z_]\\w*$", CASE_INSENSITIVE),
+                            false,
+                            false,
+                            "symbol",
+                            grammar("inside", token("punctuation", pattern(compile("^<<[-~]?'|'$"))))
+                        ))
+                    )
                 )
             )
         );
