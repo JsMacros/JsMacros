@@ -211,7 +211,7 @@ jobs:
           name: ${{ steps.fname.outputs.result }}
           path: ./build/libs/*
   
-  build-forge-1.16.5:
+  build-forge-1_16_5:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -258,7 +258,6 @@ jobs:
           display_name: ${{ steps.fname.outputs.result }}
           game_versions: 70886:1.16.5,70886:1.16.4,70886:1.16.3,2:Java 8,7498:Forge
           release_type: release
-          relations: modmenu:optionalDependency
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.fname.outputs.result }}
