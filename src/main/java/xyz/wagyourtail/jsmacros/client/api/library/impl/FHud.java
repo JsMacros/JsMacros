@@ -50,8 +50,8 @@ public class FHud extends BaseLibrary {
      * @param dirtBG boolean of whether to use a dirt background or not.
      * @return a new {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen IScreen} Object.
      */
-    public IScreen createScreen(String title, boolean dirtBG) {
-        return (IScreen) new ScriptScreen(title, dirtBG);
+    public ScriptScreen createScreen(String title, boolean dirtBG) {
+        return new ScriptScreen(title, dirtBG);
     }
     
     /**

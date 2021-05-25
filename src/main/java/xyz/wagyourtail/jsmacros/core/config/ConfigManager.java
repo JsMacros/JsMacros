@@ -57,21 +57,21 @@ public class ConfigManager {
         }
     }
     
-    public synchronized void convertConfigFormat() throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    public synchronized void convertConfigFormat() throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
         for (Map.Entry<String, Class<?>> optionClass : optionClasses.entrySet()) {
             convertConfigFormat(optionClass.getValue());
         }
         rawOptions.addProperty("version", 2);
     }
     
-    public synchronized void convertConfigFormat(Class<?> clazz) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    public synchronized void convertConfigFormat(Class<?> clazz) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
         try {
             Method m = clazz.getDeclaredMethod("fromV1", JsonObject.class);
-            Object option = clazz.newInstance();
+            Object option = clazz.getDeclaredConstructor().newInstance();
             m.invoke(option, rawOptions);
             options.put(clazz, option);
         } catch (NoSuchMethodException ignored) {
-            options.put(clazz, clazz.newInstance());
+            options.put(clazz, clazz.getDeclaredConstructor().newInstance());
         }
     }
     
