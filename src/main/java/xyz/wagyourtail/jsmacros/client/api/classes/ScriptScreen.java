@@ -1,7 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
@@ -21,10 +23,16 @@ public class ScriptScreen extends BaseScreen {
     private final int bgStyle;
     private MethodWrapper<PositionCommon.Pos3D, MatrixStack, Object> onRender;
     
-    
     public ScriptScreen(String title, boolean dirt) {
         super(new LiteralText(title), null);
         this.bgStyle = dirt ? 0 : 1;
+    }
+
+    @Override
+    protected void init() {
+        BaseScreen prev = JsMacros.prevScreen;
+        super.init();
+        JsMacros.prevScreen = prev;
     }
 
     /**
@@ -54,6 +62,12 @@ public class ScriptScreen extends BaseScreen {
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
 
         super.render(matrices, mouseX, mouseY, delta);
+
+        for (AbstractButtonWidget button : this.buttons) {
+            button.render(matrices, mouseX, mouseY, delta);
+        }
+
+        ((IScreen) this).onRenderInternal(matrices, mouseX, mouseY, delta);
 
         if (onRender != null) onRender.accept(new PositionCommon.Pos3D(mouseX, mouseY, delta), matrices);
     }

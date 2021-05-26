@@ -524,16 +524,21 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         return this;
     }
 
-    @Inject(at = @At("RETURN"), method = "render")
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info) {
+    @Override
+    public void onRenderInternal(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (matrices == null) return;
-        
+
         synchronized (elements) {
             Iterator<RenderCommon.RenderElement> iter = elements.stream().sorted(Comparator.comparingInt(RenderCommon.RenderElement::getZIndex)).iterator();
             while (iter.hasNext()) {
                 iter.next().render(matrices, mouseX, mouseY, delta);
             }
         }
+    }
+
+    @Inject(at = @At("RETURN"), method = "render")
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info) {
+        onRenderInternal(matrices, mouseX, mouseY, delta);
     }
     
     @Override
@@ -588,7 +593,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Inject(at = @At("RETURN"), method = "init()V")
     protected void init(CallbackInfo info) {
         synchronized (elements) {
-        elements.clear();
+            elements.clear();
         }
         client.keyboard.setRepeatEvents(true);
         if (onInit != null) {
