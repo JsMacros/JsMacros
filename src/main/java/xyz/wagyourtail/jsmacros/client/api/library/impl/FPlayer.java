@@ -366,4 +366,28 @@ public class FPlayer extends BaseLibrary {
         input.yaw = getPlayer().getYaw() + yaw;
         addInput(input);
     }
+
+    /**
+     * Adds sideways movement with a relative yaw value to the MovementQueue.
+     * @param yaw the relative yaw for the player
+     * @since 1.4.2
+     */
+    public void moveStrafeLeft(float yaw) {
+        PlayerInput input = new PlayerInput();
+        input.movementSideways = -1.0F;
+        input.yaw = getPlayer().getYaw() + yaw;
+        addInput(input);
+    }
+
+    /**
+     * Adds sideways movement with a relative yaw value to the MovementQueue.
+     * @param yaw the relative yaw for the player
+     * @since 1.4.2
+     */
+    public void moveStrafeRight(float yaw) {
+        PlayerInput input = new PlayerInput();
+        input.movementSideways = 1.0F;
+        input.yaw = getPlayer().getYaw() + yaw;
+        addInput(input);
+    }
 }
