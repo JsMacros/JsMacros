@@ -6,9 +6,10 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.AbstractParentElement;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.ClickEvent;
@@ -57,18 +58,18 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Shadow @Final protected Text title;
     @Shadow protected MinecraftClient client;
     @Shadow protected TextRenderer textRenderer;
-    @Shadow @Final protected List<Element> children;
     
-    @Shadow protected abstract <T extends AbstractButtonWidget> T addButton(T button);
+    @Shadow protected abstract <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement);
     @Shadow public abstract void onClose();
     @Shadow protected abstract void init();
-    
-    @Shadow @Final protected List<AbstractButtonWidget> buttons;
+
     
     @Shadow public abstract void tick();
     
     @Shadow public abstract boolean shouldCloseOnEsc();
-    
+
+    @Shadow @Final private List<Element> children;
+
     @Override
     public int getWidth() {
         return width;
@@ -125,16 +126,16 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public List<TextFieldWidgetHelper> getTextFields() {
-        Map<AbstractButtonWidget, TextFieldWidgetHelper> btns = new LinkedHashMap<>();
+        Map<TextFieldWidget, TextFieldWidgetHelper> btns = new LinkedHashMap<>();
         for (RenderCommon.RenderElement el : elements) {
             if (el instanceof TextFieldWidgetHelper) {
                 btns.put(((TextFieldWidgetHelper) el).getRaw(), (TextFieldWidgetHelper) el);
             }
         }
-        synchronized (buttons) {
-            for (AbstractButtonWidget e : buttons) {
+        synchronized (children) {
+            for (Element e : children) {
                 if (e instanceof TextFieldWidget && !btns.containsKey(e)) {
-                    btns.put(e, new TextFieldWidgetHelper((TextFieldWidget) e));
+                    btns.put((TextFieldWidget) e, new TextFieldWidgetHelper((TextFieldWidget) e));
                 }
             }
         }
@@ -143,16 +144,16 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     
     @Override
     public List<ButtonWidgetHelper<?>> getButtonWidgets() {
-        Map<AbstractButtonWidget, ButtonWidgetHelper<?>> btns = new LinkedHashMap<>();
+        Map<ClickableWidget, ButtonWidgetHelper<?>> btns = new LinkedHashMap<>();
         for (RenderCommon.RenderElement el : elements) {
             if (el instanceof ButtonWidgetHelper) {
                 btns.put(((ButtonWidgetHelper<?>) el).getRaw(), (ButtonWidgetHelper<?>) el);
             }
         }
-        synchronized (buttons) {
-            for (AbstractButtonWidget e : buttons) {
-                if (!(e instanceof TextFieldWidget) && !btns.containsKey(e)) {
-                    btns.put(e, new ButtonWidgetHelper<>(e));
+        synchronized (children) {
+            for (Element e : children) {
+                if ((e instanceof ButtonWidget) && !btns.containsKey(e)) {
+                    btns.put((ClickableWidget) e, new ButtonWidgetHelper<>((ClickableWidget) e));
                 }
             }
         }

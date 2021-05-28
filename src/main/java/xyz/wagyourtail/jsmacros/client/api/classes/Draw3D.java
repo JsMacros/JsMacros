@@ -4,8 +4,11 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 
@@ -272,7 +275,7 @@ public class Draw3D {
     }
 
 
-    public void render() {
+    public void render(MatrixStack matrixStack) {
         MinecraftClient mc = MinecraftClient.getInstance();
 
         //setup
@@ -280,34 +283,34 @@ public class Draw3D {
         RenderSystem.defaultBlendFunc();
         RenderSystem.lineWidth(2.5F);
         RenderSystem.disableTexture();
-        RenderSystem.matrixMode(5889);
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
-        RenderSystem.pushMatrix();
+        matrixStack.push();
+
+        Vec3d camPos = mc.gameRenderer.getCamera().getPos();
 
         // offsetRender
-        Camera camera = mc.gameRenderer.getCamera();
-        Vec3d camPos = camera.getPos();
-        RenderSystem.rotatef(MathHelper.wrapDegrees(camera.getPitch()), 1, 0, 0);
-        RenderSystem.rotatef(MathHelper.wrapDegrees(camera.getYaw() + 180.0F), 0, 1, 0);
-        RenderSystem.translated(-camPos.x, -camPos.y, -camPos.z);
+//        matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(MathHelper.wrapDegrees(camera.getPitch())));
+//        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(camera.getYaw() + 180F));
+        matrixStack.translate(-camPos.x, -camPos.y, -camPos.z);
         
         //render
         synchronized (boxes) {
             for (Box b : boxes) {
-                b.render();
+                b.render(matrixStack);
             }
         }
         
         synchronized (lines) {
             for (Line l : lines) {
-                l.render();
+                l.render(matrixStack);
             }
         }
-        
-        RenderSystem.popMatrix();
+
+        matrixStack.pop();
         
         //reset
-        RenderSystem.matrixMode(5888);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.enableTexture();
         RenderSystem.disableBlend();
     }
@@ -417,7 +420,7 @@ public class Draw3D {
             this.fill = fill;
         }
         
-        public void render() {
+        public void render(MatrixStack matrixStack) {
             final boolean cull = !this.cull;
             int a = (color >> 24) & 0xFF;
             int r = (color >> 16) & 0xFF;
@@ -428,44 +431,44 @@ public class Draw3D {
             
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
-            
+
+
             if (this.fill) {
                 float fa = ((fillColor >> 24) & 0xFF)/255F;
                 float fr = ((fillColor >> 16) & 0xFF)/255F;
                 float fg = ((fillColor >> 8) & 0xFF)/255F;
                 float fb = (fillColor & 0xFF)/255F;
-                
+
                 //1.15+ culls insides
                 RenderSystem.disableCull();
-                
-                buf.begin(GL11.GL_TRIANGLE_STRIP,  VertexFormats.POSITION_COLOR);
-                
-                //why'd they change it from build box to draw box... it's not calling tess.draw()
-                WorldRenderer.drawBox(buf, pos.x1, pos.y1, pos.z1, pos.x2, pos.y2, pos.z2, fr, fg, fb, fa);
-                
+
+                buf.begin(VertexFormat.DrawMode.QUADS,  VertexFormats.POSITION_COLOR);
+                WorldRenderer.drawBox(matrixStack, buf, pos.x1, pos.y1, pos.z1, pos.x2, pos.y2, pos.z2, fr, fg, fb, fa);
+
                 tess.draw();
-                
+
                 RenderSystem.enableCull();
             }
-            
-            buf.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
-            
-            buf.vertex(pos.x1, pos.y1, pos.z1).color(r, g, b, a).next();
-            buf.vertex(pos.x1, pos.y1, pos.z2).color(r, g, b, a).next();
-            buf.vertex(pos.x2, pos.y1, pos.z2).color(r, g, b, a).next();
-            buf.vertex(pos.x2, pos.y1, pos.z1).color(r, g, b, a).next();
-            buf.vertex(pos.x1, pos.y1, pos.z1).color(r, g, b, a).next();
-            buf.vertex(pos.x1, pos.y2, pos.z1).color(r, g, b, a).next();
-            buf.vertex(pos.x2, pos.y2, pos.z1).color(r, g, b, a).next();
-            buf.vertex(pos.x2, pos.y2, pos.z2).color(r, g, b, a).next();
-            buf.vertex(pos.x1, pos.y2, pos.z2).color(r, g, b, a).next();
-            buf.vertex(pos.x1, pos.y2, pos.z1).color(r, g, b, a).next();
-            buf.vertex(pos.x1, pos.y1, pos.z2).color(r, g, b, 0).next();
-            buf.vertex(pos.x1, pos.y2, pos.z2).color(r, g, b, a).next();
-            buf.vertex(pos.x2, pos.y1, pos.z2).color(r, g, b, 0).next();
-            buf.vertex(pos.x2, pos.y2, pos.z2).color(r, g, b, a).next();
-            buf.vertex(pos.x2, pos.y1, pos.z1).color(r, g, b, 0).next();
-            buf.vertex(pos.x2, pos.y2, pos.z1).color(r, g, b, a).next();
+
+            buf.begin(VertexFormat.DrawMode.LINE_STRIP, VertexFormats.POSITION_COLOR);
+            Matrix4f matrix  = matrixStack.peek().getModel();
+
+            buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).normal(0, 0, 0).next();
+            buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z2).color(r, g, b, a).normal(0, 0, 0).next();
+            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z2).color(r, g, b, a).normal(0, 0, 0).next();
+            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z1).color(r, g, b, a).normal(0, 0, 0).next();
+            buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).normal(0, 0, 0).next();
+            buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z1).color(r, g, b, a).normal(0, 0, 0).next();
+            buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z1).color(r, g, b, a).normal(0, 0, 0).next();
+            buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).normal(0, 0, 0).next();
+            buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z2).color(r, g, b, a).normal(0, 0, 0).next();
+            buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z1).color(r, g, b, a).normal(0, 0, 0).next();
+            buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z2).color(r, g, b, 0).normal(0, 0, 0).next();
+            buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z2).color(r, g, b, a).normal(0, 0, 0).next();
+            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z2).color(r, g, b, 0).normal(0, 0, 0).next();
+            buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).normal(0, 0, 0).next();
+            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z1).color(r, g, b, 0).normal(0, 0, 0).next();
+            buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z1).color(r, g, b, a).normal(0, 0, 0).next();
             
             tess.draw();
             
@@ -532,7 +535,7 @@ public class Draw3D {
             this.color = (color & 0xFFFFFF) | (alpha << 24);
         }
         
-        public void render() {
+        public void render(MatrixStack matrixStack) {
             final boolean cull = !this.cull;
             if (cull) RenderSystem.disableDepthTest();
         
@@ -542,10 +545,11 @@ public class Draw3D {
             int b = color & 0xFF;
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
-            buf.begin(GL11.GL_LINE_STRIP,  VertexFormats.POSITION_COLOR);
-            buf.vertex(pos.x1, pos.y1, pos.z1).color(r, g, b, a).next();
-            buf.vertex(pos.x1, pos.y1, pos.z1).color(r, g, b, a).next();
-            buf.vertex(pos.x2, pos.y2, pos.z2).color(r, g, b, a).next();
+            Matrix4f model = matrixStack.peek().getModel();
+            buf.begin(VertexFormat.DrawMode.LINE_STRIP,  VertexFormats.POSITION_COLOR);
+            buf.vertex(model, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
+            buf.vertex(model, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
+            buf.vertex(model, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
             tess.draw();
             
             if (cull) RenderSystem.enableDepthTest();

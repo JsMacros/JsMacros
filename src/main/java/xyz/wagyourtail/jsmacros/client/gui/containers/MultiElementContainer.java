@@ -1,8 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.gui.containers;
 
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.IOverlayParent;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.OverlayContainer;
@@ -11,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MultiElementContainer<T extends IContainerParent> extends DrawableHelper implements IContainerParent {
-    protected List<AbstractButtonWidget> buttons = new ArrayList<>();
+    protected List<ClickableWidget> buttons = new ArrayList<>();
     protected TextRenderer textRenderer;
     protected boolean visible = true;
     public final T parent;
@@ -39,21 +42,21 @@ public abstract class MultiElementContainer<T extends IContainerParent> extends 
     }
     
     public void setVisible(boolean visible) {
-        for (AbstractButtonWidget btn : buttons) {
+        for (ClickableWidget btn : buttons) {
             btn.visible = visible;
             btn.active = visible;
         }
         this.visible = visible;
     }
-    
+
     @Override
-    public <T extends AbstractButtonWidget> T addButton(T btn) {
-        buttons.add(btn);
-        parent.addButton(btn);
-        return btn;
+    public <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement) {
+        buttons.add((ClickableWidget) drawableElement);
+        parent.addDrawableChild(drawableElement);
+        return drawableElement;
     }
     
-    public List<AbstractButtonWidget> getButtons() {
+    public List<ClickableWidget> getButtons() {
         return buttons;
     }
     
@@ -75,9 +78,9 @@ public abstract class MultiElementContainer<T extends IContainerParent> extends 
     }
     
     @Override
-    public void removeButton(AbstractButtonWidget button) {
+    public void remove(Element button) {
         this.buttons.remove(button);
-        parent.removeButton(button);
+        parent.remove(button);
     }
     
     @Override

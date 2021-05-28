@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.tick;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventArmorChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventHeldItemChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventItemDamage;
@@ -31,12 +31,12 @@ public class TickBasedEvents {
             if (a.getTag() == null && b.getTag() == null) {
                 return true;
             } else {
-                CompoundTag at;
-                CompoundTag bt;
+                NbtCompound at;
+                NbtCompound bt;
                 if (a.getTag() != null) at = a.getTag().copy();
-                else at = new CompoundTag();
+                else at = new NbtCompound();
                 if (b.getTag() != null) bt = b.getTag().copy();
-                else bt = new CompoundTag();
+                else bt = new NbtCompound();
                 at.remove("Damage");
                 bt.remove("Damage");
                 return at.equals(bt);
@@ -60,8 +60,8 @@ public class TickBasedEvents {
             
             new EventTick();
             
-            if (mc.player != null && mc.player.inventory != null) {
-                PlayerInventory inv = mc.player.inventory;
+            if (mc.player != null && mc.player.getInventory() != null) {
+                PlayerInventory inv = mc.player.getInventory();
 
                 ItemStack newMainHand = inv.getMainHandStack();
                 if (areNotEqual(newMainHand, mainHand)) {

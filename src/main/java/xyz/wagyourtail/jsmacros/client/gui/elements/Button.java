@@ -1,7 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.gui.elements;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.AbstractPressableButtonWidget;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.widget.PressableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -9,7 +10,7 @@ import net.minecraft.text.Text;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class Button extends AbstractPressableButtonWidget {
+public class Button extends PressableWidget {
     protected final TextRenderer textRenderer;
     protected int color;
     protected int borderColor;
@@ -106,6 +107,11 @@ public class Button extends AbstractPressableButtonWidget {
     @Override
     public void onPress() {
         if (onPress != null) onPress.accept(this);
+    }
+
+    @Override
+    public void appendNarrations(NarrationMessageBuilder builder) {
+        //TODO
     }
 
 }

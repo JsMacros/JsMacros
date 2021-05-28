@@ -43,7 +43,7 @@ public class MovementDummy extends LivingEntity {
 
     public Vec3d applyInput(PlayerInput input) {
         this.currentInput = input.clone();
-        this.yaw = currentInput.yaw;
+        this.setYaw(currentInput.yaw);
 
         Vec3d velocity = this.getVelocity();
         double velX = velocity.x;
@@ -112,13 +112,14 @@ public class MovementDummy extends LivingEntity {
      */
     @Override
     public Vec3d method_26318(Vec3d movementInput, float f) {
-        if (this.isClimbing() && this.getVelocity().getY() < 0.0D && !this.getBlockState().isOf(Blocks.SCAFFOLDING) && this.isHoldingOntoLadder()) {
+        if (this.isClimbing() && this.getVelocity().getY() < 0.0D && !this.getBlockStateAtPos().isOf(Blocks.SCAFFOLDING) && this.isHoldingOntoLadder()) {
             this.setVelocity(this.getVelocity().getX(), 0, this.getVelocity().getZ());
         }
         return super.method_26318(movementInput, f);
     }
 
-    @Override
+
+    //TODO: relink?
     protected boolean canClimb() {
         return !this.onGround || !this.isSneaking();
     }

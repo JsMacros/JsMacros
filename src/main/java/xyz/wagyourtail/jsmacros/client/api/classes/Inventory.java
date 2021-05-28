@@ -105,7 +105,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return the index of the selected hotbar slot.
      */
     public int getSelectedHotbarSlotIndex() {
-        return player.inventory.selectedSlot;
+        return player.getInventory().selectedSlot;
     }
     
     /**
@@ -115,7 +115,7 @@ public class Inventory<T extends HandledScreen<?>> {
      */
     public void setSelectedHotbarSlotIndex(int index) {
         if (PlayerInventory.isValidHotbarIndex(index))
-            player.inventory.selectedSlot = index;
+            player.getInventory().selectedSlot = index;
     }
 
     /**
@@ -124,7 +124,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return
      */
     public Inventory<T> closeAndDrop() {
-        ItemStack held = player.inventory.getCursorStack();
+        ItemStack held = inventory.getScreenHandler().getCursorStack();
         if (!held.isEmpty()) man.clickSlot(syncId, -999, 0, SlotActionType.PICKUP, player);
         mc.execute(player::closeHandledScreen);
         this.inventory = null;
@@ -154,7 +154,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return the held (by the mouse) item.
      */
     public ItemStackHelper getHeld() {
-        return new ItemStackHelper(player.inventory.getCursorStack());
+        return new ItemStackHelper(inventory.getScreenHandler().getCursorStack());
     }
 
     /**

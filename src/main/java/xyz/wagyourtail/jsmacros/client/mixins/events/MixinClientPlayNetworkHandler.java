@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import xyz.wagyourtail.jsmacros.client.access.BossBarConsumer;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
 
@@ -44,8 +45,8 @@ class MixinClientPlayNetworkHandler {
     private Map<UUID, PlayerListEntry> playerListEntries;
     
     
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;showsDeathScreen()Z"), method="onCombatEvent", cancellable = true)
-    private void onDeath(final CombatEventS2CPacket packet, CallbackInfo info) {
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;showsDeathScreen()Z"), method="onDeathMessage", cancellable = true)
+    private void onDeath(DeathMessageS2CPacket packet, CallbackInfo info) {
         new EventDeath();
     }
     
@@ -93,55 +94,20 @@ class MixinClientPlayNetworkHandler {
     
     @Inject(at = @At("HEAD"), method = "onTitle")
     public void onTitle(TitleS2CPacket packet, CallbackInfo info) {
-        String type = null;
-        switch(packet.getAction()) {
-            case TITLE:
-                type = "TITLE";
-                break;
-            case SUBTITLE:
-                type = "SUBTITLE";
-                break;
-            case ACTIONBAR:
-                type = "ACTIONBAR";
-                break;
-            default:
-                break;
-        }
-        if (type != null && packet.getText() != null) {
-            new EventTitle(type, packet.getText());
-        }
+        if (packet.getTitle() != null)
+            new EventTitle("TITLE", packet.getTitle());
+    }
+
+    public void onSubtitle(SubtitleS2CPacket packet, CallbackInfo ci) {
+        if (packet.getSubtitle() != null)
+            new EventTitle("SUBTITLE", packet.getSubtitle());
     }
     
     @Inject(at = @At("TAIL"), method="onBossBar")
     public void onBossBar(BossBarS2CPacket packet, CallbackInfo info) {
-        String type = null;
-        switch(packet.getType()) {
-        case ADD:
-            type = "ADD";
-            break;
-        case REMOVE:
-            type = "REMOVE";
-            break;
-        case UPDATE_NAME:
-            type = "UPDATE_NAME";
-            break;
-        case UPDATE_PCT:
-            type = "UPDATE_PERCENT";
-            break;
-        case UPDATE_PROPERTIES:
-            type = "UPDATE_PROPERTIES";
-            break;
-        case UPDATE_STYLE:
-            type = "UPDATE_STYLE";
-            break;
-        default:
-            break;
-        }
-        ClientBossBar bossBar = packet.getType() == BossBarS2CPacket.Type.REMOVE ? null :
-            ((IBossBarHud) client.inGameHud.getBossBarHud()).jsmacros_GetBossBars().get(packet.getUuid());
-        new EventBossbar(type, packet.getUuid(), bossBar);
+        packet.accept(new BossBarConsumer());
     }
-    
+
 
     @Inject(at = @At(value="INVOKE", target="Lnet/minecraft/client/world/ClientWorld;playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V"), method= "onItemPickupAnimation")
     public void onItemPickupAnimation(ItemPickupAnimationS2CPacket packet, CallbackInfo info) {
@@ -164,7 +130,7 @@ class MixinClientPlayNetworkHandler {
     
     @Inject(at = @At("TAIL"), method="onChunkData")
     public void onChunkData(ChunkDataS2CPacket packet, CallbackInfo info) {
-        new EventChunkLoad(packet.getX(), packet.getZ(), packet.isFullChunk());
+        new EventChunkLoad(packet.getX(), packet.getZ(), true);
     }
     
     @Inject(at = @At("TAIL"), method="onBlockUpdate")

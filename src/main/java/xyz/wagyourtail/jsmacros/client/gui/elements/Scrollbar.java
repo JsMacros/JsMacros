@@ -1,12 +1,13 @@
 package xyz.wagyourtail.jsmacros.client.gui.elements;
 
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 
 import java.util.function.Consumer;
 
-public class Scrollbar extends AbstractButtonWidget {
+public class Scrollbar extends ClickableWidget {
     protected double scrollPages = 1;
     protected double scrollAmount = 0;
     protected double scrollbarHeight;
@@ -99,5 +100,10 @@ public class Scrollbar extends AbstractButtonWidget {
             fill(matrices, x + 1, y + height - 1, x + width - 1, y + height, borderColor);
         }
     }
-    
+
+    @Override
+    public void appendNarrations(NarrationMessageBuilder builder) {
+        //TODO
+    }
+
 }

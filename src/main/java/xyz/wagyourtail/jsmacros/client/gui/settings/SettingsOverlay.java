@@ -70,7 +70,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
         super.init();
         int w = width - 4;
     
-        this.addButton(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> this.close()));
+        this.addDrawableChild(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> this.close()));
         sections = new CategoryTreeContainer(x + 2, y + 13, w / 3, height - 17, textRenderer, this);
         
         for (String[] group : settings.groups()) {
@@ -82,7 +82,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
     
     public void clearCategory() {
         if (category != null) {
-            category.getButtons().forEach(this::removeButton);
+            category.getButtons().forEach(this::remove);
             category = null;
         }
     }

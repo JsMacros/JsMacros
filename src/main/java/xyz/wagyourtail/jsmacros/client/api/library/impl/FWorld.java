@@ -368,7 +368,7 @@ public class FWorld extends BaseLibrary {
      * @return text helper for the top part of the tab list (above the players)
      */
     public TextHelper getTabListHeader() {
-        Text header = ((IPlayerListHud)mc.inGameHud.getPlayerListWidget()).getHeader();
+        Text header = ((IPlayerListHud)mc.inGameHud.getPlayerListHud()).getHeader();
         if (header != null) return new TextHelper(header);
         return null;
     }
@@ -378,7 +378,7 @@ public class FWorld extends BaseLibrary {
      * @return  text helper for the bottom part of the tab list (below the players)
      */
     public TextHelper getTabListFooter() {
-        Text footer = ((IPlayerListHud)mc.inGameHud.getPlayerListWidget()).getFooter();
+        Text footer = ((IPlayerListHud)mc.inGameHud.getPlayerListHud()).getFooter();
         if (footer != null) return new TextHelper(footer);
         return null;
     }

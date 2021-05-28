@@ -49,13 +49,13 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
     public void init() {
         super.init();
         int w = width - 12;
-        enableBtn = addButton(new Button(x + 1, y + 1, w / 12 - 1, height - 2, textRenderer, macro.enabled ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"), (btn) -> {
+        enableBtn = addDrawableChild(new Button(x + 1, y + 1, w / 12 - 1, height - 2, textRenderer, macro.enabled ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"), (btn) -> {
             macro.enabled = !macro.enabled;
             btn.setColor(macro.enabled ? 0x7000FF00 : 0x70FF0000);
             btn.setMessage(new TranslatableText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"));
         }));
 
-        keyBtn = addButton(new Button(x + w / 12 + 1, y + 1, macro.triggerType == ScriptTrigger.TriggerType.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.triggerType == ScriptTrigger.TriggerType.EVENT ? new LiteralText(macro.event.replace("Event", "")) : buildKeyName(macro.event), (btn) -> {
+        keyBtn = addDrawableChild(new Button(x + w / 12 + 1, y + 1, macro.triggerType == ScriptTrigger.TriggerType.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.triggerType == ScriptTrigger.TriggerType.EVENT ? new LiteralText(macro.event.replace("Event", "")) : buildKeyName(macro.event), (btn) -> {
             if (macro.triggerType == ScriptTrigger.TriggerType.EVENT) {
                 parent.setEvent(this);
             } else {
@@ -63,7 +63,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
                 btn.setMessage(new TranslatableText("jsmacros.presskey"));
             }
         }));
-        if (macro.triggerType != ScriptTrigger.TriggerType.EVENT) keyStateBtn = addButton(new Button(x + w / 4 - height, y + 1, height, height - 2, textRenderer,0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText(""), (btn) -> {
+        if (macro.triggerType != ScriptTrigger.TriggerType.EVENT) keyStateBtn = addDrawableChild(new Button(x + w / 4 - height, y + 1, height, height - 2, textRenderer,0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText(""), (btn) -> {
             switch(macro.triggerType) {
             default:
             case KEY_RISING:
@@ -78,15 +78,15 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
             }
         }));
 
-        fileBtn = addButton(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("./"+macro.scriptFile.replaceAll("\\\\", "/")), (btn) -> {
+        fileBtn = addDrawableChild(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("./"+macro.scriptFile.replaceAll("\\\\", "/")), (btn) -> {
             parent.setFile(this);
         }));
         
-        editBtn = addButton(new Button(x + w - 32, y + 1, 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("selectServer.edit"), (btn) -> {
+        editBtn = addDrawableChild(new Button(x + w - 32, y + 1, 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("selectServer.edit"), (btn) -> {
             if (!macro.scriptFile.equals("")) parent.editFile(new File(Core.instance.config.macroFolder, macro.scriptFile));
         }));
 
-        delBtn = addButton(new Button(x + w - 1, y + 1, 12, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("X"), (btn) -> {
+        delBtn = addDrawableChild(new Button(x + w - 1, y + 1, 12, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("X"), (btn) -> {
             parent.confirmRemoveMacro(this);
         }));
     }

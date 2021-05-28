@@ -1,9 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.StringVisitable;
@@ -35,8 +37,7 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
     @Override
     protected void init() {
         assert client != null;
-        buttons.clear();
-        children.clear();
+        clearChildren();
         super.init();
         overlay = null;
         JsMacros.prevScreen = this;
@@ -72,9 +73,10 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
             return;
         }
         if (disableButtons) {
-            for (AbstractButtonWidget b : buttons) {
-                overlay.savedBtnStates.put(b, b.active);
-                b.active = false;
+            for (Element b : children()) {
+                if (!(b instanceof ClickableWidget)) continue;
+                overlay.savedBtnStates.put((ClickableWidget) b, ((ClickableWidget)b).active);
+                ((ClickableWidget)b).active = false;
             }
         }
         this.overlay = overlay;
@@ -84,10 +86,10 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
     @Override
     public void closeOverlay(OverlayContainer overlay) {
         if (overlay == null) return;
-        for (AbstractButtonWidget b : overlay.getButtons()) {
-            removeButton(b);
+        for (ClickableWidget b : overlay.getButtons()) {
+            this.remove(b);
         }
-        for (AbstractButtonWidget b : overlay.savedBtnStates.keySet()) {
+        for (ClickableWidget b : overlay.savedBtnStates.keySet()) {
             b.active = overlay.savedBtnStates.get(b);
         }
         overlay.onClose();
@@ -95,14 +97,13 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
     }
 
     @Override
-    public void removeButton(AbstractButtonWidget btn) {
-        buttons.remove(btn);
-        children.remove(btn);
+    public void remove(Element btn) {
+        super.remove(btn);
     }
     
     @Override
-    public <T extends AbstractButtonWidget> T addButton(T button) {
-        return super.addButton(button);
+    public <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement) {
+        return super.addDrawableChild(drawableElement);
     }
     
     @Override
