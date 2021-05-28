@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Wagyourtail
+ * {@link Draw2D} is cool
+ *
+ *   @author Wagyourtail
  *
  * @since 1.0.6
  *
