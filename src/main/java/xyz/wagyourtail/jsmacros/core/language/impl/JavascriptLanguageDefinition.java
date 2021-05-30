@@ -73,10 +73,12 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
         final Context con = buildContext(file.getParentFile().toPath(), conf.extraJsOptions, globals, lib);
         ctx.getCtx().setContext(con);
         con.enter();
-        con.eval(Source.newBuilder("js", file).build());
-        con.leave();
-
-        ((FWrapper) lib.get("JavaWrapper")).tasks.poll().release();
+        try {
+            con.eval(Source.newBuilder("js", file).build());
+        } finally {
+            con.leave();
+            ((FWrapper) lib.get("JavaWrapper")).tasks.poll().release();
+        }
     }
     
     @Override
@@ -92,10 +94,12 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
         final Context con = buildContext(currentDir, conf.extraJsOptions, globals, lib);
         ctx.getCtx().setContext(con);
         con.enter();
-        con.eval("js", script);
-        con.leave();
-
-        ((FWrapper) lib.get("JavaWrapper")).tasks.poll().release();
+        try {
+            con.eval("js", script);
+        } finally {
+            con.leave();
+            ((FWrapper) lib.get("JavaWrapper")).tasks.poll().release();
+        }
     }
     
     @Override
