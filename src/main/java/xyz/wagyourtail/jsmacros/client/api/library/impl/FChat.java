@@ -7,6 +7,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
+import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -209,5 +210,14 @@ public class FChat extends BaseLibrary {
      */
     public TextBuilder createTextBuilder() {
         return new TextBuilder();
+    }
+
+    /**
+     * @param name name of command
+     * @since 1.4.2
+     * @return
+     */
+    public CommandBuilder createCommandBuilder(String name) {
+        return new CommandBuilder(name);
     }
 }
