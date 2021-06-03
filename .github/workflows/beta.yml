@@ -75,3 +75,4 @@ jobs:
         dst_path: /maven/
         dst_owner: wagyourtail
         dst_repo_name: wagyourtail.github.io
+        dst_branch: main
