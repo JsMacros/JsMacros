@@ -74,13 +74,13 @@ jobs:
       run: rsync -a /home/runner/.m2/repository /home/runner/maven/maven
       
     - name: add to git
-      run: git add .
+      run: git --git-dir=/home/runner/maven/.git --work-tree=/home/runner/maven/ add .
       
     - name: set author
       run: git config --global user.email "wagyourtail@wagyourtail.xyz"; git config --global user.name "Github Actions"
       
     - name: commit
-      run: git commit -m "automated beta push"
+      run: git --git-dir=/home/runner/maven/.git --work-tree=/home/runner/maven/ commit -m "automated beta push"
       
     - name: Push to destination
-      run: git push
+      run: git --git-dir=/home/runner/maven/.git --work-tree=/home/runner/maven/ push
