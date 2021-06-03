@@ -1,0 +1,5 @@
+jdk:
+  - openjdk16
+install:
+  - echo "Running a custom install command"
+  - ./gradlew publishToMavenLocal

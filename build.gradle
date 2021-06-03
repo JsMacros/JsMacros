@@ -1,6 +1,7 @@
 plugins {
 	id 'java'
 	id 'fabric-loom' version '0.8-SNAPSHOT'
+	id 'maven-publish'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -164,3 +165,25 @@ task createDist(type: Copy, dependsOn: copyWebDoc) {
 
 generateWebDoc.dependsOn(copyTSEnv)
 build.finalizedBy(createDist)
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			// add all the jars that should be included when publishing to maven
+			artifact(remapJar) {
+				builtBy remapJar
+			}
+			artifact(sourcesJar) {
+				builtBy remapSourcesJar
+			}
+		}
+	}
+
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+	repositories {
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for
+		// retrieving dependencies.
+	}
+}
