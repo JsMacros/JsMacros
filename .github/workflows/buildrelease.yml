@@ -11,6 +11,60 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
+  build-1_17:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          ref: 1.17
+
+      - name: Set up JDK 16
+        uses: actions/setup-java@v2
+        with:
+         distribution: 'adopt'
+         java-version: '16'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - uses: actions/github-script@v2
+        id: fname
+        with:
+          result-encoding: string
+          script: |
+            const fs = require("fs")
+            return fs.readdirSync("./build/libs/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0].replace(".jar", "");
+
+      - name: Upload to release
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ./build/libs/${{ steps.fname.outputs.result }}.jar application/jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload to curseforge
+        uses: itsmeow/curseforge-upload@v2
+        with:
+          token: ${{ secrets.CF_API_KEY }}
+          project_id: 403185
+          game_endpoint: minecraft
+          file_path: ./build/libs/${{ steps.fname.outputs.result }}.jar
+          changelog: See the github release for changes.
+          display_name: ${{ steps.fname.outputs.result }}
+          game_versions: 73242:1.17,2:Java 16,68441:Fabric
+          release_type: release
+          relations: modmenu:optionalDependency
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.fname.outputs.result }}
+          path: ./build/libs/*
+  
   build-1_16_5:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -20,13 +74,13 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          ref: 1.16.5
+          ref: backport-1.16.5
 
-      - name: Set up JDK 16
+      - name: Set up JDK 8
         uses: actions/setup-java@v2
         with:
          distribution: 'adopt'
-         java-version: '16'
+         java-version: '8'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -76,11 +130,11 @@ jobs:
         with:
           ref: backport-1.16.1
 
-      - name: Set up JDK 16
+      - name: Set up JDK 8
         uses: actions/setup-java@v2
         with:
          distribution: 'adopt'
-         java-version: '16'
+         java-version: '8'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -118,11 +172,11 @@ jobs:
         with:
           ref: backport-1.15.2
 
-      - name: Set up JDK 16
+      - name: Set up JDK 8
         uses: actions/setup-java@v2
         with:
          distribution: 'adopt'
-         java-version: '16'
+         java-version: '8'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -172,11 +226,11 @@ jobs:
         with:
           ref: backport-1.14.4
 
-      - name: Set up JDK 16
+      - name: Set up JDK 8
         uses: actions/setup-java@v2
         with:
          distribution: 'adopt'
-         java-version: '16'
+         java-version: '8'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -226,11 +280,11 @@ jobs:
         with:
           ref: forge-1.16.5
 
-      - name: Set up JDK 16
+      - name: Set up JDK 8
         uses: actions/setup-java@v2
         with:
          distribution: 'adopt'
-         java-version: '16'
+         java-version: '8'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -279,11 +333,11 @@ jobs:
         with:
           ref: backport-1.8.9
 
-      - name: Set up JDK 16
+      - name: Set up JDK 8
         uses: actions/setup-java@v2
         with:
          distribution: 'adopt'
-         java-version: '16'
+         java-version: '8'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -314,7 +368,7 @@ jobs:
           file_path: ./build/libs/${{ steps.fname.outputs.result }}.jar
           changelog: See the github release for changes.
           display_name: ${{ steps.fname.outputs.result }}
-          game_versions: 5806:1.8.9,2:Java 8,7498:Forge
+          game_versions: 4:1.8.9,2:Java 8,68441:Forge
           release_type: release
           relations: modmenu:optionalDependency
       - uses: actions/upload-artifact@v2
