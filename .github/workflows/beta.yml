@@ -70,15 +70,17 @@ jobs:
     - name: list files in m2
       run: ls /home/runner/.m2 -R
 
-    - name: Push to destination
-      uses: nkoppel/push-files-to-another-repository@master
-      env:
-        API_TOKEN_GITHUB: ${{ secrets.PERSONAL_TOKEN }}
-      with:
-        source-files: "/home/runner/.m2/repository/*"
-        destination-directory: /maven/
-        destination-github-username: 'wagyourtail'
-        destination-repository-name: 'wagyourtail.github.io'
-        user-email: wagyourtail@wagyourtail.xyz
-        target-branch: main
+    - name: checkout maven to new dir
+      run: git clone https://github.com/wagyourtail/wagyourtail.github.io.git /home/runner/maven
       
+    - name: copy files in
+      run: rsync -a /home/runner/.m2/repository /home/runner/maven/maven
+      
+    - name: add to git
+      run: git add .
+      
+    - name: commit
+      run: git commit -m "automated beta push"
+      
+    - name: Push to destination
+      run: git push
