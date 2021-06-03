@@ -36,21 +36,21 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
       
-#     - name: Build with Gradle
-#       run: ./gradlew build
+    - name: Build with Gradle
+      run: ./gradlew build
       
-#     - uses: actions/github-script@v2
-#       id: fname
-#       with:
-#         result-encoding: string
-#         script: |
-#           const fs = require("fs")
-#           return fs.readdirSync("./dist/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0].replace(".jar", "");
+    - uses: actions/github-script@v2
+      id: fname
+      with:
+        result-encoding: string
+        script: |
+          const fs = require("fs")
+          return fs.readdirSync("./dist/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0].replace(".jar", "");
         
-#     - uses: actions/upload-artifact@v2
-#       with:
-#         name: ${{ steps.fname.outputs.result }}
-#         path: ./dist/**/*
+    - uses: actions/upload-artifact@v2
+      with:
+        name: ${{ steps.fname.outputs.result }}
+        path: ./dist/**/*
         
     - uses: actions/github-script@v2
       with:
@@ -65,17 +65,14 @@ jobs:
       run: ./gradlew publishToMavenLocal
     
     - name: Gen Sha1 files
-      run: for u in $(find ~/.m2/ -iname *.jar); do echo $u | sha1sum | cut -d' ' -f1 >> $u.sha1; done
-    
-    - name: Find where m2 is
-      run: find / -name .m2
-    
+      run: for u in $(find /home/runner/.m2/ -iname *.jar); do echo $u | sha1sum | cut -d' ' -f1 >> $u.sha1; done
+
     - name: Push to destination
       uses: nkoppel/push-files-to-another-repository@master
       env:
         API_TOKEN_GITHUB: ${{ secrets.PERSONAL_TOKEN }}
       with:
-        source-files: "~/.m2/repository/*"
+        source-files: "/home/runner/.m2/repository/*"
         destination-directory: /maven/
         destination-github-username: 'wagyourtail'
         destination-repository-name: 'wagyourtail.github.io'
