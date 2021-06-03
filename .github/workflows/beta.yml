@@ -68,7 +68,7 @@ jobs:
       run: for u in $(find /home/runner/.m2/ -iname *.jar); do echo $u | sha1sum | cut -d' ' -f1 >> $u.sha1; done
 
     - name: checkout maven to new dir
-      run: git clone https://github.com/wagyourtail/wagyourtail.github.io.git /home/runner/maven
+      run: git clone https://wagyourtail:${{ secrets.PERSONAL_TOKEN }}@github.com/wagyourtail/wagyourtail.github.io.git /home/runner/maven
       
     - name: copy files in
       run: rsync -a /home/runner/.m2/repository /home/runner/maven/maven
