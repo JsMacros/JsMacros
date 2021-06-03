@@ -77,3 +77,5 @@ jobs:
         destination-github-username: 'wagyourtail'
         destination-repository-name: 'wagyourtail.github.io'
         user-email: wagyourtail@wagyourtail.xyz
+        target-branch: main
+      
