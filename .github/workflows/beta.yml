@@ -51,3 +51,27 @@ jobs:
       with:
         name: ${{ steps.fname.outputs.result }}
         path: ./dist/**/*
+        
+    - uses: actions/github-script@v2
+      with:
+        result-encoding: string
+        script: |
+          const fs = require("fs");
+          let file = fs.readFileSync("./gradle.properties");
+          file = file.toString().split("\n").map(e => e.trim().startsWith("mod_version") ? `${e.substring(0, e.length - 7)}SNAPSHOT` : e).join("\n");
+          fs.writeFileSync("./gradle.properties", file);
+    
+    - name: Publish with Gradle
+      run: ./gradlew publishToMavenLocal
+    
+    - name: Gen Sha1 files
+      run: for u in $(find ~/.m2/ -iname *.jar); do echo $u | sha1sum | cut -d' ' -f1 >> $u.sha1; done
+    
+    - name: Push to destination
+      uses: andstor/copycat-action@v3
+      with:
+        personal_token: ${{ secrets.PERSONAL_TOKEN }}
+        src_path: ~/.m2/repository
+        dst_path: /maven/
+        dst_owner: wagyourtail
+        dst_repo_name: wagyourtail.github.io
