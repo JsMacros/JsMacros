@@ -80,7 +80,7 @@ jobs:
       run: git add .
       
     - name: commit
-      run: git commit -m "automated beta push"
+      run: git commit -m "automated beta push" --author="Github Actions <wagyourtail@wagyourtail.xyz>"
       
     - name: Push to destination
       run: git push
