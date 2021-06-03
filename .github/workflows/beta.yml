@@ -67,9 +67,6 @@ jobs:
     - name: Gen Sha1 files
       run: for u in $(find /home/runner/.m2/ -iname *.jar); do echo $u | sha1sum | cut -d' ' -f1 >> $u.sha1; done
 
-    - name: list files in m2
-      run: ls /home/runner/.m2 -R
-
     - name: checkout maven to new dir
       run: git clone https://github.com/wagyourtail/wagyourtail.github.io.git /home/runner/maven
       
@@ -79,8 +76,11 @@ jobs:
     - name: add to git
       run: git add .
       
+    - name: set author
+      run: git config --global user.email "wagyourtail@wagyourtail.xyz"; git config --global user.name "Github Actions"
+      
     - name: commit
-      run: git commit -m "automated beta push" --author="Github Actions <wagyourtail@wagyourtail.xyz>"
+      run: git commit -m "automated beta push"
       
     - name: Push to destination
       run: git push
