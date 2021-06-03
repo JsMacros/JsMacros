@@ -67,6 +67,9 @@ jobs:
     - name: Gen Sha1 files
       run: for u in $(find /home/runner/.m2/ -iname *.jar); do echo $u | sha1sum | cut -d' ' -f1 >> $u.sha1; done
 
+    - name: list files in m2
+      run: ls /home/runner/.m2 -R
+
     - name: Push to destination
       uses: nkoppel/push-files-to-another-repository@master
       env:
