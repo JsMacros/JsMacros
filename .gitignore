@@ -30,3 +30,4 @@ run/
 # javadoc
 
 doc/
+*.log

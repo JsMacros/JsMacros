@@ -6,7 +6,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.util.Screenshooter;
+import net.minecraft.client.util.ScreenshotRecorder;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -130,7 +130,7 @@ public class FPlayer extends BaseLibrary {
      */
     public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object, Object> callback) {
         assert folder != null;
-        Screenshooter.saveScreenshot(new File(Core.instance.config.macroFolder, folder), mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
+        ScreenshotRecorder.saveScreenshot(new File(Core.instance.config.macroFolder, folder), mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
                 mc.getFramebuffer(), (text) -> {
                     if (callback != null) callback.accept(new TextHelper(text));
                 });
@@ -148,7 +148,7 @@ public class FPlayer extends BaseLibrary {
      */
     public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object> callback) {
         assert folder != null && file != null;
-        Screenshooter.saveScreenshot(new File(Core.instance.config.macroFolder, folder), file, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
+        ScreenshotRecorder.saveScreenshot(new File(Core.instance.config.macroFolder, folder), file, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
                 mc.getFramebuffer(), (text) -> {
                     if (callback != null) callback.accept(new TextHelper(text));
                 });
