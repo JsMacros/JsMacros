@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.gui.containers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
@@ -151,19 +152,19 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
             fill(matrices, x + (w / 12), y + 1, x + (w / 12) + 1, y + height - 1, 0xFFFFFFFF);
             fill(matrices, x + (w / 4), y + 1, x + (w / 4) + 1, y + height - 1, 0xFFFFFFFF);
             fill(matrices, x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
-            
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
             // icon for keystate
             if (macro.triggerType != ScriptTrigger.TriggerType.EVENT) {
                 switch (macro.triggerType) {
                 default:
                 case KEY_FALLING:
-                    this.mc.getTextureManager().bindTexture(key_up_tex);
+                    RenderSystem.setShaderTexture(0, key_up_tex);
                     break;
                 case KEY_RISING:
-                    this.mc.getTextureManager().bindTexture(key_down_tex);
+                    RenderSystem.setShaderTexture(0, key_down_tex);
                     break;
                 case KEY_BOTH:
-                    this.mc.getTextureManager().bindTexture(key_both_tex);
+                    RenderSystem.setShaderTexture(0, key_both_tex);
                     break;
                 }
                 RenderSystem.enableBlend();

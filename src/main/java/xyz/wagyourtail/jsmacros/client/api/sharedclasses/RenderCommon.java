@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -265,7 +266,8 @@ public class RenderCommon {
             matrices.translate(x, y, 0);
             matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
             matrices.translate(-x, -y, 0);
-            mc.getTextureManager().bindTexture(imageid);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderTexture(0, imageid);
             RenderSystem.enableBlend();
             DrawableHelper.drawTexture(matrices, x, y, width, height, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight);
             RenderSystem.disableBlend();
