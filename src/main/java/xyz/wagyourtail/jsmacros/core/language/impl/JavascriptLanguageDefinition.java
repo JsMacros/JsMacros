@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.core.language.impl;
 
 import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.Context.Builder;
-import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
@@ -23,20 +22,23 @@ import java.util.Map;
 
 public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     private static final Engine engine = Engine.create();
-    private static final Builder build = Context.newBuilder("js")
-        .engine(engine)
-        .allowHostAccess(HostAccess.ALL)
-        .allowHostClassLookup(s -> true)
-        .allowAllAccess(true)
-        .allowIO(true)
-        .allowExperimentalOptions(true)
-        .option("js.commonjs-require", "true");
     
     public JavascriptLanguageDefinition(String extension, Core runner) {
         super(extension, runner);
     }
     
     protected Context buildContext(Path currentDir, Map<String, String> extraJsOptions, Map<String, Object> globals, Map<String, BaseLibrary> libs) throws IOException {
+
+        Builder build = Context.newBuilder("js")
+            .engine(engine)
+            .allowHostAccess(HostAccess.ALL)
+            .allowHostClassLookup(s -> true)
+            .allowAllAccess(true)
+            .allowIO(true)
+            .allowExperimentalOptions(true)
+            .option("js.commonjs-require", "true");
+
+
         build.options(extraJsOptions);
         if (currentDir == null) {
             currentDir = runner.config.macroFolder.toPath();
