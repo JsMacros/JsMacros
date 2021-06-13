@@ -499,31 +499,25 @@ public class Draw3D {
             }
 
             RenderSystem.lineWidth(2.5F);
-            buf.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+            buf.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
             buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
             buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z2).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z2).color(r, g, b, a).next();
             buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z2).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z2).color(r, g, b, a).next();
             buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
             buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
-
 
             buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z1).color(r, g, b, a).next();
             buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
             buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
             buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z1).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z1).color(r, g, b, a).next();
+            buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z1).color(r, g, b, a).next();
 
             buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z1).color(r, g, b, 0).next();
             buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z1).color(r, g, b, 0).next();
@@ -532,16 +526,16 @@ public class Draw3D {
             buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z1).color(r, g, b, a).next();
 
             buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z1).color(r, g, b, 0).next();
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z2).color(r, g, b, 0).next();
-
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z2).color(r, g, b, a).next();
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
-
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, 0).next();
             buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z2).color(r, g, b, 0).next();
 
             buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z2).color(r, g, b, a).next();
             buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
+
+            buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z2).color(r, g, b, 0).next();
+            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z2).color(r, g, b, 0).next();
+
+            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z2).color(r, g, b, a).next();
+            buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
 
             tess.draw();
             
