@@ -70,6 +70,7 @@ public class Profile extends BaseProfile {
             throw new IllegalThreadStateException("Cannot join " + macroListener.toString() + " on same thread as it's creation.");
         }
         ContextContainer<?> t = macroListener.trigger(event);
+        if (t == null) return;
         try {
             if (joinedMain) {
                 joinedThreadStack.add(t.getLockThread());
