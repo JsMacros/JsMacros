@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.movement;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -16,7 +17,9 @@ import net.minecraft.world.World;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MovementDummy extends LivingEntity {
 
@@ -24,8 +27,21 @@ public class MovementDummy extends LivingEntity {
     private PlayerInput currentInput;
     private int jumpingCooldown;
 
+    private final List<ItemStack> armorItems = new ArrayList<>(4);
+
+    private final Map<EquipmentSlot, ItemStack> equippedStack = new HashMap<>(6);
+
+    private Arm mainArm;
+
     public MovementDummy(ClientPlayerEntity player) {
         this(player.getEntityWorld(), player.getPos(), player.getVelocity(), player.getBoundingBox(), player.isOnGround(), player.isSprinting(), player.isSneaking());
+        for (ItemStack armorItem : player.getArmorItems()) {
+            armorItems.add(armorItem.copy());
+        }
+        for (EquipmentSlot value : EquipmentSlot.values()) {
+            equippedStack.put(value, player.getEquippedStack(value).copy());
+        }
+        mainArm = player.getMainArm();
     }
 
     public MovementDummy(World world, Vec3d pos, Vec3d velocity, Box hitBox, boolean onGround, boolean isSprinting, boolean isSneaking) {
@@ -38,7 +54,13 @@ public class MovementDummy extends LivingEntity {
         this.stepHeight = 0.6F;
         this.onGround = onGround;
         this.coordsHistory.add(this.getPos());
-
+        for (int i = 0; i < 4; ++i) {
+            armorItems.add(null);
+        }
+        for (EquipmentSlot value : EquipmentSlot.values()) {
+            equippedStack.put(value, null);
+        }
+        mainArm = Arm.RIGHT;
     }
 
     public Vec3d applyInput(PlayerInput input) {
@@ -142,12 +164,12 @@ public class MovementDummy extends LivingEntity {
 
     @Override
     public Iterable<ItemStack> getArmorItems() {
-        return null;
+        return armorItems;
     }
 
     @Override
     public ItemStack getEquippedStack(EquipmentSlot slot) {
-        return null;
+        return equippedStack.get(slot);
     }
 
     @Override
@@ -156,7 +178,7 @@ public class MovementDummy extends LivingEntity {
 
     @Override
     public Arm getMainArm() {
-        return null;
+        return mainArm;
     }
 
 }
