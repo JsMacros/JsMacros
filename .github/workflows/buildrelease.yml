@@ -22,7 +22,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          ref: 1.17
+          ref: main-1.17
 
       - name: Set up JDK 16
         uses: actions/setup-java@v2
