@@ -534,7 +534,7 @@ public class ClassParser {
                 for (VariableElement parameter : ((ExecutableElement) member).getParameters()) {
                     s.append(parameter.getSimpleName()).append(", ");
                 }
-                s.setLength(s.length() - 2);
+                if (((ExecutableElement) member).getParameters().size() > 0) s.setLength(s.length() - 2);
                 s.append(")");
             }
             default -> throw new UnsupportedOperationException(String.valueOf(member.getKind()));
