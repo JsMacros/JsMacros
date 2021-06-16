@@ -5,7 +5,7 @@ More information and documentation of all features and modules can be found on t
 
 [**Join The JsMacros Discord**](https://discord.gg/P6W58J8)
 
-## Downloads/Releases [![Build Release](https://github.com/wagyourtail/JsMacros/actions/workflows/buildrelease.yml/badge.svg?branch=main-1.17)](https://github.com/wagyourtail/JsMacros/actions/workflows/buildrelease.yml)
+## Downloads/Releases [![Build Release](https://github.com/wagyourtail/JsMacros/actions/workflows/buildrelease.yml/badge.svg?branch=1.4.4)](https://github.com/wagyourtail/JsMacros/actions/workflows/buildrelease.yml)
 
 For the releases of both fabric and forge versions see:
 
