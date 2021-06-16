@@ -52,7 +52,7 @@ public class Prism_python {
                 compile("(\\bclass\\s+)\\w+", CASE_INSENSITIVE),
                 true
             )),
-            token("decorator", pattern(compile("(^\\s*)@\\w+(?:\\.\\w+)*", CASE_INSENSITIVE | MULTILINE), true, false, "annotation",
+            token("decorator", pattern(compile("(^[\\t ]*)@\\w+(?:\\.\\w+)*", CASE_INSENSITIVE | MULTILINE), true, false, "annotation",
                 grammar("inside",
                     token("punctuation", pattern(compile("\\.")))
                 )
