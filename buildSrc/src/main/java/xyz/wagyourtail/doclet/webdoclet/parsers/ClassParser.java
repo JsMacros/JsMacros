@@ -18,10 +18,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 public class ClassParser {
-    private String group;
-    private String alias;
+    private final String group;
+    private final String alias;
     public TypeElement type;
 
     public ClassParser(TypeElement type, String group, String alias) {
@@ -59,11 +60,11 @@ public class ClassParser {
 
     /**
      * nothing much
-     * @return
+     * @return up dir string
      */
     private String getUpDir(int extra) {
         StringBuilder s = new StringBuilder();
-        for (String s1 : getPackage(type).split("\\.")) {
+        for (String ignored : getPackage(type).split("\\.")) {
             s.append("../");
         }
         s.append("../".repeat(Math.max(0, extra)));
@@ -85,14 +86,10 @@ public class ClassParser {
         s.append("\n");
         for (Element el : type.getEnclosedElements()) {
             switch (el.getKind()) {
-                case ENUM_CONSTANT, FIELD -> {
-                    s.append("F\t").append(getClassName(type)).append("#").append(memberName(el))
-                        .append("\t").append(getPathPart()).append("#").append(memberId(el)).append("\n");
-                }
-                case METHOD -> {
-                    s.append("M\t").append(getClassName(type)).append("#").append(memberName(el))
-                        .append("\t").append(getPathPart()).append("#").append(memberId(el)).append("\n");
-                }
+                case ENUM_CONSTANT, FIELD -> s.append("F\t").append(getClassName(type)).append("#").append(memberName(el))
+                    .append("\t").append(getPathPart()).append("#").append(memberId(el)).append("\n");
+                case METHOD -> s.append("M\t").append(getClassName(type)).append("#").append(memberName(el))
+                    .append("\t").append(getPathPart()).append("#").append(memberId(el)).append("\n");
                 default -> {}
             }
         }
@@ -100,8 +97,7 @@ public class ClassParser {
     }
 
     public String genXML() {
-        StringBuilder s = new StringBuilder("<!DOCTYPE html>\n");
-        s.append(new XMLBuilder("html").append(
+        return "<!DOCTYPE html>\n" + new XMLBuilder("html").append(
             new XMLBuilder("head").append(
                 new XMLBuilder("link", true, true).addStringOption("rel", "stylesheet").addStringOption("href", getUpDir(1) + "classContent.css")
             ),
@@ -111,18 +107,16 @@ public class ClassParser {
                         "<----- Return to main JsMacros docs page."
                     )
                 )),
-                parseClass()
-            )
+            parseClass()
         );
-        return s.toString();
     }
 
     private XMLBuilder parseClass() {
         XMLBuilder builder = new XMLBuilder("main").setClass("classDoc");
         XMLBuilder subClasses;
         builder.append(subClasses = new XMLBuilder("div").setID("subClasses"));
-        for (TypeMirror subClass : type.getPermittedSubclasses()) {
-            subClasses.append(parseType(subClass), " ");
+        for (Element subClass : Main.elements.stream().filter(e -> (e.getKind().isClass() || e.getKind().isInterface()) && ((TypeElement) e).getSuperclass().equals(type.asType())).collect(Collectors.toList())) {
+            subClasses.append(parseType(subClass.asType()), " ");
         }
         XMLBuilder cname;
         builder.append(cname = new XMLBuilder("h2", true, true).setClass("classTitle").append(getClassName(type)));
@@ -349,9 +343,7 @@ public class ClassParser {
         Map<String, XMLBuilder> paramMap = new HashMap<>();
         DocCommentTree comment = Main.treeUtils.getDocCommentTree(element);
         if (comment == null) return paramMap;
-        comment.getBlockTags().stream().filter(e -> e.getKind() == DocTree.Kind.PARAM).forEach(e -> {
-            paramMap.put(((ParamTree) e).getName().getName().toString(), createDescription(element, ((ParamTree) e).getDescription()));
-        });
+        comment.getBlockTags().stream().filter(e -> e.getKind() == DocTree.Kind.PARAM).forEach(e -> paramMap.put(((ParamTree) e).getName().getName().toString(), createDescription(element, ((ParamTree) e).getDescription())));
         return paramMap;
     }
 
@@ -637,8 +629,7 @@ public class ClassParser {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ClassParser)) return false;
-        ClassParser that = (ClassParser) o;
+        if (!(o instanceof ClassParser that)) return false;
         return type.equals(that.type);
     }
 

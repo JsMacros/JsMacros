@@ -29,6 +29,7 @@ public class Main implements Doclet {
     public static String mappingViewerURL;
     public static Elements elementUtils;
     public static DocTrees treeUtils;
+    public static Set<? extends Element> elements;
     public static Map<Element, ClassParser> internalClasses = new LinkedHashMap<>();
 
     @Override
@@ -62,7 +63,7 @@ public class Main implements Doclet {
     @Override
     public boolean run(DocletEnvironment environment) {
         mappingViewerURL = "https://wagyourtail.xyz/Projects/Minecraft%20Mappings%20Viewer/App?mapping=yarn,yarnIntermediary&version=" + McVersion.mcVersion + "&search=";
-        Set<? extends Element> elements = environment.getIncludedElements();
+        elements = environment.getIncludedElements();
         treeUtils = environment.getDocTrees();
         elementUtils = environment.getElementUtils();
 
