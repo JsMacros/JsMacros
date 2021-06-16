@@ -79,16 +79,17 @@ public class ClassParser {
      */
     public String genSearchData() {
         StringBuilder s = new StringBuilder();
-        s.append("C\t").append(getClassName(type).replaceAll("\\$", ".")).append("\t")
+        String cname = getClassName(type).replaceAll("\\$", ".");
+        s.append("C\t").append(cname).append("\t")
             .append(getPathPart());
         if (group != null) s.append("\t").append(group);
         if (alias != null) s.append("\t").append(alias);
         s.append("\n");
         for (Element el : type.getEnclosedElements()) {
             switch (el.getKind()) {
-                case ENUM_CONSTANT, FIELD -> s.append("F\t").append(getClassName(type)).append("#").append(memberName(el))
+                case ENUM_CONSTANT, FIELD -> s.append("F\t").append(cname).append("#").append(memberName(el))
                     .append("\t").append(getPathPart()).append("#").append(memberId(el)).append("\n");
-                case METHOD -> s.append("M\t").append(getClassName(type)).append("#").append(memberName(el))
+                case METHOD -> s.append("M\t").append(cname).append("#").append(memberName(el))
                     .append("\t").append(getPathPart()).append("#").append(memberId(el)).append("\n");
                 default -> {}
             }
@@ -531,8 +532,9 @@ public class ClassParser {
             case METHOD -> {
                 s.append(member.getSimpleName()).append("(");
                 for (VariableElement parameter : ((ExecutableElement) member).getParameters()) {
-                    s.append(", ").append(parameter.getSimpleName());
+                    s.append(parameter.getSimpleName()).append(", ");
                 }
+                s.setLength(s.length() - 2);
                 s.append(")");
             }
             default -> throw new UnsupportedOperationException(String.valueOf(member.getKind()));
