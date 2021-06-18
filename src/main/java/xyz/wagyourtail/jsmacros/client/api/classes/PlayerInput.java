@@ -202,7 +202,11 @@ public class PlayerInput {
         for (Map.Entry<String, String> entry : input.entrySet()) {
             Field field = PlayerInput.class.getDeclaredField(entry.getKey());
             if (Modifier.isPrivate(field.getModifiers())) throw new IllegalAccessException();
-            field.set(playerInput, entry.getValue());
+            if (float.class.isAssignableFrom(field.getType())) {
+                field.set(playerInput, Float.valueOf(entry.getValue()));
+            } else if (boolean.class.isAssignableFrom(field.getType())) {
+                field.set(playerInput, Boolean.valueOf(entry.getValue()));
+            }
         }
         return playerInput;
     }
@@ -223,6 +227,9 @@ public class PlayerInput {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (Field field : this.getClass().getDeclaredFields()) {
+            if (field.getType().equals(Gson.class)) {
+                continue;
+            }
             field.setAccessible(true);
 
             if (varNames) {
