@@ -83,6 +83,7 @@ public class SelectorDropdownOverlay extends OverlayContainer {
                 setSelected(selected + 1);
                 return true;
             case GLFW.GLFW_KEY_ENTER:
+            case GLFW.GLFW_KEY_TAB:
                 if (onChoice != null) onChoice.accept(selected);
                 close();
                 return true;

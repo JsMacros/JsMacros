@@ -534,8 +534,8 @@ public class EditorScreen extends BaseScreen {
                 new SelectorDropdownOverlay(startCol + 30, startRow, maxWidth + 8, suggestionList.size() * lineSpread + 4, displayList, textRenderer, this, (i) -> {
                     if (i == -1) return;
                     AutoCompleteSuggestion selected = suggestionList.get(i);
-                    String completion = selected.suggestion.substring(cursor.startIndex - selected.startIndex);
-                    history.add(cursor.startIndex, completion);
+                    history.replace(selected.startIndex, cursor.startIndex - selected.startIndex, selected.suggestion);
+                    cursor.updateStartIndex(cursor.endIndex, history.current);
                     compileRenderedText();
                 })
             );

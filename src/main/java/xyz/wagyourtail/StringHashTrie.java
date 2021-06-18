@@ -219,7 +219,7 @@ public class StringHashTrie implements Collection<String> {
     }
     
     /**
-     * @param prefix
+     * @param prefix prefix to search with
      *
      * @return all elements that start with the given prefix
      */
@@ -249,7 +249,42 @@ public class StringHashTrie implements Collection<String> {
             return getAll();
         }
     }
-    
+
+    /**
+     * @param prefix prefix to search with
+     *
+     * @return all elements that start with the given prefix (case insensitive)
+     */
+    public Set<String> getAllWithPrefixCaseInsensitive(String prefix) {
+        if (prefix.length() > keyLength) {
+            String start = prefix.substring(0, keyLength);
+            String rest = prefix.substring(keyLength);
+            Set<String> contents = new HashSet<>();
+            for (String key : children.keySet()) {
+                if (key.equalsIgnoreCase(start)) {
+                    contents.addAll(children.get(key).getAllWithPrefixCaseInsensitive(rest).stream().map(e -> key + e).collect(Collectors.toSet()));
+                }
+            }
+            return contents;
+        } else if (prefix.length() > 0) {
+            Set<String> contents = new HashSet<>();
+            String lowerCasePrefix = prefix.toLowerCase(Locale.ROOT);
+            for (String leaf : leafs) {
+                if (leaf.toLowerCase(Locale.ROOT).startsWith(lowerCasePrefix)) {
+                    contents.add(leaf);
+                }
+            }
+            for (String key : children.keySet()) {
+                if (key.toLowerCase(Locale.ROOT).startsWith(lowerCasePrefix)) {
+                    contents.addAll(children.get(key).getAll().stream().map(e -> key + e).collect(Collectors.toSet()));
+                }
+            }
+            return contents;
+        } else {
+            return getAll();
+        }
+    }
+
     /**
      * all contained elements as a {@link Set}
      * @return

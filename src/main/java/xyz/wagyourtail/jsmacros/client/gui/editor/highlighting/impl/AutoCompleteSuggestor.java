@@ -70,6 +70,6 @@ public class AutoCompleteSuggestor {
     }
     
     public Set<String> getSuggestions(String start) {
-        return suggestions.getAllWithPrefix(start);
+        return suggestions.getAllWithPrefixCaseInsensitive(start);
     }
 }
