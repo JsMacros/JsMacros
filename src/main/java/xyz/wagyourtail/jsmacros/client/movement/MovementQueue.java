@@ -27,9 +27,8 @@ public class MovementQueue {
 
         player = newPlayer;
 
-        Vec3d diff;
-        if (predictions.size() > queuePos) {
-            diff = new Vec3d(player.getX() - predictions.get(0).getX(), player.getY() - predictions.get(0).getY(), player.getZ() - predictions.get(0).getZ());
+        if (predictions.size() == queue.size() - queuePos + 1 && queuePos != 0) {
+            Vec3d diff = new Vec3d(player.getX() - predictions.get(0).getX(), player.getY() - predictions.get(0).getY(), player.getZ() - predictions.get(0).getZ());
             if (diff.length() > 0.01D) {
                 LOGGER.debug("Pred of by x={}, y={}, z={}", diff.getX(), diff.getY(), diff.getZ());
                 LOGGER.debug("Player pos x={}, y={}, z={}", player.getX(), player.getY(), player.getZ());
