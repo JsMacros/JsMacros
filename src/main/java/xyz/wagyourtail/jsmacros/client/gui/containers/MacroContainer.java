@@ -100,7 +100,8 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
     }
     
     public void setFile(File f) {
-        macro.scriptFile = f.getAbsolutePath().substring(Core.instance.config.macroFolder.getAbsolutePath().length()+1);
+        String absPath = f.getAbsolutePath();
+        macro.scriptFile = absPath.substring(Math.min(absPath.length(), Core.instance.config.macroFolder.getAbsolutePath().length()+1));
         fileBtn.setMessage(new LiteralText("./"+macro.scriptFile.replaceAll("\\\\", "/")));
     }
 
