@@ -780,9 +780,10 @@ public class EditorScreen extends BaseScreen {
                 history.replace(cursor.startIndex, cursor.endIndex - cursor.startIndex, String.valueOf(chr));
                 cursor.updateStartIndex(cursor.endIndex, history.current);
             } else {
-                if ((chr == ']' && prevChar == '[') ||
-                    (chr == '}' && prevChar == '{') ||
-                    (chr == ')' && prevChar == '(')) {
+                if (cursor.startIndex < history.current.length() &&
+                    ((chr == ']' && history.current.charAt(cursor.startIndex) == ']') ||
+                    (chr == '}' && history.current.charAt(cursor.startIndex) == '}')||
+                    (chr == ')' &&  history.current.charAt(cursor.startIndex) == ')'))) {
                     cursor.updateEndIndex(cursor.startIndex + 1, history.current);
                     cursor.updateStartIndex(cursor.endIndex, history.current);
                 } else {
@@ -791,19 +792,25 @@ public class EditorScreen extends BaseScreen {
             }
             switch (chr) {
                 case '[':
-                    history.addChar(cursor.startIndex, ']');
-                    cursor.updateStartIndex(cursor.startIndex - 1, history.current);
-                    cursor.updateEndIndex(cursor.startIndex, history.current);
+                    if (countCharBefore('[', cursor.startIndex) > countCharAfter(']', cursor.startIndex)) {
+                        history.addChar(cursor.startIndex, ']');
+                        cursor.updateStartIndex(cursor.startIndex - 1, history.current);
+                        cursor.updateEndIndex(cursor.startIndex, history.current);
+                    }
                     break;
                 case '{':
-                    history.addChar(cursor.startIndex, '}');
-                    cursor.updateStartIndex(cursor.startIndex - 1, history.current);
-                    cursor.updateEndIndex(cursor.startIndex, history.current);
+                    if (countCharBefore('{', cursor.startIndex) > countCharAfter('}', cursor.startIndex)) {
+                        history.addChar(cursor.startIndex, '}');
+                        cursor.updateStartIndex(cursor.startIndex - 1, history.current);
+                        cursor.updateEndIndex(cursor.startIndex, history.current);
+                    }
                     break;
                 case '(':
-                    history.addChar(cursor.startIndex, ')');
-                    cursor.updateStartIndex(cursor.startIndex - 1, history.current);
-                    cursor.updateEndIndex(cursor.startIndex, history.current);
+                    if (countCharBefore('(', cursor.startIndex) > countCharAfter(')', cursor.startIndex)) {
+                        history.addChar(cursor.startIndex, ')');
+                        cursor.updateStartIndex(cursor.startIndex - 1, history.current);
+                        cursor.updateEndIndex(cursor.startIndex, history.current);
+                    }
                     break;
                 default:
             }
@@ -811,6 +818,24 @@ public class EditorScreen extends BaseScreen {
             compileRenderedText();
         }
         return false;
+    }
+
+    private int countCharBefore(char chr, int startIndex) {
+        int count = 0;
+        for (int i = startIndex - 1; i >= 0; --i) {
+            if (history.current.charAt(i) == chr) ++count;
+            else break;
+        }
+        return count;
+    }
+
+    private int countCharAfter(char chr, int startIndex) {
+        int count = 0;
+        for (int i = startIndex; i < history.current.length(); ++i) {
+            if (history.current.charAt(i) == chr) ++count;
+            else break;
+        }
+        return count;
     }
     
 }
