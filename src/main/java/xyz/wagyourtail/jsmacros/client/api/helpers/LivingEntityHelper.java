@@ -91,5 +91,13 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     public boolean isSleeping() {
         return base.isSleeping();
     }
+
+    /**
+     * @since 1.4.5
+     * @return if the entity has elytra deployed
+     */
+    public boolean isFallFlying() {
+        return base.isFallFlying();
+    }
     
 }
