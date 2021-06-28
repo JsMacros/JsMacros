@@ -30,7 +30,7 @@ public class Prism_javascript {
         
         final Prism4j.Grammar js = GrammarUtils.extend(GrammarUtils.require(prism4j, "clike"), "javascript",
             token("keyword",
-                pattern(compile("((?:^|})\\s*)catch\\b"), true),
+                pattern(compile("((?:^|\\})\\s*)catch\\b"), true),
                 pattern(compile("(^|[^.]|\\.\\.\\.\\s*)\\b(?:as|assert(?=\\s*\\{)|async(?=\\s*(?:function\\b|\\(|[$\\w\\xA0-\\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\\s*(?:\\{|$))|for|from(?=\\s*(?:['\"]|$))|function|(?:get|set)(?=\\s*(?:[#\\[$\\w\\xA0-\\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\\b"), true)
             ),
             token("function", pattern(compile("#?(?!\\s)[_$a-zA-Z\\xA0-\\uFFFF](?:(?!\\s)[$\\w\\xA0-\\uFFFF])*(?=\\s*(?:\\.\\s*(?:apply|bind|call)\\s*)?\\()"))),
@@ -40,7 +40,7 @@ public class Prism_javascript {
         
         GrammarUtils.insertBeforeToken(js, "keyword",
             token("regex", pattern(
-                compile("((?:^|[^$\\w\\xA0-\\uFFFF.\"'\\])\\s]|\\b(?:return|yield))\\s*)\\/(?:\\[(?:[^\\]\\\\\\r\\n]|\\\\.)*]|\\\\.|[^/\\\\\\[\\r\\n])+\\/[dgimyus]{0,7}(?=(?:\\s|\\/\\*(?:[^*]|\\*(?!\\/))*\\*\\/)*(?:$|[\\r\\n,.;:})\\]]|\\/\\/))"),
+                compile("((?:^|[^$\\w\\xA0-\\uFFFF.\"'\\])\\s]|\\b(?:return|yield))\\s*)\\/(?:\\[(?:[^\\]\\\\\\r\\n]|\\\\.)*\\]|\\\\.|[^/\\\\\\[\\r\\n])+\\/[dgimyus]{0,7}(?=(?:\\s|\\/\\*(?:[^*]|\\*(?!\\/))*\\*\\/)*(?:$|[\\r\\n,.;:})\\]]|\\/\\/))"),
                 true,
                 true,
                 null,
@@ -89,7 +89,7 @@ public class Prism_javascript {
             token(
                 "template-string",
                 pattern(
-                    compile("`(?:\\\\[\\s\\S]|\\$\\{(?:[^{}]|\\{(?:[^{}]|\\{[^}]*})*})+}|(?!\\$\\{)[^\\\\`])*`"),
+                    compile("`(?:\\\\[\\s\\S]|\\$\\{(?:[^{}]|\\{(?:[^{}]|\\{[^}]*\\})*\\})+\\}|(?!\\$\\{)[^\\\\`])*`"),
                     false,
                     true,
                     null,
@@ -108,14 +108,14 @@ public class Prism_javascript {
             final List<Prism4j.Token> tokens = new ArrayList<>(js.tokens().size() + 1);
             tokens.add(token(
                 "interpolation-punctuation",
-                pattern(compile("^\\$\\{|}$"), false, false, "punctuation")
+                pattern(compile("^\\$\\{|\\}$"), false, false, "punctuation")
             ));
             tokens.addAll(js.tokens());
             insideInterpolation = grammar("inside", tokens);
         }
         
         interpolation.patterns().add(pattern(
-            compile("((?:^|[^\\\\])(?:\\\\{2})*)\\$\\{(?:[^{}]|\\{(?:[^{}]|\\{[^}]*})*})+}"),
+            compile("((?:^|[^\\\\])(?:\\\\{2})*)\\$\\{(?:[^{}]|\\{(?:[^{}]|\\{[^}]*\\})*\\})+\\}"),
             true,
             false,
             null,
@@ -135,6 +135,11 @@ public class Prism_javascript {
                     )
                 )
             );
+
+            //Prism.languages.markup.tag.addAttribute(
+            //		/on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,
+            //		'javascript'
+            //	);
         }
         
         return js;

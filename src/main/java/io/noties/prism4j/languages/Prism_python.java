@@ -72,7 +72,7 @@ public class Prism_python {
             final List<Prism4j.Token> tokens = new ArrayList<>(py.tokens().size() + 3);
             tokens.add(token(
                 "format-spec",
-                pattern(compile("(:)[^:(){}]+(?=}$)"), true)
+                pattern(compile("(:)[^:(){}]+(?=\\}$)"), true)
             ));
             tokens.add(token(
                 "conversion-option",
@@ -87,7 +87,7 @@ public class Prism_python {
         }
         
         interpolation.patterns().add(pattern(
-            compile("((?:^|[^{])(?:\\{\\{)*)\\{(?!\\{)(?:[^{}]|\\{(?!\\{)(?:[^{}]|\\{(?!\\{)(?:[^{}])+})+})+}"),
+            compile("((?:^|[^{])(?:\\{\\{)*)\\{(?!\\{)(?:[^{}]|\\{(?!\\{)(?:[^{}]|\\{(?!\\{)(?:[^{}])+\\})+\\})+\\}"),
             true,
             false,
             null,
