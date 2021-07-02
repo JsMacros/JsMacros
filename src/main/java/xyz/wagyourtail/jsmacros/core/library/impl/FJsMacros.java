@@ -156,10 +156,10 @@ public class FJsMacros extends BaseLibrary {
      * 
      * @since 1.2.7
      * @param event
-     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link BaseEvent}&gt;
+     * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link ContextContainer}&gt;
      * @return
      */
-    public IEventListener on(String event, MethodWrapper<BaseEvent, Object, Object> callback) {
+    public IEventListener on(String event, MethodWrapper<BaseEvent, ContextContainer, Object> callback) {
         if (callback == null) return null;
         if (!Core.instance.eventRegistry.events.contains(event)) {
             throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
@@ -175,7 +175,7 @@ public class FJsMacros extends BaseLibrary {
                     Thread.currentThread().setName(this.toString());
                     
                     try {
-                        callback.accept(event);
+                        callback.accept(event, p);
                     } catch (Exception e) {
                         Core.instance.eventRegistry.removeListener(this);
                         Core.instance.profile.logError(e);
@@ -216,7 +216,7 @@ public class FJsMacros extends BaseLibrary {
      * @since 1.2.7
      * 
      * @param event
-     * @param callback calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link BaseEvent}&gt;
+     * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link ContextContainer}&gt;
      * @return the listener.
      */
     public IEventListener once(String event, MethodWrapper<BaseEvent, Object, Object> callback) {
@@ -234,7 +234,7 @@ public class FJsMacros extends BaseLibrary {
                 Thread t = new Thread(() -> {
                     Thread.currentThread().setName(this.toString());
                     try {
-                        callback.accept(event);
+                        callback.accept(event, p);
                     } catch (Exception e) {
                         Core.instance.profile.logError(e);
                     } finally {
