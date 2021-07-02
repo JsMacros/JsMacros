@@ -164,12 +164,13 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventPlayerJoin.class);
         runner.eventRegistry.addEvent(EventPlayerLeave.class);
         runner.eventRegistry.addEvent(EventRecvMessage.class);
+        runner.eventRegistry.addEvent(EventRiding.class);
         runner.eventRegistry.addEvent(EventSendMessage.class);
         runner.eventRegistry.addEvent(EventSignEdit.class);
         runner.eventRegistry.addEvent(EventSound.class);
         runner.eventRegistry.addEvent(EventTick.class);
         runner.eventRegistry.addEvent(EventTitle.class);
-    
+
         runner.libraryRegistry.addLibrary(FChat.class);
         runner.libraryRegistry.addLibrary(FHud.class);
         runner.libraryRegistry.addLibrary(FClient.class);

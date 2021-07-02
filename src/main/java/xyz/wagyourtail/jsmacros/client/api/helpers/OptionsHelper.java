@@ -5,6 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.CloudRenderMode;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.GraphicsMode;
+import net.minecraft.client.option.Perspective;
 import net.minecraft.client.util.Window;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;
@@ -310,5 +311,37 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      */
     public float getVolume(String category) {
         return base.getSoundVolume(SOUND_CATEGORY_MAP.get(category));
+    }
+
+    /**
+     * @since 1.4.5
+     * @return
+     */
+    public boolean getSmoothCamera() {
+        return base.smoothCameraEnabled;
+    }
+
+    /**
+     * @param val
+     * @since 1.4.5
+     */
+    public void setSmoothCamera(boolean val) {
+        base.smoothCameraEnabled = val;
+    }
+
+    /**
+     * @since 1.4.5
+     * @return 0 for 1st person, 2 for in front.
+     */
+    public int getCameraMode() {
+        return base.getPerspective().ordinal();
+    }
+
+    /**
+     * @param mode 0: first, 2: front
+     * @since 1.4.5
+     */
+    public void setCameraMode(int mode) {
+        base.setPerspective(Perspective.values()[mode]);
     }
 }

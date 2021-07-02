@@ -9,6 +9,7 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.network.packet.c2s.play.UpdateSignC2SPacket;
 import net.minecraft.text.LiteralText;
@@ -18,12 +19,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventAirChange;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventDamage;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventEXPChange;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventSignEdit;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 
 import java.util.ArrayList;
@@ -117,5 +116,16 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
             this.input.movementSideways = (float) ((double) this.input.movementSideways * 0.3D);
             this.input.movementForward = (float) ((double) this.input.movementForward * 0.3D);
         }
+    }
+
+    @Inject(method = "startRiding", at = @At(value = "RETURN", ordinal = 1))
+    public void onStartRiding(Entity entity, boolean force, CallbackInfoReturnable<Boolean> cir) {
+        new EventRiding(true, entity);
+    }
+
+    @Inject(method = "dismountVehicle", at = @At("HEAD"))
+    public void onStopRiding(CallbackInfo ci) {
+        if (this.getVehicle() != null)
+            new EventRiding(false, this.getVehicle());
     }
 }
