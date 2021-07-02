@@ -44,6 +44,7 @@ public abstract class BaseLanguage<T> {
                 if (file.exists()) {
                     runner.contexts.put(ctx.getCtx(), Thread.currentThread().getName());
                     runner.threadContext.put(Thread.currentThread(), ctx.getCtx());
+                    runner.eventContexts.put(Thread.currentThread(), ctx);
                     exec(ctx, staticMacro, file, event);
                     
                     if (then != null) then.run();
@@ -56,7 +57,8 @@ public abstract class BaseLanguage<T> {
                     runner.profile.logError(f);
                 }
             } finally {
-                ctx.releaseLock();
+                ContextContainer<?> cc = runner.eventContexts.get(Thread.currentThread());
+                if (cc != null) cc.releaseLock();
             }
         });
         ctx.setLockThread(t);

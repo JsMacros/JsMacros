@@ -29,6 +29,7 @@ public class Core {
     public final LibraryRegistry libraryRegistry = new LibraryRegistry();
     public final Map<ScriptContext<?>, String> contexts = new WeakHashMap<>();
     public final Map<Thread, ScriptContext<?>> threadContext = new WeakHashMap<>();
+    public final Map<Thread, ContextContainer<?>> eventContexts = new WeakHashMap<>();
     public final List<BaseLanguage<?>> languages = new ArrayList<>();
     public BaseLanguage<?> defaultLang = new JavascriptLanguageDefinition(".js", this);
     
@@ -99,7 +100,7 @@ public class Core {
         return BaseWrappedException.wrapHostElement(e, elements.hasNext() ? wrapHostInternal(elements.next(), elements) : null);
     }
     
-    public static class SortLanguage implements Comparator<BaseLanguage> {
+    public static class SortLanguage implements Comparator<BaseLanguage<?>> {
 
         @Override
         public int compare(BaseLanguage a, BaseLanguage b) {

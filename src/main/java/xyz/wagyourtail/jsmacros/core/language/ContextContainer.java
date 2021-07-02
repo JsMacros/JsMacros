@@ -1,6 +1,9 @@
 package xyz.wagyourtail.jsmacros.core.language;
 
-import java.util.concurrent.Semaphore;
+import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+
+import java.util.function.Consumer;
 
 /**
  * @param <T>
@@ -14,7 +17,11 @@ public class ContextContainer<T> {
     public ContextContainer(ScriptContext<T> ctx) {
         this.ctx = ctx;
     }
-    
+
+    public synchronized boolean isLocked() {
+        return locked;
+    }
+
     public void setLockThread(Thread lockThread) {
         if (this.lockThread != null) throw new AssertionError("Cannot change lock thread of context container once assigned!");
         this.lockThread = lockThread;
@@ -30,13 +37,20 @@ public class ContextContainer<T> {
     
     /**
     * careful with this one it can cause deadlocks if used in scripts incorrectly.
+     * @param then must be a {@link MethodWrapper} when called from a script.
      * @throws InterruptedException
      * @since 1.4.0
      */
-    public synchronized void awaitLock() throws InterruptedException {
+    public synchronized void awaitLock(Runnable then) throws InterruptedException {
+        if (Core.instance.threadContext.containsKey(Thread.currentThread())) {
+            if (!(then instanceof MethodWrapper)) {
+                throw new AssertionError("For your safety, please use MethodWrapper in scripts.");
+            }
+        }
         if (locked) {
             this.wait();
         }
+        if (then != null) then.run();
     }
     
     /**
@@ -47,5 +61,10 @@ public class ContextContainer<T> {
         locked = false;
         this.notifyAll();
     }
-    
+
+    @Override
+    public String toString() {
+        return String.format("ContextContainer:{\"locked\": %s, \"lockThread\": \"%s\"}", locked, lockThread.getName());
+    }
+
 }

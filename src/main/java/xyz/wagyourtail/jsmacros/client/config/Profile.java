@@ -75,9 +75,10 @@ public class Profile extends BaseProfile {
             if (joinedMain) {
                 joinedThreadStack.add(t.getLockThread());
             }
-            t.awaitLock();
+            t.awaitLock(() -> {
+                joinedThreadStack.remove(t.getLockThread());
+            });
         } catch (InterruptedException ignored) {
-        } finally {
             joinedThreadStack.remove(t.getLockThread());
         }
     }
@@ -158,6 +159,7 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventHungerChange.class);
         runner.eventRegistry.addEvent(EventItemDamage.class);
         runner.eventRegistry.addEvent(EventItemPickup.class);
+        runner.eventRegistry.addEvent(EventJoinedTick.class);
         runner.eventRegistry.addEvent(EventJoinServer.class);
         runner.eventRegistry.addEvent(EventKey.class);
         runner.eventRegistry.addEvent(EventOpenScreen.class);

@@ -1,7 +1,10 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Util;
+import org.graalvm.polyglot.Context;
+import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Semaphore;
 
 /**
  * Functions that interact directly with JsMacros or Events.
@@ -157,6 +161,9 @@ public class FJsMacros extends BaseLibrary {
      */
     public IEventListener on(String event, MethodWrapper<BaseEvent, Object, Object> callback) {
         if (callback == null) return null;
+        if (!Core.instance.eventRegistry.events.contains(event)) {
+            throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
+        }
         Thread th = Thread.currentThread();
         ScriptContext<?> ctx = Core.instance.threadContext.get(th);
         IEventListener listener = new ScriptEventListener() {
@@ -214,6 +221,9 @@ public class FJsMacros extends BaseLibrary {
      */
     public IEventListener once(String event, MethodWrapper<BaseEvent, Object, Object> callback) {
         if (callback == null) return null;
+        if (!Core.instance.eventRegistry.events.contains(event)) {
+            throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
+        }
         Thread th = Thread.currentThread();
         ScriptContext<?> ctx = Core.instance.threadContext.get(th);
         IEventListener listener = new ScriptEventListener() {
@@ -283,7 +293,86 @@ public class FJsMacros extends BaseLibrary {
     public boolean off(String event, IEventListener listener) {
         return Core.instance.eventRegistry.removeListener(event, listener);
     }
-    
+
+    /**
+     * @param event event to wait for
+     * @since 1.4.5
+     * @return a event and a new context if the event you're waiting for was joined, to leave it early.
+     *
+     * @throws InterruptedException
+     */
+    public EventAndContext waitForEvent(String event) throws InterruptedException {
+        return waitForEvent(event, null);
+    }
+
+    /**
+     * @param event event to wait for
+     * @param filter filter the event until it has the proper values or whatever.
+     * @since 1.4.5
+     * @return a event and a new context if the event you're waiting for was joined, to leave it early.
+     *
+     * @throws InterruptedException
+     */
+    public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean> filter) throws InterruptedException {
+        if (!Core.instance.eventRegistry.events.contains(event)) {
+            throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
+        }
+        Thread th = Thread.currentThread();
+        ContextContainer<?> cc = Core.instance.eventContexts.get(Thread.currentThread());
+        if (cc != null && cc.isLocked()) {
+            throw new IllegalThreadStateException("must explicitly release context (un-joins joined events) using 'context.releaseLock()' if you want to wait for a new event on this script's main thread!");
+        }
+        ScriptContext<?> ctx = Core.instance.threadContext.get(th);
+        ContextContainer<?> ctxCont = new ContextContainer<>(ctx);
+        ctxCont.setLockThread(th);
+        Core.instance.eventContexts.put(th, ctxCont);
+        Semaphore lock = new Semaphore(0);
+        final Exception[] e = {null};
+        final BaseEvent[] ev = {null};
+        IEventListener listener = new ScriptEventListener() {
+            @Override
+            public ContextContainer<?> trigger(BaseEvent event) {
+                try {
+                    boolean test = filter == null || filter.test(event);
+                    if (test) {
+                        Core.instance.eventRegistry.removeListener(this);
+                        lock.release();
+                        ev[0] = event;
+                        return ctxCont;
+                    }
+                } catch (Exception ex) {
+                    lock.release();
+                    e[0] = ex;
+                }
+                return null;
+            }
+
+            @Override
+            public Thread getCreator() {
+                return th;
+            }
+
+            @Override
+            public MethodWrapper<?, ?, ?> getWrapper() {
+                return null;
+            }
+
+            @Override
+            public String toString() {
+                return String.format("WaitForEventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", th.getName(), event);
+            }
+        };
+        Core.instance.eventRegistry.addListener(event, listener);
+        try {
+            lock.acquire();
+        } finally {
+            Core.instance.eventRegistry.removeListener(listener);
+        }
+        if (e[0] != null) {
+            throw new RuntimeException("Error thrown in filter", e[0]);
+        }
+        return new EventAndContext(ev[0], ctxCont);
+    }
     
     /**
      * 
@@ -320,5 +409,19 @@ public class FJsMacros extends BaseLibrary {
         Thread getCreator();
         
         MethodWrapper<?,?,?> getWrapper();
+    }
+
+    public static class EventAndContext {
+        public final BaseEvent event;
+        public final ContextContainer<?> context;
+
+        public EventAndContext(BaseEvent event, ContextContainer<?> context) {
+            this.event = event;
+            this.context = context;
+        }
+
+        public String toString() {
+            return String.format("EventAndContext:{\"event\": %s, \"context\": %s}", event.toString(), context.toString());
+        }
     }
 }

@@ -111,7 +111,11 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                             retVal = c.apply(new Object[] {t, u});
                         } finally {
                             ctx.getCtx().getContext().get().leave();
+
                             Core.instance.threadContext.remove(Thread.currentThread());
+                            ContextContainer<?> cc = Core.instance.eventContexts.get(Thread.currentThread());
+                            if (cc != null) cc.releaseLock();
+                            Core.instance.eventContexts.remove(Thread.currentThread());
 
                             tasks.poll().release();
                         }
@@ -189,6 +193,9 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                         } finally {
                             ctx.getCtx().getContext().get().leave();
 
+                            ContextContainer<?> cc = Core.instance.eventContexts.get(Thread.currentThread());
+                            if (cc != null) cc.releaseLock();
+
                             tasks.poll().release();
                         }
                     } catch (InterruptedException e) {
@@ -227,10 +234,14 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                         try {
                             retVal = c.apply(new Object[] {t, u});
                         } finally {
-                                ctx.getCtx().getContext().get().leave();
-                                Core.instance.threadContext.remove(Thread.currentThread());
+                            ctx.getCtx().getContext().get().leave();
 
-                                tasks.poll().release();
+                            Core.instance.threadContext.remove(Thread.currentThread());
+                            ContextContainer<?> cc = Core.instance.eventContexts.get(Thread.currentThread());
+                            if (cc != null) cc.releaseLock();
+                            Core.instance.eventContexts.remove(Thread.currentThread());
+
+                            tasks.poll().release();
                         }
                         return (R) retVal;
                     } else {

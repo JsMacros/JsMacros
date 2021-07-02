@@ -4,10 +4,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventArmorChange;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventHeldItemChange;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventItemDamage;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventTick;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 
 public class TickBasedEvents {
@@ -59,7 +56,8 @@ public class TickBasedEvents {
             FClient.tickSynchronizer.tick();
             
             new EventTick();
-            
+            new EventJoinedTick();
+
             if (mc.player != null && mc.player.getInventory() != null) {
                 PlayerInventory inv = mc.player.getInventory();
 
