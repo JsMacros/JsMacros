@@ -296,7 +296,7 @@ public class FJsMacros extends BaseLibrary {
 
     /**
      * @param event event to wait for
-     * @since 1.4.5
+     * @since 1.5.0
      * @return a event and a new context if the event you're waiting for was joined, to leave it early.
      *
      * @throws InterruptedException
@@ -308,7 +308,7 @@ public class FJsMacros extends BaseLibrary {
     /**
      * @param event event to wait for
      * @param filter filter the event until it has the proper values or whatever.
-     * @since 1.4.5
+     * @since 1.5.0
      * @return a event and a new context if the event you're waiting for was joined, to leave it early.
      *
      * @throws InterruptedException

@@ -314,7 +314,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @since 1.4.5
+     * @since 1.5.0
      * @return
      */
     public boolean getSmoothCamera() {
@@ -323,14 +323,14 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
 
     /**
      * @param val
-     * @since 1.4.5
+     * @since 1.5.0
      */
     public void setSmoothCamera(boolean val) {
         base.smoothCameraEnabled = val;
     }
 
     /**
-     * @since 1.4.5
+     * @since 1.5.0
      * @return 0 for 1st person, 2 for in front.
      */
     public int getCameraMode() {
@@ -339,7 +339,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
 
     /**
      * @param mode 0: first, 2: front
-     * @since 1.4.5
+     * @since 1.5.0
      */
     public void setCameraMode(int mode) {
         base.setPerspective(Perspective.values()[mode]);

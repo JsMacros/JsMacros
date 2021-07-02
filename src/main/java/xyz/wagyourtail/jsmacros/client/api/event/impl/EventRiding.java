@@ -6,7 +6,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
- * @since 1.4.5
+ * @since 1.5.0
  */
 @Event("Riding")
 public class EventRiding implements BaseEvent {
