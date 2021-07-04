@@ -62,7 +62,7 @@ public abstract class BaseLanguage<T> {
             }
         });
         ctx.setLockThread(t);
-        ctx.getCtx().setMainThread(Thread.currentThread());
+        ctx.getCtx().setMainThread(t);
         t.start();
         return ctx;
     }
