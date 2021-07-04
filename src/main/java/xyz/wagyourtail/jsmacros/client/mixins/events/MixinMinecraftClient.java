@@ -30,7 +30,7 @@ public class MixinMinecraftClient {
         if (screen != currentScreen) new EventOpenScreen(screen);
     }
     
-    @Inject(at = @At("TAIL"), method="disconnect()V")
+    @Inject(at = @At(value = "INVOKE", target= "Lnet/minecraft/client/MinecraftClientGame;onLeaveGameSession()V"), method="disconnect(Lnet/minecraft/client/gui/screen/Screen;)V")
     public void onDisconnect(CallbackInfo info) {
         new EventDisconnect();
     }
