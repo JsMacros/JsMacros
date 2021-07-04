@@ -3,19 +3,23 @@ package xyz.wagyourtail.jsmacros.core.language;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
-import java.util.function.Consumer;
-
 /**
  * @param <T>
  * @since 1.4.0
  */
 public class ContextContainer<T> {
     private final ScriptContext<T> ctx;
+    private final Thread rootThread;
     private Thread lockThread;
     private boolean locked = true;
-    
+
     public ContextContainer(ScriptContext<T> ctx) {
+        this(ctx, Thread.currentThread());
+    }
+
+    public ContextContainer(ScriptContext<T> ctx, Thread rootThread) {
         this.ctx = ctx;
+        this.rootThread = rootThread;
     }
 
     public synchronized boolean isLocked() {
@@ -33,6 +37,10 @@ public class ContextContainer<T> {
     
     public Thread getLockThread() {
         return lockThread;
+    }
+
+    public Thread getRootThread() {
+        return rootThread;
     }
     
     /**

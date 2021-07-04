@@ -323,7 +323,7 @@ public class FJsMacros extends BaseLibrary {
             throw new IllegalThreadStateException("must explicitly release context (un-joins joined events) using 'context.releaseLock()' if you want to wait for a new event on this script's main thread!");
         }
         ScriptContext<?> ctx = Core.instance.threadContext.get(th);
-        ContextContainer<?> ctxCont = new ContextContainer<>(ctx);
+        ContextContainer<?> ctxCont = new ContextContainer<>(ctx, cc == null ? th : cc.getRootThread());
         ctxCont.setLockThread(th);
         Core.instance.eventContexts.put(th, ctxCont);
         Semaphore lock = new Semaphore(0);
