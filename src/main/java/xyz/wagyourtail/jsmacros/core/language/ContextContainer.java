@@ -9,17 +9,11 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
  */
 public class ContextContainer<T> {
     private final ScriptContext<T> ctx;
-    private final Thread rootThread;
     private Thread lockThread;
     private boolean locked = true;
 
     public ContextContainer(ScriptContext<T> ctx) {
-        this(ctx, Thread.currentThread());
-    }
-
-    public ContextContainer(ScriptContext<T> ctx, Thread rootThread) {
         this.ctx = ctx;
-        this.rootThread = rootThread;
     }
 
     public synchronized boolean isLocked() {
@@ -37,14 +31,6 @@ public class ContextContainer<T> {
     
     public Thread getLockThread() {
         return lockThread;
-    }
-
-    /**
-     * @since 1.5.0
-     * @return
-     */
-    public Thread getRootThread() {
-        return rootThread;
     }
     
     /**

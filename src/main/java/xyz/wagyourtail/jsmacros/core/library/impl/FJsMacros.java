@@ -344,7 +344,7 @@ public class FJsMacros extends BaseLibrary {
         ContextContainer<?> cc = Core.instance.eventContexts.get(Thread.currentThread());
 
         // create a new context container so we can actually release joined events
-        ContextContainer<?> ctxCont = new ContextContainer<>(ctx, cc == null ? th : cc.getRootThread());
+        ContextContainer<?> ctxCont = new ContextContainer<>(ctx);
 
         // create the listener
         IEventListener listener = new ScriptEventListener() {
