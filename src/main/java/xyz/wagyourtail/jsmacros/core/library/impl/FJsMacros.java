@@ -328,6 +328,8 @@ public class FJsMacros extends BaseLibrary {
         if (!Core.instance.eventRegistry.events.contains(event)) {
             throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
         }
+
+        //get curent thread establish the lock to use for waiting blah blah blah
         Thread th = Thread.currentThread();
         Semaphore lock = new Semaphore(0);
 

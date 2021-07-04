@@ -39,6 +39,10 @@ public class ContextContainer<T> {
         return lockThread;
     }
 
+    /**
+     * @since 1.5.0
+     * @return
+     */
     public Thread getRootThread() {
         return rootThread;
     }
