@@ -159,6 +159,14 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
         @Override
         public void accept(T t, U u) {
+            if (await) {
+                // if we're on the same context, can't go "async".
+                if (Core.instance.threadContext.get(Thread.currentThread()) == ctx.getCtx()) {
+                    fn.apply(new Object[] {t, u});
+                    return;
+                }
+            }
+
             Throwable[] error = {null};
             Semaphore lock = new Semaphore(0);
 
