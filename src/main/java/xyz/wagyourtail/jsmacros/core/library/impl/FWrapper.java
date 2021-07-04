@@ -100,7 +100,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     boolean onNewThread = threadContext != ctx.getCtx();
                     if (onNewThread) {
                         if (threadContext != null) {
-                            throw new AssertionError("Calling methods synchronously from other scripts is unsupported, please use custom events or methodToJavaAsync instead.");
+                            throw new AssertionError("Calling js methods synchronously from other scripts is unsupported, please use custom events or methodToJavaAsync instead.");
                         }
 
                         // wrap the new thread as a task for the FIFO Queue
