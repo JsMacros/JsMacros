@@ -28,7 +28,7 @@ public abstract class ScriptContext<T> {
      * @param t
      */
     public void setMainThread(Thread t) {
-        if (this.mainThread != null) throw new AssertionError("Cannot change lock thread of context container once assigned!");
+        if (this.mainThread != null) throw new AssertionError("Cannot change main thread of context container once assigned!");
         this.mainThread = new WeakReference<>(t);
     }
 
