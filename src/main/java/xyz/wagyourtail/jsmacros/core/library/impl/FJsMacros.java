@@ -302,45 +302,68 @@ public class FJsMacros extends BaseLibrary {
      * @throws InterruptedException
      */
     public EventAndContext waitForEvent(String event) throws InterruptedException {
-        return waitForEvent(event, null);
+        return waitForEvent(event, null, null);
+    }
+
+    /**
+     *
+     * @param event
+     * @return
+     * @throws InterruptedException
+     */
+    public EventAndContext waitForEvent(String event,  MethodWrapper<BaseEvent, Object, Boolean> filter) throws InterruptedException {
+        return waitForEvent(event, filter, null);
     }
 
     /**
      * @param event event to wait for
      * @param filter filter the event until it has the proper values or whatever.
+     * @param runBeforeWaiting runs as a {@link Runnable}, run before waiting, this is a thread-safety thing to prevent "interrupts" from going in between this and things like releaseLock and deferCurrentTask
      * @since 1.5.0
      * @return a event and a new context if the event you're waiting for was joined, to leave it early.
      *
      * @throws InterruptedException
      */
-    public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean> filter) throws InterruptedException {
+    public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean> filter, MethodWrapper<Object, Object, Object> runBeforeWaiting) throws InterruptedException {
         if (!Core.instance.eventRegistry.events.contains(event)) {
             throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
         }
         Thread th = Thread.currentThread();
-        ContextContainer<?> cc = Core.instance.eventContexts.get(Thread.currentThread());
-        if (cc != null && cc.isLocked()) {
-            throw new IllegalThreadStateException("must explicitly release context (un-joins joined events) using 'context.releaseLock()' if you want to wait for a new event on this script's main thread!");
-        }
-        ScriptContext<?> ctx = Core.instance.threadContext.get(th);
-        ContextContainer<?> ctxCont = new ContextContainer<>(ctx, cc == null ? th : cc.getRootThread());
-        ctxCont.setLockThread(th);
-        Core.instance.eventContexts.put(th, ctxCont);
         Semaphore lock = new Semaphore(0);
+
+        // event return values
         final Exception[] e = {null};
         final BaseEvent[] ev = {null};
+
+        // get the current script context from the thread
+        ScriptContext<?> ctx = Core.instance.threadContext.get(th);
+
+        // get the current context container.
+        ContextContainer<?> cc = Core.instance.eventContexts.get(Thread.currentThread());
+
+        // create a new context container so we can actually release joined events
+        ContextContainer<?> ctxCont = new ContextContainer<>(ctx, cc == null ? th : cc.getRootThread());
+
+        // create the listener
         IEventListener listener = new ScriptEventListener() {
             @Override
             public ContextContainer<?> trigger(BaseEvent event) {
                 try {
+                    // check the filter
                     boolean test = filter == null || filter.test(event);
+
                     if (test) {
+                        // remove the listener here, since it this isn't async.
                         Core.instance.eventRegistry.removeListener(this);
+
+                        // release the lock
                         lock.release();
+
                         ev[0] = event;
                         return ctxCont;
                     }
                 } catch (Exception ex) {
+                    // release the lock and set error
                     lock.release();
                     e[0] = ex;
                 }
@@ -362,7 +385,22 @@ public class FJsMacros extends BaseLibrary {
                 return String.format("WaitForEventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", th.getName(), event);
             }
         };
+        // register the listener
         Core.instance.eventRegistry.addListener(event, listener);
+
+        // run before, this is a thread-safety thing to prevent "interrupts" from going in between this and things like deferCurrentTask
+        if (runBeforeWaiting != null) runBeforeWaiting.run();
+
+        // make sure the current context isn't still locked.
+        if (cc != null && cc.isLocked()) {
+            Core.instance.eventRegistry.removeListener(listener);
+            throw new IllegalThreadStateException("must explicitly release context (un-joins joined events) using 'context.releaseLock()' if you want to wait for a new event on this script's main thread!");
+        }
+        // set the new contextContainer's lock
+        ctxCont.setLockThread(th);
+        Core.instance.eventContexts.put(th, ctxCont);
+
+        // waits for event
         try {
             lock.acquire();
         } finally {
@@ -371,6 +409,8 @@ public class FJsMacros extends BaseLibrary {
         if (e[0] != null) {
             throw new RuntimeException("Error thrown in filter", e[0]);
         }
+
+        // returns new context and event value to the user so they can release joined stuff early
         return new EventAndContext(ev[0], ctxCont);
     }
     

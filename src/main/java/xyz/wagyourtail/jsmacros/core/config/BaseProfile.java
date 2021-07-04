@@ -63,7 +63,7 @@ public abstract class BaseProfile {
      *
      * @return
      */
-    public boolean loadProfile(String pName) {
+    protected boolean loadProfile(String pName) {
         runner.eventRegistry.clearMacros();
         final List<ScriptTrigger> rawProfile = runner.config.getOptions(CoreConfigV2.class).profiles.get(pName);
         if (rawProfile == null) {

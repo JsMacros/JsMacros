@@ -32,7 +32,7 @@ public class Profile extends BaseProfile {
     }
     
     @Override
-    public boolean loadProfile(String profileName) {
+    protected boolean loadProfile(String profileName) {
         boolean val = super.loadProfile(profileName);
         final MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.currentScreen instanceof MacroScreen) {
