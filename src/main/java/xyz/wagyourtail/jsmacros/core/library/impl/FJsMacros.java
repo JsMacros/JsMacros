@@ -159,7 +159,7 @@ public class FJsMacros extends BaseLibrary {
      * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link ContextContainer}&gt;
      * @return
      */
-    public IEventListener on(String event, MethodWrapper<BaseEvent, ContextContainer, Object> callback) {
+    public IEventListener on(String event, MethodWrapper<BaseEvent, ContextContainer<?>, Object> callback) {
         if (callback == null) return null;
         if (!Core.instance.eventRegistry.events.contains(event)) {
             throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
@@ -219,7 +219,7 @@ public class FJsMacros extends BaseLibrary {
      * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link ContextContainer}&gt;
      * @return the listener.
      */
-    public IEventListener once(String event, MethodWrapper<BaseEvent, Object, Object> callback) {
+    public IEventListener once(String event, MethodWrapper<BaseEvent, ContextContainer<?>, Object> callback) {
         if (callback == null) return null;
         if (!Core.instance.eventRegistry.events.contains(event)) {
             throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));

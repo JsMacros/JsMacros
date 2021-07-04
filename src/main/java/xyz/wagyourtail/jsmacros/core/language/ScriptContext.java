@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.language;
 
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -10,7 +12,13 @@ public abstract class ScriptContext<T> {
     public final long startTime = System.currentTimeMillis();
     protected WeakReference<T> context = null;
     protected WeakReference<Thread> mainThread = null;
-    
+
+    protected final BaseEvent triggeringEvent;
+
+    public ScriptContext(BaseEvent event) {
+        this.triggeringEvent = event;
+    }
+
     public WeakReference<T> getContext() {
         return context;
     }
@@ -30,6 +38,13 @@ public abstract class ScriptContext<T> {
     public void setMainThread(Thread t) {
         if (this.mainThread != null) throw new AssertionError("Cannot change main thread of context container once assigned!");
         this.mainThread = new WeakReference<>(t);
+    }
+
+    /**
+     * @since 1.5.0
+     */
+    public BaseEvent getTriggeringEvent() {
+        return triggeringEvent;
     }
 
     public void setContext(T context) {

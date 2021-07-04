@@ -6,12 +6,14 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
+import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.core.library.IFWrapper;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLanguageLibrary;
 
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Semaphore;
 import java.util.function.Function;
 
 
@@ -61,13 +63,12 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
     /**
      * @param c
      *
-     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return a new {@link MethodWrapper MethodWrapper}
      *
      * @since 1.3.2
      */
     @Override
-    @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R")
+    @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
     public <A, B, R> MethodWrapper<A, B, R> methodToJava(Function<Object[], Object> c) {
         return new MethodWrapper<A, B, R>() {
 
@@ -94,17 +95,28 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
             @Override
             public R apply(Object t, Object u) {
                 try {
-                    boolean onNewThread = !Core.instance.threadContext.containsKey(Thread.currentThread());
+                    //check if the thread it runs on is already associated with this script context
+                    ScriptContext<?> threadContext = Core.instance.threadContext.get(Thread.currentThread());
+                    boolean onNewThread = threadContext != ctx.getCtx();
                     if (onNewThread) {
+                        if (threadContext != null) {
+                            throw new AssertionError("Calling methods synchronously from other scripts is unsupported, please use custom events or methodToJavaAsync instead.");
+                        }
+
+                        // wrap the new thread as a task for the FIFO Queue
                         tasks.put(new WrappedThread(Thread.currentThread(), true));
 
+                        // run, setting the thread stuff. oldContext allows script interop easier
+                        Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
+
+                        // wait for front of queue
                         WrappedThread joinable = tasks.peek();
                         while (joinable.thread != Thread.currentThread()) {
                             joinable.waitFor();
                             joinable = tasks.peek();
                         }
 
-                        Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
+                        // explicitly calling enter/exit allows deferCurrentTask() to work.
                         ctx.getCtx().getContext().get().enter();
                         Object retVal;
                         try {
@@ -112,15 +124,20 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                         } finally {
                             ctx.getCtx().getContext().get().leave();
 
-                            Core.instance.threadContext.remove(Thread.currentThread());
+                            // if the wrapped method contained a "waitForEvent" this becomes neccecairy.
                             ContextContainer<?> cc = Core.instance.eventContexts.get(Thread.currentThread());
                             if (cc != null) cc.releaseLock();
                             Core.instance.eventContexts.remove(Thread.currentThread());
 
+                            // clear setup for the thread
+                            Core.instance.threadContext.remove(Thread.currentThread());
+
+                            // remove task from queue
                             tasks.poll().release();
                         }
                         return (R) retVal;
                     } else {
+                        // if this is already a script thread we're therefore in a script.
                         return (R) c.apply(new Object[] {t, u});
                     }
                 } catch (InterruptedException e) {
@@ -159,13 +176,12 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
     /**
      * @param c
      *
-     * @custom.replaceParams c: (arg0?: A, arg1?: B) =&gt; R
      * @return a new {@link MethodWrapper MethodWrapper}
      *
      * @since 1.3.2
      */
     @Override
-    @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R")
+    @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
     public <A, B, R> MethodWrapper<A, B, R> methodToJavaAsync(Function<Object[], Object> c) {
         return new MethodWrapper<A, B, R>() {
 
@@ -176,7 +192,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
             @Override
             public void accept(Object arg0, Object arg1) {
-                Thread t = new Thread(() -> {
+                Thread th = new Thread(() -> {
                     try {
                         tasks.put(new WrappedThread(Thread.currentThread(), true));
 
@@ -190,6 +206,8 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                         ctx.getCtx().getContext().get().enter();
                         try {
                             c.apply(new Object[] {arg0, arg1});
+                        } catch (Throwable ex) {
+                            ex.printStackTrace();
                         } finally {
                             ctx.getCtx().getContext().get().leave();
 
@@ -202,12 +220,12 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                         e.printStackTrace();
                     }
                 });
-                t.start();
+                th.start();
             }
 
             @Override
             public void accept(Object t) {
-                this.accept(t, null);
+                this.apply(t, null);
             }
 
             @Override
@@ -217,9 +235,17 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
             @Override
             public R apply(Object t, Object u) {
-                try {
-                    boolean onNewThread = !Core.instance.threadContext.containsKey(Thread.currentThread());
-                    if (onNewThread) {
+                // if we're on the same context, can't go "async".
+                if (Core.instance.threadContext.get(Thread.currentThread()) == ctx.getCtx()) {
+                    return (R) c.apply(new Object[] {t, u});
+                }
+
+                Object[] retVal = {null};
+                Throwable[] error = {null};
+                Semaphore lock = new Semaphore(0);
+
+                Thread th = new Thread(() -> {
+                    try {
                         tasks.put(new WrappedThread(Thread.currentThread(), true));
 
                         WrappedThread joinable = tasks.peek();
@@ -230,27 +256,31 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
                         Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
                         ctx.getCtx().getContext().get().enter();
-                        Object retVal;
                         try {
-                            retVal = c.apply(new Object[] {t, u});
+                            retVal[0] = c.apply(new Object[] {t, u});
+                        } catch (Throwable ex) {
+                            error[0] = ex;
                         } finally {
                             ctx.getCtx().getContext().get().leave();
 
-                            Core.instance.threadContext.remove(Thread.currentThread());
                             ContextContainer<?> cc = Core.instance.eventContexts.get(Thread.currentThread());
                             if (cc != null) cc.releaseLock();
-                            Core.instance.eventContexts.remove(Thread.currentThread());
 
                             tasks.poll().release();
+                            lock.release();
                         }
-                        return (R) retVal;
-                    } else {
-                        return (R) c.apply(new Object[] {t, u});
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                });
+                th.start();
+                try {
+                    lock.acquire();
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
                 }
-                return null;
+                if (error[0] != null) throw new RuntimeException(error[0]);
+                return (R) retVal[0];
             }
 
             @Override
@@ -282,18 +312,20 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
      */
     public void deferCurrentTask() throws InterruptedException {
         ctx.getCtx().getContext().get().leave();
-        Core.instance.threadContext.remove(Thread.currentThread());
 
+        // remove self from queue
         tasks.poll().release();
 
+        // put self at back of the queue
         tasks.put(new WrappedThread(Thread.currentThread(), true));
+
+        // wait to be at the front of the queue again
         WrappedThread joinable = tasks.peek();
         while (joinable.thread != Thread.currentThread()) {
             joinable.waitFor();
             joinable = tasks.peek();
         }
 
-        Core.instance.threadContext.put(Thread.currentThread(), ctx.getCtx());
         ctx.getCtx().getContext().get().enter();
 
     }
@@ -325,10 +357,8 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
         }
 
         public synchronized void release() {
-            synchronized (this) {
-                this.notDone = false;
-                this.notifyAll();
-            }
+            this.notDone = false;
+            this.notifyAll();
         }
     }
 }

@@ -127,8 +127,8 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     }
     
     @Override
-    public JSScriptContext createContext() {
-        return new JSScriptContext();
+    public JSScriptContext createContext(BaseEvent event) {
+        return new JSScriptContext(event);
     }
     
     private BaseWrappedException<?> internalWrap(PolyglotException.StackFrame current, Iterator<PolyglotException.StackFrame> frames) {

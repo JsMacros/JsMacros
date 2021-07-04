@@ -2,11 +2,16 @@ package xyz.wagyourtail.jsmacros.core.language.impl;
 
 import org.graalvm.polyglot.Context;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 
 public class JSScriptContext extends ScriptContext<Context> {
     boolean closed = false;
-    
+
+    public JSScriptContext(BaseEvent event) {
+        super(event);
+    }
+
     @Override
     public boolean isContextClosed() {
         return super.isContextClosed() || closed;

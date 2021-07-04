@@ -32,7 +32,7 @@ public abstract class BaseLanguage<T> {
         
         final ScriptTrigger staticMacro = macro.copy();
         final Thread ct = Thread.currentThread();
-        ContextContainer<T> ctx = new ContextContainer<>(createContext());
+        ContextContainer<T> ctx = new ContextContainer<>(createContext(event));
         final Thread t = new Thread(() -> {
             try {
                 if (event == null) {
@@ -69,7 +69,7 @@ public abstract class BaseLanguage<T> {
     
     public ContextContainer<T> trigger(String script, Runnable then, Consumer<Throwable> catcher) {
         final Thread ct = Thread.currentThread();
-        ContextContainer<T> ctx = new ContextContainer<>(createContext());
+        ContextContainer<T> ctx = new ContextContainer<>(createContext(null));
         final Thread t = new Thread(() -> {
             try {
                 Thread.currentThread().setName(String.format("RunScript:{\"creator\":\"%s\", \"start\":\"%d\"}", ct.getName(), System.currentTimeMillis()));
@@ -139,7 +139,7 @@ public abstract class BaseLanguage<T> {
         return null;
     }
     
-    public abstract ScriptContext<T> createContext();
+    public abstract ScriptContext<T> createContext(BaseEvent event);
     
     @Deprecated
     public String extension() {
