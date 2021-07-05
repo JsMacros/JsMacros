@@ -256,11 +256,25 @@ public class ClassParser {
     private XMLBuilder parseMethod(ExecutableElement element) {
         XMLBuilder method = new XMLBuilder("div").setClass("method classItem").setID(memberId(element));
         //TODO: type params
-        method.append(new XMLBuilder("h4", true).setClass("methodTitle classItemTitle").append(
-            ".", element.getSimpleName(), "(",
-                createTitleParams(element).setClass("methodParams"),
-            ")"
+        XMLBuilder methodTitle;
+        method.append(methodTitle = new XMLBuilder("h4", true).setClass("methodTitle classItemTitle").append(
+            ".", element.getSimpleName()
         ));
+
+        List<? extends TypeParameterElement> params = element.getTypeParameters();
+        if (params.size() > 0) {
+            methodTitle.append("<");
+            for (TypeParameterElement param : params) {
+                methodTitle.append(parseType(param.asType()), ", ");
+            }
+            methodTitle.pop();
+            methodTitle.append(">");
+        }
+
+        methodTitle.append("(",
+            createTitleParams(element).setClass("methodParams"),
+            ")"
+        );
         method.append(createFlags(element, false));
         method.append(getSince(element));
 
@@ -450,11 +464,11 @@ public class ClassParser {
                 if (typeLink.options.get("href").equals("\"\"")) typeLink.setClass("type deadType");
                 else typeLink.setClass("type");
 
-                List<? extends TypeParameterElement> params = ((TypeElement) ((DeclaredType) type).asElement()).getTypeParameters();
+                List<? extends TypeMirror> params = ((DeclaredType) type).getTypeArguments();
                 if (params != null && !params.isEmpty()) {
                     builder.append("<");
-                    for (TypeParameterElement param : params) {
-                        builder.append(parseType(param.asType()), ", ");
+                    for (TypeMirror param : params) {
+                        builder.append(parseType(param), ", ");
                     }
                     builder.pop();
                     builder.append(">");

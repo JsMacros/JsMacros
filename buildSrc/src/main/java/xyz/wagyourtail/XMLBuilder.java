@@ -56,12 +56,12 @@ public class XMLBuilder {
         return this;
     }
 
-    public void pop(int index) {
-        children.remove(index);
+    public Object pop(int index) {
+        return children.remove(index);
     }
 
-    public void pop() {
-        children.remove(children.size() - 1);
+    public Object pop() {
+        return children.remove(children.size() - 1);
     }
 
     public String toString() {
