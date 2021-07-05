@@ -76,7 +76,6 @@ public class ClassParser extends AbstractParser {
             }
         }
 
-        //TODO: extends
         return "export interface " + getClassName() + " extends " + buildExtends() + " {\n" +
             StringHelpers.tabIn(genFields(fields)) +
             "\n\n" +

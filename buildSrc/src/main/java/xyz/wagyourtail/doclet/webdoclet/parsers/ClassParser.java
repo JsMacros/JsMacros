@@ -255,7 +255,6 @@ public class ClassParser {
 
     private XMLBuilder parseMethod(ExecutableElement element) {
         XMLBuilder method = new XMLBuilder("div").setClass("method classItem").setID(memberId(element));
-        //TODO: type params
         XMLBuilder methodTitle;
         method.append(methodTitle = new XMLBuilder("h4", true).setClass("methodTitle classItemTitle").append(
             ".", element.getSimpleName()
