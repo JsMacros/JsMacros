@@ -20,6 +20,8 @@ public class MovementQueue {
     private static int queuePos = 0;
     private static boolean reCalcPredictions;
 
+    private static boolean doDrawPredictions = false;
+
     public static PlayerInput tick(ClientPlayerEntity newPlayer) {
         if (queuePos == queue.size()) {
             return null;
@@ -77,6 +79,21 @@ public class MovementQueue {
         queue.add(input.clone());
     }
 
+    public static void setDrawPredictions(boolean val) {
+        if (val ^ doDrawPredictions) {
+            doDrawPredictions = val;
+            if (doDrawPredictions) {
+                synchronized (FHud.renders) {
+                    FHud.renders.add(predPoints);
+                }
+            } else {
+                synchronized (FHud.renders) {
+                    FHud.renders.remove(predPoints);
+                }
+            }
+        }
+    }
+
     public static void clear() {
         queue.clear();
         predictions.clear();
@@ -86,8 +103,10 @@ public class MovementQueue {
             }
         }
         predPoints = new Draw3D();
-        synchronized (FHud.renders) {
-            FHud.renders.add(predPoints);
+        if (doDrawPredictions) {
+            synchronized (FHud.renders) {
+                FHud.renders.add(predPoints);
+            }
         }
         queuePos = 0;
     }

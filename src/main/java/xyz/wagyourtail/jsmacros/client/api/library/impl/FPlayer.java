@@ -284,6 +284,10 @@ public class FPlayer extends BaseLibrary {
         MovementQueue.clear();
     }
 
+    public void setDrawPredictions(boolean val) {
+        MovementQueue.setDrawPredictions(val);
+    }
+
     /**
      * Predicts where one tick with a {@code PlayerInput} as input would lead to.
      *
