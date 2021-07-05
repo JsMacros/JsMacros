@@ -6,7 +6,6 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
-import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.core.library.IFWrapper;
 import xyz.wagyourtail.jsmacros.core.library.Library;
@@ -94,20 +93,23 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
     public void deferCurrentTask() throws InterruptedException {
         ctx.getCtx().getContext().get().leave();
 
-        // remove self from queue
-        tasks.poll().release();
+        try {
+            // remove self from queue
+            tasks.poll().release();
 
-        // put self at back of the queue
-        tasks.put(new WrappedThread(Thread.currentThread(), true));
+            // put self at back of the queue
+            tasks.put(new WrappedThread(Thread.currentThread(), true));
 
-        // wait to be at the front of the queue again
-        WrappedThread joinable = tasks.peek();
-        while (joinable.thread != Thread.currentThread()) {
-            joinable.waitFor();
-            joinable = tasks.peek();
+            // wait to be at the front of the queue again
+            WrappedThread joinable = tasks.peek();
+            while (joinable.thread != Thread.currentThread()) {
+                joinable.waitFor();
+                joinable = tasks.peek();
+            }
+        } finally {
+            ctx.getCtx().getContext().get().enter();
         }
 
-        ctx.getCtx().getContext().get().enter();
 
     }
 
