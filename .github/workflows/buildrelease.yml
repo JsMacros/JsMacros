@@ -7,8 +7,7 @@ name: Build Release
 on:
   release:
     types: [created]
-    
-concurrency: prevent-multiple-maven
+
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -50,6 +49,19 @@ jobs:
           args: ./build/libs/${{ steps.fname.outputs.result }}.jar application/jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: papeloto/action-zip@v1
+        with:
+          files: dist/typescript/
+          dest: typescript-1.17.zip
+
+      - name: Upload TS to release
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ./typescript-1.17.zip application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload to curseforge
         uses: itsmeow/curseforge-upload@v2
         with:
@@ -65,7 +77,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.fname.outputs.result }}
-          path: ./build/libs/*
+          path: ./dist/**/*
   
   build-1_16_5:
     # The type of runner that the job will run on
@@ -104,6 +116,19 @@ jobs:
           args: ./build/libs/${{ steps.fname.outputs.result }}.jar application/jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: papeloto/action-zip@v1
+        with:
+          files: dist/typescript/
+          dest: typescript-1.16.5.zip
+
+      - name: Upload TS to release
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ./typescript-1.16-5.zip application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload to curseforge
         uses: itsmeow/curseforge-upload@v2
         with:
@@ -119,7 +144,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.fname.outputs.result }}
-          path: ./build/libs/*
+          path: ./dist/**/*
 
   build-1_15_2:
     # The type of runner that the job will run on
@@ -158,6 +183,19 @@ jobs:
           args: ./build/libs/${{ steps.fname.outputs.result }}.jar application/jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: papeloto/action-zip@v1
+        with:
+          files: dist/typescript/
+          dest: typescript-1.15.2.zip
+
+      - name: Upload TS to release
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ./typescript-1.15.2.zip application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload to curseforge
         uses: itsmeow/curseforge-upload@v2
         with:
@@ -173,7 +211,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.fname.outputs.result }}
-          path: ./build/libs/*
+          path: ./dist/**/*
 
   build-1_14_4:
     # The type of runner that the job will run on
@@ -212,6 +250,19 @@ jobs:
           args: ./build/libs/${{ steps.fname.outputs.result }}.jar application/jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: papeloto/action-zip@v1
+        with:
+          files: dist/typescript/
+          dest: typescript-1.14.4.zip
+
+      - name: Upload TS to release
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ./typescript-1.14.4.zip application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload to curseforge
         uses: itsmeow/curseforge-upload@v2
         with:
@@ -227,7 +278,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.fname.outputs.result }}
-          path: ./build/libs/*
+          path: ./dist/**/*
   
   build-forge-1_16_5:
     # The type of runner that the job will run on
@@ -280,7 +331,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.fname.outputs.result }}
-          path: ./build/libs/*
+          path: ./dist/**/*
   
   build-1_8_9:
     # The type of runner that the job will run on
@@ -319,6 +370,19 @@ jobs:
           args: ./build/libs/${{ steps.fname.outputs.result }}.jar application/jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: papeloto/action-zip@v1
+        with:
+          files: dist/typescript/
+          dest: typescript-1.8.9.zip
+
+      - name: Upload TS to release
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ./typescript-1.8.9.zip application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload to curseforge
         uses: itsmeow/curseforge-upload@v2
         with:
@@ -334,4 +398,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.fname.outputs.result }}
-          path: ./build/libs/*
+          path: ./dist/**/*

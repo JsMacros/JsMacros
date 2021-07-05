@@ -6,8 +6,6 @@ name: Build Beta
 # events but only for the master branch
 on: push
 
-concurrency: prevent-multiple-maven
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -52,36 +50,3 @@ jobs:
       with:
         name: ${{ steps.fname.outputs.result }}
         path: ./dist/**/*
-        
-    - uses: actions/github-script@v2
-      with:
-        result-encoding: string
-        script: |
-          const fs = require("fs");
-          let file = fs.readFileSync("./gradle.properties");
-          file = file.toString().split("\n").map(e => e.trim().startsWith("mod_version") ? `${e.substring(0, e.length - 7)}SNAPSHOT` : e).join("\n");
-          fs.writeFileSync("./gradle.properties", file);
-    
-    - name: Publish with Gradle
-      run: ./gradlew publishToMavenLocal
-    
-    - name: Gen Sha1 files
-      run: for u in $(find /home/runner/.m2/ -iname *.jar); do echo $u | sha1sum | cut -d' ' -f1 >> $u.sha1; done
-
-    - name: checkout maven to new dir
-      run: git clone https://wagyourtail:${{ secrets.PERSONAL_TOKEN }}@github.com/wagyourtail/wagyourtail.github.io.git /home/runner/maven
-      
-    - name: copy files in
-      run: rsync -a /home/runner/.m2/repository /home/runner/maven/maven
-      
-    - name: add to git
-      run: git --git-dir=/home/runner/maven/.git --work-tree=/home/runner/maven/ add .
-      
-    - name: set author
-      run: git config --global user.email "wagyourtail@wagyourtail.xyz"; git config --global user.name "Github Actions"
-      
-    - name: commit
-      run: git --git-dir=/home/runner/maven/.git --work-tree=/home/runner/maven/ commit -m "automated beta push"
-      
-    - name: Push to destination
-      run: git --git-dir=/home/runner/maven/.git --work-tree=/home/runner/maven/ push
