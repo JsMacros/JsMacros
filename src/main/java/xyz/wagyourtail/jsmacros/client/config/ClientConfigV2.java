@@ -45,7 +45,7 @@ public class ClientConfigV2 {
     }
     
     public List<String> getFonts() {
-        return ((IFontManager)((IMinecraftClient)MinecraftClient.getInstance()).getFontManager()).getFontList().stream().map(Identifier::toString).collect(Collectors.toList());
+        return ((IFontManager)((IMinecraftClient)MinecraftClient.getInstance()).jsmacros_getFontManager()).jsmacros_getFontList().stream().map(Identifier::toString).collect(Collectors.toList());
     }
     
     public Map<String, short[]> getThemeData() {

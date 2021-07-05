@@ -13,7 +13,7 @@ public abstract class MixinMerchantScreen implements IMerchantScreen {
     @Shadow protected abstract void syncRecipeIndex();
     
     @Override
-    public void selectIndex(int index) {
+    public void jsmacros_selectIndex(int index) {
         selectedIndex = index;
         syncRecipeIndex();
     }

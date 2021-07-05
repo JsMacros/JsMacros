@@ -28,11 +28,13 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @since 1.0.5
      * @deprecated please use {@link Draw2D#setOnInit(MethodWrapper)}
      */
+     @Deprecated
     public MethodWrapper<Draw2D, Object, Object> onInit;
     /**
      * @since 1.1.9 [citation needed]
      * @deprecated please use {@link Draw2D#setOnFailInit(MethodWrapper)}
      */
+     @Deprecated
     public MethodWrapper<String, Object, Object> catchInit;
     
     protected final MinecraftClient mc;

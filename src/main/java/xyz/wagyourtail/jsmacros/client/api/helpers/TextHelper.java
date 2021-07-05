@@ -63,6 +63,7 @@ public class TextHelper extends BaseHelper<Text> {
      * @deprecated confusing name.
      * @return
      */
+     @Deprecated
     public String toJson() {
         return getJson();
     }

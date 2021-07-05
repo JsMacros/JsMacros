@@ -14,10 +14,15 @@ import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 
 @Mixin(MinecraftClient.class)
+abstract
 class MixinMinecraftClient implements IMinecraftClient {
     
     @Shadow @Final private FontManager fontManager;
-    
+
+    @Shadow protected abstract void doItemUse();
+
+    @Shadow protected abstract void doAttack();
+
     @Inject(at = @At("TAIL"), method = "onResolutionChanged")
     public void onResolutionChanged(CallbackInfo info) {
 
@@ -31,8 +36,18 @@ class MixinMinecraftClient implements IMinecraftClient {
     }
     
     @Override
-    public FontManager getFontManager() {
+    public FontManager jsmacros_getFontManager() {
         return fontManager;
+    }
+
+    @Override
+    public void jsmacros_doItemUse() {
+        doItemUse();
+    }
+
+    @Override
+    public void jsmacros_doAttack() {
+        doAttack();
     }
     
 }

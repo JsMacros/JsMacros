@@ -123,6 +123,7 @@ public class HTTPRequest {
          * @deprecated
          * @return
          */
+         @Deprecated
         public Object json() {
             text();
             return null;

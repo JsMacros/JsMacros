@@ -15,12 +15,12 @@ public class MixinPlayerListHud implements IPlayerListHud {
     @Shadow private Text footer;
     
     @Override
-    public Text getHeader() {
+    public Text jsmacros_getHeader() {
         return this.header;
     }
     
     @Override
-    public Text getFooter() {
+    public Text jsmacros_getFooter() {
         return this.footer;
     }
     

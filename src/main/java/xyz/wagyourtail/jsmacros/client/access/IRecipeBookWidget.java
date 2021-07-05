@@ -4,9 +4,9 @@ import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
 
 public interface IRecipeBookWidget {
 
-    RecipeBookResults getResults();
+    RecipeBookResults jsmacros_getResults();
     
-    boolean isSearching();
+    boolean jsmacros_isSearching();
     
-    void refreshResultList();
+    void jsmacros_refreshResultList();
 }

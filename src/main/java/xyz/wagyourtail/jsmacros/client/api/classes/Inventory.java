@@ -70,8 +70,19 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
+     * @param slot
+     * @since 1.5.0
+     * @return
+     */
+    public Inventory<T> click(int slot) {
+        click(slot, 0);
+        return this;
+    }
+
+    /**
      * Clicks a slot with a mouse button.
-     * 
+     *
+     * @since 1.0.8
      * @param slot
      * @param mousebutton
      * @return
@@ -96,6 +107,15 @@ public class Inventory<T extends HandledScreen<?>> {
             man.clickSlot(syncId, i, mousebutton, SlotActionType.QUICK_CRAFT, player);
         }
         man.clickSlot(syncId, -999, mousebutton + 1, SlotActionType.QUICK_CRAFT, player);
+        return this;
+    }
+
+    /**
+     * @since 1.5.0
+     * @param slot
+     */
+    public Inventory<T> dropSlot(int slot) {
+        man.clickSlot(syncId, slot, 0, SlotActionType.THROW, player);
         return this;
     }
     
@@ -302,9 +322,9 @@ public class Inventory<T extends HandledScreen<?>> {
         if (mc.currentScreen != inventory) {
             ((RecipeBookWidget)recipeBookWidget).initialize(0, 0, mc, true, (AbstractRecipeScreenHandler<?>) inventory.getScreenHandler());
         }
-        recipeBookWidget.refreshResultList();
-        res = recipeBookWidget.getResults();
-        List<RecipeResultCollection> result = ((IRecipeBookResults) res).getResultCollections();
+        recipeBookWidget.jsmacros_refreshResultList();
+        res = recipeBookWidget.jsmacros_getResults();
+        List<RecipeResultCollection> result = ((IRecipeBookResults) res).jsmacros_getResultCollections();
         recipes = result.stream().flatMap(e -> e.getRecipes(true).stream());
         return recipes.map(e -> new RecipeHelper(e, syncId)).collect(Collectors.toList());
     }

@@ -18,17 +18,17 @@ public abstract class MixinRecipeBookWidget implements IRecipeBookWidget {
     @Shadow protected abstract void refreshResults(boolean resetCurrentPage);
     
     @Override
-    public RecipeBookResults getResults() {
+    public RecipeBookResults jsmacros_getResults() {
         return recipesArea;
     }
     
     @Override
-    public boolean isSearching() {
+    public boolean jsmacros_isSearching() {
         return searching;
     }
     
     @Override
-    public void refreshResultList() {
+    public void jsmacros_refreshResultList() {
         refreshResults(false);
     }
 }

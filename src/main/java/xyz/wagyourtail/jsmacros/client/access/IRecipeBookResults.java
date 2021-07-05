@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface IRecipeBookResults {
     
-    List<RecipeResultCollection> getResultCollections();
+    List<RecipeResultCollection> jsmacros_getResultCollections();
     
 }

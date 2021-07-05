@@ -12,7 +12,6 @@ import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
@@ -58,7 +57,7 @@ public class EventKey implements BaseEvent {
             if (mc.currentScreen instanceof BaseScreen) return;
             Element focused = mc.currentScreen.getFocused();
             if (focused instanceof TextFieldWidget) return;
-            if (focused instanceof RecipeBookWidget && ((IRecipeBookWidget)focused).isSearching()) return;
+            if (focused instanceof RecipeBookWidget && ((IRecipeBookWidget)focused).jsmacros_isSearching()) return;
         }
         
         if (action == 1) {

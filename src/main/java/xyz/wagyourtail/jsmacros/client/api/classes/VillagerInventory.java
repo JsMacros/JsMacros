@@ -28,7 +28,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
      * @since 1.3.1
      */
     public VillagerInventory selectTrade(int index) {
-        ((IMerchantScreen)inventory).selectIndex(index);
+        ((IMerchantScreen)inventory).jsmacros_selectIndex(index);
         return this;
     }
     

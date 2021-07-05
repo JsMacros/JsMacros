@@ -16,7 +16,7 @@ public class MixinFontManager implements IFontManager {
     @Shadow @Final private Map<Identifier, FontStorage> fontStorages;
     
     @Override
-    public Set<Identifier> getFontList() {
+    public Set<Identifier> jsmacros_getFontList() {
         return fontStorages.keySet();
     }
     

@@ -15,7 +15,7 @@ public class MixinRecipeBookResults implements IRecipeBookResults {
     private List<RecipeResultCollection> resultCollections;
     
     @Override
-    public List<RecipeResultCollection> getResultCollections() {
+    public List<RecipeResultCollection> jsmacros_getResultCollections() {
         return resultCollections;
     }
 

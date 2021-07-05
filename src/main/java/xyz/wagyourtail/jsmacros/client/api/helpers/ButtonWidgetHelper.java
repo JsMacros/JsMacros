@@ -78,6 +78,7 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
      * @param label
      * @return
      */
+     @Deprecated
     public ButtonWidgetHelper<T> setLabel(String label) {
         base.setMessage(new LiteralText(label));
         return this;
