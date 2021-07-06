@@ -100,6 +100,7 @@ public class ConfigManager {
     
     public synchronized void loadConfig() throws IllegalAccessException, InstantiationException, IOException {
         try {
+            options.clear();
             if (rawOptions == null) reloadRawConfigFromFile();
             if (loadedAsV1) {
                 try {

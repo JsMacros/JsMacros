@@ -63,5 +63,6 @@
 	"jsmacros.linteroverrides": "Linter Scripts",
 	"jsmacros.setvalue": "Set Value",
 	"jsmacros.setkey": "Set Key",
-	"jsmacros.maxlocktime": "Max Joined Lock Time"
+	"jsmacros.maxlocktime": "Max Joined Lock Time",
+	"jsmacros.reloadconfig": "Reload config from file"
 }

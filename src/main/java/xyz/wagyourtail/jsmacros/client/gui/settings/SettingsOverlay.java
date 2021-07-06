@@ -13,8 +13,10 @@ import xyz.wagyourtail.jsmacros.client.gui.overlays.OverlayContainer;
 import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.*;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.config.Option;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -72,7 +74,16 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
     
         this.addDrawableChild(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> this.close()));
         sections = new CategoryTreeContainer(x + 2, y + 13, w / 3, height - 17, textRenderer, this);
-        
+
+        this.addDrawableChild(new Button(x + width / 2, y + 2, width / 2 - 12, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.reloadconfig"), (btn) -> {
+            try {
+                Core.instance.config.loadConfig();
+            } catch (IllegalAccessException | InstantiationException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            Core.instance.profile.loadOrCreateProfile(Core.instance.config.getOptions(CoreConfigV2.class).defaultProfile);
+        }));
+
         for (String[] group : settings.groups()) {
             sections.addCategory(group);
         }
