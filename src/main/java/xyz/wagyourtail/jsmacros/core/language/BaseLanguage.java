@@ -86,7 +86,8 @@ public abstract class BaseLanguage<T> {
                     runner.profile.logError(f);
                 }
             } finally {
-                ctx.releaseLock();
+                ContextContainer<?> cc = runner.eventContexts.get(Thread.currentThread());
+                if (cc != null) cc.releaseLock();
             }
         });
         ctx.setLockThread(t);
