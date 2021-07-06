@@ -133,10 +133,10 @@ public class FPlayer extends BaseLibrary {
      */
     public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object, Object> callback) {
         assert folder != null;
-        ScreenshotRecorder.saveScreenshot(new File(Core.instance.config.macroFolder, folder), mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
-                mc.getFramebuffer(), (text) -> {
-                    if (callback != null) callback.accept(new TextHelper(text));
-                });
+        ScreenshotRecorder.saveScreenshot(new File(Core.instance.config.macroFolder, folder), mc.getFramebuffer(),
+            (text) -> {
+                if (callback != null) callback.accept(new TextHelper(text));
+        });
     }
 
     /**
@@ -151,10 +151,10 @@ public class FPlayer extends BaseLibrary {
      */
     public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object> callback) {
         assert folder != null && file != null;
-        ScreenshotRecorder.saveScreenshot(new File(Core.instance.config.macroFolder, folder), file, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(),
-                mc.getFramebuffer(), (text) -> {
-                    if (callback != null) callback.accept(new TextHelper(text));
-                });
+        ScreenshotRecorder.saveScreenshot(new File(Core.instance.config.macroFolder, folder), file, mc.getFramebuffer(),
+            (text) -> {
+                if (callback != null) callback.accept(new TextHelper(text));
+        });
     }
 
     /**

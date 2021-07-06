@@ -21,7 +21,12 @@ repositories {
         url 'https://maven.fabricmc.net/'
     }
     maven { url 'https://jitpack.io' }
-
+    maven {
+		url "https://www.cursemaven.com"
+		content {
+			includeGroup "curse.maven"
+		}
+	}
 }
 
 dependencies {
@@ -42,8 +47,6 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-command-api-v1:${project.command_api_version}"
     include "net.fabricmc.fabric-api:fabric-command-api-v1:${project.command_api_version}"
 
-
-
 	implementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
 	implementation "org.graalvm.js:js:${project.graal_version}"
 	implementation "org.graalvm.truffle:truffle-api:${project.graal_version}"
@@ -56,22 +59,20 @@ dependencies {
 	include "org.graalvm.regex:regex:${project.graal_version}"
 	include group: 'com.ibm.icu', name: 'icu4j', version: '67.1'
 
-    implementation "io.noties:prism4j:${prism_version}"
-    include "io.noties:prism4j:${prism_version}"
+    implementation "io.noties:prism4j:${project.prism_version}"
+    include "io.noties:prism4j:${project.prism_version}"
 
     implementation "com.neovisionaries:nv-websocket-client:2.10"
     include "com.neovisionaries:nv-websocket-client:2.10"
 	
 	//nullable not defined so...
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'
-	
-	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
-	// You may need to force-disable transitiveness on them.
-//
-//	modImplementation("io.github.prospector:modmenu:${project.mod_menu_version}") {
-//        transitive = false
-//    }
-	//modImplementation('com.github.chocohead:optifabric:llama-SNAPSHOT')
+
+	modImplementation("curse.maven:modmenu-308702:${project.modmenu_version}") {
+        transitive = false
+    }
+    //for modmenu
+	modImplementation "net.fabricmc.fabric-api:fabric-screen-api-v1:1.0.4+155f865c13"
 }
 
 processResources {
