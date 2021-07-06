@@ -62,5 +62,6 @@
 	"jsmacros.theme": "Editor Theme Colors",
 	"jsmacros.linteroverrides": "Linter Scripts",
 	"jsmacros.setvalue": "Set Value",
-	"jsmacros.setkey": "Set Key"
+	"jsmacros.setkey": "Set Key",
+	"jsmacros.maxlocktime": "Max Joined Lock Time"
 }

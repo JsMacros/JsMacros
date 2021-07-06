@@ -88,7 +88,7 @@ public class Core {
             if (e != null) return e;
         }
         Iterator<StackTraceElement> elements = Arrays.stream(ex.getStackTrace()).iterator();
-        String message = ex.getClass().getName();
+        String message = ex.getClass().getSimpleName();
         String intMessage = ex.getMessage();
         if (intMessage != null) {
             message += ": " + intMessage;

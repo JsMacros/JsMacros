@@ -15,6 +15,7 @@ import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
+import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
@@ -75,6 +76,7 @@ public class Profile extends BaseProfile {
             if (joinedMain) {
                 joinedThreadStack.add(t.getLockThread());
             }
+            ContextLockWatchdog.startWatchdog(t, Thread.currentThread(), macroListener, Core.instance.config.getOptions(CoreConfigV2.class).maxLockTime);
             t.awaitLock(() -> {
                 joinedThreadStack.remove(t.getLockThread());
             });

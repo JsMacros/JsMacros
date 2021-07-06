@@ -56,10 +56,6 @@ public class JsMacros implements ClientModInitializer {
 
         // Init MovementQueue
         MovementQueue.clear();
-        
-        if (FabricLoader.getInstance().isModLoaded("modmenu"))
-            LOGGER.info("mOd 'JsMaCrOs' UsEs tHe mOdMeNu:cLiEnTsIdEoNlY CuStOm vAlUe uNnEcEsSaRiLy, As iT CaN Be iNfErReD FrOm tHe mOd's dEcLaReD EnViRoNmEnT.");
-        
     }
 
     static public Text getKeyText(String translationKey) {

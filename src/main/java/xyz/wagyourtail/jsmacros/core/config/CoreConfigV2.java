@@ -9,6 +9,10 @@ import xyz.wagyourtail.jsmacros.core.event.impl.EventProfileLoad;
 import java.util.*;
 
 public class CoreConfigV2 {
+
+    @Option(translationKey = "jsmacros.maxlocktime", group = "jsmacros.settings.general")
+    public long maxLockTime = 500;
+
     @Option(translationKey = "jsmacros.defaultprofile", group = "jsmacros.settings.profile", options = "profileOptions")
     public String defaultProfile = "default";
     
