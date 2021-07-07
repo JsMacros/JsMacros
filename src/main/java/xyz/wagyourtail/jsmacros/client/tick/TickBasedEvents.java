@@ -16,6 +16,7 @@ public class TickBasedEvents {
     private static ItemStack legArmor = ItemStack.EMPTY;
     private static ItemStack chestArmor = ItemStack.EMPTY;
     private static ItemStack headArmor = ItemStack.EMPTY;
+    private static boolean previousFallFlyState = false;
     
     public static boolean areNotEqual(ItemStack a, ItemStack b) {
         return (!a.isEmpty() || !b.isEmpty()) && (a.isEmpty() || b.isEmpty() || !a.isItemEqualIgnoreDamage(b) || a.getCount() != b.getCount() || !ItemStack.areTagsEqual(a, b) || a.getDamage() != b.getDamage());
@@ -57,6 +58,14 @@ public class TickBasedEvents {
             
             new EventTick();
             new EventJoinedTick();
+
+            if (mc.player != null) {
+                boolean state = mc.player.isFallFlying();
+                if (previousFallFlyState ^ state) {
+                    new EventFallFlying(state);
+                    previousFallFlyState = state;
+                }
+            }
 
             if (mc.player != null && mc.player.getInventory() != null) {
                 PlayerInventory inv = mc.player.getInventory();
