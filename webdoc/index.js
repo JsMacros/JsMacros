@@ -22,9 +22,9 @@ function frameLink(a) {
     a.setAttribute("onclick", "openMain(this.href); return false;");
 }
 
-async function openMain(url) {
+async function openMain(url, dontpush) {
     url = url.replace(/https?:\/\/.+?\//, "/");
-    window.history.replaceState({}, '', `${window.location.href.split('?')[0].replace(/#.*\??/, "")}?${url}`);
+    if (!dontpush) window.history.pushState({}, '', `${window.location.href.split('?')[0].replace(/#.*\??/, "")}?${url}`);
     const req = await fetch(url);
     if (req.status != 200) {
         alert(`failed to load ${req.status}: \n${req.statusText}`);
@@ -84,3 +84,7 @@ menuBtn.onclick = () => {
         mainNav.parentElement.style.display = "block";
     }
 }
+
+window.addEventListener("popstate", () => {
+    openMain(window.location.search.substring(2), true);
+});
