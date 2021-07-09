@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtNull;
 import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -92,13 +93,13 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
     
     /**
-     * @since 1.1.6
+     * @since 1.1.6, was a {@link String} until 1.5.1
      * @return
      */
-    public String getNBT() {
+    public NBTElementHelper<?> getNBT() {
         NbtCompound tag = base.getTag();
-        if (tag != null) return tag.toString();
-        else return "{}";
+        if (tag != null) return NBTElementHelper.resolve(tag);
+        else return null;
     }
     
     /**

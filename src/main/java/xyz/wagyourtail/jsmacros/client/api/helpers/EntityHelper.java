@@ -139,13 +139,13 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
     
     /**
-     * @since 1.2.8
+     * @since 1.2.8, was a {@link String} until 1.5.0
      * @return
      */
-    public String getNBT() {
+    public NBTElementHelper<?> getNBT() {
         NbtCompound nbt = new NbtCompound();
-        base.saveNbt(nbt);
-        return nbt.toString();
+        base.saveSelfNbt(nbt);
+        return NBTElementHelper.resolve(nbt);
     }
     
     /**

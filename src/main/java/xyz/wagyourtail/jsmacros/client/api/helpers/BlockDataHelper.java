@@ -70,18 +70,14 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
     public String getName() {
         return b.getName().toString();
     }
-    
+
     /**
-     * @return block NBT data as a {@link Map}.
+     * @return
+     * @since 1.5.1, used to be a {@link Map}&lt;{@link String}, {@link String}&gt;
      */
-    public Map<String, String> getNBT() {
+    public NBTElementHelper<?> getNBT() {
         if (e == null) return null;
-        Map<String, String> m = new HashMap<>();
-        NbtCompound t = e.toInitialChunkDataNbt();
-        for (String s : t.getKeys()) {
-            m.put(s, t.get(s).asString());
-        }
-        return m;
+        return NBTElementHelper.resolve(e.toInitialChunkDataNbt());
     }
     
     /**
