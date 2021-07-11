@@ -24,10 +24,12 @@ import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.RecipeHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
+import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -306,7 +308,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @since 1.3.1
      * @return all craftable recipes
      */
-    public List<RecipeHelper> getCraftableRecipes() {
+    public List<RecipeHelper> getCraftableRecipes() throws InterruptedException {
         Stream<Recipe<?>> recipes;
         RecipeBookResults res;
         IRecipeBookWidget recipeBookWidget;
@@ -319,10 +321,22 @@ public class Inventory<T extends HandledScreen<?>> {
         } else {
             return null;
         }
-        if (mc.currentScreen != inventory) {
-            ((RecipeBookWidget)recipeBookWidget).initialize(0, 0, mc, true, (AbstractRecipeScreenHandler<?>) inventory.getScreenHandler());
+        if (mc.isOnThread() || Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
+            if (mc.currentScreen != inventory) {
+                ((RecipeBookWidget)recipeBookWidget).initialize(0, 0, mc, true, (AbstractRecipeScreenHandler<?>) inventory.getScreenHandler());
+            }
+            recipeBookWidget.jsmacros_refreshResultList();
+        } else {
+            Semaphore lock = new Semaphore(0);
+            mc.execute(() -> {
+                if (mc.currentScreen != inventory) {
+                    ((RecipeBookWidget)recipeBookWidget).initialize(0, 0, mc, true, (AbstractRecipeScreenHandler<?>) inventory.getScreenHandler());
+                }
+                recipeBookWidget.jsmacros_refreshResultList();
+                lock.release();
+            });
+            lock.acquire();
         }
-        recipeBookWidget.jsmacros_refreshResultList();
         res = recipeBookWidget.jsmacros_getResults();
         List<RecipeResultCollection> result = ((IRecipeBookResults) res).jsmacros_getResultCollections();
         recipes = result.stream().flatMap(e -> e.getRecipes(true).stream());

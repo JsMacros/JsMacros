@@ -40,10 +40,14 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
      */
     public void craft(boolean craftAll) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc.currentScreen instanceof HandledScreen && ((HandledScreen<?>) mc.currentScreen).getScreenHandler().syncId == syncId) {
+        assert mc.player != null;
+        if ((mc.currentScreen instanceof HandledScreen && ((HandledScreen<?>) mc.currentScreen).getScreenHandler().syncId == syncId) ||
+            (mc.currentScreen == null && syncId == mc.player.playerScreenHandler.syncId)) {
             assert mc.interactionManager != null;
             mc.interactionManager.clickRecipe(syncId, base, craftAll);
+            return;
         }
+        throw new AssertionError("Crafting Screen no longer open!");
     }
     
     public String toString() {

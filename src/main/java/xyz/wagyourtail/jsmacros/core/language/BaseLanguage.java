@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 
 import java.io.File;
+import java.nio.file.FileSystemException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,13 +42,16 @@ public abstract class BaseLanguage<T> {
                     Thread.currentThread().setName(String.format("Script:{\"trigger\":\"%s\", \"event\":\"%s\", \"file\":\"%s\"}", staticMacro.triggerType, staticMacro.event, staticMacro.scriptFile));
                 }
                 File file = new File(runner.config.macroFolder, staticMacro.scriptFile);
-                if (file.exists()) {
+                if (file.exists() && file.isFile()) {
                     runner.contexts.put(ctx.getCtx(), Thread.currentThread().getName());
                     runner.threadContext.put(Thread.currentThread(), ctx.getCtx());
                     runner.eventContexts.put(Thread.currentThread(), ctx);
                     exec(ctx, staticMacro, file, event);
                     
                     if (then != null) then.run();
+                } else {
+                    macro.enabled = false;
+                    throw new FileSystemException("file \"" + file.getPath() + "\" does not exist or is a directory!");
                 }
             } catch (Exception e) {
                 try {
