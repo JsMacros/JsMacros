@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventResourcesReloaded;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventResourcePackLoaded;
 
 @Mixin(SplashOverlay.class)
 public class MixinSplashOverlay {
@@ -16,6 +16,6 @@ public class MixinSplashOverlay {
 
     @Inject(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screen/SplashOverlay;reloadCompleteTime:J", opcode = Opcodes.PUTFIELD))
     private void onReloadComplete(CallbackInfo ci) {
-        new EventResourcesReloaded(!reloading);
+        new EventResourcePackLoaded(!reloading);
     }
 }

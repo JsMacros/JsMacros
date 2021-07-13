@@ -1,7 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
+import net.minecraft.client.MinecraftClient;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This event is fired after resources have been reloaded, i.e. after the splash screen has finished.
@@ -10,18 +14,20 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  *
  * @since 1.5.1
  */
-@Event("ResourcesReloaded")
-public class EventResourcesReloaded implements BaseEvent {
+@Event("ResourcePackLoaded")
+public class EventResourcePackLoaded implements BaseEvent {
     public final boolean isGameStart;
+    public final List<String> loadedPacks;
 
-    public EventResourcesReloaded(boolean isGameStart) {
+    public EventResourcePackLoaded(boolean isGameStart) {
         this.isGameStart = isGameStart;
+        this.loadedPacks = new ArrayList<>(MinecraftClient.getInstance().getResourcePackManager().getEnabledNames());
 
         profile.triggerEvent(this);
     }
 
     @Override
     public String toString() {
-        return String.format("%s:{\"isGameStart\": %s}", this.getEventName(), isGameStart);
+        return String.format("%s:{\"isGameStart\": %s, \"loadedPacks\": %s}", this.getEventName(), isGameStart, loadedPacks);
     }
 }
