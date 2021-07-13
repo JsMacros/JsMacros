@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * This includes when the game is finished loading and the title screen becomes visible, which you can check using
  * {@code isGameStart}.
  *
- * @since 1.5.2
+ * @since 1.5.1
  */
 @Event("ResourcesReloaded")
 public class EventResourcesReloaded implements BaseEvent {
