@@ -45,6 +45,11 @@ async function openMain(url, dontpush) {
     if (cname == "searchMain") {
         updateClassGroups();
     }
+    scrlTo(url);
+    mainNav.parentElement.style.display = null;
+}
+
+function scrlTo(url) {
     const scroll = url.split("#")[1];
     if (scroll) {
         window.scrollTo(window.scrollX, document.getElementById(scroll).offsetTop);
@@ -53,7 +58,6 @@ async function openMain(url, dontpush) {
     } else {
         window.scrollTo(window.scrollX, 0);
     }
-    mainNav.parentElement.style.display = null;
 }
 
 async function searchBox(val) {
@@ -85,6 +89,10 @@ menuBtn.onclick = () => {
     }
 }
 
-window.addEventListener("popstate", () => {
-    openMain(window.location.search.substring(2), true);
+window.addEventListener("popstate", (e) => {
+    if (e.state !== null) {
+        const scroll = window.location.href.split("#")[1];
+        openMain(window.location.search.substring(1) + (scroll ? "#" + scroll : ""), true);
+    } else
+        scrlTo(window.location.href)
 });

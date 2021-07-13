@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * This event is fired after resources have been reloaded, i.e. after the splash screen has finished.
  * This includes when the game is finished loading and the title screen becomes visible, which you can check using
- * {@code isGameStart}.
+ * {@link #isGameStart}.
  *
  * @since 1.5.1
  */
