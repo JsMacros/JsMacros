@@ -3,6 +3,7 @@
   "package": "xyz.wagyourtail.jsmacros.client.mixins",
   "compatibilityLevel": "JAVA_16",
   "client": [
+    "access.MixinBeaconScreen",
     "access.MixinBossBarHud",
     "access.MixinChatHud",
     "access.MixinClientPlayNetworkHandler",
@@ -12,6 +13,7 @@
     "access.MixinHandledScreen",
     "access.MixinHorseScreen",
     "access.MixinInGameHud",
+    "access.MixinLoomScreen",
     "access.MixinMerchantScreen",
     "access.MixinMinecraftClient",
     "access.MixinPlayerListHud",

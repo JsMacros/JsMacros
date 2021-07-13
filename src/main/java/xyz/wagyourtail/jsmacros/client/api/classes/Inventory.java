@@ -56,6 +56,8 @@ public class Inventory<T extends HandledScreen<?>> {
         if (s instanceof HandledScreen) {
             if (s instanceof MerchantScreen) return new VillagerInventory((MerchantScreen) s);
             if (s instanceof EnchantmentScreen) return new EnchantInventory((EnchantmentScreen) s);
+            if (s instanceof LoomScreen) return new LoomInventory((LoomScreen) s);
+            if (s instanceof BeaconScreen) return new BeaconInventory((BeaconScreen) s);
             return new Inventory<>((HandledScreen<?>) s);
         } else {
             assert mc.player != null;
