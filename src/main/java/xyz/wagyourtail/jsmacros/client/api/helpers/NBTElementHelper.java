@@ -201,6 +201,13 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
             super(base);
         }
 
+        /**
+         * @since 1.5.1
+         * @return
+         */
+        private int length() {
+            return base.size();
+        }
 
         /**
          * @since 1.5.1
