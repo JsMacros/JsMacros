@@ -205,7 +205,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
          * @since 1.5.1
          * @return
          */
-        private int length() {
+        public int length() {
             return base.size();
         }
 
