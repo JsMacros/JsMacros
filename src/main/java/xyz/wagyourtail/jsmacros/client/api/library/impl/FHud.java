@@ -139,7 +139,7 @@ public class FHud extends BaseLibrary {
      * 
      * @param overlay
      */
-    public void unregisterDraw2D(Draw2D overlay) {
+    public void unregisterDraw2D(IDraw2D<Draw2D> overlay) {
         synchronized (overlays) {
             overlays.remove(overlay);
         }
