@@ -156,6 +156,9 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventDeath.class);
         runner.eventRegistry.addEvent(EventDimensionChange.class);
         runner.eventRegistry.addEvent(EventDisconnect.class);
+        runner.eventRegistry.addEvent(EventEntityDamaged.class);
+        runner.eventRegistry.addEvent(EventEntityLoad.class);
+        runner.eventRegistry.addEvent(EventEntityUnload.class);
         runner.eventRegistry.addEvent(EventEXPChange.class);
         runner.eventRegistry.addEvent(EventFallFlying.class);
         runner.eventRegistry.addEvent(EventHeldItemChange.class);

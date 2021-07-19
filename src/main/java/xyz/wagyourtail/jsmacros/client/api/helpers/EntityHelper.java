@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -177,6 +178,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         if (e instanceof PlayerEntity) return new PlayerEntityHelper<>((PlayerEntity) e);
         if (e instanceof MerchantEntity) return new MerchantEntityHelper((MerchantEntity) e);
         if (e instanceof LivingEntity) return new LivingEntityHelper<>((LivingEntity) e);
+        if (e instanceof ItemEntity) return new ItemEntityHelper((ItemEntity) e);
         return new EntityHelper<>(e);
     }
 }
