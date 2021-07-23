@@ -5,6 +5,8 @@ import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
@@ -189,7 +191,25 @@ public class FChat extends BaseLibrary {
     public TextHelper createTextHelperFromString(String content) {
         return new TextHelper(new LiteralText(content));
     }
-    
+
+    /**
+     * @since 1.5.2
+     * @return
+     */
+    public Logger getLogger() {
+        return LogManager.getLogger();
+    }
+
+    /**
+     * returns a log4j logger, for logging to console only.
+     * @since 1.5.2
+     * @param name
+     * @return
+     */
+    public Logger getLogger(String name) {
+        return LogManager.getLogger(name);
+    }
+
     /**
      * Create a  {@link xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper TextHelper} for use where you need one and not a string.
      * 

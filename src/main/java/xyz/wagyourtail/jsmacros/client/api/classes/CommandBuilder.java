@@ -174,11 +174,22 @@ public class CommandBuilder {
         return this;
     }
 
+
     public CommandBuilder or() {
         if (pointer.size() > 1) {
             ArgumentBuilder<FabricClientCommandSource, ?> oldarg = pointer.pop();
             pointer.peek().then(oldarg);
         }
+        return this;
+    }
+
+    /**
+     * name overload for {@link #or()} to work around language keyword restrictions
+     * @since 1.5.2
+     * @return
+     */
+    public CommandBuilder otherwise() {
+        or();
         return this;
     }
 
@@ -188,6 +199,17 @@ public class CommandBuilder {
             ArgumentBuilder<FabricClientCommandSource, ?> oldarg = pointer.pop();
             pointer.peek().then(oldarg);
         }
+        return this;
+    }
+
+    /**
+     * name overload for {@link #or(int)} to work around language keyword restrictions
+     * @since 1.5.2
+     * @param argLevel
+     * @return
+     */
+    public CommandBuilder otherwise(int argLevel) {
+        or(argLevel);
         return this;
     }
 
