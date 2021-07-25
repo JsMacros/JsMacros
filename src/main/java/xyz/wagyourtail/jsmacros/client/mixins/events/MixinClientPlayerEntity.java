@@ -60,9 +60,9 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         new EventEXPChange(progress, total, level);
     }
 
-    @Inject(at = @At("TAIL"), method = "applyDamage")
-    private void onApplyDamage(DamageSource source, float amount, final CallbackInfo info) {
-        new EventDamage(source, this.getHealth(), amount);
+    @Inject(at = @At("HEAD"), method = "damage")
+    private void onApplyDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        new EventDamage(source, this.getHealth() - amount, amount);
     }
 
     @Inject(at = @At("HEAD"), method = "openEditSignScreen", cancellable = true)
