@@ -2,11 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
-import net.minecraft.client.gui.screen.DirectConnectScreen;
 import net.minecraft.client.network.ServerAddress;
-import net.minecraft.client.network.ServerInfo;
-import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.config.Profile;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.client.tick.TickSync;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -131,6 +127,27 @@ public class FClient extends BaseLibrary {
             if (isWorld) mc.world.disconnect();
             if (callback != null) callback.accept(isWorld);
         });
+    }
+
+    /**
+     * Closes the client (stops the game).
+     * Waits until the game has stopped, meaning no further code is executed (for obvious reasons).
+     * Warning: this does not wait on joined threads, so your script may stop at an undefined point.
+     *
+     * @since 1.5.3
+     */
+    public void shutdown() {
+        mc.execute(mc::scheduleStop);
+
+        if (!mc.isOnThread() && !Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
+            // Wait until the game stops
+            while (true) {
+                try {
+                    Thread.sleep(Long.MAX_VALUE);
+                } catch (InterruptedException ignore) {
+                }
+            }
+        }
     }
     
     /**
