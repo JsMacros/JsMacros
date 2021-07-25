@@ -123,7 +123,7 @@ jobs:
       - name: Upload TS to release
         uses: JasonEtco/upload-to-release@master
         with:
-          args: ./typescript-1.16-5.zip application/zip
+          args: ./typescript-1.16.5.zip application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
