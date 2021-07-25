@@ -75,6 +75,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-screen-api-v1:1.0.4+155f865c13"
 }
 
+
 processResources {
 	inputs.property "version", project.version
 
@@ -126,6 +127,20 @@ javadoc {
 	}
 }
 
+task generatePyDoc(type: Javadoc) {
+	source = sourceSets.main.allJava
+	classpath = sourceSets.main.compileClasspath
+	destinationDir = new File(project.buildDir, "docs/python/JsMacrosAC/")
+	options.doclet = "xyz.wagyourtail.doclet.pydoclet.Main"
+	options.docletpath new File(project.rootDir, "buildSrc/build/libs/buildSrc.jar")
+	options.addStringOption "v", version
+}
+
+task copyPyDoc(type: Copy, dependsOn: generatePyDoc) {
+	from new File(project.rootDir, "pydoc")
+	into new File(project.buildDir, "docs/python")
+}
+
 task generateTSDoc(type: Javadoc) {
 	source = sourceSets.main.allJava
 	classpath = sourceSets.main.compileClasspath
@@ -163,7 +178,9 @@ task createDist(type: Copy, dependsOn: copyWebDoc) {
 	into new File(project.rootDir, "dist")
 }
 
-generateWebDoc.dependsOn(copyTSEnv)
+generatePyDoc.dependsOn(copyTSEnv)
+generateWebDoc.dependsOn(copyPyDoc)
+
 build.finalizedBy(createDist)
 
 publishing {
