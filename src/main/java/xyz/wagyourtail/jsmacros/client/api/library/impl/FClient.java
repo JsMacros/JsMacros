@@ -135,8 +135,6 @@ public class FClient extends BaseLibrary {
      * Warning: this does not wait on joined threads, so your script may stop at an undefined point.
      *
      * @since 1.5.3
-     *
-     * @see #shutdown()
      */
     public void shutdown() {
         mc.execute(mc::scheduleStop);
