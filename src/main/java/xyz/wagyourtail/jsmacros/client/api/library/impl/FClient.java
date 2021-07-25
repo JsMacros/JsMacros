@@ -2,11 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
-import net.minecraft.client.gui.screen.DirectConnectScreen;
 import net.minecraft.client.network.ServerAddress;
-import net.minecraft.client.network.ServerInfo;
-import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.config.Profile;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.client.tick.TickSync;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -131,6 +127,43 @@ public class FClient extends BaseLibrary {
             if (isWorld) mc.world.disconnect();
             if (callback != null) callback.accept(isWorld);
         });
+    }
+
+    /**
+     * Closes the client (stops the game).
+     *
+     * @since 1.5.3
+     */
+    public void shutdown() {
+        shutdown(true);
+    }
+
+    /**
+     * Closes the client (stops the game).
+     *
+     * @param wait Whether to wait for the game to shutdown. For obvious reasons, the script cannot run anything after
+     *             this function if this parameter is true.
+     *
+     * @since 1.5.3
+     *
+     * @see #shutdown()
+     */
+    public void shutdown(boolean wait) {
+        mc.execute(mc::scheduleStop);
+
+        if (wait) {
+            if (mc.isOnThread() || Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
+                throw new IllegalThreadStateException("Attempted to stop the client on a thread that is currently joined!");
+            }
+
+            // Wait until the game stops
+            while (true) {
+                try {
+                    Thread.sleep(Long.MAX_VALUE);
+                } catch (InterruptedException ignore) {
+                }
+            }
+        }
     }
     
     /**
