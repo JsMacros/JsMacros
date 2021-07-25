@@ -57,6 +57,7 @@ public abstract class BaseEventRegistry {
      * @param listener
      * @return
      */
+     @Deprecated
     public synchronized boolean removeListener(IEventListener listener) {
         for (Set<IEventListener> listeners : listeners.values()) {
             if (listeners.contains(listener)) {

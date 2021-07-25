@@ -40,7 +40,7 @@ public class EventCustom implements BaseEvent {
      * @since 1.3.1
      * @param callback used as a {@link Runnable}, so no args, no return value.
      */
-    public void trigger(MethodWrapper<Object, Object, Object> callback) {
+    public void trigger(MethodWrapper<Object, Object, Object, ?> callback) {
         Thread t = new Thread(() -> {
             profile.triggerEventJoinNoAnything(this);
             callback.run();

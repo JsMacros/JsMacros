@@ -1,16 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.listeners;
 
 import net.minecraft.client.util.InputUtil;
-import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventKey;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.BaseListener;
-import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
-import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
-
-import java.util.concurrent.Semaphore;
+import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 public class KeyListener extends BaseListener {
     private int mods;
@@ -37,7 +33,7 @@ public class KeyListener extends BaseListener {
     }
     
     @Override
-    public ContextContainer<?> trigger(BaseEvent event) {
+    public EventContainer<?> trigger(BaseEvent event) {
         if (check((EventKey) event)) {
             return runScript(event);
         }

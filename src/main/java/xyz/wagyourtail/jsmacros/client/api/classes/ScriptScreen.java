@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.util.math.MatrixStack;
@@ -22,7 +24,7 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
  */
 public class ScriptScreen extends BaseScreen {
     private final int bgStyle;
-    private MethodWrapper<PositionCommon.Pos3D, MatrixStack, Object> onRender;
+    private MethodWrapper<PositionCommon.Pos3D, MatrixStack, Object, ?> onRender;
     
     public ScriptScreen(String title, boolean dirt) {
         super(new LiteralText(title), null);
@@ -50,7 +52,7 @@ public class ScriptScreen extends BaseScreen {
      * @param onRender pos3d elements are mousex, mousey, tickDelta
      * @since 1.4.0
      */
-    public void setOnRender(MethodWrapper<PositionCommon.Pos3D, MatrixStack, Object> onRender) {
+    public void setOnRender(MethodWrapper<PositionCommon.Pos3D, MatrixStack, Object, ?> onRender) {
         this.onRender = onRender;
     }
 
@@ -64,7 +66,7 @@ public class ScriptScreen extends BaseScreen {
 
         super.render(matrices, mouseX, mouseY, delta);
 
-        for (Element button : this.children()) {
+        for (Element button : ImmutableList.copyOf(this.children())) {
             if (!(button instanceof Drawable)) continue;
             ((Drawable) button).render(matrices, mouseX, mouseY, delta);
         }

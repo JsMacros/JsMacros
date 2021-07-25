@@ -1,10 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Util;
-import org.graalvm.polyglot.Context;
-import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
@@ -15,17 +12,16 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.event.BaseListener;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
-import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
-import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
-import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
+import xyz.wagyourtail.jsmacros.core.language.EventContainer;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -37,8 +33,12 @@ import java.util.concurrent.Semaphore;
  */
  @Library("JsMacros")
  @SuppressWarnings("unused")
-public class FJsMacros extends BaseLibrary {
-    
+public class FJsMacros extends PerExecLibrary {
+
+    public FJsMacros(BaseScriptContext<?> context) {
+        super(context);
+    }
+
     /**
      * @return the JsMacros profile class.
      */
@@ -52,26 +52,13 @@ public class FJsMacros extends BaseLibrary {
     public ConfigManager getConfig() {
         return Core.instance.config;
     }
-    
-    
-
-    /**
-     * @return a {@link Map} of the current running threads.
-     * 
-     * @since 1.0.5
-     * 
-     */
-     @Deprecated
-    public Map<ScriptTrigger, Set<Object>> getRunningThreads() {
-        throw new RuntimeException("Deprecated");
-    }
 
     /**
      * @return list of non-garbage-collected ScriptContext's
      * @since 1.4.0
      */
-    public List<ScriptContext<?>> getOpenContexts() {
-        return ImmutableList.copyOf(Core.instance.contexts.keySet());
+    public List<BaseScriptContext<?>> getOpenContexts() {
+        return ImmutableList.copyOf(Core.instance.getContexts());
     }
 
     /**
@@ -83,8 +70,8 @@ public class FJsMacros extends BaseLibrary {
      * @param file
      * @return
      */
-    public ContextContainer<?> runScript(String file) {
-        return runScript(file, (MethodWrapper<Throwable, Object, Object>) null);
+    public EventContainer<?> runScript(String file) {
+        return runScript(file, (MethodWrapper<Throwable, Object, Object, ?>) null);
     }
 
     /**
@@ -94,13 +81,13 @@ public class FJsMacros extends BaseLibrary {
      * 
      * @param file relative to the macro folder.
      * @param callback defaults to {@code null}
-     * @return the {@link ContextContainer} the script is running on.
+     * @return the {@link EventContainer} the script is running on.
      */
-    public ContextContainer<?> runScript(String file, MethodWrapper<Throwable, Object, Object> callback) {
+    public EventContainer<?> runScript(String file, MethodWrapper<Throwable, Object, Object, ?> callback) {
         if (callback != null) {
             return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null, () -> callback.accept(null), callback);
         } else {
-            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null);
+            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null, null, null);
         }
     }
     
@@ -113,7 +100,7 @@ public class FJsMacros extends BaseLibrary {
      * @param script
      * @return
      */
-    public ContextContainer<?> runScript(String language, String script) {
+    public EventContainer<?> runScript(String language, String script) {
         return runScript(language, script, null);
     }
     
@@ -125,17 +112,14 @@ public class FJsMacros extends BaseLibrary {
      * @param language
      * @param script
      * @param callback calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link String}&gt;
-     * @return the {@link ContextContainer} the script is running on.
+     * @return the {@link EventContainer} the script is running on.
      */
-    public ContextContainer<?> runScript(String language, String script, MethodWrapper<Throwable, Object, Object> callback) {
-        BaseLanguage<?> lang = Core.instance.defaultLang;
-        for (BaseLanguage<?> l : Core.instance.languages) {
-            if (language.equals(l.extension.replaceAll("\\.", " ").trim().replaceAll(" ", "."))) {
-                lang = l;
-                break;
-            }
+    public EventContainer<?> runScript(String language, String script, MethodWrapper<Throwable, Object, Object, ?> callback) {
+        if (callback != null) {
+            return Core.instance.exec(language, script, null, () -> callback.accept(null), callback);
+        } else {
+            return Core.instance.exec(language, script, null, null, null);
         }
-        return lang.trigger(script, callback == null ? null : () -> callback.accept(null), callback);
     }
     
     /**
@@ -143,10 +127,21 @@ public class FJsMacros extends BaseLibrary {
      * 
      * @since 1.1.8
      * 
-     * @param path relative to the macro folder.
+     * @param path relative to the script's folder.
      */
     public void open(String path) {
-        Util.getOperatingSystem().open(new File(Core.instance.config.macroFolder, path));
+        Util.getOperatingSystem().open(new File(ctx.getContainedFolder(), path));
+    }
+
+    /**
+     * @since 1.6.0
+     *
+     * @param url
+     *
+     * @throws MalformedURLException
+     */
+    public void openUrl(String url) throws MalformedURLException {
+        Util.getOperatingSystem().open(new URL(url));
     }
     
     /**
@@ -156,29 +151,28 @@ public class FJsMacros extends BaseLibrary {
      * 
      * @since 1.2.7
      * @param event
-     * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link ContextContainer}&gt;
+     * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
      * @return
      */
-    public IEventListener on(String event, MethodWrapper<BaseEvent, ContextContainer<?>, Object> callback) {
+    public IEventListener on(String event, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
         if (callback == null) return null;
         if (!Core.instance.eventRegistry.events.contains(event)) {
             throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
         }
         Thread th = Thread.currentThread();
-        ScriptContext<?> ctx = Core.instance.threadContext.get(th);
         IEventListener listener = new ScriptEventListener() {
             
             @Override
-            public ContextContainer<?> trigger(BaseEvent event) {
-                ContextContainer<?> p = new ContextContainer<>(ctx);
+            public EventContainer<?> trigger(BaseEvent e) {
+                EventContainer<?> p = new EventContainer<>(ctx);
                 Thread t = new Thread(() -> {
                     Thread.currentThread().setName(this.toString());
                     
                     try {
-                        callback.accept(event, p);
-                    } catch (Exception e) {
-                        Core.instance.eventRegistry.removeListener(this);
-                        Core.instance.profile.logError(e);
+                        callback.accept(e, p);
+                    } catch (Exception ex) {
+                        Core.instance.eventRegistry.removeListener(event, this);
+                        Core.instance.profile.logError(ex);
                     } finally {
                         p.releaseLock();
                     }
@@ -195,7 +189,7 @@ public class FJsMacros extends BaseLibrary {
             }
     
             @Override
-            public MethodWrapper<?, ?, ?> getWrapper() {
+            public MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> getWrapper() {
                 return callback;
             }
     
@@ -216,27 +210,26 @@ public class FJsMacros extends BaseLibrary {
      * @since 1.2.7
      * 
      * @param event
-     * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link ContextContainer}&gt;
+     * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
      * @return the listener.
      */
-    public IEventListener once(String event, MethodWrapper<BaseEvent, ContextContainer<?>, Object> callback) {
+    public IEventListener once(String event, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
         if (callback == null) return null;
         if (!Core.instance.eventRegistry.events.contains(event)) {
             throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
         }
         Thread th = Thread.currentThread();
-        ScriptContext<?> ctx = Core.instance.threadContext.get(th);
         IEventListener listener = new ScriptEventListener() {
             @Override
-            public ContextContainer<?> trigger(BaseEvent event) {
-                Core.instance.eventRegistry.removeListener(this);
-                ContextContainer<?> p = new ContextContainer<>(ctx);
+            public EventContainer<?> trigger(BaseEvent e) {
+                Core.instance.eventRegistry.removeListener(event, this);
+                EventContainer<?> p = new EventContainer<>(ctx);
                 Thread t = new Thread(() -> {
                     Thread.currentThread().setName(this.toString());
                     try {
-                        callback.accept(event, p);
-                    } catch (Exception e) {
-                        Core.instance.profile.logError(e);
+                        callback.accept(e, p);
+                    } catch (Exception ex) {
+                        Core.instance.profile.logError(ex);
                     } finally {
                         p.releaseLock();
                     }
@@ -253,7 +246,7 @@ public class FJsMacros extends BaseLibrary {
             }
     
             @Override
-            public MethodWrapper<?, ?, ?> getWrapper() {
+            public MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> getWrapper() {
                 return callback;
             }
     
@@ -311,7 +304,7 @@ public class FJsMacros extends BaseLibrary {
      * @return
      * @throws InterruptedException
      */
-    public EventAndContext waitForEvent(String event,  MethodWrapper<BaseEvent, Object, Boolean> filter) throws InterruptedException {
+    public EventAndContext waitForEvent(String event,  MethodWrapper<BaseEvent, Object, Boolean, ?> filter) throws InterruptedException {
         return waitForEvent(event, filter, null);
     }
 
@@ -324,7 +317,7 @@ public class FJsMacros extends BaseLibrary {
      *
      * @throws InterruptedException
      */
-    public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean> filter, MethodWrapper<Object, Object, Object> runBeforeWaiting) throws InterruptedException {
+    public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean, ?> filter, MethodWrapper<Object, Object, Object, ?> runBeforeWaiting) throws InterruptedException {
         if (!Core.instance.eventRegistry.events.contains(event)) {
             throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
         }
@@ -337,19 +330,16 @@ public class FJsMacros extends BaseLibrary {
         final Exception[] e = {null};
         final BaseEvent[] ev = {null};
 
-        // get the current script context from the thread
-        ScriptContext<?> ctx = Core.instance.threadContext.get(th);
-
         // get the current context container.
-        ContextContainer<?> cc = Core.instance.eventContexts.get(Thread.currentThread());
+        EventContainer<?> cc = ctx.events.get(Thread.currentThread());
 
         // create a new context container so we can actually release joined events
-        ContextContainer<?> ctxCont = new ContextContainer<>(ctx);
+        EventContainer<?> ctxCont = new EventContainer<>(ctx);
 
         // create the listener
         IEventListener listener = new ScriptEventListener() {
             @Override
-            public ContextContainer<?> trigger(BaseEvent event) {
+            public EventContainer<?> trigger(BaseEvent event) {
                 try {
                     // check the filter
                     boolean test = filter == null || filter.test(event);
@@ -378,7 +368,7 @@ public class FJsMacros extends BaseLibrary {
             }
 
             @Override
-            public MethodWrapper<?, ?, ?> getWrapper() {
+            public MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> getWrapper() {
                 return null;
             }
 
@@ -400,7 +390,7 @@ public class FJsMacros extends BaseLibrary {
         }
         // set the new contextContainer's lock
         ctxCont.setLockThread(th);
-        Core.instance.eventContexts.put(th, ctxCont);
+        ctx.events.put(th, ctxCont);
 
         // waits for event
         try {
@@ -450,14 +440,14 @@ public class FJsMacros extends BaseLibrary {
     public interface ScriptEventListener extends IEventListener {
         Thread getCreator();
         
-        MethodWrapper<?,?,?> getWrapper();
+        MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> getWrapper();
     }
 
     public static class EventAndContext {
         public final BaseEvent event;
-        public final ContextContainer<?> context;
+        public final EventContainer<?> context;
 
-        public EventAndContext(BaseEvent event, ContextContainer<?> context) {
+        public EventAndContext(BaseEvent event, EventContainer<?> context) {
             this.event = event;
             this.context = context;
         }

@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.core.language;
 
-import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -11,7 +10,6 @@ import java.nio.file.FileSystemException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
 
 /**
@@ -21,19 +19,20 @@ import java.util.function.Consumer;
  */
 public abstract class BaseLanguage<T> {
     public final String extension;
-    protected final Core runner;
+    protected final Core<?, ?> runner;
     
-    public BaseLanguage(String extension, Core runner) {
+    public BaseLanguage(String extension, Core<?, ?> runner) {
         this.extension = extension;
         this.runner = runner;
     }
     
-    public ContextContainer<T> trigger(ScriptTrigger macro, BaseEvent event, Runnable then,
-                          Consumer<Throwable> catcher) {
+    public EventContainer<T> trigger(ScriptTrigger macro, BaseEvent event, Runnable then,
+                                     Consumer<Throwable> catcher) {
         
         final ScriptTrigger staticMacro = macro.copy();
         final Thread ct = Thread.currentThread();
-        ContextContainer<T> ctx = new ContextContainer<>(createContext(event));
+        final File file = new File(runner.config.macroFolder, staticMacro.scriptFile);
+        EventContainer<T> ctx = new EventContainer<>(createContext(event, file));
         final Thread t = new Thread(() -> {
             try {
                 if (event == null) {
@@ -41,11 +40,12 @@ public abstract class BaseLanguage<T> {
                 } else {
                     Thread.currentThread().setName(String.format("Script:{\"trigger\":\"%s\", \"event\":\"%s\", \"file\":\"%s\"}", staticMacro.triggerType, staticMacro.event, staticMacro.scriptFile));
                 }
-                File file = new File(runner.config.macroFolder, staticMacro.scriptFile);
                 if (file.exists() && file.isFile()) {
-                    runner.contexts.put(ctx.getCtx(), Thread.currentThread().getName());
-                    runner.threadContext.put(Thread.currentThread(), ctx.getCtx());
-                    runner.eventContexts.put(Thread.currentThread(), ctx);
+
+                    runner.addContext(ctx);
+                    ctx.getCtx().events.put(Thread.currentThread(), ctx);
+                    ctx.getCtx().bindThread(Thread.currentThread());
+
                     exec(ctx, staticMacro, file, event);
                     
                     if (then != null) then.run();
@@ -61,8 +61,14 @@ public abstract class BaseLanguage<T> {
                     runner.profile.logError(f);
                 }
             } finally {
-                ContextContainer<?> cc = runner.eventContexts.get(Thread.currentThread());
+                ctx.getCtx().unbindThread(Thread.currentThread());
+
+                EventContainer<?> cc = ctx.getCtx().events.get(Thread.currentThread());
                 if (cc != null) cc.releaseLock();
+
+                if (!ctx.getCtx().hasMethodWrapperBeenInvoked) {
+                    ctx.getCtx().closeContext();
+                }
             }
         });
         ctx.setLockThread(t);
@@ -71,14 +77,17 @@ public abstract class BaseLanguage<T> {
         return ctx;
     }
     
-    public ContextContainer<T> trigger(String script, Runnable then, Consumer<Throwable> catcher) {
+    public EventContainer<T> trigger(String script, File fakeFile, Runnable then, Consumer<Throwable> catcher) {
         final Thread ct = Thread.currentThread();
-        ContextContainer<T> ctx = new ContextContainer<>(createContext(null));
+        EventContainer<T> ctx = new EventContainer<>(createContext(null, fakeFile));
         final Thread t = new Thread(() -> {
             try {
                 Thread.currentThread().setName(String.format("RunScript:{\"creator\":\"%s\", \"start\":\"%d\"}", ct.getName(), System.currentTimeMillis()));
-                runner.contexts.put(ctx.getCtx(), Thread.currentThread().getName());
-                runner.threadContext.put(Thread.currentThread(), ctx.getCtx());
+
+                runner.addContext(ctx);
+                ctx.getCtx().events.put(Thread.currentThread(), ctx);
+                ctx.getCtx().bindThread(Thread.currentThread());
+
                 exec(ctx, script, new HashMap<>(), null);
     
                 if (then != null) then.run();
@@ -90,8 +99,14 @@ public abstract class BaseLanguage<T> {
                     runner.profile.logError(f);
                 }
             } finally {
-                ContextContainer<?> cc = runner.eventContexts.get(Thread.currentThread());
+                ctx.getCtx().unbindThread(Thread.currentThread());
+
+                EventContainer<?> cc = ctx.getCtx().events.get(Thread.currentThread());
                 if (cc != null) cc.releaseLock();
+
+                if (!ctx.getCtx().hasMethodWrapperBeenInvoked) {
+                    ctx.getCtx().closeContext();
+                }
             }
         });
         ctx.setLockThread(t);
@@ -100,7 +115,7 @@ public abstract class BaseLanguage<T> {
         return ctx;
     }
     
-    public Map<String, BaseLibrary> retrieveLibs(ContextContainer<T> context) {
+    public Map<String, BaseLibrary> retrieveLibs(BaseScriptContext<T> context) {
         return runner.libraryRegistry.getLibraries(this, context);
     }
     
@@ -108,7 +123,7 @@ public abstract class BaseLanguage<T> {
         return runner.libraryRegistry.getOnceLibraries(this);
     }
     
-    public Map<String, BaseLibrary> retrievePerExecLibs(ContextContainer<T> context) {
+    public Map<String, BaseLibrary> retrievePerExecLibs(BaseScriptContext<T> context) {
         return runner.libraryRegistry.getPerExecLibraries(this, context);
     }
     
@@ -122,7 +137,7 @@ public abstract class BaseLanguage<T> {
      * @throws Exception
      * @since 1.2.7 [citation needed]
      */
-    protected abstract void exec(ContextContainer<T> ctx, ScriptTrigger macro, File file, BaseEvent event) throws Exception;
+    protected abstract void exec(EventContainer<T> ctx, ScriptTrigger macro, File file, BaseEvent event) throws Exception;
     
     /**
      * run a string based script with this.
@@ -134,18 +149,16 @@ public abstract class BaseLanguage<T> {
      * @throws Exception
      * @since 1.2.7 [citation needed]
      */
-    protected abstract void exec(ContextContainer<T> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception;
+    protected abstract void exec(EventContainer<T> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception;
     
     /**
      * @param ex
      * @since 1.3.0
      * @return
      */
-    public BaseWrappedException<?> wrapException(Throwable ex) {
-        return null;
-    }
+    public abstract BaseWrappedException<?> wrapException(Throwable ex);
     
-    public abstract ScriptContext<T> createContext(BaseEvent event);
+    public abstract BaseScriptContext<T> createContext(BaseEvent event, File file);
     
     @Deprecated
     public String extension() {

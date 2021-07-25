@@ -58,7 +58,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
      * @return
      */
-    ButtonWidgetHelper<?> addButton(int x, int y, int width, int height, String text, MethodWrapper<ButtonWidgetHelper<?>, IScreen, Object> callback);
+    ButtonWidgetHelper<?> addButton(int x, int y, int width, int height, String text, MethodWrapper<ButtonWidgetHelper<?>, IScreen, Object, ?> callback);
     
     /**
      * @since 1.4.0
@@ -71,7 +71,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
      * @return
      */
-    ButtonWidgetHelper<?> addButton(int x, int y, int width, int height, int zIndex, String text, MethodWrapper<ButtonWidgetHelper<?>, IScreen, Object> callback);
+    ButtonWidgetHelper<?> addButton(int x, int y, int width, int height, int zIndex, String text, MethodWrapper<ButtonWidgetHelper<?>, IScreen, Object, ?> callback);
     
     /**
      * @since 1.0.5
@@ -91,7 +91,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param onChange calls your method as a {@link Consumer}&lt;{@link String}&gt;
      * @return
      */
-    TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, String message, MethodWrapper<String, IScreen, Object> onChange);
+    TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, String message, MethodWrapper<String, IScreen, Object, ?> onChange);
     
     /**
      * @since 1.0.5
@@ -104,7 +104,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param onChange calls your method as a {@link Consumer}&lt;{@link String}&gt;
      * @return
      */
-    TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, int zIndex, String message, MethodWrapper<String, IScreen, Object> onChange);
+    TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, int zIndex, String message, MethodWrapper<String, IScreen, Object, ?> onChange);
     
     /**
      * @since 1.0.5
@@ -119,42 +119,42 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param onMouseDown calls your method as a {@link BiConsumer}&lt;{@link PositionCommon.Pos2D}, {@link Integer}&gt;
      * @return
      */
-    IScreen setOnMouseDown(MethodWrapper<PositionCommon.Pos2D, Integer, Object> onMouseDown);
+    IScreen setOnMouseDown(MethodWrapper<PositionCommon.Pos2D, Integer, Object, ?> onMouseDown);
     
     /**
      * @since 1.2.7
      * @param onMouseDrag calls your method as a {@link BiConsumer}&lt;{@link PositionCommon.Vec2D}, {@link Integer}&gt;
      * @return
      */
-    IScreen setOnMouseDrag(MethodWrapper<PositionCommon.Vec2D, Integer, Object> onMouseDrag);
+    IScreen setOnMouseDrag(MethodWrapper<PositionCommon.Vec2D, Integer, Object, ?> onMouseDrag);
     
     /**
      * @since 1.2.7
      * @param onMouseUp calls your method as a {@link BiConsumer}&lt;{@link PositionCommon.Pos2D}, {@link Integer}&gt;
      * @return
      */
-    IScreen setOnMouseUp(MethodWrapper<PositionCommon.Pos2D, Integer, Object> onMouseUp);
+    IScreen setOnMouseUp(MethodWrapper<PositionCommon.Pos2D, Integer, Object, ?> onMouseUp);
     
     /**
      * @since 1.2.7
      * @param onScroll calls your method as a {@link BiConsumer}&lt;{@link PositionCommon.Pos2D}, {@link Double}&gt;
      * @return
      */
-    IScreen setOnScroll(MethodWrapper<PositionCommon.Pos2D, Double, Object> onScroll);
+    IScreen setOnScroll(MethodWrapper<PositionCommon.Pos2D, Double, Object, ?> onScroll);
     
     /**
      * @since 1.2.7
      * @param onKeyPressed calls your method as a {@link BiConsumer}&lt;{@link Integer}, {@link Integer}&gt;
      * @return
      */
-    IScreen setOnKeyPressed(MethodWrapper<Integer, Integer, Object> onKeyPressed);
+    IScreen setOnKeyPressed(MethodWrapper<Integer, Integer, Object, ?> onKeyPressed);
     
     /**
      * @since 1.2.7
      * @param onClose calls your method as a {@link Consumer}&lt;{@link IScreen}&gt;
      * @return
      */
-    IScreen setOnClose(MethodWrapper<IScreen, Object, Object> onClose);
+    IScreen setOnClose(MethodWrapper<IScreen, Object, Object, ?> onClose);
     
     /**
      * @since 1.1.9

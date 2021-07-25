@@ -34,7 +34,7 @@ public class JsMacros implements ClientModInitializer {
     public static BaseScreen prevScreen;
     protected static final File configFolder = new File(FabricLoader.getInstance().getConfigDir().toFile(), "jsMacros");
     
-    public static final Core core = Core.createInstance(EventRegistry::new, Profile::new, configFolder, new File(configFolder, "Macros"), LOGGER);
+    public static final Core<Profile, EventRegistry> core = Core.createInstance(EventRegistry::new, Profile::new, configFolder, new File(configFolder, "Macros"), LOGGER);
     
     @Override
     public void onInitializeClient() {

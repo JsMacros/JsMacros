@@ -1,11 +1,11 @@
 package xyz.wagyourtail.jsmacros.core.library;
 
-import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
 public abstract class PerExecLibrary extends BaseLibrary {
-    protected ContextContainer<?> ctx;
+    protected BaseScriptContext<?> ctx;
     
-    public PerExecLibrary(ContextContainer<?> context) {
+    public PerExecLibrary(BaseScriptContext<?> context) {
         this.ctx = context;
     }
 }

@@ -3,10 +3,10 @@ package xyz.wagyourtail.jsmacros.client.config;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseListener;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
-import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
+import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
-public class ContextLockWatchdog {
-    public static void startWatchdog(ContextContainer<?> lock, Thread watched, IEventListener listener, long maxTime) {
+public class EventLockWatchdog {
+    public static void startWatchdog(EventContainer<?> lock, Thread watched, IEventListener listener, long maxTime) {
         Thread t = new Thread(() -> {
             try {
                 watched.join(maxTime);

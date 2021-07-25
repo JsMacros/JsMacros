@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
-import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
+import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.impl.FWrapper;
 
@@ -31,10 +31,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
 
         Builder build = Context.newBuilder("js")
             .engine(engine)
-            .allowHostAccess(HostAccess.ALL)
-            .allowHostClassLookup(s -> true)
             .allowAllAccess(true)
-            .allowIO(true)
             .allowExperimentalOptions(true)
             .option("js.commonjs-require", "true");
 
@@ -59,7 +56,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     }
     
     @Override
-    protected void exec(ContextContainer<Context> ctx, ScriptTrigger macro, File file, BaseEvent event) throws Exception {
+    protected void exec(EventContainer<Context> ctx, ScriptTrigger macro, File file, BaseEvent event) throws Exception {
         Map<String, Object> globals = new HashMap<>();
         
         globals.put("event", event);
@@ -70,7 +67,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
         if (conf.extraJsOptions == null)
             conf.extraJsOptions = new LinkedHashMap<>();
 
-        Map<String, BaseLibrary> lib = retrieveLibs(ctx);
+        Map<String, BaseLibrary> lib = retrieveLibs(ctx.getCtx());
 
         final Context con = buildContext(file.getParentFile().toPath(), conf.extraJsOptions, globals, lib);
         ctx.getCtx().setContext(con);
@@ -84,14 +81,14 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     }
     
     @Override
-    protected void exec(ContextContainer<Context> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception {
+    protected void exec(EventContainer<Context> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception {
         globals.put("context", ctx);
 
         final CoreConfigV2 conf = runner.config.getOptions(CoreConfigV2.class);
         if (conf.extraJsOptions == null)
             conf.extraJsOptions = new LinkedHashMap<>();
 
-        Map<String, BaseLibrary> lib = retrieveLibs(ctx);
+        Map<String, BaseLibrary> lib = retrieveLibs(ctx.getCtx());
 
         final Context con = buildContext(currentDir, conf.extraJsOptions, globals, lib);
         ctx.getCtx().setContext(con);
@@ -127,8 +124,8 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     }
     
     @Override
-    public JSScriptContext createContext(BaseEvent event) {
-        return new JSScriptContext(event);
+    public JSScriptContext createContext(BaseEvent event, File file) {
+        return new JSScriptContext(event, file);
     }
     
     private BaseWrappedException<?> internalWrap(PolyglotException.StackFrame current, Iterator<PolyglotException.StackFrame> frames) {

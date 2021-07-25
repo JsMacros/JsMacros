@@ -41,7 +41,7 @@ public class FClient extends BaseLibrary {
      * @param runnable task to run
      * @since 1.4.0
      */
-    public void runOnMainThread(MethodWrapper<Object, Object, Object> runnable) {
+    public void runOnMainThread(MethodWrapper<Object, Object, Object, ?> runnable) {
         mc.execute(runnable);
     }
 
@@ -121,7 +121,7 @@ public class FClient extends BaseLibrary {
      *
      * @param callback calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link java.lang.Boolean Boolean}&gt;
      */
-    public void disconnect(MethodWrapper<Boolean, Object, Object> callback) {
+    public void disconnect(MethodWrapper<Boolean, Object, Object, ?> callback) {
         mc.execute(() -> {
             boolean isWorld = mc.world != null;
             if (isWorld) mc.world.disconnect();
@@ -134,7 +134,7 @@ public class FClient extends BaseLibrary {
      * Waits until the game has stopped, meaning no further code is executed (for obvious reasons).
      * Warning: this does not wait on joined threads, so your script may stop at an undefined point.
      *
-     * @since 1.5.3
+     * @since 1.6.0
      */
     public void shutdown() {
         mc.execute(mc::scheduleStop);

@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.core.config;
 import com.google.common.io.Files;
 import com.google.gson.*;
 import org.apache.logging.log4j.Logger;
-import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;

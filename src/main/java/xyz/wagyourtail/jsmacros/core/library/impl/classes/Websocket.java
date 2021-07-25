@@ -20,23 +20,23 @@ public class Websocket {
     /**
      * calls your method as a {@link java.util.function.Consumer BiConsumer}&lt;{@link WebSocket}, {@link List}&lt;{@link String}&gt;&gt;
      */
-    public MethodWrapper<WebSocket, Map<String, List<String>>, Object> onConnect;
+    public MethodWrapper<WebSocket, Map<String, List<String>>, Object, ?> onConnect;
     /**
      * calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link WebSocket}, {@link String}&gt;
      */
-    public MethodWrapper<WebSocket, String, Object> onTextMessage;
+    public MethodWrapper<WebSocket, String, Object, ?> onTextMessage;
     /**
      * calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link WebSocket}, {@link Disconnected}&gt;
      */
-    public MethodWrapper<WebSocket, Disconnected, Object> onDisconnect;
+    public MethodWrapper<WebSocket, Disconnected, Object, ?> onDisconnect;
     /**
      * calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link WebSocket}, {@link WebSocketException}&gt;
      */
-    public MethodWrapper<WebSocket, WebSocketException, Object> onError;
+    public MethodWrapper<WebSocket, WebSocketException, Object, ?> onError;
     /**
      * calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link WebSocket}, {@link WebSocketFrame}&gt;
      */
-    public MethodWrapper<WebSocket, WebSocketFrame, Object> onFrame;
+    public MethodWrapper<WebSocket, WebSocketFrame, Object, ?> onFrame;
 
     public Websocket(String address) throws IOException {
         ws = new WebSocketFactory().createSocket(address).addListener(new WebSocketAdapter() {

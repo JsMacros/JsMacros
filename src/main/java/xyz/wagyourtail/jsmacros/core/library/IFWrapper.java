@@ -35,14 +35,14 @@ public interface IFWrapper<T> {
      * @param c
      * @return a new {@link MethodWrapper MethodWrapper}
      */
-    <A, B, R> MethodWrapper<A, B, R> methodToJava(T c);
+    <A, B, R> MethodWrapper<A, B, R, ?> methodToJava(T c);
     
     /**
      * @since 1.4.0
      * @param c
      * @return a new {@link MethodWrapper MethodWrapper}
      */
-    <A, B, R> MethodWrapper<A, B, R> methodToJavaAsync(T c);
+    <A, B, R> MethodWrapper<A, B, R, ?> methodToJavaAsync(T c);
 
     /**
      * Close the current context, more important in JEP as they won't close themselves if you use other functions in

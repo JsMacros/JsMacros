@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.gui.editor;
 
-import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.core.Core;
 

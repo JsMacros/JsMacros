@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.core.config;
 
-import com.google.common.collect.ImmutableList;
 import org.apache.logging.log4j.Logger;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;

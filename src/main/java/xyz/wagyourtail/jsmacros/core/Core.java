@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core;
 
 import org.apache.logging.log4j.Logger;
+import xyz.wagyourtail.SynchronizedWeakHashSet;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
@@ -9,8 +10,8 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
-import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
-import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
+import xyz.wagyourtail.jsmacros.core.language.EventContainer;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.core.library.LibraryRegistry;
 
@@ -20,26 +21,44 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Core {
-    public static Core instance;
-    
-    public final BaseEventRegistry eventRegistry;
-    public final BaseProfile profile;
-    public final ConfigManager config;
+public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
+    /**
+     * static reference to instace created by {@link #createInstance(Function, Function, File, File, Logger)}
+     */
+    public static Core<?, ?> instance;
+
     public final LibraryRegistry libraryRegistry = new LibraryRegistry();
-    public final Map<ScriptContext<?>, String> contexts = new WeakHashMap<>();
-    public final Map<Thread, ScriptContext<?>> threadContext = new WeakHashMap<>();
-    public final Map<Thread, ContextContainer<?>> eventContexts = new WeakHashMap<>();
+    public final BaseEventRegistry eventRegistry;
+
+    public final T profile;
+    public final ConfigManager config;
+
+    private final Set<BaseScriptContext<?>> contexts = new SynchronizedWeakHashSet<>();
+
     public final List<BaseLanguage<?>> languages = new ArrayList<>();
-    public BaseLanguage<?> defaultLang = new JavascriptLanguageDefinition(".js", this);
-    
-    protected Core(Function<Core, BaseEventRegistry> eventRegistryFunction, Function<Core, BaseProfile> profileFunction, File configFolder, File macroFolder, Logger logger) {
+    public final BaseLanguage<?> defaultLang = new JavascriptLanguageDefinition(".js", this);
+
+    protected Core(Function<Core<T, U>, U> eventRegistryFunction, Function<Core<T, U>, T> profileFunction, File configFolder, File macroFolder, Logger logger) {
         eventRegistry = eventRegistryFunction.apply(this);
         profile = profileFunction.apply(this);
         config = new ConfigManager(configFolder, macroFolder, logger);
         addLanguage(defaultLang);
     }
-    
+
+    /**
+     * @param container
+     */
+    public void addContext(EventContainer<?> container) {
+        contexts.add(container.getCtx());
+    }
+
+    /**
+     * @return
+     */
+    public Set<BaseScriptContext<?>> getContexts() {
+        return contexts;
+    }
+
     /**
      * start by running this function, supplying implementations of {@link BaseEventRegistry} and {@link BaseProfile} and a {@link Supplier} for
      * creating the config manager with the folder paths it needs.
@@ -52,35 +71,67 @@ public class Core {
      * @param logger
      * @return
      */
-    public static Core createInstance(Function<Core, BaseEventRegistry> eventRegistryFunction, Function<Core, BaseProfile> profileFunction, File configFolder, File macroFolder, Logger logger) {
+    public static <V extends BaseProfile, R extends BaseEventRegistry> Core<V, R> createInstance(Function<Core<V, R>, R> eventRegistryFunction, Function<Core<V, R>, V> profileFunction, File configFolder, File macroFolder, Logger logger) {
         if (instance != null) throw new RuntimeException("Can't declare RunScript instance more than once");
-        instance = new Core(eventRegistryFunction, profileFunction, configFolder, macroFolder, logger);
+        instance = new Core<>(eventRegistryFunction, profileFunction, configFolder, macroFolder, logger);
         instance.profile.init(instance.config.getOptions(CoreConfigV2.class).defaultProfile);
-        return instance;
+        return (Core<V, R>) instance;
     }
 
     public void addLanguage(BaseLanguage<?> l) {
         languages.add(l);
+        sortLanguages();
     }
-    
-    public void sortLanguages() {
+
+    private void sortLanguages() {
         languages.sort(new SortLanguage());
         
     }
 
-    public ContextContainer<?> exec(ScriptTrigger macro, BaseEvent event) {
+    /**
+     * executes an {@link BaseEvent Event} on a ${@link ScriptTrigger}
+     * @param macro
+     * @param event
+     *
+     * @return
+     */
+    public EventContainer<?> exec(ScriptTrigger macro, BaseEvent event) {
         return exec(macro, event, null, null);
     }
 
-    public ContextContainer<?> exec(ScriptTrigger macro, BaseEvent event, Runnable then,
-                                    Consumer<Throwable> catcher) {
+    /**
+     * Executes an {@link BaseEvent Event} on a ${@link ScriptTrigger} with callback.
+     * @param macro
+     * @param event
+     * @param then
+     * @param catcher
+     *
+     * @return
+     */
+    public EventContainer<?> exec(ScriptTrigger macro, BaseEvent event, Runnable then,
+                                  Consumer<Throwable> catcher) {
         for (BaseLanguage<?> language : languages) {
             if (macro.scriptFile.endsWith(language.extension))
                 return language.trigger(macro, event, then, catcher);
         }
         return defaultLang.trigger(macro, event, then, catcher);
     }
-    
+
+    public EventContainer<?> exec(String lang, String script, File fakeFile, Runnable then, Consumer<Throwable> catcher) {
+        for (BaseLanguage<?> language : languages) {
+            if (language.extension.replaceAll("\\.", " ").trim().replaceAll(" ", ".").equals(lang)) {
+                return language.trigger(script, fakeFile, then, catcher);
+            }
+        }
+        return defaultLang.trigger(script, fakeFile, then, catcher);
+    }
+
+    /**
+     * wraps an exception for more uniform parsing between languages, also extracts useful info.
+     * @param ex exception to wrap.
+     *
+     * @return
+     */
     public BaseWrappedException<?> wrapException(Throwable ex) {
         if (ex == null) return null;
         for (BaseLanguage<?> lang : languages) {
@@ -100,7 +151,7 @@ public class Core {
         return BaseWrappedException.wrapHostElement(e, elements.hasNext() ? wrapHostInternal(elements.next(), elements) : null);
     }
     
-    public static class SortLanguage implements Comparator<BaseLanguage<?>> {
+    private static class SortLanguage implements Comparator<BaseLanguage<?>> {
 
         @Override
         public int compare(BaseLanguage a, BaseLanguage b) {

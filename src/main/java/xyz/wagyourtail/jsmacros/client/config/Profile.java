@@ -1,10 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.config;
 
-import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
-import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
@@ -20,15 +18,12 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
-import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
-import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
+import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
-
-import java.util.concurrent.Semaphore;
 
 public class Profile extends BaseProfile {
     
-    public Profile(Core runner) {
+    public Profile(Core<Profile, ?> runner) {
         super(runner, JsMacros.LOGGER);
     }
     
@@ -68,18 +63,16 @@ public class Profile extends BaseProfile {
     
     private void runJoinedEventListener(BaseEvent event, boolean joinedMain, IEventListener macroListener) {
         if (macroListener instanceof FJsMacros.ScriptEventListener && ((FJsMacros.ScriptEventListener) macroListener).getCreator() == Thread.currentThread() && ((FJsMacros.ScriptEventListener) macroListener).getWrapper().preventSameThreadJoin()) {
-            throw new IllegalThreadStateException("Cannot join " + macroListener.toString() + " on same thread as it's creation.");
+            throw new IllegalThreadStateException("Cannot join " + macroListener + " on same thread as it's creation.");
         }
-        ContextContainer<?> t = macroListener.trigger(event);
+        EventContainer<?> t = macroListener.trigger(event);
         if (t == null) return;
         try {
             if (joinedMain) {
                 joinedThreadStack.add(t.getLockThread());
             }
-            ContextLockWatchdog.startWatchdog(t, Thread.currentThread(), macroListener, Core.instance.config.getOptions(CoreConfigV2.class).maxLockTime);
-            t.awaitLock(() -> {
-                joinedThreadStack.remove(t.getLockThread());
-            });
+            EventLockWatchdog.startWatchdog(t, Thread.currentThread(), macroListener, Core.instance.config.getOptions(CoreConfigV2.class).maxLockTime);
+            t.awaitLock(() -> joinedThreadStack.remove(t.getLockThread()));
         } catch (InterruptedException ignored) {
             joinedThreadStack.remove(t.getLockThread());
         }
@@ -133,7 +126,7 @@ public class Profile extends BaseProfile {
                         }
                     }));
                 }
-                line.append(new LiteralText(" (" + head.location.toString() + ")").setStyle(locationStyle));
+                line.append(new LiteralText(" (" + head.location + ")").setStyle(locationStyle));
             }
             if ((head = head.next) != null) line.append("\n");
             text.append(line);

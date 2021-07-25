@@ -8,11 +8,12 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
+import org.graalvm.polyglot.Context;
 import xyz.wagyourtail.jsmacros.client.gui.containers.RunningContextContainer;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,7 +31,8 @@ public class CancelScreen extends BaseScreen {
     @Override
     public void init() {
         super.init();
-        System.gc(); // force gc all currently closed contexts
+        // force gc all currently closed contexts
+        System.gc();
         topScroll = 10;
         running.clear();
         s = this.addDrawableChild(new Scrollbar(width - 12, 5, 8, height-10, 0, 0xFF000000, 0xFFFFFFFF, 1, this::onScrollbar));
@@ -38,7 +40,10 @@ public class CancelScreen extends BaseScreen {
         this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.back"), (btn) -> this.onClose()));
     }
 
-    public void addContainer(ScriptContext<?> t) {
+    public void addContainer(BaseScriptContext<?> t) {
+        if (t == null) {
+            return;
+        }
         if (!t.isContextClosed()) {
             running.add(new RunningContextContainer(10, topScroll + running.size() * 15, width - 26, 13, textRenderer, this, t));
             running.sort(new RTCSort());
@@ -80,14 +85,14 @@ public class CancelScreen extends BaseScreen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (matrices == null) return;
         this.renderBackground(matrices, 0);
-        List<ScriptContext<?>> tl = new ArrayList<>(Core.instance.contexts.keySet());
+        List<BaseScriptContext<?>> tl = new ArrayList<>(Core.instance.getContexts());
         
         for (RunningContextContainer r : ImmutableList.copyOf(this.running)) {
-            tl.remove(r.t.get());
+            tl.remove(r.t);
             r.render(matrices, mouseX, mouseY, delta);
         }
         
-        for (ScriptContext<?> t : tl) {
+        for (BaseScriptContext<?> t : tl) {
             addContainer(t);
         }
         
@@ -112,7 +117,7 @@ public class CancelScreen extends BaseScreen {
         @Override
         public int compare(RunningContextContainer arg0, RunningContextContainer arg1) {
             try {
-                return Core.instance.contexts.get(arg0.t).compareTo(Core.instance.contexts.get(arg1.t));
+                return arg0.t.getMainThread().getName().compareTo(arg1.t.getMainThread().getName());
             } catch(NullPointerException e) {
                 return 0;
             }

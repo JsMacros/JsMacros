@@ -1,7 +1,8 @@
 package xyz.wagyourtail.jsmacros.core.library;
 
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
-import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
+import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -18,7 +19,7 @@ public class LibraryRegistry {
     public LibraryRegistry() {
     }
     
-    public Map<String, BaseLibrary> getLibraries(BaseLanguage<?> language, ContextContainer<?> context) {
+    public Map<String, BaseLibrary> getLibraries(BaseLanguage<?> language, BaseScriptContext<?> context) {
         Map<String, BaseLibrary> libs = new LinkedHashMap<>();
         libs.putAll(getOnceLibraries(language));
         libs.putAll(getPerExecLibraries(language, context));
@@ -44,13 +45,13 @@ public class LibraryRegistry {
         return libs;
     }
     
-    public Map<String, BaseLibrary> getPerExecLibraries(BaseLanguage<?> language, ContextContainer<?> context) {
+    public Map<String, BaseLibrary> getPerExecLibraries(BaseLanguage<?> language, BaseScriptContext<?> context) {
         Map<String, BaseLibrary> libs = new LinkedHashMap<>();
         
         for (Map.Entry<Library, Class<? extends PerExecLibrary>> lib : perExec.entrySet()) {
             if (lib.getKey().languages().length == 0 || Arrays.stream(lib.getKey().languages()).anyMatch(e -> e.equals(language.getClass()))) {
                 try {
-                    libs.put(lib.getKey().value(), lib.getValue().getConstructor(ContextContainer.class).newInstance(context));
+                    libs.put(lib.getKey().value(), lib.getValue().getConstructor(BaseScriptContext.class).newInstance(context));
                 } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
                     throw new RuntimeException("Failed to instantiate library, ", e);
                 }
@@ -62,7 +63,7 @@ public class LibraryRegistry {
                 for (Map.Entry<Library, Class<? extends PerExecLanguageLibrary<?>>> lib : languageEntry.getValue().entrySet()) {
                     if (Arrays.stream(lib.getKey().languages()).anyMatch(e -> e.equals(language.getClass()))) {
                         try {
-                            libs.put(lib.getKey().value(), lib.getValue().getConstructor(ContextContainer.class, Class.class).newInstance(context, language.getClass()));
+                            libs.put(lib.getKey().value(), lib.getValue().getConstructor(BaseScriptContext.class, Class.class).newInstance(context, language.getClass()));
                         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
                             throw new RuntimeException("Failed to instantiate library, ", e);
                         }

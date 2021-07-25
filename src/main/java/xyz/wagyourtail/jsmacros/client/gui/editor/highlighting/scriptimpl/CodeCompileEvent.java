@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.scriptimpl;
 
 import io.noties.prism4j.Prism4j;
 import xyz.wagyourtail.StringHashTrie;
-import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
@@ -53,7 +52,7 @@ import java.util.Map;
      * method should be {@code (index:number) => Map&lt;string,() => void&gt;},
      * meaning it accepts a character index and returns a map of names to actions.
      */
-    public MethodWrapper<Integer, Object, Map<String, MethodWrapper<Object, Object, Object>>> rightClickActions;
+    public MethodWrapper<Integer, Object, Map<String, MethodWrapper<Object, Object, Object, ?>>, ?> rightClickActions;
     
     public CodeCompileEvent(String code, String language, EditorScreen screen) {
         this.code = code;

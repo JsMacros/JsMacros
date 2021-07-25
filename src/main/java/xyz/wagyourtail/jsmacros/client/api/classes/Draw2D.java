@@ -29,13 +29,13 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @deprecated please use {@link Draw2D#setOnInit(MethodWrapper)}
      */
      @Deprecated
-    public MethodWrapper<Draw2D, Object, Object> onInit;
+    public MethodWrapper<Draw2D, Object, Object, ?> onInit;
     /**
      * @since 1.1.9 [citation needed]
      * @deprecated please use {@link Draw2D#setOnFailInit(MethodWrapper)}
      */
      @Deprecated
-    public MethodWrapper<String, Object, Object> catchInit;
+    public MethodWrapper<String, Object, Object, ?> catchInit;
     
     protected final MinecraftClient mc;
     
@@ -453,7 +453,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @param onInit calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link Draw2D}&gt;
      */
     @Override
-    public Draw2D setOnInit(MethodWrapper<Draw2D, Object, Object> onInit) {
+    public Draw2D setOnInit(MethodWrapper<Draw2D, Object, Object, ?> onInit) {
         this.onInit = onInit;
         return this;
     }
@@ -466,7 +466,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @param catchInit calls your method as a {@link java.util.function.Consumer Consumer}&lt;{@link java.lang.String String}&gt;
      */
     @Override
-    public Draw2D setOnFailInit(MethodWrapper<String, Object, Object> catchInit) {
+    public Draw2D setOnFailInit(MethodWrapper<String, Object, Object, ?> catchInit) {
         this.catchInit = catchInit;
         return this;
     }

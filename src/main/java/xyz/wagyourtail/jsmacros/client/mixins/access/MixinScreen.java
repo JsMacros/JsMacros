@@ -39,19 +39,18 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 @Mixin(Screen.class)
 public abstract class MixinScreen extends AbstractParentElement implements IScreen {
     @Unique private final Set<RenderCommon.RenderElement> elements = new LinkedHashSet<>();
-    @Unique private MethodWrapper<PositionCommon.Pos2D, Integer, Object> onMouseDown;
-    @Unique private MethodWrapper<PositionCommon.Vec2D, Integer, Object> onMouseDrag;
-    @Unique private MethodWrapper<PositionCommon.Pos2D, Integer, Object> onMouseUp;
-    @Unique private MethodWrapper<PositionCommon.Pos2D, Double, Object> onScroll;
-    @Unique private MethodWrapper<Integer, Integer, Object> onKeyPressed;
-    @Unique private MethodWrapper<IScreen, Object, Object> onInit;
-    @Unique private MethodWrapper<String, Object, Object> catchInit;
-    @Unique private MethodWrapper<IScreen, Object, Object> onClose;
+    @Unique private MethodWrapper<PositionCommon.Pos2D, Integer, Object, ?> onMouseDown;
+    @Unique private MethodWrapper<PositionCommon.Vec2D, Integer, Object, ?> onMouseDrag;
+    @Unique private MethodWrapper<PositionCommon.Pos2D, Integer, Object, ?> onMouseUp;
+    @Unique private MethodWrapper<PositionCommon.Pos2D, Double, Object, ?> onScroll;
+    @Unique private MethodWrapper<Integer, Integer, Object, ?> onKeyPressed;
+    @Unique private MethodWrapper<IScreen, Object, Object, ?> onInit;
+    @Unique private MethodWrapper<String, Object, Object, ?> catchInit;
+    @Unique private MethodWrapper<IScreen, Object, Object, ?> onClose;
     
     @Shadow public int width;
     @Shadow public int height;
@@ -399,12 +398,12 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public ButtonWidgetHelper<?> addButton(int x, int y, int width, int height, String text,
-        MethodWrapper<ButtonWidgetHelper<?>, IScreen, Object> callback) {
+        MethodWrapper<ButtonWidgetHelper<?>, IScreen, Object, ?> callback) {
         return addButton(x, y, width, height, 0, text, callback);
     }
     
     @Override
-    public ButtonWidgetHelper<?> addButton(int x, int y, int width, int height, int zIndex, String text, MethodWrapper<ButtonWidgetHelper<?>, IScreen, Object> callback) {
+    public ButtonWidgetHelper<?> addButton(int x, int y, int width, int height, int zIndex, String text, MethodWrapper<ButtonWidgetHelper<?>, IScreen, Object, ?> callback) {
         AtomicReference<ButtonWidgetHelper<?>> b = new AtomicReference<>(null);
         ButtonWidget button = new ButtonWidget(x, y, width, height, new LiteralText(text), (btn) -> {
             try {
@@ -432,12 +431,12 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, String message,
-        MethodWrapper<String, IScreen, Object> onChange) {
+        MethodWrapper<String, IScreen, Object, ?> onChange) {
         return addTextInput(x, y, width, height, 0, message, onChange);
     }
     
     @Override
-    public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, int zIndex, String message, MethodWrapper<String, IScreen, Object> onChange) {
+    public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, int zIndex, String message, MethodWrapper<String, IScreen, Object, ?> onChange) {
         TextFieldWidget field = new TextFieldWidget(this.textRenderer, x, y, width, height, new LiteralText(message));
         if (onChange != null) {
             field.setChangedListener(str -> {
@@ -472,49 +471,49 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public IScreen setOnMouseDown(MethodWrapper<Pos2D, Integer, Object> onMouseDown) {
+    public IScreen setOnMouseDown(MethodWrapper<Pos2D, Integer, Object, ?> onMouseDown) {
         this.onMouseDown = onMouseDown;
         return this;
     }
 
     @Override
-    public IScreen setOnMouseDrag(MethodWrapper<Vec2D, Integer, Object> onMouseDrag) {
+    public IScreen setOnMouseDrag(MethodWrapper<Vec2D, Integer, Object, ?> onMouseDrag) {
         this.onMouseDrag = onMouseDrag;
         return this;
     }
 
     @Override
-    public IScreen setOnMouseUp(MethodWrapper<Pos2D, Integer, Object> onMouseUp) {
+    public IScreen setOnMouseUp(MethodWrapper<Pos2D, Integer, Object, ?> onMouseUp) {
         this.onMouseUp = onMouseUp;
         return this;
     }
 
     @Override
-    public IScreen setOnScroll(MethodWrapper<Pos2D, Double, Object> onScroll) {
+    public IScreen setOnScroll(MethodWrapper<Pos2D, Double, Object, ?> onScroll) {
         this.onScroll = onScroll;
         return this;
     }
 
     @Override
-    public IScreen setOnKeyPressed(MethodWrapper<Integer, Integer, Object> onKeyPressed) {
+    public IScreen setOnKeyPressed(MethodWrapper<Integer, Integer, Object, ?> onKeyPressed) {
         this.onKeyPressed = onKeyPressed;
         return this;
     }
 
     @Override
-    public IScreen setOnInit(MethodWrapper<IScreen, Object, Object> onInit) {
+    public IScreen setOnInit(MethodWrapper<IScreen, Object, Object, ?> onInit) {
         this.onInit = onInit;
         return this;
     }
 
     @Override
-    public IScreen setOnFailInit(MethodWrapper<String, Object, Object> catchInit) {
+    public IScreen setOnFailInit(MethodWrapper<String, Object, Object, ?> catchInit) {
         this.catchInit = catchInit;
         return this;
     }
     
     @Override
-    public IScreen setOnClose(MethodWrapper<IScreen, Object, Object> onClose) {
+    public IScreen setOnClose(MethodWrapper<IScreen, Object, Object, ?> onClose) {
         this.onClose = onClose;
         return this;
     }

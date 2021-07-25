@@ -169,7 +169,7 @@ public class CommandBuilder {
         return this;
     }
 
-    public CommandBuilder executes(MethodWrapper<CommandContextHelper, Object, Boolean> callback) {
+    public CommandBuilder executes(MethodWrapper<CommandContextHelper, Object, Boolean, ?> callback) {
         pointer.peek().executes((ctx) -> callback.apply(new CommandContextHelper(ctx)) ? 1 : 0);
         return this;
     }

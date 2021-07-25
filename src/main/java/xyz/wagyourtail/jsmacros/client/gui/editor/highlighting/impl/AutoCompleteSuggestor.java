@@ -40,7 +40,7 @@ public class AutoCompleteSuggestor {
     private void generateSuggestionTree() {
         LibraryRegistry registry = Core.instance.libraryRegistry;
         Class<? extends BaseLanguage> lang = Core.instance.defaultLang.getClass();
-        for (BaseLanguage l : Core.instance.languages) {
+        for (BaseLanguage<?> l : Core.instance.languages) {
             if (l.extension.equals(this.language)) {
                 lang = l.getClass();
                 break;

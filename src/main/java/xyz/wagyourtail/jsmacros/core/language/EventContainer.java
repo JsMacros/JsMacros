@@ -1,18 +1,17 @@
 package xyz.wagyourtail.jsmacros.core.language;
 
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 /**
  * @param <T>
  * @since 1.4.0
  */
-public class ContextContainer<T> {
-    private final ScriptContext<T> ctx;
+public class EventContainer<T> {
+    private final BaseScriptContext<T> ctx;
     private Thread lockThread;
     private boolean locked = true;
 
-    public ContextContainer(ScriptContext<T> ctx) {
+    public EventContainer(BaseScriptContext<T> ctx) {
         this.ctx = ctx;
     }
 
@@ -25,7 +24,7 @@ public class ContextContainer<T> {
         this.lockThread = lockThread;
     }
     
-    public ScriptContext<T> getCtx() {
+    public BaseScriptContext<T> getCtx() {
         return ctx;
     }
     
@@ -40,7 +39,7 @@ public class ContextContainer<T> {
      * @since 1.4.0
      */
     public synchronized void awaitLock(Runnable then) throws InterruptedException {
-        if (Core.instance.threadContext.containsKey(Thread.currentThread())) {
+        if (ctx.threads.contains(Thread.currentThread())) {
             if (!(then instanceof MethodWrapper)) {
                 throw new AssertionError("For your safety, please use MethodWrapper in scripts.");
             }
@@ -58,6 +57,7 @@ public class ContextContainer<T> {
     public synchronized void releaseLock() {
         locked = false;
         this.notifyAll();
+        ctx.events.remove(lockThread);
     }
 
     @Override

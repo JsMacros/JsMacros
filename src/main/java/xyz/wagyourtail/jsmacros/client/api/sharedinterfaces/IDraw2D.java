@@ -473,14 +473,14 @@ public interface IDraw2D<T> {
      * @param onInit calls your method as a {@link Consumer}&lt;{@link T}&gt;
      * @return self for chaining
      */
-    T setOnInit(MethodWrapper<T, Object, Object> onInit);
+    T setOnInit(MethodWrapper<T, Object, Object, ?> onInit);
     
     /**
      * @since 1.2.7
      * @param catchInit calls your method as a {@link Consumer}&lt;{@link String}&gt;
      * @return self for chaining
      */
-    T setOnFailInit(MethodWrapper<String, Object, Object> catchInit);
+    T setOnFailInit(MethodWrapper<String, Object, Object, ?> catchInit);
     
     void render(MatrixStack matrixStack);
 }

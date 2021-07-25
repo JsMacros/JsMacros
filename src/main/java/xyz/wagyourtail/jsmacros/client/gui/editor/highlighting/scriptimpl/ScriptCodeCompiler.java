@@ -6,8 +6,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
-import xyz.wagyourtail.Pair;
-import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCodeCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSuggestion;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.ConfirmOverlay;
@@ -15,13 +13,11 @@ import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
-import xyz.wagyourtail.jsmacros.core.language.ContextContainer;
-import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
+import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
-import java.util.concurrent.Semaphore;
 
 /**
  * @author Wagyourtail
@@ -29,7 +25,7 @@ import java.util.concurrent.Semaphore;
 public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
     private final ScriptTrigger scriptTrigger;
     private Text[] compiledText = new Text[] {new LiteralText("")};
-    private MethodWrapper<Integer, Object, Map<String, MethodWrapper<Object, Object, Object>>> getRClickActions = null;
+    private MethodWrapper<Integer, Object, Map<String, MethodWrapper<Object, Object, Object, ?>>, ?> getRClickActions = null;
     private List<AutoCompleteSuggestion> suggestions = new LinkedList<>();
     
     public ScriptCodeCompiler(String language, EditorScreen screen, String scriptFile) {
@@ -40,7 +36,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
     @Override
     public void recompileRenderedText(@NotNull String text) {
         CodeCompileEvent compileEvent = new CodeCompileEvent(text, language, screen);
-        ContextContainer<?> t = Core.instance.exec(scriptTrigger, compileEvent, null, (ex) -> {
+        EventContainer<?> t = Core.instance.exec(scriptTrigger, compileEvent, null, (ex) -> {
             TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
             StringWriter st = new StringWriter();
             ex.printStackTrace(new PrintWriter(st));

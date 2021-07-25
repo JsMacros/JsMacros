@@ -2,8 +2,10 @@ package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import com.google.common.io.Files;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
 
 import java.io.File;
@@ -20,18 +22,22 @@ import java.io.IOException;
  */
  @Library("FS")
  @SuppressWarnings("unused")
-public class FFS extends BaseLibrary {
+public class FFS extends PerExecLibrary {
+
+    public FFS(BaseScriptContext<?> context) {
+        super(context);
+    }
 
     /**
      * List files in path.
      * 
      * @since 1.1.8
      * 
-     * @param path relative to the macro folder.
+     * @param path relative to the script's folder.
      * @return An array of file names as {@link java.lang.String Strings}.
      */
     public String[] list(String path) {
-        return new File(Core.instance.config.macroFolder, path).list();
+        return new File(ctx.getContainedFolder(), path).list();
     }
     
     /**
@@ -39,11 +45,11 @@ public class FFS extends BaseLibrary {
      * 
      * @since 1.1.8
      * 
-     * @param path relative to the macro folder.
+     * @param path relative to the script's folder.
      * @return
      */
     public boolean exists(String path) {
-        return new File(Core.instance.config.macroFolder, path).exists();
+        return new File(ctx.getContainedFolder(), path).exists();
     }
     
     /**
@@ -51,11 +57,11 @@ public class FFS extends BaseLibrary {
      * 
      * @since 1.1.8
      * 
-     * @param path relative to the macro folder.
+     * @param path relative to the script's folder.
      * @return
      */
     public boolean isDir(String path) {
-        return new File(Core.instance.config.macroFolder, path).isDirectory();
+        return new File(ctx.getContainedFolder(), path).isDirectory();
     }
     
     /**
@@ -63,11 +69,11 @@ public class FFS extends BaseLibrary {
      * 
      * @since 1.1.8
      * 
-     * @param path relative to the macro folder.
+     * @param path relative to the script's folder.
      * @return a {@link java.lang.String String} of the file name.
      */
     public String getName(String path) {
-        return new File(Core.instance.config.macroFolder, path).getName();
+        return new File(ctx.getContainedFolder(), path).getName();
     }
     
     /**
@@ -75,11 +81,11 @@ public class FFS extends BaseLibrary {
      * 
      * @since 1.1.8
      * 
-     * @param path relative to the macro folder.
+     * @param path relative to the script's folder.
      * @return a {@link java.lang.Boolean boolean} for success.
      */
     public boolean makeDir(String path) {
-        return new File(Core.instance.config.macroFolder, path).mkdir();
+        return new File(ctx.getContainedFolder(), path).mkdir();
     }
     
     /**
@@ -87,12 +93,12 @@ public class FFS extends BaseLibrary {
      * 
      * @since 1.1.8
      * 
-     * @param from relative to the macro folder.
-     * @param to relative to the macro folder.
+     * @param from relative to the script's folder.
+     * @param to relative to the script's folder.
      * @throws IOException
      */
     public void move(String from, String to) throws IOException {
-        Files.move(new File(Core.instance.config.macroFolder, from), new File(Core.instance.config.macroFolder, to));
+        Files.move(new File(Core.instance.config.macroFolder, from), new File(ctx.getContainedFolder(), to));
     }
     
     /**
@@ -100,12 +106,12 @@ public class FFS extends BaseLibrary {
      * 
      * @since 1.1.8
      * 
-     * @param from relative to the macro folder.
-     * @param to relative to the macro folder.
+     * @param from relative to the script's folder.
+     * @param to relative to the script's folder.
      * @throws IOException
      */
     public void copy(String from, String to) throws IOException {
-        Files.copy(new File(Core.instance.config.macroFolder, from), new File(Core.instance.config.macroFolder, to));
+        Files.copy(new File(ctx.getContainedFolder(), from), new File(ctx.getContainedFolder(), to));
     }
     
     /**
@@ -113,11 +119,11 @@ public class FFS extends BaseLibrary {
      * 
      * @since 1.2.9
      * 
-     * @param path relative to the macro folder.
+     * @param path relative to the script's folder.
      * @return a {@link java.lang.Boolean boolean} for success.
      */
     public boolean unlink(String path) {
-        return new File(Core.instance.config.macroFolder, path).delete();
+        return new File(ctx.getContainedFolder(), path).delete();
     }
     
     /**
@@ -125,13 +131,13 @@ public class FFS extends BaseLibrary {
      * 
      * @since 1.1.8
      * 
-     * @param patha path is relative to the macro folder.
+     * @param patha path is relative to the script's folder.
      * @param pathb
      * @return a {@link java.lang.String String} of the combined path.
      * @throws IOException
      */
     public String combine(String patha, String pathb) throws IOException {
-        String f = new File(new File(Core.instance.config.macroFolder, patha), pathb).getCanonicalPath().substring(Core.instance.config.macroFolder.getCanonicalPath().length());
+        String f = new File(new File(ctx.getContainedFolder(), patha), pathb).getCanonicalPath().substring(Core.instance.config.macroFolder.getCanonicalPath().length());
         if (f.startsWith("/")) return "."+f;
         return f;
     }
@@ -142,12 +148,12 @@ public class FFS extends BaseLibrary {
      * 
      * @since 1.1.8
      * 
-     * @param path relative to the macro folder.
+     * @param path relative to the script's folder.
      * @return a {@link java.lang.String String} of the combined path.
      * @throws IOException
      */
     public String getDir(String path) throws IOException {
-        String f = new File(Core.instance.config.macroFolder, path).getParentFile().getCanonicalPath().substring(Core.instance.config.macroFolder.getCanonicalPath().length());
+        String f = new File(ctx.getContainedFolder(), path).getParentFile().getCanonicalPath().substring(Core.instance.config.macroFolder.getCanonicalPath().length());
         if (f.startsWith("/")) return "."+f;
         return f;
     }
@@ -159,10 +165,10 @@ public class FFS extends BaseLibrary {
      * 
      * @see FileHandler
      * 
-     * @param path relative to the macro folder.
+     * @param path relative to the script's folder.
      * @return a {@link FileHandler FileHandler} for the file path.
      */
     public FileHandler open(String path) {
-        return new FileHandler(new File(Core.instance.config.macroFolder, path));
+        return new FileHandler(new File(ctx.getContainedFolder(), path));
     }
 }

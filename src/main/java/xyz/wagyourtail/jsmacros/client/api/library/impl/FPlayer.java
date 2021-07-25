@@ -8,11 +8,8 @@ import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.ScreenshotRecorder;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.GameMode;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
@@ -131,7 +128,7 @@ public class FPlayer extends BaseLibrary {
      * @see #takeScreenshot(String, String, MethodWrapper)
      * @since 1.2.6
      */
-    public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object, Object> callback) {
+    public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null;
         ScreenshotRecorder.saveScreenshot(new File(Core.instance.config.macroFolder, folder), mc.getFramebuffer(),
             (text) -> {
@@ -149,7 +146,7 @@ public class FPlayer extends BaseLibrary {
      * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
      * @since 1.2.6
      */
-    public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object> callback) {
+    public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null && file != null;
         ScreenshotRecorder.saveScreenshot(new File(Core.instance.config.macroFolder, folder), file, mc.getFramebuffer(),
             (text) -> {

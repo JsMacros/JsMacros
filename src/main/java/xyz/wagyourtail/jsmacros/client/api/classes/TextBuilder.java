@@ -141,7 +141,7 @@ public class TextBuilder {
      * @since 1.3.0
      * @return
      */
-    public TextBuilder withCustomClickEvent(MethodWrapper<Object, Object, Object> action) {
+    public TextBuilder withCustomClickEvent(MethodWrapper<Object, Object, Object, ?> action) {
         self.styled(style -> style.withClickEvent(new CustomClickEvent(() -> new Thread(() -> {
             try {
                 action.run();

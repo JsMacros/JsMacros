@@ -3,26 +3,28 @@ package xyz.wagyourtail.jsmacros.core.language.impl;
 import org.graalvm.polyglot.Context;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
-import xyz.wagyourtail.jsmacros.core.language.ScriptContext;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
-public class JSScriptContext extends ScriptContext<Context> {
+import java.io.File;
+
+public class JSScriptContext extends BaseScriptContext<Context> {
     boolean closed = false;
 
-    public JSScriptContext(BaseEvent event) {
-        super(event);
+    public JSScriptContext(BaseEvent event, File file) {
+        super(event, file);
     }
 
     @Override
     public boolean isContextClosed() {
-        return super.isContextClosed() || closed;
+        return closed;
     }
     
     @Override
     public void closeContext() {
-        if (context != null) {
-            Context ctx = context.get();
-            Core.instance.threadContext.entrySet().stream().filter(e -> e.getValue() == this).forEach(e -> e.getKey().interrupt());
-            if (ctx != null) ctx.close(true);
+        super.closeContext();
+        if (getContext() != null && !closed) {
+            threads.forEach(Thread::interrupt);
+            getContext().close(true);
             closed = true;
         }
     }
