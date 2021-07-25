@@ -131,31 +131,17 @@ public class FClient extends BaseLibrary {
 
     /**
      * Closes the client (stops the game).
-     *
-     * @since 1.5.3
-     */
-    public void shutdown() {
-        shutdown(true);
-    }
-
-    /**
-     * Closes the client (stops the game).
-     *
-     * @param wait Whether to wait for the game to shutdown. For obvious reasons, the script cannot run anything after
-     *             this function if this parameter is true.
+     * Waits until the game has stopped, meaning no further code is executed (for obvious reasons).
+     * Warning: this does not wait on joined threads, so your script may stop at an undefined point.
      *
      * @since 1.5.3
      *
      * @see #shutdown()
      */
-    public void shutdown(boolean wait) {
+    public void shutdown() {
         mc.execute(mc::scheduleStop);
 
-        if (wait) {
-            if (mc.isOnThread() || Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
-                throw new IllegalThreadStateException("Attempted to stop the client on a thread that is currently joined!");
-            }
-
+        if (!mc.isOnThread() && !Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
             // Wait until the game stops
             while (true) {
                 try {
