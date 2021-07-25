@@ -43,11 +43,9 @@ public abstract class BaseLanguage<T> {
                 if (file.exists() && file.isFile()) {
 
                     runner.addContext(ctx);
-                    ctx.getCtx().events.put(Thread.currentThread(), ctx);
-                    ctx.getCtx().bindThread(Thread.currentThread());
 
                     exec(ctx, staticMacro, file, event);
-                    
+
                     if (then != null) then.run();
                 } else {
                     macro.enabled = false;
@@ -72,6 +70,7 @@ public abstract class BaseLanguage<T> {
             }
         });
         ctx.setLockThread(t);
+        ctx.getCtx().bindThread(Thread.currentThread());
         ctx.getCtx().setMainThread(t);
         t.start();
         return ctx;
@@ -85,11 +84,9 @@ public abstract class BaseLanguage<T> {
                 Thread.currentThread().setName(String.format("RunScript:{\"creator\":\"%s\", \"start\":\"%d\"}", ct.getName(), System.currentTimeMillis()));
 
                 runner.addContext(ctx);
-                ctx.getCtx().events.put(Thread.currentThread(), ctx);
-                ctx.getCtx().bindThread(Thread.currentThread());
 
                 exec(ctx, script, new HashMap<>(), null);
-    
+
                 if (then != null) then.run();
             } catch (Exception e) {
                 try {
@@ -110,6 +107,7 @@ public abstract class BaseLanguage<T> {
             }
         });
         ctx.setLockThread(t);
+        ctx.getCtx().bindThread(Thread.currentThread());
         ctx.getCtx().setMainThread(t);
         t.start();
         return ctx;

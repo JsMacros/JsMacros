@@ -309,9 +309,11 @@ public class FJsMacros extends PerExecLibrary {
     }
 
     /**
+     * waits for an event. if this thread is bound to an event already, this will release current lock.
+     *
      * @param event event to wait for
      * @param filter filter the event until it has the proper values or whatever.
-     * @param runBeforeWaiting runs as a {@link Runnable}, run before waiting, this is a thread-safety thing to prevent "interrupts" from going in between this and things like releaseLock and deferCurrentTask
+     * @param runBeforeWaiting runs as a {@link Runnable}, run before waiting, this is a thread-safety thing to prevent "interrupts" from going in between this and things like deferCurrentTask
      * @since 1.5.0
      * @return a event and a new context if the event you're waiting for was joined, to leave it early.
      *
@@ -385,8 +387,7 @@ public class FJsMacros extends PerExecLibrary {
 
         // make sure the current context isn't still locked.
         if (cc != null && cc.isLocked()) {
-            Core.instance.eventRegistry.removeListener(listener);
-            throw new IllegalThreadStateException("must explicitly release context (un-joins joined events) using 'context.releaseLock()' if you want to wait for a new event on this script's main thread!");
+            cc.releaseLock();
         }
         // set the new contextContainer's lock
         ctxCont.setLockThread(th);

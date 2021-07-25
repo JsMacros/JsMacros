@@ -22,6 +22,7 @@ public class EventContainer<T> {
     public void setLockThread(Thread lockThread) {
         if (this.lockThread != null) throw new AssertionError("Cannot change lock thread of context container once assigned!");
         this.lockThread = lockThread;
+        ctx.events.put(lockThread, this);
     }
     
     public BaseScriptContext<T> getCtx() {
