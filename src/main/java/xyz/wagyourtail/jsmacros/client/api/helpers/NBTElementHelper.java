@@ -3,6 +3,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 import net.minecraft.nbt.*;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
+import java.util.Set;
+
 /**
  * @since 1.5.1
  */
@@ -234,6 +236,14 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
             super(base);
         }
 
+
+        /**
+         * @since 1.6.0
+         * @return
+         */
+        public Set<String> getKeys() {
+            return base.getKeys();
+        }
 
         /**
          * @since 1.5.1

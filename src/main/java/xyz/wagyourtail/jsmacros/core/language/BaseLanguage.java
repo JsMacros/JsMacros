@@ -7,7 +7,6 @@ import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 
 import java.io.File;
 import java.nio.file.FileSystemException;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -26,7 +25,7 @@ public abstract class BaseLanguage<T> {
         this.runner = runner;
     }
     
-    public EventContainer<T> trigger(ScriptTrigger macro, BaseEvent event, Runnable then,
+    public final EventContainer<T> trigger(ScriptTrigger macro, BaseEvent event, Runnable then,
                                      Consumer<Throwable> catcher) {
         
         final ScriptTrigger staticMacro = macro.copy();
@@ -44,7 +43,7 @@ public abstract class BaseLanguage<T> {
 
                     runner.addContext(ctx);
 
-                    exec(ctx, staticMacro, file, event);
+                    exec(ctx, staticMacro, event);
 
                     if (then != null) then.run();
                 } else {
@@ -76,7 +75,7 @@ public abstract class BaseLanguage<T> {
         return ctx;
     }
     
-    public EventContainer<T> trigger(String script, File fakeFile, Runnable then, Consumer<Throwable> catcher) {
+    public final EventContainer<T> trigger(String script, File fakeFile, Runnable then, Consumer<Throwable> catcher) {
         final Thread ct = Thread.currentThread();
         EventContainer<T> ctx = new EventContainer<>(createContext(null, fakeFile));
         final Thread t = new Thread(() -> {
@@ -85,7 +84,7 @@ public abstract class BaseLanguage<T> {
 
                 runner.addContext(ctx);
 
-                exec(ctx, script, new HashMap<>(), null);
+                exec(ctx, script, new HashMap<>());
 
                 if (then != null) then.run();
             } catch (Exception e) {
@@ -129,25 +128,24 @@ public abstract class BaseLanguage<T> {
      * run a script trigger/file with this.
      *
      * @param macro
-     * @param file
      * @param event
      *
      * @throws Exception
      * @since 1.2.7 [citation needed]
      */
-    protected abstract void exec(EventContainer<T> ctx, ScriptTrigger macro, File file, BaseEvent event) throws Exception;
+    protected abstract void exec(EventContainer<T> ctx, ScriptTrigger macro, BaseEvent event) throws Exception;
     
     /**
      * run a string based script with this.
      *
+     *
+     * @param ctx
      * @param script
      * @param globals
-     * @param currentDir
-     *
      * @throws Exception
      * @since 1.2.7 [citation needed]
      */
-    protected abstract void exec(EventContainer<T> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception;
+    protected abstract void exec(EventContainer<T> ctx, String script, Map<String, Object> globals) throws Exception;
     
     /**
      * @param ex

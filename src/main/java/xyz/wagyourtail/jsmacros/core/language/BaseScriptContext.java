@@ -1,13 +1,11 @@
 package xyz.wagyourtail.jsmacros.core.language;
 
 import io.netty.util.internal.ConcurrentSet;
-import xyz.wagyourtail.SynchronizedWeakHashSet;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 
 import java.io.File;
-import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -114,6 +112,7 @@ public abstract class BaseScriptContext<T> {
      * @since 1.6.0
      * @return
      */
+     @Nullable
     public File getFile() {
         return mainFile;
     }
