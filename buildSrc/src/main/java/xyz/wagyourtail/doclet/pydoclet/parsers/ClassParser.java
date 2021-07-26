@@ -118,8 +118,10 @@ public class ClassParser {
             if(!types.containsKey(t)){
                 if ((t + "").startsWith("xyz")){
                     if(Main.typeUtils.asElement(t) != null) {
-                        String path = getClassName((TypeElement) Main.typeUtils.asElement(t)); //getPackage((TypeElement) Main.typeUtils.asElement(t)) + "." +
-                        if (!imp.contains(path)) imp.add(path);
+                        if(!getClassName((TypeElement) Main.typeUtils.asElement(t)).equals(getClassName(type))) {
+                            String path = getClassName((TypeElement) Main.typeUtils.asElement(t)); //getPackage((TypeElement) Main.typeUtils.asElement(t)) + "." +
+                            if (!imp.contains(path)) imp.add(path);
+                        }
                     }
                 }else if((t + "").startsWith("net") || (t + "").startsWith("com") || (t + "").startsWith("io") || (t + "").startsWith("java.util") ||
                         (t + "").startsWith("java.lang.Runnable")  || (t + "").startsWith("java.lang.Thread") || (t + "").startsWith("java.lang.Throwable") ||
