@@ -14,7 +14,6 @@ import xyz.wagyourtail.jsmacros.core.library.impl.FWrapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -23,11 +22,11 @@ import java.util.Map;
 public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     private static final Engine engine = Engine.create();
     
-    public JavascriptLanguageDefinition(String extension, Core runner) {
+    public JavascriptLanguageDefinition(String extension, Core<?, ?> runner) {
         super(extension, runner);
     }
     
-    protected Context buildContext(Path currentDir, Map<String, String> extraJsOptions, Map<String, Object> globals, Map<String, BaseLibrary> libs) throws IOException {
+    protected Context buildContext(File currentDir, Map<String, String> extraJsOptions, Map<String, Object> globals, Map<String, BaseLibrary> libs) throws IOException {
 
         Builder build = Context.newBuilder("js")
             .engine(engine)
@@ -38,10 +37,10 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
 
         build.options(extraJsOptions);
         if (currentDir == null) {
-            currentDir = runner.config.macroFolder.toPath();
+            currentDir = runner.config.macroFolder;
         }
-        build.currentWorkingDirectory(currentDir);
-        build.option("js.commonjs-require-cwd", currentDir.toFile().getCanonicalPath());
+        build.currentWorkingDirectory(currentDir.toPath());
+        build.option("js.commonjs-require-cwd", currentDir.getCanonicalPath());
         
         final Context con = build.build();
         
@@ -56,11 +55,11 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     }
     
     @Override
-    protected void exec(EventContainer<Context> ctx, ScriptTrigger macro, File file, BaseEvent event) throws Exception {
+    protected void exec(EventContainer<Context> ctx, ScriptTrigger macro, BaseEvent event) throws Exception {
         Map<String, Object> globals = new HashMap<>();
         
         globals.put("event", event);
-        globals.put("file", file);
+        globals.put("file", ctx.getCtx().getFile());
         globals.put("context", ctx);
 
         final CoreConfigV2 conf = runner.config.getOptions(CoreConfigV2.class);
@@ -69,11 +68,11 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
 
         Map<String, BaseLibrary> lib = retrieveLibs(ctx.getCtx());
 
-        final Context con = buildContext(file.getParentFile().toPath(), conf.extraJsOptions, globals, lib);
+        final Context con = buildContext(ctx.getCtx().getContainedFolder(), conf.extraJsOptions, globals, lib);
         ctx.getCtx().setContext(con);
         con.enter();
         try {
-            con.eval(Source.newBuilder("js", file).build());
+            con.eval(Source.newBuilder("js", ctx.getCtx().getFile()).build());
         } finally {
             con.leave();
             ((FWrapper) lib.get("JavaWrapper")).tasks.poll().release();
@@ -81,7 +80,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     }
     
     @Override
-    protected void exec(EventContainer<Context> ctx, String script, Map<String, Object> globals, Path currentDir) throws Exception {
+    protected void exec(EventContainer<Context> ctx, String script, Map<String, Object> globals) throws Exception {
         globals.put("context", ctx);
 
         final CoreConfigV2 conf = runner.config.getOptions(CoreConfigV2.class);
@@ -90,11 +89,15 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
 
         Map<String, BaseLibrary> lib = retrieveLibs(ctx.getCtx());
 
-        final Context con = buildContext(currentDir, conf.extraJsOptions, globals, lib);
+        final Context con = buildContext(ctx.getCtx().getContainedFolder(), conf.extraJsOptions, globals, lib);
         ctx.getCtx().setContext(con);
         con.enter();
         try {
-            con.eval("js", script);
+            if (ctx.getCtx().getFile() != null) {
+                con.eval(Source.newBuilder("js", ctx.getCtx().getFile()).content(script).build());
+            } else {
+                con.eval("js", script);
+            }
         } finally {
             con.leave();
             ((FWrapper) lib.get("JavaWrapper")).tasks.poll().release();

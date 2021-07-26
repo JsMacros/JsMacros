@@ -1,9 +1,11 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.classes.Mappings;
+import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
@@ -25,10 +27,14 @@ import java.util.*;
  */
  @Library("Reflection")
  @SuppressWarnings("unused")
-public class FReflection extends BaseLibrary {
+public class FReflection extends PerExecLibrary {
     private static final CombinedVariableClassLoader classLoader = new CombinedVariableClassLoader(FReflection.class.getClassLoader());
     private static Mappings remapper = null;
-    
+
+    public FReflection(BaseScriptContext<?> context) {
+        super(context);
+    }
+
     /**
      * @param name name of class like {@code path.to.class}
      *
@@ -220,7 +226,7 @@ public class FReflection extends BaseLibrary {
     /**
      * Loads a jar file to be accessible with this library.
      *
-     * @param file relative to the macro folder.
+     * @param file relative to the script's folder.
      *
      * @return success value
      *
@@ -228,7 +234,7 @@ public class FReflection extends BaseLibrary {
      * @since 1.2.6
      */
     public boolean loadJarFile(String file) throws IOException {
-        File jarFile = new File(Core.instance.config.macroFolder, file);
+        File jarFile = new File(ctx.getContainedFolder(), file);
         if (classLoader.hasJar(jarFile)) return true;
         if (!jarFile.exists()) throw new FileNotFoundException("Jar File Not Found");
         return classLoader.addClassLoader(jarFile, new URLClassLoader(new URL[] {new URL("jar:file:" + jarFile.getCanonicalPath() + "!/")}));
