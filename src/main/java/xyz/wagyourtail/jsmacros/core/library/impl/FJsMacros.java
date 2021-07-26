@@ -115,10 +115,24 @@ public class FJsMacros extends PerExecLibrary {
      * @return the {@link EventContainer} the script is running on.
      */
     public EventContainer<?> runScript(String language, String script, MethodWrapper<Throwable, Object, Object, ?> callback) {
+        return runScript(language, script, null, callback);
+    }
+
+    /**
+     * @since 1.6.0
+     *
+     * @param language
+     * @param script
+     * @param file
+     * @param callback
+     *
+     * @return
+     */
+    public EventContainer<?> runScript(String language, String script, String file, MethodWrapper<Throwable, Object, Object, ?> callback) {
         if (callback != null) {
-            return Core.instance.exec(language, script, null, () -> callback.accept(null), callback);
+            return Core.instance.exec(language, script, file != null ? new File(ctx.getContainedFolder(), file) : null, () -> callback.accept(null), callback);
         } else {
-            return Core.instance.exec(language, script, null, null, null);
+            return Core.instance.exec(language, script, file != null ? new File(ctx.getContainedFolder(), file) : null, null, null);
         }
     }
     
