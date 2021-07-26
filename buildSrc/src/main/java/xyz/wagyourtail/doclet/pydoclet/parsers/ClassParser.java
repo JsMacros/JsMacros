@@ -116,24 +116,26 @@ public class ClassParser {
 
         imports.forEach(t -> {
             if(!types.containsKey(t)){
-                if ((t + "").startsWith("xyz")){
-                    if(Main.typeUtils.asElement(t) != null) {
-                        if(!getClassName((TypeElement) Main.typeUtils.asElement(t)).equals(getClassName(type))) {
-                            String path = getClassName((TypeElement) Main.typeUtils.asElement(t)); //getPackage((TypeElement) Main.typeUtils.asElement(t)) + "." +
-                            if (!imp.contains(path)) imp.add(path);
+                if(!withArg.containsKey(getClearedNameFromTypeMirror(t))) {
+                    if ((t + "").startsWith("xyz")) {
+                        if (Main.typeUtils.asElement(t) != null) {
+                            if (!getClassName((TypeElement) Main.typeUtils.asElement(t)).equals(getClassName(type))) {
+                                String path = getClassName((TypeElement) Main.typeUtils.asElement(t)); //getPackage((TypeElement) Main.typeUtils.asElement(t)) + "." +
+                                if (!imp.contains(path)) imp.add(path);
+                            }
                         }
+                    } else if ((t + "").startsWith("net") || (t + "").startsWith("com") || (t + "").startsWith("io") || (t + "").startsWith("java.util") ||
+                            (t + "").startsWith("java.lang.Runnable") || (t + "").startsWith("java.lang.Thread") || (t + "").startsWith("java.lang.Throwable") ||
+                            (t + "").startsWith("java.util.function") || (t + "").startsWith("java.lang.ref") || (t + "").startsWith("java.io") || (t + "").startsWith("org") || (t + "").startsWith("java.lang.Iterable") ||
+                            (t + "").startsWith("java.lang.StackTraceElement")) {
+                        //Main.reporter.print(Diagnostic.Kind.NOTE, typeVars + "");
+                        if (!importTypeVar)
+                            importTypeVar = true;
+                        typeVars.put(
+                                getClassName((TypeElement) Main.typeUtils.asElement(t)),
+                                t + ""
+                        );
                     }
-                }else if((t + "").startsWith("net") || (t + "").startsWith("com") || (t + "").startsWith("io") || (t + "").startsWith("java.util") ||
-                        (t + "").startsWith("java.lang.Runnable")  || (t + "").startsWith("java.lang.Thread") || (t + "").startsWith("java.lang.Throwable") ||
-                        (t + "").startsWith("java.util.function") || (t + "").startsWith("java.lang.ref") || (t + "").startsWith("java.io") || (t + "").startsWith("org") || (t + "").startsWith("java.lang.Iterable") ||
-                        (t + "").startsWith("java.lang.StackTraceElement")){
-                    //Main.reporter.print(Diagnostic.Kind.NOTE, typeVars + "");
-                    if(!importTypeVar)
-                        importTypeVar = true;
-                    typeVars.put(
-                            getClassName((TypeElement) Main.typeUtils.asElement(t)),
-                            t + ""
-                            );
                 }
             }
         });
