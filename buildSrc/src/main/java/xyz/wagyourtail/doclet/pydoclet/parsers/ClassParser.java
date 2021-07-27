@@ -4,8 +4,6 @@ import xyz.wagyourtail.doclet.pydoclet.Main;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
-import javax.swing.*;
-import javax.tools.Diagnostic;
 import java.util.*;
 
 public class ClassParser {
@@ -46,32 +44,22 @@ public class ClassParser {
     public String parseClass(){
         StringBuilder sb = new StringBuilder();
 
-        //Classline e.g class Test(AbstractTest, ):
+        //ClassLine e.g class Test(AbstractTest, ):
         sb.append(getClassLine());
 
         //Fields
         sb.append(getFields()).append("\n");
 
-        //Constructor
-        sb.append(getConstructor());
-
-        //Methods
+        //Methods / Constructor
         sb.append(getMethods());
 
         //safety pass
-        sb.append(getTabs(1) + "pass\n\n");
+        sb.append(getTabs(1)).append("pass\n\n");
 
         //imports + abstract types
         sb.insert(0, getImports()).append("\n");
 
         //Main.reporter.print(Diagnostic.Kind.NOTE, type + ", " + imports + "");
-
-        return sb.toString();
-    }
-
-    private String getConstructor() {
-        StringBuilder sb = new StringBuilder();
-
 
         return sb.toString();
     }
@@ -94,9 +82,7 @@ public class ClassParser {
 
             sb.append("(self");
 
-            method.getParameters().forEach(parameter -> {
-                sb.append(", ").append(parameter.getSimpleName()).append(": ").append(getTypeMirrorName(parameter.asType(), false));
-            });
+            method.getParameters().forEach(parameter -> sb.append(", ").append(parameter.getSimpleName()).append(": ").append(getTypeMirrorName(parameter.asType(), false)));
             sb.append(") -> ");
             //Main.reporter.print(Diagnostic.Kind.NOTE, getTypeMirrorName(method.getReturnType(), false) + "");
             if (method.getReceiverType() != null) sb.append(getTypeMirrorName(method.getReturnType(), false));
@@ -114,7 +100,7 @@ public class ClassParser {
         //Main.reporter.print(Diagnostic.Kind.NOTE, type + ": " + importList);
 
         imports.forEach(t -> {
-            if(!types.containsKey(t)){
+            if(!types.containsKey(getClearedNameFromTypeMirror(t))){
                 if(!withArg.containsKey(getClearedNameFromTypeMirror(t))) {
                     if ((t + "").startsWith("xyz")) {
                         if (Main.typeUtils.asElement(t) != null) {
@@ -131,7 +117,7 @@ public class ClassParser {
                         if (!importTypeVar) importTypeVar = true;
                         typeVars.put(
                                 getClassName((TypeElement) Main.typeUtils.asElement(t)),
-                                new AbstractMap.SimpleEntry<String, Boolean>(t + "", false)
+                                new AbstractMap.SimpleEntry<>(t + "", false)
                         );
                     }
                 }
@@ -153,9 +139,7 @@ public class ClassParser {
         if(importGeneric)
             sb.append("from typing import Generic\n");
 
-        imp.forEach(s -> {
-            sb.append("from .").append(s).append(" import *\n");
-        });
+        imp.forEach(s -> sb.append("from .").append(s).append(" import ").append(s).append("\n"));
 
         sb.append("\n");
         for(Map.Entry<String, Map.Entry<String, Boolean>> entry : typeVars.entrySet()){
@@ -179,7 +163,6 @@ public class ClassParser {
     }
 
     private String getFields(){
-        int indent = 1;
         StringBuilder sb = new StringBuilder();
 
         type.getEnclosedElements().stream().filter(e -> e.getKind().equals(ElementKind.FIELD)|| e.getKind().equals(ElementKind.ENUM_CONSTANT)).forEach(el ->{
@@ -279,7 +262,7 @@ public class ClassParser {
             case TYPEVAR -> {
                 typeVars.put(
                         ((TypeVariable) type).asElement().getSimpleName().toString(),
-                        new AbstractMap.SimpleEntry<String, Boolean>(((TypeVariable) type).asElement().getSimpleName().toString(), true)
+                        new AbstractMap.SimpleEntry<>(((TypeVariable) type).asElement().getSimpleName().toString(), true)
                 );
                 importTypeVar = true;
                 return ((TypeVariable) type).asElement().getSimpleName().toString();
@@ -342,31 +325,4 @@ public class ClassParser {
         return s.toString();
     }
 
-    /**
-     * @return package name with . separators
-     */
-    public static String getPackage(TypeElement type) {
-        Element t2 = type;
-        while (t2 != null && t2.getKind() != ElementKind.PACKAGE) t2 = t2.getEnclosingElement();
-
-        if (t2 != null) return ((PackageElement) t2).getQualifiedName().toString();
-        return "null";
-    }
-
-    public static String getPathPart(TypeElement type) {
-        return getPackage(type).replaceAll("\\.", "/") + "/" + getClassName(type).replaceAll("\\$", ".");
-    }
-
-    /**
-     * nothing much
-     * @return up dir string
-     */
-    private String getUpDir(int extra) {
-        StringBuilder s = new StringBuilder();
-        for (String ignored : getPackage(type).split("\\.")) {
-            s.append("../");
-        }
-        s.append("../".repeat(Math.max(0, extra)));
-        return s.toString();
-    }
 }

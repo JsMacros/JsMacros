@@ -4,24 +4,22 @@ import com.sun.source.util.DocTrees;
 import jdk.javadoc.doclet.Doclet;
 import jdk.javadoc.doclet.DocletEnvironment;
 import jdk.javadoc.doclet.Reporter;
-import org.gradle.internal.impldep.org.eclipse.jgit.notes.Note;
 import xyz.wagyourtail.FileHandler;
 import xyz.wagyourtail.doclet.options.IgnoredItem;
 import xyz.wagyourtail.doclet.options.OutputDirectory;
 import xyz.wagyourtail.doclet.options.Version;
 import xyz.wagyourtail.doclet.pydoclet.parsers.ClassParser;
-import xyz.wagyourtail.doclet.webdoclet.options.Links;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
-import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 public class Main implements Doclet {
     public static Reporter reporter;
@@ -101,7 +99,7 @@ public class Main implements Doclet {
             //Create Classes
             StringBuilder sb = new StringBuilder();
             for(ClassParser value : internalClasses.values()){
-                sb.append("from .").append(ClassParser.getClassName(value.type)).append(" import *\n"); //.append(ClassParser.getPackage(value.type)).append(".")
+                sb.append("from .").append(ClassParser.getClassName(value.type)).append(" import ").append(ClassParser.getClassName(value.type)).append("\n"); //.append(ClassParser.getPackage(value.type)).append(".")
                 File out = new File(outDir, ClassParser.getClassName(value.type) + ".py");
                 File parent = out.getParentFile();
                 if (!parent.exists() && !parent.mkdirs()) {
