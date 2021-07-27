@@ -15,6 +15,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
+import xyz.wagyourtail.jsmacros.core.Core;
+
+import java.util.concurrent.Semaphore;
 
 /**
  * @author Wagyourtail
@@ -66,14 +69,30 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param entity
      * @since 1.5.0
      */
-    public void attack(EntityHelper<?> entity) {
-        if (entity.getRaw() == mc.player) throw new AssertionError("Can't interact with self!");
-        assert mc.interactionManager != null;
-        mc.interactionManager.attackEntity(mc.player, entity.getRaw());
-        assert mc.player != null;
-        mc.player.swingHand(Hand.MAIN_HAND);
+    public void attack(EntityHelper<?> entity) throws InterruptedException {
+        attack(entity, false);
     }
 
+    /**
+     * @since 1.6.0
+     *
+     * @param await
+     * @param entity
+     */
+    public void attack(EntityHelper<?> entity, boolean await) throws InterruptedException {
+        if (entity.getRaw() == mc.player) throw new AssertionError("Can't interact with self!");
+        Semaphore wait = new Semaphore(await ? 0 : 1);
+        assert mc.interactionManager != null;
+        mc.execute(() -> {
+            mc.interactionManager.attackEntity(mc.player, entity.getRaw());
+            assert mc.player != null;
+            mc.player.swingHand(Hand.MAIN_HAND);
+            wait.release();
+        });
+        if (!mc.isOnThread() && !Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
+            wait.acquire();
+        }
+    }
     /**
      * @param x
      * @param y
@@ -81,39 +100,96 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
      * @since 1.5.0
      */
-    public void attack(int x, int y, int z, int direction) {
+
+    public void attack(int x, int y, int z, int direction) throws InterruptedException {
+        attack(x, y, z, direction, false);
+    }
+
+    /**
+     * @since 1.6.0
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
+     * @param await
+     *
+     * @throws InterruptedException
+     */
+    public void attack(int x, int y, int z, int direction, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
-        mc.interactionManager.attackBlock(new BlockPos(x, y, z), Direction.values()[direction]);
-        assert mc.player != null;
-        mc.player.swingHand(Hand.MAIN_HAND);
+        Semaphore wait = new Semaphore(await ? 0 : 1);
+        mc.execute(() -> {
+            mc.interactionManager.attackBlock(new BlockPos(x, y, z), Direction.values()[direction]);
+            assert mc.player != null;
+            mc.player.swingHand(Hand.MAIN_HAND);
+            wait.release();
+        });
+        if (!mc.isOnThread() && !Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
+            wait.acquire();
+        }
     }
 
     /**
      * @param entity
      * @param offHand
-     * @since 1.5.0
+     * @since 1.5.0, renamed from {@code interact} in 1.6.0
      */
-    public void interact(EntityHelper<?> entity, boolean offHand) {
+    public void interactEntity(EntityHelper<?> entity, boolean offHand) throws InterruptedException {
+        interactEntity(entity, offHand, false);
+    }
+
+    /**
+     * @param entity
+     * @param offHand
+     * @param await
+     * @since 1.6.0
+     * @throws InterruptedException
+     */
+    public void interactEntity(EntityHelper<?> entity, boolean offHand, boolean await) throws InterruptedException {
         if (entity.getRaw() == mc.player) throw new AssertionError("Can't interact with self!");
         assert mc.interactionManager != null;
+        Semaphore wait = new Semaphore(await ? 0 : 1);
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
-        ActionResult result = mc.interactionManager.interactEntity(mc.player, entity.getRaw(), hand);
-        assert mc.player != null;
-        if (result.isAccepted())
-            mc.player.swingHand(hand);
+        mc.execute(() -> {
+            ActionResult result = mc.interactionManager.interactEntity(mc.player, entity.getRaw(), hand);
+            assert mc.player != null;
+            if (result.isAccepted())
+                mc.player.swingHand(hand);
+            wait.release();
+        });
+        if (!mc.isOnThread() && !Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
+            wait.acquire();
+        }
     }
 
     /**
      * @param offHand
-     * @since 1.5.0
+     * @since 1.5.0, renamed from {@code interact} in 1.6.0
      */
-    public void interact(boolean offHand) {
+    public void interactItem(boolean offHand) throws InterruptedException {
+        interactItem(offHand, false);
+    }
+
+    /**
+     * @since 1.6.0
+     * @param offHand
+     * @param await
+     */
+    public void interactItem(boolean offHand, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
+        Semaphore wait = new Semaphore(await ? 0 : 1);
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
-        ActionResult result = mc.interactionManager.interactItem(mc.player, mc.world, hand);
-        assert mc.player != null;
-        if (result.isAccepted())
-            mc.player.swingHand(hand);
+        mc.execute(() -> {
+            ActionResult result = mc.interactionManager.interactItem(mc.player, mc.world, hand);
+            assert mc.player != null;
+            if (result.isAccepted())
+                mc.player.swingHand(hand);
+            wait.release();
+        });
+        if (!mc.isOnThread() && !Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
+            wait.acquire();
+        }
     }
 
     /**
@@ -122,28 +198,72 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param z
      * @param direction
      * @param offHand
-     * @since 1.5.0
+     * @since 1.5.0, renamed from {@code interact} in 1.6.0
      */
-    public void interact(int x, int y, int z, int direction, boolean offHand) {
-        Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
+    public void interactBlock(int x, int y, int z, int direction, boolean offHand) throws InterruptedException {
+        interactBlock(x, y, z, direction, offHand, false);
+    }
+
+    public void interactBlock(int x, int y, int z, int direction, boolean offHand, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
-        ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, hand,
-            new BlockHitResult(Vec3d.ZERO, Direction.values()[direction], new BlockPos(x, y, z), false)
-        );
-        assert mc.player != null;
-        if (result.isAccepted())
-            mc.player.swingHand(hand);
+        Semaphore wait = new Semaphore(await ? 0 : 1);
+        Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
+        mc.execute(() -> {
+            ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, hand,
+                new BlockHitResult(Vec3d.ZERO, Direction.values()[direction], new BlockPos(x, y, z), false)
+            );
+            assert mc.player != null;
+            if (result.isAccepted())
+                mc.player.swingHand(hand);
+            wait.release();
+        });
+        if (!mc.isOnThread() && !Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
+            wait.acquire();
+        }
     }
 
     /**
      * @since 1.5.0
      */
-    public void interact() {
-        ((IMinecraftClient) mc).jsmacros_doItemUse();
+    public void interact() throws InterruptedException {
+        interact(false);
     }
 
-    public void attack() {
-        ((IMinecraftClient) mc).jsmacros_doAttack();
+    /**
+     * @since 1.6.0
+     * @param await
+     */
+    public void interact(boolean await) throws InterruptedException {
+        Semaphore wait = new Semaphore(await ? 0 : 1);
+        mc.execute(() -> {
+        ((IMinecraftClient) mc).jsmacros_doItemUse();
+        wait.release();
+        });
+        if (!mc.isOnThread() && !Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
+            wait.acquire();
+        }
+    }
+
+    /**
+     * @since 1.5.0
+     */
+    public void attack() throws InterruptedException {
+        attack(false);
+    }
+
+    /**
+     * @since 1.6.0
+     * @param await
+     */
+    public void attack(boolean await) throws InterruptedException {
+        Semaphore wait = new Semaphore(await ? 0 : 1);
+        mc.execute(() -> {
+            ((IMinecraftClient) mc).jsmacros_doAttack();
+            wait.release();
+        });
+        if (!mc.isOnThread() && !Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
+            wait.acquire();
+        }
     }
 
     /**
