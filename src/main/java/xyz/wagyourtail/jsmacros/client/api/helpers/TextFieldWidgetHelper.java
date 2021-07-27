@@ -52,15 +52,16 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
      */
     public TextFieldWidgetHelper setText(String text, boolean await) throws InterruptedException {
         boolean joinedMain = MinecraftClient.getInstance().isOnThread() || Core.instance.profile.joinedThreadStack.contains(Thread.currentThread());
-        if (joinedMain && await) {
-            throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined!");
-        }
-        final Semaphore waiter = new Semaphore(await ? 0 : 1);
-        MinecraftClient.getInstance().execute(() -> {
+        if (joinedMain) {
             base.setText(text);
-            waiter.release();
-        });
-        waiter.acquire();
+        } else {
+            final Semaphore waiter = new Semaphore(await ? 0 : 1);
+            MinecraftClient.getInstance().execute(() -> {
+                base.setText(text);
+                waiter.release();
+            });
+            waiter.acquire();
+        }
         return this;
     }
     
