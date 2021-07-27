@@ -4,14 +4,16 @@ import xyz.wagyourtail.doclet.pydoclet.Main;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
+import javax.swing.*;
+import javax.tools.Diagnostic;
 import java.util.*;
 
 public class ClassParser {
     public final TypeElement type;
     private final List<TypeMirror> imports = new LinkedList<>();
-    private boolean importOverload = false, importList = false, importTypeVar = false, importAny = false, importMapping = false, importSet = false;
-    HashMap<String, String> typeVars = new HashMap<>();
-    private final HashMap<String, String> types = new HashMap<String, String>(){{
+    private boolean importOverload = false, importList = false, importTypeVar = false, importAny = false, importMapping = false, importSet = false, importGeneric = false;
+    HashMap<String, Map.Entry<String, Boolean>> typeVars = new HashMap<>();
+    private final HashMap<String, String> types = new HashMap<>(){{
         put("java.lang.Object", "object");
         put("java.lang.String", "str");
         put("java.lang.Integer", "int");
@@ -126,11 +128,10 @@ public class ClassParser {
                             (t + "").startsWith("java.util.function") || (t + "").startsWith("java.lang.ref") || (t + "").startsWith("java.io") || (t + "").startsWith("org") || (t + "").startsWith("java.lang.Iterable") ||
                             (t + "").startsWith("java.lang.StackTraceElement")) {
                         //Main.reporter.print(Diagnostic.Kind.NOTE, typeVars + "");
-                        if (!importTypeVar)
-                            importTypeVar = true;
+                        if (!importTypeVar) importTypeVar = true;
                         typeVars.put(
                                 getClassName((TypeElement) Main.typeUtils.asElement(t)),
-                                t + ""
+                                new AbstractMap.SimpleEntry<String, Boolean>(t + "", false)
                         );
                     }
                 }
@@ -149,14 +150,17 @@ public class ClassParser {
             sb.append("from typing import Mapping\n");
         if(importSet)
             sb.append("from typing import Set\n");
+        if(importGeneric)
+            sb.append("from typing import Generic\n");
 
         imp.forEach(s -> {
             sb.append("from .").append(s).append(" import *\n");
         });
 
         sb.append("\n");
-        for(Map.Entry<String, String> entry : typeVars.entrySet()){
-            sb.append(entry.getKey()).append(" = TypeVar[\"").append(entry.getValue().replace("<", "_").replace(">", "_").replace("?", "")).append("\"]\n");
+        for(Map.Entry<String, Map.Entry<String, Boolean>> entry : typeVars.entrySet()){
+            sb.append(entry.getKey()).append(" = TypeVar").append( entry.getValue().getValue() ? "(" : "[").append("\"").append(entry.getValue().getKey().replace("<", "_").replace(">", "_").replace("?", "")).append("\"").append( entry.getValue().getValue() ? ")" : "]").append("\n");
+            //sb.append(entry.getKey()).append(" = TypeVar[\"").append(entry.getValue().replace("<", "_").replace(">", "_").replace("?", "")).append("\"]\n");
         }
         sb.append("\n");
 
@@ -209,6 +213,17 @@ public class ClassParser {
                 sb.append(getTypeMirrorName(i, true)).append(", ");
                 addImport(i);
             });
+            if(type.getTypeParameters().size() > 0){
+                importGeneric = true;
+                addImport(type.getTypeParameters().get(0).asType());
+                sb.append("Generic[");
+                sb.append(getTypeMirrorName(type.getTypeParameters().get(0).asType(), true));
+                for(int i = 1; i < type.getTypeParameters().size(); i++){
+                    sb.append(", ").append(getTypeMirrorName(type.getTypeParameters().get(i).asType(), true));
+                    addImport(type.getTypeParameters().get(0).asType());
+                }
+                sb.append("], ");
+            }
             if (!extend.getKind().equals(TypeKind.NONE)){
                 sb.append(getTypeMirrorName(extend, true));
                 addImport(extend);
@@ -264,7 +279,7 @@ public class ClassParser {
             case TYPEVAR -> {
                 typeVars.put(
                         ((TypeVariable) type).asElement().getSimpleName().toString(),
-                        ((TypeVariable) type).asElement().getSimpleName().toString()
+                        new AbstractMap.SimpleEntry<String, Boolean>(((TypeVariable) type).asElement().getSimpleName().toString(), true)
                 );
                 importTypeVar = true;
                 return ((TypeVariable) type).asElement().getSimpleName().toString();
