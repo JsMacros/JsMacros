@@ -4,15 +4,12 @@ import xyz.wagyourtail.doclet.pydoclet.Main;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ClassParser {
     public final TypeElement type;
     private final List<TypeMirror> imports = new LinkedList<>();
-    private boolean importOverload = false, importList = false, importTypeVar = false, importAny = false, importMapping = false;
+    private boolean importOverload = false, importList = false, importTypeVar = false, importAny = false, importMapping = false, importSet = false;
     HashMap<String, String> typeVars = new HashMap<>();
     private final HashMap<String, String> types = new HashMap<String, String>(){{
         put("java.lang.Object", "object");
@@ -25,7 +22,7 @@ public class ClassParser {
         put("java.util.Iterator", "iter");
     }},
                                           withArg = new HashMap<>(){{
-        put("java.util.Set", "List");
+        put("java.util.Set", "Set");
         put("java.util.List", "List");
         put("java.util.Map", "Mapping");
         put("java.util.Collection", "List");
@@ -150,6 +147,8 @@ public class ClassParser {
             sb.append("from typing import Any\n");
         if (importMapping)
             sb.append("from typing import Mapping\n");
+        if(importSet)
+            sb.append("from typing import Set\n");
 
         imp.forEach(s -> {
             sb.append("from .").append(s).append(" import *\n");
@@ -299,6 +298,7 @@ public class ClassParser {
         if(withArg.containsKey(getClearedNameFromTypeMirror(type))){
             if (withArg.get(getClearedNameFromTypeMirror(type)).contains("List")) importList = true;
             else if(withArg.get(getClearedNameFromTypeMirror(type)).contains("Mapping")) importMapping = true;
+            else if(withArg.get(getClearedNameFromTypeMirror(type)).contains("Set")) importSet = true;
 
             //Main.reporter.print(Diagnostic.Kind.NOTE, this.type + ", " + type + ": " + ((DeclaredType) type).getTypeArguments());
             StringBuilder sb = new StringBuilder(withArg.get(getClearedNameFromTypeMirror(type)) + "[" + getTypeMirrorName(((DeclaredType) type).getTypeArguments().get(0), false));

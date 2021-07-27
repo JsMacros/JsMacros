@@ -4,6 +4,7 @@ import com.sun.source.util.DocTrees;
 import jdk.javadoc.doclet.Doclet;
 import jdk.javadoc.doclet.DocletEnvironment;
 import jdk.javadoc.doclet.Reporter;
+import org.gradle.internal.impldep.org.eclipse.jgit.notes.Note;
 import xyz.wagyourtail.FileHandler;
 import xyz.wagyourtail.doclet.options.IgnoredItem;
 import xyz.wagyourtail.doclet.options.OutputDirectory;
@@ -13,16 +14,14 @@ import xyz.wagyourtail.doclet.webdoclet.options.Links;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Main implements Doclet {
     public static Reporter reporter;
@@ -65,7 +64,8 @@ public class Main implements Doclet {
         treeUtils = environment.getDocTrees();
         elements = environment.getIncludedElements();
         elementUtils = environment.getElementUtils();
-        internalClasses = new LinkedHashMap<>();
+        internalClasses = new HashMap<>();
+        HashMap<String, String> libraryImports = new HashMap<>();
 
         //reporter.print(Diagnostic.Kind.NOTE, elements + "");
 
@@ -85,8 +85,19 @@ public class Main implements Doclet {
             }
 
             //Create ClassParser
-            elements.stream().filter(e -> e instanceof TypeElement).map(e -> (TypeElement) e).forEach(e -> internalClasses.put(e, new ClassParser(e)));
+            elements.stream().filter(e -> e instanceof TypeElement).map(e -> (TypeElement) e).forEach(e -> {
+                internalClasses.put(e, new ClassParser(e));
 
+                AnnotationMirror mirror = e.getAnnotationMirrors().stream().filter(a -> a.getAnnotationType().asElement().getSimpleName().toString().equals("Library")).findFirst().orElse(null);
+                //Library
+                if (mirror != null) {
+                    libraryImports.put(ClassParser.getClassName(e) + "", getAnnotationValue("value", mirror) + "");
+                    return;
+                }
+
+            });
+
+            reporter.print(Diagnostic.Kind.NOTE, libraryImports + "");
             //Create Classes
             StringBuilder sb = new StringBuilder();
             for(ClassParser value : internalClasses.values()){
@@ -101,20 +112,9 @@ public class Main implements Doclet {
             }
             sb.append("\n\n");
 
-            sb.append("Chat = FChat()\n");
-            sb.append("Client = FClient()\n");
-            sb.append("Hud = FHud()\n");
-            sb.append("JsMacros = FJsMacros()\n");
-            sb.append("KeyBind = FKeyBind()\n");
-            sb.append("Player = FPlayer()\n");
-            sb.append("Reflection = FReflection()\n");
-            sb.append("Request = FRequest()\n");
-            sb.append("World = FWorld()\n");
-            sb.append("Time = FTime()\n");
-            sb.append("JavaWrapper = FWrapper()\n");
-            sb.append("GlobalVars = FGlobalVars()\n");
-
-
+            for(Map.Entry<String, String> entry : libraryImports.entrySet()){
+                sb.append(entry.getValue()).append(" = ").append(entry.getKey()).append("()\n");
+            }
 
             new FileHandler(new File(outDir, "__init__.py")).write(sb.toString());
 
@@ -175,6 +175,14 @@ public class Main implements Doclet {
             return false;
         }
         return true;
+    }
+
+    public static Object getAnnotationValue(String key, AnnotationMirror annotation) {
+        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> el : annotation.getElementValues().entrySet()) {
+            if (el.getKey().getSimpleName().toString().equals(key))
+                return el.getValue().getValue();
+        }
+        return null;
     }
 
 }
