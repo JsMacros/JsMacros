@@ -286,7 +286,7 @@ public class FWorld extends BaseLibrary {
     public void playSound(String id, double volume, double pitch) {
         SoundEvent sound = Registry.SOUND_EVENT.get(new Identifier(id));
         assert sound != null;
-        mc.getSoundManager().play(PositionedSoundInstance.master(sound, (float) pitch, (float) volume));
+        mc.execute(() -> mc.getSoundManager().play(PositionedSoundInstance.master(sound, (float) pitch, (float) volume)));
     }
     
     /**
@@ -303,7 +303,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         SoundEvent sound = Registry.SOUND_EVENT.get(new Identifier(id));
         assert sound != null;
-        mc.world.playSound(x, y, z, sound, SoundCategory.MASTER, (float) volume, (float) pitch, true);
+        mc.execute(() -> mc.world.playSound(x, y, z, sound, SoundCategory.MASTER, (float) volume, (float) pitch, true));
     }
     
     /**

@@ -159,7 +159,7 @@ public class FClient extends BaseLibrary {
      */
     public void waitTick() throws InterruptedException {
         if (mc.isOnThread() || Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
-            throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined!");
+            throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined to main!");
         }
         tickSynchronizer.waitTick();
     }
@@ -174,7 +174,7 @@ public class FClient extends BaseLibrary {
      */
     public void waitTick(int i) throws InterruptedException {
         if (mc.isOnThread() || Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
-            throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined!");
+            throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined to main!");
         }
         while (--i >= 0) {
             tickSynchronizer.waitTick();

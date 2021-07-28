@@ -85,7 +85,7 @@ public class Main implements Doclet {
                     eventClasses.add(new EventParser(e, getAnnotationValue("value", annotationMirror).toString()));
                 }
             }
-            if (e.getSimpleName().toString().equals("ContextContainer")) {
+            if (e.getSimpleName().toString().equals("EventContainer")) {
                 classes.addClass(e);
                 System.out.println(e);
             }
