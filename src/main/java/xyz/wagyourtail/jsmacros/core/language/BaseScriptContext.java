@@ -1,20 +1,23 @@
 package xyz.wagyourtail.jsmacros.core.language;
 
-import io.netty.util.internal.ConcurrentSet;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @since 1.4.0
  * @param <T>
  */
 public abstract class BaseScriptContext<T> {
+    protected boolean closed = false;
     public final long startTime = System.currentTimeMillis();
     public final BaseEvent triggeringEvent;
     protected final File mainFile;
@@ -25,15 +28,47 @@ public abstract class BaseScriptContext<T> {
     protected T context = null;
     protected Thread mainThread = null;
 
-    protected final Set<Thread> threads = new ConcurrentSet<>();
+    protected final Set<Thread> threads = new HashSet<>();
 
-    public final Map<Thread, EventContainer<?>> events = new ConcurrentHashMap<>();
+    protected final Map<Thread, EventContainer<T>> events = new HashMap<>();
 
     public boolean hasMethodWrapperBeenInvoked = false;
 
     public BaseScriptContext(BaseEvent event, File file) {
         this.triggeringEvent = event;
         this.mainFile = file;
+    }
+
+    /**
+     * @since 1.6.0
+     * @return
+     */
+    public Map<Thread, EventContainer<T>> getBoundEvents() {
+        return ImmutableMap.copyOf(events);
+    }
+
+    /**
+     * @since 1.6.0
+     * @param th
+     * @param event
+     */
+    public synchronized void bindEvent(Thread th, EventContainer<T> event) {
+        events.put(th, event);
+    }
+
+    /**
+     * @since 1.6.0
+     * @param thread
+     *
+     * @return
+     */
+    public synchronized boolean releaseBoundEventIfPresent(Thread thread) {
+        EventContainer<T> event = events.get(thread);
+        if (event != null) {
+            event.releaseLock();
+            return true;
+        }
+        return false;
     }
 
     public T getContext() {
@@ -53,7 +88,8 @@ public abstract class BaseScriptContext<T> {
      * @param t
      * @return is a newly bound thread
      */
-    public boolean bindThread(Thread t) {
+    public synchronized boolean bindThread(Thread t) {
+        if (closed) throw new AssertionError("Cannot bind thread to closed context");
         return threads.add(t);
     }
 
@@ -61,7 +97,7 @@ public abstract class BaseScriptContext<T> {
      * @since 1.6.0
      * @param t
      */
-    public void unbindThread(Thread t) {
+    public synchronized void unbindThread(Thread t) {
         if (!threads.remove(t)) {
             throw new AssertionError("Thread was not bound");
         }
@@ -76,7 +112,7 @@ public abstract class BaseScriptContext<T> {
      * @return
      */
     public Set<Thread> getBoundThreads() {
-        return threads;
+        return ImmutableSet.copyOf(threads);
     }
 
     /**
@@ -101,10 +137,14 @@ public abstract class BaseScriptContext<T> {
         this.context = context;
     }
     
-    public abstract boolean isContextClosed();
+    public boolean isContextClosed() {
+        return closed;
+    }
     
-    public void closeContext() {
+    public synchronized void closeContext() {
+        closed = true;
         events.values().forEach(EventContainer::releaseLock);
+        threads.forEach(Thread::interrupt);
         Core.instance.getContexts().remove(this);
     }
 

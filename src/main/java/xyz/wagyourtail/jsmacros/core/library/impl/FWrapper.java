@@ -263,8 +263,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } finally {
-                    EventContainer<?> cc = ctx.events.get(Thread.currentThread());
-                    if (cc != null) cc.releaseLock();
+                    ctx.unbindThread(Thread.currentThread());
 
                     tasks.poll().release();
                     lock.release();

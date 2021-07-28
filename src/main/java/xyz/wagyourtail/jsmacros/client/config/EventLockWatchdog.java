@@ -6,11 +6,10 @@ import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 public class EventLockWatchdog {
-    public static void startWatchdog(EventContainer<?> lock, Thread watched, IEventListener listener, long maxTime) {
+    public static void startWatchdog(EventContainer<?> lock, IEventListener listener, long maxTime) {
         Thread t = new Thread(() -> {
             try {
-                watched.join(maxTime);
-                lock.releaseLock();
+                Thread.sleep(maxTime);
                 lock.getCtx().closeContext();
                 if (listener instanceof BaseListener) {
                     ((BaseListener) listener).getRawTrigger().enabled = false;

@@ -346,10 +346,7 @@ public class FJsMacros extends PerExecLibrary {
         final Exception[] e = {null};
         final BaseEvent[] ev = {null};
 
-        // get the current context container.
-        EventContainer<?> cc = ctx.events.get(Thread.currentThread());
-
-        // create a new context container so we can actually release joined events
+        // create a new event container so we can actually release joined events
         EventContainer<?> ctxCont = new EventContainer<>(ctx);
 
         // create the listener
@@ -362,7 +359,7 @@ public class FJsMacros extends PerExecLibrary {
 
                     if (test) {
                         // remove the listener here, since it this isn't async.
-                        Core.instance.eventRegistry.removeListener(this);
+                        Core.instance.eventRegistry.removeListener(event.getEventName(), this);
 
                         // release the lock
                         lock.release();
@@ -400,18 +397,17 @@ public class FJsMacros extends PerExecLibrary {
         if (runBeforeWaiting != null) runBeforeWaiting.run();
 
         // make sure the current context isn't still locked.
-        if (cc != null && cc.isLocked()) {
-            cc.releaseLock();
-        }
-        // set the new contextContainer's lock
+        ctx.releaseBoundEventIfPresent(th);
+
+        // set the new EventContainer's lock
         ctxCont.setLockThread(th);
-        ctx.events.put(th, ctxCont);
+        ctx.bindEvent(th, (EventContainer) ctxCont);
 
         // waits for event
         try {
             lock.acquire();
         } finally {
-            Core.instance.eventRegistry.removeListener(listener);
+            Core.instance.eventRegistry.removeListener(event, listener);
         }
         if (e[0] != null) {
             throw new RuntimeException("Error thrown in filter", e[0]);

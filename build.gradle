@@ -149,7 +149,7 @@ task generateWebDoc(type: Javadoc) {
 	options.addStringOption "v", version
 	options.addStringOption "mcv", project.minecraft_version
 	options {
-		links 'https://docs.oracle.com/javase/8/docs/api/', 'https://logging.apache.org/log4j/2.x/log4j-api/apidocs/'
+		links 'https://docs.oracle.com/javase/8/docs/api/', 'https://logging.apache.org/log4j/2.x/log4j-api/apidocs/', 'https://javadoc.io/doc/com.neovisionaries/nv-websocket-client/latest/'
 	}
 }
 

@@ -58,7 +58,9 @@ public class EventContainer<T> {
     public synchronized void releaseLock() {
         locked = false;
         this.notifyAll();
-        ctx.events.remove(lockThread);
+        synchronized (ctx) {
+            ctx.events.remove(lockThread);
+        }
     }
 
     @Override

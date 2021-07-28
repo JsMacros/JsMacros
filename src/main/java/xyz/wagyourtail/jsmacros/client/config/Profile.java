@@ -71,7 +71,7 @@ public class Profile extends BaseProfile {
             if (joinedMain) {
                 joinedThreadStack.add(t.getLockThread());
             }
-            EventLockWatchdog.startWatchdog(t, Thread.currentThread(), macroListener, Core.instance.config.getOptions(CoreConfigV2.class).maxLockTime);
+            EventLockWatchdog.startWatchdog(t, macroListener, Core.instance.config.getOptions(CoreConfigV2.class).maxLockTime);
             t.awaitLock(() -> joinedThreadStack.remove(t.getLockThread()));
         } catch (InterruptedException ignored) {
             joinedThreadStack.remove(t.getLockThread());
