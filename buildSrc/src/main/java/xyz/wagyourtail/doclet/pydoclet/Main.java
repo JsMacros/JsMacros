@@ -63,7 +63,7 @@ public class Main implements Doclet {
         elements = environment.getIncludedElements();
         elementUtils = environment.getElementUtils();
         internalClasses = new HashMap<>();
-        HashMap<String, String> libraryImports = new HashMap<>();
+        HashMap<String, HashMap<String, String>> classes = new HashMap<>();
 
         //reporter.print(Diagnostic.Kind.NOTE, elements + "");
 
@@ -72,7 +72,7 @@ public class Main implements Doclet {
         try {
             //Remove Folder
             if (outDir.exists() && !outDir.delete()) {
-                reporter.print(Diagnostic.Kind.ERROR, "Failed to remove old ts output\n");
+                reporter.print(Diagnostic.Kind.ERROR, "Failed to remove old py output\n");
                 return false;
             }
 
@@ -89,17 +89,55 @@ public class Main implements Doclet {
                 AnnotationMirror mirror = e.getAnnotationMirrors().stream().filter(a -> a.getAnnotationType().asElement().getSimpleName().toString().equals("Library")).findFirst().orElse(null);
                 //Library
                 if (mirror != null) {
-                    libraryImports.put(ClassParser.getClassName(e) + "", getAnnotationValue("value", mirror) + "");
-                    return;
+                    //Library
+                    if(!classes.containsKey("libraries")){
+                        classes.put("libraries", new HashMap<>());
+                    }
+                    classes.get("libraries").put(ClassParser.getClassName(e), getAnnotationValue("value", mirror) + "");
+                }else if(e.getAnnotationMirrors().stream().filter(a -> a.getAnnotationType().asElement().getSimpleName().toString().equals("Event")).findFirst().orElse(null) != null){
+                    //Event
+                    if(!classes.containsKey("events")){
+                        classes.put("events", new HashMap<>());
+                    }
+                    classes.get("events").put(ClassParser.getClassName(e), getAnnotationValue("value", e.getAnnotationMirrors().stream().filter(a -> a.getAnnotationType().asElement().getSimpleName().toString().equals("Event")).findFirst().orElse(null)) + "");
+                }else if(ClassParser.getClassName(e).contains("Helper")){
+                    if(!classes.containsKey("helpers")){
+                        classes.put("helpers", new HashMap<>());
+                    }
+                    classes.get("helpers").put(ClassParser.getClassName(e), ClassParser.getClassName(e));
+                }else if(ClassParser.getClassName(e).contains("Mixin")){
+                    if(!classes.containsKey("mixins")){
+                        classes.put("mixins", new HashMap<>());
+                    }
+                    classes.get("mixins").put(ClassParser.getClassName(e), ClassParser.getClassName(e));
+                }else{
+                    if(!classes.containsKey("rest")){
+                        classes.put("rest", new HashMap<>());
+                    }
+                    classes.get("rest").put(ClassParser.getClassName(e), ClassParser.getClassName(e));
                 }
 
             });
 
-            reporter.print(Diagnostic.Kind.NOTE, libraryImports + "");
+            //Create Sum Up Files
+            reporter.print(Diagnostic.Kind.NOTE, classes + "");
+            for(Map.Entry<String, HashMap<String, String>> entry : classes.entrySet()){
+                StringBuilder sb = new StringBuilder();
+                for(Map.Entry<String, String> args : entry.getValue().entrySet()) {
+                    sb.append("from .").append(args.getKey()).append(" import ").append(args.getKey()).append("\n");
+                }
+                if(entry.getKey().equalsIgnoreCase("libraries")){
+                    sb.append("\n\n");
+                    for(Map.Entry<String, String> args : entry.getValue().entrySet()) {
+                        sb.append(args.getValue()).append(" = ").append(args.getKey()).append("()\n");
+                    }
+                }
+                new FileHandler(new File(outDir, entry.getKey() + ".py")).write(sb.toString());
+            }
+
+
             //Create Classes
-            StringBuilder sb = new StringBuilder();
             for(ClassParser value : internalClasses.values()){
-                sb.append("from .").append(ClassParser.getClassName(value.type)).append(" import ").append(ClassParser.getClassName(value.type)).append("\n"); //.append(ClassParser.getPackage(value.type)).append(".")
                 File out = new File(outDir, ClassParser.getClassName(value.type) + ".py");
                 File parent = out.getParentFile();
                 if (!parent.exists() && !parent.mkdirs()) {
@@ -108,13 +146,14 @@ public class Main implements Doclet {
                 }
                 new FileHandler(out).write(value.parseClass());
             }
-            sb.append("\n\n");
 
-            for(Map.Entry<String, String> entry : libraryImports.entrySet()){
-                sb.append(entry.getValue()).append(" = ").append(entry.getKey()).append("()\n");
+            //Create __init__.py
+            StringBuilder sb = new StringBuilder();
+            for(String file : classes.keySet()){
+                sb.append("from .").append(file).append(" import *\n");
             }
-
             new FileHandler(new File(outDir, "__init__.py")).write(sb.toString());
+
 
             sb.delete(0, sb.length());
             sb.append("""
