@@ -1,10 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.language.impl;
 
-import com.oracle.truffle.api.Truffle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.graalvm.options.OptionKey;
-import org.graalvm.options.OptionValues;
 import org.graalvm.polyglot.*;
 import org.graalvm.polyglot.Context.Builder;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -19,7 +16,6 @@ import xyz.wagyourtail.jsmacros.core.library.impl.FWrapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;

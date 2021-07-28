@@ -50,12 +50,21 @@ dependencies {
 	implementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
 	implementation "org.graalvm.js:js:${project.graal_version}"
 	implementation "org.graalvm.truffle:truffle-api:${project.graal_version}"
+//	if (targetCompatibility == JavaVersion.VERSION_16) {
+//		implementation "org.graalvm.compiler:compiler:${project.graal_version}"
+//		implementation "org.graalvm.compiler:compiler-management:${project.graal_version}"
+//	}
 	implementation "org.graalvm.regex:regex:${project.graal_version}"
+
 	implementation group: 'com.ibm.icu', name: 'icu4j', version: '67.1'
 
 	include "org.graalvm.sdk:graal-sdk:${project.graal_version}"
 	include "org.graalvm.js:js:${project.graal_version}"
 	include "org.graalvm.truffle:truffle-api:${project.graal_version}"
+//	if (targetCompatibility == JavaVersion.VERSION_16) {
+//		include "org.graalvm.compiler:compiler:${project.graal_version}"
+//		include "org.graalvm.compiler:compiler-management:${project.graal_version}"
+//	}
 	include "org.graalvm.regex:regex:${project.graal_version}"
 	include group: 'com.ibm.icu', name: 'icu4j', version: '67.1'
 
