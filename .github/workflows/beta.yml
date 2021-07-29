@@ -37,7 +37,7 @@ jobs:
       
     - name: Build with Gradle
       run: ./gradlew build
-      
+
     - uses: actions/github-script@v2
       id: fname
       with:
