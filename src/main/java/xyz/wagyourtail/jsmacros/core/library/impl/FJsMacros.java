@@ -130,9 +130,9 @@ public class FJsMacros extends PerExecLibrary {
      */
     public EventContainer<?> runScript(String language, String script, String file, MethodWrapper<Throwable, Object, Object, ?> callback) {
         if (callback != null) {
-            return Core.instance.exec(language, script, file != null ? new File(ctx.getContainedFolder(), file) : null, () -> callback.accept(null), callback);
+            return Core.instance.exec(language, script, file != null ? ctx.getContainedFolder().toPath().resolve(file).toFile() : null, () -> callback.accept(null), callback);
         } else {
-            return Core.instance.exec(language, script, file != null ? new File(ctx.getContainedFolder(), file) : null, null, null);
+            return Core.instance.exec(language, script, file != null ? ctx.getContainedFolder().toPath().resolve(file).toFile() : null, null, null);
         }
     }
     
@@ -144,7 +144,7 @@ public class FJsMacros extends PerExecLibrary {
      * @param path relative to the script's folder.
      */
     public void open(String path) {
-        Util.getOperatingSystem().open(new File(ctx.getContainedFolder(), path));
+        Util.getOperatingSystem().open(ctx.getContainedFolder().toPath().resolve(path).toFile());
     }
 
     /**

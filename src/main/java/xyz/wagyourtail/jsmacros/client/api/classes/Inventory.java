@@ -47,7 +47,6 @@ public class Inventory<T extends HandledScreen<?>> {
     protected static MinecraftClient mc = MinecraftClient.getInstance();
 
     /**
-     * don't call from scripts
      * @return
      */
     public static Inventory<?> create() {
@@ -424,5 +423,13 @@ public class Inventory<T extends HandledScreen<?>> {
     
     public String toString() {
         return String.format("Inventory:{\"Type\": \"%s\"}", this.getType());
+    }
+
+    /**
+     * @since 1.6.0
+     * @return
+     */
+    public int getCurrentSyncId() {
+        return syncId;
     }
 }

@@ -234,7 +234,7 @@ public class FReflection extends PerExecLibrary {
      * @since 1.2.6
      */
     public boolean loadJarFile(String file) throws IOException {
-        File jarFile = new File(ctx.getContainedFolder(), file);
+        File jarFile = ctx.getContainedFolder().toPath().resolve(file).toFile();
         if (classLoader.hasJar(jarFile)) return true;
         if (!jarFile.exists()) throw new FileNotFoundException("Jar File Not Found");
         return classLoader.addClassLoader(jarFile, new URLClassLoader(new URL[] {new URL("jar:file:" + jarFile.getCanonicalPath() + "!/")}));

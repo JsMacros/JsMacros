@@ -10,6 +10,7 @@ import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Better File-System functions.
@@ -37,7 +38,7 @@ public class FFS extends PerExecLibrary {
      * @return An array of file names as {@link java.lang.String Strings}.
      */
     public String[] list(String path) {
-        return new File(ctx.getContainedFolder(), path).list();
+        return ctx.getContainedFolder().toPath().resolve(path).toFile().list();
     }
     
     /**
@@ -49,7 +50,7 @@ public class FFS extends PerExecLibrary {
      * @return
      */
     public boolean exists(String path) {
-        return new File(ctx.getContainedFolder(), path).exists();
+        return ctx.getContainedFolder().toPath().resolve(path).toFile().exists();
     }
     
     /**
@@ -61,7 +62,7 @@ public class FFS extends PerExecLibrary {
      * @return
      */
     public boolean isDir(String path) {
-        return new File(ctx.getContainedFolder(), path).isDirectory();
+        return ctx.getContainedFolder().toPath().resolve(path).toFile().isDirectory();
     }
     
     /**
@@ -73,7 +74,7 @@ public class FFS extends PerExecLibrary {
      * @return a {@link java.lang.String String} of the file name.
      */
     public String getName(String path) {
-        return new File(ctx.getContainedFolder(), path).getName();
+        return ctx.getContainedFolder().toPath().resolve(path).toFile().getName();
     }
     
     /**
@@ -85,7 +86,7 @@ public class FFS extends PerExecLibrary {
      * @return a {@link java.lang.Boolean boolean} for success.
      */
     public boolean makeDir(String path) {
-        return new File(ctx.getContainedFolder(), path).mkdir();
+        return ctx.getContainedFolder().toPath().resolve(path).toFile().mkdir();
     }
     
     /**
@@ -98,7 +99,7 @@ public class FFS extends PerExecLibrary {
      * @throws IOException
      */
     public void move(String from, String to) throws IOException {
-        Files.move(new File(Core.instance.config.macroFolder, from), new File(ctx.getContainedFolder(), to));
+        Files.move(ctx.getContainedFolder().toPath().resolve(from).toFile(), ctx.getContainedFolder().toPath().resolve(to).toFile());
     }
     
     /**
@@ -111,7 +112,7 @@ public class FFS extends PerExecLibrary {
      * @throws IOException
      */
     public void copy(String from, String to) throws IOException {
-        Files.copy(new File(ctx.getContainedFolder(), from), new File(ctx.getContainedFolder(), to));
+        Files.copy(ctx.getContainedFolder().toPath().resolve(from).toFile(), ctx.getContainedFolder().toPath().resolve(to).toFile());
     }
     
     /**
@@ -123,7 +124,7 @@ public class FFS extends PerExecLibrary {
      * @return a {@link java.lang.Boolean boolean} for success.
      */
     public boolean unlink(String path) {
-        return new File(ctx.getContainedFolder(), path).delete();
+        return ctx.getContainedFolder().toPath().resolve(path).toFile().delete();
     }
     
     /**
@@ -137,9 +138,7 @@ public class FFS extends PerExecLibrary {
      * @throws IOException
      */
     public String combine(String patha, String pathb) throws IOException {
-        String f = new File(new File(ctx.getContainedFolder(), patha), pathb).getCanonicalPath().substring(Core.instance.config.macroFolder.getCanonicalPath().length());
-        if (f.startsWith("/")) return "."+f;
-        return f;
+        return Path.of(patha, pathb).toString();
     }
     
     
@@ -153,9 +152,8 @@ public class FFS extends PerExecLibrary {
      * @throws IOException
      */
     public String getDir(String path) throws IOException {
-        String f = new File(ctx.getContainedFolder(), path).getParentFile().getCanonicalPath().substring(Core.instance.config.macroFolder.getCanonicalPath().length());
-        if (f.startsWith("/")) return "."+f;
-        return f;
+        File dir = ctx.getContainedFolder().toPath().resolve(path).toFile().getParentFile();
+        return ctx.getContainedFolder().toPath().relativize(dir.toPath()).toString();
     }
     
     /**
@@ -169,6 +167,6 @@ public class FFS extends PerExecLibrary {
      * @return a {@link FileHandler FileHandler} for the file path.
      */
     public FileHandler open(String path) {
-        return new FileHandler(new File(ctx.getContainedFolder(), path));
+        return new FileHandler(ctx.getContainedFolder().toPath().resolve(path).toFile());
     }
 }
