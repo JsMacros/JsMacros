@@ -1,8 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
-import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.classes.Mappings;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
@@ -180,7 +179,7 @@ public class FReflection extends PerExecLibrary {
     public Object invokeMethod(Method m, Object c, Object... objects) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Class<?>[] params = m.getParameterTypes();
         for (int i = 0; i < objects.length; ++i) {
-            objects[i] = tryAutoCastNumber(params[i], objects[i]);
+            objects[i] = JsMacros.tryAutoCastNumber(params[i], objects[i]);
         }
         return m.invoke(c, objects);
     }
@@ -213,7 +212,7 @@ public class FReflection extends PerExecLibrary {
                 Object[] tempObjects = new Object[objects.length];
                 try {
                     for (int i = 0; i < objects.length; ++i) {
-                        tempObjects[i] = tryAutoCastNumber(params[i], objects[i]);
+                        tempObjects[i] = JsMacros.tryAutoCastNumber(params[i], objects[i]);
                     }
                     return (T) con.newInstance(tempObjects);
                 } catch (Exception ignored) {
@@ -239,26 +238,7 @@ public class FReflection extends PerExecLibrary {
         if (!jarFile.exists()) throw new FileNotFoundException("Jar File Not Found");
         return classLoader.addClassLoader(jarFile, new URLClassLoader(new URL[] {new URL("jar:file:" + jarFile.getCanonicalPath() + "!/")}));
     }
-    
-    protected Object tryAutoCastNumber(Class<?> returnType, Object number) {
-        if ((returnType == int.class || returnType == Integer.class) && !(number instanceof Integer)) {
-            number = ((Number) number).intValue();
-        } else if ((returnType == float.class || returnType == Float.class) && !(number instanceof Float)) {
-            number = ((Number) number).floatValue();
-        } else if ((returnType == double.class || returnType == Double.class) && !(number instanceof Double)) {
-            number = ((Number) number).doubleValue();
-        } else if ((returnType == short.class || returnType == Short.class) && !(number instanceof Short)) {
-            number = ((Number) number).shortValue();
-        } else if ((returnType == long.class || returnType == Long.class) && !(number instanceof Long)) {
-            number = ((Number) number).longValue();
-        } else if ((returnType == char.class || returnType == Character.class) && !(number instanceof Character)) {
-            number = (char) ((Number) number).intValue();
-        } else if ((returnType == byte.class || returnType == Byte.class) && !(number instanceof Byte)) {
-            number = ((Number) number).byteValue();
-        }
-        return number;
-    }
-    
+
     /**
      * @since 1.3.1
      * @return the previous mapping helper generated with {@link #loadMappingHelper(String)}
