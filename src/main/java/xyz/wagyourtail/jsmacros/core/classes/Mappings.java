@@ -402,13 +402,7 @@ public class Mappings {
             ClassData cls = getMappings().get(asClass.getCanonicalName().replace(".", "/"));
             String intMethodName = null;
             if (cls != null) {
-                ClassData revd = getReversedMappings().get(cls.name);
-                if (revd != null) {
-                    MethodData mData = revd.methods.get(methodSig);
-                    if (mData != null) {
-                        intMethodName = mData.name;
-                    }
-                }
+                intMethodName = getReversedMappings().get(cls.name).methods.get(methodSig).name;
             }
 
             Method md;
