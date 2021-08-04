@@ -354,7 +354,7 @@ public class Mappings {
         }
 
         private Pair<String, List<Class<?>>> mapMethodSig(String methodSig) throws ClassNotFoundException, IOException {
-            String[] parts = methodSig.split("(|)", 3);
+            String[] parts = methodSig.split("[()]", 3);
             List<Class<?>> params = new ArrayList<>();
             Matcher m = sigPart.matcher(parts[1]);
             while (m.find()) {
@@ -400,12 +400,15 @@ public class Mappings {
 
         private Method findMethod(Class<?> asClass, String methodSig, Pair<String, List<Class<?>>>  parsedMethodSig) throws IOException, NoSuchMethodException {
             ClassData cls = getMappings().get(asClass.getCanonicalName().replace(".", "/"));
-            String intMethodName;
+            String intMethodName = null;
             if (cls != null) {
                 ClassData revd = getReversedMappings().get(cls.name);
-                intMethodName = revd.methods.get(methodSig).name;
-            } else {
-                intMethodName = parsedMethodSig.getT();
+                if (revd != null) {
+                    MethodData mData = revd.methods.get(methodSig);
+                    if (mData != null) {
+                        intMethodName = mData.name;
+                    }
+                }
             }
 
             Method md;
@@ -427,8 +430,11 @@ public class Mappings {
             ClassData cls = getMappings().get(asClass.getCanonicalName().replace(".", "/"));
             Set<String> toTryIntermediaries = new HashSet<>();
             toTryIntermediaries.add(methodName);
-            for (Map.Entry<String, MethodData> method : cls.methods.entrySet()) {
-                if (method.getValue().name.equals(methodName)) toTryIntermediaries.add(method.getKey().split("\\(")[0]);
+            if (cls != null) {
+                for (Map.Entry<String, MethodData> method : cls.methods.entrySet()) {
+                    if (method.getValue().name.equals(methodName))
+                        toTryIntermediaries.add(method.getKey().split("\\(")[0]);
+                }
             }
             for (Method method : asClass.getDeclaredMethods()) {
                 if (toTryIntermediaries.contains(method.getName())) {
