@@ -2,14 +2,10 @@ package xyz.wagyourtail.doclet.pydoclet.parsers;
 
 import com.sun.source.doctree.*;
 import com.sun.source.util.DocTreePath;
-import xyz.wagyourtail.Pair;
-import xyz.wagyourtail.XMLBuilder;
 import xyz.wagyourtail.doclet.pydoclet.Main;
-import xyz.wagyourtail.doclet.webdoclet.options.Links;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
-import javax.tools.Diagnostic;
 import java.util.*;
 
 public class ClassParser {
@@ -96,8 +92,6 @@ public class ClassParser {
             if (method.getReceiverType() != null) sb.append(getTypeMirrorName(method.getReturnType(), false));
             sb.append(":\n");
 
-//            Main.reporter.print(Diagnostic.Kind.NOTE, method + "");
-//            Main.reporter.print(Diagnostic.Kind.NOTE, getParamDescriptions(method) + "");
             sb.append(getMethodDoc(method));
             sb.append(getTabs(2)).append("pass\n\n");
         });
@@ -126,7 +120,7 @@ public class ClassParser {
             } else {
                 sb.append("\n");
             }
-            sb.append(getTabs(1) + "\"\"\"\n");
+            sb.append(getTabs(1)).append("\"\"\"\n");
         }
 
         return sb.toString();
@@ -167,41 +161,6 @@ public class ClassParser {
         return sb.toString();
     }
 
-    private static String getPackage(TypeElement type) {
-        Element t2 = type;
-        while (t2.getKind() != ElementKind.PACKAGE) t2 = t2.getEnclosingElement();
-
-        return ((PackageElement) t2).getQualifiedName().toString();
-    }
-
-    private String getUpDir(int extra) {
-        StringBuilder s = new StringBuilder();
-        for (String ignored : getPackage(type).split("\\.")) {
-            s.append("../");
-        }
-        s.append("../".repeat(Math.max(0, extra)));
-        return s.toString();
-    }
-
-    private String memberId(Element member) {
-        StringBuilder s = new StringBuilder();
-        switch (member.getKind()) {
-            case ENUM_CONSTANT, FIELD -> s.append(member.getSimpleName());
-            case CONSTRUCTOR, METHOD -> {
-                if (member.getKind() == ElementKind.METHOD) s.append(member.getSimpleName());
-                else s.append("constructor");
-                for (VariableElement parameter : ((ExecutableElement) member).getParameters()) {
-                    s.append("-").append(getTypeMirrorName(parameter.asType(), false));
-                }
-                s.append("-");
-            }
-            case TYPE_PARAMETER -> {}
-            default -> throw new UnsupportedOperationException(String.valueOf(member.getKind()));
-        }
-
-        return s.toString();
-    }
-
     public Map<String, String> getParamDescriptions(ExecutableElement element) {
         Map<String, String> paramMap = new HashMap<>();
         DocCommentTree comment = Main.treeUtils.getDocCommentTree(element);
@@ -225,12 +184,8 @@ public class ClassParser {
         for(DocTree docTree : inlineDoc){
             //Main.reporter.print(Diagnostic.Kind.NOTE, " - " + docTree + ", " + docTree.getKind());
             switch (docTree.getKind()){
-                case TEXT -> {
-                    sb.append(docTree.toString().strip().replace("\n", "")).append(" ");
-                }
-                case CODE -> {
-                    sb.append("'").append(((LiteralTree) docTree).getBody()).append("' ");
-                }
+                case TEXT -> sb.append(docTree.toString().strip().replace("\n", "")).append(" ");
+                case CODE -> sb.append("'").append(((LiteralTree) docTree).getBody()).append("' ");
                 case LINK, LINK_PLAIN -> {
                     Element ele = Main.treeUtils.getElement(new DocTreePath(new DocTreePath(Main.treeUtils.getPath(element), Main.treeUtils.getDocCommentTree(element)), ((LinkTree) docTree).getReference()));
 
@@ -239,7 +194,7 @@ public class ClassParser {
                         if (List.of(ElementKind.INTERFACE, ElementKind.CLASS, ElementKind.ANNOTATION_TYPE, ElementKind.ENUM).contains(ele.getKind())) {
                             sb.append(getClassName((TypeElement) ele));
                         } else {
-                            sb.append(getClassName((TypeElement) ele.getEnclosingElement())).append("#").append(ele.toString());
+                            sb.append(getClassName((TypeElement) ele.getEnclosingElement())).append("#").append(ele);
                         }
 
                     }else{
@@ -385,8 +340,6 @@ public class ClassParser {
         sb.append(":\n");
 
         sb.append(getClassDoc(type));
-//        DocCommentTree tree = Main.treeUtils.getDocCommentTree(type);
-//        sb.append(getDescription(type, 1));
 
         return sb.toString();
     }
