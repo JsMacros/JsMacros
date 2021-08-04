@@ -36,15 +36,6 @@ public class EventKey implements BaseEvent {
         this.key = keycode.getTranslationKey();
         this.mods = getKeyModifiers(mods);
         
-        
-        if (JsMacros.keyBinding.matchesKey(key, scancode) && action == 1 && mc.currentScreen == null) {
-            if (JsMacros.prevScreen instanceof EditorScreen) {
-                ((EditorScreen) JsMacros.prevScreen).blockFirst = true;
-            }
-            mc.openScreen(JsMacros.prevScreen);
-            return;
-        }
-        
         if (keycode == InputUtil.UNKNOWN_KEY) return;
         
         synchronized (FKeyBind.pressedKeys) {

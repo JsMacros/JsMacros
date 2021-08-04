@@ -4,8 +4,10 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
+import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 
 public class TickBasedEvents {
     private static boolean initialized = false;
@@ -53,7 +55,11 @@ public class TickBasedEvents {
         if (initialized) return;
         initialized = true;
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
-            
+
+            if (JsMacros.keyBinding.wasPressed() && mc.currentScreen == null) {
+                mc.openScreen(JsMacros.prevScreen);
+            }
+
             FClient.tickSynchronizer.tick();
             
             new EventTick();
