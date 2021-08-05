@@ -69,9 +69,6 @@ public class ClassParser {
     private String getMethods() {
         StringBuilder sb = new StringBuilder();
 
-
-
-
         type.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.METHOD || e.getKind() == ElementKind.CONSTRUCTOR).forEach(el ->{
             if (!el.getModifiers().contains(Modifier.PUBLIC)) return;
             ExecutableElement method = (ExecutableElement) el;
@@ -184,7 +181,7 @@ public class ClassParser {
         for(DocTree docTree : inlineDoc){
             //Main.reporter.print(Diagnostic.Kind.NOTE, " - " + docTree + ", " + docTree.getKind());
             switch (docTree.getKind()){
-                case TEXT -> sb.append(docTree.toString().strip().replace("\n", "")).append(" ");
+                case TEXT -> sb.append(docTree.toString().strip()).append(" "); //.replace("\n", "")
                 case CODE -> sb.append("'").append(((LiteralTree) docTree).getBody()).append("' ");
                 case LINK, LINK_PLAIN -> {
                     Element ele = Main.treeUtils.getElement(new DocTreePath(new DocTreePath(Main.treeUtils.getPath(element), Main.treeUtils.getDocCommentTree(element)), ((LinkTree) docTree).getReference()));
@@ -209,7 +206,7 @@ public class ClassParser {
             }
         }
 
-        return sb.toString();
+        return sb.toString().replace("\n ", "\n");
     }
 
     private String getImports(){
