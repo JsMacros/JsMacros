@@ -92,8 +92,8 @@ public class CategoryTreeContainer extends MultiElementContainer<ICategoryTreePa
         while (iterator.hasNext()) {
             CategoryTreeContainer child = iterator.next();
             
-            int incr = child.updateOffsets(top, minShow, maxShow, showChildren);
-            if (showChildren) {
+            int incr = child.updateOffsets(top, minShow, maxShow, showChildren && parentShowChildren);
+            if (showChildren && parentShowChildren) {
                 if (!this.isHead) this.height += child.height;
                 top += incr;
             }
