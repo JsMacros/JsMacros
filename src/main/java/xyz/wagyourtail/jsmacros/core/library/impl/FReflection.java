@@ -136,7 +136,7 @@ public class FReflection extends PerExecLibrary {
      * @return
      * @throws NoSuchMethodException
      */
-    public Method getMethod(Class<?> c, String name, String name2, Class<?> parameterTypes) throws NoSuchMethodException {
+    public Method getMethod(Class<?> c, String name, String name2, Class<?>... parameterTypes) throws NoSuchMethodException {
         try {
             return c.getMethod(name, parameterTypes);
         } catch (NoSuchMethodException | SecurityException e) {
@@ -153,7 +153,7 @@ public class FReflection extends PerExecLibrary {
      * @return
      * @throws NoSuchMethodException
      */
-    public Method getMethod(Class<?> c, String name, Class<?> parameterTypes) throws NoSuchMethodException {
+    public Method getMethod(Class<?> c, String name, Class<?>... parameterTypes) throws NoSuchMethodException {
         return c.getMethod(name, parameterTypes);
     }
     
