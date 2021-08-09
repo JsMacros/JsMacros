@@ -125,6 +125,37 @@ public class FReflection extends PerExecLibrary {
             return c.getDeclaredMethod(name2, parameterTypes);
         }
     }
+
+    /**
+     * @since 1.6.0
+     * @param c
+     * @param name
+     * @param name2
+     * @param parameterTypes
+     *
+     * @return
+     * @throws NoSuchMethodException
+     */
+    public Method getMethod(Class<?> c, String name, String name2, Class<?> parameterTypes) throws NoSuchMethodException {
+        try {
+            return c.getMethod(name, parameterTypes);
+        } catch (NoSuchMethodException | SecurityException e) {
+            return c.getMethod(name2, parameterTypes);
+        }
+    }
+
+    /**
+     * @since 1.6.0
+     * @param c
+     * @param name
+     * @param parameterTypes
+     *
+     * @return
+     * @throws NoSuchMethodException
+     */
+    public Method getMethod(Class<?> c, String name, Class<?> parameterTypes) throws NoSuchMethodException {
+        return c.getMethod(name, parameterTypes);
+    }
     
     /**
      * @param c
@@ -161,7 +192,36 @@ public class FReflection extends PerExecLibrary {
             return c.getDeclaredField(name2);
         }
     }
-    
+
+    /**
+     * @since 1.6.0
+     * @param c
+     * @param name
+     *
+     * @return
+     * @throws NoSuchFieldException
+     */
+    public Field getField(Class<?> c, String name) throws NoSuchFieldException {
+        return c.getField(name);
+    }
+
+    /**
+     * @since 1.6.0
+     * @param c
+     * @param name
+     * @param name2
+     *
+     * @return
+     * @throws NoSuchFieldException
+     */
+    public Field getField(Class<?> c, String name, String name2) throws NoSuchFieldException {
+        try {
+            return c.getField(name);
+        } catch (NoSuchFieldException | SecurityException e) {
+            return c.getField(name2);
+        }
+    }
+
     /**
      * Invoke a method on an object with auto type coercion for numbers.
      *
