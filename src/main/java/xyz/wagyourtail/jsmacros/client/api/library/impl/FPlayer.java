@@ -108,7 +108,7 @@ public class FPlayer extends BaseLibrary {
      * @param l2
      * @param l3
      * @param l4
-     * @return {@link java.lang.Boolean boolean} of success.
+     * @return of success.
      * @since 1.2.2
      */
     public boolean writeSign(String l1, String l2, String l3, String l4) {
@@ -157,7 +157,6 @@ public class FPlayer extends BaseLibrary {
     /**
      * Creates a new PlayerInput object.
      *
-     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput PlayerInput}.
      * @see xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput
      * @since 1.4.0
      */
@@ -168,7 +167,6 @@ public class FPlayer extends BaseLibrary {
     /**
      * Creates a new PlayerInput object.
      *
-     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput PlayerInput}.
      * @see xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput
      * @since 1.4.0
      */
@@ -179,7 +177,6 @@ public class FPlayer extends BaseLibrary {
     /**
      * Creates a new PlayerInput object.
      *
-     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput PlayerInput}.
      * @see xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput
      * @since 1.4.0
      */
@@ -190,7 +187,6 @@ public class FPlayer extends BaseLibrary {
     /**
      * Creates a new PlayerInput object.
      *
-     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput PlayerInput}.
      * @see xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput
      * @since 1.4.0
      */
@@ -213,7 +209,6 @@ public class FPlayer extends BaseLibrary {
      * Quoted values don't work
      *
      * @param csv CSV string to be parsed
-     * @return {@code List<PlayerInput>} Each row parsed as a {@code PlayerInput}
      * @see PlayerInput#PlayerInput(float, float, float, float, boolean, boolean, boolean)
      * @since 1.4.0
      */
@@ -238,7 +233,6 @@ public class FPlayer extends BaseLibrary {
     /**
      * Creates a new {@code PlayerInput} object with the current inputs of the player.
      *
-     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput PlayerInput} with the current inputs.
      * @see xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput
      * @since 1.4.0
      */

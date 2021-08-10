@@ -123,14 +123,26 @@ public class Main implements Doclet {
             reporter.print(Diagnostic.Kind.NOTE, classes + "");
             for(Map.Entry<String, HashMap<String, String>> entry : classes.entrySet()){
                 StringBuilder sb = new StringBuilder();
+
+                sb.append("from typing import TypeVar\n\n");
+                sb.append("from .EventContainer import EventContainer\n");
+                sb.append("from .BaseEvent import BaseEvent\n");
+
                 for(Map.Entry<String, String> args : entry.getValue().entrySet()) {
                     sb.append("from .").append(args.getKey()).append(" import ").append(args.getKey()).append("\n");
                 }
+
+                sb.append("\nFile = TypeVar[\"java.io.File\"]\n\n");
+
                 if(entry.getKey().equalsIgnoreCase("libraries")){
                     sb.append("\n\n");
                     for(Map.Entry<String, String> args : entry.getValue().entrySet()) {
                         sb.append(args.getValue()).append(" = ").append(args.getKey()).append("()\n");
                     }
+
+                    sb.append("context = EventContainer()\n");
+                    sb.append("file = File()\n");
+                    sb.append("event = BaseEvent()\n");
                 }
                 new FileHandler(new File(outDir, entry.getKey() + ".py")).write(sb.toString());
             }
