@@ -130,11 +130,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         List<EntityHelper<?>> entities = new ArrayList<>();
         for (Entity e : ImmutableList.copyOf(mc.world.getEntities())) {
-            if (e.getType() == EntityType.PLAYER) {
-                entities.add(new PlayerEntityHelper<>((PlayerEntity)e));
-            } else {
-                entities.add(new EntityHelper<>(e));
-            }
+            entities.add(EntityHelper.create(e));
         }
         return entities;
     }
