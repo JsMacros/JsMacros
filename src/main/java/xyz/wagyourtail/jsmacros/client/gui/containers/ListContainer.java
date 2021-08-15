@@ -42,12 +42,14 @@ public class ListContainer extends MultiElementContainer<IContainerParent> {
     
     public void addItem(Text name) {
         int index = listItems.size();
-        listItems.add(new Button(x+3+(list.size() % 5 * (width - 12) / 5), topScroll + (list.size() / 5 * 12), (width - 12) / 5, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, name, (btn) -> setSelected(index)));
+        listItems.add(this.addDrawableChild(new Button(x + 3 + (index % 5 * (width - 12) / 5), topScroll + (index / 5 * 12), (width - 12) / 5, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, name, (btn) -> setSelected(index))));
     }
     
     public void setSelected(int index) {
-        listItems.get(selected).forceHover = false;
-        listItems.get(selected = index).forceHover = false;
+        if (selected > -1)
+            listItems.get(selected).forceHover = false;
+        listItems.get(selected = index).forceHover = true;
+        onSelect.accept(selected);
     }
     
     public void onScrollbar(double page) {

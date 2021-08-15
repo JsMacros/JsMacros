@@ -10,6 +10,7 @@ import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 /**
@@ -72,8 +73,12 @@ public class ScriptScreen extends BaseScreen {
         }
 
         ((IScreen) this).onRenderInternal(matrices, mouseX, mouseY, delta);
-
-        if (onRender != null) onRender.accept(new PositionCommon.Pos3D(mouseX, mouseY, delta), matrices);
+        try {
+            if (onRender != null) onRender.accept(new PositionCommon.Pos3D(mouseX, mouseY, delta), matrices);
+        } catch (Exception e) {
+            Core.instance.profile.logError(e);
+            onRender = null;
+        }
     }
 
     @Override
