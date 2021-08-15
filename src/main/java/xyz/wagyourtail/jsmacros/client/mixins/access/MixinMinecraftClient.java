@@ -2,6 +2,8 @@ package xyz.wagyourtail.jsmacros.client.mixins.access;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.FontManager;
+import net.minecraft.client.gui.screen.Screen;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -12,6 +14,9 @@ import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
+import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
+
+import java.util.function.Consumer;
 
 @Mixin(MinecraftClient.class)
 abstract
@@ -23,6 +28,8 @@ class MixinMinecraftClient implements IMinecraftClient {
 
     @Shadow protected abstract void doAttack();
 
+    @Shadow public Screen currentScreen;
+
     @Inject(at = @At("TAIL"), method = "onResolutionChanged")
     public void onResolutionChanged(CallbackInfo info) {
 
@@ -33,6 +40,12 @@ class MixinMinecraftClient implements IMinecraftClient {
                 } catch (Exception ignored) {}
             }
         }
+    }
+
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;removed()V"), method="openScreen")
+    public void onCloseScreen(Screen screen, CallbackInfo ci) {
+        Consumer<IScreen> onClose = ((IScreen)currentScreen).getOnClose();
+        if (onClose != null) onClose.accept((IScreen) currentScreen);
     }
     
     @Override

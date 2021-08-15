@@ -610,17 +610,6 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
     }
     
-    @Inject(at = @At("RETURN"), method = "removed")
-    public void removed(CallbackInfo info) {
-        if (onClose != null) {
-            try {
-                onClose.accept(this);
-            } catch (Exception e) {
-                Core.instance.profile.logError(e);
-            }
-        }
-    }
-    
     //TODO: switch to enum extention with mixin 9.0 or whenever Mumfrey gets around to it
     @Inject(at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "handleTextClick", cancellable = true)
     public void handleCustomClickEvent(Style style, CallbackInfoReturnable<Boolean> cir) {
@@ -631,4 +620,10 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             cir.cancel();
         }
     }
+
+    @Override
+    public MethodWrapper<IScreen, Object, Object, ?> getOnClose() {
+        return onClose;
+    }
+
 }
