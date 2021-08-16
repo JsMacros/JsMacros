@@ -15,7 +15,11 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.command.argument.*;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
+import xyz.wagyourtail.jsmacros.client.config.EventLockWatchdog;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
+import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 import java.util.Stack;
 import java.util.function.Supplier;
@@ -170,7 +174,13 @@ public class CommandBuilder {
     }
 
     public CommandBuilder executes(MethodWrapper<CommandContextHelper, Object, Boolean, ?> callback) {
-        pointer.peek().executes((ctx) -> callback.apply(new CommandContextHelper(ctx)) ? 1 : 0);
+        pointer.peek().executes((ctx) -> {
+            EventContainer<?> lock = new EventContainer<>(callback.getCtx());
+            EventLockWatchdog.startWatchdog(lock, null, Core.instance.config.getOptions(CoreConfigV2.class).maxLockTime);
+            boolean success = callback.apply(new CommandContextHelper(ctx));
+            lock.releaseLock();
+            return success ? 1 : 0;
+        });
         return this;
     }
 

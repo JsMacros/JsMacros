@@ -29,6 +29,10 @@ public abstract class MethodWrapper<T, U, R, C extends BaseScriptContext<?>> imp
         ctx.hasMethodWrapperBeenInvoked = true;
     }
 
+    public C getCtx() {
+        return ctx;
+    }
+
     @Override
     public abstract void accept(T t);
     
