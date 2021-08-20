@@ -18,6 +18,17 @@ code {
     display: block;
     width: 100%;
     padding-left: 10px;
+    margin: .3em 0;
+}
+
+.topNav h1 img {
+    height: 1.5em;
+}
+
+.topNav h1 span {
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
 }
 
 .versionContainer {
