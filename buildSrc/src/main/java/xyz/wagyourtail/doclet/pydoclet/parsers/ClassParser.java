@@ -6,6 +6,7 @@ import xyz.wagyourtail.doclet.pydoclet.Main;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
+import javax.tools.Diagnostic;
 import java.util.*;
 
 public class ClassParser {
@@ -414,13 +415,19 @@ public class ClassParser {
             else if(withArg.get(getClearedNameFromTypeMirror(type)).contains("Mapping")) importMapping = true;
             else if(withArg.get(getClearedNameFromTypeMirror(type)).contains("Set")) importSet = true;
 
-            //Main.reporter.print(Diagnostic.Kind.NOTE, this.type + ", " + type + ": " + ((DeclaredType) type).getTypeArguments());
-            StringBuilder sb = new StringBuilder(withArg.get(getClearedNameFromTypeMirror(type)) + "[" + getTypeMirrorName(((DeclaredType) type).getTypeArguments().get(0), false));
-            for (int i = 1; i < ((DeclaredType) type).getTypeArguments().size(); i++){
-                sb.append(", ").append(getTypeMirrorName(((DeclaredType) type).getTypeArguments().get(i), false));
+            if (((DeclaredType) type).getTypeArguments().size() > 0) {
+                //Main.reporter.print(Diagnostic.Kind.NOTE, this.type + ", " + type + ": " + ((DeclaredType) type).getTypeArguments());
+                StringBuilder sb = new StringBuilder(withArg.get(getClearedNameFromTypeMirror(type)) + "[" + getTypeMirrorName(((DeclaredType) type).getTypeArguments().get(0), false));
+                for (int i = 1; i < ((DeclaredType) type).getTypeArguments().size(); i++) {
+                    sb.append(", ").append(getTypeMirrorName(((DeclaredType) type).getTypeArguments().get(i), false));
+                }
+                sb.append("]");
+                //System.out.println(sb.toString());
+                return sb.toString();
+            }else{
+                System.out.println("ERROR: " + type);
+                return withArg.get(getClearedNameFromTypeMirror(type)) + "[]";
             }
-            sb.append("]");
-            return sb.toString();
         }
         return getClassName((TypeElement) Main.typeUtils.asElement(type));
     }
