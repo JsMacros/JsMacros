@@ -92,15 +92,22 @@ class MixinClientPlayNetworkHandler {
         }
     }
     
-    @Inject(at = @At("HEAD"), method = "onTitle")
+    @Inject(at = @At("TAIL"), method = "onTitle")
     public void onTitle(TitleS2CPacket packet, CallbackInfo info) {
         if (packet.getTitle() != null)
             new EventTitle("TITLE", packet.getTitle());
     }
 
+    @Inject(at = @At("TAIL"), method = "onSubtitle")
     public void onSubtitle(SubtitleS2CPacket packet, CallbackInfo ci) {
         if (packet.getSubtitle() != null)
             new EventTitle("SUBTITLE", packet.getSubtitle());
+    }
+
+    @Inject(at = @At("TAIL"), method = "onOverlayMessage")
+    public void onOverlayMessage(OverlayMessageS2CPacket packet, CallbackInfo ci) {
+        if (packet.getMessage() != null)
+            new EventTitle("ACTIONBAR", packet.getMessage());
     }
     
     @Inject(at = @At("TAIL"), method="onBossBar")
