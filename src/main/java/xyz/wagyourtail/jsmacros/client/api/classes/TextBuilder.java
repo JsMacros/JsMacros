@@ -76,7 +76,7 @@ public class TextBuilder {
      * @return
      */
     public TextBuilder withColor(int r, int g, int b) {
-        self.styled(style -> style.withColor(TextColor.fromRgb((r & 255) << 16 + (g & 255) << 8 + (b & 255))));
+        self.styled(style -> style.withColor(TextColor.fromRgb((r & 255) << 16 | (g & 255) << 8 | (b & 255))));
         return this;
     }
     
