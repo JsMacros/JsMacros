@@ -14,33 +14,36 @@ public class ClassParser {
     private final List<TypeMirror> imports = new LinkedList<>();
     private boolean importOverload = false, importList = false, importTypeVar = false, importAny = false, importMapping = false, importSet = false, importGeneric = false;
     HashMap<String, Map.Entry<String, Boolean>> typeVars = new HashMap<>();
-    private final HashMap<String, String> types = new HashMap<>(){{
-        put("java.lang.Object", "object");
-        put("java.lang.String", "str");
-        put("java.lang.Integer", "int");
-        put("java.lang.Boolean", "bool");
-        put("java.lang.Double", "float");
-        put("java.lang.annotation.Annotation", "");
-        put("java.lang.Enum", "");
-        put("java.util.Iterator", "iter");
-    }},
-                                          withArg = new HashMap<>(){{
-        put("java.util.Set", "Set");
-        put("java.util.List", "List");
-        put("java.util.Map", "Mapping");
-        put("java.util.Collection", "List");
-    }},
-                                          unwantedClass = new HashMap<>(){{
-        put("java.lang.Object", "");
-        put("java.lang.annotation.Annotation", "");
-        put("java.lang.Enum", "");
-        put("java.util.Collection", "");
-    }};
+    private final HashMap<String, String> types = new HashMap<>(),
+                                          withArg = new HashMap<>(),
+                                          unwantedClass = new HashMap<>();
+    private final ArrayList<String> keywords = new ArrayList<>(Arrays.asList("False", "await", "else", "import", "pass", "", "None", "break", "except", "in", "raise", "", "True", "class", "finally", "is", "return", "", "and", "continue", "for", "lambda", "try", "", "as", "def", "from", "nonlocal", "while", "", "assert", "del", "global", "not", "with", "", "async", "elif", "if", "or", "yield"));
+
+
 
 
 
     public ClassParser(TypeElement type) {
         this.type = type;
+
+        types.put("java.lang.Object", "object");
+        types.put("java.lang.String", "str");
+        types.put("java.lang.Integer", "int");
+        types.put("java.lang.Boolean", "bool");
+        types.put("java.lang.Double", "float");
+        types.put("java.lang.annotation.Annotation", "");
+        types.put("java.lang.Enum", "");
+        types.put("java.util.Iterator", "iter");
+
+        withArg.put("java.util.Set", "Set");
+        withArg.put("java.util.List", "List");
+        withArg.put("java.util.Map", "Mapping");
+        withArg.put("java.util.Collection", "List");
+
+        unwantedClass.put("java.lang.Object", "");
+        unwantedClass.put("java.lang.annotation.Annotation", "");
+        unwantedClass.put("java.lang.Enum", "");
+        unwantedClass.put("java.util.Collection", "");
     }
 
 
@@ -79,12 +82,12 @@ public class ClassParser {
             if(el.getKind() == ElementKind.CONSTRUCTOR){
                 sb.append("__init__");
             }else{
-                sb.append(method.getSimpleName());
+                sb.append(getVarName(method.getSimpleName().toString()));
             }
 
             sb.append("(self");
 
-            method.getParameters().forEach(parameter -> sb.append(", ").append(parameter.getSimpleName()).append(": ").append(getTypeMirrorName(parameter.asType(), false)));
+            method.getParameters().forEach(parameter -> sb.append(", ").append(getVarName(parameter.getSimpleName().toString())).append(": ").append(getTypeMirrorName(parameter.asType(), false)));
             sb.append(") -> ");
             //Main.reporter.print(Diagnostic.Kind.NOTE, getTypeMirrorName(method.getReturnType(), false) + "");
             if (method.getReceiverType() != null) sb.append(getTypeMirrorName(method.getReturnType(), false));
@@ -173,6 +176,10 @@ public class ClassParser {
         ReturnTree t = (ReturnTree) dct.getBlockTags().stream().filter(e -> e.getKind() == DocTree.Kind.RETURN).findFirst().orElse(null);
         if (t == null) return "";
         return createDescription(element, t.getDescription());
+    }
+
+    private String getVarName(String simpleName){
+        return keywords.contains(simpleName) ? simpleName + "_" : simpleName;
     }
 
     private String createDescription(Element element, List<? extends DocTree> inlineDoc){
@@ -286,7 +293,7 @@ public class ClassParser {
             if (!el.getModifiers().contains(Modifier.PUBLIC)) return;
             addImport(el.asType());
             sb.append(getTabs(1));
-            sb.append(el.getSimpleName());
+            sb.append(getVarName(el.getSimpleName().toString()));
             sb.append(": ");
             sb.append(getTypeMirrorName(el.asType(), false));
             sb.append("\n");
