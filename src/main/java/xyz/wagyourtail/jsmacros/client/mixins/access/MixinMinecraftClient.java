@@ -15,6 +15,7 @@ import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.function.Consumer;
 
@@ -45,7 +46,11 @@ class MixinMinecraftClient implements IMinecraftClient {
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;removed()V"), method="openScreen")
     public void onCloseScreen(Screen screen, CallbackInfo ci) {
         Consumer<IScreen> onClose = ((IScreen)currentScreen).getOnClose();
-        if (onClose != null) onClose.accept((IScreen) currentScreen);
+        try {
+            if (onClose != null) onClose.accept((IScreen) currentScreen);
+        } catch (Exception e) {
+            Core.instance.profile.logError(e);
+        }
     }
     
     @Override
