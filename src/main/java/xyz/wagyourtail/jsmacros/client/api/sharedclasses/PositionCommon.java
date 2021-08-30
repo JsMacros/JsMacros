@@ -75,7 +75,7 @@ public class PositionCommon {
         }
 
         public Pos3D add(Pos3D pos) {
-            return new Pos3D(x+pos.x, y+pos.y, z*pos.z);
+            return new Pos3D(x+pos.x, y+pos.y, z+pos.z);
         }
 
         public Pos3D multiply(Pos3D pos) {

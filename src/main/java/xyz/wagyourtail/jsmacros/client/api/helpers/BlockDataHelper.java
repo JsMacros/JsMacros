@@ -68,7 +68,7 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
      * @return the translated name of the block.
      */
     public String getName() {
-        return b.getName().toString();
+        return b.getName().getString();
     }
 
     /**
