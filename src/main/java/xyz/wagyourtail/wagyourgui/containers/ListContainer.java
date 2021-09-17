@@ -1,13 +1,13 @@
-package xyz.wagyourtail.jsmacros.client.gui.containers;
+package xyz.wagyourtail.wagyourgui.containers;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.IOverlayParent;
+import xyz.wagyourtail.wagyourgui.elements.Button;
+import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
+import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 
 import java.util.LinkedList;
 import java.util.List;

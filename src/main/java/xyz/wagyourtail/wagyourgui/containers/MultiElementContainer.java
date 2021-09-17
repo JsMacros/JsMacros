@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.gui.containers;
+package xyz.wagyourtail.wagyourgui.containers;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Drawable;
@@ -7,8 +7,8 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.IOverlayParent;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.OverlayContainer;
+import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
+import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
 import java.util.ArrayList;
 import java.util.List;

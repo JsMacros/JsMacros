@@ -1,7 +1,7 @@
-package xyz.wagyourtail.jsmacros.client.gui.overlays;
+package xyz.wagyourtail.wagyourgui.overlays;
 
 import net.minecraft.client.gui.Element;
-import xyz.wagyourtail.jsmacros.client.gui.containers.IContainerParent;
+import xyz.wagyourtail.wagyourgui.containers.IContainerParent;
 
 import javax.annotation.Nullable;
 

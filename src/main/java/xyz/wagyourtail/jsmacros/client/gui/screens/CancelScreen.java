@@ -8,12 +8,12 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
-import org.graalvm.polyglot.Context;
 import xyz.wagyourtail.jsmacros.client.gui.containers.RunningContextContainer;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
+import xyz.wagyourtail.wagyourgui.elements.Button;
+import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
+import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 import java.util.ArrayList;
 import java.util.Comparator;

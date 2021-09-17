@@ -4,9 +4,9 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
-import xyz.wagyourtail.jsmacros.client.gui.containers.MultiElementContainer;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
+import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
+import xyz.wagyourtail.wagyourgui.elements.Button;
+import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 
 import java.util.HashMap;
 import java.util.Iterator;

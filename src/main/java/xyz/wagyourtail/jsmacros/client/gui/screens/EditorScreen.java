@@ -23,13 +23,14 @@ import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCod
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSuggestion;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl.DefaultCodeCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.scriptimpl.ScriptCodeCompiler;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.ConfirmOverlay;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.SelectorDropdownOverlay;
+import xyz.wagyourtail.wagyourgui.elements.Button;
+import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
+import xyz.wagyourtail.wagyourgui.overlays.ConfirmOverlay;
+import xyz.wagyourtail.wagyourgui.overlays.SelectorDropdownOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
+import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 import java.io.File;
 import java.io.IOException;

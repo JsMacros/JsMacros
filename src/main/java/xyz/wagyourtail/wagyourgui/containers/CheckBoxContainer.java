@@ -1,10 +1,10 @@
-package xyz.wagyourtail.jsmacros.client.gui.containers;
+package xyz.wagyourtail.wagyourgui.containers;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
+import xyz.wagyourtail.wagyourgui.elements.Button;
 
 import java.util.function.Consumer;
 

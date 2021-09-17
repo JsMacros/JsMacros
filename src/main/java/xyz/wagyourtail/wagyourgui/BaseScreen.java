@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.gui.screens;
+package xyz.wagyourtail.wagyourgui;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Drawable;
@@ -14,8 +14,8 @@ import net.minecraft.util.Language;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.IOverlayParent;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.OverlayContainer;
+import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
+import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
 public abstract class BaseScreen extends Screen implements IOverlayParent {
     protected Screen parent;

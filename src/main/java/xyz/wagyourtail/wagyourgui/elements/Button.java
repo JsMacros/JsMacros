@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.gui.elements;
+package xyz.wagyourtail.wagyourgui.elements;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;

@@ -1,12 +1,12 @@
-package xyz.wagyourtail.jsmacros.client.gui.overlays;
+package xyz.wagyourtail.wagyourgui.overlays;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.client.gui.elements.TextInput;
+import xyz.wagyourtail.wagyourgui.elements.Button;
+import xyz.wagyourtail.wagyourgui.elements.TextInput;
 
 import java.util.function.Consumer;
 

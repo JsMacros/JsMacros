@@ -1,10 +1,10 @@
-package xyz.wagyourtail.jsmacros.client.gui.containers;
+package xyz.wagyourtail.wagyourgui.containers;
 
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.IOverlayParent;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.OverlayContainer;
+import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
+import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
 public interface IContainerParent {
 

@@ -7,9 +7,11 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
+import xyz.wagyourtail.wagyourgui.elements.Button;
+import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
+import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
 import java.util.ArrayList;
 import java.util.Collections;

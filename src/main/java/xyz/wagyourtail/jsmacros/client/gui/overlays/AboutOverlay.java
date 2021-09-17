@@ -7,7 +7,9 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
+import xyz.wagyourtail.wagyourgui.elements.Button;
+import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
+import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
 import java.util.List;
 

@@ -8,7 +8,7 @@ import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCodeCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSuggestion;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.ConfirmOverlay;
+import xyz.wagyourtail.wagyourgui.overlays.ConfirmOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;

@@ -6,12 +6,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.TranslatableText;
-import xyz.wagyourtail.jsmacros.client.gui.containers.MultiElementContainer;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Button;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.SelectorDropdownOverlay;
-import xyz.wagyourtail.jsmacros.client.gui.overlays.TextPrompt;
-import xyz.wagyourtail.jsmacros.client.gui.screens.BaseScreen;
+import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
+import xyz.wagyourtail.wagyourgui.elements.Button;
+import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
+import xyz.wagyourtail.wagyourgui.overlays.SelectorDropdownOverlay;
+import xyz.wagyourtail.wagyourgui.overlays.TextPrompt;
+import xyz.wagyourtail.wagyourgui.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 
 import java.lang.reflect.InvocationTargetException;

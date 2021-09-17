@@ -1,11 +1,11 @@
-package xyz.wagyourtail.jsmacros.client.gui.overlays;
+package xyz.wagyourtail.wagyourgui.overlays;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import xyz.wagyourtail.jsmacros.client.gui.containers.MultiElementContainer;
-import xyz.wagyourtail.jsmacros.client.gui.elements.Scrollbar;
+import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
+import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
