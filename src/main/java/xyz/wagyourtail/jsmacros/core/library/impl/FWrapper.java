@@ -211,7 +211,11 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
             th.start();
             if (await) {
                 try {
+                    if (Core.instance.profile.checkJoinedThreadStack()) {
+                        Core.instance.profile.joinedThreadStack.add(th);
+                    }
                     lock.acquire();
+                    Core.instance.profile.joinedThreadStack.remove(th);
                 } catch (InterruptedException ex) {
                     throw new RuntimeException(ex);
                 } finally {

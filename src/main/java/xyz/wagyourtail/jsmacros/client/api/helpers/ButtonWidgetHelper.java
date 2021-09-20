@@ -158,8 +158,7 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
      * @since 1.3.1
      */
     public ButtonWidgetHelper<T> click(boolean await) throws InterruptedException {
-        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || Core.instance.profile.joinedThreadStack.contains(Thread.currentThread());
-        if (joinedMain) {
+        if (Core.instance.profile.checkJoinedThreadStack()) {
             base.mouseClicked(base.x, base.y, 0);
             base.mouseReleased(base.x, base.y, 0);
         } else {

@@ -39,7 +39,12 @@ public abstract class BaseProfile {
     public BaseEventRegistry getRegistry() {
         return runner.eventRegistry;
     }
-    
+
+    /**
+     * @since 1.6.0
+     */
+    public abstract boolean checkJoinedThreadStack();
+
     /**
      * @since 1.1.2 [citation needed]
      * @param profileName

@@ -139,7 +139,7 @@ public class FClient extends BaseLibrary {
     public void shutdown() {
         mc.execute(mc::scheduleStop);
 
-        if (!mc.isOnThread() && !Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
+        if (!Core.instance.profile.checkJoinedThreadStack()) {
             // Wait until the game stops
             while (true) {
                 try {
@@ -158,7 +158,7 @@ public class FClient extends BaseLibrary {
      * @throws InterruptedException
      */
     public void waitTick() throws InterruptedException {
-        if (mc.isOnThread() || Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
+        if (Core.instance.profile.checkJoinedThreadStack()) {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined to main!");
         }
         tickSynchronizer.waitTick();
@@ -173,7 +173,7 @@ public class FClient extends BaseLibrary {
      * @throws InterruptedException
      */
     public void waitTick(int i) throws InterruptedException {
-        if (mc.isOnThread() || Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
+        if (Core.instance.profile.checkJoinedThreadStack()) {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined to main!");
         }
         while (--i >= 0) {

@@ -39,7 +39,7 @@ public class Profile extends BaseProfile {
     
     @Override
     public void triggerEventJoin(BaseEvent event) {
-        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || joinedThreadStack.contains(Thread.currentThread());
+        boolean joinedMain = Core.instance.profile.checkJoinedThreadStack();
         triggerEventJoinNoAnything(event);
     
         for (IEventListener macro : runner.eventRegistry.getListeners("ANYTHING")) {
@@ -49,7 +49,7 @@ public class Profile extends BaseProfile {
     
     @Override
     public void triggerEventJoinNoAnything(BaseEvent event) {
-        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || joinedThreadStack.contains(Thread.currentThread());
+        boolean joinedMain = Core.instance.profile.checkJoinedThreadStack();
         if (event instanceof EventCustom) {
             for (IEventListener macro : runner.eventRegistry.getListeners(((EventCustom) event).eventName)) {
                 runJoinedEventListener(event, joinedMain, macro);
@@ -102,7 +102,12 @@ public class Profile extends BaseProfile {
             });
         }
     }
-    
+
+    @Override
+    public boolean checkJoinedThreadStack() {
+        return MinecraftClient.getInstance().isOnThread() || joinedThreadStack.contains(Thread.currentThread());
+    }
+
     private Text compileError(BaseWrappedException<?> ex) {
         if (ex == null) return null;
         BaseWrappedException<?> head = ex;

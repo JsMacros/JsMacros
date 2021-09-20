@@ -322,7 +322,7 @@ public class Inventory<T extends HandledScreen<?>> {
         } else {
             return null;
         }
-        if (mc.isOnThread() || Core.instance.profile.joinedThreadStack.contains(Thread.currentThread())) {
+        if (Core.instance.profile.checkJoinedThreadStack()) {
             if (mc.currentScreen != inventory) {
                 ((RecipeBookWidget)recipeBookWidget).initialize(0, 0, mc, true, (AbstractRecipeScreenHandler<?>) inventory.getScreenHandler());
             }

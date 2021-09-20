@@ -46,8 +46,7 @@ public class FChat extends BaseLibrary {
      * @throws InterruptedException
      */
     public void log(Object message, boolean await) throws InterruptedException {
-        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || Core.instance.profile.joinedThreadStack.contains(Thread.currentThread());
-        if (joinedMain) {
+        if (Core.instance.profile.checkJoinedThreadStack()) {
             if (message instanceof TextHelper) {
                 logInternal((TextHelper)message);
             } else if (message != null) {
@@ -100,9 +99,8 @@ public class FChat extends BaseLibrary {
      * @throws InterruptedException
      */
     public void say(String message, boolean await) throws InterruptedException {
-        boolean joinedMain = MinecraftClient.getInstance().isOnThread() || Core.instance.profile.joinedThreadStack.contains(Thread.currentThread());
         if (message == null) return;
-        if (joinedMain) {
+        if (Core.instance.profile.checkJoinedThreadStack()) {
             assert mc.player != null;
             mc.player.sendChatMessage(message);
         } else {
