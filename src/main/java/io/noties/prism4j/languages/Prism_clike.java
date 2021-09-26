@@ -32,7 +32,7 @@ public abstract class Prism_clike {
       token(
         "class-name",
         pattern(
-          compile("(\\b(?:class|interface|extends|implements|trait|instanceof|new)\\s+|\\bcatch\\s+\\()[\\w.\\\\]+", Pattern.CASE_INSENSITIVE),
+          compile("(\\b(?:class|extends|implements|instanceof|interface|new|trait)\\s+|\\bcatch\\s+\\()[\\w.\\\\]+", Pattern.CASE_INSENSITIVE),
           true,
           false,
           null,
@@ -41,9 +41,9 @@ public abstract class Prism_clike {
       ),
       token(
         "keyword",
-        pattern(compile("\\b(?:if|else|while|do|for|return|in|instanceof|function|new|try|throw|catch|finally|null|break|continue)\\b"))
+        pattern(compile("\\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\\b"))
       ),
-      token("boolean", pattern(compile("\\b(?:true|false)\\b"))),
+      token("boolean", pattern(compile("\\b(?:false|true)\\b"))),
       token("function", pattern(compile("\\b[a-zA-Z_]\\w*(?=\\s*\\()" /* this is more accurate */, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE))),
       token(
         "number",

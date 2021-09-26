@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static io.noties.prism4j.Prism4j.*;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
@@ -71,8 +72,17 @@ public class Prism_javascript {
             ),
             token("constant", pattern(compile("\\b[A-Z](?:[A-Z_]|\\dx?)*\\b")))
         );
-        
-        GrammarUtils.findToken(js, "class-name").patterns().add(pattern(compile("(^|[^$\\w\\xA0-\\uFFFF])(?!\\s)[_$A-Z\\xA0-\\uFFFF](?:(?!\\s)[$\\w\\xA0-\\uFFFF])*(?=\\.(?:prototype|constructor))"), true));
+
+        List<Prism4j.Pattern> className = GrammarUtils.findToken(js, "class-name").patterns();
+        className.clear();
+        className.add(pattern(
+            compile("(\\b(?:class|extends|implements|instanceof|interface|new)\\s+)[\\w.\\\\]+", Pattern.CASE_INSENSITIVE),
+            true,
+            false,
+            null,
+            grammar("inside", token("punctuation", pattern(compile("[.\\\\]"))))
+        ));
+        className.add(pattern(compile("(^|[^$\\w\\xA0-\\uFFFF])(?!\\s)[_$A-Z\\xA0-\\uFFFF](?:(?!\\s)[$\\w\\xA0-\\uFFFF])*(?=\\.(?:constructor|prototype))"), true));
         
         final Prism4j.Token interpolation = token("interpolation");
         
