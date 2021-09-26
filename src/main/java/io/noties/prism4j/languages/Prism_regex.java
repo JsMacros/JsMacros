@@ -18,13 +18,13 @@ public class Prism_regex {
                     token("charset-punctuation", pattern(compile("^\\[|\\]$"), false, false, "punctuation")),
                     token("range", pattern(compile("(?:[^\\\\-]|\\\\(?:x[\\da-fA-F]{2}|u[\\da-fA-F]{4}|u\\{[\\da-fA-F]+\\}|c[a-zA-Z]|0[0-7]{0,2}|[123][0-7]{2}|.))-(?:[^\\\\-]|\\\\(?:x[\\da-fA-F]{2}|u[\\da-fA-F]{4}|u\\{[\\da-fA-F]+\\}|c[a-zA-Z]|0[0-7]{0,2}|[123][0-7]{2}|.))"), false, false, null,
                         grammar("inside",
-                            token("escape", pattern(compile("\\\\(?:x[\\da-fA-F]{2}|u[\\da-fA-F]{4}|u\\{[\\da-fA-F]+\\}|c[a-zA-Z]|0[0-7]{0,2}|[123][0-7]{2}|.)"))),
+                            token("escape", pattern(compile("\\\\(?:x[\\da-fA-F]{2}|u[\\da-fA-F]{4}|u\\{[\\da-fA-F]+\\}|0[0-7]{0,2}|[123][0-7]{2}|c[a-zA-Z]|.)"))),
                             token("range-punctuation", pattern(compile("-"), false, false, "operator"))
                         )
                     )),
                     token("special-escape", pattern(compile("\\\\[\\\\(){}\\[\\]^$+*?|.]"), false, false, "escape")),
                     token("charclass", pattern(compile("\\\\[wsd]|\\\\p\\{[^\\{}]+\\}", CASE_INSENSITIVE), false, false, "class-name")),
-                    token("escape", pattern(compile("\\\\(?:x[\\da-fA-F]{2}|u[\\da-fA-F]{4}|u\\{[\\da-fA-F]+\\}|c[a-zA-Z]|0[0-7]{0,2}|[123][0-7]{2}|.)")))
+                    token("escape", pattern(compile("\\\\(?:x[\\da-fA-F]{2}|u[\\da-fA-F]{4}|u\\{[\\da-fA-F]+\\}|0[0-7]{0,2}|[123][0-7]{2}|c[a-zA-Z]|.)")))
                 )
             )),
             token("special-escape", pattern(compile("\\\\[\\\\()\\{}\\[\\]^$+*?|.]"), false, false, "escape")),
@@ -38,7 +38,7 @@ public class Prism_regex {
                 )
             ),
             token("anchor", pattern(compile("[$^]|\\\\[ABbGZz]"), false, false, "function")),
-            token("escape", pattern(compile("\\\\(?:x[\\da-fA-F]{2}|u[\\da-fA-F]{4}|u\\{[\\da-fA-F]+\\}|c[a-zA-Z]|0[0-7]{0,2}|[123][0-7]{2}|.)"))),
+            token("escape", pattern(compile("\\\\(?:x[\\da-fA-F]{2}|u[\\da-fA-F]{4}|u\\{[\\da-fA-F]+\\}|0[0-7]{0,2}|[123][0-7]{2}|c[a-zA-Z]|.)"))),
             token("group",
                 pattern(compile("\\((?:\\?(?:<[^<>']+>|'[^<>']+'|[>:]|<?[=!]|[idmnsuxU]+(?:-[idmnsuxU]+)?:?))?"), false, false, "punctuation",
                     grammar("inside",
