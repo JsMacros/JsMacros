@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -19,8 +20,13 @@ import java.util.Set;
 public abstract class BaseScriptContext<T> {
     protected boolean closed = false;
     public final long startTime = System.currentTimeMillis();
+
+    private Object syncObjectPrivate = new Object();
+    public final WeakReference<Object> syncObject = new WeakReference<>(this.syncObjectPrivate);
+
     public final BaseEvent triggeringEvent;
     protected final File mainFile;
+
 
     /**
      * the actual "context", for whatever the language impl is...
@@ -37,6 +43,17 @@ public abstract class BaseScriptContext<T> {
     public BaseScriptContext(BaseEvent event, File file) {
         this.triggeringEvent = event;
         this.mainFile = file;
+    }
+
+    /**
+     * this object should only be weak referenced unless we want to prevent the context from closing when syncObject is cleared.
+     */
+    public Object getSyncObject() {
+        return syncObjectPrivate;
+    }
+
+    public void clearSyncObject() {
+        this.syncObjectPrivate = null;
     }
 
     /**
@@ -137,7 +154,10 @@ public abstract class BaseScriptContext<T> {
         this.context = context;
     }
     
-    public boolean isContextClosed() {
+    public synchronized boolean isContextClosed() {
+        if (syncObject.get() == null) {
+            if (!closed) closeContext();
+        }
         return closed;
     }
     

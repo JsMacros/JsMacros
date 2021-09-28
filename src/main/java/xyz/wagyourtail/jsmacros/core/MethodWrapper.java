@@ -17,6 +17,8 @@ import java.util.function.*;
  */
 public abstract class MethodWrapper<T, U, R, C extends BaseScriptContext<?>> implements Consumer<T>, BiConsumer<T, U>, Function<T, R>, BiFunction<T, U, R>, Predicate<T>, BiPredicate<T, U>, Runnable, Supplier<R>, Comparator<T> {
 
+    private final Object syncObject;
+
     /**
      * This reference will keep the context from getting garbage-collected
      * until there are no more registered method-wrappers. since the only other location
@@ -27,6 +29,7 @@ public abstract class MethodWrapper<T, U, R, C extends BaseScriptContext<?>> imp
     public MethodWrapper(C containingContext) {
         ctx = containingContext;
         ctx.hasMethodWrapperBeenInvoked = true;
+        syncObject = ctx.getSyncObject();
     }
 
     public C getCtx() {

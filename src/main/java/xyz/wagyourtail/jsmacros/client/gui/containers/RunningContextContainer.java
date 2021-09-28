@@ -4,6 +4,9 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.apache.logging.log4j.Level;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.screens.CancelScreen;
@@ -24,8 +27,9 @@ public class RunningContextContainer extends MultiElementContainer<CancelScreen>
         super.init();
         cancelButton = this.addDrawableChild(new Button(x+1, y+1, height - 2, height - 2, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> {
                 BaseScriptContext<?> ctx = t;
-                if (ctx != null && !ctx.isContextClosed())
+                if (ctx != null && !ctx.isContextClosed()) {
                     ctx.closeContext();
+                }
                 parent.removeContainer(this);
         }));
     }
@@ -39,8 +43,11 @@ public class RunningContextContainer extends MultiElementContainer<CancelScreen>
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         try {
-            if (t != null && !t.isContextClosed()) {
-                if (this.visible) {
+            if (t != null) {
+                if (t.isContextClosed()) {
+                    JsMacros.LOGGER.log(Level.WARN, "Closed context {} was still in list", t.getMainThread().getName());
+                    parent.removeContainer(this);
+                } else if (this.visible) {
                     drawCenteredText(matrices, textRenderer, textRenderer.trimToWidth(t.getMainThread().getName(), width - 105 - height), x + (width - 105 - height) / 2 + height + 4, y+2, 0xFFFFFF);
                     drawCenteredText(matrices, textRenderer, textRenderer.trimToWidth(DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - t.startTime), 100), x+width - 50 + height, y+2, 0xFFFFFF);
                     fill(matrices, x+width-101, y, x+width-100, y+height, 0xFFFFFFFF);

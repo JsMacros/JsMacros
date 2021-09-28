@@ -63,6 +63,7 @@ public abstract class BaseLanguage<T> {
                 EventContainer<?> cc = ctx.getCtx().events.get(Thread.currentThread());
                 if (cc != null) cc.releaseLock();
 
+                ctx.getCtx().clearSyncObject();
                 if (!ctx.getCtx().hasMethodWrapperBeenInvoked) {
                     ctx.getCtx().closeContext();
                 }
@@ -100,6 +101,7 @@ public abstract class BaseLanguage<T> {
                 EventContainer<?> cc = ctx.getCtx().events.get(Thread.currentThread());
                 if (cc != null) cc.releaseLock();
 
+                ctx.getCtx().clearSyncObject();
                 if (!ctx.getCtx().hasMethodWrapperBeenInvoked) {
                     ctx.getCtx().closeContext();
                 }

@@ -8,6 +8,8 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
+import org.apache.logging.log4j.Level;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.gui.containers.RunningContextContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
@@ -48,6 +50,8 @@ public class CancelScreen extends BaseScreen {
             running.add(new RunningContextContainer(10, topScroll + running.size() * 15, width - 26, 13, textRenderer, this, t));
             running.sort(new RTCSort());
             s.setScrollPages(running.size() * 15 / (double) (height - 20));
+        } else {
+            JsMacros.LOGGER.log(Level.WARN, "Closed context {} was still in list", t.getMainThread().getName());
         }
     }
 
