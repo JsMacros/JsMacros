@@ -70,7 +70,6 @@ public abstract class BaseLanguage<T> {
             }
         });
         ctx.setLockThread(t);
-        ctx.getCtx().bindThread(Thread.currentThread());
         ctx.getCtx().setMainThread(t);
         t.start();
         return ctx;
@@ -108,7 +107,6 @@ public abstract class BaseLanguage<T> {
             }
         });
         ctx.setLockThread(t);
-        ctx.getCtx().bindThread(Thread.currentThread());
         ctx.getCtx().setMainThread(t);
         t.start();
         return ctx;
