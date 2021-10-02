@@ -203,6 +203,8 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     } finally {
                         ctx.getContext().leave();
 
+                        ctx.releaseBoundEventIfPresent(Thread.currentThread());
+
                         Core.instance.profile.joinedThreadStack.remove(Thread.currentThread());
                     }
                 } catch (InterruptedException e) {
@@ -269,6 +271,8 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                         error[0] = ex;
                     } finally {
                         ctx.getContext().leave();
+
+                        ctx.releaseBoundEventIfPresent(Thread.currentThread());
 
                         Core.instance.profile.joinedThreadStack.remove(Thread.currentThread());
                     }
