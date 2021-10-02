@@ -191,7 +191,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     }
                     ctx.getContext().enter();
                     try {
-                        if (joinedThread) {
+                        if (await && joinedThread) {
                             Core.instance.profile.joinedThreadStack.add(Thread.currentThread());
                         }
                         fn.apply(new Object[] {t, u});
@@ -244,6 +244,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
             Object[] retVal = {null};
             Throwable[] error = {null};
             Semaphore lock = new Semaphore(0);
+            boolean joinedThread = Core.instance.profile.checkJoinedThreadStack();
 
             Thread th = new Thread(() -> {
                 try {
@@ -260,11 +261,16 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
                     ctx.getContext().enter();
                     try {
+                        if (await && joinedThread) {
+                            Core.instance.profile.joinedThreadStack.add(Thread.currentThread());
+                        }
                         retVal[0] = fn.apply(new Object[] {t, u});
                     } catch (Throwable ex) {
                         error[0] = ex;
                     } finally {
                         ctx.getContext().leave();
+
+                        Core.instance.profile.joinedThreadStack.remove(Thread.currentThread());
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
