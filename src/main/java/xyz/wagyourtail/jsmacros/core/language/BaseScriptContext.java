@@ -49,7 +49,7 @@ public abstract class BaseScriptContext<T> {
      * this object should only be weak referenced unless we want to prevent the context from closing when syncObject is cleared.
      */
     public Object getSyncObject() {
-        return syncObjectPrivate;
+        return syncObject.get();
     }
 
     public void clearSyncObject() {
