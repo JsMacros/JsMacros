@@ -1,20 +1,76 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
+import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.text.Text;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 
+import java.util.List;
+import java.util.function.Predicate;
+
 @Mixin(ChatHud.class)
-public class MixinChatHud implements IChatHud {
+public abstract class MixinChatHud implements IChatHud {
 
     @Shadow
     private void addMessage(Text message, int messageId) {}
-    
+
+    @Shadow
+    private void addMessage(Text message, int messageId, int timestamp, boolean refresh) {}
+
+    @Shadow @Final private List<ChatHudLine<Text>> messages;
+
+    @Shadow protected abstract void removeMessage(int messageId);
+
     @Override
     public void jsmacros_addMessageBypass(Text message) {
         addMessage(message, 0);
+    }
+
+    @Override
+    public List<ChatHudLine<Text>> jsmacros_getMessages() {
+        return messages;
+    }
+
+    @Override
+    public void jsmacros_removeMessageById(int messageId) {
+        removeMessage(messageId);
+    }
+
+    @Unique
+    ThreadLocal<Integer> positionOverride = ThreadLocal.withInitial(() -> 0);
+
+    @Override
+    public void jsmacros_addMessageAtIndexBypass(Text message, int index, int time) {
+        positionOverride.set(index);
+        addMessage(message, 0, time, false);
+        positionOverride.set(0);
+    }
+
+    @ModifyArg(method = "addMessage(Lnet/minecraft/text/Text;IIZ)V", at = @At(value = "INVOKE", target = "Ljava/util/List;add(ILjava/lang/Object;)V"))
+    public int overrideMessagePos(int pos) {
+        return positionOverride.get();
+    }
+
+    @Override
+    public void jsmacros_removeMessage(int index) {
+        messages.remove(index);
+    }
+
+    @Override
+    public void jsmacros_removeMessageByText(Text text) {
+        messages.removeIf((c) -> c.getText().equals(text));
+    }
+
+    @Override
+    public void jsmacros_removeMessagePredicate(Predicate<ChatHudLine<Text>> textfilter) {
+        messages.removeIf(textfilter);
     }
 
 }

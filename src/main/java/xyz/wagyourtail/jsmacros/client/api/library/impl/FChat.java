@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.LiteralText;
@@ -9,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
+import xyz.wagyourtail.jsmacros.client.api.classes.ChatHistoryManager;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -236,5 +238,9 @@ public class FChat extends BaseLibrary {
      */
     public CommandBuilder createCommandBuilder(String name) {
         return new CommandBuilder(name);
+    }
+
+    public ChatHistoryManager getHistory() {
+        return new ChatHistoryManager(mc.inGameHud.getChatHud());
     }
 }
