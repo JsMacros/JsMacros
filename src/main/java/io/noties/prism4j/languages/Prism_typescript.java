@@ -6,6 +6,9 @@ import io.noties.prism4j.annotations.Extend;
 import org.jetbrains.annotations.NotNull;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static io.noties.prism4j.Prism4j.*;
 import static java.util.regex.Pattern.*;
 
@@ -20,8 +23,6 @@ public class Prism_typescript {
     
         Grammar ts = GrammarUtils.extend(GrammarUtils.require(prism4j, "javascript"), "typescript",
             class_name,
-            // From JavaScript Prism keyword list and TypeScript language spec: https://github.com/Microsoft/TypeScript/blob/master/doc/spec.md#221-reserved-words
-            token("keyword", pattern(compile("\\b(?:abstract|as|asserts|async|await|break|case|catch|class|const|constructor|continue|debugger|declare|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|is|keyof|let|module|namespace|new|null|of|package|private|protected|public|readonly|return|require|set|static|super|switch|this|throw|try|type|typeof|undefined|var|void|while|with|yield)\\b"))),
             token("builtin", pattern(compile("\\b(?:Array|Function|Promise|any|boolean|console|never|number|string|symbol|unknown)\\b")))
         );
     
@@ -30,7 +31,15 @@ public class Prism_typescript {
         
         Grammar typeInside = GrammarUtils.extend(ts, "inside-class");
         typeInside.tokens().remove(GrammarUtils.findToken(typeInside, "class-name"));
-        
+
+
+        List<Pattern> keywords = new ArrayList<>(3);
+        keywords.add(pattern(compile("\\b(?:abstract|declare|is|keyof|readonly|require)\\b")));
+        keywords.add(pattern(compile("\\b(?:asserts|infer|interface|module|namespace|type)\\b(?=\\s*(?:[{_$a-zA-Z\\xA0-\\uFFFF]|$))")));
+        keywords.add(pattern(compile("\\btype\\b(?=\\s*(?:[\\{*]|$))")));
+
+        GrammarUtils.findToken(ts, "keyword").patterns().addAll(keywords);
+
         GrammarUtils.insertBeforeToken(ts, "function",
             token("decorator",
                 pattern(compile("@[$\\w\\xA0-\\uFFFF]+"), false, false, null,
