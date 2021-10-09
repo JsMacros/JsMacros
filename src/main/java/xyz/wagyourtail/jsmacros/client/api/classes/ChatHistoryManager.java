@@ -51,6 +51,7 @@ public class ChatHistoryManager {
     }
 
     /**
+     * you should probably run {@link #refreshVisible()} after...
      * @param index
      * @param line
      * @param timeTicks

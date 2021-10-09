@@ -55,6 +55,7 @@ public abstract class MixinChatHud implements IChatHud {
     @Unique
     ThreadLocal<Integer> positionOverride = ThreadLocal.withInitial(() -> 0);
 
+
     @Override
     public void jsmacros_addMessageAtIndexBypass(Text message, int index, int time) {
         positionOverride.set(index);
@@ -62,7 +63,7 @@ public abstract class MixinChatHud implements IChatHud {
         positionOverride.set(0);
     }
 
-    @ModifyArg(method = "addMessage(Lnet/minecraft/text/Text;IIZ)V", at = @At(value = "INVOKE", target = "Ljava/util/List;add(ILjava/lang/Object;)V"))
+    @ModifyArg(method = "addMessage(Lnet/minecraft/text/Text;IIZ)V", at = @At(value = "INVOKE", target = "Ljava/util/List;add(ILjava/lang/Object;)V", ordinal = 1))
     public int overrideMessagePos(int pos) {
         return positionOverride.get();
     }
