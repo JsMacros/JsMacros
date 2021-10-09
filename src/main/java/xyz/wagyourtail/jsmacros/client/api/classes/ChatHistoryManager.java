@@ -221,17 +221,7 @@ public class ChatHistoryManager {
      * @return direct reference to sent message history list. modifications will affect the list.
      */
     public List<String> getSent() throws InterruptedException {
-        if (Core.instance.profile.checkJoinedThreadStack()) {
-            return hud.getMessageHistory();
-        }
-        List[] helper = {null};
-        final Semaphore semaphore = new Semaphore(0);
-        mc.execute(() -> {
-            helper[0] = hud.getMessageHistory();
-            semaphore.release();
-        });
-        semaphore.acquire();
-        return helper[0];
+        return hud.getMessageHistory();
     }
 
     /**

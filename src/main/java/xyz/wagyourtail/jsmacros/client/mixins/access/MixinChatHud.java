@@ -4,15 +4,16 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.text.Text;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 
 @Mixin(ChatHud.class)
@@ -27,6 +28,14 @@ public abstract class MixinChatHud implements IChatHud {
     @Shadow @Final private List<ChatHudLine<Text>> messages;
 
     @Shadow protected abstract void removeMessage(int messageId);
+
+    @Mutable
+    @Shadow @Final private List<String> messageHistory;
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    public void onInit(MinecraftClient client, CallbackInfo ci) {
+        messageHistory = Collections.synchronizedList(messageHistory);
+    }
 
     @Override
     public void jsmacros_addMessageBypass(Text message) {
