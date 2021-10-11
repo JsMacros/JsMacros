@@ -28,6 +28,7 @@ public class Prism_typescript {
     
         // doesn't work with TS because TS is too complex
         ts.tokens().remove(GrammarUtils.findToken(ts, "parameter"));
+        ts.tokens().remove(GrammarUtils.findToken(ts, "literal-property"));
         
         Grammar typeInside = GrammarUtils.extend(ts, "inside-class");
         typeInside.tokens().remove(GrammarUtils.findToken(typeInside, "class-name"));

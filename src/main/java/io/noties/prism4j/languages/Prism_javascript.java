@@ -110,9 +110,30 @@ public class Prism_javascript {
                         token("string", pattern(compile("[\\s\\S]+")))
                     )
                 )
+            ),
+            token(
+                "string-property",
+                pattern(
+                    compile("((?:^|[,{])[ \\t]*)([\"'])(?:\\\\(?:\\r\\n|[\\s\\S])|(?!\\2)[^\\\\\\r\\n])*\\2(?=\\s*:)", Pattern.MULTILINE),
+                    true,
+                    true,
+                    "property"
+                )
             )
         );
-        
+
+        GrammarUtils.insertBeforeToken(js, "operator",
+            token(
+                "literal-property",
+                pattern(
+                    compile("((?:^|[,{])[ \\t]*)(?!\\s)[_$a-zA-Z\\xA0-\\uFFFF](?:(?!\\s)[$\\w\\xA0-\\uFFFF])*(?=\\s*:)", Pattern.MULTILINE),
+                    true,
+                    false,
+                    "property"
+                )
+            )
+        );
+
         final Prism4j.Grammar insideInterpolation;
         {
             final List<Prism4j.Token> tokens = new ArrayList<>(js.tokens().size() + 1);
