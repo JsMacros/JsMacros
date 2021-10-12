@@ -128,32 +128,30 @@ public class MacroScreen extends BaseScreen {
     public void editFile(File file) {
         if (file != null && file.exists() && file.isFile()) {
             if (Core.instance.config.getOptions(ClientConfigV2.class).externalEditor) {
-                for (String path : System.getenv("PATH").split(";")) {
-                    String[] args = Core.instance.config.getOptions(ClientConfigV2.class).externalEditorCommand.split("\\s+");
-                    for (int i = 0; i < args.length; ++i) {
-                        args[i] = args[i]
-                            .replace("%File", file.getAbsolutePath())
-                            .replace("%MacroFolder", Core.instance.config.macroFolder.getAbsolutePath())
-                            .replace("%Folder", file.getParentFile().getAbsolutePath());
-                            File f = file;
-                            if (args[i].startsWith("%Parent")) {
-                                for (int j = Integer.getInteger(args[i].replace("%Parent", "")); j > 0; --j) f = f.getParentFile();
-                                args[i] = f.getAbsolutePath();
-                            }
-                    }
-                    try {
-                        new ProcessBuilder(args).directory(new File(path)).start();
-                        return;
-                    } catch (IOException ignored) {}
-                    if (System.getenv("PATHEXT") != null && !args[0].contains(".")) {
-                        String arg0 = args[0];
-                        for (String ext : System.getenv("PATHEXT").split(";")) {
-                            args[0] = arg0 + ext;
-                            try {
-                                new ProcessBuilder(args).directory(new File(path)).start();
-                                return;
-                            } catch (IOException ignored) {}
+                String[] args = Core.instance.config.getOptions(ClientConfigV2.class).externalEditorCommand.split("\\s+");
+                for (int i = 0; i < args.length; ++i) {
+                    args[i] = args[i]
+                        .replace("%File", file.getAbsolutePath())
+                        .replace("%MacroFolder", Core.instance.config.macroFolder.getAbsolutePath())
+                        .replace("%Folder", file.getParentFile().getAbsolutePath());
+                        File f = file;
+                        if (args[i].startsWith("%Parent")) {
+                            for (int j = Integer.getInteger(args[i].replace("%Parent", "")); j > 0; --j) f = f.getParentFile();
+                            args[i] = f.getAbsolutePath();
                         }
+                }
+                try {
+                    new ProcessBuilder(args).start();
+                    return;
+                } catch (IOException ignored) {}
+                if (System.getenv("PATHEXT") != null && !args[0].contains(".")) {
+                    String arg0 = args[0];
+                    for (String ext : System.getenv("PATHEXT").split(";")) {
+                        args[0] = arg0 + ext;
+                        try {
+                            new ProcessBuilder(args).start();
+                            return;
+                        } catch (IOException ignored) {}
                     }
                 }
                 System.out.println(System.getenv("PATH"));
