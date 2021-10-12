@@ -39,7 +39,13 @@ public class ClientConfigV2 {
     
     @Option(translationKey = "jsmacros.font", group = "jsmacros.settings.editor", options = "getFonts")
     public String editorFont = "jsmacros:jetbrainsmono";
-    
+
+    @Option(translationKey = "jsmacros.useexternaleditor", group = "jsmacros.settings.editor")
+    public boolean externalEditor = false;
+
+    @Option(translationKey = "jsmacros.externaleditorcommand", group = "jsmacros.settings.editor")
+    public String externalEditorCommand = "code %MacroFolder %File";
+
     public List<String> languages() {
         return EditorScreen.langs;
     }

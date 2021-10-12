@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
+import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroContainer;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroListTopbar;
 import xyz.wagyourtail.wagyourgui.elements.Button;
@@ -126,6 +127,38 @@ public class MacroScreen extends BaseScreen {
 
     public void editFile(File file) {
         if (file != null && file.exists() && file.isFile()) {
+            if (Core.instance.config.getOptions(ClientConfigV2.class).externalEditor) {
+                for (String path : System.getenv("PATH").split(";")) {
+                    String[] args = Core.instance.config.getOptions(ClientConfigV2.class).externalEditorCommand.split("\\s+");
+                    for (int i = 0; i < args.length; ++i) {
+                        args[i] = args[i]
+                            .replace("%File", file.getAbsolutePath())
+                            .replace("%MacroFolder", Core.instance.config.macroFolder.getAbsolutePath())
+                            .replace("%Folder", file.getParentFile().getAbsolutePath());
+                            File f = file;
+                            if (args[i].startsWith("%Parent")) {
+                                for (int j = Integer.getInteger(args[i].replace("%Parent", "")); j > 0; --j) f = f.getParentFile();
+                                args[i] = f.getAbsolutePath();
+                            }
+                    }
+                    try {
+                        new ProcessBuilder(args).directory(new File(path)).start();
+                        return;
+                    } catch (IOException ignored) {}
+                    if (System.getenv("PATHEXT") != null && !args[0].contains(".")) {
+                        String arg0 = args[0];
+                        for (String ext : System.getenv("PATHEXT").split(";")) {
+                            args[0] = arg0 + ext;
+                            try {
+                                new ProcessBuilder(args).directory(new File(path)).start();
+                                return;
+                            } catch (IOException ignored) {}
+                        }
+                    }
+                }
+                System.out.println(System.getenv("PATH"));
+                System.out.printf("Failed to run cmd '%s'", Core.instance.config.getOptions(ClientConfigV2.class).externalEditorCommand);
+            }
             assert client != null;
             client.openScreen(new EditorScreen(this, file));
         }
