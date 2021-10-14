@@ -7,14 +7,11 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.Flutterer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
@@ -31,7 +28,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 
 import java.util.ArrayList;
@@ -62,6 +58,8 @@ public class MovementDummy extends LivingEntity {
         for (EquipmentSlot value : EquipmentSlot.values()) {
             equippedStack.put(value, player.getEquippedStack(value).copy());
         }
+
+        player.getStatusEffects().forEach(this::addStatusEffect);
     }
 
     public MovementDummy(World world, Vec3d pos, Vec3d velocity, Box hitBox, boolean onGround, boolean isSprinting, boolean isSneaking) {
@@ -219,7 +217,7 @@ public class MovementDummy extends LivingEntity {
             if (this.horizontalCollision && this.doesNotCollide(vec3d4.x, vec3d4.y + 0.6000000238418579D - this.getY() + e, vec3d4.z)) {
                 this.setVelocity(vec3d4.x, 0.30000001192092896D, vec3d4.z);
             }
-        } else if (this.isFallFlying()) {
+        /*} else if (this.isFallFlying()) {
             Vec3d vec3d5 = this.getVelocity();
             if (vec3d5.y > -0.5D) {
                 this.fallDistance = 1.0F;
@@ -249,7 +247,7 @@ public class MovementDummy extends LivingEntity {
             }
 
             this.setVelocity(vec3d5.multiply(0.9900000095367432D, 0.9800000190734863D, 0.9900000095367432D));
-            this.move(MovementType.SELF, this.getVelocity());
+            this.move(MovementType.SELF, this.getVelocity());*/
         } else {
             BlockPos blockPos = this.getVelocityAffectingPos();
             float t = this.world.getBlockState(blockPos).getBlock().getSlipperiness();
@@ -328,19 +326,19 @@ public class MovementDummy extends LivingEntity {
 
                     this.horizontalSpeed += (float)vec3d.horizontalLength() * 0.6F;
                     this.distanceTraveled += (float)Math.sqrt(d * d + e * e + f * f) * 0.6F;
-                    if (!blockState.isAir()) {
-                        if (this.isTouchingWater()) {
-                            if (moveEffect.emitsGameEvents()) {
-                                this.emitGameEvent(GameEvent.SWIM);
-                            }
-                        } else {
-                            if (moveEffect.emitsGameEvents() && !blockState.isIn(BlockTags.OCCLUDES_VIBRATION_SIGNALS)) {
-                                this.emitGameEvent(GameEvent.STEP);
-                            }
-                        }
-                    } else if (blockState.isAir()) {
-                        this.addAirTravelEffects();
-                    }
+//                    if (!blockState.isAir()) {
+//                        if (this.isTouchingWater()) {
+//                            if (moveEffect.emitsGameEvents()) {
+//                                this.emitGameEvent(GameEvent.SWIM);
+//                            }
+//                        } else {
+//                            if (moveEffect.emitsGameEvents() && !blockState.isIn(BlockTags.OCCLUDES_VIBRATION_SIGNALS)) {
+//                                this.emitGameEvent(GameEvent.STEP);
+//                            }
+//                        }
+//                    } else if (blockState.isAir()) {
+//                        this.addAirTravelEffects();
+//                    }
                 }
 
                 this.tryCheckBlockCollision();
@@ -353,31 +351,31 @@ public class MovementDummy extends LivingEntity {
     private Vec3d adjustMovementForCollisions(Vec3d movement) {
         Box box = this.getBoundingBox();
         ShapeContext shapeContext = ShapeContext.of(this);
-        VoxelShape voxelShape = this.world.getWorldBorder().asVoxelShape();
-        Stream<VoxelShape> stream = VoxelShapes.matchesAnywhere(voxelShape, VoxelShapes.cuboid(box.contract(1.0E-7D)), BooleanBiFunction.AND) ? Stream.empty() : Stream.of(voxelShape);
-        Stream<VoxelShape> stream2 = this.world.getEntityCollisions(this, box.stretch(movement), (entity) -> true);
-        ReusableStream<VoxelShape> reusableStream = new ReusableStream<>(Stream.concat(stream2, stream));
-        Vec3d vec3d = movement.lengthSquared() == 0.0D ? movement : adjustMovementForCollisions(this, movement, box, this.world, shapeContext, reusableStream);
-        boolean bl = movement.x != vec3d.x;
-        boolean bl2 = movement.y != vec3d.y;
-        boolean bl3 = movement.z != vec3d.z;
-        boolean bl4 = this.onGround || bl2 && movement.y < 0.0D;
-        if (this.stepHeight > 0.0F && bl4 && (bl || bl3)) {
-            Vec3d vec3d2 = adjustMovementForCollisions(this, new Vec3d(movement.x, (double)this.stepHeight, movement.z), box, this.world, shapeContext, reusableStream);
-            Vec3d vec3d3 = adjustMovementForCollisions(this, new Vec3d(0.0D, (double)this.stepHeight, 0.0D), box.stretch(movement.x, 0.0D, movement.z), this.world, shapeContext, reusableStream);
-            if (vec3d3.y < (double)this.stepHeight) {
-                Vec3d vec3d4 = adjustMovementForCollisions(this, new Vec3d(movement.x, 0.0D, movement.z), box.offset(vec3d3), this.world, shapeContext, reusableStream).add(vec3d3);
-                if (vec3d4.horizontalLengthSquared() > vec3d2.horizontalLengthSquared()) {
-                    vec3d2 = vec3d4;
+        VoxelShape border = this.world.getWorldBorder().asVoxelShape();
+        Stream<VoxelShape> touchesWorldBorder = VoxelShapes.matchesAnywhere(border, VoxelShapes.cuboid(box.contract(1.0E-7D)), BooleanBiFunction.AND) ? Stream.empty() : Stream.of(border);
+        Stream<VoxelShape> touchedBlocks = this.world.getEntityCollisions(this, box.stretch(movement), (entity) -> true);
+        ReusableStream<VoxelShape> reusableStream = new ReusableStream<>(Stream.concat(touchedBlocks, touchesWorldBorder));
+        Vec3d adjusted = movement.lengthSquared() == 0.0D ? movement : adjustMovementForCollisions(this, movement, box, this.world, shapeContext, reusableStream);
+        boolean sameX = movement.x != adjusted.x;
+        boolean sameY = movement.y != adjusted.y;
+        boolean sameZ = movement.z != adjusted.z;
+        boolean nearGround = this.onGround || sameY && movement.y < 0.0D;
+        if (this.stepHeight > 0.0F && nearGround && (sameX || sameZ)) {
+            Vec3d stepped = adjustMovementForCollisions(this, new Vec3d(movement.x, (double)this.stepHeight, movement.z), box, this.world, shapeContext, reusableStream);
+            Vec3d newPosition = adjustMovementForCollisions(this, new Vec3d(0.0D, (double)this.stepHeight, 0.0D), box.stretch(movement.x, 0.0D, movement.z), this.world, shapeContext, reusableStream);
+            if (newPosition.y < (double)this.stepHeight) {
+                Vec3d vec3d4 = adjustMovementForCollisions(this, new Vec3d(movement.x, 0.0D, movement.z), box.offset(newPosition), this.world, shapeContext, reusableStream).add(newPosition);
+                if (vec3d4.horizontalLengthSquared() > stepped.horizontalLengthSquared()) {
+                    stepped = vec3d4;
                 }
             }
 
-            if (vec3d2.horizontalLengthSquared() > vec3d.horizontalLengthSquared()) {
-                return vec3d2.add(adjustMovementForCollisions(this, new Vec3d(0.0D, -vec3d2.y + movement.y, 0.0D), box.offset(vec3d2), this.world, shapeContext, reusableStream));
+            if (stepped.horizontalLengthSquared() > adjusted.horizontalLengthSquared()) {
+                return stepped.add(adjustMovementForCollisions(this, new Vec3d(0.0D, -stepped.y + movement.y, 0.0D), box.offset(stepped), this.world, shapeContext, reusableStream));
             }
         }
 
-        return vec3d;
+        return adjusted;
     }
 
     /**
