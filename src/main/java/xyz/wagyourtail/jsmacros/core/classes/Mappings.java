@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.core.classes;
 
-import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.core.Core;
 
@@ -197,14 +196,17 @@ public class Mappings {
             Class<?> current = tClass;
             do {
                 inheritance.add(current);
-                inheritance.addAll(getInterfaceInheritance(current).collect(Collectors.toList()));
+                inheritance.addAll(getInterfaceInheritance(current));
             } while ((current = current.getSuperclass()) != Object.class);
             inheritance.add(Object.class);
             return inheritance;
         }
 
-        private Stream<Class<?>> getInterfaceInheritance(Class<?> interf) {
-            return Arrays.stream(interf.getInterfaces()).flatMap(this::getInterfaceInheritance);
+        private Set<Class<?>> getInterfaceInheritance(Class<?> interf) {
+            Set<Class<?>> l = new HashSet<>();
+            l.add(interf);
+            l.addAll(Arrays.stream(interf.getInterfaces()).flatMap(e -> getInterfaceInheritance(e).stream()).collect(Collectors.toSet()));
+            return l;
         }
 
         private Field findField(Class<?> asClass, String fieldName) throws NoSuchFieldException, IOException {
