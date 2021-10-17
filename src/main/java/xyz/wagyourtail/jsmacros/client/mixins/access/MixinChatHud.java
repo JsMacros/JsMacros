@@ -32,7 +32,7 @@ public abstract class MixinChatHud implements IChatHud {
     @Mutable
     @Shadow @Final private List<String> messageHistory;
 
-    @Inject(method = "<init>", at = @At("TAIL"))
+    @Inject(method = "<init>", at = @At("RETURN"))
     public void onInit(MinecraftClient client, CallbackInfo ci) {
         messageHistory = Collections.synchronizedList(messageHistory);
     }
