@@ -27,11 +27,10 @@ public class ProxyBuilder<T> {
             factory.setSuperclass(Object.class);
             interfaces = Arrays.copyOf(interfaces, interfaces.length + 1);
             interfaces[interfaces.length - 1] = clazz;
-            factory.setInterfaces(interfaces);
         } else {
             factory.setSuperclass(clazz);
-            factory.setInterfaces(interfaces);
         }
+        factory.setInterfaces(interfaces);
         factory.setFilter(m -> getWrapperForMethod(m) != null);
     }
 
