@@ -11,6 +11,7 @@ public class ChatHudLineHelper extends BaseHelper<ChatHudLine<Text>> {
 
     public ChatHudLineHelper(ChatHudLine<Text> base, ChatHud hud) {
         super(base);
+        this.hud = hud;
     }
 
     public TextHelper getText() {
