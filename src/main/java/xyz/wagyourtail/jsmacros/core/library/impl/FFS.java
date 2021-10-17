@@ -11,6 +11,7 @@ import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Better File-System functions.
@@ -138,7 +139,7 @@ public class FFS extends PerExecLibrary {
      * @throws IOException
      */
     public String combine(String patha, String pathb) throws IOException {
-        return Path.of(patha, pathb).toString();
+        return Paths.get(patha, pathb).toString();
     }
     
     

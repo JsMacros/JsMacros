@@ -15,6 +15,7 @@ import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -196,10 +197,14 @@ public class Mappings {
             Class<?> current = tClass;
             do {
                 inheritance.add(current);
-                inheritance.addAll(Arrays.stream(current.getInterfaces()).toList());
+                inheritance.addAll(getInterfaceInheritance(current).collect(Collectors.toList()));
             } while ((current = current.getSuperclass()) != Object.class);
             inheritance.add(Object.class);
             return inheritance;
+        }
+
+        private Stream<Class<?>> getInterfaceInheritance(Class<?> interf) {
+            return Arrays.stream(interf.getInterfaces()).flatMap(this::getInterfaceInheritance);
         }
 
         private Field findField(Class<?> asClass, String fieldName) throws NoSuchFieldException, IOException {
@@ -326,9 +331,9 @@ public class Mappings {
             findField(cls, fieldName).set(instance, fieldValue);
         }
 
-        private static final Pattern sigPart = Pattern.compile("[ZBCSIJFDV]|L(.+?);");
+        private final Pattern sigPart = Pattern.compile("[ZBCSIJFDV]|L(.+?);");
 
-        private static Class<?> getPrimitive(char c) {
+        private Class<?> getPrimitive(char c) {
             switch (c) {
                 case 'Z':
                     return boolean.class;
@@ -353,7 +358,7 @@ public class Mappings {
             }
         }
 
-        private Pair<String, List<Class<?>>> mapMethodSig(String methodSig) throws ClassNotFoundException, IOException {
+        private MethodSigParts mapMethodSig(String methodSig) throws ClassNotFoundException, IOException {
             String[] parts = methodSig.split("[()]", 3);
             List<Class<?>> params = new ArrayList<>();
             Matcher m = sigPart.matcher(parts[1]);
@@ -374,31 +379,31 @@ public class Mappings {
                     }
                 }
             }
-//            Class<?> retval;
-//            Matcher r = sigPart.matcher(parts[2]);
-//            if (m.find()) {
-//                String clazz = m.group(1);
-//                if (clazz == null) {
-//                    retval = getPrimitive(m.group().charAt(0));
-//                } else {
-//                    ClassData intClass = getReversedMappings().get(clazz);
-//                    if (intClass != null) {
-//                        try {
-//                            retval = Class.forName(intClass.name.replace("/", "."));
-//                        } catch (ClassNotFoundException ex) {
-//                            retval = Class.forName(clazz.replace("/", "."));
-//                        }
-//                    } else {
-//                        retval = Class.forName(clazz.replace("/", "."));
-//                    }
-//                }
-//            } else {
-//                throw new IllegalArgumentException("Signature return value invalid.");
-//            }
-            return new Pair<>(parts[0], params);
+            Class<?> retval;
+            Matcher r = sigPart.matcher(parts[2]);
+            if (r.find()) {
+                String clazz = r.group(1);
+                if (clazz == null) {
+                    retval = getPrimitive(r.group().charAt(0));
+                } else {
+                    ClassData intClass = getReversedMappings().get(clazz);
+                    if (intClass != null) {
+                        try {
+                            retval = Class.forName(intClass.name.replace("/", "."));
+                        } catch (ClassNotFoundException ex) {
+                            retval = Class.forName(clazz.replace("/", "."));
+                        }
+                    } else {
+                        retval = Class.forName(clazz.replace("/", "."));
+                    }
+                }
+            } else {
+                throw new IllegalArgumentException("Signature return value invalid.");
+            }
+            return new MethodSigParts(parts[0], params.toArray(new Class[0]), retval);
         }
 
-        private Method findMethod(Class<?> asClass, String methodSig, Pair<String, List<Class<?>>>  parsedMethodSig) throws IOException, NoSuchMethodException {
+        private Method findMethod(Class<?> asClass, String methodSig, MethodSigParts parsedMethodSig) throws IOException, NoSuchMethodException {
             ClassData cls = getMappings().get(asClass.getCanonicalName().replace(".", "/"));
             String intMethodName = null;
             if (cls != null) {
@@ -408,12 +413,12 @@ public class Mappings {
             Method md;
             if (intMethodName != null) {
                 try {
-                    md = asClass.getDeclaredMethod(intMethodName, parsedMethodSig.getU().toArray(new Class[0]));
+                    md = asClass.getDeclaredMethod(intMethodName, parsedMethodSig.params);
                 } catch (NoSuchMethodException e) {
-                    md = asClass.getDeclaredMethod(parsedMethodSig.getT(), parsedMethodSig.getU().toArray(new Class[0]));
+                    md = asClass.getDeclaredMethod(parsedMethodSig.name, parsedMethodSig.params);
                 }
             } else {
-                md = asClass.getDeclaredMethod(parsedMethodSig.getT(), parsedMethodSig.getU().toArray(new Class[0]));
+                md = asClass.getDeclaredMethod(parsedMethodSig.name, parsedMethodSig.params);
             }
             md.setAccessible(true);
             return md;
@@ -469,7 +474,7 @@ public class Mappings {
         public Object invokeMethod(String methodNameOrSig, Object ...params) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
             Method md = null;
             if (methodNameOrSig.contains("(")) {
-                Pair<String, List<Class<?>>> methodSig = mapMethodSig(methodNameOrSig);
+                MethodSigParts methodSig = mapMethodSig(methodNameOrSig);
                 for (Class<?> cls : getInheritance()) {
                     try {
                         md = findMethod(cls, methodNameOrSig, methodSig);
@@ -534,4 +539,15 @@ public class Mappings {
         }
     }
 
+    private static class MethodSigParts {
+        public final String name;
+        public final Class<?>[] params;
+        public final Class<?> returnType;
+
+        MethodSigParts(String name, Class<?>[] params, Class<?> returnType) {
+            this.name = name;
+            this.params = params;
+            this.returnType = returnType;
+        }
+    }
 }

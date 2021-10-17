@@ -1,10 +1,12 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
+import javassist.util.proxy.ProxyFactory;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.classes.Mappings;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
+import xyz.wagyourtail.jsmacros.core.library.impl.classes.ProxyBuilder;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
@@ -280,6 +282,20 @@ public class FReflection extends PerExecLibrary {
             }
             throw new RuntimeException("Failed to create new instance, bad parameters?", e);
         }
+    }
+
+    /**
+     *
+     * proxy for extending java classes in the guest language with proper threading support.
+     *
+     * @param clazz
+     * @param interfaces
+     * @param <T>
+     * @since 1.6.0
+     * @return
+     */
+    public <T> ProxyBuilder<T> createClassProxyBuilder(Class<T> clazz, Class<?>... interfaces) {
+        return new ProxyBuilder<>(clazz, interfaces);
     }
     
     /**
