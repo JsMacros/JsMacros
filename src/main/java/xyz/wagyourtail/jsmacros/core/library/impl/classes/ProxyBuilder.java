@@ -18,8 +18,6 @@ import java.util.regex.Pattern;
  * @since 1.6.0
  */
 public class ProxyBuilder<T> {
-    private final Set<Class<?>> inheritance = new LinkedHashSet<>();
-
     public final ProxyFactory factory;
     public final Map<String, Map<String, MethodWrapper<ProxyReference<T>, Object[], ?, ?>>> proxiedMethods = new HashMap<>();
 
