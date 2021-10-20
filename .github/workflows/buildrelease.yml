@@ -295,7 +295,59 @@ jobs:
         with:
           name: ${{ steps.fname.outputs.result }}
           path: ./dist/**/*
-  
+
+  build-forge-1_17_1:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          ref: forge-1.17.1
+
+      - name: Set up JDK 16
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '16'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - uses: actions/github-script@v2
+        id: fname
+        with:
+          result-encoding: string
+          script: |
+            const fs = require("fs")
+            return fs.readdirSync("./build/libs/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0].replace(".jar", "");
+
+      - name: Upload to release
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ./build/libs/${{ steps.fname.outputs.result }}.jar application/jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload to curseforge
+        uses: itsmeow/curseforge-upload@v2
+        with:
+          token: ${{ secrets.CF_API_KEY }}
+          project_id: 403185
+          game_endpoint: minecraft
+          file_path: ./build/libs/${{ steps.fname.outputs.result }}.jar
+          changelog: See the github release for changes.
+          display_name: ${{ steps.fname.outputs.result }}
+          game_versions: 73242:1.17.1,2:Java 16,7498:Forge
+          release_type: release
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.fname.outputs.result }}
+          path: ./dist/**/*
+
   build-forge-1_16_5:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
