@@ -145,7 +145,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      */
     public NBTElementHelper<?> getNBT() {
         NbtCompound nbt = new NbtCompound();
-        base.saveSelfNbt(nbt);
+        base.writeNbt(nbt);
         return NBTElementHelper.resolve(nbt);
     }
     
