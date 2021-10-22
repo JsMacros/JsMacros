@@ -372,7 +372,7 @@ public class FPlayer extends BaseLibrary {
      */
     public void moveStrafeLeft(float yaw) {
         PlayerInput input = new PlayerInput();
-        input.movementSideways = -1.0F;
+        input.movementSideways = 1.0F;
         input.yaw = getPlayer().getYaw() + yaw;
         addInput(input);
     }
@@ -384,7 +384,7 @@ public class FPlayer extends BaseLibrary {
      */
     public void moveStrafeRight(float yaw) {
         PlayerInput input = new PlayerInput();
-        input.movementSideways = 1.0F;
+        input.movementSideways = -1.0F;
         input.yaw = getPlayer().getYaw() + yaw;
         addInput(input);
     }
