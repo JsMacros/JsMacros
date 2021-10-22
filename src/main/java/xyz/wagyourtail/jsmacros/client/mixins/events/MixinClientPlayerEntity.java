@@ -63,6 +63,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     @Inject(at = @At("HEAD"), method = "damage")
     private void onApplyDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         int damage = Math.round(amount * 2) / 2;
+        if (damage == 0) return;
         new EventDamage(source, this.getHealth() - damage, damage);
     }
 

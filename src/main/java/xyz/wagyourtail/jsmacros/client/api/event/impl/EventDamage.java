@@ -27,6 +27,6 @@ public class EventDamage implements BaseEvent {
     }
     
     public String toString() {
-        return String.format("%s:{\"health\": %f}", this.getEventName(), health);
+        return String.format("%s:{\"health\": %f, \"change\": %f}", this.getEventName(), health, change);
     }
 }
