@@ -42,7 +42,7 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
         if (currentDir == null) {
             currentDir = runner.config.macroFolder;
         }
-        build.currentWorkingDirectory(currentDir.toPath());
+        build.currentWorkingDirectory(currentDir.toPath().toAbsolutePath());
         build.option("js.commonjs-require-cwd", currentDir.getCanonicalPath());
         
         final Context con = build.build();

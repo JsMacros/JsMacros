@@ -182,6 +182,6 @@ public abstract class BaseScriptContext<T> {
      * @return
      */
     public File getContainedFolder() {
-        return mainFile == null ? Core.instance.config.macroFolder : mainFile.getParentFile();
+        return mainFile == null ? Core.instance.config.macroFolder.getAbsoluteFile() : mainFile.getParentFile().getAbsoluteFile();
     }
 }
