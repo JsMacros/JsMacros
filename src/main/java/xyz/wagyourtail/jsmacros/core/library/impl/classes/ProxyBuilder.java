@@ -4,6 +4,7 @@ import javassist.util.proxy.ProxyFactory;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -97,7 +98,7 @@ public class ProxyBuilder<T> {
 
 
     /**
-     * @param constructorSig string signature (you can skip the &gt;init&gt; part)
+     * @param constructorSig string signature (you can skip the &lt;init&gt; part)
      * @param constructorArgs args for the super constructor
      * @since 1.6.0
      *
@@ -115,7 +116,7 @@ public class ProxyBuilder<T> {
 
 
     /**
-     * @param constructorSig string signature (you can skip the &gt;init&gt; part)
+     * @param constructorSig string signature (you can skip the &lt;init&gt; part)
      * @param constructorArgs args for the super constructor
      * @since 1.6.0
      *
@@ -135,26 +136,26 @@ public class ProxyBuilder<T> {
     }
 
 
-    private Object invoke(Object self, Method thisMethod, Method proceed, Object[] args) throws Throwable {
+    private Object invoke(Object self, Method thisMethod, @Nullable Method proceed, Object[] args) throws Throwable {
         MethodWrapper<ProxyReference<T>, Object[], ?, ?> wrapper = getWrapperForMethod(thisMethod);
         if (wrapper == null) return proceed.invoke(self, args);
-        if (proceed.getReturnType().equals(void.class)) {
-            wrapper.accept(new ProxyReference<>((T) self, (arg) -> {
+        if (thisMethod.getReturnType().equals(void.class)) {
+            wrapper.accept(new ProxyReference<>((T) self, proceed != null ? (arg) -> {
                 try {
                     return proceed.invoke(self, arg);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
-            }), args);
+            } : null), args);
             return null;
         }
-        return wrapper.apply(new ProxyReference<>((T) self, (arg) -> {
+        return wrapper.apply(new ProxyReference<>((T) self, proceed != null ? (arg) -> {
             try {
                 return proceed.invoke(self, arg);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
-        }), args);
+        } : null), args);
     }
 
     private static final Pattern sigPart = Pattern.compile("[ZBCSIJFDV]|L(.+?);");
