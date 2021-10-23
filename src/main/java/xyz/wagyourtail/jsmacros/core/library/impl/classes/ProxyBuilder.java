@@ -44,7 +44,7 @@ public class ProxyBuilder<T> {
                         return entry.getValue();
                     }
                 } catch (ClassNotFoundException e) {
-                    JsMacros.LOGGER.debug(e);
+                    JsMacros.LOGGER.info(e);
                     method.remove(entry.getKey());
                 }
             }
@@ -62,7 +62,7 @@ public class ProxyBuilder<T> {
      */
     public ProxyBuilder<T> addMethod(String methodNameOrSig, MethodWrapper<ProxyReference<T>, Object[], ?, ?> proxyMethod) {
         String[] parts = methodNameOrSig.split("\\(");
-        proxiedMethods.computeIfAbsent(parts[0], (s) -> new LinkedHashMap<>()).put(parts.length >= 2 ? parts[1] : "default", proxyMethod);
+        proxiedMethods.computeIfAbsent(parts[0], (s) -> new LinkedHashMap<>()).put(parts.length >= 2 ? methodNameOrSig : "default", proxyMethod);
         return this;
     }
 
