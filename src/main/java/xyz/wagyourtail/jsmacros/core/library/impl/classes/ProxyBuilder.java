@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 import javassist.util.proxy.ProxyFactory;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.library.impl.FWrapper;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
@@ -20,8 +21,8 @@ import java.util.regex.Pattern;
  */
 public class ProxyBuilder<T> {
     public final ProxyFactory factory;
-    public final Map<String, Map<String, MethodWrapper<ProxyReference<T>, Object[], ?, ?>>> proxiedMethods = new HashMap<>();
-
+    public final Map<MethodSigParts, MethodWrapper<ProxyReference<T>, Object[], ?, ?>> proxiedMethods = new HashMap<>();
+    public final Map<String, MethodWrapper<ProxyReference<T>, Object[], ?, ?>> proxiedMethodDefaults = new HashMap<>();
     public ProxyBuilder(Class<T> clazz, Class<?>[] interfaces) {
         this.factory = new ProxyFactory();
         if (clazz.isInterface()) {
@@ -36,22 +37,10 @@ public class ProxyBuilder<T> {
     }
 
     private MethodWrapper<ProxyReference<T>, Object[], ?, ?> getWrapperForMethod(Method m) {
-        Map<String,  MethodWrapper<ProxyReference<T>, Object[], ?, ?>> method = proxiedMethods.get(m.getName());
-        if (method != null) {
-            for (Map.Entry<String, MethodWrapper<ProxyReference<T>, Object[], ?, ?>> entry : method.entrySet()) {
-                if (entry.getKey().equals("default")) continue;
-                try {
-                    if (Arrays.equals(mapMethodSig(entry.getKey()).params, m.getParameterTypes())) {
-                        return entry.getValue();
-                    }
-                } catch (ClassNotFoundException e) {
-                    JsMacros.LOGGER.info(e);
-                    method.remove(entry.getKey());
-                }
-            }
-            return method.get("default");
-        }
-        return null;
+        MethodSigParts sig = methodToSigParts(m);
+        MethodWrapper<ProxyReference<T>, Object[], ?, ?> wrapper = proxiedMethods.get(sig);
+        if (wrapper == null) wrapper = proxiedMethodDefaults.get(sig.name);
+        return wrapper;
     }
 
     /**
@@ -61,9 +50,13 @@ public class ProxyBuilder<T> {
      *
      * @return self for chaining
      */
-    public ProxyBuilder<T> addMethod(String methodNameOrSig, MethodWrapper<ProxyReference<T>, Object[], ?, ?> proxyMethod) {
+    public ProxyBuilder<T> addMethod(String methodNameOrSig, MethodWrapper<ProxyReference<T>, Object[], ?, ?> proxyMethod) throws ClassNotFoundException {
         String[] parts = methodNameOrSig.split("\\(");
-        proxiedMethods.computeIfAbsent(parts[0], (s) -> new LinkedHashMap<>()).put(parts.length >= 2 ? methodNameOrSig : "default", proxyMethod);
+        if (parts.length > 1) {
+            proxiedMethods.put(mapMethodSig(methodNameOrSig), proxyMethod);
+        } else {
+            proxiedMethodDefaults.put(methodNameOrSig, proxyMethod);
+        }
         return this;
     }
 
@@ -149,13 +142,13 @@ public class ProxyBuilder<T> {
             } : null), args);
             return null;
         }
-        return wrapper.apply(new ProxyReference<>((T) self, proceed != null ? (arg) -> {
+        return JsMacros.tryAutoCastNumber(thisMethod.getReturnType(), wrapper.apply(new ProxyReference<>((T) self, proceed != null ? (arg) -> {
             try {
                 return proceed.invoke(self, arg);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
-        } : null), args);
+        } : null), args));
     }
 
     private static final Pattern sigPart = Pattern.compile("[ZBCSIJFDV]|L(.+?);");
@@ -186,6 +179,10 @@ public class ProxyBuilder<T> {
         }
 
         return new MethodSigParts(parts[0], params.toArray(new Class[0]), retval);
+    }
+
+    private MethodSigParts methodToSigParts(Method mthd) {
+        return new MethodSigParts(mthd.getName(), mthd.getParameterTypes(), mthd.getReturnType());
     }
 
     private static Class<?> getPrimitive(char c) {
@@ -249,5 +246,21 @@ public class ProxyBuilder<T> {
             this.params = params;
             this.returnType = returnType;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof MethodSigParts)) return false;
+            MethodSigParts that = (MethodSigParts) o;
+            return name.equals(that.name) && Arrays.equals(params, that.params) && returnType.equals(that.returnType);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Objects.hash(name, returnType);
+            result = 31 * result + Arrays.hashCode(params);
+            return result;
+        }
+
     }
 }
