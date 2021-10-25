@@ -48,7 +48,7 @@ public class MacroListTopbar extends MultiElementContainer<MacroScreen> {
         }));
         
         addDrawableChild(new Button(x + w - 1, y+1, 11, height - 3, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("+"), (btn) -> {
-            ScriptTrigger macro = new ScriptTrigger(deftype, "", "", false);
+            ScriptTrigger macro = new ScriptTrigger(deftype, "", Core.instance.config.macroFolder, false);
             Core.instance.eventRegistry.addScriptTrigger(macro);
             parent.addMacro(macro);
         }));

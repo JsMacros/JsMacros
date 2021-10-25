@@ -14,6 +14,7 @@ import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.core.library.LibraryRegistry;
+import xyz.wagyourtail.jsmacros.core.service.ServiceLoader;
 
 import java.io.File;
 import java.util.*;
@@ -38,11 +39,15 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
     public final List<BaseLanguage<?>> languages = new ArrayList<>();
     public final BaseLanguage<?> defaultLang = new JavascriptLanguageDefinition(".js", this);
 
+    public final ServiceLoader services;
+
     protected Core(Function<Core<T, U>, U> eventRegistryFunction, Function<Core<T, U>, T> profileFunction, File configFolder, File macroFolder, Logger logger) {
-        eventRegistry = eventRegistryFunction.apply(this);
-        profile = profileFunction.apply(this);
-        config = new ConfigManager(configFolder, macroFolder, logger);
+        instance = this;
         addLanguage(defaultLang);
+        eventRegistry = eventRegistryFunction.apply(this);
+        config = new ConfigManager(configFolder, macroFolder, logger);
+        profile = profileFunction.apply(this);
+        this.services = new ServiceLoader(this);
     }
 
     /**
@@ -73,7 +78,7 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      */
     public static <V extends BaseProfile, R extends BaseEventRegistry> Core<V, R> createInstance(Function<Core<V, R>, R> eventRegistryFunction, Function<Core<V, R>, V> profileFunction, File configFolder, File macroFolder, Logger logger) {
         if (instance != null) throw new RuntimeException("Can't declare RunScript instance more than once");
-        instance = new Core<>(eventRegistryFunction, profileFunction, configFolder, macroFolder, logger);
+        new Core<>(eventRegistryFunction, profileFunction, configFolder, macroFolder, logger);
         instance.profile.init(instance.config.getOptions(CoreConfigV2.class).defaultProfile);
         return (Core<V, R>) instance;
     }

@@ -54,7 +54,7 @@ public class FileChooser extends OverlayContainer {
         }
         
         this.directory = dir;
-        this.dirname = new LiteralText("." + dir.getAbsolutePath().substring(root.getAbsolutePath().length()).replaceAll("\\\\", "/"));
+        this.dirname = new LiteralText("./" + root.getAbsoluteFile().toPath().relativize(dir.getAbsoluteFile().toPath()).toString().replaceAll("\\\\", "/"));
 
         if (!this.directory.equals(root)) {
             addFile(this.directory.getParentFile(), "..");

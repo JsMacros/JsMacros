@@ -15,6 +15,7 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
@@ -28,7 +29,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
     private MethodWrapper<Integer, Object, Map<String, MethodWrapper<Object, Object, Object, ?>>, ?> getRClickActions = null;
     private List<AutoCompleteSuggestion> suggestions = new LinkedList<>();
     
-    public ScriptCodeCompiler(String language, EditorScreen screen, String scriptFile) {
+    public ScriptCodeCompiler(String language, EditorScreen screen, File scriptFile) {
         super(language, screen);
         scriptTrigger = new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "CodeCompile", scriptFile, true);
     }

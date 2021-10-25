@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventProfileLoad;
+import xyz.wagyourtail.jsmacros.core.service.ServiceTrigger;
 
 import java.util.*;
 
@@ -18,6 +19,8 @@ public class CoreConfigV2 {
     
     @Option(translationKey = "jsmacros.profiles", group = {"jsmacros.settings.profile", "jsmacros.settings.profile.list"}, type = @OptionType("profile"))
     public Map<String, List<ScriptTrigger>> profiles = new HashMap<>();
+
+    public Map<String, ServiceTrigger> services = new HashMap<>();
     
     @Option(translationKey = "jsmacros.extrajsoptions", group = {"jsmacros.settings.languages", "jsmacros.settings.languages.javascript", "jsmacros.settings.languages.javascript.graaloptions"}, type = @OptionType("string"))
     public Map<String, String> extraJsOptions = new HashMap<>();

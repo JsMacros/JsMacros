@@ -27,7 +27,6 @@ public abstract class BaseScriptContext<T> {
     public final BaseEvent triggeringEvent;
     protected final File mainFile;
 
-
     /**
      * the actual "context", for whatever the language impl is...
      */

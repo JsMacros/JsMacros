@@ -1,6 +1,9 @@
 package xyz.wagyourtail.jsmacros.core.config;
 
 import com.google.gson.annotations.SerializedName;
+import xyz.wagyourtail.jsmacros.core.Core;
+
+import java.io.File;
 
 public class ScriptTrigger {
     @SerializedName(value = "triggerType", alternate = "type")
@@ -10,10 +13,15 @@ public class ScriptTrigger {
     public String scriptFile;
     public boolean enabled;
     
-    public ScriptTrigger(TriggerType triggerType, String event, String scriptFile, boolean enabled) {
+    public ScriptTrigger(TriggerType triggerType, String event, File scriptFile, boolean enabled) {
+        this(triggerType, event, Core.instance.config.macroFolder.getAbsoluteFile().toPath().relativize(scriptFile.getAbsoluteFile().toPath()).toString(), enabled);
+    }
+
+    protected ScriptTrigger(TriggerType triggerType, String event, String scriptFile, boolean enabled) {
         this.triggerType = triggerType;
         this.event = event;
         this.scriptFile = scriptFile;
+        this.enabled = enabled;
     }
     
     public boolean equals(ScriptTrigger macro) {

@@ -23,7 +23,7 @@ public class ConfigManager {
 
     public ConfigManager(File configFolder, File macroFolder, Logger logger) {
         this.configFolder = configFolder;
-        this.macroFolder = macroFolder;
+        this.macroFolder = macroFolder.getAbsoluteFile();
         this.LOGGER = logger;
         if (!configFolder.exists()) {
             configFolder.mkdirs();

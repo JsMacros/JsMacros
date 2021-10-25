@@ -84,9 +84,9 @@ public class FJsMacros extends PerExecLibrary {
      */
     public EventContainer<?> runScript(String file, MethodWrapper<Throwable, Object, Object, ?> callback) {
         if (callback != null) {
-            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null, () -> callback.accept(null), callback);
+            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", Core.instance.config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true), null, () -> callback.accept(null), callback);
         } else {
-            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null, null, null);
+            return Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", Core.instance.config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true), null, null, null);
         }
     }
     

@@ -172,7 +172,7 @@ public class EditorScreen extends BaseScreen {
         this.language = language;
         Map<String, String> linterOverrides = Core.instance.config.getOptions(ClientConfigV2.class).editorLinterOverrides;
         if (linterOverrides.containsKey(language)) {
-            this.codeCompiler = new ScriptCodeCompiler(language, this, linterOverrides.get(language));
+            this.codeCompiler = new ScriptCodeCompiler(language, this, Core.instance.config.macroFolder.getAbsoluteFile().toPath().resolve(linterOverrides.get(language)).toFile());
         } else {
             this.codeCompiler = new DefaultCodeCompiler(language, this);
         }

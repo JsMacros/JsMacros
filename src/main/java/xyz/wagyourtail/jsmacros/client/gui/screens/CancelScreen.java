@@ -11,6 +11,8 @@ import net.minecraft.text.TranslatableText;
 import org.apache.logging.log4j.Level;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.gui.containers.RunningContextContainer;
+import xyz.wagyourtail.jsmacros.core.service.EventService;
+import xyz.wagyourtail.wagyourgui.elements.AnnotatedCheckBox;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -24,6 +26,7 @@ import java.util.List;
 public class CancelScreen extends BaseScreen {
     private int topScroll;
     private Scrollbar s;
+    private AnnotatedCheckBox services;
     private final List<RunningContextContainer> running = new ArrayList<>();
 
     public CancelScreen(Screen parent) {
@@ -37,13 +40,17 @@ public class CancelScreen extends BaseScreen {
         System.gc();
         topScroll = 10;
         running.clear();
-        s = this.addDrawableChild(new Scrollbar(width - 12, 5, 8, height-10, 0, 0xFF000000, 0xFFFFFFFF, 1, this::onScrollbar));
+        s = this.addDrawableChild(new Scrollbar(width - 12, 5, 8, height-10, 0xFFFFFFFF, 0xFF000000, 0x7FFFFFFF, 1, this::onScrollbar));
         
         this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.back"), (btn) -> this.onClose()));
+        services = this.addDrawableChild(new AnnotatedCheckBox(this.width / 12 + 5, this.height - 12, 200, 12, textRenderer, 0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.showservices"), false, null));
     }
 
     public void addContainer(BaseScriptContext<?> t) {
         if (t == null) {
+            return;
+        }
+        if (!services.value && t.getTriggeringEvent() instanceof EventService) {
             return;
         }
         if (!t.isContextClosed()) {
@@ -93,6 +100,7 @@ public class CancelScreen extends BaseScreen {
         
         for (RunningContextContainer r : ImmutableList.copyOf(this.running)) {
             tl.remove(r.t);
+            if (!services.value && r.service) removeContainer(r);
             r.render(matrices, mouseX, mouseY, delta);
         }
         

@@ -38,7 +38,12 @@ public class FileField extends AbstractSettingField<String> {
         //default
         return Core.instance.config.macroFolder;
     }
-    
+
+    public static String relativize(SettingsOverlay.SettingField<?> setting, File file) {
+        File top = getTopLevel(setting).getAbsoluteFile();
+        return top.toPath().relativize(file.getAbsoluteFile().toPath()).toString();
+    }
+
     @Override
     public void init() {
         super.init();
@@ -48,7 +53,7 @@ public class FileField extends AbstractSettingField<String> {
                     File current = new File(getTopLevel(setting), setting.get());
                     FileChooser fc = new FileChooser(parent.x, parent.y, parent.width, parent.height, textRenderer, current.getParentFile(), current, getFirstOverlayParent(), (file) -> {
                         try {
-                            setting.set("." + file.getAbsolutePath().substring(getTopLevel(setting).getAbsolutePath().length()).replaceAll("\\\\", "/"));
+                            setting.set("./" + relativize(setting, file).replaceAll("\\\\", "/"));
                         } catch (IllegalAccessException | InvocationTargetException e) {
                             e.printStackTrace();
                         }
