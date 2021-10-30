@@ -51,7 +51,7 @@ public class KeyMacrosScreen extends MacroScreen {
         String translationKey = EventKey.getKeyModifiers(modifiers);
         if (!translationKey.equals("")) translationKey += "+";
         translationKey += InputUtil.fromKeyCode(keyCode, scanCode).getTranslationKey();
-        for (MacroContainer macro : macros) {
+        for (MacroContainer macro : (List<MacroContainer>)(List) macros) {
             if (!macro.onKey(translationKey)) return false;
         }
         return super.keyReleased(keyCode, scanCode, modifiers);
@@ -66,7 +66,7 @@ public class KeyMacrosScreen extends MacroScreen {
         String translationKey = EventKey.getKeyModifiers(mods);
         if (!translationKey.equals("")) translationKey += "+";
         translationKey += InputUtil.Type.MOUSE.createFromCode(button).getTranslationKey();
-        for (MacroContainer macro : macros) {
+        for (MacroContainer macro : (List<MacroContainer>)(List) macros) {
             if (!macro.onKey(translationKey)) return false;
         }
         return super.mouseReleased(mouseX, mouseY, button);

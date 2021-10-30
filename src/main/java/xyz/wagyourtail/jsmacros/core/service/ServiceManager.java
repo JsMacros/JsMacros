@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.service;
 
+import com.google.common.collect.ImmutableSet;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
@@ -8,14 +9,39 @@ import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
-public class ServiceLoader {
+/**
+ * @author Wagyourtail
+ * @since 1.6.3
+ */
+public class ServiceManager {
     protected final Core<?, ?> runner;
     protected final Map<String, Pair<ServiceTrigger, EventContainer<EventService>>> registeredServices = new LinkedHashMap<>();
 
-    public ServiceLoader(Core<?, ?> runner) {
+    public ServiceManager(Core<?, ?> runner) {
         this.runner = runner;
-        load();
+    }
+
+    /**
+     * @param name
+     * @param pathToFile relative to macro folder
+     *
+     * @return false if service with that name is already registered
+     */
+    public synchronized boolean registerService(String name, String pathToFile) {
+        return registerService(name, new ServiceTrigger(runner.config.macroFolder.getAbsoluteFile().toPath().resolve(pathToFile).toFile(), true));
+    }
+
+    /**
+     * @param name
+     * @param pathToFile relative to macro folder
+     * @param enabled
+     *
+     * @return false if service with that name is already registered
+     */
+    public synchronized boolean registerService(String name, String pathToFile, boolean enabled) {
+        return registerService(name, new ServiceTrigger(runner.config.macroFolder.getAbsoluteFile().toPath().resolve(pathToFile).toFile(), enabled));
     }
 
     /**
@@ -31,9 +57,35 @@ public class ServiceLoader {
         return true;
     }
 
-    public synchronized void unregisterService(String name) {
+    /**
+     * @param name
+     *
+     * @return
+     */
+    public synchronized boolean unregisterService(String name) {
         stopService(name);
-        registeredServices.remove(name);
+        return registeredServices.remove(name) != null;
+    }
+
+    /**
+     * @param oldName
+     * @param newName
+     *
+     * @return false if service with new name already registered or old name doesn't exist
+     */
+    public synchronized boolean renameService(String oldName, String newName) {
+        if (registeredServices.containsKey(newName)) return false;
+        Pair<ServiceTrigger, EventContainer<EventService>> service = registeredServices.remove(oldName);
+        if (service == null) return false;
+        registeredServices.put(newName, service);
+        return true;
+    }
+
+    /**
+     * @return registered service names
+     */
+    public synchronized Set<String> getServices() {
+        return ImmutableSet.copyOf(registeredServices.keySet());
     }
 
     /**
@@ -118,13 +170,20 @@ public class ServiceLoader {
         Pair<ServiceTrigger, EventContainer<EventService>> service = registeredServices.get(name);
         if (service == null) return ServiceStatus.UNKNOWN;
         if (service.getT().enabled) {
-            if (service.getU().getCtx().isContextClosed()) return ServiceStatus.STOPPED;
+            if (service.getU() == null || service.getU().getCtx().isContextClosed()) return ServiceStatus.STOPPED;
             return ServiceStatus.ENABLED;
         }
-        if (service.getU().getCtx().isContextClosed()) return ServiceStatus.DISABLED;
+        if (service.getU() == null || service.getU().getCtx().isContextClosed()) return ServiceStatus.DISABLED;
         return ServiceStatus.RUNNING;
     }
 
+    public ServiceTrigger getServiceData(String name) {
+        return registeredServices.get(name).getT();
+    }
+
+    /**
+     * load services from config
+     */
     public synchronized void load() {
         Map<String, ServiceTrigger> configTriggers = runner.config.getOptions(CoreConfigV2.class).services;
         for (Map.Entry<String, Pair<ServiceTrigger, EventContainer<EventService>>> registered : registeredServices.entrySet()) {
@@ -144,6 +203,9 @@ public class ServiceLoader {
         }
     }
 
+    /**
+     * save current registered services & enabled/disabled status to config
+     */
     public synchronized void save() {
         Map<String, ServiceTrigger> services = new HashMap<>();
         for (Map.Entry<String, Pair<ServiceTrigger, EventContainer<EventService>>> service : registeredServices.entrySet()) {

@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.gui.screens;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.screen.Screen;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
+import xyz.wagyourtail.jsmacros.client.gui.containers.MacroListTopbar;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseListener;
@@ -24,8 +25,8 @@ public class EventMacrosScreen extends MacroScreen {
         eventScreen.setColor(0x4FFFFFFF);
         
         keyScreen.onPress = (btn) -> this.openParent();
-        
-        topbar.updateType(ScriptTrigger.TriggerType.EVENT);
+
+        ((MacroListTopbar)topbar).updateType(ScriptTrigger.TriggerType.EVENT);
         
         List<ScriptTrigger> macros = new ArrayList<>();
         

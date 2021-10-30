@@ -10,6 +10,7 @@ import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroContainer;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroListTopbar;
+import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.AboutOverlay;
@@ -27,12 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MacroScreen extends BaseScreen {
-    protected MacroListTopbar topbar;
+    protected MultiElementContainer<MacroScreen> topbar;
     protected Scrollbar macroScroll;
-    protected List<MacroContainer> macros = new ArrayList<>();
+    protected List<MultiElementContainer<MacroScreen>> macros = new ArrayList<>();
     protected int topScroll;
     protected Button keyScreen;
     protected Button eventScreen;
+    protected Button serviceScreen;
     protected Button runningBtn;
     protected Button aboutBtn;
     
@@ -52,7 +54,7 @@ public class MacroScreen extends BaseScreen {
             openOverlay(new SettingsOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this));
         }));
 
-        topbar = new MacroListTopbar(this, this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer, ScriptTrigger.TriggerType.KEY_RISING);
+        topbar = createTopbar();
 
         topScroll = 40;
         macroScroll = this.addDrawableChild(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
@@ -61,8 +63,17 @@ public class MacroScreen extends BaseScreen {
             assert client != null;
             client.openScreen(new CancelScreen(this));
         }));
-        
+
+        serviceScreen = this.addDrawableChild(new Button(this.width /12 + 1, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.service"), (btn) -> {
+            assert client != null;
+            client.openScreen(new ServiceScreen(this));
+        }));
+
         aboutBtn = this.addDrawableChild(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this))));
+    }
+
+    protected MultiElementContainer<MacroScreen> createTopbar() {
+        return new MacroListTopbar(this, this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer, ScriptTrigger.TriggerType.KEY_RISING);
     }
     
     @Override
@@ -78,11 +89,11 @@ public class MacroScreen extends BaseScreen {
         macroScroll.setScrollPages(((macros.size() + 1) * 16) / (double) Math.max(1, this.height - 40));
     }
 
-    public void setFile(MacroContainer macro) {
-        File f = new File(Core.instance.config.macroFolder, macro.getRawMacro().scriptFile);
+    public void  setFile(MultiElementContainer<MacroScreen> macro) {
+        File f = new File(Core.instance.config.macroFolder, ((MacroContainer) macro).getRawMacro().scriptFile);
         File dir = Core.instance.config.macroFolder;
         if (!f.equals(Core.instance.config.macroFolder)) dir = f.getParentFile();
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this, macro::setFile, this::editFile));
+        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this, ((MacroContainer) macro)::setFile, this::editFile));
     }
     
     public void setEvent(MacroContainer macro) {
@@ -95,12 +106,12 @@ public class MacroScreen extends BaseScreen {
         }, this::editFile));
     }
 
-    public void confirmRemoveMacro(MacroContainer macro) {
+    public void confirmRemoveMacro(MultiElementContainer<MacroScreen> macro) {
         openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, this.textRenderer, new TranslatableText("jsmacros.confirmdeletemacro"), this, (conf) -> removeMacro(macro)));
     }
     
-    public void removeMacro(MacroContainer macro) {
-        Core.instance.eventRegistry.removeScriptTrigger(macro.getRawMacro());
+    public void removeMacro(MultiElementContainer<MacroScreen> macro) {
+        Core.instance.eventRegistry.removeScriptTrigger(((MacroContainer) macro).getRawMacro());
         for (ClickableWidget b : macro.getButtons()) {
             remove(b);
         }
@@ -115,7 +126,7 @@ public class MacroScreen extends BaseScreen {
     
     public void setMacroPos() {
         int i = 0;
-        for (MacroContainer m : macros) {
+        for (MultiElementContainer<MacroScreen> m : macros) {
             m.setVisible(topScroll + i * 16 >= 40);
             m.setPos(this.width / 12, topScroll + (i++) * 16, this.width * 5 / 6, 14);
         }
@@ -170,7 +181,7 @@ public class MacroScreen extends BaseScreen {
                 ((Drawable) b).render(matrices, mouseX, mouseY, delta);
         }
 
-        for (MacroContainer macro : ImmutableList.copyOf(this.macros)) {
+        for (MultiElementContainer<MacroScreen> macro : ImmutableList.copyOf(this.macros)) {
             macro.render(matrices, mouseX, mouseY, delta);
         }
         

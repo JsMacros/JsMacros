@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -14,20 +15,18 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.graalvm.polyglot.Context;
-import org.graalvm.polyglot.Context.Builder;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.config.Profile;
 import xyz.wagyourtail.jsmacros.client.event.EventRegistry;
-import xyz.wagyourtail.wagyourgui.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.KeyMacrosScreen;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 import java.io.File;
 
-public class JsMacros implements ClientModInitializer {
+public class JsMacros implements ModInitializer, ClientModInitializer {
     public static final String MOD_ID = "jsmacros";
     public static final Logger LOGGER  = LogManager.getLogger();
     public static KeyBinding keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title"));
@@ -37,22 +36,25 @@ public class JsMacros implements ClientModInitializer {
     public static final Core<Profile, EventRegistry> core = Core.createInstance(EventRegistry::new, Profile::new, configFolder.getAbsoluteFile(), new File(configFolder, "Macros"), LOGGER);
 
     @Override
-    public void onInitializeClient() {
+    public void onInitialize() {
+        // this is first, we just want core loaded here
         try {
             core.config.addOptions("client", ClientConfigV2.class);
         } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
+
+        // HINT TO EXTENSION DEVS: Use this init to add your shit before any scripts are actually run
+    }
+
+
+    @Override
+    public void onInitializeClient() {
+        // this comes later, we want to do core's deferred init here
+        core.deferredInit();
+
         KeyBindingHelper.registerKeyBinding(keyBinding);
         prevScreen = new KeyMacrosScreen(null);
-        
-        Thread t = new Thread(() -> {
-            Builder build = Context.newBuilder("js");
-            Context con = build.build();
-            con.eval("js", "console.log('js pre-loaded.')");
-            con.close();
-        });
-        t.start();
 
         // Init MovementQueue
         MovementQueue.clear();

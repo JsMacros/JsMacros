@@ -16,6 +16,7 @@ import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
+import xyz.wagyourtail.jsmacros.core.service.ServiceManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -50,6 +51,16 @@ public class FJsMacros extends PerExecLibrary {
      */
     public ConfigManager getConfig() {
         return Core.instance.config;
+    }
+
+    /**
+     * services are background scripts designed to run full time and are mainly noticed by their side effects.
+     *
+     * @since 1.6.3
+     * @return for managing services.
+     */
+    public ServiceManager getServiceManager() {
+        return Core.instance.services;
     }
 
     /**

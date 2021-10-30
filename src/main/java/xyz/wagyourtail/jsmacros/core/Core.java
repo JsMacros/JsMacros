@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core;
 
 import org.apache.logging.log4j.Logger;
+import org.graalvm.polyglot.Context;
 import xyz.wagyourtail.SynchronizedWeakHashSet;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
@@ -14,7 +15,7 @@ import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.core.library.LibraryRegistry;
-import xyz.wagyourtail.jsmacros.core.service.ServiceLoader;
+import xyz.wagyourtail.jsmacros.core.service.ServiceManager;
 
 import java.io.File;
 import java.util.*;
@@ -39,7 +40,9 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
     public final List<BaseLanguage<?>> languages = new ArrayList<>();
     public final BaseLanguage<?> defaultLang = new JavascriptLanguageDefinition(".js", this);
 
-    public final ServiceLoader services;
+    public final ServiceManager services;
+
+    private boolean deferredInit = false;
 
     protected Core(Function<Core<T, U>, U> eventRegistryFunction, Function<Core<T, U>, T> profileFunction, File configFolder, File macroFolder, Logger logger) {
         instance = this;
@@ -47,7 +50,16 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
         eventRegistry = eventRegistryFunction.apply(this);
         config = new ConfigManager(configFolder, macroFolder, logger);
         profile = profileFunction.apply(this);
-        this.services = new ServiceLoader(this);
+        this.services = new ServiceManager(this);
+    }
+
+    public void deferredInit() {
+        if (deferredInit) {
+            throw new RuntimeException("deferredInit has already ran!");
+        }
+        instance.profile.init(instance.config.getOptions(CoreConfigV2.class).defaultProfile);
+        instance.services.load();
+        deferredInit = true;
     }
 
     /**
@@ -78,8 +90,16 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      */
     public static <V extends BaseProfile, R extends BaseEventRegistry> Core<V, R> createInstance(Function<Core<V, R>, R> eventRegistryFunction, Function<Core<V, R>, V> profileFunction, File configFolder, File macroFolder, Logger logger) {
         if (instance != null) throw new RuntimeException("Can't declare RunScript instance more than once");
+
+        Thread t = new Thread(() -> {
+            Context.Builder build = Context.newBuilder("js");
+            Context con = build.build();
+            con.eval("js", "console.log('js pre-loaded.')");
+            con.close();
+        });
+        t.start();
+
         new Core<>(eventRegistryFunction, profileFunction, configFolder, macroFolder, logger);
-        instance.profile.init(instance.config.getOptions(CoreConfigV2.class).defaultProfile);
         return (Core<V, R>) instance;
     }
 
