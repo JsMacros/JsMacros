@@ -62,7 +62,7 @@ public class Main implements Doclet {
 
     @Override
     public boolean run(DocletEnvironment environment) {
-        mappingViewerURL = "https://wagyourtail.xyz/Projects/Minecraft%20Mappings%20Viewer/App?mapping=yarn,yarnIntermediary&version=" + McVersion.mcVersion + "&search=";
+        mappingViewerURL = "https://wagyourtail.xyz/Projects/MinecraftMappingViewer/App?mapping=INTERMEDIARY,YARN&version=" + McVersion.mcVersion + "&search=";
         elements = environment.getIncludedElements();
         treeUtils = environment.getDocTrees();
         elementUtils = environment.getElementUtils();
