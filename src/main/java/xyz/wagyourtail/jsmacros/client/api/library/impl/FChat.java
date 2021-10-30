@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.LiteralText;
@@ -48,7 +47,7 @@ public class FChat extends BaseLibrary {
      * @throws InterruptedException
      */
     public void log(Object message, boolean await) throws InterruptedException {
-        if (Core.instance.profile.checkJoinedThreadStack()) {
+        if (Core.getInstance().profile.checkJoinedThreadStack()) {
             if (message instanceof TextHelper) {
                 logInternal((TextHelper)message);
             } else if (message != null) {
@@ -102,7 +101,7 @@ public class FChat extends BaseLibrary {
      */
     public void say(String message, boolean await) throws InterruptedException {
         if (message == null) return;
-        if (Core.instance.profile.checkJoinedThreadStack()) {
+        if (Core.getInstance().profile.checkJoinedThreadStack()) {
             assert mc.player != null;
             mc.player.sendChatMessage(message);
         } else {

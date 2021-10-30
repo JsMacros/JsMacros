@@ -39,7 +39,7 @@ public class Profile extends BaseProfile {
     
     @Override
     public void triggerEventJoin(BaseEvent event) {
-        boolean joinedMain = Core.instance.profile.checkJoinedThreadStack();
+        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         triggerEventJoinNoAnything(event);
     
         for (IEventListener macro : runner.eventRegistry.getListeners("ANYTHING")) {
@@ -49,7 +49,7 @@ public class Profile extends BaseProfile {
     
     @Override
     public void triggerEventJoinNoAnything(BaseEvent event) {
-        boolean joinedMain = Core.instance.profile.checkJoinedThreadStack();
+        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (event instanceof EventCustom) {
             for (IEventListener macro : runner.eventRegistry.getListeners(((EventCustom) event).eventName)) {
                 runJoinedEventListener(event, joinedMain, macro);
@@ -71,7 +71,7 @@ public class Profile extends BaseProfile {
             if (joinedMain) {
                 joinedThreadStack.add(t.getLockThread());
             }
-            EventLockWatchdog.startWatchdog(t, macroListener, Core.instance.config.getOptions(CoreConfigV2.class).maxLockTime);
+            EventLockWatchdog.startWatchdog(t, macroListener, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
             t.awaitLock(() -> joinedThreadStack.remove(t.getLockThread()));
         } catch (InterruptedException ignored) {
             joinedThreadStack.remove(t.getLockThread());

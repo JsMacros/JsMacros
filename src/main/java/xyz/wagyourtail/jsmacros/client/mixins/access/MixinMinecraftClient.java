@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.mixins.access;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.FontManager;
 import net.minecraft.client.gui.screen.Screen;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -49,7 +48,7 @@ class MixinMinecraftClient implements IMinecraftClient {
         try {
             if (onClose != null) onClose.accept((IScreen) currentScreen);
         } catch (Exception e) {
-            Core.instance.profile.logError(e);
+            Core.getInstance().profile.logError(e);
         }
     }
     

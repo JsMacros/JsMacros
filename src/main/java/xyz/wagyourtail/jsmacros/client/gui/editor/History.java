@@ -11,7 +11,7 @@ import java.util.function.Consumer;
  *
  */
 public class History {
-    protected int MAX_UNDO = Core.instance.config.getOptions(ClientConfigV2.class).editorHistorySize;
+    protected int MAX_UNDO = Core.getInstance().config.getOptions(ClientConfigV2.class).editorHistorySize;
     protected List<HistoryStep> undo = new ArrayList<>(MAX_UNDO + 1);
     protected List<HistoryStep> redo = new ArrayList<>(MAX_UNDO + 1);
     

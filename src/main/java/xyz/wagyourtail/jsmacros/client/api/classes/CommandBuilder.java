@@ -176,7 +176,7 @@ public class CommandBuilder {
     public CommandBuilder executes(MethodWrapper<CommandContextHelper, Object, Boolean, ?> callback) {
         pointer.peek().executes((ctx) -> {
             EventContainer<?> lock = new EventContainer<>(callback.getCtx());
-            EventLockWatchdog.startWatchdog(lock, null, Core.instance.config.getOptions(CoreConfigV2.class).maxLockTime);
+            EventLockWatchdog.startWatchdog(lock, null, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
             boolean success = callback.apply(new CommandContextHelper(ctx));
             lock.releaseLock();
             return success ? 1 : 0;

@@ -51,7 +51,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
      * @throws InterruptedException
      */
     public TextFieldWidgetHelper setText(String text, boolean await) throws InterruptedException {
-        if (Core.instance.profile.checkJoinedThreadStack()) {
+        if (Core.getInstance().profile.checkJoinedThreadStack()) {
             base.setText(text);
         } else {
             final Semaphore waiter = new Semaphore(await ? 0 : 1);

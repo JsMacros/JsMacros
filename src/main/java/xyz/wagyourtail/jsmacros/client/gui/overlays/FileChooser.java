@@ -26,7 +26,7 @@ public class FileChooser extends OverlayContainer {
     private File directory;
     private Text dirname;
     private File selected;
-    public File root = Core.instance.config.macroFolder;
+    public File root = Core.getInstance().config.macroFolder;
     private final List<fileObj> files = new ArrayList<>();
     private final Consumer<File> setFile;
     private final Consumer<File> editFile;
@@ -129,14 +129,14 @@ public class FileChooser extends OverlayContainer {
         this.addDrawableChild(new Button(x + w / 6 + 2, y + height - 14, w / 6, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.new"), (btn) -> this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, new TranslatableText("jsmacros.filename"), "", this, (str) -> {
             if (str.trim().equals("")) return;
             boolean edit = true;
-            for (BaseLanguage language : Core.instance.languages) {
+            for (BaseLanguage language : Core.getInstance().languages) {
                 if (str.endsWith(language.extension)) {
                     edit = false;
                     break;
                 }
             }
             if (edit) {
-                str += Core.instance.defaultLang.extension;
+                str += Core.getInstance().defaultLang.extension;
             }
             File f = new File(directory, str);
             try {

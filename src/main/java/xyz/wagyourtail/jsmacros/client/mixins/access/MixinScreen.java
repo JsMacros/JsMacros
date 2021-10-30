@@ -409,7 +409,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             try {
                 callback.accept(b.get(), this);
             } catch (Exception e) {
-                Core.instance.profile.logError(e);
+                Core.getInstance().profile.logError(e);
             }
         });
         b.set(new ButtonWidgetHelper<>(button, zIndex));
@@ -443,7 +443,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
                 try {
                     onChange.accept(str, this);
                 } catch (Exception e) {
-                    Core.instance.profile.logError(e);
+                    Core.getInstance().profile.logError(e);
                 }
             });
         }
@@ -604,7 +604,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
                     if (catchInit != null) catchInit.accept(e.toString());
                     else throw e;
                 } catch (Exception f) {
-                    Core.instance.profile.logError(f);
+                    Core.getInstance().profile.logError(f);
                 }
             }
         }

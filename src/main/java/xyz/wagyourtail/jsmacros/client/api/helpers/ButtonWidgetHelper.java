@@ -158,7 +158,7 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
      * @since 1.3.1
      */
     public ButtonWidgetHelper<T> click(boolean await) throws InterruptedException {
-        if (Core.instance.profile.checkJoinedThreadStack()) {
+        if (Core.getInstance().profile.checkJoinedThreadStack()) {
             base.mouseClicked(base.x, base.y, 0);
             base.mouseReleased(base.x, base.y, 0);
         } else {

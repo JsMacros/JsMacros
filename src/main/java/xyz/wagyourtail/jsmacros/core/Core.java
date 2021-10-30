@@ -25,9 +25,11 @@ import java.util.function.Supplier;
 
 public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
     /**
-     * static reference to instace created by {@link #createInstance(Function, Function, File, File, Logger)}
+     * static reference to instance created by {@link #createInstance(Function, Function, File, File, Logger)}
+     * @Deprecated making this private in 1.7.0
      */
-    public static Core<?, ?> instance;
+    @Deprecated
+    private static Core<?, ?> instance;
 
     public final LibraryRegistry libraryRegistry = new LibraryRegistry();
     public final BaseEventRegistry eventRegistry;
@@ -51,6 +53,13 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
         config = new ConfigManager(configFolder, macroFolder, logger);
         profile = profileFunction.apply(this);
         this.services = new ServiceManager(this);
+    }
+
+    /**
+     * static reference to instance created by {@link #createInstance(Function, Function, File, File, Logger)}
+     */
+    public static Core<?, ?> getInstance() {
+        return instance;
     }
 
     public void deferredInit() {

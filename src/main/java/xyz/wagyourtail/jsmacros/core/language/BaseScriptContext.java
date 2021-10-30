@@ -164,7 +164,7 @@ public abstract class BaseScriptContext<T> {
         closed = true;
         events.values().forEach(EventContainer::releaseLock);
         threads.forEach(Thread::interrupt);
-        Core.instance.getContexts().remove(this);
+        Core.getInstance().getContexts().remove(this);
     }
 
     /**
@@ -181,6 +181,6 @@ public abstract class BaseScriptContext<T> {
      * @return
      */
     public File getContainedFolder() {
-        return mainFile == null ? Core.instance.config.macroFolder.getAbsoluteFile() : mainFile.getParentFile().getAbsoluteFile();
+        return mainFile == null ? Core.getInstance().config.macroFolder.getAbsoluteFile() : mainFile.getParentFile().getAbsoluteFile();
     }
 }

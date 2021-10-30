@@ -30,17 +30,17 @@ public class EventMacrosScreen extends MacroScreen {
         
         List<ScriptTrigger> macros = new ArrayList<>();
         
-        for (String event : ImmutableList.copyOf(Core.instance.eventRegistry.events)) {
-                for (IEventListener macro : Core.instance.eventRegistry.getListeners(event)) {
+        for (String event : ImmutableList.copyOf(Core.getInstance().eventRegistry.events)) {
+                for (IEventListener macro : Core.getInstance().eventRegistry.getListeners(event)) {
                     if (macro instanceof BaseListener && ((BaseListener) macro).getRawTrigger().triggerType == ScriptTrigger.TriggerType.EVENT) macros.add(((BaseListener) macro).getRawTrigger());
                 }
         }
-        if (Core.instance.eventRegistry.getListeners().containsKey(""))
-            for (IEventListener macro : Core.instance.eventRegistry.getListeners().get("")) {
+        if (Core.getInstance().eventRegistry.getListeners().containsKey(""))
+            for (IEventListener macro : Core.getInstance().eventRegistry.getListeners().get("")) {
                 if (macro instanceof BaseListener) macros.add(((BaseListener) macro).getRawTrigger());
             }
 
-        macros.sort(Core.instance.config.getOptions(ClientConfigV2.class).getSortComparator());
+        macros.sort(Core.getInstance().config.getOptions(ClientConfigV2.class).getSortComparator());
         
         for (ScriptTrigger macro : macros) {
             addMacro(macro);

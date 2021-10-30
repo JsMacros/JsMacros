@@ -6,7 +6,6 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
-import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.core.library.IFWrapper;
 import xyz.wagyourtail.jsmacros.core.library.Library;
@@ -175,7 +174,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
             Throwable[] error = {null};
             Semaphore lock = new Semaphore(0);
-            boolean joinedThread = Core.instance.profile.checkJoinedThreadStack();
+            boolean joinedThread = Core.getInstance().profile.checkJoinedThreadStack();
 
             Thread th = new Thread(() -> {
                 try {
@@ -192,12 +191,12 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     ctx.getContext().enter();
                     try {
                         if (await && joinedThread) {
-                            Core.instance.profile.joinedThreadStack.add(Thread.currentThread());
+                            Core.getInstance().profile.joinedThreadStack.add(Thread.currentThread());
                         }
                         fn.apply(new Object[] {t, u});
                     } catch (Throwable ex) {
                         if (!await) {
-                            Core.instance.profile.logError(ex);
+                            Core.getInstance().profile.logError(ex);
                         }
                         error[0] = ex;
                     } finally {
@@ -205,7 +204,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
                         ctx.releaseBoundEventIfPresent(Thread.currentThread());
 
-                        Core.instance.profile.joinedThreadStack.remove(Thread.currentThread());
+                        Core.getInstance().profile.joinedThreadStack.remove(Thread.currentThread());
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -246,7 +245,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
             Object[] retVal = {null};
             Throwable[] error = {null};
             Semaphore lock = new Semaphore(0);
-            boolean joinedThread = Core.instance.profile.checkJoinedThreadStack();
+            boolean joinedThread = Core.getInstance().profile.checkJoinedThreadStack();
 
             Thread th = new Thread(() -> {
                 try {
@@ -264,7 +263,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     ctx.getContext().enter();
                     try {
                         if (await && joinedThread) {
-                            Core.instance.profile.joinedThreadStack.add(Thread.currentThread());
+                            Core.getInstance().profile.joinedThreadStack.add(Thread.currentThread());
                         }
                         retVal[0] = fn.apply(new Object[] {t, u});
                     } catch (Throwable ex) {
@@ -274,7 +273,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
                         ctx.releaseBoundEventIfPresent(Thread.currentThread());
 
-                        Core.instance.profile.joinedThreadStack.remove(Thread.currentThread());
+                        Core.getInstance().profile.joinedThreadStack.remove(Thread.currentThread());
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

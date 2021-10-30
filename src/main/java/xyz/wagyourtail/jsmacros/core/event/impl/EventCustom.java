@@ -249,6 +249,6 @@ public class EventCustom implements BaseEvent {
      * @since 1.3.0
      */
     public void registerEvent() {
-        Core.instance.eventRegistry.addEvent(eventName);
+        Core.getInstance().eventRegistry.addEvent(eventName);
     }
 }

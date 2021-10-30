@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class DefaultCodeCompiler extends AbstractRenderCodeCompiler {
-    private final Map<String, short[]> themeData = Core.instance.config.getOptions(ClientConfigV2.class).getThemeData();
+    private final Map<String, short[]> themeData = Core.getInstance().config.getOptions(ClientConfigV2.class).getThemeData();
     private final AutoCompleteSuggestor suggestor;
     private LiteralText[] compiledText = new LiteralText[0];
     private List<AutoCompleteSuggestion> suggestions = new LinkedList<>();
@@ -40,7 +40,7 @@ public class DefaultCodeCompiler extends AbstractRenderCodeCompiler {
         }
         
         // suggestion compile
-        if (screen.cursor.startIndex != screen.cursor.endIndex || !Core.instance.config.getOptions(ClientConfigV2.class).editorSuggestions || screen.prevChar == '\0') {
+        if (screen.cursor.startIndex != screen.cursor.endIndex || !Core.getInstance().config.getOptions(ClientConfigV2.class).editorSuggestions || screen.prevChar == '\0') {
             suggestions = new LinkedList<>();
         } else {
             String line = text.split("\n", -1)[screen.cursor.startLine].substring(0, screen.cursor.startLineIndex);

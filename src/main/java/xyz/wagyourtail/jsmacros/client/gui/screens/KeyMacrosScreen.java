@@ -32,14 +32,14 @@ public class KeyMacrosScreen extends MacroScreen {
             client.openScreen(new EventMacrosScreen(this));
         };
 
-        Set<IEventListener> listeners = Core.instance.eventRegistry.getListeners().get(EventKey.class.getAnnotation(Event.class).value());
+        Set<IEventListener> listeners = Core.getInstance().eventRegistry.getListeners().get(EventKey.class.getAnnotation(Event.class).value());
         List<ScriptTrigger> macros = new ArrayList<>();
 
         if (listeners != null) for (IEventListener event : ImmutableList.copyOf(listeners)) {
             if (event instanceof BaseListener && ((BaseListener) event).getRawTrigger().triggerType != ScriptTrigger.TriggerType.EVENT) macros.add(((BaseListener) event).getRawTrigger());
         }
 
-        macros.sort(Core.instance.config.getOptions(ClientConfigV2.class).getSortComparator());
+        macros.sort(Core.getInstance().config.getOptions(ClientConfigV2.class).getSortComparator());
 
         for (ScriptTrigger macro : macros) {
             addMacro(macro);

@@ -85,7 +85,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
         }));
         
         editBtn = addDrawableChild(new Button(x + w - 32, y + 1, 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("selectServer.edit"), (btn) -> {
-            if (!macro.scriptFile.equals("")) parent.editFile(new File(Core.instance.config.macroFolder, macro.scriptFile));
+            if (!macro.scriptFile.equals("")) parent.editFile(new File(Core.getInstance().config.macroFolder, macro.scriptFile));
         }));
 
         delBtn = addDrawableChild(new Button(x + w - 1, y + 1, 12, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("X"), (btn) -> {
@@ -94,14 +94,14 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
     }
     
     public void setEventType(String type) {
-        Core.instance.eventRegistry.removeScriptTrigger(macro);
+        Core.getInstance().eventRegistry.removeScriptTrigger(macro);
         macro.event = type;
-        Core.instance.eventRegistry.addScriptTrigger(macro);
+        Core.getInstance().eventRegistry.addScriptTrigger(macro);
         keyBtn.setMessage(new LiteralText(macro.event.replace("Event", "")));
     }
     
     public void setFile(File f) {
-        macro.scriptFile = Core.instance.config.macroFolder.getAbsoluteFile().toPath().relativize(f.getAbsoluteFile().toPath()).toString();
+        macro.scriptFile = Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(f.getAbsoluteFile().toPath()).toString();
         fileBtn.setMessage(new LiteralText("./"+macro.scriptFile.replaceAll("\\\\", "/")));
     }
 
@@ -138,9 +138,9 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
     }
     
     public void setKey(String translationKeys) {
-        Core.instance.eventRegistry.removeScriptTrigger(macro);
+        Core.getInstance().eventRegistry.removeScriptTrigger(macro);
         macro.event = translationKeys;
-        Core.instance.eventRegistry.addScriptTrigger(macro);
+        Core.getInstance().eventRegistry.addScriptTrigger(macro);
         keyBtn.setMessage(buildKeyName(translationKeys));
         selectkey = false;
     }

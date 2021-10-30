@@ -146,7 +146,7 @@ public class TextBuilder {
             try {
                 action.run();
             } catch (Exception ex) {
-                Core.instance.profile.logError(ex);
+                Core.getInstance().profile.logError(ex);
             }
         }).start())));
         return this;

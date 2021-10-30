@@ -33,11 +33,11 @@ public class CoreConfigV2 {
     //"synthetic" option
     @Option(translationKey = "jsmacros.currentprofile", group = "jsmacros.settings.profile", setter = "setCurrentProfile", options = "profileOptions")
     public String getCurrentProfile() {
-        return Core.instance.profile.getCurrentProfileName();
+        return Core.getInstance().profile.getCurrentProfileName();
     }
     
     public void setCurrentProfile(String pname) {
-        Core.instance.profile.loadOrCreateProfile(pname);
+        Core.getInstance().profile.loadOrCreateProfile(pname);
     }
     
     public List<String> profileOptions() {

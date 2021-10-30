@@ -33,7 +33,7 @@ public class ServiceScreen extends MacroScreen {
 
         serviceScreen.onPress = null;
 
-        List<String> services = new ArrayList<>(Core.instance.services.getServices());
+        List<String> services = new ArrayList<>(Core.getInstance().services.getServices());
 
         //TODO: sort services from topbar, for name let's just sort alphabetically
         services.sort(String::compareTo);
@@ -59,9 +59,9 @@ public class ServiceScreen extends MacroScreen {
 
     @Override
     public void  setFile(MultiElementContainer<MacroScreen> macro) {
-        File f = new File(Core.instance.config.macroFolder, ((ServiceContainer) macro).getTrigger().file);
-        File dir = Core.instance.config.macroFolder;
-        if (!f.equals(Core.instance.config.macroFolder)) dir = f.getParentFile();
+        File f = new File(Core.getInstance().config.macroFolder, ((ServiceContainer) macro).getTrigger().file);
+        File dir = Core.getInstance().config.macroFolder;
+        if (!f.equals(Core.getInstance().config.macroFolder)) dir = f.getParentFile();
         openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this, ((ServiceContainer) macro)::setFile, this::editFile));
     }
 
@@ -72,7 +72,7 @@ public class ServiceScreen extends MacroScreen {
 
     @Override
     public void onClose() {
-        Core.instance.services.save();
+        Core.getInstance().services.save();
         super.onClose();
     }
 

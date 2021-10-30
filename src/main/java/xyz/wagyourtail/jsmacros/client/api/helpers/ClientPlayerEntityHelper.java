@@ -2,13 +2,9 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -80,7 +76,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param entity
      */
     public ClientPlayerEntityHelper<T> attack(EntityHelper<?> entity, boolean await) throws InterruptedException {
-        boolean joinedMain = Core.instance.profile.checkJoinedThreadStack();
+        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         assert mc.interactionManager != null;
         if (entity.getRaw() == mc.player) throw new AssertionError("Can't interact with self!");
         if (joinedMain) {
@@ -124,7 +120,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      */
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, int direction, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
-        boolean joinedMain = Core.instance.profile.checkJoinedThreadStack();
+        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
             mc.interactionManager.attackBlock(new BlockPos(x, y, z), Direction.values()[direction]);
             assert mc.player != null;
@@ -162,7 +158,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         assert mc.interactionManager != null;
         if (entity.getRaw() == mc.player) throw new AssertionError("Can't interact with self!");
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
-        boolean joinedMain = Core.instance.profile.checkJoinedThreadStack();
+        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
             ActionResult result = mc.interactionManager.interactEntity(mc.player, entity.getRaw(), hand);
             assert mc.player != null;
@@ -198,7 +194,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     public ClientPlayerEntityHelper<T> interactItem(boolean offHand, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
-        boolean joinedMain = Core.instance.profile.checkJoinedThreadStack();
+        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
             ActionResult result = mc.interactionManager.interactItem(mc.player, mc.world, hand);
             assert mc.player != null;
@@ -233,7 +229,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, int direction, boolean offHand, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
-        boolean joinedMain = Core.instance.profile.checkJoinedThreadStack();
+        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
             ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, hand,
                 new BlockHitResult(Vec3d.ZERO, Direction.values()[direction], new BlockPos(x, y, z), false)
@@ -269,7 +265,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param await
      */
     public ClientPlayerEntityHelper<T> interact(boolean await) throws InterruptedException {
-        boolean joinedMain = Core.instance.profile.checkJoinedThreadStack();
+        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
             ((IMinecraftClient) mc).jsmacros_doItemUse();
         } else {
@@ -295,7 +291,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param await
      */
     public ClientPlayerEntityHelper<T> attack(boolean await) throws InterruptedException {
-        boolean joinedMain = Core.instance.profile.checkJoinedThreadStack();
+        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
             ((IMinecraftClient) mc).jsmacros_doAttack();
         } else {

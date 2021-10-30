@@ -28,15 +28,15 @@ public class FileField extends AbstractSettingField<String> {
                     case "MC":
                         return MinecraftClient.getInstance().runDirectory;
                     case "CONFIG":
-                        return Core.instance.config.configFolder;
+                        return Core.getInstance().config.configFolder;
                     case "MACRO":
                     default:
-                        return Core.instance.config.macroFolder;
+                        return Core.getInstance().config.macroFolder;
                 }
             }
         }
         //default
-        return Core.instance.config.macroFolder;
+        return Core.getInstance().config.macroFolder;
     }
 
     public static String relativize(SettingsOverlay.SettingField<?> setting, File file) {

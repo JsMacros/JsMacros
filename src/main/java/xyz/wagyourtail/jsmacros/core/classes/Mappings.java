@@ -14,7 +14,6 @@ import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -38,14 +37,14 @@ public class Mappings {
             if (mappingsource.startsWith("http")) {
                 builder.append(new BufferedReader(new InputStreamReader(new URL(mappingsource).openStream(), StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n")));
             } else {
-                builder.append(new BufferedReader(new FileReader(Core.instance.config.macroFolder.toPath().resolve(mappingsource).toFile())).lines().collect(Collectors.joining("\n")));
+                builder.append(new BufferedReader(new FileReader(Core.getInstance().config.macroFolder.toPath().resolve(mappingsource).toFile())).lines().collect(Collectors.joining("\n")));
             }
         } else {
             ZipInputStream zis;
             if (mappingsource.startsWith("http")) {
                 zis = new ZipInputStream(new BufferedInputStream(new URL(mappingsource).openStream(), 1024));
             } else {
-                zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(Core.instance.config.macroFolder.toPath().resolve(mappingsource).toFile()), 1024));
+                zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(Core.getInstance().config.macroFolder.toPath().resolve(mappingsource).toFile()), 1024));
             }
             ZipEntry e;
             while ((e = zis.getNextEntry()) != null && !e.getName().equals("mappings/mappings.tiny"));

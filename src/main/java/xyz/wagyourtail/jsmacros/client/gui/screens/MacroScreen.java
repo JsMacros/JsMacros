@@ -90,9 +90,9 @@ public class MacroScreen extends BaseScreen {
     }
 
     public void  setFile(MultiElementContainer<MacroScreen> macro) {
-        File f = new File(Core.instance.config.macroFolder, ((MacroContainer) macro).getRawMacro().scriptFile);
-        File dir = Core.instance.config.macroFolder;
-        if (!f.equals(Core.instance.config.macroFolder)) dir = f.getParentFile();
+        File f = new File(Core.getInstance().config.macroFolder, ((MacroContainer) macro).getRawMacro().scriptFile);
+        File dir = Core.getInstance().config.macroFolder;
+        if (!f.equals(Core.getInstance().config.macroFolder)) dir = f.getParentFile();
         openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this, ((MacroContainer) macro)::setFile, this::editFile));
     }
     
@@ -101,8 +101,8 @@ public class MacroScreen extends BaseScreen {
     }
     
     public void runFile() {
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, Core.instance.config.macroFolder, null, this, (file) -> {
-            Core.instance.exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null);
+        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, Core.getInstance().config.macroFolder, null, this, (file) -> {
+            Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null);
         }, this::editFile));
     }
 
@@ -111,7 +111,7 @@ public class MacroScreen extends BaseScreen {
     }
     
     public void removeMacro(MultiElementContainer<MacroScreen> macro) {
-        Core.instance.eventRegistry.removeScriptTrigger(((MacroContainer) macro).getRawMacro());
+        Core.getInstance().eventRegistry.removeScriptTrigger(((MacroContainer) macro).getRawMacro());
         for (ClickableWidget b : macro.getButtons()) {
             remove(b);
         }
@@ -134,12 +134,12 @@ public class MacroScreen extends BaseScreen {
 
     public void editFile(File file) {
         if (file != null && file.exists() && file.isFile()) {
-            if (Core.instance.config.getOptions(ClientConfigV2.class).externalEditor) {
-                String[] args = Core.instance.config.getOptions(ClientConfigV2.class).externalEditorCommand.split("\\s+");
+            if (Core.getInstance().config.getOptions(ClientConfigV2.class).externalEditor) {
+                String[] args = Core.getInstance().config.getOptions(ClientConfigV2.class).externalEditorCommand.split("\\s+");
                 for (int i = 0; i < args.length; ++i) {
                     args[i] = args[i]
                         .replace("%File", file.getAbsolutePath())
-                        .replace("%MacroFolder", Core.instance.config.macroFolder.getAbsolutePath())
+                        .replace("%MacroFolder", Core.getInstance().config.macroFolder.getAbsolutePath())
                         .replace("%Folder", file.getParentFile().getAbsolutePath());
                         File f = file;
                         if (args[i].startsWith("%Parent")) {
@@ -162,7 +162,7 @@ public class MacroScreen extends BaseScreen {
                     }
                 }
                 System.out.println(System.getenv("PATH"));
-                System.out.printf("Failed to run cmd '%s'", Core.instance.config.getOptions(ClientConfigV2.class).externalEditorCommand);
+                System.out.printf("Failed to run cmd '%s'", Core.getInstance().config.getOptions(ClientConfigV2.class).externalEditorCommand);
             }
             assert client != null;
             client.openScreen(new EditorScreen(this, file));
@@ -185,7 +185,7 @@ public class MacroScreen extends BaseScreen {
             macro.render(matrices, mouseX, mouseY, delta);
         }
         
-        drawCenteredText(matrices, this.textRenderer, Core.instance.profile.getCurrentProfileName(), this.width * 7 / 12, 5, 0x7F7F7F);
+        drawCenteredText(matrices, this.textRenderer, Core.getInstance().profile.getCurrentProfileName(), this.width * 7 / 12, 5, 0x7F7F7F);
 
         fill(matrices, this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
         fill(matrices, this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);
@@ -202,7 +202,7 @@ public class MacroScreen extends BaseScreen {
     
     @Override
     public void onClose() {
-        Core.instance.profile.saveProfile();
+        Core.getInstance().profile.saveProfile();
         super.onClose();
     }
 }

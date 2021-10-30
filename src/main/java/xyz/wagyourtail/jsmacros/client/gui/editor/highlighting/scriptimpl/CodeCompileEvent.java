@@ -128,7 +128,7 @@ import java.util.Map;
      *     to {@link TextBuilder#withColor(int)}
      */
     public Map<String, short[]> getThemeData() {
-        return Core.instance.config.getOptions(ClientConfigV2.class).getThemeData();
+        return Core.getInstance().config.getOptions(ClientConfigV2.class).getThemeData();
     }
     
 }

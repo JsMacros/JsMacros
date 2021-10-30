@@ -30,7 +30,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
     public SettingsOverlay(int x, int y, int width, int height, TextRenderer textRenderer, IOverlayParent parent) {
         super(x, y, width, height, textRenderer, parent);
     
-        for (Class<?> clazz : Core.instance.config.optionClasses.values()) {
+        for (Class<?> clazz : Core.getInstance().config.optionClasses.values()) {
             for (Field f : clazz.getDeclaredFields()) {
                 if (f.isAnnotationPresent(Option.class)) {
                     try {
@@ -43,7 +43,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
                         if (!option.setter().equals("")) {
                             setter = clazz.getDeclaredMethod(option.setter(), f.getType());
                         }
-                        settings.addChild(option.group(), new SettingField<>(option, Core.instance.config.getOptions(clazz), f, getter, setter, f.getType()));
+                        settings.addChild(option.group(), new SettingField<>(option, Core.getInstance().config.getOptions(clazz), f, getter, setter, f.getType()));
                     } catch (NoSuchMethodException e) {
                         e.printStackTrace();
                     }
@@ -58,7 +58,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
                         if (!option.setter().equals("")) {
                             setter = clazz.getDeclaredMethod(option.setter(), m.getReturnType());
                         }
-                        settings.addChild(option.group(), new SettingField<>(option, Core.instance.config.getOptions(clazz), null, m, setter, m.getReturnType()));
+                        settings.addChild(option.group(), new SettingField<>(option, Core.getInstance().config.getOptions(clazz), null, m, setter, m.getReturnType()));
                     } catch (NoSuchMethodException e) {
                         e.printStackTrace();
                     }
@@ -77,11 +77,11 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
 
         this.addDrawableChild(new Button(x + width / 2, y + 2, width / 2 - 12, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.reloadconfig"), (btn) -> {
             try {
-                Core.instance.config.loadConfig();
+                Core.getInstance().config.loadConfig();
             } catch (IllegalAccessException | InstantiationException | IOException e) {
                 throw new RuntimeException(e);
             }
-            Core.instance.profile.loadOrCreateProfile(Core.instance.config.getOptions(CoreConfigV2.class).defaultProfile);
+            Core.getInstance().profile.loadOrCreateProfile(Core.getInstance().config.getOptions(CoreConfigV2.class).defaultProfile);
         }));
 
         for (String[] group : settings.groups()) {
@@ -206,7 +206,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
     
     @Override
     public void onClose() {
-        Core.instance.config.saveConfig();
+        Core.getInstance().config.saveConfig();
         IOverlayParent parent = this.parent;
         while (!(parent instanceof BaseScreen)) parent = ((OverlayContainer)parent).parent;
         ((BaseScreen)parent).updateSettings();

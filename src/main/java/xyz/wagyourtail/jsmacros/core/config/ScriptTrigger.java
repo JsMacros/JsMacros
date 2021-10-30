@@ -14,7 +14,7 @@ public class ScriptTrigger {
     public boolean enabled;
     
     public ScriptTrigger(TriggerType triggerType, String event, File scriptFile, boolean enabled) {
-        this(triggerType, event, Core.instance.config.macroFolder.getAbsoluteFile().toPath().relativize(scriptFile.getAbsoluteFile().toPath()).toString(), enabled);
+        this(triggerType, event, Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(scriptFile.getAbsoluteFile().toPath()).toString(), enabled);
     }
 
     protected ScriptTrigger(TriggerType triggerType, String event, String scriptFile, boolean enabled) {

@@ -28,18 +28,18 @@ public class MacroListTopbar extends MultiElementContainer<MacroScreen> {
         
         int w = width - 12;
         
-        addDrawableChild(new Button(x + 1, y + 1, w / 12 - 1, height - 3, textRenderer, Core.instance.config.getOptions(ClientConfigV2.class).sortMethod == Sorting.MacroSortMethod.Enabled ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.enabled"), (btn) -> {
-            Core.instance.config.getOptions(ClientConfigV2.class).sortMethod = Sorting.MacroSortMethod.Enabled;
+        addDrawableChild(new Button(x + 1, y + 1, w / 12 - 1, height - 3, textRenderer, Core.getInstance().config.getOptions(ClientConfigV2.class).sortMethod == Sorting.MacroSortMethod.Enabled ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.enabled"), (btn) -> {
+            Core.getInstance().config.getOptions(ClientConfigV2.class).sortMethod = Sorting.MacroSortMethod.Enabled;
             parent.reload();
         }));
         
-        type = addDrawableChild(new Button(x + w / 12 + 1, y + 1, (w / 4) - (w / 12) - 1, height - 3, textRenderer, Core.instance.config.getOptions(ClientConfigV2.class).sortMethod == Sorting.MacroSortMethod.TriggerName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(deftype == ScriptTrigger.TriggerType.EVENT ? "jsmacros.events" : "jsmacros.keys"), (btn) -> {
-            Core.instance.config.getOptions(ClientConfigV2.class).sortMethod = Sorting.MacroSortMethod.TriggerName;
+        type = addDrawableChild(new Button(x + w / 12 + 1, y + 1, (w / 4) - (w / 12) - 1, height - 3, textRenderer, Core.getInstance().config.getOptions(ClientConfigV2.class).sortMethod == Sorting.MacroSortMethod.TriggerName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(deftype == ScriptTrigger.TriggerType.EVENT ? "jsmacros.events" : "jsmacros.keys"), (btn) -> {
+            Core.getInstance().config.getOptions(ClientConfigV2.class).sortMethod = Sorting.MacroSortMethod.TriggerName;
             parent.reload();
         }));
         
-        addDrawableChild(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 3, textRenderer, Core.instance.config.getOptions(ClientConfigV2.class).sortMethod == Sorting.MacroSortMethod.FileName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.file"), (btn) -> {
-            Core.instance.config.getOptions(ClientConfigV2.class).sortMethod = Sorting.MacroSortMethod.FileName;
+        addDrawableChild(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 3, textRenderer, Core.getInstance().config.getOptions(ClientConfigV2.class).sortMethod == Sorting.MacroSortMethod.FileName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.file"), (btn) -> {
+            Core.getInstance().config.getOptions(ClientConfigV2.class).sortMethod = Sorting.MacroSortMethod.FileName;
             parent.reload();
         }));
         
@@ -48,8 +48,8 @@ public class MacroListTopbar extends MultiElementContainer<MacroScreen> {
         }));
         
         addDrawableChild(new Button(x + w - 1, y+1, 11, height - 3, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("+"), (btn) -> {
-            ScriptTrigger macro = new ScriptTrigger(deftype, "", Core.instance.config.macroFolder, false);
-            Core.instance.eventRegistry.addScriptTrigger(macro);
+            ScriptTrigger macro = new ScriptTrigger(deftype, "", Core.getInstance().config.macroFolder, false);
+            Core.getInstance().eventRegistry.addScriptTrigger(macro);
             parent.addMacro(macro);
         }));
     }

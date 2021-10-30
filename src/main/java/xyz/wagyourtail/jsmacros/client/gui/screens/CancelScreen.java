@@ -96,7 +96,7 @@ public class CancelScreen extends BaseScreen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (matrices == null) return;
         this.renderBackground(matrices, 0);
-        List<BaseScriptContext<?>> tl = new ArrayList<>(Core.instance.getContexts());
+        List<BaseScriptContext<?>> tl = new ArrayList<>(Core.getInstance().getContexts());
         
         for (RunningContextContainer r : ImmutableList.copyOf(this.running)) {
             tl.remove(r.t);

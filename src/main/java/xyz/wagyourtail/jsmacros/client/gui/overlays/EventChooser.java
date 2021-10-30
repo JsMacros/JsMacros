@@ -62,7 +62,7 @@ public class EventChooser extends OverlayContainer {
             }
         }));
         
-        List<String> events = new ArrayList<>(Core.instance.eventRegistry.events);
+        List<String> events = new ArrayList<>(Core.getInstance().eventRegistry.events);
         Collections.sort(events);
         for (String e : events) {
             addEvent(e);

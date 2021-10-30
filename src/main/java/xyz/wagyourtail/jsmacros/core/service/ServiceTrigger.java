@@ -12,12 +12,13 @@ public class ServiceTrigger {
     public boolean enabled;
 
     public ServiceTrigger(File file, boolean enabled) {
-        this.file = Core.instance.config.macroFolder.getAbsoluteFile().toPath().relativize(file.getAbsoluteFile().toPath()).toString();
+        this.file = Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(file.getAbsoluteFile().toPath()).toString();
         this.enabled = enabled;
     }
 
     public ScriptTrigger toScriptTrigger() {
-        return new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventService.class.getAnnotation(Event.class).value(), new File(Core.instance.config.macroFolder, file), enabled);
+        return new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventService.class.getAnnotation(Event.class).value(), new File(
+            Core.getInstance().config.macroFolder, file), enabled);
     }
 
     @Override

@@ -42,7 +42,7 @@ public class EventKey implements BaseEvent {
         }
 
         if (mc.currentScreen != null) {
-            if (Core.instance.config.getOptions(ClientConfigV2.class).disableKeyWhenScreenOpen) return;
+            if (Core.getInstance().config.getOptions(ClientConfigV2.class).disableKeyWhenScreenOpen) return;
             if (mc.currentScreen instanceof BaseScreen) return;
             Element focused = mc.currentScreen.getFocused();
             if (focused instanceof TextFieldWidget) return;

@@ -38,11 +38,11 @@ public class ProfileSetting extends AbstractMapSettingContainer<List<ScriptTrigg
         Map<String, List<ScriptTrigger>> settings = setting.get();
         if (settings.size() > 1) {
             super.removeField(key);
-            if (Core.instance.profile.getCurrentProfileName().equals(key)) {
-                Core.instance.profile.loadOrCreateProfile(settings.keySet().stream().sorted().findFirst().orElse("default"));
+            if (Core.getInstance().profile.getCurrentProfileName().equals(key)) {
+                Core.getInstance().profile.loadOrCreateProfile(settings.keySet().stream().sorted().findFirst().orElse("default"));
             }
-            if (Core.instance.config.getOptions(CoreConfigV2.class).defaultProfile.equals(key)) {
-                Core.instance.config.getOptions(CoreConfigV2.class).defaultProfile = settings.keySet().stream().sorted().findFirst().orElse("default");
+            if (Core.getInstance().config.getOptions(CoreConfigV2.class).defaultProfile.equals(key)) {
+                Core.getInstance().config.getOptions(CoreConfigV2.class).defaultProfile = settings.keySet().stream().sorted().findFirst().orElse("default");
             }
         }
     }
@@ -50,11 +50,11 @@ public class ProfileSetting extends AbstractMapSettingContainer<List<ScriptTrigg
     @Override
     public void changeKey(String key, String newKey) throws InvocationTargetException, IllegalAccessException {
         super.changeKey(key, newKey);
-        if (Core.instance.profile.getCurrentProfileName().equals(key)) {
-            Core.instance.profile.renameCurrentProfile(newKey);
+        if (Core.getInstance().profile.getCurrentProfileName().equals(key)) {
+            Core.getInstance().profile.renameCurrentProfile(newKey);
         }
-        if (Core.instance.config.getOptions(CoreConfigV2.class).defaultProfile.equals(key)) {
-            Core.instance.config.getOptions(CoreConfigV2.class).defaultProfile = newKey;
+        if (Core.getInstance().config.getOptions(CoreConfigV2.class).defaultProfile.equals(key)) {
+            Core.getInstance().config.getOptions(CoreConfigV2.class).defaultProfile = newKey;
         }
     }
     
