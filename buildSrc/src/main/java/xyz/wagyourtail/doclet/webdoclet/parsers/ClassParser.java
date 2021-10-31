@@ -120,7 +120,7 @@ public class ClassParser {
             subClasses.append(parseType(subClass.asType()), " ");
         }
         XMLBuilder cname;
-        builder.append(cname = new XMLBuilder("h2", true, true).setClass("classTitle").append(getClassName(type)));
+        builder.append(cname = new XMLBuilder("h2", true, true).setClass("classTitle").append(((PackageElement) type.getEnclosingElement()).getQualifiedName().toString(), ".", getClassName(type)));
 
         List<? extends TypeParameterElement> params = type.getTypeParameters();
         if (params != null && !params.isEmpty()) {
