@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     
-    public EntityHelper(T e) {
+    protected EntityHelper(T e) {
         super(e);
     }
     
@@ -172,7 +172,14 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     public String toString() {
         return String.format("Entity:{\"name\":\"%s\", \"type\":\"%s\"}", this.getName(), this.getType());
     }
-    
+
+    /**
+     * mostly for internal use.
+     *
+     * @param e mc entity.
+     *
+     * @return correct subclass of this.
+     */
     public static EntityHelper<?> create(Entity e) {
         if (e instanceof ClientPlayerEntity) return new ClientPlayerEntityHelper<>((ClientPlayerEntity) e);
         if (e instanceof PlayerEntity) return new PlayerEntityHelper<>((PlayerEntity) e);
@@ -180,5 +187,45 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         if (e instanceof LivingEntity) return new LivingEntityHelper<>((LivingEntity) e);
         if (e instanceof ItemEntity) return new ItemEntityHelper((ItemEntity) e);
         return new EntityHelper<>(e);
+    }
+
+    /**
+     * @since 1.6.3
+     * @return cast of this entity helper (mainly for typescript)
+     */
+    public ClientPlayerEntityHelper<?> asClientPlayer() {
+        return (ClientPlayerEntityHelper<?>) this;
+    }
+
+    /**
+     * @since 1.6.3
+     * @return cast of this entity helper (mainly for typescript)
+     */
+    public PlayerEntityHelper<?> asPlayer() {
+        return (PlayerEntityHelper<?>) this;
+    }
+
+    /**
+     * @since 1.6.3
+     * @return cast of this entity helper (mainly for typescript)
+     */
+    public MerchantEntityHelper asMerchant() {
+        return (MerchantEntityHelper) this;
+    }
+
+    /**
+     * @since 1.6.3
+     * @return cast of this entity helper (mainly for typescript)
+     */
+    public LivingEntityHelper<?> asLiving() {
+        return (LivingEntityHelper<?>) this;
+    }
+
+    /**
+     * @since 1.6.3
+     * @return cast of this entity helper (mainly for typescript)
+     */
+    public ItemEntityHelper asItem() {
+        return (ItemEntityHelper) this;
     }
 }

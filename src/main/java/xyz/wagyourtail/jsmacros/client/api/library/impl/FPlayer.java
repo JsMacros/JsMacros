@@ -96,8 +96,8 @@ public class FPlayer extends BaseLibrary {
      * @see xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper
      * @since 1.0.5
      */
-    public EntityHelper<Entity> rayTraceEntity() {
-        if (mc.targetedEntity != null) return new EntityHelper<>(mc.targetedEntity);
+    public EntityHelper<?> rayTraceEntity() {
+        if (mc.targetedEntity != null) return EntityHelper.create(mc.targetedEntity);
         else return null;
     }
 
