@@ -163,9 +163,9 @@ public abstract class BaseScriptContext<T> {
     
     public synchronized void closeContext() {
         closed = true;
-        events.values().forEach(EventContainer::releaseLock);
-        // interrupted threads can unbind themselves in interrupt so copy the set
-        ImmutableSet.copyOf(threads).forEach(Thread::interrupt);
+        // fix concurrency issue the "fun" way
+        getBoundEvents().values().forEach(EventContainer::releaseLock);
+        getBoundThreads().forEach(Thread::interrupt);
         Core.getInstance().getContexts().remove(this);
     }
 
