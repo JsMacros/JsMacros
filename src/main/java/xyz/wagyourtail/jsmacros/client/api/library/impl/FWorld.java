@@ -106,11 +106,11 @@ public class FWorld extends BaseLibrary {
      */
     public BlockDataHelper getBlock(int x, int y, int z) {
         assert mc.world != null;
-        BlockState b = mc.world.getBlockState(new BlockPos(x,y,z));
-        BlockEntity t = mc.world.getBlockEntity(new BlockPos(x,y,z));
+        BlockPos bp = new BlockPos(x, y, z);
+        BlockState b = mc.world.getBlockState(bp);
+        BlockEntity t = mc.world.getBlockEntity(bp);
         if (b.getBlock().equals(Blocks.VOID_AIR)) return null;
-        return new BlockDataHelper(b, t, new BlockPos(x,y,z));
-        
+        return new BlockDataHelper(b, t, bp);
     }
     
     /**

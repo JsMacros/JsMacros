@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.language;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Nullable;
@@ -163,7 +164,8 @@ public abstract class BaseScriptContext<T> {
     public synchronized void closeContext() {
         closed = true;
         events.values().forEach(EventContainer::releaseLock);
-        threads.forEach(Thread::interrupt);
+        // interrupted threads can unbind themselves in interrupt so copy the set
+        ImmutableSet.copyOf(threads).forEach(Thread::interrupt);
         Core.getInstance().getContexts().remove(this);
     }
 
