@@ -23,7 +23,7 @@ public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
      * @since 1.6.3
      * @return
      */
-    public String getType() {
+    public String getStyle() {
         return base.getVillagerData().getType().toString();
     }
 
@@ -34,4 +34,10 @@ public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
     public int getLevel() {
         return base.getVillagerData().getLevel();
     }
+
+    @Override
+    public String toString() {
+        return super.toString().replaceFirst("^Merchant", "Villager");
+    }
+
 }

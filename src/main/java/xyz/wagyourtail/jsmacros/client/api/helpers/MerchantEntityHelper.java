@@ -43,4 +43,10 @@ public class MerchantEntityHelper<T extends MerchantEntity> extends LivingEntity
     public boolean hasCustomer() {
         return base.hasCustomer();
     }
+
+    @Override
+    public String toString() {
+        return "Merchant" + super.toString();
+    }
+
 }
