@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.MerchantEntity;
+import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.MathHelper;
@@ -183,7 +184,8 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     public static EntityHelper<?> create(Entity e) {
         if (e instanceof ClientPlayerEntity) return new ClientPlayerEntityHelper<>((ClientPlayerEntity) e);
         if (e instanceof PlayerEntity) return new PlayerEntityHelper<>((PlayerEntity) e);
-        if (e instanceof MerchantEntity) return new MerchantEntityHelper((MerchantEntity) e);
+        if (e instanceof VillagerEntity) return new VillagerEntityHelper((VillagerEntity) e);
+        if (e instanceof MerchantEntity) return new MerchantEntityHelper<>((MerchantEntity) e);
         if (e instanceof LivingEntity) return new LivingEntityHelper<>((LivingEntity) e);
         if (e instanceof ItemEntity) return new ItemEntityHelper((ItemEntity) e);
         return new EntityHelper<>(e);
@@ -209,9 +211,18 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.6.3
      * @return cast of this entity helper (mainly for typescript)
      */
-    public MerchantEntityHelper asMerchant() {
-        return (MerchantEntityHelper) this;
+     public VillagerEntityHelper asVillager() {
+         return (VillagerEntityHelper) this;
+     }
+
+    /**
+     * @since 1.6.3
+     * @return cast of this entity helper (mainly for typescript)
+     */
+    public MerchantEntityHelper<?> asMerchant() {
+        return (MerchantEntityHelper<?>) this;
     }
+
 
     /**
      * @since 1.6.3

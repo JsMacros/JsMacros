@@ -7,13 +7,14 @@ import xyz.wagyourtail.jsmacros.client.access.IMerchantEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MerchantEntityHelper extends LivingEntityHelper<MerchantEntity> {
+public class MerchantEntityHelper<T extends MerchantEntity> extends LivingEntityHelper<T> {
     
-    public MerchantEntityHelper(MerchantEntity e) {
+    public MerchantEntityHelper(T e) {
         super(e);
     }
     
     /**
+     * these might not work... depends on the data the server sends, maybe just singleplayer.
      * @return
      */
     public List<TradeOfferHelper> getTrades() {
