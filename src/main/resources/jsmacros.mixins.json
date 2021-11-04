@@ -7,6 +7,7 @@
     "access.MixinBossBarHud",
     "access.MixinChatHud",
     "access.MixinClientPlayNetworkHandler",
+    "access.MixinEntity",
     "access.MixinFontManager",
     "access.MixinFontStorage",
     "access.MixinGameRenderer",

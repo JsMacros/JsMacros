@@ -8,8 +8,6 @@ import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
-import java.util.List;
-
 public class TextOverlay extends OverlayContainer {
     private final Text text;
     public boolean centered = true;
