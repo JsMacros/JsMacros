@@ -106,9 +106,11 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
             con.eval("js", "console.log('js pre-loaded.')");
             con.close();
         });
-        t.start();
 
         new Core<>(eventRegistryFunction, profileFunction, configFolder, macroFolder, logger);
+
+        t.start();
+
         return (Core<V, R>) instance;
     }
 
