@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.util.Util;
+import xyz.wagyourtail.jsmacros.client.config.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
@@ -351,36 +352,34 @@ public class FJsMacros extends PerExecLibrary {
         //get curent thread establish the lock to use for waiting blah blah blah
         Thread th = Thread.currentThread();
         Semaphore lock = new Semaphore(0);
+        Semaphore lock2 = new Semaphore(0);
 
         // event return values
-        final Exception[] e = {null};
         final BaseEvent[] ev = {null};
+        boolean[] done = new boolean[] {false};
 
         // create a new event container so we can actually release joined events
-        EventContainer<?> ctxCont = new EventContainer<>(ctx);
+        EventContainer<?>[] ctxCont = new EventContainer[] {new EventContainer<>(ctx)};
 
         // create the listener
         IEventListener listener = new ScriptEventListener() {
             @Override
-            public EventContainer<?> trigger(BaseEvent event) {
+            public EventContainer<?> trigger(BaseEvent evt) {
+                ev[0] = evt;
+                // allow for initial thread to run it's filter
+                lock.release();
                 try {
-                    // check the filter
-                    boolean test = filter == null || filter.test(event);
-
-                    if (test) {
-                        // remove the listener here, since it this isn't async.
-                        Core.getInstance().eventRegistry.removeListener(event.getEventName(), this);
-
-                        // release the lock
-                        lock.release();
-
-                        ev[0] = event;
-                        return ctxCont;
-                    }
-                } catch (Exception ex) {
-                    // release the lock and set error
-                    lock.release();
-                    e[0] = ex;
+                    // wait for filter to finish
+                    lock2.acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+                // if filter done, we can remove self and return the event context
+                if (done[0]) {
+                    Core.getInstance().eventRegistry.removeListener(event, this);
+                    ctx.bindEvent(th, (EventContainer) ctxCont[0]);
+                    return ctxCont[0];
                 }
                 return null;
             }
@@ -404,27 +403,31 @@ public class FJsMacros extends PerExecLibrary {
         Core.getInstance().eventRegistry.addListener(event, listener);
 
         // run before, this is a thread-safety thing to prevent "interrupts" from going in between this and things like deferCurrentTask
+        // it is thread safe because we already registered the listener so we won't miss any events
         if (runBeforeWaiting != null) runBeforeWaiting.run();
 
         // make sure the current context isn't still locked.
         ctx.releaseBoundEventIfPresent(th);
 
         // set the new EventContainer's lock
-        ctxCont.setLockThread(th);
-        ctx.bindEvent(th, (EventContainer) ctxCont);
+        ctxCont[0].setLockThread(th);
 
         // waits for event
-        try {
+        while (!done[0]) {
             lock.acquire();
-        } finally {
-            Core.getInstance().eventRegistry.removeListener(event, listener);
-        }
-        if (e[0] != null) {
-            throw new RuntimeException("Error thrown in filter", e[0]);
+            try {
+                // check the filter
+                done[0] = filter == null || filter.test(ev[0]);
+            } catch (Exception ex) {
+                Core.getInstance().eventRegistry.removeListener(event, listener);
+                throw new RuntimeException("Error thrown in filter", ex);
+            } finally {
+                lock2.release();
+            }
         }
 
         // returns new context and event value to the user so they can release joined stuff early
-        return new EventAndContext(ev[0], ctxCont);
+        return new EventAndContext(ev[0], ctxCont[0]);
     }
     
     /**
