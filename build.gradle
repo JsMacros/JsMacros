@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'fabric-loom' version '0.8-SNAPSHOT'
+	id 'fabric-loom' version '0.9-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -12,9 +12,6 @@ version = project.mod_version
 group = project.maven_group + "." + project.minecraft_version.replaceAll("\\.", "_")
 
 repositories {
-	flatDir {
-		dirs 'libs'
-	}
     mavenCentral()
     maven {
         name "Modmuss50 Repository"
