@@ -2,6 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -304,6 +306,30 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         }
         return this;
     }
+
+    /**
+     * @param stop
+     * @since 1.6.3
+     * @return
+     */
+    public ClientPlayerEntityHelper<T> setLongAttack(boolean stop) {
+        if (!stop) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.keyAttack.getBoundKeyTranslationKey()));
+        mc.options.keyAttack.setPressed(stop);
+        return this;
+    }
+
+    /**
+     * @param stop
+     * @since 1.6.3
+     * @return
+     */
+    public ClientPlayerEntityHelper<T> setLongInteract(boolean stop) {
+        if (!stop) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.keyUse.getBoundKeyTranslationKey()));
+        mc.options.keyUse.setPressed(stop);
+        return this;
+    }
+
+
 
     /**
      * @return

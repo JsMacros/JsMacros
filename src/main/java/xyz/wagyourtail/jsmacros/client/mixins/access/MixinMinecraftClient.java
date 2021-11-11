@@ -66,5 +66,5 @@ class MixinMinecraftClient implements IMinecraftClient {
     public void jsmacros_doAttack() {
         doAttack();
     }
-    
+
 }

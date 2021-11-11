@@ -186,7 +186,13 @@ public class FPlayer extends BaseLibrary {
 
     /**
      * Creates a new PlayerInput object.
-     *
+     * @param movementForward  1 = forward input (W); 0 = no input; -1 = backward input (S)
+     * @param movementSideways 1 = left input (A); 0 = no input; -1 = right input (D)
+     * @param yaw              yaw of the player
+     * @param pitch            pitch of the player
+     * @param jumping          jump input
+     * @param sneaking         sneak input
+     * @param sprinting        sprint input
      * @see xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput
      * @since 1.4.0
      */
