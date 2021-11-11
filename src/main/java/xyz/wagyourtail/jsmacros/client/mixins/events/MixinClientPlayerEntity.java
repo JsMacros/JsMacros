@@ -91,7 +91,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         } //else
         if (cancel) {
             final SignEditScreen signScreen = new SignEditScreen(sign, true);
-            client.openScreen(signScreen);
+            client.setScreen(signScreen);
             for (int i = 0; i < 4; ++i) {
                 ((ISignEditScreen) signScreen).jsmacros_setLine(i, lines.get(i));
             }

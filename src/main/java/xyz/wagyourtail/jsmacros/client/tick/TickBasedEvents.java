@@ -21,21 +21,21 @@ public class TickBasedEvents {
     private static boolean previousFallFlyState = false;
     
     public static boolean areNotEqual(ItemStack a, ItemStack b) {
-        return (!a.isEmpty() || !b.isEmpty()) && (a.isEmpty() || b.isEmpty() || !a.isItemEqualIgnoreDamage(b) || a.getCount() != b.getCount() || !ItemStack.areTagsEqual(a, b) || a.getDamage() != b.getDamage());
+        return (!a.isEmpty() || !b.isEmpty()) && (a.isEmpty() || b.isEmpty() || !a.isItemEqualIgnoreDamage(b) || a.getCount() != b.getCount() || !ItemStack.areNbtEqual(a, b) || a.getDamage() != b.getDamage());
     }
     
     public static boolean areTagsEqualIgnoreDamage(ItemStack a, ItemStack b) {
         if (a.isEmpty() && b.isEmpty()) {
             return true;
         } else if (!a.isEmpty() && !b.isEmpty()) {
-            if (a.getTag() == null && b.getTag() == null) {
+            if (a.getNbt() == null && b.getNbt() == null) {
                 return true;
             } else {
                 NbtCompound at;
                 NbtCompound bt;
-                if (a.getTag() != null) at = a.getTag().copy();
+                if (a.getNbt() != null) at = a.getNbt().copy();
                 else at = new NbtCompound();
-                if (b.getTag() != null) bt = b.getTag().copy();
+                if (b.getNbt() != null) bt = b.getNbt().copy();
                 else bt = new NbtCompound();
                 at.remove("Damage");
                 bt.remove("Damage");
@@ -57,7 +57,7 @@ public class TickBasedEvents {
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
 
             if (JsMacros.keyBinding.wasPressed() && mc.currentScreen == null) {
-                mc.openScreen(JsMacros.prevScreen);
+                mc.setScreen(JsMacros.prevScreen);
             }
 
             FClient.tickSynchronizer.tick();

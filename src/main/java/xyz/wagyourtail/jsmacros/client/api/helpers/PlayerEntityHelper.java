@@ -92,7 +92,7 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
      * @return if the player has slept the minimum ammount of time to pass the night.
      */
     public boolean isSleepingLongEnough() {
-        return base.isSleepingLongEnough();
+        return base.canResetTimeBySleeping();
     }
     
     public String toString() {

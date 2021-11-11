@@ -432,7 +432,7 @@ public class Draw3D {
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
 
-            Matrix4f matrix  = matrixStack.peek().getModel();
+            Matrix4f matrix  = matrixStack.peek().getPositionMatrix();
 
             if (this.fill) {
                 float fa = ((fillColor >> 24) & 0xFF)/255F;
@@ -612,7 +612,7 @@ public class Draw3D {
             int b = color & 0xFF;
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
-            Matrix4f model = matrixStack.peek().getModel();
+            Matrix4f model = matrixStack.peek().getPositionMatrix();
             RenderSystem.lineWidth(2.5F);
             buf.begin(VertexFormat.DrawMode.DEBUG_LINES,  VertexFormats.POSITION_COLOR);
             buf.vertex(model, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
