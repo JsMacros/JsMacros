@@ -8,10 +8,8 @@ import xyz.wagyourtail.doclet.webdoclet.Main;
 import xyz.wagyourtail.doclet.webdoclet.options.Links;
 
 import javax.lang.model.element.*;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.TypeVariable;
+import javax.lang.model.type.*;
+import javax.lang.model.util.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +114,12 @@ public class ClassParser {
         XMLBuilder builder = new XMLBuilder("main").setClass("classDoc");
         XMLBuilder subClasses;
         builder.append(subClasses = new XMLBuilder("div").setID("subClasses"));
-        for (Element subClass : Main.elements.stream().filter(e -> (e.getKind().isClass() || e.getKind().isInterface()) && ((TypeElement) e).getSuperclass().equals(type.asType())).collect(Collectors.toList())) {
+        for (Element subClass : Main.elements.stream().filter(e -> {
+            if (e.getKind().isClass() || e.getKind().isInterface()) {
+                return Main.types.isAssignable(e.asType(), Main.types.getDeclaredType(type)) && !e.equals(type);
+            }
+            return false;
+        }).collect(Collectors.toList())) {
             subClasses.append(parseType(subClass.asType()), " ");
         }
         XMLBuilder cname;
@@ -135,17 +138,15 @@ public class ClassParser {
         builder.append(createFlags(type, false));
         TypeMirror sup = type.getSuperclass();
         List<? extends TypeMirror> ifaces = type.getInterfaces();
-        if (sup != null || (ifaces != null && !ifaces.isEmpty())) {
-            XMLBuilder ext;
-            builder.append(ext = new XMLBuilder("h4", true, true).addStringOption("class", "classExtends"));
-            if (sup != null) {
-                ext.append("extends ", parseType(sup));
-            }
-            if (ifaces != null && !ifaces.isEmpty()) {
-                ext.append(" implements ");
-                for (TypeMirror iface : ifaces) {
-                    ext.append(parseType(iface), " ");
-                }
+        XMLBuilder ext;
+        builder.append(ext = new XMLBuilder("h4", true, true).addStringOption("class", "classExtends"));
+        if (sup != null && !sup.toString().equals("java.lang.Object") && !sup.getKind().equals(TypeKind.NONE)) {
+            ext.append("extends ", parseType(sup));
+        }
+        if (!ifaces.isEmpty()) {
+            ext.append(" implements ");
+            for (TypeMirror iface : ifaces) {
+                ext.append(parseType(iface), " ");
             }
         }
 
@@ -477,6 +478,13 @@ public class ClassParser {
                 builder.append(typeLink = new XMLBuilder("p", true));
                 typeLink.setClass("type primitiveType");
                 typeLink.append(((TypeVariable)type).asElement().getSimpleName());
+                TypeMirror ext = ((TypeVariable) type).getUpperBound();
+                if (!ext.toString().equals("java.lang.Object")) {
+                    typeLink.append(
+                        new XMLBuilder("p").setClass("classExtends").append("<b> extends </b>"),
+                        parseType(ext)
+                    );
+                }
             }
             case WILDCARD -> {
                 builder.append(typeLink = new XMLBuilder("p", true));

@@ -16,6 +16,7 @@ import xyz.wagyourtail.doclet.webdoclet.parsers.ClassParser;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +30,7 @@ public class Main implements Doclet {
     public static String mappingViewerURL;
     public static Elements elementUtils;
     public static DocTrees treeUtils;
+    public static Types types;
     public static Set<? extends Element> elements;
     public static Map<Element, ClassParser> internalClasses = new LinkedHashMap<>();
 
@@ -65,6 +67,7 @@ public class Main implements Doclet {
         mappingViewerURL = "https://wagyourtail.xyz/Projects/MinecraftMappingViewer/App?mapping=INTERMEDIARY,YARN&version=" + McVersion.mcVersion + "&search=";
         elements = environment.getIncludedElements();
         treeUtils = environment.getDocTrees();
+        types = environment.getTypeUtils();
         elementUtils = environment.getElementUtils();
 
         File outDir = new File(OutputDirectory.outputDir, Version.version);

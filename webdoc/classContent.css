@@ -39,6 +39,7 @@ code {
 .classExtends {
     display: inline-block;
     color: #606060;
+    padding: 0 5px;
 }
 
 .constructorDoc,.fieldDoc,.methodDoc {
