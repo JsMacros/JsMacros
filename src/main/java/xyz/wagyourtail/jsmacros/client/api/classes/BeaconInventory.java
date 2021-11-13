@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes;
 import net.minecraft.block.entity.BeaconBlockEntity;
 import net.minecraft.client.gui.screen.ingame.BeaconScreen;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.network.packet.c2s.play.UpdateBeaconC2SPacket;
 import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.client.access.IBeaconScreen;
@@ -69,16 +70,21 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
     public boolean selectSecondEffect(String id) {
         if (getLevel() >= 3) {
             StatusEffect primaryEffect = ((IBeaconScreen) inventory).jsmacros_getPrimaryEffect();
-            if (Registry.STATUS_EFFECT.getId(primaryEffect).equals(id)) {
+            if (primaryEffect != null && Registry.STATUS_EFFECT.getId(primaryEffect).toString().equals(id)) {
                 ((IBeaconScreen) inventory).jsmacros_setSecondaryEffect(primaryEffect);
                 return true;
             }
             StatusEffect matchEffect;
-            for (int i = 3; i <= getLevel(); ++i) {
+            for (int i = 0; i < getLevel(); i++) {
                 matchEffect = Arrays.stream(BeaconBlockEntity.EFFECTS_BY_LEVEL[i]).filter(e -> Registry.STATUS_EFFECT.getId(e).toString().equals(id)).findFirst().orElse(null);
                 if (matchEffect != null) {
-                    ((IBeaconScreen) inventory).jsmacros_setPrimaryEffect(matchEffect);
-                    return true;
+                    if (primaryEffect != null && matchEffect.equals(StatusEffects.REGENERATION))
+                        ((IBeaconScreen) inventory).jsmacros_setSecondaryEffect(matchEffect);
+                    else {
+                        ((IBeaconScreen) inventory).jsmacros_setPrimaryEffect(matchEffect);
+                        ((IBeaconScreen) inventory).jsmacros_setSecondaryEffect(matchEffect);
+                        return true;
+                    }
                 }
             }
         }
