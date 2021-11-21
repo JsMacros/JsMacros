@@ -29,7 +29,7 @@ public class KeyMacrosScreen extends MacroScreen {
 
         eventScreen.onPress = (btn) -> {
             assert client != null;
-            client.setScreen(new EventMacrosScreen(this));
+            client.openScreen(new EventMacrosScreen(this));
         };
 
         Set<IEventListener> listeners = Core.getInstance().eventRegistry.getListeners().get(EventKey.class.getAnnotation(Event.class).value());

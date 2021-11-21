@@ -122,7 +122,7 @@ public class EditorScreen extends BaseScreen {
                 }
                 screen.cursor.updateStartIndex(startIndex, screen.history.current);
                 screen.cursor.updateEndIndex(finalEndIndex, screen.history.current);
-                mc.setScreen(screen);
+                mc.openScreen(screen);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -153,7 +153,7 @@ public class EditorScreen extends BaseScreen {
                 if (endCol == -1) startIndex = lineIndex + lines[max].length();
                 else startIndex = lineIndex + Math.min(lines[max].length(), endCol);
                 screen.cursor.updateEndIndex(startIndex, screen.history.current);
-                mc.setScreen(screen);
+                mc.openScreen(screen);
             } catch (IOException e) {
                 e.printStackTrace();
             }

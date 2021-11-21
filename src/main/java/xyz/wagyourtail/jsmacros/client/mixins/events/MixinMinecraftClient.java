@@ -25,7 +25,7 @@ public class MixinMinecraftClient {
             new EventDimensionChange(world.getRegistryKey().getValue().toString());
     }
     
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", opcode = Opcodes.PUTFIELD), method="setScreen")
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", opcode = Opcodes.PUTFIELD), method="openScreen")
     public void onOpenScreen(Screen screen, CallbackInfo info) {
         if (screen != currentScreen) new EventOpenScreen(screen);
     }

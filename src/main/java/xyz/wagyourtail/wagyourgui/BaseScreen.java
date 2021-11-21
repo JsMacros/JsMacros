@@ -153,12 +153,12 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
             openParent();
         else {
             setFocused(null);
-            client.setScreen(null);
+            client.openScreen(null);
         }
     }
     
     public void openParent() {
         assert client != null;
-        client.setScreen(parent);
+        client.openScreen(parent);
     }
 }

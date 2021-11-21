@@ -42,7 +42,7 @@ class MixinMinecraftClient implements IMinecraftClient {
         }
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;removed()V"), method="setScreen")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;removed()V"), method="openScreen")
     public void onCloseScreen(Screen screen, CallbackInfo ci) {
         Consumer<IScreen> onClose = ((IScreen)currentScreen).getOnClose();
         try {

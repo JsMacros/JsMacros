@@ -96,7 +96,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public NBTElementHelper<?> getNBT() {
-        NbtCompound tag = base.getNbt();
+        NbtCompound tag = base.getTag();
         if (tag != null) return NBTElementHelper.resolve(tag);
         else return null;
     }
@@ -191,7 +191,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public boolean isNBTEqual(ItemStackHelper ish) {
-        return ItemStack.areNbtEqual(base, ish.getRaw());
+        return ItemStack.areTagsEqual(base, ish.getRaw());
     }
     
     /**
@@ -200,7 +200,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public boolean isNBTEqual(ItemStack is) {
-        return ItemStack.areNbtEqual(base, is);
+        return ItemStack.areTagsEqual(base, is);
     }
     
     /**

@@ -246,7 +246,7 @@ public class Inventory<T extends HandledScreen<?>> {
      *
      */
      public void openGui() {
-        mc.execute(() -> mc.setScreen(this.inventory));
+        mc.execute(() -> mc.openScreen(this.inventory));
      }
 
     /**
