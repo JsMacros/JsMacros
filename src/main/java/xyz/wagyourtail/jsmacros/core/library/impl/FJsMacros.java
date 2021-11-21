@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -82,23 +83,34 @@ public class FJsMacros extends PerExecLibrary {
      * @return
      */
     public EventContainer<?> runScript(String file) {
-        return runScript(file, (MethodWrapper<Throwable, Object, Object, ?>) null);
+        return runScript(file, (EventCustom) null, null);
     }
 
     /**
-     * Run a script with optional callback of error.
-     * 
-     * @since 1.1.5
-     * 
-     * @param file relative to the macro folder.
-     * @param callback defaults to {@code null}
-     * @return the {@link EventContainer} the script is running on.
+     * @since 1.6.3
+     * @param file
+     * @param fakeEvent
+     *
+     * @return
      */
-    public EventContainer<?> runScript(String file, MethodWrapper<Throwable, Object, Object, ?> callback) {
+    public EventContainer<?> runScript(String file, EventCustom fakeEvent) {
+        return runScript(file, fakeEvent, null);
+    }
+
+    /**
+     * runs a script with a eventCustom to be able to pass args
+     * @since 1.6.3 (1.1.5 - 1.6.3 didn't have fakeEvent)
+     * @param file
+     * @param fakeEvent
+     * @param callback
+     *
+     * @return container the script is running on.
+     */
+    public EventContainer<?> runScript(String file, EventCustom fakeEvent, MethodWrapper<Throwable, Object, Object, ?> callback) {
         if (callback != null) {
-            return Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true), null, () -> callback.accept(null), callback);
+            return Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true), fakeEvent, () -> callback.accept(null), callback);
         } else {
-            return Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true), null, null, null);
+            return Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true), fakeEvent, null, null);
         }
     }
     

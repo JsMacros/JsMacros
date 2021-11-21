@@ -19,6 +19,8 @@ import xyz.wagyourtail.jsmacros.client.config.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 import java.util.Stack;
@@ -173,10 +175,28 @@ public class CommandBuilder {
         return this;
     }
 
+    /**
+     *
+     * it is recomended to use {@link xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros#runScript(String)} in the callback
+     * if you expect to actually do anything complicated with waits.
+     * @param callback
+     *
+     * @return
+     */
     public CommandBuilder executes(MethodWrapper<CommandContextHelper, Object, Boolean, ?> callback) {
         pointer.peek().executes((ctx) -> {
             EventContainer<?> lock = new EventContainer<>(callback.getCtx());
-            EventLockWatchdog.startWatchdog(lock, null, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+            EventLockWatchdog.startWatchdog(lock, new IEventListener() {
+                @Override
+                public EventContainer<?> trigger(BaseEvent event) {
+                    return null;
+                }
+
+                @Override
+                public String toString() {
+                    return "CommandBuilder{\"called_by\": " + callback.getCtx().getTriggeringEvent().toString() + "}";
+                }
+            }, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
             boolean success = callback.apply(new CommandContextHelper(ctx));
             lock.releaseLock();
             return success ? 1 : 0;
@@ -253,7 +273,7 @@ public class CommandBuilder {
         ClientCommandManager.DISPATCHER.register(head);
         ClientPlayNetworkHandler cpnh = MinecraftClient.getInstance().getNetworkHandler();
         if (cpnh != null) {
-        ClientCommandInternals.addCommands((CommandDispatcher) cpnh.getCommandDispatcher(), (FabricClientCommandSource) cpnh.getCommandSource());
+            ClientCommandInternals.addCommands((CommandDispatcher) cpnh.getCommandDispatcher(), (FabricClientCommandSource) cpnh.getCommandSource());
         }
     }
 }
