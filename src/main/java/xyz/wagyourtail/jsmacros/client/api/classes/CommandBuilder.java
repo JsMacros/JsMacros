@@ -177,7 +177,8 @@ public class CommandBuilder {
 
     /**
      *
-     * it is recomended to use {@link xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros#runScript(String, BaseEvent)} in the callback
+     * it is recomended to use {@link xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros#runScript(String, BaseEvent)} in the callback,
+     * the {@link CommandContextHelper} arg is an {@link BaseEvent} so you can pass it directly to the script
      * if you expect to actually do anything complicated with waits.
      * @param callback
      *
