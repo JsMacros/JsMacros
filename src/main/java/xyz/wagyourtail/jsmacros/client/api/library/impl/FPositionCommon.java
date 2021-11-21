@@ -61,7 +61,7 @@ public class FPositionCommon extends BaseLibrary {
      *
      * @return
      */
-    public PositionCommon.Pos2D createPos2D(double x, double y) {
+    public PositionCommon.Pos2D createPos(double x, double y) {
         return new PositionCommon.Pos2D(x, y);
     }
 }
