@@ -10,6 +10,7 @@ import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.MathHelper;
+import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -149,7 +150,22 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         base.writeNbt(nbt);
         return NBTElementHelper.resolve(nbt);
     }
-    
+
+
+    /**
+     * @param color
+     */
+    public void setGlowingColor(int color) {
+        ((IMixinEntity) base).setGlowingColor(color);
+    }
+
+    /**
+     *
+     */
+    public void resetGlowingColor() {
+        ((IMixinEntity) base).resetColor();
+    }
+
     /**
      * Sets whether the entity is glowing.
      * @since 1.1.9
@@ -157,7 +173,8 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return
      */
     public EntityHelper<T> setGlowing(boolean val) {
-        base.setGlowing(val);
+        ((IMixinEntity) base).setOverrideGlowing(val);
+        //base.setGlowing(val);
         return this;
     }
     
