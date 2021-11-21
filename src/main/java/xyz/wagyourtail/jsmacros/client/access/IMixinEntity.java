@@ -5,6 +5,4 @@ public interface IMixinEntity {
     public void setGlowingColor(int glowingColor);
 
     public void resetColor();
-
-    public void setOverrideGlowing(boolean overrideGlowing);
 }

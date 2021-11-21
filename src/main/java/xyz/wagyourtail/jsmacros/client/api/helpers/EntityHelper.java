@@ -173,8 +173,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return
      */
     public EntityHelper<T> setGlowing(boolean val) {
-        ((IMixinEntity) base).setOverrideGlowing(val);
-        //base.setGlowing(val);
+        base.setGlowing(val);
         return this;
     }
     

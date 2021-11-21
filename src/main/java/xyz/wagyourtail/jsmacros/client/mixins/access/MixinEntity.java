@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -13,13 +14,16 @@ import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
 @Mixin(Entity.class)
 public abstract class MixinEntity implements IMixinEntity {
 
+    @Unique
     private int glowingColor = -1;
 
-    private boolean overrideGlowing;
+
+    @Shadow
+    public abstract boolean isGlowingLocal();
 
     @Override
     public void setGlowingColor(int glowingColor) {
-        this.glowingColor = MathHelper.clamp(glowingColor, 0, 16777215);
+        this.glowingColor = glowingColor & 0xFFFFFF;
     }
 
     @Override
@@ -35,17 +39,12 @@ public abstract class MixinEntity implements IMixinEntity {
         }
     }
 
-    @Inject(method = "isGlowing()Z", cancellable = true, at = @At("HEAD"))
-    public void isGlowing(CallbackInfoReturnable<Boolean> ci) {
-        if(overrideGlowing) {
-            ci.setReturnValue(true);
-            ci.cancel();
-        }
+    @Redirect(method = "setGlowing", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;isGlowing()Z", ordinal = 0), require = 0)
+    public boolean redirectIsGlowing(Entity instance) {
+        return isGlowingLocal();
     }
 
-    @Override
-    public void setOverrideGlowing(boolean overrideGlowing) {
-        this.overrideGlowing = overrideGlowing;
-    }
+
+
 
 }
