@@ -183,6 +183,7 @@ public class Profile extends BaseProfile {
         runner.libraryRegistry.addLibrary(FClient.class);
         runner.libraryRegistry.addLibrary(FKeyBind.class);
         runner.libraryRegistry.addLibrary(FPlayer.class);
+        runner.libraryRegistry.addLibrary(FPositionCommon.class);
         runner.libraryRegistry.addLibrary(FTime.class);
         runner.libraryRegistry.addLibrary(FWorld.class);
     }

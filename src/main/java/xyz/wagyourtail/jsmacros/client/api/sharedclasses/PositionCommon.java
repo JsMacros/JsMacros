@@ -36,8 +36,40 @@ public class PositionCommon {
             return new Pos2D(x+pos.x, y+pos.y);
         }
 
+        /**
+         * @since 1.6.3
+         * @param x
+         * @param y
+         *
+         * @return
+         */
+        public Pos2D add(double x, double y) {
+            return new Pos2D(this.x+x, this.y+y);
+        }
+
         public Pos2D multiply(Pos2D pos) {
             return new Pos2D(x*pos.x, y*pos.y);
+        }
+
+        /**
+         * @since 1.6.3
+         * @param x
+         * @param y
+         *
+         * @return
+         */
+        public Pos2D multiply(double x, double y) {
+            return new Pos2D(this.x*x, this.y*y);
+        }
+
+        /**
+         * @since 1.6.3
+         * @param scale
+         *
+         * @return
+         */
+        public Pos2D scale(double scale) {
+            return new Pos2D(x*scale, y*scale);
         }
 
         public String toString() {
@@ -78,8 +110,43 @@ public class PositionCommon {
             return new Pos3D(x+pos.x, y+pos.y, z+pos.z);
         }
 
+        /**
+         * @since 1.6.3
+         * @param x
+         * @param y
+         * @param z
+         *
+         * @return
+         */
+        public Pos3D add(double x, double y, double z) {
+            return new Pos3D(this.x+x, this.y+y, this.z+z);
+        }
+
         public Pos3D multiply(Pos3D pos) {
             return new Pos3D(x*pos.x, y*pos.y, z*pos.z);
+        }
+
+        /**
+         * @since 1.6.3
+         * @param x
+         * @param y
+         * @param z
+         *
+         * @return
+         */
+        public Pos3D multiply(double x, double y, double z) {
+            return new Pos3D(this.x*x, this.y*y, this.z*z);
+        }
+
+        /**
+         * @since 1.6.3
+         * @param scale
+         *
+         * @return
+         */
+         @Override
+        public Pos3D scale(double scale) {
+            return new Pos3D(x*scale, y*scale, z*scale);
         }
 
         public String toString() {
@@ -157,11 +224,47 @@ public class PositionCommon {
         }
 
         public Vec2D add(Vec2D vec) {
-            return new Vec2D(getStart().add(vec.getStart()), getEnd().add(vec.getEnd()));
+            return new Vec2D(x1 + vec.x1, y1 + vec.y1, x2 + vec.x2, y2 + vec.y2);
+        }
+
+        /**
+         * @since 1.6.3
+         * @param x1
+         * @param y1
+         * @param x2
+         * @param y2
+         *
+         * @return
+         */
+        public Vec2D add(double x1, double y1, double x2, double y2) {
+            return new Vec2D(this.x1 + x1, this.y1 + y1, this.x2 + x2, this.y2 + y2);
         }
 
         public Vec2D multiply(Vec2D vec) {
-            return new Vec2D(getStart().multiply(vec.getStart()), getEnd().multiply(vec.getEnd()));
+            return new Vec2D(x1 * vec.x1, y1 * vec.y1, x2 * vec.x2, y2 * vec.y2);
+        }
+
+        /**
+         * @since 1.6.3
+         * @param x1
+         * @param y1
+         * @param x2
+         * @param y2
+         *
+         * @return
+         */
+        public Vec2D multiply(double x1, double y1, double x2, double y2) {
+            return new Vec2D(this.x1 * x1, this.y1 * y1, this.x2 * x2, this.y2 * y2);
+        }
+
+        /**
+         * @since 1.6.3
+         * @param scale
+         *
+         * @return
+         */
+        public Vec2D scale(double scale) {
+            return new Vec2D(x1 * scale, y1 * scale, x2 * scale, y2 * scale);
         }
 
         public double dotProduct(Vec2D vec) {
@@ -173,7 +276,7 @@ public class PositionCommon {
         }
 
         public Vec2D reverse() {
-            return new Vec2D(getEnd(), getStart());
+            return new Vec2D(x2, y2, x1, y1);
         }
 
         public String toString() {
@@ -181,7 +284,7 @@ public class PositionCommon {
         }
 
         public Vec3D to3D() {
-            return new Vec3D(getStart().to3D(), getEnd().to3D());
+            return new Vec3D(x1, y1, 0, x2, y2, 0);
         }
     }
 
@@ -236,11 +339,55 @@ public class PositionCommon {
         }
 
         public Vec3D add(Vec3D vec) {
-            return new Vec3D(getStart().add(vec.getStart()), getEnd().add(vec.getEnd()));
+            return new Vec3D(this.x1 + vec.x1, this.y1 + vec.y1, this.z1 + vec.z1, this.x2 + vec.x2, this.y2 + vec.y2, this.z2 + vec.z2);
+        }
+
+        /**
+         *
+         * @since 1.6.3
+         * @param x1
+         * @param y1
+         * @param z1
+         * @param x2
+         * @param y2
+         * @param z2
+         *
+         * @return
+         */
+        public Vec3D add(double x1, double y1, double z1, double x2, double y2, double z2) {
+            return new Vec3D(this.x1 + x1, this.y1 + y1, this.z1 + z1, this.x2 + x2, this.y2 + y2, this.z2 + z2);
         }
 
         public Vec3D multiply(Vec3D vec) {
-            return new Vec3D(getStart().multiply(vec.getStart()), getEnd().multiply(vec.getEnd()));
+            return new Vec3D(this.x1 * vec.x1, this.y1 * vec.y1, this.z1 * vec.z1, this.x2 * vec.x2, this.y2 * vec.y2, this.z2 * vec.z2);
+        }
+
+        /**
+         *
+         * @since 1.6.3
+         * @param x1
+         * @param y1
+         * @param z1
+         * @param x2
+         * @param y2
+         * @param z2
+         *
+         * @return
+         */
+        public Vec3D multiply(double x1, double y1, double z1, double x2, double y2, double z2) {
+            return new Vec3D(this.x1 * x1, this.y1 * y1, this.z1 * z1, this.x2 * x2, this.y2 * y2, this.z2 * z2);
+        }
+
+        /**
+         *
+         * @since 1.6.3
+         * @param scale
+         *
+         * @return
+         */
+         @Override
+        public Vec3D scale(double scale) {
+            return new Vec3D(x1 * scale, y1 * scale, z1 * scale, x2 * scale, y2 * scale, z2 * scale);
         }
 
         public float getPitch() {
@@ -275,7 +422,7 @@ public class PositionCommon {
 
         @Override
         public Vec3D reverse() {
-            return new Vec3D(getEnd(), getStart());
+            return new Vec3D(x2, y2, z2, x1, y1, z1);
         }
 
         @Override
