@@ -89,11 +89,11 @@ public class FJsMacros extends PerExecLibrary {
     /**
      * @since 1.6.3
      * @param file
-     * @param fakeEvent
+     * @param fakeEvent you probably actually want to pass an instance created by {@link #createCustomEvent(String)}
      *
      * @return
      */
-    public EventContainer<?> runScript(String file, EventCustom fakeEvent) {
+    public EventContainer<?> runScript(String file, BaseEvent fakeEvent) {
         return runScript(file, fakeEvent, null);
     }
 
@@ -106,7 +106,7 @@ public class FJsMacros extends PerExecLibrary {
      *
      * @return container the script is running on.
      */
-    public EventContainer<?> runScript(String file, EventCustom fakeEvent, MethodWrapper<Throwable, Object, Object, ?> callback) {
+    public EventContainer<?> runScript(String file, BaseEvent fakeEvent, MethodWrapper<Throwable, Object, Object, ?> callback) {
         if (callback != null) {
             return Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true), fakeEvent, () -> callback.accept(null), callback);
         } else {
