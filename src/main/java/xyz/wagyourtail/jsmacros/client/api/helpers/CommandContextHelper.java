@@ -10,12 +10,15 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
  * @since 1.4.2
  */
-public class CommandContextHelper extends BaseHelper<CommandContext<FabricClientCommandSource>> {
+ @Event("CommandContext")
+public class CommandContextHelper extends BaseHelper<CommandContext<FabricClientCommandSource>> implements BaseEvent {
     public CommandContextHelper(CommandContext<FabricClientCommandSource> base) {
         super(base);
     }
