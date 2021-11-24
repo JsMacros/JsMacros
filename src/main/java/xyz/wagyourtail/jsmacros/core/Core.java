@@ -29,7 +29,7 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      * @Deprecated making this private in 1.7.0
      */
     @Deprecated
-    private static Core<?, ?> instance;
+    public static Core<?, ?> instance;
 
     public final LibraryRegistry libraryRegistry = new LibraryRegistry();
     public final BaseEventRegistry eventRegistry;
