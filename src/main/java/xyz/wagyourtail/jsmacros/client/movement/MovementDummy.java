@@ -1,17 +1,32 @@
 package xyz.wagyourtail.jsmacros.client.movement;
 
+import java.util.stream.Stream;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.tag.BlockTags;
+import net.minecraft.tag.FluidTags;
 import net.minecraft.util.Arm;
+import net.minecraft.util.collection.ReusableStream;
+import net.minecraft.util.function.BooleanBiFunction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 
@@ -43,6 +58,8 @@ public class MovementDummy extends LivingEntity {
         for (EquipmentSlot value : EquipmentSlot.values()) {
             equippedStack.put(value, player.getEquippedStack(value).copy());
         }
+
+        player.getStatusEffects().forEach(this::addStatusEffect);
     }
 
     public MovementDummy(World world, Vec3d pos, Vec3d velocity, Box hitBox, boolean onGround, boolean isSprinting, boolean isSneaking) {
@@ -122,7 +139,7 @@ public class MovementDummy extends LivingEntity {
         } else {
             this.jumpingCooldown = 0;
         }
-        /** Juming END **/
+        /** Jumping END **/
 
         this.travel(new Vec3d(currentInput.movementSideways * 0.98, 0.0, currentInput.movementForward * 0.98));
 
@@ -130,6 +147,235 @@ public class MovementDummy extends LivingEntity {
         this.flyingSpeed = this.isSprinting() ? 0.026F : 0.02F;
 
         return this.getPos();
+    }
+
+    @Override
+    public void travel(Vec3d movementInput) {
+        double d = 0.08D;
+        boolean bl = this.getVelocity().y <= 0.0D;
+        if (bl && this.hasStatusEffect(StatusEffects.SLOW_FALLING)) {
+            d = 0.01D;
+            this.fallDistance = 0.0F;
+        }
+
+        FluidState fluidState = this.world.getFluidState(this.getBlockPos());
+        float j;
+        double e;
+        if (this.isTouchingWater() && this.shouldSwimInFluids() && !this.canWalkOnFluid(fluidState.getFluid())) {
+            e = this.getY();
+            j = this.isSprinting() ? 0.9F : this.getBaseMovementSpeedMultiplier();
+            float g = 0.02F;
+            float h = (float) EnchantmentHelper.getDepthStrider(this);
+            if (h > 3.0F) {
+                h = 3.0F;
+            }
+
+            if (!this.onGround) {
+                h *= 0.5F;
+            }
+
+            if (h > 0.0F) {
+                j += (0.54600006F - j) * h / 3.0F;
+                g += (this.getMovementSpeed() - g) * h / 3.0F;
+            }
+
+            if (this.hasStatusEffect(StatusEffects.DOLPHINS_GRACE)) {
+                j = 0.96F;
+            }
+
+            this.updateVelocity(g, movementInput);
+            this.move(MovementType.SELF, this.getVelocity());
+            Vec3d vec3d = this.getVelocity();
+            if (this.horizontalCollision && this.isClimbing()) {
+                vec3d = new Vec3d(vec3d.x, 0.2D, vec3d.z);
+            }
+
+            this.setVelocity(vec3d.multiply(j, 0.800000011920929D, j));
+            Vec3d vec3d2 = this.method_26317(d, bl, this.getVelocity());
+            this.setVelocity(vec3d2);
+            if (this.horizontalCollision && this.doesNotCollide(vec3d2.x, vec3d2.y + 0.6000000238418579D - this.getY() + e, vec3d2.z)) {
+                this.setVelocity(vec3d2.x, 0.30000001192092896D, vec3d2.z);
+            }
+        } else if (this.isInLava() && this.shouldSwimInFluids() && !this.canWalkOnFluid(fluidState.getFluid())) {
+            e = this.getY();
+            this.updateVelocity(0.02F, movementInput);
+            this.move(MovementType.SELF, this.getVelocity());
+            Vec3d vec3d4;
+            if (this.getFluidHeight(FluidTags.LAVA) <= this.getSwimHeight()) {
+                this.setVelocity(this.getVelocity().multiply(0.5D, 0.800000011920929D, 0.5D));
+                vec3d4 = this.method_26317(d, bl, this.getVelocity());
+                this.setVelocity(vec3d4);
+            } else {
+                this.setVelocity(this.getVelocity().multiply(0.5D));
+            }
+
+            if (!this.hasNoGravity()) {
+                this.setVelocity(this.getVelocity().add(0.0D, -d / 4.0D, 0.0D));
+            }
+
+            vec3d4 = this.getVelocity();
+            if (this.horizontalCollision && this.doesNotCollide(vec3d4.x, vec3d4.y + 0.6000000238418579D - this.getY() + e, vec3d4.z)) {
+                this.setVelocity(vec3d4.x, 0.30000001192092896D, vec3d4.z);
+            }
+        /*} else if (this.isFallFlying()) {
+            Vec3d vec3d5 = this.getVelocity();
+            if (vec3d5.y > -0.5D) {
+                this.fallDistance = 1.0F;
+            }
+
+            Vec3d vec3d6 = this.getRotationVector();
+            j = this.getPitch() * 0.017453292F;
+            double k = Math.sqrt(vec3d6.x * vec3d6.x + vec3d6.z * vec3d6.z);
+            double l = vec3d5.horizontalLength();
+            double m = vec3d6.length();
+            float n = MathHelper.cos(j);
+            n = (float)((double)n * (double)n * Math.min(1.0D, m / 0.4D));
+            vec3d5 = this.getVelocity().add(0.0D, d * (-1.0D + (double)n * 0.75D), 0.0D);
+            double q;
+            if (vec3d5.y < 0.0D && k > 0.0D) {
+                q = vec3d5.y * -0.1D * (double)n;
+                vec3d5 = vec3d5.add(vec3d6.x * q / k, q, vec3d6.z * q / k);
+            }
+
+            if (j < 0.0F && k > 0.0D) {
+                q = l * (double)(-MathHelper.sin(j)) * 0.04D;
+                vec3d5 = vec3d5.add(-vec3d6.x * q / k, q * 3.2D, -vec3d6.z * q / k);
+            }
+
+            if (k > 0.0D) {
+                vec3d5 = vec3d5.add((vec3d6.x / k * l - vec3d5.x) * 0.1D, 0.0D, (vec3d6.z / k * l - vec3d5.z) * 0.1D);
+            }
+
+            this.setVelocity(vec3d5.multiply(0.9900000095367432D, 0.9800000190734863D, 0.9900000095367432D));
+            this.move(MovementType.SELF, this.getVelocity());*/
+        } else {
+            BlockPos blockPos = this.getVelocityAffectingPos();
+            float t = this.world.getBlockState(blockPos).getBlock().getSlipperiness();
+            j = this.onGround ? t * 0.91F : 0.91F;
+            Vec3d vec3d7 = this.method_26318(movementInput, t);
+            double v = vec3d7.y;
+            if (this.hasStatusEffect(StatusEffects.LEVITATION)) {
+                v += (0.05D * (double)(this.getStatusEffect(StatusEffects.LEVITATION).getAmplifier() + 1) - vec3d7.y) * 0.2D;
+                this.fallDistance = 0.0F;
+            } else if (!this.hasNoGravity()) {
+                v -= d;
+            }
+
+            this.setVelocity(vec3d7.x * (double)j, v * 0.9800000190734863D, vec3d7.z * (double)j);
+        }
+    }
+
+    @Override
+    public void move(MovementType movementType, Vec3d movement) {
+        if (this.noClip) {
+            this.setPosition(this.getX() + movement.x, this.getY() + movement.y, this.getZ() + movement.z);
+        } else {
+            if (movementType == MovementType.PISTON) {
+                movement = this.adjustMovementForPiston(movement);
+                if (movement.equals(Vec3d.ZERO)) {
+                    return;
+                }
+            }
+
+            if (this.movementMultiplier.lengthSquared() > 1.0E-7D) {
+                movement = movement.multiply(this.movementMultiplier);
+                this.movementMultiplier = Vec3d.ZERO;
+                this.setVelocity(Vec3d.ZERO);
+            }
+
+            movement = this.adjustMovementForSneaking(movement, movementType);
+            Vec3d vec3d = this.adjustMovementForCollisions(movement);
+            if (vec3d.lengthSquared() > 1.0E-7D) {
+                this.setPosition(this.getX() + vec3d.x, this.getY() + vec3d.y, this.getZ() + vec3d.z);
+            }
+
+            this.horizontalCollision = !MathHelper.approximatelyEquals(movement.x, vec3d.x) || !MathHelper.approximatelyEquals(movement.z, vec3d.z);
+            this.verticalCollision = movement.y != vec3d.y;
+            this.onGround = this.verticalCollision && movement.y < 0.0D;
+            BlockPos blockPos = this.getLandingPos();
+            BlockState blockState = this.world.getBlockState(blockPos);
+            this.fall(vec3d.y, this.onGround, blockState, blockPos);
+            if (!this.isRemoved()) {
+                Vec3d vec3d2 = this.getVelocity();
+                if (movement.x != vec3d.x) {
+                    this.setVelocity(0.0D, vec3d2.y, vec3d2.z);
+                }
+
+                if (movement.z != vec3d.z) {
+                    this.setVelocity(vec3d2.x, vec3d2.y, 0.0D);
+                }
+
+                Block block = blockState.getBlock();
+                if (movement.y != vec3d.y) {
+                    block.onEntityLand(this.world, this);
+                }
+
+                if (this.onGround) {
+                    block.onSteppedOn(this.world, blockPos, blockState, this);
+                }
+
+                MoveEffect moveEffect = this.getMoveEffect();
+                if (moveEffect.hasAny() && !this.hasVehicle()) {
+                    double d = vec3d.x;
+                    double e = vec3d.y;
+                    double f = vec3d.z;
+                    this.field_28627 = (float)((double)this.field_28627 + vec3d.length() * 0.6D);
+                    if (!blockState.isIn(BlockTags.CLIMBABLE) && !blockState.isOf(Blocks.POWDER_SNOW)) {
+                        e = 0.0D;
+                    }
+
+                    this.horizontalSpeed += (float)vec3d.horizontalLength() * 0.6F;
+                    this.distanceTraveled += (float)Math.sqrt(d * d + e * e + f * f) * 0.6F;
+//                    if (!blockState.isAir()) {
+//                        if (this.isTouchingWater()) {
+//                            if (moveEffect.emitsGameEvents()) {
+//                                this.emitGameEvent(GameEvent.SWIM);
+//                            }
+//                        } else {
+//                            if (moveEffect.emitsGameEvents() && !blockState.isIn(BlockTags.OCCLUDES_VIBRATION_SIGNALS)) {
+//                                this.emitGameEvent(GameEvent.STEP);
+//                            }
+//                        }
+//                    } else if (blockState.isAir()) {
+//                        this.addAirTravelEffects();
+//                    }
+                }
+
+                this.tryCheckBlockCollision();
+                float i = this.getVelocityMultiplier();
+                this.setVelocity(this.getVelocity().multiply(i, 1.0D, i));
+            }
+        }
+    }
+
+    private Vec3d adjustMovementForCollisions(Vec3d movement) {
+        Box box = this.getBoundingBox();
+        ShapeContext shapeContext = ShapeContext.of(this);
+        VoxelShape border = this.world.getWorldBorder().asVoxelShape();
+        Stream<VoxelShape> touchesWorldBorder = VoxelShapes.matchesAnywhere(border, VoxelShapes.cuboid(box.contract(1.0E-7D)), BooleanBiFunction.AND) ? Stream.empty() : Stream.of(border);
+        Stream<VoxelShape> touchedBlocks = this.world.getEntityCollisions(this, box.stretch(movement), (entity) -> true);
+        ReusableStream<VoxelShape> reusableStream = new ReusableStream<>(Stream.concat(touchedBlocks, touchesWorldBorder));
+        Vec3d adjusted = movement.lengthSquared() == 0.0D ? movement : adjustMovementForCollisions(this, movement, box, this.world, shapeContext, reusableStream);
+        boolean sameX = movement.x != adjusted.x;
+        boolean sameY = movement.y != adjusted.y;
+        boolean sameZ = movement.z != adjusted.z;
+        boolean nearGround = this.onGround || sameY && movement.y < 0.0D;
+        if (this.stepHeight > 0.0F && nearGround && (sameX || sameZ)) {
+            Vec3d stepped = adjustMovementForCollisions(this, new Vec3d(movement.x, (double)this.stepHeight, movement.z), box, this.world, shapeContext, reusableStream);
+            Vec3d newPosition = adjustMovementForCollisions(this, new Vec3d(0.0D, (double)this.stepHeight, 0.0D), box.stretch(movement.x, 0.0D, movement.z), this.world, shapeContext, reusableStream);
+            if (newPosition.y < (double)this.stepHeight) {
+                Vec3d vec3d4 = adjustMovementForCollisions(this, new Vec3d(movement.x, 0.0D, movement.z), box.offset(newPosition), this.world, shapeContext, reusableStream).add(newPosition);
+                if (vec3d4.horizontalLengthSquared() > stepped.horizontalLengthSquared()) {
+                    stepped = vec3d4;
+                }
+            }
+
+            if (stepped.horizontalLengthSquared() > adjusted.horizontalLengthSquared()) {
+                return stepped.add(adjustMovementForCollisions(this, new Vec3d(0.0D, -stepped.y + movement.y, 0.0D), box.offset(stepped), this.world, shapeContext, reusableStream));
+            }
+        }
+
+        return adjusted;
     }
 
     /**
