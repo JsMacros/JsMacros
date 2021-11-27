@@ -3,10 +3,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.minecraft.command.argument.BlockStateArgument;
 import net.minecraft.command.argument.ItemStackArgument;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -18,8 +16,8 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
  * @since 1.4.2
  */
  @Event("CommandContext")
-public class CommandContextHelper extends BaseHelper<CommandContext<FabricClientCommandSource>> implements BaseEvent {
-    public CommandContextHelper(CommandContext<FabricClientCommandSource> base) {
+public class CommandContextHelper extends BaseHelper<CommandContext<?>> implements BaseEvent {
+    public CommandContextHelper(CommandContext<?> base) {
         super(base);
     }
 

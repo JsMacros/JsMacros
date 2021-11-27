@@ -16,10 +16,10 @@
     "environment": "client",
     "entrypoints": {
         "main": [
-            "xyz.wagyourtail.jsmacros.client.JsMacros"
+            "xyz.wagyourtail.jsmacros.client.JsMacrosFabric"
         ],
         "client": [
-            "xyz.wagyourtail.jsmacros.client.JsMacros"
+            "xyz.wagyourtail.jsmacros.client.JsMacrosFabric"
         ],
         "modmenu": [
             "xyz.wagyourtail.jsmacros.client.ModMenuEntry"

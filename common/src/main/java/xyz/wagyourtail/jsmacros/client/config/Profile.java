@@ -142,8 +142,7 @@ public class Profile extends BaseProfile {
     @Override
     public void initRegistries() {
         super.initRegistries();
-    
-        TickBasedEvents.init();
+
         runner.eventRegistry.addEvent(EventAirChange.class);
         runner.eventRegistry.addEvent(EventArmorChange.class);
         runner.eventRegistry.addEvent(EventBlockUpdate.class);

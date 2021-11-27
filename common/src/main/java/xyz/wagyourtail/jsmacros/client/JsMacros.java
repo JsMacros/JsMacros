@@ -1,9 +1,5 @@
 package xyz.wagyourtail.jsmacros.client;
 
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -26,17 +22,32 @@ import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 import java.io.File;
 
-public class JsMacros implements ModInitializer, ClientModInitializer {
+public class JsMacros {
     public static final String MOD_ID = "jsmacros";
     public static final Logger LOGGER  = LogManager.getLogger();
     public static KeyBinding keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title"));
     public static BaseScreen prevScreen;
-    protected static final File configFolder = new File(FabricLoader.getInstance().getConfigDir().toFile(), "jsMacros");
-    
-    public static final Core<Profile, EventRegistry> core = Core.createInstance(EventRegistry::new, Profile::new, configFolder.getAbsoluteFile(), new File(configFolder, "Macros"), LOGGER);
+    protected static final File configFolder;
 
-    @Override
-    public void onInitialize() {
+    public static final Core<Profile, EventRegistry> core;
+
+    static {
+        //TODO: STOP DOING THIS WITH 1.7.0
+        File configFolder1;
+        try {
+            configFolder1 = (File) Class.forName("xyz.wagyourtail.jsmacros.client.JsMacrosFabric").getField("configFolder").get(null);
+        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+            try {
+                configFolder1 = (File) Class.forName("xyz.wagyourtail.jsmacros.client.JsMacrosForge").getField("configFolder").get(null);
+            } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        configFolder = configFolder1;
+        core = Core.createInstance(EventRegistry::new, Profile::new, configFolder.getAbsoluteFile(), new File(configFolder, "Macros"), LOGGER);
+    }
+
+    public static void onInitialize() {
         // this is first, we just want core loaded here
         try {
             core.config.addOptions("client", ClientConfigV2.class);
@@ -48,12 +59,10 @@ public class JsMacros implements ModInitializer, ClientModInitializer {
     }
 
 
-    @Override
-    public void onInitializeClient() {
+    public static void onInitializeClient() {
         // this comes later, we want to do core's deferred init here
         core.deferredInit();
 
-        KeyBindingHelper.registerKeyBinding(keyBinding);
         prevScreen = new KeyMacrosScreen(null);
 
         // Init MovementQueue

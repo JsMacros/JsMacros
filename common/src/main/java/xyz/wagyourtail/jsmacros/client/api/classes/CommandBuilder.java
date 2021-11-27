@@ -1,17 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.*;
-import com.mojang.brigadier.builder.ArgumentBuilder;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
-import net.fabricmc.fabric.impl.command.client.ClientCommandInternals;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.command.argument.*;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
@@ -23,7 +16,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
-import java.util.Stack;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,28 +25,16 @@ import java.util.regex.Pattern;
  * @since 1.4.2
  */
  @SuppressWarnings("unused")
-public class CommandBuilder {
+public abstract class CommandBuilder {
 
-    private final LiteralArgumentBuilder<FabricClientCommandSource> head;
-    private final Stack<ArgumentBuilder<FabricClientCommandSource, ?>> pointer = new Stack<>();
+    /**
+     * name -> builder
+     */
+    public static Function<String, CommandBuilder> createNewBuilder;
 
-    public CommandBuilder(String name) {
-        head = ClientCommandManager.literal(name);
-        pointer.push(head);
-    }
+    protected abstract void argument(String name, Supplier<ArgumentType<?>> type);
 
-    private void argument(String name, Supplier<ArgumentType<?>> type) {
-        ArgumentBuilder<FabricClientCommandSource, ?> arg = ClientCommandManager.argument(name, type.get());
-
-        pointer.push(arg);
-    }
-
-    public CommandBuilder literalArg(String name) {
-        ArgumentBuilder<FabricClientCommandSource, ?> arg = ClientCommandManager.literal(name);
-
-        pointer.push(arg);
-        return this;
-    }
+    public abstract CommandBuilder literalArg(String name);
 
     public CommandBuilder angleArg(String name) {
         argument(name, AngleArgumentType::angle);
@@ -189,35 +170,28 @@ public class CommandBuilder {
      *
      * @return
      */
-    public CommandBuilder executes(MethodWrapper<CommandContextHelper, Object, Boolean, ?> callback) {
-        pointer.peek().executes((ctx) -> {
-            EventContainer<?> lock = new EventContainer<>(callback.getCtx());
-            EventLockWatchdog.startWatchdog(lock, new IEventListener() {
-                @Override
-                public EventContainer<?> trigger(BaseEvent event) {
-                    return null;
-                }
+    public abstract CommandBuilder executes(MethodWrapper<CommandContextHelper, Object, Boolean, ?> callback);
 
-                @Override
-                public String toString() {
-                    return "CommandBuilder{\"called_by\": " + callback.getCtx().getTriggeringEvent().toString() + "}";
-                }
-            }, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
-            boolean success = callback.apply(new CommandContextHelper(ctx));
-            lock.releaseLock();
-            return success ? 1 : 0;
-        });
-        return this;
+    protected <S> int internalExecutes(CommandContext<S> context, MethodWrapper<CommandContextHelper, Object, Boolean, ?> callback) {
+        EventContainer<?> lock = new EventContainer<>(callback.getCtx());
+        EventLockWatchdog.startWatchdog(lock, new IEventListener() {
+            @Override
+            public EventContainer<?> trigger(BaseEvent event) {
+                return null;
+            }
+
+            @Override
+            public String toString() {
+                return "CommandBuilder{\"called_by\": " + callback.getCtx().getTriggeringEvent().toString() + "}";
+            }
+        }, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+        boolean success = callback.apply(new CommandContextHelper(context));
+        lock.releaseLock();
+        return success ? 1 : 0;
     }
 
 
-    public CommandBuilder or() {
-        if (pointer.size() > 1) {
-            ArgumentBuilder<FabricClientCommandSource, ?> oldarg = pointer.pop();
-            pointer.peek().then(oldarg);
-        }
-        return this;
-    }
+    public abstract CommandBuilder or();
 
     /**
      * name overload for {@link #or()} to work around language keyword restrictions
@@ -229,14 +203,7 @@ public class CommandBuilder {
         return this;
     }
 
-    public CommandBuilder or(int argumentLevel) {
-        argumentLevel = Math.max(1, argumentLevel);
-        while (pointer.size() > argumentLevel) {
-            ArgumentBuilder<FabricClientCommandSource, ?> oldarg = pointer.pop();
-            pointer.peek().then(oldarg);
-        }
-        return this;
-    }
+    public abstract CommandBuilder or(int argumentLevel);
 
     /**
      * name overload for {@link #or(int)} to work around language keyword restrictions
@@ -274,12 +241,5 @@ public class CommandBuilder {
         }
     }
 
-    public void register() {
-        or(1);
-        ClientCommandManager.DISPATCHER.register(head);
-        ClientPlayNetworkHandler cpnh = MinecraftClient.getInstance().getNetworkHandler();
-        if (cpnh != null) {
-            ClientCommandInternals.addCommands((CommandDispatcher) cpnh.getCommandDispatcher(), (FabricClientCommandSource) cpnh.getCommandSource());
-        }
-    }
+    public abstract void register();
 }

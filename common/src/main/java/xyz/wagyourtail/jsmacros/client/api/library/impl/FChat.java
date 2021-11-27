@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
+import com.mojang.brigadier.Command;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
@@ -236,7 +237,7 @@ public class FChat extends BaseLibrary {
      * @return
      */
     public CommandBuilder createCommandBuilder(String name) {
-        return new CommandBuilder(name);
+        return CommandBuilder.createNewBuilder.apply(name);
     }
 
     public ChatHistoryManager getHistory() {
