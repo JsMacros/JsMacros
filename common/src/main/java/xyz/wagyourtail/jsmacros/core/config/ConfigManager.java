@@ -22,7 +22,7 @@ public class ConfigManager {
     public JsonObject rawOptions = null;
 
     public ConfigManager(File configFolder, File macroFolder, Logger logger) {
-        this.configFolder = configFolder;
+        this.configFolder = configFolder.getAbsoluteFile();
         this.macroFolder = macroFolder.getAbsoluteFile();
         this.LOGGER = logger;
         if (!configFolder.exists()) {

@@ -1,0 +1,12 @@
+{
+    "required": true,
+    "package": "xyz.wagyourtail.jsmacros.client.forge.mixins",
+    "mixins": [
+    ],
+    "client": [
+        "MixinTranslationStorage"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

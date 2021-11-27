@@ -19,6 +19,8 @@ import java.util.function.Consumer;
 public abstract class BaseLanguage<T> {
     public final String extension;
     protected final Core<?, ?> runner;
+
+    public static Runnable preThread = () -> {};
     
     public BaseLanguage(String extension, Core<?, ?> runner) {
         this.extension = extension;
@@ -33,6 +35,7 @@ public abstract class BaseLanguage<T> {
         final File file = new File(runner.config.macroFolder, staticMacro.scriptFile);
         EventContainer<T> ctx = new EventContainer<>(createContext(event, file));
         final Thread t = new Thread(() -> {
+            preThread.run();
             try {
                 if (event == null) {
                     Thread.currentThread().setName(String.format("RunScript:{\"creator\":\"%s\"}", ct.getName()));
@@ -79,6 +82,7 @@ public abstract class BaseLanguage<T> {
         final Thread ct = Thread.currentThread();
         EventContainer<T> ctx = new EventContainer<>(createContext(null, fakeFile));
         final Thread t = new Thread(() -> {
+            preThread.run();
             try {
                 Thread.currentThread().setName(String.format("RunScript:{\"creator\":\"%s\", \"start\":\"%d\"}", ct.getName(), System.currentTimeMillis()));
 

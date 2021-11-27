@@ -16,7 +16,7 @@ public abstract class MixinLivingEntity {
 
     @Shadow protected abstract int computeFallDamage(float fallDistance, float damageMultiplier);
 
-    @Inject(at = @At("TAIL"), method = "applyDamage")
+    @Inject(at = @At("TAIL"), method = {"applyDamage", "m_6475_"})
     public void onDamage(DamageSource source, float amount, CallbackInfo ci) {
         new EventEntityDamaged((Entity)(Object) this, amount);
     }

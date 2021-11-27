@@ -58,7 +58,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Shadow protected MinecraftClient client;
     @Shadow protected TextRenderer textRenderer;
     
-    @Shadow(aliases = "method_37063") protected abstract <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement);
+    @Shadow(aliases = {"method_37063", "m_142416_"}) protected abstract <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement);
     @Shadow public abstract void onClose();
     @Shadow protected abstract void init();
 

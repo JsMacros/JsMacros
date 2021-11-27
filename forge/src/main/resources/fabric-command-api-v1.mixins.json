@@ -1,0 +1,16 @@
+{
+    "required": true,
+    "package": "net.fabricmc.fabric.mixin.command",
+    "mixins": [
+    ],
+    "client": [
+        "client.ClientCommandSourceMixin",
+        "client.ClientPlayerEntityMixin",
+        "client.ClientPlayNetworkHandlerMixin",
+        "client.MinecraftClientMixin",
+        "MixinHelpCommand"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
