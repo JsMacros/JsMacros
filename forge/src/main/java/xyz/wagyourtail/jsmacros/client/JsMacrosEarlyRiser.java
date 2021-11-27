@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client;
 
-import cpw.mods.modlauncher.Launcher;
 import cpw.mods.modlauncher.TransformingClassLoader;
 import net.minecraftforge.fml.loading.FMLLoader;
 import org.apache.logging.log4j.Level;
@@ -15,12 +14,9 @@ import sun.misc.Unsafe;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes;

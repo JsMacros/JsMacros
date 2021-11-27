@@ -23,21 +23,12 @@ subprojects {
         implementation "org.graalvm.regex:regex:${project.graal_version}"
 //		implementation "org.graalvm.compiler:compiler:${project.graal_version}"
 //		implementation "org.graalvm.compiler:compiler-management:${project.graal_version}"
-        include "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-        include "org.graalvm.js:js:${project.graal_version}"
-        include "org.graalvm.truffle:truffle-api:${project.graal_version}"
-        include "org.graalvm.regex:regex:${project.graal_version}"
-//		include "org.graalvm.compiler:compiler:${project.graal_version}"
-//		include "org.graalvm.compiler:compiler-management:${project.graal_version}"
 
         implementation "io.noties:prism4j:${project.prism_version}"
-        include "io.noties:prism4j:${project.prism_version}"
 
         implementation "com.neovisionaries:nv-websocket-client:2.10"
-        include "com.neovisionaries:nv-websocket-client:2.10"
 
         implementation "org.javassist:javassist:3.28.0-GA"
-        include "org.javassist:javassist:3.28.0-GA"
 
         implementation 'com.google.code.findbugs:jsr305:3.0.2'
     }

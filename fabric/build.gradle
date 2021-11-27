@@ -30,6 +30,18 @@ dependencies {
     include "net.fabricmc.fabric-api:fabric-resource-loader-v0:${project.resource_loader_version}"
     include "net.fabricmc.fabric-api:fabric-command-api-v1:${project.command_api_version}"
 
+
+    include "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+    include "org.graalvm.js:js:${project.graal_version}"
+    include "org.graalvm.truffle:truffle-api:${project.graal_version}"
+    include "org.graalvm.regex:regex:${project.graal_version}"
+//		include "org.graalvm.compiler:compiler:${project.graal_version}"
+//		include "org.graalvm.compiler:compiler-management:${project.graal_version}"
+    include "io.noties:prism4j:${project.prism_version}"
+    include "com.neovisionaries:nv-websocket-client:2.10"
+    include "org.javassist:javassist:3.28.0-GA"
+
+
     modImplementation("curse.maven:modmenu-308702:${project.modmenu_version}") {
         transitive = false
     }
@@ -67,6 +79,7 @@ sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 components.java {
