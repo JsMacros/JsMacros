@@ -39,6 +39,9 @@ allprojects {
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+
     archivesBaseName = rootProject.archives_base_name
     version = rootProject.mod_version
     group = rootProject.maven_group
@@ -65,10 +68,20 @@ allprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
-        options.release = 16
+
+        def targetVersion = 8
+        if (JavaVersion.current().isJava9Compatible()) {
+            it.options.release = targetVersion
+        }
     }
 
     java {
         withSourcesJar()
     }
 }
+
+task removeDist(type: Delete) {
+    delete new File(rootProject.rootDir, "dist")
+}
+
+clean.finalizedBy(removeDist)

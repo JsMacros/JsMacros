@@ -2,6 +2,8 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.0.0"
 }
 
+archivesBaseName = archivesBaseName + "-FABRIC"
+
 architectury {
     platformSetupLoomIde()
     fabric()
@@ -101,3 +103,11 @@ publishing {
         // Add repositories to publish to here.
     }
 }
+
+
+task createDist(type: Copy) {
+    from(new File(project.buildDir, "libs"))
+    into new File(rootProject.rootDir, "dist")
+}
+
+build.finalizedBy(createDist)
