@@ -1,9 +1,10 @@
-package xyz.wagyourtail.jsmacros.client;
+package xyz.wagyourtail.jsmacros.fabric.client;
 
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import net.minecraft.client.gui.screen.Screen;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 public class ModMenuEntry implements ModMenuApi {

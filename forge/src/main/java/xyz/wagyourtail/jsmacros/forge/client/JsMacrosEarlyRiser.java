@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client;
+package xyz.wagyourtail.jsmacros.forge.client;
 
 import cpw.mods.modlauncher.TransformingClassLoader;
 import net.minecraftforge.fml.loading.FMLLoader;
@@ -9,11 +9,10 @@ import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
 import org.spongepowered.asm.mixin.connect.IMixinConnector;
-import sun.misc.Unsafe;
+import xyz.wagyourtail.jsmacros.forge.client.FakeFabricLoader;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.StandardCopyOption;
@@ -25,21 +24,8 @@ import java.util.jar.Manifest;
 public class JsMacrosEarlyRiser implements IMixinConnector {
     public static final Logger LOGGER  = LogManager.getLogger("JsMacros EarlyRiser");
     public static final List<URL> urls = new ArrayList<>();
-    public static final Unsafe unsafe;
     public static ClassLoader loader;
 
-    static {
-        Unsafe unsafe1;
-        try {
-            Field f = Unsafe.class.getDeclaredField("theUnsafe");
-            f.setAccessible(true);
-            unsafe1 = (Unsafe) f.get(null);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-            unsafe1 = null;
-        }
-        unsafe = unsafe1;
-    }
     @Override
     public void connect() {
         MixinBootstrap.init();
@@ -71,7 +57,7 @@ public class JsMacrosEarlyRiser implements IMixinConnector {
         //            e.printStackTrace();
         //        }
         TransformingClassLoader cl = ((TransformingClassLoader) JsMacrosEarlyRiser.class.getClassLoader());
-        cl.setFallbackClassLoader(loader = new URLClassLoader(urls.toArray(URL[]::new), ClassLoader.getPlatformClassLoader()));
+        cl.setFallbackClassLoader(loader = new URLClassLoader(urls.toArray(new URL[0])));
     }
 
     //    public void addURL(Object ucp, URL url) throws NoSuchFieldException, MalformedURLException {
@@ -120,7 +106,7 @@ public class JsMacrosEarlyRiser implements IMixinConnector {
 
     public static class ShimClassLoader extends URLClassLoader {
         public ShimClassLoader() {
-            super(new URL[] {}, ClassLoader.getPlatformClassLoader());
+            super(new URL[] {});
         }
 
         @Override

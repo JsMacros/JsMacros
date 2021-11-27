@@ -35,10 +35,10 @@ public class JsMacros {
         //TODO: STOP DOING THIS WITH 1.7.0
         File configFolder1;
         try {
-            configFolder1 = (File) Class.forName("xyz.wagyourtail.jsmacros.client.JsMacrosFabric").getField("configFolder").get(null);
+            configFolder1 = (File) Class.forName("xyz.wagyourtail.jsmacros.fabric.client.JsMacrosFabric").getField("configFolder").get(null);
         } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
             try {
-                configFolder1 = (File) Class.forName("xyz.wagyourtail.jsmacros.client.JsMacrosForge").getField("configFolder").get(null);
+                configFolder1 = (File) Class.forName("xyz.wagyourtail.jsmacros.forge.client.JsMacrosForge").getField("configFolder").get(null);
             } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }

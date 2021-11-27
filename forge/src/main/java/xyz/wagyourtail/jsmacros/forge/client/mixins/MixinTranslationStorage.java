@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.forge.mixins;
+package xyz.wagyourtail.jsmacros.forge.client.mixins;
 
 
 import com.google.gson.JsonObject;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import xyz.wagyourtail.jsmacros.client.FakeFabricLoader;
+import xyz.wagyourtail.jsmacros.forge.client.FakeFabricLoader;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

@@ -1,17 +1,19 @@
-package xyz.wagyourtail.jsmacros.client;
+package xyz.wagyourtail.jsmacros.forge.client;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fmlclient.registry.ClientRegistry;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
-import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilderForge;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
+import xyz.wagyourtail.jsmacros.forge.client.api.classes.CommandBuilderForge;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +21,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 
+@Mod(JsMacros.MOD_ID)
 public class JsMacrosForge {
     public static final File configFolder = new File(MinecraftClient.getInstance().runDirectory, "config/jsMacros");
     public static final CombineClassLoader classLoader = new CombineClassLoader(JsMacrosEarlyRiser.loader, Thread.currentThread().getContextClassLoader());
@@ -26,11 +29,13 @@ public class JsMacrosForge {
     public JsMacrosForge() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onInitialize);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onInitializeClient);
+
+        // needs to be earlier because forge does this too late and Core.instance ends up null for first sound event
+        Thread.currentThread().setContextClassLoader(classLoader);
+        JsMacros.onInitialize();
     }
 
     public void onInitialize(FMLCommonSetupEvent event) {
-        Thread.currentThread().setContextClassLoader(classLoader);
-        JsMacros.onInitialize();
 
         // initialize loader-specific stuff
         BaseLanguage.preThread = () -> Thread.currentThread().setContextClassLoader(classLoader);

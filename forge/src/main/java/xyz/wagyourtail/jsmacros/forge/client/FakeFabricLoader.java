@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client;
+package xyz.wagyourtail.jsmacros.forge.client;
 
 import com.google.gson.*;
 import net.fabricmc.api.ClientModInitializer;

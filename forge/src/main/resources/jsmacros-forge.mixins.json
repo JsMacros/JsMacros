@@ -1,6 +1,6 @@
 {
     "required": true,
-    "package": "xyz.wagyourtail.jsmacros.client.forge.mixins",
+    "package": "xyz.wagyourtail.jsmacros.forge.client.mixins",
     "mixins": [
     ],
     "client": [

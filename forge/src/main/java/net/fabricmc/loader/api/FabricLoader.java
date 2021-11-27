@@ -1,9 +1,7 @@
 package net.fabricmc.loader.api;
 
-import cpw.mods.modlauncher.Launcher;
-import cpw.mods.modlauncher.api.IEnvironment;
 import net.minecraftforge.fml.loading.FMLLoader;
-import xyz.wagyourtail.jsmacros.client.FakeFabricLoader;
+import xyz.wagyourtail.jsmacros.forge.client.FakeFabricLoader;
 
 import java.io.File;
 import java.nio.file.Path;
