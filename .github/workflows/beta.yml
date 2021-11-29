@@ -18,6 +18,7 @@ jobs:
     - uses: actions/checkout@v2
       
     - uses: actions/github-script@v2
+      id: fname
       with:
         result-encoding: string
         script: |
@@ -25,6 +26,7 @@ jobs:
           let file = fs.readFileSync("./gradle.properties");
           file = file.toString().split("\n").map(e => e.trim().startsWith("mod_version") ? `${e}-beta-${process.env.GITHUB_SHA.substring(0, 7)}` : e).join("\n");
           fs.writeFileSync("./gradle.properties", file);
+          return file.toString().split("\n").filter(e => e.trim().startsWith("mod_version") || e.trim().startsWith("archives_base_name")).map(e => e.split("=")[1].trim()).join("-");
       
     - name: Set up JDK 17
       uses: actions/setup-java@v2
@@ -38,14 +40,6 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
 
-    - uses: actions/github-script@v2
-      id: fname
-      with:
-        result-encoding: string
-        script: |
-          const fs = require("fs")
-          return fs.readdirSync("./dist/").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar"))[0].replace(".jar", "");
-        
     - uses: actions/upload-artifact@v2
       with:
         name: ${{ steps.fname.outputs.result }}
