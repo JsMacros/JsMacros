@@ -1,0 +1,151 @@
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+      cf_data_fabric:
+        required: false
+        type: string
+      cf_data_forge:
+        required: false
+        type: string
+      java_version:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ matrix.Branch }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '${{ matrix.java_version }}'
+
+      - name: Grant Execute Permiussion
+        run: chmod +x gradlew
+
+      - name: Build
+        run: ./gradlew build
+
+      - name: Upload To Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.Branch }}
+          path: ./dist/**/*
+
+      - name: Install Python
+        if: ${{ inputs.branch == "main.1.18" }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+
+      - name: Install Python Deps
+        if: ${{ inputs.branch == "main.1.18" }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools wheel twine
+
+
+      - name: Upload PyDoc
+        if: ${{ inputs.branch == "main.1.18" }}
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          python setup.py sdist bdist_wheel
+          twine upload dist/*
+        working-directory: python
+
+  deploy:
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    concurrency: DeployLock
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ inputs.branch }}
+
+      - name: Check For Fabric Jar
+        uses: actions/github-script@v5
+        id: fabric_release
+        with:
+          result-encoding: string
+          script: |
+            const fs = require("fs")
+            return fs.readdirSync("./").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar") && e.contains("FABRIC"))[0] ?? false;
+
+      - name: Upload Fabric to Git Release
+        if: ${{ steps.fabric_release.outputs.result != false }}
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ./build/libs/${{ steps.fabric_release.outputs.result }} application/jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check For Forge Jar
+        uses: actions/github-script@v5
+        id: forge_release
+        with:
+          result-encoding: string
+          script: |
+            const fs = require("fs")
+            return fs.readdirSync("./").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar") && e.contains("FORGE"))[0] ?? false;
+
+      - name: Upload Forge to Git Release
+        if: ${{ steps.forge_release.outputs.result != false }}
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ./${{ steps.forge_release.outputs.result }} application/jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Zip TS
+        uses: papeloto/action-zip@v1
+        with:
+          files: typescript/
+          dest: typescript-${{ inputs.branch }}.zip
+
+      - name: Upload TS to Git Release
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ./typescript-${{ inputs.branch }}.zip application/jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Fabric To Curseforge
+        if: ${{ steps.fabric_release.outputs.result != false }}
+        uses: itsmeow/curseforge-upload@v3
+        with:
+          token: ${{ secrets.CF_API_KEY }}
+          project_id: 403185
+          game_endpoint: minecraft
+          file_path: ./${{ steps.fabric_release.outputs.result }}
+          changelog: See the github release for changes.
+          display_name: ${{ steps.fname.outputs.result }}
+          game_versions: ${{ inputs.cf_data_fabric.outputs.content }}
+          release_type: release
+          relations: modmenu:optionalDependency
+
+      - name: Upload Forge To Curseforge
+        if: ${{ steps.forge_release.outputs.result != false }}
+        uses: itsmeow/curseforge-upload@v3
+        with:
+          token: ${{ secrets.CF_API_KEY }}
+          project_id: 403185
+          game_endpoint: minecraft
+          file_path: ./${{ steps.forge_release.outputs.result }}
+          changelog: See the github release for changes.
+          display_name: ${{ steps.fname.outputs.result }}
+          game_versions: ${{ inputs.cf_data_forge.outputs.content }}
+          release_type: release
+          relations: modmenu:optionalDependency
