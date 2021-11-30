@@ -26,7 +26,7 @@ public class MerchantEntityHelper<T extends MerchantEntity> extends LivingEntity
     }
 
     public List<TradeOfferHelper> refreshTrades() {
-        ((IMerchantEntity) base).refreshOffers();
+        ((IMerchantEntity) base).jsmacros_refreshOffers();
         return getTrades();
     }
     

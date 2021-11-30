@@ -12,7 +12,7 @@ public class MixinMerchantEntity implements IMerchantEntity {
     @Shadow @Nullable protected TradeOfferList offers;
 
     @Override
-    public void refreshOffers() {
+    public void jsmacros_refreshOffers() {
         this.offers = null;
     }
 

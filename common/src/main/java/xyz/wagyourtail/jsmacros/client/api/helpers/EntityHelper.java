@@ -156,14 +156,14 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @param color
      */
     public void setGlowingColor(int color) {
-        ((IMixinEntity) base).setGlowingColor(color);
+        ((IMixinEntity) base).jsmacros_setGlowingColor(color);
     }
 
     /**
      *
      */
     public void resetGlowingColor() {
-        ((IMixinEntity) base).resetColor();
+        ((IMixinEntity) base).jsmacros_resetColor();
     }
 
     /**
@@ -173,7 +173,17 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return
      */
     public EntityHelper<T> setGlowing(boolean val) {
-        base.setGlowing(val);
+        ((IMixinEntity) base).jsmacros_setForceGlowing(val ? 2 : 0);
+        return this;
+    }
+
+    /**
+     * reset the glowing effect to proper value.
+     * @since 1.6.3
+     * @return
+     */
+    public EntityHelper<T> resetGlowing() {
+        ((IMixinEntity) base).jsmacros_setForceGlowing(1);
         return this;
     }
     
