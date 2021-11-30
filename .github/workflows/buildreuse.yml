@@ -21,13 +21,13 @@ jobs:
       - name: Checkout Branch
         uses: actions/checkout@v2
         with:
-          ref: ${{ matrix.Branch }}
+          ref: ${{ inputs.branch }}
 
       - name: Setup Java
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: ${{ matrix.java_version }}
+          java-version: ${{ inputs.java_version }}
 
       - name: Grant Execute Permiussion
         run: chmod +x gradlew
@@ -38,7 +38,7 @@ jobs:
       - name: Upload To Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.Branch }}
+          name: ${{ inputs.branch }}
           path: ./dist/**/*
 
       - name: Install Python
