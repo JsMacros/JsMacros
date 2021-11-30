@@ -85,7 +85,7 @@ jobs:
             return fs.readdirSync("./").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar") && e.includes("FABRIC"))[0] || false;
 
       - name: Upload Fabric to Git Release
-        if: ${{ steps.fabric_release.outputs.result != false }}
+        if: ${{ steps.fabric_release.outputs.result != 'false' }}
         uses: JasonEtco/upload-to-release@master
         with:
           args: ./build/libs/${{ steps.fabric_release.outputs.result }} application/jar
@@ -102,7 +102,7 @@ jobs:
             return fs.readdirSync("./").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && e.endsWith(".jar") && e.includes("FORGE"))[0] || false;
 
       - name: Upload Forge to Git Release
-        if: ${{ steps.forge_release.outputs.result != false }}
+        if: ${{ steps.forge_release.outputs.result != 'false' }}
         uses: JasonEtco/upload-to-release@master
         with:
           args: ./${{ steps.forge_release.outputs.result }} application/jar
