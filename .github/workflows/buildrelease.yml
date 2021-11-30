@@ -15,6 +15,7 @@ jobs:
       branch: main-1.18
       java_version: 17
       cf_data_fabric: 73250:1.18.1,2:Java 17,68441:Fabric
+      cf_data_forge: 73250:1.18.1,2:Java 17,7498:Forge
   build_1_17:
     uses: wagyourtail/jsmacros/.github/workflows/buildreuse.yml@main-1.18
     with:
