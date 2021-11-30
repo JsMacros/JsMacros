@@ -4,12 +4,25 @@ pluginManagement {
         maven { url "https://maven.architectury.dev/" }
         maven { url "https://maven.minecraftforge.net/" }
         mavenCentral()
+        maven { url 'https://jitpack.io' }
         gradlePluginPortal()
+    }
+    buildscript {
+        repositories {
+            maven { url "https://maven.fabricmc.net/" }
+            maven { url "https://maven.architectury.dev/" }
+            maven { url "https://maven.minecraftforge.net/" }
+            mavenCentral()
+            maven { url 'https://jitpack.io' }
+        }
+        dependencies {
+            classpath "com.github.wagyourtail.architectury-loom:dev.architectury.loom.gradle.plugin:fc8f3dadab"
+        }
     }
 }
 
 include("common")
 include("fabric")
-//include("forge")
+include("forge")
 
 rootProject.name = "jsmacros"
