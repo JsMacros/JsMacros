@@ -27,20 +27,20 @@ jobs:
     uses: wagyourtail/jsmacros/.github/workflows/buildreuse.yml@main-1.18
     with:
       branch: backport-1.16.5
-      java_version: 8
+      java_version: 16
       cf_data_forge: 70886:1.16.5,70886:1.16.4,70886:1.16.3,2:Java 8,7498:Forge
       cf_data_fabric: 70886:1.16.5,70886:1.16.4,70886:1.16.3,2:Java 8,68441:Fabric
   build_1_15:
     uses: wagyourtail/jsmacros/.github/workflows/buildreuse.yml@main-1.18
     with:
       branch: backport-1.15.2
-      java_version: 8
+      java_version: 16
       cf_data_fabric: 68722:1.15.2,2:Java 8,68441:Fabric
   build_1_14:
     uses: wagyourtail/jsmacros/.github/workflows/buildreuse.yml@main-1.18
     with:
       branch: backport-1.14.4
-      java_version: 8
+      java_version: 16
       cf_data_fabric: 64806:1.14.4,2:Java 8,68441:Fabric
   build_1_8:
     uses: wagyourtail/jsmacros/.github/workflows/buildreuse.yml@main-1.18
