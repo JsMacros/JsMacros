@@ -16,6 +16,7 @@ jobs:
       java_version: 17
       cf_data_fabric: 73250:1.18.1,2:Java 17,68441:Fabric
       cf_data_forge: 73250:1.18.1,2:Java 17,7498:Forge
+      curse_token: ${{ secrets.CF_API_KEY }}
   build_1_17:
     uses: wagyourtail/jsmacros/.github/workflows/buildreuse.yml@main-1.18
     with:
@@ -23,6 +24,7 @@ jobs:
       java_version: 16
       cf_data_forge: 73242:1.17.1,2:Java 16,7498:Forge
       cf_data_fabric: 73242:1.17.1,2:Java 16,68441:Fabric
+      curse_token: ${{ secrets.CF_API_KEY }}
   build_1_16:
     uses: wagyourtail/jsmacros/.github/workflows/buildreuse.yml@main-1.18
     with:
@@ -30,21 +32,25 @@ jobs:
       java_version: 16
       cf_data_forge: 70886:1.16.5,70886:1.16.4,70886:1.16.3,2:Java 8,7498:Forge
       cf_data_fabric: 70886:1.16.5,70886:1.16.4,70886:1.16.3,2:Java 8,68441:Fabric
+      curse_token: ${{ secrets.CF_API_KEY }}
   build_1_15:
     uses: wagyourtail/jsmacros/.github/workflows/buildreuse.yml@main-1.18
     with:
       branch: backport-1.15.2
       java_version: 16
       cf_data_fabric: 68722:1.15.2,2:Java 8,68441:Fabric
+      curse_token: ${{ secrets.CF_API_KEY }}
   build_1_14:
     uses: wagyourtail/jsmacros/.github/workflows/buildreuse.yml@main-1.18
     with:
       branch: backport-1.14.4
       java_version: 16
       cf_data_fabric: 64806:1.14.4,2:Java 8,68441:Fabric
+      curse_token: ${{ secrets.CF_API_KEY }}
   build_1_8:
     uses: wagyourtail/jsmacros/.github/workflows/buildreuse.yml@main-1.18
     with:
       branch: backport-1.8.9
       java_version: 8
       cf_data_forge: 4:1.8.9,2:Java 8,7498:Forge
+      curse_token: ${{ secrets.CF_API_KEY }}
