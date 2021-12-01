@@ -135,7 +135,7 @@ jobs:
           file_path: ./${{ steps.fabric_release.outputs.result }}
           changelog: See the github release for changes.
           display_name: ${{ steps.fname.outputs.result }}
-          game_versions: ${{ inputs.cf_data_fabric.outputs.content }}
+          game_versions: ${{ inputs.cf_data_fabric }}
           release_type: release
           relations: modmenu:optionalDependency
 
@@ -149,5 +149,5 @@ jobs:
           file_path: ./${{ steps.forge_release.outputs.result }}
           changelog: See the github release for changes.
           display_name: ${{ steps.fname.outputs.result }}
-          game_versions: ${{ inputs.cf_data_forge.outputs.content }}
+          game_versions: ${{ inputs.cf_data_forge }}
           release_type: release
