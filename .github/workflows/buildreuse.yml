@@ -148,4 +148,3 @@ jobs:
           display_name: ${{ steps.fname.outputs.result }}
           game_versions: ${{ inputs.cf_data_forge.outputs.content }}
           release_type: release
-          relations: modmenu:optionalDependency
