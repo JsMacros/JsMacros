@@ -13,9 +13,6 @@ on:
       java_version:
         required: true
         type: string
-      curse_token:
-        required: true
-        type: string
 
 jobs:
   build:
@@ -129,7 +126,7 @@ jobs:
         if: ${{ steps.fabric_release.outputs.result != 'false' }}
         uses: itsmeow/curseforge-upload@v3
         with:
-          token: ${{ inputs.curse_token }}
+          token: ${{ secrets.CF_API_KEY }}
           project_id: 403185
           game_endpoint: minecraft
           file_path: ./${{ steps.fabric_release.outputs.result }}
@@ -143,7 +140,7 @@ jobs:
         if: ${{ steps.forge_release.outputs.result != 'false' }}
         uses: itsmeow/curseforge-upload@v3
         with:
-          token: ${{ inputs.curse_token }}
+          token: ${{ secrets.CF_API_KEY }}
           project_id: 403185
           game_endpoint: minecraft
           file_path: ./${{ steps.forge_release.outputs.result }}
