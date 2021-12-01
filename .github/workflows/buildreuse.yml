@@ -123,7 +123,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Fabric To Curseforge
-        if: ${{ steps.fabric_release.outputs.result != false }}
+        if: ${{ steps.fabric_release.outputs.result != 'false' }}
         uses: itsmeow/curseforge-upload@v3
         with:
           token: ${{ secrets.CF_API_KEY }}
@@ -137,7 +137,7 @@ jobs:
           relations: modmenu:optionalDependency
 
       - name: Upload Forge To Curseforge
-        if: ${{ steps.forge_release.outputs.result != false }}
+        if: ${{ steps.forge_release.outputs.result != 'false' }}
         uses: itsmeow/curseforge-upload@v3
         with:
           token: ${{ secrets.CF_API_KEY }}
