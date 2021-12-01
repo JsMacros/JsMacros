@@ -18,6 +18,7 @@ jobs:
       cf_data_forge: 73250:1.18.1,2:Java 17,7498:Forge
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build_1_17:
     uses: wagyourtail/jsmacros/.github/workflows/buildreuse.yml@main-1.18
     with:
@@ -27,6 +28,7 @@ jobs:
       cf_data_fabric: 73242:1.17.1,2:Java 16,68441:Fabric
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build_1_16:
     uses: wagyourtail/jsmacros/.github/workflows/buildreuse.yml@main-1.18
     with:
@@ -36,6 +38,7 @@ jobs:
       cf_data_fabric: 70886:1.16.5,70886:1.16.4,70886:1.16.3,2:Java 8,68441:Fabric
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build_1_15:
     uses: wagyourtail/jsmacros/.github/workflows/buildreuse.yml@main-1.18
     with:
@@ -44,6 +47,7 @@ jobs:
       cf_data_fabric: 68722:1.15.2,2:Java 8,68441:Fabric
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build_1_14:
     uses: wagyourtail/jsmacros/.github/workflows/buildreuse.yml@main-1.18
     with:
@@ -52,6 +56,7 @@ jobs:
       cf_data_fabric: 64806:1.14.4,2:Java 8,68441:Fabric
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build_1_8:
     uses: wagyourtail/jsmacros/.github/workflows/buildreuse.yml@main-1.18
     with:
@@ -60,3 +65,4 @@ jobs:
       cf_data_forge: 4:1.8.9,2:Java 8,7498:Forge
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

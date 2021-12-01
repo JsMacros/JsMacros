@@ -16,6 +16,8 @@ on:
     secrets:
       CF_API_KEY:
         required: true
+      GITHUB_TOKEN:
+        required: true
 
 jobs:
   build:
