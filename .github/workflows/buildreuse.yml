@@ -73,7 +73,7 @@ jobs:
     needs:
       - build
     runs-on: ubuntu-latest
-    concurrency: DeployLock
+    #concurrency: DeployLock
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
