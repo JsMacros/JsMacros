@@ -10,9 +10,6 @@ on:
       cf_data_forge:
         required: false
         type: string
-      java_version:
-        required: true
-        type: string
     secrets:
       CF_API_KEY:
         required: true
@@ -20,60 +17,8 @@ on:
         required: true
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Branch
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ inputs.branch }}
-
-      - name: Setup Java
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: ${{ inputs.java_version }}
-
-      - name: Grant Execute Permiussion
-        run: chmod +x gradlew
-
-      - name: Build
-        run: ./gradlew build
-
-      - name: Upload To Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ inputs.branch }}
-          path: ./dist/**/*
-
-      - name: Install Python
-        if: ${{ inputs.branch == 'main-1.18' }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.7
-
-      - name: Install Python Deps
-        if: ${{ inputs.branch == 'main-1.18' }}
-        run: |
-          python -m pip install --upgrade pip
-          pip install setuptools wheel twine
-
-
-      - name: Upload PyDoc
-        if: ${{ inputs.branch == 'main-1.18' }}
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          python setup.py sdist bdist_wheel
-          twine upload *
-        working-directory: python
-
   deploy:
-    needs:
-      - build
     runs-on: ubuntu-latest
-    #concurrency: DeployLock
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v2

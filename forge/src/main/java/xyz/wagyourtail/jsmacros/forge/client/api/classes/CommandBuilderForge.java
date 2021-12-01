@@ -25,12 +25,14 @@ public class CommandBuilderForge extends CommandBuilder {
         pointer.push(head);
     }
 
+    @Override
     protected void argument(String name, Supplier<ArgumentType<?>> type) {
         ArgumentBuilder<FabricClientCommandSource, ?> arg = ClientCommandManager.argument(name, type.get());
 
         pointer.push(arg);
     }
 
+    @Override
     public CommandBuilder literalArg(String name) {
         ArgumentBuilder<FabricClientCommandSource, ?> arg = ClientCommandManager.literal(name);
 
@@ -38,11 +40,13 @@ public class CommandBuilderForge extends CommandBuilder {
         return this;
     }
 
+    @Override
     public CommandBuilder executes(MethodWrapper<CommandContextHelper, Object, Boolean, ?> callback) {
         pointer.peek().executes((ctx) -> internalExecutes(ctx, callback));
         return this;
     }
 
+    @Override
     public CommandBuilder or() {
         if (pointer.size() > 1) {
             ArgumentBuilder<FabricClientCommandSource, ?> oldarg = pointer.pop();
@@ -51,6 +55,7 @@ public class CommandBuilderForge extends CommandBuilder {
         return this;
     }
 
+    @Override
     public CommandBuilder or(int argLevel) {
         argLevel = Math.max(1, argLevel);
         while (pointer.size() > argLevel) {
@@ -60,6 +65,7 @@ public class CommandBuilderForge extends CommandBuilder {
         return this;
     }
 
+    @Override
     public void register() {
         or(1);
         ClientCommandManager.DISPATCHER.register(head);
