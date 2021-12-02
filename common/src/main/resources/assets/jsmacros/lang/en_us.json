@@ -64,5 +64,6 @@
 	"jsmacros.setvalue": "Set Value",
 	"jsmacros.setkey": "Set Key",
 	"jsmacros.maxlocktime": "Max Joined Lock Time",
-	"jsmacros.reloadconfig": "Reload config from file"
+	"jsmacros.reloadconfig": "Reload config from file",
+	"jsmacros.services": "Services"
 }

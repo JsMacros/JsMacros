@@ -142,13 +142,13 @@ public class TextBuilder {
      * @return
      */
     public TextBuilder withCustomClickEvent(MethodWrapper<Object, Object, Object, ?> action) {
-        self.styled(style -> style.withClickEvent(new CustomClickEvent(() -> new Thread(() -> {
+        self.styled(style -> style.withClickEvent(new CustomClickEvent(() -> {
             try {
                 action.run();
             } catch (Exception ex) {
                 Core.getInstance().profile.logError(ex);
             }
-        }).start())));
+        })));
         return this;
     }
     

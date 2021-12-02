@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 
 import com.neovisionaries.ws.client.*;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.io.IOException;
@@ -43,13 +44,23 @@ public class Websocket {
             @Override
             public void onConnected(WebSocket ws, Map<String, List<String>> headers) {
                 if (onConnect != null)
-                    onConnect.accept(ws, headers);
+                    try {
+                        onConnect.accept(ws, headers);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Core.getInstance().profile.logError(e);
+                    }
             }
 
             @Override
             public void onDisconnected(WebSocket ws, WebSocketFrame serverFrame, WebSocketFrame clientFrame, boolean isServer) {
                 if (onDisconnect != null)
-                    onDisconnect.accept(ws, new Disconnected(serverFrame, clientFrame, isServer));
+                    try {
+                        onDisconnect.accept(ws, new Disconnected(serverFrame, clientFrame, isServer));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Core.getInstance().profile.logError(e);
+                    }
             }
 
             @Override
@@ -60,19 +71,34 @@ public class Websocket {
             @Override
             public void onError(WebSocket websocket, WebSocketException ex) {
                 if (onError != null)
-                    onError.accept(websocket, ex);
+                    try {
+                        onError.accept(websocket, ex);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Core.getInstance().profile.logError(e);
+                    }
             }
 
             @Override
             public void onFrame(WebSocket ws, WebSocketFrame frame) {
                 if (onFrame != null)
-                    onFrame.accept(ws, frame);
+                    try {
+                        onFrame.accept(ws, frame);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Core.getInstance().profile.logError(e);
+                    }
             }
 
             @Override
             public void onTextMessage(WebSocket ws, String text) {
                 if (onTextMessage != null)
+                    try {
                     onTextMessage.accept(ws, text);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Core.getInstance().profile.logError(e);
+                    }
             }
         });
     }

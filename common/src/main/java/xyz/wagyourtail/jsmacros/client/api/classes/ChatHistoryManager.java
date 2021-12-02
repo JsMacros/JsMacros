@@ -156,12 +156,22 @@ public class ChatHistoryManager {
             return;
         }
         final Semaphore semaphore = new Semaphore(await ? 0 : 1);
+        Exception[] ex = new Exception[] {null};
         mc.execute(() -> {
-            ((IChatHud) hud).jsmacros_removeMessagePredicate((c) -> filter.test(new ChatHudLineHelper(c, hud)));
+            try {
+                ((IChatHud) hud).jsmacros_removeMessagePredicate((c) -> filter.test(new ChatHudLineHelper(c, hud)));
+            } catch (Exception e) {
+                ex[0] = e;
+                if (!await && !(e.getCause() instanceof InterruptedException)) {
+                    Core.getInstance().profile.logError(e);
+                }
+            }
             semaphore.release();
         });
         semaphore.acquire();
-
+        if (ex[0] != null) {
+            throw new RuntimeException(ex[0]);
+        }
     }
 
     /**

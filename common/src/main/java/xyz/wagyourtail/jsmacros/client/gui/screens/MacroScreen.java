@@ -64,7 +64,7 @@ public class MacroScreen extends BaseScreen {
             client.setScreen(new CancelScreen(this));
         }));
 
-        serviceScreen = this.addDrawableChild(new Button(this.width /12 + 1, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.service"), (btn) -> {
+        serviceScreen = this.addDrawableChild(new Button(this.width /12 + 1, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.services"), (btn) -> {
             assert client != null;
             client.setScreen(new ServiceScreen(this));
         }));

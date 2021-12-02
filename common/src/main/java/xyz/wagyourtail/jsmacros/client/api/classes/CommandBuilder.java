@@ -185,7 +185,12 @@ public abstract class CommandBuilder {
                 return "CommandBuilder{\"called_by\": " + callback.getCtx().getTriggeringEvent().toString() + "}";
             }
         }, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
-        boolean success = callback.apply(new CommandContextHelper(context));
+        boolean success = false;
+        try {
+            success = callback.apply(new CommandContextHelper(context));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         lock.releaseLock();
         return success ? 1 : 0;
     }

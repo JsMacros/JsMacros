@@ -113,7 +113,12 @@ public class ServiceManager {
         Pair<ServiceTrigger, EventContainer<EventService>> service = registeredServices.get(name);
         if (service == null) return ServiceStatus.UNKNOWN;
         if (service.getU() != null && !service.getU().getCtx().isContextClosed()) {
-            ((EventService) service.getU().getCtx().getTriggeringEvent()).stopListener.get();
+            try {
+                ((EventService) service.getU().getCtx().getTriggeringEvent()).stopListener.run();
+            } catch (Exception e) {
+                e.printStackTrace();
+                runner.profile.logError(e);
+            }
             service.getU().getCtx().closeContext();
             return ServiceStatus.RUNNING;
         }

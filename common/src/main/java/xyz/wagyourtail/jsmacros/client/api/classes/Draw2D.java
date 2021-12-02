@@ -10,6 +10,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.*;
@@ -424,8 +425,10 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
                 e.printStackTrace();
                 try {
                     if (catchInit != null) catchInit.accept(e.toString());
+                    else throw e;
                 } catch (Exception f) {
                     f.printStackTrace();
+                    Core.getInstance().profile.logError(f);
                 }
             }
         }

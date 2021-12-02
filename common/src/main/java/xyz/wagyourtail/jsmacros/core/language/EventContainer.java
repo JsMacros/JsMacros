@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.language;
 
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 /**
@@ -48,7 +49,13 @@ public class EventContainer<T> {
         if (locked) {
             this.wait();
         }
-        if (then != null) then.run();
+        try {
+            if (then != null)
+                then.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Core.getInstance().profile.logError(e);
+        }
     }
     
     /**

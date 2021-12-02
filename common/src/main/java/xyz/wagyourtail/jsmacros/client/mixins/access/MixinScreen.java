@@ -547,6 +547,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             onMouseDown.accept(new PositionCommon.Pos2D(mouseX, mouseY), button);
         } catch (Exception e) {
             e.printStackTrace();
+            Core.getInstance().profile.logError(e);
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
@@ -557,6 +558,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             onMouseDrag.accept(new PositionCommon.Vec2D(mouseX, mouseY, deltaX, deltaY), button);
         } catch (Exception e) {
             e.printStackTrace();
+            Core.getInstance().profile.logError(e);
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
@@ -567,6 +569,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             onMouseUp.accept(new PositionCommon.Pos2D(mouseX, mouseY), button);
         } catch (Exception e) {
             e.printStackTrace();
+            Core.getInstance().profile.logError(e);
         }
         return super.mouseReleased(mouseX, mouseY, button);
     }
@@ -577,6 +580,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             onKeyPressed.accept(keyCode, modifiers);
         } catch (Exception e) {
             e.printStackTrace();
+            Core.getInstance().profile.logError(e);
         }
     }
 
@@ -586,6 +590,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             onScroll.accept(new PositionCommon.Pos2D(mouseX, mouseY), amount);
         } catch (Exception e) {
             e.printStackTrace();
+            Core.getInstance().profile.logError(e);
         }
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
@@ -604,6 +609,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
                     if (catchInit != null) catchInit.accept(e.toString());
                     else throw e;
                 } catch (Exception f) {
+                    f.printStackTrace();
                     Core.getInstance().profile.logError(f);
                 }
             }

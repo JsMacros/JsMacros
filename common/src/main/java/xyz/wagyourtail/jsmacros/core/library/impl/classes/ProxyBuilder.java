@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 
 import javassist.util.proxy.ProxyFactory;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.impl.FWrapper;
 
@@ -133,13 +134,24 @@ public class ProxyBuilder<T> {
         MethodWrapper<ProxyReference<T>, Object[], ?, ?> wrapper = getWrapperForMethod(thisMethod);
         if (wrapper == null) return proceed.invoke(self, args);
         if (thisMethod.getReturnType().equals(void.class)) {
-            wrapper.accept(new ProxyReference<>((T) self, proceed != null ? (arg) -> {
-                try {
-                    return proceed.invoke(self, arg);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
+            try {
+                wrapper.accept(new ProxyReference<>((T) self, proceed != null ? (arg) -> {
+                    try {
+                        return proceed.invoke(self, arg);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new RuntimeException(e);
+                    }
+                } : null), args);
+            } catch (Throwable e) {
+                if (Arrays.stream(thisMethod.getExceptionTypes()).anyMatch(f -> f.isAssignableFrom(e.getClass()))) {
+                    throw e;
+                } else if (e instanceof RuntimeException) {
+                    throw e;
+                } else {
+                    e.printStackTrace();
+                    Core.getInstance().profile.logError(e);
                 }
-            } : null), args);
+            }
             return null;
         }
         return JsMacros.tryAutoCastNumber(thisMethod.getReturnType(), wrapper.apply(new ProxyReference<>((T) self, proceed != null ? (arg) -> {

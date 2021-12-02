@@ -42,7 +42,13 @@ public class FClient extends BaseLibrary {
      * @since 1.4.0
      */
     public void runOnMainThread(MethodWrapper<Object, Object, Object, ?> runnable) {
-        mc.execute(runnable);
+        mc.execute(() -> {
+            try {
+                runnable.run();
+            } catch (Throwable e) {
+                Core.getInstance().profile.logError(e);
+            }
+        });
     }
 
     /**
@@ -125,7 +131,13 @@ public class FClient extends BaseLibrary {
         mc.execute(() -> {
             boolean isWorld = mc.world != null;
             if (isWorld) mc.world.disconnect();
-            if (callback != null) callback.accept(isWorld);
+            try {
+                if (callback != null)
+                    callback.accept(isWorld);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Core.getInstance().profile.logError(e);
+            }
         });
     }
 

@@ -47,8 +47,13 @@ public abstract class BaseLanguage<T> {
                     runner.addContext(ctx);
 
                     exec(ctx, staticMacro, event);
-
-                    if (then != null) then.run();
+                    try {
+                        if (then != null)
+                            then.run();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runner.profile.logError(e);
+                    }
                 } else {
                     macro.enabled = false;
                     throw new FileSystemException("file \"" + file.getPath() + "\" does not exist or is a directory!");
@@ -58,6 +63,7 @@ public abstract class BaseLanguage<T> {
                     if (catcher != null) catcher.accept(e);
                     else throw e;
                 } catch (Exception f) {
+                    f.printStackTrace();
                     runner.profile.logError(f);
                 }
             } finally {

@@ -43,7 +43,12 @@ public class EventCustom implements BaseEvent {
     public void trigger(MethodWrapper<Object, Object, Object, ?> callback) {
         Thread t = new Thread(() -> {
             profile.triggerEventJoinNoAnything(this);
-            callback.run();
+            try {
+                callback.run();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Core.getInstance().profile.logError(e);
+            }
         });
         t.start();
     }

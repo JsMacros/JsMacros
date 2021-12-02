@@ -167,8 +167,6 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                 return;
             }
 
-            boolean joinedThread = Core.getInstance().profile.checkJoinedThreadStack();
-
             Thread th = new Thread(() -> {
                 try {
                     tasks.put(new WrappedThread(Thread.currentThread(), true));
@@ -183,12 +181,10 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     }
                     ctx.getContext().enter();
                     try {
-                        if (joinedThread) {
-                            Core.getInstance().profile.joinedThreadStack.add(Thread.currentThread());
-                        }
                         fn.apply(new Object[] {t, u});
                     } catch (Throwable ex) {
-                            Core.getInstance().profile.logError(ex);
+                        ex.printStackTrace();
+                        Core.getInstance().profile.logError(ex);
                     } finally {
                         ctx.getContext().leave();
 
@@ -200,7 +196,6 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     e.printStackTrace();
                 } finally {
                     ctx.unbindThread(Thread.currentThread());
-
                     tasks.poll().release();
                 }
             });
@@ -218,9 +213,8 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                 return (R) fn.apply(new Object[] {t, u});
             }
 
-            ctx.bindThread(Thread.currentThread());
-            boolean joinedThread = Core.getInstance().profile.checkJoinedThreadStack();
             try {
+                ctx.bindThread(Thread.currentThread());
                 tasks.put(new WrappedThread(Thread.currentThread(), true));
                 ctx.bindThread(Thread.currentThread());
 
@@ -234,7 +228,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
                 ctx.getContext().enter();
                 try {
-                    if (await && joinedThread) {
+                    if (await && Core.getInstance().profile.checkJoinedThreadStack()) {
                         Core.getInstance().profile.joinedThreadStack.add(Thread.currentThread());
                     }
                     return (R) fn.apply(new Object[] {t, u});

@@ -59,7 +59,13 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
     @Override
     public Map<String, Runnable> getRightClickOptions(int index) {
         if (getRClickActions == null) return new HashMap<>();
-        Map<String, ? extends Runnable> results = getRClickActions.apply(index);
+        Map<String, ? extends Runnable> results = null;
+        try {
+            results = getRClickActions.apply(index);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Core.getInstance().profile.logError(e);
+        }
         if (results == null) return new LinkedHashMap<>();
         return (Map<String, Runnable>) results;
     }
