@@ -143,13 +143,13 @@ public class ProxyBuilder<T> {
                     }
                 } : null), args);
             } catch (Throwable e) {
-                if (Arrays.stream(thisMethod.getExceptionTypes()).anyMatch(f -> f.isAssignableFrom(e.getClass()))) {
-                    throw e;
-                } else if (e instanceof RuntimeException) {
-                    throw e;
+                if (Arrays.stream(thisMethod.getExceptionTypes()).anyMatch(f -> f.isAssignableFrom(e.getCause().getClass()))) {
+                    throw e.getCause();
+                } else if (e.getCause() instanceof RuntimeException) {
+                    throw e.getCause();
                 } else {
-                    e.printStackTrace();
-                    Core.getInstance().profile.logError(e);
+                    e.getCause().printStackTrace();
+                    Core.getInstance().profile.logError(e.getCause());
                 }
             }
             return null;
