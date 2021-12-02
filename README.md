@@ -5,9 +5,11 @@ More information and documentation of all features and modules can be found on t
 
 [**Join The JsMacros Discord**](https://discord.gg/P6W58J8)
 
-## Downloads/Releases [![Build Release](https://github.com/wagyourtail/JsMacros/actions/workflows/buildrelease.yml/badge.svg?branch=1.4.4)](https://github.com/wagyourtail/JsMacros/actions/workflows/buildrelease.yml)
+## Downloads/Releases 
 
-For the releases of both fabric and forge versions see:
+[![Build Release](https://github.com/wagyourtail/JsMacros/actions/workflows/release.yml/badge.svg)](https://github.com/wagyourtail/JsMacros/actions/workflows/release.yml)
+
+### For the releases of both fabric and forge versions see:
 
 * [Curseforge](https://www.curseforge.com/minecraft/mc-mods/jsmacros)
 * [GitHub releases](https://github.com/wagyourtail/JsMacros/releases)
@@ -22,28 +24,20 @@ These extensions allow you to code in languages other than the default language 
 * **Ruby** (Ruby 2.5.x support) - [Curseforge](https://www.curseforge.com/minecraft/mc-mods/jsmacros-ruby), [GitHub](https://github.com/wagyourtail/JsMacros-Ruby)
 
 ## Beta Builds
+1.18: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=main-1.18)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Amain-1.18)
 
-### Fabric
+1.17.1: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.17.1)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.17.1)
 
-1.17: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/beta.yml/badge.svg?branch=main-1.17)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Amain-1.17)
-1.16.5: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/beta.yml/badge.svg?branch=backport-1.16.5)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.16.5)
-1.15.2: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/beta.yml/badge.svg?branch=backport-1.15.2)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.15.2)
-1.14.4: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/beta.yml/badge.svg?branch=backport-1.14.4)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.14.4)
+1.16.5: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.16.5)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.16.5)
 
-### Forge
+1.15.2: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.15.2)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.15.2)
 
-1.16.5 [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/beta.yml/badge.svg?branch=forge-1.16.5)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Aforge-1.16.5)
-1.8.9 [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/beta.yml/badge.svg?branch=backport-1.8.9)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.8.9)
+1.14.4: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.14.4)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.14.4)
+
+1.8.9: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.8.9)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.8.9)
 
 ## Support me
 
-<https://ko-fi.com/wagyourtail> or <https://www.patreon.com/wagyourtail>
+<https://ko-fi.com/wagyourtail>
 
-## Stuff for Developers
-
-### Setup
-
-```sh
-./gradlew genSources
-./gradlew eclipse
-```
+<https://www.patreon.com/wagyourtail>
