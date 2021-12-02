@@ -163,17 +163,10 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
         @Override
         public void accept(T t, U u) {
             if (await) {
-                // if we're on the same context, can't go "async".
-                if (ctx.getBoundThreads().contains(Thread.currentThread())) {
-                    fn.apply(new Object[] {t, u});
-                    return;
-                }
-
-                ctx.bindThread(Thread.currentThread());
+                apply(t, u);
+                return;
             }
 
-            Throwable[] error = {null};
-            Semaphore lock = new Semaphore(0);
             boolean joinedThread = Core.getInstance().profile.checkJoinedThreadStack();
 
             Thread th = new Thread(() -> {
@@ -190,15 +183,12 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     }
                     ctx.getContext().enter();
                     try {
-                        if (await && joinedThread) {
+                        if (joinedThread) {
                             Core.getInstance().profile.joinedThreadStack.add(Thread.currentThread());
                         }
                         fn.apply(new Object[] {t, u});
                     } catch (Throwable ex) {
-                        if (!await) {
                             Core.getInstance().profile.logError(ex);
-                        }
-                        error[0] = ex;
                     } finally {
                         ctx.getContext().leave();
 
@@ -212,20 +202,9 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     ctx.unbindThread(Thread.currentThread());
 
                     tasks.poll().release();
-                    lock.release();
                 }
             });
             th.start();
-            if (await) {
-                try {
-                    lock.acquire();
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                } finally {
-                    ctx.unbindThread(Thread.currentThread());
-                }
-                if (error[0] != null) throw new RuntimeException(error[0]);
-            }
         }
 
         @Override
@@ -235,65 +214,44 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
         @Override
         public R apply(T t, U u) {
-            // if we're on the same context, can't go "async".
             if (ctx.getBoundThreads().contains(Thread.currentThread())) {
                 return (R) fn.apply(new Object[] {t, u});
             }
 
             ctx.bindThread(Thread.currentThread());
-
-            Object[] retVal = {null};
-            Throwable[] error = {null};
-            Semaphore lock = new Semaphore(0);
             boolean joinedThread = Core.getInstance().profile.checkJoinedThreadStack();
-
-            Thread th = new Thread(() -> {
-                try {
-                    tasks.put(new WrappedThread(Thread.currentThread(), true));
-                    ctx.bindThread(Thread.currentThread());
-
-                    WrappedThread joinable = tasks.peek();
-                    while (true) {
-                        assert joinable != null;
-                        if (joinable.thread == Thread.currentThread()) break;
-                        joinable.waitFor();
-                        joinable = tasks.peek();
-                    }
-
-                    ctx.getContext().enter();
-                    try {
-                        if (await && joinedThread) {
-                            Core.getInstance().profile.joinedThreadStack.add(Thread.currentThread());
-                        }
-                        retVal[0] = fn.apply(new Object[] {t, u});
-                    } catch (Throwable ex) {
-                        error[0] = ex;
-                    } finally {
-                        ctx.getContext().leave();
-
-                        ctx.releaseBoundEventIfPresent(Thread.currentThread());
-
-                        Core.getInstance().profile.joinedThreadStack.remove(Thread.currentThread());
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    ctx.unbindThread(Thread.currentThread());
-
-                    tasks.poll().release();
-                    lock.release();
-                }
-            });
-            th.start();
             try {
-                lock.acquire();
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
+                tasks.put(new WrappedThread(Thread.currentThread(), true));
+                ctx.bindThread(Thread.currentThread());
+
+                WrappedThread joinable = tasks.peek();
+                while (true) {
+                    assert joinable != null;
+                    if (joinable.thread == Thread.currentThread()) break;
+                    joinable.waitFor();
+                    joinable = tasks.peek();
+                }
+
+                ctx.getContext().enter();
+                try {
+                    if (await && joinedThread) {
+                        Core.getInstance().profile.joinedThreadStack.add(Thread.currentThread());
+                    }
+                    return (R) fn.apply(new Object[] {t, u});
+                } catch (Throwable ex) {
+                    throw new RuntimeException(ex);
+                } finally {
+                    ctx.getContext().leave();
+                    ctx.releaseBoundEventIfPresent(Thread.currentThread());
+                    Core.getInstance().profile.joinedThreadStack.remove(Thread.currentThread());
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
             } finally {
                 ctx.unbindThread(Thread.currentThread());
+                tasks.poll().release();
             }
-            if (error[0] != null) throw new RuntimeException(error[0]);
-            return (R) retVal[0];
         }
 
         @Override
