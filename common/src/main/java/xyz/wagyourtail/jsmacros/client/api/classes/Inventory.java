@@ -255,6 +255,7 @@ public class Inventory<T extends HandledScreen<?>> {
                 throw new IllegalArgumentException("hotbarSlot must be between 0 and 8 or 40 for offhand.");
         }
         man.clickSlot(syncId, slot, hotbarSlot, SlotActionType.SWAP, player);
+        return this;
     }
     
     /**
