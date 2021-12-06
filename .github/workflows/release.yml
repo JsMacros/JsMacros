@@ -49,8 +49,8 @@ jobs:
     uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.18
     with:
       branch: main-1.18
-      cf_data_fabric: 73250:1.18.1,2:Java 17,68441:Fabric
-      cf_data_forge: 73250:1.18.1,2:Java 17,7498:Forge
+      cf_data_fabric: 73250:1.18,2:Java 17,68441:Fabric
+      cf_data_forge: 73250:1.18,2:Java 17,7498:Forge
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

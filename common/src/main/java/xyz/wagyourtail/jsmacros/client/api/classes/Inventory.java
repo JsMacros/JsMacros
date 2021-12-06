@@ -240,6 +240,22 @@ public class Inventory<T extends HandledScreen<?>> {
         if (!is2) man.clickSlot(syncId, slot1, 0, SlotActionType.PICKUP, player);
         return this;
     }
+
+    /**
+     * equivelent to hitting the numbers or f for swapping slots to hotbar
+     *
+     * @param slot
+     * @param hotbarSlot 0-8 or 40 for offhand
+     *
+     * @return
+     */
+    public Inventory<T> swapHotbar(int slot, int hotbarSlot) {
+        if (hotbarSlot != 40) {
+            if (hotbarSlot < 0 || hotbarSlot > 8)
+                throw new IllegalArgumentException("hotbarSlot must be between 0 and 8 or 40 for offhand.");
+        }
+        man.clickSlot(syncId, slot, hotbarSlot, SlotActionType.SWAP, player);
+    }
     
     /**
      * @since 1.2.8
