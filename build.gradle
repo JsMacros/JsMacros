@@ -1,217 +1,84 @@
 plugins {
-	id 'java'
-	id 'fabric-loom' version '0.10-SNAPSHOT'
-	id 'maven-publish'
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id "dev.architectury.loom" version "0.10.0-SNAPSHOT" apply false
 }
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
-
-archivesBaseName = project.archives_base_name
-version = project.mod_version
-group = project.maven_group + "." + project.minecraft_version.replaceAll("\\.", "_")
-
-repositories {
-    mavenCentral()
-    maven {
-        name "Modmuss50 Repository"
-        url 'https://maven.fabricmc.net/'
-    }
-    maven { url 'https://jitpack.io' }
-    maven {
-		url "https://www.cursemaven.com"
-		content {
-			includeGroup "curse.maven"
-		}
-	}
+architectury {
+    minecraft = rootProject.minecraft_version
 }
 
-dependencies {
-	//to change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	
-	//partial fabric api
-	modImplementation "net.fabricmc.fabric-api:fabric-api-base:${project.api_base_version}"
-	include "net.fabricmc.fabric-api:fabric-api-base:${project.api_base_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-lifecycle-events-v1:${project.lifecycle_events_version}"
-    include "net.fabricmc.fabric-api:fabric-lifecycle-events-v1:${project.lifecycle_events_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-key-binding-api-v1:${project.key_bind_api_version}"
-    include "net.fabricmc.fabric-api:fabric-key-binding-api-v1:${project.key_bind_api_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-resource-loader-v0:${project.resource_loader_version}"
-    include "net.fabricmc.fabric-api:fabric-resource-loader-v0:${project.resource_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-command-api-v1:${project.command_api_version}"
-    include "net.fabricmc.fabric-api:fabric-command-api-v1:${project.command_api_version}"
+subprojects {
+    apply plugin: "dev.architectury.loom"
 
-	implementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-	implementation "org.graalvm.js:js:${project.graal_version}"
-	implementation "org.graalvm.truffle:truffle-api:${project.graal_version}"
-//	if (targetCompatibility == JavaVersion.VERSION_16) {
+    dependencies {
+        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        // The following line declares the mojmap mappings, you may use other mappings as well
+        mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+
+        // non-mod dependencies:
+
+        implementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+        implementation "org.graalvm.js:js:${project.graal_version}"
+        implementation "org.graalvm.truffle:truffle-api:${project.graal_version}"
+        implementation "org.graalvm.regex:regex:${project.graal_version}"
 //		implementation "org.graalvm.compiler:compiler:${project.graal_version}"
 //		implementation "org.graalvm.compiler:compiler-management:${project.graal_version}"
-//	}
-	implementation "org.graalvm.regex:regex:${project.graal_version}"
 
-	implementation group: 'com.ibm.icu', name: 'icu4j', version: '67.1'
+        implementation "io.noties:prism4j:${project.prism_version}"
 
-	include "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-	include "org.graalvm.js:js:${project.graal_version}"
-	include "org.graalvm.truffle:truffle-api:${project.graal_version}"
-//	if (targetCompatibility == JavaVersion.VERSION_16) {
-//		include "org.graalvm.compiler:compiler:${project.graal_version}"
-//		include "org.graalvm.compiler:compiler-management:${project.graal_version}"
-//	}
-	include "org.graalvm.regex:regex:${project.graal_version}"
-	include group: 'com.ibm.icu', name: 'icu4j', version: '67.1'
+        implementation "com.neovisionaries:nv-websocket-client:2.10"
 
-    implementation "io.noties:prism4j:${project.prism_version}"
-    include "io.noties:prism4j:${project.prism_version}"
+        implementation "org.javassist:javassist:3.28.0-GA"
 
-    implementation "com.neovisionaries:nv-websocket-client:2.10"
-    include "com.neovisionaries:nv-websocket-client:2.10"
-
-	//for class proxies in FReflection
-	implementation "org.javassist:javassist:3.28.0-GA"
-	include "org.javassist:javassist:3.28.0-GA"
-
-
-	//nullable not defined so...
-	implementation 'com.google.code.findbugs:jsr305:3.0.2'
-
-	modImplementation("curse.maven:modmenu-308702:${project.modmenu_version}") {
-        transitive = false
+        implementation 'com.google.code.findbugs:jsr305:3.0.2'
     }
-    //for modmenu
-	modImplementation "net.fabricmc.fabric-api:fabric-screen-api-v1:1.0.4+155f865c13"
 }
 
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
 
-processResources {
-	inputs.property "version", project.version
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
+    archivesBaseName = rootProject.archives_base_name
+    version = rootProject.mod_version
+    group = rootProject.maven_group
+
+    repositories {
+        // Add repositories to retrieve artifacts from in here.
+        // You should only use this when depending on other mods because
+        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+        // for more information about repositories.
+        maven {
+            name "Modmuss50 Repository"
+            url 'https://maven.fabricmc.net/'
+        }
+        maven { url 'https://jitpack.io' }
+        maven {
+            url "https://www.cursemaven.com"
+            content {
+                includeGroup "curse.maven"
+            }
+        }
+        mavenCentral()
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+
+        it.options.release = 16
+    }
+
+    java {
+        withSourcesJar()
+    }
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile) {
-	options.encoding = "UTF-8"
-
-	def targetVersion = 8
-	if (JavaVersion.current().isJava9Compatible()) {
-		it.options.release = targetVersion
-	}
+task removeDist(type: Delete) {
+    delete new File(rootProject.rootDir, "dist")
 }
 
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = "sources"
-	from sourceSets.main.allSource
-}
-
-java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
-}
-
-jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
-	}
-}
-
-javadoc {
-	options.tags = [ "@custom.replaceParams" ]
-	source = sourceSets.main.allJava
-	classpath = sourceSets.main.compileClasspath
-	destinationDir = new File(project.buildDir, "docs/docs")
-	options {
-		links 'https://docs.oracle.com/javase/8/docs/api/'
-	}
-}
-
-task generatePyDoc(type: Javadoc) {
-	source = sourceSets.main.allJava
-	classpath = sourceSets.main.compileClasspath
-	destinationDir = new File(project.buildDir, "docs/python/JsMacrosAC/")
-	options.doclet = "xyz.wagyourtail.doclet.pydoclet.Main"
-	options.docletpath new File(project.rootDir, "buildSrc/build/libs/buildSrc.jar")
-	options.addStringOption "v", version
-}
-
-task copyPyDoc(type: Copy, dependsOn: generatePyDoc) {
-	from new File(project.rootDir, "pydoc")
-	into new File(project.buildDir, "docs/python")
-}
-
-task generateTSDoc(type: Javadoc) {
-	source = sourceSets.main.allJava
-	classpath = sourceSets.main.compileClasspath
-	destinationDir = new File(project.buildDir, "docs/typescript/headers/")
-	options.doclet = "xyz.wagyourtail.doclet.tsdoclet.Main"
-	options.docletpath new File(project.rootDir, "buildSrc/build/libs/buildSrc.jar")
-	options.addStringOption "v", version
-}
-
-task copyTSEnv(type: Copy, dependsOn: generateTSDoc) {
-	from new File(project.rootDir, "graalts")
-	into new File(project.buildDir, "docs/typescript")
-}
-
-task generateWebDoc(type: Javadoc) {
-	source = sourceSets.main.allJava
-	classpath = sourceSets.main.compileClasspath
-	destinationDir = new File(project.buildDir, "docs/web/")
-	options.doclet = "xyz.wagyourtail.doclet.webdoclet.Main"
-	options.docletpath new File(project.rootDir, "buildSrc/build/libs/buildSrc.jar")
-	options.addStringOption "v", version
-	options.addStringOption "mcv", project.minecraft_version
-	options {
-		links 'https://docs.oracle.com/javase/8/docs/api/', 'https://logging.apache.org/log4j/2.x/log4j-api/apidocs/', 'https://javadoc.io/doc/com.neovisionaries/nv-websocket-client/latest/'
-	}
-}
-
-task copyWebDoc(type: Copy, dependsOn: generateWebDoc) {
-	from new File(project.rootDir, "webdoc")
-	into new File(project.buildDir, "docs/web")
-}
-
-task createDist(type: Copy, dependsOn: copyWebDoc) {
-	from(new File(project.buildDir, "docs"), new File(project.buildDir, "libs"))
-	into new File(project.rootDir, "dist")
-}
-
-generatePyDoc.dependsOn(copyTSEnv)
-generateWebDoc.dependsOn(copyPyDoc)
-
-build.finalizedBy(createDist)
-
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			// add all the jars that should be included when publishing to maven
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
-		}
-	}
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
-	}
-}
+clean.finalizedBy(removeDist)
