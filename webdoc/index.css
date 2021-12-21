@@ -1,6 +1,55 @@
+/* Light Mode */
+:root, [color-mode="light"] {
+    --color1: #ACACAC;
+    --color2: #bcbcbc;
+    --color3: #ffffff;
+    --color-text: #0066FF;
+    --color-text2: #000000;
+  }
+  
+  /* Dark Mode */
+  [color-mode="dark"] {
+    --color1: #474d50;
+    --color2: #3e4346;
+    --color3: #181a1b;
+    --color-text: #3391ff;
+    --color-text2: #e8e6e3;
+  }
+
+  /* Any element with the class "light--hidden" will be hidden when the site is set to Light Mode */
+:root[color-mode="light"] .light--hidden {
+    display: none;
+}
+
+/* Any element with the class "dark--hidden" will be hidden when the site is set to Dark Mode */
+:root[color-mode="dark"] .dark--hidden {
+    display: none;
+}
+
+
+
+select, input {
+    background-color: var(--color3);
+    color: var(--color-text2);
+}
+
+.color-mode__btn {
+    border-radius: .375rem;
+    border-color: var(--color2);
+    border: none;
+    color: var(--color-text2);
+    background-color: transparent;
+}
+.color-mode__btn:hover {
+    background-color: var(--color2);
+}
+
+
 body {
     font-family: Sans-Serif, serif;
     margin: 0;
+    background-color: var(--color3);
+    color: var(--color-text2);
 }
 
 code {
@@ -8,7 +57,7 @@ code {
 }
 
 .topNav {
-    background-color: #ACACAC;
+    background-color: var(--color1);
     display: flex;
     align-content: stretch;
     flex-wrap: wrap;
@@ -40,7 +89,7 @@ code {
     text-decoration: none;
     font-weight: bold;
     margin: 0;
-    color: #0066FF;
+    color: var(--color-text);
 }
 
 .searchContainer {
@@ -60,12 +109,12 @@ body > div {
 
 .sideNav {
     padding: 0px 5px;
-    background-color: #BCBCBC;
+    background-color: var(--color2);
     height: 100%;
 }
 
 #footer {
-    background-color: #ACACAC;
+    background-color: var(--color1);
     display: flex;
     align-items: center;
 }
@@ -108,7 +157,7 @@ body > div {
         background-color: rgba(0,0,0,0);
     }
     #mainNav {
-        background-color: #BCBCBC;
+        background-color: var(--color2);
         padding: 5px;
     }
     #mainNav a {
