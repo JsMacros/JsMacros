@@ -1,0 +1,100 @@
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+      cf_data_fabric:
+        required: false
+        type: string
+      cf_data_forge:
+        required: false
+        type: string
+    secrets:
+      CF_API_KEY:
+        required: true
+      GITHUB_TOKEN:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ inputs.branch }}
+
+      - name: Check For Fabric Jar
+        uses: actions/github-script@v5
+        id: fabric_release
+        with:
+          result-encoding: string
+          script: |
+            const fs = require("fs")
+            return fs.readdirSync("./").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && !e.endsWith("shadow.jar") && e.endsWith(".jar") && e.includes("FABRIC"))[0] || false;
+
+      - name: Upload Fabric to Git Release
+        if: ${{ steps.fabric_release.outputs.result != 'false' }}
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ./${{ steps.fabric_release.outputs.result }} application/jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check For Forge Jar
+        uses: actions/github-script@v5
+        id: forge_release
+        with:
+          result-encoding: string
+          script: |
+            const fs = require("fs")
+            return fs.readdirSync("./").filter(e => !e.endsWith("dev.jar") && !e.endsWith("sources.jar") && !e.endsWith("shadow.jar") && e.endsWith(".jar") && e.includes("FORGE"))[0] || false;
+
+      - name: Upload Forge to Git Release
+        if: ${{ steps.forge_release.outputs.result != 'false' }}
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ./${{ steps.forge_release.outputs.result }} application/jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Zip TS
+        uses: papeloto/action-zip@v1
+        with:
+          files: typescript/
+          dest: typescript-${{ inputs.branch }}.zip
+
+      - name: Upload TS to Git Release
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ./typescript-${{ inputs.branch }}.zip application/jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Fabric To Curseforge
+        if: ${{ steps.fabric_release.outputs.result != 'false' }}
+        uses: itsmeow/curseforge-upload@v3
+        with:
+          token: ${{ secrets.CF_API_KEY }}
+          project_id: 403185
+          game_endpoint: minecraft
+          file_path: ./${{ steps.fabric_release.outputs.result }}
+          changelog: See the github release for changes.
+          display_name: ${{ steps.fname.outputs.result }}
+          game_versions: ${{ inputs.cf_data_fabric }}
+          release_type: release
+          relations: modmenu:optionalDependency
+
+      - name: Upload Forge To Curseforge
+        if: ${{ steps.forge_release.outputs.result != 'false' }}
+        uses: itsmeow/curseforge-upload@v3
+        with:
+          token: ${{ secrets.CF_API_KEY }}
+          project_id: 403185
+          game_endpoint: minecraft
+          file_path: ./${{ steps.forge_release.outputs.result }}
+          changelog: See the github release for changes.
+          display_name: ${{ steps.fname.outputs.result }}
+          game_versions: ${{ inputs.cf_data_forge }}
+          release_type: release

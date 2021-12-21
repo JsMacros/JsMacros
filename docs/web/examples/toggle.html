@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Getting Started</title>
+
+  <link rel="stylesheet" href="general.css" />
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js" defer></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<header>
+  <a href="../../../..">
+    <----- Return to main JsMacros docs page.
+  </a>
+</header>
+<main class= "General">
+  <h2>Toggle</h2>
+  <p>
+  example code for toggling a loop triggered by a keypress.
+  </p>
+  <pre class="prettyprint"><code class="language-javascript">
+const reverse = !GlobalVars.getBoolean("ToggleScript");
+GlobalVars.putBoolean("ToggleScript", reverse);
+if (reverse) {
+    Chat.log(Chat.createTextBuilder().append("[").withColor(0x7)
+        .append("ToggleScript").withColor(0x5)
+        .append("]").withColor(0x7).append(" enabled").withColor(0xc)
+        .build());
+} else {
+    Chat.log(Chat.createTextBuilder().append("[").withColor(0x7)
+        .append("ToggleScript").withColor(0x5)
+        .append("]").withColor(0x7).append(" disabled").withColor(0xc)
+        .build());
+}
+while (GlobalVars.getBoolean("ToggleScript")) {
+    Chat.log("do stuff here...");
+    Client.waitTick(20); // wait 1 second (synchronized to client ticks)
+}
+  </code>
+  </pre>
+</main>
+</body>
+</html>
