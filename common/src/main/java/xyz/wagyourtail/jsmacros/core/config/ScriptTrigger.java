@@ -17,6 +17,7 @@ public class ScriptTrigger {
         this(triggerType, event, Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(scriptFile.getAbsoluteFile().toPath()).toString(), enabled);
     }
 
+    @Deprecated
     public ScriptTrigger(TriggerType triggerType, String event, String scriptFile, boolean enabled) {
         this.triggerType = triggerType;
         this.event = event;
