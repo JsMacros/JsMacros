@@ -24,16 +24,27 @@
                 and <a href= "https://www.sublimetext.com/" target="_blank">Sublime</a>, or you can join the <a href= "https://discord.gg/P6W58J8" target="_blank">Discord</a> and give me suggestions.
                 <br>
                 <br>
-                <h3>RTFM</h3>
+                <h3>Info</h3>
+                I set it to be multi-threaded so that multiple scripts could run at once. This also prevents the game from crashing if you accidentally make a forever loop.
+                Functions can't be passed between scripts, some variables <i>can</i> but only if they're converted to java variables first... look at <a href="https://github.com/graalvm/graaljs/blob/master/docs/user/JavaScriptCompatibility.md" target="_blank">the Graal JavaScript Compatibility Docs</a>) for some raw java stuff you can do.
+                <br>
+                <br>
+                In the JS Compatibility docs, you may have noticed <code>Java.type</code> to directly grab java classes... to easier facilitate this I have created a <a href="https://wagyourtail.xyz/Projects/MinecraftMappingViewer/App">Minecraft Mapping Viewer</a> so you will be able to figure out the obfuscated (for fabric this is Yarn Intermediary) names of the Minecraft classes/methods/functions you wish to use.
+                Some classes may not work with <code>Java.type</code> in which case you can look at the <a href="xyz/wagyourtail/jsmacros/core/library/impl/FReflection.html">Reflection library</a>.
+                <br>
+                <br>
                 you can find some reference on the difference between the JS embedded in Java and Node.js specifications <a href="https://www.graalvm.org/reference-manual/js/NodeJSvsJavaScriptContext/" target="_blank">here</a>.
                 mainly:
                 <div id= "quote">
                     JavaScript code embedded in a Java application has access to limited capabilities, as specified through the Context API, and do not have access to Node.js built-in modules.
                 </div>
-                You can work around some of this, however.
+                You can work around some of this, however. either by using java alternatives or finding pure js versions of them.
                 <br>
                 <br>
                 Feel free to join the <a href= "https://discord.gg/P6W58J8" target="_blank">Discord</a> and ask any questions.
+                <br>
+                <br>
+
             </p>
         </main>
     </body>
