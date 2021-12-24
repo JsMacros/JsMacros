@@ -85,9 +85,10 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     
     /**
      * @return the name of the entity.
+     * @since 1.0.8 [citation needed], returned string until 1.6.4
      */
-    public String getName() {
-        return base.getName().getString();
+    public TextHelper getName() {
+        return new TextHelper(base.getName());
     }
     
     /**
@@ -151,6 +152,13 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         return NBTElementHelper.resolve(nbt);
     }
 
+    /**
+     * @since 1.6.4
+     * @param name
+     */
+    public void setCustomName(TextHelper name) {
+        base.setCustomName(name.getRaw());
+    }
 
     /**
      * @param color
