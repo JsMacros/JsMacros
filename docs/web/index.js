@@ -64,7 +64,7 @@ async function openMain(url, dontpush) {
     mainContent.setAttribute("class", cname);
     mainContent.innerHTML = doc.innerHTML;
     for (const a of mainContent.getElementsByTagName("a")) {
-        if (!a.hasAttribute("target") && !a.getAttribute("href")?.startsWith("#")) {
+        if (!a.hasAttribute("target") && !a.getAttribute("href")?.startsWith("#") && !a.hasAttribute("onclick")) {
             a.setAttribute("href", a.getAttribute("href").replace(/(\.\.\/)*/, `${versionSelect.value}/`));
             frameLink(a);
         }
