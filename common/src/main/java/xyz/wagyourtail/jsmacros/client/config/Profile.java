@@ -17,6 +17,7 @@ import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
@@ -81,6 +82,20 @@ public class Profile extends BaseProfile {
     @Override
     public void logError(Throwable ex) {
         ex.printStackTrace();
+        if (ex instanceof InterruptedException) {
+            return;
+        }
+        if (ex instanceof BaseScriptContext.ScriptAssertionError) {
+            return;
+        }
+        if (ex instanceof RuntimeException) {
+            if (ex.getCause() instanceof InterruptedException) {
+                return;
+            }
+            if (ex.getCause() instanceof BaseScriptContext.ScriptAssertionError) {
+                return;
+            }
+        }
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.inGameHud != null) {
             BaseWrappedException<?> e;
