@@ -546,7 +546,6 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         if (onMouseDown != null) try {
             onMouseDown.accept(new PositionCommon.Pos2D(mouseX, mouseY), button);
         } catch (Throwable e) {
-            e.printStackTrace();
             Core.getInstance().profile.logError(e);
         }
         return super.mouseClicked(mouseX, mouseY, button);
@@ -557,7 +556,6 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         if (onMouseDrag != null) try {
             onMouseDrag.accept(new PositionCommon.Vec2D(mouseX, mouseY, deltaX, deltaY), button);
         } catch (Throwable e) {
-            e.printStackTrace();
             Core.getInstance().profile.logError(e);
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
@@ -568,7 +566,6 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         if (onMouseUp != null) try {
             onMouseUp.accept(new PositionCommon.Pos2D(mouseX, mouseY), button);
         } catch (Throwable e) {
-            e.printStackTrace();
             Core.getInstance().profile.logError(e);
         }
         return super.mouseReleased(mouseX, mouseY, button);
@@ -579,7 +576,6 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         if (onKeyPressed != null) try {
             onKeyPressed.accept(keyCode, modifiers);
         } catch (Throwable e) {
-            e.printStackTrace();
             Core.getInstance().profile.logError(e);
         }
     }
@@ -589,7 +585,6 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         if (onScroll != null) try {
             onScroll.accept(new PositionCommon.Pos2D(mouseX, mouseY), amount);
         } catch (Throwable e) {
-            e.printStackTrace();
             Core.getInstance().profile.logError(e);
         }
         return super.mouseScrolled(mouseX, mouseY, amount);
@@ -609,7 +604,6 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
                     if (catchInit != null) catchInit.accept(e.toString());
                     else throw e;
                 } catch (Throwable f) {
-                    f.printStackTrace();
                     Core.getInstance().profile.logError(f);
                 }
             }

@@ -116,7 +116,6 @@ public class ServiceManager {
             try {
                 ((EventService) service.getU().getCtx().getTriggeringEvent()).stopListener.run();
             } catch (Throwable e) {
-                e.printStackTrace();
                 runner.profile.logError(e);
             }
             service.getU().getCtx().closeContext();

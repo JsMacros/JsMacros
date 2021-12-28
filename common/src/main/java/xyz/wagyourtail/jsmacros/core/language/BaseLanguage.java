@@ -51,7 +51,6 @@ public abstract class BaseLanguage<T> {
                         if (then != null)
                             then.run();
                     } catch (Throwable e) {
-                        e.printStackTrace();
                         runner.profile.logError(e);
                     }
                 } else {
@@ -63,7 +62,6 @@ public abstract class BaseLanguage<T> {
                     if (catcher != null) catcher.accept(e);
                     else throw e;
                 } catch (Throwable f) {
-                    f.printStackTrace();
                     runner.profile.logError(f);
                 }
             } finally {

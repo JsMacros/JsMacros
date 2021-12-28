@@ -46,7 +46,6 @@ public class EventCustom implements BaseEvent {
             try {
                 callback.run();
             } catch (Throwable e) {
-                e.printStackTrace();
                 Core.getInstance().profile.logError(e);
             }
         });

@@ -53,7 +53,6 @@ public class EventContainer<T> {
             if (then != null)
                 then.run();
         } catch (Throwable e) {
-            e.printStackTrace();
             Core.getInstance().profile.logError(e);
         }
     }

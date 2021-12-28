@@ -427,7 +427,6 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
                     if (catchInit != null) catchInit.accept(e.toString());
                     else throw e;
                 } catch (Throwable f) {
-                    f.printStackTrace();
                     Core.getInstance().profile.logError(f);
                 }
             }
