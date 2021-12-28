@@ -134,7 +134,7 @@ public class FClient extends BaseLibrary {
             try {
                 if (callback != null)
                     callback.accept(isWorld);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
                 Core.getInstance().profile.logError(e);
             }

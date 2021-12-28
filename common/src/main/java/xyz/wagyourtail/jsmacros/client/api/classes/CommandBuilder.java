@@ -188,7 +188,7 @@ public abstract class CommandBuilder {
         boolean success = false;
         try {
             success = callback.apply(new CommandContextHelper(context));
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         lock.releaseLock();

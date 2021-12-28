@@ -207,7 +207,7 @@ public class FJsMacros extends PerExecLibrary {
                     
                     try {
                         callback.accept(e, p);
-                    } catch (Exception ex) {
+                    } catch (Throwable ex) {
                         Core.getInstance().eventRegistry.removeListener(event, this);
                         Core.getInstance().profile.logError(ex);
                     } finally {
@@ -265,7 +265,7 @@ public class FJsMacros extends PerExecLibrary {
                     Thread.currentThread().setName(this.toString());
                     try {
                         callback.accept(e, p);
-                    } catch (Exception ex) {
+                    } catch (Throwable ex) {
                         Core.getInstance().profile.logError(ex);
                     } finally {
                         p.releaseLock();
@@ -430,7 +430,7 @@ public class FJsMacros extends PerExecLibrary {
             try {
                 // check the filter
                 done[0] = filter == null || filter.test(ev[0]);
-            } catch (Exception ex) {
+            } catch (Throwable ex) {
                 Core.getInstance().eventRegistry.removeListener(event, listener);
                 throw new RuntimeException("Error thrown in filter", ex);
             } finally {

@@ -156,11 +156,11 @@ public class ChatHistoryManager {
             return;
         }
         final Semaphore semaphore = new Semaphore(await ? 0 : 1);
-        Exception[] ex = new Exception[] {null};
+        Throwable[] ex = new Throwable[] {null};
         mc.execute(() -> {
             try {
                 ((IChatHud) hud).jsmacros_removeMessagePredicate((c) -> filter.test(new ChatHudLineHelper(c, hud)));
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 ex[0] = e;
                 if (!await && !(e.getCause() instanceof InterruptedException)) {
                     Core.getInstance().profile.logError(e);

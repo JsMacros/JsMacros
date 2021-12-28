@@ -216,7 +216,6 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
             try {
                 ctx.bindThread(Thread.currentThread());
                 tasks.put(new WrappedThread(Thread.currentThread(), true));
-                ctx.bindThread(Thread.currentThread());
 
                 WrappedThread joinable = tasks.peek();
                 while (true) {

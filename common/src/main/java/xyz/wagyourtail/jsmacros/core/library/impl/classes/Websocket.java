@@ -46,7 +46,7 @@ public class Websocket {
                 if (onConnect != null)
                     try {
                         onConnect.accept(ws, headers);
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         e.printStackTrace();
                         Core.getInstance().profile.logError(e);
                     }
@@ -57,7 +57,7 @@ public class Websocket {
                 if (onDisconnect != null)
                     try {
                         onDisconnect.accept(ws, new Disconnected(serverFrame, clientFrame, isServer));
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         e.printStackTrace();
                         Core.getInstance().profile.logError(e);
                     }
@@ -73,7 +73,7 @@ public class Websocket {
                 if (onError != null)
                     try {
                         onError.accept(websocket, ex);
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         e.printStackTrace();
                         Core.getInstance().profile.logError(e);
                     }
@@ -84,7 +84,7 @@ public class Websocket {
                 if (onFrame != null)
                     try {
                         onFrame.accept(ws, frame);
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         e.printStackTrace();
                         Core.getInstance().profile.logError(e);
                     }
@@ -95,7 +95,7 @@ public class Websocket {
                 if (onTextMessage != null)
                     try {
                     onTextMessage.accept(ws, text);
-                    } catch (Exception e) {
+                    } catch (Throwable e) {
                         e.printStackTrace();
                         Core.getInstance().profile.logError(e);
                     }

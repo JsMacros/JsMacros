@@ -62,7 +62,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
         Map<String, ? extends Runnable> results = null;
         try {
             results = getRClickActions.apply(index);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
             Core.getInstance().profile.logError(e);
         }

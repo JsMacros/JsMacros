@@ -25,7 +25,7 @@ public class MixinGameRenderer {
             for (Draw3D d : FHud.renders) {
                 try {
                     d.render(matrix);
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     e.printStackTrace();
                 }
             }

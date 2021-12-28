@@ -115,7 +115,7 @@ public class ServiceManager {
         if (service.getU() != null && !service.getU().getCtx().isContextClosed()) {
             try {
                 ((EventService) service.getU().getCtx().getTriggeringEvent()).stopListener.run();
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
                 runner.profile.logError(e);
             }

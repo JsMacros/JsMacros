@@ -45,7 +45,7 @@ public class EventCustom implements BaseEvent {
             profile.triggerEventJoinNoAnything(this);
             try {
                 callback.run();
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
                 Core.getInstance().profile.logError(e);
             }
