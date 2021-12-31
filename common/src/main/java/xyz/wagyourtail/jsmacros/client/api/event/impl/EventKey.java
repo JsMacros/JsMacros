@@ -13,6 +13,9 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * @author Wagyourtail
  * @since 1.2.7
@@ -23,6 +26,8 @@ public class EventKey implements BaseEvent {
     public final int action;
     public final String key;
     public final String mods;
+
+    private static final Set<Integer> wasNullOnDown = new HashSet<>();
     
     public EventKey(int key, int scancode, int action, int mods) {
         
@@ -42,13 +47,22 @@ public class EventKey implements BaseEvent {
         }
 
         if (mc.currentScreen != null) {
-            if (Core.getInstance().config.getOptions(ClientConfigV2.class).disableKeyWhenScreenOpen) return;
-            if (mc.currentScreen instanceof BaseScreen) return;
-            Element focused = mc.currentScreen.getFocused();
-            if (focused instanceof TextFieldWidget) return;
-            if (focused instanceof RecipeBookWidget && ((IRecipeBookWidget)focused).jsmacros_isSearching()) return;
+            if (action != 0 || !wasNullOnDown.contains(key)) {
+                if (Core.getInstance().config.getOptions(ClientConfigV2.class).disableKeyWhenScreenOpen) return;
+                if (mc.currentScreen instanceof BaseScreen) return;
+                Element focused = mc.currentScreen.getFocused();
+                if (focused instanceof TextFieldWidget) return;
+                if (focused instanceof RecipeBookWidget && ((IRecipeBookWidget) focused).jsmacros_isSearching()) return;
+            }
+        } else if (action == 1) {
+            wasNullOnDown.add(key);
         }
-        
+
+        if (action == 0) {
+            wasNullOnDown.remove(key);
+        }
+
+        // fix mods if it was a mod key
         if (action == 1) {
             if (key == 340 || key == 344) mods -= 1;
             else if (key == 341 || key == 345) mods -= 2;
