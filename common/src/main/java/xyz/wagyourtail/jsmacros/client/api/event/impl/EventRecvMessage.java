@@ -16,7 +16,7 @@ public class EventRecvMessage implements BaseEvent {
     public EventRecvMessage(Text message) {
         this.text = new TextHelper(message);
         
-        profile.triggerEventJoin(this);
+        profile.triggerEventJoinNoAnything(this);
     }
     
     public String toString() {

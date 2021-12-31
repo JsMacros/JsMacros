@@ -13,7 +13,7 @@ public class EventSendMessage implements BaseEvent {
     
     public EventSendMessage(String message) {
         this.message = message;
-        profile.triggerEventJoin(this);
+        profile.triggerEventJoinNoAnything(this);
     }
 
     public String toString() {
