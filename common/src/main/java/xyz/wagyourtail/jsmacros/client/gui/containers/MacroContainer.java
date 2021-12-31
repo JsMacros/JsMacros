@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
@@ -19,6 +20,7 @@ import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 public class MacroContainer extends MultiElementContainer<MacroScreen> {
     private static final Identifier key_down_tex = new Identifier(JsMacros.MOD_ID, "resources/key_down.png");
@@ -57,7 +59,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
             btn.setMessage(new TranslatableText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"));
         }));
 
-        keyBtn = addDrawableChild(new Button(x + w / 12 + 1, y + 1, macro.triggerType == ScriptTrigger.TriggerType.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.triggerType == ScriptTrigger.TriggerType.EVENT ? new LiteralText(macro.event.replace("Event", "")) : buildKeyName(macro.event), (btn) -> {
+        keyBtn = addDrawableChild(new Button(x + w / 12 + 1, y + 1, macro.triggerType == ScriptTrigger.TriggerType.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.triggerType == ScriptTrigger.TriggerType.EVENT ? new LiteralText(I18n.hasTranslation("jsmacros.event." + macro.event.toLowerCase(Locale.ROOT)) ? I18n.translate("jsmacros.event." + macro.event.toLowerCase(Locale.ROOT)) : macro.event) : buildKeyName(macro.event), (btn) -> {
             if (macro.triggerType == ScriptTrigger.TriggerType.EVENT) {
                 parent.setEvent(this);
             } else {
@@ -97,7 +99,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
         Core.getInstance().eventRegistry.removeScriptTrigger(macro);
         macro.event = type;
         Core.getInstance().eventRegistry.addScriptTrigger(macro);
-        keyBtn.setMessage(new LiteralText(macro.event.replace("Event", "")));
+        keyBtn.setMessage(new LiteralText(I18n.hasTranslation("jsmacros.event." + macro.event.toLowerCase(Locale.ROOT)) ? I18n.translate("jsmacros.event." + macro.event.toLowerCase(Locale.ROOT)) : macro.event));
     }
     
     public void setFile(File f) {

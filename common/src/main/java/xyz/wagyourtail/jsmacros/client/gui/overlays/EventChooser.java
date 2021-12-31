@@ -73,7 +73,7 @@ public class EventChooser extends OverlayContainer {
     }
     
     public void addEvent(String eventName) {
-        EventObj e = new EventObj(eventName, new Button(x+3+(events.size() % 5 * (width - 12) / 5), topScroll + (events.size() / 5 * 12), (width - 12) / 5, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(eventName.replace("Event", "")), (btn) -> {
+        EventObj e = new EventObj(eventName, new Button(x+3+(events.size() % 5 * (width - 12) / 5), topScroll + (events.size() / 5 * 12), (width - 12) / 5, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(I18n.hasTranslation("jsmacros.event." + eventName.toLowerCase(Locale.ROOT)) ? I18n.translate("jsmacros.event." + eventName.toLowerCase(Locale.ROOT)) : eventName), (btn) -> {
             selectEvent(eventName);
         }));
     
@@ -134,7 +134,7 @@ public class EventChooser extends OverlayContainer {
         Button btn;
         
         public EventObj(String event, Button btn) {
-            this.event = I18n.hasTranslation("jsmacros.event." + event.toLowerCase(Locale.ROOT)) ? I18n.translate("jsmacros.event." + event.toLowerCase(Locale.ROOT)) : event;
+            this.event = event;
             this.btn = btn;
         }
     }
