@@ -28,7 +28,7 @@ public class MacroListTopbar extends MultiElementContainer<MacroScreen> {
         
         int w = width - 12;
         
-        addDrawableChild(new Button(x + 1, y + 1, w / 12 - 1, height - 3, textRenderer, Core.getInstance().config.getOptions(ClientConfigV2.class).sortMethod == Sorting.MacroSortMethod.Enabled ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.enabled"), (btn) -> {
+        addDrawableChild(new Button(x + 1, y + 1, w / 12 - 1, height - 3, textRenderer, Core.getInstance().config.getOptions(ClientConfigV2.class).sortMethod == Sorting.MacroSortMethod.Enabled ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("jsmacros.enabledstatus"), (btn) -> {
             Core.getInstance().config.getOptions(ClientConfigV2.class).sortMethod = Sorting.MacroSortMethod.Enabled;
             parent.reload();
         }));
