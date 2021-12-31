@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.gui.overlays;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -16,6 +17,7 @@ import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 
 public class EventChooser extends OverlayContainer {
@@ -132,7 +134,7 @@ public class EventChooser extends OverlayContainer {
         Button btn;
         
         public EventObj(String event, Button btn) {
-            this.event = event;
+            this.event = I18n.hasTranslation("jsmacros.event." + event.toLowerCase(Locale.ROOT)) ? I18n.translate("jsmacros.event." + event.toLowerCase(Locale.ROOT)) : event;
             this.btn = btn;
         }
     }
