@@ -8,6 +8,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import xyz.wagyourtail.jsmacros.core.language.TranslationUtil;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -26,14 +27,14 @@ public class EventChooser extends OverlayContainer {
     private int topScroll;
     private final Consumer<String> setEvent;
     private final Text eventText;
-    
+
     public EventChooser(int x, int y, int width, int height, TextRenderer textRenderer, String selected, IOverlayParent parent, Consumer<String> setEvent) {
         super(x, y, width, height, textRenderer, parent);
         this.selected = selected;
         this.setEvent = setEvent;
         this.eventText = new TranslatableText("jsmacros.events");
     }
-    
+
     public void selectEvent(String event) {
         this.selected = event;
         for (EventObj e : events) {
@@ -44,7 +45,7 @@ public class EventChooser extends OverlayContainer {
             }
         }
     }
-    
+
     @Override
     public void init() {
         super.init();
@@ -63,7 +64,7 @@ public class EventChooser extends OverlayContainer {
                 this.close();
             }
         }));
-        
+
         List<String> events = new ArrayList<>(Core.getInstance().eventRegistry.events);
         Collections.sort(events);
         for (String e : events) {
@@ -71,18 +72,18 @@ public class EventChooser extends OverlayContainer {
         }
         this.selectEvent(selected);
     }
-    
+
     public void addEvent(String eventName) {
-        EventObj e = new EventObj(eventName, new Button(x+3+(events.size() % 5 * (width - 12) / 5), topScroll + (events.size() / 5 * 12), (width - 12) / 5, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(I18n.hasTranslation("jsmacros.event." + eventName.toLowerCase(Locale.ROOT)) ? I18n.translate("jsmacros.event." + eventName.toLowerCase(Locale.ROOT)) : eventName), (btn) -> {
+        EventObj e = new EventObj(eventName, new Button(x+3+(events.size() % 5 * (width - 12) / 5), topScroll + (events.size() / 5 * 12), (width - 12) / 5, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, TranslationUtil.getTranslatedEventName(eventName), (btn) -> {
             selectEvent(eventName);
         }));
-    
+
         e.btn.visible = topScroll + (events.size() / 5 * 12) >= y + 13 && topScroll + (events.size() / 5 * 12) <= y + height - 27;
         events.add(e);
         this.addDrawableChild(e.btn);
         scroll.setScrollPages((Math.ceil(events.size() / 5D) * 12) /(double) Math.max(1, height - 39));
     }
-    
+
     public void updateEventPos() {
         for (int i = 0; i < events.size(); ++i) {
             EventObj e = events.get(i);
@@ -90,7 +91,7 @@ public class EventChooser extends OverlayContainer {
             e.btn.setPos(x + 3 + (i % 5 * (width - 12) / 5), topScroll + (i / 5 * 12), (width - 12) / 5, 12);
         }
     }
-    
+
     public void onScrollbar(double page) {
         topScroll = y + 13 - (int) (page * (height - 27));
         int i = 0;
@@ -100,7 +101,7 @@ public class EventChooser extends OverlayContainer {
             ++i;
         }
     }
-    
+
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
@@ -111,7 +112,7 @@ public class EventChooser extends OverlayContainer {
         fill(matrices, x + 2, y + height - 15, x + width - 2, y + height - 14, 0xFFFFFFFF);
 //        textRenderer.draw(, mouseX, mouseY, color, shadow, matrix, vertexConsumers, seeThrough, backgroundColor, light)
         super.render(matrices, mouseX, mouseY, delta);
-        
+
         for (ClickableWidget b : ImmutableList.copyOf(this.buttons)) {
             if (b instanceof Button && ((Button) b).hovering && ((Button) b).cantRenderAllText()) {
                 // border
@@ -120,19 +121,19 @@ public class EventChooser extends OverlayContainer {
                 fill(matrices, mouseX+width+2, mouseY-textRenderer.fontHeight - 3, mouseX+width+3, mouseY, 0x7F7F7F7F);
                 fill(matrices, mouseX-3, mouseY-textRenderer.fontHeight - 3, mouseX-2, mouseY, 0x7F7F7F7F);
                 fill(matrices, mouseX-3, mouseY-textRenderer.fontHeight - 4, mouseX+width+3, mouseY-textRenderer.fontHeight - 3, 0x7F7F7F7F);
-                
+
                 // fill
                 fill(matrices, mouseX-2, mouseY-textRenderer.fontHeight - 3, mouseX+width+2, mouseY, 0xFF000000);
                 drawTextWithShadow(matrices, textRenderer, b.getMessage(), mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
             }
         }
     }
-    
-    
+
+
     public static class EventObj {
         String event;
         Button btn;
-        
+
         public EventObj(String event, Button btn) {
             this.event = event;
             this.btn = btn;

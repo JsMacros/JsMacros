@@ -65,9 +65,11 @@
 	"jsmacros.theme": "Editor Theme Colors",
 	"jsmacros.linteroverrides": "Linter Scripts",
 	"jsmacros.setvalue": "Set Value",
-	"jsmacros.setkey": "Set Key",
+	"jsmacros.setprofilename": "Set profile name",
 	"jsmacros.maxlocktime": "Max Joined Lock Time",
 	"jsmacros.reloadconfig": "Reload config from file",
 	"jsmacros.services": "Services",
-	"jsmacros.servicename": "Service Name"
+	"jsmacros.servicename": "Service Name",
+	"jsmacros.useexternaleditor": "Use external editor",
+	"jsmacros.externaleditorcommand": "Command:"
 }
