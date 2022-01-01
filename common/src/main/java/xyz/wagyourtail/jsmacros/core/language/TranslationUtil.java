@@ -13,7 +13,7 @@ public final class TranslationUtil {
 
     public static Text getTranslatedEventName(String eventName) {
         String lowerCaseName = eventName.toLowerCase(Locale.ROOT);
-        return new LiteralText(I18n.hasTranslation("jsmacros.event." + lowerCaseName) ? I18n.translate("jsmacros.event." + lowerCaseName) : eventName);
+        return I18n.hasTranslation("jsmacros.event." + lowerCaseName) ? new TranslatableText("jsmacros.event." + lowerCaseName) : new LiteralText(eventName);
     }
 
 }
