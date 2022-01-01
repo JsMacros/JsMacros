@@ -69,6 +69,7 @@
 	"jsmacros.maxlocktime": "Max Joined Lock Time",
 	"jsmacros.reloadconfig": "Reload config from file",
 	"jsmacros.services": "Services",
+	"jsmacros.showservices": "Show services",
 	"jsmacros.servicename": "Service Name",
 	"jsmacros.useexternaleditor": "Use external editor",
 	"jsmacros.externaleditorcommand": "Command:"

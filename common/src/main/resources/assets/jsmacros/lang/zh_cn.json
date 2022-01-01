@@ -70,6 +70,7 @@
     "jsmacros.reloadconfig": "重载配置",
     "jsmacros.services": "服务",
     "jsmacros.service": "服务",
+    "jsmacros.showservices": "Show services",
     "jsmacros.servicename": "服务名",
     "jsmacros.useexternaleditor": "使用外部编辑器",
     "jsmacros.externaleditorcommand": "外部编辑器参数",

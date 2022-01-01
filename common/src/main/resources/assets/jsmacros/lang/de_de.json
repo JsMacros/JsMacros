@@ -70,6 +70,7 @@
   "jsmacros.reloadconfig": "Konfiguration von Datei neu laden",
   "jsmacros.services": "Dienste",
   "jsmacros.service": "Dienst",
+  "jsmacros.showservices": "Zeige Dienste",
   "jsmacros.servicename": "Dienstname",
   "jsmacros.useexternaleditor": "Benutze externen Editor",
   "jsmacros.externaleditorcommand": "Befehl:",
