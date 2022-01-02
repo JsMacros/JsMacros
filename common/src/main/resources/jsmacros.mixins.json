@@ -29,6 +29,8 @@
     "events.MixinClientWorld",
     "events.MixinClientPlayerEntity",
     "events.MixinClientPlayNetworkHandler",
+    "events.MixinCreativeInventoryScreen",
+    "events.MixinHandledScreen",
     "events.MixinHungerManager",
     "events.MixinKeyboard",
     "events.MixinLivingEntity",

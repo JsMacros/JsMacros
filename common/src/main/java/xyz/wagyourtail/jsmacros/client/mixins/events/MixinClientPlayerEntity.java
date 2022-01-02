@@ -130,4 +130,13 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         if (this.getVehicle() != null)
             new EventRiding(false, this.getVehicle());
     }
+
+    @Inject(method = "dropSelectedItem", at = @At("HEAD"), cancellable = true)
+    public void onDropSelected(boolean entireStack, CallbackInfoReturnable<Boolean> cir) {
+        int selectedHotbarIndex = getInventory().selectedSlot;
+        EventDropSlot event = new EventDropSlot(null, 36 + selectedHotbarIndex, entireStack);
+        if (event.cancel) {
+            cir.setReturnValue(false);
+        }
+    }
 }
