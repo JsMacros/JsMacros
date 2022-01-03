@@ -10,17 +10,17 @@ import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import java.lang.reflect.InvocationTargetException;
 
 public class BooleanField  extends AbstractSettingField<Boolean> {
-    
-    
+
+
     public BooleanField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<Boolean> field) {
         super(x, y, width, textRenderer.fontHeight + 2, textRenderer, parent, field);
     }
-    
+
     @Override
     public void init() {
         super.init();
         try {
-            this.addDrawableChild(new AnnotatedCheckBox(x, y, width, height, textRenderer, 0xFFFFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, settingName, setting.get(), button -> {
+            this.addDrawableChild(new AnnotatedCheckBox(x, y, width, height, textRenderer, 0xFFFFFFFF, 0xFF242424, 0x7FFFFFFF, 0xFFFFFF, settingName, setting.get(), button -> {
                 try {
                     setting.set(((AnnotatedCheckBox)button).value);
                 } catch (IllegalAccessException | InvocationTargetException e) {
@@ -31,7 +31,7 @@ public class BooleanField  extends AbstractSettingField<Boolean> {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public void setPos(int x, int y, int width, int height) {
         super.setPos(x, y, width, height);
@@ -39,10 +39,10 @@ public class BooleanField  extends AbstractSettingField<Boolean> {
             btn.y = y;
         }
     }
-    
+
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-    
+
     }
-    
+
 }
