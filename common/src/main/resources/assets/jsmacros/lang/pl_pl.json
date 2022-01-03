@@ -107,5 +107,5 @@
 	"jsmacros.event.sound": "Dźwięk",
 	"jsmacros.event.tick": "Tick",
 	"jsmacros.event.title": "Tytuł",
-	"jsmacros.event.profileload": "Wczytanie profilu",
+	"jsmacros.event.profileload": "Wczytanie profilu"
 }
