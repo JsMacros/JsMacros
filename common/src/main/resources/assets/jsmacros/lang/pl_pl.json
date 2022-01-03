@@ -18,20 +18,20 @@
 	"jsmacros.rename": "Zmień nazwę",
 	"jsmacros.remove": "Usuń",
 	"jsmacros.filename": "Nazwa pliku",
-	"jsmacros.file": "Plik"
-	"jsmacros.new": "Nowy"
-	"jsmacros.openfolder": "Otwórz folder"
+	"jsmacros.file": "Plik",
+	"jsmacros.new": "Nowy",
+	"jsmacros.openfolder": "Otwórz folder",
 	"jsmacros.confirmdeletefile": "Napewno chcesz usunąć ten plik?",
 	"jsmacros.enabledstatus": "Aktywny",
 	"jsmacros.enabled": "Aktywny",
-  "jsmacros.disabled": "Dezaktywowany",
-  "jsmacros.presskey": "- Wciśnij klawisz -",
-  "jsmacros.run": "Uruchom",
+        "jsmacros.disabled": "Dezaktywowany",
+        "jsmacros.presskey": "- Wciśnij klawisz -",
+        "jsmacros.run": "Uruchom",
 	"jsmacros.runningstatus": "Status",
-  "jsmacros.running": "Uruchomiony",
-  "jsmacros.stopped": "Zatrzymany",
-  "jsmacros.disablewithscreen": "Wyłącz zdarzenie przycisku, gdy okno jest otwarte.",
-  "jsmacros.about": "O projekcie",
+        "jsmacros.running": "Uruchomiony",
+        "jsmacros.stopped": "Zatrzymany",
+        "jsmacros.disablewithscreen": "Wyłącz zdarzenie przycisku, gdy okno jest otwarte.",
+        "jsmacros.about": "O projekcie",
 	"jsmacros.aboutinfo": "JS Macros\n Stworzony przez: WagYourTail\n\nJavascript MacroMod do gry w klocki.\n\nPo Pomoc, zajrzyj na stronę lub dołącz do serwera Discord",
 	"jsmacros.back": "Wstecz",
 	"jsmacros.erroropening": "Wystąpił błąd podczas otwierania pliku... \n\n",
@@ -72,8 +72,7 @@
 	"jsmacros.showservices": "Pokaż usługi",
 	"jsmacros.servicename": "Nazwa usługi",
 	"jsmacros.useexternaleditor": "Użyj zewnętrznego edytora",
-	"jsmacros.externaleditorcommand": "Komenda:"
-	
+	"jsmacros.externaleditorcommand": "Komenda:",
 	"jsmacros.event.airchange": "Zmiana powietrza",
 	"jsmacros.event.anything": "Wszystko",
 	"jsmacros.event.armorchange": "Zmiana zbroi",
@@ -81,23 +80,23 @@
 	"jsmacros.event.bossbar": "Pasek Bossa",
 	"jsmacros.event.chunkload": "Wczytanie Chunku",
 	"jsmacros.event.chunkunload": "Wyładowanie Chunku",
-	"jsmacros.event.damage": "Obrażenia"
+	"jsmacros.event.damage": "Obrażenia",
 	"jsmacros.event.death": "Śmierć",
-	"jsmacros.event.dimensionchange": "Zmiana Wymiaru"
+	"jsmacros.event.dimensionchange": "Zmiana Wymiaru",
 	"jsmacros.event.disconnect": "Wyjście z serwera",
 	"jsmacros.event.entitydamaged": "Jednostka Uszkodzona",
 	"jsmacros.event.entityload": "Jednostka Wczytana",
-	"jsmacros.event.entityunload": "Jednostka Wyładowana"
-	"jsmacros.event.expchange": "Zmiana XP"
+	"jsmacros.event.entityunload": "Jednostka Wyładowana",
+	"jsmacros.event.expchange": "Zmiana XP",
 	"jsmacros.event.fallflying": "Elytra",
 	"jsmacros.event.helditemchange": "Zmiana trzymanego przedmiotu",
 	"jsmacros.event.hungerchange": "Zmiana poziomu głodu",
 	"jsmacros.event.itemdamage": "Uszkodzenia przedmiotu",
 	"jsmacros.event.itempickup": "Podniesienie przedmiotu"
-	"jsmacros.event.joinedtick": "Tick Dołączenia"
+	"jsmacros.event.joinedtick": "Tick Dołączenia",
 	"jsmacros.event.joinserver": "Dołączenie do serwera",
-	"jsmacros.event.key": "Klawisz"
-	"jsmacros.event.openscreen": "Otwarcie okienka"
+	"jsmacros.event.key": "Klawisz",
+	"jsmacros.event.openscreen": "Otwarcie okienka",
 	"jsmacros.event.playerjoin": "Dołączenie gracza",
 	"jsmacros.event.playerleave": "Wyjście gracza",
 	"jsmacros.event.recvmessage": "Otrzymanie wiadomości",
@@ -108,5 +107,5 @@
 	"jsmacros.event.sound": "Dźwięk",
 	"jsmacros.event.tick": "Tick",
 	"jsmacros.event.title": "Tytuł",
-	"jsmacros.event.profileload": "Wczytanie profilu"
+	"jsmacros.event.profileload": "Wczytanie profilu",
 }
