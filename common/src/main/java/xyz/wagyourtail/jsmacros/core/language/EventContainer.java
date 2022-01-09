@@ -63,6 +63,7 @@ public class EventContainer<T> {
      */
     public synchronized void releaseLock() {
         locked = false;
+        Core.getInstance().profile.joinedThreadStack.remove(lockThread);
         this.notifyAll();
         synchronized (ctx) {
             ctx.events.remove(lockThread);
