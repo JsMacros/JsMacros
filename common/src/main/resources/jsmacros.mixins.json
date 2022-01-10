@@ -26,9 +26,9 @@
     "access.MixinStyleSerializer",
     "access.MixinTrueTypeFont",
     "events.MixinChatHud",
-    "events.MixinClientWorld",
     "events.MixinClientPlayerEntity",
     "events.MixinClientPlayNetworkHandler",
+    "events.MixinClientWorld",
     "events.MixinCreativeInventoryScreen",
     "events.MixinHandledScreen",
     "events.MixinHungerManager",
@@ -42,5 +42,8 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "access.MixinDisconnectedScreen"
+  ]
 }
