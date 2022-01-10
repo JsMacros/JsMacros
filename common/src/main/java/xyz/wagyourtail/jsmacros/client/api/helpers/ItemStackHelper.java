@@ -116,7 +116,16 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     /**
      * @return
      */
+     @Deprecated
     public String getItemID() {
+        return getItemId();
+    }
+
+    /**
+     * @since 1.6.4
+     * @return
+     */
+    public String getItemId() {
         return Registry.ITEM.getId(base.getItem()).toString();
     }
     
@@ -128,7 +137,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
     
     public String toString() {
-        return String.format("ItemStack:{\"id\":\"%s\", \"damage\": %d, \"count\": %d}", this.getItemID(), base.getDamage(), base.getCount());
+        return String.format("ItemStack:{\"id\":\"%s\", \"damage\": %d, \"count\": %d}", this.getItemId(), base.getDamage(), base.getCount());
     }
     
     /**

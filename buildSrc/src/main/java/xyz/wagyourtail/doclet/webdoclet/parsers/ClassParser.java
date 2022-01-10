@@ -9,7 +9,6 @@ import xyz.wagyourtail.doclet.webdoclet.options.Links;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
-import javax.lang.model.util.Types;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,7 +112,7 @@ public class ClassParser {
     private XMLBuilder parseClass() {
         XMLBuilder builder = new XMLBuilder("main").setClass("classDoc");
         XMLBuilder subClasses;
-        builder.append(subClasses = new XMLBuilder("div").setID("subClasses"));
+        builder.append(subClasses = new XMLBuilder("div").setId("subClasses"));
         for (Element subClass : Main.elements.stream().filter(e -> {
             if (e.getKind().isClass() || e.getKind().isInterface()) {
                 return Main.types.isAssignable(e.asType(), Main.types.getDeclaredType(type)) && !e.equals(type);
@@ -236,7 +235,7 @@ public class ClassParser {
     }
 
     private XMLBuilder parseConstructor(ExecutableElement element) {
-        XMLBuilder constructor = new XMLBuilder("div").setClass("constructor classItem").setID(memberId(element));
+        XMLBuilder constructor = new XMLBuilder("div").setClass("constructor classItem").setId(memberId(element));
         constructor.append(new XMLBuilder("h4").setClass("constructorTitle classItemTitle").append(
             "new ", getClassName((TypeElement) element.getEnclosingElement()), "(",
                 createTitleParams(element).setClass("constructorParams"),
@@ -255,7 +254,7 @@ public class ClassParser {
     }
 
     private XMLBuilder parseMethod(ExecutableElement element) {
-        XMLBuilder method = new XMLBuilder("div").setClass("method classItem").setID(memberId(element));
+        XMLBuilder method = new XMLBuilder("div").setClass("method classItem").setId(memberId(element));
         XMLBuilder methodTitle;
         method.append(methodTitle = new XMLBuilder("h4", true).setClass("methodTitle classItemTitle").append(
             ".", element.getSimpleName()
@@ -336,7 +335,7 @@ public class ClassParser {
     }
 
     private XMLBuilder parseField(Element element) {
-        XMLBuilder field = new XMLBuilder("div").setClass("field classItem").setID(memberId(element));
+        XMLBuilder field = new XMLBuilder("div").setClass("field classItem").setId(memberId(element));
         field.append(new XMLBuilder("h4", true).setClass("classItemTitle").append(
             ".", memberName(element)
         ));
