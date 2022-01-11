@@ -58,7 +58,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Zip TS
-        uses: papeloto/action-zip@main
+        uses: vimtor/action-zip@v1
         with:
           files: typescript/
           dest: typescript-${{ inputs.branch }}.zip
