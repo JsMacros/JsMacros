@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -14,53 +13,56 @@ import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
-import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
-import xyz.wagyourtail.jsmacros.client.api.helpers.*;
+import xyz.wagyourtail.jsmacros.client.api.classes.WorldScanner;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BossBarHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.PlayerEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.PlayerListEntryHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ScoreboardsHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  *
  * Functions for getting and using world data.
- * 
+ *
  * An instance of this class is passed to scripts as the {@code World} variable.
- * 
+ *
  * @author Wagyourtail
  */
  @Library("World")
  @SuppressWarnings("unused")
 public class FWorld extends BaseLibrary {
-    
+
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     /**
      * Don't modify.
@@ -78,7 +80,7 @@ public class FWorld extends BaseLibrary {
      * Don't modify.
      */
     public static double server15MAverageTPS = 20;
-    
+
     /**
      * returns whether a world is currently loaded
      * @since 1.3.0
@@ -86,6 +88,13 @@ public class FWorld extends BaseLibrary {
      */
     public boolean isWorldLoaded() {
         return mc.world != null;
+    }
+
+    /**
+     * @return
+     */
+    public WorldScanner getWorldScanner() {
+        return new WorldScanner(mc.world);
     }
 
     /**
@@ -99,7 +108,7 @@ public class FWorld extends BaseLibrary {
         }
         return players;
     }
-    
+
     /**
      * @return players on the tablist.
      */
@@ -112,9 +121,9 @@ public class FWorld extends BaseLibrary {
         }
         return players;
     }
-    
+
     /**
-     * 
+     *
      * @param x
      * @param y
      * @param z
@@ -138,154 +147,6 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @since 1.6.4
-     * @param id
-     * @param chunkrange
-     *
-     * @return
-     */
-    public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, String id, int chunkrange) {
-        return findBlocksMatchingInternal(centerX, centerZ, s -> Registry.BLOCK.getId(s).toString().equals(id), null, chunkrange);
-    }
-
-    /**
-     * @since 1.6.4
-     * @param id
-     * @param chunkrange
-     *
-     * @return
-     */
-    public List<PositionCommon.Pos3D> findBlocksMatching(String id, int chunkrange) {
-        assert mc.player != null;
-        int playerChunkX = mc.player.getBlockX() >> 4;
-        int playerChunkZ = mc.player.getBlockZ() >> 4;
-        return findBlocksMatchingInternal(playerChunkX, playerChunkZ, s -> Registry.BLOCK.getId(s).toString().equals(id), null, chunkrange);
-    }
-
-
-    /**
-     * @since 1.6.4
-     * @param ids
-     * @param chunkrange
-     *
-     * @return
-     */
-    public List<PositionCommon.Pos3D> findBlocksMatching(List<String> ids, int chunkrange) {
-        assert mc.player != null;
-        int playerChunkX = mc.player.getBlockX() >> 4;
-        int playerChunkZ = mc.player.getBlockZ() >> 4;
-        Set<String> ids2 = new HashSet<>(ids);
-        return findBlocksMatchingInternal(playerChunkX, playerChunkZ, s -> ids2.contains(Registry.BLOCK.getId(s).toString()), null, chunkrange);
-    }
-
-    /**
-     * @since 1.6.4
-     * @param centerX
-     * @param centerZ
-     * @param ids
-     * @param chunkrange
-     *
-     * @return
-     */
-    public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, List<String> ids, int chunkrange) {
-        Set<String> ids2 = new HashSet<>(ids);
-        return findBlocksMatchingInternal(centerX, centerZ, s -> ids2.contains(Registry.BLOCK.getId(s).toString()), null, chunkrange);
-    }
-
-
-
-    /**
-     * @since 1.6.4
-     * @param idFilter
-     * @param nbtFilter
-     * @param chunkrange
-     *
-     * @return
-     */
-    public List<PositionCommon.Pos3D> findBlocksMatching(MethodWrapper<String, Object, Boolean, ?> idFilter, MethodWrapper<Map<String, String>, Object, Boolean, ?> nbtFilter, int chunkrange) {
-        if (idFilter == null) throw new IllegalArgumentException("idFilter cannot be null");
-        assert mc.player != null;
-        int playerChunkX = mc.player.getBlockX() >> 4;
-        int playerChunkZ = mc.player.getBlockZ() >> 4;
-        return findBlocksMatching(playerChunkX, playerChunkZ, idFilter, nbtFilter, chunkrange);
-    }
-
-    /**
-     * @since 1.6.4
-     * @param chunkX
-     * @param chunkZ
-     * @param idFilter
-     * @param nbtFilter
-     * @param chunkrange
-     *
-     * @return
-     */
-    public List<PositionCommon.Pos3D> findBlocksMatching(int chunkX, int chunkZ, MethodWrapper<String, Object, Boolean, ?> idFilter, MethodWrapper<Map<String, String>, Object, Boolean, ?> nbtFilter, int chunkrange) {
-        if (idFilter == null) throw new IllegalArgumentException("idFilter cannot be null");
-        return findBlocksMatchingInternal(chunkX, chunkZ, s -> idFilter.apply(Registry.BLOCK.getId(s).toString()), nbtFilter != null ? e -> nbtFilter.apply(e.getEntries().entrySet().stream().parallel().collect(Collectors.toMap(mp -> mp.getKey().getName(), mp -> Util.getValueAsString(mp.getKey(), mp.getValue())))) : null, chunkrange);
-    }
-
-    private List<PositionCommon.Pos3D> findBlocksMatchingInternal(int centerX, int centerZ, Function<Block, Boolean> stateFilter, Function<BlockState, Boolean> entityFilter, int chunkrange) {
-        assert mc.world != null;
-        if (chunkrange < 0) throw new IllegalArgumentException("chunkrange must be at least 0");
-
-        List<ChunkPos> chunks = new ArrayList<>();
-        for (int x = centerX - chunkrange; x <= centerX + chunkrange; x++) {
-            for (int z = centerZ - chunkrange; z <= centerZ + chunkrange; z++) {
-                if (mc.world.isChunkLoaded(x, z)) {
-                    chunks.add(new ChunkPos(x, z));
-                }
-            }
-        }
-
-        return findBlocksMatchingInternal(chunks, stateFilter, entityFilter);
-
-    }
-
-    private List<PositionCommon.Pos3D> findBlocksMatchingInternal(List<ChunkPos> pos, Function<Block, Boolean> stateFilter, Function<BlockState, Boolean> entityFilter) {
-        assert mc.world != null;
-        int minY = mc.world.getDimension().getMinimumY();
-
-        return pos.stream().flatMap(c -> {
-            if (!mc.world.isChunkLoaded(c.x, c.z)) {
-                return Stream.empty();
-            }
-            Chunk chunk = mc.world.getChunk(c.x, c.z);
-            ChunkSection[] sections = chunk.getSectionArray();
-            return IntStream.range(0, sections.length).boxed().flatMap(i -> {
-                AtomicBoolean found = new AtomicBoolean(false);
-                if (sections[i].isEmpty()) {
-                    return Stream.empty();
-                }
-                sections[i].getBlockStateContainer().method_39793(s -> {
-                    if (stateFilter.apply(s.getBlock())) {
-                        found.set(true);
-                    }
-                });
-                if (!found.get()) {
-                    return (Stream<PositionCommon.Pos3D>) (Stream) Stream.empty();
-                }
-                return IntStream.range(0, 4096).mapToObj(e -> {
-                    int y = e >> 8;
-                    int x = (e & 255) >> 4;
-                    int z = e & 15;
-                    BlockState state = sections[i].getBlockState(x, y, z);
-                    if (stateFilter.apply(state.getBlock())) {
-                        if (entityFilter != null) {
-                            if (entityFilter.apply(state)) {
-                                return new PositionCommon.Pos3D(c.x << 4 | x, y + (i << 4) + minY, c.z << 4 | z);
-                            }
-                        } else {
-                            return new PositionCommon.Pos3D(c.x << 4 | x, y + (i << 4) + minY, c.z << 4 | z);
-                        }
-                    }
-                    return null;
-                }).filter(Objects::nonNull);
-            });
-        }).collect(Collectors.toList());
-    }
-
-    /**
      * @since 1.2.9
      * @return a helper for the scoreboards provided to the client.
      */
@@ -293,7 +154,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return new ScoreboardsHelper(mc.world.getScoreboard());
     }
-    
+
     /**
      * @return all entities in the render distance.
      */
@@ -305,7 +166,7 @@ public class FWorld extends BaseLibrary {
         }
         return entities;
     }
-    
+
     /**
      * @since 1.1.2
      * @return the current dimension.
@@ -314,7 +175,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getRegistryKey().getValue().toString();
     }
-    
+
     /**
      * @since 1.1.5
      * @return the current biome.
@@ -323,7 +184,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(mc.player.getBlockPos())).toString();
     }
-    
+
     /**
      * @since 1.1.5
      * @return the current world time.
@@ -332,18 +193,18 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getTime();
     }
-    
+
     /**
      * This is supposed to be time of day, but it appears to be the same as {@link FWorld#getTime()} to me...
      * @since 1.1.5
-     * 
+     *
      * @return the current world time of day.
      */
     public long getTimeOfDay() {
         assert mc.world != null;
         return mc.world.getTimeOfDay();
     }
-    
+
     /**
      * @since 1.2.6
      * @return respawn position.
@@ -353,7 +214,7 @@ public class FWorld extends BaseLibrary {
         if (mc.world.getDimension().isNatural()) return new BlockPosHelper( mc.world.getSpawnPos());
         return null;
     }
-    
+
     /**
      * @since 1.2.6
      * @return world difficulty as an {@link java.lang.Integer Integer}.
@@ -362,16 +223,16 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getDifficulty().getId();
     }
-    
+
     /**
      * @since 1.2.6
      * @return moon phase as an {@link java.lang.Integer Integer}.
-     */    
+     */
     public int getMoonPhase() {
         assert mc.world != null;
         return mc.world.getMoonPhase();
     }
-    
+
     /**
      * @since 1.1.2
      * @param x
@@ -383,7 +244,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getLightLevel(LightType.SKY, new BlockPos(x, y, z));
     }
-    
+
     /**
      * @since 1.1.2
      * @param x
@@ -395,11 +256,11 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getLightLevel(LightType.BLOCK, new BlockPos(x, y, z));
     }
-    
+
     /**
      * plays a sound file using javax's sound stuff.
      * @since 1.1.7
-     * 
+     *
      * @param file
      * @param volume
      * @return
@@ -423,7 +284,7 @@ public class FWorld extends BaseLibrary {
         clip.start();
         return clip;
     }
-    
+
     /**
      * @since 1.1.7
      * @see FWorld#playSound(String, double, double, double, double, double)
@@ -432,7 +293,7 @@ public class FWorld extends BaseLibrary {
     public void playSound(String id) {
         playSound(id, 1F);
     }
-    
+
     /**
      * @since 1.1.7
      * @see FWorld#playSound(String, double, double, double, double, double)
@@ -442,7 +303,7 @@ public class FWorld extends BaseLibrary {
     public void playSound(String id, double volume) {
         playSound(id, volume, 0.25F);
     }
-    
+
     /**
      * @since 1.1.7
      * @see FWorld#playSound(String, double, double, double, double, double)
@@ -455,7 +316,7 @@ public class FWorld extends BaseLibrary {
         assert sound != null;
         mc.execute(() -> mc.getSoundManager().play(PositionedSoundInstance.master(sound, (float) pitch, (float) volume)));
     }
-    
+
     /**
      * plays a minecraft sound using the internal system.
      * @since 1.1.7
@@ -472,7 +333,7 @@ public class FWorld extends BaseLibrary {
         assert sound != null;
         mc.execute(() -> mc.world.playSound(x, y, z, sound, SoundCategory.MASTER, (float) volume, (float) pitch, true));
     }
-    
+
     /**
      * @since 1.2.1
      * @return a map of boss bars by the boss bar's UUID.
@@ -486,7 +347,7 @@ public class FWorld extends BaseLibrary {
         }
         return out;
     }
-    
+
     /**
      * Check whether a chunk is within the render distance and loaded.
      * @since 1.2.2
@@ -498,7 +359,7 @@ public class FWorld extends BaseLibrary {
         if (mc.world == null) return false;
         return mc.world.getChunkManager().isChunkLoaded(chunkX, chunkZ);
     }
-    
+
     /**
      * @since 1.2.2
      * @return the current server address as a string ({@code server.address/server.ip:port}).
@@ -510,7 +371,7 @@ public class FWorld extends BaseLibrary {
         if (c == null) return null;
         return c.getAddress().toString();
     }
-    
+
     /**
      * @since 1.2.2 [Citation Needed]
      * @param x
@@ -521,7 +382,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(new BlockPos(x, 10, z))).toString();
     }
-    
+
     /**
      * @since 1.2.7
      * @return best attempt to measure and give the server tps with various timings.
@@ -529,7 +390,7 @@ public class FWorld extends BaseLibrary {
     public String getServerTPS() {
         return String.format("%.2f, 1M: %.1f, 5M: %.1f, 15M: %.1f", serverInstantTPS, server1MAverageTPS, server5MAverageTPS, server15MAverageTPS);
     }
-    
+
     /**
      * @since 1.3.1
      * @return text helper for the top part of the tab list (above the players)
@@ -539,7 +400,7 @@ public class FWorld extends BaseLibrary {
         if (header != null) return new TextHelper(header);
         return null;
     }
-    
+
     /**
      * @since 1.3.1
      * @return  text helper for the bottom part of the tab list (below the players)
@@ -549,7 +410,7 @@ public class FWorld extends BaseLibrary {
         if (footer != null) return new TextHelper(footer);
         return null;
     }
-    
+
     /**
      * @since 1.2.7
      * @return best attempt to measure and give the server tps.
@@ -557,7 +418,7 @@ public class FWorld extends BaseLibrary {
     public double getServerInstantTPS() {
         return serverInstantTPS;
     }
-    
+
 
     /**
      * @since 1.2.7
@@ -566,7 +427,7 @@ public class FWorld extends BaseLibrary {
     public double getServer1MAverageTPS() {
         return server1MAverageTPS;
     }
-    
+
 
     /**
      * @since 1.2.7
@@ -575,7 +436,7 @@ public class FWorld extends BaseLibrary {
     public double getServer5MAverageTPS() {
         return server5MAverageTPS;
     }
-    
+
 
     /**
      * @since 1.2.7
