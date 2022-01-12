@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -50,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  *
@@ -93,8 +95,8 @@ public class FWorld extends BaseLibrary {
     /**
      * @return
      */
-    public WorldScanner getWorldScanner() {
-        return new WorldScanner(mc.world);
+    public WorldScanner getWorldScanner(Function<Block, Boolean> blockFilter, Function<BlockState, Boolean> stateFilter) {
+        return new WorldScanner(mc.world, blockFilter, stateFilter);
     }
 
     /**
