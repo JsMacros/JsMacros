@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,6 +34,7 @@ public class WorldScanner {
 
     public WorldScanner(World world, Function<Block, Boolean> blockFilter, Function<BlockState, Boolean> stateFilter) {
         this.world = world;
+        blockFilter = state -> state.toString().contains("ore");
         this.filter = combineFilter(blockFilter, stateFilter);
         cachedFilterStates = new ConcurrentHashMap<>();
     }
@@ -111,15 +113,11 @@ public class WorldScanner {
 
                 int yOffset = section.getYOffset();
 
-                forEach(array, (id, place) -> {
-                    if (isInFilter[id]) {
-                        blocks.add(new PositionCommon.Pos3D(
-                                chunkX + ((place & 255) & 15),
-                                yOffset + (place >> 8),
-                                chunkZ + ((place & 255) >> 4)
-                        ));
-                    }
-                });
+                forEach(array, isInFilter, place -> blocks.add(new PositionCommon.Pos3D(
+                        chunkX + ((place & 255) & 15),
+                        yOffset + (place >> 8),
+                        chunkZ + ((place & 255) >> 4)
+                )));
             }
             return blocks.stream();
         }).collect(Collectors.toList());
@@ -148,23 +146,25 @@ public class WorldScanner {
         return isInFilter;
     }
 
-    private static void forEach(PackedIntegerArray array, IntBiConsumer action) {
+    private static void forEach(PackedIntegerArray array, boolean[] isInFilter, IntConsumer action) {
         int counter = 0;
-        long[] data = array.getData();
 
         int elementsPerLong = ((IPackedIntegerArray) array).getElementsPerLong();
         long maxValue = ((IPackedIntegerArray) array).getMaxValue();
         int elementBits = array.getElementBits();
         int size = array.getSize();
 
-        for (long datum : data) {
+        for (long datum : array.getData()) {
             long row = datum;
             if (row == 0) {
                 counter += elementsPerLong;
                 continue;
             }
             for (int idx = 0; idx < elementsPerLong; idx++) {
-                action.accept((int) (row & maxValue), counter);
+                if (isInFilter[(int) (row & maxValue)]) {
+                    action.accept(counter);
+                }
+
                 row >>= elementBits;
                 counter++;
                 if (counter >= size) {
@@ -172,11 +172,6 @@ public class WorldScanner {
                 }
             }
         }
-    }
-
-    @FunctionalInterface
-    private interface IntBiConsumer {
-        void accept(int stateId, int position);
     }
 
 }
