@@ -34,7 +34,6 @@ public class WorldScanner {
 
     public WorldScanner(World world, Function<Block, Boolean> blockFilter, Function<BlockState, Boolean> stateFilter) {
         this.world = world;
-        blockFilter = state -> state.toString().contains("ore");
         this.filter = combineFilter(blockFilter, stateFilter);
         cachedFilterStates = new ConcurrentHashMap<>();
     }
@@ -99,7 +98,7 @@ public class WorldScanner {
 
                 for (int i = 0; i < palette.getSize(); i++) {
                     BlockState state = palette.get(i);
-                    if (cachedFilterStates.getOrDefault(state, addCachedState(state, filter))) {
+                    if (getOrApplyFilter(cachedFilterStates, state)) {
                         isInFilter[i] = true;
                         commonBlockFound = true;
                     } else {
@@ -123,6 +122,11 @@ public class WorldScanner {
         }).collect(Collectors.toList());
     }
 
+    public boolean getOrApplyFilter(Map<BlockState, Boolean> cachedFilterStates, BlockState key) {
+        Boolean v;
+        return (v = cachedFilterStates.get(key)) == null ? addCachedState(key) : v;
+    }
+
     private static Function<BlockState, Boolean> combineFilter(Function<Block, Boolean> blockFilter, Function<BlockState, Boolean> stateFilter) {
         if (blockFilter != null) {
             if (stateFilter != null) {
@@ -135,7 +139,7 @@ public class WorldScanner {
         }
     }
 
-    private boolean addCachedState(BlockState state, Function<BlockState, Boolean> filter) {
+    private boolean addCachedState(BlockState state) {
         boolean isInFilter = false;
 
         if (filter != null) {
