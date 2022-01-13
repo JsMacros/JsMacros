@@ -12,7 +12,9 @@ import net.minecraft.world.chunk.Palette;
 import net.minecraft.world.chunk.PalettedContainer;
 import xyz.wagyourtail.jsmacros.client.access.IPackedIntegerArray;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainer;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,14 +36,35 @@ public class WorldScanner {
     private final World world;
     private final Map<BlockState, Boolean> cachedFilterStates;
     private final Function<BlockState, Boolean> filter;
+    
+    private boolean useParallelStream = true;
 
     public WorldScanner(World world, Function<Block, Boolean> blockFilter, Function<BlockState, Boolean> stateFilter) {
         this.world = world;
-        blockFilter = state -> state.toString().contains("ore");
+
+        checkParallelStreamAllowed(blockFilter);
+        checkParallelStreamAllowed(stateFilter);
+        
         this.filter = combineFilter(blockFilter, stateFilter);
         cachedFilterStates = new ConcurrentHashMap<>();
     }
 
+    private void checkParallelStreamAllowed(Function<?, Boolean> filter) {
+        if (filter instanceof MethodWrapper<?, ?, ?, ?> wrapper) {
+            if (wrapper.getCtx().getFile().getName().endsWith("js")) {
+                useParallelStream = false;
+            }
+        }
+    }
+
+    private <V> Stream<V> getBestStream(List<V> list) {
+        if (useParallelStream) {
+            return list.stream().parallel();
+        } else {
+            return list.stream();
+        }
+    }
+    
     private static Function<BlockState, Boolean> combineFilter(Function<Block, Boolean> blockFilter, Function<BlockState, Boolean> stateFilter) {
         if (blockFilter != null) {
             if (stateFilter != null) {
@@ -69,19 +92,17 @@ public class WorldScanner {
         return scanChunkRange(mc.player.getChunkPos().x, mc.player.getChunkPos().z, range);
     }
 
-    // TODO: Different filtering methods
     public List<PositionCommon.Pos3D> scanChunkRange(int centerX, int centerZ, int chunkrange) {
         assert world != null;
         if (chunkrange < 0) {
-            throw new IllegalArgumentException("hunkrange must be at least 0");
+            throw new IllegalArgumentException("chunkrange must be at least 0");
         }
         return scanChunksInternal(getChunkRange(centerX, centerZ, chunkrange));
     }
 
     private List<PositionCommon.Pos3D> scanChunksInternal(List<ChunkPos> chunkPositions) {
         assert world != null;
-
-        return chunkPositions.stream().parallel().flatMap(this::scanChunkInternal).collect(Collectors.toList());
+        return getBestStream(chunkPositions).flatMap(this::scanChunkInternal).collect(Collectors.toList());
     }
 
     private Stream<PositionCommon.Pos3D> scanChunkInternal(ChunkPos pos) {
@@ -98,7 +119,6 @@ public class WorldScanner {
             if (section.isEmpty()) {
                 continue;
             }
-
             PalettedContainer<BlockState> sectionContainer = section.getBlockStateContainer();
             Palette<BlockState> palette = ((IPalettedContainer<BlockState>) sectionContainer).getData().getPalette();
 
@@ -109,7 +129,7 @@ public class WorldScanner {
 
             boolean commonBlockFound = false;
             boolean[] isInFilter = new boolean[palette.getSize()];
-
+            
             for (int i = 0; i < palette.getSize(); i++) {
                 BlockState state = palette.get(i);
                 if (getFilterResult(state)) {
@@ -123,7 +143,7 @@ public class WorldScanner {
             if (!commonBlockFound) {
                 continue;
             }
-
+            
             int yOffset = section.getYOffset();
 
             forEach(array, isInFilter, place -> blocks.add(new PositionCommon.Pos3D(
@@ -179,36 +199,47 @@ public class WorldScanner {
         }
     }
 
-    public Object2IntOpenHashMap<String> getBlocksInChunk(int chunkX, int chunkZ) {
-        return getBlocksInChunks(chunkX, chunkZ, 0);
+    public Map<String, Integer> getBlocksInChunk(int chunkX, int chunkZ, boolean ignoreState) {
+        return getBlocksInChunks(chunkX, chunkZ, 0, ignoreState);
     }
 
-    public Object2IntOpenHashMap<String> getBlocksInChunks(int centerX, int centerZ, int chunkrange) {
+    public Map<String, Integer> getBlocksInChunks(int centerX, int centerZ, int chunkrange, boolean ignoreState) {
         assert world != null;
         if (chunkrange < 0) {
             throw new IllegalArgumentException("chunkrange must be at least 0");
         }
-        return getBlocksInChunksInternal(getChunkRange(centerX, centerZ, chunkrange));
+        return getBlocksInChunksInternal(getChunkRange(centerX, centerZ, chunkrange), ignoreState);
     }
 
-    private Object2IntOpenHashMap<String> getBlocksInChunksInternal(List<ChunkPos> chunkPositions) {
-        Object2IntOpenHashMap<String> finalBlocks = new Object2IntOpenHashMap<>();
-
+    private Map<String, Integer> getBlocksInChunksInternal(List<ChunkPos> chunkPositions, boolean ignoreState) {
+        Object2IntOpenHashMap<String> result = new Object2IntOpenHashMap<>();
+        
         chunkPositions.stream().parallel().flatMap(pos -> {
             if (!world.getChunkManager().isChunkLoaded(pos.x, pos.z)) {
                 return Stream.empty();
             }
+
             Object2IntOpenHashMap<BlockState> blocks = new Object2IntOpenHashMap<>();
+
             for (ChunkSection section : world.getChunk(pos.x, pos.z).getSectionArray()) {
                 if (section.isEmpty()) {
                     continue;
                 }
                 section.getBlockStateContainer().count(blocks::addTo);
             }
+            
             return blocks.object2IntEntrySet().stream();
-        }).forEach(blockStateEntry -> finalBlocks.addTo(blockStateEntry.getKey().toString(), blockStateEntry.getIntValue()));
-
-        return finalBlocks;
+        }).forEach(blockStateEntry -> {
+            BlockState state = blockStateEntry.getKey();
+            if (getFilterResult(state)) {
+                result.addTo(ignoreState ? state.getBlock().toString() : state.toString(), blockStateEntry.getIntValue());
+            }
+        });
+        return result;
     }
 
+    public int getCachedAmount() {
+        return cachedFilterStates.size();
+    }
+    
 }

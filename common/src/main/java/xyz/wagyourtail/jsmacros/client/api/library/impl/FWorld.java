@@ -25,6 +25,7 @@ import net.minecraft.world.LightType;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.WorldScanner;
+import xyz.wagyourtail.jsmacros.client.api.classes.filter.AnyStringFilter;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BossBarHelper;
@@ -93,12 +94,41 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @return
+     * Example usage: <br>
+     * {@code World.getWorldScanner(World.getBlockAnyFilter("CONTAINS").addOption("diamond_ore", "redstone_ore"), null)}.
+     *
+     * @return a scanner for the current world
+     *
+     * @since 1.6.4
      */
     public WorldScanner getWorldScanner(Function<Block, Boolean> blockFilter, Function<BlockState, Boolean> stateFilter) {
         return new WorldScanner(mc.world, blockFilter, stateFilter);
     }
 
+    /**
+     * Returns {@code true} if one of the tests is successful.
+     *
+     * @param filterName
+     * @return a String filter to use with {@link WorldScanner}
+     *
+     * @since 1.6.4
+     */
+    public AnyStringFilter<?> getBlockAnyFilter(String filterName) {
+        return new AnyStringFilter<>(filterName);
+    }
+
+    /**
+     * Returns {@code true} if all the tests are successful.
+     *
+     * @param filterName
+     * @return a String filter to use with {@link WorldScanner}
+     *
+     * @since 1.6.4
+     */
+    public AnyStringFilter<?> getBlockAllFilter(String filterName) {
+        return new AnyStringFilter<>(filterName);
+    }
+    
     /**
      * @return players within render distance.
      */
