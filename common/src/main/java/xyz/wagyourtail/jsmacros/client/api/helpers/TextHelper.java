@@ -2,7 +2,10 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+
+import java.util.Optional;
 
 /**
  * @author Wagyourtail
@@ -56,8 +59,18 @@ public class TextHelper extends BaseHelper<Text> {
     public String getString() {
         return base.getString();
     }
-    
-    
+
+    /**
+     * @param visitor function with 2 args, no return.
+     * @since 1.6.5
+     */
+    public void visit(MethodWrapper<StyleHelper, String, Object, ?> visitor) {
+        base.visit((style, string) -> {
+            visitor.accept(new StyleHelper(style), string);
+            return Optional.empty();
+        }, base.getStyle());
+    }
+
     /**
      * @since 1.0.8
      * @deprecated confusing name.
