@@ -34,6 +34,20 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     public PositionCommon.Pos3D getPos() {
         return new PositionCommon.Pos3D(base.getX(), base.getY(), base.getZ());
     }
+
+    /**
+     * @return entity block position.
+     */
+    public PositionCommon.Pos3D getBlockPos() {
+        return new PositionCommon.Pos3D(Math.floor(base.getX()), Math.floor(base.getY()), Math.floor(base.getZ()));
+    }
+
+    /**
+     * @return entity chunk coordinates.
+     */
+    public PositionCommon.Pos2D getChunkPos() {
+        return new PositionCommon.Pos2D(base.getChunkPos().x, base.getChunkPos().z);
+    }
     
     /**
      * @since 1.0.8

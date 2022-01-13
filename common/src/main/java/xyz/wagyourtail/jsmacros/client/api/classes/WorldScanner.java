@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -22,109 +23,23 @@ import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * @author Etheradon
+ * @since 1.6.4
+ */
 public class WorldScanner {
 
-    private final MinecraftClient mc = MinecraftClient.getInstance();
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
 
     private final World world;
-
     private final Map<BlockState, Boolean> cachedFilterStates;
-
     private final Function<BlockState, Boolean> filter;
 
     public WorldScanner(World world, Function<Block, Boolean> blockFilter, Function<BlockState, Boolean> stateFilter) {
         this.world = world;
+        blockFilter = state -> state.toString().contains("ore");
         this.filter = combineFilter(blockFilter, stateFilter);
         cachedFilterStates = new ConcurrentHashMap<>();
-    }
-
-    public PositionCommon.Pos2D getPlayerChunk() {
-        ChunkPos playerChunk = mc.player.getChunkPos();
-        return new PositionCommon.Pos2D(playerChunk.x, playerChunk.z);
-    }
-
-    public List<PositionCommon.Pos3D> scanAroundPlayer(int range) {
-        assert mc.player != null;
-        return findBlocksMatchingInternal(mc.player.getChunkPos().x, mc.player.getChunkPos().z, range);
-    }
-
-    // TODO: Different filtering methods
-    private List<PositionCommon.Pos3D> findBlocksMatchingInternal(int centerX, int centerZ, int chunkrange) {
-        assert world != null;
-        if (chunkrange < 0) {
-            throw new IllegalArgumentException("chunkrange must be at least 0");
-        }
-
-        List<ChunkPos> chunks = new ArrayList<>();
-        for (int x = centerX - chunkrange; x <= centerX + chunkrange; x++) {
-            for (int z = centerZ - chunkrange; z <= centerZ + chunkrange; z++) {
-                if (world.isChunkLoaded(x, z)) {
-                    chunks.add(new ChunkPos(x, z));
-                }
-            }
-        }
-
-        return findBlocksMatchingInternal(chunks);
-    }
-
-    private List<PositionCommon.Pos3D> findBlocksMatchingInternal(List<ChunkPos> pos) {
-        assert world != null;
-
-        return pos.stream().parallel().flatMap(c -> {
-            if (!world.isChunkLoaded(c.x, c.z)) {
-                return Stream.empty();
-            }
-
-            long chunkX = (long) c.x << 4;
-            long chunkZ = (long) c.z << 4;
-
-            List<PositionCommon.Pos3D> blocks = new ArrayList<>();
-
-            for (ChunkSection section : world.getChunk(c.x, c.z).getSectionArray()) {
-                if (section.isEmpty()) {
-                    continue;
-                }
-
-                PalettedContainer<BlockState> sectionContainer = section.getBlockStateContainer();
-                Palette<BlockState> palette = ((IPalettedContainer<BlockState>) sectionContainer).getData().getPalette();
-
-                //this won't work if the PaletteStorage is of the type EmptyPaletteStorage
-                if (!(((IPalettedContainer<?>) sectionContainer).getData().getStorage() instanceof PackedIntegerArray array)) {
-                    continue;
-                }
-
-                boolean commonBlockFound = false;
-                boolean[] isInFilter = new boolean[palette.getSize()];
-
-                for (int i = 0; i < palette.getSize(); i++) {
-                    BlockState state = palette.get(i);
-                    if (getOrApplyFilter(cachedFilterStates, state)) {
-                        isInFilter[i] = true;
-                        commonBlockFound = true;
-                    } else {
-                        isInFilter[i] = false;
-                    }
-                }
-
-                if (!commonBlockFound) {
-                    continue;
-                }
-
-                int yOffset = section.getYOffset();
-
-                forEach(array, isInFilter, place -> blocks.add(new PositionCommon.Pos3D(
-                        chunkX + ((place & 255) & 15),
-                        yOffset + (place >> 8),
-                        chunkZ + ((place & 255) >> 4)
-                )));
-            }
-            return blocks.stream();
-        }).collect(Collectors.toList());
-    }
-
-    public boolean getOrApplyFilter(Map<BlockState, Boolean> cachedFilterStates, BlockState key) {
-        Boolean v;
-        return (v = cachedFilterStates.get(key)) == null ? addCachedState(key) : v;
     }
 
     private static Function<BlockState, Boolean> combineFilter(Function<Block, Boolean> blockFilter, Function<BlockState, Boolean> stateFilter) {
@@ -137,6 +52,92 @@ public class WorldScanner {
         } else {
             return stateFilter;
         }
+    }
+
+    public List<ChunkPos> getChunkRange(int centerX, int centerZ, int chunkrange) {
+        List<ChunkPos> chunks = new ArrayList<>();
+        for (int x = centerX - chunkrange; x <= centerX + chunkrange; x++) {
+            for (int z = centerZ - chunkrange; z <= centerZ + chunkrange; z++) {
+                chunks.add(new ChunkPos(x, z));
+            }
+        }
+        return chunks;
+    }
+
+    public List<PositionCommon.Pos3D> scanAroundPlayer(int range) {
+        assert mc.player != null;
+        return scanChunkRange(mc.player.getChunkPos().x, mc.player.getChunkPos().z, range);
+    }
+
+    // TODO: Different filtering methods
+    public List<PositionCommon.Pos3D> scanChunkRange(int centerX, int centerZ, int chunkrange) {
+        assert world != null;
+        if (chunkrange < 0) {
+            throw new IllegalArgumentException("hunkrange must be at least 0");
+        }
+        return scanChunksInternal(getChunkRange(centerX, centerZ, chunkrange));
+    }
+
+    private List<PositionCommon.Pos3D> scanChunksInternal(List<ChunkPos> chunkPositions) {
+        assert world != null;
+
+        return chunkPositions.stream().parallel().flatMap(this::scanChunkInternal).collect(Collectors.toList());
+    }
+
+    private Stream<PositionCommon.Pos3D> scanChunkInternal(ChunkPos pos) {
+        if (!world.isChunkLoaded(pos.x, pos.z)) {
+            return Stream.empty();
+        }
+
+        long chunkX = (long) pos.x << 4;
+        long chunkZ = (long) pos.z << 4;
+
+        List<PositionCommon.Pos3D> blocks = new ArrayList<>();
+
+        for (ChunkSection section : world.getChunk(pos.x, pos.z).getSectionArray()) {
+            if (section.isEmpty()) {
+                continue;
+            }
+
+            PalettedContainer<BlockState> sectionContainer = section.getBlockStateContainer();
+            Palette<BlockState> palette = ((IPalettedContainer<BlockState>) sectionContainer).getData().getPalette();
+
+            //this won't work if the PaletteStorage is of the type EmptyPaletteStorage
+            if (!(((IPalettedContainer<?>) sectionContainer).getData().getStorage() instanceof PackedIntegerArray array)) {
+                continue;
+            }
+
+            boolean commonBlockFound = false;
+            boolean[] isInFilter = new boolean[palette.getSize()];
+
+            for (int i = 0; i < palette.getSize(); i++) {
+                BlockState state = palette.get(i);
+                if (getFilterResult(state)) {
+                    isInFilter[i] = true;
+                    commonBlockFound = true;
+                } else {
+                    isInFilter[i] = false;
+                }
+            }
+
+            if (!commonBlockFound) {
+                continue;
+            }
+
+            int yOffset = section.getYOffset();
+
+            forEach(array, isInFilter, place -> blocks.add(new PositionCommon.Pos3D(
+                    chunkX + ((place & 255) & 15),
+                    yOffset + (place >> 8),
+                    chunkZ + ((place & 255) >> 4)
+            )));
+        }
+        return blocks.stream();
+    }
+
+    private boolean getFilterResult(BlockState state) {
+        Boolean v;
+        return (v = cachedFilterStates.get(state)) == null ? addCachedState(state) : v;
     }
 
     private boolean addCachedState(BlockState state) {
@@ -176,6 +177,38 @@ public class WorldScanner {
                 }
             }
         }
+    }
+
+    public Object2IntOpenHashMap<String> getBlocksInChunk(int chunkX, int chunkZ) {
+        return getBlocksInChunks(chunkX, chunkZ, 0);
+    }
+
+    public Object2IntOpenHashMap<String> getBlocksInChunks(int centerX, int centerZ, int chunkrange) {
+        assert world != null;
+        if (chunkrange < 0) {
+            throw new IllegalArgumentException("chunkrange must be at least 0");
+        }
+        return getBlocksInChunksInternal(getChunkRange(centerX, centerZ, chunkrange));
+    }
+
+    private Object2IntOpenHashMap<String> getBlocksInChunksInternal(List<ChunkPos> chunkPositions) {
+        Object2IntOpenHashMap<String> finalBlocks = new Object2IntOpenHashMap<>();
+
+        chunkPositions.stream().parallel().flatMap(pos -> {
+            if (!world.getChunkManager().isChunkLoaded(pos.x, pos.z)) {
+                return Stream.empty();
+            }
+            Object2IntOpenHashMap<BlockState> blocks = new Object2IntOpenHashMap<>();
+            for (ChunkSection section : world.getChunk(pos.x, pos.z).getSectionArray()) {
+                if (section.isEmpty()) {
+                    continue;
+                }
+                section.getBlockStateContainer().count(blocks::addTo);
+            }
+            return blocks.object2IntEntrySet().stream();
+        }).forEach(blockStateEntry -> finalBlocks.addTo(blockStateEntry.getKey().toString(), blockStateEntry.getIntValue()));
+
+        return finalBlocks;
     }
 
 }
