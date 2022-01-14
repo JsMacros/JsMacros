@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.collection.PackedIntegerArray;
@@ -12,6 +11,9 @@ import net.minecraft.world.chunk.Palette;
 import net.minecraft.world.chunk.PalettedContainer;
 import xyz.wagyourtail.jsmacros.client.access.IPackedIntegerArray;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainer;
+import xyz.wagyourtail.jsmacros.client.api.classes.filter.impl.BlockStateFilter;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.language.impl.JSScriptContext;
@@ -35,13 +37,14 @@ public class WorldScanner {
 
     private final World world;
     private final Map<BlockState, Boolean> cachedFilterStates;
-    private final Function<BlockState, Boolean> filter;
+    
+    private Function<BlockState, Boolean> filter;
     
     private boolean useParallelStream = true;
 
-    public WorldScanner(World world, Function<Block, Boolean> blockFilter, Function<BlockState, Boolean> stateFilter) {
+    public WorldScanner(World world, Function<BlockHelper, Boolean> blockFilter, Function<BlockStateHelper, Boolean> stateFilter) {
         this.world = world;
-
+        
         checkParallelStreamAllowed(blockFilter);
         checkParallelStreamAllowed(stateFilter);
         
@@ -65,15 +68,17 @@ public class WorldScanner {
         }
     }
     
-    private static Function<BlockState, Boolean> combineFilter(Function<Block, Boolean> blockFilter, Function<BlockState, Boolean> stateFilter) {
+    private static Function<BlockState, Boolean> combineFilter(Function<BlockHelper, Boolean> blockFilter, Function<BlockStateHelper, Boolean> stateFilter) {
         if (blockFilter != null) {
             if (stateFilter != null) {
-                return state -> blockFilter.apply(state.getBlock()) && stateFilter.apply(state);
+                return state -> blockFilter.apply(new BlockHelper(state.getBlock())) && stateFilter.apply(new BlockStateHelper(state));
             } else {
-                return state -> blockFilter.apply(state.getBlock());
+                return state -> blockFilter.apply(new BlockHelper(state.getBlock()));
             }
+        } else if (stateFilter != null){
+            return state -> stateFilter.apply(new BlockStateHelper(state));
         } else {
-            return stateFilter;
+            return null;
         }
     }
 

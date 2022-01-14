@@ -1,6 +1,6 @@
-package xyz.wagyourtail.jsmacros.client.api.classes.filter;
+package xyz.wagyourtail.jsmacros.client.api.classes.filter.logical;
 
-import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.filter.api.IFilter;
 
 /**
  * @author Etheradon

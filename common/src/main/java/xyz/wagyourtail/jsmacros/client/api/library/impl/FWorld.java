@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -26,15 +25,8 @@ import net.minecraft.world.LightType;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.WorldScanner;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.AnyStringFilter;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPosHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BossBarHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.PlayerEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.PlayerListEntryHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ScoreboardsHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.api.classes.WorldScannerBuilder;
+import xyz.wagyourtail.jsmacros.client.api.helpers.*;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -56,7 +48,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -97,140 +88,7 @@ public class FWorld extends BaseLibrary {
     public boolean isWorldLoaded() {
         return mc.world != null;
     }
-    
-    /**
-     * Example usage: <br>
-     * {@code World.getWorldScanner(World.getBlockAnyFilter("CONTAINS").addOption("diamond_ore", "redstone_ore"), null)}.
-     *
-     * @return a scanner for the current world
-     *
-     * @since 1.6.4
-     */
-    public WorldScanner getWorldScanner(MethodWrapper<Block, Object, Boolean, ?> blockFilter, MethodWrapper<BlockState, Object, Boolean, ?> stateFilter) {
-        return new WorldScanner(mc.world, blockFilter, stateFilter);
-    }
-    
-    /**
-     * Returns {@code true} if one of the tests is successful.
-     *
-     * @param filterName
-     * @return a String filter to use with {@link WorldScanner}
-     *
-     * @since 1.6.4
-     */
-    public AnyStringFilter<?> getBlockAnyFilter(String filterName) {
-        return new AnyStringFilter<>(filterName);
-    }
-    
-    /**
-     * Returns {@code true} if all the tests are successful.
-     *
-     * @param filterName
-     * @return a String filter to use with {@link WorldScanner}
-     *
-     * @since 1.6.4
-     */
-    public AnyStringFilter<?> getBlockAllFilter(String filterName) {
-        return new AnyStringFilter<>(filterName);
-    }
-    
-    /**
-     * @since 1.6.4
-     * @param id
-     * @param chunkrange
-     *
-     * @return
-     */
-    @Deprecated
-    public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, String id, int chunkrange) {
-        return new WorldScanner(mc.world, block -> Registry.BLOCK.getId(block).toString().equals(id), null).scanChunkRange(centerX, centerZ, chunkrange);
-    }
 
-    /**
-     * @since 1.6.4
-     * @param id
-     * @param chunkrange
-     *
-     * @return
-     */
-    @Deprecated
-    public List<PositionCommon.Pos3D> findBlocksMatching(String id, int chunkrange) {
-        assert mc.player != null;
-        int playerChunkX = mc.player.getBlockX() >> 4;
-        int playerChunkZ = mc.player.getBlockZ() >> 4;
-        return new WorldScanner(mc.world, block -> Registry.BLOCK.getId(block).toString().equals(id), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
-    }
-
-    /**
-     * @since 1.6.4
-     * @param ids
-     * @param chunkrange
-     *
-     * @return
-     */
-    @Deprecated
-    public List<PositionCommon.Pos3D> findBlocksMatching(List<String> ids, int chunkrange) {
-        assert mc.player != null;
-        int playerChunkX = mc.player.getBlockX() >> 4;
-        int playerChunkZ = mc.player.getBlockZ() >> 4;
-        Set<String> ids2 = new HashSet<>(ids);
-        return new WorldScanner(mc.world, block -> ids2.contains(Registry.BLOCK.getId(block).toString()), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
-    }
-
-    /**
-     * @since 1.6.4
-     * @param centerX
-     * @param centerZ
-     * @param ids
-     * @param chunkrange
-     *
-     * @return
-     */
-    @Deprecated
-    public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, List<String> ids, int chunkrange) {
-        Set<String> ids2 = new HashSet<>(ids);
-        return new WorldScanner(mc.world, block -> ids2.contains(Registry.BLOCK.getId(block).toString()), null).scanChunkRange(centerX, centerZ, chunkrange);
-    }
-
-    /**
-     * @since 1.6.4
-     * @param idFilter
-     * @param stateFilter
-     * @param chunkrange
-     *
-     * @return
-     */
-    public List<PositionCommon.Pos3D> findBlocksMatching(MethodWrapper<String, Object, Boolean, ?> idFilter, MethodWrapper<Map<String, String>, Object, Boolean, ?> stateFilter, int chunkrange) {
-        if (idFilter == null) {
-            throw new IllegalArgumentException("stateFilter cannot be null");
-        }
-        assert mc.player != null;
-        int playerChunkX = mc.player.getBlockX() >> 4;
-        int playerChunkZ = mc.player.getBlockZ() >> 4;
-        return findBlocksMatching(playerChunkX, playerChunkZ, idFilter, stateFilter, chunkrange);
-
-    }
-
-    /**
-     * @since 1.6.4
-     * @param chunkX
-     * @param chunkZ
-     * @param idFilter
-     * @param stateFilter
-     * @param chunkrange
-     *
-     * @return
-     */
-    public List<PositionCommon.Pos3D> findBlocksMatching(int chunkX, int chunkZ, MethodWrapper<String, Object, Boolean, ?> idFilter, MethodWrapper<Map<String, String>, Object, Boolean, ?> stateFilter, int chunkrange) {
-        if (idFilter == null) {
-            throw new IllegalArgumentException("idFilter cannot be null");
-        }
-        return new WorldScanner(mc.world, 
-                block -> idFilter.apply(Registry.BLOCK.getId(block).toString()), 
-                stateFilter != null ? e -> stateFilter.apply(e.getEntries().entrySet().stream().parallel().collect(Collectors.toMap(mp -> mp.getKey().getName(), mp -> Util.getValueAsString(mp.getKey(), mp.getValue())))) : null
-        ).scanChunkRange(chunkX, chunkZ, chunkrange);
-    }
-    
     /**
      * @return players within render distance.
      */
@@ -242,7 +100,7 @@ public class FWorld extends BaseLibrary {
         }
         return players;
     }
-    
+
     /**
      * @return players on the tablist.
      */
@@ -255,7 +113,7 @@ public class FWorld extends BaseLibrary {
         }
         return players;
     }
-    
+
     /**
      *
      * @param x
@@ -271,13 +129,128 @@ public class FWorld extends BaseLibrary {
         if (b.getBlock().equals(Blocks.VOID_AIR)) return null;
         return new BlockDataHelper(b, t, bp);
     }
-    
+
     public BlockDataHelper getBlock(PositionCommon.Pos3D pos) {
         return getBlock((int) pos.x, (int) pos.y, (int) pos.z);
     }
-    
+
     public BlockDataHelper getBlock(BlockPosHelper pos) {
         return getBlock(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    /**
+     * @return a scanner for the current world
+     *
+     * @since 1.6.5
+     */
+    public WorldScannerBuilder getWorldScanner() {
+        return new WorldScannerBuilder();
+    }
+
+    /**
+     * @return a scanner for the current world
+     *
+     * @since 1.6.5
+     */
+    public WorldScanner getWorldScanner(MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter) {
+        return new WorldScanner(mc.world, blockFilter, stateFilter);
+    }
+
+    /**
+     * @param id
+     * @param chunkrange
+     * @return
+     *
+     * @since 1.6.4
+     */
+    @Deprecated
+    public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, String id, int chunkrange) {
+        return new WorldScanner(mc.world, block -> Registry.BLOCK.getId(block.getRaw()).toString().equals(id), null).scanChunkRange(centerX, centerZ, chunkrange);
+    }
+
+    /**
+     * @param id
+     * @param chunkrange
+     * @return
+     *
+     * @since 1.6.4
+     */
+    @Deprecated
+    public List<PositionCommon.Pos3D> findBlocksMatching(String id, int chunkrange) {
+        assert mc.player != null;
+        int playerChunkX = mc.player.getBlockX() >> 4;
+        int playerChunkZ = mc.player.getBlockZ() >> 4;
+        return new WorldScanner(mc.world, block -> Registry.BLOCK.getId(block.getRaw()).toString().equals(id), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
+    }
+
+    /**
+     * @param ids
+     * @param chunkrange
+     * @return
+     *
+     * @since 1.6.4
+     */
+    @Deprecated
+    public List<PositionCommon.Pos3D> findBlocksMatching(List<String> ids, int chunkrange) {
+        assert mc.player != null;
+        int playerChunkX = mc.player.getBlockX() >> 4;
+        int playerChunkZ = mc.player.getBlockZ() >> 4;
+        Set<String> ids2 = new HashSet<>(ids);
+        return new WorldScanner(mc.world, block -> ids2.contains(Registry.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
+    }
+
+    /**
+     * @param centerX
+     * @param centerZ
+     * @param ids
+     * @param chunkrange
+     * @return
+     *
+     * @since 1.6.4
+     */
+    @Deprecated
+    public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, List<String> ids, int chunkrange) {
+        Set<String> ids2 = new HashSet<>(ids);
+        return new WorldScanner(mc.world, block -> ids2.contains(Registry.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(centerX, centerZ, chunkrange);
+    }
+
+    /**
+     * @param idFilter
+     * @param stateFilter
+     * @param chunkrange
+     * @return
+     *
+     * @since 1.6.4
+     */
+    public List<PositionCommon.Pos3D> findBlocksMatching(MethodWrapper<String, Object, Boolean, ?> idFilter, MethodWrapper<Map<String, String>, Object, Boolean, ?> stateFilter, int chunkrange) {
+        if (idFilter == null) {
+            throw new IllegalArgumentException("stateFilter cannot be null");
+        }
+        assert mc.player != null;
+        int playerChunkX = mc.player.getBlockX() >> 4;
+        int playerChunkZ = mc.player.getBlockZ() >> 4;
+        return findBlocksMatching(playerChunkX, playerChunkZ, idFilter, stateFilter, chunkrange);
+
+    }
+
+    /**
+     * @param chunkX
+     * @param chunkZ
+     * @param idFilter
+     * @param stateFilter
+     * @param chunkrange
+     * @return
+     *
+     * @since 1.6.4
+     */
+    public List<PositionCommon.Pos3D> findBlocksMatching(int chunkX, int chunkZ, MethodWrapper<String, Object, Boolean, ?> idFilter, MethodWrapper<Map<String, String>, Object, Boolean, ?> stateFilter, int chunkrange) {
+        if (idFilter == null) {
+            throw new IllegalArgumentException("idFilter cannot be null");
+        }
+        return new WorldScanner(mc.world,
+                block -> idFilter.apply(Registry.BLOCK.getId(block.getRaw()).toString()),
+                stateFilter != null ? e -> stateFilter.apply(e.getRaw().getEntries().entrySet().stream().parallel().collect(Collectors.toMap(mp -> mp.getKey().getName(), mp -> Util.getValueAsString(mp.getKey(), mp.getValue())))) : null
+        ).scanChunkRange(chunkX, chunkZ, chunkrange);
     }
 
     /**

@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.api.sharedinterfaces;
+package xyz.wagyourtail.jsmacros.client.api.classes.filter.api;
 
 /**
  * @author Etheradon
@@ -8,6 +8,7 @@ public interface IAdvancedFilter<T> {
 
     IFilter<T> and(IFilter<T> filter);
     IFilter<T> or(IFilter<T> filter);
+    IFilter<T> xor(IFilter<T> filter);
     IFilter<T> not();
     
 }

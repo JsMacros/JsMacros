@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.api.sharedinterfaces;
+package xyz.wagyourtail.jsmacros.client.api.classes.filter.api;
 
 import java.util.function.Function;
 
