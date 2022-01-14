@@ -67,10 +67,10 @@ import java.util.stream.Collectors;
  *
  * @author Wagyourtail
  */
- @Library("World")
- @SuppressWarnings("unused")
+@Library("World")
+@SuppressWarnings("unused")
 public class FWorld extends BaseLibrary {
-     
+
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     /**
      * Don't modify.
@@ -88,7 +88,7 @@ public class FWorld extends BaseLibrary {
      * Don't modify.
      */
     public static double server15MAverageTPS = 20;
-    
+
     /**
      * returns whether a world is currently loaded
      * @since 1.3.0
@@ -279,7 +279,7 @@ public class FWorld extends BaseLibrary {
     public BlockDataHelper getBlock(BlockPosHelper pos) {
         return getBlock(pos.getX(), pos.getY(), pos.getZ());
     }
-    
+
     /**
      * @since 1.2.9
      * @return a helper for the scoreboards provided to the client.
@@ -288,7 +288,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return new ScoreboardsHelper(mc.world.getScoreboard());
     }
-    
+
     /**
      * @return all entities in the render distance.
      */
@@ -300,7 +300,7 @@ public class FWorld extends BaseLibrary {
         }
         return entities;
     }
-    
+
     /**
      * @since 1.1.2
      * @return the current dimension.
@@ -309,7 +309,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getRegistryKey().getValue().toString();
     }
-    
+
     /**
      * @since 1.1.5
      * @return the current biome.
@@ -318,7 +318,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(mc.player.getBlockPos())).toString();
     }
-    
+
     /**
      * @since 1.1.5
      * @return the current world time.
@@ -327,7 +327,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getTime();
     }
-    
+
     /**
      * This is supposed to be time of day, but it appears to be the same as {@link FWorld#getTime()} to me...
      * @since 1.1.5
@@ -338,7 +338,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getTimeOfDay();
     }
-    
+
     /**
      * @since 1.2.6
      * @return respawn position.
@@ -348,7 +348,7 @@ public class FWorld extends BaseLibrary {
         if (mc.world.getDimension().isNatural()) return new BlockPosHelper( mc.world.getSpawnPos());
         return null;
     }
-    
+
     /**
      * @since 1.2.6
      * @return world difficulty as an {@link java.lang.Integer Integer}.
@@ -357,7 +357,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getDifficulty().getId();
     }
-    
+
     /**
      * @since 1.2.6
      * @return moon phase as an {@link java.lang.Integer Integer}.
@@ -366,7 +366,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getMoonPhase();
     }
-    
+
     /**
      * @since 1.1.2
      * @param x
@@ -378,7 +378,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getLightLevel(LightType.SKY, new BlockPos(x, y, z));
     }
-    
+
     /**
      * @since 1.1.2
      * @param x
@@ -390,7 +390,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getLightLevel(LightType.BLOCK, new BlockPos(x, y, z));
     }
-    
+
     /**
      * plays a sound file using javax's sound stuff.
      * @since 1.1.7
@@ -418,7 +418,7 @@ public class FWorld extends BaseLibrary {
         clip.start();
         return clip;
     }
-    
+
     /**
      * @since 1.1.7
      * @see FWorld#playSound(String, double, double, double, double, double)
@@ -427,7 +427,7 @@ public class FWorld extends BaseLibrary {
     public void playSound(String id) {
         playSound(id, 1F);
     }
-    
+
     /**
      * @since 1.1.7
      * @see FWorld#playSound(String, double, double, double, double, double)
@@ -437,7 +437,7 @@ public class FWorld extends BaseLibrary {
     public void playSound(String id, double volume) {
         playSound(id, volume, 0.25F);
     }
-    
+
     /**
      * @since 1.1.7
      * @see FWorld#playSound(String, double, double, double, double, double)
@@ -450,7 +450,7 @@ public class FWorld extends BaseLibrary {
         assert sound != null;
         mc.execute(() -> mc.getSoundManager().play(PositionedSoundInstance.master(sound, (float) pitch, (float) volume)));
     }
-    
+
     /**
      * plays a minecraft sound using the internal system.
      * @since 1.1.7
@@ -467,7 +467,7 @@ public class FWorld extends BaseLibrary {
         assert sound != null;
         mc.execute(() -> mc.world.playSound(x, y, z, sound, SoundCategory.MASTER, (float) volume, (float) pitch, true));
     }
-    
+
     /**
      * @since 1.2.1
      * @return a map of boss bars by the boss bar's UUID.
@@ -481,7 +481,7 @@ public class FWorld extends BaseLibrary {
         }
         return out;
     }
-    
+
     /**
      * Check whether a chunk is within the render distance and loaded.
      * @since 1.2.2
@@ -493,7 +493,7 @@ public class FWorld extends BaseLibrary {
         if (mc.world == null) return false;
         return mc.world.getChunkManager().isChunkLoaded(chunkX, chunkZ);
     }
-    
+
     /**
      * @since 1.2.2
      * @return the current server address as a string ({@code server.address/server.ip:port}).
@@ -505,7 +505,7 @@ public class FWorld extends BaseLibrary {
         if (c == null) return null;
         return c.getAddress().toString();
     }
-    
+
     /**
      * @since 1.2.2 [Citation Needed]
      * @param x
@@ -516,7 +516,7 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(new BlockPos(x, 10, z))).toString();
     }
-    
+
     /**
      * @since 1.2.7
      * @return best attempt to measure and give the server tps with various timings.
@@ -524,7 +524,7 @@ public class FWorld extends BaseLibrary {
     public String getServerTPS() {
         return String.format("%.2f, 1M: %.1f, 5M: %.1f, 15M: %.1f", serverInstantTPS, server1MAverageTPS, server5MAverageTPS, server15MAverageTPS);
     }
-    
+
     /**
      * @since 1.3.1
      * @return text helper for the top part of the tab list (above the players)
@@ -534,7 +534,7 @@ public class FWorld extends BaseLibrary {
         if (header != null) return new TextHelper(header);
         return null;
     }
-    
+
     /**
      * @since 1.3.1
      * @return  text helper for the bottom part of the tab list (below the players)
@@ -544,7 +544,7 @@ public class FWorld extends BaseLibrary {
         if (footer != null) return new TextHelper(footer);
         return null;
     }
-    
+
     /**
      * @since 1.2.7
      * @return best attempt to measure and give the server tps.
@@ -552,7 +552,8 @@ public class FWorld extends BaseLibrary {
     public double getServerInstantTPS() {
         return serverInstantTPS;
     }
-    
+
+
     /**
      * @since 1.2.7
      * @return best attempt to measure and give the server tps over the previous 1 minute average.
@@ -560,7 +561,8 @@ public class FWorld extends BaseLibrary {
     public double getServer1MAverageTPS() {
         return server1MAverageTPS;
     }
-    
+
+
     /**
      * @since 1.2.7
      * @return best attempt to measure and give the server tps over the previous 5 minute average.
@@ -568,7 +570,8 @@ public class FWorld extends BaseLibrary {
     public double getServer5MAverageTPS() {
         return server5MAverageTPS;
     }
-    
+
+
     /**
      * @since 1.2.7
      * @return best attempt to measure and give the server tps over the previous 15 minute average.
