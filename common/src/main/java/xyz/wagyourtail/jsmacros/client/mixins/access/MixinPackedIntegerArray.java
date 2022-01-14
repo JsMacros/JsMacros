@@ -19,27 +19,27 @@ public class MixinPackedIntegerArray implements IPackedIntegerArray {
     @Shadow @Final private int indexShift;
 
     @Override
-    public long getMaxValue() {
+    public long jsmacros_getMaxValue() {
         return maxValue;
     }
 
     @Override
-    public int getElementsPerLong() {
+    public int jsmacros_getElementsPerLong() {
         return elementsPerLong;
     }
 
     @Override
-    public int getIndexScale() {
+    public int jsmacros_getIndexScale() {
         return indexScale;
     }
 
     @Override
-    public int getIndexOffset() {
+    public int jsmacros_getIndexOffset() {
         return indexOffset;
     }
 
     @Override
-    public int getIndexShift() {
+    public int jsmacros_getIndexShift() {
         return indexShift;
     }
 

@@ -15,12 +15,12 @@ public class MixinPalettedContainerData<T> implements IPalettedContainerData<T> 
     @Shadow @Final private Palette<T> palette;
 
     @Override
-    public PaletteStorage getStorage() {
+    public PaletteStorage jsmacros_getStorage() {
         return storage;
     }
 
     @Override
-    public Palette<T> getPalette() {
+    public Palette<T> jsmacros_getPalette() {
         return palette;
     }
 }

@@ -5,7 +5,7 @@ import net.minecraft.world.chunk.Palette;
 
 public interface IPalettedContainerData<T> {
 
-    PaletteStorage getStorage();
-    Palette<T> getPalette();
+    PaletteStorage jsmacros_getStorage();
+    Palette<T> jsmacros_getPalette();
 
 }

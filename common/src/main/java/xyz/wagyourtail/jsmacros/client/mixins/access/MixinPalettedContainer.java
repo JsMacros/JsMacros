@@ -22,7 +22,7 @@ public class MixinPalettedContainer<T> implements IPalettedContainer<T> {
     private Field dataField;
 
     @Override
-    public IPalettedContainerData<T> getData() {
+    public IPalettedContainerData<T> jsmacros_getData() {
         if (dataField != null) {
             return (IPalettedContainerData<T>) getField(dataField);
         }
@@ -37,7 +37,7 @@ public class MixinPalettedContainer<T> implements IPalettedContainer<T> {
     }
 
     @Override
-    public PalettedContainer.PaletteProvider getPaletteProvider() {
+    public PalettedContainer.PaletteProvider jsmacros_getPaletteProvider() {
         return paletteProvider;
     }
 

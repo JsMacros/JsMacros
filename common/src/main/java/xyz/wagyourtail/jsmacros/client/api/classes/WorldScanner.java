@@ -12,9 +12,9 @@ import net.minecraft.world.chunk.Palette;
 import net.minecraft.world.chunk.PalettedContainer;
 import xyz.wagyourtail.jsmacros.client.access.IPackedIntegerArray;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainer;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.language.impl.JSScriptContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 
 /**
  * @author Etheradon
- * @since 1.6.4
+ * @since 1.6.5
  */
 public class WorldScanner {
 
@@ -51,7 +51,7 @@ public class WorldScanner {
 
     private void checkParallelStreamAllowed(Function<?, Boolean> filter) {
         if (filter instanceof MethodWrapper<?, ?, ?, ?> wrapper) {
-            if (wrapper.getCtx().getFile().getName().endsWith("js")) {
+            if (wrapper.getCtx() instanceof JSScriptContext) {
                 useParallelStream = false;
             }
         }
@@ -120,10 +120,10 @@ public class WorldScanner {
                 continue;
             }
             PalettedContainer<BlockState> sectionContainer = section.getBlockStateContainer();
-            Palette<BlockState> palette = ((IPalettedContainer<BlockState>) sectionContainer).getData().getPalette();
+            Palette<BlockState> palette = ((IPalettedContainer<BlockState>) sectionContainer).jsmacros_getData().jsmacros_getPalette();
 
             //this won't work if the PaletteStorage is of the type EmptyPaletteStorage
-            if (!(((IPalettedContainer<?>) sectionContainer).getData().getStorage() instanceof PackedIntegerArray array)) {
+            if (!(((IPalettedContainer<?>) sectionContainer).jsmacros_getData().jsmacros_getStorage() instanceof PackedIntegerArray array)) {
                 continue;
             }
 
@@ -174,8 +174,8 @@ public class WorldScanner {
     private static void forEach(PackedIntegerArray array, boolean[] isInFilter, IntConsumer action) {
         int counter = 0;
 
-        int elementsPerLong = ((IPackedIntegerArray) array).getElementsPerLong();
-        long maxValue = ((IPackedIntegerArray) array).getMaxValue();
+        int elementsPerLong = ((IPackedIntegerArray) array).jsmacros_getElementsPerLong();
+        long maxValue = ((IPackedIntegerArray) array).jsmacros_getMaxValue();
         int elementBits = array.getElementBits();
         int size = array.getSize();
 
@@ -214,7 +214,7 @@ public class WorldScanner {
     private Map<String, Integer> getBlocksInChunksInternal(List<ChunkPos> chunkPositions, boolean ignoreState) {
         Object2IntOpenHashMap<String> result = new Object2IntOpenHashMap<>();
         
-        chunkPositions.stream().parallel().flatMap(pos -> {
+        getBestStream(chunkPositions).flatMap(pos -> {
             if (!world.getChunkManager().isChunkLoaded(pos.x, pos.z)) {
                 return Stream.empty();
             }

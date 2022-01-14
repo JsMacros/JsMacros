@@ -9,7 +9,7 @@ import java.util.Set;
 
 /**
  * @author Etheradon
- * @since 1.6.4
+ * @since 1.6.5
  */
 public class AnyStringFilter<T> implements IFilter<T>, IAdvancedFilter<T> {
 

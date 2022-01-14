@@ -2,8 +2,8 @@ package xyz.wagyourtail.jsmacros.client.access;
 
 public interface IChunkSection {
 
-    short getNonEmptyBlockCount();
-    short getRandomTickableBlockCount();
-    short getNonEmptyFluidCount();
+    short jsmacros_getNonEmptyBlockCount();
+    short jsmacros_getRandomTickableBlockCount();
+    short jsmacros_getNonEmptyFluidCount();
 
 }

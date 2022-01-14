@@ -37,13 +37,17 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
 
     /**
      * @return entity block position.
+     *
+     * @since 1.6.5
      */
     public PositionCommon.Pos3D getBlockPos() {
         return new PositionCommon.Pos3D(Math.floor(base.getX()), Math.floor(base.getY()), Math.floor(base.getZ()));
     }
 
     /**
-     * @return entity chunk coordinates.
+     * @return entity chunk coordinates. Since Pos2D only has x and y fields, z coord is y.
+     *
+     * @since 1.6.5
      */
     public PositionCommon.Pos2D getChunkPos() {
         return new PositionCommon.Pos2D(base.getChunkPos().x, base.getChunkPos().z);

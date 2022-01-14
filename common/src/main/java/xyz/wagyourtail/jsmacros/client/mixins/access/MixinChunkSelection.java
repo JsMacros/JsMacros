@@ -15,17 +15,17 @@ public class MixinChunkSelection implements IChunkSection {
     @Shadow private short nonEmptyFluidCount;
 
     @Override
-    public short getNonEmptyBlockCount() {
+    public short jsmacros_getNonEmptyBlockCount() {
         return nonEmptyBlockCount;
     }
 
     @Override
-    public short getRandomTickableBlockCount() {
+    public short jsmacros_getRandomTickableBlockCount() {
         return randomTickableBlockCount;
     }
 
     @Override
-    public short getNonEmptyFluidCount() {
+    public short jsmacros_getNonEmptyFluidCount() {
         return nonEmptyFluidCount;
     }
 }

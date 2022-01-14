@@ -4,7 +4,7 @@ import net.minecraft.world.chunk.PalettedContainer;
 
 public interface IPalettedContainer<T> {
 
-    IPalettedContainerData<T> getData();
-    PalettedContainer.PaletteProvider getPaletteProvider();
+    IPalettedContainerData<T> jsmacros_getData();
+    PalettedContainer.PaletteProvider jsmacros_getPaletteProvider();
 
 }

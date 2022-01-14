@@ -4,7 +4,7 @@ import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IFilter;
 
 /**
  * @author Etheradon
- * @since 1.6.4
+ * @since 1.6.5
  */
 public class AndFilter<T> implements IFilter<T> {
     

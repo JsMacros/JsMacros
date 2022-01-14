@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.sharedinterfaces;
 
 /**
  * @author Etheradon
- * @since 1.6.4
+ * @since 1.6.5
  */
 public interface IAdvancedFilter<T> {
 
