@@ -7,6 +7,7 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
+import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 
 import java.util.ArrayList;
@@ -269,6 +270,22 @@ public class Draw3D {
      */
     public Box addPoint(double x, double y, double z, double radius, int color, int alpha, boolean cull) {
         return addBox(x - radius, y - radius, z - radius, x + radius, y + radius, z + radius, color, color, alpha, alpha, true, cull);
+    }
+
+
+    /**
+     * register so it actually shows up
+     * @since 1.6.5
+     * @return self for chaining
+     */
+    public Draw3D register() {
+        FHud.renders.add(this);
+        return this;
+    }
+
+    public Draw3D unregister() {
+        FHud.renders.remove(this);
+        return this;
     }
 
 
