@@ -4,14 +4,16 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.collection.PackedIntegerArray;
+import net.minecraft.util.collection.PaletteStorage;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.Palette;
 import net.minecraft.world.chunk.PalettedContainer;
 import xyz.wagyourtail.jsmacros.client.access.IPackedIntegerArray;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainer;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.impl.BlockStateFilter;
+import xyz.wagyourtail.jsmacros.client.access.IPalettedContainerData;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
@@ -37,49 +40,16 @@ public class WorldScanner {
 
     private final World world;
     private final Map<BlockState, Boolean> cachedFilterStates;
-    
-    private Function<BlockState, Boolean> filter;
-    
-    private boolean useParallelStream = true;
 
+    private final Function<BlockState, Boolean> filter;
+
+    private final boolean useParallelStream;
+    
     public WorldScanner(World world, Function<BlockHelper, Boolean> blockFilter, Function<BlockStateHelper, Boolean> stateFilter) {
         this.world = world;
-        
-        checkParallelStreamAllowed(blockFilter);
-        checkParallelStreamAllowed(stateFilter);
-        
+        this.useParallelStream = isParallelStreamAllowed(blockFilter) && isParallelStreamAllowed(stateFilter);
         this.filter = combineFilter(blockFilter, stateFilter);
         cachedFilterStates = new ConcurrentHashMap<>();
-    }
-
-    private void checkParallelStreamAllowed(Function<?, Boolean> filter) {
-        if (filter instanceof MethodWrapper<?, ?, ?, ?> wrapper) {
-            if (wrapper.getCtx() instanceof JSScriptContext) {
-                useParallelStream = false;
-            }
-        }
-    }
-
-    private <V> Stream<V> getBestStream(List<V> list) {
-        if (useParallelStream) {
-            return list.stream().parallel();
-        } else {
-            return list.stream();
-        }
-    }
-    
-    private static Function<BlockState, Boolean> combineFilter(Function<BlockHelper, Boolean> blockFilter, Function<BlockStateHelper, Boolean> stateFilter) {
-        if (blockFilter != null) {
-            if (stateFilter != null) {
-                return state -> blockFilter.apply(new BlockHelper(state.getBlock())) && stateFilter.apply(new BlockStateHelper(state));
-            } else {
-                return state -> blockFilter.apply(new BlockHelper(state.getBlock()));
-            }
-        } else if (stateFilter != null){
-            return state -> stateFilter.apply(new BlockStateHelper(state));
-        } else {
-            return null;
-        }
     }
 
     public List<ChunkPos> getChunkRange(int centerX, int centerZ, int chunkrange) {
@@ -120,44 +90,47 @@ public class WorldScanner {
 
         List<PositionCommon.Pos3D> blocks = new ArrayList<>();
 
-        for (ChunkSection section : world.getChunk(pos.x, pos.z).getSectionArray()) {
-            if (section.isEmpty()) {
-                continue;
-            }
-            PalettedContainer<BlockState> sectionContainer = section.getBlockStateContainer();
-            Palette<BlockState> palette = ((IPalettedContainer<BlockState>) sectionContainer).jsmacros_getData().jsmacros_getPalette();
-
-            //this won't work if the PaletteStorage is of the type EmptyPaletteStorage
-            if (!(((IPalettedContainer<?>) sectionContainer).jsmacros_getData().jsmacros_getStorage() instanceof PackedIntegerArray array)) {
-                continue;
-            }
-
-            boolean commonBlockFound = false;
-            boolean[] isInFilter = new boolean[palette.getSize()];
-            
-            for (int i = 0; i < palette.getSize(); i++) {
-                BlockState state = palette.get(i);
-                if (getFilterResult(state)) {
-                    isInFilter[i] = true;
-                    commonBlockFound = true;
-                } else {
-                    isInFilter[i] = false;
-                }
-            }
-
-            if (!commonBlockFound) {
-                continue;
-            }
-            
+        streamChunkSections(world.getChunk(pos.x, pos.z), (section, isInFilter) -> {
             int yOffset = section.getYOffset();
-
+            PackedIntegerArray array = (PackedIntegerArray) ((IPalettedContainer<?>) section.getBlockStateContainer()).jsmacros_getData().jsmacros_getStorage();
             forEach(array, isInFilter, place -> blocks.add(new PositionCommon.Pos3D(
                     chunkX + ((place & 255) & 15),
                     yOffset + (place >> 8),
                     chunkZ + ((place & 255) >> 4)
             )));
-        }
+        });
         return blocks.stream();
+    }
+    
+    public Map<String, Integer> getBlocksInChunk(int chunkX, int chunkZ, boolean ignoreState) {
+        return getBlocksInChunks(chunkX, chunkZ, 0, ignoreState);
+    }
+
+    public Map<String, Integer> getBlocksInChunks(int centerX, int centerZ, int chunkrange, boolean ignoreState) {
+        assert world != null;
+        if (chunkrange < 0) {
+            throw new IllegalArgumentException("chunkrange must be at least 0");
+        }
+        return getBlocksInChunksInternal(getChunkRange(centerX, centerZ, chunkrange), ignoreState);
+    }
+
+    private Map<String, Integer> getBlocksInChunksInternal(List<ChunkPos> chunkPositions, boolean ignoreState) {
+        Object2IntOpenHashMap<String> result = new Object2IntOpenHashMap<>();
+
+        getBestStream(chunkPositions).flatMap(pos -> {
+            if (!world.getChunkManager().isChunkLoaded(pos.x, pos.z)) {
+                return Stream.empty();
+            }
+
+            Object2IntOpenHashMap<BlockState> blocks = new Object2IntOpenHashMap<>();
+
+            streamChunkSections(world.getChunk(pos.x, pos.z), (section, isInFilter) -> count(section.getBlockStateContainer(), isInFilter, blocks::addTo));
+            return blocks.object2IntEntrySet().stream();
+        }).forEach(blockStateEntry -> {
+            BlockState state = blockStateEntry.getKey();
+            result.addTo(ignoreState ? state.getBlock().toString() : state.toString(), blockStateEntry.getIntValue());
+        });
+        return result;
     }
 
     private boolean getFilterResult(BlockState state) {
@@ -176,6 +149,81 @@ public class WorldScanner {
         return isInFilter;
     }
 
+    private boolean[] getIncludedFilterIndices(Palette<BlockState> palette) {
+        boolean commonBlockFound = false;
+        boolean[] isInFilter = new boolean[palette.getSize()];
+
+        for (int i = 0; i < palette.getSize(); i++) {
+            BlockState state = palette.get(i);
+            if (getFilterResult(state)) {
+                isInFilter[i] = true;
+                commonBlockFound = true;
+            } else {
+                isInFilter[i] = false;
+            }
+        }
+
+        if (!commonBlockFound) {
+            return new boolean[0];
+        }
+        return isInFilter;
+    }
+    
+    public int getCachedAmount() {
+        return cachedFilterStates.size();
+    }
+
+    private <V> Stream<V> getBestStream(List<V> list) {
+        if (useParallelStream) {
+            return list.stream().parallel();
+        } else {
+            return list.stream();
+        }
+    }
+    
+    private void streamChunkSections(Chunk chunk, BiConsumer<ChunkSection, boolean[]> consumer) {
+        for (ChunkSection section : chunk.getSectionArray()) {
+            if (section.isEmpty()) {
+                continue;
+            }
+
+            PalettedContainer<BlockState> sectionContainer = section.getBlockStateContainer();
+            //this won't work if the PaletteStorage is of the type EmptyPaletteStorage
+            if (!(((IPalettedContainer<?>) sectionContainer).jsmacros_getData().jsmacros_getStorage() instanceof PackedIntegerArray)) {
+                continue;
+            }
+
+            boolean[] isInFilter = getIncludedFilterIndices(((IPalettedContainer<BlockState>) sectionContainer).jsmacros_getData().jsmacros_getPalette());
+            if (isInFilter.length == 0) {
+                continue;
+            }
+            consumer.accept(section, isInFilter);
+        }
+    }
+
+    private static boolean isParallelStreamAllowed(Function<?, Boolean> filter) {
+        if (filter instanceof MethodWrapper<?, ?, ?, ?> wrapper) {
+            if (wrapper.getCtx() instanceof JSScriptContext) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static Function<BlockState, Boolean> combineFilter(Function<BlockHelper, Boolean> blockFilter, Function<BlockStateHelper, Boolean> stateFilter) {
+        if (blockFilter != null) {
+            if (stateFilter != null) {
+                return state -> blockFilter.apply(new BlockHelper(state.getBlock())) && stateFilter.apply(new BlockStateHelper(state));
+            } else {
+                return state -> blockFilter.apply(new BlockHelper(state.getBlock()));
+            }
+        } else if (stateFilter != null) {
+            return state -> stateFilter.apply(new BlockStateHelper(state));
+        } else {
+            return null;
+        }
+    }
+    
     private static void forEach(PackedIntegerArray array, boolean[] isInFilter, IntConsumer action) {
         int counter = 0;
 
@@ -203,48 +251,24 @@ public class WorldScanner {
             }
         }
     }
-
-    public Map<String, Integer> getBlocksInChunk(int chunkX, int chunkZ, boolean ignoreState) {
-        return getBlocksInChunks(chunkX, chunkZ, 0, ignoreState);
-    }
-
-    public Map<String, Integer> getBlocksInChunks(int centerX, int centerZ, int chunkrange, boolean ignoreState) {
-        assert world != null;
-        if (chunkrange < 0) {
-            throw new IllegalArgumentException("chunkrange must be at least 0");
-        }
-        return getBlocksInChunksInternal(getChunkRange(centerX, centerZ, chunkrange), ignoreState);
-    }
-
-    private Map<String, Integer> getBlocksInChunksInternal(List<ChunkPos> chunkPositions, boolean ignoreState) {
-        Object2IntOpenHashMap<String> result = new Object2IntOpenHashMap<>();
-        
-        getBestStream(chunkPositions).flatMap(pos -> {
-            if (!world.getChunkManager().isChunkLoaded(pos.x, pos.z)) {
-                return Stream.empty();
-            }
-
-            Object2IntOpenHashMap<BlockState> blocks = new Object2IntOpenHashMap<>();
-
-            for (ChunkSection section : world.getChunk(pos.x, pos.z).getSectionArray()) {
-                if (section.isEmpty()) {
-                    continue;
-                }
-                section.getBlockStateContainer().count(blocks::addTo);
-            }
-            
-            return blocks.object2IntEntrySet().stream();
-        }).forEach(blockStateEntry -> {
-            BlockState state = blockStateEntry.getKey();
-            if (getFilterResult(state)) {
-                result.addTo(ignoreState ? state.getBlock().toString() : state.toString(), blockStateEntry.getIntValue());
-            }
-        });
-        return result;
-    }
-
-    public int getCachedAmount() {
-        return cachedFilterStates.size();
-    }
     
+    public static void count(PalettedContainer<BlockState> container, boolean[] isInFilter, PalettedContainer.Counter<BlockState> counter) {
+        IPalettedContainerData<BlockState> data = ((IPalettedContainer<BlockState>) container).jsmacros_getData();
+        Palette<BlockState> palette = data.jsmacros_getPalette();
+        PaletteStorage storage = data.jsmacros_getStorage();
+
+        int[] count = new int[palette.getSize()];
+
+        if (palette.getSize() == 1) {
+            counter.accept(palette.get(0), storage.getSize());
+        } else {
+            storage.forEach(key -> count[key]++);
+            for (int idx = 0; idx < count.length; idx++) {
+                if (isInFilter[idx]) {
+                    counter.accept(palette.get(idx), count[idx]);
+                }
+            }
+        }
+    }
+
 }
