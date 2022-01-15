@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.filter.compare;
 
+import com.google.common.math.DoubleMath;
 import xyz.wagyourtail.jsmacros.client.api.classes.filter.api.IFilter;
 
 import java.util.Locale;
@@ -10,14 +11,34 @@ import java.util.Locale;
  */
 public class NumberCompareFilter implements IFilter<Number> {
 
+    private final static double EPSILON = 0.000001d;
+    
     private final String operation;
     private final Number compareTo;
     private final String numberType;
 
-    public NumberCompareFilter(String operation, Number compareTo, String numberType) {
+    public NumberCompareFilter(String operation, Object compareTo) {
         this.operation = operation;
-        this.compareTo = compareTo;
-        this.numberType = numberType;
+        this.compareTo = (Number) compareTo;
+        numberType = getNumberType(compareTo);
+    }
+
+    private String getNumberType(Object compareTo) {
+        Class<?> clazz = compareTo.getClass();
+        if (clazz == int.class || clazz == Integer.class) {
+            return "int";
+        } else if (clazz == long.class || clazz == Long.class) {
+            return "long";
+        } else if (clazz == byte.class || clazz == Byte.class) {
+            return "byte";
+        } else if (clazz == float.class || clazz == Float.class) {
+            return "float";
+        } else if (clazz == double.class || clazz == Double.class) {
+            return "double";
+        } else if (clazz == short.class || clazz == Short.class) {
+            return "short";
+        }
+        return "";
     }
 
     @Override
@@ -56,9 +77,9 @@ public class NumberCompareFilter implements IFilter<Number> {
             case "<=":
                 return num.doubleValue() <= compareTo.doubleValue();
             case "==":
-                return num.doubleValue() == compareTo.doubleValue();
+                return DoubleMath.fuzzyEquals(num.doubleValue(), compareTo.doubleValue(), EPSILON);
             case "!=":
-                return num.doubleValue() != compareTo.doubleValue();
+                return !DoubleMath.fuzzyEquals(num.doubleValue(), compareTo.doubleValue(), EPSILON);
             default:
                 throw new IllegalArgumentException("Unknown operation, try < > <= => == != instead of " + operation);
         }
@@ -75,9 +96,9 @@ public class NumberCompareFilter implements IFilter<Number> {
             case "<=":
                 return num.floatValue() <= compareTo.floatValue();
             case "==":
-                return num.floatValue() == compareTo.floatValue();
+                return DoubleMath.fuzzyEquals(num.floatValue(), compareTo.floatValue(), EPSILON);
             case "!=":
-                return num.floatValue() != compareTo.floatValue();
+                return !DoubleMath.fuzzyEquals(num.floatValue(), compareTo.floatValue(), EPSILON);
             default:
                 throw new IllegalArgumentException("Unknown operation, try < > <= => == != instead of " + operation);
         }

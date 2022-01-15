@@ -59,5 +59,10 @@ public class BlockHelper extends BaseHelper<Block> {
     public String getId() {
         return Registry.BLOCK.getId(base).toString();
     }
+
+    @Override
+    public String toString() {
+        return String.format("BlockDataHelper:{%s}", this.getId());
+    }
     
 }

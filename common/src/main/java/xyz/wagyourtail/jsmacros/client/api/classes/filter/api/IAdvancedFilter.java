@@ -4,11 +4,11 @@ package xyz.wagyourtail.jsmacros.client.api.classes.filter.api;
  * @author Etheradon
  * @since 1.6.5
  */
-public interface IAdvancedFilter<T> {
+public interface IAdvancedFilter<T> extends IFilter<T> {
 
-    IFilter<T> and(IFilter<T> filter);
-    IFilter<T> or(IFilter<T> filter);
-    IFilter<T> xor(IFilter<T> filter);
-    IFilter<T> not();
+    IAdvancedFilter<T> and(IFilter<T> filter);
+    IAdvancedFilter<T> or(IFilter<T> filter);
+    IAdvancedFilter<T> xor(IFilter<T> filter);
+    IAdvancedFilter<T> not();
     
 }

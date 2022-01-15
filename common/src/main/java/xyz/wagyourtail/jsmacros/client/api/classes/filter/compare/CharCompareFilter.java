@@ -11,7 +11,7 @@ public class CharCompareFilter implements IFilter<Character> {
     }
 
     @Override
-    public Boolean apply(Character bool) {
-        return bool == compareTo;
+    public Boolean apply(Character character) {
+        return character == compareTo;
     }
 }

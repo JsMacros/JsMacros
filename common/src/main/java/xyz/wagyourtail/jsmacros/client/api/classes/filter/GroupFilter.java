@@ -85,7 +85,7 @@ public abstract class GroupFilter<T> implements IFilter<T> {
 
         public CountMatchFilter(String operation, long compareTo) {
             super();
-            filter = new NumberCompareFilter(operation, compareTo, "long");
+            filter = new NumberCompareFilter(operation, compareTo);
         }
 
         @Override

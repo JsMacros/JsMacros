@@ -12,10 +12,10 @@ import java.util.Map;
  */
 public class BlockFilter extends ClassWrapperFilter<BlockHelper> {
     
-    private static final Map<String, Method> METHOD_LOOKUP = getPublicMethods(BlockHelper.class);
+    private static final Map<String, Method> METHOD_LOOKUP = getPublicNoParameterMethods(BlockHelper.class);
     
-    public BlockFilter(String methodName, Object... args) {
-        super(methodName, METHOD_LOOKUP, args);
+    public BlockFilter(String methodName, Object[] methodArgs, Object[] filterArgs) {
+        super(methodName, METHOD_LOOKUP, methodArgs, filterArgs);
     }
     
 }

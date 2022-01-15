@@ -23,7 +23,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
         super(base);
     }
 
-    public Map<String, String> getEntries() {
+    public Map<String, String> toMap() {
         Map<String, String> map = new HashMap<>();
         for (Map.Entry<Property<?>, Comparable<?>> e : base.getEntries().entrySet()) {
             map.put(e.getKey().getName(), Util.getValueAsString(e.getKey(), e.getValue()));
@@ -76,6 +76,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
     }
 
     public String getPistonBehaviour() {
+        System.out.println(this + " " + base.getPistonBehavior());
         switch (base.getPistonBehavior()) {
             case NORMAL:
                 return "NORMAL";
@@ -115,6 +116,11 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
             default:
                 throw new IllegalStateException("Unexpected value: " + navigationType);
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.format("BlockStateHelper:{%s, %s}", this.getBlock().getId(), this.toMap());
     }
     
 }

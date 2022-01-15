@@ -1,12 +1,13 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.filter.logical;
 
+import xyz.wagyourtail.jsmacros.client.api.classes.filter.BasicFilter;
 import xyz.wagyourtail.jsmacros.client.api.classes.filter.api.IFilter;
 
 /**
  * @author Etheradon
  * @since 1.6.5
  */
-public class NotFilter<T> implements IFilter<T> {
+public class NotFilter<T> extends BasicFilter<T> {
 
     private final IFilter<T> filter;
 
