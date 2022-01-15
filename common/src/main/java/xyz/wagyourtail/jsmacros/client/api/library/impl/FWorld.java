@@ -137,7 +137,18 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @return a scanner for the current world
+     * Usage: <br>
+     * This will return all blocks that are facing south, don't require a tool to break, 
+     * have a hardness of 10 or less and whose name contains either chest or barrel.
+     * <pre>
+     * World.getWorldScanner()
+     *     .withBlockFilter("getHardness").is("<=", 10)
+     *     .andStringBlockFilter().contains("chest", "barrel")
+     *     .withStringStateFilter().contains("facing=south")
+     *     .andStateFilter("isToolRequired").is(false)
+     *     .build()
+     * </pre>
+     * @return a builder to create a WorldScanner
      *
      * @since 1.6.5
      */
