@@ -83,13 +83,9 @@ public class MovementQueue {
         if (val ^ doDrawPredictions) {
             doDrawPredictions = val;
             if (doDrawPredictions) {
-                synchronized (FHud.renders) {
-                    FHud.renders.add(predPoints);
-                }
+                FHud.renders.add(predPoints);
             } else {
-                synchronized (FHud.renders) {
-                    FHud.renders.remove(predPoints);
-                }
+                FHud.renders.remove(predPoints);
             }
         }
     }
@@ -98,15 +94,11 @@ public class MovementQueue {
         queue.clear();
         predictions.clear();
         if (FHud.renders.contains(predPoints)) {
-            synchronized (FHud.renders) {
-                FHud.renders.remove(predPoints);
-            }
+            FHud.renders.remove(predPoints);
         }
         predPoints = new Draw3D();
         if (doDrawPredictions) {
-            synchronized (FHud.renders) {
-                FHud.renders.add(predPoints);
-            }
+            FHud.renders.add(predPoints);
         }
         queuePos = 0;
     }

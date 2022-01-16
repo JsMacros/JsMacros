@@ -1,20 +1,20 @@
 const toggleColorMode = e => {
     // Switch to Light Mode
     if (e.currentTarget.classList.contains("light--hidden")) {
-    	// Sets the custom HTML attribute
-    	document.documentElement.setAttribute("color-mode", "light");
+        // Sets the custom HTML attribute
+        document.documentElement.setAttribute("color-mode", "light");
 
-		//Sets the user's preference in local storage
-		localStorage.setItem("color-mode", "light")
-		return;
-	}
-    
+        //Sets the user's preference in local storage
+        localStorage.setItem("color-mode", "light")
+        return;
+    }
+
     /* Switch to Dark Mode
     Sets the custom HTML attribute */
     document.documentElement.setAttribute("color-mode", "dark");
 
-	// Sets the user's preference in local storage
-	localStorage.setItem("color-mode", "dark");
+    // Sets the user's preference in local storage
+    localStorage.setItem("color-mode", "dark");
 };
 
 // Get the buttons in the DOM
@@ -24,7 +24,7 @@ const toggleColorButtons = document.querySelectorAll(".color-mode__btn");
 toggleColorButtons.forEach(btn => {
     btn.addEventListener("click", toggleColorMode);
 });
-    
+
 
 function populateClassSidebar() {
     classLists.innerHTML = "";
@@ -36,12 +36,14 @@ function populateClassSidebar() {
         div.setAttribute("id", `${key}List`);
         classLists.appendChild(div);
     }
-    for (const [name, clazz] of searchMaps.classes) {
-        const a = document.createElement("a");
-        a.setAttribute("href", `${versionSelect.value}/${clazz.url.replace(/(#|$)/, ".html$1")}`);
-        frameLink(a);
-        a.innerHTML = name;
-        document.getElementById(`${clazz.group}List`).appendChild(a);
+    for (const [name, st] of searchMaps.classes) {
+        for (const clazz of st) {
+            const a = document.createElement("a");
+            a.setAttribute("href", `${versionSelect.value}/${clazz.url.replace(/(#|$)/, ".html$1")}`);
+            frameLink(a);
+            a.innerHTML = name;
+            document.getElementById(`${clazz.group}List`).appendChild(a);
+        }
     }
 }
 
