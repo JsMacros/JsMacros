@@ -51,9 +51,6 @@ public class Inventory<T extends HandledScreen<?>> {
         Inventory<?> inv = create(mc.currentScreen);
         if (inv == null) {
             assert mc.player != null;
-            if (mc.interactionManager.hasCreativeInventory()) {
-                return new Inventory<>(new CreativeInventoryScreen(mc.player));
-            }
             return new Inventory<>(new InventoryScreen(mc.player));
         }
         return inv;
