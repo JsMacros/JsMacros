@@ -32,7 +32,7 @@ public abstract class MixinCreativeInventoryScreen {
     private static Field slotInCreativeSlot;
 
     @Unique
-    private Slot getSlotFromCreativeSlot(Slot in) {
+    private synchronized Slot getSlotFromCreativeSlot(Slot in) {
         if (in.getClass().equals(Slot.class)) return in;
         boolean lockable = in.getClass().equals(lockableSlot);
         boolean creative = in.getClass().equals(creativeSlot);
@@ -46,19 +46,27 @@ public abstract class MixinCreativeInventoryScreen {
                 throw new RuntimeException(e);
             }
         }
-        // define creative/lockable slot classes
-        try {
-            Class<? extends Slot> unknown = in.getClass();
-            slotInCreativeSlot = Arrays.stream(unknown.getDeclaredFields()).filter(e -> e.getType().equals(Slot.class)).findFirst().orElse(null);
-            if (slotInCreativeSlot == null) lockableSlot = unknown;
-            else {
-                creativeSlot = unknown;
-                slotInCreativeSlot.setAccessible(true);
+        if (lockableSlot == null || creativeSlot == null) {
+            // define creative/lockable slot classes
+            try {
+                Class<? extends Slot> unknown = in.getClass();
+                Field slotField = Arrays.stream(unknown.getDeclaredFields())
+                    .filter(e -> e.getType().equals(Slot.class))
+                    .findFirst()
+                    .orElse(null);
+                if (slotField == null)
+                    lockableSlot = unknown;
+                else {
+                    slotInCreativeSlot = slotField;
+                    slotInCreativeSlot.setAccessible(true);
+                    creativeSlot = unknown;
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            return getSlotFromCreativeSlot(in);
         }
-        return getSlotFromCreativeSlot(in);
+        throw new NullPointerException("Unknown slot class");
     }
 
     @Inject(method = "onMouseClick", at = @At("HEAD"), cancellable = true)
