@@ -65,55 +65,6 @@ public class JsMacrosForge {
         FakeFabricLoader.instance.loadClientEntries();
     }
 
-
-    public static class CombineClassLoader extends ClassLoader {
-        ClassLoader a;
-        ClassLoader b;
-
-        public CombineClassLoader(ClassLoader a, ClassLoader b) {
-            this.a = a;
-            this.b = b;
-        }
-
-        @Override
-        public Class<?> loadClass(String name) throws ClassNotFoundException {
-            try {
-                return a.loadClass(name);
-            } catch (ClassNotFoundException e) {
-                return b.loadClass(name);
-            }
-        }
-
-        @Override
-        public Enumeration<URL> getResources(String name) throws IOException {
-            try {
-                return a.getResources(name);
-            } catch (IOException e) {
-                return b.getResources(name);
-            }
-        }
-
-        @Nullable
-        @Override
-        public InputStream getResourceAsStream(String name) {
-            InputStream s = a.getResourceAsStream(name);
-            if (s == null) {
-                return b.getResourceAsStream(name);
-            }
-            return s;
-        }
-
-        @Nullable
-        @Override
-        public URL getResource(String name) {
-            URL s = a.getResource(name);
-            if (s == null) {
-                return b.getResource(name);
-            }
-            return s;
-        }
-    }
-
     public static class ShimClassLoader extends ClassLoader {
         public ShimClassLoader() {
             super(ShimClassLoader.class.getClassLoader());
