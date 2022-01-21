@@ -13,7 +13,6 @@ import xyz.wagyourtail.jsmacros.fabric.client.api.classes.CommandBuilderFabric;
 import java.io.File;
 
 public class JsMacrosFabric implements ModInitializer, ClientModInitializer {
-    public static final File configFolder = new File(FabricLoader.getInstance().getConfigDir().toFile(), "jsMacros");
 
     @Override
     public void onInitializeClient() {

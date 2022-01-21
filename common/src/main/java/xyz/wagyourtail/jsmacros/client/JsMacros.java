@@ -21,31 +21,16 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 import java.io.File;
+import java.util.ServiceLoader;
 
 public class JsMacros {
     public static final String MOD_ID = "jsmacros";
     public static final Logger LOGGER  = LogManager.getLogger();
     public static KeyBinding keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title"));
     public static BaseScreen prevScreen;
-    protected static final File configFolder;
+    protected static final File configFolder = ServiceLoader.load(ConfigFolder.class).findFirst().orElseThrow().getFolder();
 
-    public static final Core<Profile, EventRegistry> core;
-
-    static {
-        //TODO: STOP DOING THIS WITH 1.7.0
-        File configFolder1;
-        try {
-            configFolder1 = (File) Class.forName("xyz.wagyourtail.jsmacros.fabric.client.JsMacrosFabric").getField("configFolder").get(null);
-        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
-            try {
-                configFolder1 = (File) Class.forName("xyz.wagyourtail.jsmacros.forge.client.JsMacrosForge").getField("configFolder").get(null);
-            } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-        configFolder = configFolder1;
-        core = Core.createInstance(EventRegistry::new, Profile::new, configFolder.getAbsoluteFile(), new File(configFolder, "Macros"), LOGGER);
-    }
+    public static final Core<Profile, EventRegistry> core = Core.createInstance(EventRegistry::new, Profile::new, configFolder.getAbsoluteFile(), new File(configFolder, "Macros"), LOGGER);
 
     public static void onInitialize() {
         // this is first, we just want core loaded here

@@ -24,7 +24,6 @@ import java.util.Enumeration;
 
 @Mod(JsMacros.MOD_ID)
 public class JsMacrosForge {
-    public static final File configFolder = new File(MinecraftClient.getInstance().runDirectory, "config/jsMacros");
 
     public JsMacrosForge() {
 
