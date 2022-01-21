@@ -22,6 +22,9 @@ public class IntField extends AbstractSettingField<Integer> {
         try {
             TextInput intIn = addDrawableChild(new TextInput(x + width / 2, y, width / 2, height, textRenderer, 0xFF101010, 0, 0xFF4040FF, 0xFFFFFF, setting.get().toString(), null, (value) -> {
                 try {
+                    if (value.equals("")) {
+                        value = "0";
+                    }
                     setting.set(Integer.parseInt(value));
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();

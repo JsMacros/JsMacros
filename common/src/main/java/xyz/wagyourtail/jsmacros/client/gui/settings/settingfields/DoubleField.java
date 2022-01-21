@@ -22,6 +22,9 @@ public class DoubleField extends AbstractSettingField<Double> {
         try {
             TextInput doubleIn = addDrawableChild(new TextInput(x + width / 2, y, width / 2, height, textRenderer, 0xFF101010, 0, 0xFF4040FF, 0xFFFFFF, setting.get().toString(), null, (value) -> {
                 try {
+                    if (value.equals("")) {
+                        value = "0";
+                    }
                     setting.set(Double.parseDouble(value));
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.printStackTrace();
