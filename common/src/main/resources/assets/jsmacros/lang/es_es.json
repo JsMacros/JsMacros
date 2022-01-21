@@ -1,5 +1,5 @@
 {
-	"jsmacros.loadconfigfail": "carga de la configuración fallda, respaldando el archivo antiguo si existe.",
+	"jsmacros.loadconfigfail": "carga de la configuración fallida, respaldando el archivo antiguo si existe.",
 	"jsmacros.saveconfigfail": "guardado de la configuración fallido",
 	"jsmacros.profilesloaded": "Perfiles Cargados:",
 	"jsmacros.title": "JS Macros",
