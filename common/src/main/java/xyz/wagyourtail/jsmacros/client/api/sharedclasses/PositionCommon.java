@@ -342,6 +342,16 @@ public class PositionCommon {
             return Math.sqrt(dx*dx + dy*dy);
         }
 
+        /**
+         * @since 1.6.5
+         * @return magnitude squared
+         */
+        public double getMagnitudeSq() {
+            double dx = x2 - x1;
+            double dy = y2 - y1;
+            return dx*dx + dy*dy;
+        }
+
         public Vec2D add(Vec2D vec) {
             return new Vec2D(x1 + vec.x1, y1 + vec.y1, x2 + vec.x2, y2 + vec.y2);
         }
@@ -455,6 +465,14 @@ public class PositionCommon {
             double dy = y2 - y1;
             double dz = z2 - z1;
             return Math.sqrt(dx*dx + dy*dy + dz*dz);
+        }
+
+        @Override
+        public double getMagnitudeSq() {
+            double dx = x2 - x1;
+            double dy = y2 - y1;
+            double dz = z2 - z1;
+            return dx*dx + dy*dy + dz*dz;
         }
 
         public Vec3D add(Vec3D vec) {

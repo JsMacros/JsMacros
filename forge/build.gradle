@@ -53,6 +53,7 @@ processResources {
 shadowJar {
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
+    mergeServiceFiles()
 }
 
 remapJar {

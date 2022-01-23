@@ -12,9 +12,9 @@ import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 
@@ -34,11 +34,11 @@ public class FHud extends BaseLibrary {
     /**
      * Don't touch this here
      */
-    public static final Set<IDraw2D<Draw2D>> overlays = new HashSet<>();
+    public static final Set<IDraw2D<Draw2D>> overlays = ConcurrentHashMap.newKeySet();
     /**
      * Don't touch this here
      */
-    public static final Set<Draw3D> renders = new HashSet<>();
+    public static final Set<Draw3D> renders = ConcurrentHashMap.newKeySet();
     
     /**
      * 
@@ -107,10 +107,10 @@ public class FHud extends BaseLibrary {
      * @since 1.0.5
      * 
      * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
-     * 
-     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D IDraw2D}.
+     *
+     * @return
      */
-    public IDraw2D<Draw2D> createDraw2D() {
+    public Draw2D createDraw2D() {
         return new Draw2D();
     }
     
@@ -118,31 +118,29 @@ public class FHud extends BaseLibrary {
      * @since 1.0.5
      * 
      * Registers an {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D IDraw2D} to be rendered.
-     * 
+     * @deprecated since 1.6.5, use {@link Draw2D#register()} instead.
      * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
      * 
      * @param overlay
      */
+    @Deprecated
     public void registerDraw2D(IDraw2D<Draw2D> overlay) {
         ((Draw2D) overlay).init();
-        synchronized (overlays) {
-            overlays.add(overlay);
-        }
+        overlays.add(overlay);
     }
     
     /**
      * @since 1.0.5
      * 
      * Unregisters an {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D IDraw2D} to stop it being rendered.
-     * 
+     * @deprecated since 1.6.5, use {@link Draw2D#unregister()} instead.
      * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
      * 
      * @param overlay
      */
+     @Deprecated
     public void unregisterDraw2D(IDraw2D<Draw2D> overlay) {
-        synchronized (overlays) {
-            overlays.remove(overlay);
-        }
+        overlays.remove(overlay);
     }
     
     /**
@@ -164,9 +162,7 @@ public class FHud extends BaseLibrary {
      * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
      */
     public void clearDraw2Ds() {
-        synchronized (overlays) {
-            overlays.clear();
-        }
+        overlays.clear();
     }
     
     /**
@@ -184,30 +180,28 @@ public class FHud extends BaseLibrary {
      * @since 1.0.6
      * 
      * Registers an {@link xyz.wagyourtail.jsmacros.client.api.classes.Draw3D Draw3D} to be rendered.
-     * 
+     * @deprecated since 1.6.5 use {@link Draw3D#register()} instead.
      * @see xyz.wagyourtail.jsmacros.client.api.classes.Draw3D
      * 
      * @param draw
      */
+     @Deprecated
     public void registerDraw3D(Draw3D draw) {
-        synchronized (renders) {
-            renders.add(draw);
-        }
+        renders.add(draw);
     }
     
     /**
      * @since 1.0.6
      * 
      * Unregisters an {@link xyz.wagyourtail.jsmacros.client.api.classes.Draw3D Draw3D} to stop it being rendered.
-     * 
+     * @since 1.6.5 use {@link Draw3D#unregister()} instead.
      * @see xyz.wagyourtail.jsmacros.client.api.classes.Draw3D
      * 
      * @param draw
      */
+     @Deprecated
     public void unregisterDraw3D(Draw3D draw) {
-        synchronized (renders) {
-            renders.remove(draw);
-        }
+        renders.remove(draw);
     }
     
     /**
@@ -229,9 +223,7 @@ public class FHud extends BaseLibrary {
      * @see xyz.wagyourtail.jsmacros.client.api.classes.Draw3D
      */
     public void clearDraw3Ds() {
-        synchronized (renders) {
-            renders.clear();
-        }
+        renders.clear();
     }
     
     /**

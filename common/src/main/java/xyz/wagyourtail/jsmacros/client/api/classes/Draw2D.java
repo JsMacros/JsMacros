@@ -8,6 +8,7 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -470,6 +471,27 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     @Override
     public Draw2D setOnFailInit(MethodWrapper<String, Object, Object, ?> catchInit) {
         this.catchInit = catchInit;
+        return this;
+    }
+
+    /**
+     * register so the overlay actually renders
+     * @since 1.6.5
+     * @return self for chaining
+     */
+    public Draw2D register() {
+        this.init();
+        FHud.overlays.add(this);
+        return this;
+    }
+
+    /**
+     * register so the overlay actually renders
+     * @since 1.6.5
+     * @return self for chaining
+     */
+    public Draw2D unregister() {
+        FHud.overlays.remove(this);
         return this;
     }
 }

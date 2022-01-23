@@ -221,10 +221,19 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     public boolean isAlive() {
         return base.isAlive();
     }
-    
+
+    /**
+    * @since 1.6.5
+    * @return UUID of the entity, random* if not a player, otherwise the player's uuid.
+    */
+    public String getUUID() {
+        return base.getUuid().toString();
+    }
+
     public String toString() {
         return String.format("Entity:{\"name\":\"%s\", \"type\":\"%s\"}", this.getName(), this.getType());
     }
+
 
     /**
      * mostly for internal use.

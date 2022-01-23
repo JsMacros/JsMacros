@@ -205,7 +205,7 @@ public class ChatHistoryManager {
      * @since 1.6.0
      */
      public void clearRecv() throws InterruptedException {
-        clearSent(false);
+        clearRecv(false);
      }
 
 
