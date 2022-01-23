@@ -1,6 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -52,6 +54,10 @@ public class BlockHelper extends BaseHelper<Block> {
         return base.getVelocityMultiplier();
     }
     
+    public List<String> getTags() {
+        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().getOrCreateTagGroup(Registry.BLOCK_KEY).getTagsFor(base).stream().map(Identifier::toString).toList();
+    }
+    
     public List<BlockStateHelper> getStates() {
         return base.getStateManager().getStates().stream().map(BlockStateHelper::new).toList();
     }
@@ -62,7 +68,7 @@ public class BlockHelper extends BaseHelper<Block> {
 
     @Override
     public String toString() {
-        return String.format("BlockDataHelper:{%s}", this.getId());
+        return String.format("BlockDataHelper:{%s}", getId());
     }
     
 }

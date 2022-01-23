@@ -44,14 +44,26 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
         return base.getZ();
     }
 
+    /**
+     * @since 1.6.5
+     * @return the block above.
+     */
     public BlockPosHelper up() {
         return new BlockPosHelper(getX(), getY() + 1, getZ());
     }
 
+    /**
+     * @since 1.6.5
+     * @return the block above.
+     */
     public BlockPosHelper up(int distance) {
         return new BlockPosHelper(getX(), getY() + distance, getZ());
     }
 
+    /**
+     * @since 1.6.5
+     * @return the block above.
+     */
     public BlockPosHelper down() {
         return new BlockPosHelper(getX(), getY() - 1, getZ());
     }
