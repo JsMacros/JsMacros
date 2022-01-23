@@ -4,13 +4,14 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
@@ -375,11 +376,33 @@ public class RenderCommon {
             matrices.translate(x1, y1, 0);
             matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
             matrices.translate(-x1, -y1, 0);
-            DrawableHelper.fill(matrices, x1, y1, x2, y2, color);
+
+            Tessellator tess = Tessellator.getInstance();
+            BufferBuilder buf = tess.getBuffer();
+
+            float fa = ((color >> 24) & 0xFF)/255F;
+            float fr = ((color >> 16) & 0xFF)/255F;
+            float fg = ((color >> 8) & 0xFF)/255F;
+            float fb = (color & 0xFF)/255F;
+
+            RenderSystem.enableBlend();
+            RenderSystem.disableTexture();
+            RenderSystem.defaultBlendFunc();
+            RenderSystem.setShader(GameRenderer::getPositionColorShader);
+
+            buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP,  VertexFormats.POSITION_COLOR);
+            Matrix4f matrix = matrices.peek().getPositionMatrix();
+            //draw a rectangle using triangle strips
+            buf.vertex(matrix, x1, y2, 0).color(fr, fg, fb, fa).next(); // Top-left
+            buf.vertex(matrix, x2, y2, 0).color(fr, fg, fb, fa).next(); // Top-right
+            buf.vertex(matrix, x1, y1, 0).color(fr, fg, fb, fa).next(); // Bottom-left
+            buf.vertex(matrix, x2, y1, 0).color(fr, fg, fb, fa).next(); // Bottom-right
+            tess.draw();
+
+            RenderSystem.enableTexture();
+            RenderSystem.disableBlend();
+
             matrices.pop();
-//            RenderSystem.translated(x1, y1, 0);
-//            RenderSystem.rotatef(-rotation, 0, 0, 1);
-//            RenderSystem.translated(-x1, -y1, 0);
         }
     
         @Override

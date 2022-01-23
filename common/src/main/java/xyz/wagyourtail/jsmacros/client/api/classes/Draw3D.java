@@ -307,6 +307,66 @@ public class Draw3D {
         );
     }
 
+    /**
+     * @param x1 top left
+     * @param y1
+     * @param z1
+     * @param x2 bottom left
+     * @param y2
+     * @param z2
+     * @param x3 bottom right
+     * @param y3
+     * @param z3
+     * @since 1.6.5
+     * @return
+     */
+    public Draw2D addDraw2D(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3) {
+        return this.addDraw2D(x1, y1, z1, x2, y2, z2, x3, y3, z3, 100,true);
+    }
+
+    /**
+     * @param x1 top left
+     * @param y1
+     * @param z1
+     * @param x2 bottom left
+     * @param y2
+     * @param z2
+     * @param x3 bottom right
+     * @param y3
+     * @param z3
+     * @param minSubdivisions
+     * @since 1.6.5
+     * @return
+     */
+    public Draw2D addDraw2D(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, int minSubdivisions) {
+        return this.addDraw2D(x1, y1, z1, x2, y2, z2, x3, y3, z3, minSubdivisions, true);
+    }
+
+    /**
+     * @param x1 top left
+     * @param y1
+     * @param z1
+     * @param x2 bottom left
+     * @param y2
+     * @param z2
+     * @param x3 bottom right
+     * @param y3
+     * @param z3
+     * @param minSubdivisions
+     * @param cull
+     *
+     * @since 1.6.5
+     * @return
+     */
+    public Draw2D addDraw2D(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, int minSubdivisions, boolean cull) {
+        Surface surface = new Surface(
+            new PositionCommon.Plane3D(x1, y1, z1, x2, y2, z2, x3, y3, z3),
+            minSubdivisions,
+            cull
+        );
+        this.surfaces.add(surface);
+        return surface;
+    }
 
     /**
      * register so it actually shows up
@@ -320,44 +380,14 @@ public class Draw3D {
         return this;
     }
 
+    /**
+     * @return self for chaining
+     *
+     * @since 1.6.5
+     */
     public Draw3D unregister() {
         FHud.renders.remove(this);
         return this;
-    }
-
-    public Draw2D addDraw2D(double x, double y, double z) {
-        return this.addDraw2D(x, y, z, 0);
-    }
-
-    public Draw2D addDraw2D(double x, double y, double z, double yaw) {
-        return this.addDraw2D(x, y, z, yaw, 0);
-    }
-
-    public Draw2D addDraw2D(double x, double y, double z, double yaw, double pitch) {
-        return this.addDraw2D(x, y, z, yaw, pitch, 0);
-    }
-
-    public Draw2D addDraw2D(double x, double y, double z, double yaw, double pitch, double roll) {
-        return this.addDraw2D(x, y, z, yaw, pitch, roll, 1);
-    }
-
-    public Draw2D addDraw2D(double x, double y, double z, double yaw, double pitch, double roll, double scale) {
-        return this.addDraw2D(x, y, z, yaw, pitch, roll, scale, true);
-    }
-
-    public Draw2D addDraw2D(double x, double y, double z, double yaw, double pitch, double roll, double scale, boolean bothSide) {
-        Surface surface = new Surface(
-            (float) x,
-            (float) y,
-            (float) z,
-            (float) yaw,
-            (float) pitch,
-            (float) roll,
-            (float) scale,
-            bothSide
-        );
-        this.surfaces.add(surface);
-        return surface;
     }
 
     public void render(MatrixStack matrixStack) {
@@ -391,16 +421,16 @@ public class Draw3D {
             }
         }
 
-        //reset
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.enableTexture();
-        RenderSystem.disableBlend();
-
         synchronized (surfaces) {
             for (Surface s : surfaces) {
                 s.render3D(matrixStack);
             }
         }
+
+        //reset
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.enableTexture();
+        RenderSystem.disableBlend();
 
         matrixStack.pop();
 
@@ -704,80 +734,46 @@ public class Draw3D {
 
     }
 
+    /**
+     * @since 1.6.5
+     */
     public static class Surface extends Draw2D {
-        protected float posX;
-        protected float posY;
-        protected float posZ;
-        protected float yaw;
-        protected float pitch;
-        protected float roll;
-        protected float scale;
-        protected boolean bothSide;
-
-        public Surface(float posX, float posY, float posZ) {
-            this(posX, posY, posZ, 0);
+        public final PositionCommon.Plane3D pos;
+        protected int minSubdivisions;
+        public boolean cull;
+        public Surface(PositionCommon.Plane3D pos, int minSubdivisions, boolean cull) {
+            this.pos = pos;
+            this.minSubdivisions = minSubdivisions;
+            this.cull = cull;
         }
 
-        public Surface(float posX, float posY, float posZ, float yaw) {
-            this(posX, posY, posZ, yaw, 0);
-        }
-
-        public Surface(float posX, float posY, float posZ, float yaw, float pitch) {
-            this(posX, posY, posZ, yaw, pitch, 0);
-        }
-
-        public Surface(float posX, float posY, float posZ, float yaw, float pitch, float roll) {
-            this(posX, posY, posZ, yaw, pitch, roll, 1);
-        }
-
-        public Surface(float posX, float posY, float posZ, float yaw, float pitch, float roll, float scale) {
-            this(posX, posY, posZ, yaw, pitch, roll, scale, true);
-        }
-
-        public Surface(float posX, float posY, float posZ, float yaw, float pitch, float roll, float scale, boolean bothSide) {
-            this.posX = posX;
-            this.posY = posY;
-            this.posZ = posZ;
-            this.yaw = yaw;
-            this.pitch = pitch;
-            this.roll = roll;
-            this.scale = scale;
-            this.bothSide = bothSide;
-        }
-
-        public void setPos(float x, float y, float z) {
-            this.posX = x;
-            this.posY = y;
-            this.posZ = z;
-        }
-
-        public void setRotation(float yaw, float pitch, float roll) {
-            this.yaw = yaw;
-            this.pitch = pitch;
-            this.roll = roll;
-        }
-
-        public void setScale(float scale) {
-            this.scale = scale;
+        public void setMinSubdivisions(int minSubdivisions) {
+            this.minSubdivisions = minSubdivisions;
+            this.init();
         }
 
         public void render3D(MatrixStack matrixStack) {
-            if (bothSide) {
+            if (cull) {
                 RenderSystem.disableCull();
             }
 
             matrixStack.push();
-            matrixStack.translate(posX, posY, posZ);
-            matrixStack.multiply(Quaternion.fromEulerXyz(
-                pitch,
-                yaw,
-                roll + (float) (Math.PI)
-            ));
+            // push back the origin to the first vec pos
+            matrixStack.translate(pos.x1, pos.y1, pos.z1);
+            PositionCommon.Vec3D normal = pos.getNormalVector();
+            // rotate to look down the normal vector
+            
+
+
+
+
+
+
             matrixStack.scale(scale, scale, scale);
             render(matrixStack);
             matrixStack.pop();
 
-            if (bothSide) {
+            if (cull) {
                 RenderSystem.enableCull();
             }
         }
