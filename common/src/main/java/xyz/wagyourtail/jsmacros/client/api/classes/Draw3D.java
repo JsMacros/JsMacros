@@ -8,9 +8,11 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -789,14 +791,26 @@ public class Draw3D {
             RenderSystem.disableDepthTest();
 
             matrixStack.push();
-            // push back the origin to the first vec pos
-            matrixStack.translate(pos.x1, pos.y1, pos.z1);
+            // push back the origin to the second vec pos (bottom left)
+            matrixStack.translate(pos.x2, pos.y2, pos.z2);
+
+            // make 12 the x axis vector
+            Vec3f xAxis = pos.getVec12().normalize().toMojangFloatVector();
+
+            // make 23 the y axis vector
+            Vec3f yAxis = pos.getVec23().normalize().toMojangFloatVector();
+
+            // make the normal vector the z axis
+            Vec3f zAxis = pos.getNormalVector().normalize().toMojangFloatVector();
+
+            // rotate the origin to the plane
+            matrixStack.multiply(quatFromBasis(xAxis, yAxis, zAxis));
+
+            // move origin to top left corner from bottom left
+            matrixStack.translate(0, pos.getVec12().getMagnitude(), 0);
+
             // fix it so that y axis goes down instead of up
             matrixStack.scale(1, -1, 1);
-
-            // rotate the origin so that the x axis matches 2-3 and the y axis matches 1-2 using the normal vector
-            PositionCommon.Vec3D normal = pos.getNormalVector().normalize();
-
 
             // scale so that x or y have minSubdivisions units between them
             matrixStack.scale((float) scale, (float) scale, (float) scale);
@@ -811,6 +825,38 @@ public class Draw3D {
             }
         }
 
+        // this is wrong? I stole it from stack overflow tho...
+        private Quaternion quatFromBasis(Vec3f a, Vec3f b, Vec3f c) {
+            float T = a.getX() + b.getY() + c.getZ();
+            float s;
+            float X, Y, Z, W;
+            if (T > 0) {
+                s = (float) (Math.sqrt(T + 1) * 2.f);
+                X = (c.getY() - b.getZ()) / s;
+                Y = (a.getZ() - c.getX()) / s;
+                Z = (b.getX() - a.getY()) / s;
+                W = 0.25f * s;
+            } else if ( a.getX() > b.getY() && a.getX() > c.getZ()) {
+                s = (float) (Math.sqrt(1 + a.getX() - b.getY() - c.getZ()) * 2);
+                X = 0.25f * s;
+                Y = (b.getX() + a.getY()) / s;
+                Z = (a.getZ() + c.getX()) / s;
+                W = (c.getY() - b.getZ()) / s;
+            } else if (b.getY() > c.getZ()) {
+                s = (float) (Math.sqrt(1 + b.getY() - a.getX() - c.getZ()) * 2);
+                X = (b.getX() + a.getY()) / s;
+                Y = 0.25f * s;
+                Z = (c.getY() + b.getZ()) / s;
+                W = (b.getZ() - c.getY()) / s;
+            } else {
+                s = (float) (Math.sqrt(1 + c.getZ() - a.getX() - b.getY()) * 2);
+                X = (a.getZ() + c.getX()) / s;
+                Y = (c.getY() + b.getZ()) / s;
+                Z = 0.25f * s;
+                W = (b.getX() - a.getY()) / s;
+            }
+            return new Quaternion(X, Y, Z, W);
+        }
     }
 
 }
