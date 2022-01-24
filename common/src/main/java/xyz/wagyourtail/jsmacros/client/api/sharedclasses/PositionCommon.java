@@ -663,6 +663,18 @@ public class PositionCommon {
         public Vec3D getNormalVector() {
             return new Vec3D(x1, y1, z1, x2, y2, z2).crossProduct(new Vec3D(x2, y2, z2, x3, y3, z3));
         }
+
+        public Vec3D getVec12() {
+            return new Vec3D(x1, y1, z1, x2, y2, z2);
+        }
+
+        public Vec3D getVec13() {
+            return new Vec3D(x1, y1, z1, x3, y3, z3);
+        }
+
+        public Vec3D getVec23() {
+            return new Vec3D(x2, y2, z2, x3, y3, z3);
+        }
     }
 
 }

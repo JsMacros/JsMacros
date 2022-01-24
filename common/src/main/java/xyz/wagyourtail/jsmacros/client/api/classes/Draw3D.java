@@ -308,6 +308,8 @@ public class Draw3D {
     }
 
     /**
+     * the math will only work properly if angle 123 is 90 degrees
+     *
      * @param x1 top left
      * @param y1
      * @param z1
@@ -325,6 +327,8 @@ public class Draw3D {
     }
 
     /**
+     * the math will only work properly if angle 123 is 90 degrees
+     *
      * @param x1 top left
      * @param y1
      * @param z1
@@ -343,6 +347,8 @@ public class Draw3D {
     }
 
     /**
+     * the math will only work properly if angle 123 is 90 degrees
+     *
      * @param x1 top left
      * @param y1
      * @param z1
@@ -738,41 +744,68 @@ public class Draw3D {
      * @since 1.6.5
      */
     public static class Surface extends Draw2D {
-        public final PositionCommon.Plane3D pos;
+        protected PositionCommon.Plane3D pos;
         protected int minSubdivisions;
+
+        // calc'd in init
+        protected int xWidth;
+        protected int yHeight;
+        protected double scale;
+
         public boolean cull;
         public Surface(PositionCommon.Plane3D pos, int minSubdivisions, boolean cull) {
             this.pos = pos;
             this.minSubdivisions = minSubdivisions;
             this.cull = cull;
+            init();
+        }
+
+        public void setPos(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3) {
+            this.pos = new PositionCommon.Plane3D(x1, y1, z1, x2, y2, z2, x3, y3, z3);
+            init();
         }
 
         public void setMinSubdivisions(int minSubdivisions) {
             this.minSubdivisions = minSubdivisions;
-            this.init();
+            init();
+        }
+
+        @Override
+        public void init() {
+            double xAxisMag = pos.getVec23().getMagnitude();
+            double yAxisMag = pos.getVec12().getMagnitude();
+
+            scale = Math.min(xAxisMag, yAxisMag) / minSubdivisions;
+            xWidth = (int) Math.ceil(xAxisMag / scale);
+            yHeight = (int) Math.ceil(yAxisMag / scale);
+
+            super.init();
         }
 
         public void render3D(MatrixStack matrixStack) {
             if (cull) {
                 RenderSystem.disableCull();
             }
+            RenderSystem.disableDepthTest();
 
             matrixStack.push();
             // push back the origin to the first vec pos
             matrixStack.translate(pos.x1, pos.y1, pos.z1);
-            PositionCommon.Vec3D normal = pos.getNormalVector();
-            // rotate to look down the normal vector
-            
+            // fix it so that y axis goes down instead of up
+            matrixStack.scale(1, -1, 1);
+
+            // rotate the origin so that the x axis matches 2-3 and the y axis matches 1-2 using the normal vector
+            PositionCommon.Vec3D normal = pos.getNormalVector().normalize();
 
 
+            // scale so that x or y have minSubdivisions units between them
+            matrixStack.scale((float) scale, (float) scale, (float) scale);
 
-
-
-
-            matrixStack.scale(scale, scale, scale);
             render(matrixStack);
+
             matrixStack.pop();
 
+            RenderSystem.enableDepthTest();
             if (cull) {
                 RenderSystem.enableCull();
             }
