@@ -27,6 +27,10 @@ public class RenderCommon {
     
     public static interface RenderElement extends Drawable {
         int getZIndex();
+
+        default void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+            render(matrices, mouseX, mouseY, delta);
+        }
     }
     
     /**
@@ -165,6 +169,29 @@ public class RenderCommon {
 //            RenderSystem.rotatef(-rotation, 0, 0, 1);
 //            RenderSystem.translated(-x, -y, 0);
 //            RenderSystem.scaled(1 / scale, 1 / scale, 1);
+        }
+
+        @Override
+        public void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+            matrices.push();
+            matrices.scale((float) scale, (float) scale, 1);
+            matrices.translate(x, y, 0);
+            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
+            matrices.translate(-x, -y, 0);
+            MatrixStack ms = RenderSystem.getModelViewStack();
+            ms.push();
+            ms.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
+            if (item != null) {
+                ItemRenderer i = mc.getItemRenderer();
+                i.zOffset = -100f;
+                i.renderGuiItemIcon(item,(int) (x / scale), (int) (y / scale));
+                i.zOffset = -200f;
+                if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, (int) (x / scale), (int) (y / scale), ovText);
+                i.zOffset = 0;
+            }
+            ms.pop();
+            RenderSystem.applyModelViewMatrix();
+            matrices.pop();
         }
     
         @Override

@@ -8,12 +8,13 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
 
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -310,66 +311,122 @@ public class Draw3D {
     }
 
     /**
-     * the math will only work properly if angle 123 is 90 degrees
+     * @param x top left
+     * @param y
+     * @param z
      *
-     * @param x1 top left
-     * @param y1
-     * @param z1
-     * @param x2 bottom left
-     * @param y2
-     * @param z2
-     * @param x3 bottom right
-     * @param y3
-     * @param z3
      * @since 1.6.5
      * @return
      */
-    public Draw2D addDraw2D(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3) {
-        return this.addDraw2D(x1, y1, z1, x2, y2, z2, x3, y3, z3, 100,true);
+    public Draw2D addDraw2D(double x, double y, double z) {
+        return addDraw2D(x, y, z, 0, 0, 0, 1, 1, 200, false, false);
     }
 
     /**
-     * the math will only work properly if angle 123 is 90 degrees
+     * @param x
+     * @param y
+     * @param z
+     * @param width
+     * @param height
      *
-     * @param x1 top left
-     * @param y1
-     * @param z1
-     * @param x2 bottom left
-     * @param y2
-     * @param z2
-     * @param x3 bottom right
-     * @param y3
-     * @param z3
-     * @param minSubdivisions
      * @since 1.6.5
      * @return
      */
-    public Draw2D addDraw2D(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, int minSubdivisions) {
-        return this.addDraw2D(x1, y1, z1, x2, y2, z2, x3, y3, z3, minSubdivisions, true);
+    public Draw2D addDraw2D(double x, double y, double z, double width, double height) {
+        return addDraw2D(x, y, z, 0, 0, 0, width, height, 200, false, false);
     }
 
     /**
-     * the math will only work properly if angle 123 is 90 degrees
-     *
-     * @param x1 top left
-     * @param y1
-     * @param z1
-     * @param x2 bottom left
-     * @param y2
-     * @param z2
-     * @param x3 bottom right
-     * @param y3
-     * @param z3
-     * @param minSubdivisions
-     * @param cull
+     * @param x
+     * @param y
+     * @param z
+     * @param xRot
+     * @param yRot
+     * @param zRot
      *
      * @since 1.6.5
      * @return
      */
-    public Draw2D addDraw2D(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, int minSubdivisions, boolean cull) {
+    public Draw2D addDraw2D(double x, double y, double z, double xRot, double yRot, double zRot) {
+        return addDraw2D(x, y, z, xRot, yRot, zRot, 1, 1, 200, false, false);
+    }
+
+    /**
+     * @param x
+     * @param y
+     * @param z
+     * @param xRot
+     * @param yRot
+     * @param zRot
+     * @param width
+     * @param height
+     *
+     * @since 1.6.5
+     * @return
+     */
+    public Draw2D addDraw2D(double x, double y, double z, double xRot, double yRot, double zRot, double width, double height) {
+        return addDraw2D(x, y, z, xRot, yRot, zRot, width, height, 200, false, false);
+    }
+
+    /**
+     * @param x
+     * @param y
+     * @param z
+     * @param xRot
+     * @param yRot
+     * @param zRot
+     * @param width
+     * @param height
+     * @param minSubdivisions
+     *
+     * @since 1.6.5
+     * @return
+     */
+    public Draw2D addDraw2D(double x, double y, double z, double xRot, double yRot, double zRot, double width, double height, int minSubdivisions) {
+        return addDraw2D(x, y, z, xRot, yRot, zRot, width, height, minSubdivisions, false, false);
+    }
+
+    /**
+     * @param x
+     * @param y
+     * @param z
+     * @param xRot
+     * @param yRot
+     * @param zRot
+     * @param width
+     * @param height
+     * @param minSubdivisions
+     * @param renderBack
+     *
+     * @since 1.6.5
+     * @return
+     */
+    public Draw2D addDraw2D(double x, double y, double z, double xRot, double yRot, double zRot, double width, double height, int minSubdivisions, boolean renderBack) {
+        return addDraw2D(x, y, z, xRot, yRot, zRot, width, height, minSubdivisions, renderBack, false);
+    }
+
+    /**
+     * @param x top left
+     * @param y
+     * @param z
+     * @param xRot
+     * @param yRot
+     * @param zRot
+     * @param width
+     * @param height
+     * @param minSubdivisions
+     * @param renderBack
+     *
+     * @since 1.6.5
+     * @return
+     */
+    public Draw2D addDraw2D(double x, double y, double z, double xRot, double yRot, double zRot, double width, double height, int minSubdivisions, boolean renderBack, boolean cull) {
         Surface surface = new Surface(
-            new PositionCommon.Plane3D(x1, y1, z1, x2, y2, z2, x3, y3, z3),
+            new PositionCommon.Pos3D(x, y, z),
+            new PositionCommon.Pos3D(xRot, yRot, zRot),
+            new PositionCommon.Pos2D(width, height),
             minSubdivisions,
+            renderBack,
             cull
         );
         this.surfaces.add(surface);
@@ -746,24 +803,29 @@ public class Draw3D {
      * @since 1.6.5
      */
     public static class Surface extends Draw2D {
-        protected PositionCommon.Plane3D pos;
+        public final PositionCommon.Pos3D pos;
+        protected final PositionCommon.Pos3D rotations;
+        protected final PositionCommon.Pos2D sizes;
         protected int minSubdivisions;
 
-        // calc'd in init
-        protected int xWidth;
-        protected int yHeight;
         protected double scale;
-
+        public boolean renderBack;
         public boolean cull;
-        public Surface(PositionCommon.Plane3D pos, int minSubdivisions, boolean cull) {
+
+        public Surface(PositionCommon.Pos3D pos, PositionCommon.Pos3D rotations, PositionCommon.Pos2D sizes, int minSubdivisions, boolean renderBack, boolean cull) {
             this.pos = pos;
+            this.rotations = rotations;
+            this.sizes = sizes;
             this.minSubdivisions = minSubdivisions;
+            this.renderBack = renderBack;
             this.cull = cull;
             init();
         }
 
-        public void setPos(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3) {
-            this.pos = new PositionCommon.Plane3D(x1, y1, z1, x2, y2, z2, x3, y3, z3);
+        public void setPos(double x, double y, double z) {
+            this.pos.x = x;
+            this.pos.y = y;
+            this.pos.z = z;
             init();
         }
 
@@ -773,41 +835,34 @@ public class Draw3D {
         }
 
         @Override
+        public int getHeight() {
+            return (int) (sizes.y / scale);
+        }
+
+        @Override
+        public int getWidth() {
+            return (int) (sizes.x / scale);
+        }
+
+        @Override
         public void init() {
-            double xAxisMag = pos.getVec23().getMagnitude();
-            double yAxisMag = pos.getVec12().getMagnitude();
-
-            scale = Math.min(xAxisMag, yAxisMag) / minSubdivisions;
-            xWidth = (int) Math.ceil(xAxisMag / scale);
-            yHeight = (int) Math.ceil(yAxisMag / scale);
-
+            scale = Math.min(sizes.x, sizes.y) / minSubdivisions;
             super.init();
         }
 
         public void render3D(MatrixStack matrixStack) {
-            if (cull) {
+            if (renderBack) {
                 RenderSystem.disableCull();
             }
-            RenderSystem.disableDepthTest();
+            if (!cull) {
+                RenderSystem.disableDepthTest();
+            }
 
             matrixStack.push();
-            // push back the origin to the second vec pos (bottom left)
-            matrixStack.translate(pos.x2, pos.y2, pos.z2);
 
-            // make 12 the x axis vector
-            Vec3f xAxis = pos.getVec12().normalize().toMojangFloatVector();
+            matrixStack.translate(pos.x, pos.y, pos.z);
 
-            // make 23 the y axis vector
-            Vec3f yAxis = pos.getVec23().normalize().toMojangFloatVector();
-
-            // make the normal vector the z axis
-            Vec3f zAxis = pos.getNormalVector().normalize().toMojangFloatVector();
-
-            // rotate the origin to the plane
-            matrixStack.multiply(quatFromBasis(xAxis, yAxis, zAxis));
-
-            // move origin to top left corner from bottom left
-            matrixStack.translate(0, pos.getVec12().getMagnitude(), 0);
+            matrixStack.multiply(Quaternion.fromEulerXyzDegrees(rotations.toVector().toMojangFloatVector()));
 
             // fix it so that y axis goes down instead of up
             matrixStack.scale(1, -1, 1);
@@ -819,43 +874,24 @@ public class Draw3D {
 
             matrixStack.pop();
 
-            RenderSystem.enableDepthTest();
-            if (cull) {
+            if (!cull) {
+                RenderSystem.enableDepthTest();
+            }
+            if (renderBack) {
                 RenderSystem.enableCull();
             }
         }
 
-        // this is wrong? I stole it from stack overflow tho...
-        private Quaternion quatFromBasis(Vec3f a, Vec3f b, Vec3f c) {
-            float T = a.getX() + b.getY() + c.getZ();
-            float s;
-            float X, Y, Z, W;
-            if (T > 0) {
-                s = (float) (Math.sqrt(T + 1) * 2.f);
-                X = (c.getY() - b.getZ()) / s;
-                Y = (a.getZ() - c.getX()) / s;
-                Z = (b.getX() - a.getY()) / s;
-                W = 0.25f * s;
-            } else if ( a.getX() > b.getY() && a.getX() > c.getZ()) {
-                s = (float) (Math.sqrt(1 + a.getX() - b.getY() - c.getZ()) * 2);
-                X = 0.25f * s;
-                Y = (b.getX() + a.getY()) / s;
-                Z = (a.getZ() + c.getX()) / s;
-                W = (c.getY() - b.getZ()) / s;
-            } else if (b.getY() > c.getZ()) {
-                s = (float) (Math.sqrt(1 + b.getY() - a.getX() - c.getZ()) * 2);
-                X = (b.getX() + a.getY()) / s;
-                Y = 0.25f * s;
-                Z = (c.getY() + b.getZ()) / s;
-                W = (b.getZ() - c.getY()) / s;
-            } else {
-                s = (float) (Math.sqrt(1 + c.getZ() - a.getX() - b.getY()) * 2);
-                X = (a.getZ() + c.getX()) / s;
-                Y = (c.getY() + b.getZ()) / s;
-                Z = 0.25f * s;
-                W = (b.getX() - a.getY()) / s;
+        @Override
+        public void render(MatrixStack matrixStack) {
+            if (matrixStack == null) return;
+
+            synchronized (elements) {
+                Iterator<RenderCommon.RenderElement> iter = elements.stream().sorted(Comparator.comparingInt(RenderCommon.RenderElement::getZIndex)).iterator();
+                while (iter.hasNext()) {
+                    iter.next().render3D(matrixStack, 0, 0, 0);
+                }
             }
-            return new Quaternion(X, Y, Z, W);
         }
     }
 

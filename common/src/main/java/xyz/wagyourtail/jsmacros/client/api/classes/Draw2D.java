@@ -25,7 +25,7 @@ import java.util.*;
  */
 @SuppressWarnings("deprecation")
 public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
-    private final Set<RenderCommon.RenderElement> elements = new LinkedHashSet<>();
+    protected final Set<RenderCommon.RenderElement> elements = new LinkedHashSet<>();
     /**
      * @since 1.0.5
      * @deprecated please use {@link Draw2D#setOnInit(MethodWrapper)}
