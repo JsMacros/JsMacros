@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -14,23 +13,18 @@ import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
-import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
+import xyz.wagyourtail.jsmacros.client.api.classes.WorldScanner;
+import xyz.wagyourtail.jsmacros.client.api.classes.WorldScannerBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -38,16 +32,21 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  *
@@ -138,6 +137,35 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
+     * Usage: <br>
+     * This will return all blocks that are facing south, don't require a tool to break, 
+     * have a hardness of 10 or less and whose name contains either chest or barrel.
+     * <pre>
+     * World.getWorldScanner()
+     *     .withBlockFilter("getHardness").is("<=", 10)
+     *     .andStringBlockFilter().contains("chest", "barrel")
+     *     .withStringStateFilter().contains("facing=south")
+     *     .andStateFilter("isToolRequired").is(false)
+     *     .build()
+     * </pre>
+     * @return a builder to create a WorldScanner
+     *
+     * @since 1.6.5
+     */
+    public WorldScannerBuilder getWorldScanner() {
+        return new WorldScannerBuilder();
+    }
+
+    /**
+     * @return a scanner for the current world
+     *
+     * @since 1.6.5
+     */
+    public WorldScanner getWorldScanner(MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter) {
+        return new WorldScanner(mc.world, blockFilter, stateFilter);
+    }
+    
+    /**
      * @since 1.6.4
      * @param id
      * @param chunkrange
@@ -145,7 +173,7 @@ public class FWorld extends BaseLibrary {
      * @return
      */
     public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, String id, int chunkrange) {
-        return findBlocksMatchingInternal(centerX, centerZ, s -> Registry.BLOCK.getId(s).toString().equals(id), null, chunkrange);
+        return new WorldScanner(mc.world, block -> Registry.BLOCK.getId(block.getRaw()).toString().equals(id), null).scanChunkRange(centerX, centerZ, chunkrange);
     }
 
     /**
@@ -159,7 +187,7 @@ public class FWorld extends BaseLibrary {
         assert mc.player != null;
         int playerChunkX = mc.player.getBlockX() >> 4;
         int playerChunkZ = mc.player.getBlockZ() >> 4;
-        return findBlocksMatchingInternal(playerChunkX, playerChunkZ, s -> Registry.BLOCK.getId(s).toString().equals(id), null, chunkrange);
+        return new WorldScanner(mc.world, block -> Registry.BLOCK.getId(block.getRaw()).toString().equals(id), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
     }
 
 
@@ -175,7 +203,7 @@ public class FWorld extends BaseLibrary {
         int playerChunkX = mc.player.getBlockX() >> 4;
         int playerChunkZ = mc.player.getBlockZ() >> 4;
         Set<String> ids2 = new HashSet<>(ids);
-        return findBlocksMatchingInternal(playerChunkX, playerChunkZ, s -> ids2.contains(Registry.BLOCK.getId(s).toString()), null, chunkrange);
+        return new WorldScanner(mc.world, block -> ids2.contains(Registry.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
     }
 
     /**
@@ -189,100 +217,40 @@ public class FWorld extends BaseLibrary {
      */
     public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, List<String> ids, int chunkrange) {
         Set<String> ids2 = new HashSet<>(ids);
-        return findBlocksMatchingInternal(centerX, centerZ, s -> ids2.contains(Registry.BLOCK.getId(s).toString()), null, chunkrange);
+        return new WorldScanner(mc.world, block -> ids2.contains(Registry.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(centerX, centerZ, chunkrange);
     }
 
 
 
     /**
      * @since 1.6.4
-     * @param idFilter
-     * @param nbtFilter
+     * @param blockFilter
+     * @param stateFilter
      * @param chunkrange
      *
      * @return
      */
-    public List<PositionCommon.Pos3D> findBlocksMatching(MethodWrapper<String, Object, Boolean, ?> idFilter, MethodWrapper<Map<String, String>, Object, Boolean, ?> nbtFilter, int chunkrange) {
-        if (idFilter == null) throw new IllegalArgumentException("idFilter cannot be null");
+    public List<PositionCommon.Pos3D> findBlocksMatching(MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter, int chunkrange) {
+        if (blockFilter == null) throw new IllegalArgumentException("idFilter cannot be null");
         assert mc.player != null;
         int playerChunkX = mc.player.getBlockX() >> 4;
         int playerChunkZ = mc.player.getBlockZ() >> 4;
-        return findBlocksMatching(playerChunkX, playerChunkZ, idFilter, nbtFilter, chunkrange);
+        return findBlocksMatching(playerChunkX, playerChunkZ, blockFilter, stateFilter, chunkrange);
     }
 
     /**
      * @since 1.6.4
      * @param chunkX
      * @param chunkZ
-     * @param idFilter
-     * @param nbtFilter
+     * @param blockFilter
+     * @param stateFilter
      * @param chunkrange
      *
      * @return
      */
-    public List<PositionCommon.Pos3D> findBlocksMatching(int chunkX, int chunkZ, MethodWrapper<String, Object, Boolean, ?> idFilter, MethodWrapper<Map<String, String>, Object, Boolean, ?> nbtFilter, int chunkrange) {
-        if (idFilter == null) throw new IllegalArgumentException("idFilter cannot be null");
-        return findBlocksMatchingInternal(chunkX, chunkZ, s -> idFilter.apply(Registry.BLOCK.getId(s).toString()), nbtFilter != null ? e -> nbtFilter.apply(e.getEntries().entrySet().stream().parallel().collect(Collectors.toMap(mp -> mp.getKey().getName(), mp -> Util.getValueAsString(mp.getKey(), mp.getValue())))) : null, chunkrange);
-    }
-
-    private List<PositionCommon.Pos3D> findBlocksMatchingInternal(int centerX, int centerZ, Function<Block, Boolean> stateFilter, Function<BlockState, Boolean> entityFilter, int chunkrange) {
-        assert mc.world != null;
-        if (chunkrange < 0) throw new IllegalArgumentException("chunkrange must be at least 0");
-
-        List<ChunkPos> chunks = new ArrayList<>();
-        for (int x = centerX - chunkrange; x <= centerX + chunkrange; x++) {
-            for (int z = centerZ - chunkrange; z <= centerZ + chunkrange; z++) {
-                if (mc.world.isChunkLoaded(x, z)) {
-                    chunks.add(new ChunkPos(x, z));
-                }
-            }
-        }
-
-        return findBlocksMatchingInternal(chunks, stateFilter, entityFilter);
-
-    }
-
-    private List<PositionCommon.Pos3D> findBlocksMatchingInternal(List<ChunkPos> pos, Function<Block, Boolean> stateFilter, Function<BlockState, Boolean> entityFilter) {
-        assert mc.world != null;
-        int minY = mc.world.getDimension().getMinimumY();
-
-        return pos.stream().flatMap(c -> {
-            if (!mc.world.isChunkLoaded(c.x, c.z)) {
-                return Stream.empty();
-            }
-            Chunk chunk = mc.world.getChunk(c.x, c.z);
-            ChunkSection[] sections = chunk.getSectionArray();
-            return IntStream.range(0, sections.length).boxed().flatMap(i -> {
-                AtomicBoolean found = new AtomicBoolean(false);
-                if (sections[i].isEmpty()) {
-                    return Stream.empty();
-                }
-                sections[i].getBlockStateContainer().method_39793(s -> {
-                    if (stateFilter.apply(s.getBlock())) {
-                        found.set(true);
-                    }
-                });
-                if (!found.get()) {
-                    return (Stream<PositionCommon.Pos3D>) (Stream) Stream.empty();
-                }
-                return IntStream.range(0, 4096).mapToObj(e -> {
-                    int y = e >> 8;
-                    int x = (e & 255) >> 4;
-                    int z = e & 15;
-                    BlockState state = sections[i].getBlockState(x, y, z);
-                    if (stateFilter.apply(state.getBlock())) {
-                        if (entityFilter != null) {
-                            if (entityFilter.apply(state)) {
-                                return new PositionCommon.Pos3D(c.x << 4 | x, y + (i << 4) + minY, c.z << 4 | z);
-                            }
-                        } else {
-                            return new PositionCommon.Pos3D(c.x << 4 | x, y + (i << 4) + minY, c.z << 4 | z);
-                        }
-                    }
-                    return null;
-                }).filter(Objects::nonNull);
-            });
-        }).collect(Collectors.toList());
+    public List<PositionCommon.Pos3D> findBlocksMatching(int chunkX, int chunkZ, MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter, int chunkrange) {
+        if (blockFilter == null) throw new IllegalArgumentException("block filter cannot be null");
+        return new WorldScanner(mc.world, blockFilter, stateFilter).scanChunkRange(chunkX, chunkZ, chunkrange);
     }
 
     /**

@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
@@ -79,6 +78,24 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
         if (e == null) return null;
         return NBTElementHelper.resolve(e.createNbt());
     }
+
+    /**
+     * @return
+     *
+     * @since 1.6.5
+     */
+    public BlockStateHelper getBlockStateHelper() {
+        return new BlockStateHelper(base);
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.6.5
+     */
+    public BlockHelper getBlockHelper() {
+        return new BlockHelper(base.getBlock());
+    }
     
     /**
      * @since 1.1.7
@@ -106,7 +123,6 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
         return b;
     }
     
-    
     public BlockState getRawBlockState() {
         return base;
     }
@@ -115,6 +131,7 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
         return e;
     }
     
+    @Override
     public String toString() {
         return String.format("BlockDataHelper:{\"x\":%d, \"y\":%d, \"z\":%d, \"id\":\"%s\"}", bp.getX(), bp.getY(), bp.getZ(), this.getId());
     }
