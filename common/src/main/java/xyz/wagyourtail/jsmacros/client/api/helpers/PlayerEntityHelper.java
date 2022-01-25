@@ -75,7 +75,31 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
      * @return
      */
     public int getXP() {
+        return base.totalExperience;
+    }
+
+    /**
+     * @since 1.6.5
+     * @return
+     */
+    public int getXPLevel() {
         return base.experienceLevel;
+    }
+
+    /**
+     * @since 1.6.5
+     * @return
+     */
+    public float getXPProgress() {
+        return base.experienceProgress;
+    }
+
+    /**
+     * @since 1.6.5
+     * @return
+     */
+    public int getXPToLevelUp() {
+        return base.getNextLevelExperience();
     }
     
     /**

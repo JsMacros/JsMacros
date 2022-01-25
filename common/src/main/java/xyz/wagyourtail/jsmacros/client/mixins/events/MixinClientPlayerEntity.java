@@ -57,7 +57,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
 
     @Inject(at = @At("HEAD"), method = "setExperience")
     public void onSetExperience(float progress, int total, int level, CallbackInfo info) {
-        new EventEXPChange(progress, total, level);
+        new EventEXPChange(progress, total, level, this.experienceProgress, this.totalExperience, this.experienceLevel);
     }
 
     @Inject(at = @At("HEAD"), method = "damage")
