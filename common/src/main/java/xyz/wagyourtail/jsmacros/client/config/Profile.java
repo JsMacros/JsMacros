@@ -94,6 +94,10 @@ public class Profile extends BaseProfile {
             if (ex.getCause() instanceof BaseScriptContext.ScriptAssertionError) {
                 return;
             }
+            // un-wrap exceptions
+            if (ex.getCause() != null && ex.getMessage().equals(ex.getCause().toString())) {
+                ex = ex.getCause();
+            }
         }
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.inGameHud != null) {
