@@ -11,6 +11,7 @@ import net.minecraft.util.math.Vec3d;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
+import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -318,7 +319,7 @@ public class Draw3D {
      * @since 1.6.5
      * @return
      */
-    public Draw2D addDraw2D(double x, double y, double z) {
+    public Surface addDraw2D(double x, double y, double z) {
         return addDraw2D(x, y, z, 0, 0, 0, 1, 1, 200, false, false);
     }
 
@@ -332,7 +333,7 @@ public class Draw3D {
      * @since 1.6.5
      * @return
      */
-    public Draw2D addDraw2D(double x, double y, double z, double width, double height) {
+    public Surface addDraw2D(double x, double y, double z, double width, double height) {
         return addDraw2D(x, y, z, 0, 0, 0, width, height, 200, false, false);
     }
 
@@ -347,7 +348,7 @@ public class Draw3D {
      * @since 1.6.5
      * @return
      */
-    public Draw2D addDraw2D(double x, double y, double z, double xRot, double yRot, double zRot) {
+    public Surface addDraw2D(double x, double y, double z, double xRot, double yRot, double zRot) {
         return addDraw2D(x, y, z, xRot, yRot, zRot, 1, 1, 200, false, false);
     }
 
@@ -364,7 +365,7 @@ public class Draw3D {
      * @since 1.6.5
      * @return
      */
-    public Draw2D addDraw2D(double x, double y, double z, double xRot, double yRot, double zRot, double width, double height) {
+    public Surface addDraw2D(double x, double y, double z, double xRot, double yRot, double zRot, double width, double height) {
         return addDraw2D(x, y, z, xRot, yRot, zRot, width, height, 200, false, false);
     }
 
@@ -382,7 +383,7 @@ public class Draw3D {
      * @since 1.6.5
      * @return
      */
-    public Draw2D addDraw2D(double x, double y, double z, double xRot, double yRot, double zRot, double width, double height, int minSubdivisions) {
+    public Surface addDraw2D(double x, double y, double z, double xRot, double yRot, double zRot, double width, double height, int minSubdivisions) {
         return addDraw2D(x, y, z, xRot, yRot, zRot, width, height, minSubdivisions, false, false);
     }
 
@@ -401,7 +402,7 @@ public class Draw3D {
      * @since 1.6.5
      * @return
      */
-    public Draw2D addDraw2D(double x, double y, double z, double xRot, double yRot, double zRot, double width, double height, int minSubdivisions, boolean renderBack) {
+    public Surface addDraw2D(double x, double y, double z, double xRot, double yRot, double zRot, double width, double height, int minSubdivisions, boolean renderBack) {
         return addDraw2D(x, y, z, xRot, yRot, zRot, width, height, minSubdivisions, renderBack, false);
     }
 
@@ -420,7 +421,7 @@ public class Draw3D {
      * @since 1.6.5
      * @return
      */
-    public Draw2D addDraw2D(double x, double y, double z, double xRot, double yRot, double zRot, double width, double height, int minSubdivisions, boolean renderBack, boolean cull) {
+    public Surface addDraw2D(double x, double y, double z, double xRot, double yRot, double zRot, double width, double height, int minSubdivisions, boolean renderBack, boolean cull) {
         Surface surface = new Surface(
             new PositionCommon.Pos3D(x, y, z),
             new PositionCommon.Pos3D(xRot, yRot, zRot),
@@ -804,7 +805,7 @@ public class Draw3D {
      */
     public static class Surface extends Draw2D {
         public final PositionCommon.Pos3D pos;
-        protected final PositionCommon.Pos3D rotations;
+        public final PositionCommon.Pos3D rotations;
         protected final PositionCommon.Pos2D sizes;
         protected int minSubdivisions;
 
@@ -826,12 +827,31 @@ public class Draw3D {
             this.pos.x = x;
             this.pos.y = y;
             this.pos.z = z;
+        }
+
+        public void setRotations(double x, double y, double z) {
+            this.rotations.x = x;
+            this.rotations.y = y;
+            this.rotations.z = z;
+        }
+
+        public void setSizes(double x, double y) {
+            this.sizes.x = x;
+            this.sizes.y = y;
             init();
+        }
+
+        public PositionCommon.Pos2D getSizes() {
+            return sizes.add(0, 0);
         }
 
         public void setMinSubdivisions(int minSubdivisions) {
             this.minSubdivisions = minSubdivisions;
             init();
+        }
+
+        public int getMinSubdivisions() {
+            return minSubdivisions;
         }
 
         @Override

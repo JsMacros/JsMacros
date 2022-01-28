@@ -565,7 +565,21 @@ public class RenderCommon {
 //            RenderSystem.translated(-x, -y, 0);
 //            RenderSystem.scaled(1 / scale, 1 / scale, 1);
         }
-    
+
+        @Override
+        public void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+            matrices.push();
+            matrices.scale((float) scale, (float) scale, 1);
+            matrices.translate(x, y, 0);
+            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
+            matrices.translate(-x, -y, 0);
+            Tessellator tess = Tessellator.getInstance();
+            VertexConsumerProvider.Immediate buffer = VertexConsumerProvider.immediate(tess.getBuffer());
+            mc.textRenderer.draw(text, (float)(x / scale), (float)(y / scale), color, shadow, matrices.peek().getPositionMatrix(), buffer, true, 0, 0xF000F0);
+            buffer.draw();
+            matrices.pop();
+        }
+
         @Override
         public int getZIndex() {
             return zIndex;
