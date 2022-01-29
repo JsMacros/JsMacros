@@ -871,13 +871,6 @@ public class Draw3D {
         }
 
         public void render3D(MatrixStack matrixStack) {
-            if (renderBack) {
-                RenderSystem.disableCull();
-            }
-            if (!cull) {
-                RenderSystem.disableDepthTest();
-            }
-
             matrixStack.push();
 
             matrixStack.translate(pos.x, pos.y, pos.z);
@@ -909,6 +902,16 @@ public class Draw3D {
             synchronized (elements) {
                 Iterator<RenderCommon.RenderElement> iter = elements.stream().sorted(Comparator.comparingInt(RenderCommon.RenderElement::getZIndex)).iterator();
                 while (iter.hasNext()) {
+                    if (renderBack) {
+                        RenderSystem.disableCull();
+                    } else {
+                        RenderSystem.enableCull();
+                    }
+                    if (!cull) {
+                        RenderSystem.disableDepthTest();
+                    } else {
+                        RenderSystem.enableDepthTest();
+                    }
                     iter.next().render3D(matrixStack, 0, 0, 0);
                 }
             }

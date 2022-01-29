@@ -218,14 +218,16 @@ public class RenderCommon {
         public int regionHeight;
         public int textureWidth;
         public int textureHeight;
+        public int color;
         public int zIndex;
         
-        public Image(int x, int y, int width, int height, int zIndex, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
+        public Image(int x, int y, int width, int height, int zIndex, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
             this.x = x;
             this.y = y;
             this.width = width;
             this.height = height;
             this.zIndex = zIndex;
+            setColor(color);
             this.imageX = imageX;
             this.imageY = imageY;
             this.regionWidth = regionWidth;
@@ -234,6 +236,45 @@ public class RenderCommon {
             this.textureHeight = textureHeight;
             imageid = new Identifier(id);
             this.rotation = rotation;
+        }
+
+        public Image(int x, int y, int width, int height, int zIndex, int alpha, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.zIndex = zIndex;
+            setColor(alpha, color);
+            this.imageX = imageX;
+            this.imageY = imageY;
+            this.regionWidth = regionWidth;
+            this.regionHeight = regionHeight;
+            this.textureWidth = textureWidth;
+            this.textureHeight = textureHeight;
+            imageid = new Identifier(id);
+            this.rotation = rotation;
+        }
+
+        /**
+         * @since 1.6.5
+         * @param color
+         * @return
+         */
+        public Image setColor(int color) {
+            if (color <= 0xFFFFFF) color = color | 0xFF000000;
+            this.color = color;
+            return this;
+        }
+
+        /**
+         * @since 1.6.5
+         * @param color
+         * @param alpha
+         * @return
+         */
+        public Image setColor(int color, int alpha) {
+            this.color = color | (alpha << 24);
+            return this;
         }
         
         /**
@@ -294,12 +335,35 @@ public class RenderCommon {
             matrices.translate(x, y, 0);
             matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
             matrices.translate(-x, -y, 0);
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, imageid);
+            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+            RenderSystem.defaultBlendFunc();
             RenderSystem.enableBlend();
-            DrawableHelper.drawTexture(matrices, x, y, width, height, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight);
-            RenderSystem.disableBlend();
+            RenderSystem.setShaderTexture(0, imageid);
+            Tessellator tess = Tessellator.getInstance();
+            BufferBuilder buf = tess.getBuffer();
+            
+            buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP,  VertexFormats.POSITION_TEXTURE_COLOR);
+            Matrix4f matrix = matrices.peek().getPositionMatrix();
+
+            float x1 = x;
+            float y1 = y;
+            float x2 = x + width;
+            float y2 = y + height;
+
+            float u1 = imageX / (float) textureWidth;
+            float v1 = imageY / (float) textureHeight;
+            float u2 = (imageX + regionWidth) / (float) textureWidth;
+            float v2 = (imageY + regionHeight) / (float) textureHeight;
+
+            //draw a rectangle using triangle strips
+            buf.vertex(matrix, x1, y2, 0).texture(u1, v2).color(color).next(); // Top-left
+            buf.vertex(matrix, x2, y2, 0).texture(u2, v2).color(color).next(); // Top-right
+            buf.vertex(matrix, x1, y1, 0).texture(u1, v1).color(color).next(); // Bottom-left
+            buf.vertex(matrix, x2, y1, 0).texture(u2, v1).color(color).next(); // Bottom-right
+            tess.draw();
+
             matrices.pop();
+            RenderSystem.disableBlend();
 //            RenderSystem.translated(-x, -y, 0);
 //            RenderSystem.rotatef(-rotation, 0, 0, 1);
 //            RenderSystem.translated(x, y, 0);
