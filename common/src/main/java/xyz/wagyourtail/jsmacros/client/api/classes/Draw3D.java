@@ -901,6 +901,7 @@ public class Draw3D {
 
             synchronized (elements) {
                 Iterator<RenderCommon.RenderElement> iter = elements.stream().sorted(Comparator.comparingInt(RenderCommon.RenderElement::getZIndex)).iterator();
+                float current = 0;
                 while (iter.hasNext()) {
                     if (renderBack) {
                         RenderSystem.disableCull();
@@ -912,7 +913,11 @@ public class Draw3D {
                     } else {
                         RenderSystem.enableDepthTest();
                     }
-                    iter.next().render3D(matrixStack, 0, 0, 0);
+                    RenderCommon.RenderElement next = iter.next();
+                    matrixStack.push();
+                    matrixStack.translate(0, 0, .001 * next.getZIndex());
+                    next.render3D(matrixStack, 0, 0, 0);
+                    matrixStack.pop();
                 }
             }
         }
