@@ -77,6 +77,7 @@ public class EventContainer<T> {
                 Core.getInstance().profile.logError(t);
             }
         }
+        then.clear();
         this.notifyAll();
         synchronized (ctx) {
             ctx.events.remove(lockThread);
