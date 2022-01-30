@@ -496,7 +496,6 @@ public class Draw3D {
         //reset
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.enableTexture();
-        RenderSystem.disableBlend();
 
         matrixStack.pop();
 
@@ -810,6 +809,13 @@ public class Draw3D {
         protected int minSubdivisions;
 
         protected double scale;
+        /**
+         * scale that zIndex is multiplied by to get the actual offset (in blocks) for rendering
+         * default: {@code 1/1000}
+         * if there is still z-fighting, increase this value
+         * @since 1.6.5
+         */
+        public double zIndexScale = .001;
         public boolean renderBack;
         public boolean cull;
 
@@ -915,7 +921,7 @@ public class Draw3D {
                     }
                     RenderCommon.RenderElement next = iter.next();
                     matrixStack.push();
-                    matrixStack.translate(0, 0, .001 * next.getZIndex());
+                    matrixStack.translate(0, 0, zIndexScale * next.getZIndex());
                     next.render3D(matrixStack, 0, 0, 0);
                     matrixStack.pop();
                 }
