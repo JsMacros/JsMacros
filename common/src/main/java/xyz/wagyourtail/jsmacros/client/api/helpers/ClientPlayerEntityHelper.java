@@ -1,11 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -23,6 +24,7 @@ import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
@@ -394,5 +396,154 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
 
     public String toString() {
         return "Client" + super.toString();
+    }
+
+    /**
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @param offHand
+     * @param await
+     * @return true if block could be placed
+     * @throws InterruptedException
+     */
+    public boolean placeBlock(int x, int y, int z, boolean offHand, boolean swingHand, boolean await) throws InterruptedException {
+        AtomicBoolean success = new AtomicBoolean(false);
+        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        if (joinedMain) {
+            return placeBlock(x, y, z, offHand, swingHand);
+        } else {
+            Semaphore wait = new Semaphore(await ? 0 : 1);
+            mc.execute(() -> {
+                success.set(placeBlock(x, y, z, offHand, swingHand));
+                wait.release();
+            });
+            wait.acquire();
+        }
+        return success.get();
+    }
+
+    /**
+     * Should be called every Tick until this method returns false (eg. while loop)
+     * @param x
+     * @param y
+     * @param z
+     * @return false if block has been broken
+     */
+    public boolean breakBlock(int x, int y, int z){
+        assert mc.interactionManager != null;
+        assert mc.player != null;
+
+        boolean value = mc.interactionManager.updateBlockBreakingProgress(new BlockPos(x, y, z), Direction.DOWN);
+        mc.player.swingHand(Hand.MAIN_HAND);
+        return value;
+    }
+
+    /**
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @param offHand
+     * @return true if block could be placed
+     */
+    public boolean placeBlock(int x, int y, int z, boolean offHand){
+        Vec3d hitpos = new Vec3d(x + 0.5, y + 0.5, z + 0.5);
+        BlockPos placePos = new BlockPos(x, y, z);
+        BlockPos neighbor;
+        Direction side = getPlaceSide(placePos);
+
+        if(side == null){
+            side = Direction.UP;
+            neighbor = placePos;
+        }else{
+            neighbor = placePos.offset(side.getOpposite());
+            hitpos.add(side.getOffsetX() * 0.5, side.getOffsetY() * 0.5, side.getOffsetZ() * 0.5);
+        }
+
+        Direction s = side;
+
+        return internalPlace(new BlockHitResult(hitpos, s, neighbor, false), offHand ? Hand.OFF_HAND : Hand.MAIN_HAND, true);
+    }
+
+    /**
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @param offHand
+     * @param swingHand
+     * @return true if block could be placed
+     */
+    public boolean placeBlock(int x, int y, int z, boolean offHand, boolean swingHand){
+        Vec3d hitpos = new Vec3d(x + 0.5, y + 0.5, z + 0.5);
+        BlockPos placePos = new BlockPos(x, y, z);
+        BlockPos neighbor;
+        Direction side = getPlaceSide(placePos);
+
+        if(side == null){
+            side = Direction.UP;
+            neighbor = placePos;
+        }else{
+            neighbor = placePos.offset(side.getOpposite());
+            hitpos.add(side.getOffsetX() * 0.5, side.getOffsetY() * 0.5, side.getOffsetZ() * 0.5);
+        }
+
+        Direction s = side;
+
+        boolean success = internalPlace(new BlockHitResult(hitpos, s, neighbor, false), offHand ? Hand.OFF_HAND : Hand.MAIN_HAND, swingHand);
+        return success;
+    }
+
+    private boolean internalPlace(BlockHitResult blockHitResult, Hand hand, boolean swingHand){
+        assert mc.player != null;
+        assert mc.interactionManager != null;
+        assert mc.getNetworkHandler() != null;
+
+        boolean wasSneaking = mc.player.input.sneaking;
+        mc.player.input.sneaking = false;
+        ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, hand, blockHitResult);
+
+        if(result.shouldSwingHand()){
+            if(swingHand) mc.player.swingHand(hand);
+            else mc.getNetworkHandler().sendPacket(new HandSwingC2SPacket(hand));
+        }
+        mc.player.input.sneaking = wasSneaking;
+        return result.isAccepted();
+    }
+
+    private Direction getPlaceSide(BlockPos blockPos) {
+        assert mc.world != null;
+
+        for (Direction side : Direction.values()) {
+            BlockPos neighbor = blockPos.offset(side);
+            Direction side2 = side.getOpposite();
+
+            BlockState state = mc.world.getBlockState(neighbor);
+
+            // Check if neighbour isn't empty
+            if (state.isAir() || isClickable(state.getBlock())) continue;
+
+            // Check if neighbour is a fluid
+            if (!state.getFluidState().isEmpty()) continue;
+
+            return side2;
+        }
+
+        return null;
+    }
+
+    private static boolean isClickable(Block block) {
+        return block instanceof CraftingTableBlock
+                || block instanceof AnvilBlock
+                || block instanceof AbstractButtonBlock
+                || block instanceof AbstractPressurePlateBlock
+                || block instanceof BlockWithEntity
+                || block instanceof BedBlock
+                || block instanceof FenceGateBlock
+                || block instanceof DoorBlock
+                || block instanceof NoteBlock
+                || block instanceof TrapdoorBlock;
     }
 }
