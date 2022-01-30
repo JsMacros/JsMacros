@@ -1,6 +1,65 @@
+/* Light Mode */
+:root, [color-mode="light"] {
+    --top-nav-footer-color: #ACACAC;
+    --side-nav-color: #bcbcbc;
+    --class-content-color: #ffffff;
+    --blue-text-color: #0066FF;
+    --primary-text-color: #000000;
+    --link-color: #0000FF;
+    --visited-link-color: #800080;
+  }
+  
+  /* Dark Mode */
+  [color-mode="dark"] {
+    --top-nav-footer-color: #373a3d;
+    --side-nav-color: #424345;
+    --class-content-color: #181a1b;
+    --blue-text-color: #3391ff;
+    --primary-text-color: #e8e6e3;
+    --link-color: #3391ff;
+    --visited-link-color: #a832b1;
+  }
+
+  /* Any element with the class "light--hidden" will be hidden when the site is set to Light Mode */
+:root[color-mode="light"] .light--hidden {
+    display: none;
+}
+
+/* Any element with the class "dark--hidden" will be hidden when the site is set to Dark Mode */
+:root[color-mode="dark"] .dark--hidden {
+    display: none;
+}
+
+a {
+    color: var(--link-color);
+}
+
+a:visited {
+    color: var(--visited-link-color);
+}
+
+select, input {
+    background-color: var(--class-content-color);
+    color: var(--primary-text-color);
+}
+
+.color-mode__btn {
+    border-radius: .375rem;
+    border-color: var(--side-nav-color);
+    border: none;
+    color: var(--primary-text-color);
+    background-color: transparent;
+}
+.color-mode__btn:hover {
+    background-color: var(--side-nav-color);
+}
+
+
 body {
     font-family: Sans-Serif, serif;
     margin: 0;
+    background-color: var(--class-content-color);
+    color: var(--primary-text-color);
 }
 
 code {
@@ -8,7 +67,7 @@ code {
 }
 
 .topNav {
-    background-color: #ACACAC;
+    background-color: var(--top-nav-footer-color);
     display: flex;
     align-content: stretch;
     flex-wrap: wrap;
@@ -40,7 +99,7 @@ code {
     text-decoration: none;
     font-weight: bold;
     margin: 0;
-    color: #0066FF;
+    color: var(--blue-text-color);
 }
 
 .searchContainer {
@@ -60,12 +119,12 @@ body > div {
 
 .sideNav {
     padding: 0px 5px;
-    background-color: #BCBCBC;
+    background-color: var(--side-nav-color);
     height: 100%;
 }
 
 #footer {
-    background-color: #ACACAC;
+    background-color: var(--top-nav-footer-color);
     display: flex;
     align-items: center;
 }
@@ -90,7 +149,7 @@ body > div {
     text-decoration: none;
     font-weight: bold;
     margin: 0;
-    color: #0066FF;
+    color: var(--blue-text-color);
 }
 
 #menuBtn {
@@ -108,7 +167,7 @@ body > div {
         background-color: rgba(0,0,0,0);
     }
     #mainNav {
-        background-color: #BCBCBC;
+        background-color: var(--side-nav-color);
         padding: 5px;
     }
     #mainNav a {

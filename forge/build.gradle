@@ -26,15 +26,17 @@ loom {
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
 
-    include "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-    include "org.graalvm.js:js:${project.graal_version}"
-    include "org.graalvm.truffle:truffle-api:${project.graal_version}"
-    include "org.graalvm.regex:regex:${project.graal_version}"
+    shadowCommon "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+    shadowCommon "org.graalvm.js:js:${project.graal_version}", {
+        exclude module: "icu4j"
+    }
+    shadowCommon "org.graalvm.truffle:truffle-api:${project.graal_version}"
+    shadowCommon "org.graalvm.regex:regex:${project.graal_version}"
 //		include "org.graalvm.compiler:compiler:${project.graal_version}"
 //		include "org.graalvm.compiler:compiler-management:${project.graal_version}"
-    include "io.noties:prism4j:${project.prism_version}"
-    include "com.neovisionaries:nv-websocket-client:2.10"
-    include "org.javassist:javassist:3.28.0-GA"
+    shadowCommon "io.noties:prism4j:${project.prism_version}"
+    shadowCommon "com.neovisionaries:nv-websocket-client:2.10"
+    shadowCommon "org.javassist:javassist:3.28.0-GA"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
@@ -51,6 +53,7 @@ processResources {
 shadowJar {
     configurations = [project.configurations.shadowCommon]
     classifier "dev-shadow"
+    mergeServiceFiles()
 }
 
 remapJar {

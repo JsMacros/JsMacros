@@ -45,8 +45,7 @@ public class EventCustom implements BaseEvent {
             profile.triggerEventJoinNoAnything(this);
             try {
                 callback.run();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Throwable e) {
                 Core.getInstance().profile.logError(e);
             }
         });
@@ -248,7 +247,15 @@ public class EventCustom implements BaseEvent {
     public Object getObject(String name) {
         return args.get(name);
     }
-    
+
+    /**
+     * @since 1.6.4
+     * @return map backing the event
+     */
+    public Map<String, Object> getUnderlyingMap() {
+        return args;
+    }
+
     /**
      * registers event so you can see it in the gui
      * @since 1.3.0

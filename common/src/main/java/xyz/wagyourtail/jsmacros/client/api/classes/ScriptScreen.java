@@ -74,7 +74,7 @@ public class ScriptScreen extends BaseScreen {
         ((IScreen) this).onRenderInternal(matrices, mouseX, mouseY, delta);
         try {
             if (onRender != null) onRender.accept(new PositionCommon.Pos3D(mouseX, mouseY, delta), matrices);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
             onRender = null;
         }

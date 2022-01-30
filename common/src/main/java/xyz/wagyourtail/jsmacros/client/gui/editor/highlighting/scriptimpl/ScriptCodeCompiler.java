@@ -62,8 +62,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
         Map<String, ? extends Runnable> results = null;
         try {
             results = getRClickActions.apply(index);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
         if (results == null) return new LinkedHashMap<>();

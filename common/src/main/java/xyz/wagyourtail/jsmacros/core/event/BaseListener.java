@@ -24,7 +24,7 @@ public abstract class BaseListener implements IEventListener {
         if (trigger.enabled) {
             try {
                 return runner.exec(trigger, event);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
                 return null;
             }

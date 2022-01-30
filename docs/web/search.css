@@ -1,3 +1,15 @@
+:root, [color-mode="light"] {
+    --paramHeader-color: #0066FF;
+
+}
+
+/* Dark Mode */
+[color-mode="dark"] {
+    --paramHeader-color: #3030B0;
+}
+
+
+
 body {
     font-family: Sans-Serif, serif;
     margin: 0;
@@ -36,8 +48,8 @@ code {
 }
 
 .SearchCheck:checked {
-    border-color: #0066FF;
-    background-color: #0066FF;
+    border-color: var(--paramHeader-color);
+    background-color: var(--paramHeader-color);
 }
 
 .resultItem {
@@ -71,7 +83,7 @@ code {
 
 .flag {
     display: inline-block;
-    background-color: #0066FF;
+    background-color: var(--paramHeader-color);
     padding: 5px;
     border-radius: 5px;
     color: white;

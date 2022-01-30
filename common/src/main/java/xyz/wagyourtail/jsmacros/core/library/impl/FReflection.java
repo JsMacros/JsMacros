@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import javassist.util.proxy.ProxyFactory;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.core.classes.WrappedClassInstance;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.classes.Mappings;
@@ -344,6 +345,29 @@ public class FReflection extends PerExecLibrary {
             return remapper;
         }
         return remapper = new Mappings(urlorfile);
+    }
+
+    /**
+     * @since 1.6.5
+     * @param instance
+     * @param <T>
+     *
+     * @return
+     */
+    public <T> WrappedClassInstance<T> wrapInstace(T instance) {
+        return new WrappedClassInstance<>(instance);
+    }
+
+    /**
+     * @since 1.6.5
+     * @param className
+     *
+     * @return
+     *
+     * @throws ClassNotFoundException
+     */
+    public WrappedClassInstance<?> getWrappedClass(String className) throws ClassNotFoundException {
+        return new WrappedClassInstance(null, Class.forName(className.replace("/", ".")));
     }
     
     /**

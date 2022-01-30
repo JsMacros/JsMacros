@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.mojang.brigadier.Command;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.LiteralText;
@@ -14,6 +15,7 @@ import xyz.wagyourtail.jsmacros.client.api.classes.ChatHistoryManager;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
@@ -110,6 +112,41 @@ public class FChat extends BaseLibrary {
             mc.execute(() -> {
                 assert mc.player != null;
                 mc.player.sendChatMessage(message);
+                semaphore.release();
+            });
+            semaphore.acquire();
+        }
+    }
+
+    /**
+     * open the chat input box with specific text already typed.
+     *
+     * @since 1.6.4
+     * @param message the message to start the chat screen with
+     */
+     public void open(String message) throws InterruptedException {
+        open(message, false);
+     }
+
+    /**
+     * open the chat input box with specific text already typed.
+     * hint: you can combine with {@link xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros#waitForEvent(String)} or
+     * {@link xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros#once(String, MethodWrapper)} to wait for the chat screen
+     * to close and/or the to wait for the sent message
+     *
+     * @since 1.6.4
+     * @param message the message to start the chat screen with
+     * @param await
+     */
+    public void open(String message, boolean await) throws InterruptedException {
+        if (message == null) message = "";
+        if (Core.getInstance().profile.checkJoinedThreadStack()) {
+            mc.setScreen(new ChatScreen(message));
+        } else {
+            String finalMessage = message;
+            final Semaphore semaphore = new Semaphore(await ? 0 : 1);
+            mc.execute(() -> {
+                mc.setScreen(new ChatScreen(finalMessage));
                 semaphore.release();
             });
             semaphore.acquire();

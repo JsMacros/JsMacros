@@ -53,10 +53,10 @@ jobs:
       cf_data_forge: 73250:1.18,2:Java 17,7498:Forge
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     needs:
       - build_1_18
       - deploy_1_17
+      - upload_pydoc
 
   deploy_1_17:
     uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.18
@@ -66,7 +66,6 @@ jobs:
       cf_data_forge: 73242:1.17.1,2:Java 16,7498:Forge
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     needs:
       - build_1_17
       - deploy_1_16
@@ -79,7 +78,6 @@ jobs:
       cf_data_forge: 70886:1.16.5,70886:1.16.4,70886:1.16.3,2:Java 8,7498:Forge
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     needs:
       - build_1_16
       - deploy_1_15
@@ -91,7 +89,6 @@ jobs:
       cf_data_fabric: 68722:1.15.2,2:Java 8,68441:Fabric
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     needs:
       - build_1_15
       - deploy_1_14
@@ -103,7 +100,6 @@ jobs:
       cf_data_fabric: 64806:1.14.4,2:Java 8,68441:Fabric
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     needs:
       - build_1_14
       - deploy_1_8
@@ -115,7 +111,6 @@ jobs:
       cf_data_fabric: 68722:1.8.9,2:Java 8,68441:Fabric
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     needs:
       - build_1_8
 
@@ -147,6 +142,6 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          python setup.py sdist bdist_wheel
+          python setup.py dist bdist_wheel
           twine upload dist/*
         working-directory: python

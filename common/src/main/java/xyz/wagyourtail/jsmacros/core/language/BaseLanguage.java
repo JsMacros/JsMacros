@@ -50,20 +50,18 @@ public abstract class BaseLanguage<T> {
                     try {
                         if (then != null)
                             then.run();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } catch (Throwable e) {
                         runner.profile.logError(e);
                     }
                 } else {
                     macro.enabled = false;
                     throw new FileSystemException("file \"" + file.getPath() + "\" does not exist or is a directory!");
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 try {
                     if (catcher != null) catcher.accept(e);
                     else throw e;
-                } catch (Exception f) {
-                    f.printStackTrace();
+                } catch (Throwable f) {
                     runner.profile.logError(f);
                 }
             } finally {
@@ -97,11 +95,11 @@ public abstract class BaseLanguage<T> {
                 exec(ctx, script, new HashMap<>());
 
                 if (then != null) then.run();
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 try {
                     if (catcher != null) catcher.accept(e);
                     else throw e;
-                } catch (Exception f) {
+                } catch (Throwable f) {
                     runner.profile.logError(f);
                 }
             } finally {

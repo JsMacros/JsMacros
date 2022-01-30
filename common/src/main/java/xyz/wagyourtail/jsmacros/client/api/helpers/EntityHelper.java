@@ -34,6 +34,24 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     public PositionCommon.Pos3D getPos() {
         return new PositionCommon.Pos3D(base.getX(), base.getY(), base.getZ());
     }
+
+    /**
+     * @return entity block position.
+     *
+     * @since 1.6.5
+     */
+    public PositionCommon.Pos3D getBlockPos() {
+        return new PositionCommon.Pos3D(Math.floor(base.getX()), Math.floor(base.getY()), Math.floor(base.getZ()));
+    }
+
+    /**
+     * @return entity chunk coordinates. Since Pos2D only has x and y fields, z coord is y.
+     *
+     * @since 1.6.5
+     */
+    public PositionCommon.Pos2D getChunkPos() {
+        return new PositionCommon.Pos2D(base.getChunkPos().x, base.getChunkPos().z);
+    }
     
     /**
      * @since 1.0.8
@@ -85,9 +103,10 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     
     /**
      * @return the name of the entity.
+     * @since 1.0.8 [citation needed], returned string until 1.6.4
      */
-    public String getName() {
-        return base.getName().getString();
+    public TextHelper getName() {
+        return new TextHelper(base.getName());
     }
     
     /**
@@ -158,6 +177,13 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         return NBTElementHelper.resolve(nbt);
     }
 
+    /**
+     * @since 1.6.4
+     * @param name
+     */
+    public void setCustomName(TextHelper name) {
+        base.setCustomName(name.getRaw());
+    }
 
     /**
      * @param color
@@ -202,10 +228,19 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     public boolean isAlive() {
         return base.isAlive();
     }
-    
+
+    /**
+    * @since 1.6.5
+    * @return UUID of the entity, random* if not a player, otherwise the player's uuid.
+    */
+    public String getUUID() {
+        return base.getUuid().toString();
+    }
+
     public String toString() {
         return String.format("Entity:{\"name\":\"%s\", \"type\":\"%s\"}", this.getName(), this.getType());
     }
+
 
     /**
      * mostly for internal use.

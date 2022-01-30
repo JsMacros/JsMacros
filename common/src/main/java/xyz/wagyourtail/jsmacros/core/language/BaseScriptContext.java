@@ -106,7 +106,7 @@ public abstract class BaseScriptContext<T> {
      * @return is a newly bound thread
      */
     public synchronized boolean bindThread(Thread t) {
-        if (closed) throw new AssertionError("Cannot bind thread to closed context");
+        if (closed) throw new ScriptAssertionError("Cannot bind thread to closed context");
         return threads.add(t);
     }
 
@@ -116,7 +116,7 @@ public abstract class BaseScriptContext<T> {
      */
     public synchronized void unbindThread(Thread t) {
         if (!threads.remove(t)) {
-            throw new AssertionError("Thread was not bound");
+            throw new ScriptAssertionError("Thread was not bound");
         }
         EventContainer<?> container = events.get(t);
         if (container != null) {
@@ -137,7 +137,7 @@ public abstract class BaseScriptContext<T> {
      * @param t
      */
     public void setMainThread(Thread t) {
-        if (this.mainThread != null) throw new AssertionError("Cannot change main thread of context container once assigned!");
+        if (this.mainThread != null) throw new ScriptAssertionError("Cannot change main thread of context container once assigned!");
         this.mainThread = t;
         bindThread(t);
     }
@@ -150,7 +150,7 @@ public abstract class BaseScriptContext<T> {
     }
 
     public void setContext(T context) {
-        if (this.context != null) throw new RuntimeException("Context already set");
+        if (this.context != null) throw new ScriptAssertionError("Context already set");
         this.context = context;
     }
     
@@ -184,5 +184,11 @@ public abstract class BaseScriptContext<T> {
      */
     public File getContainedFolder() {
         return mainFile == null ? Core.getInstance().config.macroFolder.getAbsoluteFile() : mainFile.getParentFile().getAbsoluteFile();
+    }
+
+    public static class ScriptAssertionError extends AssertionError {
+        public ScriptAssertionError(String message) {
+            super(message);
+        }
     }
 }

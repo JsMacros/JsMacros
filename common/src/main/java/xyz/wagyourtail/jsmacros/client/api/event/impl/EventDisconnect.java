@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
+import net.minecraft.text.Text;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
@@ -9,8 +11,13 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
  @Event(value = "Disconnect", oldName = "DISCONNECT")
 public class EventDisconnect implements BaseEvent {
+    /**
+     * @since 1.6.4
+     */
+    public final TextHelper message;
     
-    public EventDisconnect() {
+    public EventDisconnect(Text message) {
+        this.message = new TextHelper(message);
         profile.triggerEvent(this);
     }
 

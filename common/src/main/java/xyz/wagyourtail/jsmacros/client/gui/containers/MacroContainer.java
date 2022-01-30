@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
@@ -11,6 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.core.language.TranslationUtil;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
@@ -19,6 +21,7 @@ import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 public class MacroContainer extends MultiElementContainer<MacroScreen> {
     private static final Identifier key_down_tex = new Identifier(JsMacros.MOD_ID, "resources/key_down.png");
@@ -42,11 +45,11 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
         this.mc = MinecraftClient.getInstance();
         init();
     }
-    
+
     public ScriptTrigger getRawMacro() {
         return macro;
     }
-    
+
     @Override
     public void init() {
         super.init();
@@ -57,7 +60,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
             btn.setMessage(new TranslatableText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"));
         }));
 
-        keyBtn = addDrawableChild(new Button(x + w / 12 + 1, y + 1, macro.triggerType == ScriptTrigger.TriggerType.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.triggerType == ScriptTrigger.TriggerType.EVENT ? new LiteralText(macro.event.replace("Event", "")) : buildKeyName(macro.event), (btn) -> {
+        keyBtn = addDrawableChild(new Button(x + w / 12 + 1, y + 1, macro.triggerType == ScriptTrigger.TriggerType.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.triggerType == ScriptTrigger.TriggerType.EVENT ? TranslationUtil.getTranslatedEventName(macro.event) : buildKeyName(macro.event), (btn) -> {
             if (macro.triggerType == ScriptTrigger.TriggerType.EVENT) {
                 parent.setEvent(this);
             } else {
@@ -83,7 +86,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
         fileBtn = addDrawableChild(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("./"+macro.scriptFile.replaceAll("\\\\", "/")), (btn) -> {
             parent.setFile(this);
         }));
-        
+
         editBtn = addDrawableChild(new Button(x + w - 32, y + 1, 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("selectServer.edit"), (btn) -> {
             if (!macro.scriptFile.equals("")) parent.editFile(new File(Core.getInstance().config.macroFolder, macro.scriptFile));
         }));
@@ -92,14 +95,14 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
             parent.confirmRemoveMacro(this);
         }));
     }
-    
+
     public void setEventType(String type) {
         Core.getInstance().eventRegistry.removeScriptTrigger(macro);
         macro.event = type;
         Core.getInstance().eventRegistry.addScriptTrigger(macro);
-        keyBtn.setMessage(new LiteralText(macro.event.replace("Event", "")));
+        keyBtn.setMessage(TranslationUtil.getTranslatedEventName(macro.event));
     }
-    
+
     public void setFile(File f) {
         macro.scriptFile = Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(f.getAbsoluteFile().toPath()).toString();
         fileBtn.setMessage(new LiteralText("./"+macro.scriptFile.replaceAll("\\\\", "/")));
@@ -117,7 +120,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
         delBtn.setPos(x + w - 1, y + 1, 12, height - 2);
 
     }
-    
+
     public boolean onKey(String translationKey) {
         if (selectkey) {
             setKey(translationKey);
@@ -125,7 +128,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
         }
         return true;
     }
-    
+
     public static Text buildKeyName(String translationKeys) {
         LiteralText text = new LiteralText("");
         boolean notfirst = false;
@@ -136,7 +139,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
         }
         return text;
     }
-    
+
     public void setKey(String translationKeys) {
         Core.getInstance().eventRegistry.removeScriptTrigger(macro);
         macro.event = translationKeys;
@@ -144,7 +147,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
         keyBtn.setMessage(buildKeyName(translationKeys));
         selectkey = false;
     }
-    
+
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (visible) {
@@ -172,13 +175,13 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
                 drawTexture(matrices, x + w / 4 - height + 2, y + 2, height-4, height-4, 0, 0, 32, 32, 32, 32);
                 RenderSystem.disableBlend();
             }
-            
+
             // border
             fill(matrices, x, y, x + width, y + 1, 0xFFFFFFFF);
             fill(matrices, x, y + height - 1, x + width, y + height, 0xFFFFFFFF);
             fill(matrices, x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
             fill(matrices, x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
-            
+
             // overlay
             if (keyBtn.hovering && keyBtn.cantRenderAllText()) {
                 fill(matrices, mouseX-2, mouseY-textRenderer.fontHeight - 3, mouseX+textRenderer.getWidth(keyBtn.getMessage())+2, mouseY, 0xFF000000);

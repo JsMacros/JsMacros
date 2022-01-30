@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
@@ -46,22 +47,24 @@ public class Inventory<T extends HandledScreen<?>> {
     protected final ClientPlayerEntity player;
     protected static MinecraftClient mc = MinecraftClient.getInstance();
 
-    /**
-     * @return
-     */
     public static Inventory<?> create() {
-        //prevent race condition
-        final net.minecraft.client.gui.screen.Screen s = mc.currentScreen;
+        Inventory<?> inv = create(mc.currentScreen);
+        if (inv == null) {
+            assert mc.player != null;
+            return new Inventory<>(new InventoryScreen(mc.player));
+        }
+        return inv;
+    }
+
+    public static Inventory<?> create(net.minecraft.client.gui.screen.Screen s) {
         if (s instanceof HandledScreen) {
             if (s instanceof MerchantScreen) return new VillagerInventory((MerchantScreen) s);
             if (s instanceof EnchantmentScreen) return new EnchantInventory((EnchantmentScreen) s);
             if (s instanceof LoomScreen) return new LoomInventory((LoomScreen) s);
             if (s instanceof BeaconScreen) return new BeaconInventory((BeaconScreen) s);
             return new Inventory<>((HandledScreen<?>) s);
-        } else {
-            assert mc.player != null;
-            return new Inventory<>(new InventoryScreen(mc.player));
         }
+        return null;
     }
 
     protected Inventory(T inventory) {
@@ -365,9 +368,9 @@ public class Inventory<T extends HandledScreen<?>> {
         Map<String, int[]> map = new HashMap<>();
         int slots = getTotalSlots();
         if (this.inventory instanceof InventoryScreen || (this.inventory instanceof CreativeInventoryScreen && ((CreativeInventoryScreen) this.inventory).getSelectedTab() == ItemGroup.INVENTORY.getIndex())) {
-            if (this.inventory instanceof  CreativeInventoryScreen) {
-                map.put("delete", new int[] {--slots});
-            } 
+            if (this.inventory instanceof CreativeInventoryScreen) {
+                --slots;
+            }
             map.put("hotbar", JsMacros.range(slots - 10, slots - 1)); // range(36, 45);
             map.put("offhand", new int[] { slots - 1 }); // range(45, 46);
             map.put("main", JsMacros.range(slots - 10 - 27, slots - 10)); // range(9, 36);
@@ -377,6 +380,11 @@ public class Inventory<T extends HandledScreen<?>> {
             map.put("helmet", new int[] { slots - 10 - 27 - 4 }); // range(5, 6);
             map.put("crafting_in", JsMacros.range(slots - 10 - 27 - 4 - 4, slots - 10 - 27 - 4)); // range(1, 5);
             map.put("craft_out", new int[] { slots - 10 - 27 - 4 - 4 - 1 });
+            if (this.inventory instanceof  CreativeInventoryScreen) {
+                map.put("delete", new int[] {0});
+                map.remove("crafting_in");
+                map.remove("craft_out");
+            } 
         } else {
             map.put("hotbar", JsMacros.range(slots - 9, slots));
             map.put("main", JsMacros.range(slots - 9 - 27, slots - 9));

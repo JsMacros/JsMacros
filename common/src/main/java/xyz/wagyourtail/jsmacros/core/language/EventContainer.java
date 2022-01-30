@@ -52,8 +52,7 @@ public class EventContainer<T> {
         try {
             if (then != null)
                 then.run();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
     }
@@ -64,6 +63,7 @@ public class EventContainer<T> {
      */
     public synchronized void releaseLock() {
         locked = false;
+        Core.getInstance().profile.joinedThreadStack.remove(lockThread);
         this.notifyAll();
         synchronized (ctx) {
             ctx.events.remove(lockThread);

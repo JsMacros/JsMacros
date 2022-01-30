@@ -408,7 +408,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         ButtonWidget button = new ButtonWidget(x, y, width, height, new LiteralText(text), (btn) -> {
             try {
                 callback.accept(b.get(), this);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 Core.getInstance().profile.logError(e);
             }
         });
@@ -442,7 +442,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             field.setChangedListener(str -> {
                 try {
                     onChange.accept(str, this);
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     Core.getInstance().profile.logError(e);
                 }
             });
@@ -545,8 +545,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (onMouseDown != null) try {
             onMouseDown.accept(new PositionCommon.Pos2D(mouseX, mouseY), button);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
         return super.mouseClicked(mouseX, mouseY, button);
@@ -556,8 +555,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (onMouseDrag != null) try {
             onMouseDrag.accept(new PositionCommon.Vec2D(mouseX, mouseY, deltaX, deltaY), button);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
@@ -567,8 +565,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (onMouseUp != null) try {
             onMouseUp.accept(new PositionCommon.Pos2D(mouseX, mouseY), button);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
         return super.mouseReleased(mouseX, mouseY, button);
@@ -578,8 +575,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> info) {
         if (onKeyPressed != null) try {
             onKeyPressed.accept(keyCode, modifiers);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
     }
@@ -588,8 +584,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (onScroll != null) try {
             onScroll.accept(new PositionCommon.Pos2D(mouseX, mouseY), amount);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
         return super.mouseScrolled(mouseX, mouseY, amount);
@@ -604,12 +599,11 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         if (onInit != null) {
             try {
                 onInit.accept(this);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 try {
                     if (catchInit != null) catchInit.accept(e.toString());
                     else throw e;
-                } catch (Exception f) {
-                    f.printStackTrace();
+                } catch (Throwable f) {
                     Core.getInstance().profile.logError(f);
                 }
             }

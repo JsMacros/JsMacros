@@ -12,11 +12,27 @@ public class EventEXPChange implements BaseEvent {
     public final float progress;
     public final int total;
     public final int level;
-    
-    public EventEXPChange(float progress, int total, int level) {
+    /**
+     * @since 1.6.5
+     */
+    public final float prevProgress;
+    /**
+     * @since 1.6.5
+     */
+    public final int prevTotal;
+    /**
+     * @since 1.6.5
+     */
+    public final int prevLevel;
+
+    public EventEXPChange(float progress, int total, int level, float prevProgress, int prevTotal, int prevLevel) {
         this.progress = progress;
         this.total = total;
         this.level = level;
+
+        this.prevProgress = prevProgress;
+        this.prevTotal = prevTotal;
+        this.prevLevel = prevLevel;
         
         profile.triggerEvent(this);
     }

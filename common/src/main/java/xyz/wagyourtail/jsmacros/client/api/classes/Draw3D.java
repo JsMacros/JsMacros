@@ -5,11 +5,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
-import org.lwjgl.opengl.GL11;
+import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 
 import java.util.ArrayList;
@@ -27,7 +25,7 @@ import java.util.List;
 public class Draw3D {
     private final List<Box> boxes = new ArrayList<>();
     private final List<Line> lines = new ArrayList<>();
-    
+
     /**
      * @since 1.0.6
      *
@@ -36,7 +34,7 @@ public class Draw3D {
     public List<Box> getBoxes() {
         return ImmutableList.copyOf(boxes);
     }
-    
+
     /**
      * @since 1.0.6
      *
@@ -45,7 +43,7 @@ public class Draw3D {
     public List<Line> getLines() {
         return ImmutableList.copyOf(lines);
     }
-    
+
     /**
      * @since 1.0.6
      *
@@ -63,7 +61,7 @@ public class Draw3D {
     public Box addBox(double x1, double y1, double z1, double x2, double y2, double z2, int color, int fillColor, boolean fill) {
         return addBox(x1, y1, z1, x2, y2, z2, color, fillColor, fill, false);
     }
-    
+
     /**
     * @since 1.3.1
     *
@@ -87,7 +85,7 @@ public class Draw3D {
         }
         return b;
     }
-    
+
     /**
      * @since 1.1.8
      *
@@ -107,8 +105,8 @@ public class Draw3D {
     public Box addBox(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, int fillColor, int fillAlpha, boolean fill) {
         return addBox(x1, y1, z1, x2, y2, z2, color, alpha, fillColor, fillAlpha, fill, false);
     }
-    
-    
+
+
     public Box addBox(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, int fillColor, int fillAlpha, boolean fill, boolean cull) {
         Box b = new Box(x1, y1, z1, x2, y2, z2, color, alpha, fillColor, fillAlpha, fill, cull);
         synchronized (boxes) {
@@ -116,7 +114,7 @@ public class Draw3D {
         }
         return b;
     }
-    
+
     /**
      * @since 1.0.6
      *
@@ -129,8 +127,8 @@ public class Draw3D {
         }
         return this;
     }
-    
-    
+
+
     /**
      * @since 1.0.6
      *
@@ -146,8 +144,8 @@ public class Draw3D {
     public Line addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color) {
         return addLine(x1, y1, z1, x2, y2, z2, color, false);
     }
-    
-    
+
+
     /**
     *
     * @since 1.3.1
@@ -170,7 +168,7 @@ public class Draw3D {
         }
         return l;
     }
-    
+
     /**
      * @since 1.1.8
      *
@@ -188,7 +186,7 @@ public class Draw3D {
     public Line addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha) {
         return addLine(x1, y1, z1, x2, y2, z2, color, alpha, false);
     }
-    
+
     /**
     *
     * @since 1.3.1
@@ -212,7 +210,7 @@ public class Draw3D {
         }
         return l;
     }
-    
+
     /**
      * @since 1.0.6
      *
@@ -275,6 +273,22 @@ public class Draw3D {
     }
 
 
+    /**
+     * register so it actually shows up
+     * @since 1.6.5
+     * @return self for chaining
+     */
+    public Draw3D register() {
+        FHud.renders.add(this);
+        return this;
+    }
+
+    public Draw3D unregister() {
+        FHud.renders.remove(this);
+        return this;
+    }
+
+
     public void render(MatrixStack matrixStack) {
         MinecraftClient mc = MinecraftClient.getInstance();
 
@@ -292,14 +306,14 @@ public class Draw3D {
 //        matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(MathHelper.wrapDegrees(camera.getPitch())));
 //        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(camera.getYaw() + 180F));
         matrixStack.translate(-camPos.x, -camPos.y, -camPos.z);
-        
+
         //render
         synchronized (boxes) {
             for (Box b : boxes) {
                 b.render(matrixStack);
             }
         }
-        
+
         synchronized (lines) {
             for (Line l : lines) {
                 l.render(matrixStack);
@@ -314,14 +328,14 @@ public class Draw3D {
         matrixStack.pop();
 
     }
-    
+
     public static class Box {
         public PositionCommon.Vec3D pos;
         public int color;
         public int fillColor;
         public boolean fill;
         public boolean cull;
-        
+
         public Box(double x1, double y1, double z1, double x2, double y2, double z2, int color, int fillColor, boolean fill, boolean cull) {
             setPos(x1, y1, z1, x2, y2, z2);
             setColor(color);
@@ -329,7 +343,7 @@ public class Draw3D {
             this.fill = fill;
             this.cull = cull;
         }
-        
+
         public Box(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, int fillColor, int fillAlpha, boolean fill, boolean cull) {
             setPos(x1, y1, z1, x2, y2, z2);
             setColor(color, alpha);
@@ -337,10 +351,10 @@ public class Draw3D {
             this.fill = fill;
             this.cull = cull;
         }
-        
+
         /**
          * @since 1.0.6
-         * 
+         *
          * @param x1
          * @param y1
          * @param z1
@@ -356,77 +370,84 @@ public class Draw3D {
 
         /**
          * @since 1.0.6
-         * 
+         *
          * @param color
          */
         public void setColor(int color) {
             if (color <= 0xFFFFFF) color = color | 0xFF000000;
             this.color = color;
         }
-        
+
         /**
          * @since 1.0.6
-         * 
+         *
          * @param fillColor
          */
         public void setFillColor(int fillColor) {
             this.fillColor = fillColor;
         }
-        
+
         /**
          * @since 1.1.8
-         * 
+         *
          * @param color
          * @param alpha
          */
         public void setColor(int color, int alpha) {
             this.color = color | (alpha << 24);
         }
-        
+
         /**
          * @since 1.1.8
-         * 
+         *
          * @param alpha
          */
         public void setAlpha(int alpha) {
             this.color = (color & 0xFFFFFF) | (alpha << 24);
         }
-        
+
         /**
          * @since 1.1.8
-         * 
+         *
          * @param fillColor
          * @param alpha
          */
         public void setFillColor(int fillColor, int alpha) {
             this.fillColor = fillColor | (alpha << 24);
         }
-        
+
         /**
          * @since 1.1.8
-         * 
+         *
          * @param alpha
          */
         public void setFillAlpha(int alpha) {
             this.fillColor = (fillColor & 0xFFFFFF) | (alpha << 24);
         }
-        
+
         /**
          * @since 1.0.6
-         * 
+         *
          * @param fill
          */
         public void setFill(boolean fill) {
             this.fill = fill;
         }
-        
+
         public void render(MatrixStack matrixStack) {
             final boolean cull = !this.cull;
             int a = (color >> 24) & 0xFF;
             int r = (color >> 16) & 0xFF;
             int g = (color >> 8) & 0xFF;
             int b = color & 0xFF;
-            
+
+            float x1 = (float)pos.x1;
+            float y1 = (float)pos.y1;
+            float z1 = (float)pos.z1;
+            float x2 = (float)pos.x2;
+            float y2 = (float)pos.y2;
+            float z2 = (float)pos.z2;
+
             if (cull) RenderSystem.disableDepthTest();
 
             Tessellator tess = Tessellator.getInstance();
@@ -443,55 +464,23 @@ public class Draw3D {
                 //1.15+ culls insides
                 RenderSystem.disableCull();
 
-                buf.begin(VertexFormat.DrawMode.TRIANGLES,  VertexFormats.POSITION_COLOR);
+                buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP,  VertexFormats.POSITION_COLOR);
 
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z2).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z2).color(fr, fg, fb, fa).next();
-
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z2).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z1).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(fr, fg, fb, fa).next();
-
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z1).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z2).color(fr, fg, fb, fa).next();
-
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z2).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z2).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z1).color(fr, fg, fb, fa).next();
-
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z1).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z1).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(fr, fg, fb, fa).next();
-
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z1).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z1).color(fr, fg, fb, fa).next();
-
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z1).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z1).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(fr, fg, fb, fa).next();
-
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z1).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z2).color(fr, fg, fb, fa).next();
-
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z2).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z2).color(fr, fg, fb, fa).next();
-
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z2).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z2).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(fr, fg, fb, fa).next();
-
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z2).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z1).color(fr, fg, fb, fa).next();
-
-                buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z1).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(fr, fg, fb, fa).next();
-                buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z1).color(fr, fg, fb, fa).next();
+                //draw a cube using triangle strips
+                buf.vertex(matrix, x1, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-left
+                buf.vertex(matrix, x2, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-right
+                buf.vertex(matrix, x1, y1, z2).color(fr, fg, fb, fa).next(); // Front-bottom-left
+                buf.vertex(matrix, x2, y1, z2).color(fr, fg, fb, fa).next(); // Front-bottom-right
+                buf.vertex(matrix, x2, y1, z1).color(fr, fg, fb, fa).next(); // Front-bottom-left
+                buf.vertex(matrix, x2, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-right
+                buf.vertex(matrix, x2, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-right
+                buf.vertex(matrix, x1, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-left
+                buf.vertex(matrix, x1, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-left
+                buf.vertex(matrix, x1, y1, z2).color(fr, fg, fb, fa).next(); // Front-bottom-left
+                buf.vertex(matrix, x1, y1, z1).color(fr, fg, fb, fa).next(); // Back-bottom-left
+                buf.vertex(matrix, x2, y1, z1).color(fr, fg, fb, fa).next(); // Back-bottom-right
+                buf.vertex(matrix, x1, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-left
+                buf.vertex(matrix, x2, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-right
 
                 tess.draw();
 
@@ -501,44 +490,45 @@ public class Draw3D {
             RenderSystem.lineWidth(2.5F);
             buf.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
-            buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
-            buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z2).color(r, g, b, a).next();
+            buf.vertex(matrix, x1, y1, z1).color(r, g, b, a).next();
+            buf.vertex(matrix, x1, y1, z2).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z2).color(r, g, b, a).next();
+            buf.vertex(matrix, x2, y1, z2).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
+            buf.vertex(matrix, x2, y1, z1).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
+            buf.vertex(matrix, x1, y1, z1).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z1).color(r, g, b, a).next();
-            buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
+            buf.vertex(matrix, x1, y2, z1).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
+            buf.vertex(matrix, x1, y2, z2).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z1).color(r, g, b, a).next();
+            buf.vertex(matrix, x2, y2, z2).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z1).color(r, g, b, a).next();
+            buf.vertex(matrix, x2, y2, z1).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z1).color(r, g, b, 0).next();
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z1).color(r, g, b, 0).next();
+            buf.vertex(matrix, x1, y2, z1).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z1).color(r, g, b, a).next();
+            buf.vertex(matrix, x1, y2, z1).color(r, g, b, 0).next();
+            buf.vertex(matrix, x2, y1, z1).color(r, g, b, 0).next();
 
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z1).color(r, g, b, 0).next();
-            buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z2).color(r, g, b, 0).next();
+            buf.vertex(matrix, x2, y1, z1).color(r, g, b, a).next();
+            buf.vertex(matrix, x2, y2, z1).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x1, (float) pos.y1, (float) pos.z2).color(r, g, b, a).next();
-            buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
+            buf.vertex(matrix, x2, y2, z1).color(r, g, b, 0).next();
+            buf.vertex(matrix, x1, y1, z2).color(r, g, b, 0).next();
 
-            buf.vertex(matrix, (float) pos.x1, (float) pos.y2, (float) pos.z2).color(r, g, b, 0).next();
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z2).color(r, g, b, 0).next();
+            buf.vertex(matrix, x1, y1, z2).color(r, g, b, a).next();
+            buf.vertex(matrix, x1, y2, z2).color(r, g, b, a).next();
 
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y1, (float) pos.z2).color(r, g, b, a).next();
-            buf.vertex(matrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
+            buf.vertex(matrix, x1, y2, z2).color(r, g, b, 0).next();
+            buf.vertex(matrix, x2, y1, z2).color(r, g, b, 0).next();
+
+            buf.vertex(matrix, x2, y1, z2).color(r, g, b, a).next();
+            buf.vertex(matrix, x2, y2, z2).color(r, g, b, a).next();
 
             tess.draw();
-            
+
             if (cull) RenderSystem.enableDepthTest();
         }
     }

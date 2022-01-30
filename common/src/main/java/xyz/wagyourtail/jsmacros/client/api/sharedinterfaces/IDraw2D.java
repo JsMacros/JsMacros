@@ -16,6 +16,7 @@ import java.util.function.Consumer;
 /**
  * @author Wagyourtail
  * @since 1.2.7
+ * @param <T>
  */
 public interface IDraw2D<T> {
     
@@ -481,6 +482,10 @@ public interface IDraw2D<T> {
      * @return self for chaining
      */
     T setOnFailInit(MethodWrapper<String, Object, Object, ?> catchInit);
-    
+
+    /**
+     * internal
+     * @param matrixStack
+     */
     void render(MatrixStack matrixStack);
 }

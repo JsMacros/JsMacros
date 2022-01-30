@@ -10,13 +10,13 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.*;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
-import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
@@ -81,6 +81,24 @@ public class Profile extends BaseProfile {
     @Override
     public void logError(Throwable ex) {
         ex.printStackTrace();
+        if (ex instanceof InterruptedException) {
+            return;
+        }
+        if (ex instanceof BaseScriptContext.ScriptAssertionError) {
+            return;
+        }
+        if (ex instanceof RuntimeException) {
+            if (ex.getCause() instanceof InterruptedException) {
+                return;
+            }
+            if (ex.getCause() instanceof BaseScriptContext.ScriptAssertionError) {
+                return;
+            }
+            // un-wrap exceptions
+            if (ex.getCause() != null && ex.getMessage().equals(ex.getCause().toString())) {
+                ex = ex.getCause();
+            }
+        }
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.inGameHud != null) {
             BaseWrappedException<?> e;
@@ -149,10 +167,12 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventBossbar.class);
         runner.eventRegistry.addEvent(EventChunkLoad.class);
         runner.eventRegistry.addEvent(EventChunkUnload.class);
+        runner.eventRegistry.addEvent(EventClickSlot.class);
         runner.eventRegistry.addEvent(EventDamage.class);
         runner.eventRegistry.addEvent(EventDeath.class);
         runner.eventRegistry.addEvent(EventDimensionChange.class);
         runner.eventRegistry.addEvent(EventDisconnect.class);
+        runner.eventRegistry.addEvent(EventDropSlot.class);
         runner.eventRegistry.addEvent(EventEntityDamaged.class);
         runner.eventRegistry.addEvent(EventEntityLoad.class);
         runner.eventRegistry.addEvent(EventEntityUnload.class);

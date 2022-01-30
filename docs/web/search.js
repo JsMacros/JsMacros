@@ -15,17 +15,21 @@ async function reloadSearchMap() {
             const parts = line.split("\t");
             switch (parts[0]) {
                 case "C":
-                    searchMaps.classes.set(parts[4] ?? parts[1], {name: parts[1], url:parts[2], group:parts[3] ?? "Class"});
-                    if (parts[3] && parts[3] != "Class") classGroups.add(parts[3]); 
+                    if (!searchMaps.classes.has(parts[4] ?? parts[1]))
+                        searchMaps.classes.set(parts[4] ?? parts[1], new Set());
+                    searchMaps.classes.get(parts[4] ?? parts[1]).add({name: parts[1], url: parts[2], group: parts[3] ?? "Class"});
+                    if (parts[3] && parts[3] !== "Class") classGroups.add(parts[3]);
                     break;
                 case "M": {
                     let methodStuff = {class: parts[1].split("#")[0], name: parts[1].split("#")[1], url:parts[2]}
                     let cname = methodStuff.class;
                     if (!searchMaps.classes.has(cname)) {
-                        for (const [name, clazz] of searchMaps.classes) {
-                            if (clazz.name == cname) {
-                                cname = name;
-                                break;
+                        for (const [name, st] of searchMaps.classes) {
+                            for (const clazz of st) {
+                                if (clazz.name === cname) {
+                                    cname = name;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -37,9 +41,13 @@ async function reloadSearchMap() {
                     let cname = fieldStuff.class;
                     if (!searchMaps.classes.has(cname)) {
                         for (const [name, clazz] of searchMaps.classes) {
-                            if (clazz.name == cname) {
-                                cname = name;
-                                break;
+                            for (const [name, st] of searchMaps.classes) {
+                                for (const clazz of st) {
+                                    if (clazz.name === cname) {
+                                        cname = name;
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }
@@ -103,26 +111,38 @@ async function searchF(val, override=false) {
     const fieldDiv = document.createElement("div");
     fieldDiv.setAttribute("id", "FieldResults");
     searchResults.appendChild(fieldDiv);
-    for (const [name, clazz] of searchMaps.classes) {
-        if (document.getElementById(`${clazz.group}Check`).checked) {
-            if (clazz.name.toLowerCase().includes(val)) {
-                appendSearchResult(name, clazz.url, clazz.group);
+    for (const [name, st] of searchMaps.classes) {
+        for (const clazz of st) {
+            if (document.getElementById(`${clazz.group}Check`).checked) {
+                if (clazz.name.toLowerCase().includes(val)) {
+                    appendSearchResult(name, clazz.url, clazz.group);
+                }
             }
         }
     }
     if (methodsCheck.checked) {
         for (const [name, method] of searchMaps.methods) {
-            if (document.getElementById(`${searchMaps.classes.get(`${name.split("#")[0]}`).group}Check`).checked &&
-                method.name.toLowerCase().includes(val)) {
-                appendSearchResult(name, method.url, "Method");
+            for (const clazz of searchMaps.classes.get(`${name.split("#")[0]}`)) {
+                if (clazz.name === method.class) {
+                    if (document.getElementById(`${clazz.group}Check`).checked &&
+                        method.name.toLowerCase().includes(val)) {
+                        appendSearchResult(name, method.url, "Method");
+                    }
+                    break;
+                }
             }
         }
     }
     if (fieldsCheck.checked) {
         for (const [name, field] of searchMaps.fields) {
-            if (document.getElementById(`${searchMaps.classes.get(`${name.split("#")[0]}`).group}Check`).checked &&
-                field.name.toLowerCase().includes(val)) {
-                appendSearchResult(name, field.url, "Field");
+            for (const clazz of searchMaps.classes.get(`${name.split("#")[0]}`)) {
+                if (clazz.name === field.class) {
+                    if (document.getElementById(`${clazz.group}Check`).checked &&
+                        field.name.toLowerCase().includes(val)) {
+                        appendSearchResult(name, field.url, "Field");
+                    }
+                    break;
+                }
             }
         }
     }

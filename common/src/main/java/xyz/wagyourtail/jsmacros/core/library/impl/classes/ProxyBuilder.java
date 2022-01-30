@@ -148,7 +148,6 @@ public class ProxyBuilder<T> {
                 } else if (e.getCause() instanceof RuntimeException) {
                     throw e.getCause();
                 } else {
-                    e.getCause().printStackTrace();
                     Core.getInstance().profile.logError(e.getCause());
                 }
             }

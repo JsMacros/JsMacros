@@ -64,7 +64,7 @@ public class FKeyBind extends BaseLibrary {
      */
     public void setKeyBind(String bind, String key) {
         for (KeyBinding keybind : mc.options.keysAll) {
-            if (keybind.getBoundKeyTranslationKey().equals(bind)) {
+            if (keybind.getTranslationKey().equals(bind)) {
                 keybind.setBoundKey(InputUtil.fromTranslationKey(key));
                 return;
             }
@@ -90,6 +90,10 @@ public class FKeyBind extends BaseLibrary {
     protected void key(Key keyBind, boolean keyState) {
         if (keyState) KeyBinding.onKeyPressed(keyBind);
         KeyBinding.setKeyPressed(keyBind, keyState);
+
+        // add to pressed keys list
+        if (keyState) pressedKeys.add(keyBind.getTranslationKey());
+        else pressedKeys.remove(keyBind.getTranslationKey());
     }
     
     /**
@@ -107,6 +111,10 @@ public class FKeyBind extends BaseLibrary {
             if (key.getTranslationKey().equals(keyBind)) {
                 if (keyState) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(key.getBoundKeyTranslationKey()));
                 key.setPressed(keyState);
+
+                // add to pressed keys list
+                if (keyState) pressedKeys.add(key.getBoundKeyTranslationKey());
+                else pressedKeys.remove(key.getBoundKeyTranslationKey());
                 return;
             }
         }
@@ -121,6 +129,10 @@ public class FKeyBind extends BaseLibrary {
     protected void key(KeyBinding keyBind, boolean keyState) {
         if (keyState) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(keyBind.getBoundKeyTranslationKey()));
         keyBind.setPressed(keyState);
+
+        // add to pressed keys list
+        if (keyState) pressedKeys.add(keyBind.getBoundKeyTranslationKey());
+        else pressedKeys.remove(keyBind.getBoundKeyTranslationKey());
     }
     
     /**

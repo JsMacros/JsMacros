@@ -5,9 +5,14 @@ import com.mojang.brigadier.arguments.*;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.*;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.SuggestionsBuilderHelper;
 import xyz.wagyourtail.jsmacros.client.config.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -16,6 +21,9 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
@@ -172,6 +180,44 @@ public abstract class CommandBuilder {
      */
     public abstract CommandBuilder executes(MethodWrapper<CommandContextHelper, Object, Boolean, ?> callback);
 
+    protected abstract <S> void suggests(SuggestionProvider<S> suggestionProvider);
+
+    /**
+     * @since 1.6.5
+     * @param suggestions
+     *
+     * @return
+     */
+    public CommandBuilder suggestMatching(String... suggestions) {
+        suggests((ctx, builder) -> CommandSource.suggestMatching(Arrays.asList(suggestions), builder));
+        return this;
+    }
+
+    /**
+     * @since 1.6.5
+     * @param suggestions
+     *
+     * @return
+     */
+    public CommandBuilder suggestIdentifier(String... suggestions) {
+        suggests((ctx, builder) -> CommandSource.suggestIdentifiers(Arrays.stream(suggestions).map(Identifier::new), builder));
+        return this;
+    }
+
+    /**
+     * @since 1.6.5
+     * @param callback
+     *
+     * @return
+     */
+    public CommandBuilder suggest(MethodWrapper<CommandContextHelper, SuggestionsBuilderHelper, Object, ?> callback) {
+        suggests((ctx, builder) -> {
+            callback.accept(new CommandContextHelper(ctx), new SuggestionsBuilderHelper(builder));
+            return builder.buildFuture();
+        });
+        return this;
+    }
+
     protected <S> int internalExecutes(CommandContext<S> context, MethodWrapper<CommandContextHelper, Object, Boolean, ?> callback) {
         EventContainer<?> lock = new EventContainer<>(callback.getCtx());
         EventLockWatchdog.startWatchdog(lock, new IEventListener() {
@@ -188,7 +234,7 @@ public abstract class CommandBuilder {
         boolean success = false;
         try {
             success = callback.apply(new CommandContextHelper(context));
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         lock.releaseLock();
