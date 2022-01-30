@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -12,6 +13,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
  */
 @SuppressWarnings("unused")
 public class ItemStackHelper extends BaseHelper<ItemStack> {
+    protected static final MinecraftClient mc = MinecraftClient.getInstance();
     
     public ItemStackHelper(ItemStack i) {
         super(i);
@@ -90,7 +92,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     public int getMaxCount() {
         return base.getMaxCount();
     }
-    
+
     /**
      * @since 1.1.6, was a {@link String} until 1.5.1
      * @return
@@ -211,7 +213,23 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     public boolean isNBTEqual(ItemStack is) {
         return ItemStack.areNbtEqual(base, is);
     }
-    
+
+    /**
+     * @since 1.6.5
+     * @return
+     */
+    public boolean isOnCooldown() {
+        return MinecraftClient.getInstance().player.getItemCooldownManager().isCoolingDown(base.getItem());
+    }
+
+    /**
+     * @since 1.6.5
+     * @return
+     */
+    public float getCooldownProgress() {
+        return mc.player.getItemCooldownManager().getCooldownProgress(base.getItem(), mc.getTickDelta());
+    }
+
     /**
      * @since 1.2.0
      * @return
