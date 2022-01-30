@@ -4,18 +4,26 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
+import xyz.wagyourtail.jsmacros.client.access.IItemCooldownEntry;
+import xyz.wagyourtail.jsmacros.client.access.IItemCooldownManager;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
 
+import java.util.Map;
 import java.util.concurrent.Semaphore;
+import java.util.stream.Collectors;
 
 /**
  * @author Wagyourtail
@@ -329,7 +337,51 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         return this;
     }
 
+    /**
+     * @since 1.6.5
+     * @return
+     */
+    public Map<String, Integer> getItemCooldownsRemainingTicks() {
+        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).getManagerTicks();
+        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).getCooldownItems();
+        return map.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getName().getString(), e -> e.getValue().getEndTick() - tick));
+    }
 
+    /**
+     * @param item
+     * @since 1.6.5
+     * @return
+     */
+    public int getItemCooldownRemainingTicks(String item) {
+        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).getManagerTicks();
+        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).getCooldownItems();
+        IItemCooldownEntry entry = map.get(Registry.ITEM.get(new Identifier(item)));
+        if (entry == null) return -1;
+        return entry.getEndTick() - tick;
+    }
+
+    /**
+     * @since 1.6.5
+     * @return
+     */
+    public Map<String, Integer>  getTicksSinceCooldownsStart() {
+        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).getManagerTicks();
+        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).getCooldownItems();
+        return map.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getName().getString(), e -> e.getValue().getStartTick() - tick));
+    }
+
+    /**
+     * @param item
+     * @since 1.6.5
+     * @return
+     */
+    public int getTicksSinceCooldownStart(String item) {
+        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).getManagerTicks();
+        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).getCooldownItems();
+        IItemCooldownEntry entry = map.get(Registry.ITEM.get(new Identifier(item)));
+        if (entry == null) return -1;
+        return entry.getStartTick() - tick;
+    }
 
     /**
      * @return

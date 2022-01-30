@@ -15,6 +15,8 @@
     "access.MixinHandledScreen",
     "access.MixinHorseScreen",
     "access.MixinInGameHud",
+    "access.MixinItemCooldownEntry",
+    "access.MixinItemCooldownManager",
     "access.MixinLoomScreen",
     "access.MixinMerchantEntity",
     "access.MixinMerchantScreen",
