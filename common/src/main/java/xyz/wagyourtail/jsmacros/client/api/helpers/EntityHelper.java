@@ -91,6 +91,13 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
     
     /**
+     * @return the display name of the entity.
+     */
+    public String getDisplayName() {
+        return base.getDisplayName().getString();
+    }
+    
+    /**
      * @return the type of the entity.
      */
     public String getType() {

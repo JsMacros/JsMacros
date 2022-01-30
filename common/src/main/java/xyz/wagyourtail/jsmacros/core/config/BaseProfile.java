@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.config;
 
 import org.apache.logging.log4j.Logger;
+import xyz.wagyourtail.jsmacros.client.api.library.impl.FWindow;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
@@ -156,5 +157,6 @@ public abstract class BaseProfile {
         runner.libraryRegistry.addLibrary(FGlobalVars.class);
         runner.libraryRegistry.addLibrary(FReflection.class);
         runner.libraryRegistry.addLibrary(FRequest.class);
+        runner.libraryRegistry.addLibrary(FWindow.class);
     }
 }
