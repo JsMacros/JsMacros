@@ -8,13 +8,12 @@
     "access.MixinChatHud",
     "access.MixinChunkSelection",
     "access.MixinClientPlayNetworkHandler",
+    "access.MixinDisconnectedScreen",
     "access.MixinEntity",
     "access.MixinFontManager",
     "access.MixinFontStorage",
-    "access.MixinGameRenderer",
     "access.MixinHandledScreen",
     "access.MixinHorseScreen",
-    "access.MixinInGameHud",
     "access.MixinItemCooldownEntry",
     "access.MixinItemCooldownManager",
     "access.MixinLoomScreen",
@@ -48,8 +47,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "access.MixinDisconnectedScreen"
-  ]
+  }
 }

@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.mixins.access;
+package xyz.wagyourtail.jsmacros.fabric.client.mixins.access;
 
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.MinecraftClient;
