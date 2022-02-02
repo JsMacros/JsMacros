@@ -43,7 +43,6 @@ public class JsMacrosForge {
 
         // initialize loader-specific stuff
         CommandBuilder.createNewBuilder = CommandBuilderForge::new;
-        MinecraftForge.EVENT_BUS.addListener(this::onTick);
 
         ForgeEvents.init();
 
@@ -52,12 +51,6 @@ public class JsMacrosForge {
         // load fabric-style plugins
         Thread.currentThread().setContextClassLoader(new ShimClassLoader());
         FakeFabricLoader.instance.loadEntries();
-    }
-
-    public void onTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            TickBasedEvents.onTick(MinecraftClient.getInstance());
-        }
     }
 
     public void onInitializeClient(FMLClientSetupEvent event) {
