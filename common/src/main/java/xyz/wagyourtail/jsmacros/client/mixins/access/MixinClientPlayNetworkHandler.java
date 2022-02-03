@@ -40,12 +40,19 @@ public class MixinClientPlayNetworkHandler {
             final long tick = packet.getTime();
             final long time = System.currentTimeMillis();
             if (tick != lastServerTimeRecvTick) {
-                final double mspt = (double)(time - lastServerTimeRecvTime) / (double)(tick - lastServerTimeRecvTick);
+                double mspt = (double)(time - lastServerTimeRecvTime) / (double)(tick - lastServerTimeRecvTick);
+                // if just joined
                 if (lastServerTimeRecvTick == 0) {
                     lastServerTimeRecvTime = time;
                     lastServerTimeRecvTick = tick;
                     return;
                 }
+                // if recorded more than 1000 ticks in a second, reset mspt to value for 25 tps
+                // this is probably bed sleeping...
+                if (mspt < 1) {
+                    mspt = 40;
+                }
+
                 lastServerTimeRecvTime = time;
                 lastServerTimeRecvTick = tick;
                 
