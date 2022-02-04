@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.*;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.Entry;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +19,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.access.BossBarConsumer;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
@@ -88,22 +90,34 @@ class MixinClientPlayNetworkHandler {
         }
     }
 
-    @Inject(at = @At("TAIL"), method = "onTitle")
-    public void onTitle(TitleS2CPacket packet, CallbackInfo info) {
-        if (packet.getTitle() != null)
-            new EventTitle("TITLE", packet.getTitle());
+    @ModifyArg(method = "onTitle", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;setTitle(Lnet/minecraft/text/Text;)V"))
+    public Text onTitle(Text title) {
+        EventTitle et = new EventTitle("TITLE", title);
+        if (et.message == null) {
+            return null;
+        } else {
+            return et.message.getRaw();
+        }
     }
 
-    @Inject(at = @At("TAIL"), method = "onSubtitle")
-    public void onSubtitle(SubtitleS2CPacket packet, CallbackInfo ci) {
-        if (packet.getSubtitle() != null)
-            new EventTitle("SUBTITLE", packet.getSubtitle());
+    @ModifyArg(method = "onSubtitle", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;setSubtitle(Lnet/minecraft/text/Text;)V"))
+    public Text onSubtitle(Text title) {
+        EventTitle et = new EventTitle("SUBTITLE", title);
+        if (et.message == null) {
+            return null;
+        } else {
+            return et.message.getRaw();
+        }
     }
 
-    @Inject(at = @At("TAIL"), method = "onOverlayMessage")
-    public void onOverlayMessage(OverlayMessageS2CPacket packet, CallbackInfo ci) {
-        if (packet.getMessage() != null)
-            new EventTitle("ACTIONBAR", packet.getMessage());
+    @ModifyArg(method = "onOverlayMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;setOverlayMessage(Lnet/minecraft/text/Text;Z)V"))
+    public Text onActionbar(Text title) {
+        EventTitle et = new EventTitle("ACTIONBAR", title);
+        if (et.message == null) {
+            return null;
+        } else {
+            return et.message.getRaw();
+        }
     }
 
     @Inject(at = @At("TAIL"), method="onBossBar")

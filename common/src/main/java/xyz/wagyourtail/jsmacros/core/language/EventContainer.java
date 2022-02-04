@@ -3,6 +3,9 @@ package xyz.wagyourtail.jsmacros.core.language;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @param <T>
  * @since 1.4.0
@@ -11,6 +14,8 @@ public class EventContainer<T> {
     private final BaseScriptContext<T> ctx;
     private Thread lockThread;
     private boolean locked = true;
+
+    private final List<Runnable> then = new ArrayList<>();
 
     public EventContainer(BaseScriptContext<T> ctx) {
         this.ctx = ctx;
@@ -47,13 +52,14 @@ public class EventContainer<T> {
             }
         }
         if (locked) {
+            this.then.add(then);
             this.wait();
-        }
-        try {
-            if (then != null)
+        } else {
+            try {
                 then.run();
-        } catch (Throwable e) {
-            Core.getInstance().profile.logError(e);
+            } catch (Throwable t) {
+                Core.getInstance().profile.logError(t);
+            }
         }
     }
     
@@ -64,6 +70,14 @@ public class EventContainer<T> {
     public synchronized void releaseLock() {
         locked = false;
         Core.getInstance().profile.joinedThreadStack.remove(lockThread);
+        for (Runnable runnable : then) {
+            try {
+                runnable.run();
+            } catch (Throwable t) {
+                Core.getInstance().profile.logError(t);
+            }
+        }
+        then.clear();
         this.notifyAll();
         synchronized (ctx) {
             ctx.events.remove(lockThread);

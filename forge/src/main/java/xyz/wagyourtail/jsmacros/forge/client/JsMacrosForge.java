@@ -15,6 +15,7 @@ import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.forge.client.api.classes.CommandBuilderForge;
+import xyz.wagyourtail.jsmacros.forge.client.forgeevents.ForgeEvents;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,18 +43,14 @@ public class JsMacrosForge {
 
         // initialize loader-specific stuff
         CommandBuilder.createNewBuilder = CommandBuilderForge::new;
-        MinecraftForge.EVENT_BUS.addListener(this::onTick);
+
+        ForgeEvents.init();
+
         ClientRegistry.registerKeyBinding(JsMacros.keyBinding);
 
         // load fabric-style plugins
         Thread.currentThread().setContextClassLoader(new ShimClassLoader());
         FakeFabricLoader.instance.loadEntries();
-    }
-
-    public void onTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
-            TickBasedEvents.onTick(MinecraftClient.getInstance());
-        }
     }
 
     public void onInitializeClient(FMLClientSetupEvent event) {
