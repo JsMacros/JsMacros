@@ -399,39 +399,13 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
-     *
-     * @param x
-     * @param y
-     * @param z
-     * @param offHand
-     * @param await
-     * @return true if block could be placed
-     * @throws InterruptedException
-     */
-    public boolean placeBlock(int x, int y, int z, boolean offHand, boolean swingHand, boolean await) throws InterruptedException {
-        AtomicBoolean success = new AtomicBoolean(false);
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
-        if (joinedMain) {
-            return placeBlock(x, y, z, offHand, swingHand);
-        } else {
-            Semaphore wait = new Semaphore(await ? 0 : 1);
-            mc.execute(() -> {
-                success.set(placeBlock(x, y, z, offHand, swingHand));
-                wait.release();
-            });
-            wait.acquire();
-        }
-        return success.get();
-    }
-
-    /**
      * Should be called every Tick until this method returns false (eg. while loop)
      * @param x
      * @param y
      * @param z
      * @return false if block has been broken
      */
-    public boolean breakBlock(int x, int y, int z){
+    private boolean breakBlock(int x, int y, int z){
         assert mc.interactionManager != null;
         assert mc.player != null;
 
@@ -446,25 +420,64 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param y
      * @param z
      * @param offHand
+     * @param await
+     * @return true if block could be placed
+     * @throws InterruptedException
+     */
+    public boolean placeBlock(int x, int y, int z, boolean offHand, boolean swingHand, boolean await) throws InterruptedException {
+        AtomicBoolean success = new AtomicBoolean(false);
+        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        if (joinedMain) {
+            Vec3d hitpos = new Vec3d(x + 0.5, y + 0.5, z + 0.5);
+            BlockPos neighbor, placePos = new BlockPos(x, y, z);
+            Direction side = getPlaceSide(placePos);
+
+            if(side == null){
+                side = Direction.UP;
+                neighbor = placePos;
+            }else{
+                neighbor = placePos.offset(side.getOpposite());
+                hitpos.add(side.getOffsetX() * 0.5, side.getOffsetY() * 0.5, side.getOffsetZ() * 0.5);
+            }
+
+            Direction s = side;
+
+            return internalPlace(new BlockHitResult(hitpos, s, neighbor, false), offHand ? Hand.OFF_HAND : Hand.MAIN_HAND, true);
+        } else {
+            Semaphore wait = new Semaphore(await ? 0 : 1);
+            mc.execute(() -> {
+                Vec3d hitpos = new Vec3d(x + 0.5, y + 0.5, z + 0.5);
+                BlockPos neighbor, placePos = new BlockPos(x, y, z);
+                Direction side = getPlaceSide(placePos);
+
+                if(side == null){
+                    side = Direction.UP;
+                    neighbor = placePos;
+                }else{
+                    neighbor = placePos.offset(side.getOpposite());
+                    hitpos.add(side.getOffsetX() * 0.5, side.getOffsetY() * 0.5, side.getOffsetZ() * 0.5);
+                }
+
+                Direction s = side;
+
+                success.set(internalPlace(new BlockHitResult(hitpos, s, neighbor, false), offHand ? Hand.OFF_HAND : Hand.MAIN_HAND, true));
+                wait.release();
+            });
+            wait.acquire();
+        }
+        return success.get();
+    }
+
+    /**
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @param offHand
      * @return true if block could be placed
      */
-    public boolean placeBlock(int x, int y, int z, boolean offHand){
-        Vec3d hitpos = new Vec3d(x + 0.5, y + 0.5, z + 0.5);
-        BlockPos placePos = new BlockPos(x, y, z);
-        BlockPos neighbor;
-        Direction side = getPlaceSide(placePos);
-
-        if(side == null){
-            side = Direction.UP;
-            neighbor = placePos;
-        }else{
-            neighbor = placePos.offset(side.getOpposite());
-            hitpos.add(side.getOffsetX() * 0.5, side.getOffsetY() * 0.5, side.getOffsetZ() * 0.5);
-        }
-
-        Direction s = side;
-
-        return internalPlace(new BlockHitResult(hitpos, s, neighbor, false), offHand ? Hand.OFF_HAND : Hand.MAIN_HAND, true);
+    public boolean placeBlock(int x, int y, int z, boolean offHand) throws InterruptedException {
+        return placeBlock(x, y, z, offHand, true, false);
     }
 
     /**
@@ -476,24 +489,8 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param swingHand
      * @return true if block could be placed
      */
-    public boolean placeBlock(int x, int y, int z, boolean offHand, boolean swingHand){
-        Vec3d hitpos = new Vec3d(x + 0.5, y + 0.5, z + 0.5);
-        BlockPos placePos = new BlockPos(x, y, z);
-        BlockPos neighbor;
-        Direction side = getPlaceSide(placePos);
-
-        if(side == null){
-            side = Direction.UP;
-            neighbor = placePos;
-        }else{
-            neighbor = placePos.offset(side.getOpposite());
-            hitpos.add(side.getOffsetX() * 0.5, side.getOffsetY() * 0.5, side.getOffsetZ() * 0.5);
-        }
-
-        Direction s = side;
-
-        boolean success = internalPlace(new BlockHitResult(hitpos, s, neighbor, false), offHand ? Hand.OFF_HAND : Hand.MAIN_HAND, swingHand);
-        return success;
+    public boolean placeBlock(int x, int y, int z, boolean offHand, boolean swingHand) throws InterruptedException {
+        return placeBlock(x, y, z, offHand, swingHand, false);
     }
 
     private boolean internalPlace(BlockHitResult blockHitResult, Hand hand, boolean swingHand){
