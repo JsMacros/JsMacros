@@ -2,7 +2,10 @@ package xyz.wagyourtail.doclet.tsdoclet.parsers;
 
 import xyz.wagyourtail.StringHelpers;
 
-import javax.lang.model.element.*;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

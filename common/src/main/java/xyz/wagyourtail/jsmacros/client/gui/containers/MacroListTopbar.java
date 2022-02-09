@@ -6,11 +6,11 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.config.Sorting;
-import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
-import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
+import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
+import xyz.wagyourtail.wagyourgui.elements.Button;
 
 public class MacroListTopbar extends MultiElementContainer<MacroScreen> {
     public ScriptTrigger.TriggerType deftype;

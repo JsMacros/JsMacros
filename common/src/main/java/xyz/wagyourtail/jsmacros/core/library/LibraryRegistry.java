@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.core.library;
 
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
-import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;

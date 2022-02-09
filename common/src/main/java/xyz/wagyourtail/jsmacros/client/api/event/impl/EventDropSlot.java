@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import xyz.wagyourtail.jsmacros.client.JsMacros;

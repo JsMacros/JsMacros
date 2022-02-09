@@ -3,9 +3,9 @@ package xyz.wagyourtail.jsmacros.client.gui.settings.settingfields;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import xyz.wagyourtail.wagyourgui.elements.AnnotatedCheckBox;
-import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.AbstractSettingContainer;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
+import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.AbstractSettingContainer;
+import xyz.wagyourtail.wagyourgui.elements.AnnotatedCheckBox;
 
 import java.lang.reflect.InvocationTargetException;
 

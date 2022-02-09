@@ -6,7 +6,6 @@ import xyz.wagyourtail.doclet.pydoclet.Main;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
-import javax.tools.Diagnostic;
 import java.util.*;
 
 public class ClassParser {
