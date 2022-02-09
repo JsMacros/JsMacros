@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
@@ -58,6 +59,13 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     @Inject(at = @At("HEAD"), method = "setExperience")
     public void onSetExperience(float progress, int total, int level, CallbackInfo info) {
         new EventEXPChange(progress, total, level, this.experienceProgress, this.totalExperience, this.experienceLevel);
+    }
+
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getHealth()F"), method = "updateHealth", locals = LocalCapture.CAPTURE_FAILHARD)
+    private void onUpdateHealth(float health, CallbackInfo ci) {
+        float f = health - this.getHealth();
+        if (f <= 0) return;
+        new EventDamage(DamageSource.GENERIC, health, f);
     }
 
     @Inject(at = @At("HEAD"), method = "damage")
