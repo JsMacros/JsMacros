@@ -61,20 +61,6 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         new EventEXPChange(progress, total, level, this.experienceProgress, this.totalExperience, this.experienceLevel);
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getHealth()F"), method = "updateHealth")
-    private void onUpdateHealth(float health, CallbackInfo ci) {
-        float f = this.getHealth() - health;
-        if (f <= 0) return;
-        new EventDamage(DamageSource.GENERIC, health, f);
-    }
-
-//    @Inject(at = @At("HEAD"), method = "damage")
-//    private void onApplyDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-//        int damage = Math.round(amount * 2) / 2;
-//        if (damage == 0) return;
-//        new EventDamage(source, this.getHealth() - damage, damage);
-//    }
-
     @Inject(at = @At("HEAD"), method = "openEditSignScreen", cancellable = true)
     public void onOpenEditSignScreen(SignBlockEntity sign, CallbackInfo info) {
         List<String> lines = new ArrayList<>(Arrays.asList("", "", "", ""));

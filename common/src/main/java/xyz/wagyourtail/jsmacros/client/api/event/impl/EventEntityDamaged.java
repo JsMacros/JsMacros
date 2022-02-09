@@ -8,10 +8,12 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 @Event("EntityDamaged")
 public class EventEntityDamaged implements BaseEvent {
     public final EntityHelper<?> entity;
+    public final float health;
     public final float damage;
 
-    public EventEntityDamaged(Entity e, float amount) {
+    public EventEntityDamaged(Entity e, float health, float amount) {
         entity = EntityHelper.create(e);
+        this.health = health;
         this.damage = amount;
 
         profile.triggerEvent(this);
