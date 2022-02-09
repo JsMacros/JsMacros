@@ -63,7 +63,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getHealth()F"), method = "updateHealth")
     private void onUpdateHealth(float health, CallbackInfo ci) {
-        float f = health - this.getHealth();
+        float f = this.getHealth() - health;
         if (f <= 0) return;
         new EventDamage(DamageSource.GENERIC, health, f);
     }
