@@ -264,7 +264,50 @@ public interface IDraw2D<T> {
      * @return added image
      */
     Image addImage(int x, int y, int width, int height, int zIndex, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation);
-    
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param zIndex
+     * @param color
+     * @param id
+     * @param imageX
+     * @param imageY
+     * @param regionWidth
+     * @param regionHeight
+     * @param textureWidth
+     * @param textureHeight
+     * @param rotation
+     *
+     * @since 1.6.5
+     * @return
+     */
+    Image addImage(int x, int y, int width, int height, int zIndex, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation);
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param zIndex
+     * @param alpha
+     * @param color
+     * @param id
+     * @param imageX
+     * @param imageY
+     * @param regionWidth
+     * @param regionHeight
+     * @param textureWidth
+     * @param textureHeight
+     * @param rotation
+     *
+     * @since 1.6.5
+     * @return
+     */
+    Image addImage(int x, int y, int width, int height, int zIndex, int alpha, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation);
+
     /**
      * @since 1.2.7
      * @param i
