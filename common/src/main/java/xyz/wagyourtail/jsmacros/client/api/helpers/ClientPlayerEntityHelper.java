@@ -7,6 +7,8 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.Item;
 import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
+import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -16,15 +18,16 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
+import xyz.wagyourtail.jsmacros.client.access.IClientPlayerInteractionManager;
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownEntry;
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownManager;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.Map;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +38,9 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends PlayerEntityHelper<T> {
     protected final MinecraftClient mc = MinecraftClient.getInstance();
+
+    private static BlockPos breakPos;
+    private static boolean finishedBlockBreak;
 
     public ClientPlayerEntityHelper(T e) {
         super(e);
@@ -398,19 +404,12 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         return "Client" + super.toString();
     }
 
-    /**
-     * Should be called every Tick until this method returns false (eg. while loop)
-     * @param x
-     * @param y
-     * @param z
-     * @return false if block has been broken
-     */
-    private boolean breakBlock(int x, int y, int z){
-        assert mc.interactionManager != null;
-        assert mc.player != null;
+    private static boolean internalBreakBlock(int x, int y, int z){
+        assert MinecraftClient.getInstance().interactionManager != null;
+        assert MinecraftClient.getInstance().player != null;
 
-        boolean value = mc.interactionManager.updateBlockBreakingProgress(new BlockPos(x, y, z), Direction.DOWN);
-        mc.player.swingHand(Hand.MAIN_HAND);
+        boolean value = MinecraftClient.getInstance().interactionManager.updateBlockBreakingProgress(new BlockPos(x, y, z), Direction.DOWN);
+        MinecraftClient.getInstance().player.swingHand(Hand.MAIN_HAND);
         return value;
     }
 
@@ -419,13 +418,68 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x
      * @param y
      * @param z
+     * @return
+     * @since 1.6.5
+     */
+    public ClientPlayerEntityHelper<T> breakBlock(int x, int y, int z) {
+        assert MinecraftClient.getInstance().interactionManager != null;
+        
+        breakPos = new BlockPos(x, y, z);
+        finishedBlockBreak = false;
+        ((IClientPlayerInteractionManager)MinecraftClient.getInstance().interactionManager).jsmacros_setBreakingBlock(true);
+        ((IClientPlayerInteractionManager)MinecraftClient.getInstance().interactionManager).jsmacros_setCurrentBreakingPos(breakPos);
+        return this;
+    }
+
+    /**
+     *
+     * @return
+     * @since 1.6.5
+     */
+    public ClientPlayerEntityHelper<T> stopBlockBreaking(){
+        sendBlockFinish();
+        finishedBlockBreak = true;
+        breakPos = null;
+        return this;
+    }
+
+    private static void sendBlockFinish(){
+        assert MinecraftClient.getInstance().interactionManager != null;
+        assert MinecraftClient.getInstance().world != null;
+        assert MinecraftClient.getInstance().player != null;
+
+        MinecraftClient.getInstance().world.setBlockBreakingInfo(MinecraftClient.getInstance().player.getId(), breakPos, -1);
+        ((IClientPlayerInteractionManager) MinecraftClient.getInstance().interactionManager).jsmacros_sendPlayerAction(PlayerActionC2SPacket.Action.ABORT_DESTROY_BLOCK, breakPos, Direction.DOWN);
+    }
+
+
+    /**
+     * Should never ever be called because it is called every tick
+     */
+    public static void onTick(){
+        if(MinecraftClient.getInstance().player != null) {
+            if (breakPos != null) {
+                finishedBlockBreak = !internalBreakBlock(breakPos.getX(), breakPos.getY(), breakPos.getZ());
+                if (finishedBlockBreak) {
+                    sendBlockFinish();
+                    breakPos = null;
+                    finishedBlockBreak = false;
+                }
+            }
+        }
+    }
+
+    /**
+     * @since 1.6.5
+     * @param x
+     * @param y
+     * @param z
      * @param offHand
      * @param await
-     * @return true if block could be placed
+     * @return
      * @throws InterruptedException
      */
-    public boolean placeBlock(int x, int y, int z, boolean offHand, boolean swingHand, boolean await) throws InterruptedException {
-        AtomicBoolean success = new AtomicBoolean(false);
+    public ClientPlayerEntityHelper<T> placeBlock(int x, int y, int z, boolean offHand, boolean swingHand, boolean await) throws InterruptedException {
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
             Vec3d hitpos = new Vec3d(x + 0.5, y + 0.5, z + 0.5);
@@ -442,7 +496,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
 
             Direction s = side;
 
-            return internalPlace(new BlockHitResult(hitpos, s, neighbor, false), offHand ? Hand.OFF_HAND : Hand.MAIN_HAND, true);
+            internalPlace(new BlockHitResult(hitpos, s, neighbor, false), offHand ? Hand.OFF_HAND : Hand.MAIN_HAND, true);
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
@@ -460,28 +514,28 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
 
                 Direction s = side;
 
-                success.set(internalPlace(new BlockHitResult(hitpos, s, neighbor, false), offHand ? Hand.OFF_HAND : Hand.MAIN_HAND, true));
+                internalPlace(new BlockHitResult(hitpos, s, neighbor, false), offHand ? Hand.OFF_HAND : Hand.MAIN_HAND, true);
                 wait.release();
             });
             wait.acquire();
         }
-        return success.get();
+        return this;
     }
 
     /**
-     *
+     * @since 1.6.5
      * @param x
      * @param y
      * @param z
      * @param offHand
      * @return true if block could be placed
      */
-    public boolean placeBlock(int x, int y, int z, boolean offHand) throws InterruptedException {
+    public ClientPlayerEntityHelper<T> placeBlock(int x, int y, int z, boolean offHand) throws InterruptedException {
         return placeBlock(x, y, z, offHand, true, false);
     }
 
     /**
-     *
+     * @since 1.6.5
      * @param x
      * @param y
      * @param z
@@ -489,11 +543,11 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param swingHand
      * @return true if block could be placed
      */
-    public boolean placeBlock(int x, int y, int z, boolean offHand, boolean swingHand) throws InterruptedException {
+    public ClientPlayerEntityHelper<T> placeBlock(int x, int y, int z, boolean offHand, boolean swingHand) throws InterruptedException {
         return placeBlock(x, y, z, offHand, swingHand, false);
     }
 
-    private boolean internalPlace(BlockHitResult blockHitResult, Hand hand, boolean swingHand){
+    private void internalPlace(BlockHitResult blockHitResult, Hand hand, boolean swingHand){
         assert mc.player != null;
         assert mc.interactionManager != null;
         assert mc.getNetworkHandler() != null;
@@ -507,7 +561,8 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
             else mc.getNetworkHandler().sendPacket(new HandSwingC2SPacket(hand));
         }
         mc.player.input.sneaking = wasSneaking;
-        return result.isAccepted();
+        mc.player.sendMessage(new LiteralText(result + " 1:"), false);
+        mc.player.sendMessage(new LiteralText(result.shouldSwingHand() + " | " + result.isAccepted() + " 2:"), false);
     }
 
     private Direction getPlaceSide(BlockPos blockPos) {
