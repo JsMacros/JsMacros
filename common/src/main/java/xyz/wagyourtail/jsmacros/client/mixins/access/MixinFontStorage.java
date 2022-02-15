@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.IntFunction;
 
 @Mixin(FontStorage.class)
 public abstract class MixinFontStorage {

@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.core.language;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Nullable;

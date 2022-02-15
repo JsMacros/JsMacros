@@ -6,12 +6,11 @@ import net.minecraft.text.LiteralText;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.logging.log4j.Level;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.client.gui.screens.CancelScreen;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.service.EventService;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
-import xyz.wagyourtail.jsmacros.client.gui.screens.CancelScreen;
-import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
 public class RunningContextContainer extends MultiElementContainer<CancelScreen> {
     private Button cancelButton;

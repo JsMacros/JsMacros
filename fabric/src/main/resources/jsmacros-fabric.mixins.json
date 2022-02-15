@@ -3,8 +3,8 @@
     "package": "xyz.wagyourtail.jsmacros.fabric.client.mixins",
     "compatibilityLevel": "JAVA_17",
     "client": [
-        "access.MixinInGameHud",
-        "access.MixinGameRenderer"
+        "access.MixinGameRenderer",
+        "access.MixinInGameHud"
     ],
     "injectors": {
         "defaultRequire": 1

@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
@@ -25,7 +24,7 @@ import java.util.*;
  */
 @SuppressWarnings("deprecation")
 public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
-    private final Set<RenderCommon.RenderElement> elements = new LinkedHashSet<>();
+    protected final Set<RenderCommon.RenderElement> elements = new LinkedHashSet<>();
     /**
      * @since 1.0.5
      * @deprecated please use {@link Draw2D#setOnInit(MethodWrapper)}
@@ -237,16 +236,41 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     public RenderCommon.Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
         return addImage(x, y, width, height, 0, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
     }
-    
+
+    /**
+     * @since 1.4.0
+     * @see IDraw2D#addImage(int, int, int, int, int, String, int, int, int, int, int, int, double)
+     */
     @Override
     public RenderCommon.Image addImage(int x, int y, int width, int height, int zIndex, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
-        RenderCommon.Image i = new RenderCommon.Image(x, y, width, height, zIndex, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation);
+        return addImage(x, y, width, height, zIndex, 0xFFFFFFFF, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
+    }
+
+    /**
+     * @since 1.6.5
+     * @see IDraw2D#addImage(int, int, int, int, int, int, String, int, int, int, int, int, int, double)
+     */
+    @Override
+    public RenderCommon.Image addImage(int x, int y, int width, int height, int zIndex, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
+        RenderCommon.Image i = new RenderCommon.Image(x, y, width, height, zIndex, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation);
         synchronized (elements) {
             elements.add(i);
         }
         return i;
     }
-    
+    /**
+     * @since 1.6.5
+     * @see IDraw2D#addImage(int, int, int, int, int, int, int, String, int, int, int, int, int, int, double)
+     */
+    @Override
+    public RenderCommon.Image addImage(int x, int y, int width, int height, int zIndex, int alpha, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
+        RenderCommon.Image i = new RenderCommon.Image(x, y, width, height, zIndex, alpha, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation);
+        synchronized (elements) {
+            elements.add(i);
+        }
+        return i;
+    }
+
     /**
      * @since 1.2.3
      * @see IDraw2D#removeImage(xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon.Image)

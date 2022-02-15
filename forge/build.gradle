@@ -52,7 +52,16 @@ processResources {
 
 shadowJar {
     configurations = [project.configurations.shadowCommon]
+    dependencies {
+        exclude(dependency {
+            it.moduleGroup == 'org.intellij'
+        })
+        exclude(dependency {
+            it.moduleGroup == 'org.jetbrains'
+        })
+    }
     classifier "dev-shadow"
+
     mergeServiceFiles()
 }
 

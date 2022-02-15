@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.filter.logical;
 
 import xyz.wagyourtail.jsmacros.client.api.classes.filter.BasicFilter;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.api.IAdvancedFilter;
 import xyz.wagyourtail.jsmacros.client.api.classes.filter.api.IFilter;
 
 /**

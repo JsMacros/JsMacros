@@ -6,21 +6,24 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import xyz.wagyourtail.wagyourgui.elements.Button;
-import xyz.wagyourtail.wagyourgui.overlays.ConfirmOverlay;
-import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
-import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
-import xyz.wagyourtail.wagyourgui.BaseScreen;
 import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.*;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.config.Option;
+import xyz.wagyourtail.wagyourgui.BaseScreen;
+import xyz.wagyourtail.wagyourgui.elements.Button;
+import xyz.wagyourtail.wagyourgui.overlays.ConfirmOverlay;
+import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
+import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class SettingsOverlay extends OverlayContainer implements ICategoryTreeParent {
     private final Text title = new TranslatableText("jsmacros.settings");

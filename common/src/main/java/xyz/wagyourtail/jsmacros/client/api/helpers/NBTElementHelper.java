@@ -1,6 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.AbstractNbtList;
+import net.minecraft.nbt.AbstractNbtNumber;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Set;

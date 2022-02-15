@@ -2,10 +2,10 @@ package xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.LiteralText;
-import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.FileChooser;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.settings.settingfields.FileField;
+import xyz.wagyourtail.wagyourgui.elements.Button;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
