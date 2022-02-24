@@ -61,6 +61,14 @@ public class TextHelper extends BaseHelper<Text> {
     }
 
     /**
+     * @since 1.6.5
+     * @return the text content. stripped formatting when servers send it the (super) old way due to shitty coders.
+     */
+    public String getStringStripFormatting() {
+        return base.getString().replaceAll("\\u00A7.", "");
+    }
+
+    /**
      * @param visitor function with 2 args, no return.
      * @since 1.6.5
      */
