@@ -147,7 +147,7 @@ public class FGlobalVars extends BaseLibrary {
      *
      * @since 1.6.5
      */
-    public Integer getAndIncrement(String name) {
+    public Integer getAndIncrementInt(String name) {
         Object i = globalRaw.get(name);
         if (i instanceof Integer) {
             globalRaw.put(name, ((Integer) i) + 1);
@@ -166,7 +166,7 @@ public class FGlobalVars extends BaseLibrary {
      *
      * @since 1.6.5
      */
-    public Integer getAndDecrement(String name) {
+    public Integer getAndDecrementInt(String name) {
         Object i = globalRaw.get(name);
         if (i instanceof Integer) {
             globalRaw.put(name, ((Integer) i) - 1);
@@ -185,7 +185,7 @@ public class FGlobalVars extends BaseLibrary {
      *
      * @since 1.6.5
      */
-    public Integer incrementAndGet(String name) {
+    public Integer incrementAndGetInt(String name) {
         Object i = globalRaw.get(name);
         if (i instanceof Integer) {
             globalRaw.put(name, i = ((Integer) i) + 1);
@@ -204,7 +204,7 @@ public class FGlobalVars extends BaseLibrary {
      *
      * @since 1.6.5
      */
-    public Integer decrementAndGet(String name) {
+    public Integer decrementAndGetInt(String name) {
         Object i = globalRaw.get(name);
         if (i instanceof Integer) {
             globalRaw.put(name, i = ((Integer) i) - 1);
