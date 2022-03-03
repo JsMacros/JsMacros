@@ -201,8 +201,8 @@ public class MacroScreen extends BaseScreen {
     }
     
     @Override
-    public void onClose() {
+    public void close() {
         Core.getInstance().profile.saveProfile();
-        super.onClose();
+        super.close();
     }
 }

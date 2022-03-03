@@ -57,7 +57,7 @@ public class MovementDummy extends LivingEntity {
         this.coordsHistory.add(this.getPos());
 
         for (EquipmentSlot value : EquipmentSlot.values()) {
-            equippedStack.put(value, new ItemStack(null));
+            equippedStack.put(value, new ItemStack(Items.AIR));
         }
     }
 

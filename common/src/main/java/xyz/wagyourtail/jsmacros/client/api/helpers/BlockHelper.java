@@ -7,6 +7,7 @@ import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Etheradon
@@ -100,7 +101,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @version 1.6.5
      */
     public List<String> getTags() {
-        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().getOrCreateTagGroup(Registry.BLOCK_KEY).getTagsFor(base).stream().map(Identifier::toString).toList();
+        return base.getRegistryEntry().streamTags().map(t -> t.id().toString()).collect(Collectors.toList());
     }
 
     /**
@@ -109,7 +110,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @version 1.6.5
      */
     public List<BlockStateHelper> getStates() {
-        return base.getStateManager().getStates().stream().map(BlockStateHelper::new).toList();
+        return base.getStateManager().getStates().stream().map(BlockStateHelper::new).collect(Collectors.toList());
     }
 
     /**

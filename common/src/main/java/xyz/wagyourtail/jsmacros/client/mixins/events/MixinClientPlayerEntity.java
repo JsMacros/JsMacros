@@ -101,7 +101,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         this.input.movementSideways = moveInput.movementSideways;
         this.input.jumping = moveInput.jumping;
         this.input.sneaking = moveInput.sneaking;
-        this.client.options.keySprint.setPressed(moveInput.sprinting);
+        this.client.options.sprintKey.setPressed(moveInput.sprinting);
         this.setYaw(moveInput.yaw);
         this.setPitch(moveInput.pitch);
 

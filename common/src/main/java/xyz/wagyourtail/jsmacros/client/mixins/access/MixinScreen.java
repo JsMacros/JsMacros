@@ -60,7 +60,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Shadow protected TextRenderer textRenderer;
     
     @Shadow(aliases = {"method_37063", "m_142416_"}) protected abstract <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement);
-    @Shadow public abstract void onClose();
+    @Shadow(aliases = "close") public abstract void onClose();
     @Shadow protected abstract void init();
 
     
@@ -492,9 +492,9 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
+    @Unique
     public void close() {
         onClose();
-        
     }
 
     @Override
@@ -638,7 +638,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
     
     //TODO: switch to enum extention with mixin 9.0 or whenever Mumfrey gets around to it
-    @Inject(at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "handleTextClick", cancellable = true)
+    @Inject(at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "handleTextClick", cancellable = true)
     public void handleCustomClickEvent(Style style, CallbackInfoReturnable<Boolean> cir) {
         ClickEvent clickEvent = style.getClickEvent();
         if (clickEvent instanceof CustomClickEvent) {

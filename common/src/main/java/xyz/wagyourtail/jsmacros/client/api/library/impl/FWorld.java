@@ -278,7 +278,7 @@ public class FWorld extends BaseLibrary {
      */
     public String getBiome() {
         assert mc.world != null;
-        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(mc.player.getBlockPos())).toString();
+        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(mc.player.getBlockPos()).value()).toString();
     }
     
     /**
@@ -476,7 +476,7 @@ public class FWorld extends BaseLibrary {
      */
     public String getBiomeAt(int x, int z) {
         assert mc.world != null;
-        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(new BlockPos(x, 10, z))).toString();
+        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(new BlockPos(x, 10, z)).value()).toString();
     }
     
     /**

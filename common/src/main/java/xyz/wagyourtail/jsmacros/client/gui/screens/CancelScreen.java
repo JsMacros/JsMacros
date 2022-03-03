@@ -42,7 +42,7 @@ public class CancelScreen extends BaseScreen {
         running.clear();
         s = this.addDrawableChild(new Scrollbar(width - 12, 5, 8, height-10, 0xFFFFFFFF, 0xFF000000, 0x7FFFFFFF, 1, this::onScrollbar));
         
-        this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.back"), (btn) -> this.onClose()));
+        this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.back"), (btn) -> this.close()));
         services = this.addDrawableChild(new AnnotatedCheckBox(this.width / 12 + 5, this.height - 12, 200, 12, textRenderer, 0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.showservices"), false, null));
     }
 
@@ -121,7 +121,7 @@ public class CancelScreen extends BaseScreen {
     }
 
     @Override
-    public void onClose() {
+    public void close() {
         this.openParent();
     }
 

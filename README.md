@@ -41,3 +41,9 @@ These extensions allow you to code in languages other than the default language 
 <https://ko-fi.com/wagyourtail>
 
 <https://www.patreon.com/wagyourtail>
+
+## Acknoledgements
+[
+![JProfiler](https://www.ej-technologies.com/images/product_banners/jprofiler_small.png)
+Thank You to JProfiler for usage of the Java Profiler tool for optimizing jsmacros!
+](https://www.ej-technologies.com/products/jprofiler/overview.html)

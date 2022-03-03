@@ -81,7 +81,7 @@ public class ScriptScreen extends BaseScreen {
     }
 
     @Override
-    public void onClose() {
+    public void close() {
         openParent();
     }
 }

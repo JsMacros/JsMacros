@@ -26,7 +26,7 @@ class MixinMinecraftClient implements IMinecraftClient {
 
     @Shadow protected abstract void doItemUse();
 
-    @Shadow protected abstract void doAttack();
+    @Shadow protected abstract boolean doAttack();
 
     @Shadow public Screen currentScreen;
 

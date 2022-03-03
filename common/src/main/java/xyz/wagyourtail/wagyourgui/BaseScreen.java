@@ -151,7 +151,7 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
     public void updateSettings() {}
 
     @Override
-    public void onClose() {
+    public void close() {
         assert client != null;
         if (client.world == null)
             openParent();

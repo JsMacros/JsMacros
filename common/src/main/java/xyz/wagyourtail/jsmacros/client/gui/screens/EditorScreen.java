@@ -191,7 +191,7 @@ public class EditorScreen extends BaseScreen {
         scrollbar = addDrawableChild(new Scrollbar(width, 12, 10, height - 24, 0, 0xFF000000, 0xFFFFFFFF, 1, this::setScroll));
         saveBtn = this.addDrawableChild(new Button(width / 2, 0, width / 6, 12, textRenderer, needSave() ? 0xFFA0A000 : 0xFF00A000, 0xFF000000, needSave() ? 0xFF707000 : 0xFF007000, 0xFFFFFF, new TranslatableText("jsmacros.save"), (btn) -> save()));
         this.addDrawableChild(new Button(width * 4 / 6, 0, width / 6, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.close"), (btn) -> openParent()));
-        this.addDrawableChild(new Button(width, 0, 10, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(client.world == null ? "X" : "-"), (btn) -> onClose()));
+        this.addDrawableChild(new Button(width, 0, 10, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(client.world == null ? "X" : "-"), (btn) -> close()));
         
         if (language == null)
             setLanguage(getDefaultLanguage());
