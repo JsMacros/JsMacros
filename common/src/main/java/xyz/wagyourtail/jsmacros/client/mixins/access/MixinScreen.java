@@ -60,7 +60,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Shadow protected TextRenderer textRenderer;
     
     @Shadow(aliases = {"method_37063", "m_142416_"}) protected abstract <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement);
-    @Shadow(aliases = "close") public abstract void onClose();
+    @Shadow(aliases = {"close", "method_25419", "m_7379_"}) public abstract void onClose();
     @Shadow protected abstract void init();
 
     
