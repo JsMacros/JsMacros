@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -136,13 +137,13 @@ public class FKeyBind extends BaseLibrary {
     }
     
     /**
-     * @since 1.2.6
+     * @since 1.2.6 (turned into set instead of list in 1.6.5)
      * 
-     * @return a list of currently pressed keys.
+     * @return a set of currently pressed keys.
      */
-    public List<String> getPressedKeys() {
+    public Set<String> getPressedKeys() {
         synchronized (pressedKeys) {
-            return new ArrayList<>(pressedKeys);
+            return ImmutableSet.copyOf(pressedKeys);
         }
     }
 }
