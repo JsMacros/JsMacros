@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.util.Util;
-import xyz.wagyourtail.jsmacros.client.config.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
@@ -23,7 +22,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -207,7 +205,7 @@ public class FJsMacros extends PerExecLibrary {
                     
                     try {
                         callback.accept(e, p);
-                    } catch (Exception ex) {
+                    } catch (Throwable ex) {
                         Core.getInstance().eventRegistry.removeListener(event, this);
                         Core.getInstance().profile.logError(ex);
                     } finally {
@@ -265,7 +263,7 @@ public class FJsMacros extends PerExecLibrary {
                     Thread.currentThread().setName(this.toString());
                     try {
                         callback.accept(e, p);
-                    } catch (Exception ex) {
+                    } catch (Throwable ex) {
                         Core.getInstance().profile.logError(ex);
                     } finally {
                         p.releaseLock();
@@ -430,7 +428,7 @@ public class FJsMacros extends PerExecLibrary {
             try {
                 // check the filter
                 done[0] = filter == null || filter.test(ev[0]);
-            } catch (Exception ex) {
+            } catch (Throwable ex) {
                 Core.getInstance().eventRegistry.removeListener(event, listener);
                 throw new RuntimeException("Error thrown in filter", ex);
             } finally {

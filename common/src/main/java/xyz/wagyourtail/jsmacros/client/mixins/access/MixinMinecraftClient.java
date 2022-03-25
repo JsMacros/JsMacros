@@ -26,7 +26,7 @@ class MixinMinecraftClient implements IMinecraftClient {
 
     @Shadow protected abstract void doItemUse();
 
-    @Shadow protected abstract void doAttack();
+    @Shadow protected abstract boolean doAttack();
 
     @Shadow public Screen currentScreen;
 
@@ -37,7 +37,7 @@ class MixinMinecraftClient implements IMinecraftClient {
             for (IDraw2D<Draw2D> h : FHud.overlays) {
                 try {
                     ((Draw2D) h).init();
-                } catch (Exception ignored) {}
+                } catch (Throwable ignored) {}
             }
         }
     }
@@ -47,7 +47,7 @@ class MixinMinecraftClient implements IMinecraftClient {
         Consumer<IScreen> onClose = ((IScreen)currentScreen).getOnClose();
         try {
             if (onClose != null) onClose.accept((IScreen) currentScreen);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
     }

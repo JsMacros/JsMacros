@@ -38,7 +38,7 @@ public class XMLBuilder {
         return this;
     }
 
-    public XMLBuilder setID(String id) {
+    public XMLBuilder setId(String id) {
         return addStringOption("id", id);
     }
 

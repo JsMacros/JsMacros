@@ -145,7 +145,7 @@ public class TextBuilder {
         self.styled(style -> style.withClickEvent(new CustomClickEvent(() -> {
             try {
                 action.run();
-            } catch (Exception ex) {
+            } catch (Throwable ex) {
                 Core.getInstance().profile.logError(ex);
             }
         })));

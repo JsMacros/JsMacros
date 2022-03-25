@@ -13,8 +13,6 @@ on:
     secrets:
       CF_API_KEY:
         required: true
-      GITHUB_TOKEN:
-        required: true
 
 jobs:
   deploy:
@@ -60,7 +58,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Zip TS
-        uses: papeloto/action-zip@v1
+        uses: vimtor/action-zip@v1
         with:
           files: typescript/
           dest: typescript-${{ inputs.branch }}.zip

@@ -5,12 +5,11 @@ import io.noties.prism4j.Prism4j;
 import io.noties.prism4j.annotations.Extend;
 import org.jetbrains.annotations.NotNull;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static io.noties.prism4j.Prism4j.*;
-import static java.util.regex.Pattern.*;
+import static java.util.regex.Pattern.compile;
 
 @Extend("javascript")
 @SuppressWarnings("unused")

@@ -27,7 +27,7 @@ public class KeyListener extends BaseListener {
                 }
             }
             this.mods = EventKey.getModInt(mods.toString());
-        } catch(Exception e) {
+        } catch(Throwable e) {
             key = InputUtil.UNKNOWN_KEY.getTranslationKey();
         }
     }

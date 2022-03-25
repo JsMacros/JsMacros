@@ -33,7 +33,7 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
     }
     
     /**
-    * {@code 0} is tablist, {@code 1} or {@code 3 + getPlayerTeamColorIndex()} is sidebar, {@code 2} should be tab list.
+    * {@code 0} is tab list, {@code 1} or {@code 3 + getPlayerTeamColorIndex()} is sidebar, {@code 2} should be below name.
     * therefore max slot number is 18.
      * @param slot
      * @since 1.2.9
@@ -53,6 +53,15 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
     public int getPlayerTeamColorIndex(PlayerEntityHelper<PlayerEntity> entity) {
         return getPlayerTeamColorIndex(entity.getRaw());
     }
+
+
+    /**
+     * @since 1.6.5
+     * @return team index for client player
+     */
+    public int getPlayerTeamColorIndex() {
+        return getPlayerTeamColorIndex(MinecraftClient.getInstance().player);
+    }
     
     /**
      * @since 1.3.0
@@ -69,6 +78,14 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
      */
     public TeamHelper getPlayerTeam(PlayerEntityHelper<PlayerEntity> p) {
         return new TeamHelper(getPlayerTeam(p.getRaw()));
+    }
+
+    /**
+     * @since 1.6.5
+     * @return team for client player
+     */
+    public TeamHelper getPlayerTeam() {
+        return new TeamHelper(getPlayerTeam(MinecraftClient.getInstance().player));
     }
     
     /**

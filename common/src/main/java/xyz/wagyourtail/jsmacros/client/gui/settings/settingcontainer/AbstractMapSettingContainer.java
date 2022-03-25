@@ -6,13 +6,13 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.TranslatableText;
+import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
+import xyz.wagyourtail.wagyourgui.BaseScreen;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 import xyz.wagyourtail.wagyourgui.overlays.SelectorDropdownOverlay;
 import xyz.wagyourtail.wagyourgui.overlays.TextPrompt;
-import xyz.wagyourtail.wagyourgui.BaseScreen;
-import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
     public AbstractMapSettingContainer(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
         super(x, y, width, height, textRenderer, parent, group);
     }
-    
+
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void init() {
@@ -61,7 +61,7 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
             }
         }));
     }
-    
+
     public void onScrollbar(double pages) {
         topScroll = (int) (pages * height);
         Iterator<String> it = map.keySet().stream().sorted().iterator();
@@ -75,14 +75,14 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
             height += current.height;
         }
     }
-    
+
     public void newField(String key) throws InvocationTargetException, IllegalAccessException {
         setting.get().put(key, defaultValue.get());
         addField(key, defaultValue.get());
     }
-    
+
     public abstract void addField(String key, T value);
-    
+
     public void removeField(String key) throws InvocationTargetException, IllegalAccessException {
         setting.get().remove(key);
         MapSettingEntry<T> ent = map.remove(key);
@@ -95,18 +95,18 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
             onScrollbar(0);
         }
     }
-    
+
     public void changeValue(String key, T newValue) throws InvocationTargetException, IllegalAccessException {
         setting.get().put(key, newValue);
         map.get(key).setValue(newValue);
     }
-    
+
     public void changeKey(String key, String newKey) throws InvocationTargetException, IllegalAccessException {
         Map<String, T> setting = this.setting.get();
         setting.put(newKey, setting.remove(key));
         map.get(key).setKey(newKey);
     }
-    
+
     @Override
     @SuppressWarnings("unchecked")
     public void addSetting(SettingsOverlay.SettingField<?> setting) {
@@ -119,25 +119,25 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         textRenderer.draw(matrices, settingName, x + width / 2F - textRenderer.getWidth(settingName) / 2F + 20, y + 1, 0xFFFFFF);
         fill(matrices, x, y + 10, x+width,y + 11,0xFFFFFFFF);
     }
-    
+
     public static abstract class MapSettingEntry<T> extends MultiElementContainer<AbstractMapSettingContainer<T, MapSettingEntry<T>>> {
         protected String key;
         protected Button keyBtn;
         protected T value;
-    
+
         public MapSettingEntry(int x, int y, int width, TextRenderer textRenderer, AbstractMapSettingContainer<T, MapSettingEntry<T>> parent, String key, T value) {
             super(x, y, width, textRenderer.fontHeight + 2, textRenderer, parent);
             this.key = key;
             this.value = value;
             init();
         }
-    
+
         @Override
         @SuppressWarnings({"unchecked", "rawtypes"})
         public void init() {
@@ -156,7 +156,7 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
                     int y = parent.y;
                     int width = parent.width;
                     int height = parent.height;
-                    openOverlay(new TextPrompt(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.setkey"), key, getFirstOverlayParent(), (newKey) -> {
+                    openOverlay(new TextPrompt(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.setprofilename"), key, getFirstOverlayParent(), (newKey) -> {
                         try {
                             parent.changeKey(key, newKey);
                         } catch (InvocationTargetException | IllegalAccessException e) {
@@ -173,7 +173,7 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
                 }
             }));
         }
-    
+
         @Override
         public void setPos(int x, int y, int width, int height) {
             super.setPos(x, y, width, height);
@@ -181,21 +181,21 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
                 btn.y = y;
             }
         }
-        
+
         public void setKey(String newKey) {
             parent.map.remove(key);
             this.key = newKey;
             keyBtn.setMessage(new LiteralText(this.key));
             parent.map.put(key, this);
         }
-        
+
         public void setValue(T newValue) {
             this.value = newValue;
         }
-        
+
         @Override
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        
+
         }
     }
 }

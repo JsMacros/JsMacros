@@ -1,5 +1,6 @@
-package xyz.wagyourtail.jsmacros.client.mixins.access;
+package xyz.wagyourtail.jsmacros.fabric.client.mixins.access;
 
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -21,13 +22,11 @@ public class MixinGameRenderer {
     @Inject(at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", args = "ldc=hand"), method = "renderWorld")
     public void render(float tickDelta, long limitTime, MatrixStack matrix, CallbackInfo info) {
         client.getProfiler().swap("jsmacros_draw3d");
-        synchronized (FHud.renders) {
-            for (Draw3D d : FHud.renders) {
-                try {
-                    d.render(matrix);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        for (Draw3D d : ImmutableSet.copyOf(FHud.renders)) {
+            try {
+                d.render(matrix);
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
         }
     }

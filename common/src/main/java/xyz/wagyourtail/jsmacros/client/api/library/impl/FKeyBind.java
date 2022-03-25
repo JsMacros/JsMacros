@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -48,7 +49,7 @@ public class FKeyBind extends BaseLibrary {
      */
     public Map<String, String> getKeyBindings() {
         Map<String, String> keys = new HashMap<>();
-        for (KeyBinding key : ImmutableList.copyOf(mc.options.keysAll)) {
+        for (KeyBinding key : ImmutableList.copyOf(mc.options.allKeys)) {
             keys.put(key.getTranslationKey(), key.getBoundKeyTranslationKey());
         }
         return keys;
@@ -63,8 +64,8 @@ public class FKeyBind extends BaseLibrary {
      * @param key
      */
     public void setKeyBind(String bind, String key) {
-        for (KeyBinding keybind : mc.options.keysAll) {
-            if (keybind.getBoundKeyTranslationKey().equals(bind)) {
+        for (KeyBinding keybind : mc.options.allKeys) {
+            if (keybind.getTranslationKey().equals(bind)) {
                 keybind.setBoundKey(InputUtil.fromTranslationKey(key));
                 return;
             }
@@ -90,6 +91,10 @@ public class FKeyBind extends BaseLibrary {
     protected void key(Key keyBind, boolean keyState) {
         if (keyState) KeyBinding.onKeyPressed(keyBind);
         KeyBinding.setKeyPressed(keyBind, keyState);
+
+        // add to pressed keys list
+        if (keyState) pressedKeys.add(keyBind.getTranslationKey());
+        else pressedKeys.remove(keyBind.getTranslationKey());
     }
     
     /**
@@ -103,10 +108,14 @@ public class FKeyBind extends BaseLibrary {
      * @param keyState
      */
     public void keyBind(String keyBind, boolean keyState) {
-        for (KeyBinding key : mc.options.keysAll) {
+        for (KeyBinding key : mc.options.allKeys) {
             if (key.getTranslationKey().equals(keyBind)) {
                 if (keyState) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(key.getBoundKeyTranslationKey()));
                 key.setPressed(keyState);
+
+                // add to pressed keys list
+                if (keyState) pressedKeys.add(key.getBoundKeyTranslationKey());
+                else pressedKeys.remove(key.getBoundKeyTranslationKey());
                 return;
             }
         }
@@ -121,16 +130,20 @@ public class FKeyBind extends BaseLibrary {
     protected void key(KeyBinding keyBind, boolean keyState) {
         if (keyState) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(keyBind.getBoundKeyTranslationKey()));
         keyBind.setPressed(keyState);
+
+        // add to pressed keys list
+        if (keyState) pressedKeys.add(keyBind.getBoundKeyTranslationKey());
+        else pressedKeys.remove(keyBind.getBoundKeyTranslationKey());
     }
     
     /**
-     * @since 1.2.6
+     * @since 1.2.6 (turned into set instead of list in 1.6.5)
      * 
-     * @return a list of currently pressed keys.
+     * @return a set of currently pressed keys.
      */
-    public List<String> getPressedKeys() {
+    public Set<String> getPressedKeys() {
         synchronized (pressedKeys) {
-            return new ArrayList<>(pressedKeys);
+            return ImmutableSet.copyOf(pressedKeys);
         }
     }
 }

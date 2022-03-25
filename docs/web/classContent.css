@@ -4,9 +4,11 @@
     --code-color: #C0C0C0;
     --classItem-color: #F0F0F0;
     --classExtends-color: #606060;
+    --paramHeader-color: #0066FF;
     --classItemTypeDesc-color: #606060;
     --methodConstructor-color: #606060;
     --primitiveType-font-size: 0.83em;
+    --typeLink-color: #0066FF;
 
 }
 
@@ -16,6 +18,8 @@
     --code-color: #3c4143;
     --classItem-color: #404040;
     --classExtends-color: #A0A0A0;
+    --paramHeader-color: #3030B0;
+    --typeLink-color: #0088FF;
     --classItemTypeDesc-color: #A0A0A0;
     --methofConstructor-color: #A0A0A0;
     --primitiveType-font-size: 1rem
@@ -87,7 +91,7 @@ code {
 .shortClassItem a {
     text-decoration: none;
     font-weight: normal;
-    color: #0066FF;
+    color: var(--typeLink-color);
     padding-right: 5px;
 }
 
@@ -97,7 +101,7 @@ code {
 
 .flag {
     display: inline-block;
-    background-color: #0066FF;
+    background-color: var(--paramHeader-color);
     padding: 5px;
     border-radius: 5px;
     color: white;
@@ -112,7 +116,7 @@ code {
     text-decoration: none;
     font-weight: bold;
     margin: 0;
-    color: #0066FF;
+    color: var(--typeLink-color);
 }
 
 .deadType {
@@ -166,6 +170,6 @@ code {
 }
 
 .paramTable thead {
-    background-color: #0066FF;
+    background-color: var(--paramHeader-color);
     color: white;
 }

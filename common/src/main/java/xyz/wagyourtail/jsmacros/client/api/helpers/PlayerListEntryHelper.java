@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.world.GameMode;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -34,7 +35,25 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
         if (prof == null) return null;
         return prof.getName();
     }
-    
+
+    /**
+     * @since 1.6.5
+     * @return
+     */
+    public int getPing() {
+        return base.getLatency();
+    }
+
+    /**
+     * @since 1.6.5
+     * @return null if unknown
+     */
+    public String getGamemode() {
+        GameMode gm = base.getGameMode();
+        if (gm == null) return null;
+        return gm.getName();
+    }
+
     /**
      * @since 1.1.9
      * @return

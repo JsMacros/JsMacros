@@ -9,6 +9,8 @@ import org.apache.logging.log4j.Level;
 import org.spongepowered.asm.mixin.Mixins;
 
 import java.io.*;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -22,6 +24,9 @@ public class FakeFabricLoader implements FabricLoader {
     private final List<String> clientEntryPoints = new LinkedList<>();
     private final Set<String> loadedModIds = new HashSet<>();
     private final Map<String, Set<String>> langResources = new HashMap<>();
+
+    private final ClassLoader classLoader;
+    private final Set<URL> urls = new HashSet<>();
 
     public FakeFabricLoader(File pluginPath) throws Exception {
         if (instance != null) throw new Exception("FakeFabricLoader already initialized!");
@@ -41,8 +46,9 @@ public class FakeFabricLoader implements FabricLoader {
             }
         }
         for (File f : urls) {
-            JsMacrosEarlyRiser.urls.add(f.toURI().toURL());
+            this.urls.add(f.toURI().toURL());
         }
+        classLoader = new ShimClassLoader(this.urls.toArray(new URL[0]), this.getClass().getClassLoader());
         instance = this;
     }
 
@@ -121,7 +127,7 @@ public class FakeFabricLoader implements FabricLoader {
         for (String entry : entryPoints) {
             JsMacrosEarlyRiser.LOGGER.log(Level.INFO, "[FakeFabricLoader] loading mod class: " + entry);
             try {
-                ((ModInitializer)Class.forName(entry).newInstance()).onInitialize();
+                ((ModInitializer)Class.forName(entry, true, classLoader).newInstance()).onInitialize();
             } catch (ClassNotFoundException e) {
                 JsMacrosEarlyRiser.LOGGER.log(Level.ERROR, "Class Not Found: " + entry);
             } catch (InstantiationException | IllegalAccessException e) {
@@ -134,7 +140,7 @@ public class FakeFabricLoader implements FabricLoader {
     public void loadClientEntries() {
         for (String entry : clientEntryPoints) {
             JsMacrosEarlyRiser.LOGGER.log(Level.INFO, "[FakeFabricLoader] loading mod class: " + entry);
-            try {((ClientModInitializer)Class.forName(entry).newInstance()).onInitializeClient();
+            try {((ClientModInitializer)Class.forName(entry, true, classLoader).newInstance()).onInitializeClient();
             } catch (ClassNotFoundException e) {
                 JsMacrosEarlyRiser.LOGGER.log(Level.ERROR, "Class Not Found: " + entry);
             } catch (InstantiationException | IllegalAccessException e) {
@@ -152,4 +158,17 @@ public class FakeFabricLoader implements FabricLoader {
         return loadedModIds.contains(modid);
     }
 
+    private static final class ShimClassLoader extends URLClassLoader {
+
+        public ShimClassLoader(URL[] urls, ClassLoader parent) {
+            super(urls, parent);
+        }
+
+        @Override
+        protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+            if (!name.contains(".")) throw new ClassNotFoundException();
+            return super.loadClass(name, resolve);
+        }
+
+    }
 }

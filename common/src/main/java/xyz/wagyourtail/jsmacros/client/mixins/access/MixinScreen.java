@@ -33,6 +33,7 @@ import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon.Vec2D;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
+import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -59,7 +60,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Shadow protected TextRenderer textRenderer;
     
     @Shadow(aliases = {"method_37063", "m_142416_"}) protected abstract <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement);
-    @Shadow public abstract void onClose();
+    @Shadow(aliases = {"close", "method_25419", "m_7379_"}) public abstract void onClose();
     @Shadow protected abstract void init();
 
     
@@ -255,10 +256,36 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         int regionHeight, int textureWidth, int textureHeight, double rotation) {
         return addImage(x, y, width, height, 0, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
     }
-    
+
+
+    /**
+     * @since 1.4.0
+     * @see IDraw2D#addImage(int, int, int, int, int, String, int, int, int, int, int, int, double)
+     */
     @Override
     public RenderCommon.Image addImage(int x, int y, int width, int height, int zIndex, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
-        RenderCommon.Image i = new RenderCommon.Image(x, y, width, height, zIndex, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation);
+        return addImage(x, y, width, height, zIndex, 0xFFFFFFFF, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
+    }
+
+    /**
+     * @since 1.6.5
+     * @see IDraw2D#addImage(int, int, int, int, int, int, String, int, int, int, int, int, int, double)
+     */
+    @Override
+    public RenderCommon.Image addImage(int x, int y, int width, int height, int zIndex, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
+        RenderCommon.Image i = new RenderCommon.Image(x, y, width, height, zIndex, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation);
+        synchronized (elements) {
+            elements.add(i);
+        }
+        return i;
+    }
+    /**
+     * @since 1.6.5
+     * @see IDraw2D#addImage(int, int, int, int, int, int, int, String, int, int, int, int, int, int, double)
+     */
+    @Override
+    public RenderCommon.Image addImage(int x, int y, int width, int height, int zIndex, int alpha, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
+        RenderCommon.Image i = new RenderCommon.Image(x, y, width, height, zIndex, alpha, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation);
         synchronized (elements) {
             elements.add(i);
         }
@@ -408,7 +435,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         ButtonWidget button = new ButtonWidget(x, y, width, height, new LiteralText(text), (btn) -> {
             try {
                 callback.accept(b.get(), this);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 Core.getInstance().profile.logError(e);
             }
         });
@@ -442,7 +469,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             field.setChangedListener(str -> {
                 try {
                     onChange.accept(str, this);
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     Core.getInstance().profile.logError(e);
                 }
             });
@@ -465,9 +492,9 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
+    @Unique
     public void close() {
         onClose();
-        
     }
 
     @Override
@@ -545,8 +572,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (onMouseDown != null) try {
             onMouseDown.accept(new PositionCommon.Pos2D(mouseX, mouseY), button);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
         return super.mouseClicked(mouseX, mouseY, button);
@@ -556,8 +582,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (onMouseDrag != null) try {
             onMouseDrag.accept(new PositionCommon.Vec2D(mouseX, mouseY, deltaX, deltaY), button);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
@@ -567,8 +592,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (onMouseUp != null) try {
             onMouseUp.accept(new PositionCommon.Pos2D(mouseX, mouseY), button);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
         return super.mouseReleased(mouseX, mouseY, button);
@@ -578,8 +602,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> info) {
         if (onKeyPressed != null) try {
             onKeyPressed.accept(keyCode, modifiers);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
     }
@@ -588,8 +611,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (onScroll != null) try {
             onScroll.accept(new PositionCommon.Pos2D(mouseX, mouseY), amount);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
         return super.mouseScrolled(mouseX, mouseY, amount);
@@ -604,12 +626,11 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         if (onInit != null) {
             try {
                 onInit.accept(this);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 try {
                     if (catchInit != null) catchInit.accept(e.toString());
                     else throw e;
-                } catch (Exception f) {
-                    f.printStackTrace();
+                } catch (Throwable f) {
                     Core.getInstance().profile.logError(f);
                 }
             }
@@ -617,7 +638,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
     
     //TODO: switch to enum extention with mixin 9.0 or whenever Mumfrey gets around to it
-    @Inject(at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "handleTextClick", cancellable = true)
+    @Inject(at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "handleTextClick", cancellable = true)
     public void handleCustomClickEvent(Style style, CallbackInfoReturnable<Boolean> cir) {
         ClickEvent clickEvent = style.getClickEvent();
         if (clickEvent instanceof CustomClickEvent) {

@@ -4,7 +4,6 @@ import javassist.util.proxy.ProxyFactory;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
-import xyz.wagyourtail.jsmacros.core.library.impl.FWrapper;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
@@ -148,7 +147,6 @@ public class ProxyBuilder<T> {
                 } else if (e.getCause() instanceof RuntimeException) {
                     throw e.getCause();
                 } else {
-                    e.getCause().printStackTrace();
                     Core.getInstance().profile.logError(e.getCause());
                 }
             }

@@ -4,9 +4,14 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.network.ServerAddress;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
+import xyz.wagyourtail.jsmacros.client.config.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.client.tick.TickSync;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.IEventListener;
+import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
@@ -42,12 +47,35 @@ public class FClient extends BaseLibrary {
      * @since 1.4.0
      */
     public void runOnMainThread(MethodWrapper<Object, Object, Object, ?> runnable) {
+        runOnMainThread(runnable, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+    }
+
+    /**
+     * @since 1.6.5
+     * @param runnable
+     * @param watchdogMaxTime max time for the watchdog to wait before killing the script
+     */
+    public void runOnMainThread(MethodWrapper<Object, Object, Object, ?> runnable, long watchdogMaxTime) {
         mc.execute(() -> {
+            EventContainer<?> lock = new EventContainer<>(runnable.getCtx());
+            EventLockWatchdog.startWatchdog(lock, new IEventListener() {
+                @Override
+                public EventContainer<?> trigger(BaseEvent event) {
+                    return null;
+                }
+
+                @Override
+                public String toString() {
+                    return "RunOnMainThread{\"called_by\": " + runnable.getCtx().getTriggeringEvent().toString() + "}";
+                }
+            }, watchdogMaxTime);
+            boolean success = false;
             try {
                 runnable.run();
             } catch (Throwable e) {
-                Core.getInstance().profile.logError(e);
+                e.printStackTrace();
             }
+            lock.releaseLock();
         });
     }
 
@@ -134,8 +162,7 @@ public class FClient extends BaseLibrary {
             try {
                 if (callback != null)
                     callback.accept(isWorld);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Throwable e) {
                 Core.getInstance().profile.logError(e);
             }
         });

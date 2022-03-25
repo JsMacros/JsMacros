@@ -1,6 +1,5 @@
 package xyz.wagyourtail.doclet.tsdoclet;
 
-import org.gradle.internal.impldep.com.google.common.collect.ImmutableList;
 import xyz.wagyourtail.StringHelpers;
 import xyz.wagyourtail.doclet.tsdoclet.parsers.ClassParser;
 

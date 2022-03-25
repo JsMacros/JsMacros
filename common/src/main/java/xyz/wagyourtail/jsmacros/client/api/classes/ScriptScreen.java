@@ -8,9 +8,9 @@ import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
-import xyz.wagyourtail.wagyourgui.BaseScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 /**
  * just go look at {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen IScreen}
@@ -74,14 +74,14 @@ public class ScriptScreen extends BaseScreen {
         ((IScreen) this).onRenderInternal(matrices, mouseX, mouseY, delta);
         try {
             if (onRender != null) onRender.accept(new PositionCommon.Pos3D(mouseX, mouseY, delta), matrices);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
             onRender = null;
         }
     }
 
     @Override
-    public void onClose() {
+    public void close() {
         openParent();
     }
 }

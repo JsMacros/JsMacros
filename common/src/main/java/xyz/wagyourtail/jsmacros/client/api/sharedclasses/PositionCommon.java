@@ -1,7 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.sharedclasses;
 
+import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 
 /**
  * @author Wagyourtail
@@ -83,6 +85,57 @@ public class PositionCommon {
         public Vec2D toVector() {
             return new Vec2D(ZERO, this);
         }
+
+        /**
+         * @since 1.6.4
+         * @param start_pos
+         *
+         * @return
+         */
+        public Vec2D toVector(Pos2D start_pos) {
+            return new Vec2D(start_pos, this);
+        }
+
+
+        /**
+         * @since 1.6.4
+         * @param start_x
+         * @param start_y
+         *
+         * @return
+         */
+        public Vec2D toVector(double start_x, double start_y) {
+            return new Vec2D(start_x, start_y, this.x, this.y);
+        }
+
+        /**
+         * @since 1.6.4
+         * @return
+         */
+        public Vec2D toReverseVector() {
+            return new Vec2D(this, ZERO);
+        }
+
+        /**
+         * @since 1.6.4
+         * @param end_pos
+         *
+         * @return
+         */
+        public Vec2D toReverseVector(Pos2D end_pos) {
+            return new Vec2D(this, end_pos);
+        }
+
+        /**
+         * @since 1.6.4
+         * @param end_x
+         * @param end_y
+         *
+         * @return
+         */
+        public Vec2D toReverseVector(double end_x, double end_y) {
+            return new Vec2D(this, new Pos2D(end_x, end_y));
+        }
     }
 
     /**
@@ -157,6 +210,74 @@ public class PositionCommon {
         public Vec3D toVector() {
             return new Vec3D(ZERO, this);
         }
+
+        /**
+         * @since 1.6.4
+         * @param start_pos
+         *
+         * @return
+         */
+        @Override
+        public Vec3D toVector(Pos2D start_pos) {
+            return toVector(start_pos.to3D());
+        }
+
+        /**
+         * @since 1.6.4
+         * @param start_pos
+         *
+         * @return
+         */
+        public Vec3D toVector(Pos3D start_pos) {
+            return new Vec3D(start_pos, this);
+        }
+
+        /**
+         * @since 1.6.4
+         * @param start_x
+         * @param start_y
+         * @param start_z
+         *
+         * @return
+         */
+        public Vec3D toVector(double start_x, double start_y, double start_z) {
+            return new Vec3D(start_x, start_y, start_z, this.x, this.y, this.z);
+        }
+
+        /**
+         * @since 1.6.4
+         * @return
+         */
+        public Vec3D toReverseVector() {
+            return new Vec3D(this, ZERO);
+        }
+
+        @Override
+        public Vec3D toReverseVector(Pos2D end_pos) {
+            return toReverseVector(end_pos.to3D());
+        }
+
+        /**
+         * @since 1.6.4
+         * @param end_pos
+         *
+         * @return
+         */
+        public Vec3D toReverseVector(Pos3D end_pos) {
+            return new Vec3D(this, end_pos);
+        }
+
+        /**
+         * @since 1.6.4
+         * @param end_x
+         * @param end_y
+         * @param end_z
+         *
+         * @return
+         */
+        public Vec3D toReverseVector(double end_x, double end_y, double end_z) {
+            return new Vec3D(this, new Pos3D(end_x, end_y, end_z));
+        }
     }
 
     /**
@@ -223,6 +344,16 @@ public class PositionCommon {
             return Math.sqrt(dx*dx + dy*dy);
         }
 
+        /**
+         * @since 1.6.5
+         * @return magnitude squared
+         */
+        public double getMagnitudeSq() {
+            double dx = x2 - x1;
+            double dy = y2 - y1;
+            return dx*dx + dy*dy;
+        }
+
         public Vec2D add(Vec2D vec) {
             return new Vec2D(x1 + vec.x1, y1 + vec.y1, x2 + vec.x2, y2 + vec.y2);
         }
@@ -277,6 +408,15 @@ public class PositionCommon {
 
         public Vec2D reverse() {
             return new Vec2D(x2, y2, x1, y1);
+        }
+
+        /**
+         * @return a new Vec2D with the same direction but a magnitude of 1
+         * @since 1.6.5
+         */
+        public Vec2D normalize() {
+            double mag = getMagnitude();
+            return new Vec2D(x1 / mag, y1 / mag, x2 / mag, y2 / mag);
         }
 
         public String toString() {
@@ -338,9 +478,62 @@ public class PositionCommon {
             return Math.sqrt(dx*dx + dy*dy + dz*dz);
         }
 
+        @Override
+        public double getMagnitudeSq() {
+            double dx = x2 - x1;
+            double dy = y2 - y1;
+            double dz = z2 - z1;
+            return dx*dx + dy*dy + dz*dz;
+        }
+
         public Vec3D add(Vec3D vec) {
             return new Vec3D(this.x1 + vec.x1, this.y1 + vec.y1, this.z1 + vec.z1, this.x2 + vec.x2, this.y2 + vec.y2, this.z2 + vec.z2);
         }
+
+        /**
+         * @since 1.6.4
+         * @param pos
+         *
+         * @return
+         */
+        public Vec3D addStart(Pos3D pos) {
+            return new Vec3D(this.x1 + pos.x, this.y1 + pos.y, this.z1 + pos.z, this.x2, this.y2, this.z2);
+        }
+
+        /**
+         * @since 1.6.4
+         * @param pos
+         *
+         * @return
+         */
+        public Vec3D addEnd(Pos3D pos) {
+            return new Vec3D(this.x1, this.y1, this.z1, this.x2 + pos.x, this.y2 + pos.y, this.z2 + pos.z);
+        }
+
+        /**
+         * @since 1.6.4
+         * @param x
+         * @param y
+         * @param z
+         *
+         * @return
+         */
+        public Vec3D addStart(double x, double y, double z) {
+            return new Vec3D(this.x1 + x, this.y1 + y, this.z1 + z, this.x2, this.y2, this.z2);
+        }
+
+        /**
+         * @since 1.6.4
+         * @param x
+         * @param y
+         * @param z
+         *
+         * @return
+         */
+        public Vec3D addEnd(double x, double y, double z) {
+            return new Vec3D(this.x1, this.y1, this.z1, this.x2 + x, this.y2 + y, this.z2 + z);
+        }
+
 
         /**
          *
@@ -390,6 +583,17 @@ public class PositionCommon {
             return new Vec3D(x1 * scale, y1 * scale, z1 * scale, x2 * scale, y2 * scale, z2 * scale);
         }
 
+        /**
+         * @since 1.6.5
+         *
+         * @return
+         */
+        @Override
+        public Vec3D normalize() {
+            double mag = getMagnitude();
+            return new Vec3D(x1 / mag, y1 / mag, z1 / mag, x2 / mag, y2 / mag, z2 / mag);
+        }
+
         public float getPitch() {
             double dx = x2 - x1;
             double dy = y2 - y1;
@@ -428,6 +632,57 @@ public class PositionCommon {
         @Override
         public String toString() {
             return String.format("%f, %f, %f -> %f, %f, %f", x1, y1, z1, x2, y2, z2);
+        }
+
+        /**
+         * @since 1.6.5
+         * @return
+         */
+        public Vec3f toMojangFloatVector() {
+            return new Vec3f((float) (x2-x1), (float) (y2-y1), (float) (z2-z1));
+        }
+    }
+
+    /**
+     * @since 1.6.5
+     */
+    public static class Plane3D {
+        public double x1;
+        public double y1;
+        public double z1;
+        public double x2;
+        public double y2;
+        public double z2;
+        public double x3;
+        public double y3;
+        public double z3;
+
+        public Plane3D(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3) {
+            this.x1 = x1;
+            this.y1 = y1;
+            this.z1 = z1;
+            this.x2 = x2;
+            this.y2 = y2;
+            this.z2 = z2;
+            this.x3 = x3;
+            this.y3 = y3;
+            this.z3 = z3;
+        }
+
+        public Vec3D getNormalVector() {
+            return new Vec3D(x1, y1, z1, x2, y2, z2).crossProduct(new Vec3D(x2, y2, z2, x3, y3, z3));
+        }
+
+        public Vec3D getVec12() {
+            return new Vec3D(x1, y1, z1, x2, y2, z2);
+        }
+
+        public Vec3D getVec13() {
+            return new Vec3D(x1, y1, z1, x3, y3, z3);
+        }
+
+        public Vec3D getVec23() {
+            return new Vec3D(x2, y2, z2, x3, y3, z3);
         }
     }
 

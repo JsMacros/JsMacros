@@ -4,6 +4,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.fabric.impl.command.client.ClientCommandInternals;
@@ -44,6 +46,11 @@ public class CommandBuilderFabric extends CommandBuilder {
     public CommandBuilder executes(MethodWrapper<CommandContextHelper, Object, Boolean, ?> callback) {
         pointer.peek().executes((ctx) -> internalExecutes(ctx, callback));
         return this;
+    }
+
+    @Override
+    protected <S> void suggests(SuggestionProvider<S> suggestionProvider) {
+        ((RequiredArgumentBuilder)pointer.peek()).suggests(suggestionProvider);
     }
 
     @Override

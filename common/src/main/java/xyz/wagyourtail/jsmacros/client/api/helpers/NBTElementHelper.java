@@ -1,6 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.AbstractNbtList;
+import net.minecraft.nbt.AbstractNbtNumber;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Set;
@@ -107,7 +110,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
     public static NBTElementHelper<?> resolve(NbtElement element) {
         if (element == null) return null;
         switch (element.getType()) {
-            case NbtElement.NULL_TYPE: //0
+            case NbtElement.END_TYPE: //0
                 return new NBTElementHelper<>(element);
             case NbtElement.BYTE_TYPE: //1
             case NbtElement.SHORT_TYPE: //2

@@ -23,8 +23,12 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
+import xyz.wagyourtail.jsmacros.client.api.classes.WorldScanner;
+import xyz.wagyourtail.jsmacros.client.api.classes.WorldScannerBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
@@ -112,7 +116,132 @@ public class FWorld extends BaseLibrary {
         if (b.getBlock().equals(Blocks.VOID_AIR)) return null;
         return new BlockDataHelper(b, t, bp);
     }
+
+    public BlockDataHelper getBlock(PositionCommon.Pos3D pos) {
+        return getBlock((int) pos.x, (int) pos.y, (int) pos.z);
+    }
+
+    public BlockDataHelper getBlock(BlockPosHelper pos) {
+        return getBlock(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    /**
+     * Usage: <br>
+     * This will return all blocks that are facing south, don't require a tool to break, 
+     * have a hardness of 10 or less and whose name contains either chest or barrel.
+     * <pre>
+     * World.getWorldScanner()
+     *     .withBlockFilter("getHardness").is("<=", 10)
+     *     .andStringBlockFilter().contains("chest", "barrel")
+     *     .withStringStateFilter().contains("facing=south")
+     *     .andStateFilter("isToolRequired").is(false)
+     *     .build()
+     * </pre>
+     * @return a builder to create a WorldScanner
+     *
+     * @since 1.6.5
+     */
+    public WorldScannerBuilder getWorldScanner() {
+        return new WorldScannerBuilder();
+    }
+
+    /**
+     * @return a scanner for the current world
+     *
+     * @since 1.6.5
+     */
+    public WorldScanner getWorldScanner(MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter) {
+        return new WorldScanner(mc.world, blockFilter, stateFilter);
+    }
     
+    /**
+     * @since 1.6.4
+     * @param id
+     * @param chunkrange
+     *
+     * @return
+     */
+    public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, String id, int chunkrange) {
+        return new WorldScanner(mc.world, block -> Registry.BLOCK.getId(block.getRaw()).toString().equals(id), null).scanChunkRange(centerX, centerZ, chunkrange);
+    }
+
+    /**
+     * @since 1.6.4
+     * @param id
+     * @param chunkrange
+     *
+     * @return
+     */
+    public List<PositionCommon.Pos3D> findBlocksMatching(String id, int chunkrange) {
+        assert mc.player != null;
+        int playerChunkX = mc.player.getBlockX() >> 4;
+        int playerChunkZ = mc.player.getBlockZ() >> 4;
+        return new WorldScanner(mc.world, block -> Registry.BLOCK.getId(block.getRaw()).toString().equals(id), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
+    }
+
+
+    /**
+     * @since 1.6.4
+     * @param ids
+     * @param chunkrange
+     *
+     * @return
+     */
+    public List<PositionCommon.Pos3D> findBlocksMatching(List<String> ids, int chunkrange) {
+        assert mc.player != null;
+        int playerChunkX = mc.player.getBlockX() >> 4;
+        int playerChunkZ = mc.player.getBlockZ() >> 4;
+        Set<String> ids2 = new HashSet<>(ids);
+        return new WorldScanner(mc.world, block -> ids2.contains(Registry.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
+    }
+
+    /**
+     * @since 1.6.4
+     * @param centerX
+     * @param centerZ
+     * @param ids
+     * @param chunkrange
+     *
+     * @return
+     */
+    public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, List<String> ids, int chunkrange) {
+        Set<String> ids2 = new HashSet<>(ids);
+        return new WorldScanner(mc.world, block -> ids2.contains(Registry.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(centerX, centerZ, chunkrange);
+    }
+
+
+
+    /**
+     * @since 1.6.4
+     * @param blockFilter
+     * @param stateFilter
+     * @param chunkrange
+     *
+     * @return
+     */
+    public List<PositionCommon.Pos3D> findBlocksMatching(MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter, int chunkrange) {
+        if (blockFilter == null) throw new IllegalArgumentException("idFilter cannot be null");
+        assert mc.player != null;
+        int playerChunkX = mc.player.getBlockX() >> 4;
+        int playerChunkZ = mc.player.getBlockZ() >> 4;
+        return findBlocksMatching(playerChunkX, playerChunkZ, blockFilter, stateFilter, chunkrange);
+    }
+
+    /**
+     * @since 1.6.4
+     * @param chunkX
+     * @param chunkZ
+     * @param blockFilter
+     * @param stateFilter
+     * @param chunkrange
+     *
+     * @return
+     */
+    public List<PositionCommon.Pos3D> findBlocksMatching(int chunkX, int chunkZ, MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter, int chunkrange) {
+        if (blockFilter == null) throw new IllegalArgumentException("block filter cannot be null");
+        return new WorldScanner(mc.world, blockFilter, stateFilter).scanChunkRange(chunkX, chunkZ, chunkrange);
+    }
+
     /**
      * @since 1.2.9
      * @return a helper for the scoreboards provided to the client.
@@ -149,7 +278,7 @@ public class FWorld extends BaseLibrary {
      */
     public String getBiome() {
         assert mc.world != null;
-        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(mc.player.getBlockPos())).toString();
+        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(mc.player.getBlockPos()).value()).toString();
     }
     
     /**
@@ -347,7 +476,7 @@ public class FWorld extends BaseLibrary {
      */
     public String getBiomeAt(int x, int z) {
         assert mc.world != null;
-        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(new BlockPos(x, 10, z))).toString();
+        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(new BlockPos(x, 10, z)).value()).toString();
     }
     
     /**

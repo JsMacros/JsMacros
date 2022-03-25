@@ -12,7 +12,6 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLanguageLibrary;
 
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.Semaphore;
 import java.util.function.Function;
 
 
@@ -183,7 +182,6 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     try {
                         fn.apply(new Object[] {t, u});
                     } catch (Throwable ex) {
-                        ex.printStackTrace();
                         Core.getInstance().profile.logError(ex);
                     } finally {
                         ctx.getContext().leave();
@@ -216,7 +214,6 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
             try {
                 ctx.bindThread(Thread.currentThread());
                 tasks.put(new WrappedThread(Thread.currentThread(), true));
-                ctx.bindThread(Thread.currentThread());
 
                 WrappedThread joinable = tasks.peek();
                 while (true) {

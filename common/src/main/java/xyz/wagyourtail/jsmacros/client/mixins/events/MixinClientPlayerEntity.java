@@ -10,7 +10,6 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.network.packet.c2s.play.UpdateSignC2SPacket;
 import net.minecraft.text.LiteralText;
 import org.spongepowered.asm.mixin.Final;
@@ -57,14 +56,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
 
     @Inject(at = @At("HEAD"), method = "setExperience")
     public void onSetExperience(float progress, int total, int level, CallbackInfo info) {
-        new EventEXPChange(progress, total, level);
-    }
-
-    @Inject(at = @At("HEAD"), method = "damage")
-    private void onApplyDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        int damage = Math.round(amount * 2) / 2;
-        if (damage == 0) return;
-        new EventDamage(source, this.getHealth() - damage, damage);
+        new EventEXPChange(progress, total, level, this.experienceProgress, this.totalExperience, this.experienceLevel);
     }
 
     @Inject(at = @At("HEAD"), method = "openEditSignScreen", cancellable = true)
@@ -109,7 +101,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         this.input.movementSideways = moveInput.movementSideways;
         this.input.jumping = moveInput.jumping;
         this.input.sneaking = moveInput.sneaking;
-        this.client.options.keySprint.setPressed(moveInput.sprinting);
+        this.client.options.sprintKey.setPressed(moveInput.sprinting);
         this.setYaw(moveInput.yaw);
         this.setPitch(moveInput.pitch);
 
@@ -129,5 +121,14 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     public void onStopRiding(CallbackInfo ci) {
         if (this.getVehicle() != null)
             new EventRiding(false, this.getVehicle());
+    }
+
+    @Inject(method = "dropSelectedItem", at = @At("HEAD"), cancellable = true)
+    public void onDropSelected(boolean entireStack, CallbackInfoReturnable<Boolean> cir) {
+        int selectedHotbarIndex = getInventory().selectedSlot;
+        EventDropSlot event = new EventDropSlot(null, 36 + selectedHotbarIndex, entireStack);
+        if (event.cancel) {
+            cir.setReturnValue(false);
+        }
     }
 }

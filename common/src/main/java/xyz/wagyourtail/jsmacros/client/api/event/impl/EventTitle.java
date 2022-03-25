@@ -12,13 +12,13 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  @Event(value = "Title", oldName = "TITLE")
 public class EventTitle implements BaseEvent {
     public final String type;
-    public final TextHelper message;
+    public TextHelper message;
     
     public EventTitle(String type, Text message) {
         this.type = type;
         this.message = new TextHelper(message);
         
-        profile.triggerEvent(this);
+        profile.triggerEventJoinNoAnything(this);
     }
     
     public String toString() {

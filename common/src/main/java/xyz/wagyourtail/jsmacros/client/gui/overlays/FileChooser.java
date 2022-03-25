@@ -8,10 +8,10 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
-import xyz.wagyourtail.wagyourgui.elements.Button;
-import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
+import xyz.wagyourtail.wagyourgui.elements.Button;
+import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 import xyz.wagyourtail.wagyourgui.overlays.ConfirmOverlay;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
@@ -19,7 +19,10 @@ import xyz.wagyourtail.wagyourgui.overlays.TextPrompt;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class FileChooser extends OverlayContainer {

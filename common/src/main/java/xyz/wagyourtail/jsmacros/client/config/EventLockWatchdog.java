@@ -16,7 +16,6 @@ public class EventLockWatchdog {
                 }
                 WatchdogException ex = new WatchdogException(String.format("Script \n\"%s\"\n joined longer than allowed time of %d ms.", listener.toString(), maxTime));
                 Core.getInstance().profile.logError(ex);
-                ex.printStackTrace();
             } catch (InterruptedException ignored) { }
         });
         Thread u = new Thread(() -> {

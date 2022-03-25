@@ -1,15 +1,16 @@
 package xyz.wagyourtail.jsmacros.core.classes;
 
-import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -143,7 +144,32 @@ public class Mappings {
      */
     public <T> MappedClass<T> remapClass(T instance) throws IOException {
         getReversedMappings();
-        return new MappedClass<T>(instance, (Class<T>) instance.getClass());
+        return new MappedClass<>(instance);
+    }
+
+    /**
+     *
+     * gets the class without instance, so can only access static methods/fields
+     * @param className
+     *
+     * @return
+     *
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public MappedClass<?> getClass(String className) throws IOException, ClassNotFoundException {
+        ClassData revd = getReversedMappings().get(className);
+        Class<?> cls;
+        if (revd != null) {
+            try {
+                cls = Class.forName(revd.name.replace("/", "."));
+            } catch (ClassNotFoundException ex) {
+                cls = Class.forName(className.replace("/", "."));
+            }
+        } else {
+            cls = Class.forName(className.replace("/", "."));
+        }
+        return new MappedClass(null, cls);
     }
 
     public static class ClassData {
@@ -179,36 +205,18 @@ public class Mappings {
      * @since 1.6.0
      * @param <T>
      */
-    public class MappedClass<T> {
-        private final T instance;
-        private final Class<T> tClass;
-        private final Set<Class<?>> inheritance = new LinkedHashSet<>();
+    public class MappedClass<T> extends WrappedClassInstance<T> {
 
-
-        public MappedClass(T instance, Class<T> tClass) {
-            this.instance = instance;
-            this.tClass = tClass;
+        public MappedClass(T instance) {
+            super(instance);
         }
 
-        private synchronized Set<Class<?>> getInheritance() {
-            if (!inheritance.isEmpty()) return inheritance;
-            Class<?> current = tClass;
-            do {
-                inheritance.add(current);
-                inheritance.addAll(getInterfaceInheritance(current));
-            } while ((current = current.getSuperclass()) != Object.class);
-            inheritance.add(Object.class);
-            return inheritance;
+        public MappedClass(T instance, Class<T> type) {
+            super(instance, type);
         }
 
-        private Set<Class<?>> getInterfaceInheritance(Class<?> interf) {
-            Set<Class<?>> l = new HashSet<>();
-            l.add(interf);
-            l.addAll(Arrays.stream(interf.getInterfaces()).flatMap(e -> getInterfaceInheritance(e).stream()).collect(Collectors.toSet()));
-            return l;
-        }
-
-        private Field findField(Class<?> asClass, String fieldName) throws NoSuchFieldException, IOException {
+        @Override
+        protected Field findField(Class<?> asClass, String fieldName) throws NoSuchFieldException, IOException {
             ClassData cls = getMappings().get(asClass.getCanonicalName().replace(".", "/"));
             String intFieldName;
             if (cls != null) {
@@ -232,179 +240,8 @@ public class Mappings {
             return fd;
         }
 
-        /**
-         * @since 1.6.0
-         *
-         * @param fieldName
-         *
-         * @return
-         *
-         * @throws NoSuchFieldException
-         * @throws IllegalAccessException
-         * @throws IOException
-         */
-        public Object getFieldValue(String fieldName) throws NoSuchFieldException, IllegalAccessException, IOException {
-            Field fd = null;
-            for (Class<?> cls : getInheritance()) {
-                try {
-                    fd = findField(cls, fieldName);
-                    break;
-                } catch (NoSuchFieldException ignored) {}
-            }
-            if (fd == null) throw new NoSuchFieldException();
-            return fd.get(instance);
-        }
-
-        /**
-         * @since 1.6.0
-         *
-         * @param asClass
-         * @param fieldName
-         *
-         * @return
-         *
-         * @throws IOException
-         * @throws ClassNotFoundException
-         * @throws NoSuchFieldException
-         * @throws IllegalAccessException
-         */
-        public Object getFieldValueAsClass(String asClass, String fieldName) throws IOException, ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-            ClassData revd = getReversedMappings().get(asClass);
-            Class<?> cls;
-            if (revd != null) {
-                try {
-                    cls = Class.forName(revd.name.replace("/", "."));
-                } catch (ClassNotFoundException ex) {
-                    cls = Class.forName(asClass.replace("/", "."));
-                }
-            } else {
-                cls = Class.forName(asClass.replace("/", "."));
-            }
-            return findField(cls, fieldName).get(instance);
-        }
-
-        /**
-         * @since 1.6.0
-         *
-         * @param fieldName
-         * @param fieldValue
-         *
-         * @throws NoSuchFieldException
-         * @throws IllegalAccessException
-         * @throws IOException
-         */
-        public void setFieldValue(String fieldName, Object fieldValue) throws NoSuchFieldException, IllegalAccessException, IOException {
-            Field fd = null;
-            for (Class<?> cls : getInheritance()) {
-                try {
-                    fd = findField(cls, fieldName);
-                    break;
-                } catch (NoSuchFieldException ignored) {}
-            }
-            if (fd == null) throw new NoSuchFieldException();
-            fd.set(instance, fieldValue);
-        }
-
-        /**
-         * @since 1.6.0
-         *
-         * @param asClass
-         * @param fieldName
-         * @param fieldValue
-         *
-         * @throws NoSuchFieldException
-         * @throws IllegalAccessException
-         * @throws IOException
-         * @throws ClassNotFoundException
-         */
-        public void setFieldValueAsClass(String asClass, String fieldName, Object fieldValue) throws NoSuchFieldException, IllegalAccessException, IOException, ClassNotFoundException {
-            ClassData revd = getReversedMappings().get(asClass);
-            Class<?> cls;
-            if (revd != null) {
-                try {
-                    cls = Class.forName(revd.name.replace("/", "."));
-                } catch (ClassNotFoundException ex) {
-                    cls = Class.forName(asClass.replace("/", "."));
-                }
-            } else {
-                cls = Class.forName(asClass.replace("/", "."));
-            }
-            findField(cls, fieldName).set(instance, fieldValue);
-        }
-
-        private final Pattern sigPart = Pattern.compile("[ZBCSIJFDV]|L(.+?);");
-
-        private Class<?> getPrimitive(char c) {
-            switch (c) {
-                case 'Z':
-                    return boolean.class;
-                case 'B':
-                    return byte.class;
-                case 'C':
-                    return char.class;
-                case 'S':
-                    return short.class;
-                case 'I':
-                    return int.class;
-                case 'J':
-                    return long.class;
-                case 'F':
-                    return float.class;
-                case 'D':
-                    return double.class;
-                case 'V':
-                    return void.class;
-                default:
-                    throw new NullPointerException("Unknown Primitive: " + c);
-            }
-        }
-
-        private MethodSigParts mapMethodSig(String methodSig) throws ClassNotFoundException, IOException {
-            String[] parts = methodSig.split("[()]", 3);
-            List<Class<?>> params = new ArrayList<>();
-            Matcher m = sigPart.matcher(parts[1]);
-            while (m.find()) {
-                String clazz = m.group(1);
-                if (clazz == null) {
-                    params.add(getPrimitive(m.group().charAt(0)));
-                } else {
-                    ClassData intClass = getReversedMappings().get(clazz);
-                    if (intClass != null) {
-                        try {
-                            params.add(Class.forName(intClass.name.replace("/", ".")));
-                        } catch (ClassNotFoundException ex) {
-                            params.add(Class.forName(clazz.replace("/", ".")));
-                        }
-                    } else {
-                        params.add(Class.forName(clazz.replace("/", ".")));
-                    }
-                }
-            }
-            Class<?> retval;
-            Matcher r = sigPart.matcher(parts[2]);
-            if (r.find()) {
-                String clazz = r.group(1);
-                if (clazz == null) {
-                    retval = getPrimitive(r.group().charAt(0));
-                } else {
-                    ClassData intClass = getReversedMappings().get(clazz);
-                    if (intClass != null) {
-                        try {
-                            retval = Class.forName(intClass.name.replace("/", "."));
-                        } catch (ClassNotFoundException ex) {
-                            retval = Class.forName(clazz.replace("/", "."));
-                        }
-                    } else {
-                        retval = Class.forName(clazz.replace("/", "."));
-                    }
-                }
-            } else {
-                throw new IllegalArgumentException("Signature return value invalid.");
-            }
-            return new MethodSigParts(parts[0], params.toArray(new Class[0]), retval);
-        }
-
-        private Method findMethod(Class<?> asClass, String methodSig, MethodSigParts parsedMethodSig) throws IOException, NoSuchMethodException {
+        @Override
+        protected Method findMethod(Class<?> asClass, String methodSig, MethodSigParts parsedMethodSig) throws IOException, NoSuchMethodException {
             ClassData cls = getMappings().get(asClass.getCanonicalName().replace(".", "/"));
             String intMethodName = null;
             if (cls != null) {
@@ -426,7 +263,8 @@ public class Mappings {
 
         }
 
-        private Method findMethod(Class<?> asClass, String methodName, Class<?>[] fuzzableParams) throws IOException, NoSuchMethodException {
+        @Override
+        protected Method findMethod(Class<?> asClass, String methodName, Class<?>[] fuzzableParams) throws IOException, NoSuchMethodException {
             ClassData cls = getMappings().get(asClass.getCanonicalName().replace(".", "/"));
             Set<String> toTryIntermediaries = new HashSet<>();
             toTryIntermediaries.add(methodName);
@@ -448,107 +286,21 @@ public class Mappings {
             throw new NoSuchMethodException();
         }
 
-        private boolean areParamsCompatible(Class<?>[] fuzzable, Class<?>[] target) {
-            if (fuzzable.length != target.length) return false;
-            for (int i = 0; i < fuzzable.length; ++i) {
-                if (Number.class.isAssignableFrom(fuzzable[i]) && (Number.class.isAssignableFrom(target[i]) || target[i].isPrimitive())) continue;
-                if (target[i].isAssignableFrom(fuzzable[i])) continue;
-                return false;
-            }
-            return true;
-        }
-
-        /**
-         * @since 1.6.0
-         *
-         * @param methodNameOrSig
-         * @param params
-         *
-         * @return
-         *
-         * @throws IOException
-         * @throws NoSuchMethodException
-         * @throws InvocationTargetException
-         * @throws IllegalAccessException
-         * @throws ClassNotFoundException
-         */
-        public Object invokeMethod(String methodNameOrSig, Object ...params) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
-            Method md = null;
-            if (methodNameOrSig.contains("(")) {
-                MethodSigParts methodSig = mapMethodSig(methodNameOrSig);
-                for (Class<?> cls : getInheritance()) {
-                    try {
-                        md = findMethod(cls, methodNameOrSig, methodSig);
-                        break;
-                    } catch (NoSuchMethodException ignored) {}
-                }
-            } else {
-                Class<?>[] paramClasses = Arrays.stream(params).map(Object::getClass).toArray(Class[]::new);
-                for (Class<?> cls : getInheritance()) {
-                    try {
-                        md = findMethod(cls, methodNameOrSig, paramClasses);
-                        break;
-                    } catch (NoSuchMethodException ignored) {}
-                }
-            }
-            if (md == null) throw new NoSuchMethodException();
-            Class<?>[] rightParamClasses = md.getParameterTypes();
-            for (int i = 0; i < params.length; ++i) {
-                params[i] = JsMacros.tryAutoCastNumber(rightParamClasses[i], params[i]);
-            }
-            return md.invoke(instance, params);
-        }
-
-        /**
-         * @since 1.6.0
-         *
-         * @param asClass
-         * @param methodNameOrSig
-         * @param params
-         *
-         * @return
-         *
-         * @throws IOException
-         * @throws ClassNotFoundException
-         * @throws NoSuchMethodException
-         * @throws InvocationTargetException
-         * @throws IllegalAccessException
-         */
-        public Object invokeMethodAsClass(String asClass, String methodNameOrSig, Object ...params) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-            ClassData revd = getReversedMappings().get(asClass);
+        @Override
+        protected Class<?> getClass(String className) throws ClassNotFoundException, IOException {
+            ClassData revd = getReversedMappings().get(className);
             Class<?> cls;
             if (revd != null) {
                 try {
                     cls = Class.forName(revd.name.replace("/", "."));
                 } catch (ClassNotFoundException ex) {
-                    cls = Class.forName(asClass.replace("/", "."));
+                    cls = Class.forName(className.replace("/", "."));
                 }
             } else {
-                cls = Class.forName(asClass.replace("/", "."));
+                cls = Class.forName(className.replace("/", "."));
             }
-            Method md;
-            if (methodNameOrSig.contains("(")) {
-                md = findMethod(cls, methodNameOrSig, mapMethodSig(methodNameOrSig));
-            } else {
-                md = findMethod(cls, methodNameOrSig, Arrays.stream(params).map(Object::getClass).toArray(Class[]::new));
-            }
-            Class<?>[] rightParamClasses = md.getParameterTypes();
-            for (int i = 0; i < params.length; ++i) {
-                params[i] = JsMacros.tryAutoCastNumber(rightParamClasses[i], params[i]);
-            }
-            return md.invoke(instance, params);
+            return cls;
         }
-    }
 
-    private static class MethodSigParts {
-        public final String name;
-        public final Class<?>[] params;
-        public final Class<?> returnType;
-
-        MethodSigParts(String name, Class<?>[] params, Class<?> returnType) {
-            this.name = name;
-            this.params = params;
-            this.returnType = returnType;
-        }
     }
 }
