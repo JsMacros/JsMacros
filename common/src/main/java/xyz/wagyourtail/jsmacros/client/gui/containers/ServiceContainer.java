@@ -88,7 +88,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
     }
 
     public ServiceTrigger getTrigger() {
-        return Core.getInstance().services.getServiceData(service);
+        return Core.getInstance().services.getTrigger(service);
     }
 
     public void setFile(File file) {
