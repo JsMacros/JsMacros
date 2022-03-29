@@ -241,7 +241,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
             ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, hand,
-                new BlockHitResult(Vec3d.ZERO, Direction.values()[direction], new BlockPos(x, y, z), false)
+                new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
             );
             assert mc.player != null;
             if (result.isAccepted())
@@ -250,7 +250,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
                 ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, hand,
-                    new BlockHitResult(Vec3d.ZERO, Direction.values()[direction], new BlockPos(x, y, z), false)
+                    new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
                 );
                 assert mc.player != null;
                 if (result.isAccepted())
