@@ -17,7 +17,7 @@ import java.util.Set;
  */
 public class ServiceManager {
     protected final Core<?, ?> runner;
-    protected final Map<String, Pair<ServiceTrigger, EventContainer<EventService>>> registeredServices = new LinkedHashMap<>();
+    protected final Map<String, Pair<ServiceTrigger, EventContainer<?>>> registeredServices = new LinkedHashMap<>();
 
     public ServiceManager(Core<?, ?> runner) {
         this.runner = runner;
@@ -75,7 +75,7 @@ public class ServiceManager {
      */
     public synchronized boolean renameService(String oldName, String newName) {
         if (registeredServices.containsKey(newName)) return false;
-        Pair<ServiceTrigger, EventContainer<EventService>> service = registeredServices.remove(oldName);
+        Pair<ServiceTrigger, EventContainer<?>> service = registeredServices.remove(oldName);
         if (service == null) return false;
         registeredServices.put(newName, service);
         return true;
@@ -95,7 +95,7 @@ public class ServiceManager {
      * @return previous state (or {@link ServiceStatus#UNKNOWN} if unknown service)
      */
     public synchronized ServiceStatus startService(String name) {
-        Pair<ServiceTrigger, EventContainer<EventService>> service = registeredServices.get(name);
+        Pair<ServiceTrigger, EventContainer<?>> service = registeredServices.get(name);
         if (service == null) return ServiceStatus.UNKNOWN;
         if (service.getU() == null || service.getU().getCtx().isContextClosed()) {
             service.setU((EventContainer<EventService>) runner.exec(service.getT().toScriptTrigger(), new EventService(name)));
@@ -110,7 +110,7 @@ public class ServiceManager {
      * @return previous state (or {@link ServiceStatus#UNKNOWN} if unknown service)
      */
     public synchronized ServiceStatus stopService(String name) {
-        Pair<ServiceTrigger, EventContainer<EventService>> service = registeredServices.get(name);
+        Pair<ServiceTrigger, EventContainer<?>> service = registeredServices.get(name);
         if (service == null) return ServiceStatus.UNKNOWN;
         if (service.getU() != null && !service.getU().getCtx().isContextClosed()) {
             try {
@@ -143,7 +143,7 @@ public class ServiceManager {
      * @return previous state (or {@link ServiceStatus#UNKNOWN} if unknown service)
      */
     public synchronized ServiceStatus enableService(String name) {
-        Pair<ServiceTrigger, EventContainer<EventService>> service = registeredServices.get(name);
+        Pair<ServiceTrigger, EventContainer<?>> service = registeredServices.get(name);
         if (service == null) return ServiceStatus.UNKNOWN;
         if (!service.getT().enabled) {
             service.getT().enabled = true;
@@ -158,7 +158,7 @@ public class ServiceManager {
      * @return previous state (or {@link ServiceStatus#UNKNOWN} if unknown service)
      */
     public synchronized ServiceStatus disableService(String name) {
-        Pair<ServiceTrigger, EventContainer<EventService>> service = registeredServices.get(name);
+        Pair<ServiceTrigger, EventContainer<?>> service = registeredServices.get(name);
         if (service == null) return ServiceStatus.UNKNOWN;
         if (service.getT().enabled) {
             service.getT().enabled = false;
@@ -173,7 +173,7 @@ public class ServiceManager {
      * @return {@link ServiceStatus#UNKNOWN} if unknown service, {@link ServiceStatus#RUNNING} if disabled and running, {@link ServiceStatus#DISABLED} if disabled and stopped, {@link ServiceStatus#STOPPED} if enabled and stopped, {@link ServiceStatus#ENABLED} if enabled and running.
      */
     public synchronized ServiceStatus status(String name) {
-        Pair<ServiceTrigger, EventContainer<EventService>> service = registeredServices.get(name);
+        Pair<ServiceTrigger, EventContainer<?>> service = registeredServices.get(name);
         if (service == null) return ServiceStatus.UNKNOWN;
         if (service.getT().enabled) {
             if (service.getU() == null || service.getU().getCtx().isContextClosed()) return ServiceStatus.STOPPED;
@@ -183,7 +183,23 @@ public class ServiceManager {
         return ServiceStatus.RUNNING;
     }
 
-    public ServiceTrigger getServiceData(String name) {
+    /**
+     * this might throw if the service is not running...
+     *
+     * @param name
+     * @since 1.6.5
+     * @return the event that is current for the service
+     */
+    public EventService getServiceData(String name) {
+        return (EventService) registeredServices.get(name).getU().getCtx().getTriggeringEvent();
+    }
+
+    /**
+     * @param name
+     * @since 1.6.5 [named getServiceData previously]
+     * @return
+     */
+    public ServiceTrigger getTrigger(String name) {
         return registeredServices.get(name).getT();
     }
 
@@ -192,7 +208,7 @@ public class ServiceManager {
      */
     public synchronized void load() {
         Map<String, ServiceTrigger> configTriggers = runner.config.getOptions(CoreConfigV2.class).services;
-        for (Map.Entry<String, Pair<ServiceTrigger, EventContainer<EventService>>> registered : registeredServices.entrySet()) {
+        for (Map.Entry<String, Pair<ServiceTrigger, EventContainer<?>>> registered : registeredServices.entrySet()) {
             if (!configTriggers.containsKey(registered.getKey()) || !configTriggers.get(registered.getKey()).equals(registered.getValue().getT())) {
                 ServiceStatus prevStatus = status(registered.getKey());
                 registered.getValue().setT(configTriggers.get(registered.getKey()));
@@ -214,7 +230,7 @@ public class ServiceManager {
      */
     public synchronized void save() {
         Map<String, ServiceTrigger> services = new HashMap<>();
-        for (Map.Entry<String, Pair<ServiceTrigger, EventContainer<EventService>>> service : registeredServices.entrySet()) {
+        for (Map.Entry<String, Pair<ServiceTrigger, EventContainer<?>>> service : registeredServices.entrySet()) {
             services.put(service.getKey(), service.getValue().getT());
         }
 
