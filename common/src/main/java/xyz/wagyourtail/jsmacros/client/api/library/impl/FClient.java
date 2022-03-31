@@ -2,9 +2,13 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
+import net.minecraft.client.network.MultiplayerServerListPinger;
 import net.minecraft.client.network.ServerAddress;
+import net.minecraft.client.network.ServerInfo;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ServerInfoHelper;
 import xyz.wagyourtail.jsmacros.client.config.EventLockWatchdog;
+import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.client.tick.TickSync;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -14,6 +18,11 @@ import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
+
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Semaphore;
 
 /**
 *
@@ -219,4 +228,50 @@ public class FClient extends BaseLibrary {
             tickSynchronizer.waitTick();
         }
     }
+
+    /**
+     * @param ip
+     *
+     * @return
+     *
+     * @since 1.6.5
+     * @throws UnknownHostException
+     * @throws InterruptedException
+     */
+    public ServerInfoHelper ping(String ip) throws UnknownHostException, InterruptedException {
+        ServerInfo info = new ServerInfo("", ip, false);
+        if (Core.getInstance().profile.checkJoinedThreadStack()) {
+            throw new IllegalThreadStateException("pinging from main thread is not supported!");
+        }
+        Semaphore semaphore = new Semaphore(0);
+        TickBasedEvents.serverListPinger.add(info, semaphore::release);
+        semaphore.acquire();
+        return new ServerInfoHelper(info);
+    }
+
+    /**
+     * @param ip
+     * @param callback
+     *
+     * @since 1.6.5
+     * @throws UnknownHostException
+     */
+    public void pingAsync(String ip, MethodWrapper<ServerInfoHelper, IOException, Object, ?> callback) throws UnknownHostException {
+        CompletableFuture.runAsync(() -> {
+            ServerInfo info = new ServerInfo("", ip, false);
+            try {
+                TickBasedEvents.serverListPinger.add(info, () -> callback.accept(new ServerInfoHelper(info), null));
+            } catch (IOException e) {
+                callback.accept(null , e);
+            }
+        });
+    }
+
+    /**
+     * @since 1.6.5
+     */
+    public void cancelAllPings() {
+        TickBasedEvents.serverListPinger.cancel();
+    }
+
 }
