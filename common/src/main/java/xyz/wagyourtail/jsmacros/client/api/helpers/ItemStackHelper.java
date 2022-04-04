@@ -66,17 +66,17 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     
     /**
      * @since 1.2.0
-     * @return
+     * @return was string before 1.6.5
      */
-    public String getDefaultName() {
-        return base.getItem().getName().getString();
+    public TextHelper getDefaultName() {
+        return new TextHelper(base.getItem().getName());
     }
     
     /**
-     * @return
+     * @return was string before 1.6.5
      */
-    public String getName() {
-        return base.getName().getString();
+    public TextHelper getName() {
+        return new TextHelper(base.getName());
     }
     
     /**

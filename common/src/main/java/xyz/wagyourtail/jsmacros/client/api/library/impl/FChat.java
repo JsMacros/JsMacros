@@ -279,4 +279,33 @@ public class FChat extends BaseLibrary {
     public ChatHistoryManager getHistory() {
         return new ChatHistoryManager(mc.inGameHud.getChatHud());
     }
+
+    /**
+     * @param string
+     * @since 1.6.5
+     * @return &#167; -> &amp;
+     */
+    public String sectionSymbolToAmpersand(String string) {
+        return string.replaceAll("§", "&");
+    }
+
+    /**
+     * @param string
+     * @since 1.6.5
+     * @return &amp; -> &#167;
+     */
+    public String ampersandToSectionSymbol(String string) {
+        return string.replaceAll("&", "§");
+    }
+
+    /**
+     * @param string
+     * @since 1.6.5
+     * @return
+     */
+     public String stripFormatting(String string) {
+     // on 1.15 and lower switch to comment
+//        return string.replaceAll("§#\\d{6}|§.", "");
+        return string.replaceAll("§.", "");
+    }
 }
