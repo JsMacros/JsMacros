@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 archivesBaseName = archivesBaseName + "-FORGE"
@@ -34,12 +34,14 @@ dependencies {
     shadowCommon "org.graalvm.regex:regex:${project.graal_version}"
 //		include "org.graalvm.compiler:compiler:${project.graal_version}"
 //		include "org.graalvm.compiler:compiler-management:${project.graal_version}"
-    shadowCommon "io.noties:prism4j:${project.prism_version}"
+    shadowCommon "io.noties:prism4j:${project.prism_version}", {
+        exclude module: "annotations-java5"
+    }
     shadowCommon "com.neovisionaries:nv-websocket-client:2.10"
     shadowCommon "org.javassist:javassist:3.28.0-GA"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
 }
 
 processResources {
@@ -52,15 +54,10 @@ processResources {
 
 shadowJar {
     configurations = [project.configurations.shadowCommon]
-    dependencies {
-        exclude(dependency {
-            it.moduleGroup == 'org.intellij'
-        })
-        exclude(dependency {
-            it.moduleGroup == 'org.jetbrains'
-        })
-    }
     classifier "dev-shadow"
+
+    // exclude icu that's "accidentally" (I hope) included in graaljs jar
+    exclude "com/ibm/**"
 
     mergeServiceFiles()
 }

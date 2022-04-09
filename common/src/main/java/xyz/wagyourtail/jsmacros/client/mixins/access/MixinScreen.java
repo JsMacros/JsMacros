@@ -16,10 +16,7 @@ import net.minecraft.text.ClickEvent;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -42,6 +39,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Mixin(Screen.class)
+@Implements(@Interface(iface = IScreen.class, prefix = "soft$"))
 public abstract class MixinScreen extends AbstractParentElement implements IScreen {
     @Unique private final Set<RenderCommon.RenderElement> elements = new LinkedHashSet<>();
     @Unique private MethodWrapper<PositionCommon.Pos2D, Integer, Object, ?> onMouseDown;
@@ -491,9 +489,8 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         return this;
     }
 
-    @Override
-    @Unique
-    public void close() {
+    @Intrinsic
+    public void soft$close() {
         onClose();
     }
 
