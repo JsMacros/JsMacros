@@ -234,12 +234,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return
      */
     public Inventory<T> swap(int slot1, int slot2) {
-        boolean is1 = getSlot(slot1).isEmpty();
-        boolean is2 = getSlot(slot2).isEmpty();
-        if (is1 && is2) return this;
-        if (!is1) man.clickSlot(syncId, slot1, 0, SlotActionType.PICKUP, player);
-        man.clickSlot(syncId, slot2, 0, SlotActionType.PICKUP, player);
-        if (!is2) man.clickSlot(syncId, slot1, 0, SlotActionType.PICKUP, player);
+        man.clickSlot(syncId, slot1, slot2, SlotActionType.SWAP, player);
         return this;
     }
 
