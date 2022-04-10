@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 
 import javassist.*;
+import javassist.bytecode.Descriptor;
 import javassist.bytecode.MethodInfo;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.proxypackage.Neighbor;
@@ -14,9 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.6.5
  */
 public class ClassBuilder<T> {
-    public final Map<String, MethodWrapper<Object, Object, Object, ?>> methodWrappers = new ConcurrentHashMap<>();
+    public static final Map<String, MethodWrapper<Object, Object, Object, ?>> methodWrappers = new ConcurrentHashMap<>();
     ClassPool defaultPool = ClassPool.getDefault();
-    private final CtClass ctClass;
+    public final CtClass ctClass;
     private final String className;
 
     public ClassBuilder(String name, Class<T> parent, Class<?> ...interfaces) throws NotFoundException, CannotCompileException {
@@ -44,7 +45,7 @@ public class ClassBuilder<T> {
         return new MethodBuilder(defaultPool.getCtClass(returnType.getName()), name, paramCtClasses);
     }
 
-    public ConstructorBuilder buildConstructor(Class<?> ...params) throws NotFoundException {
+    public ConstructorBuilder addConstructor(Class<?> ...params) throws NotFoundException {
         CtClass[] paramCtClasses = new CtClass[params.length];
         for (int i = 0; i < params.length; i++) {
             paramCtClasses[i] = defaultPool.getCtClass(params[i].getName());
@@ -52,22 +53,22 @@ public class ClassBuilder<T> {
         return new ConstructorBuilder(paramCtClasses, false);
     }
 
-    public ConstructorBuilder buildClInit() {
+    public ConstructorBuilder addClinit() {
         return new ConstructorBuilder(new CtClass[0], true);
     }
 
     public class FieldBuilder {
-        CtClass fieldType;
-        String fieldName;
-        int fieldMods = 0;
-        CtField.Initializer fieldInitializer;
+        private CtClass fieldType;
+        private String fieldName;
+        private int fieldMods = 0;
+        public CtField.Initializer fieldInitializer;
 
         public FieldBuilder(CtClass fieldType, String name) {
             this.fieldType = fieldType;
             this.fieldName = name;
         }
 
-        public ClassBuilder compile(String code) throws CannotCompileException {
+        public ClassBuilder<T> compile(String code) throws CannotCompileException {
             ctClass.addField(CtField.make(fieldType.getName() + " " + fieldName + ";", ctClass));
             return ClassBuilder.this;
         }
@@ -119,7 +120,7 @@ public class ClassBuilder<T> {
             return new FieldInitializerBuilder();
         }
 
-        public ClassBuilder end() throws CannotCompileException {
+        public ClassBuilder<T> end() throws CannotCompileException {
             ctClass.addField(new CtField(fieldType, fieldName, ctClass), fieldInitializer);
             return ClassBuilder.this;
         }
@@ -210,9 +211,8 @@ public class ClassBuilder<T> {
             this.params = params;
         }
 
-        public ClassBuilder compile(String code) throws CannotCompileException {
-            CtMethod method = CtMethod.make(code, ctClass);
-            ctClass.addMethod(method);
+        public ClassBuilder<T> compile(String code) throws CannotCompileException {
+            ctClass.addMethod(CtMethod.make(code, ctClass));
             return ClassBuilder.this;
         }
 
@@ -254,23 +254,106 @@ public class ClassBuilder<T> {
             return this;
         }
 
-        public ClassBuilder body(String code_src) throws CannotCompileException {
+        public ClassBuilder<T> body(String code_src) throws CannotCompileException {
             CtMethod method = CtNewMethod.make(this.methodMods, this.methodReturnType, this.methodName, this.params, this.exceptions, code_src, ctClass);
             ctClass.addMethod(method);
             return ClassBuilder.this;
         }
 
-        public ClassBuilder guestBody(MethodWrapper<Object, Object, Object, ?> methodBody) throws CannotCompileException, NotFoundException {
+        public ClassBuilder<T> guestBody(MethodWrapper<Object, Object, Object, ?> methodBody) throws CannotCompileException, NotFoundException {
             CtMethod method = new CtMethod(this.methodReturnType, this.methodName, this.params, ctClass);
             method.setModifiers(this.methodMods);
             method.setExceptionTypes(this.exceptions);
-            method.setBody("{ return xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder.methodWrappers.get(\"" + ClassBuilder.this.className + ";" + methodName + "\").apply(this);}");
+            boolean voidReturn = methodReturnType.equals(CtClass.voidType);
+            String guestName = ClassBuilder.this.className + ";" + methodName + Descriptor.ofMethod(methodReturnType, params);
+            StringBuilder body = new StringBuilder();
+            body.append("{");
+            if (!voidReturn) {
+                    body.append(" return ");
+                    if (!methodReturnType.isPrimitive()) {
+                        body.append("((").append(methodReturnType.getName()).append(")");
+                    } else {
+                        if (methodReturnType.equals(CtClass.booleanType)) {
+                            body.append("((java.lang.Boolean)");
+                        } else {
+                            body.append("((java.lang.Number)");
+                        }
+                    }
+            } else {
+                body.append("(");
+            }
+            body.append("((xyz.wagyourtail.jsmacros.core.MethodWrapper)")
+                .append("xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder.methodWrappers.get(\"")
+                .append(guestName)
+                .append("\")).")
+                .append(voidReturn ? "accept" : "apply")
+                .append("(")
+                .append("this, new Object[]{");
+            int i = 0;
+            for (CtClass param : params) {
+                if (!param.isPrimitive()) {
+                    body.append("(java.lang.Object) $").append(++i).append(",");
+                } else {
+                    if (param.equals(CtClass.booleanType)) {
+                        body.append("java.lang.Boolean.valueOf($").append(++i).append("),");
+                    } else if (param.equals(CtClass.byteType)) {
+                        body.append("java.lang.Byte.valueOf($").append(++i).append("),");
+                    } else if (param.equals(CtClass.charType)) {
+                        body.append("java.lang.Character.valueOf($").append(++i).append("),");
+                    } else if (param.equals(CtClass.shortType)) {
+                        body.append("java.lang.Short.valueOf($").append(++i).append("),");
+                    } else if (param.equals(CtClass.intType)) {
+                        body.append("java.lang.Integer.valueOf($").append(++i).append("),");
+                    } else if (param.equals(CtClass.longType)) {
+                        body.append("java.lang.Long.valueOf($").append(++i).append("),");
+                    } else if (param.equals(CtClass.floatType)) {
+                        body.append("java.lang.Float.valueOf($").append(++i).append("),");
+                    } else if (param.equals(CtClass.doubleType)) {
+                        body.append("java.lang.Double.valueOf($").append(++i).append("),");
+                    } else {
+                        throw new RuntimeException("Unknown primitive type: " + param.getName());
+                    }
+                }
+            }
+            if (params.length > 0) {
+                body.deleteCharAt(body.length() - 1);
+            }
+            body.append("}))");
+            if (!voidReturn) {
+                if (!methodReturnType.isPrimitive()) {
+                    body.append(");");
+                } else {
+                    if (methodReturnType.equals(CtClass.booleanType)) {
+                        body.append(".booleanValue();");
+                    } else if (methodReturnType.equals(CtClass.byteType)) {
+                        body.append(".byteValue();");
+                    } else if (methodReturnType.equals(CtClass.charType)) {
+                        body.append(".charValue();");
+                    } else if (methodReturnType.equals(CtClass.shortType)) {
+                        body.append(".shortValue();");
+                    } else if (methodReturnType.equals(CtClass.intType)) {
+                        body.append(".intValue();");
+                    } else if (methodReturnType.equals(CtClass.longType)) {
+                        body.append(".longValue();");
+                    } else if (methodReturnType.equals(CtClass.floatType)) {
+                        body.append(".floatValue();");
+                    } else if (methodReturnType.equals(CtClass.doubleType)) {
+                        body.append(".doubleValue();");
+                    } else {
+                        throw new RuntimeException("Unknown primitive type: " + methodReturnType.getName());
+                    }
+                }
+            } else {
+                body.append(";");
+            }
+            body.append("}");
+            method.setBody(body.toString());
             ctClass.addMethod(method);
-            methodWrappers.put(ClassBuilder.this.className + ";" + methodName, methodBody);
+            methodWrappers.put(guestName, methodBody);
             return ClassBuilder.this;
         }
 
-        public ClassBuilder body(MethodWrapper<CtClass, CtBehavior, Object, ?> buildBody) throws CannotCompileException {
+        public ClassBuilder<T> body(MethodWrapper<CtClass, CtBehavior, Object, ?> buildBody) throws CannotCompileException {
             CtMethod method = new CtMethod(this.methodReturnType, this.methodName, this.params, ctClass);
             method.setModifiers(this.methodMods);
             buildBody.apply(ctClass, method);
@@ -278,7 +361,7 @@ public class ClassBuilder<T> {
             return ClassBuilder.this;
         }
 
-        public ClassBuilder endAbstract() throws NotFoundException, CannotCompileException {
+        public ClassBuilder<T> endAbstract() throws NotFoundException, CannotCompileException {
             CtMethod method = CtNewMethod.abstractMethod(this.methodReturnType, this.methodName, this.params, this.exceptions, ctClass);
             ctClass.addMethod(method);
             return ClassBuilder.this;
@@ -293,7 +376,7 @@ public class ClassBuilder<T> {
         }
 
         @Override
-        public ClassBuilder body(String code_src) throws CannotCompileException {
+        public ClassBuilder<T> body(String code_src) throws CannotCompileException {
             CtConstructor constructor = CtNewConstructor.make(this.params, this.exceptions, code_src, ctClass);
             constructor.setModifiers(this.methodMods);
             ctClass.addConstructor(constructor);
@@ -301,18 +384,59 @@ public class ClassBuilder<T> {
         }
 
         @Override
-        public ClassBuilder guestBody(MethodWrapper<Object, Object, Object, ?> methodBody) throws CannotCompileException, NotFoundException {
+        public ClassBuilder<T> guestBody(MethodWrapper<Object, Object, Object, ?> methodBody) throws CannotCompileException, NotFoundException {
             CtConstructor method = new CtConstructor(this.params, ctClass);
             method.setModifiers(this.methodMods);
             method.setExceptionTypes(this.exceptions);
-            method.setBody("{ return xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder.methodWrappers.get(\"" + ClassBuilder.this.className + ";" + methodName + "\").apply(this);}");
+            String guestName = ClassBuilder.this.className + ";" + methodName + Descriptor.ofMethod(methodReturnType, params);
+            StringBuilder body = new StringBuilder();
+            body.append("{");
+            body.append("(");
+            body.append("((xyz.wagyourtail.jsmacros.core.MethodWrapper)")
+                .append("xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder.methodWrappers.get(\"")
+                .append(guestName)
+                .append("\")).")
+                .append("apply")
+                .append("(")
+                .append("this, new Object[]{");
+            int i = 0;
+            for (CtClass param : params) {
+                if (!param.isPrimitive()) {
+                    body.append("(java.lang.Object) $").append(++i).append(",");
+                } else {
+                    if (param.equals(CtClass.booleanType)) {
+                        body.append("java.lang.Boolean.valueOf($").append(++i).append("),");
+                    } else if (param.equals(CtClass.byteType)) {
+                        body.append("java.lang.Byte.valueOf($").append(++i).append("),");
+                    } else if (param.equals(CtClass.charType)) {
+                        body.append("java.lang.Character.valueOf($").append(++i).append("),");
+                    } else if (param.equals(CtClass.shortType)) {
+                        body.append("java.lang.Short.valueOf($").append(++i).append("),");
+                    } else if (param.equals(CtClass.intType)) {
+                        body.append("java.lang.Integer.valueOf($").append(++i).append("),");
+                    } else if (param.equals(CtClass.longType)) {
+                        body.append("java.lang.Long.valueOf($").append(++i).append("),");
+                    } else if (param.equals(CtClass.floatType)) {
+                        body.append("java.lang.Float.valueOf($").append(++i).append("),");
+                    } else if (param.equals(CtClass.doubleType)) {
+                        body.append("java.lang.Double.valueOf($").append(++i).append("),");
+                    } else {
+                        throw new RuntimeException("Unknown primitive type: " + param.getName());
+                    }
+                }
+            }
+            if (params.length > 0) {
+                body.deleteCharAt(body.length() - 1);
+            }
+            body.append("}));}");
+            method.setBody(body.toString());
             ctClass.addConstructor(method);
-            methodWrappers.put(ClassBuilder.this.className + ";" + methodName, methodBody);
+            methodWrappers.put(guestName, methodBody);
             return ClassBuilder.this;
         }
 
         @Override
-        public ClassBuilder body(MethodWrapper<CtClass, CtBehavior, Object, ?> buildBody) throws CannotCompileException {
+        public ClassBuilder<T> body(MethodWrapper<CtClass, CtBehavior, Object, ?> buildBody) throws CannotCompileException {
             CtConstructor constructor = new CtConstructor(this.params, ctClass);
             constructor.setModifiers(this.methodMods);
             buildBody.apply(ctClass, constructor);
@@ -321,7 +445,7 @@ public class ClassBuilder<T> {
         }
 
         @Override
-        public ClassBuilder endAbstract() {
+        public ClassBuilder<T> endAbstract() {
             throw new UnsupportedOperationException("Cannot end abstract constructors");
         }
 
