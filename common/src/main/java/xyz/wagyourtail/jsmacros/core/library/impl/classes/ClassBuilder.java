@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @param <T>
  * @since 1.6.5
  */
+ @SuppressWarnings("unused")
 public class ClassBuilder<T> {
     public static final Map<String, MethodWrapper<Object, Object, Object, ?>> methodWrappers = new ConcurrentHashMap<>();
     ClassPool defaultPool = ClassPool.getDefault();
@@ -31,10 +32,6 @@ public class ClassBuilder<T> {
 
     public FieldBuilder addField(Class<?> fieldType, String name) throws NotFoundException {
         return new FieldBuilder(defaultPool.getCtClass(fieldType.getName()), name);
-    }
-
-    public FieldBuilder addField(Class<?> fieldType) throws NotFoundException {
-        return new FieldBuilder(defaultPool.getCtClass(fieldType.getName()), null);
     }
 
     public MethodBuilder addMethod(Class<?> returnType, String name, Class<?> ...params) throws NotFoundException {
@@ -58,7 +55,7 @@ public class ClassBuilder<T> {
     }
 
     public class FieldBuilder {
-        private CtClass fieldType;
+        private final CtClass fieldType;
         private String fieldName;
         private int fieldMods = 0;
         public CtField.Initializer fieldInitializer;
@@ -121,7 +118,9 @@ public class ClassBuilder<T> {
         }
 
         public ClassBuilder<T> end() throws CannotCompileException {
-            ctClass.addField(new CtField(fieldType, fieldName, ctClass), fieldInitializer);
+            CtField field = new CtField(fieldType, fieldName, ctClass);
+            field.setModifiers(fieldMods);
+            ctClass.addField(field, fieldInitializer);
             return ClassBuilder.this;
         }
 
@@ -188,7 +187,7 @@ public class ClassBuilder<T> {
                 return FieldBuilder.this;
             }
 
-            public FieldBuilder callStaticMethodInThisClass(String methodName, String ...code_arg) throws NotFoundException {
+            public FieldBuilder callStaticMethodInThisClass(String methodName, String ...code_arg) {
                 FieldBuilder.this.fieldInitializer = CtField.Initializer.byCallWithParams(ctClass, methodName, code_arg);
                 return FieldBuilder.this;
             }
@@ -292,7 +291,7 @@ public class ClassBuilder<T> {
             int i = 0;
             for (CtClass param : params) {
                 if (!param.isPrimitive()) {
-                    body.append("(java.lang.Object) $").append(++i).append(",");
+                    body.append("$").append(++i).append(",");
                 } else {
                     if (param.equals(CtClass.booleanType)) {
                         body.append("java.lang.Boolean.valueOf($").append(++i).append("),");
@@ -390,9 +389,7 @@ public class ClassBuilder<T> {
             method.setExceptionTypes(this.exceptions);
             String guestName = ClassBuilder.this.className + ";" + methodName + Descriptor.ofMethod(methodReturnType, params);
             StringBuilder body = new StringBuilder();
-            body.append("{");
-            body.append("(");
-            body.append("((xyz.wagyourtail.jsmacros.core.MethodWrapper)")
+            body.append("{(((xyz.wagyourtail.jsmacros.core.MethodWrapper)")
                 .append("xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder.methodWrappers.get(\"")
                 .append(guestName)
                 .append("\")).")
