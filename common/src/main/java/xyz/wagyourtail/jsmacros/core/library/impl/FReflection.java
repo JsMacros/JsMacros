@@ -1,12 +1,17 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.NotFoundException;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.core.classes.Mappings;
 import xyz.wagyourtail.jsmacros.core.classes.WrappedClassInstance;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
+import xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.ProxyBuilder;
+import xyz.wagyourtail.jsmacros.core.library.impl.classes.proxypackage.Neighbor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,7 +37,7 @@ import java.util.*;
  @Library("Reflection")
  @SuppressWarnings("unused")
 public class FReflection extends PerExecLibrary {
-    private static final CombinedVariableClassLoader classLoader = new CombinedVariableClassLoader(FReflection.class.getClassLoader());
+    public static final CombinedVariableClassLoader classLoader = new CombinedVariableClassLoader(FReflection.class.getClassLoader());
     private static Mappings remapper = null;
 
     public FReflection(BaseScriptContext<?> context) {
@@ -299,6 +304,35 @@ public class FReflection extends PerExecLibrary {
      */
     public <T> ProxyBuilder<T> createClassProxyBuilder(Class<T> clazz, Class<?>... interfaces) {
         return new ProxyBuilder<>(clazz, interfaces);
+    }
+
+    /**
+     *
+     *
+     * @param cName
+     * @param clazz
+     * @param interfaces
+     * @param <T>
+     *
+     * @since 1.6.5
+     * @return
+     *
+     * @throws NotFoundException
+     * @throws CannotCompileException
+     */
+    public <T> ClassBuilder<T> createClassBuilder(String cName, Class<T> clazz, Class<?>... interfaces) throws NotFoundException, CannotCompileException {
+        return new ClassBuilder<>(cName, clazz, interfaces);
+    }
+
+    /**
+     * @param cName
+     * @since 1.6.5
+     * @return
+     *
+     * @throws ClassNotFoundException
+     */
+    public Class<?> getClassFromClassBuilderResult(String cName) throws ClassNotFoundException {
+        return Class.forName("xyz.wagyourtail.jsmacros.core.library.impl.classes.proxypackage." + cName.replaceAll("\\.", "\\$"), true, Neighbor.class.getClassLoader());
     }
     
     /**
