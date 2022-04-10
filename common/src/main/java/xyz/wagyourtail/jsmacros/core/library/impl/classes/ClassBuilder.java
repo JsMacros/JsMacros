@@ -1,12 +1,17 @@
 package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 
 import javassist.*;
+import javassist.bytecode.AnnotationsAttribute;
+import javassist.bytecode.ConstPool;
 import javassist.bytecode.Descriptor;
 import javassist.bytecode.MethodInfo;
+import javassist.bytecode.annotation.*;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.proxypackage.Neighbor;
 
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,6 +25,8 @@ public class ClassBuilder<T> {
     ClassPool defaultPool = ClassPool.getDefault();
     public final CtClass ctClass;
     private final String className;
+    private final AnnotationsAttribute classAnnotations;
+
 
     public ClassBuilder(String name, Class<T> parent, Class<?> ...interfaces) throws NotFoundException, CannotCompileException {
         className = name.replaceAll("\\.", "\\$");
@@ -28,6 +35,8 @@ public class ClassBuilder<T> {
         for (Class<?> i : interfaces) {
             ctClass.addInterface(defaultPool.getCtClass(i.getName()));
         }
+        classAnnotations = new AnnotationsAttribute(ctClass.getClassFile().getConstPool(), AnnotationsAttribute.visibleTag);
+        ctClass.getClassFile().addAttribute(classAnnotations);
     }
 
     public FieldBuilder addField(Class<?> fieldType, String name) throws NotFoundException {
@@ -54,10 +63,18 @@ public class ClassBuilder<T> {
         return new ConstructorBuilder(new CtClass[0], true);
     }
 
+
+    public AnnotationBuilder<ClassBuilder<T>> addAnnotation(Class<?> type) throws NotFoundException {
+        Annotation annotation = new Annotation(ctClass.getClassFile().getConstPool(), defaultPool.getCtClass(type.getName()));
+        classAnnotations.addAnnotation(annotation);
+        return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this);
+    }
+
     public class FieldBuilder {
         private final CtClass fieldType;
         private String fieldName;
         private int fieldMods = 0;
+        private final AnnotationsAttribute fieldAnnotations = new AnnotationsAttribute(ctClass.getClassFile().getConstPool(), AnnotationsAttribute.visibleTag);
         public CtField.Initializer fieldInitializer;
 
         public FieldBuilder(CtClass fieldType, String name) {
@@ -113,6 +130,12 @@ public class ClassBuilder<T> {
             return Modifier.toString(fieldMods);
         }
 
+        public AnnotationBuilder<FieldBuilder> addAnnotation(Class<?> type) throws NotFoundException {
+            Annotation annotation = new Annotation(ctClass.getClassFile().getConstPool(), defaultPool.getCtClass(type.getName()));
+            fieldAnnotations.addAnnotation(annotation);
+            return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this);
+        }
+
         public FieldInitializerBuilder initializer() {
             return new FieldInitializerBuilder();
         }
@@ -120,6 +143,7 @@ public class ClassBuilder<T> {
         public ClassBuilder<T> end() throws CannotCompileException {
             CtField field = new CtField(fieldType, fieldName, ctClass);
             field.setModifiers(fieldMods);
+            field.getFieldInfo().addAttribute(fieldAnnotations);
             ctClass.addField(field, fieldInitializer);
             return ClassBuilder.this;
         }
@@ -201,6 +225,7 @@ public class ClassBuilder<T> {
         CtClass[] params;
         CtClass[] exceptions;
         String methodName;
+        final AnnotationsAttribute methodAnnotations = new AnnotationsAttribute(ctClass.getClassFile().getConstPool(), AnnotationsAttribute.visibleTag);
         int methodMods = 0;
 
 
@@ -255,6 +280,7 @@ public class ClassBuilder<T> {
 
         public ClassBuilder<T> body(String code_src) throws CannotCompileException {
             CtMethod method = CtNewMethod.make(this.methodMods, this.methodReturnType, this.methodName, this.params, this.exceptions, code_src, ctClass);
+            method.getMethodInfo().addAttribute(methodAnnotations);
             ctClass.addMethod(method);
             return ClassBuilder.this;
         }
@@ -347,6 +373,7 @@ public class ClassBuilder<T> {
             }
             body.append("}");
             method.setBody(body.toString());
+            method.getMethodInfo().addAttribute(methodAnnotations);
             ctClass.addMethod(method);
             methodWrappers.put(guestName, methodBody);
             return ClassBuilder.this;
@@ -355,6 +382,7 @@ public class ClassBuilder<T> {
         public ClassBuilder<T> body(MethodWrapper<CtClass, CtBehavior, Object, ?> buildBody) throws CannotCompileException {
             CtMethod method = new CtMethod(this.methodReturnType, this.methodName, this.params, ctClass);
             method.setModifiers(this.methodMods);
+            method.getMethodInfo().addAttribute(methodAnnotations);
             buildBody.apply(ctClass, method);
             ctClass.addMethod(method);
             return ClassBuilder.this;
@@ -362,8 +390,15 @@ public class ClassBuilder<T> {
 
         public ClassBuilder<T> endAbstract() throws NotFoundException, CannotCompileException {
             CtMethod method = CtNewMethod.abstractMethod(this.methodReturnType, this.methodName, this.params, this.exceptions, ctClass);
+            method.getMethodInfo().addAttribute(methodAnnotations);
             ctClass.addMethod(method);
             return ClassBuilder.this;
+        }
+
+        public AnnotationBuilder<MethodBuilder> addAnnotation(Class<?> type) throws NotFoundException {
+            Annotation annotation = new Annotation(ctClass.getClassFile().getConstPool(), defaultPool.getCtClass(type.getName()));
+            methodAnnotations.addAnnotation(annotation);
+            return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this);
         }
     }
 
@@ -378,6 +413,7 @@ public class ClassBuilder<T> {
         public ClassBuilder<T> body(String code_src) throws CannotCompileException {
             CtConstructor constructor = CtNewConstructor.make(this.params, this.exceptions, code_src, ctClass);
             constructor.setModifiers(this.methodMods);
+            constructor.getMethodInfo().addAttribute(methodAnnotations);
             ctClass.addConstructor(constructor);
             return ClassBuilder.this;
         }
@@ -427,6 +463,7 @@ public class ClassBuilder<T> {
             }
             body.append("}));}");
             method.setBody(body.toString());
+            method.getMethodInfo().addAttribute(methodAnnotations);
             ctClass.addConstructor(method);
             methodWrappers.put(guestName, methodBody);
             return ClassBuilder.this;
@@ -436,6 +473,7 @@ public class ClassBuilder<T> {
         public ClassBuilder<T> body(MethodWrapper<CtClass, CtBehavior, Object, ?> buildBody) throws CannotCompileException {
             CtConstructor constructor = new CtConstructor(this.params, ctClass);
             constructor.setModifiers(this.methodMods);
+            constructor.getMethodInfo().addAttribute(methodAnnotations);
             buildBody.apply(ctClass, constructor);
             ctClass.addConstructor(constructor);
             return ClassBuilder.this;
@@ -450,5 +488,182 @@ public class ClassBuilder<T> {
 
     public Class<? extends T> finishBuildAndFreeze() throws CannotCompileException, NotFoundException {
         return (Class<? extends T>) ctClass.toClass(Neighbor.class);
+    }
+
+    public class AnnotationBuilder<T> {
+        final Annotation annotationInstance;
+        final ConstPool constPool;
+        private final T member;
+
+        private AnnotationBuilder(Annotation annotationInstance, ConstPool constPool, T member) {
+            this.annotationInstance = annotationInstance;
+            this.constPool = constPool;
+            this.member = member;
+        }
+
+        public AnnotationBuilder<T> putString(String key, String value) {
+            annotationInstance.addMemberValue(key, new StringMemberValue(value, constPool));
+            return this;
+        }
+
+        public AnnotationBuilder<T> putBoolean(String key, boolean value) {
+            annotationInstance.addMemberValue(key, new BooleanMemberValue(value, constPool));
+            return this;
+        }
+
+        public AnnotationBuilder<T> putByte(String key, byte value) {
+            annotationInstance.addMemberValue(key, new ByteMemberValue(value, constPool));
+            return this;
+        }
+
+        public AnnotationBuilder<T> putChar(String key, char value) {
+            annotationInstance.addMemberValue(key, new CharMemberValue(value, constPool));
+            return this;
+        }
+
+        public AnnotationBuilder<T> putShort(String key, short value) {
+            annotationInstance.addMemberValue(key, new ShortMemberValue(value, constPool));
+            return this;
+        }
+
+        public AnnotationBuilder<T> putInt(String key, int value) {
+            annotationInstance.addMemberValue(key, new IntegerMemberValue(value, constPool));
+            return this;
+        }
+
+        public AnnotationBuilder<T> putLong(String key, long value) {
+            annotationInstance.addMemberValue(key, new LongMemberValue(value, constPool));
+            return this;
+        }
+
+        public AnnotationBuilder<T> putFloat(String key, float value) {
+            annotationInstance.addMemberValue(key, new FloatMemberValue(value, constPool));
+            return this;
+        }
+
+        public AnnotationBuilder<T> putDouble(String key, double value) {
+            annotationInstance.addMemberValue(key, new DoubleMemberValue(value, constPool));
+            return this;
+        }
+
+        public AnnotationBuilder<T> putClass(String key, Class<?> value) {
+            annotationInstance.addMemberValue(key, new ClassMemberValue(value.getName(), constPool));
+            return this;
+        }
+
+        public AnnotationBuilder<T> putEnum(String key, Enum<?> value) {
+            EnumMemberValue enumMemberValue = new EnumMemberValue(constPool);
+            enumMemberValue.setType(value.getDeclaringClass().getName());
+            enumMemberValue.setValue(value.name());
+            annotationInstance.addMemberValue(key, enumMemberValue);
+            return this;
+        }
+
+        public AnnotationBuilder<AnnotationBuilder<T>> putAnnotation(String key, Class<?> annotationClass) throws NotFoundException {
+            Annotation annotation = new Annotation(constPool, defaultPool.getCtClass(annotationClass.getName()));
+            annotationInstance.addMemberValue(key, new AnnotationMemberValue(annotation, constPool));
+            return new AnnotationBuilder<>(annotation, constPool, this);
+        }
+
+        public AnnotationArrayBuilder<AnnotationBuilder<T>> putArray(String key, Class<?> annotationClass) throws NotFoundException {
+            AnnotationArrayBuilder ab = new AnnotationArrayBuilder<>(this, constPool);
+            annotationInstance.addMemberValue(key, ab.arrayMemberValue);
+            return ab;
+        }
+
+
+        public T finish() {
+            return member;
+        }
+
+        public class AnnotationArrayBuilder<U> {
+            ArrayMemberValue arrayMemberValue;
+            private final ConstPool constPool;
+            private final List<MemberValue> mv = new ArrayList<>();
+            private final U parent;
+
+            public AnnotationArrayBuilder(U parent, ConstPool constPool) {
+                this.constPool = constPool;
+                this.parent = parent;
+                this.arrayMemberValue = new ArrayMemberValue(constPool);
+            }
+
+            public AnnotationArrayBuilder<U> putString(String value) {
+                mv.add(new StringMemberValue(value, constPool));
+                return this;
+            }
+
+            public AnnotationArrayBuilder<U> putBoolean(boolean value) {
+                mv.add(new BooleanMemberValue(value, constPool));
+                return this;
+            }
+
+            public AnnotationArrayBuilder<U> putByte(byte value) {
+                mv.add(new ByteMemberValue(value, constPool));
+                return this;
+            }
+
+            public AnnotationArrayBuilder<U> putChar(char value) {
+                mv.add(new CharMemberValue(value, constPool));
+                return this;
+            }
+
+            public AnnotationArrayBuilder<U> putShort(short value) {
+                mv.add(new ShortMemberValue(value, constPool));
+                return this;
+            }
+
+            public AnnotationArrayBuilder<U> putInt(int value) {
+                mv.add(new IntegerMemberValue(value, constPool));
+                return this;
+            }
+
+            public AnnotationArrayBuilder<U> putLong(long value) {
+                mv.add(new LongMemberValue(value, constPool));
+                return this;
+            }
+
+            public AnnotationArrayBuilder<U> putFloat(float value) {
+                mv.add(new FloatMemberValue(value, constPool));
+                return this;
+            }
+
+            public AnnotationArrayBuilder<U> putDouble(double value) {
+                mv.add(new DoubleMemberValue(value, constPool));
+                return this;
+            }
+
+            public AnnotationArrayBuilder<U> putClass(Class<?> value) {
+                mv.add(new ClassMemberValue(value.getName(), constPool));
+                return this;
+            }
+
+            public AnnotationArrayBuilder<U> putEnum(Enum<?> value) {
+                EnumMemberValue enumMemberValue = new EnumMemberValue(constPool);
+                enumMemberValue.setType(value.getDeclaringClass().getName());
+                enumMemberValue.setValue(value.name());
+                mv.add(enumMemberValue);
+                return this;
+            }
+
+            public AnnotationBuilder<AnnotationArrayBuilder<U>> putAnnotation(Class<?> annotationClass) throws NotFoundException {
+                Annotation annotation = new Annotation(constPool, defaultPool.getCtClass(annotationClass.getName()));
+                mv.add(new AnnotationMemberValue(annotation, constPool));
+                return new AnnotationBuilder<>(annotation, constPool, this);
+            }
+
+            public AnnotationArrayBuilder<AnnotationArrayBuilder<U>> putArray(Class<?> annotationClass) throws NotFoundException {
+                AnnotationArrayBuilder ab = new AnnotationArrayBuilder<>(this, constPool);
+                mv.add(ab.arrayMemberValue);
+                return ab;
+            }
+
+            public U finish() {
+                ArrayMemberValue arrayMemberValue = new ArrayMemberValue(constPool);
+                arrayMemberValue.setValue(mv.toArray(new MemberValue[0]));
+                return parent;
+            }
+        }
+
     }
 }
