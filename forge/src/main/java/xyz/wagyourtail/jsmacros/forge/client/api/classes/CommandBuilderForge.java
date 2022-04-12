@@ -6,11 +6,13 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.tree.CommandNode;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.fabric.impl.command.client.ClientCommandInternals;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import xyz.wagyourtail.jsmacros.client.access.ICommandNode;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -80,5 +82,12 @@ public class CommandBuilderForge extends CommandBuilder {
         if (cpnh != null) {
             ClientCommandInternals.addCommands((CommandDispatcher) cpnh.getCommandDispatcher(), (FabricClientCommandSource) cpnh.getCommandSource());
         }
+    }
+
+    @Override
+    public void unregister() {
+        CommandNode<?> cn = ((ICommandNode) ClientCommandManager.DISPATCHER.getRoot()).remove(head.getLiteral());
+        CommandDispatcher<?> cd = MinecraftClient.getInstance().player.networkHandler.getCommandDispatcher();
+        ((ICommandNode) cd.getRoot()).remove(head.getLiteral());
     }
 }

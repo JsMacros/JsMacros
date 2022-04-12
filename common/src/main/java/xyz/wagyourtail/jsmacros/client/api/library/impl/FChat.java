@@ -1,17 +1,23 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.tree.CommandNode;
+import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
+import xyz.wagyourtail.jsmacros.client.access.ICommandNode;
 import xyz.wagyourtail.jsmacros.client.api.classes.ChatHistoryManager;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
+import xyz.wagyourtail.jsmacros.client.api.helpers.CommandNodeHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -274,6 +280,32 @@ public class FChat extends BaseLibrary {
      */
     public CommandBuilder createCommandBuilder(String name) {
         return CommandBuilder.createNewBuilder.apply(name);
+    }
+
+    /**
+     * @param name
+     * @since 1.6.5
+     */
+    public CommandNodeHelper unregisterCommand(String name) {
+        CommandNodeHelper c = null;
+        CommandNode<?> cnf = ((ICommandNode) ClientCommandManager.DISPATCHER.getRoot()).remove(name);
+        CommandDispatcher<?> cd = MinecraftClient.getInstance().player.networkHandler.getCommandDispatcher();
+        CommandNode<?> cn = ((ICommandNode) cd.getRoot()).remove(name);
+        return cn != null || cnf != null ? new CommandNodeHelper(cn, cnf) : null;
+    }
+
+    /**
+     * @since 1.6.5
+     * @param node
+     */
+    public void reRegisterCommand(CommandNodeHelper node) {
+        if (node.fabric != null) {
+            ClientCommandManager.DISPATCHER.getRoot().addChild(node.fabric);
+        }
+        CommandDispatcher<?> cd = mc.player.networkHandler.getCommandDispatcher();
+        if (node.getRaw() != null) {
+            cd.getRoot().addChild((CommandNode) node.getRaw());
+        }
     }
 
     public ChatHistoryManager getHistory() {

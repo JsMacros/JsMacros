@@ -8,6 +8,7 @@
     "access.MixinChatHud",
     "access.MixinChunkSelection",
     "access.MixinClientPlayNetworkHandler",
+    "access.MixinCommandNode",
     "access.MixinDisconnectedScreen",
     "access.MixinEntity",
     "access.MixinFontManager",

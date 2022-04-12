@@ -290,4 +290,10 @@ public abstract class CommandBuilder {
     }
 
     public abstract void register();
+
+    /**
+     * @since 1.6.5
+     * removes this command
+     */
+    public abstract void unregister();
 }
