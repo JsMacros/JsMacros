@@ -295,5 +295,5 @@ public abstract class CommandBuilder {
      * @since 1.6.5
      * removes this command
      */
-    public abstract void unregister();
+    public abstract void unregister() throws IllegalAccessException;
 }

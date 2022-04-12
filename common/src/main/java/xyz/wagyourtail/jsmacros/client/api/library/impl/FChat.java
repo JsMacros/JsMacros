@@ -5,15 +5,15 @@ import com.mojang.brigadier.tree.CommandNode;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
-import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
-import xyz.wagyourtail.jsmacros.client.access.ICommandNode;
 import xyz.wagyourtail.jsmacros.client.api.classes.ChatHistoryManager;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
@@ -286,11 +286,15 @@ public class FChat extends BaseLibrary {
      * @param name
      * @since 1.6.5
      */
-    public CommandNodeHelper unregisterCommand(String name) {
+    public CommandNodeHelper unregisterCommand(String name) throws IllegalAccessException {
         CommandNodeHelper c = null;
-        CommandNode<?> cnf = ((ICommandNode) ClientCommandManager.DISPATCHER.getRoot()).remove(name);
-        CommandDispatcher<?> cd = MinecraftClient.getInstance().player.networkHandler.getCommandDispatcher();
-        CommandNode<?> cn = ((ICommandNode) cd.getRoot()).remove(name);
+        CommandNode<?> cnf = CommandNodeAccessor.remove(ClientCommandManager.DISPATCHER.getRoot(), name);
+        CommandNode<?> cn = null;
+        ClientPlayNetworkHandler p = MinecraftClient.getInstance().getNetworkHandler();
+        if (p != null) {
+            CommandDispatcher<?> cd = p.getCommandDispatcher();
+            cn = CommandNodeAccessor.remove(cd.getRoot(), name);
+        }
         return cn != null || cnf != null ? new CommandNodeHelper(cn, cnf) : null;
     }
 
@@ -302,9 +306,12 @@ public class FChat extends BaseLibrary {
         if (node.fabric != null) {
             ClientCommandManager.DISPATCHER.getRoot().addChild(node.fabric);
         }
-        CommandDispatcher<?> cd = mc.player.networkHandler.getCommandDispatcher();
-        if (node.getRaw() != null) {
-            cd.getRoot().addChild((CommandNode) node.getRaw());
+        ClientPlayNetworkHandler nh = mc.getNetworkHandler();
+        if (nh != null) {
+            CommandDispatcher<?> cd = nh.getCommandDispatcher();
+            if (node.getRaw() != null) {
+                cd.getRoot().addChild((CommandNode) node.getRaw());
+            }
         }
     }
 

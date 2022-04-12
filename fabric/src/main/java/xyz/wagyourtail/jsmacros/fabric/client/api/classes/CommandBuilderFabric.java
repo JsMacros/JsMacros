@@ -12,7 +12,8 @@ import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.fabric.impl.command.client.ClientCommandInternals;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import xyz.wagyourtail.jsmacros.client.access.ICommandNode;
+import net.minecraft.client.network.ClientPlayerEntity;
+import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -85,9 +86,12 @@ public class CommandBuilderFabric extends CommandBuilder {
     }
 
     @Override
-    public void unregister() {
-        CommandNode<?> cn = ((ICommandNode) ClientCommandManager.DISPATCHER.getRoot()).remove(head.getLiteral());
-        CommandDispatcher<?> cd = MinecraftClient.getInstance().player.networkHandler.getCommandDispatcher();
-        ((ICommandNode) cd.getRoot()).remove(head.getLiteral());
+    public void unregister() throws IllegalAccessException {
+        CommandNodeAccessor.remove(ClientCommandManager.DISPATCHER.getRoot(), head.getLiteral());
+        ClientPlayNetworkHandler p = MinecraftClient.getInstance().getNetworkHandler();
+        if (p != null) {
+            CommandDispatcher<?> cd = p.getCommandDispatcher();
+            CommandNodeAccessor.remove(cd.getRoot(), head.getLiteral());
+        }
     }
 }
