@@ -166,6 +166,10 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                 return;
             }
 
+            if (ctx.isContextClosed()) {
+                throw new BaseScriptContext.ScriptAssertionError("Context closed");
+            }
+
             Thread th = new Thread(() -> {
                 try {
                     tasks.put(new WrappedThread(Thread.currentThread(), true));
@@ -178,6 +182,13 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                         joinable.waitFor();
                         joinable = tasks.peek();
                     }
+
+                    if (ctx.isContextClosed()) {
+                        ctx.unbindThread(Thread.currentThread());
+                        tasks.poll().release();
+                        throw new BaseScriptContext.ScriptAssertionError("Context closed");
+                    }
+
                     ctx.getContext().enter();
                     try {
                         fn.apply(new Object[] {t, u});
@@ -207,6 +218,10 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
         @Override
         public R apply(T t, U u) {
+            if (ctx.isContextClosed()) {
+                throw new BaseScriptContext.ScriptAssertionError("Context closed");
+            }
+
             if (ctx.getBoundThreads().contains(Thread.currentThread())) {
                 return (R) fn.apply(new Object[] {t, u});
             }
@@ -221,6 +236,12 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     if (joinable.thread == Thread.currentThread()) break;
                     joinable.waitFor();
                     joinable = tasks.peek();
+                }
+
+                if (ctx.isContextClosed()) {
+                    ctx.unbindThread(Thread.currentThread());
+                    tasks.poll().release();
+                    throw new BaseScriptContext.ScriptAssertionError("Context closed");
                 }
 
                 ctx.getContext().enter();
