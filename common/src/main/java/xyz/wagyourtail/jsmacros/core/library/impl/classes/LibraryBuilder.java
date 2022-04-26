@@ -27,6 +27,12 @@ public class LibraryBuilder extends ClassBuilder<BaseLibrary> {
             int finalI = i;
             allowed[i] = Core.getInstance().languages.stream().filter(e -> e.extension.endsWith(allowedLangs[finalI])).findFirst().orElseThrow(() -> new IllegalArgumentException("Language not found: " + allowedLangs[finalI])).getClass();
         }
+        AnnotationBuilder.AnnotationArrayBuilder ab = b.putArray("allowedLanguages", BaseLanguage.class);
+        for (Class<?> c : allowed) {
+            ab.putClass(c);
+        }
+        ab.finish();
+        b.finish();
         this.perExec = perExec;
         languages = allowedLangs.length > 0;
     }
@@ -54,11 +60,25 @@ public class LibraryBuilder extends ClassBuilder<BaseLibrary> {
         if (languages) {
             params.add(BaseLanguage.class);
         }
-        return addConstructor(params.toArray(new Class<?>[0]));
+        ConstructorBuilder cb = addConstructor(params.toArray(new Class<?>[0]));
+        cb.makePublic();
+        return cb;
     }
 
     @Override
     public Class<? extends BaseLibrary> finishBuildAndFreeze() throws CannotCompileException, NotFoundException {
+        if (!hasConstructorSet) {
+            ConstructorBuilder cb = addConstructor();
+            StringBuilder body = new StringBuilder("{super(");
+            for (int i = 0; i < cb.params.length; i++) {
+                if (i > 0) {
+                    body.append(", ");
+                }
+                body.append("$").append(i);
+            }
+            body.append(");}");
+            cb.body(body.toString());
+        }
         Class<? extends BaseLibrary> clazz = super.finishBuildAndFreeze();
         Core.getInstance().libraryRegistry.addLibrary(clazz);
         return clazz;
