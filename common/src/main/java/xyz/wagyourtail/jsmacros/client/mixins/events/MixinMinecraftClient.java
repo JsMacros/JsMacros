@@ -47,7 +47,7 @@ public abstract class MixinMinecraftClient {
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", opcode = Opcodes.PUTFIELD), method="setScreen")
     public void onOpenScreen(Screen screen, CallbackInfo info) {
         if (screen != currentScreen) {
-            if (interactionManager.hasCreativeInventory() && screen instanceof AbstractInventoryScreen) {
+            if (screen instanceof AbstractInventoryScreen && interactionManager.hasCreativeInventory()) {
                 if (!(screen instanceof CreativeInventoryScreen)) {
                     prevScreen = currentScreen;
                 }
