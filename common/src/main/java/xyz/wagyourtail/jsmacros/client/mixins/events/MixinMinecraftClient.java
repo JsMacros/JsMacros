@@ -3,7 +3,11 @@ package xyz.wagyourtail.jsmacros.client.mixins.events;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
+import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.world.ClientWorld;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
@@ -27,6 +31,10 @@ public abstract class MixinMinecraftClient {
 
     @Shadow public abstract void setScreen(@Nullable Screen screen);
 
+    @Shadow @Nullable public ClientPlayerInteractionManager interactionManager;
+
+    @Shadow private static MinecraftClient instance;
+
     @Inject(at = @At("HEAD"), method="joinWorld")
     public void onJoinWorld(ClientWorld world, CallbackInfo info) {
         if (world != null)
@@ -39,7 +47,13 @@ public abstract class MixinMinecraftClient {
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", opcode = Opcodes.PUTFIELD), method="setScreen")
     public void onOpenScreen(Screen screen, CallbackInfo info) {
         if (screen != currentScreen) {
-            prevScreen = currentScreen;
+            if (interactionManager.hasCreativeInventory() && screen instanceof AbstractInventoryScreen) {
+                if (!(screen instanceof CreativeInventoryScreen)) {
+                    prevScreen = currentScreen;
+                }
+            } else {
+                prevScreen = currentScreen;
+            }
             new EventOpenScreen(screen);
         }
     }
@@ -47,6 +61,9 @@ public abstract class MixinMinecraftClient {
     @Inject(at = @At("TAIL"), method = "setScreen")
     public void afterOpenScreen(Screen screen, CallbackInfo info) {
         if (screen instanceof HandledScreen<?>) {
+            if (interactionManager.hasCreativeInventory() && !(screen instanceof CreativeInventoryScreen)) {
+                return;
+            }
             EventOpenContainer event = new EventOpenContainer(((HandledScreen<?>) screen));
             if (event.cancelled) {
                 setScreen(prevScreen);
