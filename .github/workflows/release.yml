@@ -19,25 +19,25 @@ jobs:
     uses: wagyourtail/jsmacros/.github/workflows/releasebuild.yml@main-1.18
     with:
       branch: backport-1.17.1
-      java_version: 16
+      java_version: 17
 
   build_1_16:
     uses: wagyourtail/jsmacros/.github/workflows/releasebuild.yml@main-1.18
     with:
       branch: backport-1.16.5
-      java_version: 16
+      java_version: 17
 
   build_1_15:
     uses: wagyourtail/jsmacros/.github/workflows/releasebuild.yml@main-1.18
     with:
       branch: backport-1.15.2
-      java_version: 16
+      java_version: 17
 
   build_1_14:
     uses: wagyourtail/jsmacros/.github/workflows/releasebuild.yml@main-1.18
     with:
       branch: backport-1.14.4
-      java_version: 16
+      java_version: 17
 
   build_1_8:
     uses: wagyourtail/jsmacros/.github/workflows/releasebuild.yml@main-1.18
