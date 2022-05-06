@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Getting Started</title>
+
+  <link rel="stylesheet" href="general.css" />
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<header>
+  <a href="../../../..">
+    <----- Return to main JsMacros docs page.
+  </a>
+</header>
+<main class= "General">
+  <h2>TPS Display Service</h2>
+  <p>
+  example code for a service that displays the tps in an overlay in the bottom
+  left corner of the screen.
+  <br>
+  <br>
+  To register a service, click the service button in the bottom left next to "running".
+  Give it a name, and assign a file. the enable/disable will determine if the service should start at startup,
+  you can manully start/stop with the run/stop button.
+  </p>
+  <pre class="prettyprint"><code class="language-javascript">
+// services start with minecraft, when enabled and are meant to be persistent scripts.
+const d2d = Hud.createDraw2D()
+let tpsmeter;
+d2d.setOnInit(JavaWrapper.methodToJava(() => {
+    tpsmeter = d2d.addText(World.getServerTPS(), 0, d2d.getHeight() - 10, 0xFFFFFF, true);
+}));
+const ticklistener = JsMacros.on("Tick", JavaWrapper.methodToJava(() => {
+    tpsmeter?.setText(World.getServerTPS());
+}));
+Hud.registerDraw2D(d2d);
+// this fires when the service is stopped
+event.stopListener = JavaWrapper.methodToJava(() => {
+    Hud.unregisterDraw2D(d2d);
+    JsMacros.off(ticklistener);
+});
+  </code>
+  </pre>
+</main>
+</body>
+</html>

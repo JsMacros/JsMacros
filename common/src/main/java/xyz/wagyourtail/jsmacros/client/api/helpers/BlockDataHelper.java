@@ -64,10 +64,10 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
     }
     
     /**
-     * @return the translated name of the block.
+     * @return the translated name of the block. (was string before 1.6.5)
      */
-    public String getName() {
-        return b.getName().getString();
+    public TextHelper getName() {
+        return new TextHelper(b.getName());
     }
 
     /**

@@ -8,10 +8,8 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @since 1.4.0
@@ -33,9 +31,9 @@ public abstract class BaseScriptContext<T> {
     protected T context = null;
     protected Thread mainThread = null;
 
-    protected final Set<Thread> threads = new HashSet<>();
+    protected final Set<Thread> threads = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
-    protected final Map<Thread, EventContainer<T>> events = new HashMap<>();
+    protected final Map<Thread, EventContainer<T>> events = new ConcurrentHashMap<>();
 
     public boolean hasMethodWrapperBeenInvoked = false;
 
@@ -59,7 +57,7 @@ public abstract class BaseScriptContext<T> {
      * @since 1.6.0
      * @return
      */
-    public Map<Thread, EventContainer<T>> getBoundEvents() {
+    public synchronized Map<Thread, EventContainer<T>> getBoundEvents() {
         return ImmutableMap.copyOf(events);
     }
 
@@ -106,6 +104,7 @@ public abstract class BaseScriptContext<T> {
      */
     public synchronized boolean bindThread(Thread t) {
         if (closed) throw new ScriptAssertionError("Cannot bind thread to closed context");
+        if (t == null) throw new ScriptAssertionError("Cannot bind null thread");
         return threads.add(t);
     }
 
@@ -127,7 +126,7 @@ public abstract class BaseScriptContext<T> {
      * @since 1.6.0
      * @return
      */
-    public Set<Thread> getBoundThreads() {
+    public synchronized Set<Thread> getBoundThreads() {
         return ImmutableSet.copyOf(threads);
     }
 

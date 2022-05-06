@@ -1,17 +1,23 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.tree.CommandNode;
+import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.ChatHistoryManager;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
+import xyz.wagyourtail.jsmacros.client.api.helpers.CommandNodeHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -276,7 +282,69 @@ public class FChat extends BaseLibrary {
         return CommandBuilder.createNewBuilder.apply(name);
     }
 
+    /**
+     * @param name
+     * @since 1.6.5
+     */
+    public CommandNodeHelper unregisterCommand(String name) throws IllegalAccessException {
+        CommandNodeHelper c = null;
+        CommandNode<?> cnf = CommandNodeAccessor.remove(ClientCommandManager.DISPATCHER.getRoot(), name);
+        CommandNode<?> cn = null;
+        ClientPlayNetworkHandler p = MinecraftClient.getInstance().getNetworkHandler();
+        if (p != null) {
+            CommandDispatcher<?> cd = p.getCommandDispatcher();
+            cn = CommandNodeAccessor.remove(cd.getRoot(), name);
+        }
+        return cn != null || cnf != null ? new CommandNodeHelper(cn, cnf) : null;
+    }
+
+    /**
+     * @since 1.6.5
+     * @param node
+     */
+    public void reRegisterCommand(CommandNodeHelper node) {
+        if (node.fabric != null) {
+            ClientCommandManager.DISPATCHER.getRoot().addChild(node.fabric);
+        }
+        ClientPlayNetworkHandler nh = mc.getNetworkHandler();
+        if (nh != null) {
+            CommandDispatcher<?> cd = nh.getCommandDispatcher();
+            if (node.getRaw() != null) {
+                cd.getRoot().addChild((CommandNode) node.getRaw());
+            }
+        }
+    }
+
     public ChatHistoryManager getHistory() {
         return new ChatHistoryManager(mc.inGameHud.getChatHud());
+    }
+
+    /**
+     * @param string
+     * @since 1.6.5
+     * @return &#167; -> &amp;
+     */
+    public String sectionSymbolToAmpersand(String string) {
+        return string.replaceAll("§", "&");
+    }
+
+    /**
+     * @param string
+     * @since 1.6.5
+     * @return &amp; -> &#167;
+     */
+    public String ampersandToSectionSymbol(String string) {
+        return string.replaceAll("&", "§");
+    }
+
+    /**
+     * @param string
+     * @since 1.6.5
+     * @return
+     */
+     public String stripFormatting(String string) {
+     // on 1.15 and lower switch to comment
+//        return string.replaceAll("§#\\d{6}|§.", "");
+        return string.replaceAll("§.", "");
     }
 }

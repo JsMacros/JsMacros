@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.tick;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.MultiplayerServerListPinger;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -18,7 +19,12 @@ public class TickBasedEvents {
     private static ItemStack chestArmor = ItemStack.EMPTY;
     private static ItemStack headArmor = ItemStack.EMPTY;
     private static boolean previousFallFlyState = false;
-    
+
+
+
+    public static final MultiplayerServerListPinger serverListPinger = new MultiplayerServerListPinger();
+
+
     public static boolean areNotEqual(ItemStack a, ItemStack b) {
         return (!a.isEmpty() || !b.isEmpty()) && (a.isEmpty() || b.isEmpty() || !a.isItemEqualIgnoreDamage(b) || a.getCount() != b.getCount() || !ItemStack.areNbtEqual(a, b) || a.getDamage() != b.getDamage());
     }
@@ -56,6 +62,7 @@ public class TickBasedEvents {
         }
 
         FClient.tickSynchronizer.tick();
+        serverListPinger.tick();
 
         new EventTick();
         new EventJoinedTick();

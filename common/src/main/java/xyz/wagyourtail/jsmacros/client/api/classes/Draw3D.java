@@ -50,6 +50,15 @@ public class Draw3D {
     }
 
     /**
+     * @return
+     *
+     * @since 1.6.5
+     */
+    public List<Surface> getDraw2Ds() {
+        return ImmutableList.copyOf(surfaces);
+    }
+
+    /**
      * @param x1
      * @param y1
      * @param z1
@@ -430,8 +439,19 @@ public class Draw3D {
             renderBack,
             cull
         );
-        this.surfaces.add(surface);
+        synchronized (surfaces) {
+            this.surfaces.add(surface);
+        }
         return surface;
+    }
+
+    /**
+     * @since 1.6.5
+     */
+     public void removeDraw2D(Surface surface) {
+        synchronized (this.surfaces) {
+            this.surfaces.remove(surface);
+        }
     }
 
     /**

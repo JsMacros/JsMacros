@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 archivesBaseName = archivesBaseName + "-FABRIC"
@@ -48,7 +48,7 @@ dependencies {
         transitive = false
     }
     //for modmenu
-    modImplementation "net.fabricmc.fabric-api:fabric-screen-api-v1:1.0.4+155f865c13"
+    modImplementation "net.fabricmc.fabric-api:fabric-screen-api-v1:1.0.9+d882b915d2"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }

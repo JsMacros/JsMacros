@@ -185,6 +185,7 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventJoinedTick.class);
         runner.eventRegistry.addEvent(EventJoinServer.class);
         runner.eventRegistry.addEvent(EventKey.class);
+        runner.eventRegistry.addEvent(EventOpenContainer.class);
         runner.eventRegistry.addEvent(EventOpenScreen.class);
         runner.eventRegistry.addEvent(EventPlayerJoin.class);
         runner.eventRegistry.addEvent(EventPlayerLeave.class);
