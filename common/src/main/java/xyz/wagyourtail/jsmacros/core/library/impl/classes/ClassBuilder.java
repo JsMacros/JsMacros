@@ -11,6 +11,7 @@ import xyz.wagyourtail.jsmacros.core.library.impl.classes.proxypackage.Neighbor;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,7 +37,6 @@ public class ClassBuilder<T> {
             ctClass.addInterface(defaultPool.getCtClass(i.getName()));
         }
         classAnnotations = new AnnotationsAttribute(ctClass.getClassFile().getConstPool(), AnnotationsAttribute.visibleTag);
-        ctClass.getClassFile().addAttribute(classAnnotations);
     }
 
     public FieldBuilder addField(Class<?> fieldType, String name) throws NotFoundException {
@@ -66,8 +66,7 @@ public class ClassBuilder<T> {
 
     public AnnotationBuilder<ClassBuilder<T>> addAnnotation(Class<?> type) throws NotFoundException {
         Annotation annotation = new Annotation(ctClass.getClassFile().getConstPool(), defaultPool.getCtClass(type.getName()));
-        classAnnotations.addAnnotation(annotation);
-        return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this);
+        return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this, classAnnotations);
     }
 
     public class FieldBuilder {
@@ -132,8 +131,7 @@ public class ClassBuilder<T> {
 
         public AnnotationBuilder<FieldBuilder> addAnnotation(Class<?> type) throws NotFoundException {
             Annotation annotation = new Annotation(ctClass.getClassFile().getConstPool(), defaultPool.getCtClass(type.getName()));
-            fieldAnnotations.addAnnotation(annotation);
-            return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this);
+            return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this, fieldAnnotations);
         }
 
         public FieldInitializerBuilder initializer() {
@@ -379,6 +377,15 @@ public class ClassBuilder<T> {
             return ClassBuilder.this;
         }
 
+        public BodyBuilder buildBody() throws CannotCompileException {
+            CtMethod method = new CtMethod(this.methodReturnType, this.methodName, this.params, ctClass);
+            method.setModifiers(this.methodMods);
+            method.getMethodInfo().addAttribute(methodAnnotations);
+            String guestName = ClassBuilder.this.className + ";" + methodName + Descriptor.ofMethod(methodReturnType, params);
+            ctClass.addMethod(method);
+            return new BodyBuilder(method, guestName);
+        }
+
         public ClassBuilder<T> body(MethodWrapper<CtClass, CtBehavior, Object, ?> buildBody) throws CannotCompileException {
             CtMethod method = new CtMethod(this.methodReturnType, this.methodName, this.params, ctClass);
             method.setModifiers(this.methodMods);
@@ -397,8 +404,7 @@ public class ClassBuilder<T> {
 
         public AnnotationBuilder<MethodBuilder> addAnnotation(Class<?> type) throws NotFoundException {
             Annotation annotation = new Annotation(ctClass.getClassFile().getConstPool(), defaultPool.getCtClass(type.getName()));
-            methodAnnotations.addAnnotation(annotation);
-            return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this);
+            return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this, methodAnnotations);
         }
     }
 
@@ -420,11 +426,26 @@ public class ClassBuilder<T> {
 
         @Override
         public ClassBuilder<T> guestBody(MethodWrapper<Object, Object, Object, ?> methodBody) throws CannotCompileException, NotFoundException {
+            if (params.length != 0) throw new IllegalArgumentException("must use one of the other body methods as this one can't call super...");
             CtConstructor method = new CtConstructor(this.params, ctClass);
             method.setModifiers(this.methodMods);
             method.setExceptionTypes(this.exceptions);
             String guestName = ClassBuilder.this.className + ";" + methodName + Descriptor.ofMethod(methodReturnType, params);
             StringBuilder body = new StringBuilder();
+            if (params.length == 0 || Arrays.stream(ClassBuilder.this.ctClass.getSuperclass().getDeclaredConstructors()).anyMatch(c -> {
+                try {
+                    return Arrays.equals(c.getParameterTypes(), params);
+                } catch (NotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            })) {
+                body.append("super(");
+                for (int i = 0; i < params.length; i++) {
+                    if (i != 0) body.append(", ");
+                    body.append("$").append(i + 1);
+                }
+                body.append(");");
+            }
             body.append("{(((xyz.wagyourtail.jsmacros.core.MethodWrapper)")
                 .append("xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder.methodWrappers.get(\"")
                 .append(guestName)
@@ -470,6 +491,16 @@ public class ClassBuilder<T> {
         }
 
         @Override
+        public BodyBuilder buildBody() throws CannotCompileException {
+            CtConstructor method = new CtConstructor(this.params, ctClass);
+            method.setModifiers(this.methodMods);
+            method.getMethodInfo().addAttribute(methodAnnotations);
+            String guestName = ClassBuilder.this.className + ";" + methodName + Descriptor.ofMethod(methodReturnType, params);
+            ctClass.addConstructor(method);
+            return new BodyBuilder(method, guestName);
+        }
+
+        @Override
         public ClassBuilder<T> body(MethodWrapper<CtClass, CtBehavior, Object, ?> buildBody) throws CannotCompileException {
             CtConstructor constructor = new CtConstructor(this.params, ctClass);
             constructor.setModifiers(this.methodMods);
@@ -487,18 +518,21 @@ public class ClassBuilder<T> {
     }
 
     public Class<? extends T> finishBuildAndFreeze() throws CannotCompileException, NotFoundException {
+        ctClass.getClassFile().addAttribute(classAnnotations);
         return (Class<? extends T>) ctClass.toClass(Neighbor.class);
     }
 
     public class AnnotationBuilder<T> {
         final Annotation annotationInstance;
+        final AnnotationsAttribute attr;
         final ConstPool constPool;
         private final T member;
 
-        private AnnotationBuilder(Annotation annotationInstance, ConstPool constPool, T member) {
+        private AnnotationBuilder(Annotation annotationInstance, ConstPool constPool, T member, AnnotationsAttribute attr) {
             this.annotationInstance = annotationInstance;
             this.constPool = constPool;
             this.member = member;
+            this.attr = attr;
         }
 
         public AnnotationBuilder<T> putString(String key, String value) {
@@ -562,7 +596,7 @@ public class ClassBuilder<T> {
         public AnnotationBuilder<AnnotationBuilder<T>> putAnnotation(String key, Class<?> annotationClass) throws NotFoundException {
             Annotation annotation = new Annotation(constPool, defaultPool.getCtClass(annotationClass.getName()));
             annotationInstance.addMemberValue(key, new AnnotationMemberValue(annotation, constPool));
-            return new AnnotationBuilder<>(annotation, constPool, this);
+            return new AnnotationBuilder<>(annotation, constPool, this, null);
         }
 
         public AnnotationArrayBuilder<AnnotationBuilder<T>> putArray(String key, Class<?> annotationClass) throws NotFoundException {
@@ -573,6 +607,7 @@ public class ClassBuilder<T> {
 
 
         public T finish() {
+            if (attr != null) attr.addAnnotation(annotationInstance);
             return member;
         }
 
@@ -649,7 +684,7 @@ public class ClassBuilder<T> {
             public AnnotationBuilder<AnnotationArrayBuilder<U>> putAnnotation(Class<?> annotationClass) throws NotFoundException {
                 Annotation annotation = new Annotation(constPool, defaultPool.getCtClass(annotationClass.getName()));
                 mv.add(new AnnotationMemberValue(annotation, constPool));
-                return new AnnotationBuilder<>(annotation, constPool, this);
+                return new AnnotationBuilder<>(annotation, constPool, this, null);
             }
 
             public AnnotationArrayBuilder<AnnotationArrayBuilder<U>> putArray(Class<?> annotationClass) throws NotFoundException {
@@ -665,5 +700,50 @@ public class ClassBuilder<T> {
             }
         }
 
+    }
+    
+    public class BodyBuilder {
+        private final CtBehavior ctBehavior;
+        private final String guestName;
+        private final StringBuilder body = new StringBuilder("{\n");
+        private int guestCount = 0;
+
+        private BodyBuilder(CtBehavior ctBehavior, String guestName) {
+            this.ctBehavior = ctBehavior;
+            this.guestName = guestName;
+        }
+
+        public BodyBuilder appendJavaCode(String code) {
+            body.append(code).append(";\n");
+            return this;
+        }
+
+        /**
+         * @param code
+         * @param argsAsObjects
+         * @param tokenBefore ie, "return", "Object wasd = " etc
+         *
+         * @return
+         */
+        public BodyBuilder appendGuestCode(MethodWrapper<Object, Object, Object, ?> code, String argsAsObjects, String tokenBefore) {
+            if (tokenBefore != null) {
+                body.append(tokenBefore);
+            }
+            body.append("(((xyz.wagyourtail.jsmacros.core.MethodWrapper)")
+                .append("xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder.methodWrappers.get(\"")
+                .append(guestName).append(": ").append(guestCount)
+                .append("\")).").append("apply").append("(")
+                .append("this, new Object[]{")
+                .append(argsAsObjects)
+                .append("}));\n");
+            methodWrappers.put(guestName + ": " + (guestCount++), code);
+            return this;
+        }
+
+        public ClassBuilder<T> finish() throws CannotCompileException {
+            body.append("\n}");
+            ctBehavior.setBody(body.toString());
+            return ClassBuilder.this;
+        }
     }
 }

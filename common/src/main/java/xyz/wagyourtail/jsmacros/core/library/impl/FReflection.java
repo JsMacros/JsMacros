@@ -10,6 +10,7 @@ import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder;
+import xyz.wagyourtail.jsmacros.core.library.impl.classes.LibraryBuilder;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.ProxyBuilder;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.proxypackage.Neighbor;
 
@@ -333,6 +334,10 @@ public class FReflection extends PerExecLibrary {
      */
     public Class<?> getClassFromClassBuilderResult(String cName) throws ClassNotFoundException {
         return Class.forName("xyz.wagyourtail.jsmacros.core.library.impl.classes.proxypackage." + cName.replaceAll("\\.", "\\$"), true, Neighbor.class.getClassLoader());
+    }
+
+    public LibraryBuilder createLibraryBuilder(String name, boolean perExec, String... acceptedLangs) throws NotFoundException, CannotCompileException {
+        return new LibraryBuilder(name, perExec, acceptedLangs);
     }
     
     /**
