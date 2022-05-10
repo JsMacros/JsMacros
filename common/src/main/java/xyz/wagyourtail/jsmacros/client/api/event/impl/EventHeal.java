@@ -11,14 +11,11 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
  @Event("Heal")
 public class EventHeal implements BaseEvent {
-    public final EntityHelper<?> attacker;
     public final String source;
     public final float health;
     public final float change;
 
     public EventHeal(DamageSource source, float health, float change) {
-        if (source.getAttacker() == null) this.attacker = null;
-        else this.attacker = EntityHelper.create(source.getAttacker());
         this.source = source.getName();
         this.health = health;
         this.change = change;
