@@ -45,6 +45,9 @@ public abstract class MixinLivingEntity {
             new EventEntityDamaged((Entity)(Object) this, health, difference);
         }
         else if (difference < 0) {
+
+            difference *= -1;
+
             if ((Object) this instanceof ClientPlayerEntity) {
                 new EventHeal(DamageSource.GENERIC, health, difference);
             }
