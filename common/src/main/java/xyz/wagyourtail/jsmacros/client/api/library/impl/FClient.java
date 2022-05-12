@@ -67,6 +67,7 @@ public class FClient extends BaseLibrary {
     public void runOnMainThread(MethodWrapper<Object, Object, Object, ?> runnable, long watchdogMaxTime) {
         mc.execute(() -> {
             EventContainer<?> lock = new EventContainer<>(runnable.getCtx());
+            lock.setLockThread(Thread.currentThread());
             EventLockWatchdog.startWatchdog(lock, new IEventListener() {
                 @Override
                 public EventContainer<?> trigger(BaseEvent event) {

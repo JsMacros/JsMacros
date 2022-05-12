@@ -217,6 +217,7 @@ public abstract class CommandBuilder {
 
     protected <S> int internalExecutes(CommandContext<S> context, MethodWrapper<CommandContextHelper, Object, Boolean, ?> callback) {
         EventContainer<?> lock = new EventContainer<>(callback.getCtx());
+        lock.setLockThread(Thread.currentThread());
         EventLockWatchdog.startWatchdog(lock, new IEventListener() {
             @Override
             public EventContainer<?> trigger(BaseEvent event) {
