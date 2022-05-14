@@ -16,8 +16,10 @@ import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
+import xyz.wagyourtail.jsmacros.core.library.impl.classes.WrappedScript;
 import xyz.wagyourtail.jsmacros.core.service.ServiceManager;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -146,17 +148,109 @@ public class FJsMacros extends PerExecLibrary {
      * @param script
      * @param file
      * @param callback
-     *
      * @return
      */
     public EventContainer<?> runScript(String language, String script, String file, MethodWrapper<Throwable, Object, Object, ?> callback) {
+        return runScript(language, script, file, null, callback);
+    }
+
+    /**
+     * @since 1.7.0
+     *
+     * @param language
+     * @param script
+     * @param file
+     * @param event
+     * @param callback
+     *
+     * @return
+     */
+    public EventContainer<?> runScript(String language, String script, String file, BaseEvent event, MethodWrapper<Throwable, Object, Object, ?> callback) {
         if (callback != null) {
-            return Core.getInstance().exec(language, script, file != null ? ctx.getContainedFolder().toPath().resolve(file).toFile() : null, () -> callback.accept(null), callback);
+            return Core.getInstance().exec(language, script, file != null ? ctx.getContainedFolder().toPath().resolve(file).toFile() : null, event, () -> callback.accept(null), callback);
         } else {
-            return Core.getInstance().exec(language, script, file != null ? ctx.getContainedFolder().toPath().resolve(file).toFile() : null, null, null);
+            return Core.getInstance().exec(language, script, file != null ? ctx.getContainedFolder().toPath().resolve(file).toFile() : null, event, null, null);
         }
     }
-    
+
+    /**
+     * @since 1.7.0
+     * @param file
+     * @return
+     * @param <T>
+     * @param <U>
+     * @param <R>
+     */
+    public <T, U, R> MethodWrapper<T, U, R, ?> wrapScriptRun(String file) {
+        return new WrappedScript<>((e) -> (EventContainer<BaseScriptContext<?>>) Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, e.getEventName(), Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true), e, null, null), false);
+    }
+
+    /**
+     * @since 1.7.0
+     * @param language
+     * @param script
+     * @return
+     * @param <T>
+     * @param <U>
+     * @param <R>
+     */
+    public <T, U, R> MethodWrapper<T, U, R, ?> wrapScriptRun(String language, String script) {
+        return new WrappedScript<>((e) -> (EventContainer<BaseScriptContext<?>>) Core.getInstance().exec(language, script, null, e, null, null), false);
+    }
+
+    /**
+     * @since 1.7.0
+     * @param language
+     * @param script
+     * @param file
+     * @return
+     * @param <T>
+     * @param <U>
+     * @param <R>
+     */
+    public <T, U, R> MethodWrapper<T, U, R, ?> wrapScriptRun(String language, String script, String file) {
+        return new WrappedScript<>((e) -> (EventContainer<BaseScriptContext<?>>) Core.getInstance().exec(language, script, file != null ? ctx.getContainedFolder().toPath().resolve(file).toFile() : null, e, null, null), false);
+    }
+
+    /**
+     * @since 1.7.0
+     * @param file
+     * @return
+     * @param <T>
+     * @param <U>
+     * @param <R>
+     */
+    public <T, U, R> MethodWrapper<T, U, R, ?> wrapScriptRunAsync(String file) {
+        return new WrappedScript<>((e) -> (EventContainer<BaseScriptContext<?>>) Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, e.getEventName(), Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true), e, null, null), true);
+    }
+
+    /**
+     * @since 1.7.0
+     * @param language
+     * @param script
+     * @return
+     * @param <T>
+     * @param <U>
+     * @param <R>
+     */
+    public <T, U, R> MethodWrapper<T, U, R, ?> wrapScriptRunAsync(String language, String script) {
+        return new WrappedScript<>((e) -> (EventContainer<BaseScriptContext<?>>) Core.getInstance().exec(language, script, null, e, null, null), true);
+    }
+
+    /**
+     * @since 1.7.0
+     * @param language
+     * @param script
+     * @param file
+     * @return
+     * @param <T>
+     * @param <U>
+     * @param <R>
+     */
+    public <T, U, R> MethodWrapper<T, U, R, ?> wrapScriptRunAsync(String language, String script, String file) {
+        return new WrappedScript<>((e) -> (EventContainer<BaseScriptContext<?>>) Core.getInstance().exec(language, script, file != null ? ctx.getContainedFolder().toPath().resolve(file).toFile() : null, e, null, null), true);
+    }
+
     /**
      * Opens a file with the default system program.
      * 

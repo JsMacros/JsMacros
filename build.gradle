@@ -55,6 +55,9 @@ allprojects {
         maven {
             name "Modmuss50 Repository"
             url 'https://maven.fabricmc.net/'
+            metadataSources {
+                artifact()
+            }
         }
         maven { url 'https://jitpack.io' }
         maven {

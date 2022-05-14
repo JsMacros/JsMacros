@@ -26,6 +26,11 @@ public abstract class MethodWrapper<T, U, R, C extends BaseScriptContext<?>> imp
      */
     protected final C ctx;
 
+    protected MethodWrapper() {
+        ctx = null;
+        syncObject = null;
+    }
+
     public MethodWrapper(C containingContext) {
         ctx = containingContext;
         ctx.hasMethodWrapperBeenInvoked = true;
