@@ -21,6 +21,8 @@ import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 
+import java.util.Arrays;
+
 public class Profile extends BaseProfile {
     
     public Profile(Core<Profile, ?> runner) {
@@ -70,33 +72,36 @@ public class Profile extends BaseProfile {
         try {
             if (joinedMain) {
                 joinedThreadStack.add(t.getLockThread());
+                EventLockWatchdog.startWatchdog(t, macroListener, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
             }
-            EventLockWatchdog.startWatchdog(t, macroListener, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
             t.awaitLock(() -> joinedThreadStack.remove(t.getLockThread()));
         } catch (InterruptedException ignored) {
             joinedThreadStack.remove(t.getLockThread());
         }
     }
-    
+
+    public static Class<? extends Throwable>[] ignoredErrors = new Class[] {
+        InterruptedException.class,
+        BaseScriptContext.ScriptAssertionError.class,
+    };
+
     @Override
     public void logError(Throwable ex) {
         ex.printStackTrace();
-        if (ex instanceof InterruptedException) {
-            return;
-        }
-        if (ex instanceof BaseScriptContext.ScriptAssertionError) {
+        Throwable finalEx = ex;
+        if (Arrays.stream(ignoredErrors).anyMatch(e -> e.isAssignableFrom(finalEx.getClass()))) {
             return;
         }
         if (ex instanceof RuntimeException) {
-            if (ex.getCause() instanceof InterruptedException) {
-                return;
-            }
-            if (ex.getCause() instanceof BaseScriptContext.ScriptAssertionError) {
-                return;
-            }
-            // un-wrap exceptions
-            if (ex.getCause() != null && ex.getMessage().equals(ex.getCause().toString())) {
-                ex = ex.getCause();
+            if (ex.getCause() != null) {
+                Throwable cause = ex.getCause();
+                if (Arrays.stream(ignoredErrors).anyMatch(e -> e.isAssignableFrom(cause.getClass()))) {
+                    return;
+                }
+                // un-wrap exceptions
+                if (ex.getMessage().equals(ex.getCause().toString())) {
+                    ex = ex.getCause();
+                }
             }
         }
         MinecraftClient mc = MinecraftClient.getInstance();

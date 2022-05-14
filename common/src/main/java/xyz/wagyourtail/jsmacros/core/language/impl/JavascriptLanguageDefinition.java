@@ -83,7 +83,11 @@ public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
     }
     
     @Override
-    protected void exec(EventContainer<Context> ctx, String script, Map<String, Object> globals) throws Exception {
+    protected void exec(EventContainer<Context> ctx, String script, BaseEvent event) throws Exception {
+        Map<String, Object> globals = new HashMap<>();
+
+        globals.put("event", event);
+        globals.put("file", ctx.getCtx().getFile());
         globals.put("context", ctx);
 
         final CoreConfigV2 conf = runner.config.getOptions(CoreConfigV2.class);

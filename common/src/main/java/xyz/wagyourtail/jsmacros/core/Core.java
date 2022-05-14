@@ -26,10 +26,8 @@ import java.util.function.Supplier;
 public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
     /**
      * static reference to instance created by {@link #createInstance(Function, Function, File, File, Logger)}
-     * @Deprecated making this private in 1.7.0
      */
-    @Deprecated
-    public static Core<?, ?> instance;
+    private static Core<?, ?> instance;
 
     public final LibraryRegistry libraryRegistry = new LibraryRegistry();
     public final BaseEventRegistry eventRegistry;
@@ -146,20 +144,35 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      */
     public EventContainer<?> exec(ScriptTrigger macro, BaseEvent event, Runnable then,
                                   Consumer<Throwable> catcher) {
+        BaseLanguage<?> l = defaultLang;
         for (BaseLanguage<?> language : languages) {
-            if (macro.scriptFile.endsWith(language.extension))
-                return language.trigger(macro, event, then, catcher);
-        }
-        return defaultLang.trigger(macro, event, then, catcher);
-    }
-
-    public EventContainer<?> exec(String lang, String script, File fakeFile, Runnable then, Consumer<Throwable> catcher) {
-        for (BaseLanguage<?> language : languages) {
-            if (language.extension.replaceAll("\\.", " ").trim().replaceAll(" ", ".").equals(lang)) {
-                return language.trigger(script, fakeFile, then, catcher);
+            if (macro.scriptFile.endsWith(language.extension)) {
+                l = language;
+                break;
             }
         }
-        return defaultLang.trigger(script, fakeFile, then, catcher);
+        return l.trigger(macro, event, then, catcher);
+    }
+
+    /**
+     * @since 1.7.0
+     * @param lang
+     * @param script
+     * @param fakeFile
+     * @param event
+     * @param then
+     * @param catcher
+     * @return
+     */
+    public EventContainer<?> exec(String lang, String script, File fakeFile, BaseEvent event, Runnable then, Consumer<Throwable> catcher) {
+        BaseLanguage<?> l = defaultLang;
+        for (BaseLanguage<?> language : languages) {
+            if (language.extension.replaceAll("\\.", " ").trim().replaceAll(" ", ".").equals(lang)) {
+                l = language;
+                break;
+            }
+        }
+        return l.trigger(script, fakeFile, event, then, catcher);
     }
 
     /**

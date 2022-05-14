@@ -82,9 +82,9 @@ public abstract class BaseLanguage<T> {
         return ctx;
     }
     
-    public final EventContainer<T> trigger(String script, File fakeFile, Runnable then, Consumer<Throwable> catcher) {
+    public final EventContainer<T> trigger(String script, File fakeFile, BaseEvent event, Runnable then, Consumer<Throwable> catcher) {
         final Thread ct = Thread.currentThread();
-        EventContainer<T> ctx = new EventContainer<>(createContext(null, fakeFile));
+        EventContainer<T> ctx = new EventContainer<>(createContext(event, fakeFile));
         final Thread t = new Thread(() -> {
             preThread.run();
             try {
@@ -92,7 +92,7 @@ public abstract class BaseLanguage<T> {
 
                 runner.addContext(ctx);
 
-                exec(ctx, script, new HashMap<>());
+                exec(ctx, script, event);
 
                 if (then != null) then.run();
             } catch (Throwable e) {
@@ -149,11 +149,11 @@ public abstract class BaseLanguage<T> {
      *
      * @param ctx
      * @param script
-     * @param globals
+     * @param event
      * @throws Exception
-     * @since 1.2.7 [citation needed]
+     * @since 1.7.0
      */
-    protected abstract void exec(EventContainer<T> ctx, String script, Map<String, Object> globals) throws Exception;
+    protected abstract void exec(EventContainer<T> ctx, String script, BaseEvent event) throws Exception;
     
     /**
      * @param ex
