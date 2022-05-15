@@ -169,11 +169,13 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventChunkUnload.class);
         runner.eventRegistry.addEvent(EventClickSlot.class);
         runner.eventRegistry.addEvent(EventDamage.class);
+        runner.eventRegistry.addEvent(EventHeal.class);
         runner.eventRegistry.addEvent(EventDeath.class);
         runner.eventRegistry.addEvent(EventDimensionChange.class);
         runner.eventRegistry.addEvent(EventDisconnect.class);
         runner.eventRegistry.addEvent(EventDropSlot.class);
         runner.eventRegistry.addEvent(EventEntityDamaged.class);
+        runner.eventRegistry.addEvent(EventEntityHealed.class);
         runner.eventRegistry.addEvent(EventEntityLoad.class);
         runner.eventRegistry.addEvent(EventEntityUnload.class);
         runner.eventRegistry.addEvent(EventEXPChange.class);
