@@ -1,56 +1,49 @@
 <!DOCTYPE html>
-<html lang="en-US" color-mode="dark">
-    <head>
-        
-        <title>JsMacros Docs</title>
+<html lang="en-US">
 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
 
-        <link rel="apple-touch-icon" sizes="180x180" href="img/icons/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="img/icons/favicon-16x16.png">
-        <link rel="manifest" href="site.webmanifest">
-        <link rel="shortcut icon" href="favicon.ico">
+    <title>JsMacros Docs</title>
 
-        <meta charset="UTF-8" />
-        <meta name="apple-mobile-web-app-title" content="JsMacros">
-        <meta name="application-name" content="JsMacros">
-        <meta name="msapplication-TileColor" content="#ffffff">
-        <meta name="msapplication-config" content="./img/icons/browserconfig.xml">
-        <meta name="theme-color" content="#ffffff">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <meta property= "og:type" content= "website" />
-        <meta property= "og:title" content= "JsMacros by Wagyourtail" />
-        <meta property= "og:description" content= "Macro mod with keyboard and event based triggers for block game." />
-        <meta property= "og:image" content= "https://jsmacros.wagyourtail.xyz/icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="img/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/icons/favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="shortcut icon" href="favicon.ico">
 
-        <link rel="stylesheet" href="index.css"/>
-        <link rel="stylesheet" href="classContent.css"/>
-        <link rel="stylesheet" href="search.css"/>
-        <link rel="stylesheet" href="general.css"/>
+    <meta charset="UTF-8" />
+    <meta name="apple-mobile-web-app-title" content="JsMacros">
+    <meta name="application-name" content="JsMacros">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-config" content="./img/icons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
 
-        <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="JsMacros by Wagyourtail" />
+    <meta property="og:description" content="Macro mod with keyboard and event based triggers for block game." />
+    <meta property="og:image" content="https://jsmacros.wagyourtail.xyz/icon.png" />
 
-        <meta name="keywords" content="JsMacros,js,macros,minecraft,macro,mod,keybind">
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="classContent.css" />
+    <link rel="stylesheet" href="search.css" />
+    <link rel="stylesheet" href="general.css" />
 
-        <script> // This code assumes a Light Mode default
-        if (
-        localStorage.getItem("color-mode") === "dark" ||
-        (window.matchMedia("(prefers-color-scheme: dark)").matches &&
-          !localStorage.getItem("color-mode"))
-      ) {
-        document.documentElement.setAttribute("color-mode", "dark");
-      }
-        </script>
-        <script defer src="search.js"></script>
-        <script defer src="index.js"></script>
-    </head>
-    <body>
-        <header>
-            <div class="topNav">
-                <h1><img src="img/jsmacros.svg" alt="logo"> <span>Documentation</span></h1>
-                <div>
-                    <button id="menuBtn"><svg viewBox="0 0 100 80" width="40" height="40">
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+
+    <meta name="keywords" content="JsMacros,js,macros,minecraft,macro,mod,keybind">
+
+    <script defer src="search.js"></script>
+    <script defer src="index.js"></script>
+</head>
+
+<body>
+    <header>
+        <div class="topNav">
+            <h1><img src="img/jsmacros.svg" alt="logo"> <span>Documentation</span></h1>
+            <div>
+                <button id="menuBtn"><svg viewBox="0 0 100 80" width="40" height="40">
                         <rect width="100" height="20"></rect>
                         <rect y="30" width="100" height="20"></rect>
                         <rect y="60" width="100" height="20"></rect>
@@ -71,14 +64,30 @@
                     </select>
                 </label>
                 <!--- Light mode button --->
-<button class="color-mode__btn light--hidden" aria-label="Toggle light mode">
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" class="fill-current text-gray-200 hover:text-white h-6 w-6" aria-hidden="true"><g fill="none"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 1 1-8 0a4 4 0 0 1 8 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke:currentColor;"></path></g></svg>
-</button>
+                <button class="color-mode__btn light--hidden" aria-label="Toggle light mode" onclick="changeColorMode()">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2em"
+                        height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" aria-hidden="true">
+                        <g fill="none">
+                            <path
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 1 1-8 0a4 4 0 0 1 8 0z"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            </path>
+                        </g>
+                    </svg>
+                </button>
 
-<!--- Dark mode button --->
-<button class="color-mode__btn dark--hidden" aria-label="Toggle dark mode">
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" class="fill-current text-gray-200 hover:text-white h-6 w-6" aria-hidden="true"><g fill="none"><path d="M20.354 15.354A9 9 0 0 1 8.646 3.646A9.003 9.003 0 0 0 12 21a9.003 9.003 0 0 0 8.354-5.646z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke:currentColor;"></path></g></svg>
-</button>
+                <!--- Dark mode button --->
+                <button class="color-mode__btn dark--hidden" aria-label="Toggle dark mode" onclick="changeColorMode()">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2em"
+                        height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" aria-hidden="true">
+                        <g fill="none">
+                            <path
+                                d="M20.354 15.354A9 9 0 0 1 8.646 3.646A9.003 9.003 0 0 0 12 21a9.003 9.003 0 0 0 8.354-5.646z"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            </path>
+                        </g>
+                    </svg>
+                </button>
                 <label for="search" class="searchContainer">
                     <input id="search" type="search" placeholder="search for classes/fields/methods" onkeyup="searchBox(this.value)" />
                 </label>
@@ -104,24 +113,24 @@
                     </div>
                     <h3>Classes</h3>
                     <div id="classLists">
-
-                    </div>
-                </nav>
-            </div>
-            <main id="mainContent">
-                <div id="Loading">
-                    <h2>Loading</h2>
                 </div>
-                <noscript>
-                    <h2>This page requires javascript to work properly.</h2>
-                </noscript>
-            </main>
+            </nav>
         </div>
-        <footer id="footer">
-            <a href="https://discord.gg/P6W58J8" target="_blank">Discord</a>
-            <a href="https://github.com/wagyourtail/JsMacros" target="_blank">Github</a>
-            <a href="https://ko-fi.com/wagyourtail" target="_blank">Donate</a>
-            <h4>Wagyourtail 2021</h4>
-        </footer>
-    </body>
+        <main id="mainContent">
+            <div id="Loading">
+                <h2>Loading</h2>
+            </div>
+            <noscript>
+                <h2>This page requires javascript to work properly.</h2>
+            </noscript>
+        </main>
+    </div>
+    <footer id="footer">
+        <a href="https://discord.gg/P6W58J8" target="_blank">Discord</a>
+        <a href="https://github.com/wagyourtail/JsMacros" target="_blank">Github</a>
+        <a href="https://ko-fi.com/wagyourtail" target="_blank">Donate</a>
+        <h4>Wagyourtail 2021</h4>
+    </footer>
+</body>
+
 </html>
