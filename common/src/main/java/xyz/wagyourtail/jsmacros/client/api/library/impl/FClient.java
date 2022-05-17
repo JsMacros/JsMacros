@@ -2,9 +2,11 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
+import net.minecraft.client.gui.screen.SaveLevelScreen;
 import net.minecraft.client.network.MultiplayerServerListPinger;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ServerInfoHelper;
 import xyz.wagyourtail.jsmacros.client.config.EventLockWatchdog;
@@ -117,6 +119,22 @@ public class FClient extends BaseLibrary {
      */
     public String getFPS() {
         return mc.fpsDebugString;
+    }
+    
+    /**
+     * Join singleplayer world
+     *
+     * @since 1.6.6
+     *
+     * @param folderName
+     */
+    public void loadWorld(String folderName) {
+        mc.execute(() -> {
+            if (mc.world != null) mc.world.disconnect();
+            mc.joinWorld(null);
+            mc.setScreenAndRender(new SaveLevelScreen(new TranslatableText("selectWorld.data_read")));
+            mc.startIntegratedServer(folderName);
+        });
     }
     
     /**
