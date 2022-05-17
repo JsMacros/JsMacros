@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 
 public class TickBasedEvents {
@@ -66,6 +67,8 @@ public class TickBasedEvents {
 
         new EventTick();
         new EventJoinedTick();
+
+        ClientPlayerEntityHelper.onTick();
 
         if (mc.player != null) {
             boolean state = mc.player.isFallFlying();
