@@ -120,6 +120,22 @@ public class FClient extends BaseLibrary {
     }
     
     /**
+     * Join singleplayer world
+     *
+     * @since 1.6.6
+     *
+     * @param folderName
+     */
+    public void loadWorld(String folderName) {
+        mc.execute(() -> {
+            if (mc.world != null) mc.world.disconnect();
+            mc.joinWorld(null);
+            mc.setScreenAndRender(new SaveLevelScreen(new TranslatableText("selectWorld.data_read")));
+            mc.startIntegratedServer(folderName);
+        });
+    }
+    
+    /**
      * @since 1.2.3 (was in the {@code jsmacros} library until 1.2.9)
      *
      * @see #connect(String, int)
