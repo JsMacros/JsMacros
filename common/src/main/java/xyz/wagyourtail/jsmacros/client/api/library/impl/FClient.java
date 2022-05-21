@@ -183,7 +183,7 @@ public class FClient extends BaseLibrary {
             } else {
                 mc.disconnect();
             }
-            ConnectScreen.connect(null, mc, new ServerAddress(ip, port), null);
+            ConnectScreen.connect(null, mc, new ServerAddress(ip, port), new ServerInfo("server", new ServerAddress(ip, port).toString(), false));
         });
     }
     
