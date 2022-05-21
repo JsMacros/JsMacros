@@ -2,10 +2,15 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
+import net.minecraft.client.gui.screen.ProgressScreen;
 import net.minecraft.client.gui.screen.SaveLevelScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.MultiplayerServerListPinger;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ServerInfoHelper;
@@ -130,7 +135,13 @@ public class FClient extends BaseLibrary {
      */
     public void loadWorld(String folderName) {
         mc.execute(() -> {
-            mc.disconnect();
+            boolean bl = mc.isInSingleplayer();
+            if (mc.world != null) mc.world.disconnect();
+            if (bl) {
+                mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
+            } else {
+                mc.disconnect();
+            }
             mc.setScreenAndRender(new SaveLevelScreen(new TranslatableText("selectWorld.data_read")));
             mc.startIntegratedServer(folderName);
         });
@@ -158,7 +169,13 @@ public class FClient extends BaseLibrary {
      */
     public void connect(String ip, int port) {
         mc.execute(() -> {
-            mc.disconnect();
+            boolean bl = mc.isInSingleplayer();
+            if (mc.world != null) mc.world.disconnect();
+            if (bl) {
+                mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
+            } else {
+                mc.disconnect();
+            }
             ConnectScreen.connect(null, mc, new ServerAddress(ip, port), null);
         });
     }
@@ -184,7 +201,15 @@ public class FClient extends BaseLibrary {
     public void disconnect(MethodWrapper<Boolean, Object, Object, ?> callback) {
         mc.execute(() -> {
             boolean isWorld = mc.world != null;
-            if (isWorld) mc.disconnect();
+            if (isWorld) {
+                boolean bl = mc.isInSingleplayer();
+                if (mc.world != null) mc.world.disconnect();
+                if (bl) {
+                    mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
+                } else {
+                    mc.disconnect();
+                }
+            }
             try {
                 if (callback != null)
                     callback.accept(isWorld);
