@@ -130,8 +130,7 @@ public class FClient extends BaseLibrary {
      */
     public void loadWorld(String folderName) {
         mc.execute(() -> {
-            if (mc.world != null) mc.world.disconnect();
-            mc.joinWorld(null);
+            mc.disconnect();
             mc.setScreenAndRender(new SaveLevelScreen(new TranslatableText("selectWorld.data_read")));
             mc.startIntegratedServer(folderName);
         });
@@ -159,8 +158,7 @@ public class FClient extends BaseLibrary {
      */
     public void connect(String ip, int port) {
         mc.execute(() -> {
-            if (mc.world != null) mc.world.disconnect();
-            mc.joinWorld(null);
+            mc.disconnect();
             ConnectScreen.connect(null, mc, new ServerAddress(ip, port), null);
         });
     }
@@ -186,7 +184,7 @@ public class FClient extends BaseLibrary {
     public void disconnect(MethodWrapper<Boolean, Object, Object, ?> callback) {
         mc.execute(() -> {
             boolean isWorld = mc.world != null;
-            if (isWorld) mc.world.disconnect();
+            if (isWorld) mc.disconnect();
             try {
                 if (callback != null)
                     callback.accept(isWorld);
