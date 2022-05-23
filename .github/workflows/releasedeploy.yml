@@ -82,6 +82,8 @@ jobs:
           curseforge-id: 403185
           curseforge-token: ${{ secrets.CF_API_KEY }}
 
+          name: ${{ steps.fabric_release.outputs.result }}
+
           files: ./${{ steps.fabric_release.outputs.result }}
           version-type: release
 
@@ -101,6 +103,8 @@ jobs:
 
           curseforge-id: 403185
           curseforge-token: ${{ secrets.CF_API_KEY }}
+
+          name: ${{ steps.forge_release.outputs.result }}
 
           files: ./${{ steps.forge_release.outputs.result }}
           version-type: release
