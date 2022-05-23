@@ -10,6 +10,9 @@ on:
       java_vers:
         required: true
         type: string
+      GITHUB_REF:
+        required: true
+        type: string
     secrets:
       CF_API_KEY:
         required: true
@@ -77,7 +80,7 @@ jobs:
         id: version_num
         env:
           GV: '${{ inputs.game_vers }}'
-          REF: '${{ env.GITHUB_REF }}'
+          REF: '${{ inputs.GITHUB_REF }}'
         with:
           result-encoding: string
           script: |

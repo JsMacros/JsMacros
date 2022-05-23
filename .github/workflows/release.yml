@@ -51,6 +51,7 @@ jobs:
       branch: main-1.18
       game_vers: 1.18.2
       java_vers: 17
+      GITHUB_REF: ${{ github.ref }}
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
@@ -64,6 +65,7 @@ jobs:
       branch: backport-1.17.1
       game_vers: 1.17.2
       java_vers: 16
+      GITHUB_REF: ${{ github.ref }}
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
@@ -77,6 +79,7 @@ jobs:
       branch: backport-1.16.5
       game_vers: 1.16.5 1.16.4 1.16.3
       java_vers: 8
+      GITHUB_REF: ${{ github.ref }}
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
@@ -90,6 +93,7 @@ jobs:
       branch: backport-1.15.2
       game_vers: 1.15.2
       java_vers: 8
+      GITHUB_REF: ${{ github.ref }}
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
@@ -103,6 +107,7 @@ jobs:
       branch: backport-1.14.4
       game_vers: 1.14.4
       java_vers: 8
+      GITHUB_REF: ${{ github.ref }}
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
@@ -116,6 +121,7 @@ jobs:
       branch: backport-1.8.9
       game_vers: 1.8.9
       java_vers: 8
+      GITHUB_REF: ${{ github.ref }}
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
