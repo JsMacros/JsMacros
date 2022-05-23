@@ -84,7 +84,7 @@ jobs:
         with:
           result-encoding: string
           script: |
-            return `${process.env.GV.split(" ")[0]}-${process.env.REF.replace(/\/?refs\/tags\//, '')}`
+            return `${process.env.GV.split(/\s/)[0]}-${process.env.REF.replace(/\/?refs\/tags\//, '')}`
 
       - name: Run Publish Fabric
         if: ${{ steps.fabric_release.outputs.result != 'false' }}
