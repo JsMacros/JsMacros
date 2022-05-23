@@ -53,6 +53,7 @@ jobs:
       java_vers: 17
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
     needs:
       - build_1_18
       - deploy_1_17
@@ -65,6 +66,7 @@ jobs:
       java_vers: 16
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
     needs:
       - build_1_17
       - deploy_1_16
@@ -77,6 +79,7 @@ jobs:
       java_vers: 8
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
     needs:
       - build_1_16
       - deploy_1_15
@@ -89,6 +92,7 @@ jobs:
       java_vers: 8
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
     needs:
       - build_1_15
       - deploy_1_14
@@ -101,6 +105,7 @@ jobs:
       java_vers: 8
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
     needs:
       - build_1_14
       - deploy_1_8
@@ -113,6 +118,7 @@ jobs:
       java_vers: 8
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
     needs:
       - build_1_8
 
