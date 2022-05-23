@@ -49,21 +49,20 @@ jobs:
     uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.18
     with:
       branch: main-1.18
-      cf_data_fabric: 73250:1.18.2,2:Java 17,68441:Fabric
-      cf_data_forge: 73250:1.18.2,2:Java 17,7498:Forge
+      game_vers: 1.18.2
+      java_vers: 17
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
     needs:
       - build_1_18
       - deploy_1_17
-      - upload_pydoc
 
   deploy_1_17:
     uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.18
     with:
       branch: backport-1.17.1
-      cf_data_fabric: 73242:1.17.1,2:Java 16,68441:Fabric
-      cf_data_forge: 73242:1.17.1,2:Java 16,7498:Forge
+      game_vers: 1.17.2
+      java_vers: 16
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
     needs:
@@ -74,8 +73,8 @@ jobs:
     uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.18
     with:
       branch: backport-1.16.5
-      cf_data_fabric: 70886:1.16.5,70886:1.16.4,70886:1.16.3,2:Java 8,68441:Fabric
-      cf_data_forge: 70886:1.16.5,70886:1.16.4,70886:1.16.3,2:Java 8,7498:Forge
+      game_vers: 1.16.5 1.16.4 1.16.3
+      java_vers: 8
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
     needs:
@@ -86,7 +85,8 @@ jobs:
     uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.18
     with:
       branch: backport-1.15.2
-      cf_data_fabric: 68722:1.15.2,2:Java 8,68441:Fabric
+      game_vers: 1.15.2
+      java_vers: 8
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
     needs:
@@ -97,7 +97,8 @@ jobs:
     uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.18
     with:
       branch: backport-1.14.4
-      cf_data_fabric: 64806:1.14.4,2:Java 8,68441:Fabric
+      game_vers: 1.14.4
+      java_vers: 8
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
     needs:
@@ -108,7 +109,8 @@ jobs:
     uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.18
     with:
       branch: backport-1.8.9
-      cf_data_fabric: 68722:1.8.9,2:Java 8,68441:Fabric
+      game_vers: 1.8.9
+      java_vers: 8
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
     needs:
@@ -136,7 +138,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install setuptools wheel twine
 
-
       - name: Upload PyDoc
         env:
           TWINE_USERNAME: __token__
@@ -144,4 +145,3 @@ jobs:
         run: |
           python setup.py dist bdist_wheel
           twine upload dist/*
-        working-directory: python

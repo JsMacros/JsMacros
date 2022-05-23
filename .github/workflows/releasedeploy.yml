@@ -4,14 +4,16 @@ on:
       branch:
         required: true
         type: string
-      cf_data_fabric:
-        required: false
+      game_vers:
+        required: true
         type: string
-      cf_data_forge:
-        required: false
+      java_vers:
+        required: true
         type: string
     secrets:
       CF_API_KEY:
+        required: true
+      MODRINTH_TOKEN:
         required: true
 
 jobs:
@@ -70,29 +72,42 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Fabric To Curseforge
+      - name: Run Publish Fabric
         if: ${{ steps.fabric_release.outputs.result != 'false' }}
-        uses: itsmeow/curseforge-upload@v3
+        uses: Kir-Antipov/mc-publish@v2.1
         with:
-          token: ${{ secrets.CF_API_KEY }}
-          project_id: 403185
-          game_endpoint: minecraft
-          file_path: ./${{ steps.fabric_release.outputs.result }}
-          changelog: See the github release for changes.
-          display_name: ${{ steps.fname.outputs.result }}
-          game_versions: ${{ inputs.cf_data_fabric }}
-          release_type: release
-          relations: modmenu:optionalDependency
+          modrinth-id: 3wGWhm8A
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
-      - name: Upload Forge To Curseforge
+          curseforge-id: 403185
+          curseforge-token: ${{ secrets.CF_API_KEY }}
+
+          files: ./${{ steps.fabric_release.outputs.result }}
+          version-type: release
+
+          loaders: fabric
+          game-versions: ${{ inputs.game_vers }}
+
+          java: ${{ inputs.java_vers }}
+          retry-attempts: 2
+          retry-delay: 10000
+
+      - name: Run Publish Forge
         if: ${{ steps.forge_release.outputs.result != 'false' }}
-        uses: itsmeow/curseforge-upload@v3
+        uses: Kir-Antipov/mc-publish@v2.1
         with:
-          token: ${{ secrets.CF_API_KEY }}
-          project_id: 403185
-          game_endpoint: minecraft
-          file_path: ./${{ steps.forge_release.outputs.result }}
-          changelog: See the github release for changes.
-          display_name: ${{ steps.fname.outputs.result }}
-          game_versions: ${{ inputs.cf_data_forge }}
-          release_type: release
+          modrinth-id: 3wGWhm8A
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          curseforge-id: 403185
+          curseforge-token: ${{ secrets.CF_API_KEY }}
+
+          files: ./${{ steps.forge_release.outputs.result }}
+          version-type: release
+
+          loaders: forge
+          game-versions: ${{ inputs.game_vers }}
+
+          java: ${{ inputs.java_vers }}
+          retry-attempts: 2
+          retry-delay: 10000
