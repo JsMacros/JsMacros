@@ -83,6 +83,7 @@ jobs:
           curseforge-token: ${{ secrets.CF_API_KEY }}
 
           name: ${{ steps.fabric_release.outputs.result }}
+          version: ${{ steps.fabric_release.outputs.result }}
 
           files: ./${{ steps.fabric_release.outputs.result }}
           version-type: release
@@ -105,6 +106,7 @@ jobs:
           curseforge-token: ${{ secrets.CF_API_KEY }}
 
           name: ${{ steps.forge_release.outputs.result }}
+          version: ${{ steps.forge_release.outputs.result }}
 
           files: ./${{ steps.forge_release.outputs.result }}
           version-type: release
