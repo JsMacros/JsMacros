@@ -63,7 +63,7 @@ jobs:
     uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.18
     with:
       branch: backport-1.17.1
-      game_vers: 1.17.2
+      game_vers: 1.17.1
       java_vers: 16
       GITHUB_REF: ${{ github.ref }}
     secrets:
