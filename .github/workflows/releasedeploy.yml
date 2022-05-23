@@ -77,7 +77,7 @@ jobs:
         id: version_num
         env:
           GV: '${{ inputs.game_vers }}'
-          REF: '${{ GITHUB_REF }}'
+          REF: '${{ env.GITHUB_REF }}'
         with:
           result-encoding: string
           script: |
