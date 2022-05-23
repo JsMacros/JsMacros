@@ -76,8 +76,8 @@ jobs:
         uses: actions/github-script@v5
         id: version_num
         env:
-          GV: ${{ inputs.game_vers }}
-          REF: ${{ GITHUB_REF }}
+          GV: '${{ inputs.game_vers }}'
+          REF: '${{ GITHUB_REF }}'
         with:
           result-encoding: string
           script: |
