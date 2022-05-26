@@ -202,5 +202,5 @@ jobs:
           cd dist
           ls
           cd python
-          python setup.py dist bdist_wheel
+          python -m build
           twine upload dist/*
