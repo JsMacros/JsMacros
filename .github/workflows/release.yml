@@ -199,7 +199,7 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          cd dist/python
+          cd dist
           ls
           cd python
           python setup.py dist bdist_wheel
