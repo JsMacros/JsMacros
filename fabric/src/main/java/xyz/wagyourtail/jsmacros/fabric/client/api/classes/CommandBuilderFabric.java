@@ -6,19 +6,23 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.mojang.brigadier.tree.CommandNode;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.impl.command.client.ClientCommandInternals;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.CommandRegistryWrapper;
+import net.minecraft.tag.TagKey;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntryList;
+import net.minecraft.util.registry.RegistryKey;
 import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
+import java.util.Optional;
 import java.util.Stack;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -26,7 +30,7 @@ import java.util.function.Supplier;
 public class CommandBuilderFabric extends CommandBuilder {
     private final LiteralArgumentBuilder<FabricClientCommandSource> head;
     private final Stack<ArgumentBuilder<FabricClientCommandSource, ?>> pointer = new Stack<>();
-
+    private final CommandRegistryAccess registry = new CommandRegistryAccess(null);
     public CommandBuilderFabric(String name) {
         head = ClientCommandManager.literal(name);
         pointer.push(head);
@@ -43,7 +47,7 @@ public class CommandBuilderFabric extends CommandBuilder {
     protected void argument(String name, Function<CommandRegistryAccess, ArgumentType<?>> type) {
         ClientPlayNetworkHandler handler = MinecraftClient.getInstance().getNetworkHandler();
         assert handler != null;
-        ArgumentBuilder<FabricClientCommandSource, ?> arg = ClientCommandManager.argument(name, type.apply(new CommandRegistryAccess(handler.getRegistryManager())));
+        ArgumentBuilder<FabricClientCommandSource, ?> arg = ClientCommandManager.argument(name, type.apply(registry));
         pointer.push(arg);
     }
 

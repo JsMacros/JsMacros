@@ -9,6 +9,7 @@
     "access.MixinChunkSelection",
     "access.MixinClientPlayerEntity",
     "access.MixinClientPlayNetworkHandler",
+    "access.MixinCommandRegistryAccess",
     "access.MixinDisconnectedScreen",
     "access.MixinEntity",
     "access.MixinFontManager",
