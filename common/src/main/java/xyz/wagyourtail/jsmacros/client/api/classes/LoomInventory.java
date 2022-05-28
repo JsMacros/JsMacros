@@ -51,7 +51,7 @@ public class LoomInventory extends Inventory<LoomScreen> {
      * @since 1.7.0
      * @return available pattern ids
      */
-    public List<String> listAvailableIds() {
+    public List<String> listAvailablePatterns() {
         List<RegistryEntry<BannerPattern>> patterns = getPatternsFor(inventory.getScreenHandler().getSlot(2).getStack());
         return patterns.stream().map(e -> e.value().getId()).collect(Collectors.toList());
     }
