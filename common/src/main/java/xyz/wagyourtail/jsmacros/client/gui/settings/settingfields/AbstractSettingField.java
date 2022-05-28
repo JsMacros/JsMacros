@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.gui.settings.settingfields;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.AbstractSettingContainer;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
@@ -13,7 +12,7 @@ public abstract class AbstractSettingField<T> extends MultiElementContainer<Abst
     public AbstractSettingField(int x, int y, int width, int height, TextRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<T> field) {
         super(x, y, width, height, textRenderer, parent);
         setting = field;
-        settingName = new TranslatableText(field.option.translationKey());
+        settingName = Text.translatable(field.option.translationKey());
         init();
     }
     

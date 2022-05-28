@@ -8,7 +8,7 @@ import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.passive.AbstractDonkeyEntity;
-import net.minecraft.entity.passive.HorseBaseEntity;
+import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -417,7 +417,7 @@ public class Inventory<T extends HandledScreen<?>> {
                 map.put("output", new int[] { slots - 9 - 27 - 1 });
                 map.put("input", new int[] { slots - 9 - 27 - 2 });
             } else if (inventory instanceof HorseScreen) {
-                HorseBaseEntity h = (HorseBaseEntity) ((IHorseScreen)this.inventory).jsmacros_getEntity();
+                AbstractHorseEntity h = (AbstractHorseEntity) ((IHorseScreen)this.inventory).jsmacros_getEntity();
                 if (h.canBeSaddled()) map.put("saddle", new int[] {0});
                 if (h.hasArmorSlot()) map.put("armor", new int[] {1});
                 if (h instanceof AbstractDonkeyEntity && ((AbstractDonkeyEntity) h).hasChest()) {

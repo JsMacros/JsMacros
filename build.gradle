@@ -61,10 +61,8 @@ allprojects {
         }
         maven { url 'https://jitpack.io' }
         maven {
-            url "https://www.cursemaven.com"
-            content {
-                includeGroup "curse.maven"
-            }
+            name "modmenu repository"
+            url 'https://maven.terraformersmc.com/releases/'
         }
         mavenCentral()
     }

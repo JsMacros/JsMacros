@@ -53,13 +53,13 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     public OptionsHelper setCloudMode(int mode) {
         switch(mode) {
             case 2:
-                base.cloudRenderMode = CloudRenderMode.FANCY;
+                base.getCloudRenderMod().setValue(CloudRenderMode.FANCY);
                 return this;
             case 1:
-                base.cloudRenderMode = CloudRenderMode.FAST;
+                base.getCloudRenderMod().setValue(CloudRenderMode.FAST);
                 return this;
             default:
-                base.cloudRenderMode = CloudRenderMode.OFF;
+                base.getCloudRenderMod().setValue(CloudRenderMode.OFF);
                 return this;
         }
     }
@@ -68,7 +68,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return
      */
     public int getGraphicsMode() {
-        switch (base.graphicsMode) {
+        switch (base.getGraphicsMode().getValue()) {
             case FABULOUS:
                 return 2;
             case FANCY:
@@ -85,13 +85,13 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     public OptionsHelper setGraphicsMode(int mode) {
         switch(mode) {
             case 2:
-                base.graphicsMode = GraphicsMode.FABULOUS;
+                base.getGraphicsMode().setValue(GraphicsMode.FABULOUS);
                 return this;
             case 1:
-                base.graphicsMode = GraphicsMode.FANCY;
+                base.getGraphicsMode().setValue(GraphicsMode.FANCY);
                 return this;
             default:
-                base.graphicsMode = GraphicsMode.FAST;
+                base.getGraphicsMode().setValue(GraphicsMode.FAST);
                 return this;
         }
     }
@@ -145,7 +145,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return
      */
     public boolean isRightHanded() {
-        return base.mainArm == Arm.RIGHT;
+        return base.getMainArm().getValue() == Arm.RIGHT;
     }
     
     /**
@@ -154,9 +154,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      */
     public void setRightHanded(boolean val) {
         if (val) {
-            base.mainArm = Arm.RIGHT;
+            base.getMainArm().setValue(Arm.RIGHT);
         } else {
-            base.mainArm = Arm.LEFT;
+            base.getMainArm().setValue(Arm.LEFT);
         }
     }
     
@@ -165,16 +165,16 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return
      */
     public double getFov() {
-        return base.fov;
+        return base.getFov().getValue();
     }
     
     /**
      * @since 1.1.7
-     * @param fov
+     * @param fov (int since 1.7.0)
      * @return
      */
-    public OptionsHelper setFov(double fov) {
-        base.fov = fov;
+    public OptionsHelper setFov(int fov) {
+        base.getFov().setValue(fov);
         return this;
     }
     
@@ -183,7 +183,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return
      */
     public int getRenderDistance() {
-        return base.viewDistance;
+        return base.getViewDistance().getValue();
     }
     
     /**
@@ -191,7 +191,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @param d
      */
     public void setRenderDistance(int d) {
-        base.viewDistance = d;
+        base.getViewDistance().setValue(d);
     }
     
     /**
@@ -243,7 +243,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * normal values for gamam are between {@code 0} and {@code 1}
      */
     public double getGamma() {
-        return base.gamma;
+        return base.getGamma().getValue();
     }
     
     /**
@@ -251,7 +251,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * normal values for gamma are between {@code 0} and {@code 1}
      */
     public void setGamma(double gamma) {
-        base.gamma = gamma;
+        base.getGamma().setValue(gamma);
     }
     
     /**
@@ -292,7 +292,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @param scale
      */
     public void setGuiScale(int scale) {
-        base.guiScale = scale;
+        base.getGuiScale().setValue(scale);
         mc.execute(mc::onResolutionChanged);
     }
     
@@ -301,7 +301,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return gui scale, {@code 0} for auto.
      */
     public int getGuiScale() {
-        return base.guiScale;
+        return base.getGuiScale().getValue();
     }
     
     /**

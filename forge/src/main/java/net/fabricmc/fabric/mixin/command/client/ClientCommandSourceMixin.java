@@ -48,7 +48,7 @@ abstract class ClientCommandSourceMixin implements FabricClientCommandSource {
 
     @Override
     public void sendError(Text message) {
-        client.inGameHud.addChatMessage(MessageType.SYSTEM, new LiteralText("").append(message).formatted(Formatting.RED), Util.NIL_UUID);
+        client.inGameHud.addChatMessage(MessageType.SYSTEM, Text.literal("").append(message).formatted(Formatting.RED), Util.NIL_UUID);
     }
 
     @Override

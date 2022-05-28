@@ -7,18 +7,20 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.CommandNode;
-import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.impl.command.client.ClientCommandInternals;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.command.CommandRegistryAccess;
 import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.Stack;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class CommandBuilderFabric extends CommandBuilder {
@@ -34,6 +36,14 @@ public class CommandBuilderFabric extends CommandBuilder {
     protected void argument(String name, Supplier<ArgumentType<?>> type) {
         ArgumentBuilder<FabricClientCommandSource, ?> arg = ClientCommandManager.argument(name, type.get());
 
+        pointer.push(arg);
+    }
+
+    @Override
+    protected void argument(String name, Function<CommandRegistryAccess, ArgumentType<?>> type) {
+        ClientPlayNetworkHandler handler = MinecraftClient.getInstance().getNetworkHandler();
+        assert handler != null;
+        ArgumentBuilder<FabricClientCommandSource, ?> arg = ClientCommandManager.argument(name, type.apply(new CommandRegistryAccess(handler.getRegistryManager())));
         pointer.push(arg);
     }
 

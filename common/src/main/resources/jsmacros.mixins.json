@@ -41,7 +41,6 @@
     "events.MixinLivingEntity",
     "events.MixinMinecraftClient",
     "events.MixinMouse",
-    "events.MixinScreen",
     "events.MixinSoundSystem",
     "events.MixinSplashOverlay"
   ],

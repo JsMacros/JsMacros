@@ -332,8 +332,7 @@ public class FWorld extends BaseLibrary {
      */
     public BlockPosHelper getRespawnPos() {
         assert mc.world != null;
-        if (mc.world.getDimension().isNatural()) return new BlockPosHelper( mc.world.getSpawnPos());
-        return null;
+        return new BlockPosHelper(mc.world.getSpawnPos());
     }
     
     /**

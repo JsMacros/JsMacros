@@ -1,6 +1,6 @@
 architectury {
     injectInjectables = false
-    common("forge", "fabric")
+    common("fabric")
 }
 
 dependencies {
@@ -8,7 +8,7 @@ dependencies {
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
 
-    modApi "net.fabricmc.fabric-api:fabric-command-api-v1:${project.command_api_version}"
+    modApi fabricApi.module("fabric-command-api-v2",  project.fapi_version)
 }
 
 publishing {

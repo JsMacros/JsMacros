@@ -1,17 +1,13 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.*;
-import net.minecraft.client.network.MultiplayerServerListPinger;
+import net.minecraft.client.gui.screen.ConnectScreen;
+import net.minecraft.client.gui.screen.MessageScreen;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelStorageException;
-import net.minecraft.world.level.storage.LevelSummary;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ServerInfoHelper;
 import xyz.wagyourtail.jsmacros.client.config.EventLockWatchdog;
@@ -28,7 +24,6 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Semaphore;
@@ -138,19 +133,18 @@ public class FClient extends BaseLibrary {
     public void loadWorld(String folderName) throws LevelStorageException {
 
         LevelStorage levelstoragesource = mc.getLevelStorage();
-        List<LevelSummary> levels = levelstoragesource.getLevelList();
-        if (levels.stream().noneMatch(e -> e.getName().equals(folderName))) throw new RuntimeException("Level Not Found!");
+        List<LevelStorage.LevelSave> levels = levelstoragesource.getLevelList().levels();
+        if (levels.stream().noneMatch(e -> e.getRootPath().equals(folderName))) throw new RuntimeException("Level Not Found!");
 
         mc.execute(() -> {
             boolean bl = mc.isInSingleplayer();
             if (mc.world != null) mc.world.disconnect();
             if (bl) {
-                mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
+                mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
             } else {
                 mc.disconnect();
             }
-            mc.setScreenAndRender(new SaveLevelScreen(new TranslatableText("selectWorld.data_read")));
-            mc.startIntegratedServer(folderName);
+            mc.createIntegratedServerLoader().start(null, folderName);
         });
     }
     
@@ -179,7 +173,7 @@ public class FClient extends BaseLibrary {
             boolean bl = mc.isInSingleplayer();
             if (mc.world != null) mc.world.disconnect();
             if (bl) {
-                mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
+                mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
             } else {
                 mc.disconnect();
             }
@@ -212,7 +206,7 @@ public class FClient extends BaseLibrary {
                 boolean bl = mc.isInSingleplayer();
                 if (mc.world != null) mc.world.disconnect();
                 if (bl) {
-                    mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
+                    mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
                 } else {
                     mc.disconnect();
                 }

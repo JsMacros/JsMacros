@@ -5,10 +5,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
@@ -52,10 +51,10 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
     public void init() {
         super.init();
         int w = width - 12;
-        enableBtn = addDrawableChild(new Button(x + 1, y + 1, w / 12 - 1, height - 2, textRenderer, macro.enabled ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"), (btn) -> {
+        enableBtn = addDrawableChild(new Button(x + 1, y + 1, w / 12 - 1, height - 2, textRenderer, macro.enabled ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.translatable(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"), (btn) -> {
             macro.enabled = !macro.enabled;
             btn.setColor(macro.enabled ? 0x7000FF00 : 0x70FF0000);
-            btn.setMessage(new TranslatableText(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"));
+            btn.setMessage(Text.translatable(macro.enabled ? "jsmacros.enabled" : "jsmacros.disabled"));
         }));
 
         keyBtn = addDrawableChild(new Button(x + w / 12 + 1, y + 1, macro.triggerType == ScriptTrigger.TriggerType.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, macro.triggerType == ScriptTrigger.TriggerType.EVENT ? TranslationUtil.getTranslatedEventName(macro.event) : buildKeyName(macro.event), (btn) -> {
@@ -63,10 +62,10 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
                 parent.setEvent(this);
             } else {
                 selectkey = true;
-                btn.setMessage(new TranslatableText("jsmacros.presskey"));
+                btn.setMessage(Text.translatable("jsmacros.presskey"));
             }
         }));
-        if (macro.triggerType != ScriptTrigger.TriggerType.EVENT) keyStateBtn = addDrawableChild(new Button(x + w / 4 - height, y + 1, height, height - 2, textRenderer,0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText(""), (btn) -> {
+        if (macro.triggerType != ScriptTrigger.TriggerType.EVENT) keyStateBtn = addDrawableChild(new Button(x + w / 4 - height, y + 1, height, height - 2, textRenderer,0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal(""), (btn) -> {
             switch(macro.triggerType) {
             default:
             case KEY_RISING:
@@ -81,15 +80,15 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
             }
         }));
 
-        fileBtn = addDrawableChild(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("./"+macro.scriptFile.replaceAll("\\\\", "/")), (btn) -> {
+        fileBtn = addDrawableChild(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("./"+macro.scriptFile.replaceAll("\\\\", "/")), (btn) -> {
             parent.setFile(this);
         }));
 
-        editBtn = addDrawableChild(new Button(x + w - 32, y + 1, 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new TranslatableText("selectServer.edit"), (btn) -> {
+        editBtn = addDrawableChild(new Button(x + w - 32, y + 1, 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.translatable("selectServer.edit"), (btn) -> {
             if (!macro.scriptFile.equals("")) parent.editFile(new File(Core.getInstance().config.macroFolder, macro.scriptFile));
         }));
 
-        delBtn = addDrawableChild(new Button(x + w - 1, y + 1, 12, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("X"), (btn) -> {
+        delBtn = addDrawableChild(new Button(x + w - 1, y + 1, 12, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("X"), (btn) -> {
             parent.confirmRemoveMacro(this);
         }));
     }
@@ -103,7 +102,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
 
     public void setFile(File f) {
         macro.scriptFile = Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(f.getAbsoluteFile().toPath()).toString();
-        fileBtn.setMessage(new LiteralText("./"+macro.scriptFile.replaceAll("\\\\", "/")));
+        fileBtn.setMessage(Text.literal("./"+macro.scriptFile.replaceAll("\\\\", "/")));
     }
 
     @Override
@@ -128,7 +127,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
     }
 
     public static Text buildKeyName(String translationKeys) {
-        LiteralText text = new LiteralText("");
+        MutableText text = Text.literal("");
         boolean notfirst = false;
         for (String s : translationKeys.split("\\+")) {
             if (notfirst) text.append("+");

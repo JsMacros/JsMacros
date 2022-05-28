@@ -111,7 +111,7 @@ public class Profile extends BaseProfile {
                 e = runner.wrapException(ex);
             } catch (Throwable t) {
                 t.printStackTrace();
-                mc.execute(() -> ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new TranslatableText("jsmacros.errorerror").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED))));
+                mc.execute(() -> ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(Text.translatable("jsmacros.errorerror").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED))));
                 return;
             }
             Text text = compileError(e);
@@ -119,7 +119,7 @@ public class Profile extends BaseProfile {
                 try {
                     ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
                 } catch (Throwable t) {
-                    ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new TranslatableText("jsmacros.errorerror").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
+                    ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(Text.translatable("jsmacros.errorerror").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
                     t.printStackTrace();
                 }
             });
@@ -134,16 +134,16 @@ public class Profile extends BaseProfile {
     private Text compileError(BaseWrappedException<?> ex) {
         if (ex == null) return null;
         BaseWrappedException<?> head = ex;
-        LiteralText text = new LiteralText("");
+        MutableText text = Text.literal("");
         do {
             String message = head.message;
-            MutableText line = new LiteralText(message).setStyle(Style.EMPTY.withColor(Formatting.RED));
+            MutableText line = Text.literal(message).setStyle(Style.EMPTY.withColor(Formatting.RED));
             if (head.location != null) {
                 Style locationStyle = Style.EMPTY.withColor(Formatting.GOLD);
                 if (head.location instanceof BaseWrappedException.GuestLocation) {
                     BaseWrappedException.GuestLocation loc = (BaseWrappedException.GuestLocation) head.location;
                     locationStyle = locationStyle.withHoverEvent(
-                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("jsmacros.clicktoview"))
+                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("jsmacros.clicktoview"))
                     ).withClickEvent(new CustomClickEvent(() -> {
                         if (loc.startIndex > -1) {
                             EditorScreen.openAndScrollToIndex(loc.file, loc.startIndex, loc.endIndex);
@@ -154,7 +154,7 @@ public class Profile extends BaseProfile {
                         }
                     }));
                 }
-                line.append(new LiteralText(" (" + head.location + ")").setStyle(locationStyle));
+                line.append(Text.literal(" (" + head.location + ")").setStyle(locationStyle));
             }
             if ((head = head.next) != null) line.append("\n");
             text.append(line);
