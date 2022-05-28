@@ -7,6 +7,7 @@
     "access.MixinBossBarHud",
     "access.MixinChatHud",
     "access.MixinChunkSelection",
+    "access.MixinClientPlayerEntity",
     "access.MixinClientPlayNetworkHandler",
     "access.MixinDisconnectedScreen",
     "access.MixinEntity",
