@@ -1,10 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.ScoreboardPlayerScore;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,6 +29,14 @@ public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
             scores.put(pl.getPlayerName(), pl.getScore());
         }
         return scores;
+    }
+
+    /**
+     * @since 1.7.0
+     * @return
+     */
+    public List<String> getKnownPlayers() {
+        return ImmutableList.copyOf(base.getScoreboard().getKnownPlayers());
     }
     
     /**

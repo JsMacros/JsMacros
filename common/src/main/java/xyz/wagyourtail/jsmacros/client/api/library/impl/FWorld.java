@@ -190,11 +190,11 @@ public class FWorld extends BaseLibrary {
      *
      * @return
      */
-    public List<PositionCommon.Pos3D> findBlocksMatching(List<String> ids, int chunkrange) {
+    public List<PositionCommon.Pos3D> findBlocksMatching(String[] ids, int chunkrange) {
         assert mc.player != null;
         int playerChunkX = mc.player.getBlockX() >> 4;
         int playerChunkZ = mc.player.getBlockZ() >> 4;
-        Set<String> ids2 = new HashSet<>(ids);
+        Set<String> ids2 = new HashSet<>(Arrays.asList(ids));
         return new WorldScanner(mc.world, block -> ids2.contains(Registry.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
     }
 
@@ -207,8 +207,8 @@ public class FWorld extends BaseLibrary {
      *
      * @return
      */
-    public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, List<String> ids, int chunkrange) {
-        Set<String> ids2 = new HashSet<>(ids);
+    public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, String[] ids, int chunkrange) {
+        Set<String> ids2 = new HashSet<>(Arrays.asList(ids));
         return new WorldScanner(mc.world, block -> ids2.contains(Registry.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(centerX, centerZ, chunkrange);
     }
 

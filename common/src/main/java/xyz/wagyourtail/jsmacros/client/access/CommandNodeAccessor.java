@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.access;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
 import java.util.Map;

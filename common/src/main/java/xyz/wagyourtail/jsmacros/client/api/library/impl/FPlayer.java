@@ -27,7 +27,6 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -264,7 +263,7 @@ public class FPlayer extends BaseLibrary {
      * @see xyz.wagyourtail.jsmacros.client.movement.MovementQueue
      * @since 1.4.0
      */
-    public void addInputs(List<PlayerInput> inputs) {
+    public void addInputs(PlayerInput[] inputs) {
         for (PlayerInput input : inputs) {
             addInput(input);
         }
@@ -305,7 +304,7 @@ public class FPlayer extends BaseLibrary {
      * @since 1.4.0
      */
     public PositionCommon.Pos3D predictInput(PlayerInput input, boolean draw) {
-        return predictInputs(Collections.singletonList(input), draw).get(0);
+        return predictInputs(new PlayerInput[]{input}, draw).get(0);
     }
 
     /**
@@ -314,10 +313,10 @@ public class FPlayer extends BaseLibrary {
      *
      * @param inputs the PlayerInputs for each tick for the prediction
      * @return the position after each input
-     * @see #predictInputs(List, boolean)
+     * @see #predictInputs(PlayerInput[], boolean)
      * @since 1.4.0
      */
-    public List<PositionCommon.Pos3D> predictInputs(List<PlayerInput> inputs) {
+    public List<PositionCommon.Pos3D> predictInputs(PlayerInput[] inputs) {
         return predictInputs(inputs, false);
     }
 
@@ -329,7 +328,7 @@ public class FPlayer extends BaseLibrary {
      * @return the position after each input
      * @since 1.4.0
      */
-    public List<PositionCommon.Pos3D> predictInputs(List<PlayerInput> inputs, boolean draw) {
+    public List<PositionCommon.Pos3D> predictInputs(PlayerInput[] inputs, boolean draw) {
         assert mc.player != null;
         MovementDummy dummy = new MovementDummy(mc.player);
         List<PositionCommon.Pos3D> predictions = new ArrayList<>();
