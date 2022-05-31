@@ -9,6 +9,8 @@ import javassist.bytecode.annotation.*;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.proxypackage.Neighbor;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +29,7 @@ public class ClassBuilder<T> {
     public final CtClass ctClass;
     private final String className;
     private final AnnotationsAttribute classAnnotations;
+    private final AnnotationsAttribute invisibleClassAnnotations;
 
 
     public ClassBuilder(String name, Class<T> parent, Class<?> ...interfaces) throws NotFoundException, CannotCompileException {
@@ -37,6 +40,7 @@ public class ClassBuilder<T> {
             ctClass.addInterface(defaultPool.getCtClass(i.getName()));
         }
         classAnnotations = new AnnotationsAttribute(ctClass.getClassFile().getConstPool(), AnnotationsAttribute.visibleTag);
+        invisibleClassAnnotations = new AnnotationsAttribute(ctClass.getClassFile().getConstPool(), AnnotationsAttribute.invisibleTag);
     }
 
     public FieldBuilder addField(Class<?> fieldType, String name) throws NotFoundException {
@@ -66,7 +70,7 @@ public class ClassBuilder<T> {
 
     public AnnotationBuilder<ClassBuilder<T>> addAnnotation(Class<?> type) throws NotFoundException {
         Annotation annotation = new Annotation(ctClass.getClassFile().getConstPool(), defaultPool.getCtClass(type.getName()));
-        return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this, classAnnotations);
+        return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this, type.getAnnotation(Retention.class).value() != RetentionPolicy.RUNTIME ? invisibleClassAnnotations : classAnnotations);
     }
 
     public class FieldBuilder {
@@ -74,6 +78,7 @@ public class ClassBuilder<T> {
         private String fieldName;
         private int fieldMods = 0;
         private final AnnotationsAttribute fieldAnnotations = new AnnotationsAttribute(ctClass.getClassFile().getConstPool(), AnnotationsAttribute.visibleTag);
+        private final AnnotationsAttribute invisibleFieldAnnotations = new AnnotationsAttribute(ctClass.getClassFile().getConstPool(), AnnotationsAttribute.invisibleTag);
         public CtField.Initializer fieldInitializer;
 
         public FieldBuilder(CtClass fieldType, String name) {
@@ -131,7 +136,7 @@ public class ClassBuilder<T> {
 
         public AnnotationBuilder<FieldBuilder> addAnnotation(Class<?> type) throws NotFoundException {
             Annotation annotation = new Annotation(ctClass.getClassFile().getConstPool(), defaultPool.getCtClass(type.getName()));
-            return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this, fieldAnnotations);
+            return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this, type.getAnnotation(Retention.class).value() != RetentionPolicy.RUNTIME ? invisibleFieldAnnotations : fieldAnnotations);
         }
 
         public FieldInitializerBuilder initializer() {
@@ -142,6 +147,7 @@ public class ClassBuilder<T> {
             CtField field = new CtField(fieldType, fieldName, ctClass);
             field.setModifiers(fieldMods);
             field.getFieldInfo().addAttribute(fieldAnnotations);
+            field.getFieldInfo().addAttribute(invisibleFieldAnnotations);
             ctClass.addField(field, fieldInitializer);
             return ClassBuilder.this;
         }
@@ -224,6 +230,7 @@ public class ClassBuilder<T> {
         CtClass[] exceptions;
         String methodName;
         final AnnotationsAttribute methodAnnotations = new AnnotationsAttribute(ctClass.getClassFile().getConstPool(), AnnotationsAttribute.visibleTag);
+        final AnnotationsAttribute invisibleMethodAnnotations = new AnnotationsAttribute(ctClass.getClassFile().getConstPool(), AnnotationsAttribute.invisibleTag);
         int methodMods = 0;
 
 
@@ -279,6 +286,7 @@ public class ClassBuilder<T> {
         public ClassBuilder<T> body(String code_src) throws CannotCompileException {
             CtMethod method = CtNewMethod.make(this.methodMods, this.methodReturnType, this.methodName, this.params, this.exceptions, code_src, ctClass);
             method.getMethodInfo().addAttribute(methodAnnotations);
+            method.getMethodInfo().addAttribute(invisibleMethodAnnotations);
             ctClass.addMethod(method);
             return ClassBuilder.this;
         }
@@ -372,6 +380,7 @@ public class ClassBuilder<T> {
             body.append("}");
             method.setBody(body.toString());
             method.getMethodInfo().addAttribute(methodAnnotations);
+            method.getMethodInfo().addAttribute(invisibleMethodAnnotations);
             ctClass.addMethod(method);
             methodWrappers.put(guestName, methodBody);
             return ClassBuilder.this;
@@ -381,6 +390,7 @@ public class ClassBuilder<T> {
             CtMethod method = new CtMethod(this.methodReturnType, this.methodName, this.params, ctClass);
             method.setModifiers(this.methodMods);
             method.getMethodInfo().addAttribute(methodAnnotations);
+            method.getMethodInfo().addAttribute(invisibleMethodAnnotations);
             String guestName = ClassBuilder.this.className + ";" + methodName + Descriptor.ofMethod(methodReturnType, params);
             ctClass.addMethod(method);
             return new BodyBuilder(method, guestName);
@@ -390,6 +400,7 @@ public class ClassBuilder<T> {
             CtMethod method = new CtMethod(this.methodReturnType, this.methodName, this.params, ctClass);
             method.setModifiers(this.methodMods);
             method.getMethodInfo().addAttribute(methodAnnotations);
+            method.getMethodInfo().addAttribute(invisibleMethodAnnotations);
             buildBody.apply(ctClass, method);
             ctClass.addMethod(method);
             return ClassBuilder.this;
@@ -398,13 +409,14 @@ public class ClassBuilder<T> {
         public ClassBuilder<T> endAbstract() throws NotFoundException, CannotCompileException {
             CtMethod method = CtNewMethod.abstractMethod(this.methodReturnType, this.methodName, this.params, this.exceptions, ctClass);
             method.getMethodInfo().addAttribute(methodAnnotations);
+            method.getMethodInfo().addAttribute(invisibleMethodAnnotations);
             ctClass.addMethod(method);
             return ClassBuilder.this;
         }
 
         public AnnotationBuilder<MethodBuilder> addAnnotation(Class<?> type) throws NotFoundException {
             Annotation annotation = new Annotation(ctClass.getClassFile().getConstPool(), defaultPool.getCtClass(type.getName()));
-            return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this, methodAnnotations);
+            return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this, type.getAnnotation(Retention.class).value() != RetentionPolicy.RUNTIME ? invisibleMethodAnnotations : methodAnnotations);
         }
     }
 
@@ -420,6 +432,7 @@ public class ClassBuilder<T> {
             CtConstructor constructor = CtNewConstructor.make(this.params, this.exceptions, code_src, ctClass);
             constructor.setModifiers(this.methodMods);
             constructor.getMethodInfo().addAttribute(methodAnnotations);
+            constructor.getMethodInfo().addAttribute(invisibleMethodAnnotations);
             ctClass.addConstructor(constructor);
             return ClassBuilder.this;
         }
@@ -485,6 +498,7 @@ public class ClassBuilder<T> {
             body.append("}));}");
             method.setBody(body.toString());
             method.getMethodInfo().addAttribute(methodAnnotations);
+            method.getMethodInfo().addAttribute(invisibleMethodAnnotations);
             ctClass.addConstructor(method);
             methodWrappers.put(guestName, methodBody);
             return ClassBuilder.this;
@@ -495,6 +509,7 @@ public class ClassBuilder<T> {
             CtConstructor method = new CtConstructor(this.params, ctClass);
             method.setModifiers(this.methodMods);
             method.getMethodInfo().addAttribute(methodAnnotations);
+            method.getMethodInfo().addAttribute(invisibleMethodAnnotations);
             String guestName = ClassBuilder.this.className + ";" + methodName + Descriptor.ofMethod(methodReturnType, params);
             ctClass.addConstructor(method);
             return new BodyBuilder(method, guestName);
@@ -505,6 +520,7 @@ public class ClassBuilder<T> {
             CtConstructor constructor = new CtConstructor(this.params, ctClass);
             constructor.setModifiers(this.methodMods);
             constructor.getMethodInfo().addAttribute(methodAnnotations);
+            constructor.getMethodInfo().addAttribute(invisibleMethodAnnotations);
             buildBody.apply(ctClass, constructor);
             ctClass.addConstructor(constructor);
             return ClassBuilder.this;
@@ -519,6 +535,7 @@ public class ClassBuilder<T> {
 
     public Class<? extends T> finishBuildAndFreeze() throws CannotCompileException, NotFoundException {
         ctClass.getClassFile().addAttribute(classAnnotations);
+        ctClass.getClassFile().addAttribute(invisibleClassAnnotations);
         return (Class<? extends T>) ctClass.toClass(Neighbor.class);
     }
 
