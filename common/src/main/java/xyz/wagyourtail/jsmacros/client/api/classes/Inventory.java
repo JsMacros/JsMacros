@@ -14,6 +14,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
@@ -173,6 +174,39 @@ public class Inventory<T extends HandledScreen<?>> {
     public Inventory<T> quick(int slot) {
         man.clickSlot(syncId, slot, 0, SlotActionType.QUICK_MOVE, player);
         return this;
+    }
+
+    /**
+     * @param slot
+     * @since 1.7.0
+     * @return
+     */
+    public int quickAll(int slot) {
+        return quickAll(slot, 0);
+    }
+
+    /**
+     * quicks all that match the slot
+     * @param slot a slot from the section you want to move items from
+     * @param button
+     * @since 1.7.0
+     * @return number of items that matched
+     */
+    public int quickAll(int slot, int button) {
+        int count = 0;
+        ItemStack cursorStack = inventory.getScreenHandler().slots.get(slot).getStack().copy();
+        net.minecraft.inventory.Inventory hoverSlotInv = inventory.getScreenHandler().slots.get(slot).inventory;
+        for(Slot slot2 : inventory.getScreenHandler().slots) {
+            if (slot2 != null
+                && slot2.canTakeItems(mc.player)
+                && slot2.hasStack()
+                && slot2.inventory == hoverSlotInv
+                && ScreenHandler.canInsertItemIntoSlot(slot2, cursorStack, true)) {
+                count += slot2.getStack().getCount();
+                man.clickSlot(syncId, slot2.id, button, SlotActionType.QUICK_MOVE, player);
+            }
+        }
+        return count;
     }
 
     /**
