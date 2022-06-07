@@ -5,8 +5,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.network.encryption.ChatMessageSigner;
 import net.minecraft.network.encryption.PlayerPublicKey;
+import net.minecraft.network.message.ChatMessageSigner;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -36,5 +36,4 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
             sendChatMessagePacket(chatMessageSigner, message, null);
         }
     }
-
 }

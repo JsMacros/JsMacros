@@ -86,7 +86,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * Clicks a slot with a mouse button.
+     * Clicks a slot with a mouse button.~~if the slot is a container, it will click the first slot in the container
      *
      * @since 1.0.8
      * @param slot

@@ -288,7 +288,7 @@ public class FChat extends BaseLibrary {
      */
     public CommandNodeHelper unregisterCommand(String name) throws IllegalAccessException {
         CommandNodeHelper c = null;
-        CommandNode<?> cnf = CommandNodeAccessor.remove(ClientCommandManager.DISPATCHER.getRoot(), name);
+        CommandNode<?> cnf = CommandNodeAccessor.remove(ClientCommandManager.getActiveDispatcher().getRoot(), name);
         CommandNode<?> cn = null;
         ClientPlayNetworkHandler p = MinecraftClient.getInstance().getNetworkHandler();
         if (p != null) {
@@ -304,7 +304,7 @@ public class FChat extends BaseLibrary {
      */
     public void reRegisterCommand(CommandNodeHelper node) {
         if (node.fabric != null) {
-            ClientCommandManager.DISPATCHER.getRoot().addChild(node.fabric);
+            ClientCommandManager.getActiveDispatcher().getRoot().addChild(node.fabric);
         }
         ClientPlayNetworkHandler nh = mc.getNetworkHandler();
         if (nh != null) {
