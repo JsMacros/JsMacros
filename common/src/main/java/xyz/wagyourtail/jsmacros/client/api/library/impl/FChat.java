@@ -16,6 +16,7 @@ import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.client.access.IClientPlayerEntity;
 import xyz.wagyourtail.jsmacros.client.api.classes.ChatHistoryManager;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
+import xyz.wagyourtail.jsmacros.client.api.classes.CommandManager;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandNodeHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -274,45 +275,36 @@ public class FChat extends BaseLibrary {
     }
 
     /**
-     * @param name name of command
+     *
+     *@param name name of command
      * @since 1.4.2
      * @return
      */
+     @Deprecated
     public CommandBuilder createCommandBuilder(String name) {
-        return CommandBuilder.createNewBuilder.apply(name);
+        return CommandManager.instance.createCommandBuilder(name);
     }
 
     /**
      * @param name
      * @since 1.6.5
      */
+     @Deprecated
     public CommandNodeHelper unregisterCommand(String name) throws IllegalAccessException {
-        CommandNodeHelper c = null;
-        CommandNode<?> cnf = CommandNodeAccessor.remove(ClientCommandManager.getActiveDispatcher().getRoot(), name);
-        CommandNode<?> cn = null;
-        ClientPlayNetworkHandler p = MinecraftClient.getInstance().getNetworkHandler();
-        if (p != null) {
-            CommandDispatcher<?> cd = p.getCommandDispatcher();
-            cn = CommandNodeAccessor.remove(cd.getRoot(), name);
-        }
-        return cn != null || cnf != null ? new CommandNodeHelper(cn, cnf) : null;
+        return CommandManager.instance.unregisterCommand(name);
     }
 
     /**
      * @since 1.6.5
      * @param node
      */
+     @Deprecated
     public void reRegisterCommand(CommandNodeHelper node) {
-        if (node.fabric != null) {
-            ClientCommandManager.getActiveDispatcher().getRoot().addChild(node.fabric);
-        }
-        ClientPlayNetworkHandler nh = mc.getNetworkHandler();
-        if (nh != null) {
-            CommandDispatcher<?> cd = nh.getCommandDispatcher();
-            if (node.getRaw() != null) {
-                cd.getRoot().addChild((CommandNode) node.getRaw());
-            }
-        }
+        CommandManager.instance.reRegisterCommand(node);
+    }
+
+    public CommandManager getCommandManager() {
+        return CommandManager.instance;
     }
 
     public ChatHistoryManager getHistory() {

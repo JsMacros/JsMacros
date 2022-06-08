@@ -33,11 +33,6 @@ import java.util.regex.Pattern;
  @SuppressWarnings("unused")
 public abstract class CommandBuilder {
 
-    /**
-     * name -> builder
-     */
-    public static Function<String, CommandBuilder> createNewBuilder;
-
     protected abstract void argument(String name, Supplier<ArgumentType<?>> type);
 
     protected abstract void argument(String name, Function<CommandRegistryAccess, ArgumentType<?>> type);

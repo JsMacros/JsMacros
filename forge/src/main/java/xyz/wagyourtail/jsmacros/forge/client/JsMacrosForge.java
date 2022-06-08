@@ -9,7 +9,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
+import xyz.wagyourtail.jsmacros.client.api.classes.CommandManager;
 import xyz.wagyourtail.jsmacros.forge.client.api.classes.CommandBuilderForge;
+import xyz.wagyourtail.jsmacros.forge.client.api.classes.CommandManagerForge;
 import xyz.wagyourtail.jsmacros.forge.client.forgeevents.ForgeEvents;
 
 @Mod(JsMacros.MOD_ID)
@@ -31,7 +33,7 @@ public class JsMacrosForge {
     public void onInitialize(FMLCommonSetupEvent event) {
 
         // initialize loader-specific stuff
-        CommandBuilder.createNewBuilder = CommandBuilderForge::new;
+        CommandManager.instance = new CommandManagerForge();
 
         ForgeEvents.init();
 
