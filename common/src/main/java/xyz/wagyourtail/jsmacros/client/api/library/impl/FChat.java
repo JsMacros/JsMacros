@@ -1,8 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.tree.CommandNode;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
