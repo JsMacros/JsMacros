@@ -52,6 +52,20 @@ jobs:
       branch: backport-1.8.9
       java_version: 8
 
+  deploy_1_19:
+    uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
+    with:
+      branch: main-1.18
+      game_vers: 1.18.2
+      java_vers: 17
+      GITHUB_REF: ${{ github.ref }}
+    secrets:
+      CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+    needs:
+      - build_1_19
+      - deploy_1_18
+
   deploy_1_18:
     uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
     with:
@@ -142,7 +156,7 @@ jobs:
   upload_pydoc:
     runs-on: ubuntu-latest
     needs:
-      - build_1_18
+      - build_1_19
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
@@ -165,6 +179,6 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          cd python
+          cd dist/python
           python setup.py dist bdist_wheel
           twine upload dist/*
