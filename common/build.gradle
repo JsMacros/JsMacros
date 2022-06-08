@@ -1,6 +1,6 @@
 architectury {
     injectInjectables = false
-    common("fabric")
+    common("fabric", "forge")
 }
 
 dependencies {
