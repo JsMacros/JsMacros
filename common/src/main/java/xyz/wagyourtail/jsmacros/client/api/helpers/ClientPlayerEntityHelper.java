@@ -227,7 +227,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x
      * @param y
      * @param z
-     * @param direction
+     * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
      * @param offHand
      * @since 1.5.0, renamed from {@code interact} in 1.6.0
      */
