@@ -158,7 +158,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
-     * @param direction
+     * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
      * @return the block offset by the given direction.
      *
      * @since 1.6.5
@@ -168,7 +168,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
-     * @param direction
+     * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
      * @param distance
      * @return the n-th block offset by the given direction.
      *
