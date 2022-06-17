@@ -172,8 +172,7 @@ public class PlayerInput {
     }
 
     /**
-     * Parses a JSON string into a {@code PlayerInput} Object
-     * For details see {@code PlayerInput.fromCsv()}, on what has to be present.<br>
+     * Parses a JSON string into a {@code PlayerInput} Object<br>
      * Capitalization of the keys matters.
      *
      * @param json JSON string to be parsed
@@ -181,11 +180,8 @@ public class PlayerInput {
      * @see #fromCsv(String)
      * @since 1.4.0
      */
-    public static PlayerInput fromJson(String json) throws NoSuchFieldException, IllegalAccessException {
-        Map<String, String> map = new HashMap<>();
-        map = (Map<String, String>) gson.fromJson(json, map.getClass());
-        map = map.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().toLowerCase().replace("\"", ""), e -> e.getValue().replace("\"", "")));
-        return fromMap(map);
+    public static PlayerInput fromJson(String json) {
+        return gson.fromJson(json, PlayerInput.class);
     }
 
 

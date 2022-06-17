@@ -46,6 +46,12 @@ jobs:
       branch: backport-1.14.4
       java_version: 17
 
+  build_1_12:
+    uses: wagyourtail/jsmacros/.github/workflows/releasebuild.yml@main-1.19
+    with:
+      branch: backport-1.12.2
+      java_version: 17
+
   build_1_8:
     uses: wagyourtail/jsmacros/.github/workflows/releasebuild.yml@main-1.19
     with:
@@ -55,8 +61,8 @@ jobs:
   deploy_1_19:
     uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
     with:
-      branch: main-1.18
-      game_vers: 1.18.2
+      branch: main-1.19
+      game_vers: 1.19
       java_vers: 17
       GITHUB_REF: ${{ github.ref }}
     secrets:
@@ -69,7 +75,7 @@ jobs:
   deploy_1_18:
     uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
     with:
-      branch: main-1.18
+      branch: backport-1.18.2
       game_vers: 1.18.2
       java_vers: 17
       GITHUB_REF: ${{ github.ref }}
@@ -137,6 +143,20 @@ jobs:
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
     needs:
       - build_1_14
+      - deploy_1_12
+
+  deploy_1_12:
+    uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
+    with:
+      branch: backport-1.12.2
+      game_vers: 1.12.2
+      java_vers: 8
+      GITHUB_REF: ${{ github.ref }}
+    secrets:
+      CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+    needs:
+      - build_1_12
       - deploy_1_8
 
   deploy_1_8:
@@ -161,7 +181,7 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: main-1.18
+          name: main-1.19
           path: dist
 
       - name: Install Python
