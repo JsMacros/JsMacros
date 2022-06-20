@@ -10,6 +10,11 @@ public class EventLockWatchdog {
         Thread t = new Thread(() -> {
             try {
                 Thread.sleep(maxTime);
+                synchronized (lock) {
+                    if (!lock.isLocked()) {
+                        return;
+                    }
+                }
                 lock.getCtx().closeContext();
                 if (listener instanceof BaseListener) {
                     ((BaseListener) listener).getRawTrigger().enabled = false;
@@ -20,9 +25,15 @@ public class EventLockWatchdog {
         });
         Thread u = new Thread(() -> {
             try {
-                lock.awaitLock(t::interrupt);
+                lock.awaitLock(() -> {
+                    synchronized (lock) {
+                        t.interrupt();
+                    }
+                });
             } catch (InterruptedException ignored) {}
         });
+        t.setPriority(Thread.NORM_PRIORITY - 1);
+        u.setPriority(Thread.NORM_PRIORITY - 1);
         t.start();
         u.start();
     }
