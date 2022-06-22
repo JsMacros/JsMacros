@@ -7,7 +7,6 @@ import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 
 import java.io.File;
 import java.nio.file.FileSystemException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 

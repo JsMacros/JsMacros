@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.config;
+package xyz.wagyourtail.jsmacros.core;
 
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseListener;

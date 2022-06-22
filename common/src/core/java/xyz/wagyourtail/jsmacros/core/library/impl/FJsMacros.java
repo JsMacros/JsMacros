@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.util.Util;
+import org.apache.commons.io.IOUtils;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
@@ -19,11 +19,14 @@ import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.WrappedScript;
 import xyz.wagyourtail.jsmacros.core.service.ServiceManager;
 
-import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -258,8 +261,8 @@ public class FJsMacros extends PerExecLibrary {
      * 
      * @param path relative to the script's folder.
      */
-    public void open(String path) {
-        Util.getOperatingSystem().open(ctx.getContainedFolder().toPath().resolve(path).toFile());
+    public void open(String path) throws IOException {
+        openUrl(ctx.getContainedFolder().toPath().resolve(path).toUri().toURL());
     }
 
     /**
@@ -269,10 +272,36 @@ public class FJsMacros extends PerExecLibrary {
      *
      * @throws MalformedURLException
      */
-    public void openUrl(String url) throws MalformedURLException {
-        Util.getOperatingSystem().open(new URL(url));
+    public void openUrl(String url) throws IOException {
+        openUrl(new URL(url));
     }
-    
+
+    protected void openUrl(URL url) throws IOException {
+        String string = System.getProperty("os.name").toLowerCase(Locale.ROOT);
+        String urlOpen[];
+        if (string.contains("mac") || string.contains("darwin")) {
+            urlOpen = new String[]{"open", url.toString()};
+        } else if (string.contains("win")) {
+            urlOpen = new String[]{"rundll32", "url.dll,FileProtocolHandler", url.toString()};
+        } else {
+            String s2 = url.toString();
+            if ("file".equals(url.getProtocol())) {
+                s2 = s2.replace("file:", "file://");
+            }
+            urlOpen = new String[]{"xdg-open", s2};
+        }
+
+        Process process = (Process) Runtime.getRuntime().exec(urlOpen);
+
+        for(String s2 : IOUtils.readLines(process.getErrorStream(), Charset.defaultCharset())) {
+            Core.getInstance().config.LOGGER.error(s2);
+        }
+
+        process.getInputStream().close();
+        process.getErrorStream().close();
+        process.getOutputStream().close();
+    }
+
     /**
      * Creates a listener for an event, this function can be more efficient that running a script file when used properly.
      * 

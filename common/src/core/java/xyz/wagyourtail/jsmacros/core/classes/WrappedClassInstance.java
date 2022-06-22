@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.classes;
 
-import xyz.wagyourtail.jsmacros.client.JsMacros;
+
+import xyz.wagyourtail.Util;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -198,7 +199,7 @@ public class WrappedClassInstance<T> {
         if (md == null) throw new NoSuchMethodException();
         Class<?>[] rightParamClasses = md.getParameterTypes();
         for (int i = 0; i < params.length; ++i) {
-            params[i] = JsMacros.tryAutoCastNumber(rightParamClasses[i], params[i]);
+            params[i] = Util.tryAutoCastNumber(rightParamClasses[i], params[i]);
         }
         return md.invoke(instance, params);
     }
@@ -213,7 +214,7 @@ public class WrappedClassInstance<T> {
         }
         Class<?>[] rightParamClasses = md.getParameterTypes();
         for (int i = 0; i < params.length; ++i) {
-            params[i] = JsMacros.tryAutoCastNumber(rightParamClasses[i], params[i]);
+            params[i] = Util.tryAutoCastNumber(rightParamClasses[i], params[i]);
         }
         return md.invoke(instance, params);
     }
@@ -233,6 +234,7 @@ public class WrappedClassInstance<T> {
     public Class<T> getRawClass() {
         return tClass;
     }
+
 
     public static class MethodSigParts {
         public final String name;

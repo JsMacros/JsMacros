@@ -1,0 +1,19 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+archivesBaseName = archivesBaseName + "-js"
+
+configurations {
+    common
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+}
+
+dependencies {
+    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
+    // Do NOT use other classes from fabric loader
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
+
+    common(project(":common").sourceSets.core.output)
+}

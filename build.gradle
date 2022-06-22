@@ -10,6 +10,12 @@ architectury {
 subprojects {
     apply plugin: "dev.architectury.loom"
 
+    configurations {
+        coreImplementation {
+            extendsFrom implementation
+        }
+    }
+
     dependencies {
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
         // The following line declares the mojmap mappings, you may use other mappings as well
@@ -17,20 +23,18 @@ subprojects {
 
         // non-mod dependencies:
 
-        implementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-        implementation "org.graalvm.js:js:${project.graal_version}"
-        implementation "org.graalvm.truffle:truffle-api:${project.graal_version}"
-        implementation "org.graalvm.regex:regex:${project.graal_version}"
+        coreImplementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+        coreImplementation "org.graalvm.js:js:${project.graal_version}"
+        coreImplementation "org.graalvm.truffle:truffle-api:${project.graal_version}"
+        coreImplementation "org.graalvm.regex:regex:${project.graal_version}"
 //		implementation "org.graalvm.compiler:compiler:${project.graal_version}"
 //		implementation "org.graalvm.compiler:compiler-management:${project.graal_version}"
 
         implementation "io.noties:prism4j:${project.prism_version}"
 
-        implementation "com.neovisionaries:nv-websocket-client:2.10"
+        coreImplementation "com.neovisionaries:nv-websocket-client:2.10"
 
-        implementation "org.javassist:javassist:3.28.0-GA"
-
-        implementation 'com.google.code.findbugs:jsr305:3.0.2'
+        coreImplementation "org.javassist:javassist:3.28.0-GA"
     }
 }
 
@@ -70,7 +74,7 @@ allprojects {
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
 
-        it.options.release = 16
+        it.options.release = 17
     }
 
     java {

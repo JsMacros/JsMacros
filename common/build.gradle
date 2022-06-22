@@ -3,6 +3,18 @@ architectury {
     common("fabric", "forge")
 }
 
+
+sourceSets {
+    core {
+        configurations.coreImplementation.setCanBeResolved(true)
+        compileClasspath += configurations.coreImplementation + configurations.minecraftLibraries
+    }
+    main {
+        compileClasspath += core.output + configurations.coreImplementation
+        runtimeClasspath += core.output + configurations.coreImplementation
+    }
+}
+
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
@@ -21,6 +33,15 @@ publishing {
     repositories {
         // Add repositories to publish to here.
     }
+}
+
+jar {
+    classifier "dev"
+    from sourceSets.main.output, sourceSets.core.output
+
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+
 }
 
 task generatePyDoc(type: Javadoc) {

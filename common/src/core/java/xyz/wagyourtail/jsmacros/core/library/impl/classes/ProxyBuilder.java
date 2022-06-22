@@ -1,11 +1,11 @@
 package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 
 import javassist.util.proxy.ProxyFactory;
-import xyz.wagyourtail.jsmacros.client.JsMacros;
+import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.Util;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -123,7 +123,7 @@ public class ProxyBuilder<T> {
      */
     public T buildInstance(Class<?>[] constructorSig, Object[] constructorArgs) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         for (int i = 0; i < constructorArgs.length; ++i) {
-            constructorArgs[i] = JsMacros.tryAutoCastNumber(constructorSig[i], constructorArgs[i]);
+            constructorArgs[i] = Util.tryAutoCastNumber(constructorSig[i], constructorArgs[i]);
         }
         return (T) factory.create(constructorSig, constructorArgs, this::invoke);
     }
@@ -152,7 +152,7 @@ public class ProxyBuilder<T> {
             }
             return null;
         }
-        return JsMacros.tryAutoCastNumber(thisMethod.getReturnType(), wrapper.apply(new ProxyReference<>((T) self, proceed != null ? (arg) -> {
+        return Util.tryAutoCastNumber(thisMethod.getReturnType(), wrapper.apply(new ProxyReference<>((T) self, proceed != null ? (arg) -> {
             try {
                 return proceed.invoke(self, arg);
             } catch (IllegalAccessException | InvocationTargetException e) {

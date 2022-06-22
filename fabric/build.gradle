@@ -49,7 +49,10 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-screen-api-v1:1.0.9+d882b915d2"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    common(project(path: ":javascript_extension", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+    shadowCommon(project(path: ":javascript_extension", configuration: "namedElements")) { transitive false }
+
 }
 
 processResources {

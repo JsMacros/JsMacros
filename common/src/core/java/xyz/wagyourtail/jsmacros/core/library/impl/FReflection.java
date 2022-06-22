@@ -1,9 +1,8 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import javassist.CannotCompileException;
-import javassist.ClassPool;
 import javassist.NotFoundException;
-import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.Util;
 import xyz.wagyourtail.jsmacros.core.classes.Mappings;
 import xyz.wagyourtail.jsmacros.core.classes.WrappedClassInstance;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
@@ -250,7 +249,7 @@ public class FReflection extends PerExecLibrary {
     public Object invokeMethod(Method m, Object c, Object... objects) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Class<?>[] params = m.getParameterTypes();
         for (int i = 0; i < objects.length; ++i) {
-            objects[i] = JsMacros.tryAutoCastNumber(params[i], objects[i]);
+            objects[i] = Util.tryAutoCastNumber(params[i], objects[i]);
         }
         return m.invoke(c, objects);
     }
@@ -283,7 +282,7 @@ public class FReflection extends PerExecLibrary {
                 Object[] tempObjects = new Object[objects.length];
                 try {
                     for (int i = 0; i < objects.length; ++i) {
-                        tempObjects[i] = JsMacros.tryAutoCastNumber(params[i], objects[i]);
+                        tempObjects[i] = Util.tryAutoCastNumber(params[i], objects[i]);
                     }
                     return (T) con.newInstance(tempObjects);
                 } catch (Exception ignored) {

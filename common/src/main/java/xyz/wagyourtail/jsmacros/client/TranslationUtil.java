@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.core.language;
+package xyz.wagyourtail.jsmacros.client;
 
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
