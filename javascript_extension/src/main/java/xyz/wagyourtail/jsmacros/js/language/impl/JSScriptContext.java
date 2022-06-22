@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.core.language.impl;
+package xyz.wagyourtail.jsmacros.js.language.impl;
 
 import org.graalvm.polyglot.Context;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -20,4 +20,10 @@ public class JSScriptContext extends BaseScriptContext<Context> {
             ctx.close(true);
         }
     }
+
+    @Override
+    public boolean isMultiThreaded() {
+        return false;
+    }
+
 }

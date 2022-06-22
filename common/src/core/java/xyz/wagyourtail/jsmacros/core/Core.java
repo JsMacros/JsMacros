@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.core;
 
 import org.apache.logging.log4j.Logger;
-import org.graalvm.polyglot.Context;
 import xyz.wagyourtail.SynchronizedWeakHashSet;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
@@ -9,11 +8,12 @@ import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
+import xyz.wagyourtail.jsmacros.core.extensions.Extension;
+import xyz.wagyourtail.jsmacros.core.extensions.ExtensionLoader;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
-import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.core.library.LibraryRegistry;
 import xyz.wagyourtail.jsmacros.core.service.ServiceManager;
 
@@ -34,11 +34,7 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
 
     public final T profile;
     public final ConfigManager config;
-
     private final Set<BaseScriptContext<?>> contexts = new SynchronizedWeakHashSet<>();
-
-    public final List<BaseLanguage<?>> languages = new ArrayList<>();
-    public final BaseLanguage<?> defaultLang = new JavascriptLanguageDefinition(".js", this);
 
     public final ServiceManager services;
 
@@ -46,7 +42,6 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
 
     protected Core(Function<Core<T, U>, U> eventRegistryFunction, Function<Core<T, U>, T> profileFunction, File configFolder, File macroFolder, Logger logger) {
         instance = this;
-        addLanguage(defaultLang);
         eventRegistry = eventRegistryFunction.apply(this);
         config = new ConfigManager(configFolder, macroFolder, logger);
         profile = profileFunction.apply(this);
@@ -98,28 +93,9 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
     public static <V extends BaseProfile, R extends BaseEventRegistry> Core<V, R> createInstance(Function<Core<V, R>, R> eventRegistryFunction, Function<Core<V, R>, V> profileFunction, File configFolder, File macroFolder, Logger logger) {
         if (instance != null) throw new RuntimeException("Can't declare RunScript instance more than once");
 
-        Thread t = new Thread(() -> {
-            Context.Builder build = Context.newBuilder("js");
-            Context con = build.build();
-            con.eval("js", "console.log('js pre-loaded.')");
-            con.close();
-        });
-
         new Core<>(eventRegistryFunction, profileFunction, configFolder, macroFolder, logger);
 
-        t.start();
-
         return (Core<V, R>) instance;
-    }
-
-    public void addLanguage(BaseLanguage<?> l) {
-        languages.add(l);
-        sortLanguages();
-    }
-
-    private void sortLanguages() {
-        languages.sort(new SortLanguage());
-        
     }
 
     /**
@@ -144,13 +120,7 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      */
     public EventContainer<?> exec(ScriptTrigger macro, BaseEvent event, Runnable then,
                                   Consumer<Throwable> catcher) {
-        BaseLanguage<?> l = defaultLang;
-        for (BaseLanguage<?> language : languages) {
-            if (macro.scriptFile.endsWith(language.extension)) {
-                l = language;
-                break;
-            }
-        }
+        BaseLanguage<?> l = ExtensionLoader.getExtensionForFileName(macro.getScriptFile()).getLanguage(this);
         return l.trigger(macro, event, then, catcher);
     }
 
@@ -165,13 +135,7 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      * @return
      */
     public EventContainer<?> exec(String lang, String script, File fakeFile, BaseEvent event, Runnable then, Consumer<Throwable> catcher) {
-        BaseLanguage<?> l = defaultLang;
-        for (BaseLanguage<?> language : languages) {
-            if (language.extension.replaceAll("\\.", " ").trim().replaceAll(" ", ".").equals(lang)) {
-                l = language;
-                break;
-            }
-        }
+        BaseLanguage<?> l = ExtensionLoader.getExtensionForName(lang).getLanguage(this);
         return l.trigger(script, fakeFile, event, then, catcher);
     }
 
@@ -183,7 +147,7 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      */
     public BaseWrappedException<?> wrapException(Throwable ex) {
         if (ex == null) return null;
-        for (BaseLanguage<?> lang : languages) {
+        for (Extension lang : ExtensionLoader.getAllExtensions()) {
             BaseWrappedException<?> e = lang.wrapException(ex);
             if (e != null) return e;
         }

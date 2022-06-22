@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.core.library.impl;
+package xyz.wagyourtail.jsmacros.js.library.impl;
 
 import org.graalvm.polyglot.Context;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
@@ -6,10 +6,10 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
-import xyz.wagyourtail.jsmacros.core.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.core.library.IFWrapper;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLanguageLibrary;
+import xyz.wagyourtail.jsmacros.js.language.impl.JavascriptLanguageDefinition;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Function;

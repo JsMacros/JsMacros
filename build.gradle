@@ -16,24 +16,21 @@ subprojects {
         }
     }
 
+    sourceSets {
+        main {
+            compileClasspath += configurations.coreImplementation
+            runtimeClasspath += configurations.coreImplementation
+        }
+    }
+
     dependencies {
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
         // The following line declares the mojmap mappings, you may use other mappings as well
         mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
         // non-mod dependencies:
-
-        coreImplementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-        coreImplementation "org.graalvm.js:js:${project.graal_version}"
-        coreImplementation "org.graalvm.truffle:truffle-api:${project.graal_version}"
-        coreImplementation "org.graalvm.regex:regex:${project.graal_version}"
-//		implementation "org.graalvm.compiler:compiler:${project.graal_version}"
-//		implementation "org.graalvm.compiler:compiler-management:${project.graal_version}"
-
         implementation "io.noties:prism4j:${project.prism_version}"
-
         coreImplementation "com.neovisionaries:nv-websocket-client:2.10"
-
         coreImplementation "org.javassist:javassist:3.28.0-GA"
     }
 }

@@ -41,7 +41,9 @@ dependencies {
     shadowCommon "org.javassist:javassist:3.28.0-GA"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    common(project(path: ":javascript_extension", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
+    shadowCommon(project(path: ":javascript_extension", configuration: "namedElements")) { transitive false }
 }
 
 processResources {

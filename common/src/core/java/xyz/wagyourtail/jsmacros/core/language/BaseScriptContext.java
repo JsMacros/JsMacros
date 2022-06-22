@@ -184,6 +184,8 @@ public abstract class BaseScriptContext<T> {
         return mainFile == null ? Core.getInstance().config.macroFolder.getAbsoluteFile() : mainFile.getParentFile().getAbsoluteFile();
     }
 
+    public abstract boolean isMultiThreaded();
+
     public static class ScriptAssertionError extends AssertionError {
         public ScriptAssertionError(String message) {
             super(message);

@@ -154,13 +154,6 @@ public abstract class BaseLanguage<T> {
      */
     protected abstract void exec(EventContainer<T> ctx, String script, BaseEvent event) throws Exception;
     
-    /**
-     * @param ex
-     * @since 1.3.0
-     * @return
-     */
-    public abstract BaseWrappedException<?> wrapException(Throwable ex);
-    
     public abstract BaseScriptContext<T> createContext(BaseEvent event, File file);
     
     @Deprecated

@@ -10,8 +10,8 @@ sourceSets {
         compileClasspath += configurations.coreImplementation + configurations.minecraftLibraries
     }
     main {
-        compileClasspath += core.output + configurations.coreImplementation
-        runtimeClasspath += core.output + configurations.coreImplementation
+        compileClasspath += core.output
+        runtimeClasspath += core.output
     }
 }
 

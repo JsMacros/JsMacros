@@ -7,6 +7,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.extensions.Extension;
+import xyz.wagyourtail.jsmacros.core.extensions.ExtensionLoader;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
@@ -130,14 +132,12 @@ public class FileChooser extends OverlayContainer {
         this.addDrawableChild(new Button(x + w / 6 + 2, y + height - 14, w / 6, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.new"), (btn) -> this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, Text.translatable("jsmacros.filename"), "", this, (str) -> {
             if (str.trim().equals("")) return;
             boolean edit = true;
-            for (BaseLanguage language : Core.getInstance().languages) {
-                if (str.endsWith(language.extension)) {
-                    edit = false;
-                    break;
-                }
+            Extension language = ExtensionLoader.getExtensionForName(str);
+            if (str.endsWith(language.getLanguageExtension())) {
+                edit = false;
             }
             if (edit) {
-                str += Core.getInstance().defaultLang.extension;
+                str += language.getLanguageExtension();
             }
             File f = new File(directory, str);
             try {

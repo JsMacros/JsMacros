@@ -18,7 +18,6 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
-import xyz.wagyourtail.jsmacros.core.language.impl.JSScriptContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -265,7 +264,7 @@ public class WorldScanner {
 
     private static boolean isParallelStreamAllowed(Function<?, Boolean> filter) {
         if (filter instanceof MethodWrapper<?, ?, ?, ?> wrapper) {
-            if (wrapper.getCtx() instanceof JSScriptContext) {
+            if (!wrapper.getCtx().isMultiThreaded()) {
                 return false;
             }
         }

@@ -52,7 +52,6 @@ dependencies {
     common(project(path: ":javascript_extension", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
     shadowCommon(project(path: ":javascript_extension", configuration: "namedElements")) { transitive false }
-
 }
 
 processResources {

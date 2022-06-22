@@ -151,7 +151,6 @@ public abstract class BaseProfile {
         runner.eventRegistry.addEvent(EventProfileLoad.class);
     
         runner.libraryRegistry.addLibrary(FJsMacros.class);
-        runner.libraryRegistry.addLibrary(FWrapper.class);
         runner.libraryRegistry.addLibrary(FFS.class);
         runner.libraryRegistry.addLibrary(FGlobalVars.class);
         runner.libraryRegistry.addLibrary(FReflection.class);
