@@ -52,11 +52,7 @@ public class ExtensionLoader {
 
         for (Extension extension : extensions) {
             for (Class<? extends BaseLibrary> lib : extension.getLibraries()) {
-                try {
-                    Class.forName(lib.getName(), true, classLoader);
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
-                }
+                Core.getInstance().libraryRegistry.addLibrary(lib);
             }
             for (Path lib : extension.getDependencies()) {
                 //TODO. jij loading on classLoader
