@@ -40,11 +40,9 @@ public class EventKey implements BaseEvent {
         this.mods = getKeyModifiers(mods);
         
         if (keycode == InputUtil.UNKNOWN_KEY) return;
-        
-        synchronized (FKeyBind.pressedKeys) {
-            if (action == 1) FKeyBind.pressedKeys.add(keycode.getTranslationKey());
-            else FKeyBind.pressedKeys.remove(keycode.getTranslationKey());
-        }
+
+        if (action == 1) FKeyBind.KeyTracker.press(keycode);
+        else FKeyBind.KeyTracker.unpress(keycode);
 
         if (mc.currentScreen != null) {
             if (action != 0 || !wasNullOnDown.contains(key)) {

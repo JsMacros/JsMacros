@@ -23,10 +23,6 @@ import java.util.*;
  @SuppressWarnings("unused")
 public class FKeyBind extends BaseLibrary {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
-    /**
-     * Don't modify
-     */
-    public static final Set<String> pressedKeys = new HashSet<>();
     
     /**
      * Dont use this one... get the raw minecraft keycode class.
@@ -93,8 +89,8 @@ public class FKeyBind extends BaseLibrary {
         KeyBinding.setKeyPressed(keyBind, keyState);
 
         // add to pressed keys list
-        if (keyState) pressedKeys.add(keyBind.getTranslationKey());
-        else pressedKeys.remove(keyBind.getTranslationKey());
+        if (keyState) KeyTracker.press(keyBind);
+        else KeyTracker.unpress(keyBind);
     }
     
     /**
@@ -114,8 +110,8 @@ public class FKeyBind extends BaseLibrary {
                 key.setPressed(keyState);
 
                 // add to pressed keys list
-                if (keyState) pressedKeys.add(key.getBoundKeyTranslationKey());
-                else pressedKeys.remove(key.getBoundKeyTranslationKey());
+                if (keyState) KeyTracker.press(key);
+                else KeyTracker.unpress(key);
                 return;
             }
         }
@@ -132,8 +128,8 @@ public class FKeyBind extends BaseLibrary {
         keyBind.setPressed(keyState);
 
         // add to pressed keys list
-        if (keyState) pressedKeys.add(keyBind.getBoundKeyTranslationKey());
-        else pressedKeys.remove(keyBind.getBoundKeyTranslationKey());
+        if (keyState) KeyTracker.press(keyBind);
+        else KeyTracker.unpress(keyBind);
     }
     
     /**
@@ -142,7 +138,41 @@ public class FKeyBind extends BaseLibrary {
      * @return a set of currently pressed keys.
      */
     public Set<String> getPressedKeys() {
-        synchronized (pressedKeys) {
+        return KeyTracker.getPressedKeys();
+    }
+
+    public static class KeyTracker {
+        private static final Set<String> pressedKeys = new HashSet<>();
+
+        public synchronized static void press(Key key) {
+            String translationKey = key.getTranslationKey();
+            if (translationKey != null) {
+                pressedKeys.add(translationKey);
+            }
+        }
+
+        public synchronized static void press(KeyBinding bind) {
+            String translationKey = bind.getBoundKeyTranslationKey();
+            if (translationKey != null) {
+                pressedKeys.add(translationKey);
+            }
+        }
+
+        public synchronized static void unpress(Key key) {
+            String translationKey = key.getTranslationKey();
+            if (translationKey != null) {
+                pressedKeys.remove(translationKey);
+            }
+        }
+
+        public synchronized static void unpress(KeyBinding bind) {
+            String translationKey = bind.getBoundKeyTranslationKey();
+            if (translationKey != null) {
+                pressedKeys.remove(translationKey);
+            }
+        }
+
+        public static synchronized Set<String> getPressedKeys() {
             return ImmutableSet.copyOf(pressedKeys);
         }
     }
