@@ -5,12 +5,10 @@ import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.SourceSection;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.extensions.Extension;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
-import xyz.wagyourtail.jsmacros.js.language.impl.JSScriptContext;
 import xyz.wagyourtail.jsmacros.js.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.js.library.impl.FWrapper;
 
@@ -32,6 +30,7 @@ public class JSExtension implements Extension {
             con.eval("js", "console.log('js pre-loaded.')");
             con.close();
         });
+        t.start();
     }
 
     @Override

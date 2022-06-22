@@ -1,5 +1,13 @@
 package xyz.wagyourtail.jsmacros.core.extensions;
 
+import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,11 +22,46 @@ public class ExtensionLoader {
     public static synchronized void loadExtensions() {
         if (classLoader != null)
             throw new IllegalStateException("Extensions already loaded");
-        //TODO: create classloader
+        Path extPath = Core.getInstance().config.configFolder.toPath().resolve("LanguageExtensions");
+        if (!Files.exists(extPath)) {
+            try {
+                Files.createDirectories(extPath);
+            } catch (Exception e) {
+                throw new RuntimeException("Could not create LanguageExtensions directory", e);
+            }
+        }
+        URL[] urls = new URL[0];
+        try {
+            urls = Files.list(extPath).filter(Files::isRegularFile).map(e -> {
+                try {
+                    return e.toUri().toURL();
+                } catch (MalformedURLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }).toArray(URL[]::new);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        classLoader = new URLClassLoader(urls, ExtensionLoader.class.getClassLoader());
+
         extensions.addAll(ServiceLoader.load(Extension.class, classLoader)
             .stream()
             .map(ServiceLoader.Provider::get)
             .collect(Collectors.toSet()));
+
+        for (Extension extension : extensions) {
+            for (Class<? extends BaseLibrary> lib : extension.getLibraries()) {
+                try {
+                    Class.forName(lib.getName(), true, classLoader);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            for (Path lib : extension.getDependencies()) {
+                //TODO. jij loading on classLoader
+            }
+        }
     }
 
     public static boolean isExtensionLoaded(String name) {

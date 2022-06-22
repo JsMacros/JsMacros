@@ -26,6 +26,14 @@ loom {
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
 
+
+    implementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+    implementation "org.graalvm.js:js:${project.graal_version}"
+    implementation "org.graalvm.truffle:truffle-api:${project.graal_version}"
+    implementation "org.graalvm.regex:regex:${project.graal_version}"
+//		include "org.graalvm.compiler:compiler:${project.graal_version}"
+//		include "org.graalvm.compiler:compiler-management:${project.graal_version}"
+
     shadowCommon "org.graalvm.sdk:graal-sdk:${project.graal_version}"
     shadowCommon "org.graalvm.js:js:${project.graal_version}", {
         exclude module: "icu4j"

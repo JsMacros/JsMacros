@@ -33,6 +33,14 @@ dependencies {
     include fabricApi.module("fabric-command-api-v2",  project.fapi_version)
 
 
+    implementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+    implementation "org.graalvm.js:js:${project.graal_version}"
+    implementation "org.graalvm.truffle:truffle-api:${project.graal_version}"
+    implementation "org.graalvm.regex:regex:${project.graal_version}"
+//		include "org.graalvm.compiler:compiler:${project.graal_version}"
+//		include "org.graalvm.compiler:compiler-management:${project.graal_version}"
+
+
     include "org.graalvm.sdk:graal-sdk:${project.graal_version}"
     include "org.graalvm.js:js:${project.graal_version}"
     include "org.graalvm.truffle:truffle-api:${project.graal_version}"

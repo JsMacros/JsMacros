@@ -8,6 +8,7 @@ sourceSets {
     core {
         configurations.coreImplementation.setCanBeResolved(true)
         compileClasspath += configurations.coreImplementation + configurations.minecraftLibraries
+        runtimeClasspath += configurations.coreImplementation + configurations.minecraftLibraries
     }
     main {
         compileClasspath += core.output

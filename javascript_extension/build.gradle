@@ -15,10 +15,10 @@ dependencies {
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
 
-    coreImplementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-    coreImplementation "org.graalvm.js:js:${project.graal_version}"
-    coreImplementation "org.graalvm.truffle:truffle-api:${project.graal_version}"
-    coreImplementation "org.graalvm.regex:regex:${project.graal_version}"
+    implementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+    implementation "org.graalvm.js:js:${project.graal_version}"
+    implementation "org.graalvm.truffle:truffle-api:${project.graal_version}"
+    implementation "org.graalvm.regex:regex:${project.graal_version}"
 //		implementation "org.graalvm.compiler:compiler:${project.graal_version}"
 //		implementation "org.graalvm.compiler:compiler-management:${project.graal_version}"
 
