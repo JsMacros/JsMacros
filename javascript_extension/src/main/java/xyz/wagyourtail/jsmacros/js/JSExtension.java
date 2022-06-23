@@ -17,10 +17,7 @@ import xyz.wagyourtail.jsmacros.js.library.impl.FWrapper;
 
 import java.io.File;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 public class JSExtension implements Extension {
 
@@ -28,8 +25,9 @@ public class JSExtension implements Extension {
 
     @Override
     public void init() {
+        Thread.currentThread().setContextClassLoader(JSExtension.class.getClassLoader());
+
         Thread t = new Thread(() -> {
-            Thread.currentThread().setContextClassLoader(JSExtension.class.getClassLoader());
             Context.Builder build = Context.newBuilder("js");
             Context con = build.build();
             con.eval("js", "console.log('js pre-loaded.')");
