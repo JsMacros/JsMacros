@@ -29,6 +29,7 @@
     "access.MixinRecipeBookWidget",
     "access.MixinScreen",
     "access.MixinSignEditScreen",
+    "access.MixinSimpleOption",
     "access.MixinStyleSerializer",
     "access.MixinTrueTypeFont",
     "events.MixinChatHud",
