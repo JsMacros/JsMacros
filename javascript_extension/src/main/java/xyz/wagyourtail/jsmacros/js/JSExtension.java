@@ -1,9 +1,6 @@
 package xyz.wagyourtail.jsmacros.js;
 
 import com.google.common.collect.Sets;
-import org.graalvm.home.HomeFinder;
-import org.graalvm.home.impl.DefaultHomeFinder;
-import org.graalvm.nativeimage.ImageSingletons;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.SourceSection;
@@ -17,7 +14,10 @@ import xyz.wagyourtail.jsmacros.js.library.impl.FWrapper;
 
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Set;
 
 public class JSExtension implements Extension {
 
@@ -25,8 +25,6 @@ public class JSExtension implements Extension {
 
     @Override
     public void init() {
-        Thread.currentThread().setContextClassLoader(JSExtension.class.getClassLoader());
-
         Thread t = new Thread(() -> {
             Context.Builder build = Context.newBuilder("js");
             Context con = build.build();

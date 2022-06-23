@@ -114,6 +114,7 @@ public class ExtensionLoader {
                 }
             }
         }
+        Thread.currentThread().setContextClassLoader(classLoader);
         for (Extension extension : extensions) {
             extension.init();
         }
