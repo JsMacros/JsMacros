@@ -27,12 +27,12 @@ dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
 
 
-    runtimeOnly "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-    runtimeOnly "org.graalvm.js:js:${project.graal_version}"
-    runtimeOnly "org.graalvm.truffle:truffle-api:${project.graal_version}"
-    runtimeOnly "org.graalvm.regex:regex:${project.graal_version}"
-//		include "org.graalvm.compiler:compiler:${project.graal_version}"
-//		include "org.graalvm.compiler:compiler-management:${project.graal_version}"
+    localRuntime "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+    localRuntime "org.graalvm.js:js:${project.graal_version}"
+    localRuntime "org.graalvm.truffle:truffle-api:${project.graal_version}"
+    localRuntime "org.graalvm.regex:regex:${project.graal_version}"
+//		localRuntime "org.graalvm.compiler:compiler:${project.graal_version}"
+//		localRuntime "org.graalvm.compiler:compiler-management:${project.graal_version}"
 
     shadowCommon "io.noties:prism4j:${project.prism_version}", {
         exclude module: "annotations-java5"

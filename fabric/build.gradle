@@ -33,12 +33,12 @@ dependencies {
     include fabricApi.module("fabric-command-api-v2",  project.fapi_version)
 
 
-    runtimeOnly "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-    runtimeOnly "org.graalvm.js:js:${project.graal_version}"
-    runtimeOnly "org.graalvm.truffle:truffle-api:${project.graal_version}"
-    runtimeOnly "org.graalvm.regex:regex:${project.graal_version}"
-//		include "org.graalvm.compiler:compiler:${project.graal_version}"
-//		include "org.graalvm.compiler:compiler-management:${project.graal_version}"
+    localRuntime "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+    localRuntime "org.graalvm.js:js:${project.graal_version}"
+    localRuntime "org.graalvm.truffle:truffle-api:${project.graal_version}"
+    localRuntime "org.graalvm.regex:regex:${project.graal_version}"
+//		localRuntime "org.graalvm.compiler:compiler:${project.graal_version}"
+//		localRuntime "org.graalvm.compiler:compiler-management:${project.graal_version}"
 
     include "io.noties:prism4j:${project.prism_version}"
     include "com.neovisionaries:nv-websocket-client:2.10"
