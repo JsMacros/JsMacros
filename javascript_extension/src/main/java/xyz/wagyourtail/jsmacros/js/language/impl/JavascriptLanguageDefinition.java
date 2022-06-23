@@ -1,15 +1,15 @@
 package xyz.wagyourtail.jsmacros.js.language.impl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.graalvm.polyglot.*;
+import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Context.Builder;
+import org.graalvm.polyglot.Engine;
+import org.graalvm.polyglot.Source;
+import org.graalvm.polyglot.Value;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
-import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.js.library.impl.FWrapper;
@@ -17,12 +17,10 @@ import xyz.wagyourtail.jsmacros.js.library.impl.FWrapper;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class JavascriptLanguageDefinition extends BaseLanguage<Context> {
-    private static final Logger LOGGER = LogManager.getLogger("JsMacros");
     private static final Engine engine = Engine.newBuilder().option("engine.WarnInterpreterOnly", "false").build();
     
     public JavascriptLanguageDefinition(String extension, Core<?, ?> runner) {

@@ -27,21 +27,13 @@ dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
 
 
-    implementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-    implementation "org.graalvm.js:js:${project.graal_version}"
-    implementation "org.graalvm.truffle:truffle-api:${project.graal_version}"
-    implementation "org.graalvm.regex:regex:${project.graal_version}"
+    runtimeOnly "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+    runtimeOnly "org.graalvm.js:js:${project.graal_version}"
+    runtimeOnly "org.graalvm.truffle:truffle-api:${project.graal_version}"
+    runtimeOnly "org.graalvm.regex:regex:${project.graal_version}"
 //		include "org.graalvm.compiler:compiler:${project.graal_version}"
 //		include "org.graalvm.compiler:compiler-management:${project.graal_version}"
 
-    shadowCommon "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-    shadowCommon "org.graalvm.js:js:${project.graal_version}", {
-        exclude module: "icu4j"
-    }
-    shadowCommon "org.graalvm.truffle:truffle-api:${project.graal_version}"
-    shadowCommon "org.graalvm.regex:regex:${project.graal_version}"
-//		include "org.graalvm.compiler:compiler:${project.graal_version}"
-//		include "org.graalvm.compiler:compiler-management:${project.graal_version}"
     shadowCommon "io.noties:prism4j:${project.prism_version}", {
         exclude module: "annotations-java5"
     }
@@ -51,7 +43,8 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     common(project(path: ":javascript_extension", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
-    shadowCommon(project(path: ":javascript_extension", configuration: "namedElements")) { transitive false }
+
+    jsmacrosExtensionInclude(project(path: ":javascript_extension", configuration: "namedElements")) { transitive false }
 }
 
 processResources {
@@ -59,6 +52,10 @@ processResources {
 
     filesMatching("META-INF/mods.toml") {
         expand "version": project.version
+    }
+
+    filesMatching("jsmacros.extension.json") {
+        expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")
     }
 }
 
@@ -76,6 +73,11 @@ remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
     classifier null
+
+    from (configurations.jsmacrosExtensionInclude.files) {
+        include '*'
+        into "META-INF/jsmacrosdeps"
+    }
 }
 
 jar {

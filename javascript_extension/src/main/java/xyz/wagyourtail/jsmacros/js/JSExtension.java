@@ -1,6 +1,9 @@
 package xyz.wagyourtail.jsmacros.js;
 
 import com.google.common.collect.Sets;
+import org.graalvm.home.HomeFinder;
+import org.graalvm.home.impl.DefaultHomeFinder;
+import org.graalvm.nativeimage.ImageSingletons;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotException;
 import org.graalvm.polyglot.SourceSection;
@@ -13,7 +16,7 @@ import xyz.wagyourtail.jsmacros.js.language.impl.JavascriptLanguageDefinition;
 import xyz.wagyourtail.jsmacros.js.library.impl.FWrapper;
 
 import java.io.File;
-import java.nio.file.Path;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
@@ -23,8 +26,10 @@ public class JSExtension implements Extension {
 
     private static JavascriptLanguageDefinition languageDefinition;
 
-    public JSExtension() {
+    @Override
+    public void init() {
         Thread t = new Thread(() -> {
+            Thread.currentThread().setContextClassLoader(JSExtension.class.getClassLoader());
             Context.Builder build = Context.newBuilder("js");
             Context con = build.build();
             con.eval("js", "console.log('js pre-loaded.')");
@@ -40,7 +45,7 @@ public class JSExtension implements Extension {
 
     @Override
     public String getLanguageName() {
-        return "javascript";
+        return "graaljs";
     }
 
     @Override
@@ -51,7 +56,10 @@ public class JSExtension implements Extension {
     @Override
     public BaseLanguage<?> getLanguage(Core<?, ?> runner) {
         if (languageDefinition == null) {
-           languageDefinition = new JavascriptLanguageDefinition("js", runner);
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader(JSExtension.class.getClassLoader());
+            languageDefinition = new JavascriptLanguageDefinition("js", runner);
+            Thread.currentThread().setContextClassLoader(classLoader);
         }
         return languageDefinition;
     }
@@ -62,12 +70,11 @@ public class JSExtension implements Extension {
     }
 
     @Override
-    public Set<Path> getDependencies() {
+    public Set<URL> getDependencies() {
         if (System.getProperty("java.vm.vendor").toLowerCase(Locale.ROOT).contains("graalvm")) {
             return new HashSet<>();
         }
-        //TODO: Add GraalJS dependencies to inner classloader so above works
-        return new HashSet<>();
+        return Extension.super.getDependencies();
     }
 
 

@@ -22,5 +22,27 @@ dependencies {
 //		implementation "org.graalvm.compiler:compiler:${project.graal_version}"
 //		implementation "org.graalvm.compiler:compiler-management:${project.graal_version}"
 
+
+    jsmacrosExtensionInclude "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+    jsmacrosExtensionInclude "org.graalvm.js:js:${project.graal_version}"
+    jsmacrosExtensionInclude "org.graalvm.truffle:truffle-api:${project.graal_version}"
+    jsmacrosExtensionInclude "org.graalvm.regex:regex:${project.graal_version}"
+//		jsmacrosExtensionInclude "org.graalvm.compiler:compiler:${project.graal_version}"
+//		jsmacrosExtensionInclude "org.graalvm.compiler:compiler-management:${project.graal_version}"
+
+
     common(project(":common").sourceSets.core.output)
+}
+
+processResources {
+    filesMatching("jsmacros.ext.graaljs.js.json") {
+        expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")
+    }
+}
+
+jar {
+    from (configurations.jsmacrosExtensionInclude.files) {
+        include '*'
+        into "META-INF/jsmacrosdeps"
+    }
 }
