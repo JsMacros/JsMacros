@@ -26,7 +26,8 @@ declare const Graal: {
  */
 declare namespace Java {
     export function type<T>(className: string):_javatypes.java.lang.Class<T> & { new(...values): T }
-    export function from<T>(javaData: Array<T> | java.util.Collection<T>):T[];
+    export function from<T>(javaData: Array<T>):T[];
+    export function from<T>(javaData: java.util.Collection<T>):T[];
     export function to<T extends Java.Object>(jsData: any, toType: Java.Class<T>):T;
     export function isJavaObject(obj: Java.Object):boolean;
     export function isType(obj: Java.Class<any>):boolean;
