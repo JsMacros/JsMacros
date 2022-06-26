@@ -186,6 +186,7 @@ public class MovementDummy extends LivingEntity {
         return Arm.RIGHT;
     }
 
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public MovementDummy clone() {
         return new MovementDummy(this);

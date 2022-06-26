@@ -28,7 +28,7 @@ public class LibraryBuilder extends ClassBuilder<BaseLibrary> {
         Class<?>[] allowed = new Class<?>[allowedLangs.length];
         for (int i = 0; i < allowedLangs.length; i++) {
             int finalI = i;
-            allowed[i] = Optional.ofNullable(ExtensionLoader.getExtensionForNameNoDefault(allowedLangs[i]).getLanguage(Core.getInstance()).getClass()).orElseThrow(() -> new AssertionError("Language " + allowedLangs[finalI] + " not found!"));
+            allowed[i] = Optional.ofNullable(Core.getInstance().extensions.getExtensionForNameNoDefault(allowedLangs[i]).getLanguage(Core.getInstance()).getClass()).orElseThrow(() -> new AssertionError("Language " + allowedLangs[finalI] + " not found!"));
         }
         AnnotationBuilder.AnnotationArrayBuilder ab = b.putArray("allowedLanguages", BaseLanguage.class);
         for (Class<?> c : allowed) {

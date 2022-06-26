@@ -1,8 +1,6 @@
-package xyz.wagyourtail.jsmacros.forge.client.mixins;
+package xyz.wagyourtail.jsmacros.client.mixins.access;
 
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import net.minecraft.client.resource.language.LanguageDefinition;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.resource.ResourceManager;
@@ -11,15 +9,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import xyz.wagyourtail.jsmacros.forge.client.FakeFabricLoader;
+import xyz.wagyourtail.jsmacros.core.Core;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mixin(TranslationStorage.class)
 public class MixinTranslationStorage {
@@ -28,15 +24,9 @@ public class MixinTranslationStorage {
     private static void insertFabricLanguageData(ResourceManager p_239497_0_, List<LanguageDefinition> p_239497_1_, CallbackInfoReturnable<TranslationStorage> cir, Map<String, String> map) {
         Map<String, String> translations = new LinkedHashMap<>();
         for (LanguageDefinition lang : p_239497_1_) {
-            Set<String> res = FakeFabricLoader.instance.getLangResources(lang.getCode());
-            for (String r : res) {
-                JsonObject ts = null;
-                try (Reader reader = new InputStreamReader(FakeFabricLoader.class.getResourceAsStream(r))) {
-                    ts = new JsonParser().parse(reader).getAsJsonObject();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                ts.entrySet().forEach((e) -> translations.putIfAbsent(e.getKey(), e.getValue().getAsString()));
+            Set<Map<String, String>> res = Core.getInstance().extensions.getAllExtensions().stream().map(e -> e.getTranslations(lang.getCode())).collect(Collectors.toSet());
+            for (Map<String, String> r : res) {
+                translations.putAll(r);
             }
         }
         translations.forEach(map::putIfAbsent);

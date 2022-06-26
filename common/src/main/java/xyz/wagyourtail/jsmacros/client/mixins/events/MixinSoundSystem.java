@@ -15,13 +15,13 @@ public class MixinSoundSystem {
         String id = null;
         try {
             id = instance.getId().toString();
-        } catch (NullPointerException e) {}
+        } catch (NullPointerException ignored) {}
         float volume = 1.0F;
         float pitch = 1.0F;
         try {
             volume = instance.getVolume();
             pitch = instance.getPitch();
-        } catch (NullPointerException e) {}
+        } catch (NullPointerException ignored) {}
         
         new EventSound(id, volume, pitch, instance.getX(), instance.getY(), instance.getZ());
     }

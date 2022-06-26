@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.core.language;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.extensions.Extension;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 
 import java.io.File;
@@ -16,14 +17,14 @@ import java.util.function.Consumer;
  * @since 1.1.3
  */
 public abstract class BaseLanguage<T> {
-    public final String extension;
     protected final Core<?, ?> runner;
+    public final Extension extension;
 
     public static Runnable preThread = () -> {};
     
-    public BaseLanguage(String extension, Core<?, ?> runner) {
-        this.extension = extension;
+    public BaseLanguage(Extension extension, Core<?, ?> runner) {
         this.runner = runner;
+        this.extension = extension;
     }
     
     public final EventContainer<T> trigger(ScriptTrigger macro, BaseEvent event, Runnable then,
@@ -81,7 +82,7 @@ public abstract class BaseLanguage<T> {
         return ctx;
     }
     
-    public final EventContainer<T> trigger(String script, File fakeFile, BaseEvent event, Runnable then, Consumer<Throwable> catcher) {
+    public final EventContainer<T> trigger(String lang, String script, File fakeFile, BaseEvent event, Runnable then, Consumer<Throwable> catcher) {
         final Thread ct = Thread.currentThread();
         EventContainer<T> ctx = new EventContainer<>(createContext(event, fakeFile));
         final Thread t = new Thread(() -> {
@@ -91,7 +92,7 @@ public abstract class BaseLanguage<T> {
 
                 runner.addContext(ctx);
 
-                exec(ctx, script, event);
+                exec(ctx, lang, script, event);
 
                 if (then != null) then.run();
             } catch (Throwable e) {
@@ -152,13 +153,8 @@ public abstract class BaseLanguage<T> {
      * @throws Exception
      * @since 1.7.0
      */
-    protected abstract void exec(EventContainer<T> ctx, String script, BaseEvent event) throws Exception;
+    protected abstract void exec(EventContainer<T> ctx, String lang, String script, BaseEvent event) throws Exception;
     
     public abstract BaseScriptContext<T> createContext(BaseEvent event, File file);
-    
-    @Deprecated
-    public String extension() {
-        return extension;
-    }
     
 }

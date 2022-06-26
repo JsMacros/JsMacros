@@ -29,13 +29,15 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      */
     private static Core<?, ?> instance;
 
+    private final Set<BaseScriptContext<?>> contexts = new SynchronizedWeakHashSet<>();
+
     public final LibraryRegistry libraryRegistry = new LibraryRegistry();
     public final BaseEventRegistry eventRegistry;
 
+    public final ExtensionLoader extensions;
+
     public final T profile;
     public final ConfigManager config;
-    private final Set<BaseScriptContext<?>> contexts = new SynchronizedWeakHashSet<>();
-
     public final ServiceManager services;
 
     private boolean deferredInit = false;
@@ -45,6 +47,8 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
         eventRegistry = eventRegistryFunction.apply(this);
         config = new ConfigManager(configFolder, macroFolder, logger);
         profile = profileFunction.apply(this);
+
+        extensions =  new ExtensionLoader(this);
         this.services = new ServiceManager(this);
     }
 
@@ -120,7 +124,7 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      */
     public EventContainer<?> exec(ScriptTrigger macro, BaseEvent event, Runnable then,
                                   Consumer<Throwable> catcher) {
-        BaseLanguage<?> l = ExtensionLoader.getExtensionForFileName(macro.getScriptFile()).getLanguage(this);
+        BaseLanguage<?> l = Core.getInstance().extensions.getExtensionForFileName(macro.getScriptFile()).getLanguage(this);
         return l.trigger(macro, event, then, catcher);
     }
 
@@ -135,8 +139,8 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      * @return
      */
     public EventContainer<?> exec(String lang, String script, File fakeFile, BaseEvent event, Runnable then, Consumer<Throwable> catcher) {
-        BaseLanguage<?> l = ExtensionLoader.getExtensionForName(lang).getLanguage(this);
-        return l.trigger(script, fakeFile, event, then, catcher);
+        BaseLanguage<?> l = Core.getInstance().extensions.getExtensionForName(lang).getLanguage(this);
+        return l.trigger(lang, script, fakeFile, event, then, catcher);
     }
 
     /**
@@ -147,7 +151,7 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      */
     public BaseWrappedException<?> wrapException(Throwable ex) {
         if (ex == null) return null;
-        for (Extension lang : ExtensionLoader.getAllExtensions()) {
+        for (Extension lang : Core.getInstance().extensions.getAllExtensions()) {
             BaseWrappedException<?> e = lang.wrapException(ex);
             if (e != null) return e;
         }
@@ -162,23 +166,5 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
     
     private BaseWrappedException<StackTraceElement> wrapHostInternal(StackTraceElement e, Iterator<StackTraceElement> elements) {
         return BaseWrappedException.wrapHostElement(e, elements.hasNext() ? wrapHostInternal(elements.next(), elements) : null);
-    }
-    
-    private static class SortLanguage implements Comparator<BaseLanguage<?>> {
-
-        @Override
-        public int compare(BaseLanguage a, BaseLanguage b) {
-            final String[] as = a.extension.replaceAll("\\.", " ").trim().split(" ");
-            final String[] bs = b.extension.replaceAll("\\.", " ").trim().split(" ");
-            final int lendif = bs.length-as.length;
-            if (lendif != 0) return lendif;
-            int comp = 0;
-            for (int i = bs.length - 1; i >= 0; --i) {
-                comp = as[i].compareTo(bs[i]);
-                if (comp != 0) break;
-            }
-            return comp;
-        }
-        
     }
 }

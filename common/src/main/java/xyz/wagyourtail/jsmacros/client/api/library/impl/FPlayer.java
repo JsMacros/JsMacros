@@ -230,7 +230,7 @@ public class FPlayer extends BaseLibrary {
      * @see #createPlayerInputsFromCsv(String)
      * @since 1.4.0
      */
-    public PlayerInput createPlayerInputsFromJson(String json) throws NoSuchFieldException, IllegalAccessException {
+    public PlayerInput createPlayerInputsFromJson(String json) {
         return PlayerInput.fromJson(json);
     }
 

@@ -2,7 +2,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
-archivesBaseName = archivesBaseName + "-js"
+archivesBaseName = archivesBaseName + "-js-extension"
 
 configurations {
     common
@@ -35,7 +35,7 @@ dependencies {
 }
 
 processResources {
-    filesMatching("jsmacros.ext.graaljs.js.json") {
+    filesMatching("jsmacros.ext.graal.json") {
         expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")
     }
 }

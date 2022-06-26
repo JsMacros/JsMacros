@@ -616,7 +616,7 @@ public class ClassBuilder<T> {
             return new AnnotationBuilder<>(annotation, constPool, this, null);
         }
 
-        public AnnotationArrayBuilder<AnnotationBuilder<T>> putArray(String key, Class<?> annotationClass) throws NotFoundException {
+        public AnnotationArrayBuilder<AnnotationBuilder<T>> putArray(String key, Class<?> annotationClass) {
             AnnotationArrayBuilder ab = new AnnotationArrayBuilder<>(this, constPool);
             annotationInstance.addMemberValue(key, ab.arrayMemberValue);
             return ab;
@@ -704,7 +704,7 @@ public class ClassBuilder<T> {
                 return new AnnotationBuilder<>(annotation, constPool, this, null);
             }
 
-            public AnnotationArrayBuilder<AnnotationArrayBuilder<U>> putArray(Class<?> annotationClass) throws NotFoundException {
+            public AnnotationArrayBuilder<AnnotationArrayBuilder<U>> putArray(Class<?> annotationClass) {
                 AnnotationArrayBuilder ab = new AnnotationArrayBuilder<>(this, constPool);
                 mv.add(ab.arrayMemberValue);
                 return ab;

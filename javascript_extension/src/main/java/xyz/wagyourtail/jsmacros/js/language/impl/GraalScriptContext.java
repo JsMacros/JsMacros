@@ -6,9 +6,9 @@ import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
 import java.io.File;
 
-public class JSScriptContext extends BaseScriptContext<Context> {
+public class GraalScriptContext extends BaseScriptContext<Context> {
 
-    public JSScriptContext(BaseEvent event, File file) {
+    public GraalScriptContext(BaseEvent event, File file) {
         super(event, file);
     }
     

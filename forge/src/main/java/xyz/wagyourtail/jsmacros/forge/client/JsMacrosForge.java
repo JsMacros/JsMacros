@@ -8,9 +8,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandManager;
-import xyz.wagyourtail.jsmacros.forge.client.api.classes.CommandBuilderForge;
 import xyz.wagyourtail.jsmacros.forge.client.api.classes.CommandManagerForge;
 import xyz.wagyourtail.jsmacros.forge.client.forgeevents.ForgeEvents;
 
@@ -41,7 +39,6 @@ public class JsMacrosForge {
 
         // load fabric-style plugins
         Thread.currentThread().setContextClassLoader(new ShimClassLoader());
-        FakeFabricLoader.instance.loadEntries();
     }
 
     public void onInitializeClient(FMLClientSetupEvent event) {
@@ -49,7 +46,6 @@ public class JsMacrosForge {
 
         // load fabric-style plugins
         Thread.currentThread().setContextClassLoader(new ShimClassLoader());
-        FakeFabricLoader.instance.loadClientEntries();
     }
 
     public static class ShimClassLoader extends ClassLoader {

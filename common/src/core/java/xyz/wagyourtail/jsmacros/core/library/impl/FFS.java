@@ -135,7 +135,7 @@ public class FFS extends PerExecLibrary {
      * @return a {@link java.lang.String String} of the combined path.
      * @throws IOException
      */
-    public String combine(String patha, String pathb) throws IOException {
+    public String combine(String patha, String pathb) {
         return Paths.get(patha, pathb).toString();
     }
     
@@ -149,7 +149,7 @@ public class FFS extends PerExecLibrary {
      * @return a {@link java.lang.String String} of the combined path.
      * @throws IOException
      */
-    public String getDir(String path) throws IOException {
+    public String getDir(String path) {
         File dir = ctx.getContainedFolder().toPath().resolve(path).toFile().getParentFile();
         return ctx.getContainedFolder().toPath().relativize(dir.toPath()).toString();
     }

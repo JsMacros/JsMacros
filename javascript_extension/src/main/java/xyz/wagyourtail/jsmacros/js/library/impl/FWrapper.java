@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.js.library.impl;
 
 import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Value;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -9,10 +10,9 @@ import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.IFWrapper;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLanguageLibrary;
-import xyz.wagyourtail.jsmacros.js.language.impl.JavascriptLanguageDefinition;
+import xyz.wagyourtail.jsmacros.js.language.impl.GraalLanguageDefinition;
 
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.function.Function;
 
 
 /**
@@ -20,7 +20,7 @@ import java.util.function.Function;
  *
  * An instance of this class is passed to scripts as the {@code JavaWrapper} variable.
  *
- * Javascript:
+ * GraalJS:
  * language spec requires that only one thread can hold an instance of the language at a time,
  * so this implementation uses a non-preemptive queue for the threads that call the resulting {@link MethodWrapper
  * MethodWrappers}.
@@ -42,9 +42,9 @@ import java.util.function.Function;
  * @author Wagyourtail
  * @since 1.2.5, re-named from {@code consumer} in 1.4.0
  */
-@Library(value = "JavaWrapper", languages = JavascriptLanguageDefinition.class)
+@Library(value = "JavaWrapper", languages = GraalLanguageDefinition.class)
 @SuppressWarnings("unused")
-public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapper<Function<Object[], Object>> {
+public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapper<Value> {
     public final LinkedBlockingQueue<WrappedThread> tasks = new LinkedBlockingQueue<>();
 
 
@@ -67,7 +67,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
      */
     @Override
     @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
-    public <A, B, R> MethodWrapper<A, B, R, BaseScriptContext<Context>> methodToJava(Function<Object[], Object> c) {
+    public <A, B, R> MethodWrapper<A, B, R, BaseScriptContext<Context>> methodToJava(Value c) {
         return new JSMethodWrapper<>(c, true);
     }
 
@@ -80,7 +80,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
      */
     @Override
     @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
-    public <A, B, R> MethodWrapper<A, B, R, BaseScriptContext<Context>> methodToJavaAsync(Function<Object[], Object> c) {
+    public <A, B, R> MethodWrapper<A, B, R, BaseScriptContext<Context>> methodToJavaAsync(Value c) {
         return new JSMethodWrapper<>(c, false);
     }
 
@@ -93,6 +93,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
         ctx.getContext().leave();
 
         try {
+            assert tasks.peek() != null;
             // remove self from queue
             tasks.poll().release();
 
@@ -101,9 +102,11 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
             // wait to be at the front of the queue again
             WrappedThread joinable = tasks.peek();
+            assert joinable != null;
             while (joinable.thread != Thread.currentThread()) {
                 joinable.waitFor();
                 joinable = tasks.peek();
+                assert joinable != null;
             }
         } finally {
             ctx.getContext().enter();
@@ -145,24 +148,19 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
     }
 
     private class JSMethodWrapper<T, U, R> extends MethodWrapper<T, U, R, BaseScriptContext<Context>> {
-        private final Function<Object[], Object> fn;
+        private final Value fn;
         private final boolean await;
 
-        JSMethodWrapper(Function<Object[], Object> fn, boolean await) {
+        JSMethodWrapper(Value fn, boolean await) {
             super(FWrapper.this.ctx);
+            if (!fn.canExecute()) throw new AssertionError("c is not executable");
             this.fn = fn;
             this.await = await;
         }
 
-        @Override
-        public void accept(T t) {
-            accept(t, null);
-        }
-
-        @Override
-        public void accept(T t, U u) {
+        private void innerAccept(Object... args) {
             if (await) {
-                apply(t, u);
+                innerApply(args);
                 return;
             }
 
@@ -185,13 +183,14 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
                     if (ctx.isContextClosed()) {
                         ctx.unbindThread(Thread.currentThread());
+                        assert tasks.peek() != null;
                         tasks.poll().release();
                         throw new BaseScriptContext.ScriptAssertionError("Context closed");
                     }
 
                     ctx.getContext().enter();
                     try {
-                        fn.apply(new Object[] {t, u});
+                        fn.executeVoid(args);
                     } catch (Throwable ex) {
                         Core.getInstance().profile.logError(ex);
                     } finally {
@@ -205,25 +204,20 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     e.printStackTrace();
                 } finally {
                     ctx.unbindThread(Thread.currentThread());
+                    assert tasks.peek() != null;
                     tasks.poll().release();
                 }
             });
             th.start();
         }
 
-        @Override
-        public R apply(T t) {
-            return apply(t, null);
-        }
-
-        @Override
-        public R apply(T t, U u) {
+        private <R2> R2 innerApply(Object... args) {
             if (ctx.isContextClosed()) {
                 throw new BaseScriptContext.ScriptAssertionError("Context closed");
             }
 
             if (ctx.getBoundThreads().contains(Thread.currentThread())) {
-                return (R) fn.apply(new Object[] {t, u});
+                return fn.execute(args).asHostObject();
             }
 
             try {
@@ -240,6 +234,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
                 if (ctx.isContextClosed()) {
                     ctx.unbindThread(Thread.currentThread());
+                    assert tasks.peek() != null;
                     tasks.poll().release();
                     throw new BaseScriptContext.ScriptAssertionError("Context closed");
                 }
@@ -249,7 +244,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     if (await && Core.getInstance().profile.checkJoinedThreadStack()) {
                         Core.getInstance().profile.joinedThreadStack.add(Thread.currentThread());
                     }
-                    return (R) fn.apply(new Object[] {t, u});
+                    return fn.execute(args).asHostObject();
                 } catch (Throwable ex) {
                     throw new RuntimeException(ex);
                 } finally {
@@ -262,33 +257,54 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                 throw new RuntimeException(e);
             } finally {
                 ctx.unbindThread(Thread.currentThread());
+                assert tasks.peek() != null;
                 tasks.poll().release();
             }
         }
 
         @Override
+        public void accept(T t) {
+            innerAccept(t);
+        }
+
+        @Override
+        public void accept(T t, U u) {
+            innerAccept(t, u);
+        }
+
+        @Override
+        public R apply(T t) {
+            return innerApply(t);
+        }
+
+        @Override
+        public R apply(T t, U u) {
+            return innerApply(t, u);
+        }
+
+        @Override
         public boolean test(T t) {
-            return (boolean) apply(t, null);
+            return innerApply(t);
         }
 
         @Override
         public boolean test(T t, U u) {
-            return (boolean) apply(t, u);
+            return innerApply(t, u);
         }
 
         @Override
         public void run() {
-            accept(null, null);
+            innerAccept();
         }
 
         @Override
         public int compare(T o1, T o2) {
-            return (int) apply(o1, (U) o2);
+            return innerApply(o1, o2);
         }
 
         @Override
         public R get() {
-            return apply(null, null);
+            return innerApply();
         }
 
     }

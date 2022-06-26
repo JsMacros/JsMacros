@@ -22,9 +22,6 @@ public class CoreConfigV2 {
 
     public Map<String, ServiceTrigger> services = new HashMap<>();
     
-    @Option(translationKey = "jsmacros.extrajsoptions", group = {"jsmacros.settings.languages", "jsmacros.settings.languages.javascript", "jsmacros.settings.languages.javascript.graaloptions"}, type = @OptionType("string"))
-    public Map<String, String> extraJsOptions = new HashMap<>();
-    
     public CoreConfigV2() {
         profiles.put("default", new ArrayList<>());
         profiles.get("default").add(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventProfileLoad.class.getAnnotation(Event.class).value(), "index.js", true));
@@ -58,9 +55,5 @@ public class CoreConfigV2 {
             profiles.put(el.getKey(), triggers);
         }
         v1.remove("profiles");
-        for (Map.Entry<String, JsonElement> el : v1.getAsJsonObject("extraJsOptions").entrySet()) {
-            extraJsOptions.put(el.getKey(), el.getValue().getAsString());
-        }
-        v1.remove("extraJsOptions");
     }
 }

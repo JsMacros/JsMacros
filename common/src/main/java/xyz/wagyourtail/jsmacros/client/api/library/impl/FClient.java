@@ -299,7 +299,7 @@ public class FClient extends BaseLibrary {
      * @since 1.6.5
      * @throws UnknownHostException
      */
-    public void pingAsync(String ip, MethodWrapper<ServerInfoHelper, IOException, Object, ?> callback) throws UnknownHostException {
+    public void pingAsync(String ip, MethodWrapper<ServerInfoHelper, IOException, Object, ?> callback) {
         CompletableFuture.runAsync(() -> {
             ServerInfo info = new ServerInfo("", ip, false);
             try {

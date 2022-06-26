@@ -41,7 +41,7 @@ public class AutoCompleteSuggestor {
     
     private void generateSuggestionTree() {
         LibraryRegistry registry = Core.getInstance().libraryRegistry;
-        Class<? extends BaseLanguage> lang = ExtensionLoader.getExtensionForName(language).getLanguage(Core.getInstance()).getClass();
+        Class<? extends BaseLanguage> lang = Core.getInstance().extensions.getExtensionForName(language).getLanguage(Core.getInstance()).getClass();
         
         Map<String, Class<?>> libs = new HashMap<>();
         registry.libraries.forEach((k,v) -> {

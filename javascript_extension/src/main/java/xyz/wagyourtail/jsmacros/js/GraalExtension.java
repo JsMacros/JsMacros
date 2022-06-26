@@ -9,7 +9,7 @@ import xyz.wagyourtail.jsmacros.core.extensions.Extension;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
-import xyz.wagyourtail.jsmacros.js.language.impl.JavascriptLanguageDefinition;
+import xyz.wagyourtail.jsmacros.js.language.impl.GraalLanguageDefinition;
 import xyz.wagyourtail.jsmacros.js.library.impl.FWrapper;
 
 import java.io.File;
@@ -19,9 +19,10 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 
-public class JSExtension implements Extension {
+public class GraalExtension implements Extension {
 
-    private static JavascriptLanguageDefinition languageDefinition;
+    private static GraalLanguageDefinition languageDefinition;
+    private static String[] extensions;
 
     @Override
     public void init() {
@@ -32,6 +33,11 @@ public class JSExtension implements Extension {
             con.close();
         });
         t.start();
+        try {
+            Core.getInstance().config.addOptions("js", JSConfig.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -40,21 +46,44 @@ public class JSExtension implements Extension {
     }
 
     @Override
-    public String getLanguageName() {
-        return "graaljs";
+    public String getLanguageImplName() {
+        return "graal";
     }
 
     @Override
-    public String getLanguageExtension() {
-        return "js";
+    public synchronized String[] getLanguageFileExtensions() {
+        if (extensions == null) {
+            String[] s = GraalLanguageDefinition.engine.getLanguages().keySet().toArray(new String[0]);
+            // replace python with py
+            for (int i = 0; i < s.length; i++) {
+                s[i] = s[i].replace("python", "py");
+            }
+            // replace ruby with rb
+            for (int i = 0; i < s.length; i++) {
+                s[i] = s[i].replace("ruby", "rb");
+            }
+            if (s.length > 1) {
+                // move js to the front
+                for (int i = 0; i < s.length; i++) {
+                    if (s[i].equals("js")) {
+                        String tmp = s[0];
+                        s[0] = s[i];
+                        s[i] = tmp;
+                        break;
+                    }
+                }
+            }
+            extensions = s;
+        }
+        return extensions;
     }
 
     @Override
     public BaseLanguage<?> getLanguage(Core<?, ?> runner) {
         if (languageDefinition == null) {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            Thread.currentThread().setContextClassLoader(JSExtension.class.getClassLoader());
-            languageDefinition = new JavascriptLanguageDefinition("js", runner);
+            Thread.currentThread().setContextClassLoader(GraalExtension.class.getClassLoader());
+            languageDefinition = new GraalLanguageDefinition(this, runner);
             Thread.currentThread().setContextClassLoader(classLoader);
         }
         return languageDefinition;

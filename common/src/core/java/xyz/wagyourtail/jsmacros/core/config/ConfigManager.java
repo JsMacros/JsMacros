@@ -21,7 +21,7 @@ public class ConfigManager {
     public final File macroFolder;
     public final File configFile;
     public final Logger LOGGER;
-    boolean loadedAsV1 = false;
+    int loadedAsVers = 3;
     public JsonObject rawOptions = null;
 
     public ConfigManager(File configFolder, File macroFolder, Logger logger) {
@@ -55,7 +55,7 @@ public class ConfigManager {
         try (FileReader reader = new FileReader(configFile)) {
             rawOptions = new JsonParser().parse(reader).getAsJsonObject();
             JsonElement version = rawOptions.get("version");
-            loadedAsV1 = (version == null || version.getAsInt() != 2);
+            loadedAsVers = version == null ? 1 : version.getAsInt();
         }
     }
     
@@ -63,12 +63,12 @@ public class ConfigManager {
         for (Map.Entry<String, Class<?>> optionClass : optionClasses.entrySet()) {
             convertConfigFormat(optionClass.getValue());
         }
-        rawOptions.addProperty("version", 2);
+        rawOptions.addProperty("version", 3);
     }
     
     public synchronized void convertConfigFormat(Class<?> clazz) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
         try {
-            Method m = clazz.getDeclaredMethod("fromV1", JsonObject.class);
+            Method m = clazz.getDeclaredMethod("fromV" + loadedAsVers, JsonObject.class);
             Object option = clazz.getDeclaredConstructor().newInstance();
             m.invoke(option, rawOptions);
             options.put(clazz, option);
@@ -87,9 +87,10 @@ public class ConfigManager {
         if (optionClasses.containsKey(key)) throw new IllegalStateException("Key \""+ key +"\" already in config manager!");
         optionClasses.put(key, optionClass);
         try {
-            if (loadedAsV1) {
+            if (loadedAsVers != 3) {
                 convertConfigFormat(optionClass);
-            } else {
+            }
+            if (loadedAsVers != 1) {
                 if (!rawOptions.has(key)) throw new NullPointerException();
                 options.put(optionClass, gson.fromJson(rawOptions.get(key), optionClass));
             }
@@ -104,16 +105,17 @@ public class ConfigManager {
         try {
             options.clear();
             if (rawOptions == null) reloadRawConfigFromFile();
-            if (loadedAsV1) {
+            if (loadedAsVers != 3) {
                 try {
                     convertConfigFormat();
                 } finally {
-                    final File back = new File(configFolder, "options.json.v1.bak");
+                    final File back = new File(configFolder, "options.json.v" + loadedAsVers + ".bak");
                     if (back.exists()) back.delete();
                     Files.move(configFile, back);
                     saveConfig();
                 }
-            } else {
+            }
+            if (loadedAsVers != 1) {
                 for (Map.Entry<String, Class<?>> optionClass : optionClasses.entrySet()) {
                     try {
                         if (!rawOptions.has(optionClass.getKey())) throw new NullPointerException();

@@ -10,8 +10,11 @@ import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public interface Extension {
 
@@ -19,9 +22,9 @@ public interface Extension {
 
     int getPriority();
 
-    String getLanguageName();
+    String getLanguageImplName();
 
-    String getLanguageExtension();
+    String[] getLanguageFileExtensions();
 
     /**
      *
@@ -32,7 +35,7 @@ public interface Extension {
     Set<Class<? extends BaseLibrary>> getLibraries();
 
     default Set<URL> getDependencies() {
-        return getDependenciesInternal(this.getClass(), "jsmacros.ext." + getLanguageName() + "." + getLanguageExtension() + ".json");
+        return getDependenciesInternal(this.getClass(), "jsmacros.ext." + getLanguageImplName() + ".json");
     }
 
     static Set<URL> getDependenciesInternal(Class<?> clazz, String fname) {
@@ -62,4 +65,23 @@ public interface Extension {
     }
 
     BaseWrappedException<?> wrapException(Throwable t);
+
+
+    default Map<String, String> getTranslations(String lang) {
+        return getTranslationsInternal(this.getClass(), "assets/jsmacros/" + getLanguageImplName() + "/lang/" + lang + ".json");
+    }
+
+    static Map<String, String> getTranslationsInternal(Class<?> clazz, String fname) {
+        JsonElement json;
+        try (Reader reader = new InputStreamReader(clazz.getResourceAsStream("/" + fname))) {
+            json = new JsonParser().parse(reader);
+        } catch (Exception e) {
+            return new HashMap<>();
+        }
+
+        if (json.isJsonObject()) {
+            return json.getAsJsonObject().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, v -> v.getValue().getAsString()));
+        }
+        return new HashMap<>();
+    }
 }

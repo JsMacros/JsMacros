@@ -12,19 +12,74 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ExtensionLoader {
-    private static final Set<Extension> extensions = new HashSet<>();
+    private final Set<Extension> extensions = new HashSet<>();
+    private final Core core;
 
-    private static ExtensionClassLoader classLoader;
+    private ExtensionClassLoader classLoader;
 
-    private static Extension highestPriorityExtension;
+    private Extension highestPriorityExtension;
 
-    private static boolean loadingDone;
+    private boolean loadingDone;
 
-    private static Path extPath = Core.getInstance().config.configFolder.toPath().resolve("LanguageExtensions");
+    private final Path extPath;
 
-    public static synchronized void loadExtensions() {
+
+    public ExtensionLoader(Core core) {
+        this.core = core;
+        this.extPath = core.config.configFolder.toPath().resolve("LanguageExtensions");
+    }
+
+    public boolean isExtensionLoaded(String name) {
+        if (notLoaded()) loadExtensions();
+        return extensions.stream().anyMatch(e -> e.getLanguageImplName().equals(name));
+    }
+
+    public boolean notLoaded() {
+        return !loadingDone;
+    }
+
+    public Extension getHighestPriorityExtension() {
+        if (notLoaded()) loadExtensions();
+        if (highestPriorityExtension == null) {
+            highestPriorityExtension = extensions.stream().max(Comparator.comparingInt(Extension::getPriority)).orElse(null);
+        }
+        return highestPriorityExtension;
+    }
+
+    public Set<Extension> getAllExtensions() {
+        if (notLoaded()) loadExtensions();
+        return extensions;
+    }
+
+    public Extension getExtensionForFileName(String file) {
+        List<Extension> extensions = this.extensions.stream()
+            .filter(e -> Arrays.stream(e.getLanguageFileExtensions()).anyMatch(file::endsWith))
+            .collect(Collectors.toList());
+        if (extensions.size() > 1) {
+            Optional<Extension> ext = extensions.stream()
+                .filter(e ->
+                    Arrays.stream(e.getLanguageFileExtensions()).anyMatch(ext1 -> file.endsWith(e.getLanguageImplName() + "." + ext1))
+                ).findFirst();
+            // get max priority extension for language
+            return ext.orElseGet(() -> extensions.stream()
+                .max(Comparator.comparingInt(Extension::getPriority))
+                .orElse(getHighestPriorityExtension()));
+        }
+        return extensions.isEmpty() ? getHighestPriorityExtension() : extensions.get(0);
+    }
+
+    public Extension getExtensionForName(String lang) {
+        return extensions.stream().filter(e -> e.getLanguageImplName().equals(lang)).findFirst().orElse(getExtensionForFileName(lang));
+    }
+
+    public Extension getExtensionForNameNoDefault(String lang) {
+        return extensions.stream().filter(e -> e.getLanguageImplName().equals(lang)).findFirst().orElse(null);
+    }
+
+    public synchronized void loadExtensions() {
         if (classLoader != null) {
             System.err.println("Extensions already loaded");
             return;
@@ -37,9 +92,9 @@ public class ExtensionLoader {
             }
         }
 
-        URL[] urls = new URL[0];
-        try {
-            urls = Files.list(extPath).filter(Files::isRegularFile).map(e -> {
+        URL[] urls;
+        try (Stream<Path> files = Files.list(extPath)) {
+            urls = files.filter(Files::isRegularFile).map(e -> {
                 try {
                     return e.toUri().toURL();
                 } catch (MalformedURLException ex) {
@@ -52,19 +107,18 @@ public class ExtensionLoader {
 
         classLoader = new ExtensionClassLoader(urls);
 
+        // extract lib to dependencies folder
+        Path dependenciesPath;
+        try {
+            dependenciesPath = Files.createTempDirectory(extPath, "tmp");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         // add internal extensions
         Set<URL> internalExtensions = Extension.getDependenciesInternal(ExtensionLoader.class, "jsmacros.extension.json");
         for (URL lib : internalExtensions) {
             System.out.println("Adding internal extension: " + lib);
-            // extract lib to dependencies folder
-            Path dependenciesPath = extPath.resolve("dependencies");
-            if (!Files.exists(dependenciesPath)) {
-                try {
-                    Files.createDirectories(dependenciesPath);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
             // copy resource to dependencies folder
             Path path = dependenciesPath.resolve(lib.getPath().substring(lib.getPath().lastIndexOf('/') + 1));
             try (InputStream stream = lib.openStream()){
@@ -87,22 +141,13 @@ public class ExtensionLoader {
         // load extension deps
         for (Extension extension : extensions) {
             for (Class<? extends BaseLibrary> lib : extension.getLibraries()) {
-                Core.getInstance().libraryRegistry.addLibrary(lib);
+                core.libraryRegistry.addLibrary(lib);
             }
             Set<URL> deps = extension.getDependencies();
             if (deps.isEmpty()) {
                 System.out.println("No dependencies for extension: " + extension.getClass().getName());
             }
             for (URL lib : deps) {
-                // extract lib to dependencies folder
-                Path dependenciesPath = extPath.resolve("dependencies");
-                if (!Files.exists(dependenciesPath)) {
-                    try {
-                        Files.createDirectories(dependenciesPath);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
                 // copy resource to dependencies folder
                 Path path = dependenciesPath.resolve(lib.getPath().substring(lib.getPath().lastIndexOf('/') + 1));
                 try (InputStream stream = lib.openStream()){
@@ -121,45 +166,4 @@ public class ExtensionLoader {
         loadingDone = true;
     }
 
-    public static boolean isExtensionLoaded(String name) {
-        if (notLoaded()) loadExtensions();
-        return extensions.stream().anyMatch(e -> e.getLanguageName().equals(name));
-    }
-
-    public static boolean notLoaded() {
-        return !loadingDone;
-    }
-
-    public static Extension getHighestPriorityExtension() {
-        if (notLoaded()) loadExtensions();
-        if (highestPriorityExtension == null) {
-            highestPriorityExtension = extensions.stream().max(Comparator.comparingInt(Extension::getPriority)).orElse(null);
-        }
-        return highestPriorityExtension;
-    }
-
-    public static Set<Extension> getAllExtensions() {
-        if (notLoaded()) loadExtensions();
-        return extensions;
-    }
-
-    public static Extension getExtensionForFileName(String file) {
-        List<Extension> extensions = ExtensionLoader.extensions.stream().filter(e -> file.endsWith(e.getLanguageExtension())).collect(Collectors.toList());
-        if (extensions.size() > 1) {
-            Optional<Extension> ext = extensions.stream().filter(e -> file.endsWith(e.getLanguageName() + "." + e.getLanguageExtension())).findFirst();
-            // get max priority extension for language
-            return ext.orElseGet(() -> extensions.stream()
-                .max(Comparator.comparingInt(Extension::getPriority))
-                .orElse(getHighestPriorityExtension()));
-        }
-        return extensions.isEmpty() ? getHighestPriorityExtension() : extensions.get(0);
-    }
-
-    public static Extension getExtensionForName(String lang) {
-        return extensions.stream().filter(e -> e.getLanguageName().equals(lang)).findFirst().orElse(getExtensionForFileName(lang));
-    }
-
-    public static Extension getExtensionForNameNoDefault(String lang) {
-        return extensions.stream().filter(e -> e.getLanguageName().equals(lang)).findFirst().orElse(null);
-    }
 }
