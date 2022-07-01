@@ -124,8 +124,11 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      */
     public EventContainer<?> exec(ScriptTrigger macro, BaseEvent event, Runnable then,
                                   Consumer<Throwable> catcher) {
-        BaseLanguage<?> l = Core.getInstance().extensions.getExtensionForFileName(macro.getScriptFile()).getLanguage(this);
-        return l.trigger(macro, event, then, catcher);
+
+        final File file = new File(this.config.macroFolder, macro.scriptFile);
+        Extension l = extensions.getExtensionForFile(file);
+        if (l == null) l = extensions.getHighestPriorityExtension();
+        return l.getLanguage(this).trigger(macro, event, then, catcher);
     }
 
     /**
@@ -139,8 +142,9 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      * @return
      */
     public EventContainer<?> exec(String lang, String script, File fakeFile, BaseEvent event, Runnable then, Consumer<Throwable> catcher) {
-        BaseLanguage<?> l = Core.getInstance().extensions.getExtensionForName(lang).getLanguage(this);
-        return l.trigger(lang, script, fakeFile, event, then, catcher);
+        Extension l = extensions.getExtensionForFile(new File(lang));
+        assert l != null;
+        return l.getLanguage(this).trigger(lang, script, fakeFile, event, then, catcher);
     }
 
     /**

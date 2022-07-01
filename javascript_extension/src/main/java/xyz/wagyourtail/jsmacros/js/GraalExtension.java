@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.js;
 import com.google.common.collect.Sets;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.PolyglotException;
+import org.graalvm.polyglot.Source;
 import org.graalvm.polyglot.SourceSection;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.extensions.Extension;
@@ -13,6 +14,7 @@ import xyz.wagyourtail.jsmacros.js.language.impl.GraalLanguageDefinition;
 import xyz.wagyourtail.jsmacros.js.library.impl.FWrapper;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,7 +24,6 @@ import java.util.Set;
 public class GraalExtension implements Extension {
 
     private static GraalLanguageDefinition languageDefinition;
-    private static String[] extensions;
 
     @Override
     public void init() {
@@ -51,32 +52,25 @@ public class GraalExtension implements Extension {
     }
 
     @Override
-    public synchronized String[] getLanguageFileExtensions() {
-        if (extensions == null) {
-            String[] s = GraalLanguageDefinition.engine.getLanguages().keySet().toArray(new String[0]);
-            // replace python with py
-            for (int i = 0; i < s.length; i++) {
-                s[i] = s[i].replace("python", "py");
-            }
-            // replace ruby with rb
-            for (int i = 0; i < s.length; i++) {
-                s[i] = s[i].replace("ruby", "rb");
-            }
-            if (s.length > 1) {
-                // move js to the front
-                for (int i = 0; i < s.length; i++) {
-                    if (s[i].equals("js")) {
-                        String tmp = s[0];
-                        s[0] = s[i];
-                        s[i] = tmp;
-                        break;
-                    }
+    public ExtMatch extensionMatch(File fname) {
+        try {
+            if (GraalLanguageDefinition.engine.getLanguages().containsKey(Source.findLanguage(fname))) {
+                if (fname.getName().contains(getLanguageImplName())) {
+                    return ExtMatch.MATCH_WITH_NAME;
                 }
+                return ExtMatch.MATCH;
             }
-            extensions = s;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return extensions;
+        return ExtMatch.NOT_MATCH;
     }
+
+    @Override
+    public String defaultFileExtension() {
+        return "js";
+    }
+
 
     @Override
     public BaseLanguage<?> getLanguage(Core<?, ?> runner) {

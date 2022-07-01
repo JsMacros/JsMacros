@@ -129,15 +129,13 @@ public class FileChooser extends OverlayContainer {
 
         this.addDrawableChild(new Button(x + w / 6 + 2, y + height - 14, w / 6, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.new"), (btn) -> this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, Text.translatable("jsmacros.filename"), "", this, (str) -> {
             if (str.trim().equals("")) return;
-            boolean edit = true;
 
             // has extension
-            if (!str.matches("\\..*")) {
-                str += "." + Core.getInstance().extensions.getHighestPriorityExtension().getLanguageFileExtensions()[0];
-            }
-            if (edit) {
-            }
             File f = new File(directory, str);
+            if (Core.getInstance().extensions.getExtensionForFile(f) == null) {
+                str += "." + Core.getInstance().extensions.getHighestPriorityExtension().defaultFileExtension();
+                f = new File(directory, str);
+            }
             try {
                 f.createNewFile();
                 this.setDir(directory);

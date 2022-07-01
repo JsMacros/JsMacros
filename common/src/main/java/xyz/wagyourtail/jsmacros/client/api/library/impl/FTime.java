@@ -1,8 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 
 /**
  * 
@@ -14,8 +16,12 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
  */
  @Library("Time")
  @SuppressWarnings("unused")
-public class FTime extends BaseLibrary {
-    
+public class FTime extends PerExecLibrary {
+
+    public FTime(BaseScriptContext<?> context) {
+        super(context);
+    }
+
     /**
      * @return current time in MS.
      */
@@ -30,6 +36,6 @@ public class FTime extends BaseLibrary {
      * @throws InterruptedException
      */
     public void sleep(long millis) throws InterruptedException {
-        Thread.sleep(millis);
+        ctx.wrapSleep(() -> Thread.sleep(millis));
     }
 }

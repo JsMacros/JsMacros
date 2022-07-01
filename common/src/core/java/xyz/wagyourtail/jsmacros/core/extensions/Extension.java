@@ -7,6 +7,8 @@ import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
@@ -24,7 +26,9 @@ public interface Extension {
 
     String getLanguageImplName();
 
-    String[] getLanguageFileExtensions();
+    ExtMatch extensionMatch(File file);
+
+    String defaultFileExtension();
 
     /**
      *
@@ -83,5 +87,21 @@ public interface Extension {
             return json.getAsJsonObject().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, v -> v.getValue().getAsString()));
         }
         return new HashMap<>();
+    }
+
+    enum ExtMatch {
+        NOT_MATCH(false),
+        MATCH(true),
+        MATCH_WITH_NAME(true);
+
+        boolean match;
+
+        ExtMatch(boolean match) {
+            this.match = match;
+        }
+
+        public boolean isMatch() {
+            return match;
+        }
     }
 }

@@ -11,6 +11,7 @@ import xyz.wagyourtail.jsmacros.core.library.IFWrapper;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLanguageLibrary;
 import xyz.wagyourtail.jsmacros.js.language.impl.GraalLanguageDefinition;
+import xyz.wagyourtail.jsmacros.js.language.impl.GraalScriptContext;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -44,15 +45,14 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 @Library(value = "JavaWrapper", languages = GraalLanguageDefinition.class)
 @SuppressWarnings("unused")
-public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapper<Value> {
-    public final LinkedBlockingQueue<WrappedThread> tasks = new LinkedBlockingQueue<>();
+public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext> implements IFWrapper<Value> {
 
 
-    public FWrapper(BaseScriptContext<Context> ctx, Class<? extends BaseLanguage<Context>> language) {
+    public FWrapper(GraalScriptContext ctx, Class<? extends BaseLanguage<Context>> language) {
         super(ctx, language);
 
         try {
-            tasks.put(new WrappedThread(Thread.currentThread(), true));
+            ctx.tasks.put(new WrappedThread(Thread.currentThread(), true));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -67,7 +67,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
      */
     @Override
     @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
-    public <A, B, R> MethodWrapper<A, B, R, BaseScriptContext<Context>> methodToJava(Value c) {
+    public <A, B, R> MethodWrapper<A, B, R, GraalScriptContext> methodToJava(Value c) {
         return new JSMethodWrapper<>(c, true);
     }
 
@@ -80,7 +80,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
      */
     @Override
     @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
-    public <A, B, R> MethodWrapper<A, B, R, BaseScriptContext<Context>> methodToJavaAsync(Value c) {
+    public <A, B, R> MethodWrapper<A, B, R, GraalScriptContext> methodToJavaAsync(Value c) {
         return new JSMethodWrapper<>(c, false);
     }
 
@@ -89,30 +89,9 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
      * use with caution, don't accidentally cause circular waiting.
      * @throws InterruptedException
      */
+     @Override
     public void deferCurrentTask() throws InterruptedException {
-        ctx.getContext().leave();
-
-        try {
-            assert tasks.peek() != null;
-            // remove self from queue
-            tasks.poll().release();
-
-            // put self at back of the queue
-            tasks.put(new WrappedThread(Thread.currentThread(), true));
-
-            // wait to be at the front of the queue again
-            WrappedThread joinable = tasks.peek();
-            assert joinable != null;
-            while (joinable.thread != Thread.currentThread()) {
-                joinable.waitFor();
-                joinable = tasks.peek();
-                assert joinable != null;
-            }
-        } finally {
-            ctx.getContext().enter();
-        }
-
-
+        ctx.wrapSleep(() -> {});
     }
 
     /**
@@ -147,7 +126,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
         }
     }
 
-    private class JSMethodWrapper<T, U, R> extends MethodWrapper<T, U, R, BaseScriptContext<Context>> {
+    private class JSMethodWrapper<T, U, R> extends MethodWrapper<T, U, R, GraalScriptContext> {
         private final Value fn;
         private final boolean await;
 
@@ -170,21 +149,21 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
             Thread th = new Thread(() -> {
                 try {
-                    tasks.put(new WrappedThread(Thread.currentThread(), true));
+                    ctx.tasks.put(new WrappedThread(Thread.currentThread(), true));
                     ctx.bindThread(Thread.currentThread());
 
-                    WrappedThread joinable = tasks.peek();
+                    WrappedThread joinable = ctx.tasks.peek();
                     while (true) {
                         assert joinable != null;
                         if (joinable.thread == Thread.currentThread()) break;
                         joinable.waitFor();
-                        joinable = tasks.peek();
+                        joinable = ctx.tasks.peek();
                     }
 
                     if (ctx.isContextClosed()) {
                         ctx.unbindThread(Thread.currentThread());
-                        assert tasks.peek() != null;
-                        tasks.poll().release();
+                        assert ctx.tasks.peek() != null;
+                        ctx.tasks.poll().release();
                         throw new BaseScriptContext.ScriptAssertionError("Context closed");
                     }
 
@@ -204,8 +183,8 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                     e.printStackTrace();
                 } finally {
                     ctx.unbindThread(Thread.currentThread());
-                    assert tasks.peek() != null;
-                    tasks.poll().release();
+                    assert ctx.tasks.peek() != null;
+                    ctx.tasks.poll().release();
                 }
             });
             th.start();
@@ -222,20 +201,20 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
 
             try {
                 ctx.bindThread(Thread.currentThread());
-                tasks.put(new WrappedThread(Thread.currentThread(), true));
+                ctx.tasks.put(new WrappedThread(Thread.currentThread(), true));
 
-                WrappedThread joinable = tasks.peek();
+                WrappedThread joinable = ctx.tasks.peek();
                 while (true) {
                     assert joinable != null;
                     if (joinable.thread == Thread.currentThread()) break;
                     joinable.waitFor();
-                    joinable = tasks.peek();
+                    joinable = ctx.tasks.peek();
                 }
 
                 if (ctx.isContextClosed()) {
                     ctx.unbindThread(Thread.currentThread());
-                    assert tasks.peek() != null;
-                    tasks.poll().release();
+                    assert ctx.tasks.peek() != null;
+                    ctx.tasks.poll().release();
                     throw new BaseScriptContext.ScriptAssertionError("Context closed");
                 }
 
@@ -257,8 +236,8 @@ public class FWrapper extends PerExecLanguageLibrary<Context> implements IFWrapp
                 throw new RuntimeException(e);
             } finally {
                 ctx.unbindThread(Thread.currentThread());
-                assert tasks.peek() != null;
-                tasks.poll().release();
+                assert ctx.tasks.peek() != null;
+                ctx.tasks.poll().release();
             }
         }
 

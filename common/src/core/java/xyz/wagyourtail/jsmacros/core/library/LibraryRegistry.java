@@ -13,7 +13,7 @@ public class LibraryRegistry {
     public final Map<Library, BaseLibrary> libraries = new LinkedHashMap<>();
     public final Map<Library, Class<? extends PerExecLibrary>> perExec = new LinkedHashMap<>();
     public final Map<Class<? extends BaseLanguage<?>>, Map<Library, PerLanguageLibrary>> perLanguage = new LinkedHashMap<>();
-    public final Map<Class<? extends BaseLanguage<?>>, Map<Library, Class<? extends PerExecLanguageLibrary<?>>>> perExecLanguage = new LinkedHashMap<>();
+    public final Map<Class<? extends BaseLanguage<?>>, Map<Library, Class<? extends PerExecLanguageLibrary<?, ?>>>> perExecLanguage = new LinkedHashMap<>();
     
     public LibraryRegistry() {
     }
@@ -57,12 +57,12 @@ public class LibraryRegistry {
             }
         }
 
-        for (Map.Entry<Class<? extends BaseLanguage<?>>, Map<Library, Class<? extends PerExecLanguageLibrary<?>>>> languageEntry : perExecLanguage.entrySet()) {
+        for (Map.Entry<Class<? extends BaseLanguage<?>>, Map<Library, Class<? extends PerExecLanguageLibrary<?, ?>>>> languageEntry : perExecLanguage.entrySet()) {
             if (languageEntry.getKey().isAssignableFrom(language.getClass())) {
-                for (Map.Entry<Library, Class<? extends PerExecLanguageLibrary<?>>> lib : languageEntry.getValue().entrySet()) {
+                for (Map.Entry<Library, Class<? extends PerExecLanguageLibrary<?, ?>>> lib : languageEntry.getValue().entrySet()) {
                     if (Arrays.stream(lib.getKey().languages()).anyMatch(e -> e.equals(language.getClass()))) {
                         try {
-                            libs.put(lib.getKey().value(), lib.getValue().getConstructor(BaseScriptContext.class, Class.class).newInstance(context, language.getClass()));
+                            libs.put(lib.getKey().value(), lib.getValue().getConstructor(context.getClass(), Class.class).newInstance(context, language.getClass()));
                         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
                             throw new RuntimeException("Failed to instantiate library, ", e);
                         }
@@ -82,7 +82,7 @@ public class LibraryRegistry {
             } else if (PerExecLanguageLibrary.class.isAssignableFrom(clazz)) {
                 for (Class<? extends BaseLanguage<?>> lang : ann.languages()) {
                     if (!perExecLanguage.containsKey(lang)) perExecLanguage.put(lang, new LinkedHashMap<>());
-                    perExecLanguage.get(lang).put(ann, (Class<? extends PerExecLanguageLibrary<?>>) clazz);
+                    perExecLanguage.get(lang).put(ann, (Class<? extends PerExecLanguageLibrary<?, ?>>) clazz);
                 }
             } else if (PerLanguageLibrary.class.isAssignableFrom(clazz)) {
                 for (Class<? extends BaseLanguage<?>> lang : ann.languages()) {

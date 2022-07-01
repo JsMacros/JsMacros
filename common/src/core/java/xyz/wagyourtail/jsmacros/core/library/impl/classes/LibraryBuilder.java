@@ -3,8 +3,6 @@ package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.extensions.Extension;
-import xyz.wagyourtail.jsmacros.core.extensions.ExtensionLoader;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.*;
@@ -28,7 +26,7 @@ public class LibraryBuilder extends ClassBuilder<BaseLibrary> {
         Class<?>[] allowed = new Class<?>[allowedLangs.length];
         for (int i = 0; i < allowedLangs.length; i++) {
             int finalI = i;
-            allowed[i] = Optional.ofNullable(Core.getInstance().extensions.getExtensionForNameNoDefault(allowedLangs[i]).getLanguage(Core.getInstance()).getClass()).orElseThrow(() -> new AssertionError("Language " + allowedLangs[finalI] + " not found!"));
+            allowed[i] = Optional.ofNullable(Core.getInstance().extensions.getExtensionForName(allowedLangs[i]).getLanguage(Core.getInstance()).getClass()).orElseThrow(() -> new AssertionError("Language " + allowedLangs[finalI] + " not found!"));
         }
         AnnotationBuilder.AnnotationArrayBuilder ab = b.putArray("allowedLanguages", BaseLanguage.class);
         for (Class<?> c : allowed) {

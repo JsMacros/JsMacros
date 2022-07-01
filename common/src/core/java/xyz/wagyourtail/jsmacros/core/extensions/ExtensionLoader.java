@@ -1,8 +1,11 @@
 package xyz.wagyourtail.jsmacros.core.extensions;
 
+import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -16,7 +19,7 @@ import java.util.stream.Stream;
 
 public class ExtensionLoader {
     private final Set<Extension> extensions = new HashSet<>();
-    private final Core core;
+    private final Core<?, ?> core;
 
     private ExtensionClassLoader classLoader;
 
@@ -27,7 +30,7 @@ public class ExtensionLoader {
     private final Path extPath;
 
 
-    public ExtensionLoader(Core core) {
+    public ExtensionLoader(Core<?, ?> core) {
         this.core = core;
         this.extPath = core.config.configFolder.toPath().resolve("LanguageExtensions");
     }
@@ -54,28 +57,23 @@ public class ExtensionLoader {
         return extensions;
     }
 
-    public Extension getExtensionForFileName(String file) {
-        List<Extension> extensions = this.extensions.stream()
-            .filter(e -> Arrays.stream(e.getLanguageFileExtensions()).anyMatch(file::endsWith))
-            .collect(Collectors.toList());
+    public @Nullable Extension getExtensionForFile(File file) {
+        List<Pair<Extension.ExtMatch, Extension>> extensions = this.extensions.stream().map(e -> new Pair<>(e.extensionMatch(file), e)).filter(p -> p.getT().isMatch()).collect(Collectors.toList());
         if (extensions.size() > 1) {
-            Optional<Extension> ext = extensions.stream()
-                .filter(e ->
-                    Arrays.stream(e.getLanguageFileExtensions()).anyMatch(ext1 -> file.endsWith(e.getLanguageImplName() + "." + ext1))
-                ).findFirst();
-            // get max priority extension for language
-            return ext.orElseGet(() -> extensions.stream()
-                .max(Comparator.comparingInt(Extension::getPriority))
-                .orElse(getHighestPriorityExtension()));
+            List<Pair<Extension.ExtMatch, Extension>> extensionsByName = extensions.stream().filter(p -> p.getT() == Extension.ExtMatch.MATCH_WITH_NAME).collect(Collectors.toList());
+            if (extensionsByName.size() > 0) {
+                extensionsByName.sort(Comparator.comparingInt(e -> e.getU().getPriority()));
+                return extensionsByName.get(0).getU();
+            }
         }
-        return extensions.isEmpty() ? getHighestPriorityExtension() : extensions.get(0);
+        if (extensions.size() > 0) {
+            extensions.sort(Comparator.comparingInt(e -> e.getU().getPriority()));
+            return extensions.get(0).getU();
+        }
+        return null;
     }
 
     public Extension getExtensionForName(String lang) {
-        return extensions.stream().filter(e -> e.getLanguageImplName().equals(lang)).findFirst().orElse(getExtensionForFileName(lang));
-    }
-
-    public Extension getExtensionForNameNoDefault(String lang) {
         return extensions.stream().filter(e -> e.getLanguageImplName().equals(lang)).findFirst().orElse(null);
     }
 

@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.library;
 
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 /**
@@ -28,6 +29,7 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
  *
  * @author Wagyourtail
  */
+ @Library("JavaWrapper")
 public interface IFWrapper<T> {
     
     /**
@@ -35,6 +37,7 @@ public interface IFWrapper<T> {
      * @param c
      * @return a new {@link MethodWrapper MethodWrapper}
      */
+    @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
     <A, B, R> MethodWrapper<A, B, R, ?> methodToJava(T c);
     
     /**
@@ -42,14 +45,22 @@ public interface IFWrapper<T> {
      * @param c
      * @return a new {@link MethodWrapper MethodWrapper}
      */
+    @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
     <A, B, R> MethodWrapper<A, B, R, ?> methodToJavaAsync(T c);
 
     /**
-     * Close the current context, more important in JEP as they won't close themselves if you use other functions in
-     * this class
+     * JS/JEP only, puts current task at end of queue.
+     * use with caution, don't accidentally cause circular waiting.
+     * @throws InterruptedException
+     */
+    default void deferCurrentTask() throws InterruptedException {
+        throw new AssertionError("deferCurrentTask() is not implemented for this language");
+    }
+
+    /**
+     * Close the current context
      *
      * @since 1.2.2
-     *
      */
     void stop();
 }

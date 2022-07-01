@@ -186,9 +186,19 @@ public abstract class BaseScriptContext<T> {
 
     public abstract boolean isMultiThreaded();
 
+
+    public void wrapSleep(SleepRunnable sleep) throws InterruptedException {
+        sleep.run();
+    }
+
     public static class ScriptAssertionError extends AssertionError {
         public ScriptAssertionError(String message) {
             super(message);
         }
+    }
+
+    @FunctionalInterface
+    public interface SleepRunnable {
+        void run() throws InterruptedException;
     }
 }
