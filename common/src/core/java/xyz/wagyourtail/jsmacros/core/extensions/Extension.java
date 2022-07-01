@@ -34,7 +34,7 @@ public interface Extension {
      *
      * @return a single static instance of the language definition
      */
-    BaseLanguage<?> getLanguage(Core<?, ?> runner);
+    BaseLanguage<?, ?> getLanguage(Core<?, ?> runner);
 
     Set<Class<? extends BaseLibrary>> getLibraries();
 

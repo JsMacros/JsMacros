@@ -48,7 +48,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext> implements IFWrapper<Value> {
 
 
-    public FWrapper(GraalScriptContext ctx, Class<? extends BaseLanguage<Context>> language) {
+    public FWrapper(GraalScriptContext ctx, Class<? extends BaseLanguage<Context, GraalScriptContext>> language) {
         super(ctx, language);
 
         try {

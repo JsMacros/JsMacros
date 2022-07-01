@@ -16,7 +16,7 @@ import java.util.function.Consumer;
  *
  * @since 1.1.3
  */
-public abstract class BaseLanguage<T> {
+public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
     protected final Core<?, ?> runner;
     public final Extension extension;
 
@@ -120,7 +120,7 @@ public abstract class BaseLanguage<T> {
         return ctx;
     }
     
-    public Map<String, BaseLibrary> retrieveLibs(BaseScriptContext<T> context) {
+    public Map<String, BaseLibrary> retrieveLibs(T context) {
         return runner.libraryRegistry.getLibraries(this, context);
     }
     
@@ -155,6 +155,6 @@ public abstract class BaseLanguage<T> {
      */
     protected abstract void exec(EventContainer<T> ctx, String lang, String script, BaseEvent event) throws Exception;
     
-    public abstract BaseScriptContext<T> createContext(BaseEvent event, File file);
+    public abstract T createContext(BaseEvent event, File file);
     
 }

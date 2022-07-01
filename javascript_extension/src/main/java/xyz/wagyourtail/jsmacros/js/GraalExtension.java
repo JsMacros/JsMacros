@@ -73,7 +73,7 @@ public class GraalExtension implements Extension {
 
 
     @Override
-    public BaseLanguage<?> getLanguage(Core<?, ?> runner) {
+    public BaseLanguage<?, ?> getLanguage(Core<?, ?> runner) {
         if (languageDefinition == null) {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             Thread.currentThread().setContextClassLoader(GraalExtension.class.getClassLoader());

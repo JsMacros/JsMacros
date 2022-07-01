@@ -30,7 +30,7 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
     }
 
     @Override
-    public void wrapSleep(Runnable sleep) throws InterruptedException {
+    public void wrapSleep(SleepRunnable sleep) throws InterruptedException {
         getContext().leave();
 
         try {

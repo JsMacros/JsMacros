@@ -10,14 +10,14 @@ import java.util.List;
  * @param <T>
  * @since 1.4.0
  */
-public class EventContainer<T> {
-    private final BaseScriptContext<T> ctx;
+public class EventContainer<T extends BaseScriptContext<?>> {
+    private final T ctx;
     private Thread lockThread;
     private boolean locked = true;
 
     private final List<Runnable> then = new ArrayList<>();
 
-    public EventContainer(BaseScriptContext<T> ctx) {
+    public EventContainer(T ctx) {
         this.ctx = ctx;
     }
 
@@ -28,10 +28,10 @@ public class EventContainer<T> {
     public void setLockThread(Thread lockThread) {
         if (this.lockThread != null) throw new AssertionError("Cannot change lock thread of context container once assigned!");
         this.lockThread = lockThread;
-        ctx.events.put(lockThread, this);
+        ctx.events.put(lockThread, (EventContainer) this);
     }
     
-    public BaseScriptContext<T> getCtx() {
+    public T getCtx() {
         return ctx;
     }
     

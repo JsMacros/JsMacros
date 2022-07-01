@@ -33,7 +33,7 @@ public abstract class BaseScriptContext<T> {
 
     protected final Set<Thread> threads = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
-    protected final Map<Thread, EventContainer<T>> events = new ConcurrentHashMap<>();
+    protected final Map<Thread, EventContainer<? extends BaseScriptContext<T>>> events = new ConcurrentHashMap<>();
 
     public boolean hasMethodWrapperBeenInvoked = false;
 
@@ -57,7 +57,7 @@ public abstract class BaseScriptContext<T> {
      * @since 1.6.0
      * @return
      */
-    public synchronized Map<Thread, EventContainer<T>> getBoundEvents() {
+    public synchronized Map<Thread, EventContainer<? extends BaseScriptContext<T>>> getBoundEvents() {
         return ImmutableMap.copyOf(events);
     }
 
@@ -66,7 +66,7 @@ public abstract class BaseScriptContext<T> {
      * @param th
      * @param event
      */
-    public synchronized void bindEvent(Thread th, EventContainer<T> event) {
+    public synchronized void bindEvent(Thread th, EventContainer<BaseScriptContext<T>> event) {
         events.put(th, event);
     }
 
@@ -77,7 +77,7 @@ public abstract class BaseScriptContext<T> {
      * @return
      */
     public synchronized boolean releaseBoundEventIfPresent(Thread thread) {
-        EventContainer<T> event = events.get(thread);
+        EventContainer<? extends BaseScriptContext<T>> event = events.get(thread);
         if (event != null) {
             event.releaseLock();
             return true;

@@ -12,20 +12,20 @@ public class LibraryRegistry {
     
     public final Map<Library, BaseLibrary> libraries = new LinkedHashMap<>();
     public final Map<Library, Class<? extends PerExecLibrary>> perExec = new LinkedHashMap<>();
-    public final Map<Class<? extends BaseLanguage<?>>, Map<Library, PerLanguageLibrary>> perLanguage = new LinkedHashMap<>();
-    public final Map<Class<? extends BaseLanguage<?>>, Map<Library, Class<? extends PerExecLanguageLibrary<?, ?>>>> perExecLanguage = new LinkedHashMap<>();
+    public final Map<Class<? extends BaseLanguage<?, ?>>, Map<Library, PerLanguageLibrary>> perLanguage = new LinkedHashMap<>();
+    public final Map<Class<? extends BaseLanguage<?, ?>>, Map<Library, Class<? extends PerExecLanguageLibrary<?, ?>>>> perExecLanguage = new LinkedHashMap<>();
     
     public LibraryRegistry() {
     }
     
-    public Map<String, BaseLibrary> getLibraries(BaseLanguage<?> language, BaseScriptContext<?> context) {
+    public Map<String, BaseLibrary> getLibraries(BaseLanguage<?, ?> language, BaseScriptContext<?> context) {
         Map<String, BaseLibrary> libs = new LinkedHashMap<>();
         libs.putAll(getOnceLibraries(language));
         libs.putAll(getPerExecLibraries(language, context));
         return libs;
     }
     
-    public Map<String, BaseLibrary> getOnceLibraries(BaseLanguage<?> language) {
+    public Map<String, BaseLibrary> getOnceLibraries(BaseLanguage<?, ?> language) {
         Map<String, BaseLibrary> libs = new LinkedHashMap<>();
         
         for (Map.Entry<Library, BaseLibrary> lib : libraries.entrySet()) {
@@ -33,7 +33,7 @@ public class LibraryRegistry {
                 libs.put(lib.getKey().value(), lib.getValue());
         }
 
-        for (Map.Entry<Class<? extends BaseLanguage<?>>, Map<Library, PerLanguageLibrary>> languageEntry : perLanguage.entrySet()) {
+        for (Map.Entry<Class<? extends BaseLanguage<?, ?>>, Map<Library, PerLanguageLibrary>> languageEntry : perLanguage.entrySet()) {
             if (languageEntry.getKey().isAssignableFrom(language.getClass())) {
                 for (Map.Entry<Library, PerLanguageLibrary> lib : languageEntry.getValue().entrySet()) {
                     libs.put(lib.getKey().value(), lib.getValue());
@@ -44,7 +44,7 @@ public class LibraryRegistry {
         return libs;
     }
     
-    public Map<String, BaseLibrary> getPerExecLibraries(BaseLanguage<?> language, BaseScriptContext<?> context) {
+    public Map<String, BaseLibrary> getPerExecLibraries(BaseLanguage<?, ?> language, BaseScriptContext<?> context) {
         Map<String, BaseLibrary> libs = new LinkedHashMap<>();
         
         for (Map.Entry<Library, Class<? extends PerExecLibrary>> lib : perExec.entrySet()) {
@@ -57,7 +57,7 @@ public class LibraryRegistry {
             }
         }
 
-        for (Map.Entry<Class<? extends BaseLanguage<?>>, Map<Library, Class<? extends PerExecLanguageLibrary<?, ?>>>> languageEntry : perExecLanguage.entrySet()) {
+        for (Map.Entry<Class<? extends BaseLanguage<?, ?>>, Map<Library, Class<? extends PerExecLanguageLibrary<?, ?>>>> languageEntry : perExecLanguage.entrySet()) {
             if (languageEntry.getKey().isAssignableFrom(language.getClass())) {
                 for (Map.Entry<Library, Class<? extends PerExecLanguageLibrary<?, ?>>> lib : languageEntry.getValue().entrySet()) {
                     if (Arrays.stream(lib.getKey().languages()).anyMatch(e -> e.equals(language.getClass()))) {
@@ -80,12 +80,12 @@ public class LibraryRegistry {
             if (PerExecLibrary.class.isAssignableFrom(clazz)) {
                 perExec.put(ann, clazz.asSubclass(PerExecLibrary.class));
             } else if (PerExecLanguageLibrary.class.isAssignableFrom(clazz)) {
-                for (Class<? extends BaseLanguage<?>> lang : ann.languages()) {
+                for (Class<? extends BaseLanguage<?, ?>> lang : ann.languages()) {
                     if (!perExecLanguage.containsKey(lang)) perExecLanguage.put(lang, new LinkedHashMap<>());
                     perExecLanguage.get(lang).put(ann, (Class<? extends PerExecLanguageLibrary<?, ?>>) clazz);
                 }
             } else if (PerLanguageLibrary.class.isAssignableFrom(clazz)) {
-                for (Class<? extends BaseLanguage<?>> lang : ann.languages()) {
+                for (Class<? extends BaseLanguage<?, ?>> lang : ann.languages()) {
                     if (!perLanguage.containsKey(lang)) perLanguage.put(lang, new LinkedHashMap<>());
                     try {
                         perLanguage.get(lang).put(ann, clazz.asSubclass(PerLanguageLibrary.class).getConstructor(Class.class).newInstance(lang));

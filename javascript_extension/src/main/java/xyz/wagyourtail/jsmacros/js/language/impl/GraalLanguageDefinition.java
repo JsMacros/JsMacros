@@ -13,16 +13,14 @@ import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.js.JSConfig;
-import xyz.wagyourtail.jsmacros.js.library.impl.FWrapper;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 
-public class GraalLanguageDefinition extends BaseLanguage<Context> {
+public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptContext> {
     public static final Engine engine = Engine.newBuilder().option("engine.WarnInterpreterOnly", "false").build();
     
     public GraalLanguageDefinition(Extension extension, Core<?, ?> runner) {
@@ -58,7 +56,7 @@ public class GraalLanguageDefinition extends BaseLanguage<Context> {
     }
     
     @Override
-    protected void exec(EventContainer<Context> ctx, ScriptTrigger macro, BaseEvent event) throws Exception {
+    protected void exec(EventContainer<GraalScriptContext> ctx, ScriptTrigger macro, BaseEvent event) throws Exception {
         Map<String, Object> globals = new HashMap<>();
         
         globals.put("event", event);
@@ -80,12 +78,12 @@ public class GraalLanguageDefinition extends BaseLanguage<Context> {
             con.eval(Source.newBuilder(lang, ctx.getCtx().getFile()).build());
         } finally {
             con.leave();
-            Objects.requireNonNull(((FWrapper) lib.get("JavaWrapper")).tasks.poll()).release();
+            ctx.getCtx().tasks.poll().release();
         }
     }
     
     @Override
-    protected void exec(EventContainer<Context> ctx, String lang, String script, BaseEvent event) throws Exception {
+    protected void exec(EventContainer<GraalScriptContext> ctx, String lang, String script, BaseEvent event) throws Exception {
         Map<String, Object> globals = new HashMap<>();
 
         globals.put("event", event);
@@ -110,7 +108,7 @@ public class GraalLanguageDefinition extends BaseLanguage<Context> {
             }
         } finally {
             con.leave();
-            Objects.requireNonNull(((FWrapper) lib.get("JavaWrapper")).tasks.poll()).release();
+            ctx.getCtx().tasks.poll().release();
         }
     }
 

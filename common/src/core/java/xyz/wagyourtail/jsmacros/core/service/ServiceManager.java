@@ -98,7 +98,7 @@ public class ServiceManager {
         Pair<ServiceTrigger, EventContainer<?>> service = registeredServices.get(name);
         if (service == null) return ServiceStatus.UNKNOWN;
         if (service.getU() == null || service.getU().getCtx().isContextClosed()) {
-            service.setU((EventContainer<EventService>) runner.exec(service.getT().toScriptTrigger(), new EventService(name)));
+            service.setU(runner.exec(service.getT().toScriptTrigger(), new EventService(name)));
             return ServiceStatus.STOPPED;
         }
         return ServiceStatus.RUNNING;
