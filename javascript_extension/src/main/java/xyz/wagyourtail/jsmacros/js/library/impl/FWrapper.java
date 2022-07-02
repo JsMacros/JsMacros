@@ -217,7 +217,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                     if (await && Core.getInstance().profile.checkJoinedThreadStack()) {
                         Core.getInstance().profile.joinedThreadStack.add(Thread.currentThread());
                     }
-                    return fn.execute(args).asHostObject();
+                    return (R2) fn.execute(args).as(Object.class);
                 } catch (Throwable ex) {
                     throw new RuntimeException(ex);
                 } finally {

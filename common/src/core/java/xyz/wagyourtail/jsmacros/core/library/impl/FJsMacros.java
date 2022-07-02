@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -478,87 +477,88 @@ public class FJsMacros extends PerExecLibrary {
      * @throws InterruptedException
      */
     public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean, ?> filter, MethodWrapper<Object, Object, Object, ?> runBeforeWaiting) throws InterruptedException {
-        if (!Core.getInstance().eventRegistry.events.contains(event)) {
-            throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
-        }
-
-        //get curent thread establish the lock to use for waiting blah blah blah
-        Thread th = Thread.currentThread();
-        Semaphore lock = new Semaphore(0);
-        Semaphore lock2 = new Semaphore(0);
-
         // event return values
         final BaseEvent[] ev = {null};
-        boolean[] done = new boolean[] {false};
-
         // create a new event container so we can actually release joined events
         EventContainer<?>[] ctxCont = new EventContainer[] {new EventContainer<>(ctx)};
+        ctx.wrapSleep(() -> {
+            if (!Core.getInstance().eventRegistry.events.contains(event)) {
+                throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
+            }
 
-        // create the listener
-        IEventListener listener = new ScriptEventListener() {
-            @Override
-            public EventContainer<?> trigger(BaseEvent evt) {
-                ev[0] = evt;
-                // allow for initial thread to run it's filter
-                lock.release();
-                try {
-                    // wait for filter to finish
-                    lock2.acquire();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            //get curent thread establish the lock to use for waiting blah blah blah
+            Thread th = Thread.currentThread();
+            Semaphore lock = new Semaphore(0);
+            Semaphore lock2 = new Semaphore(0);
+
+            boolean[] done = new boolean[] {false};
+
+            // create the listener
+            IEventListener listener = new ScriptEventListener() {
+                @Override
+                public EventContainer<?> trigger(BaseEvent evt) {
+                    ev[0] = evt;
+                    // allow for initial thread to run it's filter
+                    lock.release();
+                    try {
+                        // wait for filter to finish
+                        lock2.acquire();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                    // if filter done, we can remove self and return the event context
+                    if (done[0]) {
+                        Core.getInstance().eventRegistry.removeListener(event, this);
+                        ctx.bindEvent(th, (EventContainer) ctxCont[0]);
+                        return ctxCont[0];
+                    }
                     return null;
                 }
-                // if filter done, we can remove self and return the event context
-                if (done[0]) {
-                    Core.getInstance().eventRegistry.removeListener(event, this);
-                    ctx.bindEvent(th, (EventContainer) ctxCont[0]);
-                    return ctxCont[0];
+
+                @Override
+                public Thread getCreator() {
+                    return th;
                 }
-                return null;
+
+                @Override
+                public MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> getWrapper() {
+                    return null;
+                }
+
+                @Override
+                public String toString() {
+                    return String.format("WaitForEventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", th.getName(), event);
+                }
+            };
+            // register the listener
+            Core.getInstance().eventRegistry.addListener(event, listener);
+
+            // run before, this is a thread-safety thing to prevent "interrupts" from going in between this and things like deferCurrentTask
+            // it is thread safe because we already registered the listener so we won't miss any events
+            if (runBeforeWaiting != null) runBeforeWaiting.run();
+
+            // make sure the current context isn't still locked.
+            ctx.releaseBoundEventIfPresent(th);
+
+            // set the new EventContainer's lock
+            ctxCont[0].setLockThread(th);
+
+            // waits for event
+            while (!done[0]) {
+                lock.acquire();
+                try {
+                    // check the filter
+                    done[0] = filter == null || filter.test(ev[0]);
+                } catch (Throwable ex) {
+                    Core.getInstance().eventRegistry.removeListener(event, listener);
+                    throw new RuntimeException("Error thrown in filter", ex);
+                } finally {
+                    lock2.release();
+                }
             }
 
-            @Override
-            public Thread getCreator() {
-                return th;
-            }
-
-            @Override
-            public MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> getWrapper() {
-                return null;
-            }
-
-            @Override
-            public String toString() {
-                return String.format("WaitForEventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", th.getName(), event);
-            }
-        };
-        // register the listener
-        Core.getInstance().eventRegistry.addListener(event, listener);
-
-        // run before, this is a thread-safety thing to prevent "interrupts" from going in between this and things like deferCurrentTask
-        // it is thread safe because we already registered the listener so we won't miss any events
-        if (runBeforeWaiting != null) runBeforeWaiting.run();
-
-        // make sure the current context isn't still locked.
-        ctx.releaseBoundEventIfPresent(th);
-
-        // set the new EventContainer's lock
-        ctxCont[0].setLockThread(th);
-
-        // waits for event
-        while (!done[0]) {
-            lock.acquire();
-            try {
-                // check the filter
-                done[0] = filter == null || filter.test(ev[0]);
-            } catch (Throwable ex) {
-                Core.getInstance().eventRegistry.removeListener(event, listener);
-                throw new RuntimeException("Error thrown in filter", ex);
-            } finally {
-                lock2.release();
-            }
-        }
-
+        });
         // returns new context and event value to the user so they can release joined stuff early
         return new EventAndContext(ev[0], ctxCont[0]);
     }
