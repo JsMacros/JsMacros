@@ -30,6 +30,16 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
     }
 
     @Override
+    public void setMainThread(Thread t) {
+        super.setMainThread(t);
+        try {
+            tasks.put(new FWrapper.WrappedThread(t, true));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void wrapSleep(SleepRunnable sleep) throws InterruptedException {
         getContext().leave();
 

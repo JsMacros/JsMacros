@@ -50,12 +50,6 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
 
     public FWrapper(GraalScriptContext ctx, Class<? extends BaseLanguage<Context, GraalScriptContext>> language) {
         super(ctx, language);
-
-        try {
-            ctx.tasks.put(new WrappedThread(Thread.currentThread(), true));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**
@@ -153,11 +147,11 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                     ctx.bindThread(Thread.currentThread());
 
                     WrappedThread joinable = ctx.tasks.peek();
-                    while (true) {
-                        assert joinable != null;
-                        if (joinable.thread == Thread.currentThread()) break;
+                    assert joinable != null;
+                    while (joinable.thread != Thread.currentThread()) {
                         joinable.waitFor();
                         joinable = ctx.tasks.peek();
+                        assert joinable != null;
                     }
 
                     if (ctx.isContextClosed()) {
@@ -204,11 +198,11 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                 ctx.tasks.put(new WrappedThread(Thread.currentThread(), true));
 
                 WrappedThread joinable = ctx.tasks.peek();
-                while (true) {
-                    assert joinable != null;
-                    if (joinable.thread == Thread.currentThread()) break;
+                assert joinable != null;
+                while (joinable.thread != Thread.currentThread()) {
                     joinable.waitFor();
                     joinable = ctx.tasks.peek();
+                    assert joinable != null;
                 }
 
                 if (ctx.isContextClosed()) {
