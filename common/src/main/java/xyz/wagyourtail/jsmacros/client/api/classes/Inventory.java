@@ -282,7 +282,7 @@ public class Inventory<T extends HandledScreen<?>> {
      *
      * @param slot
      * @param hotbarSlot 0-8 or 40 for offhand
-     *
+     * @since 1.6.5 [citation needed]
      * @return
      */
     public Inventory<T> swapHotbar(int slot, int hotbarSlot) {

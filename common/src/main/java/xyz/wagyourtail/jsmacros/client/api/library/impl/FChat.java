@@ -298,10 +298,18 @@ public class FChat extends BaseLibrary {
         CommandManager.instance.reRegisterCommand(node);
     }
 
+    /**
+     * @since 1.7.0
+     * @return
+     */
     public CommandManager getCommandManager() {
         return CommandManager.instance;
     }
 
+    /**
+     * @since 1.7.0
+     * @return
+     */
     public ChatHistoryManager getHistory() {
         return new ChatHistoryManager(mc.inGameHud.getChatHud());
     }
