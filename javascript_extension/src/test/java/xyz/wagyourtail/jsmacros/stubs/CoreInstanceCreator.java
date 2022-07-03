@@ -11,7 +11,6 @@ public class CoreInstanceCreator {
     private static final File configFolder = new File("run/config");
     private static final File macroFolder = new File(configFolder, "macro");
 
-
     public static Core<?, ?> createCore() {
         Core<?, ?> instance = Core.getInstance();
         if (instance == null) {
@@ -25,5 +24,4 @@ public class CoreInstanceCreator {
         }
         return instance;
     }
-
 }

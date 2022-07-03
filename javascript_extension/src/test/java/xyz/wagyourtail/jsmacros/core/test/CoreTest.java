@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
-import xyz.wagyourtail.jsmacros.core.library.impl.FGlobalVars;
 import xyz.wagyourtail.jsmacros.stubs.CoreInstanceCreator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
