@@ -152,6 +152,9 @@ public class FGlobalVars extends BaseLibrary {
         if (i instanceof Integer) {
             globalRaw.put(name, ((Integer) i) + 1);
             return (Integer) i;
+        } else if (i == null) {
+            globalRaw.put(name, 1);
+            return 0;
         } else {
             return null;
         }
@@ -171,6 +174,9 @@ public class FGlobalVars extends BaseLibrary {
         if (i instanceof Integer) {
             globalRaw.put(name, ((Integer) i) - 1);
             return (Integer) i;
+        } else if (i == null) {
+            globalRaw.put(name, -1);
+            return 0;
         } else {
             return null;
         }
@@ -190,8 +196,11 @@ public class FGlobalVars extends BaseLibrary {
         if (i instanceof Integer) {
             globalRaw.put(name, i = ((Integer) i) + 1);
             return (Integer) i;
+        } else if (i == null) {
+            globalRaw.put(name, 1);
+            return 1;
         } else {
-            return null;
+        return null;
         }
     }
 
@@ -209,6 +218,9 @@ public class FGlobalVars extends BaseLibrary {
         if (i instanceof Integer) {
             globalRaw.put(name, i = ((Integer) i) - 1);
             return (Integer) i;
+        } else if (i == null) {
+            globalRaw.put(name, -1);
+            return -1;
         } else {
             return null;
         }
@@ -283,9 +295,11 @@ public class FGlobalVars extends BaseLibrary {
         if (i instanceof Boolean) {
             globalRaw.put(name, !(Boolean) i);
             return !(Boolean) i;
-        } else {
+        } else if (i == null) {
             globalRaw.put(name, true);
             return true;
+        } else {
+            return null;
         }
     }
 
