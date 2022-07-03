@@ -58,6 +58,7 @@ public class ExtensionLoader {
     }
 
     public @Nullable Extension getExtensionForFile(File file) {
+        if (notLoaded()) loadExtensions();
         List<Pair<Extension.ExtMatch, Extension>> extensions = this.extensions.stream().map(e -> new Pair<>(e.extensionMatch(file), e)).filter(p -> p.getT().isMatch()).collect(Collectors.toList());
         if (extensions.size() > 1) {
             List<Pair<Extension.ExtMatch, Extension>> extensionsByName = extensions.stream().filter(p -> p.getT() == Extension.ExtMatch.MATCH_WITH_NAME).collect(Collectors.toList());
@@ -74,6 +75,7 @@ public class ExtensionLoader {
     }
 
     public Extension getExtensionForName(String lang) {
+        if (notLoaded()) loadExtensions();
         return extensions.stream().filter(e -> e.getLanguageImplName().equals(lang)).findFirst().orElse(null);
     }
 
@@ -106,9 +108,9 @@ public class ExtensionLoader {
         classLoader = new ExtensionClassLoader(urls);
 
         // extract lib to dependencies folder
-        Path dependenciesPath;
+        Path dependenciesPath = extPath.resolve("tmp");
         try {
-            dependenciesPath = Files.createTempDirectory(extPath, "tmp");
+            Files.createDirectories(dependenciesPath);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

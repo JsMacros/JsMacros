@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.core;
 
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 import xyz.wagyourtail.SynchronizedWeakHashSet;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
@@ -10,7 +10,6 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.extensions.Extension;
 import xyz.wagyourtail.jsmacros.core.extensions.ExtensionLoader;
-import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
@@ -18,14 +17,17 @@ import xyz.wagyourtail.jsmacros.core.library.LibraryRegistry;
 import xyz.wagyourtail.jsmacros.core.service.ServiceManager;
 
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
     /**
-     * static reference to instance created by {@link #createInstance(Function, Function, File, File, Logger)}
+     * static reference to instance created by {@link #createInstance(Function, BiFunction, File, File, Logger)}
      */
     private static Core<?, ?> instance;
 
@@ -42,18 +44,18 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
 
     private boolean deferredInit = false;
 
-    protected Core(Function<Core<T, U>, U> eventRegistryFunction, Function<Core<T, U>, T> profileFunction, File configFolder, File macroFolder, Logger logger) {
+    protected Core(Function<Core<T, U>, U> eventRegistryFunction, BiFunction<Core<T, U>, Logger, T> profileFunction, File configFolder, File macroFolder, Logger logger) {
         instance = this;
         eventRegistry = eventRegistryFunction.apply(this);
         config = new ConfigManager(configFolder, macroFolder, logger);
-        profile = profileFunction.apply(this);
+        profile = profileFunction.apply(this, logger);
 
         extensions =  new ExtensionLoader(this);
         this.services = new ServiceManager(this);
     }
 
     /**
-     * static reference to instance created by {@link #createInstance(Function, Function, File, File, Logger)}
+     * static reference to instance created by {@link #createInstance(Function, BiFunction, File, File, Logger)}
      */
     public static Core<?, ?> getInstance() {
         return instance;
@@ -94,7 +96,7 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      * @param logger
      * @return
      */
-    public static <V extends BaseProfile, R extends BaseEventRegistry> Core<V, R> createInstance(Function<Core<V, R>, R> eventRegistryFunction, Function<Core<V, R>, V> profileFunction, File configFolder, File macroFolder, Logger logger) {
+    public static <V extends BaseProfile, R extends BaseEventRegistry> Core<V, R> createInstance(Function<Core<V, R>, R> eventRegistryFunction, BiFunction<Core<V, R>, Logger, V> profileFunction, File configFolder, File macroFolder, Logger logger) {
         if (instance != null) throw new RuntimeException("Can't declare RunScript instance more than once");
 
         new Core<>(eventRegistryFunction, profileFunction, configFolder, macroFolder, logger);
@@ -142,7 +144,7 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      * @return
      */
     public EventContainer<?> exec(String lang, String script, File fakeFile, BaseEvent event, Runnable then, Consumer<Throwable> catcher) {
-        Extension l = extensions.getExtensionForFile(new File(lang));
+        Extension l = extensions.getExtensionForFile(new File(lang.startsWith(".") ? lang : "." + lang));
         assert l != null;
         return l.getLanguage(this).trigger(lang, script, fakeFile, event, then, catcher);
     }

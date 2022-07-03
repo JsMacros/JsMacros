@@ -10,10 +10,9 @@ import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.IFWrapper;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLanguageLibrary;
+import xyz.wagyourtail.jsmacros.js.language.impl.WrappedThread;
 import xyz.wagyourtail.jsmacros.js.language.impl.GraalLanguageDefinition;
 import xyz.wagyourtail.jsmacros.js.language.impl.GraalScriptContext;
-
-import java.util.concurrent.LinkedBlockingQueue;
 
 
 /**
@@ -23,7 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * GraalJS:
  * language spec requires that only one thread can hold an instance of the language at a time,
- * so this implementation uses a non-preemptive queue for the threads that call the resulting {@link MethodWrapper
+ * so this implementation uses a non-preemptive priority queue for the threads that call the resulting {@link MethodWrapper
  * MethodWrappers}.
  *
  * JEP:
@@ -62,7 +61,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
     @Override
     @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
     public <A, B, R> MethodWrapper<A, B, R, GraalScriptContext> methodToJava(Value c) {
-        return new JSMethodWrapper<>(c, true);
+        return new JSMethodWrapper<>(c, true, 5);
     }
 
     /**
@@ -75,7 +74,12 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
     @Override
     @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
     public <A, B, R> MethodWrapper<A, B, R, GraalScriptContext> methodToJavaAsync(Value c) {
-        return new JSMethodWrapper<>(c, false);
+        return new JSMethodWrapper<>(c, false, 5);
+    }
+
+    @Override
+    public <A, B, R> MethodWrapper<A, B, R, ?> methodToJavaAsync(int priority, Value c) {
+        return new JSMethodWrapper<>(c, false, priority);
     }
 
     /**
@@ -99,36 +103,17 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
         ctx.closeContext();
     }
 
-    public static class WrappedThread {
-        public Thread thread;
-        public boolean notDone;
-
-        public WrappedThread(Thread thread, boolean notDone) {
-            this.thread = thread;
-            this.notDone = notDone;
-        }
-
-        public synchronized void waitFor() throws InterruptedException {
-            if (this.notDone) {
-                this.wait();
-            }
-        }
-
-        public synchronized void release() {
-            this.notDone = false;
-            this.notifyAll();
-        }
-    }
-
     private class JSMethodWrapper<T, U, R> extends MethodWrapper<T, U, R, GraalScriptContext> {
         private final Value fn;
-        private final boolean await;
+        public final boolean await;
+        public final int priority;
 
-        JSMethodWrapper(Value fn, boolean await) {
+        JSMethodWrapper(Value fn, boolean await, int priority) {
             super(FWrapper.this.ctx);
             if (!fn.canExecute()) throw new AssertionError("c is not executable");
             this.fn = fn;
             this.await = await;
+            this.priority = priority;
         }
 
         private void innerAccept(Object... args) {
@@ -143,7 +128,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
 
             Thread th = new Thread(() -> {
                 try {
-                    ctx.tasks.put(new WrappedThread(Thread.currentThread(), true));
+                    ctx.tasks.put(new WrappedThread(Thread.currentThread(), priority));
                     ctx.bindThread(Thread.currentThread());
 
                     WrappedThread joinable = ctx.tasks.peek();
@@ -153,6 +138,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                         joinable = ctx.tasks.peek();
                         assert joinable != null;
                     }
+                    ctx.tasks.peek().setRunning();
 
                     if (ctx.isContextClosed()) {
                         ctx.unbindThread(Thread.currentThread());
@@ -195,7 +181,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
 
             try {
                 ctx.bindThread(Thread.currentThread());
-                ctx.tasks.put(new WrappedThread(Thread.currentThread(), true));
+                ctx.tasks.add(new WrappedThread(Thread.currentThread(), priority));
 
                 WrappedThread joinable = ctx.tasks.peek();
                 assert joinable != null;
@@ -204,6 +190,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                     joinable = ctx.tasks.peek();
                     assert joinable != null;
                 }
+                ctx.tasks.peek().setRunning();
 
                 if (ctx.isContextClosed()) {
                     ctx.unbindThread(Thread.currentThread());

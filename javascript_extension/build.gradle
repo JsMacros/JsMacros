@@ -30,8 +30,13 @@ dependencies {
 //		jsmacrosExtensionInclude "org.graalvm.compiler:compiler:${project.graal_version}"
 //		jsmacrosExtensionInclude "org.graalvm.compiler:compiler-management:${project.graal_version}"
 
-
     common(project(":common").sourceSets.core.output)
+
+    testImplementation(project(":common").sourceSets.core.output)
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
 }
 
 processResources {
@@ -47,6 +52,9 @@ jar {
     }
 }
 
+test {
+    useJUnitPlatform()
+}
 
 publishing {
     publications {

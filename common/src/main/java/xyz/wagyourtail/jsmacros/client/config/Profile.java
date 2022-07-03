@@ -42,7 +42,7 @@ public class Profile extends BaseProfile {
     
     @Override
     public void triggerEventJoin(BaseEvent event) {
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = checkJoinedThreadStack();
         triggerEventJoinNoAnything(event);
     
         for (IEventListener macro : runner.eventRegistry.getListeners("ANYTHING")) {
@@ -52,7 +52,7 @@ public class Profile extends BaseProfile {
     
     @Override
     public void triggerEventJoinNoAnything(BaseEvent event) {
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = checkJoinedThreadStack();
         if (event instanceof EventCustom) {
             for (IEventListener macro : runner.eventRegistry.getListeners(((EventCustom) event).eventName)) {
                 runJoinedEventListener(event, joinedMain, macro);

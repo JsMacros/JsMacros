@@ -3,13 +3,12 @@ package xyz.wagyourtail.jsmacros.js.language.impl;
 import org.graalvm.polyglot.Context;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
-import xyz.wagyourtail.jsmacros.js.library.impl.FWrapper;
 
 import java.io.File;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 public class GraalScriptContext extends BaseScriptContext<Context> {
-    public final LinkedBlockingQueue<FWrapper.WrappedThread> tasks = new LinkedBlockingQueue<>();
+    public final PriorityBlockingQueue<WrappedThread> tasks = new PriorityBlockingQueue<>(11, (a, b) -> a.isRunning() ? -1000 : b.isRunning() ? 1000 : b.priority - a.priority);
 
     public GraalScriptContext(BaseEvent event, File file) {
         super(event, file);
@@ -32,11 +31,9 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
     @Override
     public void setMainThread(Thread t) {
         super.setMainThread(t);
-        try {
-            tasks.put(new FWrapper.WrappedThread(t, true));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        WrappedThread w = new WrappedThread(t, 5);
+        w.setRunning();
+        tasks.add(w);
     }
 
     @Override
@@ -46,21 +43,22 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
         try {
             assert tasks.peek() != null;
             // remove self from queue
-            tasks.poll().release();
+            int prio = tasks.poll().release();
 
             sleep.run();
 
             // put self at back of the queue
-            tasks.put(new FWrapper.WrappedThread(Thread.currentThread(), true));
+            tasks.add(new WrappedThread(Thread.currentThread(), prio));
 
             // wait to be at the front of the queue again
-            FWrapper.WrappedThread joinable = tasks.peek();
+            WrappedThread joinable = tasks.peek();
             assert joinable != null;
             while (joinable.thread != Thread.currentThread()) {
                 joinable.waitFor();
                 joinable = tasks.peek();
                 assert joinable != null;
             }
+            tasks.peek().setRunning();
         } finally {
             getContext().enter();
         }

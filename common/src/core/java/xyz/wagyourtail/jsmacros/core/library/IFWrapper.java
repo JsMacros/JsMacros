@@ -39,6 +39,7 @@ public interface IFWrapper<T> {
      */
     @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
     <A, B, R> MethodWrapper<A, B, R, ?> methodToJava(T c);
+
     
     /**
      * @since 1.4.0
@@ -47,6 +48,22 @@ public interface IFWrapper<T> {
      */
     @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
     <A, B, R> MethodWrapper<A, B, R, ?> methodToJavaAsync(T c);
+
+    /**
+     * JS/JEP ONLY
+     * allows you to set the position of the thread in the queue. you can use this for return value one's too...
+     * @since 1.8.0
+     * @param priority
+     * @param c
+     * @return
+     * @param <A>
+     * @param <B>
+     * @param <R>
+     */
+    @DocletReplaceParams("priority: number, c: (arg0?: A, arg1?: B) => R | void")
+    default <A, B, R> MethodWrapper<A, B, R, ?> methodToJavaAsync(int priority, T c) {
+        return methodToJavaAsync(c);
+    }
 
     /**
      * JS/JEP only, puts current task at end of queue.

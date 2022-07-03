@@ -9,8 +9,8 @@ pluginManagement {
     }
 }
 
-include("javascript_extension")
 include("common")
+include("javascript_extension")
 include("fabric")
 include("forge")
 
