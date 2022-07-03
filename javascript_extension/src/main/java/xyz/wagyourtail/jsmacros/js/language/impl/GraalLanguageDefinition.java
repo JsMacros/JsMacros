@@ -95,7 +95,7 @@ public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptCo
             conf.extraGraalOptions = new LinkedHashMap<>();
 
         Map<String, BaseLibrary> lib = retrieveLibs(ctx.getCtx());
-        lang = Source.findLanguage(new File(lang));
+        lang = Source.findLanguage(new File(lang.startsWith(".") ? lang : "." + lang));
         if (!engine.getLanguages().containsKey(lang)) lang = "js";
         final Context con = buildContext(ctx.getCtx().getContainedFolder(), lang, conf.extraGraalOptions, globals, lib);
         ctx.getCtx().setContext(con);

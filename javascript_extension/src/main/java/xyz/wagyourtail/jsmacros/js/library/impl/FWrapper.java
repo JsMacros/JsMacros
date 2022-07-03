@@ -93,6 +93,26 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
     }
 
     /**
+     * JS/JEP only, puts current task at end of queue.
+     * use with caution, don't accidentally cause circular waiting.
+     * @throws InterruptedException
+     */
+    @Override
+    public void deferCurrentTask(int priorityAdjust) throws InterruptedException {
+        ctx.wrapSleep(priorityAdjust, () -> {});
+    }
+
+    /**
+     * JS/JEP only, puts current task at end of queue.
+     * @throws InterruptedException
+     */
+    @Override
+    public int getCurrentPriority() {
+        assert ctx.tasks.peek() != null;
+        return ctx.tasks.peek().priority;
+    }
+
+    /**
      * Close the current context, more important in JEP as they won't close themselves if you use other functions in
      * this class
      *

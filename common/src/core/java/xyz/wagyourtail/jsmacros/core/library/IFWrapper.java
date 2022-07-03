@@ -67,9 +67,30 @@ public interface IFWrapper<T> {
      * JS/JEP only, puts current task at end of queue.
      * use with caution, don't accidentally cause circular waiting.
      * @throws InterruptedException
+     * @since 1.4.0 [citation needed]
      */
     default void deferCurrentTask() throws InterruptedException {
         throw new AssertionError("deferCurrentTask() is not implemented for this language");
+    }
+
+    /**
+     * JS/JEP only, puts current task at end of queue.
+     * use with caution, don't accidentally cause circular waiting.
+     * @since 1.8.0
+     * @throws InterruptedException
+     * @param priorityAdjust the amount to adjust the priority by
+     */
+    default void deferCurrentTask(int priorityAdjust) throws InterruptedException {
+        throw new AssertionError("deferCurrentTask() is not implemented for this language");
+    }
+
+    /**
+     * JS/JEP only, get priority of current task.
+     * @throws InterruptedException
+     * @since 1.8.0
+     */
+    default int getCurrentPriority() {
+        throw new AssertionError("getCurrentPriority() is not implemented for this language");
     }
 
     /**
