@@ -173,7 +173,7 @@ public abstract class CommandBuilder {
      *
      * @return
      */
-    public abstract CommandBuilder executes(MethodWrapper<CommandContextHelper, Object, Boolean, ?> callback);
+    public abstract CommandBuilder executes(MethodWrapper<CommandContextHelper, Object, Object, ?> callback);
 
     protected abstract <S> void suggests(SuggestionProvider<S> suggestionProvider);
 
@@ -213,7 +213,7 @@ public abstract class CommandBuilder {
         return this;
     }
 
-    protected <S> int internalExecutes(CommandContext<S> context, MethodWrapper<CommandContextHelper, Object, Boolean, ?> callback) {
+    protected <S> int internalExecutes(CommandContext<S> context, MethodWrapper<CommandContextHelper, Object, Object, ?> callback) {
         EventContainer<?> lock = new EventContainer<>(callback.getCtx());
         lock.setLockThread(Thread.currentThread());
         EventLockWatchdog.startWatchdog(lock, new IEventListener() {
@@ -227,15 +227,12 @@ public abstract class CommandBuilder {
                 return "CommandBuilder{\"called_by\": " + callback.getCtx().getTriggeringEvent().toString() + "}";
             }
         }, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
-        boolean success = false;
         try {
-            success = callback.apply(new CommandContextHelper(context));
-        } catch (Throwable e) {
-            e.printStackTrace();
+            callback.accept(new CommandContextHelper(context));
         } finally {
             lock.releaseLock();
         }
-        return success ? 1 : 0;
+        return 1;
     }
 
 

@@ -8,7 +8,8 @@ import java.util.function.*;
 
 /**
  * Wraps most of the important functional interfaces.
- * 
+ * @see xyz.wagyourtail.jsmacros.core.library.IFWrapper
+ *
  * @author Wagyourtail
  *
  * @param <T>

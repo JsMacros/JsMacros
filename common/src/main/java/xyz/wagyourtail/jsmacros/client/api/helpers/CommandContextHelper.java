@@ -31,7 +31,7 @@ public class CommandContextHelper extends BaseHelper<CommandContext<?>> implemen
     public Object getArg(String name) throws CommandSyntaxException {
         Object arg = base.getArgument(name, Object.class);
         if (arg instanceof BlockStateArgument) {
-            arg = new BlockDataHelper(((BlockStateArgument) arg).getBlockState(), null, null);
+            arg = new BlockStateHelper(((BlockStateArgument) arg).getBlockState());
         } else if (arg instanceof Identifier) {
             arg = arg.toString();
         } else if (arg instanceof ItemStackArgument) {

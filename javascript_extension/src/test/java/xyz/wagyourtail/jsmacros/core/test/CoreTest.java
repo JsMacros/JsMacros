@@ -21,6 +21,7 @@ public class CoreTest {
         JavaWrapper.methodToJavaAsync(4, () => {
             order.push(2);
             event.putString("test", JSON.stringify(order));
+            event.putBoolean("locked", false);
         }).run();
         JavaWrapper.methodToJavaAsync(6, () => {
             order.push(3);
@@ -34,6 +35,7 @@ public class CoreTest {
     public void test() throws InterruptedException {
         Core<?, ?> core = CoreInstanceCreator.createCore();
         EventCustom custom = new EventCustom("test");
+        custom.putBoolean("locked", true);
         EventContainer<?> ev = core.exec("js",
             TEST_SCRIPT,
             null,
@@ -41,8 +43,9 @@ public class CoreTest {
             null,
             null
         );
-        Thread.sleep(1000);
-        ev.getCtx().closeContext();
+        while (custom.getBoolean("locked")) {
+            Thread.sleep(100);
+        }
         assertEquals("[0,3,1,2]", custom.getString("test"));
     }
 }
