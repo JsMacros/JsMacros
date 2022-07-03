@@ -47,7 +47,7 @@ public class RunningContextContainer extends MultiElementContainer<CancelScreen>
         try {
             if (t != null) {
                 if (t.isContextClosed()) {
-                    JsMacros.LOGGER.log(Level.WARN, "Closed context {} was still in list", t.getMainThread().getName());
+                    JsMacros.LOGGER.warn("Closed context {} was still in list", t.getMainThread().getName());
                     parent.removeContainer(this);
                 } else if (this.visible) {
                     drawCenteredText(matrices, textRenderer, textRenderer.trimToWidth(service ? ((EventService) t.getTriggeringEvent()).serviceName : t.getMainThread().getName(), width - 105 - height), x + (width - 105 - height) / 2 + height + 4, y+2, 0xFFFFFF);

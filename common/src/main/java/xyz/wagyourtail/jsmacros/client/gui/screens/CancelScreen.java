@@ -57,7 +57,7 @@ public class CancelScreen extends BaseScreen {
             running.sort(new RTCSort());
             s.setScrollPages(running.size() * 15 / (double) (height - 20));
         } else {
-            JsMacros.LOGGER.log(Level.WARN, "Closed context {} was still in list", t.getMainThread().getName());
+            JsMacros.LOGGER.warn("Closed context {} was still in list", t.getMainThread().getName());
         }
     }
 
