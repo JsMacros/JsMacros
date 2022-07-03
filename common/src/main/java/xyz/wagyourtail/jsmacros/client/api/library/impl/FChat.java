@@ -5,8 +5,9 @@ import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.Text;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.client.access.IClientPlayerEntity;
 import xyz.wagyourtail.jsmacros.client.api.classes.ChatHistoryManager;
@@ -234,7 +235,7 @@ public class FChat extends BaseLibrary {
      * @return
      */
     public Logger getLogger() {
-        return LogManager.getLogger();
+        return JsMacros.LOGGER;
     }
 
     /**
@@ -244,7 +245,7 @@ public class FChat extends BaseLibrary {
      * @return
      */
     public Logger getLogger(String name) {
-        return LogManager.getLogger(name);
+        return LoggerFactory.getLogger(name);
     }
 
     /**
@@ -274,6 +275,7 @@ public class FChat extends BaseLibrary {
      *@param name name of command
      * @since 1.4.2
      * @return
+     * @see #getCommandManager()
      */
      @Deprecated
     public CommandBuilder createCommandBuilder(String name) {
@@ -283,6 +285,7 @@ public class FChat extends BaseLibrary {
     /**
      * @param name
      * @since 1.6.5
+     * @see #getCommandManager()
      */
      @Deprecated
     public CommandNodeHelper unregisterCommand(String name) throws IllegalAccessException {
@@ -292,6 +295,7 @@ public class FChat extends BaseLibrary {
     /**
      * @since 1.6.5
      * @param node
+     * @see #getCommandManager()
      */
      @Deprecated
     public void reRegisterCommand(CommandNodeHelper node) {
