@@ -284,7 +284,8 @@ public class FGlobalVars extends BaseLibrary {
             globalRaw.put(name, !(Boolean) i);
             return !(Boolean) i;
         } else {
-            return null;
+            globalRaw.put(name, true);
+            return true;
         }
     }
 
