@@ -46,7 +46,7 @@ jar {
 }
 
 task generatePyDoc(type: Javadoc) {
-    source = sourceSets.main.allJava
+    source = sourceSets.main.allJava + sourceSets.core.allJava
     classpath = sourceSets.main.compileClasspath
     destinationDir = new File(rootProject.buildDir, "docs/python/JsMacrosAC/")
     options.doclet = "xyz.wagyourtail.doclet.pydoclet.Main"
@@ -60,7 +60,7 @@ task copyPyDoc(type: Copy, dependsOn: generatePyDoc) {
 }
 
 task generateTSDoc(type: Javadoc) {
-    source = sourceSets.main.allJava
+    source = sourceSets.main.allJava + sourceSets.core.allJava
     classpath = sourceSets.main.compileClasspath
     destinationDir = new File(rootProject.buildDir, "docs/typescript/headers/")
     options.doclet = "xyz.wagyourtail.doclet.tsdoclet.Main"
@@ -74,7 +74,7 @@ task copyTSEnv(type: Copy, dependsOn: generateTSDoc) {
 }
 
 task generateWebDoc(type: Javadoc) {
-    source = sourceSets.main.allJava
+    source = sourceSets.main.allJava + sourceSets.core.allJava
     classpath = sourceSets.main.compileClasspath
     destinationDir = new File(rootProject.buildDir, "docs/web/")
     options.doclet = "xyz.wagyourtail.doclet.webdoclet.Main"

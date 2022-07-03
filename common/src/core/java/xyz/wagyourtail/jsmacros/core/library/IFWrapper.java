@@ -5,22 +5,20 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 /**
  * {@link FunctionalInterface} implementation for wrapping methods to match the language spec.
- *
+ * <br><br>
  * An instance of this class is passed to scripts as the {@code consumer} variable.
- *
+ * <br><br>
  * Javascript:
  * language spec requires that only one thread can hold an instance of the language at a time,
- * so this implementation uses a non-preemptive queue for the threads that call the resulting {@link MethodWrapper MethodWrappers}.
- *
+ * so this implementation uses a non-preemptive priority queue for the threads that call the resulting {@link MethodWrapper MethodWrappers}.
+ * <br><br>
  * JEP:
  * language spec requires everything to be on the same thread, on the java end, so all calls to {@link MethodWrapper MethodWrappers}
- * call back to JEP's starting thread and wait for the call to complete. This means that JEP can sometimes have trouble
- * closing properly, so if you use any {@link MethodWrapper MethodWrappers}, be sure to call FConsumer#stop(), to close the process,
- * otherwise it's a memory leak.
- *
+ * call back to JEP's starting thread and wait for the call to complete.
+ * <br><br>
  * Jython:
  * no limitations
- *
+ * <br><br>
  * LUA:
  * no limitations
  *
