@@ -20,7 +20,7 @@ public class BlockHelper extends BaseHelper<Block> {
     /**
      * @return the default state of the block.
      *
-     * @version 1.6.5
+     * @since 1.6.5
      */
     public BlockStateHelper getDefaultState() {
         return new BlockStateHelper(base.getDefaultState());
@@ -29,7 +29,7 @@ public class BlockHelper extends BaseHelper<Block> {
     /**
      * @return the default item stack of the block.
      *
-     * @version 1.6.5
+     * @since 1.6.5
      */
     public ItemStackHelper getDefaultItemStack() {
         return new ItemStackHelper(base.asItem().getDefaultStack());
@@ -42,7 +42,7 @@ public class BlockHelper extends BaseHelper<Block> {
     /**
      * @return {@code true} if the block has dynamic bounds.
      *
-     * @version 1.6.5
+     * @since 1.6.5
      */
     public boolean hasDynamicBounds() {
         return base.hasDynamicBounds();
@@ -51,7 +51,7 @@ public class BlockHelper extends BaseHelper<Block> {
     /**
      * @return the blast resistance.
      *
-     * @version 1.6.5
+     * @since 1.6.5
      */
     public float getBlastResistance() {
         return base.getBlastResistance();
@@ -60,7 +60,7 @@ public class BlockHelper extends BaseHelper<Block> {
     /**
      * @return the jump velocity multiplier.
      *
-     * @version 1.6.5
+     * @since 1.6.5
      */
     public float getJumpVelocityMultiplier() {
         return base.getJumpVelocityMultiplier();
@@ -69,7 +69,7 @@ public class BlockHelper extends BaseHelper<Block> {
     /**
      * @return the slipperiness.
      *
-     * @version 1.6.5
+     * @since 1.6.5
      */
     public float getSlipperiness() {
         return base.getSlipperiness();
@@ -78,7 +78,7 @@ public class BlockHelper extends BaseHelper<Block> {
     /**
      * @return the hardness.
      *
-     * @version 1.6.5
+     * @since 1.6.5
      */
     public float getHardness() {
         return base.getHardness();
@@ -87,7 +87,7 @@ public class BlockHelper extends BaseHelper<Block> {
     /**
      * @return the velocity multiplier.
      *
-     * @version 1.6.5
+     * @since 1.6.5
      */
     public float getVelocityMultiplier() {
         return base.getVelocityMultiplier();
@@ -96,7 +96,7 @@ public class BlockHelper extends BaseHelper<Block> {
     /**
      * @return all tags of the block as an {@link java.util.ArrayList ArrayList}.
      *
-     * @version 1.6.5
+     * @since 1.6.5
      */
     public List<String> getTags() {
         return base.getRegistryEntry().streamTags().map(t -> t.id().toString()).collect(Collectors.toList());
@@ -105,7 +105,7 @@ public class BlockHelper extends BaseHelper<Block> {
     /**
      * @return all possible block states of the block.
      *
-     * @version 1.6.5
+     * @since 1.6.5
      */
     public List<BlockStateHelper> getStates() {
         return base.getStateManager().getStates().stream().map(BlockStateHelper::new).collect(Collectors.toList());
@@ -114,7 +114,7 @@ public class BlockHelper extends BaseHelper<Block> {
     /**
      * @return the identifier of the block.
      *
-     * @version 1.6.5
+     * @since 1.6.5
      */
     public String getId() {
         return Registry.BLOCK.getId(base).toString();
