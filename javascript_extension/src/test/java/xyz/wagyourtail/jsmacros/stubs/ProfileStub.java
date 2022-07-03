@@ -12,11 +12,12 @@ import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 
 import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class ProfileStub extends BaseProfile {
 
     static Thread th;
-    static LinkedList<Runnable> runnables = new LinkedList<>();
+    static LinkedBlockingQueue<Runnable> runnables = new LinkedBlockingQueue<>();
 
     static {
         th = new Thread(() -> {
@@ -25,10 +26,15 @@ public class ProfileStub extends BaseProfile {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            while (!runnables.isEmpty()) {
-                runnables.poll().run();
+            while (true) {
+                try {
+                    runnables.take().run();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
+        th.setDaemon(true);
         th.start();
     }
 
