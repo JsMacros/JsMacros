@@ -1,15 +1,15 @@
 package xyz.wagyourtail.jsmacros.js.language.impl;
 
+import it.unimi.dsi.fastutil.objects.Object2IntFunction;
 import org.graalvm.polyglot.Context;
+import xyz.wagyourtail.PrioryFiFoTaskQueue;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
 import java.io.File;
-import java.util.concurrent.PriorityBlockingQueue;
 
 public class GraalScriptContext extends BaseScriptContext<Context> {
-    public final PriorityBlockingQueue<WrappedThread> tasks = new PriorityBlockingQueue<>(11, (a, b) -> a.isRunning() ? -1000 : b.isRunning() ? 1000 : b.priority - a.priority);
-
+    public final PrioryFiFoTaskQueue<WrappedThread> tasks = new PrioryFiFoTaskQueue<>(GraalScriptContext::getThreadPriority);
     public GraalScriptContext(BaseEvent event, File file) {
         super(event, file);
     }
@@ -23,6 +23,9 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
         }
     }
 
+    public static int getThreadPriority(Object thread) {
+        return -((WrappedThread) thread).priority;
+    }
     @Override
     public boolean isMultiThreaded() {
         return false;
@@ -32,7 +35,6 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
     public void setMainThread(Thread t) {
         super.setMainThread(t);
         WrappedThread w = new WrappedThread(t, 5);
-        w.setRunning();
         tasks.add(w);
     }
 
@@ -62,7 +64,6 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
                 joinable = tasks.peek();
                 assert joinable != null;
             }
-            tasks.peek().setRunning();
         } finally {
             getContext().enter();
         }

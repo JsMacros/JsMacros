@@ -148,7 +148,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
 
             Thread th = new Thread(() -> {
                 try {
-                    ctx.tasks.put(new WrappedThread(Thread.currentThread(), priority));
+                    ctx.tasks.add(new WrappedThread(Thread.currentThread(), priority));
                     ctx.bindThread(Thread.currentThread());
 
                     WrappedThread joinable = ctx.tasks.peek();
@@ -158,7 +158,6 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                         joinable = ctx.tasks.peek();
                         assert joinable != null;
                     }
-                    ctx.tasks.peek().setRunning();
 
                     if (ctx.isContextClosed()) {
                         ctx.unbindThread(Thread.currentThread());
@@ -210,7 +209,6 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                     joinable = ctx.tasks.peek();
                     assert joinable != null;
                 }
-                ctx.tasks.peek().setRunning();
 
                 if (ctx.isContextClosed()) {
                     ctx.unbindThread(Thread.currentThread());

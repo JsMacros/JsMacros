@@ -18,7 +18,7 @@ public class CoreTest {
             order.push(1);
             event.putString("test", JSON.stringify(order));
         }).run();
-        JavaWrapper.methodToJavaAsync(4, () => {
+        JavaWrapper.methodToJavaAsync(5, () => {
             order.push(2);
             event.putString("test", JSON.stringify(order));
         }).run();
