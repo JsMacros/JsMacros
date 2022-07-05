@@ -1,9 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.sharedclasses;
 
-import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPosHelper;
 
 /**
  * @author Wagyourtail
@@ -277,6 +278,22 @@ public class PositionCommon {
          */
         public Vec3D toReverseVector(double end_x, double end_y, double end_z) {
             return new Vec3D(this, new Pos3D(end_x, end_y, end_z));
+        }
+
+        /**
+         * @since 1.8.0
+         * @return
+         */
+        public BlockPosHelper toBlockPos() {
+            return new BlockPosHelper(new BlockPos(Math.floor(x), Math.floor(y), Math.floor(z)));
+        }
+
+        /**
+         * @since 1.8.0
+         * @return
+         */
+        public BlockPos toRawBlockPos() {
+            return new BlockPos(Math.floor(x), Math.floor(y), Math.floor(z));
         }
     }
 
