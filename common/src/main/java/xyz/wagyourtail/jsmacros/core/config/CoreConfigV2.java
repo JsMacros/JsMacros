@@ -37,6 +37,7 @@ public class CoreConfigV2 {
     }
     
     public void setCurrentProfile(String pname) {
+        Core.getInstance().profile.saveProfile();
         Core.getInstance().profile.loadOrCreateProfile(pname);
     }
     
