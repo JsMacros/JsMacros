@@ -6,6 +6,8 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.stubs.CoreInstanceCreator;
+import xyz.wagyourtail.jsmacros.stubs.EventRegistryStub;
+import xyz.wagyourtail.jsmacros.stubs.ProfileStub;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -33,7 +35,7 @@ public class CoreTest {
 
     @Test
     public void test() throws InterruptedException {
-        Core<?, ?> core = CoreInstanceCreator.createCore();
+        Core<ProfileStub, EventRegistryStub> core = CoreInstanceCreator.createCore();
         EventCustom custom = new EventCustom("test");
         EventContainer<?> ev = core.exec("js",
             TEST_SCRIPT,

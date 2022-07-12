@@ -321,6 +321,15 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
+     * @since 1.8.0
+     * @return
+     */
+    public boolean isBreakingBlock() {
+        assert mc.interactionManager != null;
+        return mc.interactionManager.isBreakingBlock();
+    }
+
+    /**
      * Predicts where each {@code PlayerInput} executed in a row would lead
      *
      * @param inputs the PlayerInputs for each tick for the prediction

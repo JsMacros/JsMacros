@@ -11,8 +11,8 @@ public class CoreInstanceCreator {
     private static final File configFolder = new File("run/config");
     private static final File macroFolder = new File(configFolder, "macro");
 
-    public static Core<?, ?> createCore() {
-        Core<?, ?> instance = Core.getInstance();
+    public static Core<ProfileStub, EventRegistryStub> createCore() {
+        Core<ProfileStub, EventRegistryStub> instance = (Core) Core.getInstance();
         if (instance == null) {
             instance = Core.createInstance(
                 EventRegistryStub::new,

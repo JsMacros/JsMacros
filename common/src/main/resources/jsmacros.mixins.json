@@ -34,6 +34,7 @@
     "access.MixinTrueTypeFont",
     "events.MixinChatHud",
     "events.MixinClientPlayerEntity",
+    "events.MixinClientPlayerInteractionManager",
     "events.MixinClientPlayNetworkHandler",
     "events.MixinClientWorld",
     "events.MixinCreativeInventoryScreen",
