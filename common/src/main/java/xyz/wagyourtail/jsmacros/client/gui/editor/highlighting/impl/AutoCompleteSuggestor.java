@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl;
 
 import xyz.wagyourtail.StringHashTrie;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.extensions.Extension;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.library.LibraryRegistry;
 
@@ -41,7 +42,11 @@ public class AutoCompleteSuggestor {
     
     private void generateSuggestionTree() {
         LibraryRegistry registry = Core.getInstance().libraryRegistry;
-        Class<? extends BaseLanguage> lang = Core.getInstance().extensions.getExtensionForFile(new File(language)).getLanguage(Core.getInstance()).getClass();
+        Extension ex = Core.getInstance().extensions.getExtensionForFile(new File(language));
+        if (ex == null) {
+            ex = Core.getInstance().extensions.getHighestPriorityExtension();
+        }
+        Class<? extends BaseLanguage> lang = ex.getLanguage(Core.getInstance()).getClass();
         
         Map<String, Class<?>> libs = new HashMap<>();
         registry.libraries.forEach((k,v) -> {
