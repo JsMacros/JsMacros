@@ -22,6 +22,7 @@ import xyz.wagyourtail.jsmacros.client.gui.editor.SelectCursor;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCodeCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSuggestion;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl.DefaultCodeCompiler;
+import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl.NoStyleCodeCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.scriptimpl.ScriptCodeCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -39,7 +40,7 @@ import java.util.stream.Collectors;
 
 public class EditorScreen extends BaseScreen {
     private static final OrderedText ellipses = Text.literal("...").formatted(Formatting.DARK_GRAY).asOrderedText();
-    public static final List<String> langs = Lists.newArrayList("javascript", "json", "lua", "python", "ruby", "typescript");
+    public static final List<String> langs = Lists.newArrayList("javascript", "json", "lua", "python", "ruby", "typescript", "none");
     public static Style defaultStyle = Style.EMPTY.withFont(new Identifier("jsmacros", "ubuntumono"));
     protected final File file;
     protected final FileHandler handler;
@@ -171,10 +172,21 @@ public class EditorScreen extends BaseScreen {
     public synchronized void setLanguage(String language) {
         this.language = language;
         Map<String, String> linterOverrides = Core.getInstance().config.getOptions(ClientConfigV2.class).editorLinterOverrides;
-        if (linterOverrides.containsKey(language)) {
-            this.codeCompiler = new ScriptCodeCompiler(language, this, Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(linterOverrides.get(language)).toFile());
+        if (!language.equals("none")) {
+            if (linterOverrides.containsKey(language)) {
+                this.codeCompiler = new ScriptCodeCompiler(
+                    language,
+                    this,
+                    Core.getInstance().config.macroFolder.getAbsoluteFile()
+                        .toPath()
+                        .resolve(linterOverrides.get(language))
+                        .toFile()
+                );
+            } else {
+                this.codeCompiler = new DefaultCodeCompiler(language, this);
+            }
         } else {
-            this.codeCompiler = new DefaultCodeCompiler(language, this);
+            this.codeCompiler = new NoStyleCodeCompiler(null, this);
         }
         compileRenderedText();
     }
@@ -506,14 +518,19 @@ public class EditorScreen extends BaseScreen {
     
     private synchronized void compileRenderedText() {
         long time = System.currentTimeMillis();
-        codeCompiler.recompileRenderedText(history.current);
-        List<AutoCompleteSuggestion> suggestionList = codeCompiler.getSuggestions();
-    
-    
+        List<AutoCompleteSuggestion> suggestionList;
+        try {
+            codeCompiler.recompileRenderedText(history.current);
+            suggestionList = codeCompiler.getSuggestions();
+        } catch (StackOverflowError e) {
+            setLanguage("none");
+            return;
+        }
+
         if (overlay instanceof SelectorDropdownOverlay) {
             closeOverlay(overlay);
         }
-        
+
         if (suggestionList.size() > 0 && Core.getInstance().config.getOptions(ClientConfigV2.class).editorSuggestions) {
             suggestionList.sort(Comparator.comparing(a -> a.suggestion));
             int startIndex = cursor.startIndex;
@@ -530,7 +547,7 @@ public class EditorScreen extends BaseScreen {
             int add = lineSpread - scroll % lineSpread;
             if (add == lineSpread) add = 0;
             int startRow = (lines.length - firstLine + 1) * lineSpread + add;
-            
+
             openOverlay(
                 new SelectorDropdownOverlay(startCol + 30, startRow, maxWidth + 8, suggestionList.size() * lineSpread + 4, displayList, textRenderer, this, (i) -> {
                     if (i == -1) return;

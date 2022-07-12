@@ -12,6 +12,7 @@ import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Arm;
 import org.lwjgl.glfw.GLFW;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinSimpleOption;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.*;
@@ -174,7 +175,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return
      */
     public OptionsHelper setFov(int fov) {
-        base.getFov().setValue(fov);
+        ((MixinSimpleOption)(Object) base.getFov()).forceSetValue(fov);
         return this;
     }
     
@@ -191,7 +192,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @param d
      */
     public void setRenderDistance(int d) {
-        base.getViewDistance().setValue(d);
+        ((MixinSimpleOption)(Object) base.getViewDistance()).forceSetValue(d);
     }
     
     /**
@@ -251,7 +252,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * normal values for gamma are between {@code 0} and {@code 1}
      */
     public void setGamma(double gamma) {
-        base.getGamma().setValue(gamma);
+        ((MixinSimpleOption)(Object) base.getGamma()).forceSetValue(gamma);
     }
     
     /**
