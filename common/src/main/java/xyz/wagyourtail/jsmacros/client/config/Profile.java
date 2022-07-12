@@ -170,6 +170,8 @@ public class Profile extends BaseProfile {
 
         runner.eventRegistry.addEvent(EventAirChange.class);
         runner.eventRegistry.addEvent(EventArmorChange.class);
+        runner.eventRegistry.addEvent(EventAttackBlock.class);
+        runner.eventRegistry.addEvent(EventAttackEntity.class);
         runner.eventRegistry.addEvent(EventBlockUpdate.class);
         runner.eventRegistry.addEvent(EventBossbar.class);
         runner.eventRegistry.addEvent(EventChunkLoad.class);
@@ -190,6 +192,7 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventHeldItemChange.class);
         runner.eventRegistry.addEvent(EventHungerChange.class);
         runner.eventRegistry.addEvent(EventInteractBlock.class);
+        runner.eventRegistry.addEvent(EventInteractEntity.class);
         runner.eventRegistry.addEvent(EventItemDamage.class);
         runner.eventRegistry.addEvent(EventItemPickup.class);
         runner.eventRegistry.addEvent(EventJoinedTick.class);
