@@ -25,6 +25,16 @@ public abstract class AbstractParser {
         final StringBuilder s = new StringBuilder();
         for (Element field : fields) {
             if (!field.getModifiers().contains(Modifier.PUBLIC)) continue;
+            if (field.getModifiers().contains(Modifier.STATIC)) continue;
+            s.append(genField(field)).append("\n");
+        }
+        return s.toString();
+    }
+    public String genStaticFields(Set<Element> fields) {
+        final StringBuilder s = new StringBuilder();
+        for (Element field : fields) {
+            if (!field.getModifiers().contains(Modifier.PUBLIC)) continue;
+            if (!field.getModifiers().contains(Modifier.STATIC)) continue;
             s.append(genField(field)).append("\n");
         }
         return s.toString();
@@ -34,11 +44,33 @@ public abstract class AbstractParser {
         final StringBuilder s = new StringBuilder();
         for (Element method : methods) {
             if (!method.getModifiers().contains(Modifier.PUBLIC)) continue;
+            if (method.getModifiers().contains(Modifier.STATIC)) continue;
             s.append(genMethod((ExecutableElement) method)).append("\n");
         }
+        if (s.length() > 0) s.append("\n\n");
         return s.toString();
     }
 
+    public String genStaticMethods(Set<Element> methods) {
+        final StringBuilder s = new StringBuilder();
+        for (Element method : methods) {
+            if (!method.getModifiers().contains(Modifier.PUBLIC)) continue;
+            if (!method.getModifiers().contains(Modifier.STATIC)) continue;
+            s.append(genMethod((ExecutableElement) method)).append("\n");
+        }
+        if (s.length() > 0) s.append("\n");
+        return s.toString();
+    }
+
+    public String genConstructors(Set<Element> methods) {
+        final StringBuilder s = new StringBuilder();
+        for (Element method : methods) {
+            if (!method.getModifiers().contains(Modifier.PUBLIC)) continue;
+            s.append(genConstructor((ExecutableElement) method)).append("\n");
+        }
+        if (s.length() > 0) s.append("\n");
+        return s.toString();
+    }
     public String genField(Element field) {
         return genComment(field) +
         (field.getModifiers().contains(Modifier.FINAL) ? "readonly " : "") +
@@ -74,6 +106,32 @@ public abstract class AbstractParser {
         }
         s.append("): ").append(transformType(method.getReturnType())).append(";");
 
+        return s.toString();
+    }
+
+    public String genConstructor(ExecutableElement constructor) {
+        final StringBuilder s = new StringBuilder();
+        s.append(genComment(constructor));
+        s.append("new ");
+        //diamondOperator
+        List<? extends TypeParameterElement> typeParams = type.getTypeParameters();
+        if (typeParams != null && !typeParams.isEmpty()) {
+            s.append("<");
+            for (TypeParameterElement param : typeParams) {
+                s.append(transformType(param.asType())).append(", ");
+            }
+            s.setLength(s.length() - 2);
+            s.append(">");
+        }
+        s.append("(");
+        List<? extends VariableElement> params = constructor.getParameters();
+        if (params != null && !params.isEmpty()) {
+            for (VariableElement param : params) {
+                s.append(param.getSimpleName()).append(": ").append(transformType(param.asType())).append(", ");
+            }
+            s.setLength(s.length() - 2);
+        }
+        s.append("): ").append(transformType(type.asType())).append(";");
         return s.toString();
     }
 
@@ -137,10 +195,10 @@ public abstract class AbstractParser {
                     }
 
                     Main.classes.addClass(((DeclaredType) type).asElement());
-                    return "Java." + rawType.toString().replace("java.lang.", "");
+                    return "_javatypes." + rawType.toString();
                 } else {
                     Main.classes.addClass(((DeclaredType) type).asElement());
-                    return "Java." + rawType.toString().replace(".function.", "._function.");
+                    return "_javatypes." + rawType.toString().replace(".function.", "._function.");
                 }
             }
             case TYPEVAR -> {
@@ -159,9 +217,6 @@ public abstract class AbstractParser {
     public String genComment(Element comment) {
         DocCommentTree tree = Main.treeUtils.getDocCommentTree(comment);
         if (tree == null) {
-            if (comment.getModifiers().contains(Modifier.STATIC)) {
-                return "// static\n";
-            }
             return "";
         }
         final StringBuilder s = new StringBuilder();
@@ -173,8 +228,8 @@ public abstract class AbstractParser {
                     if (referenceString.startsWith("#")) {
                         s.append(referenceString);
                     } else {
-                        s.append("Java.").append(
-                            referenceString.replace("java.lang.", "")
+                        s.append("_javatypes.").append(
+                            referenceString
                             .replace(".function.", "._function.")
                         );
                     }
@@ -199,13 +254,6 @@ public abstract class AbstractParser {
                 s.append("\n").append(blockTag);
             }
         }
-
-        if (comment.getModifiers().contains(Modifier.STATIC)) {
-            return "\n/**\n" +
-                StringHelpers.addToLineStarts(s.toString(), " * ") +
-                " * \n * static" +
-                "\n */\n";
-        }
         return "\n/**\n" +
             StringHelpers.addToLineStarts(s.toString(), " * ") +
             "\n */\n";
@@ -213,7 +261,9 @@ public abstract class AbstractParser {
 
     public abstract String genTSInterface();
 
-
+    public TypeElement getType() {
+        return type;
+    }
 
     @Override
     public boolean equals(Object o) {

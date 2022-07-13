@@ -20,7 +20,7 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
     protected final Core<?, ?> runner;
     public final Extension extension;
 
-    public static Runnable preThread = () -> {};
+    public Runnable preThread = () -> {};
     
     public BaseLanguage(Extension extension, Core<?, ?> runner) {
         this.runner = runner;

@@ -10,7 +10,7 @@ import javax.lang.model.element.TypeElement;
 import java.util.*;
 
 public class PackageTree {
-    public final static List<String> predefinedClasses = List.of("java.util.Collection", "java.util.List", "java.util.Map", "java.util.Set", "java.io.File", "java.net.URL", "java.net.URI", ".Object", ".Class", ".Throwable", "java.io.Serializable", ".StackTraceElement");
+    public final static List<String> predefinedClasses = List.of("java.util.Collection", "java.util.List", "java.util.Map", "java.util.Set", "java.io.File", "java.net.URL", "java.net.URI", "java.lang.Object", "java.lang.Class", "java.lang.Throwable", "java.io.Serializable", "java.lang.StackTraceElement");
     private String pkgName;
     private Map<String, PackageTree> children = new LinkedHashMap<>();
     private Set<ClassParser> classes = new LinkedHashSet<>();
@@ -29,7 +29,7 @@ public class PackageTree {
         while (enclose != null && enclose.getKind() != ElementKind.PACKAGE) enclose = enclose.getEnclosingElement();
 
         if (enclose != null) {
-            String[] pkg = ((PackageElement)enclose).getQualifiedName().toString().replace("java.lang", "").replace(".function.", "._function.").split("\\.");
+            String[] pkg = ((PackageElement)enclose).getQualifiedName().toString().replace(".function.", "._function.").split("\\.");
             for (int i = pkg.length - 1; i >= 0; --i) {
                 if (pkg[i].equals("")) continue;
                 enclosing.push(pkg[i]);
@@ -74,7 +74,7 @@ public class PackageTree {
             onlyChild.pkgName = pkgName + "." + onlyChild.pkgName;
             return onlyChild.genTSTreeIntern();
         }
-        StringBuilder s = new StringBuilder("export namespace ");
+        StringBuilder s = new StringBuilder("namespace ");
         s.append(pkgName).append(" {\n");
         for (String value : compiledClasses.values()) {
             s.append("\n").append(StringHelpers.tabIn(value));
@@ -84,5 +84,13 @@ public class PackageTree {
         }
         s.append("\n}");
         return s.toString();
+    }
+
+    public List<ClassParser> getAllClasses() {
+        List<ClassParser> result = new ArrayList<>(classes);
+        for (PackageTree value : children.values()) {
+            result.addAll(value.getAllClasses());
+        }
+        return result;
     }
 }

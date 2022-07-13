@@ -32,7 +32,7 @@ public class LibraryParser extends AbstractParser {
             }
         }
 
-        return "declare namespace " + name + " {\n\n" +
+        return "namespace " + name + " {\n" +
             StringHelpers.tabIn(genMethods(methods)) +
             "\n}";
     }

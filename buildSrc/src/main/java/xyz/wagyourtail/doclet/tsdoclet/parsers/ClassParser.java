@@ -13,21 +13,23 @@ public class ClassParser extends AbstractParser {
         super(type);
     }
 
-    private String getClassName() {
+    private String getClassName(boolean typeParams) {
         StringBuilder s = new StringBuilder(type.getSimpleName());
         Element type = this.type.getEnclosingElement();
         while (type.getKind() == ElementKind.INTERFACE || type.getKind() == ElementKind.CLASS) {
             s.insert(0, type.getSimpleName() + "$");
             type = type.getEnclosingElement();
         }
-        List<? extends TypeParameterElement> params = this.type.getTypeParameters();
-        if (params != null && !params.isEmpty()) {
-            s.append("<");
-            for (TypeParameterElement param : params) {
-                s.append(transformType(param.asType())).append(", ");
+        if (typeParams) {
+            List<? extends TypeParameterElement> params = this.type.getTypeParameters();
+            if (params != null && !params.isEmpty()) {
+                s.append("<");
+                for (TypeParameterElement param : params) {
+                    s.append(transformType(param.asType())).append(", ");
+                }
+                s.setLength(s.length() - 2);
+                s.append(">");
             }
-            s.setLength(s.length() - 2);
-            s.append(">");
         }
         return s.toString();
     }
@@ -37,14 +39,14 @@ public class ClassParser extends AbstractParser {
         String sup = transformType(type.getSuperclass());
         if (sup.equals("void")) {
             if (type.getKind().isInterface()) {
-                s.append("Java.Interface");
+                s.append("_javatypes.java.lang.Interface");
             } else {
-                s.append("Java.Object");
+                s.append("_javatypes.java.lang.Object");
             }
         } else if (!sup.equals("/* minecraft classes, as any, because obfuscation: */ any")) {
             s.append(sup);
         } else {
-            s.append("/* supressed minecraft class */ Java.Object");
+            s.append("/* supressed minecraft class */ _javatypes.java.lang.Object");
         }
 
         List<? extends TypeMirror> iface = type.getInterfaces();
@@ -52,7 +54,7 @@ public class ClassParser extends AbstractParser {
             for (TypeMirror ifa : iface) {
                 sup = transformType(ifa);
                 if (sup.equals("/* minecraft classes, as any, because obfuscation: */ any")) {
-                    s.append(", ").append("/* supressed minecraft class */ Java.Interface");
+                    s.append(", ").append("/* supressed minecraft class */ _javatypes.java.lang.Interface");
                 } else {
                     s.append(", ").append(sup);
                 }
@@ -65,22 +67,29 @@ public class ClassParser extends AbstractParser {
     public String genTSInterface() {
         Set<Element> fields = new LinkedHashSet<>();
         Set<Element> methods = new LinkedHashSet<>();
+        Set<Element> constructors = new LinkedHashSet<>();
 
         for (Element el : type.getEnclosedElements()) {
             if (el.getModifiers().contains(Modifier.PUBLIC)) {
                 switch (el.getKind()) {
                     case FIELD, ENUM_CONSTANT -> fields.add(el);
                     case METHOD -> methods.add(el);
+                    case CONSTRUCTOR -> constructors.add(el);
                     default -> {}
                 }
             }
         }
 
-        return "export interface " + getClassName() + " extends " + buildExtends() + " {\n" +
-            StringHelpers.tabIn(genFields(fields)) +
-            "\n\n" +
-            StringHelpers.tabIn(genMethods(methods)) +
-            "\n}";
+        StringBuilder s = new StringBuilder("interface ").append(getClassName(true)).append(" extends ").append(buildExtends()).append(" {\n")
+                .append(StringHelpers.tabIn(genFields(fields)))
+                .append(StringHelpers.tabIn(genMethods(methods))).append("\n}");
+        s.append("\nnamespace ").append(getClassName(false)).append(" {\n")
+            .append(StringHelpers.tabIn("interface static {\n"))
+                .append(StringHelpers.tabIn(genConstructors(constructors), 2))
+                .append(StringHelpers.tabIn(genStaticFields(fields), 2))
+                .append(StringHelpers.tabIn(genStaticMethods(methods), 2)).append("\n    }\n}");
+
+        return s.toString();
     }
 
 }
