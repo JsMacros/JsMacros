@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
@@ -90,6 +91,9 @@ public class FGlobalVars extends BaseLibrary {
      * @since 1.1.7
      */
     public Object putObject(String name, Object o) {
+        if (Core.getInstance().extensions.isGuestObject(o)) {
+            throw new AssertionError("Cannot put a guest object into global variables");
+        }
         globalRaw.put(name, o);
         return o;
     }

@@ -89,6 +89,8 @@ public interface Extension {
         return new HashMap<>();
     }
 
+    boolean isGuestObject(Object o);
+
     enum ExtMatch {
         NOT_MATCH(false),
         MATCH(true),

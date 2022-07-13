@@ -166,4 +166,9 @@ public class ExtensionLoader {
         loadingDone = true;
     }
 
+    public boolean isGuestObject(Object obj) {
+        if (notLoaded()) loadExtensions();
+        return extensions.stream().anyMatch(e -> e.isGuestObject(obj));
+    }
+
 }

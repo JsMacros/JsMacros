@@ -1,10 +1,7 @@
 package xyz.wagyourtail.jsmacros.js;
 
 import com.google.common.collect.Sets;
-import org.graalvm.polyglot.Context;
-import org.graalvm.polyglot.PolyglotException;
-import org.graalvm.polyglot.Source;
-import org.graalvm.polyglot.SourceSection;
+import org.graalvm.polyglot.*;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.extensions.Extension;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
@@ -117,6 +114,11 @@ public class GraalExtension implements Extension {
             return new BaseWrappedException<>(ex, message, wrapLocation(((PolyglotException) ex).getSourceLocation()), frames.hasNext() ? internalWrap(frames.next(), frames) : null);
         }
         return null;
+    }
+
+    @Override
+    public boolean isGuestObject(Object o) {
+        return o instanceof Value;
     }
 
     private BaseWrappedException<?> internalWrap(PolyglotException.StackFrame current, Iterator<PolyglotException.StackFrame> frames) {

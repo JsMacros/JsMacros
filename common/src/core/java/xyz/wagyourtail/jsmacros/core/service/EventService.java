@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.service;
 
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -103,6 +104,9 @@ public class EventService implements BaseEvent {
      * @since 1.6.5
      */
     public Object putObject(String name, Object o) {
+        if (Core.getInstance().extensions.isGuestObject(o)) {
+            throw new AssertionError("Cannot put a guest object into event");
+        }
         args.put(name, o);
         return o;
     }

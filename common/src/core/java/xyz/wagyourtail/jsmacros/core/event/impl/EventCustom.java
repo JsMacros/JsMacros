@@ -133,6 +133,9 @@ public class EventCustom implements BaseEvent {
      * @since 1.2.8
      */
     public Object putObject(String name, Object o) {
+        if (Core.getInstance().extensions.isGuestObject(o)) {
+            throw new AssertionError("Cannot put a guest object into an event");
+        }
         args.put(name, o);
         return o;
     }
