@@ -32,7 +32,7 @@ public class EventParser extends AbstractParser {
         }
 
         return "interface " + name + " extends BaseEvent {\n" +
-            StringHelpers.tabIn(genFields(fields)) +
+            StringHelpers.tabIn(genFields(fields)) + "\n" +
             StringHelpers.tabIn(genMethods(methods)) +
             "\n}";
     }
