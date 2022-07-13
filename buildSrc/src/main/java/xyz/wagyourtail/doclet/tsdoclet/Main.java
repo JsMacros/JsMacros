@@ -114,8 +114,8 @@ public class Main implements Doclet {
             outputTS.append("\n\ndeclare namespace Java {");
             for (ClassParser clz : classes.getAllClasses()) {
                 outputTS.append("\n").append("    export function type(className: \"").append(clz.getType().getQualifiedName().toString()).append("\"): ")
-                        .append("_javatypes.java.lang.Class<").append(clz.getType().getQualifiedName().toString())
-                        .append("> & _javatypes.").append(clz.getType().getQualifiedName().toString()).append(".static");
+                        .append("_javatypes.java.lang.Class<_javatypes.").append(clz.getType().getQualifiedName().toString().replace(".function.", "._function."))
+                        .append("> & _javatypes.").append(clz.getType().getQualifiedName().toString().replace(".function.", "._function.")).append(".static");
             }
             outputTS.append("\n}");
 
