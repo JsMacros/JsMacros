@@ -81,12 +81,12 @@ public class ClassParser extends AbstractParser {
         }
 
         StringBuilder s = new StringBuilder("interface ").append(getClassName(true)).append(" extends ").append(buildExtends()).append(" {\n")
-                .append(StringHelpers.tabIn(genFields(fields)))
+                .append(StringHelpers.tabIn(genFields(fields))).append("\n")
                 .append(StringHelpers.tabIn(genMethods(methods))).append("\n}");
         s.append("\nnamespace ").append(getClassName(false)).append(" {\n")
-            .append(StringHelpers.tabIn("interface static {\n"))
-                .append(StringHelpers.tabIn(genConstructors(constructors), 2))
-                .append(StringHelpers.tabIn(genStaticFields(fields), 2))
+            .append(StringHelpers.tabIn("interface static {")).append("\n")
+                .append(StringHelpers.tabIn(genConstructors(constructors), 2)).append("\n")
+                .append(StringHelpers.tabIn(genStaticFields(fields), 2)).append("\n")
                 .append(StringHelpers.tabIn(genStaticMethods(methods), 2)).append("\n    }\n}");
 
         return s.toString();

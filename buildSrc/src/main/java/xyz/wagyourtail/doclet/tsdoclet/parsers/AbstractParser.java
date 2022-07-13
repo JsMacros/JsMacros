@@ -47,7 +47,6 @@ public abstract class AbstractParser {
             if (method.getModifiers().contains(Modifier.STATIC)) continue;
             s.append(genMethod((ExecutableElement) method)).append("\n");
         }
-        if (s.length() > 0) s.append("\n\n");
         return s.toString();
     }
 
@@ -58,7 +57,6 @@ public abstract class AbstractParser {
             if (!method.getModifiers().contains(Modifier.STATIC)) continue;
             s.append(genMethod((ExecutableElement) method)).append("\n");
         }
-        if (s.length() > 0) s.append("\n");
         return s.toString();
     }
 
@@ -68,7 +66,6 @@ public abstract class AbstractParser {
             if (!method.getModifiers().contains(Modifier.PUBLIC)) continue;
             s.append(genConstructor((ExecutableElement) method)).append("\n");
         }
-        if (s.length() > 0) s.append("\n");
         return s.toString();
     }
     public String genField(Element field) {
