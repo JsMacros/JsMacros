@@ -77,6 +77,73 @@ allprojects {
     java {
         withSourcesJar()
     }
+
+    jar {
+
+        def files = []
+        def jsons = []
+
+        eachFile {
+            files.add(it)
+        }
+
+        filesMatching("**/*.mixins.json") {
+            def json = new groovy.json.JsonSlurper().parse(it.open())
+            jsons.add(json)
+        }
+
+        doLast {
+            def pkgs = new ArrayList()
+            def client = new ArrayList()
+            def server = new ArrayList()
+            def mixins = new ArrayList()
+            jsons.forEach({
+                def pkg = it.package
+                pkgs.add(pkg.replace(".", "/"))
+                def cl = it.client
+                if (cl != null) {
+                    cl.forEach({
+                        client.add((pkg + "." + it).replace(".", "/"))
+                    })
+                }
+                def sl = it.server
+                if (sl != null) {
+                    sl.forEach({
+                        server.add((pkg + "." + it).replace(".", "/"))
+                    })
+                }
+                def ml = it.mixins
+                if (ml != null) {
+                    ml.forEach({
+                        mixins.add((pkg + "." + it).replace(".", "/"))
+                    })
+                }
+            })
+            files.forEach({
+                def name = it.relativePath.toString()
+                for (def cl in client) {
+                    if (name.endsWith(cl + ".class")) {
+                        return
+                    }
+                }
+                for (def sl in server) {
+                    if (name.endsWith(sl + ".class")) {
+                        return
+                    }
+                }
+                for (def ml in mixins) {
+                    if (name.endsWith(ml + ".class")) {
+                        return
+                    }
+                }
+                for (def pkg in pkgs) {
+                    if (name.contains(pkg + "/") && name.endsWith(".class")) {
+                        System.err.println("File " + name + " is not in a mixin json")
+                    }
+                }
+            })
+        }
+    }
 }
 
 task removeDist(type: Delete) {
