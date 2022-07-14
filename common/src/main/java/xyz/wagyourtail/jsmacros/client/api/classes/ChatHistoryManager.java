@@ -231,7 +231,7 @@ public class ChatHistoryManager {
      * @since 1.6.0
      * @return direct reference to sent message history list. modifications will affect the list.
      */
-    public List<String> getSent() throws InterruptedException {
+    public List<String> getSent() {
         return hud.getMessageHistory();
     }
 

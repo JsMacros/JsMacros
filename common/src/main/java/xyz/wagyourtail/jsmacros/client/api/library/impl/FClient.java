@@ -10,7 +10,7 @@ import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelStorageException;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ServerInfoHelper;
-import xyz.wagyourtail.jsmacros.client.config.EventLockWatchdog;
+import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.client.tick.TickSync;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -18,9 +18,11 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
+import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -38,13 +40,17 @@ import java.util.concurrent.Semaphore;
  */
 @Library("Client")
 @SuppressWarnings("unused")
-public class FClient extends BaseLibrary {
+public class FClient extends PerExecLibrary {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     /**
      * Don't touch this plz xd.
      */
     public static TickSync tickSynchronizer = new TickSync();
-    
+
+    public FClient(BaseScriptContext<?> context) {
+        super(context);
+    }
+
     /**
     *
     * @since 1.0.0 (was in the {@code jsmacros} library until 1.2.9)
@@ -252,7 +258,7 @@ public class FClient extends BaseLibrary {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined to main!");
         }
-        tickSynchronizer.waitTick();
+        ctx.wrapSleep(tickSynchronizer::waitTick);
     }
     
     /**
@@ -267,9 +273,12 @@ public class FClient extends BaseLibrary {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined to main!");
         }
-        while (--i >= 0) {
-            tickSynchronizer.waitTick();
-        }
+        ctx.wrapSleep(() -> {
+            int i2 = i;
+            while (--i2 >= 0) {
+                tickSynchronizer.waitTick();
+            }
+        });
     }
 
     /**
@@ -299,7 +308,7 @@ public class FClient extends BaseLibrary {
      * @since 1.6.5
      * @throws UnknownHostException
      */
-    public void pingAsync(String ip, MethodWrapper<ServerInfoHelper, IOException, Object, ?> callback) throws UnknownHostException {
+    public void pingAsync(String ip, MethodWrapper<ServerInfoHelper, IOException, Object, ?> callback) {
         CompletableFuture.runAsync(() -> {
             ServerInfo info = new ServerInfo("", ip, false);
             try {

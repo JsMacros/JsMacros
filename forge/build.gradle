@@ -26,14 +26,14 @@ loom {
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
 
-    shadowCommon "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-    shadowCommon "org.graalvm.js:js:${project.graal_version}", {
-        exclude module: "icu4j"
-    }
-    shadowCommon "org.graalvm.truffle:truffle-api:${project.graal_version}"
-    shadowCommon "org.graalvm.regex:regex:${project.graal_version}"
-//		include "org.graalvm.compiler:compiler:${project.graal_version}"
-//		include "org.graalvm.compiler:compiler-management:${project.graal_version}"
+
+    localRuntime "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+    localRuntime "org.graalvm.js:js:${project.graal_version}"
+    localRuntime "org.graalvm.truffle:truffle-api:${project.graal_version}"
+    localRuntime "org.graalvm.regex:regex:${project.graal_version}"
+//		localRuntime "org.graalvm.compiler:compiler:${project.graal_version}"
+//		localRuntime "org.graalvm.compiler:compiler-management:${project.graal_version}"
+
     shadowCommon "io.noties:prism4j:${project.prism_version}", {
         exclude module: "annotations-java5"
     }
@@ -41,7 +41,14 @@ dependencies {
     shadowCommon "org.javassist:javassist:3.28.0-GA"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
+
+    //ij wasn't seeing this, even tho it's part of namedElements...
+    implementation(project(":common").sourceSets.core.output)
+
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
+
+    common(project(path: ":javascript_extension", configuration: "namedElements")) { transitive false }
+    jsmacrosExtensionInclude(project(path: ":javascript_extension", configuration: "namedElements")) { transitive false }
 }
 
 processResources {
@@ -49,6 +56,10 @@ processResources {
 
     filesMatching("META-INF/mods.toml") {
         expand "version": project.version
+    }
+
+    filesMatching("jsmacros.extension.json") {
+        expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")
     }
 }
 
@@ -66,6 +77,11 @@ remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
     classifier null
+
+    from (configurations.jsmacrosExtensionInclude.files) {
+        include '*'
+        into "META-INF/jsmacrosdeps"
+    }
 }
 
 jar {

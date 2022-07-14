@@ -14,6 +14,13 @@ public class StringHelpers {
         return "    " + string.replaceAll("\n", "\n    ");
     }
 
+    public static String tabIn(String string, int count) {
+        for (int i = 0; i < count; i++) {
+            string = "    " + string.replaceAll("\n", "\n    ");
+        }
+        return string;
+    }
+
     public static String tabOut(String string) {
         return ("\n" + string).replaceAll("\n    ", "\n").substring(1);
     }

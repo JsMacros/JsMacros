@@ -25,7 +25,7 @@ declare const Graal: {
  * Java namespace for graal's Java functions.
  */
 declare namespace Java {
-    export function type<T>(className: string):Java.Class<T>;
+    export function type<T>(className: string):_javatypes.java.lang.Class<T> & { new(...values): T }
     export function from<T>(javaData: Array<T> | java.util.Collection<T>):T[];
     export function to<T extends Java.Object>(jsData: any, toType: Java.Class<T>):T;
     export function isJavaObject(obj: Java.Object):boolean;
@@ -35,6 +35,8 @@ declare namespace Java {
     export function isScriptObject(obj: any):boolean;
     export function isScriptFunction(fn: Function):boolean;
     export function addToClasspath(location: string):void;
+
+
 }
 
 /**
@@ -48,71 +50,123 @@ declare const Polyglot: {
     evalFile(languageId: string, sourceFileName: string):() => any;
 }
 
-
-
 /**
- * 
- * Declare the java typings inside the Java namespace, because why not.
- * java types should all be interfaces so new users don't try to call `new` on them directly.
+ *
+ * Declare the java typings.
  * java typings should be namespaced by their package name, for organizational/asthetic reasons,
- * except for java.lang.*, those go top level if they need to be implemented, 
- * tho they should probably get upstreamed to this file.
- * 
+ * java.lang classes should probably get upstreamed to this file.
+ *
  * Declaring this namespace for appending to it is expected of the user if they would like typing for other java classes.
- * 
+ *
  * It would be nice if any libraries that add java classes / functions, used in paramethers or return values,
  * would also include the classes in the same way with a re-declaration to extend the namespace in the libraries typescript file.
  */
 declare namespace Java {
-    //It might be a good idea to check the javadoc because it's hard to typescript constructors like this...
-    export interface Class<T extends Java.Object> extends Java.Object {
-        new(...value: any): T;
-    }
-    export interface Object {}
-    export interface Interface {}
+    export function type(className: "java.lang.Class"):_javatypes.java.lang.Class<_javatypes.java.lang.Class> & _javatypes.java.lang.Class.static
+    export function type(className: "java.lang.Object"):_javatypes.java.lang.Class<_javatypes.java.lang.Object> & _javatypes.java.lang.Object.static
+    export function type(className: "java.lang.StackTraceElement"):_javatypes.java.lang.Class<_javatypes.java.lang.StackTraceElement> & _javatypes.java.lang.StackTraceElement.static
+    export function type(className: "java.lang.Throwable"):_javatypes.java.lang.Class<_javatypes.java.lang.Throwable> & _javatypes.java.lang.Throwable.static
+    export function type(className: "java.io.File"):_javatypes.java.lang.Class<_javatypes.java.io.File> & _javatypes.java.io.File.static
+    export function type(className: "java.net.URI"):_javatypes.java.lang.Class<_javatypes.java.net.URI> & _javatypes.java.net.URI.static
+    export function type(className: "java.net.URL"):_javatypes.java.lang.Class<_javatypes.java.net.URL> & _javatypes.java.net.URL.static
+}
 
-    /**
-     * I know this one isn't really a class in java, but please use it as a wrapper for java arrays, 
-     * so we can differentiate it from other ArrayLike structures.
-     */
-    export interface Array<T> extends Java.Object, ArrayLike<T> {
-        [n: number]: T;
-        length: number;
-    }
 
-    export interface StackTraceElement extends Java.Object, Java.java.io.Serializable {	
-		
-		getFileName():string;
-		getLineNumber():number;
-		getClassName():string;
-		getMethodName():string;
-		isNativeMethod():boolean;
-		toString():string;
-		equals(arg0: any):boolean;
-		hashCode():number;
-		
-	}
+declare namespace _javatypes {
+    namespace java {
+        namespace lang {
+            interface Class<T> extends Object {}
+            namespace Class {
+                interface static {
+                    forName(className: string): Class<?>
+                    forName(name: string, initialize: boolean, loader: ClassLoader): Class<?>
+                    forName(module: Module, name: string): Class<?>
+                }
+            }
 
-    export interface Throwable extends Java.Object, Java.java.io.Serializable, Error {	
-		
-		getMessage():string;
-		getLocalizedMessage():string;
-		getCause():Java.Throwable;
-		initCause(arg0: Java.Throwable):Java.Throwable;
-		toString():string;
-		fillInStackTrace():Java.Throwable;
-		getStackTrace():Java.Array<Java.StackTraceElement>;
-		setStackTrace(arg0: Java.Array<Java.StackTraceElement>):void;
-		addSuppressed(arg0: Java.Throwable):void;
-		getSuppressed():Java.Array<Java.Throwable>;
-		
-    }
-    
+            interface Object {
+                getClass(): Class<Object>
+                hashCode(): number
+                equals(obj: Object): object
+                toString(): string
+                notify(): void
+                notifyAll(): void
+                wait(): void
+                wait(var1: number): void
+                wait(timeoutMillis: number, nanos: number): void
+            }
+            namespace Object {
+                interface static {
+                    new (): Object
+                }
+            }
 
-    export namespace java {
-        export namespace util {
-            
-            export interface Collection<T> extends Java.Object, ArrayLike<T> {
+            interface Interface {}
+            namespace Interface {
+                interface static {}
+            }
+
+            interface Comparable<T> extends Interface {
+                compareTo(var1: T): number
+            }
+            namespace Comparable {
+                interface static {}
+            }
+
+            interface Array<T> extends Object, ArrayLike<T> {
+                [n: number]: T;
+                length: number;
+            }
+            namespace Array {
+                interface static {}
+            }
+
+            interface StackTraceElement extends Object, java.io.Serializable {
+                getFileName():string;
+                getLineNumber():number;
+                getClassName():string;
+                getMethodName():string;
+                isNativeMethod():boolean;
+                toString():string;
+                equals(arg0: any):boolean;
+                hashCode():number;
+            }
+            namespace StackTraceElement {
+                interface static {
+                    new (declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement
+                    new (classLoaderName: string, moduleName: string, moduleVersion: string, declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement
+                }
+            }
+
+            interface Throwable extends Object, java.io.Serializable, Error {
+                getMessage():string;
+                getLocalizedMessage():string;
+                getCause():Throwable;
+                initCause(arg0: Throwable):Throwable;
+                toString():string;
+                fillInStackTrace():Throwable;
+                getStackTrace():Array<StackTraceElement>;
+                setStackTrace(arg0: Array<StackTraceElement>):void;
+                addSuppressed(arg0: Throwable):void;
+                getSuppressed():Array<Throwable>;
+            }
+            namespace Throwable {
+                interface static {
+                    new (): Throwable
+                    new (message: string): Throwable
+                    new (message: string, cause: Throwable): Throwable
+                }
+            }
+
+            interface Iterable<T> extends java.lang.Interface, ArrayLike<T> {
+            }
+            namespace Iterable {
+                namespace static {}
+            }
+        }
+
+        namespace util {
+            interface Collection<T> extends java.lang.Iterable<T> {
                 readonly [n: number]: T;
                 size(): number;
                 get(index: number): T;
@@ -126,7 +180,11 @@ declare namespace Java {
                 retainAll(elements: Collection<T>): boolean;
                 toArray(): Array<T>;
             }
-            export interface List<T> extends Collection<T> {
+            namespace Collection {
+                interface static {}
+            }
+
+            interface List<T> extends Collection<T> {
                 set(index: number, element: T): T;
                 // the `| T` and optional second arg are here to make this compatible with Collection<T>
                 add(index: number | T, element?: T): boolean;
@@ -137,7 +195,11 @@ declare namespace Java {
                 indexOf(element: T): number;
                 lastIndexOf(element: T): number;
             }
-            export interface Map<K, V> extends Java.Object {
+            namespace List {
+                interface static {}
+            }
+
+            interface Map<K, V> extends java.lang.Object {
                 clear(): void;
                 containsKey(key: K): boolean;
                 containsValue(value: V): boolean;
@@ -153,11 +215,18 @@ declare namespace Java {
                 size(): number;
                 values(): Collection<V>;
             }
-            export interface Set<T> extends Collection<T> {}
+            namespace Map {
+                interface static {}
+            }
+
+            interface Set<T> extends Collection<T> {}
+            namespace Set {
+                interface static {}
+            }
         }
-    
-        export namespace io {
-            export interface File extends Java.Object {
+
+        namespace io {
+            interface File extends java.lang.Object {
                 canExecute(): boolean;
                 canRead(): boolean;
                 canWrite(): boolean;
@@ -175,8 +244,8 @@ declare namespace Java {
                 isFile(): boolean;
                 isHidden(): boolean;
                 length(): number;
-                list(): Java.Array<string>;
-                listFiles(): Java.Array<File>;
+                list(): java.lang.Array<string>;
+                listFiles(): java.lang.Array<File>;
                 mkdir(): boolean;
                 mkdirs(): boolean;
                 renameTo(dest: File): boolean;
@@ -185,17 +254,26 @@ declare namespace Java {
                 setReadable(readable: boolean, ownerOnly?: boolean): boolean;
                 setWritable(writable: boolean, ownerOnly?: boolean): boolean;
                 toString(): string;
-                toURI(): Java.java.net.URI;
+                toURI(): java.net.URI;
             }
-            
-			export interface Serializable extends Java.Object {	
-				
-				
-			}
+            namespace File {
+                interface static {
+                    new (pathName: string): File
+                    new (parent: string, child: string): File
+                    new (parent: File, child: string): File
+                    new (uri: java.net.URI): File
+                    listRoots(): java.lang.Array<File>
+                }
+            }
+
+            interface Serializable extends java.lang.Interface{}
+            namespace Serializable {
+                interface static {}
+            }
         }
-        
-        export namespace net {
-            export interface URL extends Java.Object {
+
+        namespace net {
+            interface URL extends java.lang.Object {
                 getFile(): string;
                 getPath(): string;
                 getProtocol(): string;
@@ -204,7 +282,16 @@ declare namespace Java {
                 toString(): string;
                 toURI(): URI;
             }
-            export interface URI extends Java.Object {
+            namespace URL {
+                interface static {
+                    new (protocol: string, host: string, port: number, file: string): URL
+                    new (protocol: string, host: string, file: string): URL
+                    new (spec: string): URL
+                    new (context: URL, spec: string): URL
+                }
+            }
+
+            interface URI extends java.lang.Object, java.lang.Comparable<URI>, java.io.Serializable {
                 getHost(): string;
                 getPath(): string;
                 getPort(): number;
@@ -215,8 +302,18 @@ declare namespace Java {
                 resolve(str: string): URI;
                 toASCIIString(): string;
                 toString(): string;
-                toURL(): Java.java.net.URL;
-
+                toURL(): URL;
+            }
+            namespace URI {
+                interface static {
+                    new (str: string): URI
+                    new (scheme: string, userInfo: string, host: string, port: number, path: string, query: string, fragment: string)
+                    new (scheme: string, authority: string, path: string, query: string, fragment: string)
+                    new (scheme: string, host: string, path: string, fragment: string)
+                    new (scheme: string, ssp: string, fragment: string)
+                    new (scheme: string, path: string)
+                    create(str: string): URI
+                }
             }
         }
     }

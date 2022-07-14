@@ -9,6 +9,7 @@ import xyz.wagyourtail.StringHelpers;
 import xyz.wagyourtail.doclet.options.IgnoredItem;
 import xyz.wagyourtail.doclet.options.OutputDirectory;
 import xyz.wagyourtail.doclet.options.Version;
+import xyz.wagyourtail.doclet.tsdoclet.parsers.ClassParser;
 import xyz.wagyourtail.doclet.tsdoclet.parsers.EventParser;
 import xyz.wagyourtail.doclet.tsdoclet.parsers.LibraryParser;
 
@@ -17,15 +18,12 @@ import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Main implements Doclet {
     public static Reporter reporter;
     public static FileHandler outputTS;
-    public static PackageTree classes = new PackageTree("Java");
+    public static PackageTree classes = new PackageTree("_javatypes");
     public static DocTrees treeUtils;
 
     @Override
@@ -94,11 +92,11 @@ public class Main implements Doclet {
         try {
             outputTS.append("""
                 declare const event: Events.BaseEvent;
-                declare const file: Java.java.io.File;
-                declare const context: Java.xyz.wagyourtail.jsmacros.core.language.EventContainer<any>;
+                declare const file: _javatypes.java.io.File;
+                declare const context: _javatypes.xyz.wagyourtail.jsmacros.core.language.EventContainer<any>;
 
                 declare namespace Events {
-                    export interface BaseEvent extends Java.Object {
+                    export interface BaseEvent extends _javatypes.java.lang.Object {
                         getEventName(): string;
                     }""");
 
@@ -112,8 +110,14 @@ public class Main implements Doclet {
                 outputTS.append("\n\n" + lib.genTSInterface());
             }
 
-            outputTS.append("\n\n" + classes.genTSTree().replaceFirst("export", "declare"));
-
+            outputTS.append("\n\ndeclare " + classes.genTSTree());
+            outputTS.append("\n\ndeclare namespace Java {");
+            for (ClassParser clz : classes.getAllClasses()) {
+                outputTS.append("\n").append("    export function type(className: \"").append(clz.getType().getQualifiedName().toString()).append("\"): ")
+                        .append("_javatypes.java.lang.Class<_javatypes.").append(clz.getType().getQualifiedName().toString().replace(".function.", "._function."))
+                        .append("> & _javatypes.").append(clz.getType().getQualifiedName().toString().replace(".function.", "._function.")).append(".static");
+            }
+            outputTS.append("\n}");
 
         } catch (IOException e) {
             e.printStackTrace();

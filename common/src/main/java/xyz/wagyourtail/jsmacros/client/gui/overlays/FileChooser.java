@@ -7,7 +7,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
+import xyz.wagyourtail.jsmacros.core.extensions.ExtensionLoader;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 import xyz.wagyourtail.wagyourgui.overlays.ConfirmOverlay;
@@ -129,17 +129,13 @@ public class FileChooser extends OverlayContainer {
 
         this.addDrawableChild(new Button(x + w / 6 + 2, y + height - 14, w / 6, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.new"), (btn) -> this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, Text.translatable("jsmacros.filename"), "", this, (str) -> {
             if (str.trim().equals("")) return;
-            boolean edit = true;
-            for (BaseLanguage language : Core.getInstance().languages) {
-                if (str.endsWith(language.extension)) {
-                    edit = false;
-                    break;
-                }
-            }
-            if (edit) {
-                str += Core.getInstance().defaultLang.extension;
-            }
+
+            // has extension
             File f = new File(directory, str);
+            if (Core.getInstance().extensions.getExtensionForFile(f) == null) {
+                str += "." + Core.getInstance().extensions.getHighestPriorityExtension().defaultFileExtension();
+                f = new File(directory, str);
+            }
             try {
                 f.createNewFile();
                 this.setDir(directory);

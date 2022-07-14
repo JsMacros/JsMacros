@@ -31,6 +31,7 @@ run/
 
 doc/
 *.log
+*.log.gz
 
 
 docs/web/[0-9]*

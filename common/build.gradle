@@ -3,6 +3,19 @@ architectury {
     common("fabric", "forge")
 }
 
+
+sourceSets {
+    core {
+        configurations.coreImplementation.setCanBeResolved(true)
+        compileClasspath += configurations.coreImplementation + configurations.minecraftLibraries
+        runtimeClasspath += configurations.coreImplementation + configurations.minecraftLibraries
+    }
+    main {
+        compileClasspath += core.output
+        runtimeClasspath += core.output
+    }
+}
+
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
@@ -23,8 +36,17 @@ publishing {
     }
 }
 
+jar {
+    classifier "dev"
+    from sourceSets.main.output, sourceSets.core.output
+
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+
+}
+
 task generatePyDoc(type: Javadoc) {
-    source = sourceSets.main.allJava
+    source = sourceSets.main.allJava + sourceSets.core.allJava
     classpath = sourceSets.main.compileClasspath
     destinationDir = new File(rootProject.buildDir, "docs/python/JsMacrosAC/")
     options.doclet = "xyz.wagyourtail.doclet.pydoclet.Main"
@@ -38,7 +60,7 @@ task copyPyDoc(type: Copy, dependsOn: generatePyDoc) {
 }
 
 task generateTSDoc(type: Javadoc) {
-    source = sourceSets.main.allJava
+    source = sourceSets.main.allJava + sourceSets.core.allJava
     classpath = sourceSets.main.compileClasspath
     destinationDir = new File(rootProject.buildDir, "docs/typescript/headers/")
     options.doclet = "xyz.wagyourtail.doclet.tsdoclet.Main"
@@ -52,7 +74,7 @@ task copyTSEnv(type: Copy, dependsOn: generateTSDoc) {
 }
 
 task generateWebDoc(type: Javadoc) {
-    source = sourceSets.main.allJava
+    source = sourceSets.main.allJava + sourceSets.core.allJava
     classpath = sourceSets.main.compileClasspath
     destinationDir = new File(rootProject.buildDir, "docs/web/")
     options.doclet = "xyz.wagyourtail.doclet.webdoclet.Main"
@@ -60,7 +82,7 @@ task generateWebDoc(type: Javadoc) {
     options.addStringOption "v", version
     options.addStringOption "mcv", rootProject.minecraft_version
     options {
-        links 'https://docs.oracle.com/javase/8/docs/api/', 'https://logging.apache.org/log4j/2.x/log4j-api/apidocs/', 'https://javadoc.io/doc/com.neovisionaries/nv-websocket-client/latest/'
+        links 'https://docs.oracle.com/javase/8/docs/api/', 'https://www.javadoc.io/doc/org.slf4j/slf4j-api/1.7.30/', 'https://javadoc.io/doc/com.neovisionaries/nv-websocket-client/latest/'
     }
 }
 

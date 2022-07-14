@@ -4,7 +4,6 @@
     "mixins": [
     ],
     "client": [
-        "MixinTranslationStorage"
     ],
     "injectors": {
         "defaultRequire": 1

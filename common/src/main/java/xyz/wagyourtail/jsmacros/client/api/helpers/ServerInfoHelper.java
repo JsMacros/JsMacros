@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.network.ServerInfo;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableTextContent;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 

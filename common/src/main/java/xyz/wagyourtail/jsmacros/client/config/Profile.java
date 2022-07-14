@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.config;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
+import org.slf4j.Logger;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
@@ -13,6 +14,7 @@ import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
+import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
@@ -25,8 +27,8 @@ import java.util.Arrays;
 
 public class Profile extends BaseProfile {
     
-    public Profile(Core<Profile, ?> runner) {
-        super(runner, JsMacros.LOGGER);
+    public Profile(Core<Profile, ?> runner, Logger logger) {
+        super(runner, logger);
     }
     
     @Override
@@ -41,7 +43,7 @@ public class Profile extends BaseProfile {
     
     @Override
     public void triggerEventJoin(BaseEvent event) {
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = checkJoinedThreadStack();
         triggerEventJoinNoAnything(event);
     
         for (IEventListener macro : runner.eventRegistry.getListeners("ANYTHING")) {
@@ -51,7 +53,7 @@ public class Profile extends BaseProfile {
     
     @Override
     public void triggerEventJoinNoAnything(BaseEvent event) {
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        boolean joinedMain = checkJoinedThreadStack();
         if (event instanceof EventCustom) {
             for (IEventListener macro : runner.eventRegistry.getListeners(((EventCustom) event).eventName)) {
                 runJoinedEventListener(event, joinedMain, macro);
@@ -168,6 +170,8 @@ public class Profile extends BaseProfile {
 
         runner.eventRegistry.addEvent(EventAirChange.class);
         runner.eventRegistry.addEvent(EventArmorChange.class);
+        runner.eventRegistry.addEvent(EventAttackBlock.class);
+        runner.eventRegistry.addEvent(EventAttackEntity.class);
         runner.eventRegistry.addEvent(EventBlockUpdate.class);
         runner.eventRegistry.addEvent(EventBossbar.class);
         runner.eventRegistry.addEvent(EventChunkLoad.class);
@@ -187,6 +191,8 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventFallFlying.class);
         runner.eventRegistry.addEvent(EventHeldItemChange.class);
         runner.eventRegistry.addEvent(EventHungerChange.class);
+        runner.eventRegistry.addEvent(EventInteractBlock.class);
+        runner.eventRegistry.addEvent(EventInteractEntity.class);
         runner.eventRegistry.addEvent(EventItemDamage.class);
         runner.eventRegistry.addEvent(EventItemPickup.class);
         runner.eventRegistry.addEvent(EventJoinedTick.class);

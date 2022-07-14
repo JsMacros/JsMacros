@@ -17,6 +17,7 @@ import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +57,7 @@ public class CommandBuilderForge extends CommandBuilder {
     }
 
     @Override
-    public CommandBuilder executes(MethodWrapper<CommandContextHelper, Object, Boolean, ?> callback) {
+    public CommandBuilder executes(MethodWrapper<CommandContextHelper, Object, Object, ?> callback) {
         Pair<Boolean, Function<CommandRegistryAccess, ArgumentBuilder<ServerCommandSource, ?>>> arg = pointer.pop();
         pointer.push(new Pair<>(arg.getT(), arg.getU().andThen((e) -> e.executes((ctx) -> internalExecutes(ctx, callback)))));
         return this;

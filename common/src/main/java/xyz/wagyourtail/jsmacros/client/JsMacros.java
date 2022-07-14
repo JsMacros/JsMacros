@@ -8,9 +8,9 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.config.Profile;
 import xyz.wagyourtail.jsmacros.client.event.EventRegistry;
@@ -24,7 +24,7 @@ import java.util.ServiceLoader;
 
 public class JsMacros {
     public static final String MOD_ID = "jsmacros";
-    public static final Logger LOGGER  = LogManager.getLogger();
+    public static final Logger LOGGER  = LoggerFactory.getLogger(MOD_ID);
     public static KeyBinding keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title"));
     public static BaseScreen prevScreen;
     protected static final File configFolder = ServiceLoader.load(ConfigFolder.class).findFirst().orElseThrow().getFolder();
@@ -145,25 +145,5 @@ public class JsMacros {
             a[i-start] = i;
         }
         return a;
-    }
-
-
-    public static Object tryAutoCastNumber(Class<?> returnType, Object number) {
-        if ((returnType == int.class || returnType == Integer.class) && !(number instanceof Integer)) {
-            number = ((Number) number).intValue();
-        } else if ((returnType == float.class || returnType == Float.class) && !(number instanceof Float)) {
-            number = ((Number) number).floatValue();
-        } else if ((returnType == double.class || returnType == Double.class) && !(number instanceof Double)) {
-            number = ((Number) number).doubleValue();
-        } else if ((returnType == short.class || returnType == Short.class) && !(number instanceof Short)) {
-            number = ((Number) number).shortValue();
-        } else if ((returnType == long.class || returnType == Long.class) && !(number instanceof Long)) {
-            number = ((Number) number).longValue();
-        } else if ((returnType == char.class || returnType == Character.class) && !(number instanceof Character)) {
-            number = (char) ((Number) number).intValue();
-        } else if ((returnType == byte.class || returnType == Byte.class) && !(number instanceof Byte)) {
-            number = ((Number) number).byteValue();
-        }
-        return number;
     }
 }

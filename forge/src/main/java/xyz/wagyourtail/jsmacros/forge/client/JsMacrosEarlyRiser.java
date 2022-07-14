@@ -23,14 +23,5 @@ public class JsMacrosEarlyRiser implements IMixinConnector {
         LOGGER.log(Level.INFO, "[JsMacros] Loading Mixins.");
         Mixins.addConfiguration("jsmacros.mixins.json");
         Mixins.addConfiguration("jsmacros-forge.mixins.json");
-        try {
-            loadFakeFabricDeps();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void loadFakeFabricDeps() throws Exception {
-        new FakeFabricLoader(new File(FMLLoader.getGamePath().toFile(), "mods/jsmacros")).loadMixins();
     }
 }

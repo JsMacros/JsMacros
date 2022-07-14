@@ -230,7 +230,7 @@ public class FPlayer extends BaseLibrary {
      * @see #createPlayerInputsFromCsv(String)
      * @since 1.4.0
      */
-    public PlayerInput createPlayerInputsFromJson(String json) throws NoSuchFieldException, IllegalAccessException {
+    public PlayerInput createPlayerInputsFromJson(String json) {
         return PlayerInput.fromJson(json);
     }
 
@@ -318,6 +318,15 @@ public class FPlayer extends BaseLibrary {
      */
     public List<PositionCommon.Pos3D> predictInputs(PlayerInput[] inputs) {
         return predictInputs(inputs, false);
+    }
+
+    /**
+     * @since 1.8.0
+     * @return
+     */
+    public boolean isBreakingBlock() {
+        assert mc.interactionManager != null;
+        return mc.interactionManager.isBreakingBlock();
     }
 
     /**

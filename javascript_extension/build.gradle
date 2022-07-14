@@ -1,0 +1,69 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+archivesBaseName = archivesBaseName + "-js-extension"
+
+configurations {
+    common
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+}
+
+dependencies {
+    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
+    // Do NOT use other classes from fabric loader
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
+
+    implementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+    implementation "org.graalvm.js:js:${project.graal_version}"
+    implementation "org.graalvm.truffle:truffle-api:${project.graal_version}"
+    implementation "org.graalvm.regex:regex:${project.graal_version}"
+//		implementation "org.graalvm.compiler:compiler:${project.graal_version}"
+//		implementation "org.graalvm.compiler:compiler-management:${project.graal_version}"
+
+
+    jsmacrosExtensionInclude "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+    jsmacrosExtensionInclude "org.graalvm.js:js:${project.graal_version}"
+    jsmacrosExtensionInclude "org.graalvm.truffle:truffle-api:${project.graal_version}"
+    jsmacrosExtensionInclude "org.graalvm.regex:regex:${project.graal_version}"
+//		jsmacrosExtensionInclude "org.graalvm.compiler:compiler:${project.graal_version}"
+//		jsmacrosExtensionInclude "org.graalvm.compiler:compiler-management:${project.graal_version}"
+
+    implementation(project(":common").sourceSets.core.output)
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+
+}
+
+processResources {
+    filesMatching("jsmacros.ext.graal.json") {
+        expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")
+    }
+}
+
+jar {
+    from (configurations.jsmacrosExtensionInclude.files) {
+        include '*'
+        into "META-INF/jsmacrosdeps"
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenFabric(MavenPublication) {
+            artifactId = rootProject.archives_base_name + "-" + project.name
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+    }
+}

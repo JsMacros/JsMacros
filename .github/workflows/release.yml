@@ -11,55 +11,55 @@ on:
 jobs:
 
   build_1_19:
-    uses: wagyourtail/jsmacros/.github/workflows/releasebuild.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.19
     with:
       branch: main-1.19
       java_version: 17
 
   build_1_18:
-    uses: wagyourtail/jsmacros/.github/workflows/releasebuild.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.19
     with:
       branch: backport-1.18.2
       java_version: 17
 
   build_1_17:
-    uses: wagyourtail/jsmacros/.github/workflows/releasebuild.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.19
     with:
       branch: backport-1.17.1
       java_version: 17
 
   build_1_16:
-    uses: wagyourtail/jsmacros/.github/workflows/releasebuild.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.19
     with:
       branch: backport-1.16.5
       java_version: 17
 
   build_1_15:
-    uses: wagyourtail/jsmacros/.github/workflows/releasebuild.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.19
     with:
       branch: backport-1.15.2
       java_version: 17
 
   build_1_14:
-    uses: wagyourtail/jsmacros/.github/workflows/releasebuild.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.19
     with:
       branch: backport-1.14.4
       java_version: 17
 
   build_1_12:
-    uses: wagyourtail/jsmacros/.github/workflows/releasebuild.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.19
     with:
       branch: backport-1.12.2
       java_version: 17
 
   build_1_8:
-    uses: wagyourtail/jsmacros/.github/workflows/releasebuild.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.19
     with:
       branch: backport-1.8.9
       java_version: 8
 
   deploy_1_19:
-    uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
     with:
       branch: main-1.19
       game_vers: 1.19
@@ -73,7 +73,7 @@ jobs:
       - deploy_1_18
 
   deploy_1_18:
-    uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
     with:
       branch: backport-1.18.2
       game_vers: 1.18.2
@@ -87,7 +87,7 @@ jobs:
       - deploy_1_17
 
   deploy_1_17:
-    uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
     with:
       branch: backport-1.17.1
       game_vers: 1.17.1
@@ -101,7 +101,7 @@ jobs:
       - deploy_1_16
 
   deploy_1_16:
-    uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
     with:
       branch: backport-1.16.5
       game_vers: |
@@ -118,7 +118,7 @@ jobs:
       - deploy_1_15
 
   deploy_1_15:
-    uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
     with:
       branch: backport-1.15.2
       game_vers: 1.15.2
@@ -132,7 +132,7 @@ jobs:
       - deploy_1_14
 
   deploy_1_14:
-    uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
     with:
       branch: backport-1.14.4
       game_vers: 1.14.4
@@ -146,7 +146,7 @@ jobs:
       - deploy_1_12
 
   deploy_1_12:
-    uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
     with:
       branch: backport-1.12.2
       game_vers: 1.12.2
@@ -160,7 +160,7 @@ jobs:
       - deploy_1_8
 
   deploy_1_8:
-    uses: wagyourtail/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
+    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
     with:
       branch: backport-1.8.9
       game_vers: 1.8.9
