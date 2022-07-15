@@ -3,6 +3,7 @@ package xyz.wagyourtail.doclet.tsdoclet.parsers;
 import com.sun.source.doctree.*;
 import xyz.wagyourtail.StringHelpers;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.doclet.tsdoclet.Main;
 
 import javax.lang.model.element.*;
@@ -101,7 +102,14 @@ public abstract class AbstractParser {
                 s.setLength(s.length() - 2);
             }
         }
-        s.append("): ").append(transformType(method.getReturnType())).append(";");
+        s.append("): ");
+        DocletReplaceReturn replace2 = method.getAnnotation(DocletReplaceReturn.class);
+        if (replace2 != null) {
+            s.append(replace2.value());
+        } else {
+            s.append(transformType(method.getReturnType()));
+        }
+        s.append(";");
 
         return s.toString();
     }

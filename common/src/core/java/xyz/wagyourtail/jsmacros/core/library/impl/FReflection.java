@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.core.library.impl;
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
 import xyz.wagyourtail.Util;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.classes.Mappings;
 import xyz.wagyourtail.jsmacros.core.classes.WrappedClassInstance;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
@@ -53,28 +54,29 @@ public class FReflection extends PerExecLibrary {
      * @see FReflection#getClass(String, String)
      * @since 1.2.3
      */
-    public Class<?> getClass(String name) throws ClassNotFoundException {
+     @DocletReplaceReturn("_javatypes.java.lang.Class<T> & { new(...values): T }")
+    public <T> Class<T> getClass(String name) throws ClassNotFoundException {
         switch (name) {
             case "boolean":
-                return boolean.class;
+                return (Class<T>) boolean.class;
             case "byte":
-                return byte.class;
+                return (Class<T>) byte.class;
             case "short":
-                return short.class;
+                return (Class<T>) short.class;
             case "int":
-                return int.class;
+                return (Class<T>) int.class;
             case "long":
-                return long.class;
+                return (Class<T>) long.class;
             case "float":
-                return float.class;
+                return (Class<T>) float.class;
             case "double":
-                return double.class;
+                return (Class<T>) double.class;
             case "char":
-                return char.class;
+                return (Class<T>) char.class;
             case "void":
-                return void.class;
+                return (Class<T>) void.class;
             default:
-                return Class.forName(name, true, classLoader);
+                return (Class<T>) Class.forName(name, true, classLoader);
         }
     }
     
@@ -90,11 +92,12 @@ public class FReflection extends PerExecLibrary {
      * @throws ClassNotFoundException
      * @since 1.2.3
      */
-    public Class<?> getClass(String name, String name2) throws ClassNotFoundException {
+     @DocletReplaceReturn("_javatypes.java.lang.Class<T> & { new(...values): T }")
+    public <T> Class<T> getClass(String name, String name2) throws ClassNotFoundException {
         try {
             return getClass(name);
         } catch (ClassNotFoundException e) {
-            return Class.forName(name2);
+            return (Class<T>) Class.forName(name2);
         }
     }
     
