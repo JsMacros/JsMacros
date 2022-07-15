@@ -36,30 +36,9 @@ public class JsMacrosForge {
         ForgeEvents.init();
 
         ClientRegistry.registerKeyBinding(JsMacros.keyBinding);
-
-        // load fabric-style plugins
-        Thread.currentThread().setContextClassLoader(new ShimClassLoader());
     }
 
     public void onInitializeClient(FMLClientSetupEvent event) {
         JsMacros.onInitializeClient();
-
-        // load fabric-style plugins
-        Thread.currentThread().setContextClassLoader(new ShimClassLoader());
-    }
-
-    public static class ShimClassLoader extends ClassLoader {
-        public ShimClassLoader() {
-            super(ShimClassLoader.class.getClassLoader());
-        }
-
-        @Override
-        public Class<?> loadClass(String name) throws ClassNotFoundException {
-            try {
-                return super.loadClass(name);
-            } catch (StringIndexOutOfBoundsException e) {
-                throw new ClassNotFoundException();
-            }
-        }
     }
 }
