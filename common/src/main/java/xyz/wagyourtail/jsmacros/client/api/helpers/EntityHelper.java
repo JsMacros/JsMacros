@@ -175,7 +175,20 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @param name
      */
     public void setCustomName(TextHelper name) {
-        base.setCustomName(name.getRaw());
+        if (name == null) {
+            base.setCustomName(null);
+        } else {
+            base.setCustomName(name.getRaw());
+        }
+    }
+
+    /**
+     * sets the name to always display
+     * @since 1.8.0
+     * @param b
+     */
+    public void setCustomNameVisible(boolean b) {
+        base.setCustomNameVisible(b);
     }
 
     /**
