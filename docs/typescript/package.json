@@ -1,0 +1,33 @@
+{
+  "name": "@jsmacros/jsmacros-typescript",
+  "version": "0.0.1",
+  "description": "Typescript definitions & configuration to compile typescript into valid JsMacros code",
+  "main": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JsMacros/JsMacros.git"
+  },
+  "keywords": [
+    "minecraft",
+    "mod",
+    "jsmacros",
+    "jsm",
+    "types",
+    "typescript",
+    "macro",
+    "macros"
+  ],
+  "files": ["headers", "index.d.ts", "tsconfig.json"],
+  "author": "William Gray <wagyourtail@wagyourtail.xyz> (https://wagyourtail.xyz/)",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/JsMacros/JsMacros/issues"
+  },
+  "homepage": "https://github.com/JsMacros/JsMacros#readme",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  }
+}
