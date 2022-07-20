@@ -202,3 +202,46 @@ jobs:
           cd dist/python
           python setup.py sdist bdist_wheel
           twine upload dist/*
+
+  publish_npm:
+    runs-on: ubuntu-latest
+    needs:
+      - build_1_19
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: main-1.19
+          path: dist
+
+      - uses: actions/setup-node@v3
+        name: Setup node
+        with:
+          registry-url: https://registry.npmjs.org/
+          node-version: latest
+
+      - name: Extract Version Number
+        uses: actions/github-script@v5
+        id: version_num
+        env:
+          REF: '${{ github.ref }}'
+        with:
+          result-encoding: string
+          script: |
+            return `${process.env.REF.replace(/\/?refs\/tags\//, '')}`
+
+      # The types .d.ts file normally has a version number in it
+      # This is useful for people using the file directly so they can download multiple versions and keep track of which one is which
+      # But for the npm package, it's easier to rename it to be consistent than to dynamically edit the package.json and tsconfig.json
+      - name: Remove version number from .d.ts file
+        run:
+          mv dist/typescript/headers/JsMacros-*.d.ts dist/typescript/headers/JsMacros.d.ts
+
+      - name: Publish to node
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          cd dist/typescript
+          npm version ${{ steps.version_num.outputs.result }}
+          npm publish
+
