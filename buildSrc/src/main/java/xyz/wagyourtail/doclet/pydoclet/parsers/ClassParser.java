@@ -6,6 +6,7 @@ import xyz.wagyourtail.doclet.pydoclet.Main;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
+import javax.tools.Diagnostic;
 import java.util.*;
 
 public class ClassParser {
@@ -88,8 +89,14 @@ public class ClassParser {
 
             method.getParameters().forEach(parameter -> sb.append(", ").append(getVarName(parameter.getSimpleName().toString())).append(": ").append(getTypeMirrorName(parameter.asType(), false)));
             sb.append(") -> ");
-            //Main.reporter.print(Diagnostic.Kind.NOTE, getTypeMirrorName(method.getReturnType(), false) + "");
-            if (method.getReceiverType() != null) sb.append(getTypeMirrorName(method.getReturnType(), false));
+
+            if (method.getReceiverType() != null) {
+                String return_type = getTypeMirrorName(method.getReturnType(), false);
+
+//                Main.reporter.print(Diagnostic.Kind.NOTE, return_type);  // TODO hey! why weird type?
+
+                sb.append(return_type);
+            };
             sb.append(":\n");
 
             sb.append(getMethodDoc(method));
@@ -225,6 +232,9 @@ public class ClassParser {
         imports.forEach(t -> {
             if(!types.containsKey(getClearedNameFromTypeMirror(t))){
                 if(!withArg.containsKey(getClearedNameFromTypeMirror(t))) {
+
+                    if (!typeVars.isEmpty() && !(t + "").endsWith("int") && !(t + "").endsWith("str") && !(t + "").endsWith("void")) Main.reporter.print(Diagnostic.Kind.NOTE, t.toString());  // TODO hey! look at me!
+
                     if ((t + "").startsWith("xyz")) {
                         if (Main.typeUtils.asElement(t) != null) {
                             if (!getClassName((TypeElement) Main.typeUtils.asElement(t)).equals(getClassName(type))) {
@@ -236,13 +246,13 @@ public class ClassParser {
                             (t + "").startsWith("java.lang.Runnable") || (t + "").startsWith("java.lang.Thread") || (t + "").startsWith("java.lang.Throwable") ||
                             (t + "").startsWith("java.util.function") || (t + "").startsWith("java.lang.ref") || (t + "").startsWith("java.io") || (t + "").startsWith("org") || (t + "").startsWith("java.lang.Iterable") ||
                             (t + "").startsWith("java.lang.StackTraceElement")) {
-                        //Main.reporter.print(Diagnostic.Kind.NOTE, typeVars + "");
+//                        Main.reporter.print(Diagnostic.Kind.NOTE, typeVars + "");  // TODO hey! look at me!
                         if (!importTypeVar) importTypeVar = true;
                         typeVars.put(
                                 getClassName((TypeElement) Main.typeUtils.asElement(t)),
                                 new AbstractMap.SimpleEntry<>(t + "", false)
                         );
-                    }
+                    };
                 }
             }
         });
@@ -267,7 +277,7 @@ public class ClassParser {
         sb.append("\n");
         String type_name;
         for(Map.Entry<String, Map.Entry<String, Boolean>> entry : typeVars.entrySet()){
-            type_name = entry.getValue().getKey().toString().replace("<", "_").replace(">", "_").replace("?", "").replace(".", "_");
+            type_name = entry.getValue().getKey().replace("<", "_").replace(">", "_").replace("?", "").replace(".", "_");
             if(Objects.equals(type_name.toString(), "T") || Objects.equals(type_name.toString(), "U") || Objects.equals(type_name.toString(), "R")){
                 sb.append(entry.getKey()).append(" = TypeVar(\"").append(entry.getKey()).append("\")\n");
             } else {
@@ -365,7 +375,9 @@ public class ClassParser {
 
     private String getTypeMirrorName(TypeMirror type, boolean cls) {
         imports.add(type);
-        //Main.reporter.print(Diagnostic.Kind.MANDATORY_WARNING, type + "");
+//        Main.reporter.print(Diagnostic.Kind.MANDATORY_WARNING, type + "");
+//        Main.reporter.print(Diagnostic.Kind.NOTE, type.toString());
+        // TODO  hey! why weird names?
         switch (type.getKind()) {
             case BOOLEAN -> {
                 return "bool";
