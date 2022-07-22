@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
@@ -167,7 +168,7 @@ public class FJsMacros extends PerExecLibrary {
      *
      * @return
      */
-    public EventContainer<?> runScript(String language, String script, String file, BaseEvent event, MethodWrapper<Throwable, Object, Object, ?> callback) {
+    public EventContainer<?> runScript(String language, String script, String file, BaseEvent event, @Nullable MethodWrapper<Throwable, Object, Object, ?> callback) {
         if (callback != null) {
             return Core.getInstance().exec(language, script, file != null ? ctx.getContainedFolder().toPath().resolve(file).toFile() : null, event, () -> callback.accept(null), callback);
         } else {

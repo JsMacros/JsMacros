@@ -22,7 +22,7 @@ public class MovementQueue {
 
     private static boolean doDrawPredictions = false;
 
-    public static PlayerInput tick(ClientPlayerEntity newPlayer) {
+    public synchronized static PlayerInput tick(ClientPlayerEntity newPlayer) {
         if (queuePos == queue.size()) {
             return null;
         }
@@ -58,7 +58,7 @@ public class MovementQueue {
         return queue.get(queuePos - 1);
     }
 
-    private static void calcPredictions() {
+    private synchronized static void calcPredictions() {
         List<PlayerInput> toCalc = new ArrayList<>(queue.subList(queuePos, queue.size()));
         predictions.clear();
         MovementDummy dummy = new MovementDummy(player);
@@ -67,7 +67,7 @@ public class MovementQueue {
         }
     }
 
-    private static void drawPredictions() {
+    private synchronized static void drawPredictions() {
         predictions.forEach(point -> predPoints.addPoint(new PositionCommon.Pos3D(point.getX(), point.getY(), point.getZ()), 0.01, 0xffd000));
     }
 
@@ -79,7 +79,7 @@ public class MovementQueue {
         queue.add(input.clone());
     }
 
-    public static void setDrawPredictions(boolean val) {
+    public synchronized static void setDrawPredictions(boolean val) {
         if (val ^ doDrawPredictions) {
             doDrawPredictions = val;
             if (doDrawPredictions) {
@@ -90,7 +90,7 @@ public class MovementQueue {
         }
     }
 
-    public static void clear() {
+    public synchronized static void clear() {
         queue.clear();
         predictions.clear();
         if (FHud.renders.contains(predPoints)) {
