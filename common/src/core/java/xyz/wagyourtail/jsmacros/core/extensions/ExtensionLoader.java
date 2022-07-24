@@ -68,7 +68,7 @@ public class ExtensionLoader {
             }
         }
         if (extensions.size() > 0) {
-            extensions.sort(Comparator.comparingInt(e -> e.getU().getPriority()));
+            extensions.sort(Comparator.comparingInt(e -> -e.getU().getPriority()));
             return extensions.get(0).getU();
         }
         return null;
