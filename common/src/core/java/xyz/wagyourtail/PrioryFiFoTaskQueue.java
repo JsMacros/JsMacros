@@ -51,7 +51,7 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
     }
 
     @Override
-    public boolean add(E e) {
+    public synchronized boolean add(E e) {
         boolean wasEmpty = taskSet.isEmpty();
         if (taskSet.add(e)) {
             if (wasEmpty) {
@@ -124,7 +124,7 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
     }
 
     @Override
-    public E remove() {
+    public synchronized E remove() {
         E e = currentTask;
         if (e != null) {
             remove(e);
@@ -141,6 +141,13 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
     public E pollWaiting() throws InterruptedException {
         if (currentTask == null) {
             this.wait();
+        }
+        return remove();
+    }
+
+    public E pollWaiting(long timeout) throws InterruptedException {
+        if (currentTask == null) {
+            this.wait(timeout);
         }
         return remove();
     }
