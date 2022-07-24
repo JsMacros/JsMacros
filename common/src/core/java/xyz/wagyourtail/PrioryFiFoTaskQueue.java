@@ -139,17 +139,31 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
     }
 
     public synchronized E pollWaiting() throws InterruptedException {
-        if (currentTask == null) {
+        if (taskSet.isEmpty()) {
             this.wait();
         }
         return remove();
     }
 
     public synchronized E pollWaiting(long timeout) throws InterruptedException {
-        if (currentTask == null) {
+        if (taskSet.isEmpty()) {
             this.wait(timeout);
         }
         return remove();
+    }
+
+    public synchronized E peekWaiting() throws InterruptedException {
+        if (taskSet.isEmpty()) {
+            this.wait();
+        }
+        return currentTask;
+    }
+
+    public synchronized E peekWaiting(long timeout) throws InterruptedException {
+        if (taskSet.isEmpty()) {
+            this.wait(timeout);
+        }
+        return currentTask;
     }
 
     @Override
