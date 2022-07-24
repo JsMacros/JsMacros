@@ -58,6 +58,7 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
                 currentTask = e;
             }
             tasks.computeIfAbsent(priorityFunction.apply(e), k -> new ArrayList<>()).add(e);
+            this.notifyAll();
             return true;
         }
         return false;
@@ -134,6 +135,13 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
 
     @Override
     public E poll() {
+        return remove();
+    }
+
+    public E pollWaiting() throws InterruptedException {
+        if (currentTask == null) {
+            this.wait();
+        }
         return remove();
     }
 
