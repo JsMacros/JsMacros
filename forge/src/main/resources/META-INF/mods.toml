@@ -11,3 +11,10 @@ authors = "Wagyourtail"
 description = '''
     Macro Mod for Block Game
 '''
+
+[[dependencies.jsmacros]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.19]"
+ordering="NONE"
+side="BOTH"
