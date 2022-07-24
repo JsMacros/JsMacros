@@ -138,14 +138,14 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
         return remove();
     }
 
-    public E pollWaiting() throws InterruptedException {
+    public synchronized E pollWaiting() throws InterruptedException {
         if (currentTask == null) {
             this.wait();
         }
         return remove();
     }
 
-    public E pollWaiting(long timeout) throws InterruptedException {
+    public synchronized E pollWaiting(long timeout) throws InterruptedException {
         if (currentTask == null) {
             this.wait(timeout);
         }
