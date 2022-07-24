@@ -6,6 +6,7 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * "Global" variables for passing to other contexts.
@@ -18,7 +19,7 @@ import java.util.Map;
 @Library("GlobalVars")
 @SuppressWarnings("unused")
 public class FGlobalVars extends BaseLibrary {
-    public static Map<String, Object> globalRaw = new HashMap<>();
+    public static Map<String, Object> globalRaw = new ConcurrentHashMap<>();
 
     /**
      * Put an Integer into the global variable space.

@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @since 1.6.4
@@ -31,7 +32,7 @@ public class EventService implements BaseEvent {
             '}';
     }
 
-    protected Map<String, Object> args = new HashMap<>();
+    protected Map<String, Object> args = new ConcurrentHashMap<>();
 
     /**
      * Put an Integer into the global variable space.

@@ -63,7 +63,7 @@ public class ExtensionLoader {
         if (extensions.size() > 1) {
             List<Pair<Extension.ExtMatch, Extension>> extensionsByName = extensions.stream().filter(p -> p.getT() == Extension.ExtMatch.MATCH_WITH_NAME).collect(Collectors.toList());
             if (extensionsByName.size() > 0) {
-                extensionsByName.sort(Comparator.comparingInt(e -> e.getU().getPriority()));
+                extensionsByName.sort(Comparator.comparingInt(e -> -e.getU().getPriority()));
                 return extensionsByName.get(0).getU();
             }
         }

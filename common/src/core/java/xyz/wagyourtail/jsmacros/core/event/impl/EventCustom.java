@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Custom Events
@@ -16,7 +17,7 @@ import java.util.Map;
  @Event("Custom")
  @SuppressWarnings("unused")
 public class EventCustom implements BaseEvent {
-    protected Map<String, Object> args = new HashMap<>();
+    protected Map<String, Object> args = new ConcurrentHashMap<>();
     public String eventName;
     
     /**

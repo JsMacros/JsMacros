@@ -5,14 +5,15 @@ import it.unimi.dsi.fastutil.objects.Object2IntFunction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.function.Function;
 
 public class PrioryFiFoTaskQueue<E> implements Queue<E> {
     E currentTask;
     Int2ObjectOpenHashMap<List<E>> tasks = new Int2ObjectOpenHashMap<>();
     Set<E> taskSet = new HashSet<>();
-    Object2IntFunction<E> priorityFunction;
+    Function<E, Integer> priorityFunction;
 
-    public PrioryFiFoTaskQueue(Object2IntFunction<E> priorityFunction) {
+    public PrioryFiFoTaskQueue(Function<E, Integer> priorityFunction) {
         this.priorityFunction = priorityFunction;
     }
 
@@ -56,7 +57,7 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
             if (wasEmpty) {
                 currentTask = e;
             }
-            tasks.computeIfAbsent(priorityFunction.getInt(e), k -> new ArrayList<>()).add(e);
+            tasks.computeIfAbsent(priorityFunction.apply(e), k -> new ArrayList<>()).add(e);
             return true;
         }
         return false;
@@ -65,7 +66,7 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
     @Override
     public boolean remove(Object o) {
         if (taskSet.remove(o)) {
-            int prio = priorityFunction.getInt(o);
+            int prio = priorityFunction.apply((E) o);
             List<E> list = tasks.get(prio);
             list.remove(o);
             if (list.isEmpty()) {
