@@ -128,7 +128,7 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
         return runner.libraryRegistry.getOnceLibraries(this);
     }
     
-    public Map<String, BaseLibrary> retrievePerExecLibs(BaseScriptContext<T> context) {
+    public Map<String, BaseLibrary> retrievePerExecLibs(T context) {
         return runner.libraryRegistry.getPerExecLibraries(this, context);
     }
     
