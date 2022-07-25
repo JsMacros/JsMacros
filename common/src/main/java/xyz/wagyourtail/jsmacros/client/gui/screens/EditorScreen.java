@@ -40,7 +40,19 @@ import java.util.stream.Collectors;
 
 public class EditorScreen extends BaseScreen {
     private static final OrderedText ellipses = Text.literal("...").formatted(Formatting.DARK_GRAY).asOrderedText();
-    public static final List<String> langs = Lists.newArrayList("javascript", "json", "lua", "python", "ruby", "typescript", "none");
+    public static final List<String> langs = Lists.newArrayList(
+        "javascript",
+        "lua",
+        "python",
+        "clike",
+        "regex",
+        "json",
+        "ruby",
+        "typescript",
+        "groovy",
+        "kotlin",
+        "none"
+    );
     public static Style defaultStyle = Style.EMPTY.withFont(new Identifier("jsmacros", "ubuntumono"));
     protected final File file;
     protected final FileHandler handler;
@@ -104,6 +116,12 @@ public class EditorScreen extends BaseScreen {
                 return "json";
             case "rb":
                 return "ruby";
+            case "kts":
+                return "kotlin";
+            case "groovy":
+                return "groovy";
+            case "ts":
+                return "typescript";
             default:
                 return "javascript";
         }
@@ -536,7 +554,8 @@ public class EditorScreen extends BaseScreen {
         try {
             codeCompiler.recompileRenderedText(history.current);
             suggestionList = codeCompiler.getSuggestions();
-        } catch (StackOverflowError e) {
+        } catch (Throwable e) {
+            e.printStackTrace();
             setLanguage("none");
             return;
         }

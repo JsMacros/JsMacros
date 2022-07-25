@@ -40,6 +40,10 @@ public class Prism implements GrammarLocator {
                 return Prism_ruby.create(prism4j);
             case "typescript":
                 return Prism_typescript.create(prism4j);
+            case "groovy":
+                return Prism_groovy.create(prism4j);
+            case "kotlin":
+                return Prism_kotlin.create(prism4j);
             default:
                 return null;
         }
@@ -48,7 +52,18 @@ public class Prism implements GrammarLocator {
     @NotNull
     @Override
     public Set<String> languages() {
-        return Sets.newHashSet("javascript", "lua", "python", "json", "regex");
+        return Sets.newHashSet(
+            "javascript",
+            "lua",
+            "python",
+            "clike",
+            "regex",
+            "json",
+            "ruby",
+            "typescript",
+            "groovy",
+            "kotlin"
+        );
     }
     
 }
