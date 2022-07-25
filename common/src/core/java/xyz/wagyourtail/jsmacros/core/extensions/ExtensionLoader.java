@@ -140,9 +140,6 @@ public class ExtensionLoader {
 
         // load extension deps
         for (Extension extension : extensions) {
-            for (Class<? extends BaseLibrary> lib : extension.getLibraries()) {
-                core.libraryRegistry.addLibrary(lib);
-            }
             Set<URL> deps = extension.getDependencies();
             if (deps.isEmpty()) {
                 System.out.println("No dependencies for extension: " + extension.getClass().getName());
@@ -161,6 +158,10 @@ public class ExtensionLoader {
         }
         Thread.currentThread().setContextClassLoader(classLoader);
         for (Extension extension : extensions) {
+            for (Class<? extends BaseLibrary> lib : extension.getLibraries()) {
+                core.libraryRegistry.addLibrary(lib);
+            }
+
             extension.init();
         }
         loadingDone = true;

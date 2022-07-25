@@ -154,6 +154,17 @@ public class History {
         redo.clear();
         if (onChange != null) onChange.accept(current);
     }
+
+    public synchronized void tabLinesKeepCursor(int startLine, int startLineIndex, int endLineIndex, int lineCount, boolean reverse) {
+        TabLinesKeepCursor step = new TabLinesKeepCursor(startLine, startLineIndex, endLineIndex, lineCount, reverse, cursor);
+        current = step.applyStep(current);
+        while (undo.size() >= MAX_UNDO) {
+            undo.remove(0);
+        }
+        undo.add(step);
+        redo.clear();
+        if (onChange != null) onChange.accept(current);
+    }
     
     /**
      * @return position of step. -1 if nothing to undo.
@@ -392,6 +403,66 @@ public class History {
                 endIndex += lines[i].length() + 1;
             }
             String result = String.join("\n", lines);
+            cursor.updateStartIndex(startIndex, result);
+            cursor.updateEndIndex(--endIndex, result);
+            return result;
+        }
+    }
+
+    protected static class TabLinesKeepCursor extends HistoryStep {
+        int startLine;
+        int startLineIndex;
+        int endLineIndex;
+        int lineCount;
+        boolean reversed;
+
+        public TabLinesKeepCursor(int startLine, int startLineIndex, int endLineIndex, int lineCount, boolean reversed, SelectCursor cursor) {
+            this.startLine = startLine;
+            this.startLineIndex = startLineIndex;
+            this.endLineIndex = endLineIndex;
+            this.lineCount = lineCount;
+            this.reversed = reversed;
+            this.cursor = cursor;
+        }
+
+        @Override
+        protected String applyStep(String input) {
+            return tab(input, startLine, lineCount, reversed, false);
+        }
+
+        @Override
+        protected String unApplyStep(String input) {
+            return tab(input, startLine, lineCount, !reversed, true);
+        }
+
+        private String tab(String input, int startLine, int lineCount, boolean reversed, boolean undo) {
+            String[] lines = input.split("\n", -1);
+            int startIndex = 0;
+            for (int i = 0; i < startLine; ++i) {
+                startIndex += lines[i].length() + 1;
+            }
+            int endIndex = startIndex;
+            for (int i = startLine; i < startLine + lineCount; ++i) {
+                if (reversed) {
+                    lines[i] = lines[i].replaceFirst("^ {0,4}", "");
+                } else {
+                    lines[i] = "    " + lines[i];
+                }
+                endIndex += lines[i].length() + 1;
+            }
+            String result = String.join("\n", lines);
+            if (undo) {
+                startIndex += Math.max(0, startLineIndex);
+                endIndex -= Math.max(0, lines[startLine + lineCount - 1].length() - endLineIndex);
+            } else {
+                if (reversed) {
+                    startIndex += Math.max(0, startLineIndex - 4);
+                    endIndex -= Math.max(0, lines[startLine + lineCount - 1].length() - endLineIndex + 4);
+                } else {
+                    startIndex += startLineIndex + 4;
+                    endIndex -= Math.max(0, lines[startLine + lineCount - 1].length() - 4 - endLineIndex);
+                }
+            }
             cursor.updateStartIndex(startIndex, result);
             cursor.updateEndIndex(--endIndex, result);
             return result;

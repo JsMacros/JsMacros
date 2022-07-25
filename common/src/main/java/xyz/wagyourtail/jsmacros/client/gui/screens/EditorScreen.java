@@ -511,6 +511,20 @@ public class EditorScreen extends BaseScreen {
                 currentPage = scroll / (height - 24.0D);
                 scrollbar.scrollToPercent(MathHelper.clamp((currentPage + 1) / (calcTotalPages() - 1), 0, 1));
                 return true;
+            case GLFW.GLFW_KEY_RIGHT_BRACKET:
+                if (Screen.hasControlDown()) {
+                    history.tabLinesKeepCursor(cursor.startLine, cursor.startLineIndex, cursor.endLineIndex, cursor.endLine - cursor.startLine + 1, false);
+                    compileRenderedText();
+                    return true;
+                }
+                break;
+            case GLFW.GLFW_KEY_LEFT_BRACKET:
+                if (Screen.hasControlDown()) {
+                    history.tabLinesKeepCursor(cursor.startLine, cursor.startLineIndex, cursor.endLineIndex, cursor.endLine - cursor.startLine + 1, true);
+                    compileRenderedText();
+                    return true;
+                }
+                break;
             default:
         }
         return super.keyPressed(keyCode, scanCode, modifiers);

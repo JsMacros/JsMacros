@@ -47,12 +47,12 @@ public class EventContainer<T extends BaseScriptContext<?>> {
      */
     public synchronized void awaitLock(Runnable then) throws InterruptedException {
         if (ctx.threads.contains(Thread.currentThread())) {
-            if (!(then instanceof MethodWrapper)) {
+            if (then != null && !(then instanceof MethodWrapper)) {
                 throw new AssertionError("For your safety, please use MethodWrapper in scripts.");
             }
         }
         if (locked) {
-            this.then.add(then);
+            if (then != null) this.then.add(then);
             this.wait();
         } else {
             try {
