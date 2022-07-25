@@ -144,17 +144,19 @@ public class Profile extends BaseProfile {
                 Style locationStyle = Style.EMPTY.withColor(Formatting.GOLD);
                 if (head.location instanceof BaseWrappedException.GuestLocation) {
                     BaseWrappedException.GuestLocation loc = (BaseWrappedException.GuestLocation) head.location;
-                    locationStyle = locationStyle.withHoverEvent(
-                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("jsmacros.clicktoview"))
-                    ).withClickEvent(new CustomClickEvent(() -> {
-                        if (loc.startIndex > -1) {
-                            EditorScreen.openAndScrollToIndex(loc.file, loc.startIndex, loc.endIndex);
-                        } else if (loc.line > -1) {
-                            EditorScreen.openAndScrollToLine(loc.file, loc.line, loc.column, -1);
-                        } else {
-                            EditorScreen.openAndScrollToIndex(loc.file, 0, 0);
-                        }
-                    }));
+                    if (loc.file != null) {
+                        locationStyle = locationStyle.withHoverEvent(
+                            new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("jsmacros.clicktoview"))
+                        ).withClickEvent(new CustomClickEvent(() -> {
+                            if (loc.startIndex > -1) {
+                                EditorScreen.openAndScrollToIndex(loc.file, loc.startIndex, loc.endIndex);
+                            } else if (loc.line > -1) {
+                                EditorScreen.openAndScrollToLine(loc.file, loc.line, loc.column, -1);
+                            } else {
+                                EditorScreen.openAndScrollToIndex(loc.file, 0, 0);
+                            }
+                        }));
+                    }
                 }
                 line.append(Text.literal(" (" + head.location + ")").setStyle(locationStyle));
             }
