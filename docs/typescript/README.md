@@ -3,9 +3,9 @@ Type information for the JsMacros minecraft mod
 
 # Setup
 ## Install the package
-Install the version of the package that matches your mod version (for full releases), or 0.0.0-sha (for beta releases)
+Install the version of the package that matches your mod version (for full releases), or 0.0.0-sha (for beta releases)  
 `$ npm install jsmacros/jsmacros-typescript` (Latest release)  
-`$ npm install jsmacros/jsmacros-typescript@beta` (Latest beta)
+`$ npm install jsmacros/jsmacros-typescript@beta` (Latest beta)  
 `$ npm install jsmacros/jsmacros-typescript@1.7.0` (release 1.7.0)  
 `$ npm install jsmacros/jsmacros-typescript@0.0.0-30d74d2` (beta-30d74d2)
 
