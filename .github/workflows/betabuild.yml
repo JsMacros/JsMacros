@@ -75,7 +75,7 @@ jobs:
 
       - name: Publish to node
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           cd dist/typescript
           npm version 0.0.0-${{ steps.shortsha.outputs.result }}

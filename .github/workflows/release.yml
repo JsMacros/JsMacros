@@ -232,7 +232,7 @@ jobs:
 
       - name: Publish to node
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           cd dist/typescript
           npm version ${{ steps.version_num.outputs.result }}
