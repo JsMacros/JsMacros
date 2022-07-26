@@ -26,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/JsMacros/JsMacros/issues"
   },
-  "homepage": "https://github.com/JsMacros/JsMacros#readme"
+  "homepage": "https://github.com/JsMacros/JsMacros#readme",
+  "publishConfig": {
+    "access": "public"
+  }
 }
