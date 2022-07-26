@@ -3,10 +3,7 @@ Type information for the JsMacros minecraft mod
 
 # Setup
 ## Install the package
-[Detailed guide](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#installing-a-package)
-
-1. Generate a personal access token
-2. Install the version of the package that matches your mod version (for full releases), or 0.0.0-sha (for beta releases)
+Install the version of the package that matches your mod version (for full releases), or 0.0.0-sha (for beta releases)
 `$ npm install jsmacros/jsmacros-typescript@1.7.0` (release 1.7.0)  
 `$ npm install jsmacros/jsmacros-typescript@0.0.0-30d74d2` (beta-30d74d2)
 
@@ -14,8 +11,8 @@ Type information for the JsMacros minecraft mod
 ### Mandatory fields
 These fields tell typescript to use the ambient type definitions without having to import them 
 
-`compilerOptions.typeRoots: ["node_modules"]`
-`compilerOptions.types: ["wagyourtail/jsmacros-typescript"]`
+`compilerOptions.typeRoots: ["node_modules"]`  
+`compilerOptions.types: ["jsmacros/jsmacros-types"]`
 
 `skipLibCheck: true`: Prevents typescript from reporting errors in the type declaration file - the errors are caused by differences in the typescript and java type systems and are unavoidable
 
@@ -26,7 +23,7 @@ These fields tell typescript to use the ambient type definitions without having 
   "compilerOptions": {
     "outDir": "dist",
     "typeRoots": ["node_modules"],
-    "types": ["jsmacros/jsmacros-typescript"],
+    "types": ["jsmacros/jsmacros-types"],
     "skipLibCheck": true
   }
 }
