@@ -1,6 +1,6 @@
 {
-  "name": "@jsmacros/jsmacros-typescript",
-  "version": "0.0.1",
+  "name": "@mart3323/jsmacros-types",
+  "version": "0.0.0",
   "description": "Typescript definitions & configuration to compile typescript into valid JsMacros code",
   "main": "index.d.ts",
   "scripts": {
@@ -26,8 +26,5 @@
   "bugs": {
     "url": "https://github.com/JsMacros/JsMacros/issues"
   },
-  "homepage": "https://github.com/JsMacros/JsMacros#readme",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  }
+  "homepage": "https://github.com/JsMacros/JsMacros#readme"
 }
