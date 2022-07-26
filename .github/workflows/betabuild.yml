@@ -79,4 +79,4 @@ jobs:
         run: |
           cd dist/typescript
           npm version 0.0.0-${{ steps.shortsha.outputs.result }}
-          npm publish
+          npm publish --tag beta
