@@ -63,6 +63,7 @@ jobs:
       - uses: actions/setup-node@v3
         name: Setup node
         with:
+          registry-url: https://registry.npmjs.org/
           node-version: latest
 
       - uses: actions/github-script@v2
