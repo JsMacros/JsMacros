@@ -510,7 +510,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     }
 
     /**
-     * register so the overlay actually renders
+     * unregister so the overlay stops rendering
      * @since 1.6.5
      * @return self for chaining
      */
