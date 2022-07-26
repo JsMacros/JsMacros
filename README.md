@@ -7,34 +7,32 @@ More information and documentation of all features and modules can be found on t
 
 ## Downloads/Releases 
 
-[![Build Release](https://github.com/wagyourtail/JsMacros/actions/workflows/release.yml/badge.svg)](https://github.com/wagyourtail/JsMacros/actions/workflows/release.yml)
+[![Build Release](https://github.com/JsMacros/JsMacros/actions/workflows/release.yml/badge.svg)](https://github.com/wagyourtail/JsMacros/actions/workflows/release.yml)
 
 ### For the releases of both fabric and forge versions see:
 
 * [Curseforge](https://www.curseforge.com/minecraft/mc-mods/jsmacros)
+* [Modrinth](https://modrinth.com/mod/jsmacros)
 * [GitHub releases](https://github.com/wagyourtail/JsMacros/releases)
 
 ## Extensions
 
-These extensions allow you to code in languages other than the default language JavaScript, and some even have performance benefits. [More about extensions](https://jsmacros.wagyourtail.xyz/?/extensions.html)
+Extensions allow you to code in languages other than the default language JavaScript, and some even have performance benefits. 
 
-* **Jython** (python 2.7 support) - [Curseforge](https://www.curseforge.com/minecraft/mc-mods/jsmacros-jython), [GitHub](https://github.com/wagyourtail/JsMacros-Jython)
-* **JEP** (python 3.x support) - [Curseforge](https://www.curseforge.com/minecraft/mc-mods/jsmacros-jep), [GitHub](https://github.com/wagyourtail/JsMacros-JEP)
-* **Lua** (lua 5.2 support) - [Curseforge](https://www.curseforge.com/minecraft/mc-mods/jsmacros-lua), [GitHub](https://github.com/wagyourtail/JsMacros-Lua)
-* **Ruby** (Ruby 2.5.x support) - [Curseforge](https://www.curseforge.com/minecraft/mc-mods/jsmacros-ruby), [GitHub](https://github.com/wagyourtail/JsMacros-Ruby)
+#### [More about extensions](https://jsmacros.wagyourtail.xyz/?/extensions.html)
 
 ## Beta Builds
-1.18: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=main-1.18)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Amain-1.18)
+1.18: [![Build Beta](https://github.com/JsMacros/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=main-1.18)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Amain-1.18)
 
-1.17.1: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.17.1)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.17.1)
+1.17.1: [![Build Beta](https://github.com/JsMacros/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.17.1)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.17.1)
 
-1.16.5: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.16.5)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.16.5)
+1.16.5: [![Build Beta](https://github.com/JsMacros/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.16.5)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.16.5)
 
-1.15.2: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.15.2)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.15.2)
+1.15.2: [![Build Beta](https://github.com/JsMacros/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.15.2)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.15.2)
 
-1.14.4: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.14.4)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.14.4)
+1.14.4: [![Build Beta](https://github.com/JsMacros/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.14.4)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.14.4)
 
-1.8.9: [![Build Beta](https://github.com/wagyourtail/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.8.9)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.8.9)
+1.8.9: [![Build Beta](https://github.com/JsMacros/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.8.9)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.8.9)
 
 ## Support me
 
