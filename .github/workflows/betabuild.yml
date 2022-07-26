@@ -64,7 +64,6 @@ jobs:
         name: Setup node
         with:
           node-version: latest
-          registry-url: https://npm.pkg.github.com/
 
       - uses: actions/github-script@v2
         id: shortsha
