@@ -195,7 +195,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
             }
 
             if (ctx.getBoundThreads().contains(Thread.currentThread())) {
-                return fn.execute(args).asHostObject();
+                return (R2) fn.execute(args).as(Object.class);
             }
 
             try {
