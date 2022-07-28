@@ -183,6 +183,15 @@ public class FChat extends BaseLibrary {
         }
         mc.inGameHud.setTitleTicks(fadeIn, remain, fadeOut);
     }
+
+    /**
+     * @since 1.8.1
+     * @param text
+     */
+    public void actionbar(Object text) {
+        actionbar(text, false);
+    }
+
     
     /**
      * Display the smaller title that's above the actionbar.
