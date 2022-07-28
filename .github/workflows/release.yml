@@ -62,7 +62,7 @@ jobs:
     uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.19
     with:
       branch: main-1.19
-      game_vers: 1.19
+      game_vers: 1.19.1
       java_vers: 17
       GITHUB_REF: ${{ github.ref }}
     secrets:
