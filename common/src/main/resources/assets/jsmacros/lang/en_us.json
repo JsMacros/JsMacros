@@ -69,5 +69,6 @@
 	"jsmacros.showservices": "Show services",
 	"jsmacros.servicename": "Service Name",
 	"jsmacros.useexternaleditor": "Use external editor",
-	"jsmacros.externaleditorcommand": "Command:"
+	"jsmacros.externaleditorcommand": "Command:",
+	"jsmacros.chat.tag.modified": "This message has been modified by JS Macros."
 }
