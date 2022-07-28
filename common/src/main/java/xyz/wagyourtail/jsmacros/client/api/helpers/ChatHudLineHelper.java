@@ -6,28 +6,28 @@ import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
-public class ChatHudLineHelper extends BaseHelper<ChatHudLine<Text>> {
+public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
     private ChatHud hud;
 
-    public ChatHudLineHelper(ChatHudLine<Text> base, ChatHud hud) {
+    public ChatHudLineHelper(ChatHudLine base, ChatHud hud) {
         super(base);
         this.hud = hud;
     }
 
     public TextHelper getText() {
-        return new TextHelper(base.getText());
+        return new TextHelper(base.content());
     }
 
-    public int getId() {
-        return base.getId();
-    }
+//    public int getId() {
+//        return base.getId();
+//    }
 
     public int getCreationTick() {
-        return base.getCreationTick();
+        return base.creationTick();
     }
 
     public void deleteById() {
-        ((IChatHud) hud).jsmacros_removeMessageById(base.getId());
+        ((IChatHud) hud).jsmacros_removeMessageById(0);
     }
 
 }

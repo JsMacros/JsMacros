@@ -6,7 +6,6 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.encryption.PlayerPublicKey;
-import net.minecraft.network.message.ChatMessageSigner;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -21,19 +20,18 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         super(world, profile, publicKey);
     }
 
-    @Shadow protected abstract void sendChatMessagePacket(ChatMessageSigner signer, String message, @Nullable Text preview);
+    @Shadow protected abstract void sendChatMessagePacket(String message, @Nullable Text preview);
 
-    @Shadow protected abstract void sendCommand(ChatMessageSigner signer, String command, @Nullable Text preview);
+    @Shadow protected abstract void sendCommandInternal(String command, @Nullable Text preview);
 
     @Shadow @Final protected MinecraftClient client;
 
     @Override
     public void jsmacros_sendChatMessageBypass(String message) {
-        ChatMessageSigner chatMessageSigner = ChatMessageSigner.create(this.getUuid());
         if (message.startsWith("/")) {
-            sendCommand(chatMessageSigner, message.substring(1), null);
+            sendCommandInternal(message.substring(1), null);
         } else {
-            sendChatMessagePacket(chatMessageSigner, message, null);
+            sendChatMessagePacket(message, null);
         }
     }
 }
