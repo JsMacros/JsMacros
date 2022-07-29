@@ -1,12 +1,21 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.ParseResults;
+import com.mojang.brigadier.suggestion.Suggestion;
+import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.tree.CommandNode;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.command.CommandSource;
+import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandNodeHelper;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -14,6 +23,7 @@ import java.util.stream.Collectors;
  */
 public abstract class CommandManager {
     public static CommandManager instance;
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
 
     /**
      * @since 1.7.0
@@ -49,4 +59,21 @@ public abstract class CommandManager {
      * @param node
      */
     public abstract void reRegisterCommand(CommandNodeHelper node);
+
+    /**
+     * @since 1.8.2
+     * @param commandPart
+     */
+    public void getArgumentAutocompleteOptions(String commandPart, MethodWrapper<List<String>, Object, Object, ?> callback) {
+        assert mc.player != null;
+        CommandDispatcher<CommandSource> commandDispatcher = mc.player.networkHandler.getCommandDispatcher();
+        ParseResults<CommandSource> parse = commandDispatcher.parse(commandPart, mc.player.networkHandler.getCommandSource());
+        CompletableFuture<Suggestions> suggestions = commandDispatcher.getCompletionSuggestions(parse);
+        suggestions.thenAccept(
+                (s) -> {
+                    List<String> list = s.getList().stream().map(Suggestion::getText).collect(Collectors.toList());
+                    callback.accept(list);
+                }
+        );
+    }
 }
