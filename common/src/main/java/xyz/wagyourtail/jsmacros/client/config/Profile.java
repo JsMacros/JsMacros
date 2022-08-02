@@ -4,7 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import org.slf4j.Logger;
-import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
@@ -22,6 +21,7 @@ import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
+import xyz.wagyourtail.jsmacros.core.library.impl.FTime;
 
 import java.util.Arrays;
 
@@ -219,7 +219,6 @@ public class Profile extends BaseProfile {
         runner.libraryRegistry.addLibrary(FKeyBind.class);
         runner.libraryRegistry.addLibrary(FPlayer.class);
         runner.libraryRegistry.addLibrary(FPositionCommon.class);
-        runner.libraryRegistry.addLibrary(FTime.class);
         runner.libraryRegistry.addLibrary(FWorld.class);
     }
 }

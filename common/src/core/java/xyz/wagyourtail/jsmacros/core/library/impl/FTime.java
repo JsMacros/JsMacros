@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.api.library.impl;
+package xyz.wagyourtail.jsmacros.core.library.impl;
 
 
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;

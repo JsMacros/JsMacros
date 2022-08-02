@@ -143,7 +143,7 @@ public class FChat extends BaseLibrary {
     public void open(String message, boolean await) throws InterruptedException {
         if (message == null) message = "";
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
-            mc.setScreen(new ChatScreen(message));
+            throw new UnsupportedOperationException("Cannot open a screen while joined to the main thread");
         } else {
             String finalMessage = message;
             final Semaphore semaphore = new Semaphore(await ? 0 : 1);
