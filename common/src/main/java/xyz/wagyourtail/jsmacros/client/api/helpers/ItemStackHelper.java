@@ -1,11 +1,14 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.tag.ItemTags;
 import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Wagyourtail
@@ -130,7 +133,51 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     public String getItemId() {
         return Registry.ITEM.getId(base.getItem()).toString();
     }
-    
+
+    /**
+     * @since 1.8.2
+     * @return
+     */
+    public List<String> getTags() {
+        return base.getRegistryEntry().streamTags().map(t -> t.id().toString()).collect(Collectors.toList());
+    }
+
+    /**
+     * @since 1.8.2
+     * @return
+     */
+    public boolean isFood() {
+        return base.getItem().isFood();
+    }
+
+    /**
+     * @since 1.8.2
+     * @return
+     */
+    public boolean isTool() {
+        return base.getItem() instanceof ToolItem;
+    }
+
+    /**
+     * @since 1.8.2
+     * @return
+     */
+    public boolean isWearable() {
+        return base.getItem() instanceof Wearable;
+    }
+
+    /**
+     * @since 1.8.2
+     * @return
+     */
+    public int getMiningLevel() {
+        if (isTool()) {
+            return ((ToolItem) base.getItem()).getMaterial().getMiningLevel();
+        } else {
+            return 0;
+        }
+    }
+
     /**
      * @return
      */
