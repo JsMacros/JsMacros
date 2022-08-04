@@ -206,6 +206,15 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     /**
+     * warning: affected by setGlowingColor
+     * @since 1.8.2
+     * @return glow color
+     */
+    public int getGlowingColor() {
+        return base.getTeamColorValue();
+    }
+
+    /**
      * Sets whether the entity is glowing.
      * @since 1.1.9
      * @param val
