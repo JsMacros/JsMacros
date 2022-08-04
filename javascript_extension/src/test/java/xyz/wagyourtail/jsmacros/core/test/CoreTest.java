@@ -56,13 +56,13 @@ public class CoreTest {
         JavaWrapper.methodToJavaAsync(() => {
             while (j.length < 10) {
                 j.push('a');
-                Time.sleep(50)
+                Time.sleep(100)
             }
         }).run();
         JavaWrapper.methodToJavaAsync(() => {
             while (j.length < 10) {
                 j.push('b');
-                Time.sleep(50)
+                Time.sleep(100)
             }
         }).run();
         JavaWrapper.deferCurrentTask(-1)
