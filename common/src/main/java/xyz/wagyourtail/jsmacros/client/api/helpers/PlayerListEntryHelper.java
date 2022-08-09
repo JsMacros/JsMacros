@@ -61,7 +61,15 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
     public TextHelper getDisplayText() {
         return new TextHelper(base.getDisplayName());
     }
-    
+
+    /**
+     * @since 1.8.2
+     * @return
+     */
+    public byte[] getPublicKey() {
+        return base.getPublicKeyData().data().key().getEncoded();
+    }
+
     public String toString() {
         return String.format("Player:{\"uuid\": \"%s\", \"name\":\"%s\"}", this.getUUID(), this.getName());
     }
