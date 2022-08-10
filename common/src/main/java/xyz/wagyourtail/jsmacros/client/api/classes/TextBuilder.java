@@ -6,6 +6,7 @@ import net.minecraft.util.Formatting;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.StyleHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -163,6 +164,11 @@ public class TextBuilder {
         ClickEvent.Action clickAction = ClickEvent.Action.byName(action);
         assert action != null;
         self.styled(style -> style.withClickEvent(new ClickEvent(clickAction, value)));
+        return this;
+    }
+
+    public TextBuilder withStyle(StyleHelper style) {
+        self.setStyle(style.getRaw());
         return this;
     }
     
