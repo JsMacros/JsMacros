@@ -37,7 +37,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return 0: off, 2: fancy
      */
     public int getCloudMode() {
-        switch (base.getCloudRenderMode()) {
+        switch (base.getCloudRenderMode().getValue()) {
             case FANCY:
                 return 2;
             case FAST:
@@ -54,13 +54,13 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     public OptionsHelper setCloudMode(int mode) {
         switch(mode) {
             case 2:
-                base.getCloudRenderMod().setValue(CloudRenderMode.FANCY);
+                base.getCloudRenderMode().setValue(CloudRenderMode.FANCY);
                 return this;
             case 1:
-                base.getCloudRenderMod().setValue(CloudRenderMode.FAST);
+                base.getCloudRenderMode().setValue(CloudRenderMode.FAST);
                 return this;
             default:
-                base.getCloudRenderMod().setValue(CloudRenderMode.OFF);
+                base.getCloudRenderMode().setValue(CloudRenderMode.OFF);
                 return this;
         }
     }

@@ -15,7 +15,7 @@ public abstract class MixinFontStorage {
     @Inject(method = "findGlyphRenderer", at = @At("HEAD"), cancellable = true)
     private void onGlyphRenderer(int codePoint, CallbackInfoReturnable<GlyphRenderer> cir) {
         if (codePoint == 32) {
-            cir.setReturnValue(EmptyGlyphRenderer.field_38311);
+            cir.setReturnValue(EmptyGlyphRenderer.INSTANCE);
         }
     }
 }

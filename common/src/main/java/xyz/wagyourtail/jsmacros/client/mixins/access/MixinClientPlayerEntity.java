@@ -20,7 +20,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         super(world, profile, publicKey);
     }
 
-    @Shadow protected abstract void sendChatMessagePacket(String message, @Nullable Text preview);
+    @Shadow protected abstract void sendChatMessageInternal(String message, @Nullable Text preview);
 
     @Shadow protected abstract void sendCommandInternal(String command, @Nullable Text preview);
 
@@ -31,7 +31,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         if (message.startsWith("/")) {
             sendCommandInternal(message.substring(1), null);
         } else {
-            sendChatMessagePacket(message, null);
+            sendChatMessageInternal(message, null);
         }
     }
 }
