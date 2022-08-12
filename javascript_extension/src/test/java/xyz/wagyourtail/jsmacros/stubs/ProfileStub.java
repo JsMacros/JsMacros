@@ -41,6 +41,7 @@ public class ProfileStub extends BaseProfile {
     public ProfileStub(Core<?, ?> runner, Logger logger) {
         super(runner, logger);
         joinedThreadStack.add(th);
+        initRegistries();
     }
 
     @Override

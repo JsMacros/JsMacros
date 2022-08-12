@@ -21,7 +21,6 @@ public class CoreInstanceCreator {
                 macroFolder,
                 LOGGER
             );
-            instance.deferredInit();
         }
         return instance;
     }
