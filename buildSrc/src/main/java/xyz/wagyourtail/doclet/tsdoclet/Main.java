@@ -61,7 +61,7 @@ public class Main implements Doclet {
         Set<EventParser> eventClasses = new LinkedHashSet<>();
 
 
-        outputTS = new FileHandler(new File(OutputDirectory.outputDir, "JsMacros-" + Version.version + ".d.ts"));
+        outputTS = new FileHandler(new File(OutputDirectory.outputDir, "JsMacros.d.ts"));
 
         if (!OutputDirectory.outputDir.exists() && !OutputDirectory.outputDir.mkdirs()) {
             reporter.print(Diagnostic.Kind.ERROR, "Failed to create version dir\n");

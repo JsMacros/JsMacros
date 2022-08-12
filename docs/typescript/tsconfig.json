@@ -8,7 +8,6 @@
         "skipLibCheck": true
     },
     "include": [
-        "scripts/**/*.ts",
       "headers/*.d.ts"
     ],
     "exclude": [
