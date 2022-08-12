@@ -17,7 +17,7 @@ public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
      * @return
      */
     public String getProfession() {
-        return base.getVillagerData().getProfession().id();
+        return base.getVillagerData().getProfession().getId();
     }
 
     /**

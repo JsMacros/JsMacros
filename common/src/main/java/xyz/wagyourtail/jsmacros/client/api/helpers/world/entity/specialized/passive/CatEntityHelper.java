@@ -39,8 +39,8 @@ public class CatEntityHelper extends TameableEntityHelper<CatEntity> {
      *
      * @since 1.8.4
      */
-    public String getVariant() {
-        return Registry.CAT_VARIANT.getId(base.getVariant()).toString();
+    public int getVariant() {
+        return base.getCatType();
     }
 
 }

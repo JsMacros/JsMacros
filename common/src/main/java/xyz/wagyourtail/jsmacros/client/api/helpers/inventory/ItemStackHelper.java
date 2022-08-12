@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static net.minecraft.text.Text.literal;
+import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.literal;
 
 /**
  * @author Wagyourtail
@@ -337,7 +337,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public List<String> getTags() {
-        return base.getRegistryEntry().streamTags().map(t -> t.id().toString()).collect(Collectors.toList());
+        return Registry.ITEM.getEntry(Registry.ITEM.getKey(base.getItem()).get()).get().streamTags().map(t -> t.id().toString()).collect(Collectors.toList());
     }
 
     /**

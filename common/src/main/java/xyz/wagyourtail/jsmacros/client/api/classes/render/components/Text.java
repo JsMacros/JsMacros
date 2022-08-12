@@ -8,6 +8,9 @@ import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 
+import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.empty;
+import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.literal;
+
 /**
  * @author Wagyourtail
  * @since 1.0.5
@@ -29,7 +32,7 @@ public class Text implements RenderElement, Alignable<Text> {
     public int zIndex;
 
     public Text(String text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
-        this(new TextHelper(net.minecraft.text.Text.literal(text)), x, y, color, zIndex, shadow, scale, rotation);
+        this(new TextHelper(literal(text)), x, y, color, zIndex, shadow, scale, rotation);
     }
 
     public Text(TextHelper text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
@@ -108,7 +111,7 @@ public class Text implements RenderElement, Alignable<Text> {
      * @since 1.0.5
      */
     public Text setText(String text) {
-        this.text = net.minecraft.text.Text.literal(text);
+        this.text = literal(text);
         this.width = mc.textRenderer.getWidth(text);
         return this;
     }
@@ -362,7 +365,7 @@ public class Text implements RenderElement, Alignable<Text> {
     public static class Builder extends RenderElementBuilder<Text> implements Alignable<Builder> {
         private int x = 0;
         private int y = 0;
-        private net.minecraft.text.Text text = net.minecraft.text.Text.empty();
+        private net.minecraft.text.Text text = empty();
         private int color = 0xFFFFFFFF;
         private double scale = 1;
         private float rotation = 0;
@@ -411,7 +414,7 @@ public class Text implements RenderElement, Alignable<Text> {
          */
         public Builder text(String text) {
             if (text != null) {
-                this.text = net.minecraft.text.Text.literal(text);
+                this.text = literal(text);
             }
             return this;
         }

@@ -7,6 +7,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.ClientConnection;
@@ -181,8 +182,8 @@ class MixinClientPlayNetworkHandler {
     @Inject(method = "onEntityStatusEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/thread/ThreadExecutor;)V", shift = At.Shift.AFTER))
     public void onEntityStatusEffect(EntityStatusEffectS2CPacket packet, CallbackInfo info) {
         if (packet.getEntityId() == client.player.getId()) {
-            StatusEffectInstance newEffect = new StatusEffectInstance(packet.getEffectId(), packet.getDuration(), packet.getAmplifier(), packet.isAmbient(), packet.shouldShowParticles(), packet.shouldShowIcon(), (StatusEffectInstance) null, Optional.ofNullable(packet.getFactorCalculationData()));
-            StatusEffectInstance oldEffect = client.player.getStatusEffect(packet.getEffectId());
+            StatusEffectInstance newEffect = new StatusEffectInstance(StatusEffect.byRawId(packet.getEffectId()), packet.getDuration(), packet.getAmplifier(), packet.isAmbient(), packet.shouldShowParticles(), packet.shouldShowIcon(), (StatusEffectInstance) null);
+            StatusEffectInstance oldEffect = client.player.getStatusEffect(StatusEffect.byRawId(packet.getEffectId()));
             new EventStatusEffectUpdate(oldEffect == null ? null : new StatusEffectHelper(oldEffect), new StatusEffectHelper(newEffect), true);
         }
     }

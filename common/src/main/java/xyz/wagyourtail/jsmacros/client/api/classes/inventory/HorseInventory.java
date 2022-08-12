@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.gui.screen.ingame.HorseScreen;
 import net.minecraft.entity.passive.AbstractDonkeyEntity;
-import net.minecraft.entity.passive.AbstractHorseEntity;
+import net.minecraft.entity.passive.HorseBaseEntity;
 
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
@@ -19,11 +19,11 @@ import java.util.stream.IntStream;
 @SuppressWarnings("unused")
 public class HorseInventory extends Inventory<HorseScreen> {
 
-    private final AbstractHorseEntity horse;
+    private final HorseBaseEntity horse;
 
     protected HorseInventory(HorseScreen inventory) {
         super(inventory);
-        this.horse = (AbstractHorseEntity) ((IHorseScreen) inventory).jsmacros_getEntity();
+        this.horse = (HorseBaseEntity) ((IHorseScreen) inventory).jsmacros_getEntity();
     }
 
     /**

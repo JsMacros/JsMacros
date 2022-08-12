@@ -28,7 +28,7 @@ public class GoatEntityHelper extends AnimalEntityHelper<GoatEntity> {
      * @since 1.8.4
      */
     public boolean hasLeftHorn() {
-        return base.hasLeftHorn();
+        return false;
     }
 
     /**
@@ -37,7 +37,7 @@ public class GoatEntityHelper extends AnimalEntityHelper<GoatEntity> {
      * @since 1.8.4
      */
     public boolean hasRightHorn() {
-        return base.hasRightHorn();
+        return false;
     }
 
     /**

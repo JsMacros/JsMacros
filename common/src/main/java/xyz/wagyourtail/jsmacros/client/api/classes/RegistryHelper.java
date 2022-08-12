@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.command.CommandRegistryWrapper;
 import net.minecraft.command.argument.BlockArgumentParser;
 import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.entity.EntityType;
@@ -59,9 +58,10 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public ItemStackHelper getItemStack(String id, String nbt) throws CommandSyntaxException {
-        ItemStringReader.ItemResult itemResult = ItemStringReader.item(new CommandRegistryWrapper.Impl<>(Registry.ITEM), new StringReader(parseNameSpace(id) + nbt));
-        ItemStack stack = new ItemStack(itemResult.item());
-        stack.setNbt(itemResult.nbt());
+        ItemStringReader itemResult = new ItemStringReader(new StringReader(parseNameSpace(id) + nbt), false);
+        itemResult.consume();
+        ItemStack stack = itemResult.getItem().getDefaultStack();
+        stack.setNbt(itemResult.getNbt());
         return new CreativeItemStackHelper(stack);
     }
 
@@ -112,7 +112,9 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public BlockStateHelper getBlockState(String id, String nbt) throws CommandSyntaxException {
-        return new BlockStateHelper(BlockArgumentParser.block(Registry.BLOCK, parseNameSpace(id) + nbt, false).blockState());
+        BlockArgumentParser parser = new BlockArgumentParser(new StringReader(parseNameSpace(id) + nbt), false);
+        parser.parse(true);
+        return new BlockStateHelper(parser.getBlockState());
     }
 
     /**
@@ -235,7 +237,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public List<String> getPaintingIds() {
-        return Registry.PAINTING_VARIANT.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
+        return Registry.PAINTING_MOTIVE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**

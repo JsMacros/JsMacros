@@ -14,7 +14,7 @@ public class EventRegistryStub extends BaseEventRegistry {
 
     @Override
     public void addScriptTrigger(ScriptTrigger rawmacro) {
-        // no-op
+        throw new AssertionError("not implemented");
     }
 
     @Override

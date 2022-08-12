@@ -11,12 +11,15 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.text.Text;
 
+import xyz.wagyourtail.jsmacros.client.access.backports.TextBackport;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Arrays;
+
+import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.literal;
 
 /**
  * @author Etheradon
@@ -69,7 +72,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper setName(String name) {
-        base.setCustomName(Text.literal(name));
+        base.setCustomName(literal(name));
         return this;
     }
 
@@ -192,9 +195,9 @@ public class CreativeItemStackHelper extends ItemStackHelper {
         } else if (lore instanceof TextBuilder[] textBuilders) {
             return addLoreInternal(Arrays.stream(textBuilders).map(TextBuilder::build).map(TextHelper::getRaw).toArray(Text[]::new));
         } else if (lore instanceof String[] strings) {
-            return addLoreInternal(Arrays.stream(strings).map(Text::literal).toArray(Text[]::new));
+            return addLoreInternal(Arrays.stream(strings).map(TextBackport::literal).toArray(Text[]::new));
         } else {
-            return addLoreInternal(Arrays.stream(lore).map(Object::toString).map(Text::literal).toArray(Text[]::new));
+            return addLoreInternal(Arrays.stream(lore).map(Object::toString).map(TextBackport::literal).toArray(Text[]::new));
         }
     }
 

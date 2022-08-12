@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.translatable;
+
 /**
  * @author Etheradon
  * @since 1.8.4
@@ -96,7 +98,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public TextHelper getRomanLevelName(int level) {
-        MutableText mutableText = Text.translatable(base.getTranslationKey());
+        MutableText mutableText = translatable(base.getTranslationKey());
         mutableText.formatted(base.isCursed() ? Formatting.RED : Formatting.GRAY);
         if (level != 1 || this.getMaxLevel() != 1) {
             mutableText.append(" ").append(getRomanNumeral(level));
@@ -126,7 +128,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public String getName() {
-        return Text.translatable(base.getTranslationKey()).getString();
+        return translatable(base.getTranslationKey()).getString();
     }
 
     /**

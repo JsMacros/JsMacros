@@ -12,6 +12,8 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 
+import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.literal;
+
 /**
  * @author Etheradon
  * @since 1.8.4
@@ -106,7 +108,7 @@ public class Slider extends ClickableWidget {
     }
 
     public void setMessage(String message) {
-        setMessage(Text.literal(message));
+        setMessage(literal(message));
     }
 
     @Override

@@ -6,10 +6,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.*;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
@@ -25,21 +23,20 @@ import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.translatable;
+
 /**
  * @since 1.4.2
  */
- @SuppressWarnings("unused")
+@SuppressWarnings("unused")
 public abstract class CommandBuilder {
 
     protected abstract void argument(String name, Supplier<ArgumentType<?>> type);
-
-    protected abstract void argument(String name, Function<CommandRegistryAccess, ArgumentType<?>> type);
 
     public abstract CommandBuilder literalArg(String name);
 
@@ -431,9 +428,9 @@ public abstract class CommandBuilder {
                 reader.setCursor(i + m.group(0).length());
                 return args;
             } else {
-                throw new SimpleCommandExceptionType(Text.translatable(
-                    "jsmacros.commandfailedregex",
-                    "/" + pattern.pattern() + "/"
+                throw new SimpleCommandExceptionType(translatable(
+                        "jsmacros.commandfailedregex",
+                        "/" + pattern.pattern() + "/"
                 )).createWithContext(reader);
             }
         }

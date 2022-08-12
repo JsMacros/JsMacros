@@ -11,10 +11,8 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Items;
-import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.network.packet.c2s.play.UpdateSignC2SPacket;
-import net.minecraft.text.Text;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.text.LiteralText;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -52,8 +50,8 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
 
 
     // IGNORE
-    public MixinClientPlayerEntity(ClientWorld $$0, GameProfile $$1, @Nullable PlayerPublicKey $$2) {
-        super($$0, $$1, $$2);
+    public MixinClientPlayerEntity(ClientWorld world, GameProfile profile) {
+        super(world, profile);
     }
 
     @Shadow
@@ -77,7 +75,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         lines = event.signText;
         if (event.closeScreen) {
             for (int i = 0; i < 4; ++i) {
-                sign.setTextOnRow(i, Text.literal(lines.get(i)));
+                sign.setTextOnRow(i, new LiteralText(lines.get(i)));
             }
             sign.markDirty();
             networkHandler.sendPacket(new UpdateSignC2SPacket(sign.getPos(), lines.get(0), lines.get(1), lines.get(2), lines.get(3)));

@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.vehicle;
 
 import net.minecraft.entity.vehicle.BoatEntity;
-import net.minecraft.entity.vehicle.ChestBoatEntity;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
@@ -24,7 +23,7 @@ public class BoatEntityHelper extends EntityHelper<BoatEntity> {
      * @since 1.8.4
      */
     public boolean isChestBoat() {
-        return base instanceof ChestBoatEntity;
+        return false;
     }
 
     /**

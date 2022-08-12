@@ -1,12 +1,15 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
+
+import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.literal;
 
 /**
  * @author Wagyourtail
@@ -43,7 +46,7 @@ public class TextHelper extends BaseHelper<Text> {
      */
     @Deprecated
     public TextHelper replaceFromString(String content) {
-        base = Text.literal(content);
+        base = new LiteralText(content);
         return this;
     }
     
@@ -77,7 +80,7 @@ public class TextHelper extends BaseHelper<Text> {
      * @since 1.8.4
      */
     public TextHelper withoutFormatting() {
-        return new TextHelper(Text.literal(getStringStripFormatting()));
+        return new TextHelper(literal(getStringStripFormatting()));
     }
     
     /**

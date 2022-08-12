@@ -16,8 +16,8 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.ClickEvent;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +30,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
 import xyz.wagyourtail.jsmacros.client.access.backports.ButtonWidgetBuilder;
+import xyz.wagyourtail.jsmacros.client.access.backports.TextBackport;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
@@ -53,6 +54,8 @@ import xyz.wagyourtail.wagyourgui.elements.Slider;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
+
+import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.literal;
 
 @Mixin(Screen.class)
 @Implements(@Interface(iface = IScreen.class, prefix = "soft$"))
@@ -528,7 +531,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     
     @Override
     public String getTitleText() {
-        return title.getString();
+        return title.text.getString();
     }
 
     @Override
@@ -540,7 +543,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Override
     public ClickableWidgetHelper<?, ?> addButton(int x, int y, int width, int height, int zIndex, String text, MethodWrapper<ClickableWidgetHelper<?, ?>, IScreen, Object, ?> callback) {
         AtomicReference<ClickableWidgetHelper<?, ?>> b = new AtomicReference<>(null);
-        ButtonWidget button = ButtonWidgetBuilder.builder(Text.literal(text), (btn) -> {
+        ButtonWidget button = ButtonWidgetBuilder.builder(literal(text), (btn) -> {
             try {
                 callback.accept(b.get(), this);
             } catch (Throwable e) {
@@ -575,7 +578,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, int zIndex, String text, boolean checked, boolean showMessage, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback) {
         AtomicReference<CheckBoxWidgetHelper> ref = new AtomicReference<>(null);
 
-        CheckBox checkbox = new CheckBox(x, y, width, height, net.minecraft.text.Text.literal(text), checked, showMessage, (btn) -> {
+        CheckBox checkbox = new CheckBox(x, y, width, height, literal(text), checked, showMessage, (btn) -> {
             try {
                 callback.accept(ref.get(), this);
             } catch (Exception e) {
@@ -610,7 +613,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public SliderWidgetHelper addSlider(int x, int y, int width, int height, int zIndex, String text, double value, int steps, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback) {
         AtomicReference<SliderWidgetHelper> ref = new AtomicReference<>(null);
 
-        Slider slider = new Slider(x, y, width, height, net.minecraft.text.Text.literal(text), value, (btn) -> {
+        Slider slider = new Slider(x, y, width, height, literal(text), value, (btn) -> {
             try {
                 callback.accept(ref.get(), this);
             } catch (Exception e) {
@@ -703,7 +706,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<?, ?, Boolean, ?> alternateToggle, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback) {
         AtomicReference<CyclingButtonWidgetHelper<?>> ref = new AtomicReference<>(null);
         CyclingButtonWidget<String> cyclingButton;
-        CyclingButtonWidget.Builder<String> builder = CyclingButtonWidget.builder(net.minecraft.text.Text::literal);
+        CyclingButtonWidget.Builder<String> builder = CyclingButtonWidget.builder(TextBackport::literal);
         if (alternatives != null) {
             BooleanSupplier supplier = alternateToggle == null ? Screen::hasAltDown : alternateToggle::get;
             builder.values(supplier, Arrays.asList(values), Arrays.asList(alternatives));
@@ -716,7 +719,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             builder.omitKeyText();
         }
 
-        cyclingButton = builder.build(x, y, width, height, net.minecraft.text.Text.literal(prefix), (btn, val) -> {
+        cyclingButton = builder.build(x, y, width, height, literal(prefix), (btn, val) -> {
             try {
                 callback.accept(ref.get(), this);
             } catch (Exception e) {
@@ -748,7 +751,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     
     @Override
     public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, int zIndex, String message, MethodWrapper<String, IScreen, Object, ?> onChange) {
-        TextFieldWidget field = new TextFieldWidget(this.textRenderer, x, y, width, height, net.minecraft.text.Text.literal(message));
+        TextFieldWidget field = new TextFieldWidget(this.textRenderer, x, y, width, height, literal(message));
         if (onChange != null) {
             field.setChangedListener(str -> {
                 try {

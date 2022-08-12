@@ -2,9 +2,8 @@ package xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl;
 
 import io.noties.prism4j.AbsVisitor;
 import io.noties.prism4j.Prism4j;
-import net.minecraft.text.MutableText;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
-import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,12 +15,12 @@ import java.util.Map;
 public class TextStyleCompiler extends AbsVisitor {
     private final Style defaultStyle;
     private final Map<String, short[]> themeData;
-    private final List<MutableText> result = new LinkedList<>();
+    private final List<LiteralText> result = new LinkedList<>();
     
     public TextStyleCompiler(Style defaultStyle, Map<String, short[]> themeData) {
         this.defaultStyle = defaultStyle;
         this.themeData = themeData;
-        result.add((MutableText) Text.literal("").setStyle(defaultStyle));
+        result.add((LiteralText) new LiteralText("").setStyle(defaultStyle));
     }
     
     @Override
@@ -29,8 +28,8 @@ public class TextStyleCompiler extends AbsVisitor {
         String[] lines = text.literal().replaceAll("\t", "    ").split("\r\n|\n", -1);
         int i = 0;
         while (i < lines.length) {
-            result.get(result.size() - 1).append(Text.literal(lines[i]).setStyle(defaultStyle));
-            if (++i < lines.length) result.add((MutableText) Text.literal("").setStyle(defaultStyle));
+            result.get(result.size() - 1).append(new LiteralText(lines[i]).setStyle(defaultStyle));
+            if (++i < lines.length) result.add((LiteralText) new LiteralText("").setStyle(defaultStyle));
         }
     }
     
@@ -43,8 +42,8 @@ public class TextStyleCompiler extends AbsVisitor {
         appendChildResult(child.getResult());
     }
     
-    protected void appendChildResult(List<MutableText> childResult) {
-        MutableText first = childResult.remove(0);
+    protected void appendChildResult(List<LiteralText> childResult) {
+        LiteralText first = childResult.remove(0);
         result.get(result.size() - 1).append(first);
         result.addAll(childResult);
     }
@@ -56,7 +55,7 @@ public class TextStyleCompiler extends AbsVisitor {
         return val;
     }
     
-    public List<MutableText> getResult() {
+    public List<LiteralText> getResult() {
         return result;
     }
     

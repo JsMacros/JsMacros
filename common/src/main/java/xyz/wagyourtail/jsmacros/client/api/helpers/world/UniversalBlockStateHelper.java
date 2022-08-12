@@ -872,7 +872,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
         Properties.AGE_1,
         Properties.AGE_2,
         Properties.AGE_3,
-        Properties.AGE_4,
         Properties.AGE_5,
         Properties.AGE_7,
         Properties.AGE_15,
@@ -1029,28 +1028,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
         return base.get(Properties.CHARGES);
     }
 
-    /**
-    *
-    * Used on sculk sensors.
-    *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public boolean isShrieking() {
-        return base.get(Properties.SHRIEKING);
-    }
-
-    /**
-     * Used on sculk sensors.
-    *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public boolean canSummon() {
-        return base.get(Properties.CAN_SUMMON);
-    }
 
     /**
     *
@@ -1062,15 +1039,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      */
     public String getSculkSensorPhase() {
         return base.get(Properties.SCULK_SENSOR_PHASE).asString();
-    }
-
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public boolean isBloom() {
-        return base.get(Properties.BLOOM);
     }
 
     /**

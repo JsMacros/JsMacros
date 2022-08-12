@@ -124,7 +124,7 @@ public class FHud extends BaseLibrary {
      * @since 1.8.4
      */
     public int getScaleFactor() {
-        return mc.options.getGuiScale().getValue();
+        return mc.options.guiScale;
     }
     
     /**

@@ -1,8 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.Packet;
-import net.minecraft.network.PacketCallbacks;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -53,7 +54,7 @@ public class MixinClientConnection {
     }
 
     @Inject(method = "sendImmediately", at = @At("HEAD"), cancellable = true)
-    private void onSendPacket(Packet<?> packet, PacketCallbacks callbacks, CallbackInfo ci) {
+    private void onSendPacket(Packet<?> packet, GenericFutureListener<? extends Future<? super Void>> callbacks, CallbackInfo ci) {
         EventJoinedSendPacket event = new EventJoinedSendPacket(packet);
         if (event.isCanceled() || event.packet == null) {
             ci.cancel();

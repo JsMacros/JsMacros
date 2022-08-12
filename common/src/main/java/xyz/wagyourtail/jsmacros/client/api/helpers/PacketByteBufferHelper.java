@@ -18,7 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.GlobalPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
@@ -54,6 +53,8 @@ import java.util.*;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
+
+import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.literal;
 
 /**
  * @author Etheradon
@@ -314,49 +315,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     }
 
     /**
-     * @param registry the registry the value is from
-     * @param value    the value to store
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public <T> PacketByteBufferHelper writeRegistryValue(IndexedIterable<T> registry, T value) {
-        base.writeRegistryValue(registry, value);
-        return this;
-    }
-
-    /**
-     * @param registry the registry the read value is from
-     * @return the registry value.
-     *
-     * @since 1.8.4
-     */
-    public <T> T readRegistryValue(IndexedIterable<T> registry) {
-        return base.readRegistryValue(registry);
-    }
-
-    /**
-     * @param key the registry key to store
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeRegistryKey(RegistryKey<?> key) {
-        base.writeRegistryKey(key);
-        return this;
-    }
-
-    /**
-     * @param registry the registry the read key is from
-     * @return the registry key.
-     *
-     * @since 1.8.4
-     */
-    public <T> RegistryKey<T> readRegistryKey(RegistryKey<? extends Registry<T>> registry) {
-        return base.readRegistryKey(registry);
-    }
-
-    /**
      * @param collection the collection to store
      * @param writer     the function that writes the collection's elements to the buffer
      * @return self for chaining.
@@ -438,7 +396,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param writer the function to write the optional value if present to the buffer
      * @return self for chaining.
      *
-     * @see #writeNullable(Object, MethodWrapper)
      * @since 1.8.4
      */
     public <T> PacketByteBufferHelper writeOptional(T value, MethodWrapper<PacketByteBuf, T, ?, ?> writer) {
@@ -450,63 +407,10 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param reader the function to read the optional value from the buffer if present
      * @return the optional value.
      *
-     * @see #readNullable(MethodWrapper)
      * @since 1.8.4
      */
     public <T> Optional<T> readOptional(MethodWrapper<PacketByteBuf, ?, T, ?> reader) {
         return base.readOptional(reader::apply);
-    }
-
-    /**
-     * @param value  the optional value to store
-     * @param writer the function to write the optional value if it's not null to the buffer
-     * @return self for chaining.
-     *
-     * @see #writeOptional(Object, MethodWrapper) 
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeNullable(Object value, MethodWrapper<PacketByteBuf, Object, ?, ?> writer) {
-        base.writeNullable(value, writer::accept);
-        return this;
-    }
-
-    /**
-     * @param reader the function to read the value from the buffer if it's not null
-     * @return the read value or {@code null} if it was null.
-     *
-     * @see #readOptional(MethodWrapper)
-     * @since 1.8.4
-     */
-    public <T> T readNullable(MethodWrapper<PacketByteBuf, ?, T, ?> reader) {
-        return base.readNullable(reader::apply);
-    }
-
-    /**
-     * This method chooses the left value if it's not null, otherwise it chooses the right value.
-     *
-     * @param left        the left value to store
-     * @param right       the right value to store
-     * @param leftWriter  the function to write the left value to the buffer
-     * @param rightWriter the function to write the right value to the buffer
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public <L, R> PacketByteBufferHelper writeEither(L left, R right, MethodWrapper<PacketByteBuf, L, ?, ?> leftWriter, MethodWrapper<PacketByteBuf, R, ?, ?> rightWriter) {
-        base.writeEither(left == null ? Either.right(right) : Either.left(left), leftWriter::accept, rightWriter::accept);
-        return this;
-    }
-
-    /**
-     * @param leftReader  the function to read the left value from the buffer
-     * @param rightReader the function to read the right value from the buffer
-     * @return the read object.
-     *
-     * @since 1.8.4
-     */
-    public Object readEither(MethodWrapper<PacketByteBuf, ?, Object, ?> leftReader, MethodWrapper<PacketByteBuf, ?, Object, ?> rightReader) {
-        Either<?, ?> either = base.readEither(leftReader::apply, rightReader::apply);
-        return either.map(left -> left, right -> right);
     }
 
     /**
@@ -718,54 +622,8 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         return new BlockPosHelper(pos.getSectionX(), pos.getSectionY(), pos.getSectionZ());
     }
 
-    /**
-     * @param dimension the dimension, vanilla default are {@code overworld}, {@code the_nether},
-     *                  {@code the_end}
-     * @param pos       the position to store
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeGlobalPos(String dimension, BlockPosHelper pos) {
-        RegistryKey<World> key = RegistryKey.of(Registry.WORLD_KEY, new Identifier(dimension));
-        base.writeGlobalPos(GlobalPos.create(key, pos.getRaw()));
-        return this;
-    }
-
-    /**
-     * @param dimension the dimension, vanilla default are {@code overworld}, {@code the_nether},
-     *                  {@code the_end}
-     * @param x         the x coordinate of the position to store
-     * @param y         the y coordinate of the position to store
-     * @param z         the z coordinate of the position to store
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeGlobalPos(String dimension, int x, int y, int z) {
-        RegistryKey<World> key = RegistryKey.of(Registry.WORLD_KEY, new Identifier(dimension));
-        base.writeGlobalPos(GlobalPos.create(key, new BlockPos(x, y, z)));
-        return this;
-    }
-
-    /**
-     * @return the read global pos, the first element is the dimension, the second is the position.
-     *
-     * @since 1.8.4
-     */
-    public Pair<String, BlockPosHelper> readGlobalPos() {
-        GlobalPos pos = base.readGlobalPos();
-        return new Pair<>(pos.getDimension().getValue().toString(), new BlockPosHelper(pos.getPos()));
-    }
-
-    /**
-     * @param text the string to store
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
     public PacketByteBufferHelper writeText(String text) {
-        base.writeText(Text.literal(text));
+        base.writeText(literal(text));
         return this;
     }
 
@@ -1008,46 +866,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     }
 
     /**
-     * @param instant the instant to store
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeInstant(Instant instant) {
-        base.writeInstant(instant);
-        return this;
-    }
-
-    /**
-     * @return the read instant.
-     *
-     * @since 1.8.4
-     */
-    public Instant readInstant() {
-        return base.readInstant();
-    }
-
-    /**
-     * @param key the public key to store
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writePublicKey(PublicKey key) {
-        base.writePublicKey(key);
-        return this;
-    }
-
-    /**
-     * @return the read public key.
-     *
-     * @since 1.8.4
-     */
-    public PublicKey readPublicKey() {
-        return base.readPublicKey();
-    }
-
-    /**
      * @param hitResult the hit result to store
      * @return self for chaining.
      *
@@ -1115,44 +933,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      */
     public BitSet readBitSet() {
         return base.readBitSet();
-    }
-
-    /**
-     * @param profile the profile to store
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeGameProfile(GameProfile profile) {
-        base.writeGameProfile(profile);
-        return this;
-    }
-
-    /**
-     * @return the read game profile.
-     *
-     * @since 1.8.4
-     */
-    public GameProfile readGameProfile() {
-        return base.readGameProfile();
-    }
-
-    /**
-     * @return the read profile's name.
-     *
-     * @since 1.8.4
-     */
-    public String readGameProfileName() {
-        return readGameProfile().getName();
-    }
-
-    /**
-     * @return the read profile's UUID.
-     *
-     * @since 1.8.4
-     */
-    public UUID readGameProfileUuid() {
-        return readGameProfile().getId();
     }
 
     /**
@@ -1876,7 +1656,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("LightUpdateS2CPacket", net.minecraft.network.packet.s2c.play.LightUpdateS2CPacket.class);
         PACKETS.put("ExperienceOrbSpawnS2CPacket", net.minecraft.network.packet.s2c.play.ExperienceOrbSpawnS2CPacket.class);
         PACKETS.put("EntityAnimationS2CPacket", net.minecraft.network.packet.s2c.play.EntityAnimationS2CPacket.class);
-        PACKETS.put("ChatSuggestionsS2CPacket", net.minecraft.network.packet.s2c.play.ChatSuggestionsS2CPacket.class);
         PACKETS.put("EntityS2CPacket", net.minecraft.network.packet.s2c.play.EntityS2CPacket.class);
         PACKETS.put("EntityS2CPacket$Rotate", net.minecraft.network.packet.s2c.play.EntityS2CPacket.Rotate.class);
         PACKETS.put("EntityS2CPacket$MoveRelative", net.minecraft.network.packet.s2c.play.EntityS2CPacket.MoveRelative.class);
@@ -1907,7 +1686,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("OverlayMessageS2CPacket", net.minecraft.network.packet.s2c.play.OverlayMessageS2CPacket.class);
         PACKETS.put("ChunkDeltaUpdateS2CPacket", net.minecraft.network.packet.s2c.play.ChunkDeltaUpdateS2CPacket.class);
         PACKETS.put("SetTradeOffersS2CPacket", net.minecraft.network.packet.s2c.play.SetTradeOffersS2CPacket.class);
-        PACKETS.put("ServerMetadataS2CPacket", net.minecraft.network.packet.s2c.play.ServerMetadataS2CPacket.class);
         PACKETS.put("SelectAdvancementTabS2CPacket", net.minecraft.network.packet.s2c.play.SelectAdvancementTabS2CPacket.class);
         PACKETS.put("WorldBorderCenterChangedS2CPacket", net.minecraft.network.packet.s2c.play.WorldBorderCenterChangedS2CPacket.class);
         PACKETS.put("WorldBorderInterpolateSizeS2CPacket", net.minecraft.network.packet.s2c.play.WorldBorderInterpolateSizeS2CPacket.class);
@@ -1920,7 +1698,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("EntityEquipmentUpdateS2CPacket", net.minecraft.network.packet.s2c.play.EntityEquipmentUpdateS2CPacket.class);
         PACKETS.put("ExperienceBarUpdateS2CPacket", net.minecraft.network.packet.s2c.play.ExperienceBarUpdateS2CPacket.class);
         PACKETS.put("HealthUpdateS2CPacket", net.minecraft.network.packet.s2c.play.HealthUpdateS2CPacket.class);
-        PACKETS.put("ChatMessageS2CPacket", net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket.class);
         PACKETS.put("EntityPassengersSetS2CPacket", net.minecraft.network.packet.s2c.play.EntityPassengersSetS2CPacket.class);
         PACKETS.put("UnlockRecipesS2CPacket", net.minecraft.network.packet.s2c.play.UnlockRecipesS2CPacket.class);
         PACKETS.put("ChunkLoadDistanceS2CPacket", net.minecraft.network.packet.s2c.play.ChunkLoadDistanceS2CPacket.class);
@@ -1948,8 +1725,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("TeleportConfirmC2SPacket", net.minecraft.network.packet.c2s.play.TeleportConfirmC2SPacket.class);
         PACKETS.put("QueryBlockNbtC2SPacket", net.minecraft.network.packet.c2s.play.QueryBlockNbtC2SPacket.class);
         PACKETS.put("UpdateDifficultyC2SPacket", net.minecraft.network.packet.c2s.play.UpdateDifficultyC2SPacket.class);
-        PACKETS.put("MessageAcknowledgmentC2SPacket", net.minecraft.network.packet.c2s.play.MessageAcknowledgmentC2SPacket.class);
-        PACKETS.put("CommandExecutionC2SPacket", net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket.class);
         PACKETS.put("ClientStatusC2SPacket", net.minecraft.network.packet.c2s.play.ClientStatusC2SPacket.class);
         PACKETS.put("ScoreboardPlayerUpdateS2CPacket", net.minecraft.network.packet.s2c.play.ScoreboardPlayerUpdateS2CPacket.class);
         PACKETS.put("EntityAttachS2CPacket", net.minecraft.network.packet.s2c.play.EntityAttachS2CPacket.class);

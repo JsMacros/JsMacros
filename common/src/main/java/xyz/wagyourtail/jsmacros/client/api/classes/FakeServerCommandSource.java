@@ -37,11 +37,6 @@ public class FakeServerCommandSource extends ServerCommandSource {
     }
 
     @Override
-    public Collection<String> getChatSuggestions() {
-        return source.getChatSuggestions();
-    }
-
-    @Override
     public Collection<String> getPlayerNames() {
         return source.getPlayerNames();
     }
@@ -88,7 +83,7 @@ public class FakeServerCommandSource extends ServerCommandSource {
 
     @Override
     public void sendFeedback(Text message, boolean broadcastToOps) {
-        MinecraftClient.getInstance().player.sendMessage(message);
+        MinecraftClient.getInstance().player.sendMessage(message, false);
     }
 
 }

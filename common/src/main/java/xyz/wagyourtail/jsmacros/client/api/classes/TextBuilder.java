@@ -25,7 +25,7 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class TextBuilder {
-    private final MutableText head = Text.literal("");
+    private final LiteralText head = new LiteralText("");
     private MutableText self = head;
     
     public TextBuilder() {
@@ -50,7 +50,7 @@ public class TextBuilder {
     }
     
     private void appendInternal(String text) {
-        head.append(self = Text.literal(text));
+        head.append(self = new LiteralText(text));
     }
     
     private void appendInternal(TextHelper helper) {

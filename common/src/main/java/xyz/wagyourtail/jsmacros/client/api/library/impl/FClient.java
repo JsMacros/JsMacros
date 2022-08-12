@@ -1,20 +1,22 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ConnectScreen;
-import net.minecraft.client.gui.screen.MessageScreen;
-import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.screen.*;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
+import net.minecraft.client.network.MultiplayerServerListPinger;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.realms.gui.screen.RealmsMainScreen;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelStorageException;
-
+import net.minecraft.world.level.storage.LevelSummary;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
@@ -38,6 +40,7 @@ import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Semaphore;
@@ -168,18 +171,19 @@ public class FClient extends PerExecLibrary {
     public void loadWorld(String folderName) throws LevelStorageException {
 
         LevelStorage levelstoragesource = mc.getLevelStorage();
-        List<LevelStorage.LevelSave> levels = levelstoragesource.getLevelList().levels();
-        if (levels.stream().noneMatch(e -> e.getRootPath().equals(folderName))) throw new RuntimeException("Level Not Found!");
+        List<LevelSummary> levels = levelstoragesource.getLevelList();
+        if (levels.stream().noneMatch(e -> e.getName().equals(folderName))) throw new RuntimeException("Level Not Found!");
 
         mc.execute(() -> {
             boolean bl = mc.isInSingleplayer();
             if (mc.world != null) mc.world.disconnect();
             if (bl) {
-                mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
+                mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
             } else {
                 mc.disconnect();
             }
-            mc.createIntegratedServerLoader().start(null, folderName);
+            mc.setScreenAndRender(new SaveLevelScreen(new TranslatableText("selectWorld.data_read")));
+            mc.startIntegratedServer(folderName);
         });
     }
     
@@ -208,7 +212,7 @@ public class FClient extends PerExecLibrary {
             boolean bl = mc.isInSingleplayer();
             if (mc.world != null) mc.world.disconnect();
             if (bl) {
-                mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
+                mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
             } else {
                 mc.disconnect();
             }
@@ -242,7 +246,7 @@ public class FClient extends PerExecLibrary {
             if (isWorld) {
                 // logic in death screen disconnect button
                 if (mc.world != null) mc.world.disconnect();
-                mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
+                mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
                 mc.setScreen(new TitleScreen());
             }
             if (isInSingleplayer) {

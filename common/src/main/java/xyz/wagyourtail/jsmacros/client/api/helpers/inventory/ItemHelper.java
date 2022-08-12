@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 
-import net.minecraft.command.CommandRegistryWrapper;
 import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.item.*;
 
@@ -271,8 +270,11 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public ItemStackHelper getStackWithNbt(String nbt) throws CommandSyntaxException {
-        ItemStringReader.ItemResult itemResult = ItemStringReader.item(new CommandRegistryWrapper.Impl<>(Registry.ITEM), new StringReader(getId() + nbt));
-        return new ItemStackHelper(new ItemStack(itemResult.item()));
+        ItemStringReader reader = new ItemStringReader(new StringReader(getId() + nbt), false);
+        reader.consume();
+        ItemStack stack = reader.getItem().getDefaultStack();
+        stack.setNbt(reader.getNbt());
+        return new ItemStackHelper(stack);
     }
 
     @Override

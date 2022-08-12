@@ -74,12 +74,12 @@ public class CommandContextHelper extends BaseHelper<CommandContext<?>> implemen
             arg = new FormattingHelper((Formatting) arg);
         } else if (arg instanceof AngleArgumentType.Angle) {
             arg = ((AngleArgumentType.Angle) arg).getAngle(fakeServerSource);
-        } else if (arg instanceof ItemPredicateArgumentType.ItemStackPredicateArgument) {
-            ItemPredicateArgumentType.ItemStackPredicateArgument itemPredicate = (ItemPredicateArgumentType.ItemStackPredicateArgument) arg;
-            arg = (Predicate<ItemStackHelper>) item -> itemPredicate.test(item.getRaw());
+        } else if (arg instanceof ItemPredicateArgumentType.ItemPredicateArgument) {
+            ItemPredicateArgumentType.ItemPredicateArgument itemPredicate = (ItemPredicateArgumentType.ItemPredicateArgument) arg;
+            arg = itemPredicate.create(null);
         } else if (arg instanceof BlockPredicateArgumentType.BlockPredicate) {
             BlockPredicateArgumentType.BlockPredicate blockPredicate = (BlockPredicateArgumentType.BlockPredicate) arg;
-            arg = (Predicate<BlockPosHelper>) block -> blockPredicate.test(new CachedBlockPosition(MinecraftClient.getInstance().world, block.getRaw(), false));
+            arg = blockPredicate.create(Registry.BLOCK);
         } else if (arg instanceof PosArgument) {
             arg = new BlockPosHelper(((PosArgument) arg).toAbsoluteBlockPos(fakeServerSource));
         } else if (arg instanceof Enchantment) {

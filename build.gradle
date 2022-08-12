@@ -38,8 +38,8 @@ subprojects {
             }
         }
         maven {
-            name "modmenu repository"
-            url 'https://maven.terraformersmc.com/releases/'
+            url "https://maven.terraformersmc.com/releases"
+            name "modmenu maven"
         }
         maven { url 'https://jitpack.io' }
         mavenCentral()

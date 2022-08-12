@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
@@ -37,7 +37,7 @@ public class ScriptScreen extends BaseScreen {
     private MethodWrapper<Pos3D, MatrixStack, Object, ?> onRender;
     
     public ScriptScreen(String title, boolean dirt) {
-        super(Text.literal(title), null);
+        super(new LiteralText(title), null);
         this.bgStyle = dirt ? 0 : 1;
         this.drawTitle = true;
     }

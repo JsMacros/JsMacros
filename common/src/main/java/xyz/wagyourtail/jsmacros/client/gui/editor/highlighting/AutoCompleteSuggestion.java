@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.gui.editor.highlighting;
 
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 
@@ -11,7 +12,7 @@ public class AutoCompleteSuggestion {
     public AutoCompleteSuggestion(int startIndex, String suggestion) {
         this.suggestion = suggestion;
         this.startIndex = startIndex;
-        this.displayText = Text.literal(suggestion).setStyle(EditorScreen.defaultStyle);
+        this.displayText = new LiteralText(suggestion).setStyle(EditorScreen.defaultStyle);
     }
     
     public AutoCompleteSuggestion(int startIndex, String suggestion, Text displayText) {

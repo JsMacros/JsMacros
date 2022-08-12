@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
+import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.literal;
+
 /**
  * @author Wagyourtail
  * @since 1.0.5
@@ -96,7 +98,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      */
      @Deprecated
     public B setLabel(String label) {
-        base.setMessage(Text.literal(label));
+        base.setMessage(literal(label));
         return (B) this;
     }
     
@@ -215,9 +217,9 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
         } else if (tooltip instanceof TextHelper) {
             tooltips.add(((TextHelper) tooltip).getRaw());
         } else if (tooltip instanceof String) {
-            tooltips.add(Text.literal((String) tooltip));
+            tooltips.add(literal((String) tooltip));
         } else {
-            tooltips.add(Text.literal(tooltip.toString()));
+            tooltips.add(literal(tooltip.toString()));
         }
         return (B) this;
     }

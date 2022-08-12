@@ -39,7 +39,7 @@ public class ZombieVillagerEntityHelper extends ZombieEntityHelper<ZombieVillage
      * @since 1.8.4
      */
     public String getProfession() {
-        return base.getVillagerData().getProfession().id();
+        return base.getVillagerData().getProfession().getId();
     }
 
     /**

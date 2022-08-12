@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.dec
 
 import net.minecraft.entity.decoration.painting.PaintingEntity;
 
+import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
 /**
@@ -21,7 +22,7 @@ public class PaintingEntityHelper extends EntityHelper<PaintingEntity> {
      * @since 1.8.4
      */
     public int getWidth() {
-        return base.getVariant().value().getWidth();
+        return base.motive.getWidth();
     }
 
     /**
@@ -30,7 +31,7 @@ public class PaintingEntityHelper extends EntityHelper<PaintingEntity> {
      * @since 1.8.4
      */
     public int getHeight() {
-        return base.getVariant().value().getWidth();
+        return base.motive.getWidth();
     }
 
     /**
@@ -39,7 +40,7 @@ public class PaintingEntityHelper extends EntityHelper<PaintingEntity> {
      * @since 1.8.4
      */
     public String getIdentifier() {
-        return base.getVariant().getKey().map(paintingVariantRegistryKey -> paintingVariantRegistryKey.getValue().toString()).orElse(null);
+        return Registry.PAINTING_MOTIVE.getId(base.motive).toString();
     }
 
 }

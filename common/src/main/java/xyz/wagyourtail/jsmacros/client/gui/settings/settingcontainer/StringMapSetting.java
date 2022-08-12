@@ -1,7 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.text.Text;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.overlays.TextPrompt;
@@ -38,15 +39,15 @@ public class StringMapSetting extends AbstractMapSettingContainer<String, String
         public void init() {
             super.init();
             int w = width - height;
-            addDrawableChild(new Button(x + w / 2, y, w / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(value), (btn) -> {
+            addDrawableChild(new Button(x + w / 2, y, w / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(value), (btn) -> {
                 int x = parent.x;
                 int y = parent.y;
                 int width = parent.width;
                 int height = parent.height;
-                openOverlay(new TextPrompt(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, Text.translatable("jsmacros.setvalue"), value, getFirstOverlayParent(), (str) -> {
+                openOverlay(new TextPrompt(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.setvalue"), value, getFirstOverlayParent(), (str) -> {
                     try {
                         parent.changeValue(key, str);
-                        btn.setMessage(Text.literal(str));
+                        btn.setMessage(new LiteralText(str));
                     } catch (InvocationTargetException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
