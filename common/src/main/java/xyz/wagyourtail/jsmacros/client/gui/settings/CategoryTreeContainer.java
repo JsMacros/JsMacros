@@ -2,7 +2,8 @@ package xyz.wagyourtail.jsmacros.client.gui.settings;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
@@ -116,10 +117,10 @@ public class CategoryTreeContainer extends MultiElementContainer<ICategoryTreePa
     
     private void initChild(boolean show) {
         if (children.size() > 0) {
-            expandBtn = addDrawableChild(new Button(x, y, btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(">"), (btn) -> this.toggleExpand()));
+            expandBtn = addDrawableChild(new Button(x, y, btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(">"), (btn) -> this.toggleExpand()));
             expandBtn.visible = show;
         }
-        showBtn = addDrawableChild(new Button(x + btnHeight, y, width - btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable(category), (btn) -> this.selectCategory()));
+        showBtn = addDrawableChild(new Button(x + btnHeight, y, width - btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText(category), (btn) -> this.selectCategory()));
         showBtn.visible = show;
         showBtn.horizCenter = false;
         
@@ -130,7 +131,7 @@ public class CategoryTreeContainer extends MultiElementContainer<ICategoryTreePa
     
     private void toggleExpand() {
         showChildren = !showChildren;
-        expandBtn.setMessage(Text.literal(showChildren ? "<" : ">"));
+        expandBtn.setMessage(new LiteralText(showChildren ? "<" : ">"));
         updateOffsets();
     }
     

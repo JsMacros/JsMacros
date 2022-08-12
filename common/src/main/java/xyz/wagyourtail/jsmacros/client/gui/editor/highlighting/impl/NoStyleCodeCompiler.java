@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl;
 
-import net.minecraft.text.MutableText;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCodeCompiler;
@@ -22,12 +22,12 @@ public class NoStyleCodeCompiler extends AbstractRenderCodeCompiler {
     @Override
     public void recompileRenderedText(@NotNull String text) {
         if (text.length() == 0) {
-            compiledText = new Text[] {Text.literal("")};
+            compiledText = new Text[] {new LiteralText("")};
         } else {
             String[] t2 = text.split("\n");
             compiledText = new Text[t2.length];
             for (int i = 0; i < t2.length; i++) {
-                compiledText[i] = Text.literal(t2[i]).setStyle(EditorScreen.defaultStyle);
+                compiledText[i] = new LiteralText(t2[i]).setStyle(EditorScreen.defaultStyle);
             }
         }
     }

@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.scriptimpl;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +25,7 @@ import java.util.*;
  */
 public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
     private final ScriptTrigger scriptTrigger;
-    private Text[] compiledText = new Text[] {Text.literal("")};
+    private Text[] compiledText = new Text[] {new LiteralText("")};
     private MethodWrapper<Integer, Object, Map<String, MethodWrapper<Object, Object, Object, ?>>, ?> getRClickActions = null;
     private List<AutoCompleteSuggestion> suggestions = new LinkedList<>();
     
@@ -40,7 +41,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
             TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
             StringWriter st = new StringWriter();
             ex.printStackTrace(new PrintWriter(st));
-            Text error = Text.literal(st.toString().replaceAll("\r", "").replaceAll("\t", "    ")).setStyle(EditorScreen.defaultStyle);
+            Text error = new LiteralText(st.toString().replaceAll("\r", "").replaceAll("\t", "    ")).setStyle(EditorScreen.defaultStyle);
             screen.openOverlay(new ConfirmOverlay(screen.width / 4, screen.height / 4, screen.width / 2, screen.height / 2, false, renderer, error, screen, (e) -> screen.openParent()));
         });
         if (t != null) {

@@ -8,7 +8,7 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
@@ -519,7 +519,7 @@ public class RenderCommon {
         public int zIndex;
         
         public Text(String text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
-            this.text = net.minecraft.text.Text.literal(text);
+            this.text = new LiteralText(text);
             this.x = x;
             this.y = y;
             this.color = color;
@@ -582,7 +582,7 @@ public class RenderCommon {
          * @return
          */
         public Text setText(String text) {
-            this.text = net.minecraft.text.Text.literal(text);
+            this.text = new LiteralText(text);
             this.width = mc.textRenderer.getWidth(text);
             return this;
         }

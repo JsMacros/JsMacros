@@ -4,7 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import net.minecraft.text.LiteralText;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
@@ -21,7 +21,7 @@ public class TextInput extends Button {
     protected int arrowCursor;
     
     public TextInput(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int hilightColor, int textColor, String message, Consumer<Button> onClick, Consumer<String> onChange) {
-        super(x, y, width, height, textRenderer, color, borderColor, color, textColor, Text.literal(""), onClick);
+        super(x, y, width, height, textRenderer, color, borderColor, color, textColor, new LiteralText(""), onClick);
         this.selColor = hilightColor;
         this.content = message;
         this.onChange = onChange;

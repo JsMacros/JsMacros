@@ -6,10 +6,9 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.*;
-import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.SuggestionsBuilderHelper;
@@ -35,8 +34,6 @@ public abstract class CommandBuilder {
 
     protected abstract void argument(String name, Supplier<ArgumentType<?>> type);
 
-    protected abstract void argument(String name, Function<CommandRegistryAccess, ArgumentType<?>> type);
-
     public abstract CommandBuilder literalArg(String name);
 
     public CommandBuilder angleArg(String name) {
@@ -60,7 +57,7 @@ public abstract class CommandBuilder {
     }
 
     public CommandBuilder doubleArg(String name) {
-        argument(name, (Supplier<ArgumentType<?>>) DoubleArgumentType::doubleArg);
+        argument(name, DoubleArgumentType::doubleArg);
         return this;
     }
 
@@ -75,7 +72,7 @@ public abstract class CommandBuilder {
     }
 
     public CommandBuilder longArg(String name) {
-        argument(name, (Supplier<ArgumentType<?>>) LongArgumentType::longArg);
+        argument(name, LongArgumentType::longArg);
         return this;
     }
 
@@ -90,7 +87,7 @@ public abstract class CommandBuilder {
     }
 
     public CommandBuilder intArg(String name) {
-        argument(name, (Supplier<ArgumentType<?>>) IntegerArgumentType::integer);
+        argument(name, IntegerArgumentType::integer);
         return this;
     }
 
@@ -281,10 +278,7 @@ public abstract class CommandBuilder {
                 reader.setCursor(i + m.group(0).length());
                 return args;
             } else {
-                throw new SimpleCommandExceptionType(Text.translatable(
-                    "jsmacros.commandfailedregex",
-                    "/" + pattern.pattern() + "/"
-                )).createWithContext(reader);
+                throw new SimpleCommandExceptionType(new TranslatableText("jsmacros.commandfailedregex", "/" + pattern.pattern() + "/")).createWithContext(reader);
             }
         }
     }

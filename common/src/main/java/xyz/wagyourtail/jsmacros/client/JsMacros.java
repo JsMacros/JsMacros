@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
@@ -57,7 +58,7 @@ public class JsMacros {
         try {
             return InputUtil.fromTranslationKey(translationKey).getLocalizedText();
         } catch(Exception e) {
-            return Text.literal(translationKey);
+            return new LiteralText(translationKey);
         }
     }
     

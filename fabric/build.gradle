@@ -20,17 +20,17 @@ configurations {
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
 
-    modApi fabricApi.module("fabric-api-base",  project.fapi_version)
-    modApi fabricApi.module("fabric-lifecycle-events-v1",  project.fapi_version)
-    modApi fabricApi.module("fabric-key-binding-api-v1",  project.fapi_version)
-    modApi fabricApi.module("fabric-resource-loader-v0",  project.fapi_version)
-    modApi fabricApi.module("fabric-command-api-v2",  project.fapi_version)
+    modApi fabricApi.module("fabric-api-base", project.fapi_version)
+    modApi fabricApi.module("fabric-lifecycle-events-v1", project.fapi_version)
+    modApi fabricApi.module("fabric-key-binding-api-v1", project.fapi_version)
+    modApi fabricApi.module("fabric-resource-loader-v0", project.fapi_version)
+    modApi fabricApi.module("fabric-command-api-v1", project.fapi_version)
 
-    include fabricApi.module("fabric-api-base",  project.fapi_version)
-    include fabricApi.module("fabric-lifecycle-events-v1",  project.fapi_version)
-    include fabricApi.module("fabric-key-binding-api-v1",  project.fapi_version)
-    include fabricApi.module("fabric-resource-loader-v0",  project.fapi_version)
-    include fabricApi.module("fabric-command-api-v2",  project.fapi_version)
+    include fabricApi.module("fabric-api-base", project.fapi_version)
+    include fabricApi.module("fabric-lifecycle-events-v1", project.fapi_version)
+    include fabricApi.module("fabric-key-binding-api-v1", project.fapi_version)
+    include fabricApi.module("fabric-resource-loader-v0", project.fapi_version)
+    include fabricApi.module("fabric-command-api-v1", project.fapi_version)
 
 
     localRuntime "org.graalvm.sdk:graal-sdk:${project.graal_version}"
@@ -45,9 +45,7 @@ dependencies {
     include "org.javassist:javassist:3.28.0-GA"
 
 
-    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-    //for modmenu
-    modImplementation "net.fabricmc.fabric-api:fabric-screen-api-v1:1.0.9+d882b915d2"
+    modImplementation "com.terraformersmc:modmenu:${rootProject.modmenu_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     //ij wasn't seeing this, even tho it's part of namedElements...

@@ -205,14 +205,14 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ActionResult result = mc.interactionManager.interactItem(mc.player, hand);
+            ActionResult result = mc.interactionManager.interactItem(mc.player, mc.world, hand);
             assert mc.player != null;
             if (result.isAccepted())
                 mc.player.swingHand(hand);
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ActionResult result = mc.interactionManager.interactItem(mc.player, hand);
+                ActionResult result = mc.interactionManager.interactItem(mc.player, mc.world, hand);
                 assert mc.player != null;
                 if (result.isAccepted())
                     mc.player.swingHand(hand);
@@ -240,7 +240,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ActionResult result = mc.interactionManager.interactBlock(mc.player, hand,
+            ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, hand,
                 new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
             );
             assert mc.player != null;
@@ -249,7 +249,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ActionResult result = mc.interactionManager.interactBlock(mc.player, hand,
+                ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, hand,
                     new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
                 );
                 assert mc.player != null;

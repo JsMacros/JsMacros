@@ -3,7 +3,7 @@ package xyz.wagyourtail.wagyourgui.elements;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import net.minecraft.text.LiteralText;
 
 import java.util.function.Consumer;
 
@@ -18,7 +18,7 @@ public class Scrollbar extends ClickableWidget {
     protected Consumer<Double> onChange;
 
     public Scrollbar(int x, int y, int width, int height, int color, int borderColor, int hilightColor, double scrollPages, Consumer<Double> onChange) {
-        super(x, y, width, height, Text.literal(""));
+        super(x, y, width, height, new LiteralText(""));
         this.color = color;
         this.borderColor = borderColor;
         this.hilightColor = hilightColor;

@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl;
 
 import io.noties.prism4j.Prism4j;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 public class DefaultCodeCompiler extends AbstractRenderCodeCompiler {
     private final Map<String, short[]> themeData = Core.getInstance().config.getOptions(ClientConfigV2.class).getThemeData();
     private final AutoCompleteSuggestor suggestor;
-    private Text[] compiledText = new Text[0];
+    private LiteralText[] compiledText = new LiteralText[0];
     private List<AutoCompleteSuggestion> suggestions = new LinkedList<>();
     
     public DefaultCodeCompiler(String language, EditorScreen screen) {
@@ -30,12 +31,12 @@ public class DefaultCodeCompiler extends AbstractRenderCodeCompiler {
     public void recompileRenderedText(@NotNull String text) {
         // style compiler
         if (text.length() == 0) {
-            compiledText = new Text[] {Text.literal("")};
+            compiledText = new LiteralText[] {new LiteralText("")};
         } else {
             final List<Prism4j.Node> nodes = Prism.getNodes(text, language);
             final TextStyleCompiler visitor = new TextStyleCompiler(EditorScreen.defaultStyle, themeData);
             visitor.visit(nodes);
-            compiledText = visitor.getResult().toArray(new Text[0]);
+            compiledText = visitor.getResult().toArray(new LiteralText[0]);
         }
         
         // suggestion compile

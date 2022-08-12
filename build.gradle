@@ -64,8 +64,8 @@ allprojects {
         }
         maven { url 'https://jitpack.io' }
         maven {
-            name "modmenu repository"
-            url 'https://maven.terraformersmc.com/releases/'
+            url "https://maven.terraformersmc.com/releases"
+            name "modmenu maven"
         }
         mavenCentral()
     }

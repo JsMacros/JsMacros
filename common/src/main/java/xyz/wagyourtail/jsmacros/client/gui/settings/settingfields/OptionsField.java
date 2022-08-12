@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.gui.settings.settingfields;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.AbstractSettingContainer;
@@ -25,8 +26,8 @@ public class OptionsField extends AbstractSettingField<Object> {
         super.init();
         try {
             List<Object> values = setting.getOptions();
-            List<Text> textvalues = values.stream().map(e -> Text.literal(e.toString())).collect(Collectors.toList());
-            this.addDrawableChild(new Button(x + width / 2, y, width / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(setting.get().toString()), (btn) -> {
+            List<Text> textvalues = values.stream().map(e -> new LiteralText(e.toString())).collect(Collectors.toList());
+            this.addDrawableChild(new Button(x + width / 2, y, width / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(setting.get().toString()), (btn) -> {
                 getFirstOverlayParent().openOverlay(new SelectorDropdownOverlay(x + width / 2, y, width / 2, values.size() * (textRenderer.fontHeight + 1) + 4, textvalues, textRenderer, getFirstOverlayParent(), (choice) -> {
                     btn.setMessage(textvalues.get(choice));
                     try {

@@ -9,7 +9,6 @@ import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.client.access.IBeaconScreen;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 
 /**
@@ -98,8 +97,7 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
      */
     public boolean applyEffects() {
         if (inventory.getScreenHandler().hasPayment()) {
-            mc.getNetworkHandler().sendPacket(new UpdateBeaconC2SPacket(Optional.ofNullable(((IBeaconScreen) inventory).jsmacros_getPrimaryEffect()),
-                Optional.ofNullable(((IBeaconScreen) inventory).jsmacros_getSecondaryEffect())));
+            mc.getNetworkHandler().sendPacket(new UpdateBeaconC2SPacket(StatusEffect.getRawId(((IBeaconScreen) inventory).jsmacros_getPrimaryEffect()), StatusEffect.getRawId(((IBeaconScreen) inventory).jsmacros_getSecondaryEffect())));
             player.closeHandledScreen();
             return true;
         }

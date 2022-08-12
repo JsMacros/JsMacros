@@ -1,7 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.text.Text;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.wagyourgui.elements.AnnotatedCheckBox;
 import xyz.wagyourtail.wagyourgui.overlays.TextPrompt;
@@ -56,18 +57,18 @@ public class ColorMapSetting extends AbstractMapSettingContainer<short[], ColorM
         public void init() {
             super.init();
             int w = width - height;
-            this.addDrawableChild(new AnnotatedCheckBox(x + w / 2, y, w / 2, height, textRenderer, convertColorToInt(value), 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(convertColorToString(value)), true, (btn) -> {
+            this.addDrawableChild(new AnnotatedCheckBox(x + w / 2, y, w / 2, height, textRenderer, convertColorToInt(value), 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(convertColorToString(value)), true, (btn) -> {
                 ((AnnotatedCheckBox)btn).value = true;
                 int x = parent.x;
                 int y = parent.y;
                 int width = parent.width;
                 int height = parent.height;
-                TextPrompt prompt = new TextPrompt(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, Text.translatable("jsmacros.setvalue"), convertColorToString(value), getFirstOverlayParent(), (str) -> {
+                TextPrompt prompt = new TextPrompt(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.setvalue"), convertColorToString(value), getFirstOverlayParent(), (str) -> {
                     try {
                         short[] newVal = convertStringToColor(str);
                         parent.changeValue(key, newVal);
                         btn.setColor(convertColorToInt(newVal));
-                        btn.setMessage(Text.literal(str));
+                        btn.setMessage(new LiteralText(str));
                     } catch (InvocationTargetException | IllegalAccessException e) {
                         e.printStackTrace();
                     }

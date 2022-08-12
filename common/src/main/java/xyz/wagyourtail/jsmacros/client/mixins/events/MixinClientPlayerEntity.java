@@ -11,10 +11,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.c2s.play.UpdateSignC2SPacket;
-import net.minecraft.text.LiteralTextContent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.text.LiteralText;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.wagyourtail.jsmacros.client.access.IClientPlayerEntity;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
@@ -46,13 +42,11 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
 
     // IGNORE
     public MixinClientPlayerEntity(ClientWorld world, GameProfile profile) {
-        super(world, profile, null);
+        super(world, profile);
     }
 
     @Shadow
     public abstract boolean shouldSlowDown();
-
-    @Shadow public abstract void sendChatMessage(String message, @Nullable Text preview);
 
     @Override
     public void setAir(int air) {
@@ -72,7 +66,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         lines = event.signText;
         if (event.closeScreen) {
             for (int i = 0; i < 4; ++i) {
-                sign.setTextOnRow(i, Text.literal(lines.get(i)));
+                sign.setTextOnRow(i, new LiteralText(lines.get(i)));
             }
             sign.markDirty();
             networkHandler.sendPacket(new UpdateSignC2SPacket(sign.getPos(), lines.get(0), lines.get(1), lines.get(2), lines.get(3)));
@@ -135,28 +129,6 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         EventDropSlot event = new EventDropSlot(null, 36 + selectedHotbarIndex, entireStack);
         if (event.cancel) {
             cir.setReturnValue(false);
-        }
-    }
-
-    @Inject(method = "sendChatMessage(Ljava/lang/String;Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
-    public void onSendChatMessage(String message, Text preview, CallbackInfo ci) {
-        final String result = new EventSendMessage(message).message;
-        if (result == null || result.equals("")) {
-            ci.cancel();
-        } else if (!result.equals(message)) {
-            ci.cancel();
-            ((IClientPlayerEntity) this).jsmacros_sendChatMessageBypass(result);
-        }
-    }
-
-    @Inject(method = "sendCommand(Ljava/lang/String;Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
-    public void onSendCommand(String command, Text preview, CallbackInfo ci) {
-        final String result = new EventSendMessage("/" + command).message;
-        if (result == null || result.equals("")) {
-            ci.cancel();
-        } else if (!result.equals("/" + command)) {
-            ci.cancel();
-            ((IClientPlayerEntity) this).jsmacros_sendChatMessageBypass(result);
         }
     }
 }

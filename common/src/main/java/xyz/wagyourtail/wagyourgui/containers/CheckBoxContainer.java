@@ -2,6 +2,7 @@ package xyz.wagyourtail.wagyourgui.containers;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 
@@ -26,10 +27,10 @@ public class CheckBoxContainer extends MultiElementContainer<IContainerParent> {
     public void init() {
         super.init();
         
-        checkBox = this.addDrawableChild(new Button(x, y, height, height, textRenderer, 0, 0xFF000000,0x7FFFFFFF, 0xFFFFFF, Text.literal(state ? "\u2713" : ""), btn -> {
+        checkBox = this.addDrawableChild(new Button(x, y, height, height, textRenderer, 0, 0xFF000000,0x7FFFFFFF, 0xFFFFFF, new LiteralText(state ? "\u2713" : ""), btn -> {
             state = !state;
             if (setState != null) setState.accept(state);
-            btn.setMessage(Text.literal(state ? "\u2713" : ""));
+            btn.setMessage(new LiteralText(state ? "\u2713" : ""));
         }));
     }
     

@@ -4,12 +4,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
-import xyz.wagyourtail.jsmacros.client.access.IClientPlayerEntity;
 import xyz.wagyourtail.jsmacros.client.api.classes.ChatHistoryManager;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandManager;
@@ -79,7 +79,7 @@ public class FChat extends BaseLibrary {
 
     private static void logInternal(String message) {
         if (message != null) {
-            Text text = Text.literal(message);
+            LiteralText text = new LiteralText(message);
             ((IChatHud)mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
         }
     }
@@ -113,12 +113,12 @@ public class FChat extends BaseLibrary {
         if (message == null) return;
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
             assert mc.player != null;
-            ((IClientPlayerEntity) mc.player).jsmacros_sendChatMessageBypass(message);
+            mc.player.sendChatMessage(message);
         } else {
             final Semaphore semaphore = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
                 assert mc.player != null;
-                ((IClientPlayerEntity) mc.player).jsmacros_sendChatMessageBypass(message);
+                mc.player.sendChatMessage(message);
                 semaphore.release();
             });
             semaphore.acquire();
@@ -175,9 +175,9 @@ public class FChat extends BaseLibrary {
         Text titlee = null;
         Text subtitlee = null;
         if (title instanceof TextHelper) titlee = ((TextHelper) title).getRaw();
-        else if (title != null) titlee = Text.literal(title.toString());
+        else if (title != null) titlee = new LiteralText(title.toString());
         if (subtitle instanceof TextHelper) subtitlee = ((TextHelper) subtitle).getRaw();
-        else if (subtitle != null) subtitlee = Text.literal(subtitle.toString());
+        else if (subtitle != null) subtitlee = new LiteralText(subtitle.toString());
         if (title != null)
             mc.inGameHud.setTitle(titlee);
         if (subtitle != null)
@@ -210,7 +210,7 @@ public class FChat extends BaseLibrary {
         assert mc.inGameHud != null;
         Text textt = null;
         if (text instanceof TextHelper) textt = ((TextHelper) text).getRaw();
-        else if (text != null) textt = Text.literal(text.toString());
+        else if (text != null) textt = new LiteralText(text.toString());
         mc.inGameHud.setOverlayMessage(textt, tinted);
     }
     
@@ -225,8 +225,8 @@ public class FChat extends BaseLibrary {
     public void toast(Object title, Object desc) {
         ToastManager t = mc.getToastManager();
         if (t != null) {
-            Text titlee = (title instanceof TextHelper) ? ((TextHelper) title).getRaw() : title != null ? Text.literal(title.toString()) : null;
-            Text descc = (desc instanceof TextHelper) ? ((TextHelper) desc).getRaw() : desc != null ? Text.literal(desc.toString()) : null;
+            Text titlee = (title instanceof TextHelper) ? ((TextHelper) title).getRaw() : title != null ? new LiteralText(title.toString()) : null;
+            Text descc = (desc instanceof TextHelper) ? ((TextHelper) desc).getRaw() : desc != null ? new LiteralText(desc.toString()) : null;
             if (titlee != null) t.add(SystemToast.create(mc, null, titlee, descc));
         }
     }
@@ -241,7 +241,7 @@ public class FChat extends BaseLibrary {
      * @return a new {@link xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper TextHelper}
      */
     public TextHelper createTextHelperFromString(String content) {
-        return new TextHelper(Text.literal(content));
+        return new TextHelper(new LiteralText(content));
     }
 
     /**

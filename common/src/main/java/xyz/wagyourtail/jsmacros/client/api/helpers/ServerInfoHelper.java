@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.network.ServerInfo;
-import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public class ServerInfoHelper extends BaseHelper<ServerInfo> {
     }
 
     public String resourcePackPolicy() {
-        return ((TranslatableTextContent) base.getResourcePackPolicy().getName().getContent()).getKey();
+        return ((TranslatableText) base.getResourcePackPolicy().getName()).getKey();
     }
 
     public String getIcon() {

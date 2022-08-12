@@ -15,9 +15,7 @@ public class JSConfig {
 
     @Deprecated
     public void fromV1(JsonObject v1) {
-        JsonObject obj = v1.getAsJsonObject("extraJsOptions");
-        if (obj == null) return;
-        for (Map.Entry<String, JsonElement> el : obj.entrySet()) {
+        for (Map.Entry<String, JsonElement> el : v1.getAsJsonObject("extraJsOptions").entrySet()) {
             extraGraalOptions.put(el.getKey(), el.getValue().getAsString());
         }
         v1.remove("extraJsOptions");
