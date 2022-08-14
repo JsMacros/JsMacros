@@ -6,7 +6,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.util.ScreenshotRecorder;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.GameMode;
@@ -90,13 +92,22 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
-     * @return the entity the player is currently looking at.
+     * @return the entity the camera is currently looking at.
      * @see xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper
      * @since 1.0.5
      */
     public EntityHelper<?> rayTraceEntity() {
         if (mc.targetedEntity != null) return EntityHelper.create(mc.targetedEntity);
         else return null;
+    }
+
+    /**
+     * @param distance
+     * @since 1.8.3
+     * @return entity the player entity is currently looking at (if any).
+     */
+    public EntityHelper<?> rayTraceEntity(int distance) {
+        return DebugRenderer.getTargetedEntity(mc.player, distance).map(EntityHelper::create).orElse(null);
     }
 
     /**

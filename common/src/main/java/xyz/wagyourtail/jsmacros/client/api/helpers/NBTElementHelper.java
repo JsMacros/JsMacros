@@ -1,12 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.nbt.AbstractNbtList;
-import net.minecraft.nbt.AbstractNbtNumber;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.*;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * @since 1.5.1
@@ -207,6 +205,23 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
         }
 
         /**
+         * @since 1.8.3
+         * @return
+         */
+        public boolean isPossiblyUUID() {
+            return base.getType() == NbtElement.INT_ARRAY_TYPE && base.size() == 4;
+        }
+
+        /**
+         * @since 1.8.3
+         * @return
+         */
+        public UUID asUUID() {
+            if (!isPossiblyUUID()) return null;
+            return NbtHelper.toUuid(base);
+        }
+
+        /**
          * @since 1.5.1
          * @return
          */
@@ -238,7 +253,6 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
         private NBTCompoundHelper(NbtCompound base) {
             super(base);
         }
-
 
         /**
          * @since 1.6.0
