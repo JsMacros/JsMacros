@@ -15,10 +15,7 @@ import net.minecraft.world.GameMode;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ClientPlayerEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.*;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.movement.MovementDummy;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
@@ -143,6 +140,11 @@ public class FPlayer extends BaseLibrary {
                                           (text) -> {
                 if (callback != null) callback.accept(new TextHelper(text));
         });
+    }
+
+    public StatsHelper getStatistics() {
+        assert mc.player != null;
+        return new StatsHelper(mc.player.getStatHandler());
     }
 
     /**
