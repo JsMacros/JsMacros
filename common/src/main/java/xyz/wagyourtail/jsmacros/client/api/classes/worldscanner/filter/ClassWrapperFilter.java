@@ -1,10 +1,10 @@
-package xyz.wagyourtail.jsmacros.client.api.classes.filter;
+package xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter;
 
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.api.IFilter;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.compare.BooleanCompareFilter;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.compare.CharCompareFilter;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.compare.NumberCompareFilter;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.compare.StringCompareFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.compare.BooleanCompareFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.compare.CharCompareFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.compare.NumberCompareFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.compare.StringCompareFilter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

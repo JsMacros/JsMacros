@@ -1,8 +1,8 @@
-package xyz.wagyourtail.jsmacros.client.api.classes.filter.impl;
+package xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.impl;
 
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.BasicFilter;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.api.ICompare;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.compare.StringCompareFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.BasicFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.ICompare;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.compare.StringCompareFilter;
 
 import java.util.HashSet;
 import java.util.List;

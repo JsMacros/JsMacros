@@ -1,11 +1,11 @@
-package xyz.wagyourtail.jsmacros.client.api.classes;
+package xyz.wagyourtail.jsmacros.client.api.classes.worldscanner;
 
 import net.minecraft.client.MinecraftClient;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.api.IAdvancedFilter;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.api.IFilter;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.impl.BlockFilter;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.impl.BlockStateFilter;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.impl.StringifyFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IAdvancedFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.impl.BlockFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.impl.BlockStateFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.impl.StringifyFilter;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;

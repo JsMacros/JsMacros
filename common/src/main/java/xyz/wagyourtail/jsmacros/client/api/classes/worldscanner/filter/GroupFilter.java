@@ -1,8 +1,8 @@
-package xyz.wagyourtail.jsmacros.client.api.classes.filter;
+package xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter;
 
 import com.google.common.collect.ImmutableList;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.api.IFilter;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.compare.NumberCompareFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.compare.NumberCompareFilter;
 
 import java.util.ArrayList;
 import java.util.List;

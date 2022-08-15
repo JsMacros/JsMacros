@@ -1,7 +1,7 @@
-package xyz.wagyourtail.jsmacros.client.api.classes.filter.logical;
+package xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.logical;
 
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.BasicFilter;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.api.IFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.BasicFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IFilter;
 
 /**
  * @author Etheradon

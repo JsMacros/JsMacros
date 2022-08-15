@@ -1,7 +1,7 @@
-package xyz.wagyourtail.jsmacros.client.api.classes.filter.compare;
+package xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.compare;
 
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.api.ICompare;
-import xyz.wagyourtail.jsmacros.client.api.classes.filter.api.IFilter;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.ICompare;
+import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IFilter;
 
 /**
  * @author Etheradon

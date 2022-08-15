@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.api.classes.filter.api;
+package xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api;
 
 @FunctionalInterface
 public interface ICompare<T> {
