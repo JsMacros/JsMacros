@@ -13,8 +13,10 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.ClickEvent;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -66,6 +68,10 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Shadow public abstract boolean shouldCloseOnEsc();
 
     @Shadow @Final private List<Element> children;
+
+    @Shadow protected abstract void renderTextHoverEffect(MatrixStack matrices, @Nullable Style style, int x, int y);
+
+    @Shadow public abstract boolean handleTextClick(@Nullable Style style);
 
     @Override
     public int getWidth() {
@@ -553,8 +559,21 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
         synchronized (elements) {
             Iterator<RenderCommon.RenderElement> iter = elements.stream().sorted(Comparator.comparingInt(RenderCommon.RenderElement::getZIndex)).iterator();
+            RenderCommon.Text hoverText = null;
+
             while (iter.hasNext()) {
-                iter.next().render(matrices, mouseX, mouseY, delta);
+                RenderCommon.RenderElement e = iter.next();
+                e.render(matrices, mouseX, mouseY, delta);
+                if (e instanceof RenderCommon.Text) {
+                    RenderCommon.Text t = (RenderCommon.Text) e;
+                    if (mouseX > t.x && mouseX < t.x + t.width && mouseY > t.y && mouseY < t.y + textRenderer.fontHeight) {
+                        hoverText = t;
+                    }
+                }
+            }
+
+            if (hoverText != null) {
+                renderTextHoverEffect(matrices, textRenderer.getTextHandler().getStyleAt(hoverText.text, mouseX - hoverText.x), mouseX, mouseY);
             }
         }
     }
@@ -571,7 +590,27 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        if (super.mouseClicked(mouseX, mouseY, button)) {
+            return true;
+        }
+
+        RenderCommon.Text hoverText = null;
+
+        synchronized (elements) {
+            for (RenderCommon.RenderElement e : elements) {
+                if (e instanceof RenderCommon.Text) {
+                    RenderCommon.Text t = (RenderCommon.Text) e;
+                    if (mouseX > t.x && mouseX < t.x + t.width && mouseY > t.y && mouseY < t.y + textRenderer.fontHeight) {
+                        hoverText = t;
+                    }
+                }
+            }
+        }
+
+        if (hoverText != null) {
+            return handleTextClick(textRenderer.getTextHandler().getStyleAt(hoverText.text, (int) mouseX - hoverText.x));
+        }
+        return false;
     }
 
     @Override
