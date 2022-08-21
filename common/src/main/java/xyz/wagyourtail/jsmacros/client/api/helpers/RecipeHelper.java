@@ -2,8 +2,14 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Wagyourtail
@@ -25,7 +31,20 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     public String getId() {
         return base.getId().toString();
     }
-    
+
+    /**
+     * get ingredients list, empty inner list means empty slot
+     * @since 1.8.3
+     * @return
+     */
+    public List<List<ItemStackHelper>> getIngredients() {
+        List<List<ItemStackHelper>> ingredients = new ArrayList<>();
+        for (Ingredient in : base.getIngredients()) {
+            ingredients.add(Arrays.stream(in.getMatchingStacks()).map(ItemStackHelper::new).collect(Collectors.toList()));
+        }
+        return ingredients;
+    }
+
     /**
      * @since 1.3.1
      * @return
