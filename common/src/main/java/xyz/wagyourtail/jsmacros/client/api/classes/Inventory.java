@@ -379,17 +379,38 @@ public class Inventory<T extends HandledScreen<?>> {
             if (mc.currentScreen != inventory) {
                 ((RecipeBookWidget)recipeBookWidget).initialize(0, 0, mc, true, (AbstractRecipeScreenHandler<?>) inventory.getScreenHandler());
             }
-            recipeBookWidget.jsmacros_refreshResultList();
+            if (!((RecipeBookWidget) recipeBookWidget).isOpen()) {
+                ((RecipeBookWidget) recipeBookWidget).reset();
+            }
+            try {
+                recipeBookWidget.jsmacros_refreshResultList();
+            } catch (Throwable t) {
+                t.printStackTrace();
+                throw new RuntimeException("refreshing the recipe list threw an error", t);
+            }
         } else {
             Semaphore lock = new Semaphore(0);
+            Throwable[] t = new Throwable[1];
             mc.execute(() -> {
-                if (mc.currentScreen != inventory) {
-                    ((RecipeBookWidget)recipeBookWidget).initialize(0, 0, mc, true, (AbstractRecipeScreenHandler<?>) inventory.getScreenHandler());
+                try {
+                    if (mc.currentScreen != inventory) {
+                        ((RecipeBookWidget) recipeBookWidget).initialize(0, 0, mc, true, (AbstractRecipeScreenHandler<?>) inventory.getScreenHandler());
+                    }
+                    if (!((RecipeBookWidget) recipeBookWidget).isOpen()) {
+                        ((RecipeBookWidget) recipeBookWidget).reset();
+                    }
+                    recipeBookWidget.jsmacros_refreshResultList();
+                } catch (Throwable e) {
+                    t[0] = e;
+                } finally {
+                    lock.release();
                 }
-                recipeBookWidget.jsmacros_refreshResultList();
-                lock.release();
             });
             lock.acquire();
+            if (t[0] != null) {
+                t[0].printStackTrace();
+                throw new RuntimeException("refreshing the recipe list threw an error", t[0]);
+            }
         }
         res = recipeBookWidget.jsmacros_getResults();
         List<RecipeResultCollection> result = ((IRecipeBookResults) res).jsmacros_getResultCollections();
