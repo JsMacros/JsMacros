@@ -33,7 +33,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
 
     /**
-     * get ingredients list, empty inner list means empty slot
+     * get ingredients list
      * @since 1.8.3
      * @return
      */
