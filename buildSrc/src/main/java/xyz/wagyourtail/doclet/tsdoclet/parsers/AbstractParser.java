@@ -199,6 +199,10 @@ public abstract class AbstractParser {
                         return "string";
                     }
 
+                    if ("java.lang.Object".equals(rawType.toString())) {
+                        return "any";
+                    }
+
                     Main.classes.addClass(((DeclaredType) type).asElement());
                     return "_javatypes." + rawType.toString();
                 } else {
