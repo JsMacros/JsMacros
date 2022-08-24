@@ -626,7 +626,7 @@ public class PositionCommon {
         }
 
         public double dotProduct(Vec3D vec) {
-            double dz1 = z1 - z2;
+            double dz1 = z2 - z1;
             double dz2 = vec.z2 - vec.z1;
             return super.dotProduct(vec) + dz1 * dz2;
         }
@@ -636,7 +636,7 @@ public class PositionCommon {
             double dx2 = vec.x2 - vec.x1;
             double dy1 = y2 - y1;
             double dy2 = vec.y2 - vec.y1;
-            double dz1 = z1 - z2;
+            double dz1 = z2 - z1;
             double dz2 = vec.z2 - vec.z1;
             return new Vec3D(0, 0, 0, dy1*dz2 - dz1*dy2, dz1*dx2 - dx1*dz2, dx1*dy2 - dy1*dx2);
         }
