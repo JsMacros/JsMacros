@@ -52,26 +52,31 @@ public class FChat extends BaseLibrary {
      * @throws InterruptedException
      */
     public void log(Object message, boolean await) throws InterruptedException {
+        if (message == null) return;
+        final Object message2 = message instanceof TextHelper ? message :
+            message instanceof TextBuilder ? ((TextBuilder) message).build() :
+                message.toString();
+
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
-            if (message instanceof TextHelper) {
-                logInternal((TextHelper)message);
-            } else if (message != null) {
-                logInternal(message.toString());
+            if (message2 instanceof TextHelper) {
+                logInternal((TextHelper)message2);
+            } else {
+                logInternal((String) message2);
             }
         } else {
             final Semaphore semaphore = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                if (message instanceof TextHelper) {
-                    logInternal((TextHelper) message);
-                } else if (message != null) {
-                    logInternal(message.toString());
+                if (message2 instanceof TextHelper) {
+                    logInternal((TextHelper) message2);
+                } else {
+                    logInternal((String) message2);
                 }
                 semaphore.release();
             });
             semaphore.acquire();
         }
     }
-    
+
     private static void logInternal(String message) {
         if (message != null) {
             Text text = Text.literal(message);
