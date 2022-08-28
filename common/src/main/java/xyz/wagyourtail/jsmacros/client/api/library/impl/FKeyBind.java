@@ -63,6 +63,7 @@ public class FKeyBind extends BaseLibrary {
         for (KeyBinding keybind : mc.options.allKeys) {
             if (keybind.getTranslationKey().equals(bind)) {
                 keybind.setBoundKey(InputUtil.fromTranslationKey(key));
+                KeyBinding.updateKeysByCode();
                 return;
             }
         }
