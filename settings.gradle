@@ -4,7 +4,6 @@ pluginManagement {
         maven { url "https://maven.architectury.dev/" }
         maven { url "https://maven.minecraftforge.net/" }
         mavenCentral()
-        maven { url 'https://jitpack.io' }
         gradlePluginPortal()
     }
 }

@@ -11,7 +11,6 @@ import net.minecraft.util.math.Vec3d;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
-import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -648,7 +647,7 @@ public class Draw3D {
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
 
-            Matrix4f matrix = matrixStack.peek().getPositionMatrix();
+            Matrix4f matrix  = matrixStack.peek().getModel();
 
             if (this.fill) {
                 float fa = ((fillColor >> 24) & 0xFF) / 255F;
@@ -805,7 +804,7 @@ public class Draw3D {
             int b = color & 0xFF;
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
-            Matrix4f model = matrixStack.peek().getPositionMatrix();
+            Matrix4f model = matrixStack.peek().getModel();
             RenderSystem.lineWidth(2.5F);
             buf.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
             buf.vertex(model, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
@@ -901,7 +900,7 @@ public class Draw3D {
 
             matrixStack.translate(pos.x, pos.y, pos.z);
 
-            matrixStack.multiply(Quaternion.fromEulerXyzDegrees(rotations.toVector().toMojangFloatVector()));
+            matrixStack.multiply(Quaternion.method_35823(rotations.toVector().toMojangFloatVector()));
 
             // fix it so that y axis goes down instead of up
             matrixStack.scale(1, -1, 1);

@@ -1,7 +1,7 @@
 {
     "required": true,
     "package": "xyz.wagyourtail.jsmacros.client.mixins",
-    "compatibilityLevel": "JAVA_17",
+    "compatibilityLevel": "JAVA_16",
     "client": [
         "access.MixinBeaconScreen",
         "access.MixinBossBarHud",
@@ -25,7 +25,6 @@
         "access.MixinMouse",
         "access.MixinPackedIntegerArray",
         "access.MixinPalettedContainer",
-        "access.MixinPalettedContainerData",
         "access.MixinPlayerEntity",
         "access.MixinPlayerListHud",
         "access.MixinRecipeBookResults",

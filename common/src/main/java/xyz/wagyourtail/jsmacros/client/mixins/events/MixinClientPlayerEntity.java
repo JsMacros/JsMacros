@@ -83,7 +83,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         } //else
         if (cancel) {
             final SignEditScreen signScreen = new SignEditScreen(sign, true);
-            client.setScreen(signScreen);
+            client.openScreen(signScreen);
             for (int i = 0; i < 4; ++i) {
                 ((ISignEditScreen) signScreen).jsmacros_setLine(i, lines.get(i));
             }
@@ -101,7 +101,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         this.input.movementSideways = moveInput.movementSideways;
         this.input.jumping = moveInput.jumping;
         this.input.sneaking = moveInput.sneaking;
-        this.client.options.sprintKey.setPressed(moveInput.sprinting);
+        this.client.options.keySprint.setPressed(moveInput.sprinting);
         this.setYaw(moveInput.yaw);
         this.setPitch(moveInput.pitch);
 

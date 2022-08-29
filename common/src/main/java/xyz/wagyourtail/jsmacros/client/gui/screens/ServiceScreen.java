@@ -28,7 +28,7 @@ public class ServiceScreen extends MacroScreen {
         };
         eventScreen.onPress = (btn) -> {
             this.openParent();
-            if (this.parent instanceof KeyMacrosScreen) client.setScreen(new EventMacrosScreen(parent));
+            if (this.parent instanceof KeyMacrosScreen) client.openScreen(new EventMacrosScreen(parent));
         };
 
         serviceScreen.onPress = null;

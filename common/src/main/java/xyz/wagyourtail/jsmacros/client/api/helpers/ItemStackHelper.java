@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.tag.ItemTags;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -101,7 +102,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public NBTElementHelper<?> getNBT() {
-        NbtCompound tag = base.getNbt();
+        NbtCompound tag = base.getTag();
         if (tag != null) return NBTElementHelper.resolve(tag);
         else return null;
     }
@@ -139,7 +140,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public List<String> getTags() {
-        return Registry.ITEM.getEntry(Registry.ITEM.getKey(base.getItem()).get()).get().streamTags().map(t -> t.id().toString()).collect(Collectors.toList());
+        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().getOrCreateTagGroup(Registry.ITEM_KEY).getTagsFor(base.getItem()).stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
@@ -249,7 +250,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public boolean isNBTEqual(ItemStackHelper ish) {
-        return ItemStack.areNbtEqual(base, ish.getRaw());
+        return ItemStack.areTagsEqual(base, ish.getRaw());
     }
     
     /**
@@ -258,7 +259,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public boolean isNBTEqual(ItemStack is) {
-        return ItemStack.areNbtEqual(base, is);
+        return ItemStack.areTagsEqual(base, is);
     }
 
     /**

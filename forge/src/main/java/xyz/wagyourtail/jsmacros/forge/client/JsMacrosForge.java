@@ -1,12 +1,12 @@
 package xyz.wagyourtail.jsmacros.forge.client;
 
-import net.minecraftforge.client.ClientRegistry;
-import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fmlclient.ConfigGuiHandler;
+import net.minecraftforge.fmlclient.registry.ClientRegistry;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandManager;
 import xyz.wagyourtail.jsmacros.forge.client.api.classes.CommandManagerForge;

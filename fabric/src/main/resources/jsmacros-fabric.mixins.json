@@ -1,7 +1,7 @@
 {
     "required": true,
     "package": "xyz.wagyourtail.jsmacros.fabric.client.mixins",
-    "compatibilityLevel": "JAVA_17",
+    "compatibilityLevel": "JAVA_16",
     "client": [
         "access.MixinGameRenderer",
         "access.MixinInGameHud"

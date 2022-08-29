@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.api.sharedclasses;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -180,7 +179,7 @@ public class RenderCommon {
             matrices.translate(-x, -y, 0);
             MatrixStack ms = RenderSystem.getModelViewStack();
             ms.push();
-            ms.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
+            ms.method_34425(matrices.peek().getModel());
             if (item != null) {
                 ItemRenderer i = mc.getItemRenderer();
                 i.zOffset = -100f;
@@ -343,7 +342,7 @@ public class RenderCommon {
             BufferBuilder buf = tess.getBuffer();
             
             buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP,  VertexFormats.POSITION_TEXTURE_COLOR);
-            Matrix4f matrix = matrices.peek().getPositionMatrix();
+            Matrix4f matrix = matrices.peek().getModel();
 
             float x1 = x;
             float y1 = y;
@@ -355,11 +354,16 @@ public class RenderCommon {
             float u2 = (imageX + regionWidth) / (float) textureWidth;
             float v2 = (imageY + regionHeight) / (float) textureHeight;
 
+            int a = (color >> 24 & 0xFF);
+            int r = ((color >> 16) & 0xFF);
+            int g = ((color >> 8) & 0xFF);
+            int b = (color & 0xFF);
+
             //draw a rectangle using triangle strips
-            buf.vertex(matrix, x1, y2, 0).texture(u1, v2).color(color).next(); // Top-left
-            buf.vertex(matrix, x2, y2, 0).texture(u2, v2).color(color).next(); // Top-right
-            buf.vertex(matrix, x1, y1, 0).texture(u1, v1).color(color).next(); // Bottom-left
-            buf.vertex(matrix, x2, y1, 0).texture(u2, v1).color(color).next(); // Bottom-right
+            buf.vertex(matrix, x1, y2, 0).texture(u1, v2).color(r, g, b, a).next(); // Top-left
+            buf.vertex(matrix, x2, y2, 0).texture(u2, v2).color(r, g, b, a).next(); // Top-right
+            buf.vertex(matrix, x1, y1, 0).texture(u1, v1).color(r, g, b, a).next(); // Bottom-left
+            buf.vertex(matrix, x2, y1, 0).texture(u2, v1).color(r, g, b, a).next(); // Bottom-right
             tess.draw();
 
             matrices.pop();
@@ -482,7 +486,7 @@ public class RenderCommon {
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
             buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP,  VertexFormats.POSITION_COLOR);
-            Matrix4f matrix = matrices.peek().getPositionMatrix();
+            Matrix4f matrix = matrices.peek().getModel();
             //draw a rectangle using triangle strips
             buf.vertex(matrix, x1, y2, 0).color(fr, fg, fb, fa).next(); // Top-left
             buf.vertex(matrix, x2, y2, 0).color(fr, fg, fb, fa).next(); // Top-right
@@ -639,7 +643,7 @@ public class RenderCommon {
             matrices.translate(-x, -y, 0);
             Tessellator tess = Tessellator.getInstance();
             VertexConsumerProvider.Immediate buffer = VertexConsumerProvider.immediate(tess.getBuffer());
-            mc.textRenderer.draw(text, (float)(x / scale), (float)(y / scale), color, shadow, matrices.peek().getPositionMatrix(), buffer, true, 0, 0xF000F0);
+            mc.textRenderer.draw(text, (float)(x / scale), (float)(y / scale), color, shadow, matrices.peek().getModel(), buffer, true, 0, 0xF000F0);
             buffer.draw();
             matrices.pop();
         }

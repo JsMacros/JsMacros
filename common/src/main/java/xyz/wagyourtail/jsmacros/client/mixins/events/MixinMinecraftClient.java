@@ -29,7 +29,7 @@ public abstract class MixinMinecraftClient {
     @Shadow
     public Screen currentScreen;
 
-    @Shadow public abstract void setScreen(@Nullable Screen screen);
+    @Shadow public abstract void openScreen(@Nullable Screen screen);
 
     @Shadow @Nullable public ClientPlayerInteractionManager interactionManager;
 
@@ -44,7 +44,7 @@ public abstract class MixinMinecraftClient {
     @Unique
     private Screen prevScreen;
     
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", opcode = Opcodes.PUTFIELD), method="setScreen")
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", opcode = Opcodes.PUTFIELD), method="openScreen")
     public void onOpenScreen(Screen screen, CallbackInfo info) {
         if (screen != currentScreen) {
             if (screen instanceof AbstractInventoryScreen && interactionManager.hasCreativeInventory()) {
@@ -58,7 +58,7 @@ public abstract class MixinMinecraftClient {
         }
     }
 
-    @Inject(at = @At("TAIL"), method = "setScreen")
+    @Inject(at = @At("TAIL"), method = "openScreen")
     public void afterOpenScreen(Screen screen, CallbackInfo info) {
         if (screen instanceof HandledScreen<?>) {
             if (interactionManager.hasCreativeInventory() && !(screen instanceof CreativeInventoryScreen)) {
@@ -66,7 +66,7 @@ public abstract class MixinMinecraftClient {
             }
             EventOpenContainer event = new EventOpenContainer(((HandledScreen<?>) screen));
             if (event.cancelled) {
-                setScreen(prevScreen);
+                openScreen(prevScreen);
             }
         }
         prevScreen = null;

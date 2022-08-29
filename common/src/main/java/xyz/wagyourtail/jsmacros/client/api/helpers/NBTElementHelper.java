@@ -108,7 +108,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
     public static NBTElementHelper<?> resolve(NbtElement element) {
         if (element == null) return null;
         switch (element.getType()) {
-            case NbtElement.END_TYPE: //0
+            case NbtElement.NULL_TYPE: //0
                 return new NBTElementHelper<>(element);
             case NbtElement.BYTE_TYPE: //1
             case NbtElement.SHORT_TYPE: //2

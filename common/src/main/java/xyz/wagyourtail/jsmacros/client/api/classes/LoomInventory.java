@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes;
 
 import net.minecraft.block.entity.BannerPattern;
 import net.minecraft.client.gui.screen.ingame.LoomScreen;
-import net.minecraft.util.registry.RegistryEntry;
 import xyz.wagyourtail.jsmacros.client.access.ILoomScreen;
 
 import java.util.Arrays;

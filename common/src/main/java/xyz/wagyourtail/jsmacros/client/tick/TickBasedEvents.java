@@ -26,21 +26,21 @@ public class TickBasedEvents {
 
 
     public static boolean areNotEqual(ItemStack a, ItemStack b) {
-        return (!a.isEmpty() || !b.isEmpty()) && (a.isEmpty() || b.isEmpty() || !a.isItemEqualIgnoreDamage(b) || a.getCount() != b.getCount() || !ItemStack.areNbtEqual(a, b) || a.getDamage() != b.getDamage());
+        return (!a.isEmpty() || !b.isEmpty()) && (a.isEmpty() || b.isEmpty() || !a.isItemEqualIgnoreDamage(b) || a.getCount() != b.getCount() || !ItemStack.areTagsEqual(a, b) || a.getDamage() != b.getDamage());
     }
     
     public static boolean areTagsEqualIgnoreDamage(ItemStack a, ItemStack b) {
         if (a.isEmpty() && b.isEmpty()) {
             return true;
         } else if (!a.isEmpty() && !b.isEmpty()) {
-            if (a.getNbt() == null && b.getNbt() == null) {
+            if (a.getTag() == null && b.getTag() == null) {
                 return true;
             } else {
                 NbtCompound at;
                 NbtCompound bt;
-                if (a.getNbt() != null) at = a.getNbt().copy();
+                if (a.getTag() != null) at = a.getTag().copy();
                 else at = new NbtCompound();
-                if (b.getNbt() != null) bt = b.getNbt().copy();
+                if (b.getTag() != null) bt = b.getTag().copy();
                 else bt = new NbtCompound();
                 at.remove("Damage");
                 bt.remove("Damage");
@@ -58,7 +58,7 @@ public class TickBasedEvents {
     
     public static void onTick(MinecraftClient mc) {
         if (JsMacros.keyBinding.wasPressed() && mc.currentScreen == null) {
-            mc.setScreen(JsMacros.prevScreen);
+            mc.openScreen(JsMacros.prevScreen);
         }
 
         FClient.tickSynchronizer.tick();

@@ -4,16 +4,15 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.collection.PackedIntegerArray;
-import net.minecraft.util.collection.PaletteStorage;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.Palette;
 import net.minecraft.world.chunk.PalettedContainer;
+import xyz.wagyourtail.jsmacros.client.access.IChunkSection;
 import xyz.wagyourtail.jsmacros.client.access.IPackedIntegerArray;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainer;
-import xyz.wagyourtail.jsmacros.client.access.IPalettedContainerData;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
@@ -130,7 +129,7 @@ public class WorldScanner {
 
         streamChunkSections(world.getChunk(pos.x, pos.z), (section, isInFilter) -> {
             int yOffset = section.getYOffset();
-            PackedIntegerArray array = (PackedIntegerArray) ((IPalettedContainer<?>) section.getBlockStateContainer()).jsmacros_getData().jsmacros_getStorage();
+            PackedIntegerArray array = (PackedIntegerArray) ((IPalettedContainer<?>) section.getContainer()).jsmacros_getData();
             forEach(array, isInFilter, place -> blocks.add(new PositionCommon.Pos3D(
                     chunkX + ((place & 255) & 15),
                     yOffset + (place >> 8),
@@ -180,7 +179,7 @@ public class WorldScanner {
 
             Object2IntOpenHashMap<BlockState> blocks = new Object2IntOpenHashMap<>();
 
-            streamChunkSections(world.getChunk(pos.x, pos.z), (section, isInFilter) -> count(section.getBlockStateContainer(), isInFilter, blocks::addTo));
+            streamChunkSections(world.getChunk(pos.x, pos.z), (section, isInFilter) -> count(((IChunkSection) section).jsmacros_getContainer(), isInFilter, blocks::addTo));
             return blocks.object2IntEntrySet().stream();
         }).forEach(blockStateEntry -> {
             BlockState state = blockStateEntry.getKey();
@@ -207,10 +206,10 @@ public class WorldScanner {
 
     private boolean[] getIncludedFilterIndices(Palette<BlockState> palette) {
         boolean commonBlockFound = false;
-        boolean[] isInFilter = new boolean[palette.getSize()];
+        boolean[] isInFilter = new boolean[palette.getIndexBits()];
 
-        for (int i = 0; i < palette.getSize(); i++) {
-            BlockState state = palette.get(i);
+        for (int i = 0; i < palette.getIndexBits(); i++) {
+            BlockState state = palette.getByIndex(i);
             if (getFilterResult(state)) {
                 isInFilter[i] = true;
                 commonBlockFound = true;
@@ -248,13 +247,13 @@ public class WorldScanner {
                 continue;
             }
 
-            PalettedContainer<BlockState> sectionContainer = section.getBlockStateContainer();
+            PalettedContainer<BlockState> sectionContainer = ((IChunkSection) section).jsmacros_getContainer();
             //this won't work if the PaletteStorage is of the type EmptyPaletteStorage
-            if (!(((IPalettedContainer<?>) sectionContainer).jsmacros_getData().jsmacros_getStorage() instanceof PackedIntegerArray)) {
+            if (((IPalettedContainer<?>) sectionContainer).jsmacros_getData() == null) {
                 continue;
             }
 
-            boolean[] isInFilter = getIncludedFilterIndices(((IPalettedContainer<BlockState>) sectionContainer).jsmacros_getData().jsmacros_getPalette());
+            boolean[] isInFilter = getIncludedFilterIndices((Palette<BlockState>) ((IPalettedContainer<BlockState>) sectionContainer).jsmacros_getPaletteProvider());
             if (isInFilter.length == 0) {
                 continue;
             }
@@ -293,7 +292,7 @@ public class WorldScanner {
         int elementBits = array.getElementBits();
         int size = array.getSize();
 
-        for (long datum : array.getData()) {
+        for (long datum : array.getStorage()) {
             long row = datum;
             if (row == 0) {
                 counter += elementsPerLong;
@@ -313,20 +312,20 @@ public class WorldScanner {
         }
     }
     
-    private static void count(PalettedContainer<BlockState> container, boolean[] isInFilter, PalettedContainer.Counter<BlockState> counter) {
-        IPalettedContainerData<BlockState> data = ((IPalettedContainer<BlockState>) container).jsmacros_getData();
-        Palette<BlockState> palette = data.jsmacros_getPalette();
-        PaletteStorage storage = data.jsmacros_getStorage();
+    private static void count(PalettedContainer<BlockState> container, boolean[] isInFilter, PalettedContainer.CountConsumer<BlockState> counter) {
+        IPalettedContainer<BlockState> data = ((IPalettedContainer<BlockState>) container);
+        Palette<BlockState> palette = (Palette<BlockState>) data.jsmacros_getPaletteProvider();
+        PackedIntegerArray storage = data.jsmacros_getData();
 
-        int[] count = new int[palette.getSize()];
+        int[] count = new int[palette.getIndexBits()];
 
-        if (palette.getSize() == 1) {
-            counter.accept(palette.get(0), storage.getSize());
+        if (palette.getIndexBits() == 1) {
+            counter.accept(palette.getByIndex(0), storage.getSize());
         } else {
             storage.forEach(key -> count[key]++);
             for (int idx = 0; idx < count.length; idx++) {
                 if (isInFilter[idx]) {
-                    counter.accept(palette.get(idx), count[idx]);
+                    counter.accept(palette.getByIndex(idx), count[idx]);
                 }
             }
         }

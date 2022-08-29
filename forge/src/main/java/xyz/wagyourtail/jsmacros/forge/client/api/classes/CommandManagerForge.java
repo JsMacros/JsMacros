@@ -2,9 +2,9 @@ package xyz.wagyourtail.jsmacros.forge.client.api.classes;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.CommandNode;
+import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraftforge.client.ClientCommandHandler;
 import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandManager;
@@ -19,7 +19,7 @@ public class CommandManagerForge extends CommandManager {
 
     @Override
     public CommandNodeHelper unregisterCommand(String command) throws IllegalAccessException {
-        CommandNode<?> cnf = CommandNodeAccessor.remove(ClientCommandHandler.getDispatcher().getRoot(), command);
+        CommandNode<?> cnf = CommandNodeAccessor.remove(ClientCommandManager.DISPATCHER.getRoot(), command);
         CommandNode<?> cn = null;
         ClientPlayNetworkHandler p = MinecraftClient.getInstance().getNetworkHandler();
         if (p != null) {
@@ -32,7 +32,7 @@ public class CommandManagerForge extends CommandManager {
     @Override
     public void reRegisterCommand(CommandNodeHelper node) {
         if (node.fabric != null) {
-            ClientCommandHandler.getDispatcher().getRoot().addChild(node.fabric);
+            ClientCommandManager.DISPATCHER.getRoot().addChild(node.fabric);
         }
         ClientPlayNetworkHandler nh = MinecraftClient.getInstance().getNetworkHandler();
         if (nh != null) {

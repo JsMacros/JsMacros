@@ -45,7 +45,7 @@ public class FKeyBind extends BaseLibrary {
      */
     public Map<String, String> getKeyBindings() {
         Map<String, String> keys = new HashMap<>();
-        for (KeyBinding key : ImmutableList.copyOf(mc.options.allKeys)) {
+        for (KeyBinding key : ImmutableList.copyOf(mc.options.keysAll)) {
             keys.put(key.getTranslationKey(), key.getBoundKeyTranslationKey());
         }
         return keys;
@@ -60,7 +60,7 @@ public class FKeyBind extends BaseLibrary {
      * @param key
      */
     public void setKeyBind(String bind, String key) {
-        for (KeyBinding keybind : mc.options.allKeys) {
+        for (KeyBinding keybind : mc.options.keysAll) {
             if (keybind.getTranslationKey().equals(bind)) {
                 keybind.setBoundKey(InputUtil.fromTranslationKey(key));
                 KeyBinding.updateKeysByCode();
@@ -105,7 +105,7 @@ public class FKeyBind extends BaseLibrary {
      * @param keyState
      */
     public void keyBind(String keyBind, boolean keyState) {
-        for (KeyBinding key : mc.options.allKeys) {
+        for (KeyBinding key : mc.options.keysAll) {
             if (key.getTranslationKey().equals(keyBind)) {
                 if (keyState) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(key.getBoundKeyTranslationKey()));
                 key.setPressed(keyState);

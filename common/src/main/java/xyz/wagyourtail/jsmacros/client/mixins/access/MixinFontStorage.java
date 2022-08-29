@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -16,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.IntFunction;
 
 @Mixin(FontStorage.class)
 public abstract class MixinFontStorage {
@@ -46,8 +46,8 @@ public abstract class MixinFontStorage {
     
     // allow ttf space to be loaded
     @Group(name = "getGlyphOF", min = 1, max = 1)
-    @ModifyArg(method = "getGlyph", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;computeIfAbsent(ILit/unimi/dsi/fastutil/ints/Int2ObjectFunction;)Ljava/lang/Object;", remap = false))
-    private Int2ObjectFunction<Glyph> modifyLambda(Int2ObjectFunction<Glyph> original) {
+    @ModifyArg(method = "getGlyph", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;computeIfAbsent(ILjava/util/function/IntFunction;)Ljava/lang/Object;", remap = false))
+    private IntFunction<Glyph> modifyLambda(IntFunction<Glyph> original) {
         return (ix) -> {
             Glyph g = this.getRenderableGlyph(ix);
             // null check is for below inject which makes get return null if it hits non ttf font on space char

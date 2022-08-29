@@ -26,7 +26,7 @@ class MixinMinecraftClient implements IMinecraftClient {
 
     @Shadow protected abstract void doItemUse();
 
-    @Shadow protected abstract boolean doAttack();
+    @Shadow protected abstract void doAttack();
 
     @Shadow public Screen currentScreen;
 
@@ -42,7 +42,7 @@ class MixinMinecraftClient implements IMinecraftClient {
         }
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;removed()V"), method="setScreen")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;removed()V"), method="openScreen")
     public void onCloseScreen(Screen screen, CallbackInfo ci) {
         Consumer<IScreen> onClose = ((IScreen)currentScreen).getOnClose();
         try {

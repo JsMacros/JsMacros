@@ -1,6 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -99,7 +101,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public List<String> getTags() {
-        return base.getRegistryEntry().streamTags().map(t -> t.id().toString()).collect(Collectors.toList());
+        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().getOrCreateTagGroup(Registry.BLOCK_KEY).getTagsFor(base).stream().map(Identifier::toString).toList();
     }
 
     /**

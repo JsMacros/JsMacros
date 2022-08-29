@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[40,)"
+loaderVersion="[33,)"
 issueTrackerURL="https://github.com/wagyourtail/jsmacros"
 license = "MPL-2.0"
 
@@ -15,6 +15,6 @@ description = '''
 [[dependencies.jsmacros]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.18.2]"
+versionRange="[1.17.1]"
 ordering="NONE"
 side="BOTH"

@@ -3,8 +3,7 @@ package xyz.wagyourtail.jsmacros.forge.client.forgeevents;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraftforge.client.event.RegisterClientCommandsEvent;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
@@ -14,7 +13,6 @@ import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
-import xyz.wagyourtail.jsmacros.forge.client.api.classes.CommandBuilderForge;
 
 public class ForgeEvents {
     private static final MinecraftClient client = MinecraftClient.getInstance();
@@ -23,7 +21,6 @@ public class ForgeEvents {
         OverlayRegistry.registerOverlayBelow(ForgeIngameGui.HUD_TEXT_ELEMENT, "jsmacros_hud", ForgeEvents::renderHudListener);
         MinecraftForge.EVENT_BUS.addListener(ForgeEvents::renderWorldListener);
         MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onTick);
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onClientCommand);
     }
 
     public static void renderHudListener(ForgeIngameGui gui, MatrixStack mStack, float partialTicks, int width, int height) {
@@ -34,11 +31,11 @@ public class ForgeEvents {
         }
     }
 
-    public static void renderWorldListener(RenderLevelLastEvent e) {
+    public static void renderWorldListener(RenderWorldLastEvent e) {
         client.getProfiler().swap("jsmacros_draw3d");
         for (Draw3D d : ImmutableSet.copyOf(FHud.renders)) {
             try {
-                d.render(e.getPoseStack());
+                d.render(e.getMatrixStack());
             } catch (Throwable t) {
                 t.printStackTrace();
             }
@@ -50,9 +47,5 @@ public class ForgeEvents {
         if (event.phase == TickEvent.Phase.END) {
             TickBasedEvents.onTick(MinecraftClient.getInstance());
         }
-    }
-
-    public static void onClientCommand(RegisterClientCommandsEvent event) {
-        CommandBuilderForge.onRegisterEvent(event);
     }
 }

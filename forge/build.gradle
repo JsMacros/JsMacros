@@ -19,7 +19,7 @@ configurations {
 
 loom {
     forge {
-        mixinConfigs "jsmacros-forge.mixins.json"
+        mixinConfigs "fabric-command-api-v1.mixins.json", "jsmacros-forge.mixins.json"
     }
 }
 
