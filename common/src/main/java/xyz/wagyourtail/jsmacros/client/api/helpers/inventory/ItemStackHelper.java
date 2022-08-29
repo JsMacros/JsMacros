@@ -15,6 +15,7 @@ import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
 
 import com.google.gson.JsonParseException;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
@@ -78,7 +79,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean isUnbreakable() {
-        return base.getOrCreateNbt().getBoolean("Unbreakable");
+        return base.getOrCreateTag().getBoolean("Unbreakable");
     }
     
     /**
@@ -185,9 +186,9 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     public List<TextHelper> getLore() {
         List<TextHelper> texts = new ArrayList<>();
-        if (base.hasNbt()) {
-            if (base.getNbt().contains("display", 10)) {
-                NbtCompound nbtCompound = base.getNbt().getCompound("display");
+        if (base.hasTag()) {
+            if (base.getTag().contains("display", 10)) {
+                NbtCompound nbtCompound = base.getTag().getCompound("display");
                 if (nbtCompound.getType("Lore") == 9) {
                     NbtList nbtList = nbtCompound.getList("Lore", 8);
 
@@ -298,7 +299,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public NBTElementHelper<?> getNBT() {
-        NbtCompound tag = base.getNbt();
+        NbtCompound tag = base.getTag();
         if (tag != null) return NBTElementHelper.resolve(tag);
         else return null;
     }
@@ -337,7 +338,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public List<String> getTags() {
-        return Registry.ITEM.getEntry(Registry.ITEM.getKey(base.getItem()).get()).get().streamTags().map(t -> t.id().toString()).collect(Collectors.toList());
+        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().getOrCreateTagGroup(Registry.ITEM_KEY).getTagsFor(base.getItem()).stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
@@ -404,7 +405,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public boolean equals(ItemStack is) {
-        return base.isItemEqual(is) && ItemStack.areNbtEqual(base, is);
+        return base.isItemEqual(is) && ItemStack.areTagsEqual(base, is);
     }
     
     /**
@@ -449,7 +450,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public boolean isNBTEqual(ItemStackHelper ish) {
-        return ItemStack.areNbtEqual(base, ish.getRaw());
+        return ItemStack.areTagsEqual(base, ish.getRaw());
     }
     
     /**
@@ -458,7 +459,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public boolean isNBTEqual(ItemStack is) {
-        return ItemStack.areNbtEqual(base, is);
+        return ItemStack.areTagsEqual(base, is);
     }
 
     /**
@@ -537,7 +538,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean hasDestroyRestrictions() {
-        return base.getOrCreateNbt().contains("CanDestroy", 9);
+        return base.getOrCreateTag().contains("CanDestroy", 9);
     }
 
     /**
@@ -549,7 +550,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean hasPlaceRestrictions() {
-        return base.getOrCreateNbt().contains("CanPlaceOn", 9);
+        return base.getOrCreateTag().contains("CanPlaceOn", 9);
     }
 
     /**
@@ -559,7 +560,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     public List<String> getDestroyRestrictions() {
         if (hasDestroyRestrictions()) {
-            return base.getOrCreateNbt().getList("CanDestroy", 8).stream().map(NbtElement::asString).collect(Collectors.toList());
+            return base.getOrCreateTag().getList("CanDestroy", 8).stream().map(NbtElement::asString).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
@@ -571,7 +572,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     public List<String> getPlaceRestrictions() {
         if (hasPlaceRestrictions()) {
-            return base.getOrCreateNbt().getList("CanPlaceOn", 8).stream().map(NbtElement::asString).collect(Collectors.toList());
+            return base.getOrCreateTag().getList("CanPlaceOn", 8).stream().map(NbtElement::asString).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
@@ -640,7 +641,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     protected boolean isFlagSet(ItemStack.TooltipSection section) {
-        NbtCompound nbtCompound = base.getOrCreateNbt();
+        NbtCompound nbtCompound = base.getOrCreateTag();
         return (nbtCompound.getInt("HideFlags") & section.getFlag()) != 0;
     }
     

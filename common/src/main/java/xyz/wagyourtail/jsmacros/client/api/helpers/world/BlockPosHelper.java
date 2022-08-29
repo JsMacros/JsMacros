@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
+import net.minecraft.util.math.Vec3d;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -218,7 +219,8 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
      * @since 1.8.4
      */
     public double distanceTo(EntityHelper<?> entity) {
-        return Math.sqrt(base.getSquaredDistance(entity.getRaw().getPos()));
+        Vec3d poss = entity.getRaw().getPos();
+        return Math.sqrt(base.getSquaredDistance(poss.x, poss.y, poss.z, false));
     }
 
     /**
@@ -238,7 +240,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
      * @since 1.8.4
      */
     public double distanceTo(Pos3D pos) {
-        return Math.sqrt(base.getSquaredDistance(pos.getX(), pos.getY(), pos.getZ()));
+        return Math.sqrt(base.getSquaredDistance(pos.getX(), pos.getY(), pos.getZ(), false));
     }
 
     /**
@@ -250,7 +252,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
      * @since 1.8.4
      */
     public double distanceTo(double x, double y, double z) {
-        return Math.sqrt(base.getSquaredDistance(x, y, z));
+        return Math.sqrt(base.getSquaredDistance(x, y, z, false));
     }
 
     /**

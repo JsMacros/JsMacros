@@ -279,7 +279,7 @@ public class Item implements RenderElement, Alignable<Item> {
         setupMatrix(matrices, x, y, (float) scale, rotation, DEFAULT_ITEM_SIZE, DEFAULT_ITEM_SIZE, rotateCenter);
         MatrixStack ms = RenderSystem.getModelViewStack();
         ms.push();
-        ms.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
+        ms.method_34425(matrices.peek().getModel());
         if (item != null) {
             ItemRenderer i = mc.getItemRenderer();
             i.renderGuiItemIcon(item, x, y);
@@ -300,7 +300,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
         MatrixStack ms = RenderSystem.getModelViewStack();
         ms.push();
-        ms.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
+        ms.method_34425(matrices.peek().getModel());
         RenderSystem.applyModelViewMatrix();
 
         if (item != null) {

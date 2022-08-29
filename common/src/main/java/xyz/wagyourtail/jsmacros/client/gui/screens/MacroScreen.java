@@ -51,21 +51,21 @@ public class MacroScreen extends BaseScreen {
         keyScreen = this.addDrawableChild(new Button(0, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.keys"), btn -> {
             assert client != null;
             if (client.currentScreen.getClass() != KeyMacrosScreen.class) {
-                client.setScreen(new KeyMacrosScreen(this));
+                client.openScreen(new KeyMacrosScreen(this));
             }
         }));
 
         eventScreen = this.addDrawableChild(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.events"), btn -> {
             assert client != null;
             if (client.currentScreen.getClass() != EventMacrosScreen.class) {
-                client.setScreen(new EventMacrosScreen(this));
+                client.openScreen(new EventMacrosScreen(this));
             }
         }));
 
         serviceScreen = this.addDrawableChild(new Button(2 * this.width / 6 + 2, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.services"), btn -> {
             assert client != null;
             if (client.currentScreen.getClass() != ServiceScreen.class) {
-                client.setScreen(new ServiceScreen(this));
+                client.openScreen(new ServiceScreen(this));
             }
         }));
         
@@ -80,10 +80,15 @@ public class MacroScreen extends BaseScreen {
     
         runningBtn = this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.running"), (btn) -> {
             assert client != null;
-            client.setScreen(new CancelScreen(this));
+            client.openScreen(new CancelScreen(this));
         }));
 
-        aboutBtn = this.addDrawableChild(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this))));
+        serviceScreen = this.addDrawableChild(new Button(this.width /12 + 1, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.services"), (btn) -> {
+            assert client != null;
+            client.openScreen(new ServiceScreen(this));
+        }));
+
+        aboutBtn = this.addDrawableChild(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this))));
     }
 
     protected MultiElementContainer<MacroScreen> createTopbar() {
@@ -179,7 +184,7 @@ public class MacroScreen extends BaseScreen {
                 System.out.printf("Failed to run cmd '%s'", Core.getInstance().config.getOptions(ClientConfigV2.class).externalEditorCommand);
             }
             assert client != null;
-            client.setScreen(new EditorScreen(this, file));
+            client.openScreen(new EditorScreen(this, file));
         }
     }
 

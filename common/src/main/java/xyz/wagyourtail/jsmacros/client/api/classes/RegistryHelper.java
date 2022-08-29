@@ -61,7 +61,7 @@ public class RegistryHelper {
         ItemStringReader itemResult = new ItemStringReader(new StringReader(parseNameSpace(id) + nbt), false);
         itemResult.consume();
         ItemStack stack = itemResult.getItem().getDefaultStack();
-        stack.setNbt(itemResult.getNbt());
+        stack.setTag(itemResult.getNbt());
         return new CreativeItemStackHelper(stack);
     }
 

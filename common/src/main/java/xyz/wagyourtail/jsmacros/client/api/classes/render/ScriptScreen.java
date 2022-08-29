@@ -99,7 +99,7 @@ public class ScriptScreen extends BaseScreen {
     }
 
     @Override
-    public boolean shouldPause() {
+    public boolean isPauseScreen() {
         return shouldPause;
     }
 

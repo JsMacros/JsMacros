@@ -123,7 +123,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper clearEnchantments() {
-        NbtCompound compound = base.getOrCreateNbt();
+        NbtCompound compound = base.getOrCreateTag();
         if (compound.contains("Enchantments", 9)) {
             compound.remove("Enchantments");
         }
@@ -147,7 +147,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper removeEnchantment(String id) {
-        NbtCompound compound = base.getOrCreateNbt();
+        NbtCompound compound = base.getOrCreateTag();
         if (compound.contains("Enchantments", 9)) {
             NbtList nbtList = compound.getList("Enchantments", 10);
             nbtList.forEach(nbtElement -> {
@@ -165,7 +165,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper clearLore() {
-        NbtCompound nbtCompound = base.getOrCreateSubNbt("display");
+        NbtCompound nbtCompound = base.getOrCreateSubTag("display");
         if (nbtCompound.contains("Lore", 9)) {
             nbtCompound.remove("Lore");
         }
@@ -208,7 +208,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     private CreativeItemStackHelper addLoreInternal(Text... texts) {
-        NbtCompound nbtCompound = base.getOrCreateSubNbt("display");
+        NbtCompound nbtCompound = base.getOrCreateSubTag("display");
         NbtList list = nbtCompound.contains("Lore", 9) ? nbtCompound.getList("Lore", 8) : new NbtList();
         for (Text text : texts) {
             list.add(NbtString.of(Text.Serializer.toJson(text)));
@@ -225,7 +225,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper setUnbreakable(boolean unbreakable) {
-        base.getOrCreateNbt().putBoolean("Unbreakable", unbreakable);
+        base.getOrCreateTag().putBoolean("Unbreakable", unbreakable);
         return this;
     }
 
@@ -304,7 +304,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     protected CreativeItemStackHelper setHideFlag(ItemStack.TooltipSection section, boolean hide) {
-        NbtCompound nbtCompound = base.getOrCreateNbt();
+        NbtCompound nbtCompound = base.getOrCreateTag();
         if (hide) {
             nbtCompound.putInt("HideFlags", nbtCompound.getInt("HideFlags") | section.getFlag());
         } else {

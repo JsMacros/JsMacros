@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -28,11 +29,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
 import net.minecraft.world.RaycastContext;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkSection;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -53,8 +57,12 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
@@ -291,6 +299,66 @@ public class FWorld extends BaseLibrary {
         return new WorldScanner(mc.world, blockFilter, stateFilter).scanChunkRange(chunkX, chunkZ, chunkrange);
     }
 
+    private List<Pos3D> findBlocksMatchingInternal(int centerX, int centerZ, Function<Block, Boolean> stateFilter, Function<BlockState, Boolean> entityFilter, int chunkrange) {
+        assert mc.world != null;
+        if (chunkrange < 0) throw new IllegalArgumentException("chunkrange must be at least 0");
+
+        List<ChunkPos> chunks = new ArrayList<>();
+        for (int x = centerX - chunkrange; x <= centerX + chunkrange; x++) {
+            for (int z = centerZ - chunkrange; z <= centerZ + chunkrange; z++) {
+                if (mc.world.isChunkLoaded(x, z)) {
+                    chunks.add(new ChunkPos(x, z));
+                }
+            }
+        }
+
+        return findBlocksMatchingInternal(chunks, stateFilter, entityFilter);
+
+    }
+
+    private List<Pos3D> findBlocksMatchingInternal(List<ChunkPos> pos, Function<Block, Boolean> stateFilter, Function<BlockState, Boolean> entityFilter) {
+        assert mc.world != null;
+        int minY = mc.world.getDimension().getMinimumY();
+
+        return pos.stream().flatMap(c -> {
+            if (!mc.world.isChunkLoaded(c.x, c.z)) {
+                return Stream.empty();
+            }
+            Chunk chunk = mc.world.getChunk(c.x, c.z);
+            ChunkSection[] sections = chunk.getSectionArray();
+            return IntStream.range(0, sections.length).boxed().flatMap(i -> {
+                AtomicBoolean found = new AtomicBoolean(false);
+                if (sections[i].isEmpty()) {
+                    return Stream.empty();
+                }
+                sections[i].getContainer().count((s, n) -> {
+                    if (stateFilter.apply(s.getBlock())) {
+                        found.set(true);
+                    }
+                });
+                if (!found.get()) {
+                    return (Stream<Pos3D>) (Stream) Stream.empty();
+                }
+                return IntStream.range(0, 4096).mapToObj(e -> {
+                    int y = e >> 8;
+                    int x = (e & 255) >> 4;
+                    int z = e & 15;
+                    BlockState state = sections[i].getBlockState(x, y, z);
+                    if (stateFilter.apply(state.getBlock())) {
+                        if (entityFilter != null) {
+                            if (entityFilter.apply(state)) {
+                                return new Pos3D(c.x << 4 | x, y + (i << 4) + minY, c.z << 4 | z);
+                            }
+                        } else {
+                            return new Pos3D(c.x << 4 | x, y + (i << 4) + minY, c.z << 4 | z);
+                        }
+                    }
+                    return null;
+                }).filter(Objects::nonNull);
+            });
+        }).collect(Collectors.toList());
+    }
+
     /**
      * By default, air blocks are ignored and the callback is only called for real blocks.
      *
@@ -515,7 +583,7 @@ public class FWorld extends BaseLibrary {
      */
     public String getBiome() {
         assert mc.world != null;
-        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(mc.player.getBlockPos()).value()).toString();
+        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(mc.player.getBlockPos())).toString();
     }
     
     /**
@@ -778,7 +846,7 @@ public class FWorld extends BaseLibrary {
      */
     public String getBiomeAt(int x, int z) {
         assert mc.world != null;
-        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(new BlockPos(x, 10, z)).value()).toString();
+        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(new BlockPos(x, 10, z))).toString();
     }
     
     /**

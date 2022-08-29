@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.*;
-import net.minecraft.client.render.ChunkBuilderMode;
 import net.minecraft.client.render.entity.PlayerModelPart;
 import net.minecraft.client.resource.language.LanguageDefinition;
 import net.minecraft.client.sound.SoundManager;
@@ -11,7 +10,6 @@ import net.minecraft.network.packet.c2s.play.UpdateDifficultyLockC2SPacket;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Arm;
 import net.minecraft.world.Difficulty;
@@ -654,17 +652,8 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public String getChunkBuilderMode() {
-            switch (base.chunkBuilderMode) {
-                case NONE:
-                    return "none";
-                case NEARBY:
-                    return "nearby";
-                case PLAYER_AFFECTED:
-                    return "player_affected";
-                default:
-                    throw new IllegalArgumentException();
-            }
+        public boolean getChunkBuilderMode() {
+            return base.syncChunkWrites;
         }
 
         /**
@@ -674,23 +663,8 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public VideoOptionsHelper setChunkBuilderMode(String mode) {
-            ChunkBuilderMode newMode;
-            switch (mode.toUpperCase(Locale.ROOT)) {
-                case "NONE":
-                    newMode = ChunkBuilderMode.NONE;
-                    break;
-                case "NEARBY":
-                    newMode = ChunkBuilderMode.NEARBY;
-                    break;
-                case "PLAYER_AFFECTED":
-                    newMode = ChunkBuilderMode.PLAYER_AFFECTED;
-                    break;
-                default:
-                    newMode = base.chunkBuilderMode;
-                    break;
-            }
-            base.chunkBuilderMode = newMode;
+        public VideoOptionsHelper setChunkBuilderMode(boolean mode) {
+            base.syncChunkWrites = mode;
             return this;
         }
 
@@ -731,26 +705,6 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          */
         public VideoOptionsHelper setRenderDistance(int radius) {
             base.viewDistance = radius;
-            return this;
-        }
-
-        /**
-         * @return the current simulation distance in chunks.
-         *
-         * @since 1.8.4
-         */
-        public int getSimulationDistance() {
-            return base.simulationDistance;
-        }
-
-        /**
-         * @param radius the new simulation distance in chunks
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public VideoOptionsHelper setSimulationDistance(int radius) {
-            base.simulationDistance = radius;
             return this;
         }
 
@@ -1126,26 +1080,6 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
             base.fovEffectScale = (float) val;
             return this;
         }
-
-        /**
-         * @return {@code true} if the autosave indicator is enabled, {@code false} otherwise.
-         *
-         * @since 1.8.4
-         */
-        public boolean isAutosaveIndicatorEnabled() {
-            return base.showAutosaveIndicator;
-        }
-
-        /**
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public VideoOptionsHelper enableAutosaveIndicator(boolean val) {
-            base.showAutosaveIndicator = val;
-            return this;
-        }
-
     }
 
     public class MusicOptionsHelper {
@@ -1400,41 +1334,6 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the currently selected sound device.
-         *
-         * @since 1.8.4
-         */
-        public String getSoundDevice() {
-            return base.soundDevice;
-        }
-
-        /**
-         * @param audioDevice the audio device to use
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public MusicOptionsHelper setSoundDevice(String audioDevice) {
-            List<String> audioDevices = getAudioDevices();
-            if (!audioDevices.contains(audioDevice)) {
-                audioDevice = "";
-            }
-            base.soundDevice = audioDevice;
-            SoundManager soundManager = MinecraftClient.getInstance().getSoundManager();
-            soundManager.reloadSounds();
-            return this;
-        }
-
-        /**
-         * @return a list of all connected audio devices.
-         *
-         * @since 1.8.4
-         */
-        public List<String> getAudioDevices() {
-            return Stream.concat(Stream.of(""), MinecraftClient.getInstance().getSoundManager().getSoundDevices().stream()).collect(Collectors.toList());
-        }
-
-        /**
          * @return {@code true} if subtitles should be shown, {@code false} otherwise.
          *
          * @since 1.8.4
@@ -1667,7 +1566,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public KeyBinding[] getRawKeys() {
-            return ArrayUtils.clone(base.allKeys);
+            return ArrayUtils.clone(base.keysAll);
         }
 
         /**
@@ -1676,7 +1575,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public List<String> getCategories() {
-            return Arrays.stream(base.allKeys).map(KeyBinding::getCategory).distinct().collect(Collectors.toList());
+            return Arrays.stream(base.keysAll).map(KeyBinding::getCategory).distinct().collect(Collectors.toList());
         }
 
         /**
@@ -1685,7 +1584,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public List<String> getKeys() {
-            return Arrays.stream(base.allKeys).map(KeyBinding::getTranslationKey).collect(Collectors.toList());
+            return Arrays.stream(base.keysAll).map(KeyBinding::getTranslationKey).collect(Collectors.toList());
         }
 
         /**
@@ -1694,9 +1593,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public Map<String, String> getKeyBinds() {
-            Map<String, String> keyBinds = new HashMap<>(base.allKeys.length);
+            Map<String, String> keyBinds = new HashMap<>(base.keysAll.length);
 
-            for (KeyBinding key : base.allKeys) {
+            for (KeyBinding key : base.keysAll) {
                 keyBinds.put(translatable(key.getTranslationKey()).getString(), key.getBoundKeyLocalizedText().getString());
             }
             return keyBinds;
@@ -1719,9 +1618,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public Map<String, Map<String, String>> getKeyBindsByCategory() {
-            Map<String, Map<String, String>> entries = new HashMap<>(MinecraftClient.getInstance().options.allKeys.length);
+            Map<String, Map<String, String>> entries = new HashMap<>(MinecraftClient.getInstance().options.keysAll.length);
 
-            for (KeyBinding key : MinecraftClient.getInstance().options.allKeys) {
+            for (KeyBinding key : MinecraftClient.getInstance().options.keysAll) {
                 Map<String, String> categoryMap;
                 String category = key.getCategory();
                 if (!entries.containsKey(category)) {
@@ -2412,27 +2311,6 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
             base.monochromeLogo = val;
             return this;
         }
-
-        /**
-         * @return {@code true} if lighting flashes are hidden, {@code false} otherwise.
-         *
-         * @since 1.8.4
-         */
-        public boolean areLightningFlashesHidden() {
-            return base.hideLightningFlashes;
-        }
-
-        /**
-         * @param val the new fov value
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public AccessibilityOptionsHelper setFovEffect(boolean val) {
-            base.hideLightningFlashes = val;
-            return this;
-        }
-
     }
 
     /**

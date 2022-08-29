@@ -298,7 +298,7 @@ public class Inventory<T extends HandledScreen<?>> {
         IntList slots = new IntArrayList();
         for (String key : mapIdentifiers) {
             if (map.containsKey(key)) {
-                slots.addAll(IntList.of(map.get(key)));
+                slots.addAll(IntArrayList.wrap(map.get(key)));
             }
         }
         return slots.toIntArray();
@@ -479,7 +479,7 @@ public class Inventory<T extends HandledScreen<?>> {
      *
      */
      public void openGui() {
-        mc.execute(() -> mc.setScreen(this.inventory));
+        mc.execute(() -> mc.openScreen(this.inventory));
      }
 
     /**

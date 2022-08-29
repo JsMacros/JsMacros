@@ -249,7 +249,7 @@ public class Surface extends Draw2D implements RenderElement {
         matrixStack.translate(pos.x, pos.y, pos.z);
 
         if (rotateToPlayer) {
-            Vec3f rot = MinecraftClient.getInstance().gameRenderer.getCamera().getRotation().toEulerXyzDegrees();
+            Vec3f rot = MinecraftClient.getInstance().gameRenderer.getCamera().getRotation().method_35824();
             rotations.x = -rot.getX();
             rotations.y = 180 + rot.getY();
             rotations.z = 0;
@@ -265,7 +265,7 @@ public class Surface extends Draw2D implements RenderElement {
             matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float) rotations.z));
             matrixStack.translate(-sizes.x / 2, sizes.y / 2, 0);
         } else {
-            matrixStack.multiply(Quaternion.fromEulerXyzDegrees(rotations.toVector().toMojangFloatVector()));
+            matrixStack.multiply(Quaternion.method_35823(rotations.toVector().toMojangFloatVector()));
         }
         // fix it so that y-axis goes down instead of up
         matrixStack.scale(1, -1, 1);

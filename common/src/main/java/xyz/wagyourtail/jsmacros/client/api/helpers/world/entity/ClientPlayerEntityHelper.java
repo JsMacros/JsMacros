@@ -509,8 +509,8 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      */
     public ClientPlayerEntityHelper<T> setLongAttack(boolean stop) {
-        if (!stop) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.attackKey.getBoundKeyTranslationKey()));
-        else KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(mc.options.attackKey.getBoundKeyTranslationKey()), false);
+        if (!stop) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.keyAttack.getBoundKeyTranslationKey()));
+        else KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(mc.options.keyAttack.getBoundKeyTranslationKey()), false);
         return this;
     }
 
@@ -520,8 +520,8 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      */
     public ClientPlayerEntityHelper<T> setLongInteract(boolean stop) {
-        if (!stop) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.useKey.getBoundKeyTranslationKey()));
-        else KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(mc.options.useKey.getBoundKeyTranslationKey()), false);
+        if (!stop) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.keyUse.getBoundKeyTranslationKey()));
+        else KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(mc.options.keyUse.getBoundKeyTranslationKey()), false);
         return this;
     }
 

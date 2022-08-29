@@ -1,8 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientCommandSource;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -56,9 +58,8 @@ public class FakeServerCommandSource extends ServerCommandSource {
         return source.getRecipeIds();
     }
 
-    @Override
-    public CompletableFuture<Suggestions> getCompletions(CommandContext<?> context) {
-        return source.getCompletions(context);
+    public CompletableFuture<Suggestions> getCompletions(CommandContext<CommandSource> context, SuggestionsBuilder builder) {
+        return source.getCompletions(context, builder);
     }
 
     @Override

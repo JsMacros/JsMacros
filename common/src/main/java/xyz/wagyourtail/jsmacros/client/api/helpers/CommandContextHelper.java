@@ -79,7 +79,7 @@ public class CommandContextHelper extends BaseHelper<CommandContext<?>> implemen
             arg = itemPredicate.create(null);
         } else if (arg instanceof BlockPredicateArgumentType.BlockPredicate) {
             BlockPredicateArgumentType.BlockPredicate blockPredicate = (BlockPredicateArgumentType.BlockPredicate) arg;
-            arg = blockPredicate.create(Registry.BLOCK);
+            arg = blockPredicate.create(MinecraftClient.getInstance().getNetworkHandler().getTagManager());
         } else if (arg instanceof PosArgument) {
             arg = new BlockPosHelper(((PosArgument) arg).toAbsoluteBlockPos(fakeServerSource));
         } else if (arg instanceof Enchantment) {

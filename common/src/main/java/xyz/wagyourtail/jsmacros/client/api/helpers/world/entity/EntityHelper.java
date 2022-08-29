@@ -26,6 +26,7 @@ import net.minecraft.entity.vehicle.TntMinecartEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.MathHelper;
 
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
@@ -373,7 +374,8 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.8.4
      */
     public double distanceTo(BlockPosHelper pos) {
-        return Math.sqrt(pos.getRaw().getSquaredDistance(base.getPos()));
+        Vec3d poss = base.getPos();
+        return Math.sqrt(pos.getRaw().getSquaredDistance(poss.x, poss.y, poss.z, false));
     }
 
     /**
@@ -409,7 +411,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.8.4
      */
     public ChunkHelper getChunk() {
-        return new ChunkHelper(base.getWorld().getChunk(base.getBlockPos()));
+        return new ChunkHelper(base.world.getChunk(base.getBlockPos()));
     }
     
     /**
@@ -418,7 +420,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.8.4
      */
     public String getBiome() {
-        return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(base.getBlockPos()).value()).toString();
+        return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(base.getBlockPos())).toString();
     }
 
     @Override
@@ -678,7 +680,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         if (!client.isIntegratedServerRunning()) {
             return null;
         }
-        Entity entity = client.getServer().getPlayerManager().getPlayer(client.player.getUuid()).getWorld().getEntity(base.getUuid());
+        Entity entity = client.getServer().getPlayerManager().getPlayer(client.player.getUuid()).world.getEntityById(base.getId());
         if (entity == null) {
             return null;
         } else {

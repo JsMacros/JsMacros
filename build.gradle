@@ -61,6 +61,11 @@ subprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
+
+        def version = 16
+        if (JavaVersion.current().isJava9Compatible()) {
+            options.release = version
+        }
     }
 
     jar {

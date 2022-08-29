@@ -37,7 +37,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public List<TextHelper> getCreativeTab() {
-        return getGroups().map(ItemGroup::getDisplayName).map(TextHelper::new).collect(Collectors.toList());
+        return getGroups().map(ItemGroup::getTranslationKey).map(TextHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -273,7 +273,7 @@ public class ItemHelper extends BaseHelper<Item> {
         ItemStringReader reader = new ItemStringReader(new StringReader(getId() + nbt), false);
         reader.consume();
         ItemStack stack = reader.getItem().getDefaultStack();
-        stack.setNbt(reader.getNbt());
+        stack.setTag(reader.getNbt());
         return new ItemStackHelper(stack);
     }
 
