@@ -77,8 +77,12 @@ public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptCo
             assert ctx.getCtx().getFile() != null;
             con.eval(Source.newBuilder(lang, ctx.getCtx().getFile()).build());
         } finally {
-            con.leave();
-            ctx.getCtx().tasks.poll().release();
+            try {
+                con.leave();
+                ctx.getCtx().tasks.poll().release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
     
@@ -107,8 +111,12 @@ public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptCo
                 con.eval(lang, script);
             }
         } finally {
-            con.leave();
-            ctx.getCtx().tasks.poll().release();
+            try {
+                con.leave();
+                ctx.getCtx().tasks.poll().release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
