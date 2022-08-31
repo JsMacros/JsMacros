@@ -28,29 +28,35 @@ public class EventKey implements BaseEvent {
     public final String mods;
 
     private static final Set<Integer> wasNullOnDown = new HashSet<>();
-    
-    public EventKey(int key, int scancode, int action, int mods) {
-        
+
+    public EventKey(int action, String key, String mods) {
+        this.action = action;
+        this.key = key;
+        this.mods = mods;
+
+        trigger();
+    }
+
+    public static boolean parse(int key, int scancode, int action, int mods) {
         InputUtil.Key keycode;
         if (key <= 7) keycode = InputUtil.Type.MOUSE.createFromCode(key);
         else keycode = InputUtil.Type.KEYSYM.createFromCode(key);
+
+        String keyStr = keycode.getTranslationKey();
+        String modsStr = getKeyModifiers(mods);
         
-        this.action = action;
-        this.key = keycode.getTranslationKey();
-        this.mods = getKeyModifiers(mods);
-        
-        if (keycode == InputUtil.UNKNOWN_KEY) return;
+        if (keycode == InputUtil.UNKNOWN_KEY) return false;
 
         if (action == 1) FKeyBind.KeyTracker.press(keycode);
         else FKeyBind.KeyTracker.unpress(keycode);
 
         if (mc.currentScreen != null) {
             if (action != 0 || !wasNullOnDown.contains(key)) {
-                if (Core.getInstance().config.getOptions(ClientConfigV2.class).disableKeyWhenScreenOpen) return;
-                if (mc.currentScreen instanceof BaseScreen) return;
+                if (Core.getInstance().config.getOptions(ClientConfigV2.class).disableKeyWhenScreenOpen) return false;
+                if (mc.currentScreen instanceof BaseScreen) return false;
                 Element focused = mc.currentScreen.getFocused();
-                if (focused instanceof TextFieldWidget) return;
-                if (focused instanceof RecipeBookWidget && ((IRecipeBookWidget) focused).jsmacros_isSearching()) return;
+                if (focused instanceof TextFieldWidget) return false;
+                if (focused instanceof RecipeBookWidget && ((IRecipeBookWidget) focused).jsmacros_isSearching()) return false;
             }
         } else if (action == 1) {
             wasNullOnDown.add(key);
@@ -66,9 +72,14 @@ public class EventKey implements BaseEvent {
             else if (key == 341 || key == 345) mods -= 2;
             else if (key == 342 || key == 346) mods -= 4;
         }
-        
+
+        new EventKey(action, keyStr, modsStr);
+        EventJoinedKey ev = new EventJoinedKey(action, keyStr, modsStr);
+        return ev.cancel;
+    }
+
+    protected void trigger() {
         profile.triggerEvent(this);
-        
     }
 
     public String toString() {
