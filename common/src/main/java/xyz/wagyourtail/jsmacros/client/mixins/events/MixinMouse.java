@@ -10,9 +10,9 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.EventKey;
 @Mixin(Mouse.class)
 class MixinMouse {
     
-    @Inject(at = @At("HEAD"), method = "onMouseButton")
+    @Inject(at = @At("HEAD"), method = "onMouseButton", cancellable = true)
     private void onMouseButton(long window, int key, int action, int mods, final CallbackInfo info) {
         if (key == -1 || action == 2) return;
-        new EventKey(key, -1, action, mods);
+        if (EventKey.parse(key, -1, action, mods)) info.cancel();
     }
 }
