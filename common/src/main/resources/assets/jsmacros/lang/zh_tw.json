@@ -21,7 +21,7 @@
   "jsmacros.new": "新增",
   "jsmacros.openfolder": "開啟資料夾",
   "jsmacros.confirmdeletefile": "確定要刪除這個檔案?",
-  "jsmacros.enabledstatus": "啟用",
+  "jsmacros.enabledstatus": "啟用狀態",
   "jsmacros.enabled": "啟用",
   "jsmacros.disabled": "禁用",
   "jsmacros.presskey": "- 按下按鍵 -",
@@ -73,7 +73,7 @@
   "jsmacros.externaleditorcommand": "外部編輯器指令:",
   "jsmacros.chat.tag.modified": "這個訊息被JS Macros修改過",
   
-  "jsmacros.macrosortmethod.enabled": "啟用",
+  "jsmacros.macrosortmethod.enabled": "啟用狀態",
   "jsmacros.macrosortmethod.triggername": "觸發方式",
   "jsmacros.macrosortmethod.filename": "檔案名稱",
   
