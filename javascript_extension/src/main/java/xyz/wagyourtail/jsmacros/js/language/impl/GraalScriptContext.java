@@ -46,13 +46,13 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
     public void wrapSleep(int changePriority, SleepRunnable sleep) throws InterruptedException {
         getContext().leave();
 
+        assert tasks.peek() != null;
+        // remove self from queue
+        int prio = tasks.poll().release();
+
         try {
-            assert tasks.peek() != null;
-            // remove self from queue
-            int prio = tasks.poll().release();
-
             sleep.run();
-
+        } finally {
             // put self at back of the queue
             tasks.add(new WrappedThread(Thread.currentThread(), prio + changePriority));
 
@@ -64,7 +64,7 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
                 joinable = tasks.peek();
                 assert joinable != null;
             }
-        } finally {
+
             getContext().enter();
         }
     }
