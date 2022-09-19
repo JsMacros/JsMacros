@@ -77,6 +77,33 @@ public class FChat extends BaseLibrary {
         }
     }
 
+    /**
+     * Logs the formatted message to the player chat. The message is formatted using the default
+     * java {@link String#format(String, Object...)} syntax.
+     *
+     * @param message
+     * @param args
+     * @throws InterruptedException
+     * @since 1.9.0
+     */
+    public void logf(String message, Object... args) throws InterruptedException {
+        log(String.format(message, args), false);
+    }
+
+    /**
+     * Logs the formatted message to the player chat. The message is formatted using the default
+     * java {@link String#format(String, Object...)} syntax.
+     *
+     * @param message
+     * @param await should wait for message to actually be sent to chat to continue
+     * @param args
+     * @throws InterruptedException
+     * @since 1.9.0
+     */
+    public void logf(String message, boolean await, Object... args) throws InterruptedException {
+        log(String.format(message, args), await);
+    }
+
     private static void logInternal(String message) {
         if (message != null) {
             Text text = Text.literal(message);

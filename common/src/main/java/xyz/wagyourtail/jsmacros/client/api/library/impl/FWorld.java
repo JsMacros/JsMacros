@@ -10,16 +10,19 @@ import net.minecraft.client.gui.hud.ClientBossBar;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
+import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -41,6 +44,7 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -262,14 +266,77 @@ public class FWorld extends BaseLibrary {
      * @return all entities in the render distance.
      */
     public List<EntityHelper<?>> getEntities() {
+        return getEntitiesInternal(entity -> true);
+    }
+
+    /**
+     * @param types the entity types to consider
+     * @return all entities in the render distance, that match the specified entity type.
+     *
+     * @since 1.9.0
+     */
+    public List<EntityHelper<?>> getEntities(String... types) {
+        Set<String> uniqueTypes = Set.of(types);
+        Predicate<Entity> typePredicate = entity -> uniqueTypes.contains(Registry.ENTITY_TYPE.getId(entity.getType()).toString());
+        return getEntitiesInternal(typePredicate);
+    }
+
+    /**
+     * @param distance the maximum distance to search for entities.
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public List<EntityHelper<?>> getEntities(double distance) {
+        assert mc.player != null;
+        Predicate<Entity> distancePredicate = e -> e.distanceTo(mc.player) <= distance;
+        return getEntitiesInternal(distancePredicate);
+    }
+
+    /**
+     * @param distance the maximum distance to search for entities.
+     * @param types the entity types to consider
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public List<EntityHelper<?>> getEntities(double distance, String... types) {
+        Set<String> uniqueTypes = Set.of(types);
+        assert mc.player != null;
+        Predicate<Entity> distancePredicate = e -> e.distanceTo(mc.player) <= distance;
+        Predicate<Entity> typePredicate = entity -> uniqueTypes.contains(Registry.ENTITY_TYPE.getId(entity.getType()).toString());
+        return getEntitiesInternal(distancePredicate.and(typePredicate));
+    }
+
+    /**
+     * @param filter
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public List<EntityHelper<?>> getEntities(MethodWrapper<EntityHelper<?>, ?, ?, ?> filter) {
         assert mc.world != null;
         List<EntityHelper<?>> entities = new ArrayList<>();
         for (Entity e : ImmutableList.copyOf(mc.world.getEntities())) {
-            entities.add(EntityHelper.create(e));
+            EntityHelper<?> entity = EntityHelper.create(e);
+            if (filter.test(entity)) {
+                entities.add(entity);
+            }
         }
         return entities;
     }
-
+    
+    private List<EntityHelper<?>> getEntitiesInternal(Predicate<Entity> filter) {
+        assert mc.world != null;
+        List<EntityHelper<?>> entities = new ArrayList<>();
+        for (Entity e : ImmutableList.copyOf(mc.world.getEntities())) {
+            if (filter.test(e)) {
+                entities.add(EntityHelper.create(e));
+            }
+        }
+        return entities;
+    }
+    
     /**
      * raytrace between two points returning the first block hit.
      *
@@ -350,6 +417,69 @@ public class FWorld extends BaseLibrary {
     public long getTimeOfDay() {
         assert mc.world != null;
         return mc.world.getTimeOfDay();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isDay() {
+        assert mc.world != null;
+        return mc.world.isDay();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isNight() {
+        assert mc.world != null;
+        return mc.world.isNight();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isRaining() {
+        assert mc.world != null;
+        return mc.world.isRaining();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isThundering() {
+        assert mc.world != null;
+        return mc.world.isThundering();
+    }
+
+    /**
+     * @return the name of the loaded world or {@code UNKNOWN_NAME} if no name could be found
+     *
+     * @since 1.9.0
+     */
+    public String getServerName() {
+        IntegratedServer server = mc.getServer();
+        if (server != null) {
+            return "LOCAL_" + server.getSavePath(WorldSavePath.ROOT).normalize().getFileName();
+        }
+        ServerInfo multiplayerServer = mc.getCurrentServerEntry();
+        if (multiplayerServer != null) {
+            if (mc.isConnectedToRealms()) {
+                return "REALM_" + multiplayerServer.name;
+            }
+            if (multiplayerServer.isLocal()) {
+                return "LAN_" + multiplayerServer.name;
+            }
+            return multiplayerServer.address.replace(":25565", "").replace(":", "_");
+        }
+        return "UNKNOWN_NAME";
     }
     
     /**

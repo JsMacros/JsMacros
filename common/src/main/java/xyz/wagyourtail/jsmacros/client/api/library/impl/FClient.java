@@ -6,8 +6,14 @@ import net.minecraft.client.gui.screen.MessageScreen;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.text.Text;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelStorageException;
+
+import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ModContainerHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ServerInfoHelper;
 import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
@@ -326,4 +332,62 @@ public class FClient extends PerExecLibrary {
         TickBasedEvents.serverListPinger.cancel();
     }
 
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public List<? extends ModContainerHelper<?>> getLoadedMods() {
+        return JsMacros.getModLoader().getLoadedMods();
+    }
+
+    /**
+     * Makes minecraft believe that the mouse is currently inside the window.
+     * This will automatically set pause on lost focus to false.
+     *
+     * @since 1.9.0
+     */
+    public void grabMouse() {
+        mc.options.pauseOnLostFocus = false;
+        mc.onWindowFocusChanged(true);
+        mc.mouse.lockCursor();
+    }
+
+    /**
+     * @return {@code true} if the mod is loaded inside a development environment, {@code false} otherwise
+     *
+     * @since 1.9.0
+     */
+    public boolean isDevEnv() {
+        return JsMacros.getModLoader().isDevEnv();
+    }
+
+    /**
+     * @return the name of the mod loader
+     *
+     * @since 1.9.0
+     */
+    public String getModLoader() {
+        return JsMacros.getModLoader().getName();
+    }
+
+    /**
+     * @return a list of all loaded blocks as {@link BlockHelper BlockHelper} objects
+     *
+     * @since 1.9.0
+     */
+    public List<BlockHelper> getRegisteredBlocks() {
+        return Registry.BLOCK.stream().map(BlockHelper::new).toList();
+    }
+
+    /**
+     * @return a list of all loaded items as {@link ItemHelper ItemHelper} objects
+     *
+     * @since 1.9.0
+     */
+    public List<ItemHelper> getRegisteredItems() {
+        return Registry.ITEM.stream().map(ItemHelper::new).toList();
+    }
+    
 }

@@ -28,6 +28,7 @@ public class JsMacros {
     public static KeyBinding keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title"));
     public static BaseScreen prevScreen;
     protected static final File configFolder = ServiceLoader.load(ConfigFolder.class).findFirst().orElseThrow().getFolder();
+    protected static final ModLoader modLoader = ServiceLoader.load(ModLoader.class).findFirst().orElseThrow();
 
     public static final Core<Profile, EventRegistry> core = Core.createInstance(EventRegistry::new, Profile::new, configFolder.getAbsoluteFile(), new File(configFolder, "Macros"), LOGGER);
 
@@ -146,4 +147,13 @@ public class JsMacros {
         }
         return a;
     }
+
+    public static ModLoader getModLoader() {
+        return modLoader;
+    }
+
+    public static File getConfigFolder() {
+        return configFolder;
+    }
+    
 }

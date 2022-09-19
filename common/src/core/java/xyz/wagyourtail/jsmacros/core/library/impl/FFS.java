@@ -74,6 +74,42 @@ public class FFS extends PerExecLibrary {
     public String getName(String path) {
         return ctx.getContainedFolder().toPath().resolve(path).toFile().getName();
     }
+
+    /**
+     * Creates a new file in the specified path, relative to the script's folder. This will only
+     * work if the parent directory already exists. See {@link #createFile(String, String, boolean)}
+     * to automatically create all parent directories.
+     *
+     * @param path relative to the script's folder.
+     * @param name the name of the file.
+     * @return {@code true} if the file was created successfully
+     *
+     * @throws IOException
+     * @since 1.9.0
+     */
+    public boolean createFile(String path, String name) throws IOException {
+        return createFile(path, name, false);
+    }
+
+    /**
+     * Creates a new file in the specified path, relative to the script's folder. Optionally parent
+     * directories can be created if they do not exist.
+     *
+     * @param path       relative to the script's folder.
+     * @param name       the name of the file.
+     * @param createDirs automatically creates the parent folders
+     * @return {@code true} if the file was created successfully
+     *
+     * @throws IOException
+     * @since 1.9.0
+     */
+    public boolean createFile(String path, String name, boolean createDirs) throws IOException {
+        File file = ctx.getContainedFolder().toPath().resolve(path).resolve(name).toFile();
+        if (createDirs) {
+            file.getParentFile().mkdirs();
+        }
+        return file.createNewFile();
+    }
     
     /**
      * Make a directory.

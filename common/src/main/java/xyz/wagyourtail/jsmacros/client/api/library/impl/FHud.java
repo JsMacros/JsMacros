@@ -81,6 +81,15 @@ public class FHud extends BaseLibrary {
     public IScreen getOpenScreen() {
         return (IScreen) mc.currentScreen;
     }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public int getScaleFactor() {
+        return mc.options.getGuiScale().getValue();
+    }
     
     /**
      * 

@@ -78,6 +78,26 @@ public class FKeyBind extends BaseLibrary {
     public void key(String keyName, boolean keyState) {
         key(getKeyCode(keyName), keyState);
     }
+
+    /**
+     * Calls {@link #key(String, boolean)} with keyState set to true.
+     *
+     * @param keyName
+     * @since 1.9.0
+     */
+    public void pressKey(String keyName) {
+        key(keyName, true);
+    }
+
+    /**
+     * Calls {@link #key(String, boolean)} with keyState set to false.
+     *
+     * @param keyName
+     * @since 1.9.0
+     */
+    public void releaseKey(String keyName) {
+        key(keyName, false);
+    }
     
     /**
      * Don't use this one... set the key-state using the raw minecraft keycode class.
@@ -116,6 +136,28 @@ public class FKeyBind extends BaseLibrary {
                 return;
             }
         }
+    }
+
+    /**
+     * Calls {@link #keyBind(String, boolean)} with keyState set to true.
+     *
+     * @param keyBind
+     * @see #key(String, boolean)
+     * @since 1.9.0
+     */
+    public void pressKeyBind(String keyBind) {
+        keyBind(keyBind, true);
+    }
+
+    /**
+     * Calls {@link #keyBind(String, boolean)} with keyState set to false.
+     *
+     * @param keyBind
+     * @see #key(String, boolean)
+     * @since 1.9.0
+     */
+    public void releaseKeyBind(String keyBind) {
+        keyBind(keyBind, false);
     }
     
     /**

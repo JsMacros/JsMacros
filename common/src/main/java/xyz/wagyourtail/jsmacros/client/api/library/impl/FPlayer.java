@@ -9,9 +9,12 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.util.ScreenshotRecorder;
 import net.minecraft.entity.Entity;
+import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.GameMode;
+
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
@@ -70,6 +73,17 @@ public class FPlayer extends BaseLibrary {
         return mode.getName();
     }
 
+    /**
+     * @param gameMode possible values are survival, creative, adventure, spectator
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public void setGameMode(String gameMode) {
+        assert mc.interactionManager != null;
+        mc.interactionManager.setGameMode(GameMode.byName(gameMode, mc.interactionManager.getCurrentGameMode()));
+    }
+    
     /**
      * @param distance
      * @param fluid
@@ -142,11 +156,6 @@ public class FPlayer extends BaseLibrary {
         });
     }
 
-    public StatsHelper getStatistics() {
-        assert mc.player != null;
-        return new StatsHelper(mc.player.getStatHandler());
-    }
-
     /**
      * Take a screenshot and save to a file.
      * <p>
@@ -160,11 +169,51 @@ public class FPlayer extends BaseLibrary {
     public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null && file != null;
         ScreenshotRecorder.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), file, mc.getFramebuffer(),
-                                          (text) -> {
-                if (callback != null) callback.accept(new TextHelper(text));
-        });
+                (text) -> {
+                    if (callback != null) callback.accept(new TextHelper(text));
+                });
+    }
+    
+    /**
+     * @param folder
+     * @param width
+     * @param height
+     * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
+     * @since 1.9.0
+     */
+    public void takePanorama(String folder, int width, int height, MethodWrapper<TextHelper, Object, Object, ?> callback) {
+        assert folder != null;
+        Text result = mc.takePanorama(new File(Core.getInstance().config.macroFolder, folder), width, height);
+        if (callback != null) {
+            callback.accept(new TextHelper(result));
+        }
+    }
+    
+    public StatsHelper getStatistics() {
+        assert mc.player != null;
+        return new StatsHelper(mc.player.getStatHandler());
     }
 
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isMining() {
+        assert mc.interactionManager != null;
+        return mc.interactionManager.isBreakingBlock();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public float getReach() {
+        assert mc.interactionManager != null;
+        return mc.interactionManager.getReachDistance();
+    }
+    
     /**
      * Creates a new PlayerInput object.
      *
