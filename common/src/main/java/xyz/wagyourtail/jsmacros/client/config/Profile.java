@@ -21,7 +21,6 @@ import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
-import xyz.wagyourtail.jsmacros.core.library.impl.FTime;
 
 import java.util.Arrays;
 
@@ -206,8 +205,8 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventLaunchGame.class);
         runner.eventRegistry.addEvent(EventOpenContainer.class);
         runner.eventRegistry.addEvent(EventOpenScreen.class);
-        runner.eventRegistry.addEvent(EventPacketRecv.class);
-        runner.eventRegistry.addEvent(EventPacketSend.class);
+        runner.eventRegistry.addEvent(EventRecvPacket.class);
+        runner.eventRegistry.addEvent(EventSendPacket.class);
         runner.eventRegistry.addEvent(EventPlayerJoin.class);
         runner.eventRegistry.addEvent(EventPlayerLeave.class);
         runner.eventRegistry.addEvent(EventQuitGame.class);
@@ -227,6 +226,7 @@ public class Profile extends BaseProfile {
         runner.libraryRegistry.addLibrary(FKeyBind.class);
         runner.libraryRegistry.addLibrary(FPlayer.class);
         runner.libraryRegistry.addLibrary(FPositionCommon.class);
+        runner.libraryRegistry.addLibrary(FUtil.class);
         runner.libraryRegistry.addLibrary(FWorld.class);
     }
 }

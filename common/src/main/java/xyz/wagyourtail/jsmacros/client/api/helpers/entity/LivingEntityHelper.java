@@ -228,7 +228,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
             return true;
         }
 
-        if (!simpleCast) {
+        if (simpleCast) {
             return false;
         }
 

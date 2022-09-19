@@ -105,7 +105,7 @@ public class EditorScreen extends BaseScreen {
     
     public String getDefaultLanguage() {
         final String[] fname = file.getName().split("\\.", -1);
-        String ext = fname[fname.length - 1].toLowerCase();
+        String ext = fname[fname.length - 1].toLowerCase(Locale.ROOT);
         
         switch (ext) {
             case "py":

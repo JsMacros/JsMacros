@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.api.helpers;
+package xyz.wagyourtail.jsmacros.client.api.classes;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryWrapper;
@@ -11,6 +11,8 @@ import net.minecraft.util.registry.Registry;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EnchantmentHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.FluidStateHelper;

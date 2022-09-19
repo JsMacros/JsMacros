@@ -9,14 +9,14 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @author Etheradon
  * @since 1.9.0
  */
-@Event(value = "PacketRecv")
-public class EventPacketRecv implements BaseEvent {
+@Event(value = "SendPacket")
+public class EventSendPacket implements BaseEvent {
 
     public final Packet<?> packet;
 
-    public EventPacketRecv(Packet<?> packet) {
+    public EventSendPacket(Packet<?> packet) {
         this.packet = packet;
-        profile.triggerEvent(this);
+        profile.triggerEventNoAnything(this);
     }
 
 }

@@ -21,6 +21,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.advancement.AdvancementManage
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
@@ -45,7 +46,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @since 1.9.0
      */
     public void lookAt(String direction) {
-        Direction dir = Direction.byName(direction.toLowerCase());
+        Direction dir = Direction.byName(direction.toLowerCase(Locale.ROOT));
         double yaw = getYaw();
         double pitch = getPitch();
         if (dir.getAxis().isHorizontal()) {
@@ -134,7 +135,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @since 1.9.0
      */
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, String direction) throws InterruptedException {
-        return attack(x, y, z, Direction.byName(direction.toLowerCase()).getId(), false);
+        return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), false);
     }
     
     /**
@@ -160,7 +161,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @since 1.8.0
      */
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, String direction, boolean await) throws InterruptedException {
-        return attack(x, y, z, Direction.byName(direction.toLowerCase()).getId(), await);
+        return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), await);
     }
     
     /**
@@ -278,7 +279,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @since 1.9.0
      */
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, String direction, boolean offHand) throws InterruptedException {
-        return interactBlock(x, y, z, Direction.byName(direction.toLowerCase()).getId(), offHand, false);
+        return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, false);
     }
     
     /**
@@ -302,7 +303,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @since 1.9.0
      */
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, String direction, boolean offHand, boolean await) throws InterruptedException {
-        return interactBlock(x, y, z, Direction.byName(direction.toLowerCase()).getId(), offHand, await);
+        return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, await);
     }
     
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, int direction, boolean offHand, boolean await) throws InterruptedException {
