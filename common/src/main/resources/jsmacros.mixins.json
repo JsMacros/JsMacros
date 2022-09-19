@@ -3,9 +3,11 @@
     "package": "xyz.wagyourtail.jsmacros.client.mixins",
     "compatibilityLevel": "JAVA_17",
     "client": [
+        "access.MixinAbstractFurnaceScreenHandler",
         "access.MixinAdvancementManager",
         "access.MixinAdvancementProgress",
         "access.MixinAdvancementRewards",
+        "access.MixinAnvilScreen",
         "access.MixinBeaconScreen",
         "access.MixinBossBarHud",
         "access.MixinChatHud",

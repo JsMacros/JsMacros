@@ -17,6 +17,11 @@ import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
@@ -26,12 +31,17 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.RecipeHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -58,10 +68,31 @@ public class Inventory<T extends HandledScreen<?>> {
 
     public static Inventory<?> create(net.minecraft.client.gui.screen.Screen s) {
         if (s instanceof HandledScreen) {
-            if (s instanceof MerchantScreen) return new VillagerInventory((MerchantScreen) s);
-            if (s instanceof EnchantmentScreen) return new EnchantInventory((EnchantmentScreen) s);
-            if (s instanceof LoomScreen) return new LoomInventory((LoomScreen) s);
-            if (s instanceof BeaconScreen) return new BeaconInventory((BeaconScreen) s);
+            if (s instanceof MerchantScreen merchantScreen) {
+                return new VillagerInventory(merchantScreen);
+            } else if (s instanceof EnchantmentScreen enchantmentScreen) {
+                return new EnchantInventory(enchantmentScreen);
+            } else if (s instanceof LoomScreen loomScreen) {
+                return new LoomInventory(loomScreen);
+            } else if (s instanceof BeaconScreen beaconScreen) {
+                return new BeaconInventory(beaconScreen);
+            } else if (s instanceof AnvilScreen anvilScreen) {
+                return new AnvilInventory(anvilScreen);
+            } else if (s instanceof BrewingStandScreen brewingStandScreen) {
+                return new BrewingStandInventory(brewingStandScreen);
+            } else if (s instanceof CartographyTableScreen cartographyTableScreen) {
+                return new CartographyInventory(cartographyTableScreen);
+            } else if (s instanceof FurnaceScreen furnaceScreen) {
+                return new FurnaceInventory(furnaceScreen);
+            } else if (s instanceof GrindstoneScreen grindstoneScreen) {
+                return new GrindStoneInventory(grindstoneScreen);
+            } else if (s instanceof SmithingScreen smithingScreen) {
+                return new SmithingInventory(smithingScreen);
+            } else if (s instanceof StonecutterScreen stonecutterScreen) {
+                return new StoneCutterInventory(stonecutterScreen);
+            } else if (s instanceof GenericContainerScreen || s instanceof  Generic3x3ContainerScreen || s instanceof  HopperScreen || s instanceof ShulkerBoxScreen) {
+                return new ContainerInventory<>((HandledScreen<?>) s);
+            }
             return new Inventory<>((HandledScreen<?>) s);
         }
         return null;
@@ -123,6 +154,181 @@ public class Inventory<T extends HandledScreen<?>> {
     public Inventory<T> dropSlot(int slot) {
         man.clickSlot(syncId, slot, 0, SlotActionType.THROW, player);
         return this;
+    }
+
+    /**
+     * @param slot
+     * @param stack decide whether to drop the whole stack or just a single item
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public Inventory<T> dropSlot(int slot, boolean stack) {
+        man.clickSlot(syncId, slot, stack ? 1 : 0, SlotActionType.THROW, player);
+        return this;
+    }
+
+    /**
+     * @param item
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean contains(ItemStackHelper item) {
+        return getItems().stream().anyMatch(stack -> stack.equals(item));
+    }
+
+    /**
+     * @param item
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean contains(String item) {
+        return getItems().stream().anyMatch(stack -> stack.getItemId().equals(item));
+    }
+
+    /**
+     * @return the first empty slot in the main inventory and -1 if there are no empty slots
+     *
+     * @since 1.9.0
+     */
+    public int findFreeInventorySlot() {
+        return findFreeSlot("main" , "hotbar");
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public int findFreeHotbarSlot() {
+        return findFreeSlot("hotbar");
+    }
+
+    /**
+     * @param mapIdentifiers the identifier used to get the slots from {@link #getMap()}.
+     * @return the first empty slot in the given slots and -1 if there are no empty slots
+     *
+     * @since 1.9.0
+     */
+    public int findFreeSlot(String... mapIdentifiers) {
+        for (int slot : getSlots(mapIdentifiers)) {
+            if (getSlot(slot).isEmpty()) {
+                return slot;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public Map<String, Integer> getItemCount() {
+        Object2IntOpenHashMap<String> itemMap = new Object2IntOpenHashMap<>();
+        getItems().stream().filter(Predicate.not(ItemStackHelper::isEmpty)).forEach(item -> itemMap.addTo(item.getItemId(), item.getCount()));
+        return itemMap;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public List<ItemStackHelper> getItems() {
+        return IntStream.range(0, getTotalSlots()).mapToObj(this::getSlot).filter(Predicate.not(ItemStackHelper::isEmpty)).toList();
+    }
+
+    /**
+     * @param mapIdentifiers
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public List<ItemStackHelper> getItems(String... mapIdentifiers) {
+        return Arrays.stream(getSlots(mapIdentifiers)).mapToObj(this::getSlot).filter(Predicate.not(ItemStackHelper::isEmpty)).toList();
+    }
+
+    /**
+     * @param item
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public int[] findItem(ItemStackHelper item) {
+        IntList slots = new IntArrayList();
+        for (int i = 0; i < getTotalSlots(); i++) {
+            if (getSlot(i).equals(item)) {
+                slots.add(i);
+            }
+        }
+        return slots.toIntArray();
+    }
+
+    /**
+     * @param item
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public int[] findItem(String item) {
+        IntList slots = new IntArrayList();
+        for (int i = 0; i < getTotalSlots(); i++) {
+            if (getSlot(i).getItemId().equals(item)) {
+                slots.add(i);
+            }
+        }
+        return slots.toIntArray();
+    }
+
+    /**
+     * @param mapIdentifiers
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public int[] getSlots(String... mapIdentifiers) {
+        Map<String, int[]> map = getMap();
+        IntList slots = new IntArrayList();
+        for (String key : mapIdentifiers) {
+            if (map.containsKey(key)) {
+                slots.addAll(IntList.of(map.get(key)));
+            }
+        }
+        return slots.toIntArray();
+    }
+
+    /**
+     * @param callback
+     * @since 1.9.0
+     */
+    public void iterateItems(MethodWrapper<ItemStackHelper, Integer, ?, ?> callback) {
+        int count = getTotalSlots();
+        for (int i = 0; i < count; i++) {
+            ItemStackHelper stack = getSlot(i);
+            if (!stack.isEmpty()) {
+                callback.accept(stack, i);
+            }
+        }
+    }
+
+    /**
+     * @param callback
+     * @param mapIdentifiers
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public void iterateItems(MethodWrapper<ItemStackHelper, Integer, ?, ?> callback, String... mapIdentifiers) {
+        int count = getTotalSlots();
+        IntStream.of(getSlots(mapIdentifiers)).forEach(i -> {
+            ItemStackHelper stack = getSlot(i);
+            if (!stack.isEmpty()) {
+                callback.accept(stack, i);
+            }
+        });
     }
     
     /**
@@ -357,22 +563,29 @@ public class Inventory<T extends HandledScreen<?>> {
         }
         return null;
     }
-    
+
     /**
+     * @return
+     *
+     * @throws InterruptedException
      * @since 1.3.1
-     * @return all craftable recipes
      */
     public List<RecipeHelper> getCraftableRecipes() throws InterruptedException {
+        return getCraftableRecipes(true);
+    }
+
+    /**
+     * @param craftable
+     * @return
+     *
+     * @throws InterruptedException
+     * @since 1.9.0
+     */
+    public List<RecipeHelper> getCraftableRecipes(boolean craftable) throws InterruptedException {
         Stream<Recipe<?>> recipes;
         RecipeBookResults res;
-        IRecipeBookWidget recipeBookWidget;
-        if (inventory instanceof CraftingScreen) {
-            recipeBookWidget = (IRecipeBookWidget) ((CraftingScreen)inventory).getRecipeBookWidget();
-        } else if (inventory instanceof InventoryScreen) {
-            recipeBookWidget = (IRecipeBookWidget) ((InventoryScreen)inventory).getRecipeBookWidget();
-        } else if (inventory instanceof AbstractFurnaceScreen) {
-            recipeBookWidget = (IRecipeBookWidget) ((AbstractFurnaceScreen<?>)inventory).getRecipeBookWidget();
-        } else {
+        IRecipeBookWidget recipeBookWidget = getRecipeBookWidget();
+        if (recipeBookWidget == null) {
             return null;
         }
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
@@ -414,8 +627,23 @@ public class Inventory<T extends HandledScreen<?>> {
         }
         res = recipeBookWidget.jsmacros_getResults();
         List<RecipeResultCollection> result = ((IRecipeBookResults) res).jsmacros_getResultCollections();
-        recipes = result.stream().flatMap(e -> e.getRecipes(true).stream());
+        recipes = result.stream().flatMap(e -> e.getRecipes(craftable).stream());
         return recipes.map(e -> new RecipeHelper(e, syncId)).collect(Collectors.toList());
+    }
+
+    @Nullable
+    private IRecipeBookWidget getRecipeBookWidget() {
+        IRecipeBookWidget recipeBookWidget;
+        if (inventory instanceof CraftingScreen) {
+            recipeBookWidget = (IRecipeBookWidget) ((CraftingScreen)inventory).getRecipeBookWidget();
+        } else if (inventory instanceof InventoryScreen) {
+            recipeBookWidget = (IRecipeBookWidget) ((InventoryScreen)inventory).getRecipeBookWidget();
+        } else if (inventory instanceof AbstractFurnaceScreen) {
+            recipeBookWidget = (IRecipeBookWidget) ((AbstractFurnaceScreen<?>)inventory).getRecipeBookWidget();
+        } else {
+            return null;
+        }
+        return recipeBookWidget;
     }
     
     private Map<String, int[]> getMapInternal() {
@@ -445,7 +673,7 @@ public class Inventory<T extends HandledScreen<?>> {
             if (inventory instanceof CreativeInventoryScreen) {
                 map.remove("main");
                 map.put("creative", JsMacros.range(slots - 9));
-            } else if (inventory instanceof GenericContainerScreen || inventory instanceof Generic3x3ContainerScreen || inventory instanceof HopperScreen || inventory instanceof ShulkerBoxScreen) {
+            } else if (isContainer()) {
                 map.put("container", JsMacros.range(slots - 9 - 27));
             } else if (inventory instanceof BeaconScreen) {
                 map.put("slot", new int[] { slots - 9 - 27 - 1 });
@@ -487,6 +715,42 @@ public class Inventory<T extends HandledScreen<?>> {
         return map;
     }
 
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isContainer() {
+        return inventory instanceof GenericContainerScreen || inventory instanceof Generic3x3ContainerScreen || inventory instanceof HopperScreen || inventory instanceof ShulkerBoxScreen;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isRecipeBookOpened() {
+        IRecipeBookWidget recipeBookWidget = getRecipeBookWidget();
+        if (recipeBookWidget == null) {
+            return false;
+        }
+        return ((RecipeBookWidget) recipeBookWidget).isOpen();
+    }
+
+    /**
+     * @param open
+     * @since 1.9.0
+     */
+    public void setRecipeBookOpen(boolean open) {
+        IRecipeBookWidget recipeBookWidget = getRecipeBookWidget();
+        if (recipeBookWidget != null) {
+            RecipeBookWidget rbw = (RecipeBookWidget) recipeBookWidget;
+            if (rbw.isOpen() != open) {
+                rbw.toggleOpen();
+            }
+        }
+    }
+    
     /**
      * @since 1.2.3
      * 

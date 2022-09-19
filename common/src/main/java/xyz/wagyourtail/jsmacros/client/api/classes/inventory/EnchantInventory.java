@@ -2,7 +2,11 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.screen.EnchantmentScreenHandler;
 import net.minecraft.util.registry.Registry;
+
+import xyz.wagyourtail.jsmacros.client.api.helpers.EnchantmentHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 
 /**
@@ -35,6 +39,20 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
             }
         }
         return enchants;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public EnchantmentHelper[] getEnchantmentHelpers() {
+        EnchantmentScreenHandler handler = inventory.getScreenHandler();
+        EnchantmentHelper[] enchantments = new EnchantmentHelper[3];
+        for (int i = 0; i < 3; i++) {
+            enchantments[i] = new EnchantmentHelper(Enchantment.byRawId(handler.enchantmentId[i]), handler.enchantmentLevel[i]);
+        }
+        return enchantments;
     }
     
     /**
@@ -74,6 +92,15 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
             return true;
         }
         return false;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public ItemStackHelper getItemToEnchant() {
+        return getSlot(0);
     }
     
 }

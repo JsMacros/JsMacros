@@ -342,7 +342,8 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public boolean equals(ItemStackHelper ish) {
-        return base.equals(ish.getRaw());
+        //ItemStack doesn't overwrite the equals method, so we have to do it ourselves
+        return base.isItemEqual(ish.base) && ItemStack.areNbtEqual(base, ish.getRaw());
     }
     
     /**
