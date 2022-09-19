@@ -3,6 +3,9 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.util.Window;
+
+import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
@@ -252,4 +255,57 @@ public class FHud extends BaseLibrary {
     public double getMouseY() {
         return mc.mouse.getY() * (double)mc.getWindow().getScaledHeight() / (double)mc.getWindow().getHeight();
     }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public int getWindowWidth() {
+        return mc.getWindow().getWidth();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public int getWindowHeight() {
+        return mc.getWindow().getHeight();
+    }
+
+    /**
+     * @param width
+     * @since 1.9.0
+     */
+    public void setWindowWidth(int width) {
+        GLFW.glfwSetWindowSize(mc.getWindow().getHandle(), width, getWindowHeight());
+    }
+
+    /**
+     * @param height
+     * @since 1.9.0
+     */
+    public void setWindowHeight(int height) {
+        GLFW.glfwSetWindowSize(mc.getWindow().getHandle(), getWindowWidth(), height);
+    }
+
+    /**
+     * @param width
+     * @param height
+     * @since 1.9.0
+     */
+    public void setWindowSize(int width, int height) {
+        GLFW.glfwSetWindowSize(mc.getWindow().getHandle(), width, height);
+    }
+
+    /**
+     * @param x
+     * @param y
+     * @since 1.9.0
+     */
+    public void setWindowPosition(int x, int y) {
+        GLFW.glfwSetWindowPos(mc.getWindow().getHandle(), x, y);
+    }
+    
 }

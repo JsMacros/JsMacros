@@ -1,7 +1,10 @@
-package xyz.wagyourtail.jsmacros.client.api.helpers;
+package xyz.wagyourtail.jsmacros.client.api.helpers.block;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -177,7 +180,64 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     public BlockPosHelper offset(String direction, int distance) {
         return new BlockPosHelper(base.offset(Direction.byName(direction)));
     }
-    
+
+    /**
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public BlockPosHelper offset(int x, int y, int z) {
+        return new BlockPosHelper(new BlockPos(getX() + x, getY() + y, getZ() + z));
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public double distanceTo(EntityHelper<?> entity) {
+        return Math.sqrt(base.getSquaredDistance(entity.getRaw().getPos()));
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public double distanceTo(BlockPosHelper pos) {
+        return Math.sqrt(base.getSquaredDistance(pos.base));
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public double distanceTo(PositionCommon.Pos3D pos) {
+        return Math.sqrt(base.getSquaredDistance(pos.getX(), pos.getY(), pos.getZ()));
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public double distanceTo(float x, float y, float z) {
+        return Math.sqrt(base.getSquaredDistance(x, y, z));
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public PositionCommon.Pos3D toPos3D() {
+        return new PositionCommon.Pos3D(base.getX(), base.getY(), base.getZ());
+    }
+
     @Override
     public String toString() {
         return String.format("BlockPosHelper:{\"x\": %d, \"y\": %d, \"z\": %d}", base.getX(), base.getY(), base.getZ());

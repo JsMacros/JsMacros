@@ -1,9 +1,15 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import com.google.common.collect.ImmutableList;
+
+import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.item.BowItem;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +31,16 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
             l.add(new StatusEffectHelper(i));
         }
         return l;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean hasStatusEffect(String id) {
+        StatusEffect effect = Registry.STATUS_EFFECT.get(new Identifier(id));
+        return base.getStatusEffects().stream().anyMatch(statusEffectInstance -> statusEffectInstance.getEffectType().equals(effect));
     }
     
     /**
@@ -93,6 +109,55 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public float getAbsorptionHealth() {
+        return base.getAbsorptionAmount();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public int getArmor() {
+        return base.getArmor();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public int getDefaultHealth() {
+        return base.defaultMaxHealth;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public String getMobCategory() {
+        EntityGroup group = base.getGroup();
+        if (group == EntityGroup.UNDEAD) {
+            return "UNDEAD";
+        } else if (group == EntityGroup.DEFAULT) {
+            return "DEFAULT";
+        } else if (group == EntityGroup.ARTHROPOD) {
+            return "ARTHROPOD";
+        } else if (group == EntityGroup.ILLAGER) {
+            return "ILLAGER";
+        } else if (group == EntityGroup.AQUATIC) {
+            return "AQUATIC";
+        } else {
+            return "UNKNOWN";
+        }
+    }
+    
+    /**
      * @since 1.2.7
      * @return if the entity is in a bed.
      */
@@ -106,6 +171,19 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      */
     public boolean isFallFlying() {
         return base.isFallFlying();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public double getBowPullProgress() {
+        if (base.getMainHandStack().getItem() instanceof BowItem) {
+            return BowItem.getPullProgress(base.getItemUseTime());
+        } else {
+            return 0;
+        }
     }
     
 }

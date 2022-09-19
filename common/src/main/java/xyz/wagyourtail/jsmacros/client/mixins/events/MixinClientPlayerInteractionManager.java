@@ -21,7 +21,7 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.EventAttackBlock;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventAttackEntity;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventInteractBlock;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventInteractEntity;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockDataHelper;
 
 @Mixin(ClientPlayerInteractionManager.class)
 public class MixinClientPlayerInteractionManager {

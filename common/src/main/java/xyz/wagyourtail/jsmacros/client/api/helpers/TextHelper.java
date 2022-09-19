@@ -5,6 +5,7 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * @author Wagyourtail
@@ -12,6 +13,8 @@ import java.util.Optional;
  */
 @SuppressWarnings("unused")
 public class TextHelper extends BaseHelper<Text> {
+
+    private static final Pattern STRIP_FORMATTING_PATTERN = Pattern.compile("(?i)\u00a7[0-9A-FK-OR]");
     
     public TextHelper(String json) {
         super(Text.Serializer.fromJson(json));
@@ -64,7 +67,7 @@ public class TextHelper extends BaseHelper<Text> {
      * @return the text content. stripped formatting when servers send it the (super) old way due to shitty coders.
      */
     public String getStringStripFormatting() {
-        return base.getString().replaceAll("\\u00A7.", "");
+        return STRIP_FORMATTING_PATTERN.matcher(base.getString()).replaceAll("");
     }
 
     /**

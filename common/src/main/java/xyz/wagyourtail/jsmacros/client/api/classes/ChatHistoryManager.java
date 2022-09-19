@@ -8,8 +8,10 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @since 1.6.0
@@ -41,6 +43,40 @@ public class ChatHistoryManager {
         return helper[0];
     }
 
+    /**
+     * @return the amount of messages in the chat history
+     *
+     * @throws InterruptedException
+     * @since 1.9.0
+     */
+    public int gerRecvCount() throws InterruptedException {
+        final Semaphore semaphore = new Semaphore(0);
+        AtomicInteger count = new AtomicInteger(0);
+        mc.execute(() -> {
+            count.set(((IChatHud) hud).jsmacros_getMessages().size());
+            semaphore.release();
+        });
+        semaphore.acquire();
+        return count.get();
+    }
+
+    /**
+     * @return all received messages in the chat history
+     *
+     * @throws InterruptedException
+     * @since 1.9.0
+     */
+    public List<ChatHudLineHelper> getRecvLines() throws InterruptedException {
+        List<ChatHudLineHelper> recvLines = new ArrayList<>();
+        final Semaphore semaphore = new Semaphore(0);
+        mc.execute(() -> {
+            ((IChatHud) hud).jsmacros_getMessages().stream().map(textChatHudLine -> new ChatHudLineHelper(textChatHudLine, hud)).forEach(recvLines::add);
+            semaphore.release();
+        });
+        semaphore.acquire();
+        return recvLines;
+    }
+    
     /**
      * @since 1.6.0
      * @param index

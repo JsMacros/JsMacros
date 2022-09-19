@@ -1,34 +1,21 @@
-package xyz.wagyourtail.jsmacros.client.api.helpers;
+package xyz.wagyourtail.jsmacros.client.api.helpers.block;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.registry.Registry;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Etheradon
  * @since 1.6.5
  */
-public class BlockStateHelper extends BaseHelper<BlockState> {
+public class BlockStateHelper extends StateHelper<BlockState> {
 
     public BlockStateHelper(BlockState base) {
         super(base);
-    }
-
-    /**
-     * @return a map of the state properties with its identifier and value.
-     *
-     * @since 1.6.5
-     */
-    public Map<String, String> toMap() {
-        return base.getEntries().entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey().getName(), entry -> Util.getValueAsString(entry.getKey(), entry.getValue())));
     }
 
     /**
@@ -40,6 +27,15 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
         return new BlockHelper(base.getBlock());
     }
 
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public FluidStateHelper getFluidState() {
+        return new FluidStateHelper(base.getFluidState());
+    }
+    
     /**
      * @return the hardness.
      *
@@ -183,7 +179,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
     /**
      * @return {@code true} if the state is a liquid.
      *
-     * @since 1.6.5* @since 1.6.5
+     * @since 1.6.5
      */
     public boolean isLiquid() {
         return base.getMaterial().isLiquid();
@@ -192,7 +188,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
     /**
      * @return {@code true} if the state is solid.
      *
-     * @since 1.6.5* @since 1.6.5
+     * @since 1.6.5
      */
     public boolean isSolid() {
         return base.getMaterial().isSolid();
@@ -231,17 +227,18 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
         return base.shouldSuffocate(MinecraftClient.getInstance().world, pos.getRaw());
     }
 
-    private static NavigationType getNavigationType(String navigationType) {
-        switch (navigationType.toUpperCase(Locale.ROOT)) {
-            case "LAND":
-                return NavigationType.LAND;
-            case "WATER":
-                return NavigationType.WATER;
-            case "AIR":
-                return NavigationType.AIR;
-            default:
-                throw new IllegalStateException("Unexpected value: " + navigationType);
-        }
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public UniversalBlockStateHelper getUniversalHelper() {
+        return new UniversalBlockStateHelper(base);
+    }
+    
+    @Override
+    protected StateHelper<BlockState> create(BlockState base) {
+        return new BlockStateHelper(base);
     }
 
     @Override

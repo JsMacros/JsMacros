@@ -38,4 +38,72 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     public int getTime() {
         return base.getDuration();
     }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isPermanent() {
+        return base.isPermanent();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isAmbient() {
+        return base.isAmbient();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean shouldShowIcon() {
+        return base.shouldShowIcon();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean shouldShowParticles() {
+        return base.shouldShowParticles();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public String getType() {
+        return switch (base.getEffectType().getCategory()) {
+            case HARMFUL -> "HARMFUL";
+            case NEUTRAL -> "NEUTRAL";
+            case BENEFICIAL -> "BENEFICIAL";
+        };
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isInstant() {
+        return base.getEffectType().isInstant();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isBeneficial() {
+        return base.getEffectType().isBeneficial();
+    }
+    
 }

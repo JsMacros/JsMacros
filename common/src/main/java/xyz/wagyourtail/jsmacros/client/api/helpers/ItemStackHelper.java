@@ -3,11 +3,23 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.tag.ItemTags;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.Texts;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.registry.Registry;
+
+import com.google.gson.JsonParseException;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -16,6 +28,7 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("unused")
 public class ItemStackHelper extends BaseHelper<ItemStack> {
+    private static Style LORE_STYLE = Style.EMPTY.withColor(Formatting.DARK_PURPLE).withItalic(true);
     protected static final MinecraftClient mc = MinecraftClient.getInstance();
     
     public ItemStackHelper(ItemStack i) {
@@ -24,7 +37,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     
     /**
      * Sets the item damage value.
-     * 
+     * You should use {@link CreativeItemStackHelper#setDamage(int)} instead.
      * You may want to use {@link ItemStackHelper#copy()} first.
      * 
      * @since 1.2.0
@@ -32,6 +45,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @param damage
      * @return
      */
+    @Deprecated(since = "1.9.0")
     public ItemStackHelper setDamage(int damage) {
         base.setDamage(damage);
         return this;
@@ -52,6 +66,124 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     public boolean isEnchantable() {
         return base.isEnchantable();
     }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isEnchanted() {
+        return base.hasEnchantments();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public List<EnchantmentHelper> getEnchantments() {
+        List<EnchantmentHelper> enchantments = new ArrayList<>();
+        net.minecraft.enchantment.EnchantmentHelper.get(base).forEach((enchantment, value) -> {
+            enchantments.add(new EnchantmentHelper(enchantment, value));
+        });
+        return enchantments;
+    }
+
+    /**
+     * @param id
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public Optional<EnchantmentHelper> getEnchantment(String id) {
+        return getEnchantments().stream().filter(enchantmentHelper -> enchantmentHelper.getName().equals(id)).findFirst();
+    }
+
+    /**
+     * @param id
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean hasEnchantment(String id) {
+        return getEnchantments().stream().anyMatch(enchantmentHelper -> enchantmentHelper.getName().equals(id));
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public List<EnchantmentHelper> getPossibleEnchantments() {
+        return Registry.ENCHANTMENT.stream().filter(enchantment -> enchantment.isAcceptableItem(base)).map(EnchantmentHelper::new).toList();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public List<EnchantmentHelper> getPossibleEnchantmentsFromTable() {
+        return Registry.ENCHANTMENT.stream().filter(enchantment -> enchantment.type.isAcceptableItem(base.getItem())).map(EnchantmentHelper::new).toList();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public List<TextHelper> getLore() {
+        List<TextHelper> texts = new ArrayList<>();
+        if (base.hasNbt()) {
+            if (base.getNbt().contains("display", 10)) {
+                NbtCompound nbtCompound = base.getNbt().getCompound("display");
+                if (nbtCompound.getType("Lore") == 9) {
+                    NbtList nbtList = nbtCompound.getList("Lore", 8);
+
+                    for (int i = 0; i < nbtList.size(); i++) {
+                        String string = nbtList.getString(i);
+                        try {
+                            MutableText mutableText2 = Text.Serializer.fromJson(string);
+                            if (mutableText2 != null) {
+                                Texts.setStyleIfAbsent(mutableText2, LORE_STYLE);
+                                texts.add(new TextHelper(mutableText2));
+                            }
+                        } catch (JsonParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+        return texts;
+    }
+
+    /**
+     * @return max durability
+     *
+     * @since 1.9.0
+     */
+    public int getMaxDurability() {
+        return base.getMaxDamage();
+    }
+
+    /**
+     * @return durability
+     *
+     * @since 1.9.0
+     */
+    public int getDurability() {
+        return base.getMaxCount() - base.getDamage();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public int getRepairCost() {
+        return base.getRepairCost();
+    }
     
     /**
      * @return
@@ -65,6 +197,21 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     public int getMaxDamage() {
         return base.getMaxDamage();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public float getAttackDamage() {
+        if (base.getItem() instanceof SwordItem swordItem) {
+            return swordItem.getAttackDamage();
+        } else if (base.getItem() instanceof MiningToolItem miningToolItem) {
+            return miningToolItem.getAttackDamage();
+        } else {
+            return 0.5f;
+        }
     }
     
     /**
@@ -277,6 +424,42 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
         return mc.player.getItemCooldownManager().getCooldownProgress(base.getItem(), mc.getTickDelta());
     }
 
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isAir() {
+        return base.getItem() == Items.AIR;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isSuitableFor(BlockHelper block) {
+        return base.isSuitableFor(block.getDefaultState().getRaw());
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isSuitableFor(BlockStateHelper block) {
+        return base.isSuitableFor(block.getRaw());
+    }
+    
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public CreativeItemStackHelper getCreativeHelper() {
+        return new CreativeItemStackHelper(base);
+    }
+    
     /**
      * @since 1.2.0
      * @return

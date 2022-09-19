@@ -17,6 +17,7 @@ import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownEntry;
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownManager;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
+import xyz.wagyourtail.jsmacros.client.api.helpers.advancement.AdvancementManagerHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
 
@@ -390,7 +391,36 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         return base.getHungerManager().getFoodLevel();
     }
 
+    /**
+     * This will return the invisible hunger decade that you may have seen in mods as a yellow overlay.
+     *
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public float getSaturation() {
+        return base.getHungerManager().getSaturationLevel();
+    }
+    
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<?> dropHeldItem(boolean dropStack) {
+        base.dropSelectedItem(dropStack);
+        return this;
+    }
 
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public AdvancementManagerHelper getAdvancementManager() {
+        return new AdvancementManagerHelper(base.networkHandler.getAdvancementHandler().getManager());
+    }
+    
     public String toString() {
         return "Client" + super.toString();
     }

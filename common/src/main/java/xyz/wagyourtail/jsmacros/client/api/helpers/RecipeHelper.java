@@ -4,6 +4,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeMatcher;
+import net.minecraft.util.registry.Registry;
+
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
@@ -67,6 +70,81 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
             return;
         }
         throw new AssertionError("Crafting Screen no longer open!");
+    }
+
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public String getGroup() {
+        return base.getGroup();
+    }
+
+    /**
+     * This will not account for the actual items used in the recipe, but only the default recipe
+     * itself. Items with durability or items with a lot of tags will probably not work correctly
+     *
+     * @return will return {@code true} if any of the ingredients have a recipe remainder
+     *
+     * @since 1.9.0
+     */
+    public boolean hasRecipeRemainders() {
+        return base.getIngredients().stream().anyMatch(ingredient -> ingredient.getMatchingStacks()[0].getItem().hasRecipeRemainder());
+    }
+
+    /**
+     * @return a list of all possible recipe remainders
+     *
+     * @since 1.9.0
+     */
+    public List<List<ItemStackHelper>> getRecipeRemainders() {
+        return base.getIngredients().stream()
+                .filter(ingredient -> ingredient.getMatchingStacks()[0].getItem().hasRecipeRemainder())
+                .map(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).map(ItemStackHelper::new).toList()
+                ).toList();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public String getType() {
+        return Registry.RECIPE_TYPE.getId(base.getType()).toString();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean canCraft() {
+        RecipeMatcher matcher = new RecipeMatcher();
+        MinecraftClient.getInstance().player.getInventory().populateRecipeFinder(matcher);
+        return matcher.match(base, null);
+    }
+
+    /**
+     * @param amount
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean canCraft(int amount) {
+        return getCraftableAmount() >= amount;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public int getCraftableAmount() {
+        RecipeMatcher matcher = new RecipeMatcher();
+        MinecraftClient.getInstance().player.getInventory().populateRecipeFinder(matcher);
+        return matcher.countCrafts(base, null);
     }
     
     public String toString() {

@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -10,7 +11,10 @@ import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
+
 import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -139,6 +143,24 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     public boolean isOnFire() {
         return base.isOnFire();
     }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isSneaking() {
+        return base.isSneaking();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isSprinting() {
+        return base.isSprinting();
+    }
     
     /**
      * @since 1.1.8 [citation needed]
@@ -252,10 +274,110 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         return base.getUuid().toString();
     }
 
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public int getMaxAir() {
+        return base.getMaxAir();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public int getAir() {
+        return base.getAir();
+    }
+    
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public double getSpeed() {
+        double dx = Math.abs(base.getX() - base.prevX);
+        double dz = Math.abs(base.getZ() - base.prevZ);
+        return Math.sqrt(dx * dx + dz * dz) * 20;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public DirectionHelper getFacingDirection() {
+        return new DirectionHelper(base.getHorizontalFacing());
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public float distanceTo(EntityHelper<?> entity) {
+        return base.distanceTo(entity.getRaw());
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public double distanceTo(BlockPosHelper pos) {
+        return Math.sqrt(pos.getRaw().getSquaredDistance(base.getPos()));
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public double distanceTo(PositionCommon.Pos3D pos) {
+        return Math.sqrt(base.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()));
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public double distanceTo(double x, double y, double z) {
+        return Math.sqrt(base.squaredDistanceTo(x, y, z));
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public PositionCommon.Pos3D getVelocity() {
+        return new PositionCommon.Pos3D(base.getVelocity().x, base.getVelocity().y, base.getVelocity().z);
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public ChunkHelper getChunk() {
+        return new ChunkHelper(base.getWorld().getChunk(base.getBlockPos()));
+    }
+    
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public String getBiome() {
+        return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(base.getBlockPos()).value()).toString();
+    }
+
     public String toString() {
         return String.format("Entity:{\"name\":\"%s\", \"type\":\"%s\"}", this.getName(), this.getType());
     }
-
 
     /**
      * mostly for internal use.
@@ -322,4 +444,23 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     public ItemEntityHelper asItem() {
         return (ItemEntityHelper) this;
     }
+
+    /**
+     * @return the entity as a server entity if an integrated server is running
+     *
+     * @since 1.9.0
+     */
+    public EntityHelper<?> asServerEntity() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (!client.isIntegratedServerRunning()) {
+            return null;
+        }
+        Entity entity = client.getServer().getPlayerManager().getPlayer(client.player.getUuid()).getWorld().getEntity(base.getUuid());
+        if (entity == null) {
+            return null;
+        } else {
+            return create(entity);
+        }
+    }
+    
 }

@@ -34,6 +34,10 @@ import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.WorldScanner;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.WorldScannerBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -136,6 +140,20 @@ public class FWorld extends BaseLibrary {
         return getBlock(pos.getX(), pos.getY(), pos.getZ());
     }
 
+    /**
+     * The x and z position of the chunk can be calculated by the following formula: xChunk = x >>
+     * 4; zChunk = z >> 4;
+     *
+     * @param x the x coordinate of the chunk, not the absolute position
+     * @param z the z coordinate of the chunk, not the absolute position
+     * @return ChunkHelper for the chunk coordinates {@link ChunkHelper}.
+     *
+     * @since 1.9.0
+     */
+    public ChunkHelper getChunk(int x, int z) {
+        return new ChunkHelper(mc.world.getChunk(x, z));
+    }
+    
     /**
      * Usage: <br>
      * This will return all blocks that are facing south, don't require a tool to break, 

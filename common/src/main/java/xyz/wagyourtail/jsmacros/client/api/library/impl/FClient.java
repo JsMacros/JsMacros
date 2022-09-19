@@ -3,15 +3,20 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.MessageScreen;
+import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.client.realms.gui.screen.RealmsMainScreen;
 import net.minecraft.text.Text;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelStorageException;
 
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.FullOptionsHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.RegistryHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ModContainerHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
@@ -26,7 +31,6 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 
@@ -66,6 +70,15 @@ public class FClient extends PerExecLibrary {
         return mc;
     }
 
+    /**
+     * @return a helper for interacting with minecraft's registry.
+     *
+     * @since 1.9.0
+     */
+    public RegistryHelper getRegistryHelper() {
+        return new RegistryHelper();
+    }
+    
     /**
      * Run your task on the main minecraft thread
      * @param runnable task to run
@@ -114,6 +127,15 @@ public class FClient extends PerExecLibrary {
      */
     public OptionsHelper getGameOptions() {
         return new OptionsHelper(mc.options);
+    }
+
+    /**
+     * @return a helper which gives access to all game options and some other useful options.
+     *
+     * @since 1.9.0
+     */
+    public FullOptionsHelper getFullGameOptions() {
+        return new FullOptionsHelper(mc.options);
     }
     
     /**
@@ -214,6 +236,8 @@ public class FClient extends PerExecLibrary {
     public void disconnect(MethodWrapper<Boolean, Object, Object, ?> callback) {
         mc.execute(() -> {
             boolean isWorld = mc.world != null;
+            boolean isInSingleplayer = mc.isInSingleplayer();
+            boolean isInRealm = mc.isConnectedToRealms();
             if (isWorld) {
                 boolean bl = mc.isInSingleplayer();
                 if (mc.world != null) mc.world.disconnect();
@@ -222,6 +246,13 @@ public class FClient extends PerExecLibrary {
                 } else {
                     mc.disconnect();
                 }
+            }
+            if (isInSingleplayer) {
+                mc.setScreen(new TitleScreen());
+            } else if (isInRealm) {
+                mc.setScreen(new RealmsMainScreen(new TitleScreen()));
+            } else {
+                mc.setScreen(new MultiplayerScreen(new TitleScreen()));
             }
             try {
                 if (callback != null)

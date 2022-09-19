@@ -8,17 +8,16 @@ import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.util.ScreenshotRecorder;
-import net.minecraft.entity.Entity;
 import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.GameMode;
 
-import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.movement.MovementDummy;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
@@ -88,7 +87,7 @@ public class FPlayer extends BaseLibrary {
      * @param distance
      * @param fluid
      * @return the block/liquid the player is currently looking at.
-     * @see xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper
+     * @see BlockDataHelper
      * @since 1.0.5
      */
     public BlockDataHelper rayTraceBlock(double distance, boolean fluid) {

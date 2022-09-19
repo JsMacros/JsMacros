@@ -6,8 +6,8 @@ import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IFilt
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.impl.BlockFilter;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.impl.BlockStateFilter;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.impl.StringifyFilter;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 //added line breaks sow it will be displayed correctly on the website

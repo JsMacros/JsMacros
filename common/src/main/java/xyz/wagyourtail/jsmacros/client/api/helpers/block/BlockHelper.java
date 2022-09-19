@@ -1,7 +1,10 @@
-package xyz.wagyourtail.jsmacros.client.api.helpers;
+package xyz.wagyourtail.jsmacros.client.api.helpers.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
+
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;
@@ -120,6 +123,15 @@ public class BlockHelper extends BaseHelper<Block> {
         return Registry.BLOCK.getId(base).toString();
     }
 
+    /**
+     * @return the name of the block
+     *
+     * @since 1.9.0
+     */
+    public TextHelper getName() {
+        return new TextHelper(base.getName());
+    }
+    
     @Override
     public String toString() {
         return String.format("BlockDataHelper:{%s}", getId());

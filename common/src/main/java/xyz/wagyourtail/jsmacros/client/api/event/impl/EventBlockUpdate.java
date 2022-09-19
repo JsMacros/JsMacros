@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.event.impl;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
