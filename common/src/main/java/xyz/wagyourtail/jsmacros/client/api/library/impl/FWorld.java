@@ -25,6 +25,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
@@ -273,6 +274,86 @@ public class FWorld extends BaseLibrary {
         return new WorldScanner(mc.world, blockFilter, stateFilter).scanChunkRange(chunkX, chunkZ, chunkrange);
     }
 
+    /**
+     * @param pos
+     * @param radius
+     * @param callback
+     * @since 1.9.0
+     */
+    public void iterateSphere(BlockPosHelper pos, int radius, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
+        iterateSphere(pos, radius, callback, true);
+    }
+
+    /**
+     * @param pos
+     * @param radius
+     * @param callback
+     * @param ignoreAir
+     * @since 1.9.0
+     */
+    public void iterateSphere(BlockPosHelper pos, int radius, MethodWrapper<BlockDataHelper, ?, ?, ?> callback, boolean ignoreAir) {
+        if (radius < 0) {
+            throw new IllegalArgumentException("radius cannot be negative");
+        }
+        assert mc.world != null;
+        int xStart = pos.getX() - radius;
+        int yStart = MathHelper.clamp(mc.world.getBottomY(), pos.getY() - radius, mc.world.getHeight());
+        int zStart = pos.getZ() - radius;
+        int xEnd = pos.getX() + radius;
+        int yEnd = MathHelper.clamp(mc.world.getBottomY(), pos.getY() + radius, mc.world.getHeight());
+        int zEnd = pos.getZ() + radius;
+        int radiusSq = radius * radius;
+
+        BlockPos.Mutable blockPos = new BlockPos.Mutable();
+
+        for (int x = xStart; x <= xEnd; x++) {
+            int dx = x - pos.getX();
+            for (int y = yStart; y <= yEnd; y++) {
+                int dy = y - pos.getY();
+                for (int z = zStart; z <= zEnd; z++) {
+                    int dz = z - pos.getZ();
+                    blockPos.set(x, y, z);
+                    BlockState state = mc.world.getBlockState(blockPos);
+                    if (ignoreAir && state.isAir()) {
+                        continue;
+                    }
+                    if (dx * dx + dy * dy + dz * dz <= radiusSq) {
+                        callback.accept(new BlockDataHelper(state, mc.world.getBlockEntity(blockPos), blockPos));
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param pos1
+     * @param pos2
+     * @param callback
+     * @since 1.9.0
+     */
+    public void iterateBox(BlockPosHelper pos1, BlockPosHelper pos2, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
+        iterateBox(pos1, pos2, callback, true);
+    }
+
+    /**
+     * @param pos1
+     * @param pos2
+     * @param callback
+     * @param ignoreAir
+     * @since 1.9.0
+     */
+    public void iterateBox(BlockPosHelper pos1, BlockPosHelper pos2, MethodWrapper<BlockDataHelper, ?, ?, ?> callback, boolean ignoreAir) {
+        assert mc.world != null;
+        BlockPos.stream(pos1.getRaw().withY(MathHelper.clamp(mc.world.getBottomY(), pos1.getY(), mc.world.getHeight())), pos2.getRaw().withY(MathHelper.clamp(mc.world.getBottomY(), pos2.getY(), mc.world.getHeight()))).forEach(bp -> {
+            BlockState state = mc.world.getBlockState(bp);
+            if (ignoreAir && state.isAir()) {
+                return;
+            }
+            BlockEntity t = mc.world.getBlockEntity(bp);
+            callback.accept(new BlockDataHelper(state, mc.world.getBlockEntity(bp), bp));
+        });
+    }
+    
     /**
      * @since 1.2.9
      * @return a helper for the scoreboards provided to the client.

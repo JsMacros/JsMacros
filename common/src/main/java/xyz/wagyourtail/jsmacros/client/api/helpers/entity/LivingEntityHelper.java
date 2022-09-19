@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -11,10 +12,15 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.BowItem;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.RaycastContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> {
@@ -186,6 +192,62 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
         } else {
             return 0;
         }
+    }
+
+    /**
+     * @param entity
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean canSeeEntity(EntityHelper<?> entity) {
+        return canSeeEntity(entity, true);
+    }
+
+    /**
+     * @param entity
+     * @param simpleCast
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean canSeeEntity(EntityHelper<?> entity, boolean simpleCast) {
+        Entity rawEntity = entity.getRaw();
+        
+        Vec3d baseEyePos = new Vec3d(base.getX(), base.getEyeY(), base.getZ());
+        Vec3d vec3d = base.getEyePos();
+        Vec3d vec3d2 = base.getRotationVec(1.0F).multiply(10);
+        Vec3d vec3d3 = vec3d.add(vec3d2);
+        Box box = base.getBoundingBox().stretch(vec3d2).expand(1.0);
+        
+        Function<Vec3d, Boolean> canSee = pos -> base.world.raycast(new RaycastContext(baseEyePos, pos, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, base)).getType() == HitResult.Type.MISS;
+
+        if (canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getEyeY(), rawEntity.getZ()))
+                || canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getY() + 0.5, rawEntity.getZ()))
+                || canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getY(), rawEntity.getZ()))) {
+            return true;
+        }
+
+        if (!simpleCast) {
+            return false;
+        }
+
+        Box boundingBox = rawEntity.getBoundingBox();
+        double bHeight = boundingBox.maxY - boundingBox.minY;
+        int steps = (int) (bHeight / 0.1);
+        double diffX = (boundingBox.maxX - boundingBox.minX) / 2;
+        double diffZ = (boundingBox.maxZ - boundingBox.minZ) / 2;
+        //create 4 pillars around the mob to check for visibility
+        for (int i = 0; i < steps; i++) {
+            double y = i * 0.1;
+            if (canSee.apply(new Vec3d(rawEntity.getX() + diffX, rawEntity.getY() + y, rawEntity.getZ()))
+                    || canSee.apply(new Vec3d(rawEntity.getX() - diffX, rawEntity.getY() + y, rawEntity.getZ()))
+                    || canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getY() + y, rawEntity.getZ() + diffZ))
+                    || canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getY() + y, rawEntity.getZ() - diffZ))) {
+                return true;
+            }
+        }
+        return false;
     }
     
 }

@@ -48,8 +48,8 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      *
      * @since 1.6.5
      */
-    public PositionCommon.Pos3D getBlockPos() {
-        return new PositionCommon.Pos3D(Math.floor(base.getX()), Math.floor(base.getY()), Math.floor(base.getZ()));
+    public BlockPosHelper getBlockPos() {
+        return new BlockPosHelper(base.getBlockPos());
     }
 
     /**

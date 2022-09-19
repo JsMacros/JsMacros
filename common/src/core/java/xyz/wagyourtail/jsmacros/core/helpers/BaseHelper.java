@@ -10,4 +10,10 @@ public abstract class BaseHelper<T> {
     public T getRaw() {
         return base;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return base.equals(obj);
+    }
+    
 }

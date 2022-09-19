@@ -39,6 +39,24 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
+     * Sets the player rotation along the given axis and keeps the other axis the same.
+     *
+     * @param direction possible values are "up", "down", "north", "south", "east", "west"
+     * @since 1.9.0
+     */
+    public void lookAt(String direction) {
+        Direction dir = Direction.byName(direction.toLowerCase());
+        double yaw = getYaw();
+        double pitch = getPitch();
+        if (dir.getAxis().isHorizontal()) {
+            yaw = dir.asRotation();
+        } else {
+            pitch = dir == Direction.UP ? -90 : 90;
+        }
+        lookAt(yaw, pitch);
+    }
+    
+    /**
      * @param yaw   (was pitch prior to 1.2.6)
      * @param pitch (was yaw prior to 1.2.6)
      * @return
@@ -105,6 +123,20 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         }
         return this;
     }
+
+    /**
+     * @param x
+     * @param y
+     * @param z
+     * @param direction possible values are "up", "down", "north", "south", "east", "west"
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> attack(int x, int y, int z, String direction) throws InterruptedException {
+        return attack(x, y, z, Direction.byName(direction.toLowerCase()).getId(), false);
+    }
+    
     /**
      * @param x
      * @param y
@@ -117,6 +149,20 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         return attack(x, y, z, direction, false);
     }
 
+    /**
+     * @param x
+     * @param y
+     * @param z
+     * @param direction possible values are "up", "down", "north", "south", "east", "west"
+     * @param await
+     * @return
+     *
+     * @since 1.8.0
+     */
+    public ClientPlayerEntityHelper<T> attack(int x, int y, int z, String direction, boolean await) throws InterruptedException {
+        return attack(x, y, z, Direction.byName(direction.toLowerCase()).getId(), await);
+    }
+    
     /**
      * @since 1.6.0
      *
@@ -228,6 +274,17 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x
      * @param y
      * @param z
+     * @param direction possible values are "up", "down", "north", "south", "east", "west"
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, String direction, boolean offHand) throws InterruptedException {
+        return interactBlock(x, y, z, Direction.byName(direction.toLowerCase()).getId(), offHand, false);
+    }
+    
+    /**
+     * @param x
+     * @param y
+     * @param z
      * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
      * @param offHand
      * @since 1.5.0, renamed from {@code interact} in 1.6.0
@@ -236,6 +293,18 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         return interactBlock(x, y, z, direction, offHand, false);
     }
 
+    /**
+     * @param x
+     * @param y
+     * @param z
+     * @param direction possible values are "up", "down", "north", "south", "east", "west"
+     * @param await
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, String direction, boolean offHand, boolean await) throws InterruptedException {
+        return interactBlock(x, y, z, Direction.byName(direction.toLowerCase()).getId(), offHand, await);
+    }
+    
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, int direction, boolean offHand, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
