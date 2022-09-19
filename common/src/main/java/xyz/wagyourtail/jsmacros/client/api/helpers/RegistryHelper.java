@@ -14,6 +14,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.FluidStateHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
 
 import java.util.List;
 

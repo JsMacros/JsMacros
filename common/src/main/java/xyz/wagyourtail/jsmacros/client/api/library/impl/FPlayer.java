@@ -14,10 +14,12 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.GameMode;
 
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
-import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
+import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.entity.ClientPlayerEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.movement.MovementDummy;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
@@ -45,7 +47,7 @@ public class FPlayer extends BaseLibrary {
 
     /**
      * @return the Inventory handler
-     * @see xyz.wagyourtail.jsmacros.client.api.classes.Inventory
+     * @see Inventory
      */
     public Inventory<?> openInventory() {
         assert mc.player != null && mc.player.getInventory() != null;
@@ -54,7 +56,7 @@ public class FPlayer extends BaseLibrary {
 
     /**
      * @return the player entity wrapper.
-     * @see xyz.wagyourtail.jsmacros.client.api.helpers.ClientPlayerEntityHelper
+     * @see ClientPlayerEntityHelper
      * @since 1.0.3
      */
     public ClientPlayerEntityHelper<ClientPlayerEntity> getPlayer() {
@@ -103,7 +105,7 @@ public class FPlayer extends BaseLibrary {
 
     /**
      * @return the entity the camera is currently looking at.
-     * @see xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper
+     * @see EntityHelper
      * @since 1.0.5
      */
     public EntityHelper<?> rayTraceEntity() {

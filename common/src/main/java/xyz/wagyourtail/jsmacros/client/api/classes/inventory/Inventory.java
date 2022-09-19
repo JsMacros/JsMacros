@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.api.classes;
+package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.*;

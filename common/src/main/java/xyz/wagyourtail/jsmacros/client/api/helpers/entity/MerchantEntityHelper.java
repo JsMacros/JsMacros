@@ -1,8 +1,9 @@
-package xyz.wagyourtail.jsmacros.client.api.helpers;
+package xyz.wagyourtail.jsmacros.client.api.helpers.entity;
 
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.village.TradeOffer;
 import xyz.wagyourtail.jsmacros.client.access.IMerchantEntity;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TradeOfferHelper;
 
 import java.util.ArrayList;
 import java.util.List;

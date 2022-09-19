@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.api.classes;
+package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.entity.BannerPattern;

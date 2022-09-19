@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.api.classes;
+package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -11,7 +11,6 @@ import net.minecraft.util.math.Vec3d;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
-import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 
 import java.util.ArrayList;
 import java.util.Comparator;

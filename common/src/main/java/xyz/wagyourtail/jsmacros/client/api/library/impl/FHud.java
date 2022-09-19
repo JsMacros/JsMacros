@@ -3,13 +3,12 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.util.Window;
 
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
-import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.ScriptScreen;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.ScriptScreen;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
@@ -180,9 +179,9 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.6
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.classes.Draw3D
+     * @see Draw3D
      * 
-     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.classes.Draw3D Draw3D}.
+     * @return a new {@link Draw3D Draw3D}.
      */
     public Draw3D createDraw3D() {
         return new Draw3D();
@@ -191,9 +190,9 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.6
      * 
-     * Registers an {@link xyz.wagyourtail.jsmacros.client.api.classes.Draw3D Draw3D} to be rendered.
+     * Registers an {@link Draw3D Draw3D} to be rendered.
      * @deprecated since 1.6.5 use {@link Draw3D#register()} instead.
-     * @see xyz.wagyourtail.jsmacros.client.api.classes.Draw3D
+     * @see Draw3D
      * 
      * @param draw
      */
@@ -205,9 +204,9 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.6
      * 
-     * Unregisters an {@link xyz.wagyourtail.jsmacros.client.api.classes.Draw3D Draw3D} to stop it being rendered.
+     * Unregisters an {@link Draw3D Draw3D} to stop it being rendered.
      * @since 1.6.5 use {@link Draw3D#unregister()} instead.
-     * @see xyz.wagyourtail.jsmacros.client.api.classes.Draw3D
+     * @see Draw3D
      * 
      * @param draw
      */
@@ -219,9 +218,9 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.6
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.classes.Draw3D
+     * @see Draw3D
      * 
-     * @return A list of current {@link xyz.wagyourtail.jsmacros.client.api.classes.Draw3D Draw3D}.
+     * @return A list of current {@link Draw3D Draw3D}.
      */
     public List<Draw3D> listDraw3Ds() {
         return ImmutableList.copyOf(renders);
@@ -232,7 +231,7 @@ public class FHud extends BaseLibrary {
      * 
      * clears the Draw2D render list.
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.classes.Draw3D
+     * @see Draw3D
      */
     public void clearDraw3Ds() {
         renders.clear();

@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.api.helpers;
+package xyz.wagyourtail.jsmacros.client.api.helpers.entity;
 
 import net.minecraft.entity.passive.VillagerEntity;
 

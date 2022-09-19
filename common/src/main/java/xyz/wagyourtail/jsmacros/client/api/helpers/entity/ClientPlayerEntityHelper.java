@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.api.helpers;
+package xyz.wagyourtail.jsmacros.client.api.helpers.entity;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Wagyourtail
- * @see xyz.wagyourtail.jsmacros.client.api.helpers.PlayerEntityHelper
+ * @see PlayerEntityHelper
  * @since 1.0.3
  */
 @SuppressWarnings("unused")

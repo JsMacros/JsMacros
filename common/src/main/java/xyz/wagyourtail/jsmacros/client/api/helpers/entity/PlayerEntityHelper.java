@@ -1,6 +1,9 @@
-package xyz.wagyourtail.jsmacros.client.api.helpers;
+package xyz.wagyourtail.jsmacros.client.api.helpers.entity;
 
 import net.minecraft.entity.player.PlayerEntity;
+
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.PlayerAbilitiesHelper;
 
 /**
  * @author Wagyourtail

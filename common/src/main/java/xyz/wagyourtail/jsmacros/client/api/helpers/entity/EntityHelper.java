@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.api.helpers;
+package xyz.wagyourtail.jsmacros.client.api.helpers.entity;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -14,6 +14,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 
 import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ChunkHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.DirectionHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;

@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.api.classes;
+package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.Drawable;

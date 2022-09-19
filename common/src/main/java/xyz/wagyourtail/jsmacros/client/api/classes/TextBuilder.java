@@ -4,7 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
-import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StyleHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;

@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.sharedinterfaces;
 
 import net.minecraft.client.util.math.MatrixStack;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ButtonWidgetHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.gui.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextFieldWidgetHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.gui.TextFieldWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon.Item;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon.Rect;

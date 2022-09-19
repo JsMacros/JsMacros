@@ -1,6 +1,8 @@
-package xyz.wagyourtail.jsmacros.client.api.helpers;
+package xyz.wagyourtail.jsmacros.client.api.helpers.entity;
 
 import com.google.common.collect.ImmutableList;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 
 import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.EquipmentSlot;

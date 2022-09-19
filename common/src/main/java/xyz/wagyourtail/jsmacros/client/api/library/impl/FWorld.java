@@ -38,6 +38,8 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.entity.PlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;

@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
