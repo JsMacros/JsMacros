@@ -73,9 +73,12 @@ public class EventKey implements BaseEvent {
             else if (key == 342 || key == 346) mods -= 4;
         }
 
-        new EventKey(action, keyStr, modsStr);
         EventJoinedKey ev = new EventJoinedKey(action, keyStr, modsStr);
-        return ev.cancel;
+        //only call the key event if it's not canceled.
+        if (!ev.isCanceled()) {
+            new EventKey(action, keyStr, modsStr);
+        }
+        return ev.isCanceled();
     }
 
     protected void trigger() {

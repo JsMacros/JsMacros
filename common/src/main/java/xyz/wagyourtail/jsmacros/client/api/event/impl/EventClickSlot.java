@@ -5,6 +5,7 @@ import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
+import xyz.wagyourtail.jsmacros.core.event.ICancelable;
 
 /**
  * event triggered when the user "clicks" a slot in an inventory
@@ -13,7 +14,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.6.4
  */
 @Event("ClickSlot")
-public class EventClickSlot implements BaseEvent {
+public class EventClickSlot implements BaseEvent, ICancelable {
     protected final HandledScreen<?> screen;
     /**
      * <a href="https://wiki.vg/Protocol#Click_Window" target="_blank">https://wiki.vg/Protocol#Click_Window</a>
@@ -41,8 +42,17 @@ public class EventClickSlot implements BaseEvent {
         return Inventory.create(screen);
     }
 
+    @Override
+    public void cancel() {
+        this.cancel = true;
+    }
+
+    @Override
+    public boolean isCanceled() {
+        return cancel;
+    }
+    
     public String toString() {
         return String.format("%s:{\"slot\": %d, \"screen\": \"%s\"}", this.getEventName(), slot, JsMacros.getScreenName(screen));
     }
-
 }

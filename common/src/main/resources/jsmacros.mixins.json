@@ -43,6 +43,7 @@
         "access.MixinTranslationStorage",
         "access.MixinTrueTypeFont",
         "events.MixinChatHud",
+        "events.MixinClientConnection",
         "events.MixinClientPlayerEntity",
         "events.MixinClientPlayerInteractionManager",
         "events.MixinClientPlayNetworkHandler",
@@ -54,6 +55,7 @@
         "events.MixinLivingEntity",
         "events.MixinMinecraftClient",
         "events.MixinMouse",
+        "events.MixinScreenHandler",
         "events.MixinSoundSystem",
         "events.MixinSplashOverlay"
     ],

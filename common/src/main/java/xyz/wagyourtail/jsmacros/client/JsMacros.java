@@ -11,6 +11,7 @@ import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventQuitGame;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.config.Profile;
 import xyz.wagyourtail.jsmacros.client.event.EventRegistry;
@@ -52,6 +53,7 @@ public class JsMacros {
 
         // Init MovementQueue
         MovementQueue.clear();
+        Runtime.getRuntime().addShutdownHook(new Thread(EventQuitGame::new));
     }
 
     static public Text getKeyText(String translationKey) {
