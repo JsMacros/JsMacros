@@ -322,7 +322,7 @@ public class FGlobalVars extends BaseLibrary {
     }
 
     /**
-     * removes a key from the global varaible space.
+     * removes a key from the global variable space.
      *
      * @param key
      *

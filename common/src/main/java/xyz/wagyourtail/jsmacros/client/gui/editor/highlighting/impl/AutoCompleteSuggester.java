@@ -13,12 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class AutoCompleteSuggestor {
+public class AutoCompleteSuggester {
     private final StringHashTrie suggestions = new StringHashTrie();
     private final String language;
     private final String method_separator;
     
-    public AutoCompleteSuggestor(String language) {
+    public AutoCompleteSuggester(String language) {
         switch (language) {
             case "python":
                 this.language = ".py";

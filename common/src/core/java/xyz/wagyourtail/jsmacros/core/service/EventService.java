@@ -320,7 +320,7 @@ public class EventService implements BaseEvent {
     }
 
     /**
-     * removes a key from the global varaible space.
+     * removes a key from the global variable space.
      *
      * @param key
      *

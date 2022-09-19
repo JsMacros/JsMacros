@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 
 public class DefaultCodeCompiler extends AbstractRenderCodeCompiler {
     private final Map<String, short[]> themeData = Core.getInstance().config.getOptions(ClientConfigV2.class).getThemeData();
-    private final AutoCompleteSuggestor suggestor;
+    private final AutoCompleteSuggester suggester;
     private Text[] compiledText = new Text[0];
     private List<AutoCompleteSuggestion> suggestions = new LinkedList<>();
     
     public DefaultCodeCompiler(String language, EditorScreen screen) {
         super(language, screen);
-        suggestor = new AutoCompleteSuggestor(language);
+        suggester = new AutoCompleteSuggester(language);
     }
     
     @Override
@@ -46,7 +46,7 @@ public class DefaultCodeCompiler extends AbstractRenderCodeCompiler {
             Matcher m = Pattern.compile(String.format("[\\w%s]+$", language.equals("lua") ? ":" : ".")).matcher(line);
             if (m.find()) {
                 String start = m.group();
-                Set<String> suggestions = suggestor.getSuggestions(start);
+                Set<String> suggestions = suggester.getSuggestions(start);
                 this.suggestions =  suggestions.stream().map(e -> new AutoCompleteSuggestion(screen.cursor.startIndex - start.length(), e)).collect(Collectors.toList());
             } else {
                 suggestions = new LinkedList<>();

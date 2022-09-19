@@ -260,7 +260,7 @@ public class FReflection extends PerExecLibrary {
     /**
      * Attempts to create a new instance of a class. You probably don't have to use this one and can just call {@code
      * new} on a {@link java.lang.Class Class} unless you're in LUA, but then you also have the (kinda poorly
-     * doccumented, can someone find a better docs link for me)
+     * documented, can someone find a better docs link for me)
      * <a target="_blank" href= "http://luaj.sourceforge.net/api/3.2/org/luaj/vm2/lib/jse/LuajavaLib.html">LuaJava Library</a>.
      *
      * @param c
