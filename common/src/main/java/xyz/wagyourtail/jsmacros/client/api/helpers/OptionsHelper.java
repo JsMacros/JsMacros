@@ -12,6 +12,7 @@ import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Arm;
 import org.lwjgl.glfw.GLFW;
+import xyz.wagyourtail.jsmacros.client.access.IResourcePackManager;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinSimpleOption;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -139,6 +140,17 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
             mc.reloadResources();
         }
         return this;
+    }
+
+    /**
+     * @since 1.8.3
+     * @param state false to put it back
+     */
+    public void removeServerResourcePack(boolean state) {
+        if (state != ((IResourcePackManager) rpm).jsmacros_isServerPacksDisabled()) {
+            ((IResourcePackManager) rpm).jsmacros_disableServerPacks(state);
+            mc.reloadResources();
+        }
     }
     
     /**

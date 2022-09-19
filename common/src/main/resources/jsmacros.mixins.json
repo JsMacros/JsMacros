@@ -28,6 +28,7 @@
         "access.MixinPlayerListHud",
         "access.MixinRecipeBookResults",
         "access.MixinRecipeBookWidget",
+        "access.MixinResourcePackManager",
         "access.MixinScreen",
         "access.MixinSignEditScreen",
         "access.MixinSimpleOption",
