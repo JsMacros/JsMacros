@@ -10,9 +10,11 @@ import xyz.wagyourtail.jsmacros.client.access.IPalettedContainerData;
 @Mixin(targets = "net.minecraft.world.chunk.PalettedContainer$Data")
 public class MixinPalettedContainerData<T> implements IPalettedContainerData<T> {
 
-    @Shadow @Final private PaletteStorage storage;
+    @Shadow @Final
+    PaletteStorage storage;
 
-    @Shadow @Final private Palette<T> palette;
+    @Shadow @Final
+    Palette<T> palette;
 
     @Override
     public PaletteStorage jsmacros_getStorage() {

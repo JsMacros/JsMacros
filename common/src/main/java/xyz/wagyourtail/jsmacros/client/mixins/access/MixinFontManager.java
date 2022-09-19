@@ -13,7 +13,8 @@ import java.util.Set;
 
 @Mixin(FontManager.class)
 public class MixinFontManager implements IFontManager {
-    @Shadow @Final private Map<Identifier, FontStorage> fontStorages;
+    @Shadow @Final
+    Map<Identifier, FontStorage> fontStorages;
     
     @Override
     public Set<Identifier> jsmacros_getFontList() {

@@ -32,6 +32,7 @@ import java.util.UUID;
 @Mixin(ClientPlayNetworkHandler.class)
 class MixinClientPlayNetworkHandler {
 
+    @Final
     @Shadow
     private MinecraftClient client;
     @Shadow
@@ -45,7 +46,7 @@ class MixinClientPlayNetworkHandler {
     private Map<UUID, PlayerListEntry> playerListEntries;
 
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;showsDeathScreen()Z"), method="onDeathMessage", cancellable = true)
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;showsDeathScreen()Z"), method="onDeathMessage")
     private void onDeath(DeathMessageS2CPacket packet, CallbackInfo info) {
         new EventDeath();
     }

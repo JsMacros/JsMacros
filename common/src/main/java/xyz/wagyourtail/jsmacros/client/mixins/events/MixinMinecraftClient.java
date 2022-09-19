@@ -33,7 +33,8 @@ public abstract class MixinMinecraftClient {
 
     @Shadow @Nullable public ClientPlayerInteractionManager interactionManager;
 
-    @Shadow private static MinecraftClient instance;
+    @Shadow
+    static MinecraftClient instance;
 
     @Inject(at = @At("HEAD"), method="joinWorld")
     public void onJoinWorld(ClientWorld world, CallbackInfo info) {

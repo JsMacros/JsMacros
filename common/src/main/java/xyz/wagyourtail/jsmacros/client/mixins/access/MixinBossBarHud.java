@@ -15,7 +15,7 @@ public class MixinBossBarHud implements IBossBarHud {
     
     @Shadow
     @Final
-    private Map<UUID, ClientBossBar> bossBars;
+    Map<UUID, ClientBossBar> bossBars;
 
     @Override
     public Map<UUID, ClientBossBar> jsmacros_GetBossBars() {
