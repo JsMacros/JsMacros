@@ -13,9 +13,12 @@ import net.minecraftforge.event.TickEvent;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.forge.client.api.classes.CommandBuilderForge;
+
+import java.util.Comparator;
 
 public class ForgeEvents {
     private static final MinecraftClient client = MinecraftClient.getInstance();
@@ -28,7 +31,7 @@ public class ForgeEvents {
     }
 
     public static void renderHudListener(ForgeGui gui, MatrixStack mStack, float partialTicks, int width, int height) {
-        for (IDraw2D<Draw2D> h : ImmutableSet.copyOf(FHud.overlays)) {
+        for (IDraw2D<Draw2D> h : ImmutableSet.copyOf(FHud.overlays).stream().sorted(Comparator.comparingInt(RenderCommon.RenderElement::getZIndex)).toList()) {
             try {
                 h.render(mStack);
             } catch (Throwable ignored) {}

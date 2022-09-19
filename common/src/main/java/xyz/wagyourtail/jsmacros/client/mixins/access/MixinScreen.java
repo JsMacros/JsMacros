@@ -10,11 +10,16 @@ import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.CyclingButtonWidget;
+import net.minecraft.client.gui.widget.LockButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,8 +27,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.gui.CheckBoxWidgetHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.gui.CyclingButtonWidgetHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.gui.LockButtonWidgetHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.gui.SliderWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.TextFieldWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
@@ -34,9 +44,12 @@ import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.wagyourgui.elements.CheckBox;
+import xyz.wagyourtail.wagyourgui.elements.Slider;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BooleanSupplier;
 
 @Mixin(Screen.class)
 @Implements(@Interface(iface = IScreen.class, prefix = "soft$"))
@@ -81,6 +94,45 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public int getHeight() {
         return height;
     }
+
+    @Override
+    public List<RenderCommon.Draw2DElement> getDraw2Ds() {
+        List<RenderCommon.Draw2DElement> list = new LinkedList<>();
+        synchronized (elements) {
+            for (Drawable e : elements) {
+                if (e instanceof RenderCommon.Draw2DElement) {
+                    list.add((RenderCommon.Draw2DElement) e);
+                }
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public RenderCommon.Draw2DElement addDraw2D(Draw2D draw2D, int x, int y, int width, int height) {
+        return addDraw2D(draw2D, x, y, width, height, 0);
+    }
+
+    @Override
+    public RenderCommon.Draw2DElement addDraw2D(Draw2D draw2D, int x, int y, int width, int height, int zIndex) {
+        if (draw2D == null) {
+            return null;
+        }
+        RenderCommon.Draw2DElement d = new RenderCommon.Draw2DElement(draw2D, x, y, width, height, zIndex, 1, 0);
+        synchronized (elements) {
+            elements.add(d);
+        }
+        return d;
+    }
+
+    @Override
+    public IScreen removeDraw2D(RenderCommon.Draw2DElement draw2D) {
+        synchronized (elements) {
+            elements.remove(draw2D);
+        }
+        return this;
+    }
+
 
     @Override
     public List<RenderCommon.Text> getTexts() {
@@ -175,9 +227,9 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
         return this;
     }
-    
+
     @Override
-    public RenderCommon.RenderElement reAddElement(RenderCommon.RenderElement e) {
+    public <T extends RenderCommon.RenderElement> T reAddElement(T e) {
         synchronized (elements) {
             elements.add(e);
             if (e instanceof ButtonWidgetHelper) children.add(((ButtonWidgetHelper<?>) e).getRaw());
@@ -448,6 +500,177 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
         return b.get();
     }
+
+
+    @Override
+    public CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, String text, boolean checked, boolean showMessage, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback) {
+        return addCheckbox(x, y, width, height, 0, text, checked, showMessage, callback);
+    }
+
+    @Override
+    public CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, String text, boolean checked, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback) {
+        return addCheckbox(x, y, width, height, 0, text, checked, callback);
+    }
+
+    @Override
+    public CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, int zIndex, String text, boolean checked, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback) {
+        return addCheckbox(x, y, width, height, zIndex, text, checked, true, callback);
+    }
+
+    @Override
+    public CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, int zIndex, String text, boolean checked, boolean showMessage, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback) {
+        AtomicReference<CheckBoxWidgetHelper> ref = new AtomicReference<>(null);
+
+        CheckBox checkbox = new CheckBox(x, y, width, height, Text.literal(text), checked, showMessage, (btn) -> {
+            try {
+                callback.accept(ref.get(), this);
+            } catch (Exception e) {
+                Core.getInstance().profile.logError(e);
+            }
+        });
+
+        ref.set(new CheckBoxWidgetHelper(checkbox, zIndex));
+        synchronized (elements) {
+            elements.add(ref.get());
+            children.add(checkbox);
+        }
+        return ref.get();
+    }
+
+    @Override
+    public SliderWidgetHelper addSlider(int x, int y, int width, int height, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback, int steps) {
+        return addSlider(x, y, width, height, 0, text, value, callback, steps);
+    }
+
+    @Override
+    public SliderWidgetHelper addSlider(int x, int y, int width, int height, int zIndex, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback) {
+        return addSlider(x, y, width, height, zIndex, text, value, callback, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public SliderWidgetHelper addSlider(int x, int y, int width, int height, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback) {
+        return addSlider(x, y, width, height, 0, text, value, callback);
+    }
+
+    @Override
+    public SliderWidgetHelper addSlider(int x, int y, int width, int height, int zIndex, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback, int steps) {
+        AtomicReference<SliderWidgetHelper> ref = new AtomicReference<>(null);
+
+        Slider slider = new Slider(x, y, width, height, Text.literal(text), value, (btn) -> {
+            try {
+                callback.accept(ref.get(), this);
+            } catch (Exception e) {
+                Core.getInstance().profile.logError(e);
+            }
+        }, steps);
+
+        ref.set(new SliderWidgetHelper(slider, zIndex));
+        synchronized (elements) {
+            elements.add(ref.get());
+            children.add(slider);
+        }
+        return ref.get();
+    }
+
+    @Override
+    public ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int textureStartX, int textureStartY, String texture, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback) {
+        return addTexturedButton(x, y, width, height, 0, textureStartX, textureStartY, 0, texture, 256, 256, callback);
+    }
+
+    @Override
+    public ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int textureStartX, int textureStartY, int hoverOffset, String texture, int textureWidth, int textureHeight, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback) {
+        return addTexturedButton(x, y, width, height, 0, textureStartX, textureStartY, hoverOffset, texture, textureWidth, textureHeight, callback);
+    }
+
+    @Override
+    public ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int zIndex, int textureStartX, int textureStartY, int hoverOffset, String texture, int textureWidth, int textureHeight, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback) {
+        AtomicReference<ButtonWidgetHelper<TexturedButtonWidget>> ref = new AtomicReference<>(null);
+
+        TexturedButtonWidget texturedButton = new TexturedButtonWidget(x, y, width, height, textureStartX, textureStartY, hoverOffset, new Identifier(texture), textureWidth, textureHeight, (btn) -> {
+            try {
+                callback.accept(ref.get(), this);
+            } catch (Exception e) {
+                Core.getInstance().profile.logError(e);
+            }
+        });
+
+        ref.set(new ButtonWidgetHelper<>(texturedButton, zIndex));
+        synchronized (elements) {
+            elements.add(ref.get());
+            children.add(texturedButton);
+        }
+        return ref.get();
+    }
+
+    @Override
+    public LockButtonWidgetHelper addLockButton(int x, int y, MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> callback) {
+        return addLockButton(x, y, 0, callback);
+    }
+
+    @Override
+    public LockButtonWidgetHelper addLockButton(int x, int y, int zIndex, MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> callback) {
+        AtomicReference<LockButtonWidgetHelper> ref = new AtomicReference<>(null);
+        LockButtonWidget lockButton = new LockButtonWidget(x, y, (btn) -> {
+            try {
+                callback.accept(ref.get(), this);
+            } catch (Exception e) {
+                Core.getInstance().profile.logError(e);
+            }
+        });
+        ref.set(new LockButtonWidgetHelper(lockButton, zIndex));
+        synchronized (elements) {
+            elements.add(ref.get());
+            children.add(lockButton);
+        }
+        return ref.get();
+    }
+
+    @Override
+    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String initial) {
+        return addCyclingButton(x, y, width, height, 0, callback, values, initial);
+    }
+
+    @Override
+    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String initial) {
+        return addCyclingButton(x, y, width, height, 0, callback, values, null, initial, null);
+    }
+
+    @Override
+    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String[] alternatives, String initial, String prefix) {
+        return addCyclingButton(x, y, width, height, 0, callback, values, alternatives, initial, prefix, null);
+    }
+
+    @Override
+    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<?, ?, Boolean, ?> alternateToggle) {
+        AtomicReference<CyclingButtonWidgetHelper<?>> ref = new AtomicReference<>(null);
+        CyclingButtonWidget<String> cyclingButton;
+        CyclingButtonWidget.Builder<String> builder = CyclingButtonWidget.builder(Text::literal);
+        if (alternatives != null) {
+            BooleanSupplier supplier = alternateToggle == null ? Screen::hasAltDown : alternateToggle::get;
+            builder.values(supplier, Arrays.asList(values), Arrays.asList(alternatives));
+        } else {
+            builder.values(values);
+        }
+        builder.initially(initial);
+
+        if (prefix == null || prefix.isBlank()) {
+            builder.omitKeyText();
+        }
+
+        cyclingButton = builder.build(x, y, width, height, Text.literal(prefix), (btn, val) -> {
+            try {
+                callback.accept(ref.get(), this);
+            } catch (Exception e) {
+                Core.getInstance().profile.logError(e);
+            }
+        });
+        ref.set(new CyclingButtonWidgetHelper<>(cyclingButton, zIndex));
+        synchronized (elements) {
+            elements.add(ref.get());
+            children.add(cyclingButton);
+        }
+        return ref.get();
+    }
     
     @Override
     public IScreen removeButton(ButtonWidgetHelper<?> btn) {
@@ -550,6 +773,67 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public IScreen reloadScreen() {
         client.execute(() -> client.setScreen((Screen) (Object) this));
         return this;
+    }
+
+
+    @Override
+    public ButtonWidgetHelper.ButtonBuilder getButtonBuilder() {
+        return new ButtonWidgetHelper.ButtonBuilder(this);
+    }
+
+    @Override
+    public CheckBoxWidgetHelper.CheckBoxBuilder getCheckBoxBuilder() {
+        return new CheckBoxWidgetHelper.CheckBoxBuilder(this);
+    }
+
+    @Override
+    public CyclingButtonWidgetHelper.CyclicButtonBuilder<?> getCyclicButtonBuilder(MethodWrapper<Object, ?, TextHelper, ?> valueToText) {
+        return new CyclingButtonWidgetHelper.CyclicButtonBuilder<>(this, valueToText);
+    }
+
+    @Override
+    public LockButtonWidgetHelper.LockButtonBuilder getLockButtonBuilder() {
+        return new LockButtonWidgetHelper.LockButtonBuilder(this);
+    }
+
+    @Override
+    public SliderWidgetHelper.SliderBuilder getSliderBuilder() {
+        return new SliderWidgetHelper.SliderBuilder(this);
+    }
+
+    @Override
+    public TextFieldWidgetHelper.TextFieldBuilder getTextFieldBuilder() {
+        return new TextFieldWidgetHelper.TextFieldBuilder(this, textRenderer);
+    }
+
+    @Override
+    public ButtonWidgetHelper.TexturedButtonBuilder getTexturedButtonBuilder() {
+        return new ButtonWidgetHelper.TexturedButtonBuilder(this);
+    }
+
+    @Override
+    public RenderCommon.Item.Builder getItemBuilder() {
+        return new RenderCommon.Item.Builder(this);
+    }
+
+    @Override
+    public RenderCommon.Image.Builder getImageBuilder() {
+        return new RenderCommon.Image.Builder(this);
+    }
+
+    @Override
+    public RenderCommon.Rect.Builder getRectBuilder() {
+        return new RenderCommon.Rect.Builder(this);
+    }
+
+    @Override
+    public RenderCommon.Text.Builder getTextBuilder() {
+        return new RenderCommon.Text.Builder(this);
+    }
+
+    @Override
+    public RenderCommon.Draw2DElement.Builder getDraw2DBuilder(Draw2D element) {
+        return new RenderCommon.Draw2DElement.Builder(this, element);
     }
 
     @Override
@@ -669,6 +953,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
                 }
             }
         }
+        getDraw2Ds().forEach(e -> e.getDraw2D().init());
     }
     
     //TODO: switch to enum extention with mixin 9.0 or whenever Mumfrey gets around to it
@@ -687,4 +972,9 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         return onClose;
     }
 
+    @Override
+    public int getZIndex() {
+        return 0;
+    }
+    
 }

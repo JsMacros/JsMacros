@@ -23,12 +23,14 @@ import xyz.wagyourtail.wagyourgui.BaseScreen;
  * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen
  */
 public class ScriptScreen extends BaseScreen {
+    public boolean drawTitle;
     private final int bgStyle;
     private MethodWrapper<PositionCommon.Pos3D, MatrixStack, Object, ?> onRender;
     
     public ScriptScreen(String title, boolean dirt) {
         super(Text.literal(title), null);
         this.bgStyle = dirt ? 0 : 1;
+        this.drawTitle = true;
     }
 
     @Override
@@ -62,7 +64,9 @@ public class ScriptScreen extends BaseScreen {
         if (bgStyle == 0) this.renderBackgroundTexture(0);
         else if (bgStyle == 1) this.renderBackground(matrices, 0);
 
-        drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+        if (drawTitle) {
+            drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+        }
 
         super.render(matrices, mouseX, mouseY, delta);
 

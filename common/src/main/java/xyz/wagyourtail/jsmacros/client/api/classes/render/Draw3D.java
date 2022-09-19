@@ -8,6 +8,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
+
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
@@ -57,6 +60,36 @@ public class Draw3D {
         return ImmutableList.copyOf(surfaces);
     }
 
+    /**
+     * @param box
+     * @since 1.9.0
+     */
+    public void addBox(Box box) {
+        synchronized (boxes) {
+            boxes.add(box);
+        }
+    }
+
+    /**
+     * @param line
+     * @since 1.9.0
+     */
+    public void addLine(Line line) {
+        synchronized (lines) {
+            lines.add(line);
+        }
+    }
+
+    /**
+     * @param surface
+     * @since 1.9.0
+     */
+    public void addSurface(Surface surface) {
+        synchronized (surfaces) {
+            surfaces.add(surface);
+        }
+    }
+    
     /**
      * @param x1
      * @param y1
@@ -454,6 +487,33 @@ public class Draw3D {
     }
 
     /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public Box.Builder getBoxBuilder() {
+        return new Box.Builder(this);
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public Line.Builder getLineBuilder() {
+        return new Line.Builder(this);
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public Surface.Builder getSurfaceBuilder() {
+        return new Surface.Builder(this);
+    }
+    
+    /**
      * register so it actually shows up
      *
      * @return self for chaining
@@ -508,7 +568,7 @@ public class Draw3D {
 
         synchronized (surfaces) {
             for (Surface s : surfaces) {
-                s.render3D(matrixStack);
+                s.render3D(matrixStack, 0, 0, 0);
             }
         }
 
@@ -728,6 +788,158 @@ public class Draw3D {
             }
         }
 
+        public static class Builder {
+
+            private final Draw3D parent;
+
+            private PositionCommon.Pos3D pos1 = new PositionCommon.Pos3D(0, 0, 0);
+            private PositionCommon.Pos3D pos2 = new PositionCommon.Pos3D(0, 0, 0);
+            private int color = 0xFFFFFF;
+            private int fillColor = 0xFFFFFF;
+            private int alpha = 255;
+            private int fillAlpha = 0;
+            private boolean fill = false;
+            private boolean cull = false;
+
+            public Builder(Draw3D parent) {
+                this.parent = parent;
+            }
+
+            public PositionCommon.Pos3D getPos1() {
+                return pos1;
+            }
+
+            public Builder pos1(PositionCommon.Pos3D pos1) {
+                this.pos1 = pos1;
+                return this;
+            }
+
+            public Builder pos1(BlockPosHelper pos1) {
+                this.pos1 = pos1.toPos3D();
+                return this;
+            }
+
+            public Builder pos1(double x1, double y1, double z1) {
+                this.pos1 = new PositionCommon.Pos3D(x1, y1, z1);
+                return this;
+            }
+
+            public PositionCommon.Pos3D getPos2() {
+                return pos2;
+            }
+
+            public Builder pos2(PositionCommon.Pos3D pos2) {
+                this.pos2 = pos2;
+                return this;
+            }
+
+            public Builder pos2(BlockPosHelper pos2) {
+                this.pos2 = pos2.toPos3D();
+                return this;
+            }
+
+            public Builder pos2(int x2, int y2, int z2) {
+                this.pos2 = new PositionCommon.Pos3D(x2, y2, z2);
+                return this;
+            }
+
+            public Builder pos(int x1, int y1, int z1, int x2, int y2, int z2) {
+                this.pos1 = new PositionCommon.Pos3D(x1, y1, z1);
+                this.pos2 = new PositionCommon.Pos3D(x2, y2, z2);
+                return this;
+            }
+
+            public Builder pos(BlockPosHelper pos1, BlockPosHelper pos2) {
+                this.pos1 = pos1.toPos3D();
+                this.pos2 = pos2.toPos3D();
+                return this;
+            }
+
+            public Builder pos(PositionCommon.Pos3D pos1, PositionCommon.Pos3D pos2) {
+                this.pos1 = pos1;
+                this.pos2 = pos2;
+                return this;
+            }
+
+            public Builder forBlock(int x, int y, int z) {
+                this.pos1 = new PositionCommon.Pos3D(x, y, z);
+                this.pos2 = new PositionCommon.Pos3D(x + 1, y + 1, z + 1);
+                return this;
+            }
+
+            public Builder forBlock(BlockPosHelper pos) {
+                this.pos1 = pos.toPos3D();
+                this.pos2 = pos.offset(1, 1, 1).toPos3D();
+                return this;
+            }
+
+            public Builder forBlock(PositionCommon.Pos3D pos1) {
+                this.pos1 = pos1;
+                this.pos2 = pos1.add(1, 1, 1);
+                return this;
+            }
+
+            public int getColor() {
+                return color;
+            }
+
+            public Builder color(int color) {
+                this.color = color;
+                return this;
+            }
+
+            public int getFillColor() {
+                return fillColor;
+            }
+
+            public Builder fillColor(int fillColor) {
+                this.fillColor = fillColor;
+                return this;
+            }
+
+            public int getAlpha() {
+                return alpha;
+            }
+
+            public Builder alpha(int alpha) {
+                this.alpha = alpha;
+                return this;
+            }
+
+            public int getFillAlpha() {
+                return fillAlpha;
+            }
+
+            public Builder fillAlpha(int fillAlpha) {
+                this.fillAlpha = fillAlpha;
+                return this;
+            }
+
+            public boolean isFill() {
+                return fill;
+            }
+
+            public Builder fill(boolean fill) {
+                this.fill = fill;
+                return this;
+            }
+
+            public boolean isCull() {
+                return cull;
+            }
+
+            public Builder cull(boolean cull) {
+                this.cull = cull;
+                return this;
+            }
+
+            public Box build() {
+                Box box = new Box(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, color, alpha, fillColor, fillAlpha, fill, cull);
+                parent.addBox(box);
+                return box;
+            }
+        }
+        
     }
 
     public static class Line {
@@ -816,6 +1028,109 @@ public class Draw3D {
             }
         }
 
+        public static class Builder {
+            private final Draw3D parent;
+
+            private PositionCommon.Pos3D pos1 = new PositionCommon.Pos3D(0, 0, 0);
+            private PositionCommon.Pos3D pos2 = new PositionCommon.Pos3D(0, 0, 0);
+            private int color = 0xFFFFFF;
+            private int alpha = 255;
+            private boolean cull = false;
+
+            public Builder(Draw3D parent) {
+                this.parent = parent;
+            }
+
+            public PositionCommon.Pos3D getPos1() {
+                return pos1;
+            }
+
+            public Builder pos1(PositionCommon.Pos3D pos1) {
+                this.pos1 = pos1;
+                return this;
+            }
+
+            public Builder pos1(BlockPosHelper pos1) {
+                this.pos1 = pos1.toPos3D();
+                return this;
+            }
+
+            public Builder pos1(double x1, double y1, double z1) {
+                this.pos1 = new PositionCommon.Pos3D(x1, y1, z1);
+                return this;
+            }
+
+            public PositionCommon.Pos3D getPos2() {
+                return pos2;
+            }
+
+            public Builder pos2(PositionCommon.Pos3D pos2) {
+                this.pos2 = pos2;
+                return this;
+            }
+
+            public Builder pos2(BlockPosHelper pos2) {
+                this.pos2 = pos2.toPos3D();
+                return this;
+            }
+
+            public Builder pos2(int x2, int y2, int z2) {
+                this.pos2 = new PositionCommon.Pos3D(x2, y2, z2);
+                return this;
+            }
+
+            public Builder pos(int x1, int y1, int z1, int x2, int y2, int z2) {
+                this.pos1 = new PositionCommon.Pos3D(x1, y1, z1);
+                this.pos2 = new PositionCommon.Pos3D(x2, y2, z2);
+                return this;
+            }
+
+            public Builder pos(BlockPosHelper pos1, BlockPosHelper pos2) {
+                this.pos1 = pos1.toPos3D();
+                this.pos2 = pos2.toPos3D();
+                return this;
+            }
+
+            public Builder pos(PositionCommon.Pos3D pos1, PositionCommon.Pos3D pos2) {
+                this.pos1 = pos1;
+                this.pos2 = pos2;
+                return this;
+            }
+
+            public int getColor() {
+                return color;
+            }
+
+            public Builder color(int color) {
+                this.color = color;
+                return this;
+            }
+
+            public int getAlpha() {
+                return alpha;
+            }
+
+            public Builder alpha(int alpha) {
+                this.alpha = alpha;
+                return this;
+            }
+
+            public boolean isCull() {
+                return cull;
+            }
+
+            public Builder cull(boolean cull) {
+                this.cull = cull;
+                return this;
+            }
+
+            public Line build() {
+                Line line = new Line(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, color, alpha, cull);
+                parent.addLine(line);
+                return line;
+            }
+        }
+        
     }
 
     /**
@@ -895,7 +1210,8 @@ public class Draw3D {
             super.init();
         }
 
-        public void render3D(MatrixStack matrixStack) {
+        @Override
+        public void render3D(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
             matrixStack.push();
 
             matrixStack.translate(pos.x, pos.y, pos.z);
@@ -908,8 +1224,9 @@ public class Draw3D {
             // scale so that x or y have minSubdivisions units between them
             matrixStack.scale((float) scale, (float) scale, (float) scale);
 
-            render(matrixStack);
-
+            synchronized (elements) {
+                renderElements3D(matrixStack, getElementsByZIndex());
+            }
             matrixStack.pop();
 
             if (!cull) {
@@ -920,32 +1237,195 @@ public class Draw3D {
             }
         }
 
-        @Override
-        public void render(MatrixStack matrixStack) {
-            if (matrixStack == null) return;
-
-            synchronized (elements) {
-                Iterator<RenderCommon.RenderElement> iter = elements.stream().sorted(Comparator.comparingInt(RenderCommon.RenderElement::getZIndex)).iterator();
-                float current = 0;
-                while (iter.hasNext()) {
-                    if (renderBack) {
-                        RenderSystem.disableCull();
-                    } else {
-                        RenderSystem.enableCull();
-                    }
-                    if (!cull) {
-                        RenderSystem.disableDepthTest();
-                    } else {
-                        RenderSystem.enableDepthTest();
-                    }
-                    RenderCommon.RenderElement next = iter.next();
-                    matrixStack.push();
-                    matrixStack.translate(0, 0, zIndexScale * next.getZIndex());
-                    next.render3D(matrixStack, 0, 0, 0);
-                    matrixStack.pop();
+        private void renderElements3D(MatrixStack matrixStack, Iterator<RenderCommon.RenderElement> iter) {
+            while (iter.hasNext()) {
+                RenderCommon.RenderElement element = iter.next();
+                //render each draw2D element individually so that the cull and renderBack settings are used
+                if (element instanceof RenderCommon.Draw2DElement draw2DElement) {
+                    renderDraw2D3D(matrixStack, draw2DElement);
+                } else {
+                    renderElement3D(matrixStack, element);
                 }
             }
         }
+
+        private void renderDraw2D3D(MatrixStack matrixStack, RenderCommon.Draw2DElement draw2DElement) {
+            matrixStack.push();
+            Draw2D draw2D = draw2DElement.getDraw2D();
+            matrixStack.translate(draw2DElement.x, draw2DElement.y, 0);
+            matrixStack.scale(draw2DElement.scale, draw2DElement.scale, 1);
+            matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(draw2DElement.rotation));
+            synchronized (draw2D.elements) {
+                renderElements3D(matrixStack, draw2D.getElementsByZIndex());
+            }
+            matrixStack.pop();
+        }
+
+        private void renderElement3D(MatrixStack matrixStack, RenderCommon.RenderElement element) {
+            if (renderBack) {
+                RenderSystem.disableCull();
+            } else {
+                RenderSystem.enableCull();
+            }
+            if (!cull) {
+                RenderSystem.disableDepthTest();
+            } else {
+                RenderSystem.enableDepthTest();
+            }
+            matrixStack.push();
+            matrixStack.translate(0, 0, zIndexScale * element.getZIndex());
+            element.render3D(matrixStack, 0, 0, 0);
+            matrixStack.pop();
+        }
+
+        public static class Builder {
+            private final Draw3D parent;
+
+            private PositionCommon.Pos3D pos = new PositionCommon.Pos3D(0, 0, 0);
+            private int xRot = 0;
+            private int yRot = 0;
+            private int zRot = 0;
+            private int width = 1000;
+            private int height = 1000;
+            private int minSubdivisions = 1;
+            private double scale = 1;
+            private double zIndexScale = 0.001;
+            private boolean renderBack = true;
+            private boolean cull = false;
+
+            public Builder(Draw3D parent) {
+                this.parent = parent;
+            }
+
+            public PositionCommon.Pos3D getPos() {
+                return pos;
+            }
+
+            public Builder pos(PositionCommon.Pos3D pos) {
+                this.pos = pos;
+                return this;
+            }
+
+            public Builder pos(BlockPosHelper pos) {
+                this.pos = pos.toPos3D();
+                return this;
+            }
+
+            public Builder pos(double x, double y, double z) {
+                this.pos = new PositionCommon.Pos3D(x, y, z);
+                return this;
+            }
+
+            public int getXRot() {
+                return xRot;
+            }
+
+            public Builder xRot(int xRot) {
+                this.xRot = xRot;
+                return this;
+            }
+
+            public int getYRot() {
+                return yRot;
+            }
+
+            public Builder yRot(int yRot) {
+                this.yRot = yRot;
+                return this;
+            }
+
+            public int getZRot() {
+                return zRot;
+            }
+
+            public Builder zRot(int zRot) {
+                this.zRot = zRot;
+                return this;
+            }
+
+            public Builder setRot(int xRot, int yRot, int zRot) {
+                this.xRot = xRot;
+                this.yRot = yRot;
+                this.zRot = zRot;
+                return this;
+            }
+
+            public int getWidth() {
+                return width;
+            }
+
+            public Builder width(int width) {
+                this.width = width;
+                return this;
+            }
+
+            public int getHeight() {
+                return height;
+            }
+
+            public Builder height(int height) {
+                this.height = height;
+                return this;
+            }
+
+            public Builder setSize(int width, int height) {
+                this.width = width;
+                this.height = height;
+                return this;
+            }
+
+            public int getMinSubdivisions() {
+                return minSubdivisions;
+            }
+
+            public Builder minSubdivisions(int minSubdivisions) {
+                this.minSubdivisions = minSubdivisions;
+                return this;
+            }
+
+            public double getScale() {
+                return scale;
+            }
+
+            public Builder scale(double scale) {
+                this.scale = scale;
+                return this;
+            }
+
+            public double getZIndexScale() {
+                return zIndexScale;
+            }
+
+            public Builder zIndex(double zIndexScale) {
+                this.zIndexScale = zIndexScale;
+                return this;
+            }
+
+            public boolean isRenderBack() {
+                return renderBack;
+            }
+
+            public Builder renderBack(boolean renderBack) {
+                this.renderBack = renderBack;
+                return this;
+            }
+
+            public boolean isCull() {
+                return cull;
+            }
+
+            public Builder cull(boolean cull) {
+                this.cull = cull;
+                return this;
+            }
+
+            public Surface build() {
+                Surface surface = new Surface(pos, new PositionCommon.Pos3D(xRot, yRot, zRot), new PositionCommon.Pos2D(width, height), minSubdivisions, renderBack, cull);
+                parent.addSurface(surface);
+                return surface;
+            }
+        }
+        
     }
 
 }

@@ -14,8 +14,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.registry.Registry;
+
+import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 
 /**
  * @author Wagyourtail
@@ -31,6 +34,24 @@ public class RenderCommon {
         default void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             render(matrices, mouseX, mouseY, delta);
         }
+    }
+
+    public static abstract class RenderElementBuilder<T extends RenderElement> {
+
+        private final IDraw2D<?> draw2D;
+
+        protected RenderElementBuilder(IDraw2D<?> draw2D) {
+            this.draw2D = draw2D;
+        }
+
+        public T build() {
+            T element = createElement();
+            draw2D.reAddElement(element);
+            return element;
+        }
+
+        protected abstract T createElement();
+
     }
     
     /**
@@ -83,10 +104,10 @@ public class RenderCommon {
          * @since 1.2.6
          * @param scale
          * @return
-         * @throws Exception
+         * @throws IllegalArgumentException
          */
-        public Item setScale(double scale) throws Exception {
-            if (scale == 0) throw new Exception("Scale can't be 0");
+        public Item setScale(double scale) throws IllegalArgumentException {
+            if (scale == 0) throw new IllegalArgumentException("Scale can't be 0");
             this.scale = scale;
             return this;
         }
@@ -151,41 +172,51 @@ public class RenderCommon {
         public ItemStackHelper getItem() {
             return new ItemStackHelper(item);
         }
-    
+
         @Override
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             matrices.push();
-            matrices.scale((float) scale, (float) scale, 1);
             matrices.translate(x, y, 0);
             matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
             matrices.translate(-x, -y, 0);
-            if (item != null) {
-                ItemRenderer i = mc.getItemRenderer();
-                i.renderGuiItemIcon(item,(int) (x / scale), (int) (y / scale));
-                if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, (int) (x / scale), (int) (y / scale), ovText);
-            }
-            matrices.pop();
-//            RenderSystem.translated(x, y, 0);
-//            RenderSystem.rotatef(-rotation, 0, 0, 1);
-//            RenderSystem.translated(-x, -y, 0);
-//            RenderSystem.scaled(1 / scale, 1 / scale, 1);
-        }
-
-        @Override
-        public void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-            matrices.push();
             matrices.scale((float) scale, (float) scale, 1);
-            matrices.translate(x, y, 0);
-            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
-            matrices.translate(-x, -y, 0);
             MatrixStack ms = RenderSystem.getModelViewStack();
             ms.push();
             ms.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
             if (item != null) {
                 ItemRenderer i = mc.getItemRenderer();
-                i.zOffset = -100f;
                 i.renderGuiItemIcon(item,(int) (x / scale), (int) (y / scale));
-                i.zOffset = -200f;
+                if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, (int) (x / scale), (int) (y / scale), ovText);
+            }
+            ms.pop();
+            RenderSystem.applyModelViewMatrix();
+            matrices.pop();
+        }
+
+        @Override
+        public void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+            //TODO: cull and renderBack still not working
+            matrices.push();
+            matrices.translate(x, y, 0);
+            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
+            matrices.translate(-x, -y, 0);
+            matrices.scale((float) scale, (float) scale, 1);
+
+            MatrixStack ms = RenderSystem.getModelViewStack();
+            ms.push();
+            ms.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
+            RenderSystem.applyModelViewMatrix();
+
+            if (item != null) {
+                ItemRenderer i = mc.getItemRenderer();
+                ms.push();
+                ms.scale(1, 1, 0);
+                RenderSystem.applyModelViewMatrix();
+                RenderSystem.disableDepthTest();
+                i.renderGuiItemIcon(item,(int) (x / scale), (int) (y / scale));
+                ms.pop();
+                RenderSystem.applyModelViewMatrix();
+                i.zOffset = -199.9f;
                 if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, (int) (x / scale), (int) (y / scale), ovText);
                 i.zOffset = 0;
             }
@@ -198,7 +229,123 @@ public class RenderCommon {
         public int getZIndex() {
             return zIndex;
         }
-    
+
+
+        public static final class Builder extends RenderElementBuilder<Item>{
+            private ItemStackHelper itemStack = new ItemStackHelper(ItemStack.EMPTY);
+            private String ovText = "";
+            private boolean overlay = false;
+            private double scale = 1;
+            private float rotation = 0;
+            private int x = 0;
+            private int y = 0;
+            private int zIndex = 0;
+
+            public Builder(IDraw2D<?> draw2D) {
+                super(draw2D);
+            }
+
+            public ItemStackHelper getItem() {
+                return itemStack;
+            }
+
+            public Builder item(ItemStackHelper item) {
+                this.itemStack = item;
+                return this;
+            }
+
+            public Builder item(String item) {
+                this.itemStack = new ItemStackHelper(Registry.ITEM.get(new Identifier(item)).getDefaultStack());
+                return this;
+            }
+
+            public Builder item(String item, int count) {
+                ItemStack itemStack = Registry.ITEM.get(new Identifier(item)).getDefaultStack();
+                itemStack.setCount(count);
+                this.itemStack = new ItemStackHelper(itemStack);
+                return this;
+            }
+
+            public String getOvText() {
+                return ovText;
+            }
+
+            public Builder overlayText(String overlayText) {
+                this.ovText = overlayText;
+                return this;
+            }
+
+            public boolean isOverlayVisible() {
+                return overlay;
+            }
+
+            public Builder overlay(boolean overlay) {
+                this.overlay = overlay;
+                return this;
+            }
+
+            public double getScale() {
+                return scale;
+            }
+
+            public Builder scale(double scale) {
+                if (scale == 0) {
+                    throw new IllegalArgumentException("Scale can't be 0");
+                }
+                this.scale = scale;
+                return this;
+            }
+
+            public float getRotation() {
+                return rotation;
+            }
+
+            public Builder rotation(float rotation) {
+                this.rotation = rotation;
+                return this;
+            }
+
+            public int getX() {
+                return x;
+            }
+
+            public Builder x(int x) {
+                this.x = x;
+                return this;
+            }
+
+            public int getY() {
+                return y;
+            }
+
+            public Builder y(int y) {
+                this.y = y;
+                return this;
+            }
+
+            public Builder pos(int x, int y) {
+                this.x = x;
+                this.y = y;
+                return this;
+            }
+
+            public int getzIndex() {
+                return zIndex;
+            }
+
+            public Builder zIndex(int zIndex) {
+                this.zIndex = zIndex;
+                return this;
+            }
+
+            @Override
+            protected Item createElement() {
+                Item item = new Item(x, y, zIndex, itemStack, overlay, scale, rotation);
+                item.setOverlayText(ovText);
+                return item;
+            }
+        }
+        
     }
     
     /**
@@ -373,7 +520,206 @@ public class RenderCommon {
         public int getZIndex() {
             return zIndex;
         }
-    
+
+
+        public static final class Builder extends RenderElementBuilder<Image> {
+            private String identifier = "";
+            private float rotation = 0;
+            private int x = 0;
+            private int y = 0;
+            private int width = 0;
+            private int height = 0;
+            private int imageX = 0;
+            private int imageY = 0;
+            private int regionWidth = 0;
+            private int regionHeight = 0;
+            private int textureWidth = 0;
+            private int textureHeight = 0;
+            private int alpha = 0xFF;
+            private int color = 0xFFFFFFFF;
+            private int zIndex = 0;
+
+            public Builder(IDraw2D<?> draw2D) {
+                super(draw2D);
+            }
+
+            public String getIdentifier() {
+                return identifier;
+            }
+
+            public Builder identifier(String identifier) {
+                this.identifier = identifier;
+                return this;
+            }
+
+            public float getRotation() {
+                return rotation;
+            }
+
+            public Builder rotation(float rotation) {
+                this.rotation = rotation;
+                return this;
+            }
+
+            public int getX() {
+                return x;
+            }
+
+            public Builder x(int x) {
+                this.x = x;
+                return this;
+            }
+
+            public int getY() {
+                return y;
+            }
+
+            public Builder y(int y) {
+                this.y = y;
+                return this;
+            }
+
+            public Builder pos(int x, int y) {
+                this.x = x;
+                this.y = y;
+                return this;
+            }
+
+            public int getWidth() {
+                return width;
+            }
+
+            public Builder width(int width) {
+                this.width = width;
+                return this;
+            }
+
+            public int getHeight() {
+                return height;
+            }
+
+            public Builder height(int height) {
+                this.height = height;
+                return this;
+            }
+
+            public Builder size(int width, int height) {
+                this.width = width;
+                this.height = height;
+                return this;
+            }
+
+            public int getImageX() {
+                return imageX;
+            }
+
+            public Builder imageX(int imageX) {
+                this.imageX = imageX;
+                return this;
+            }
+
+            public int getImageY() {
+                return imageY;
+            }
+
+            public Builder imageY(int imageY) {
+                this.imageY = imageY;
+                return this;
+            }
+
+            public Builder imagePos(int imageX, int imageY) {
+                this.imageX = imageX;
+                this.imageY = imageY;
+                return this;
+            }
+
+            public int getRegionWidth() {
+                return regionWidth;
+            }
+
+            public Builder regionWidth(int regionWidth) {
+                this.regionWidth = regionWidth;
+                return this;
+            }
+
+            public int getRegionHeight() {
+                return regionHeight;
+            }
+
+            public Builder regionHeight(int regionHeight) {
+                this.regionHeight = regionHeight;
+                return this;
+            }
+
+            public Builder regionSize(int regionWidth, int regionHeight) {
+                this.regionWidth = regionWidth;
+                this.regionHeight = regionHeight;
+                return this;
+            }
+
+            public int getTextureWidth() {
+                return textureWidth;
+            }
+
+            public Builder textureWidth(int textureWidth) {
+                this.textureWidth = textureWidth;
+                return this;
+            }
+
+            public int getTextureHeight() {
+                return textureHeight;
+            }
+
+            public Builder textureHeight(int textureHeight) {
+                this.textureHeight = textureHeight;
+                return this;
+            }
+
+            public Builder textureSize(int textureWidth, int textureHeight) {
+                this.textureWidth = textureWidth;
+                this.textureHeight = textureHeight;
+                return this;
+            }
+
+            public int getColor() {
+                return color;
+            }
+
+            public Builder color(int color) {
+                this.color = color;
+                return this;
+            }
+
+            public int getAlpha() {
+                return alpha;
+            }
+
+            public Builder alpha(int alpha) {
+                this.alpha = alpha;
+                return this;
+            }
+
+            public Builder color(int color, int alpha) {
+                this.color = color;
+                this.alpha = alpha;
+                return this;
+            }
+
+            public int getzIndex() {
+                return zIndex;
+            }
+
+            public Builder zIndex(int zIndex) {
+                this.zIndex = zIndex;
+                return this;
+            }
+            @Override
+            public Image createElement() {
+                return new Image(x, y, width, height, zIndex, alpha, color, identifier, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
+            }
+
+        }
+        
     }
     
     /**
@@ -500,7 +846,137 @@ public class RenderCommon {
         public int getZIndex() {
             return zIndex;
         }
-    
+
+
+        public static final class Builder extends RenderElementBuilder<Rect>{
+            private float rotation = 0;
+            private int x1 = 0;
+            private int y1 = 0;
+            private int x2 = 0;
+            private int y2 = 0;
+            private int color = 0xFFFFFFFF;
+            private int alpha = 0xFF;
+            private int zIndex = 0;
+
+            public Builder(IDraw2D<?> draw2D) {
+                super(draw2D);
+            }
+
+            public float getRotation() {
+                return rotation;
+            }
+
+            public Builder rotation(float rotation) {
+                this.rotation = rotation;
+                return this;
+            }
+
+            public int getX1() {
+                return x1;
+            }
+
+            public Builder x1(int x1) {
+                this.x1 = x1;
+                return this;
+            }
+
+            public int getY1() {
+                return y1;
+            }
+
+            public Builder y1(int y1) {
+                this.y1 = y1;
+                return this;
+            }
+
+            public Builder pos1(int x1, int y1) {
+                this.x1 = x1;
+                this.y1 = y1;
+                return this;
+            }
+
+            public int getX2() {
+                return x2;
+            }
+
+            public Builder x2(int x2) {
+                this.x2 = x2;
+                return this;
+            }
+
+            public int getY2() {
+                return y2;
+            }
+
+            public Builder y2(int y2) {
+                this.y2 = y2;
+                return this;
+            }
+
+            public Builder pos2(int x2, int y2) {
+                this.x2 = x2;
+                this.y2 = y2;
+                return this;
+            }
+
+            public Builder pos(int x1, int y1, int x2, int y2) {
+                this.x1 = x1;
+                this.y1 = y1;
+                this.x2 = x2;
+                this.y2 = y2;
+                return this;
+            }
+
+            public Builder width(int width) {
+                this.x2 = this.x1 + width;
+                return this;
+            }
+            
+            public Builder height(int height) {
+                this.y2 = this.y1 + height;
+                return this;
+            }
+            
+            public int getColor() {
+                return color;
+            }
+
+            public Builder color(int color) {
+                this.color = color;
+                return this;
+            }
+
+            public int getAlpha() {
+                return alpha;
+            }
+
+            public Builder alpha(int alpha) {
+                this.alpha = alpha;
+                return this;
+            }
+
+            public Builder color(int color, int alpha) {
+                this.color = color;
+                this.alpha = alpha;
+                return this;
+            }
+
+            public int getzIndex() {
+                return zIndex;
+            }
+
+            public Builder zIndex(int zIndex) {
+                this.zIndex = zIndex;
+                return this;
+            }
+
+            @Override
+            public Rect createElement() {
+                return new Rect(x1, y1, x2, y2, color, alpha, rotation, zIndex);
+            }
+
+        }
+        
     }
     
     /**
@@ -546,10 +1022,10 @@ public class RenderCommon {
          * @since 1.0.5
          * @param scale
          * @return
-         * @throws Exception
+         * @throws IllegalArgumentException
          */
-        public Text setScale(double scale) throws Exception {
-            if (scale == 0) throw new Exception("Scale can't be 0");
+        public Text setScale(double scale) throws IllegalArgumentException {
+            if (scale == 0) throw new IllegalArgumentException("Scale can't be 0");
             this.scale = scale;
             return this;
         }
@@ -621,6 +1097,7 @@ public class RenderCommon {
             matrices.translate(x, y, 0);
             matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
             matrices.translate(-x, -y, 0);
+            matrices.scale((float) scale, (float) scale, 1);
             if (shadow) mc.textRenderer.drawWithShadow(matrices, text, (int)(x / scale), (int)(y / scale), color);
             else mc.textRenderer.draw(matrices, text, (int)(x / scale), (int)(y / scale), color);
             matrices.pop();
@@ -637,6 +1114,7 @@ public class RenderCommon {
             matrices.translate(x, y, 0);
             matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
             matrices.translate(-x, -y, 0);
+            matrices.scale((float) scale, (float) scale, 1);
             Tessellator tess = Tessellator.getInstance();
             VertexConsumerProvider.Immediate buffer = VertexConsumerProvider.immediate(tess.getBuffer());
             mc.textRenderer.draw(text, (float)(x / scale), (float)(y / scale), color, shadow, matrices.peek().getPositionMatrix(), buffer, true, 0, 0xF000F0);
@@ -648,6 +1126,323 @@ public class RenderCommon {
         public int getZIndex() {
             return zIndex;
         }
-    
+
+
+        public static class Builder extends RenderElementBuilder<Text> {
+            private net.minecraft.text.Text text = net.minecraft.text.Text.empty();
+            private double scale = 1;
+            private float rotation = 0;
+            private int x = 0;
+            private int y = 0;
+            private int color = 0xFFFFFFFF;
+            private boolean shadow = false;
+            private int zIndex = 0;
+
+            public Builder(IDraw2D<?> draw2D) {
+                super(draw2D);
+            }
+
+            public TextHelper getText() {
+                return new TextHelper(text);
+            }
+
+            public Builder text(TextHelper text) {
+                this.text = text.getRaw();
+                return this;
+            }
+
+            public Builder text(String text) {
+                this.text = net.minecraft.text.Text.literal(text);
+                return this;
+            }
+
+            public double getScale() {
+                return scale;
+            }
+
+            public Builder scale(double scale) {
+                this.scale = scale;
+                return this;
+            }
+
+            public float getRotation() {
+                return rotation;
+            }
+
+            public Builder rotation(float rotation) {
+                this.rotation = rotation;
+                return this;
+            }
+
+            public int getX() {
+                return x;
+            }
+
+            public Builder x(int x) {
+                this.x = x;
+                return this;
+            }
+
+            public int getY() {
+                return y;
+            }
+
+            public Builder y(int y) {
+                this.y = y;
+                return this;
+            }
+
+            public Builder pos(int x, int y) {
+                this.x = x;
+                this.y = y;
+                return this;
+            }
+
+            public int getColor() {
+                return color;
+            }
+
+            public Builder color(int color) {
+                this.color = color;
+                return this;
+            }
+
+            public boolean isShadow() {
+                return shadow;
+            }
+
+            public Builder shadow(boolean shadow) {
+                this.shadow = shadow;
+                return this;
+            }
+
+            public int getzIndex() {
+                return zIndex;
+            }
+
+            public Builder zIndex(int zIndex) {
+                this.zIndex = zIndex;
+                return this;
+            }
+
+            @Override
+            public Text createElement() {
+                return new Text(new TextHelper(text), x, y, color, zIndex, shadow, scale, rotation);
+            }
+
+        }
+        
     }
+    
+    public static class Draw2DElement implements RenderElement {
+
+        public float scale;
+        public float rotation;
+        public int x;
+        public int y;
+        public int width;
+        public int height;
+        public final Draw2D draw2D;
+        public int zIndex;
+
+        public Draw2DElement(Draw2D draw2D, int x, int y, int width, int height, int zIndex, float scale, float rotation) {
+            this.draw2D = draw2D;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.zIndex = zIndex;
+            this.scale = scale;
+            this.rotation = rotation;
+        }
+
+        public Draw2DElement setZIndex(int zIndex) {
+            this.zIndex = zIndex;
+            return this;
+        }
+
+        @Override
+        public int getZIndex() {
+            return zIndex;
+        }
+
+        public float getScale() {
+            return scale;
+        }
+
+        public Draw2DElement setScale(float scale) {
+            this.scale = scale;
+            return this;
+        }
+
+        public float getRotation() {
+            return rotation;
+        }
+
+        public Draw2DElement setRotation(float rotation) {
+            this.rotation = rotation;
+            return this;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public Draw2DElement setX(int x) {
+            this.x = x;
+            return this;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public Draw2DElement setY(int y) {
+            this.y = y;
+            return this;
+        }
+
+        public Draw2DElement setPos(int x, int y) {
+            this.x = x;
+            this.y = y;
+            return this;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public Draw2DElement setWidth(int width) {
+            this.width = width;
+            return this;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public Draw2DElement setHeight(int height) {
+            this.height = height;
+            return this;
+        }
+
+        public Draw2DElement setSize(int width, int height) {
+            this.width = width;
+            this.height = height;
+            return this;
+        }
+
+        public Draw2D getDraw2D() {
+            return draw2D;
+        }
+
+        @Override
+        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+            matrices.push();
+            matrices.translate(x, y, 0);
+            matrices.scale(scale, scale, 1);
+            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
+
+            draw2D.render(matrices);
+
+            matrices.pop();
+        }
+
+        public static class Builder extends RenderElementBuilder<Draw2DElement> {
+            private final Draw2D draw2D;
+            private int x = 0;
+            private int y = 0;
+            private int width = 0;
+            private int height = 0;
+            private int zIndex = 0;
+            private float scale = 1;
+            private float rotation = 0;
+
+            public Builder(IDraw2D<?> parent, Draw2D draw2D) {
+                super(parent);
+                this.draw2D = draw2D;
+            }
+
+            public int getX() {
+                return x;
+            }
+
+            public Builder x(int x) {
+                this.x = x;
+                return this;
+            }
+
+            public int getY() {
+                return y;
+            }
+
+            public Builder y(int y) {
+                this.y = y;
+                return this;
+            }
+
+            public Builder pos(int x, int y) {
+                this.x = x;
+                this.y = y;
+                return this;
+            }
+
+            public int getWidth() {
+                return width;
+            }
+
+            public Builder width(int width) {
+                this.width = width;
+                return this;
+            }
+
+            public int getHeight() {
+                return height;
+            }
+
+            public Builder height(int height) {
+                this.height = height;
+                return this;
+            }
+
+            public Builder size(int width, int height) {
+                this.width = width;
+                this.height = height;
+                return this;
+            }
+
+            public Builder zIndex(int zIndex) {
+                this.zIndex = zIndex;
+                return this;
+            }
+
+            public int getZIndex() {
+                return zIndex;
+            }
+
+            public float getScale() {
+                return scale;
+            }
+
+            public Builder scale(float scale) {
+                this.scale = scale;
+                return this;
+            }
+
+            public float getRotation() {
+                return rotation;
+            }
+
+            public Builder rotation(float rotation) {
+                this.rotation = rotation;
+                return this;
+            }
+
+            @Override
+            protected Draw2DElement createElement() {
+                return new Draw2DElement(draw2D, x, y, width, height, zIndex, scale, rotation);
+            }
+        }
+    }
+
 }

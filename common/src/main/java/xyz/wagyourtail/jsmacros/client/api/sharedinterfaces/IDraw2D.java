@@ -1,9 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.api.sharedinterfaces;
 
 import net.minecraft.client.util.math.MatrixStack;
+
+import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon.Draw2DElement;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon.Image;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon.Item;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon.Rect;
@@ -18,7 +21,12 @@ import java.util.function.Consumer;
  * @since 1.2.7
  * @param <T>
  */
-public interface IDraw2D<T> {
+public interface IDraw2D<T> extends RenderCommon.RenderElement {
+
+    @Override
+    default void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        render(matrices);
+    }
     
     /**
      * @since 1.2.7
@@ -59,7 +67,14 @@ public interface IDraw2D<T> {
      */
      @Deprecated
     List<Image> getImages();
-    
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    List<RenderCommon.Draw2DElement> getDraw2Ds();
+     
     /**
     * @since 1.2.9
      * @return a read only copy of the list of all elements added by scripts.
@@ -78,7 +93,7 @@ public interface IDraw2D<T> {
     * @since 1.2.9
      * @return self for chaining
      */
-    RenderCommon.RenderElement reAddElement(RenderCommon.RenderElement e);
+    <T extends RenderCommon.RenderElement> T reAddElement(T e);
     
     /**
      * @since 1.2.7
@@ -512,6 +527,63 @@ public interface IDraw2D<T> {
      @Deprecated
     T removeItem(Item i);
 
+    /**
+     * Tries to add the given draw2d as a child. Fails if cyclic dependencies are detected.
+     *
+     * @param draw2D
+     * @return
+     *
+     * @since 1.9.0
+     */
+    RenderCommon.Draw2DElement addDraw2D(Draw2D draw2D, int x, int y, int width, int height);
+
+    /**
+     * Tries to add the given draw2d as a child. Fails if cyclic dependencies are detected.
+     * @param draw2D
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param zIndex
+     *
+     * @since 1.9.0
+     * @return
+     */
+    RenderCommon.Draw2DElement addDraw2D(Draw2D draw2D, int x, int y, int width, int height, int zIndex);
+
+    /**
+     * @param draw2D
+     * @return
+     *
+     * @since 1.9.0
+     */
+    T removeDraw2D(RenderCommon.Draw2DElement draw2D);
+
+    /**
+     * @since 1.9.0
+     */
+    Item.Builder getItemBuilder();
+
+    /**
+     * @since 1.9.0
+     */
+    Image.Builder getImageBuilder();
+
+    /**
+     * @since 1.9.0
+     */
+    Rect.Builder getRectBuilder();
+
+    /**
+     * @since 1.9.0
+     */
+    Text.Builder getTextBuilder();
+
+    /**
+     * @since 1.9.0
+     */
+    Draw2DElement.Builder getDraw2DBuilder(Draw2D element);
+    
     /**
      * @since 1.2.7
      * @param onInit calls your method as a {@link Consumer}&lt;{@link T}&gt;

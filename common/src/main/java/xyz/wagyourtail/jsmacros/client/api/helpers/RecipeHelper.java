@@ -101,7 +101,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
      */
     public List<List<ItemStackHelper>> getRecipeRemainders() {
         return base.getIngredients().stream()
-                .filter(ingredient -> ingredient.getMatchingStacks()[0].getItem().hasRecipeRemainder())
+                .filter(ingredient -> ingredient.getMatchingStacks().length > 0 && ingredient.getMatchingStacks()[0].getItem().hasRecipeRemainder())
                 .map(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).map(ItemStackHelper::new).toList()
                 ).toList();
     }

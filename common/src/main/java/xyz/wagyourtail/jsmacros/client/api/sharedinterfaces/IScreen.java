@@ -1,8 +1,15 @@
 package xyz.wagyourtail.jsmacros.client.api.sharedinterfaces;
 
+import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.gui.CheckBoxWidgetHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.gui.CyclingButtonWidgetHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.gui.LockButtonWidgetHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.gui.SliderWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.TextFieldWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon.Item;
@@ -18,7 +25,6 @@ import java.util.function.Consumer;
  * @since 1.2.7
  */
 public interface IScreen extends IDraw2D<IScreen> {
-    
     
     /**
      * @since 1.2.7
@@ -72,7 +78,260 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @return
      */
     ButtonWidgetHelper<?> addButton(int x, int y, int width, int height, int zIndex, String text, MethodWrapper<ButtonWidgetHelper<?>, IScreen, Object, ?> callback);
-    
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param text
+     * @param checked
+     * @param showMessage
+     * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
+     * @return
+     *
+     * @since 1.9.0
+     */
+    CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, String text, boolean checked, boolean showMessage, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback);
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param text
+     * @param checked
+     * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
+     * @return
+     *
+     * @since 1.9.0
+     */
+    CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, String text, boolean checked, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback);
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param zIndex
+     * @param text
+     * @param checked
+     * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
+     * @return
+     *
+     * @since 1.9.0
+     */
+    CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, int zIndex, String text, boolean checked, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback);
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param zIndex
+     * @param text
+     * @param checked
+     * @param showMessage
+     * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
+     * @return
+     *
+     * @since 1.9.0
+     */
+    CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, int zIndex, String text, boolean checked, boolean showMessage, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback);
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param text
+     * @param value
+     * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
+     * @param steps
+     * @return
+     *
+     * @since 1.9.0
+     */
+    SliderWidgetHelper addSlider(int x, int y, int width, int height, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback, int steps);
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param zIndex
+     * @param text
+     * @param value
+     * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
+     * @param steps
+     * @return
+     *
+     * @since 1.9.0
+     */
+    SliderWidgetHelper addSlider(int x, int y, int width, int height, int zIndex, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback, int steps);
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param text
+     * @param value
+     * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
+     * @return
+     *
+     * @since 1.9.0
+     */
+    SliderWidgetHelper addSlider(int x, int y, int width, int height, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback);
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param zIndex
+     * @param text
+     * @param value
+     * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
+     * @return
+     *
+     * @since 1.9.0
+     */
+    SliderWidgetHelper addSlider(int x, int y, int width, int height, int zIndex, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback);
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param textureStartX
+     * @param textureStartY
+     * @param hoverOffset
+     * @param texture
+     * @param textureWidth
+     * @param textureHeight
+     * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
+     * @return
+     *
+     * @since 1.9.0
+     */
+    ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int textureStartX, int textureStartY, int hoverOffset, String texture, int textureWidth, int textureHeight, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback);
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param zIndex
+     * @param textureStartX
+     * @param textureStartY
+     * @param hoverOffset
+     * @param texture
+     * @param textureWidth
+     * @param textureHeight
+     * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
+     * @return
+     *
+     * @since 1.9.0
+     */
+    ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int zIndex, int textureStartX, int textureStartY, int hoverOffset, String texture, int textureWidth, int textureHeight, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback);
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param textureStartX
+     * @param textureStartY
+     * @param texture
+     * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
+     * @return
+     *
+     * @since 1.9.0
+     */
+    ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int textureStartX, int textureStartY, String texture, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback);
+
+    /**
+     * @param x
+     * @param y
+     * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
+     * @return
+     *
+     * @since 1.9.0
+     */
+    LockButtonWidgetHelper addLockButton(int x, int y, MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> callback);
+
+    /**
+     * @param x
+     * @param y
+     * @param zIndex
+     * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
+     * @return
+     *
+     * @since 1.9.0
+     */
+    LockButtonWidgetHelper addLockButton(int x, int y, int zIndex, MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> callback);
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param callback
+     * @param values
+     * @return
+     *
+     * @since 1.9.0
+     */
+    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String initial);
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param zIndex
+     * @param callback
+     * @param values
+     * @return
+     *
+     * @since 1.9.0
+     */
+    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String initial);
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param zIndex
+     * @param callback
+     * @param values
+     * @param alternatives
+     * @return
+     *
+     * @since 1.9.0
+     */
+    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String[] alternatives, String initial, String prefix);
+
+    /**
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param zIndex
+     * @param callback
+     * @param values
+     * @param alternatives
+     * @param initial
+     * @param prefix
+     * @param alternateToggle
+     * @return
+     *
+     * @since 1.9.0
+     */
+    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<?, ?, Boolean, ?> alternateToggle);
+
     /**
      * @since 1.0.5
      * @param btn
@@ -232,6 +491,41 @@ public interface IScreen extends IDraw2D<IScreen> {
      */
     IScreen reloadScreen();
 
+    /**
+     * @since 1.9.0
+     */
+    ButtonWidgetHelper.ButtonBuilder getButtonBuilder();
+
+    /**
+     * @since 1.9.0
+     */
+    CheckBoxWidgetHelper.CheckBoxBuilder getCheckBoxBuilder();
+
+    /**
+     * @since 1.9.0
+     */
+    CyclingButtonWidgetHelper.CyclicButtonBuilder<?> getCyclicButtonBuilder(MethodWrapper<Object, ?, TextHelper, ?> valueToText);
+
+    /**
+     * @since 1.9.0
+     */
+    LockButtonWidgetHelper.LockButtonBuilder getLockButtonBuilder();
+
+    /**
+     * @since 1.9.0
+     */
+    SliderWidgetHelper.SliderBuilder getSliderBuilder();
+
+    /**
+     * @since 1.9.0
+     */
+    TextFieldWidgetHelper.TextFieldBuilder getTextFieldBuilder();
+
+    /**
+     * @since 1.9.0
+     */
+    ButtonWidgetHelper.TexturedButtonBuilder getTexturedButtonBuilder();
+    
     /**
      * DON'T TOUCH
      * @since 1.4.1

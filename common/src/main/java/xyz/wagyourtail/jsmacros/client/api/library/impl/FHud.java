@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 
+import com.google.common.collect.ImmutableMap;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.CustomImage;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.ScriptScreen;
@@ -15,6 +17,7 @@ import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -84,6 +87,38 @@ public class FHud extends BaseLibrary {
         return (IScreen) mc.currentScreen;
     }
 
+    /**
+     * @param width  the width of the canvas
+     * @param height the height of the canvas
+     * @return a {@link CustomImage} that can be used as a texture for screen backgrounds, rendering
+     *         images, etc.
+     *
+     * @since 1.9.0
+     */
+    public CustomImage createTexture(int width, int height, String name) {
+        return CustomImage.createWidget(width, height, name);
+    }
+
+    /**
+     * @param path absolute path to an image file
+     * @return a {@link CustomImage} that can be used as a texture for screen backgrounds, rendering
+     *         images, etc.
+     *
+     * @since 1.9.0
+     */
+    public CustomImage createTexture(String path, String name) {
+        return CustomImage.createWidget(path, name);
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public Map<String, CustomImage> getRegisteredTextures() {
+        return ImmutableMap.copyOf(CustomImage.IMAGES);
+    }
+    
     /**
      * @return
      *
