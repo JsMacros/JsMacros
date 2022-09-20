@@ -28,7 +28,6 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
     
     /**
-     * @since 1.3.1
      * @return
      */
     public String getId() {
@@ -49,7 +48,6 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
 
     /**
-     * @since 1.3.1
      * @return
      */
     public ItemStackHelper getOutput() {
@@ -57,7 +55,6 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
     
     /**
-     * @since 1.3.1
      * @param craftAll
      */
     public void craft(boolean craftAll) {
@@ -72,9 +69,8 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
         throw new AssertionError("Crafting Screen no longer open!");
     }
 
-
     /**
-     * @return
+     * @return the type of this recipe.
      *
      * @since 1.9.0
      */
@@ -84,9 +80,9 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
 
     /**
      * This will not account for the actual items used in the recipe, but only the default recipe
-     * itself. Items with durability or items with a lot of tags will probably not work correctly
+     * itself. Items with durability or with a lot of tags will probably not work correctly.
      *
-     * @return will return {@code true} if any of the ingredients have a recipe remainder
+     * @return will return {@code true} if any of the default ingredients have a recipe remainder.
      *
      * @since 1.9.0
      */
@@ -95,19 +91,19 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
 
     /**
-     * @return a list of all possible recipe remainders
+     * @return a list of all possible recipe remainders.
      *
      * @since 1.9.0
      */
     public List<List<ItemStackHelper>> getRecipeRemainders() {
         return base.getIngredients().stream()
                 .filter(ingredient -> ingredient.getMatchingStacks().length > 0 && ingredient.getMatchingStacks()[0].getItem().hasRecipeRemainder())
-                .map(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).map(ItemStackHelper::new).toList()
-                ).toList();
+                .map(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).map(ItemStackHelper::new).toList())
+                .toList();
     }
 
     /**
-     * @return
+     * @return the type of this recipe.
      *
      * @since 1.9.0
      */
@@ -116,7 +112,8 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
 
     /**
-     * @return
+     * @return {@code true} if the recipe can be crafted with the current inventory, {@code false}
+     *         otherwise.
      *
      * @since 1.9.0
      */
@@ -127,8 +124,9 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
 
     /**
-     * @param amount
-     * @return
+     * @param amount the amount of items to craft.
+     * @return {@code true} if the given amount of items can be crafted with the current inventory,
+     *         {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -137,7 +135,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
 
     /**
-     * @return
+     * @return how often the recipe can be crafted with the current inventory.
      *
      * @since 1.9.0
      */

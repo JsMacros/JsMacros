@@ -10,6 +10,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class DirectionHelper extends BaseHelper<Direction> {
 
     public DirectionHelper(Direction base) {
@@ -17,7 +18,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     }
 
     /**
-     * @return
+     * @return the name of this direction.
      *
      * @since 1.9.0
      */
@@ -26,7 +27,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     }
 
     /**
-     * @return
+     * @return the name of the axis this direction is aligned to.
      *
      * @since 1.9.0
      */
@@ -35,7 +36,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     }
 
     /**
-     * @return
+     * @return {@code true} if this direction is vertical, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -44,7 +45,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     }
 
     /**
-     * @return
+     * @return {@code true} if this direction is horizontal, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -53,7 +54,8 @@ public class DirectionHelper extends BaseHelper<Direction> {
     }
 
     /**
-     * @return
+     * @return {@code true} if this direction is pointing in a positive direction, {@code false}
+     *         otherwise.
      *
      * @since 1.9.0
      */
@@ -62,7 +64,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     }
 
     /**
-     * @return
+     * @return the yaw of this direction.
      *
      * @since 1.9.0
      */
@@ -75,7 +77,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     }
 
     /**
-     * @return
+     * @return the pitch of this direction.
      *
      * @since 1.9.0
      */
@@ -88,7 +90,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     }
 
     /**
-     * @return
+     * @return the opposite direction.
      *
      * @since 1.9.0
      */
@@ -97,7 +99,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     }
 
     /**
-     * @return
+     * @return the direction to the left.
      *
      * @since 1.9.0
      */
@@ -106,7 +108,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     }
 
     /**
-     * @return
+     * @return the direction to the right.
      *
      * @since 1.9.0
      */
@@ -115,7 +117,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     }
 
     /**
-     * @return
+     * @return the direction as a directional vector.
      *
      * @since 1.9.0
      */
@@ -125,8 +127,9 @@ public class DirectionHelper extends BaseHelper<Direction> {
     }
 
     /**
-     * @param yaw
-     * @return
+     * @param yaw the yaw to check
+     * @return {@code true} if the yaw is facing this direction more than any other one,
+     *         {@code false} otherwise.
      *
      * @since 1.9.0
      */

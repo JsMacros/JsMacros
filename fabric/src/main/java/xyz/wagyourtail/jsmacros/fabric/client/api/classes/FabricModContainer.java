@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class FabricModContainer extends ModContainerHelper<ModContainer> {
 
-    ModMetadata metadata;
+    private final ModMetadata metadata;
 
     public FabricModContainer(ModContainer base) {
         super(base);

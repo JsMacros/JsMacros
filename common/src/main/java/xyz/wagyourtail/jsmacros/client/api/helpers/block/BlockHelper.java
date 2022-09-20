@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
  * @author Etheradon
  * @since 1.6.5
  */
+@SuppressWarnings("unused")
 public class BlockHelper extends BaseHelper<Block> {
 
     public BlockHelper(Block base) {
@@ -124,14 +125,14 @@ public class BlockHelper extends BaseHelper<Block> {
     }
 
     /**
-     * @return the name of the block
+     * @return the name of the block.
      *
      * @since 1.9.0
      */
     public TextHelper getName() {
         return new TextHelper(base.getName());
     }
-    
+
     @Override
     public String toString() {
         return String.format("BlockDataHelper:{%s}", getId());

@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class CartographyInventory extends Inventory<CartographyTableScreen> {
 
     public CartographyInventory(CartographyTableScreen inventory) {
@@ -15,7 +16,7 @@ public class CartographyInventory extends Inventory<CartographyTableScreen> {
     }
 
     /**
-     * @return
+     * @return the map item.
      *
      * @since 1.9.0
      */
@@ -24,7 +25,7 @@ public class CartographyInventory extends Inventory<CartographyTableScreen> {
     }
 
     /**
-     * @return
+     * @return the paper item.
      *
      * @since 1.9.0
      */
@@ -33,13 +34,12 @@ public class CartographyInventory extends Inventory<CartographyTableScreen> {
     }
 
     /**
-     * @return
+     * @return the output item.
      *
      * @since 1.9.0
      */
     public ItemStackHelper getOutput() {
         return getSlot(2);
     }
-
 
 }

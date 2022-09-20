@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class LockButtonWidgetHelper extends ButtonWidgetHelper<LockButtonWidget> {
 
     public LockButtonWidgetHelper(LockButtonWidget btn) {
@@ -23,7 +24,7 @@ public class LockButtonWidgetHelper extends ButtonWidgetHelper<LockButtonWidget>
     }
 
     /**
-     * @return
+     * @return {@code true} if the button is locked, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -32,8 +33,8 @@ public class LockButtonWidgetHelper extends ButtonWidgetHelper<LockButtonWidget>
     }
 
     /**
-     * @param locked
-     * @return
+     * @param locked whether to lock the button or not
+     * @return this instance for chaining. 
      *
      * @since 1.9.0
      */
@@ -77,7 +78,7 @@ public class LockButtonWidgetHelper extends ButtonWidgetHelper<LockButtonWidget>
                     if (action != null) {
                         action.accept(b.get(), screen);
                     }
-                } catch (Throwable e) {
+                } catch (Exception e) {
                     Core.getInstance().profile.logError(e);
                 }
             });

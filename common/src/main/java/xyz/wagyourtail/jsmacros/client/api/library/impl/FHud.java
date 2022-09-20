@@ -111,7 +111,7 @@ public class FHud extends BaseLibrary {
     }
 
     /**
-     * @return
+     * @return an immutable Map of all registered custom textures.
      *
      * @since 1.9.0
      */
@@ -120,7 +120,7 @@ public class FHud extends BaseLibrary {
     }
     
     /**
-     * @return
+     * @return the current gui scale factor of minecraft.
      *
      * @since 1.9.0
      */
@@ -291,7 +291,7 @@ public class FHud extends BaseLibrary {
     }
 
     /**
-     * @return
+     * @return the current window width.
      *
      * @since 1.9.0
      */
@@ -300,7 +300,7 @@ public class FHud extends BaseLibrary {
     }
 
     /**
-     * @return
+     * @return the current window height.
      *
      * @since 1.9.0
      */
@@ -309,7 +309,7 @@ public class FHud extends BaseLibrary {
     }
 
     /**
-     * @param width
+     * @param width the new window width.
      * @since 1.9.0
      */
     public void setWindowWidth(int width) {
@@ -317,7 +317,7 @@ public class FHud extends BaseLibrary {
     }
 
     /**
-     * @param height
+     * @param height the new window height.
      * @since 1.9.0
      */
     public void setWindowHeight(int height) {
@@ -325,8 +325,8 @@ public class FHud extends BaseLibrary {
     }
 
     /**
-     * @param width
-     * @param height
+     * @param width  the new window width.
+     * @param height the new window height.
      * @since 1.9.0
      */
     public void setWindowSize(int width, int height) {
@@ -334,12 +334,21 @@ public class FHud extends BaseLibrary {
     }
 
     /**
-     * @param x
-     * @param y
+     * @param x the new window x position.
+     * @param y the new window y position.
      * @since 1.9.0
      */
     public void setWindowPosition(int x, int y) {
         GLFW.glfwSetWindowPos(mc.getWindow().getHandle(), x, y);
+    }
+
+    /**
+     * @param x the new mouse x position.
+     * @param y the new mouse y position.
+     * @since 1.9.0
+     */
+    public void setMousePosition(int x, int y) {
+        GLFW.glfwSetCursorPos(mc.getWindow().getHandle(), x, y);
     }
     
 }

@@ -94,7 +94,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     }
 
     /**
-     * @return
+     * @return {@code true} if the text field is editable, {@code false} otherwise.
      * @since 1.9.0
      */
     public boolean isEditable() {
@@ -112,7 +112,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     }
 
     /**
-     * @return
+     * @return the selected text.
      *
      * @since 1.9.0
      */
@@ -121,7 +121,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     }
 
     /**
-     * @param suggestion
+     * @param suggestion the suggestion to set.
      * @since 1.9.0
      */
     public void setSuggestion(String suggestion) {
@@ -129,7 +129,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     }
 
     /**
-     * @return
+     * @return the maximum length of this text field.
      *
      * @since 1.9.0
      */
@@ -138,7 +138,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     }
 
     /**
-     * @param length
+     * @param length the new maximum length
      * @since 1.9.0
      */
     public void setMaxLength(int length) {
@@ -151,7 +151,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     }
 
     /**
-     * @param predicate
+     * @param predicate the text filter
      * @since 1.9.0
      */
     public void setTextPredicate(MethodWrapper<String, ?, ?, ?> predicate) {
@@ -166,7 +166,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     }
 
     /**
-     * @param position
+     * @param position the cursor position
      * @since 1.9.0
      */
     public void setCursorPosition(int position) {

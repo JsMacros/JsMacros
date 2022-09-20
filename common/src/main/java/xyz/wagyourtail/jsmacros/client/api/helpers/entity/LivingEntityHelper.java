@@ -42,7 +42,10 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
-     * @return
+     * For client side entities, excluding the player, this will most likely return {@code false}
+     * even if the entity has the effect, as effects are not synced to the client.
+     *
+     * @return {@code true} if the entity has the specified status effect, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -117,7 +120,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
-     * @return
+     * @return the entity's absorption amount.
      *
      * @since 1.9.0
      */
@@ -126,7 +129,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
-     * @return
+     * @return the entity's armor value.
      *
      * @since 1.9.0
      */
@@ -135,7 +138,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
-     * @return
+     * @return the entity's default health.
      *
      * @since 1.9.0
      */
@@ -144,7 +147,8 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
-     * @return
+     * @return the entity's mob category, {@code UNDEAD}, {@code DEFAULT}, {@code ARTHROPOD}, or
+     *         {@code ILLAGER}, {@code AQUATIC} or {@code UNKNOWN}.
      *
      * @since 1.9.0
      */
@@ -182,7 +186,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
-     * @return
+     * @return the bow pull progress of the entity, {@code 0} by default.
      *
      * @since 1.9.0
      */
@@ -195,8 +199,9 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
-     * @param entity
-     * @return
+     * @param entity the entity to check line of sight to
+     * @return {@code true} if the player has line of sight to the specified entity, {@code false}
+     *         otherwise.
      *
      * @since 1.9.0
      */
@@ -205,9 +210,10 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
-     * @param entity
-     * @param simpleCast
-     * @return
+     * @param entity     the entity to check line of sight to
+     * @param simpleCast whether to use a simple raycast or a more complex one
+     * @return {@code true} if the player has line of sight to the specified entity, {@code false}
+     *         otherwise.
      *
      * @since 1.9.0
      */

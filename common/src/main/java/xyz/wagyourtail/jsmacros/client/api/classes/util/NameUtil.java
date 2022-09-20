@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * @author Etheradon
  * @since 1.9.0
  */
-public class NameUtil {
+public final class NameUtil {
 
     private static final String VALID_NAME = "[A-Za-z0-9_]+";
     private static final Pattern PATTERN_NAME = Pattern.compile(VALID_NAME);
@@ -17,6 +17,9 @@ public class NameUtil {
 
     private static final int MAX_STRING_LENGTH = 60;
     private static final int DEFAULT_BUILDER_CAPACITY = 16;
+
+    private NameUtil() {
+    }
 
     /**
      * Iterate until <. If found, get the next valid name

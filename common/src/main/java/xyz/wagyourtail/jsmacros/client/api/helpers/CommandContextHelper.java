@@ -18,6 +18,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
  * @since 1.4.2
  */
  @Event("CommandContext")
+ @SuppressWarnings("unused")
 public class CommandContextHelper extends BaseHelper<CommandContext<?>> implements BaseEvent {
     public CommandContextHelper(CommandContext<?> base) {
         super(base);

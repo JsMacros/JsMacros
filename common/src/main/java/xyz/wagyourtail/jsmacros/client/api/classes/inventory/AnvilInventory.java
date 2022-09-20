@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
-import net.minecraft.screen.AnvilScreenHandler;
 
 import xyz.wagyourtail.jsmacros.client.access.IAnvilScreen;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
@@ -10,6 +9,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class AnvilInventory extends Inventory<AnvilScreen> {
 
     public AnvilInventory(AnvilScreen inventory) {
@@ -17,7 +17,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
     }
 
     /**
-     * @param name
+     * @param name the new name
      * @since 1.9.0
      */
     public void rename(String name) {
@@ -25,7 +25,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
     }
 
     /**
-     * @return
+     * @return the level cost to apply the changes.
      *
      * @since 1.9.0
      */
@@ -34,16 +34,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
     }
 
     /**
-     * @return
-     *
-     * @since 1.9.0
-     */
-    public int getNextLevelCost() {
-        return AnvilScreenHandler.getNextCost(getLevelCost());
-    }
-
-    /**
-     * @return
+     * @return the first input item.
      *
      * @since 1.9.0
      */
@@ -52,7 +43,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
     }
 
     /**
-     * @return
+     * @return the second input item.
      *
      * @since 1.9.0
      */
@@ -61,7 +52,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
     }
 
     /**
-     * @return
+     * @return the expected output item.
      *
      * @since 1.9.0
      */

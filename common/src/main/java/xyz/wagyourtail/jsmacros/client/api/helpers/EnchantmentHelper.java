@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -12,12 +13,13 @@ import java.util.List;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class EnchantmentHelper extends BaseHelper<Enchantment> {
 
-    private int level;
+    private final int level;
 
     public EnchantmentHelper(Enchantment base) {
-        super(base);
+        this(base, 0);
     }
 
     public EnchantmentHelper(Enchantment base, int level) {
@@ -26,7 +28,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
-     * @return
+     * @return the level of this enchantment.
      *
      * @since 1.9.0
      */
@@ -35,7 +37,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
-     * @return
+     * @return the maximum level of this enchantment.
      *
      * @since 1.9.0
      */
@@ -44,8 +46,8 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
-     * @param level
-     * @return
+     * @param level the level for the name.
+     * @return the name of this enchantment for the given level.
      *
      * @since 1.9.0
      */
@@ -54,16 +56,25 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
-     * @return
+     * @return the name of this enchantment.
      *
      * @since 1.9.0
      */
     public String getName() {
-        return String.valueOf(net.minecraft.enchantment.EnchantmentHelper.getEnchantmentId(base));
+        return Text.translatable(base.getTranslationKey()).getString();
     }
 
     /**
-     * @return
+     * @return the id of this enchantment.
+     *
+     * @since 1.9.0
+     */
+    public String getId() {
+        return Registry.ENCHANTMENT.getId(base).toString();
+    }
+
+    /**
+     * @return the rarity of this enchantment.
      *
      * @since 1.9.0
      */
@@ -72,7 +83,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
-     * @return
+     * @return {@code true} if this enchantment is a curse, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -81,7 +92,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
-     * @return
+     * @return {@code true} if this enchantment is a treasure, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -90,27 +101,20 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
-     * @param item
-     * @return
+     * @param item the item to check.
+     * @return {@code true} if this enchantment can be applied to the given item, {@code false}
+     *         otherwise.
      *
      * @since 1.9.0
      */
-    public boolean isAcceptableItem(String item) {
-        return base.isAcceptableItem(Registry.ITEM.get(new Identifier(item)).getDefaultStack());
+    public boolean isAcceptableItem(ItemHelper item) {
+        return base.isAcceptableItem(item.getRaw().getDefaultStack());
     }
 
     /**
-     * @return
-     *
-     * @since 1.9.0
-     */
-    public List<String> getAcceptableItems() {
-        return Registry.ITEM.stream().filter(item -> base.type.isAcceptableItem(item)).map(item -> Registry.ITEM.getId(item).toString()).toList();
-    }
-
-    /**
-     * @param item
-     * @return
+     * @param item the item to check.
+     * @return {@code true} if this enchantment can be applied to the given item, {@code false}
+     *         otherwise.
      *
      * @since 1.9.0
      */
@@ -119,8 +123,18 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
-     * @param enchantment
-     * @return
+     * @return a list of all acceptable item ids for this enchantment.
+     *
+     * @since 1.9.0
+     */
+    public List<String> getAcceptableItems() {
+        return Registry.ITEM.stream().filter(item -> base.type.isAcceptableItem(item)).map(item -> Registry.ITEM.getId(item).toString()).toList();
+    }
+
+    /**
+     * @param enchantment the enchantment to check.
+     * @return {@code true} if this enchantment is compatible with the given enchantment,
+     *         {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -129,8 +143,9 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
-     * @param enchantment
-     * @return
+     * @param enchantment the enchantment to check.
+     * @return {@code true} if this enchantment is compatible with the given enchantment,
+     *         {@code false} otherwise.
      *
      * @since 1.9.0
      */

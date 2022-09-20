@@ -130,7 +130,7 @@ public class FClient extends PerExecLibrary {
     }
 
     /**
-     * @return a helper which gives access to all game options and some other useful options.
+     * @return a helper which gives access to all game options and some other useful features.
      *
      * @since 1.9.0
      */
@@ -365,7 +365,7 @@ public class FClient extends PerExecLibrary {
 
 
     /**
-     * @return
+     * @return a list of all loaded mods.
      *
      * @since 1.9.0
      */
@@ -386,7 +386,7 @@ public class FClient extends PerExecLibrary {
     }
 
     /**
-     * @return {@code true} if the mod is loaded inside a development environment, {@code false} otherwise
+     * @return {@code true} if the mod is loaded inside a development environment, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -395,7 +395,7 @@ public class FClient extends PerExecLibrary {
     }
 
     /**
-     * @return the name of the mod loader
+     * @return the name of the mod loader.
      *
      * @since 1.9.0
      */
@@ -404,7 +404,7 @@ public class FClient extends PerExecLibrary {
     }
 
     /**
-     * @return a list of all loaded blocks as {@link BlockHelper BlockHelper} objects
+     * @return a list of all loaded blocks as {@link BlockHelper BlockHelper} objects.
      *
      * @since 1.9.0
      */
@@ -413,7 +413,7 @@ public class FClient extends PerExecLibrary {
     }
 
     /**
-     * @return a list of all loaded items as {@link ItemHelper ItemHelper} objects
+     * @return a list of all loaded items as {@link ItemHelper ItemHelper} objects.
      *
      * @since 1.9.0
      */

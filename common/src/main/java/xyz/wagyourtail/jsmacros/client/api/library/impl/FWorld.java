@@ -275,9 +275,9 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @param pos
-     * @param radius
-     * @param callback
+     * @param pos the center position
+     * @param radius the radius to scan
+     * @param callback the callback to call for each block
      * @since 1.9.0
      */
     public void iterateSphere(BlockPosHelper pos, int radius, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
@@ -285,10 +285,10 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @param pos
-     * @param radius
-     * @param callback
-     * @param ignoreAir
+     * @param pos the center position
+     * @param radius the radius to scan
+     * @param callback the callback to call for each block
+     * @param ignoreAir whether to ignore air blocks
      * @since 1.9.0
      */
     public void iterateSphere(BlockPosHelper pos, int radius, MethodWrapper<BlockDataHelper, ?, ?, ?> callback, boolean ignoreAir) {
@@ -326,9 +326,9 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @param pos1
-     * @param pos2
-     * @param callback
+     * @param pos1 the first position
+     * @param pos2 the second position
+     * @param callback the callback to call for each block
      * @since 1.9.0
      */
     public void iterateBox(BlockPosHelper pos1, BlockPosHelper pos2, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
@@ -336,10 +336,10 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @param pos1
-     * @param pos2
-     * @param callback
-     * @param ignoreAir
+     * @param pos1 the first position
+     * @param pos2 the second position
+     * @param callback the callback to call for each block
+     * @param ignoreAir whether to ignore air blocks
      * @since 1.9.0
      */
     public void iterateBox(BlockPosHelper pos1, BlockPosHelper pos2, MethodWrapper<BlockDataHelper, ?, ?, ?> callback, boolean ignoreAir) {
@@ -349,7 +349,6 @@ public class FWorld extends BaseLibrary {
             if (ignoreAir && state.isAir()) {
                 return;
             }
-            BlockEntity t = mc.world.getBlockEntity(bp);
             callback.accept(new BlockDataHelper(state, mc.world.getBlockEntity(bp), bp));
         });
     }
@@ -384,7 +383,7 @@ public class FWorld extends BaseLibrary {
 
     /**
      * @param distance the maximum distance to search for entities.
-     * @return
+     * @return a list of entities within the specified distance to the player.
      *
      * @since 1.9.0
      */
@@ -397,7 +396,7 @@ public class FWorld extends BaseLibrary {
     /**
      * @param distance the maximum distance to search for entities.
      * @param types the entity types to consider
-     * @return
+     * @return a list of entities within the specified distance to the player, that match the specified entity type.
      *
      * @since 1.9.0
      */
@@ -410,8 +409,8 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @param filter
-     * @return
+     * @param filter the entity filter
+     * @return a list of entities that match the specified filter.
      *
      * @since 1.9.0
      */
@@ -521,7 +520,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @return
+     * @return {@code true} if it is daytime, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -531,7 +530,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @return
+     * @return {@code true} if it is nighttime, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -541,7 +540,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @return
+     * @return {@code true} if it is raining, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -551,7 +550,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @return
+     * @return {@code true} if it is thundering, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -561,7 +560,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @return the name of the loaded world or {@code UNKNOWN_NAME} if no name could be found
+     * @return the name of the loaded world or {@code UNKNOWN_NAME} if no name could be found.
      *
      * @since 1.9.0
      */

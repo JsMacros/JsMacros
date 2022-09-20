@@ -31,6 +31,7 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 
 /**
@@ -75,14 +76,13 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
-     * @param gameMode possible values are survival, creative, adventure, spectator
-     * @return
+     * @param gameMode possible values are survival, creative, adventure, spectator (case insensitive)
      *
      * @since 1.9.0
      */
     public void setGameMode(String gameMode) {
         assert mc.interactionManager != null;
-        mc.interactionManager.setGameMode(GameMode.byName(gameMode, mc.interactionManager.getCurrentGameMode()));
+        mc.interactionManager.setGameMode(GameMode.byName(gameMode.toLowerCase(Locale.ROOT), mc.interactionManager.getCurrentGameMode()));
     }
     
     /**
@@ -174,11 +174,11 @@ public class FPlayer extends BaseLibrary {
                     if (callback != null) callback.accept(new TextHelper(text));
                 });
     }
-    
+
     /**
-     * @param folder
-     * @param width
-     * @param height
+     * @param folder   the folder to save the screenshot to, relative to the macro folder
+     * @param width    the width of the panorama
+     * @param height   the height of the panorama
      * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
      * @since 1.9.0
      */
@@ -196,7 +196,7 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
-     * @return
+     * @return {@code true} if the player is currently breaking a block, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -206,7 +206,7 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
-     * @return
+     * @return the current reach distance of the player.
      *
      * @since 1.9.0
      */

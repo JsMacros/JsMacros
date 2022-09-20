@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public abstract class StateHelper<U extends State<?, ?>> extends BaseHelper<U> {
 
     public StateHelper(U base) {

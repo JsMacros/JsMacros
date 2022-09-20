@@ -19,6 +19,7 @@ import java.util.stream.StreamSupport;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class AdvancementHelper extends BaseHelper<Advancement> {
 
     public AdvancementHelper(Advancement base) {
@@ -26,42 +27,54 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
     }
 
     /**
-     * @return
+     * @return the parent advancement or {@code null} if there is none.
+     *
+     * @since 1.9.0
      */
     public AdvancementHelper getParent() {
-        return new AdvancementHelper(base.getParent());
+        return base.getParent() == null ? null : new AdvancementHelper(base.getParent());
     }
 
     /**
-     * @return
+     * @return a list of all child advancements.
+     *
+     * @since 1.9.0
      */
     public List<AdvancementHelper> getChildren() {
         return StreamSupport.stream(base.getChildren().spliterator(), false).map(AdvancementHelper::new).toList();
     }
 
     /**
-     * @return
+     * @return the requirements of this advancement.
+     *
+     * @since 1.9.0
      */
     public String[][] getRequirements() {
         return base.getRequirements();
     }
 
     /**
-     * @return
+     * @return the amount of requirements.
+     *
+     * @since 1.9.0
      */
     public int getRequirementCount() {
         return base.getRequirementCount();
     }
 
     /**
-     * @return
+     * @return the identifier of this advancement.
+     *
+     * @since 1.9.0
      */
     public String getId() {
         return base.getId().toString();
     }
 
     /**
-     * @return
+     * @return a map of all criteria and their criterion of this advancement.
+     *
+     * @since 1.9.0
      */
     public Map<String, String> getCriteria() {
         return base.getCriteria().entrySet().stream().filter(e -> e.getValue().getConditions() != null).collect(Collectors.toMap(
@@ -71,28 +84,36 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
     }
 
     /**
-     * @return
+     * @return the experience awarded by this advancement.
+     *
+     * @since 1.9.0
      */
     public int getExperience() {
         return ((IAdvancementRewards) base.getRewards()).jsmacros_getExperience();
     }
 
     /**
-     * @return
+     * @return the loot table ids for this advancement's rewards.
+     *
+     * @since 1.9.0
      */
     public String[] getLoot() {
         return (String[]) Arrays.stream(((IAdvancementRewards) base.getRewards()).jsmacros_getLoot()).map(Identifier::toString).toArray();
     }
 
     /**
-     * @return
+     * @return the recipes unlocked through this advancement.
+     *
+     * @since 1.9.0
      */
     public String[] getRecipes() {
         return (String[]) Arrays.stream(base.getRewards().getRecipes()).map(Identifier::toString).toArray();
     }
 
     /**
-     * @return
+     * @return the progress.
+     *
+     * @since 1.9.0
      */
     public AdvancementProgressHelper getProgress() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;

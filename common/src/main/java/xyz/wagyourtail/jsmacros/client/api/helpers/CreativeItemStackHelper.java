@@ -17,6 +17,7 @@ import java.util.Arrays;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class CreativeItemStackHelper extends ItemStackHelper {
 
     public CreativeItemStackHelper(ItemStack i) {
@@ -24,8 +25,8 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     /**
-     * @param damage
-     * @return
+     * @param damage the damage the item should take.
+     * @return this helper for chaining.
      *
      * @since 1.9.0
      */
@@ -35,8 +36,8 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     /**
-     * @param count
-     * @return
+     * @param count the new count of the item.
+     * @return this helper for chaining.
      *
      * @since 1.9.0
      */
@@ -46,8 +47,8 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     /**
-     * @param name
-     * @return
+     * @param name the new name of the item.
+     * @return this helper for chaining.
      *
      * @since 1.9.0
      */
@@ -57,8 +58,8 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     /**
-     * @param name
-     * @return
+     * @param name the new name of the item.
+     * @return this helper for chaining.
      *
      * @since 1.9.0
      */
@@ -68,23 +69,34 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     /**
-     * @param id
-     * @param level
-     * @return
+     * @param id    the id of the enchantment.
+     * @param level the level of the enchantment.
+     * @return this helper for chaining.
      *
      * @since 1.9.0
      */
-    public ItemStackHelper addEnchantment(String id, int level) {
+    public CreativeItemStackHelper addEnchantment(String id, int level) {
         base.addEnchantment(Registry.ENCHANTMENT.get(Identifier.tryParse(id)), level);
         return this;
     }
 
     /**
-     * @return
+     * @param enchantment the enchantment to add.
+     * @return this helper for chaining.
      *
      * @since 1.9.0
      */
-    public ItemStackHelper clearEnchantments() {
+    public CreativeItemStackHelper addEnchantment(EnchantmentHelper enchantment) {
+        base.addEnchantment(enchantment.getRaw(), enchantment.getLevel());
+        return this;
+    }
+
+    /**
+     * @return this helper for chaining.
+     *
+     * @since 1.9.0
+     */
+    public CreativeItemStackHelper clearEnchantments() {
         NbtCompound compound = base.getOrCreateNbt();
         if (compound.contains("Enchantments", 9)) {
             compound.remove("Enchantments");
@@ -93,12 +105,12 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     /**
-     * @param id
-     * @return
+     * @param id the id of the enchantment to remove.
+     * @return this helper for chaining.
      *
      * @since 1.9.0
      */
-    public ItemStackHelper removeEnchantment(String id) {
+    public CreativeItemStackHelper removeEnchantment(String id) {
         NbtCompound compound = base.getOrCreateNbt();
         if (compound.contains("Enchantments", 9)) {
             NbtList nbtList = compound.getList("Enchantments", 10);
@@ -112,12 +124,12 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     /**
-     * @param lore
-     * @return
+     * @param lore the lore to add.
+     * @return this helper for chaining.
      *
      * @since 1.9.0
      */
-    public ItemStackHelper addLore(Object... lore) {
+    public CreativeItemStackHelper addLore(Object... lore) {
         if (lore instanceof TextHelper[] textHelpers) {
             return addLoreInternal(Arrays.stream(textHelpers).map(BaseHelper::getRaw).toArray(Text[]::new));
         } else if (lore instanceof TextBuilder[] textBuilders) {
@@ -130,12 +142,12 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     /**
-     * @param texts
-     * @return
+     * @param texts the lore to add.
+     * @return this helper for chaining.
      *
      * @since 1.9.0
      */
-    private ItemStackHelper addLoreInternal(Text... texts) {
+    private CreativeItemStackHelper addLoreInternal(Text... texts) {
         NbtCompound nbtCompound = base.getOrCreateSubNbt("display");
         NbtList list = new NbtList();
         for (Text text : texts) {
@@ -147,16 +159,16 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     /**
-     * @return
+     * @return this helper for chaining.
      *
      * @since 1.9.0
      */
-    public ItemStackHelper clearLore() {
+    public CreativeItemStackHelper clearLore() {
         NbtCompound nbtCompound = base.getOrCreateSubNbt("display");
         if (nbtCompound.contains("Lore", 9)) {
             nbtCompound.remove("Lore");
         }
         return this;
     }
-    
+
 }

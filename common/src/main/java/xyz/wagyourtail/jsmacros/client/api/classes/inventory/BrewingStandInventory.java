@@ -16,6 +16,7 @@ import java.util.List;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
 
     public BrewingStandInventory(BrewingStandScreen inventory) {
@@ -23,32 +24,34 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
     }
 
     /**
-     * @return
+     * @param potion the potion to check
+     * @return {@code true} if the given potion is can be brewed, {@code false} otherwise.
      *
      * @since 1.9.0
      */
-    public boolean isBrewablePotion(ItemStackHelper item) {
-        Potion potion = PotionUtil.getPotion(item.getRaw());
-        if (potion != Potions.EMPTY) {
-            return BrewingRecipeRegistry.isBrewable(potion);
+    public boolean isBrewablePotion(ItemStackHelper potion) {
+        Potion p = PotionUtil.getPotion(potion.getRaw());
+        if (p != Potions.EMPTY) {
+            return BrewingRecipeRegistry.isBrewable(p);
         }
         return false;
     }
 
     /**
-     * @param stack
-     * @return
+     * @param ingredient the item to check
+     * @return {@code true} if the given item is a valid ingredient, {@code false} otherwise.
      *
      * @since 1.9.0
      */
-    public boolean isValidIngredient(ItemStackHelper stack) {
-        return BrewingRecipeRegistry.isValidIngredient(stack.getRaw());
+    public boolean isValidIngredient(ItemStackHelper ingredient) {
+        return BrewingRecipeRegistry.isValidIngredient(ingredient.getRaw());
     }
 
     /**
-     * @param potion
-     * @param ingredient
-     * @return
+     * @param potion     the potion to check
+     * @param ingredient the ingredient to check
+     * @return {@code true} if the given potion and ingredient can be brewed together, {@code false}
+     *         otherwise.
      *
      * @since 1.9.0
      */
@@ -57,7 +60,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
     }
 
     /**
-     * @return
+     * @return the left fuel.
      *
      * @since 1.9.0
      */
@@ -66,7 +69,9 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
     }
 
     /**
-     * @return
+     * The maximum fuel count is a constant with the value 20.
+     *
+     * @return the maximum fuel.
      *
      * @since 1.9.0
      */
@@ -75,7 +80,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
     }
 
     /**
-     * @return
+     * @return {@code true} if the brewing stand can currently brew, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -96,7 +101,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
     }
 
     /**
-     * @return
+     * @return the time the potions have been brewing.
      *
      * @since 1.9.0
      */
@@ -105,7 +110,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
     }
 
     /**
-     * @return
+     * @return the remaining time the potions have to brew.
      *
      * @since 1.9.0
      */
@@ -114,7 +119,10 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
     }
 
     /**
-     * @return
+     * @param potion     the potion
+     * @param ingredient the ingredient
+     * @return the resulting potion of the given potion and ingredient if it exists and the potion
+     *         itself otherwise.
      *
      * @since 1.9.0
      */
@@ -123,6 +131,8 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
     }
 
     /**
+     * @return a list of all resulting potions of the current input.
+     *
      * @since 1.9.0
      */
     public List<ItemStackHelper> previewPotions() {
@@ -131,7 +141,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
     }
 
     /**
-     * @return
+     * @return the ingredient.
      *
      * @since 1.9.0
      */
@@ -140,7 +150,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
     }
 
     /**
-     * @return
+     * @return the fuel item.
      *
      * @since 1.9.0
      */
@@ -149,7 +159,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
     }
 
     /**
-     * @return
+     * @return a list of the potions inside the brewing stand.
      *
      * @since 1.9.0
      */

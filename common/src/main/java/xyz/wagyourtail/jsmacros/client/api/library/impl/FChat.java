@@ -81,8 +81,8 @@ public class FChat extends BaseLibrary {
      * Logs the formatted message to the player chat. The message is formatted using the default
      * java {@link String#format(String, Object...)} syntax.
      *
-     * @param message
-     * @param args
+     * @param message the message to format and log
+     * @param args    the arguments used to format the message
      * @throws InterruptedException
      * @since 1.9.0
      */
@@ -94,9 +94,9 @@ public class FChat extends BaseLibrary {
      * Logs the formatted message to the player chat. The message is formatted using the default
      * java {@link String#format(String, Object...)} syntax.
      *
-     * @param message
-     * @param await should wait for message to actually be sent to chat to continue
-     * @param args
+     * @param message the message to format and log
+     * @param await   should wait for message to actually be sent to chat to continue
+     * @param args    the arguments used to format the message
      * @throws InterruptedException
      * @since 1.9.0
      */

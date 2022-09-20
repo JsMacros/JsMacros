@@ -15,6 +15,7 @@ import java.util.Optional;
 /**
  * @since 1.5.1
  */
+@SuppressWarnings("unused")
 public class BeaconInventory extends Inventory<BeaconScreen> {
     protected BeaconInventory(BeaconScreen inventory) {
         super(inventory);

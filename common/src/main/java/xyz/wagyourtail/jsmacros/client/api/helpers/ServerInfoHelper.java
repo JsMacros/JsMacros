@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 /**
  * @since 1.6.5
  */
+@SuppressWarnings("unused")
 public class ServerInfoHelper extends BaseHelper<ServerInfo> {
 
     public ServerInfoHelper(ServerInfo base) {

@@ -184,9 +184,9 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
         }
         return this;
     }
-    
+
     /**
-     * @param tooltips
+     * @param tooltips the tooltips to set
      * @since 1.9.0
      */
     public void setTooltip(Object... tooltips) {
@@ -197,7 +197,7 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
     }
 
     /**
-     * @param tooltip
+     * @param tooltip the tooltips to add
      * @since 1.9.0
      */
     public void addTooltip(Object tooltip) {
@@ -213,7 +213,7 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
     }
 
     /**
-     * @param index
+     * @param index the index of the tooltip to remove
      * @return
      *
      * @since 1.9.0
@@ -227,8 +227,8 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
     }
 
     /**
-     * @param tooltip
-     * @return
+     * @param tooltip the tooltip to remove
+     * @return {@code true} if the tooltip was removed successfully, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -237,7 +237,7 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
     }
 
     /**
-     * @return
+     * @return a copy of the tooltips
      *
      * @since 1.9.0
      */

@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -40,7 +41,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     }
 
     /**
-     * @return
+     * @return {@code true} if this effect is applied permanently, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -49,7 +50,10 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     }
 
     /**
-     * @return
+     * Ambient effects are usually applied through beacons and they make the particles more
+     * translucent.
+     *
+     * @return {@code true} if this effect is an ambient one, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -58,7 +62,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     }
 
     /**
-     * @return
+     * @return {@code true} if this effect has an icon it should render, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -67,7 +71,8 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     }
 
     /**
-     * @return
+     * @return {@code true} if this effect affects the particle color and gets rendered in game,
+     *         {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -76,7 +81,8 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     }
 
     /**
-     * @return
+     * @return the type of this effect, which is either {@code HARMFUL}, {@code NEUTRAL} or
+     *         {@code BENEFICIAL}.
      *
      * @since 1.9.0
      */
@@ -89,7 +95,10 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     }
 
     /**
-     * @return
+     * An effect which is instant can still have a duration, but only if it's set through a
+     * command.
+     *
+     * @return {@code true} if this effect should be applied instantly, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -98,12 +107,30 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     }
 
     /**
-     * @return
+     * @return {@code true} if this effect is considered beneficial, {@code false} otherwise.
      *
      * @since 1.9.0
      */
     public boolean isBeneficial() {
-        return base.getEffectType().isBeneficial();
+        return base.getEffectType().getCategory() == StatusEffectCategory.BENEFICIAL;
+    }
+
+    /**
+     * @return {@code true} if this effect is considered neutral, {@code false} otherwise.
+     *
+     * @since 1.9.0
+     */
+    public boolean isNeutral() {
+        return base.getEffectType().getCategory() == StatusEffectCategory.NEUTRAL;
+    }
+
+    /**
+     * @return {@code true} if this effect is considered harmful, {@code false} otherwise.
+     *
+     * @since 1.9.0
+     */
+    public boolean isHarmful() {
+        return base.getEffectType().getCategory() == StatusEffectCategory.HARMFUL;
     }
     
 }

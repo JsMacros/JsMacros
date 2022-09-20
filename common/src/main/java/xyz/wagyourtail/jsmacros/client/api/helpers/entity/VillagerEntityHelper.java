@@ -5,6 +5,7 @@ import net.minecraft.entity.passive.VillagerEntity;
 /**
  * @since 1.6.3
  */
+@SuppressWarnings("unused")
 public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
 
     public VillagerEntityHelper(VillagerEntity e) {

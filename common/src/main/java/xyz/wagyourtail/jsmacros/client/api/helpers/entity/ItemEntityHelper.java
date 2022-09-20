@@ -4,6 +4,7 @@ import net.minecraft.entity.ItemEntity;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 
+@SuppressWarnings("unused")
 public class ItemEntityHelper extends EntityHelper<ItemEntity> {
     public ItemEntityHelper(ItemEntity e) {
         super(e);

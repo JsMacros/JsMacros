@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class CustomImage {
 
     public static final Map<String, CustomImage> IMAGES = new HashMap<>();
@@ -55,6 +56,10 @@ public class CustomImage {
         update();
         currentId++;
         IMAGES.put(identifier.toString(), this);
+    }
+
+    public String getName() {
+        return name;
     }
 
     public BufferedImage loadImage(String path) {

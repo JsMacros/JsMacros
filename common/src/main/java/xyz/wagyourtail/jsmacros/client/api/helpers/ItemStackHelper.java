@@ -68,7 +68,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @return
+     * @return {@code true} if the item is enchanted, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -77,7 +77,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @return
+     * @return a list of all enchantments on this item.
      *
      * @since 1.9.0
      */
@@ -90,18 +90,18 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @param id
-     * @return
+     * @param id the id of the enchantment to check for.
+     * @return the enchantment instance, containing the level, or {@code null} if the item is not enchanted with the specified enchantment.
      *
      * @since 1.9.0
      */
-    public Optional<EnchantmentHelper> getEnchantment(String id) {
-        return getEnchantments().stream().filter(enchantmentHelper -> enchantmentHelper.getName().equals(id)).findFirst();
+    public EnchantmentHelper getEnchantment(String id) {
+        return getEnchantments().stream().filter(enchantmentHelper -> enchantmentHelper.getName().equals(id)).findFirst().orElse(null);
     }
 
     /**
-     * @param id
-     * @return
+     * @param id the id of the enchantment to check for.
+     * @return {@code true} if the item is enchanted with the specified enchantment, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -110,7 +110,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @return
+     * @return a list of all enchantments that can be applied to this item.
      *
      * @since 1.9.0
      */
@@ -119,7 +119,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @return
+     * @return a list of all enchantments that can be applied to this item through an enchanting table.
      *
      * @since 1.9.0
      */
@@ -128,7 +128,11 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @return
+     * The returned list is a copy of the original list and can be modified without affecting the
+     * original item. For editing the actual lore see
+     * {@link CreativeItemStackHelper#addLore(Object...)}.
+     *
+     * @return a list of all lines of lore on this item.
      *
      * @since 1.9.0
      */
@@ -159,7 +163,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @return max durability
+     * @return the maximum durability of this item.
      *
      * @since 1.9.0
      */
@@ -168,7 +172,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @return durability
+     * @return the current durability of this item.
      *
      * @since 1.9.0
      */
@@ -177,7 +181,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @return
+     * @return the current repair cost of this item.
      *
      * @since 1.9.0
      */
@@ -186,21 +190,25 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
     
     /**
-     * @return
+     * @return the damage taken by this item.
+     * 
+     * @see #getDurability() 
      */
     public int getDamage() {
         return base.getDamage();
     }
     
     /**
-     * @return
+     * @return the maximum damage this item can take.
+     * 
+     * @see #getMaxDurability() 
      */
     public int getMaxDamage() {
         return base.getMaxDamage();
     }
 
     /**
-     * @return
+     * @return the default attack damage of this item.
      *
      * @since 1.9.0
      */
@@ -230,14 +238,14 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
     
     /**
-     * @return
+     * @return the item count this stack is holding.
      */
     public int getCount() {
         return base.getCount();
     }
     
     /**
-     * @return
+     * @return the maximum amount of items this stack can hold.
      */
     public int getMaxCount() {
         return base.getMaxCount();
@@ -426,16 +434,9 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @return
-     *
-     * @since 1.9.0
-     */
-    public boolean isAir() {
-        return base.getItem() == Items.AIR;
-    }
-
-    /**
-     * @return
+     * @param block the block to check.
+     * @return {@code true} if the given block can be mined and drops when broken with this item,
+     *         {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -444,21 +445,35 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @return
+     * @param block the block to check.
+     * @return {@code true} if the given block can be mined and drops when broken with this item,
+     *         {@code false} otherwise.
      *
      * @since 1.9.0
      */
     public boolean isSuitableFor(BlockStateHelper block) {
         return base.isSuitableFor(block.getRaw());
     }
-    
+
     /**
-     * @return
+     * {@link CreativeItemStackHelper} is a subclass of {@link ItemStackHelper} that adds methods
+     * for manipulating the item's nbt data.
+     *
+     * @return a {@link CreativeItemStackHelper} instance for this item.
      *
      * @since 1.9.0
      */
     public CreativeItemStackHelper getCreativeHelper() {
         return new CreativeItemStackHelper(base);
+    }
+
+    /**
+     * @return the item this stack is made of.
+     *
+     * @since 1.9.0
+     */
+    public ItemHelper getItem() {
+        return new ItemHelper(base.getItem());
     }
     
     /**

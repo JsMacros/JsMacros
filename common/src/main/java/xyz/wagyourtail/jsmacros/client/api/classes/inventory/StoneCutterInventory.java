@@ -11,6 +11,7 @@ import java.util.List;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class StoneCutterInventory extends Inventory<StonecutterScreen> {
 
     public StoneCutterInventory(StonecutterScreen inventory) {
@@ -18,7 +19,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
     }
 
     /**
-     * @return
+     * @return the selected recipe index.
      *
      * @since 1.9.0
      */
@@ -27,8 +28,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
     }
 
     /**
-     * @return
-     *
+     * @param idx the index to select
      * @since 1.9.0
      */
     public void selectRecipe(int idx) {
@@ -39,7 +39,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
     }
 
     /**
-     * @return
+     * @return the amount of available recipes.
      *
      * @since 1.9.0
      */
@@ -48,7 +48,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
     }
 
     /**
-     * @return
+     * @return a list of all available recipe results in the form of item stacks.
      *
      * @since 1.9.0
      */
@@ -57,7 +57,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
     }
 
     /**
-     * @return
+     * @return {@code true} if there is a selected recipe, {@code false} otherwise.
      *
      * @since 1.9.0
      */

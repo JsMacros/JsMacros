@@ -126,11 +126,11 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
-     * @param x
-     * @param y
-     * @param z
+     * @param x         the x coordinate to attack
+     * @param y         the y coordinate to attack
+     * @param z         the z coordinate to attack
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
-     * @return
+     * @return this instance for chaining.
      *
      * @since 1.9.0
      */
@@ -151,14 +151,14 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
-     * @param x
-     * @param y
-     * @param z
+     * @param x         the x coordinate to attack
+     * @param y         the y coordinate to attack
+     * @param z         the z coordinate to attack
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
-     * @param await
-     * @return
+     * @param await     whether to wait for the attack to finish
+     * @return this instance for chaining.
      *
-     * @since 1.8.0
+     * @since 1.9.0
      */
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, String direction, boolean await) throws InterruptedException {
         return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), await);
@@ -272,10 +272,12 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
-     * @param x
-     * @param y
-     * @param z
+     * @param x         the x coordinate to interact
+     * @param y         the y coordinate to interact
+     * @param z         the z coordinate to interact
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
+     * @return this instance for chaining.
+     *
      * @since 1.9.0
      */
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, String direction, boolean offHand) throws InterruptedException {
@@ -295,11 +297,13 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
-     * @param x
-     * @param y
-     * @param z
+     * @param x         the x coordinate to interact
+     * @param y         the y coordinate to interact
+     * @param z         the z coordinate to interact
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
-     * @param await
+     * @param await     whether to wait for the interaction to complete
+     * @return this instance for chaining.
+     *
      * @since 1.9.0
      */
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, String direction, boolean offHand, boolean await) throws InterruptedException {
@@ -464,7 +468,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     /**
      * This will return the invisible hunger decade that you may have seen in mods as a yellow overlay.
      *
-     * @return
+     * @return the saturation level.
      *
      * @since 1.9.0
      */
@@ -473,7 +477,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
     
     /**
-     * @return
+     * @return this instance for chaining.
      *
      * @since 1.9.0
      */
@@ -483,7 +487,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
-     * @return
+     * @return an advancement manager to work with advancements.
      *
      * @since 1.9.0
      */

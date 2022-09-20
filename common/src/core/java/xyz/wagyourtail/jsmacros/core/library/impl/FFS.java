@@ -84,7 +84,7 @@ public class FFS extends PerExecLibrary {
      * @param name the name of the file.
      * @return {@code true} if the file was created successfully
      *
-     * @throws IOException
+     * @throws IOException if there occurs an error while creating the file
      * @since 1.9.0
      */
     public boolean createFile(String path, String name) throws IOException {
@@ -100,7 +100,7 @@ public class FFS extends PerExecLibrary {
      * @param createDirs automatically creates the parent folders
      * @return {@code true} if the file was created successfully
      *
-     * @throws IOException
+     * @throws IOException if there occurs an error while creating the file
      * @since 1.9.0
      */
     public boolean createFile(String path, String name, boolean createDirs) throws IOException {

@@ -12,6 +12,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 /**
  * @since 1.3.1
  */
+@SuppressWarnings("unused")
 public class EnchantInventory extends Inventory<EnchantmentScreen> {
     
     protected EnchantInventory(EnchantmentScreen inventory) {
@@ -42,7 +43,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
     }
 
     /**
-     * @return
+     * @return the visible enchantment for each level.
      *
      * @since 1.9.0
      */
@@ -95,7 +96,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
     }
 
     /**
-     * @return
+     * @return the item to be enchanted.
      *
      * @since 1.9.0
      */

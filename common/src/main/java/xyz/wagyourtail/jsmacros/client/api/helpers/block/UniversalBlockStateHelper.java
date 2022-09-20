@@ -55,6 +55,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.DirectionHelper;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
@@ -691,7 +692,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on amethysts, corals, rails, dripleaves, dripleaf stems, campfires, candles, chains,
      * chests, conduits, fences, double plants, ender chests, iron bars, glass panes, glow lichen,
      * hanging roots, ladders, lanterns, light blocks, lightning rods, pointed dripstone,
-     * scaffolding , sculk sensors, sea pickles, signs, stairs, slabs, trap doors, walls
+     * scaffolding , sculk sensors, sea pickles, signs, stairs, slabs, trap doors and walls
      *
      * @return
      *

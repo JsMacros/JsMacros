@@ -48,7 +48,7 @@ import java.util.stream.Stream;
  * @author Wagyourtail
  * @since 1.0.8
  */
- @SuppressWarnings("unused")
+@SuppressWarnings("unused")
 public class Inventory<T extends HandledScreen<?>> {
     protected T inventory;
     protected Map<String, int[]> map;
@@ -157,9 +157,9 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param slot
+     * @param slot  the slot to drop
      * @param stack decide whether to drop the whole stack or just a single item
-     * @return
+     * @return this instance for chaining.
      *
      * @since 1.9.0
      */
@@ -169,8 +169,9 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param item
-     * @return
+     * @param item the item to check for
+     * @return {@code true} if the item is contined anywhere in the inventory, {@code false}
+     *         otherwise.
      *
      * @since 1.9.0
      */
@@ -179,8 +180,9 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param item
-     * @return
+     * @param item the item to check for
+     * @return {@code true} if the item is contined anywhere in the inventory, {@code false}
+     *         otherwise.
      *
      * @since 1.9.0
      */
@@ -189,16 +191,17 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @return the first empty slot in the main inventory and -1 if there are no empty slots
+     * @return the first empty slot in the main inventory or {@code -1} if there are no empty
+     *         slots.
      *
      * @since 1.9.0
      */
     public int findFreeInventorySlot() {
-        return findFreeSlot("main" , "hotbar");
+        return findFreeSlot("main", "hotbar");
     }
 
     /**
-     * @return
+     * @return the first empty hotbar slot or {@code -1} if there are no empty slots.
      *
      * @since 1.9.0
      */
@@ -222,7 +225,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @return
+     * @return a map of all item ids mapped to their total count.
      *
      * @since 1.9.0
      */
@@ -233,7 +236,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @return
+     * @return a list of all items in the inventory.
      *
      * @since 1.9.0
      */
@@ -242,8 +245,8 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param mapIdentifiers
-     * @return
+     * @param mapIdentifiers the inventory sections
+     * @return a list of all items in the given inventory sections.
      *
      * @since 1.9.0
      */
@@ -252,8 +255,8 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param item
-     * @return
+     * @param item the item to search for
+     * @return all slots containing the given item.
      *
      * @since 1.9.0
      */
@@ -268,8 +271,8 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param item
-     * @return
+     * @param item the item to search for
+     * @return all slots containing the given item.
      *
      * @since 1.9.0
      */
@@ -284,8 +287,8 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param mapIdentifiers
-     * @return
+     * @param mapIdentifiers the inventory sections
+     * @return all slots indexes in the given inventory sections.
      *
      * @since 1.9.0
      */
@@ -301,7 +304,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param callback
+     * @param callback the callback for accepting the items.
      * @since 1.9.0
      */
     public void iterateItems(MethodWrapper<ItemStackHelper, Integer, ?, ?> callback) {
@@ -315,14 +318,11 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param callback
-     * @param mapIdentifiers
-     * @return
-     *
+     * @param callback       the callback for accepting the items
+     * @param mapIdentifiers the inventory sections to iterate over
      * @since 1.9.0
      */
     public void iterateItems(MethodWrapper<ItemStackHelper, Integer, ?, ?> callback, String... mapIdentifiers) {
-        int count = getTotalSlots();
         IntStream.of(getSlots(mapIdentifiers)).forEach(i -> {
             ItemStackHelper stack = getSlot(i);
             if (!stack.isEmpty()) {
@@ -575,8 +575,8 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param craftable
-     * @return
+     * @param craftable whether only to list craftable recipes
+     * @return a list of recipes that can be crafted in this inventory.
      *
      * @throws InterruptedException
      * @since 1.9.0
@@ -716,7 +716,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @return
+     * @return {@code true} if the inventory is a container, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -725,7 +725,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @return
+     * @return {@code true} if the recipe book is visible, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -738,7 +738,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param open
+     * @param open whether to open or close the recipe book
      * @since 1.9.0
      */
     public void setRecipeBookOpen(boolean open) {

@@ -6,6 +6,7 @@ import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
+@SuppressWarnings("unused")
 public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
     private ChatHud hud;
 

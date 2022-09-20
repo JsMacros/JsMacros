@@ -107,7 +107,7 @@ public class FUtil extends BaseLibrary {
     /**
      * Creates a java {@link ArrayList}.
      *
-     * @return a java ArrayList
+     * @return a java ArrayList.
      *
      * @since 1.9.0
      */
@@ -120,7 +120,7 @@ public class FUtil extends BaseLibrary {
      *
      * @param array the array to add to the list
      * @param <T>   the type of the array
-     * @return a java ArrayList from the given array
+     * @return a java ArrayList from the given array.
      *
      * @since 1.9.0
      */
@@ -131,7 +131,7 @@ public class FUtil extends BaseLibrary {
     /**
      * Creates a java {@link HashMap}.
      *
-     * @return a java HashMap
+     * @return a java HashMap.
      *
      * @since 1.9.0
      */
@@ -142,7 +142,7 @@ public class FUtil extends BaseLibrary {
     /**
      * Creates a java {@link HashSet}.
      *
-     * @return a java HashSet
+     * @return a java HashSet.
      *
      * @since 1.9.0
      */
@@ -153,7 +153,7 @@ public class FUtil extends BaseLibrary {
     /**
      * Creates a java {@link LinkedList}.
      *
-     * @return a java LinkedList
+     * @return a java LinkedList.
      *
      * @since 1.9.0
      */
@@ -162,8 +162,9 @@ public class FUtil extends BaseLibrary {
     }
 
     /**
-     * @param obj
-     * @return
+     * @param obj the object to wrap
+     * @return the correct instance of {@link BaseHelper} for the given object if it exists and
+     *         {@code null} otherwise.
      *
      * @since 1.9.0
      */
@@ -252,8 +253,8 @@ public class FUtil extends BaseLibrary {
     }
 
     /**
-     * @param text
-     * @return
+     * @param text the text to check
+     * @return the pixel width of the given text for the current font renderer.
      *
      * @since 1.9.0
      */
@@ -262,8 +263,8 @@ public class FUtil extends BaseLibrary {
     }
 
     /**
-     * @param text
-     * @return
+     * @param text the text to check
+     * @return the pixel width of the given text for the current font renderer.
      *
      * @since 1.9.0
      */
@@ -272,9 +273,7 @@ public class FUtil extends BaseLibrary {
     }
 
     /**
-     * @param uri
-     * @return
-     *
+     * @param uri the uri to open
      * @since 1.9.0
      */
     public void openLink(String uri) throws URISyntaxException {
@@ -282,9 +281,7 @@ public class FUtil extends BaseLibrary {
     }
 
     /**
-     * @param path
-     * @return
-     *
+     * @param path the path top open, relative the config folder
      * @since 1.9.0
      */
     public void openFile(String path) {
@@ -292,8 +289,8 @@ public class FUtil extends BaseLibrary {
     }
 
     /**
-     * @param array
-     * @return
+     * @param array the array to convert
+     * @return the String representation of the given array.
      *
      * @since 1.9.0
      */
@@ -302,8 +299,11 @@ public class FUtil extends BaseLibrary {
     }
 
     /**
-     * @param array
-     * @return
+     * This method will convert any objects hold in the array data to Strings and should be used for
+     * multidimensional arrays.
+     *
+     * @param array the array to convert
+     * @return the String representation of the given array.
      *
      * @since 1.9.0
      */
@@ -314,7 +314,7 @@ public class FUtil extends BaseLibrary {
     /**
      * Copies the text to the clipboard.
      *
-     * @param text
+     * @param text the text to copy
      * @since 1.9.0
      */
     public void copyToClipboard(String text) {
@@ -333,8 +333,8 @@ public class FUtil extends BaseLibrary {
     /**
      * Hashes the given string with sha-256.
      *
-     * @param message
-     * @return
+     * @param message the message to hash
+     * @return the hashed message.
      *
      * @since 1.9.0
      */
@@ -345,9 +345,9 @@ public class FUtil extends BaseLibrary {
     /**
      * Hashes the given string with sha-256 the selected algorithm.
      *
-     * @param message
+     * @param message   the message to hash
      * @param algorithm sha1 | sha256 | sha384 | sha512 | md2 | md5
-     * @return
+     * @return the hashed message.
      *
      * @since 1.9.0
      */
@@ -366,8 +366,8 @@ public class FUtil extends BaseLibrary {
     /**
      * Encodes the given string with Base64.
      *
-     * @param message
-     * @return
+     * @param message the message to encode
+     * @return the encoded message.
      *
      * @since 1.9.0
      */
@@ -378,8 +378,8 @@ public class FUtil extends BaseLibrary {
     /**
      * Decodes the given string with Base64.
      *
-     * @param message
-     * @return
+     * @param message the message to decode
+     * @return the decoded message.
      *
      * @since 1.9.0
      */
@@ -412,8 +412,8 @@ public class FUtil extends BaseLibrary {
     }
 
     /**
-     * @param identifier
-     * @return
+     * @param identifier the String representation of the identifier, with the namespace and path
+     * @return the raw minecraft Identifier.
      *
      * @since 1.9.0
      */
@@ -424,8 +424,8 @@ public class FUtil extends BaseLibrary {
     /**
      * Tries to guess the name of the sender of a given message.
      *
-     * @param text
-     * @return
+     * @param text the text to check
+     * @return the name of the sender or null if it couldn't be guessed.
      *
      * @since 1.9.0
      */
@@ -434,10 +434,24 @@ public class FUtil extends BaseLibrary {
     }
 
     /**
-     * Tries to guess the name, as well as the titles, of the sender of a given message.
+     * Tries to guess the name of the sender of a given message.
      *
-     * @param text
-     * @return
+     * @param text the text to check
+     * @return the name of the sender or null if it couldn't be guessed.
+     *
+     * @since 1.9.0
+     */
+    public String guessName(String text) {
+        List<String> names = guessNameAndRoles(text);
+        return names.isEmpty() ? null : names.get(0);
+    }
+
+    /**
+     * Tries to guess the name, as well as the titles and roles of the sender of the given message.
+     *
+     * @param text the text to check
+     * @return a list of names, titles and roles of the sender or an empty list if it couldn't be
+     *         guessed.
      *
      * @since 1.9.0
      */
@@ -446,22 +460,11 @@ public class FUtil extends BaseLibrary {
     }
 
     /**
-     * Tries to guess the name of the sender of a given message.
+     * Tries to guess the name, as well as the titles and roles of the sender of the given message.
      *
-     * @param text
-     * @return
-     *
-     * @since 1.9.0
-     */
-    public String guessName(String text) {
-        return guessNameAndRoles(text).get(0);
-    }
-
-    /**
-     * Tries to guess the name, as well as the titles, of the sender of a given message.
-     *
-     * @param text
-     * @return
+     * @param text the text to check
+     * @return a list of names, titles and roles of the sender or an empty list if it couldn't be
+     *         guessed.
      *
      * @since 1.9.0
      */

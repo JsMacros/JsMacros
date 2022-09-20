@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.TradeOfferHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class MerchantEntityHelper<T extends MerchantEntity> extends LivingEntityHelper<T> {
     
     public MerchantEntityHelper(T e) {

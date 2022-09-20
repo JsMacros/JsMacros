@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class SliderWidgetHelper extends ButtonWidgetHelper<Slider> {
 
     public SliderWidgetHelper(Slider btn) {
@@ -22,7 +23,7 @@ public class SliderWidgetHelper extends ButtonWidgetHelper<Slider> {
     }
 
     /**
-     * @return
+     * @return the current value of this slider.
      *
      * @since 1.9.0
      */
@@ -31,8 +32,8 @@ public class SliderWidgetHelper extends ButtonWidgetHelper<Slider> {
     }
 
     /**
-     * @param value
-     * @return
+     * @param value the new value
+     * @return this instance for chaining.
      *
      * @since 1.9.0
      */
@@ -42,7 +43,7 @@ public class SliderWidgetHelper extends ButtonWidgetHelper<Slider> {
     }
 
     /**
-     * @return
+     * @return the set amount of steps of this slider.
      *
      * @since 1.9.0
      */
@@ -51,8 +52,8 @@ public class SliderWidgetHelper extends ButtonWidgetHelper<Slider> {
     }
 
     /**
-     * @param steps
-     * @return
+     * @param steps the amount of steps
+     * @return this instance for chaining.
      *
      * @since 1.9.0
      */

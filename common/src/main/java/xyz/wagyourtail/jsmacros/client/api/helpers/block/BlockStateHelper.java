@@ -12,6 +12,7 @@ import java.util.Locale;
  * @author Etheradon
  * @since 1.6.5
  */
+@SuppressWarnings("unused")
 public class BlockStateHelper extends StateHelper<BlockState> {
 
     public BlockStateHelper(BlockState base) {
@@ -28,7 +29,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
     }
 
     /**
-     * @return
+     * @return the fluid state of this block state.
      *
      * @since 1.9.0
      */
@@ -228,7 +229,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
     }
 
     /**
-     * @return
+     * @return an {@link UniversalBlockStateHelper} to access all properties of this block state.
      *
      * @since 1.9.0
      */

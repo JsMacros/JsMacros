@@ -149,7 +149,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     /**
-     * @return
+     * @return {@code true} if the entity is sneaking, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -158,7 +158,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     /**
-     * @return
+     * @return {@code true} if the entity is sprinting, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -279,7 +279,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     /**
-     * @return
+     * @return the maximum amount of air this entity can have.
      *
      * @since 1.9.0
      */
@@ -288,7 +288,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     /**
-     * @return
+     * @return the amount of air this entity has.
      *
      * @since 1.9.0
      */
@@ -297,7 +297,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
     
     /**
-     * @return
+     * @return this entity's current speed in blocks per second.
      *
      * @since 1.9.0
      */
@@ -308,7 +308,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     /**
-     * @return
+     * @return the direction the entity is facing, rounded to the nearest 45 degrees.
      *
      * @since 1.9.0
      */
@@ -317,7 +317,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     /**
-     * @return
+     * @return the distance between this entity and the specified one.
      *
      * @since 1.9.0
      */
@@ -326,7 +326,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     /**
-     * @return
+     * @return the distance between this entity and the specified position.
      *
      * @since 1.9.0
      */
@@ -335,7 +335,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     /**
-     * @return
+     * @return the distance between this entity and the specified position.
      *
      * @since 1.9.0
      */
@@ -344,7 +344,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     /**
-     * @return
+     * @return the distance between this entity and the specified position.
      *
      * @since 1.9.0
      */
@@ -353,7 +353,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     /**
-     * @return
+     * @return the velocity vector.
      *
      * @since 1.9.0
      */
@@ -362,7 +362,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     /**
-     * @return
+     * @return the chunk helper for the chunk this entity is in.
      *
      * @since 1.9.0
      */
@@ -371,7 +371,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
     
     /**
-     * @return
+     * @return the name of the biome this entity is in.
      *
      * @since 1.9.0
      */
@@ -450,7 +450,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     /**
-     * @return the entity as a server entity if an integrated server is running
+     * @return the entity as a server entity if an integrated server is running and {@code null} otherwise.
      *
      * @since 1.9.0
      */

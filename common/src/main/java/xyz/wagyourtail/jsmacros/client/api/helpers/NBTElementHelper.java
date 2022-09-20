@@ -9,6 +9,7 @@ import java.util.UUID;
 /**
  * @since 1.5.1
  */
+@SuppressWarnings("unused")
 public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
 
     private NBTElementHelper(T base) {

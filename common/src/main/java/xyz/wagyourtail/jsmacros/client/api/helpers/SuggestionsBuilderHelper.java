@@ -6,6 +6,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 /**
  * @since 1.6.5
  */
+@SuppressWarnings("unused")
 public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
     public SuggestionsBuilderHelper(SuggestionsBuilder base) {
         super(base);

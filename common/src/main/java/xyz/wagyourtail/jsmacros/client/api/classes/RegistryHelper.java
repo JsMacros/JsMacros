@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryWrapper;
 import net.minecraft.command.argument.BlockArgumentParser;
 import net.minecraft.command.argument.ItemStringReader;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -24,16 +25,12 @@ import java.util.List;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class RegistryHelper {
 
-    public RegistryHelper() {
-    }
-
     /**
-     * Returns an {@link ItemStackHelper} for the given item.
-     *
-     * @param id in the form {@code minecraft:diamond_sword}
-     * @return
+     * @param id the item id.
+     * @return an {@link ItemStackHelper} for the given item.
      *
      * @since 1.9.0
      */
@@ -42,11 +39,11 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id
-     * @param nbt
-     * @return
+     * @param id  the item id.
+     * @param nbt the item nbt.
+     * @return an {@link ItemStackHelper} for the given item and nbt data.
      *
-     * @throws CommandSyntaxException
+     * @throws CommandSyntaxException if the nbt data is invalid.
      * @since 1.9.0
      */
     public ItemStackHelper getItemStack(String id, String nbt) throws CommandSyntaxException {
@@ -55,9 +52,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all items.
-     *
-     * @return
+     * @return a list of all registered item ids.
      *
      * @since 1.9.0
      */
@@ -66,10 +61,8 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns an {@link BlockStateHelper} for the given block.
-     *
-     * @param id in the form {@code minecraft:dirt}
-     * @return
+     * @param id the block id.
+     * @return an {@link BlockStateHelper} for the given block.
      *
      * @since 1.9.0
      */
@@ -78,13 +71,11 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns an {@link BlockStateHelper} for the given block with the specified nbt.
+     * @param id  the block id.
+     * @param nbt the block nbt.
+     * @return an {@link BlockStateHelper} for the given block with the specified nbt.
      *
-     * @param id
-     * @param nbt
-     * @return
-     *
-     * @throws CommandSyntaxException
+     * @throws CommandSyntaxException if the nbt data is invalid.
      * @since 1.9.0
      */
     public BlockStateHelper getBlockState(String id, String nbt) throws CommandSyntaxException {
@@ -92,10 +83,8 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns an {@link BlockHelper} for the given block.
-     *
-     * @param id in the form {@code minecraft:dirt}
-     * @return
+     * @param id the block id
+     * @return an {@link BlockHelper} for the given block.
      *
      * @since 1.9.0
      */
@@ -104,9 +93,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all blocksS.
-     *
-     * @return
+     * @return a list of all registered block ids.
      *
      * @since 1.9.0
      */
@@ -115,10 +102,8 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns an {@link EnchantmentHelper} for the given enchantment.
-     *
-     * @param id in the form {@code minecraft:knockback}
-     * @return
+     * @param id the enchantment id.
+     * @return an {@link EnchantmentHelper} for the given enchantment.
      *
      * @since 1.9.0
      */
@@ -127,11 +112,9 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns an {@link EnchantmentHelper} for the given enchantment.
-     *
-     * @param id    in the form {@code minecraft:knockback}
-     * @param level
-     * @return
+     * @param id    the enchantment id.
+     * @param level the level of the enchantment.
+     * @return an {@link EnchantmentHelper} for the given enchantment with the specified level.
      *
      * @since 1.9.0
      */
@@ -140,9 +123,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all enchantments.
-     *
-     * @return
+     * @return a list of all registered enchantment ids.
      *
      * @since 1.9.0
      */
@@ -151,11 +132,8 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns an {@link EntityHelper} for the given entity, that will be summoned inside the
-     * world.
-     *
-     * @param type in the form {@code minecraft:bat}
-     * @return
+     * @param type the entity type id.
+     * @return an {@link EntityHelper} for the given entity.
      *
      * @since 1.9.0
      */
@@ -164,10 +142,8 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns an {@link EntityType} for the given entity.
-     *
-     * @param type in the form {@code minecraft:bat}
-     * @return
+     * @param type the entity type id.
+     * @return an {@link EntityType} for the given entity.
      *
      * @since 1.9.0
      */
@@ -176,9 +152,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all entity types.
-     *
-     * @return
+     * @return a list of all entity type ids.
      *
      * @since 1.9.0
      */
@@ -187,10 +161,8 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns an {@link FluidStateHelper} for the given fluid.
-     *
-     * @param id in the form {@code minecraft:water}
-     * @return
+     * @param id the fluid id.
+     * @return an {@link FluidStateHelper} for the given fluid.
      *
      * @since 1.9.0
      */
@@ -199,9 +171,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all features.
-     *
-     * @return
+     * @return a list of all feature ids.
      *
      * @since 1.9.0
      */
@@ -210,9 +180,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all structure features.
-     *
-     * @return
+     * @return a list of all structure feature ids.
      *
      * @since 1.9.0
      */
@@ -221,9 +189,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all painting motives.
-     *
-     * @return
+     * @return a list of all painting motive ids.
      *
      * @since 1.9.0
      */
@@ -232,9 +198,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all particle types.
-     *
-     * @return
+     * @return a list of all particle type ids.
      *
      * @since 1.9.0
      */
@@ -243,9 +207,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all game events.
-     *
-     * @return
+     * @return a list of all game event names.
      *
      * @since 1.9.0
      */
@@ -254,9 +216,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all status effects.
-     *
-     * @return
+     * @return a list of all status effect ids.
      *
      * @since 1.9.0
      */
@@ -265,9 +225,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all block entity types.
-     *
-     * @return
+     * @return a list of all block entity type ids.
      *
      * @since 1.9.0
      */
@@ -276,9 +234,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all screen handlers.
-     *
-     * @return
+     * @return a list of all screen handler ids.
      *
      * @since 1.9.0
      */
@@ -287,9 +243,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all recipe types.
-     *
-     * @return
+     * @return a list of all recipe type ids.
      *
      * @since 1.9.0
      */
@@ -298,9 +252,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all villager types.
-     *
-     * @return
+     * @return a list of all villager type ids.
      *
      * @since 1.9.0
      */
@@ -309,9 +261,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all villager professions.
-     *
-     * @return
+     * @return a list of all villager profession ids.
      *
      * @since 1.9.0
      */
@@ -320,9 +270,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all villager points of interest.
-     *
-     * @return
+     * @return a list of all point of interest type ids.
      *
      * @since 1.9.0
      */
@@ -331,9 +279,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all villager memory module types.
-     *
-     * @return
+     * @return a list of all memory module type ids.
      *
      * @since 1.9.0
      */
@@ -342,9 +288,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all villager sensor types.
-     *
-     * @return
+     * @return a list of all villager sensor type ids.
      *
      * @since 1.9.0
      */
@@ -353,9 +297,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all villager activity types.
-     *
-     * @return
+     * @return a list of all villager activity type ids.
      *
      * @since 1.9.0
      */
@@ -364,9 +306,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all statistic types.
-     *
-     * @return
+     * @return a list of all stat type ids.
      *
      * @since 1.9.0
      */
@@ -375,9 +315,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all entity attributes.
-     *
-     * @return
+     * @return a list of all entity attribute ids.
      *
      * @since 1.9.0
      */
@@ -386,9 +324,7 @@ public class RegistryHelper {
     }
 
     /**
-     * Returns a list of all potion types.
-     *
-     * @return
+     * @return a list of all potion type ids.
      *
      * @since 1.9.0
      */

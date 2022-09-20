@@ -16,6 +16,7 @@ import java.util.Map;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
 
     public FurnaceInventory(AbstractFurnaceScreen<?> inventory) {
@@ -23,7 +24,7 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
     }
 
     /**
-     * @return
+     * @return the currently smelted item.
      *
      * @since 1.9.0
      */
@@ -32,7 +33,7 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
     }
 
     /**
-     * @return
+     * @return the fuel item.
      *
      * @since 1.9.0
      */
@@ -41,7 +42,7 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
     }
 
     /**
-     * @return
+     * @return the smelted items.
      *
      * @since 1.9.0
      */
@@ -50,8 +51,8 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
     }
 
     /**
-     * @param stack
-     * @return
+     * @param stack the item to check
+     * @return {@code true} if the item is a valid fuel, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -60,8 +61,8 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
     }
 
     /**
-     * @param stack
-     * @return
+     * @param stack the item to check
+     * @return {@code true} if the item can be smelted, {@code false} otherwise.
      *
      * @since 1.9.0
      */
@@ -70,11 +71,11 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
     }
 
     /**
-     * @return
+     * @return a map of all valid fuels and their burn times in ticks.
      *
      * @since 1.9.0
      */
-    public Object2IntMap<String> getFuelValues() {
+    public Map<String, Integer> getFuelValues() {
         Object2IntMap<String> fuelMap = new Object2IntOpenHashMap<>();
         for (Map.Entry<Item, Integer> entry : FurnaceBlockEntity.createFuelTimeMap().entrySet()) {
             fuelMap.put(Registry.ITEM.getId(entry.getKey()).toString(), entry.getValue().intValue());
@@ -101,7 +102,7 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
     }
 
     /**
-     * @return
+     * @return {@code true} if the furnace is currently smelting an item, {@code false} otherwise.
      *
      * @since 1.9.0
      */

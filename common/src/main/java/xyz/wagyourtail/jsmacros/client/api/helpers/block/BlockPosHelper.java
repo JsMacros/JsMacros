@@ -56,7 +56,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
-     * @param distance
+     * @param distance the distance to move up
      * @return the block n-th block above.
      *
      * @since 1.6.5
@@ -75,7 +75,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
-     * @param distance
+     * @param distance the distance to move down
      * @return the block n-th block below.
      *
      * @since 1.6.5
@@ -94,7 +94,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
-     * @param distance
+     * @param distance the distance to move north
      * @return the n-th block to the north.
      *
      * @since 1.6.5
@@ -113,7 +113,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
-     * @param distance
+     * @param distance the distance to move south
      * @return the n-th block to the south.
      *
      * @since 1.6.5
@@ -132,7 +132,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
-     * @param distance
+     * @param distance the distance to move east
      * @return the n-th block to the east.
      *
      * @since 1.6.5
@@ -151,7 +151,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
-     * @param distance
+     * @param distance the distance to move west
      * @return the n-th block to the west.
      *
      * @since 1.6.5
@@ -172,7 +172,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
 
     /**
      * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
-     * @param distance
+     * @param distance the distance to move in the given direction
      * @return the n-th block offset by the given direction.
      *
      * @since 1.6.5
@@ -182,10 +182,10 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
-     * @param x
-     * @param y
-     * @param z
-     * @return
+     * @param x the x offset
+     * @param y the y offset
+     * @param z the y offset
+     * @return the block offset by the given values.
      *
      * @since 1.9.0
      */
@@ -194,7 +194,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
-     * @return
+     * @return the distance of this position to the given entity.
      *
      * @since 1.9.0
      */
@@ -203,7 +203,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
-     * @return
+     * @return the distance of this position to the given position.
      *
      * @since 1.9.0
      */
@@ -212,7 +212,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
-     * @return
+     * @return the distance of this position to the given position.
      *
      * @since 1.9.0
      */
@@ -221,7 +221,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
-     * @return
+     * @return the distance of this position to the given position.
      *
      * @since 1.9.0
      */
@@ -230,7 +230,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
-     * @return
+     * @return the {@link PositionCommon.Pos3D} representation of this position.
      *
      * @since 1.9.0
      */

@@ -10,6 +10,7 @@ import net.minecraft.client.option.GraphicsMode;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.option.NarratorMode;
 import net.minecraft.client.option.ParticlesMode;
+import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.render.ChunkBuilderMode;
 import net.minecraft.client.render.entity.PlayerModelPart;
 import net.minecraft.client.resource.language.LanguageDefinition;
@@ -25,6 +26,7 @@ import net.minecraft.world.Difficulty;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.ArrayUtils;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinSimpleOption;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
@@ -42,6 +44,7 @@ import java.util.stream.Stream;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class FullOptionsHelper extends BaseHelper<GameOptions> {
 
     private static final Map<String, SoundCategory> SOUND_CATEGORY_MAP = Arrays.stream(SoundCategory.values()).collect(Collectors.toMap(SoundCategory::getName, Function.identity()));
@@ -57,6 +60,222 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
 
     public FullOptionsHelper(GameOptions options) {
         super(options);
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public SkinOptionsHelper getSkinOptions() {
+        return skin;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public VideoOptionsHelper getVideoOptions() {
+        return video;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public MusicOptionsHelper getMusicOptions() {
+        return music;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public ControlOptionsHelper getControlOptions() {
+        return control;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public ChatOptionsHelper getChatOptions() {
+        return chat;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public AccessibilityOptionsHelper getAccessibilityOptions() {
+        return accessibility;
+    }
+
+    public FullOptionsHelper saveOptions() {
+        base.write();
+        return this;
+    }
+
+    /**
+     * @return list of names of resource packs.
+     *
+     * @since 1.1.7
+     */
+    public List<String> getResourcePacks() {
+        return new ArrayList<>(rpm.getNames());
+    }
+
+    /**
+     * @return list of names of enabled resource packs.
+     *
+     * @since 1.2.0
+     */
+    public List<String> getEnabledResourcePacks() {
+        return new ArrayList<>(rpm.getEnabledNames());
+    }
+
+    /**
+     * Set the enabled resource packs to the provided list.
+     *
+     * @param enabled
+     * @return
+     *
+     * @since 1.2.0
+     */
+    public FullOptionsHelper setEnabledResourcePacks(String[] enabled) {
+        Collection<String> en = Arrays.stream(enabled).distinct().toList();
+        List<String> currentRP = ImmutableList.copyOf(base.resourcePacks);
+        rpm.setEnabledProfiles(en);
+        base.resourcePacks.clear();
+        base.incompatibleResourcePacks.clear();
+        for (ResourcePackProfile p : rpm.getEnabledProfiles()) {
+            if (!p.isPinned()) {
+                base.resourcePacks.add(p.getName());
+                if (!p.getCompatibility().isCompatible()) {
+                    base.incompatibleResourcePacks.add(p.getName());
+                }
+            }
+        }
+        base.write();
+        List<String> newRP = ImmutableList.copyOf(base.resourcePacks);
+        if (!currentRP.equals(newRP)) {
+            mc.reloadResources();
+        }
+        return this;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.1.7
+     */
+    public int getFov() {
+        return base.getFov().getValue();
+    }
+
+    /**
+     * @param fov
+     * @return
+     *
+     * @since 1.1.7
+     */
+    public FullOptionsHelper setFov(int fov) {
+        base.getFov().setValue(fov);
+        return this;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public int getViewDistance() {
+        return base.getViewDistance().getValue();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public String getLanguage() {
+        return base.language;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public FullOptionsHelper setLanguage(String languageCode) {
+        LanguageDefinition language = MinecraftClient.getInstance().getLanguageManager().getLanguage(languageCode);
+        base.language = language.getCode();
+        MinecraftClient.getInstance().reloadResources();
+        base.write();
+        return this;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public String getDifficulty() {
+        return mc.world.getDifficulty().getName();
+    }
+
+    /**
+     * @param name
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public FullOptionsHelper setDifficulty(String name) {
+        if (mc.isIntegratedServerRunning()) {
+            mc.getServer().setDifficulty(Difficulty.byName(name), true);
+        }
+        return this;
+    }
+
+    /**
+     * @param ordinal
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public FullOptionsHelper setDifficulty(int ordinal) {
+        if (mc.isIntegratedServerRunning()) {
+            mc.getServer().setDifficulty(Difficulty.byOrdinal(ordinal), true);
+        }
+        return this;
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public boolean isDifficultyLocked() {
+        return MinecraftClient.getInstance().world.getLevelProperties().isDifficultyLocked();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.9.0
+     */
+    public FullOptionsHelper lockDifficulty() {
+        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new UpdateDifficultyLockC2SPacket(true));
+        return this;
+    }
+
+    private MixinSimpleOption getBase(SimpleOption option) {
+        return (MixinSimpleOption) (Object) option;
     }
 
     public class SkinOptionsHelper {
@@ -1854,17 +2073,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val 
+         * @return the current helper instance for chaining.
          *
          * @since 1.9.0
          */
-        public AccessibilityOptionsHelper enableMonocrhomeLogo(boolean val) {
+        public AccessibilityOptionsHelper enableMonochromeLogo(boolean val) {
             base.getMonochromeLogo().setValue(val);
             return this;
         }
 
         /**
-         * @return
+         * @return {@code true} if lighting flashes are hidden, {@code false} otherwise.
          *
          * @since 1.9.0
          */
@@ -1873,173 +2093,16 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new fov value.
+         * @return the current helper instance for chaining.
          *
          * @since 1.9.0
          */
         public AccessibilityOptionsHelper setFovEffect(boolean val) {
-            base.getHideLightningFlashes().setValue(val);
+            getBase(base.getHideLightningFlashes()).forceSetValue(val);
             return this;
         }
 
-    }
-
-    public FullOptionsHelper saveOptions() {
-        base.write();
-        return this;
-    }
-
-    /**
-     * @return list of names of resource packs.
-     *
-     * @since 1.1.7
-     */
-    public List<String> getResourcePacks() {
-        return new ArrayList<>(rpm.getNames());
-    }
-
-    /**
-     * @return list of names of enabled resource packs.
-     *
-     * @since 1.2.0
-     */
-    public List<String> getEnabledResourcePacks() {
-        return new ArrayList<>(rpm.getEnabledNames());
-    }
-
-    /**
-     * Set the enabled resource packs to the provided list.
-     *
-     * @param enabled
-     * @return
-     *
-     * @since 1.2.0
-     */
-    public FullOptionsHelper setEnabledResourcePacks(String[] enabled) {
-        Collection<String> en = Arrays.stream(enabled).distinct().toList();
-        List<String> currentRP = ImmutableList.copyOf(base.resourcePacks);
-        rpm.setEnabledProfiles(en);
-        base.resourcePacks.clear();
-        base.incompatibleResourcePacks.clear();
-        for (ResourcePackProfile p : rpm.getEnabledProfiles()) {
-            if (!p.isPinned()) {
-                base.resourcePacks.add(p.getName());
-                if (!p.getCompatibility().isCompatible()) {
-                    base.incompatibleResourcePacks.add(p.getName());
-                }
-            }
-        }
-        base.write();
-        List<String> newRP = ImmutableList.copyOf(base.resourcePacks);
-        if (!currentRP.equals(newRP)) {
-            mc.reloadResources();
-        }
-        return this;
-    }
-
-    /**
-     * @return
-     *
-     * @since 1.1.7
-     */
-    public int getFov() {
-        return base.getFov().getValue();
-    }
-
-    /**
-     * @param fov
-     * @return
-     *
-     * @since 1.1.7
-     */
-    public FullOptionsHelper setFov(int fov) {
-        base.getFov().setValue(fov);
-        return this;
-    }
-
-    /**
-     * @return
-     *
-     * @since 1.9.0
-     */
-    public int getViewDistance() {
-        return base.getViewDistance().getValue();
-    }
-
-    /**
-     * @return
-     *
-     * @since 1.9.0
-     */
-    public String getLanguage() {
-        return base.language;
-    }
-
-    /**
-     * @return
-     *
-     * @since 1.9.0
-     */
-    public FullOptionsHelper setLanguage(String languageCode) {
-        LanguageDefinition language = MinecraftClient.getInstance().getLanguageManager().getLanguage(languageCode);
-        base.language = language.getCode();
-        MinecraftClient.getInstance().reloadResources();
-        base.write();
-        return this;
-    }
-
-    /**
-     * @return
-     *
-     * @since 1.9.0
-     */
-    public String getDifficulty() {
-        return mc.world.getDifficulty().getName();
-    }
-
-    /**
-     * @param name
-     * @return
-     *
-     * @since 1.9.0
-     */
-    public FullOptionsHelper setDifficulty(String name) {
-        if (mc.isIntegratedServerRunning()) {
-            mc.getServer().setDifficulty(Difficulty.byName(name), true);
-        }
-        return this;
-    }
-
-    /**
-     * @param ordinal
-     * @return
-     *
-     * @since 1.9.0
-     */
-    public FullOptionsHelper setDifficulty(int ordinal) {
-        if (mc.isIntegratedServerRunning()) {
-            mc.getServer().setDifficulty(Difficulty.byOrdinal(ordinal), true);
-        }
-        return this;
-    }
-
-    /**
-     * @return
-     *
-     * @since 1.9.0
-     */
-    public boolean isDifficultyLocked() {
-        return MinecraftClient.getInstance().world.getLevelProperties().isDifficultyLocked();
-    }
-
-    /**
-     * @return
-     *
-     * @since 1.9.0
-     */
-    public FullOptionsHelper lockDifficulty() {
-        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new UpdateDifficultyLockC2SPacket(true));
-        return this;
     }
 
 }

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  * @author Wagyourtail
  * @since 1.6.5
  */
+@SuppressWarnings("unused")
 public class StyleHelper extends BaseHelper<Style> {
     public StyleHelper(Style base) {
         super(base);

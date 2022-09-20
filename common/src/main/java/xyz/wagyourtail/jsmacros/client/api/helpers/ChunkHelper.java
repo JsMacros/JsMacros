@@ -1,6 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.chunk.Chunk;
 
@@ -19,6 +21,7 @@ import java.util.stream.StreamSupport;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class ChunkHelper extends BaseHelper<Chunk> {
 
     public ChunkHelper(Chunk base) {
@@ -26,7 +29,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @return the first block (0 0 0 chunk coordinate) of the chunk
+     * @return the first block (0 0 0 coordinate) of this chunk.
      *
      * @since 1.9.0
      */
@@ -35,10 +38,13 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @param x
-     * @param y
-     * @param z
-     * @return the block offset from the starting block of the chunk by x y z
+     * The coordinates are relative to the starting chunk position, see
+     * {@link #getStartingBlock()}.
+     *
+     * @param x the x offset
+     * @param y the actual y coordinate
+     * @param z the z offset
+     * @return the block offset from the starting block of this chunk by x y z.
      *
      * @since 1.9.0
      */
@@ -47,7 +53,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @return the max {@code y} position of all blocks inside the chunk
+     * @return the maximum {@code y} position of all blocks inside this chunk.
      *
      * @since 1.9.0
      */
@@ -56,7 +62,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @return the min {@code y} position of all blocks inside the chunk
+     * @return the minimum {@code y} position of all blocks inside this chunk.
      *
      * @since 1.9.0
      */
@@ -65,7 +71,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @return the {@code x} coordinate (not the world coordinate) of the chunk
+     * @return the {@code x} coordinate (not the world coordinate) of this chunk.
      *
      * @since 1.9.0
      */
@@ -74,7 +80,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @return the {@code z} coordinate (not the world coordinate) of the chunk
+     * @return the {@code z} coordinate (not the world coordinate) of this chunk.
      *
      * @since 1.9.0
      */
@@ -83,17 +89,17 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @return
+     * @return all entities inside this chunk.
      *
      * @since 1.9.0
      */
     public List<? extends EntityHelper<?>> getEntities() {
         return StreamSupport.stream(MinecraftClient.getInstance().world.getEntities().spliterator(), false).
-                filter(entity -> entity.getChunkPos() == base.getPos()).map(EntityHelper::create).toList();
+                filter(entity -> entity.getChunkPos().equals(base.getPos())).map(EntityHelper::create).toList();
     }
 
     /**
-     * @return
+     * @return all tile entity positions inside this chunk.
      *
      * @since 1.9.0
      */
@@ -102,7 +108,28 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @return
+     * @param callback   the callback function
+     * @param includeAir whether to include air blocks or not
+     * @since 1.9.0
+     */
+    public void forEach(MethodWrapper<BlockDataHelper, ?, ?, ?> callback, boolean includeAir) {
+        //Maybe adapt this to the WorldScanner way?
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                for (int y = base.getBottomY(); y < base.getTopY(); y++) {
+                    BlockPos pos = base.getPos().getBlockPos(x, y, z);
+                    BlockState state = base.getBlockState(pos);
+                    if (!includeAir && state.isAir()) {
+                        continue;
+                    }
+                    callback.accept(new BlockDataHelper(state, base.getBlockEntity(pos), pos));
+                }
+            }
+        }
+    }
+
+    /**
+     * @return a map of the raw heightmap data.
      *
      * @since 1.9.0
      */
@@ -111,16 +138,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @return
-     *
-     * @since 1.9.0
-     */
-    public void forEach(boolean includeAir, MethodWrapper<BlockDataHelper, ?, ?, ?> consumer) {
-
-    }
-
-    /**
-     * @return
+     * @return the raw surface world generation heightmap.
      *
      * @since 1.9.0
      */
@@ -129,7 +147,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @return
+     * @return the raw surface heightmap.
      *
      * @since 1.9.0
      */
@@ -138,7 +156,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @return
+     * @return the raw ocean floor world generation heightmap.
      *
      * @since 1.9.0
      */
@@ -147,7 +165,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @return
+     * @return the raw ocean floor heightmap.
      *
      * @since 1.9.0
      */
@@ -156,7 +174,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @return
+     * @return the raw motion blocking heightmap.
      *
      * @since 1.9.0
      */
@@ -165,7 +183,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @return
+     * @return the raw motion blocking heightmap without leaves.
      *
      * @since 1.9.0
      */

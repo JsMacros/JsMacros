@@ -74,8 +74,8 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id
-     * @return
+     * @param id the identifier of the entity.
+     * @return how many times the player has killed the entity.
      *
      * @since 1.9.0
      */
@@ -84,8 +84,8 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id
-     * @return
+     * @param id the identifier of the entity.
+     * @return how many times the player has killed the specified entity.
      *
      * @since 1.9.0
      */
@@ -94,18 +94,18 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id
-     * @return
+     * @param id the identifier of the block
+     * @return how many times the player has mined the block.
      *
      * @since 1.9.0
      */
-    public int getItemMined(String id) {
+    public int getBlockMined(String id) {
         return getStat(Stats.MINED, Registry.BLOCK, id);
     }
 
     /**
-     * @param id
-     * @return
+     * @param id the identifier of the item.
+     * @return how many times the player has broken the item.
      *
      * @since 1.9.0
      */
@@ -114,8 +114,8 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id
-     * @return
+     * @param id the identifier of the item.
+     * @return how many times the player has crafted the item.
      *
      * @since 1.9.0
      */
@@ -124,8 +124,8 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id
-     * @return
+     * @param id the identifier of the item.
+     * @return how many times the player has used the item.
      *
      * @since 1.9.0
      */
@@ -134,8 +134,8 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id
-     * @return
+     * @param id the identifier of the item.
+     * @return how many times the player has picked up the item.
      *
      * @since 1.9.0
      */
@@ -144,8 +144,8 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id
-     * @return
+     * @param id the identifier of the item.
+     * @return how many times the player has dropped the item.
      *
      * @since 1.9.0
      */
@@ -154,8 +154,8 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id
-     * @return
+     * @param id the identifier of the custom stat.
+     * @return the value of the custom stat.
      *
      * @since 1.9.0
      */
@@ -168,8 +168,8 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id
-     * @return
+     * @param id the identifier of the custom stat.
+     * @return the formatted value of the custom stat.
      *
      * @since 1.9.0
      */
@@ -177,7 +177,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
         Stat<Identifier> stat = Stats.CUSTOM.getOrCreateStat(new Identifier(id));
         return stat.format(base.getStat(stat));
     }
-    
+
     /**
      * Used to request an update of the statistics from the server.
      *

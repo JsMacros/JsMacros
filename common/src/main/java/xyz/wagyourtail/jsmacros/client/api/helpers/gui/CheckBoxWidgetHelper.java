@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author Etheradon
  * @since 1.9.0
  */
+@SuppressWarnings("unused")
 public class CheckBoxWidgetHelper extends ButtonWidgetHelper<CheckBox> {
 
     public CheckBoxWidgetHelper(CheckBox btn) {
@@ -78,7 +79,7 @@ public class CheckBoxWidgetHelper extends ButtonWidgetHelper<CheckBox> {
                     if (action != null) {
                         action.accept(b.get(), screen);
                     }
-                } catch (Throwable e) {
+                } catch (Exception e) {
                     Core.getInstance().profile.logError(e);
                 }
             });
