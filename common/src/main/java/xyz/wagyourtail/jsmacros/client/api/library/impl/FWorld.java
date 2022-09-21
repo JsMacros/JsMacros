@@ -151,7 +151,7 @@ public class FWorld extends BaseLibrary {
      * @param z the z coordinate of the chunk, not the absolute position
      * @return ChunkHelper for the chunk coordinates {@link ChunkHelper}.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ChunkHelper getChunk(int x, int z) {
         return new ChunkHelper(mc.world.getChunk(x, z));
@@ -278,7 +278,7 @@ public class FWorld extends BaseLibrary {
      * @param pos the center position
      * @param radius the radius to scan
      * @param callback the callback to call for each block
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void iterateSphere(BlockPosHelper pos, int radius, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
         iterateSphere(pos, radius, callback, true);
@@ -289,7 +289,7 @@ public class FWorld extends BaseLibrary {
      * @param radius the radius to scan
      * @param callback the callback to call for each block
      * @param ignoreAir whether to ignore air blocks
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void iterateSphere(BlockPosHelper pos, int radius, MethodWrapper<BlockDataHelper, ?, ?, ?> callback, boolean ignoreAir) {
         if (radius < 0) {
@@ -329,7 +329,7 @@ public class FWorld extends BaseLibrary {
      * @param pos1 the first position
      * @param pos2 the second position
      * @param callback the callback to call for each block
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void iterateBox(BlockPosHelper pos1, BlockPosHelper pos2, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
         iterateBox(pos1, pos2, callback, true);
@@ -340,7 +340,7 @@ public class FWorld extends BaseLibrary {
      * @param pos2 the second position
      * @param callback the callback to call for each block
      * @param ignoreAir whether to ignore air blocks
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void iterateBox(BlockPosHelper pos1, BlockPosHelper pos2, MethodWrapper<BlockDataHelper, ?, ?, ?> callback, boolean ignoreAir) {
         assert mc.world != null;
@@ -373,7 +373,7 @@ public class FWorld extends BaseLibrary {
      * @param types the entity types to consider
      * @return all entities in the render distance, that match the specified entity type.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<EntityHelper<?>> getEntities(String... types) {
         Set<String> uniqueTypes = Set.of(types);
@@ -385,7 +385,7 @@ public class FWorld extends BaseLibrary {
      * @param distance the maximum distance to search for entities.
      * @return a list of entities within the specified distance to the player.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<EntityHelper<?>> getEntities(double distance) {
         assert mc.player != null;
@@ -398,7 +398,7 @@ public class FWorld extends BaseLibrary {
      * @param types the entity types to consider
      * @return a list of entities within the specified distance to the player, that match the specified entity type.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<EntityHelper<?>> getEntities(double distance, String... types) {
         Set<String> uniqueTypes = Set.of(types);
@@ -412,7 +412,7 @@ public class FWorld extends BaseLibrary {
      * @param filter the entity filter
      * @return a list of entities that match the specified filter.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<EntityHelper<?>> getEntities(MethodWrapper<EntityHelper<?>, ?, ?, ?> filter) {
         assert mc.world != null;
@@ -522,7 +522,7 @@ public class FWorld extends BaseLibrary {
     /**
      * @return {@code true} if it is daytime, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isDay() {
         assert mc.world != null;
@@ -532,7 +532,7 @@ public class FWorld extends BaseLibrary {
     /**
      * @return {@code true} if it is nighttime, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isNight() {
         assert mc.world != null;
@@ -542,7 +542,7 @@ public class FWorld extends BaseLibrary {
     /**
      * @return {@code true} if it is raining, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isRaining() {
         assert mc.world != null;
@@ -552,7 +552,7 @@ public class FWorld extends BaseLibrary {
     /**
      * @return {@code true} if it is thundering, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isThundering() {
         assert mc.world != null;
@@ -562,7 +562,7 @@ public class FWorld extends BaseLibrary {
     /**
      * @return the name of the loaded world or {@code UNKNOWN_NAME} if no name could be found.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getServerName() {
         IntegratedServer server = mc.getServer();

@@ -6,7 +6,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public class SmithingInventory extends Inventory<SmithingScreen> {
@@ -18,7 +18,7 @@ public class SmithingInventory extends Inventory<SmithingScreen> {
     /**
      * @return the left input item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getFirstInput() {
         return getSlot(0);
@@ -27,7 +27,7 @@ public class SmithingInventory extends Inventory<SmithingScreen> {
     /**
      * @return the right input item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getSecondInput() {
         return getSlot(1);
@@ -36,7 +36,7 @@ public class SmithingInventory extends Inventory<SmithingScreen> {
     /**
      * @return the expected output item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getOutput() {
         return getSlot(2);

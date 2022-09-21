@@ -84,7 +84,7 @@ public class FChat extends BaseLibrary {
      * @param message the message to format and log
      * @param args    the arguments used to format the message
      * @throws InterruptedException
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void logf(String message, Object... args) throws InterruptedException {
         log(String.format(message, args), false);
@@ -98,7 +98,7 @@ public class FChat extends BaseLibrary {
      * @param await   should wait for message to actually be sent to chat to continue
      * @param args    the arguments used to format the message
      * @throws InterruptedException
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void logf(String message, boolean await, Object... args) throws InterruptedException {
         log(String.format(message, args), await);

@@ -78,7 +78,7 @@ public class FPlayer extends BaseLibrary {
     /**
      * @param gameMode possible values are survival, creative, adventure, spectator (case insensitive)
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void setGameMode(String gameMode) {
         assert mc.interactionManager != null;
@@ -180,7 +180,7 @@ public class FPlayer extends BaseLibrary {
      * @param width    the width of the panorama
      * @param height   the height of the panorama
      * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void takePanorama(String folder, int width, int height, MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null;
@@ -198,7 +198,7 @@ public class FPlayer extends BaseLibrary {
     /**
      * @return {@code true} if the player is currently breaking a block, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isMining() {
         assert mc.interactionManager != null;
@@ -208,7 +208,7 @@ public class FPlayer extends BaseLibrary {
     /**
      * @return the current reach distance of the player.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public float getReach() {
         assert mc.interactionManager != null;

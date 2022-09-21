@@ -187,7 +187,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
      * @param z the y offset
      * @return the block offset by the given values.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public BlockPosHelper offset(int x, int y, int z) {
         return new BlockPosHelper(new BlockPos(getX() + x, getY() + y, getZ() + z));
@@ -196,7 +196,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     /**
      * @return the distance of this position to the given entity.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public double distanceTo(EntityHelper<?> entity) {
         return Math.sqrt(base.getSquaredDistance(entity.getRaw().getPos()));
@@ -205,7 +205,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     /**
      * @return the distance of this position to the given position.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public double distanceTo(BlockPosHelper pos) {
         return Math.sqrt(base.getSquaredDistance(pos.base));
@@ -214,7 +214,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     /**
      * @return the distance of this position to the given position.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public double distanceTo(PositionCommon.Pos3D pos) {
         return Math.sqrt(base.getSquaredDistance(pos.getX(), pos.getY(), pos.getZ()));
@@ -223,7 +223,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     /**
      * @return the distance of this position to the given position.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public double distanceTo(float x, float y, float z) {
         return Math.sqrt(base.getSquaredDistance(x, y, z));
@@ -232,7 +232,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     /**
      * @return the {@link PositionCommon.Pos3D} representation of this position.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public PositionCommon.Pos3D toPos3D() {
         return new PositionCommon.Pos3D(base.getX(), base.getY(), base.getZ());

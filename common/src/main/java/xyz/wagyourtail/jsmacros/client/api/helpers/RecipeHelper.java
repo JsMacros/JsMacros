@@ -72,7 +72,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     /**
      * @return the type of this recipe.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getGroup() {
         return base.getGroup();
@@ -84,7 +84,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
      *
      * @return will return {@code true} if any of the default ingredients have a recipe remainder.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean hasRecipeRemainders() {
         return base.getIngredients().stream().anyMatch(ingredient -> ingredient.getMatchingStacks()[0].getItem().hasRecipeRemainder());
@@ -93,7 +93,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     /**
      * @return a list of all possible recipe remainders.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<List<ItemStackHelper>> getRecipeRemainders() {
         return base.getIngredients().stream()
@@ -105,7 +105,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     /**
      * @return the type of this recipe.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getType() {
         return Registry.RECIPE_TYPE.getId(base.getType()).toString();
@@ -115,7 +115,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
      * @return {@code true} if the recipe can be crafted with the current inventory, {@code false}
      *         otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean canCraft() {
         RecipeMatcher matcher = new RecipeMatcher();
@@ -128,7 +128,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
      * @return {@code true} if the given amount of items can be crafted with the current inventory,
      *         {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean canCraft(int amount) {
         return getCraftableAmount() >= amount;
@@ -137,7 +137,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     /**
      * @return how often the recipe can be crafted with the current inventory.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getCraftableAmount() {
         RecipeMatcher matcher = new RecipeMatcher();

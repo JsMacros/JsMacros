@@ -45,7 +45,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
     /**
      * @return the visible enchantment for each level.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public EnchantmentHelper[] getEnchantmentHelpers() {
         EnchantmentScreenHandler handler = inventory.getScreenHandler();
@@ -98,7 +98,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
     /**
      * @return the item to be enchanted.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getItemToEnchant() {
         return getSlot(0);

@@ -14,7 +14,7 @@ import java.util.Map;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
@@ -26,7 +26,7 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
     /**
      * @return the currently smelted item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getInput() {
         return getSlot(0);
@@ -35,7 +35,7 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
     /**
      * @return the fuel item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getFuel() {
         return getSlot(1);
@@ -44,7 +44,7 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
     /**
      * @return the smelted items.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getResult() {
         return getSlot(2);
@@ -54,7 +54,7 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
      * @param stack the item to check
      * @return {@code true} if the item is a valid fuel, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean canUseAsFuel(ItemStackHelper stack) {
         return ((IAbstractFurnaceScreenHandler) inventory.getScreenHandler()).jsmacros_isFuel(stack.getRaw());
@@ -64,7 +64,7 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
      * @param stack the item to check
      * @return {@code true} if the item can be smelted, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isSmeltable(ItemStackHelper stack) {
         return ((IAbstractFurnaceScreenHandler) inventory.getScreenHandler()).jsmacros_isSmeltable(stack.getRaw());
@@ -73,7 +73,7 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
     /**
      * @return a map of all valid fuels and their burn times in ticks.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public Map<String, Integer> getFuelValues() {
         Object2IntMap<String> fuelMap = new Object2IntOpenHashMap<>();
@@ -86,7 +86,7 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getCookProgress() {
         return inventory.getScreenHandler().getCookProgress();
@@ -95,7 +95,7 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getFuelProgress() {
         return inventory.getScreenHandler().getFuelProgress();
@@ -104,7 +104,7 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
     /**
      * @return {@code true} if the furnace is currently smelting an item, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isBurning() {
         return inventory.getScreenHandler().isBurning();

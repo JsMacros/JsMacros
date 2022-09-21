@@ -90,7 +90,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, String text, boolean checked, boolean showMessage, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback);
 
@@ -104,7 +104,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, String text, boolean checked, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback);
 
@@ -119,7 +119,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, int zIndex, String text, boolean checked, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback);
 
@@ -135,7 +135,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, int zIndex, String text, boolean checked, boolean showMessage, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback);
 
@@ -150,7 +150,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param steps
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     SliderWidgetHelper addSlider(int x, int y, int width, int height, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback, int steps);
 
@@ -166,7 +166,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param steps
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     SliderWidgetHelper addSlider(int x, int y, int width, int height, int zIndex, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback, int steps);
 
@@ -180,7 +180,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     SliderWidgetHelper addSlider(int x, int y, int width, int height, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback);
 
@@ -195,7 +195,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     SliderWidgetHelper addSlider(int x, int y, int width, int height, int zIndex, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback);
 
@@ -213,7 +213,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int textureStartX, int textureStartY, int hoverOffset, String texture, int textureWidth, int textureHeight, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback);
 
@@ -232,7 +232,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int zIndex, int textureStartX, int textureStartY, int hoverOffset, String texture, int textureWidth, int textureHeight, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback);
 
@@ -247,7 +247,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int textureStartX, int textureStartY, String texture, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback);
 
@@ -257,7 +257,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     LockButtonWidgetHelper addLockButton(int x, int y, MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> callback);
 
@@ -268,7 +268,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param callback calls your method as a {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     LockButtonWidgetHelper addLockButton(int x, int y, int zIndex, MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> callback);
 
@@ -281,7 +281,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param values
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String initial);
 
@@ -295,7 +295,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param values
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String initial);
 
@@ -310,7 +310,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param alternatives
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String[] alternatives, String initial, String prefix);
 
@@ -328,7 +328,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @param alternateToggle
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<?, ?, Boolean, ?> alternateToggle);
 
@@ -492,37 +492,37 @@ public interface IScreen extends IDraw2D<IScreen> {
     IScreen reloadScreen();
 
     /**
-     * @since 1.9.0
+     * @since 1.8.4
      */
     ButtonWidgetHelper.ButtonBuilder getButtonBuilder();
 
     /**
-     * @since 1.9.0
+     * @since 1.8.4
      */
     CheckBoxWidgetHelper.CheckBoxBuilder getCheckBoxBuilder();
 
     /**
-     * @since 1.9.0
+     * @since 1.8.4
      */
     CyclingButtonWidgetHelper.CyclicButtonBuilder<?> getCyclicButtonBuilder(MethodWrapper<Object, ?, TextHelper, ?> valueToText);
 
     /**
-     * @since 1.9.0
+     * @since 1.8.4
      */
     LockButtonWidgetHelper.LockButtonBuilder getLockButtonBuilder();
 
     /**
-     * @since 1.9.0
+     * @since 1.8.4
      */
     SliderWidgetHelper.SliderBuilder getSliderBuilder();
 
     /**
-     * @since 1.9.0
+     * @since 1.8.4
      */
     TextFieldWidgetHelper.TextFieldBuilder getTextFieldBuilder();
 
     /**
-     * @since 1.9.0
+     * @since 1.8.4
      */
     ButtonWidgetHelper.TexturedButtonBuilder getTexturedButtonBuilder();
     

@@ -17,7 +17,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public class ItemHelper extends BaseHelper<Item> {
@@ -29,7 +29,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @return the name of this item's group or {@code "unknown"} if this item is not in a group.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getGroup() {
         return base.getGroup() == null ? "unknown" : base.getGroup().getName();
@@ -39,7 +39,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @return the item stack representing the group of this item or {@code null} if this item is
      *         not in a group.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getGroupIcon() {
         return base.getGroup() == null ? null : new ItemStackHelper(base.getGroup().getIcon());
@@ -50,7 +50,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @return {@code true} if the given item stack can be used to repair item stacks of this item,
      *         {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean canBeRepairedWith(ItemStackHelper stack) {
         return base.canRepair(null, stack.getRaw());
@@ -61,7 +61,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @return {@code true} if the given block can be mined and drops when broken with this item,
      *         {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isSuitableFor(BlockHelper block) {
         return base.isSuitableFor(block.getDefaultState().getRaw());
@@ -72,7 +72,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @return {@code true} if the given block can be mined and drops when broken with this item,
      *         {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isSuitableFor(BlockStateHelper block) {
         return base.isSuitableFor(block.getRaw());
@@ -81,7 +81,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @return {@code true} if the item has a block representation, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isBlock() {
         return base instanceof BlockItem;
@@ -91,7 +91,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @return the block representation of this item or {@code null} if this item has no
      *         corresponding block.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public BlockHelper getBlock() {
         if (isBlock()) {
@@ -105,7 +105,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @return the mining speed of this item against the given block state, returns {@code 1} by
      *         default.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public float getMiningSpeedMultiplier(BlockStateHelper state) {
         //at least in vanilla the item stack is never used
@@ -115,7 +115,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @return {@code true} if the item has durability, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isDamageable() {
         return base.isDamageable();
@@ -125,7 +125,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @return {@code true} if when crafter the item stack has a remainder, {@code false}
      *         otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean hasRecipeRemainder() {
         return base.hasRecipeRemainder();
@@ -134,7 +134,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @return the recipe remainder if it exists and {@code null} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemHelper getRecipeRemainder() {
         return base.getRecipeRemainder() == null ? null : new ItemHelper(base.getRecipeRemainder());
@@ -145,7 +145,7 @@ public class ItemHelper extends BaseHelper<Item> {
      *
      * @return the enchantability of this item, returns {@code 0} by default.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getEnchantability() {
         return base.getEnchantability();
@@ -154,7 +154,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @return the name of this item, translated to the current language.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getName() {
         return base.getName().getString();
@@ -163,7 +163,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @return the identifier of this item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getId() {
         return Registry.ITEM.getId(base).toString();
@@ -172,7 +172,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @return the maximum amount of items in a stack of this item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getMaxCount() {
         return base.getMaxCount();
@@ -183,7 +183,7 @@ public class ItemHelper extends BaseHelper<Item> {
      *
      * @return the maximum amount of damage this item can take.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getMaxDurability() {
         return base.getMaxDamage();
@@ -192,7 +192,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @return {@code true} if this item is fireproof, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isFireproof() {
         return base.isFireproof();
@@ -201,7 +201,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @return {@code true} if this item is a tool, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isTool() {
         return base instanceof ToolItem;
@@ -210,7 +210,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @return {@code true} if this item can be worn in the armor slot, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isWearable() {
         return base instanceof Wearable;
@@ -219,7 +219,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @return {@code true} if this item is food, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isFood() {
         return base.isFood();
@@ -228,7 +228,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @return the food component of this item or {@code null} if this item is not food.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public FoodComponentHelper getFoodHelper() {
         if (isFood()) {
@@ -241,7 +241,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @return {@code true} if this item can be nested, i.e. put into a bundle or shulker box,
      *         {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean canBeNested() {
         return base.canBeNested();
@@ -250,7 +250,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @return the default item stack of this item with a stack size of {@code 1}.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getDefaultStack() {
         return new ItemStackHelper(base.getDefaultStack());
@@ -261,7 +261,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @return the item stack of this item with a stack size of {@code 1} and the given nbt.
      *
      * @throws CommandSyntaxException if the nbt data is invalid.
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getStackWithNbt(String nbt) throws CommandSyntaxException {
         ItemStringReader.ItemResult itemResult = ItemStringReader.item(new CommandRegistryWrapper.Impl<>(Registry.ITEM), new StringReader(getId() + nbt));

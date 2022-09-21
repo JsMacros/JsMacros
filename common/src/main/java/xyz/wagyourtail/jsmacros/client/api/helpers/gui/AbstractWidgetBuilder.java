@@ -9,7 +9,7 @@ import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends ButtonWidgetHelper<T>> {

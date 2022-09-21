@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @Mixin(ClientAdvancementManager.class)
 public class MixinClientAdvancementManager implements IClientAdvancementManager {

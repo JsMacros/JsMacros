@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.client.access.ITextFieldWidget;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @Mixin(TextFieldWidget.class)
 public class MixinTextFieldWidget implements ITextFieldWidget {

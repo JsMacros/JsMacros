@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 public class ForgeModContainer extends ModContainerHelper<IModInfo> {
 

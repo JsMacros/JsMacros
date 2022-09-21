@@ -447,14 +447,14 @@ public class FJsMacros extends PerExecLibrary {
 
     /**
      * @param event the event to remove all listeners from
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void off(String event) {
         Core.getInstance().eventRegistry.getListeners().get(event).clear();
     }
 
     /**
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void disableAllListeners() {
         Core.getInstance().eventRegistry.getListeners().clear();

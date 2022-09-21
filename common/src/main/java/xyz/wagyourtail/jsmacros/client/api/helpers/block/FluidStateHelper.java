@@ -7,7 +7,7 @@ import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public class FluidStateHelper extends StateHelper<FluidState> {
@@ -19,7 +19,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
     /**
      * @return {@code true} if this fluid is still, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isStill() {
         return base.isStill();
@@ -29,7 +29,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
      * @return {@code true} if this fluid is empty (the default fluid state for non fluid blocks),
      *         {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isEmpty() {
         return base.isEmpty();
@@ -38,7 +38,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
     /**
      * @return the height of this state.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public float getHeight() {
         return base.getHeight();
@@ -47,7 +47,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
     /**
      * @return the level of this state.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getLevel() {
         return base.getLevel();
@@ -57,7 +57,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
      * @return {@code true} if the fluid has some random tick logic (only used by lava to do the
      *         fire spread), {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean hasRandomTicks() {
         return base.hasRandomTicks();
@@ -67,7 +67,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
      * @param pos the position in the world
      * @return the velocity vector at the given position for this fluid.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public PositionCommon.Pos3D getVelocity(BlockPosHelper pos) {
         return new PositionCommon.Pos3D(base.getVelocity(MinecraftClient.getInstance().world, pos.getRaw()));
@@ -76,7 +76,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
     /**
      * @return the block state of this fluid.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public BlockStateHelper getBlockState() {
         return new BlockStateHelper(base.getBlockState());
@@ -85,7 +85,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
     /**
      * @return the blast resistance of this fluid.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public float getBlastResistance() {
         return base.getBlastResistance();

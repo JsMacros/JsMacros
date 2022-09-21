@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public class FullOptionsHelper extends BaseHelper<GameOptions> {
@@ -65,7 +65,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public SkinOptionsHelper getSkinOptions() {
         return skin;
@@ -74,7 +74,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public VideoOptionsHelper getVideoOptions() {
         return video;
@@ -83,7 +83,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public MusicOptionsHelper getMusicOptions() {
         return music;
@@ -92,7 +92,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ControlOptionsHelper getControlOptions() {
         return control;
@@ -101,7 +101,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ChatOptionsHelper getChatOptions() {
         return chat;
@@ -110,7 +110,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public AccessibilityOptionsHelper getAccessibilityOptions() {
         return accessibility;
@@ -192,7 +192,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getViewDistance() {
         return base.getViewDistance().getValue();
@@ -201,7 +201,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getLanguage() {
         return base.language;
@@ -210,7 +210,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public FullOptionsHelper setLanguage(String languageCode) {
         LanguageDefinition language = MinecraftClient.getInstance().getLanguageManager().getLanguage(languageCode);
@@ -223,7 +223,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getDifficulty() {
         return mc.world.getDifficulty().getName();
@@ -233,7 +233,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
      * @param name
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public FullOptionsHelper setDifficulty(String name) {
         if (mc.isIntegratedServerRunning()) {
@@ -246,7 +246,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
      * @param ordinal
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public FullOptionsHelper setDifficulty(int ordinal) {
         if (mc.isIntegratedServerRunning()) {
@@ -258,7 +258,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isDifficultyLocked() {
         return MinecraftClient.getInstance().world.getLevelProperties().isDifficultyLocked();
@@ -267,7 +267,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public FullOptionsHelper lockDifficulty() {
         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new UpdateDifficultyLockC2SPacket(true));
@@ -293,7 +293,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isCapeActivated() {
             return base.isPlayerModelPartEnabled(PlayerModelPart.CAPE);
@@ -302,7 +302,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isJacketActivated() {
             return base.isPlayerModelPartEnabled(PlayerModelPart.JACKET);
@@ -311,7 +311,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isLeftSleeveActivated() {
             return base.isPlayerModelPartEnabled(PlayerModelPart.LEFT_SLEEVE);
@@ -320,7 +320,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isRightSleeveActivated() {
             return base.isPlayerModelPartEnabled(PlayerModelPart.RIGHT_SLEEVE);
@@ -329,7 +329,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isLeftPantsActivated() {
             return base.isPlayerModelPartEnabled(PlayerModelPart.LEFT_PANTS_LEG);
@@ -338,7 +338,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isRightPantsActivated() {
             return base.isPlayerModelPartEnabled(PlayerModelPart.RIGHT_PANTS_LEG);
@@ -347,7 +347,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isHatActivated() {
             return base.isPlayerModelPartEnabled(PlayerModelPart.HAT);
@@ -356,7 +356,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isRightHand() {
             return base.getMainArm().getValue() == Arm.RIGHT;
@@ -365,7 +365,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public SkinOptionsHelper toggleCape(boolean val) {
             base.togglePlayerModelPart(PlayerModelPart.CAPE, val);
@@ -375,7 +375,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public SkinOptionsHelper toggleJacket(boolean val) {
             base.togglePlayerModelPart(PlayerModelPart.JACKET, val);
@@ -385,7 +385,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public SkinOptionsHelper toggleLeftSleeve(boolean val) {
             base.togglePlayerModelPart(PlayerModelPart.LEFT_SLEEVE, val);
@@ -395,7 +395,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public SkinOptionsHelper toggleRightSleeve(boolean val) {
             base.togglePlayerModelPart(PlayerModelPart.RIGHT_SLEEVE, val);
@@ -405,7 +405,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public SkinOptionsHelper toggleLeftPanTs(boolean val) {
             base.togglePlayerModelPart(PlayerModelPart.LEFT_PANTS_LEG, val);
@@ -415,7 +415,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public SkinOptionsHelper toggleRightPants(boolean val) {
             base.togglePlayerModelPart(PlayerModelPart.RIGHT_PANTS_LEG, val);
@@ -425,7 +425,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public SkinOptionsHelper toggleHat(boolean val) {
             base.togglePlayerModelPart(PlayerModelPart.HAT, val);
@@ -435,7 +435,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public SkinOptionsHelper toggleMainHand(String hand) {
             base.getMainArm().setValue(hand.equals("left") ? Arm.LEFT : Arm.RIGHT);
@@ -459,7 +459,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public String getFullscreenResolution() {
             return base.fullscreenResolution;
@@ -468,7 +468,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public int getBiomeBlendRadius() {
             return base.getBiomeBlendRadius().getValue();
@@ -477,7 +477,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setBiomeBlendRadius(int radius) {
             base.getBiomeBlendRadius().setValue(radius);
@@ -487,7 +487,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public String getGraphicsMode() {
             return switch (base.getGraphicsMode().getValue()) {
@@ -501,7 +501,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setGraphicsMode(String mode) {
             base.getGraphicsMode().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
@@ -516,7 +516,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public String getChunkBuilderMode() {
             return switch (base.getChunkBuilderMode().getValue()) {
@@ -530,7 +530,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setChunkBuilderMode(String mode) {
             base.getChunkBuilderMode().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
@@ -545,7 +545,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public String getSmoothLightningMode() {
             return switch (base.getAo().getValue()) {
@@ -559,7 +559,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setSmoothLightningMode(String mode) {
             base.getAo().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
@@ -574,7 +574,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public int getRenderDistance() {
             return base.getViewDistance().getValue();
@@ -583,7 +583,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setRenderDistance(int radius) {
             base.getViewDistance().setValue(radius);
@@ -593,7 +593,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public int getSimulationDistance() {
             return base.getSimulationDistance().getValue();
@@ -602,7 +602,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setSimulationDistance(int radius) {
             base.getSimulationDistance().setValue(radius);
@@ -612,7 +612,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public int getMaxFps() {
             return base.getMaxFps().getValue();
@@ -621,7 +621,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setMaxFps(int maxFps) {
             base.getMaxFps().setValue(maxFps);
@@ -631,7 +631,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isVsyncEnabled() {
             return base.getEnableVsync().getValue();
@@ -640,7 +640,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper enableVsync(boolean val) {
             base.getEnableVsync().setValue(val);
@@ -650,7 +650,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isViewBobbingEnabled() {
             return base.getBobView().getValue();
@@ -659,7 +659,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper enableViewBobbing(boolean val) {
             base.getBobView().setValue(val);
@@ -669,7 +669,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public int getGuiScale() {
             return base.getGuiScale().getValue();
@@ -678,7 +678,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setGuiScale(int scale) {
             base.getGuiScale().setValue(scale);
@@ -688,7 +688,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public String getAttackIndicatorType() {
             return switch (base.getAttackIndicator().getValue()) {
@@ -702,7 +702,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setAttackIndicatorType(String type) {
             base.getAttackIndicator().setValue(switch (type.toUpperCase(Locale.ROOT)) {
@@ -717,7 +717,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getGamma() {
             return getBrightness();
@@ -726,7 +726,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setGamma(double gamma) {
             return setBrightness(gamma);
@@ -735,7 +735,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getBrightness() {
             return base.getGamma().getValue();
@@ -744,7 +744,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setBrightness(double gamma) {
             base.getGamma().setValue(gamma);
@@ -754,7 +754,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public String getCloudsMode() {
             return switch (base.getCloudRenderMode().getValue()) {
@@ -768,7 +768,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setCloudsMode(String mode) {
             base.getCloudRenderMode().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
@@ -783,7 +783,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isFullscreen() {
             return base.getFullscreen().getValue();
@@ -792,7 +792,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setBrightness(boolean fullscreen) {
             base.getFullscreen().setValue(fullscreen);
@@ -802,7 +802,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public String getParticleMode() {
             return switch (base.getParticles().getValue()) {
@@ -816,7 +816,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setParticleMode(String mode) {
             base.getParticles().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
@@ -831,7 +831,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public int getMipMapLevels() {
             return base.getMipmapLevels().getValue();
@@ -840,7 +840,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setMipMapLevels(int val) {
             base.getMipmapLevels().setValue(val);
@@ -850,7 +850,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean areEntityShadowsEnabled() {
             return base.getEntityShadows().getValue();
@@ -859,7 +859,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper enableEntityShadows(boolean val) {
             base.getEntityShadows().setValue(val);
@@ -869,7 +869,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getDistortionEffects() {
             return base.getDistortionEffectScale().getValue();
@@ -878,7 +878,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setDistortionEffects(double val) {
             base.getDistortionEffectScale().setValue(val);
@@ -888,7 +888,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getEntityDistance() {
             return base.getEntityDistanceScaling().getValue();
@@ -897,7 +897,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setEntityDistance(double val) {
             base.getEntityDistanceScaling().setValue(val);
@@ -907,7 +907,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getFovEffects() {
             return base.getFovEffectScale().getValue();
@@ -916,7 +916,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper setFovEffects(double val) {
             base.getFovEffectScale().setValue(val);
@@ -926,7 +926,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isAutosaveIndicatorEnabled() {
             return base.getShowAutosaveIndicator().getValue();
@@ -935,7 +935,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public VideoOptionsHelper enableAutosaveIndicator(boolean val) {
             base.getShowAutosaveIndicator().setValue(val);
@@ -959,7 +959,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getMasterVolume() {
             return base.getSoundVolume(SoundCategory.MASTER);
@@ -968,7 +968,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public MusicOptionsHelper setMasterVolume(float volume) {
             base.setSoundVolume(SoundCategory.MASTER, volume);
@@ -978,7 +978,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getMusicVolume() {
             return base.getSoundVolume(SoundCategory.MUSIC);
@@ -987,7 +987,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public MusicOptionsHelper setMusicVolume(float volume) {
             base.setSoundVolume(SoundCategory.MUSIC, volume);
@@ -997,7 +997,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getRecordsVolume() {
             return base.getSoundVolume(SoundCategory.RECORDS);
@@ -1006,7 +1006,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public MusicOptionsHelper setRecordsVolume(float volume) {
             base.setSoundVolume(SoundCategory.RECORDS, volume);
@@ -1016,7 +1016,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getWeatherVolume() {
             return base.getSoundVolume(SoundCategory.WEATHER);
@@ -1025,7 +1025,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public MusicOptionsHelper setWeatherVolume(float volume) {
             base.setSoundVolume(SoundCategory.WEATHER, volume);
@@ -1035,7 +1035,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getBlocksVolume() {
             return base.getSoundVolume(SoundCategory.BLOCKS);
@@ -1044,7 +1044,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public MusicOptionsHelper setBlocksVolume(float volume) {
             base.setSoundVolume(SoundCategory.BLOCKS, volume);
@@ -1054,7 +1054,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getHostileVolume() {
             return base.getSoundVolume(SoundCategory.HOSTILE);
@@ -1063,7 +1063,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public MusicOptionsHelper setHostileVolume(float volume) {
             base.setSoundVolume(SoundCategory.HOSTILE, volume);
@@ -1073,7 +1073,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getFriendlyVolume() {
             return base.getSoundVolume(SoundCategory.NEUTRAL);
@@ -1082,7 +1082,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public MusicOptionsHelper setFriendlyVolume(float volume) {
             base.setSoundVolume(SoundCategory.NEUTRAL, volume);
@@ -1092,7 +1092,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getPlayerVolume() {
             return base.getSoundVolume(SoundCategory.PLAYERS);
@@ -1101,7 +1101,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public MusicOptionsHelper setPlayerVolume(float volume) {
             base.setSoundVolume(SoundCategory.PLAYERS, volume);
@@ -1111,7 +1111,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getAmbientVolume() {
             return base.getSoundVolume(SoundCategory.AMBIENT);
@@ -1120,7 +1120,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public MusicOptionsHelper setAmbientVolume(float volume) {
             base.setSoundVolume(SoundCategory.AMBIENT, volume);
@@ -1130,7 +1130,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getVoiceVolume() {
             return base.getSoundVolume(SoundCategory.VOICE);
@@ -1139,7 +1139,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public MusicOptionsHelper setVoiceVolume(float volume) {
             base.setSoundVolume(SoundCategory.VOICE, volume);
@@ -1149,7 +1149,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public float getVolume(String category) {
             return base.getSoundVolume(SOUND_CATEGORY_MAP.get(category));
@@ -1158,7 +1158,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public Map<String, Float> getVolumes() {
             Map<String, Float> volumes = new HashMap<>();
@@ -1171,7 +1171,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public MusicOptionsHelper setVolume(String category, float volume) {
             base.setSoundVolume(SOUND_CATEGORY_MAP.get(category), volume);
@@ -1181,7 +1181,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public String getSoundDevice() {
             return base.getSoundDevice().getValue();
@@ -1190,7 +1190,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public MusicOptionsHelper setSoundDevice(String audioDevice) {
             List<String> audioDevices = getAudioDevices();
@@ -1210,7 +1210,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean areSubtitlesShown() {
             return base.getShowSubtitles().getValue();
@@ -1219,7 +1219,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public MusicOptionsHelper showSubtitles(boolean val) {
             base.getShowSubtitles().setValue(val);
@@ -1243,7 +1243,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getMouseSensitivity() {
             return base.getMouseSensitivity().getValue();
@@ -1252,7 +1252,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ControlOptionsHelper setMouseSensitivity(double val) {
             base.getMouseSensitivity().setValue(val);
@@ -1262,7 +1262,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isMouseInverted() {
             return base.getInvertYMouse().getValue();
@@ -1271,7 +1271,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ControlOptionsHelper invertMouse(boolean val) {
             base.getInvertYMouse().setValue(val);
@@ -1281,7 +1281,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getMouseWheelSensitivity() {
             return base.getMouseWheelSensitivity().getValue();
@@ -1290,7 +1290,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ControlOptionsHelper setMouseWheelSensitivity(double val) {
             base.getMouseWheelSensitivity().setValue(val);
@@ -1300,7 +1300,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isDiscreteScrollingEnabled() {
             return base.getDiscreteMouseScroll().getValue();
@@ -1309,7 +1309,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ControlOptionsHelper enableDiscreteScrolling(boolean val) {
             base.getDiscreteMouseScroll().setValue(val);
@@ -1319,7 +1319,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isTouchscreenEnabled() {
             return base.getTouchscreen().getValue();
@@ -1328,7 +1328,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ControlOptionsHelper enableTouchscreen(boolean val) {
             base.getTouchscreen().setValue(val);
@@ -1338,7 +1338,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isRawMouseInputEnabled() {
             return base.getRawMouseInput().getValue();
@@ -1347,7 +1347,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ControlOptionsHelper enableRawMouseInput(boolean val) {
             base.getRawMouseInput().setValue(val);
@@ -1357,7 +1357,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isAutoJumpEnabled() {
             return base.getAutoJump().getValue();
@@ -1366,7 +1366,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ControlOptionsHelper enableAutoJump(boolean val) {
             base.getAutoJump().setValue(val);
@@ -1376,7 +1376,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isSneakToggled() {
             return base.getSneakToggled().getValue();
@@ -1385,7 +1385,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ControlOptionsHelper toggleSneak(boolean val) {
             base.getSneakToggled().setValue(val);
@@ -1395,7 +1395,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isSprintToggled() {
             return base.getSprintToggled().getValue();
@@ -1404,7 +1404,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ControlOptionsHelper toggleSprint(boolean val) {
             base.getSprintToggled().setValue(val);
@@ -1414,7 +1414,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public KeyBinding[] getRawKeys() {
             return ArrayUtils.clone(base.allKeys);
@@ -1423,7 +1423,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public List<String> getCategories() {
             return Arrays.stream(base.allKeys).map(KeyBinding::getCategory).distinct().toList();
@@ -1432,7 +1432,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public List<String> getKeys() {
             return Arrays.stream(base.allKeys).map(KeyBinding::getTranslationKey).toList();
@@ -1441,7 +1441,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public Map<String, String> getKeyBinds() {
             Map<String, String> keyBinds = new HashMap<>(base.allKeys.length);
@@ -1455,7 +1455,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public Map<String, String> getKeyBindsByCategory(String category) {
             return getKeyBindsByCategory().get(category);
@@ -1464,7 +1464,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public Map<String, Map<String, String>> getKeyBindsByCategory() {
             Map<String, Map<String, String>> entries = new HashMap<>(MinecraftClient.getInstance().options.allKeys.length);
@@ -1500,7 +1500,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public String getChatVisibility() {
             String chatVisibilityKey = base.getChatVisibility().getValue().getTranslationKey();
@@ -1510,7 +1510,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper setChatVisibility(String mode) {
             base.getChatVisibility().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
@@ -1525,7 +1525,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean areColorsShown() {
             return base.getChatColors().getValue();
@@ -1534,7 +1534,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper setChatVisibility(boolean val) {
             base.getChatColors().setValue(val);
@@ -1544,7 +1544,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean areWebLinksEnabled() {
             return base.getChatLinks().getValue();
@@ -1553,7 +1553,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper enableWebLinks(boolean val) {
             base.getChatLinks().setValue(val);
@@ -1563,7 +1563,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isWebLinkPromptEnabled() {
             return base.getChatLinksPrompt().getValue();
@@ -1572,7 +1572,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper enableWebLinkPrompt(boolean val) {
             base.getChatLinksPrompt().setValue(val);
@@ -1582,7 +1582,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getChatOpacity() {
             return base.getChatOpacity().getValue();
@@ -1591,7 +1591,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper setChatOpacity(double val) {
             base.getChatOpacity().setValue(val);
@@ -1601,7 +1601,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper setTextBackgroundOpacity(double val) {
             base.getTextBackgroundOpacity().setValue(val);
@@ -1611,7 +1611,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getTextBackgroundOpacity() {
             return base.getTextBackgroundOpacity().getValue();
@@ -1620,7 +1620,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getTextSize() {
             return base.getChatScale().getValue();
@@ -1629,7 +1629,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper setTextSize(double val) {
             base.getChatScale().setValue(val);
@@ -1639,7 +1639,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getChatLineSpacing() {
             return base.getChatLineSpacing().getValue();
@@ -1648,7 +1648,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper setChatLineSpacing(double val) {
             base.getChatLineSpacing().setValue(val);
@@ -1658,7 +1658,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getChatDelay() {
             return base.getChatDelay().getValue();
@@ -1667,7 +1667,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper setChatDelay(double val) {
             base.getChatDelay().setValue(val);
@@ -1677,7 +1677,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getChatWidth() {
             return base.getChatWidth().getValue();
@@ -1686,7 +1686,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper setChatWidth(double val) {
             base.getChatWidth().setValue(val);
@@ -1696,7 +1696,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getChatFocusedHeight() {
             return base.getChatHeightFocused().getValue();
@@ -1705,7 +1705,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper setChatFocusedHeight(double val) {
             base.getChatHeightFocused().setValue(val);
@@ -1715,7 +1715,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getChatUnfocusedHeight() {
             return base.getChatHeightUnfocused().getValue();
@@ -1724,7 +1724,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper setChatUnfocusedHeight(double val) {
             base.getChatHeightUnfocused().setValue(val);
@@ -1734,7 +1734,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public String getNarratorMode() {
             String narratorKey = ((TranslatableTextContent) (base.getNarrator().getValue().getName().getContent())).getKey();
@@ -1744,7 +1744,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper setNarratorMode(String mode) {
             base.getNarrator().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
@@ -1760,7 +1760,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean areCommandSuggestionsEnabled() {
             return base.getAutoSuggestions().getValue();
@@ -1769,7 +1769,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper enableCommandSuggestions(boolean val) {
             base.getAutoSuggestions().setValue(val);
@@ -1779,7 +1779,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean areMatchedNamesHidden() {
             return base.getHideMatchedNames().getValue();
@@ -1788,7 +1788,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper enableHideMatchedNames(boolean val) {
             base.getHideMatchedNames().setValue(val);
@@ -1798,7 +1798,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isDebugInfoReduced() {
             return base.getReducedDebugInfo().getValue();
@@ -1807,7 +1807,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public ChatOptionsHelper reduceDebugInfo(boolean val) {
             base.getReducedDebugInfo().setValue(val);
@@ -1831,7 +1831,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public String getNarratorMode() {
             String narratorKey = ((TranslatableTextContent) (base.getNarrator().getValue().getName().getContent())).getKey();
@@ -1841,7 +1841,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public AccessibilityOptionsHelper setNarratorMode(String mode) {
             base.getNarrator().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
@@ -1857,7 +1857,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean areSubtitlesShown() {
             return base.getShowSubtitles().getValue();
@@ -1866,7 +1866,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public AccessibilityOptionsHelper showSubtitles(boolean val) {
             base.getShowSubtitles().setValue(val);
@@ -1876,7 +1876,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public AccessibilityOptionsHelper setTextBackgroundOpacity(double val) {
             base.getTextBackgroundOpacity().setValue(val);
@@ -1886,7 +1886,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getTextBackgroundOpacity() {
             return base.getTextBackgroundOpacity().getValue();
@@ -1895,7 +1895,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isBackgroundForChatOnly() {
             return base.getBackgroundForChatOnly().getValue();
@@ -1904,7 +1904,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public AccessibilityOptionsHelper enableBackgroundForChatOnly(boolean val) {
             base.getBackgroundForChatOnly().setValue(val);
@@ -1914,7 +1914,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getChatOpacity() {
             return base.getChatOpacity().getValue();
@@ -1923,7 +1923,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public AccessibilityOptionsHelper setChatOpacity(double val) {
             base.getChatOpacity().setValue(val);
@@ -1933,7 +1933,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getChatLineSpacing() {
             return base.getChatLineSpacing().getValue();
@@ -1942,7 +1942,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public AccessibilityOptionsHelper setChatLineSpacing(double val) {
             base.getChatLineSpacing().setValue(val);
@@ -1952,7 +1952,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getChatDelay() {
             return base.getChatDelay().getValue();
@@ -1961,7 +1961,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public AccessibilityOptionsHelper setChatDelay(double val) {
             base.getChatDelay().setValue(val);
@@ -1971,7 +1971,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isAutoJumpEnabled() {
             return base.getAutoJump().getValue();
@@ -1980,7 +1980,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public AccessibilityOptionsHelper enableAutoJump(boolean val) {
             base.getAutoJump().setValue(val);
@@ -1990,7 +1990,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isSneakToggled() {
             return base.getSneakToggled().getValue();
@@ -1999,7 +1999,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public AccessibilityOptionsHelper toggleSneak(boolean val) {
             base.getSneakToggled().setValue(val);
@@ -2009,7 +2009,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isSprintToggled() {
             return base.getSprintToggled().getValue();
@@ -2018,7 +2018,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public AccessibilityOptionsHelper toggleSprint(boolean val) {
             base.getSprintToggled().setValue(val);
@@ -2028,7 +2028,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getDistortionEffect() {
             return base.getDistortionEffectScale().getValue();
@@ -2037,7 +2037,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public AccessibilityOptionsHelper setDistortionEffect(double val) {
             base.getDistortionEffectScale().setValue(val);
@@ -2047,7 +2047,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public double getFovEffect() {
             return base.getFovEffectScale().getValue();
@@ -2056,7 +2056,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public AccessibilityOptionsHelper setFovEffect(double val) {
             base.getFovEffectScale().setValue(val);
@@ -2066,7 +2066,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean isMonochromeLogoEnabled() {
             return base.getMonochromeLogo().getValue();
@@ -2076,7 +2076,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @param val 
          * @return the current helper instance for chaining.
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public AccessibilityOptionsHelper enableMonochromeLogo(boolean val) {
             base.getMonochromeLogo().setValue(val);
@@ -2086,7 +2086,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         /**
          * @return {@code true} if lighting flashes are hidden, {@code false} otherwise.
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public boolean areLightningFlashesHidden() {
             return base.getHideLightningFlashes().getValue();
@@ -2096,7 +2096,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @param val the new fov value.
          * @return the current helper instance for chaining.
          *
-         * @since 1.9.0
+         * @since 1.8.4
          */
         public AccessibilityOptionsHelper setFovEffect(boolean val) {
             getBase(base.getHideLightningFlashes()).forceSetValue(val);

@@ -187,7 +187,7 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
 
     /**
      * @param tooltips the tooltips to set
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void setTooltip(Object... tooltips) {
         this.tooltips = new ArrayList<>();
@@ -198,7 +198,7 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
 
     /**
      * @param tooltip the tooltips to add
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void addTooltip(Object tooltip) {
         if (tooltip instanceof TextBuilder) {
@@ -216,7 +216,7 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
      * @param index the index of the tooltip to remove
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean removeTooltip(int index) {
         if (index >= 0 && index < tooltips.size()) {
@@ -230,7 +230,7 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
      * @param tooltip the tooltip to remove
      * @return {@code true} if the tooltip was removed successfully, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean removeTooltip(TextHelper tooltip) {
         return tooltips.remove(tooltip.getRaw());
@@ -239,7 +239,7 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
     /**
      * @return a copy of the tooltips
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<TextHelper> getTooltips() {
         return tooltips.stream().map(TextHelper::new).toList();

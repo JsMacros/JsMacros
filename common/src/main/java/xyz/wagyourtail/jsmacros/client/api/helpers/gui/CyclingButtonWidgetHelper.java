@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButtonWidget<T>> {
@@ -30,7 +30,7 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
     /**
      * @return the current value.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public T getValue() {
         return base.getValue();
@@ -40,7 +40,7 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
      * @param val the new value
      * @return {@code true} if the value has changed, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean setValue(T val) {
         T lastText = base.getValue();
@@ -52,7 +52,7 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
      * @param amount the amount to cycle by
      * @return this instance for chaining.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public CyclingButtonWidgetHelper<T> cycle(int amount) {
         ((ICyclingButtonWidget) base).jsmacros_cycle(amount);
@@ -62,7 +62,7 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
     /**
      * @return this instance for chaining.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public CyclingButtonWidgetHelper<T> forward() {
         return cycle(1);
@@ -71,7 +71,7 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
     /**
      * @return this instance for chaining.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public CyclingButtonWidgetHelper<T> backward() {
         return cycle(-1);

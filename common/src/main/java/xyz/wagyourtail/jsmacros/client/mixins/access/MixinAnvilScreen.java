@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.client.access.IAnvilScreen;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @Mixin(AnvilScreen.class)
 public abstract class MixinAnvilScreen implements IAnvilScreen {

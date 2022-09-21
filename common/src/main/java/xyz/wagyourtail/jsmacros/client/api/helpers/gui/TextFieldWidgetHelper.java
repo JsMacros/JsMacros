@@ -95,7 +95,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
 
     /**
      * @return {@code true} if the text field is editable, {@code false} otherwise.
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isEditable() {
         return ((ITextFieldWidget) base).jsmacros_isEditable();
@@ -114,7 +114,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     /**
      * @return the selected text.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getSelectedText() {
         return base.getSelectedText();
@@ -122,7 +122,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
 
     /**
      * @param suggestion the suggestion to set.
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void setSuggestion(String suggestion) {
         base.setSuggestion(suggestion);
@@ -131,7 +131,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     /**
      * @return the maximum length of this text field.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getMaxLength() {
         return ((ITextFieldWidget) base).jsmacros_getMaxLength();
@@ -139,7 +139,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
 
     /**
      * @param length the new maximum length
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void setMaxLength(int length) {
         base.setMaxLength(length);
@@ -152,14 +152,14 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
 
     /**
      * @param predicate the text filter
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void setTextPredicate(MethodWrapper<String, ?, ?, ?> predicate) {
         base.setTextPredicate(predicate);
     }
 
     /**
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void resetTextPredicate() {
         base.setTextPredicate(Objects::nonNull);
@@ -167,21 +167,21 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
 
     /**
      * @param position the cursor position
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void setCursorPosition(int position) {
         base.setCursor(position);
     }
 
     /**
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void setCursorToStart() {
         base.setCursorToStart();
     }
 
     /**
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void setCursorToEnd() {
         base.setCursorToEnd();

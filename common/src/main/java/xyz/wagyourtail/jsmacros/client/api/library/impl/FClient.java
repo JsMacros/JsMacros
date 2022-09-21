@@ -73,7 +73,7 @@ public class FClient extends PerExecLibrary {
     /**
      * @return a helper for interacting with minecraft's registry.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public RegistryHelper getRegistryHelper() {
         return new RegistryHelper();
@@ -132,7 +132,7 @@ public class FClient extends PerExecLibrary {
     /**
      * @return a helper which gives access to all game options and some other useful features.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public FullOptionsHelper getFullGameOptions() {
         return new FullOptionsHelper(mc.options);
@@ -367,7 +367,7 @@ public class FClient extends PerExecLibrary {
     /**
      * @return a list of all loaded mods.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<? extends ModContainerHelper<?>> getLoadedMods() {
         return JsMacros.getModLoader().getLoadedMods();
@@ -377,7 +377,7 @@ public class FClient extends PerExecLibrary {
      * Makes minecraft believe that the mouse is currently inside the window.
      * This will automatically set pause on lost focus to false.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void grabMouse() {
         mc.options.pauseOnLostFocus = false;
@@ -388,7 +388,7 @@ public class FClient extends PerExecLibrary {
     /**
      * @return {@code true} if the mod is loaded inside a development environment, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isDevEnv() {
         return JsMacros.getModLoader().isDevEnv();
@@ -397,7 +397,7 @@ public class FClient extends PerExecLibrary {
     /**
      * @return the name of the mod loader.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getModLoader() {
         return JsMacros.getModLoader().getName();
@@ -406,7 +406,7 @@ public class FClient extends PerExecLibrary {
     /**
      * @return a list of all loaded blocks as {@link BlockHelper BlockHelper} objects.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<BlockHelper> getRegisteredBlocks() {
         return Registry.BLOCK.stream().map(BlockHelper::new).toList();
@@ -415,7 +415,7 @@ public class FClient extends PerExecLibrary {
     /**
      * @return a list of all loaded items as {@link ItemHelper ItemHelper} objects.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<ItemHelper> getRegisteredItems() {
         return Registry.ITEM.stream().map(ItemHelper::new).toList();

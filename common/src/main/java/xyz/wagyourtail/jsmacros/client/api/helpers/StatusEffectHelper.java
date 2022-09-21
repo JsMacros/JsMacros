@@ -43,7 +43,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     /**
      * @return {@code true} if this effect is applied permanently, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isPermanent() {
         return base.isPermanent();
@@ -55,7 +55,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      *
      * @return {@code true} if this effect is an ambient one, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isAmbient() {
         return base.isAmbient();
@@ -64,7 +64,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     /**
      * @return {@code true} if this effect has an icon it should render, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean shouldShowIcon() {
         return base.shouldShowIcon();
@@ -74,7 +74,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      * @return {@code true} if this effect affects the particle color and gets rendered in game,
      *         {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean shouldShowParticles() {
         return base.shouldShowParticles();
@@ -84,7 +84,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      * @return the type of this effect, which is either {@code HARMFUL}, {@code NEUTRAL} or
      *         {@code BENEFICIAL}.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getType() {
         return switch (base.getEffectType().getCategory()) {
@@ -100,7 +100,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      *
      * @return {@code true} if this effect should be applied instantly, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isInstant() {
         return base.getEffectType().isInstant();
@@ -109,7 +109,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     /**
      * @return {@code true} if this effect is considered beneficial, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isBeneficial() {
         return base.getEffectType().getCategory() == StatusEffectCategory.BENEFICIAL;
@@ -118,7 +118,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     /**
      * @return {@code true} if this effect is considered neutral, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isNeutral() {
         return base.getEffectType().getCategory() == StatusEffectCategory.NEUTRAL;
@@ -127,7 +127,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     /**
      * @return {@code true} if this effect is considered harmful, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isHarmful() {
         return base.getEffectType().getCategory() == StatusEffectCategory.HARMFUL;

@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.client.access.ICyclingButtonWidget;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @Mixin(CyclingButtonWidget.class)
 public abstract class MixinCyclingButton implements ICyclingButtonWidget {

@@ -77,7 +77,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean shouldRewardPlayerExperience() {
         return base.shouldRewardPlayerExperience();
@@ -100,7 +100,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
     /**
      * @return the original priced item without any adjustments due to rewards or demand
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getOriginalFirstInput() {
         return base.getOriginalFirstBuyItem().isEmpty() ? new ItemStackHelper(ItemStack.EMPTY) : new ItemStackHelper(base.getOriginalFirstBuyItem());
@@ -109,7 +109,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getSpecialPrice() {
         return base.getSpecialPrice();
@@ -118,7 +118,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public float getPriceMultiplier() {
         return base.getPriceMultiplier();
@@ -127,7 +127,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getDemandBonus() {
         return base.getDemandBonus();

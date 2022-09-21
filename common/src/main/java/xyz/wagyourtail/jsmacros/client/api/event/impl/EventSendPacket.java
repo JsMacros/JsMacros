@@ -7,7 +7,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @Event(value = "SendPacket")
 public class EventSendPacket implements BaseEvent {

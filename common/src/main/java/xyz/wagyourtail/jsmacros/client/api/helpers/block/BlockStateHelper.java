@@ -31,7 +31,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
     /**
      * @return the fluid state of this block state.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public FluidStateHelper getFluidState() {
         return new FluidStateHelper(base.getFluidState());
@@ -231,7 +231,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
     /**
      * @return an {@link UniversalBlockStateHelper} to access all properties of this block state.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public UniversalBlockStateHelper getUniversalHelper() {
         return new UniversalBlockStateHelper(base);

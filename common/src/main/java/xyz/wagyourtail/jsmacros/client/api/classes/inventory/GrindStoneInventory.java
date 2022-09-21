@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
@@ -20,7 +20,7 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
     /**
      * @return the upper item to disenchant.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getFirstInput() {
         return getSlot(0);
@@ -29,7 +29,7 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
     /**
      * @return the bottom item to disenchant.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getSecondInput() {
         return getSlot(1);
@@ -38,7 +38,7 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
     /**
      * @return the expected output item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getOutput() {
         return getSlot(2);
@@ -50,7 +50,7 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
      *
      * @return the minimum amount of xp the grindstone should return.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int simulateXp() {
         int xp = 0;

@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public class CustomImage {

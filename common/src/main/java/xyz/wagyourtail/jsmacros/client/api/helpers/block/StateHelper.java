@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public abstract class StateHelper<U extends State<?, ?>> extends BaseHelper<U> {
@@ -24,7 +24,7 @@ public abstract class StateHelper<U extends State<?, ?>> extends BaseHelper<U> {
     /**
      * @return a map of the state properties with its identifier and value.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public Map<String, String> toMap() {
         return base.getEntries().entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey().getName(), entry -> Util.getValueAsString(entry.getKey(), entry.getValue())));

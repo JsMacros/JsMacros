@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public class DirectionHelper extends BaseHelper<Direction> {
@@ -20,7 +20,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     /**
      * @return the name of this direction.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getName() {
         return base.getName();
@@ -29,7 +29,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     /**
      * @return the name of the axis this direction is aligned to.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getAxis() {
         return base.getAxis().toString();
@@ -38,7 +38,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     /**
      * @return {@code true} if this direction is vertical, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isVertical() {
         return base.getAxis().isVertical();
@@ -47,7 +47,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     /**
      * @return {@code true} if this direction is horizontal, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isHorizontal() {
         return base.getAxis().isHorizontal();
@@ -57,7 +57,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
      * @return {@code true} if this direction is pointing in a positive direction, {@code false}
      *         otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isTowardsPositive() {
         return base.getDirection().offset() == 1;
@@ -66,7 +66,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     /**
      * @return the yaw of this direction.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public float getYaw() {
         if (base.getHorizontal() == -1) {
@@ -79,7 +79,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     /**
      * @return the pitch of this direction.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public float getPitch() {
         if (isHorizontal()) {
@@ -92,7 +92,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     /**
      * @return the opposite direction.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public DirectionHelper getOpposite() {
         return new DirectionHelper(base.getOpposite());
@@ -101,7 +101,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     /**
      * @return the direction to the left.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public DirectionHelper getLeft() {
         return new DirectionHelper(base.rotateYCounterclockwise());
@@ -110,7 +110,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     /**
      * @return the direction to the right.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public DirectionHelper getRight() {
         return new DirectionHelper(base.rotateYClockwise());
@@ -119,7 +119,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     /**
      * @return the direction as a directional vector.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public PositionCommon.Pos3D getVector() {
         Vec3i vec = base.getVector();
@@ -131,7 +131,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
      * @return {@code true} if the yaw is facing this direction more than any other one,
      *         {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean pointsTo(float yaw) {
         return base.pointsTo(yaw);

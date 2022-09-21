@@ -85,7 +85,7 @@ public class FFS extends PerExecLibrary {
      * @return {@code true} if the file was created successfully
      *
      * @throws IOException if there occurs an error while creating the file
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean createFile(String path, String name) throws IOException {
         return createFile(path, name, false);
@@ -101,7 +101,7 @@ public class FFS extends PerExecLibrary {
      * @return {@code true} if the file was created successfully
      *
      * @throws IOException if there occurs an error while creating the file
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean createFile(String path, String name, boolean createDirs) throws IOException {
         File file = ctx.getContainedFolder().toPath().resolve(path).resolve(name).toFile();

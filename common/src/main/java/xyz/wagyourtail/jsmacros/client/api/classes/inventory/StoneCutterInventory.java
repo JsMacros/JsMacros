@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public class StoneCutterInventory extends Inventory<StonecutterScreen> {
@@ -21,7 +21,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
     /**
      * @return the selected recipe index.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getSelectedRecipeIndex() {
         return inventory.getScreenHandler().getSelectedRecipe();
@@ -29,7 +29,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
 
     /**
      * @param idx the index to select
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void selectRecipe(int idx) {
         if (idx >= 0 && idx < inventory.getScreenHandler().getAvailableRecipeCount()) {
@@ -41,7 +41,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
     /**
      * @return the amount of available recipes.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getAvailableRecipeCount() {
         return inventory.getScreenHandler().getAvailableRecipeCount();
@@ -50,7 +50,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
     /**
      * @return a list of all available recipe results in the form of item stacks.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<ItemStackHelper> getRecipes() {
         return inventory.getScreenHandler().getAvailableRecipes().stream().map(recipe -> new ItemStackHelper(recipe.getOutput())).toList();
@@ -59,7 +59,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
     /**
      * @return {@code true} if there is a selected recipe, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean canCraft() {
         return inventory.getScreenHandler().canCraft();

@@ -151,7 +151,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     /**
      * @return {@code true} if the entity is sneaking, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isSneaking() {
         return base.isSneaking();
@@ -160,7 +160,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     /**
      * @return {@code true} if the entity is sprinting, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isSprinting() {
         return base.isSprinting();
@@ -281,7 +281,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     /**
      * @return the maximum amount of air this entity can have.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getMaxAir() {
         return base.getMaxAir();
@@ -290,7 +290,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     /**
      * @return the amount of air this entity has.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getAir() {
         return base.getAir();
@@ -299,7 +299,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     /**
      * @return this entity's current speed in blocks per second.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public double getSpeed() {
         double dx = Math.abs(base.getX() - base.prevX);
@@ -310,7 +310,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     /**
      * @return the direction the entity is facing, rounded to the nearest 45 degrees.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public DirectionHelper getFacingDirection() {
         return new DirectionHelper(base.getHorizontalFacing());
@@ -319,7 +319,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     /**
      * @return the distance between this entity and the specified one.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public float distanceTo(EntityHelper<?> entity) {
         return base.distanceTo(entity.getRaw());
@@ -328,7 +328,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     /**
      * @return the distance between this entity and the specified position.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public double distanceTo(BlockPosHelper pos) {
         return Math.sqrt(pos.getRaw().getSquaredDistance(base.getPos()));
@@ -337,7 +337,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     /**
      * @return the distance between this entity and the specified position.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public double distanceTo(PositionCommon.Pos3D pos) {
         return Math.sqrt(base.squaredDistanceTo(pos.getX(), pos.getY(), pos.getZ()));
@@ -346,7 +346,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     /**
      * @return the distance between this entity and the specified position.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public double distanceTo(double x, double y, double z) {
         return Math.sqrt(base.squaredDistanceTo(x, y, z));
@@ -355,7 +355,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     /**
      * @return the velocity vector.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public PositionCommon.Pos3D getVelocity() {
         return new PositionCommon.Pos3D(base.getVelocity().x, base.getVelocity().y, base.getVelocity().z);
@@ -364,7 +364,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     /**
      * @return the chunk helper for the chunk this entity is in.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ChunkHelper getChunk() {
         return new ChunkHelper(base.getWorld().getChunk(base.getBlockPos()));
@@ -373,7 +373,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     /**
      * @return the name of the biome this entity is in.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getBiome() {
         return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(base.getBlockPos()).value()).toString();
@@ -452,7 +452,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     /**
      * @return the entity as a server entity if an integrated server is running and {@code null} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public EntityHelper<?> asServerEntity() {
         MinecraftClient client = MinecraftClient.getInstance();

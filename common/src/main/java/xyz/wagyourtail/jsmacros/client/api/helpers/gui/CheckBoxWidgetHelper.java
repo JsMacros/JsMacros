@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public class CheckBoxWidgetHelper extends ButtonWidgetHelper<CheckBox> {
@@ -25,7 +25,7 @@ public class CheckBoxWidgetHelper extends ButtonWidgetHelper<CheckBox> {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isChecked() {
         return base.isChecked();
@@ -35,7 +35,7 @@ public class CheckBoxWidgetHelper extends ButtonWidgetHelper<CheckBox> {
      * @param checked
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public CheckBoxWidgetHelper setChecked(boolean checked) {
         if (base.isChecked() != checked) {

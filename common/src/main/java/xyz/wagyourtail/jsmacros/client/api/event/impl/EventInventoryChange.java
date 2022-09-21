@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @Event(value = "InventoryChange")
 public class EventInventoryChange implements BaseEvent {

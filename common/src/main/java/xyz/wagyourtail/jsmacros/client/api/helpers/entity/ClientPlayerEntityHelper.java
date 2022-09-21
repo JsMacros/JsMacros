@@ -43,7 +43,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * Sets the player rotation along the given axis and keeps the other axis the same.
      *
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void lookAt(String direction) {
         Direction dir = Direction.byName(direction.toLowerCase(Locale.ROOT));
@@ -132,7 +132,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
      * @return this instance for chaining.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, String direction) throws InterruptedException {
         return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), false);
@@ -158,7 +158,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param await     whether to wait for the attack to finish
      * @return this instance for chaining.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, String direction, boolean await) throws InterruptedException {
         return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), await);
@@ -278,7 +278,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
      * @return this instance for chaining.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, String direction, boolean offHand) throws InterruptedException {
         return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, false);
@@ -304,7 +304,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param await     whether to wait for the interaction to complete
      * @return this instance for chaining.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, String direction, boolean offHand, boolean await) throws InterruptedException {
         return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, await);
@@ -470,7 +470,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      *
      * @return the saturation level.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public float getSaturation() {
         return base.getHungerManager().getSaturationLevel();
@@ -479,7 +479,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     /**
      * @return this instance for chaining.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ClientPlayerEntityHelper<?> dropHeldItem(boolean dropStack) {
         base.dropSelectedItem(dropStack);
@@ -489,7 +489,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     /**
      * @return an advancement manager to work with advancements.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public AdvancementManagerHelper getAdvancementManager() {
         return new AdvancementManagerHelper(base.networkHandler.getAdvancementHandler().getManager());

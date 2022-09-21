@@ -184,7 +184,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @param draw2d
      * @return {@code true} if adding the child to the parent would result in a cyclic dependency.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     private boolean hasCyclicDependencies(Draw2D draw2d) {
         Deque<Draw2D> queue = new ArrayDeque<>();

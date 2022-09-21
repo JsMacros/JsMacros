@@ -47,7 +47,7 @@ public class ChatHistoryManager {
      * @return the amount of messages in the chat history
      *
      * @throws InterruptedException
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int gerRecvCount() throws InterruptedException {
         final Semaphore semaphore = new Semaphore(0);
@@ -64,7 +64,7 @@ public class ChatHistoryManager {
      * @return all received messages in the chat history
      *
      * @throws InterruptedException
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<ChatHudLineHelper> getRecvLines() throws InterruptedException {
         List<ChatHudLineHelper> recvLines = new ArrayList<>();

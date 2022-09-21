@@ -127,7 +127,7 @@ public class BlockHelper extends BaseHelper<Block> {
     /**
      * @return the name of the block.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public TextHelper getName() {
         return new TextHelper(base.getName());

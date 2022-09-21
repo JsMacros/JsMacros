@@ -7,7 +7,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public class AnvilInventory extends Inventory<AnvilScreen> {
@@ -18,7 +18,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
 
     /**
      * @param name the new name
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void rename(String name) {
         ((IAnvilScreen) inventory).jsmacros_rename(name);
@@ -27,7 +27,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
     /**
      * @return the level cost to apply the changes.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getLevelCost() {
         return inventory.getScreenHandler().getLevelCost();
@@ -36,7 +36,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
     /**
      * @return the first input item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getFirstInput() {
         return getSlot(0);
@@ -45,7 +45,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
     /**
      * @return the second input item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getSecondInput() {
         return getSlot(1);
@@ -54,7 +54,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
     /**
      * @return the expected output item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemStackHelper getOutput() {
         return getSlot(2);

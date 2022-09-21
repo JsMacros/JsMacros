@@ -62,7 +62,7 @@ public class Draw3D {
 
     /**
      * @param box
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void addBox(Box box) {
         synchronized (boxes) {
@@ -72,7 +72,7 @@ public class Draw3D {
 
     /**
      * @param line
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void addLine(Line line) {
         synchronized (lines) {
@@ -82,7 +82,7 @@ public class Draw3D {
 
     /**
      * @param surface
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void addSurface(Surface surface) {
         synchronized (surfaces) {
@@ -489,7 +489,7 @@ public class Draw3D {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public Box.Builder getBoxBuilder() {
         return new Box.Builder(this);
@@ -498,7 +498,7 @@ public class Draw3D {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public Line.Builder getLineBuilder() {
         return new Line.Builder(this);
@@ -507,7 +507,7 @@ public class Draw3D {
     /**
      * @return
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public Surface.Builder getSurfaceBuilder() {
         return new Surface.Builder(this);

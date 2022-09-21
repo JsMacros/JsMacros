@@ -77,7 +77,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @param id the identifier of the entity.
      * @return how many times the player has killed the entity.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getEntityKilled(String id) {
         return getStat(Stats.KILLED, Registry.ENTITY_TYPE, id);
@@ -87,7 +87,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @param id the identifier of the entity.
      * @return how many times the player has killed the specified entity.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getKilledByEntity(String id) {
         return getStat(Stats.KILLED_BY, Registry.ENTITY_TYPE, id);
@@ -97,7 +97,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @param id the identifier of the block
      * @return how many times the player has mined the block.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getBlockMined(String id) {
         return getStat(Stats.MINED, Registry.BLOCK, id);
@@ -107,7 +107,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @param id the identifier of the item.
      * @return how many times the player has broken the item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getItemBroken(String id) {
         return getStat(Stats.BROKEN, Registry.ITEM, id);
@@ -117,7 +117,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @param id the identifier of the item.
      * @return how many times the player has crafted the item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getItemCrafted(String id) {
         return getStat(Stats.CRAFTED, Registry.ITEM, id);
@@ -127,7 +127,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @param id the identifier of the item.
      * @return how many times the player has used the item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getItemUsed(String id) {
         return getStat(Stats.USED, Registry.ITEM, id);
@@ -137,7 +137,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @param id the identifier of the item.
      * @return how many times the player has picked up the item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getItemPickedUp(String id) {
         return getStat(Stats.PICKED_UP, Registry.ITEM, id);
@@ -147,7 +147,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @param id the identifier of the item.
      * @return how many times the player has dropped the item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getItemDropped(String id) {
         return getStat(Stats.DROPPED, Registry.ITEM, id);
@@ -157,7 +157,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @param id the identifier of the custom stat.
      * @return the value of the custom stat.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getCustomStat(String id) {
         return base.getStat(Stats.CUSTOM.getOrCreateStat(new Identifier(id)));
@@ -171,7 +171,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @param id the identifier of the custom stat.
      * @return the formatted value of the custom stat.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getCustomFormattedStat(String id) {
         Stat<Identifier> stat = Stats.CUSTOM.getOrCreateStat(new Identifier(id));
@@ -181,7 +181,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     /**
      * Used to request an update of the statistics from the server.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void updateStatistics() {
         MinecraftClient mc = MinecraftClient.getInstance();

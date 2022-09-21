@@ -4,7 +4,7 @@ import net.minecraft.item.ItemStack;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 public interface IAbstractFurnaceScreenHandler {
 

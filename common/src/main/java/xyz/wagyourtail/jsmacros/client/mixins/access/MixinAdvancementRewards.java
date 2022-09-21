@@ -10,7 +10,7 @@ import xyz.wagyourtail.jsmacros.client.access.IAdvancementRewards;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @Mixin(AdvancementRewards.class)
 public class MixinAdvancementRewards implements IAdvancementRewards {

@@ -161,7 +161,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @param stack decide whether to drop the whole stack or just a single item
      * @return this instance for chaining.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public Inventory<T> dropSlot(int slot, boolean stack) {
         man.clickSlot(syncId, slot, stack ? 1 : 0, SlotActionType.THROW, player);
@@ -173,7 +173,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return {@code true} if the item is contined anywhere in the inventory, {@code false}
      *         otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean contains(ItemStackHelper item) {
         return getItems().stream().anyMatch(stack -> stack.equals(item));
@@ -184,7 +184,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return {@code true} if the item is contined anywhere in the inventory, {@code false}
      *         otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean contains(String item) {
         return getItems().stream().anyMatch(stack -> stack.getItemId().equals(item));
@@ -194,7 +194,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return the first empty slot in the main inventory or {@code -1} if there are no empty
      *         slots.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int findFreeInventorySlot() {
         return findFreeSlot("main", "hotbar");
@@ -203,7 +203,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @return the first empty hotbar slot or {@code -1} if there are no empty slots.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int findFreeHotbarSlot() {
         return findFreeSlot("hotbar");
@@ -213,7 +213,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @param mapIdentifiers the identifier used to get the slots from {@link #getMap()}.
      * @return the first empty slot in the given slots and -1 if there are no empty slots
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int findFreeSlot(String... mapIdentifiers) {
         for (int slot : getSlots(mapIdentifiers)) {
@@ -227,7 +227,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @return a map of all item ids mapped to their total count.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public Map<String, Integer> getItemCount() {
         Object2IntOpenHashMap<String> itemMap = new Object2IntOpenHashMap<>();
@@ -238,7 +238,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @return a list of all items in the inventory.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<ItemStackHelper> getItems() {
         return IntStream.range(0, getTotalSlots()).mapToObj(this::getSlot).filter(Predicate.not(ItemStackHelper::isEmpty)).toList();
@@ -248,7 +248,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @param mapIdentifiers the inventory sections
      * @return a list of all items in the given inventory sections.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<ItemStackHelper> getItems(String... mapIdentifiers) {
         return Arrays.stream(getSlots(mapIdentifiers)).mapToObj(this::getSlot).filter(Predicate.not(ItemStackHelper::isEmpty)).toList();
@@ -258,7 +258,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @param item the item to search for
      * @return all slots containing the given item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int[] findItem(ItemStackHelper item) {
         IntList slots = new IntArrayList();
@@ -274,7 +274,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @param item the item to search for
      * @return all slots containing the given item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int[] findItem(String item) {
         IntList slots = new IntArrayList();
@@ -290,7 +290,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @param mapIdentifiers the inventory sections
      * @return all slots indexes in the given inventory sections.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int[] getSlots(String... mapIdentifiers) {
         Map<String, int[]> map = getMap();
@@ -305,7 +305,7 @@ public class Inventory<T extends HandledScreen<?>> {
 
     /**
      * @param callback the callback for accepting the items.
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void iterateItems(MethodWrapper<ItemStackHelper, Integer, ?, ?> callback) {
         int count = getTotalSlots();
@@ -320,7 +320,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @param callback       the callback for accepting the items
      * @param mapIdentifiers the inventory sections to iterate over
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void iterateItems(MethodWrapper<ItemStackHelper, Integer, ?, ?> callback, String... mapIdentifiers) {
         IntStream.of(getSlots(mapIdentifiers)).forEach(i -> {
@@ -579,7 +579,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return a list of recipes that can be crafted in this inventory.
      *
      * @throws InterruptedException
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<RecipeHelper> getCraftableRecipes(boolean craftable) throws InterruptedException {
         Stream<Recipe<?>> recipes;
@@ -718,7 +718,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @return {@code true} if the inventory is a container, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isContainer() {
         return inventory instanceof GenericContainerScreen || inventory instanceof Generic3x3ContainerScreen || inventory instanceof HopperScreen || inventory instanceof ShulkerBoxScreen;
@@ -727,7 +727,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @return {@code true} if the recipe book is visible, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isRecipeBookOpened() {
         IRecipeBookWidget recipeBookWidget = getRecipeBookWidget();
@@ -739,7 +739,7 @@ public class Inventory<T extends HandledScreen<?>> {
 
     /**
      * @param open whether to open or close the recipe book
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void setRecipeBookOpen(boolean open) {
         IRecipeBookWidget recipeBookWidget = getRecipeBookWidget();

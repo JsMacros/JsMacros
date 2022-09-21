@@ -45,7 +45,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @param damage
      * @return
      */
-    @Deprecated(since = "1.9.0")
+    @Deprecated
     public ItemStackHelper setDamage(int damage) {
         base.setDamage(damage);
         return this;
@@ -70,7 +70,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     /**
      * @return {@code true} if the item is enchanted, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isEnchanted() {
         return base.hasEnchantments();
@@ -79,7 +79,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     /**
      * @return a list of all enchantments on this item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<EnchantmentHelper> getEnchantments() {
         List<EnchantmentHelper> enchantments = new ArrayList<>();
@@ -93,7 +93,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @param id the id of the enchantment to check for.
      * @return the enchantment instance, containing the level, or {@code null} if the item is not enchanted with the specified enchantment.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public EnchantmentHelper getEnchantment(String id) {
         return getEnchantments().stream().filter(enchantmentHelper -> enchantmentHelper.getName().equals(id)).findFirst().orElse(null);
@@ -103,7 +103,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @param id the id of the enchantment to check for.
      * @return {@code true} if the item is enchanted with the specified enchantment, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean hasEnchantment(String id) {
         return getEnchantments().stream().anyMatch(enchantmentHelper -> enchantmentHelper.getName().equals(id));
@@ -112,7 +112,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     /**
      * @return a list of all enchantments that can be applied to this item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<EnchantmentHelper> getPossibleEnchantments() {
         return Registry.ENCHANTMENT.stream().filter(enchantment -> enchantment.isAcceptableItem(base)).map(EnchantmentHelper::new).toList();
@@ -121,7 +121,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     /**
      * @return a list of all enchantments that can be applied to this item through an enchanting table.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<EnchantmentHelper> getPossibleEnchantmentsFromTable() {
         return Registry.ENCHANTMENT.stream().filter(enchantment -> enchantment.type.isAcceptableItem(base.getItem())).map(EnchantmentHelper::new).toList();
@@ -134,7 +134,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      *
      * @return a list of all lines of lore on this item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<TextHelper> getLore() {
         List<TextHelper> texts = new ArrayList<>();
@@ -165,7 +165,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     /**
      * @return the maximum durability of this item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getMaxDurability() {
         return base.getMaxDamage();
@@ -174,7 +174,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     /**
      * @return the current durability of this item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getDurability() {
         return base.getMaxCount() - base.getDamage();
@@ -183,7 +183,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     /**
      * @return the current repair cost of this item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getRepairCost() {
         return base.getRepairCost();
@@ -210,7 +210,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     /**
      * @return the default attack damage of this item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public float getAttackDamage() {
         if (base.getItem() instanceof SwordItem swordItem) {
@@ -438,7 +438,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return {@code true} if the given block can be mined and drops when broken with this item,
      *         {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isSuitableFor(BlockHelper block) {
         return base.isSuitableFor(block.getDefaultState().getRaw());
@@ -449,7 +449,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return {@code true} if the given block can be mined and drops when broken with this item,
      *         {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isSuitableFor(BlockStateHelper block) {
         return base.isSuitableFor(block.getRaw());
@@ -461,7 +461,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      *
      * @return a {@link CreativeItemStackHelper} instance for this item.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public CreativeItemStackHelper getCreativeHelper() {
         return new CreativeItemStackHelper(base);
@@ -470,7 +470,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     /**
      * @return the item this stack is made of.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ItemHelper getItem() {
         return new ItemHelper(base.getItem());

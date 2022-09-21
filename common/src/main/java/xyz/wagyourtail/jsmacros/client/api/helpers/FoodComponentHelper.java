@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public class FoodComponentHelper extends BaseHelper<FoodComponent> {
@@ -21,7 +21,7 @@ public class FoodComponentHelper extends BaseHelper<FoodComponent> {
     /**
      * @return the amount of hunger this food restores.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getHunger() {
         return base.getHunger();
@@ -30,7 +30,7 @@ public class FoodComponentHelper extends BaseHelper<FoodComponent> {
     /**
      * @return the amount of saturation this food restores.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public float getSaturation() {
         return base.getSaturationModifier();
@@ -39,7 +39,7 @@ public class FoodComponentHelper extends BaseHelper<FoodComponent> {
     /**
      * @return {@code true} if this food can be eaten by wolves, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isMeat() {
         return base.isMeat();
@@ -49,7 +49,7 @@ public class FoodComponentHelper extends BaseHelper<FoodComponent> {
      * @return {@code true} if this food can be eaten even when the player is not hungry,
      *         {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isAlwaysEdible() {
         return base.isAlwaysEdible();
@@ -58,7 +58,7 @@ public class FoodComponentHelper extends BaseHelper<FoodComponent> {
     /**
      * @return {@code true} if the food can be eaten faster than usual, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean isSnack() {
         return base.isSnack();
@@ -67,7 +67,7 @@ public class FoodComponentHelper extends BaseHelper<FoodComponent> {
     /**
      * @return a map of status effects and their respective probabilities.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public Map<StatusEffectHelper, Float> getStatusEffects() {
         Object2FloatArrayMap<StatusEffectHelper> effects = new Object2FloatArrayMap<>();

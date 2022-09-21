@@ -19,7 +19,7 @@ import java.util.stream.StreamSupport;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @SuppressWarnings("unused")
 public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
@@ -31,7 +31,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     /**
      * @return a map of all advancement ids mapped to their advancement.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public Map<String, AdvancementHelper> getAdvancementsForIdentifiers() {
         return ((IAdvancementManager) base).jsmacros_getAdvancementMap().entrySet().stream().collect(Collectors.toMap(
@@ -43,7 +43,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     /**
      * @return a list of all advancements.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<AdvancementHelper> getAdvancements() {
         return base.getAdvancements().stream().map(AdvancementHelper::new).toList();
@@ -52,7 +52,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     /**
      * @return a list of all started advancements.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<AdvancementHelper> getStartedAdvancements() {
         return getProgressStream().filter(advancementProgressEntry -> !advancementProgressEntry.getValue().isAnyObtained()).map(advancementProgressEntry -> new AdvancementHelper(advancementProgressEntry.getKey())).toList();
@@ -61,7 +61,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     /**
      * @return a list of all missing advancements.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<AdvancementHelper> getMissingAdvancements() {
         return getProgressStream().filter(advancementProgressEntry -> !advancementProgressEntry.getValue().isDone()).map(advancementProgressEntry -> new AdvancementHelper(advancementProgressEntry.getKey())).toList();
@@ -70,7 +70,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     /**
      * @return a list of all completed advancements.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<AdvancementHelper> getCompletedAdvancements() {
         return getProgressStream().filter(advancementProgressEntry -> advancementProgressEntry.getValue().isDone()).map(advancementProgressEntry -> new AdvancementHelper(advancementProgressEntry.getKey())).toList();
@@ -79,14 +79,14 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     /**
      * @return a list of all the root advancements.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<AdvancementHelper> getRootAdvancements() {
         return StreamSupport.stream(base.getRoots().spliterator(), false).map(AdvancementHelper::new).toList();
     }
 
     /**
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<AdvancementHelper> getDependents() {
         return ((IAdvancementManager) base).jsmacros_getDependents().stream().map(AdvancementHelper::new).toList();
@@ -96,7 +96,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @param identifier the identifier of the advancement
      * @return the advancement for the given identifier.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public AdvancementHelper getAdvancement(String identifier) {
         return new AdvancementHelper(base.get(new Identifier(identifier)));
@@ -105,7 +105,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     /**
      * @return a map of all advancements mapped to their progress.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public Map<AdvancementHelper, AdvancementProgressHelper> getAdvancementsProgress() {
         return getProgressStream().collect(Collectors.toMap(
@@ -117,7 +117,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     /**
      * @return the progress of the given advancement.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public AdvancementProgressHelper getAdvancementProgress(String identifier) {
         return new AdvancementProgressHelper(((IClientAdvancementManager) MinecraftClient.getInstance().player.networkHandler.getAdvancementHandler()).jsmacros_getAdvancementProgress().get(base.get(new Identifier(identifier))));

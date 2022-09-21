@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.core.event.ICancelable;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @Event("JoinedRecvPacket")
 public class EventJoinedRecvPacket implements BaseEvent, ICancelable {

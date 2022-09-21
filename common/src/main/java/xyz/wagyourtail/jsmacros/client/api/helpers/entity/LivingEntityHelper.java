@@ -47,7 +47,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      *
      * @return {@code true} if the entity has the specified status effect, {@code false} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean hasStatusEffect(String id) {
         StatusEffect effect = Registry.STATUS_EFFECT.get(new Identifier(id));
@@ -122,7 +122,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     /**
      * @return the entity's absorption amount.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public float getAbsorptionHealth() {
         return base.getAbsorptionAmount();
@@ -131,7 +131,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     /**
      * @return the entity's armor value.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getArmor() {
         return base.getArmor();
@@ -140,7 +140,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     /**
      * @return the entity's default health.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getDefaultHealth() {
         return base.defaultMaxHealth;
@@ -150,7 +150,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @return the entity's mob category, {@code UNDEAD}, {@code DEFAULT}, {@code ARTHROPOD}, or
      *         {@code ILLAGER}, {@code AQUATIC} or {@code UNKNOWN}.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getMobCategory() {
         EntityGroup group = base.getGroup();
@@ -188,7 +188,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     /**
      * @return the bow pull progress of the entity, {@code 0} by default.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public double getBowPullProgress() {
         if (base.getMainHandStack().getItem() instanceof BowItem) {
@@ -203,7 +203,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @return {@code true} if the player has line of sight to the specified entity, {@code false}
      *         otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean canSeeEntity(EntityHelper<?> entity) {
         return canSeeEntity(entity, true);
@@ -215,7 +215,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @return {@code true} if the player has line of sight to the specified entity, {@code false}
      *         otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public boolean canSeeEntity(EntityHelper<?> entity, boolean simpleCast) {
         Entity rawEntity = entity.getRaw();

@@ -93,7 +93,7 @@ public class FHud extends BaseLibrary {
      * @return a {@link CustomImage} that can be used as a texture for screen backgrounds, rendering
      *         images, etc.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public CustomImage createTexture(int width, int height, String name) {
         return CustomImage.createWidget(width, height, name);
@@ -104,7 +104,7 @@ public class FHud extends BaseLibrary {
      * @return a {@link CustomImage} that can be used as a texture for screen backgrounds, rendering
      *         images, etc.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public CustomImage createTexture(String path, String name) {
         return CustomImage.createWidget(path, name);
@@ -113,7 +113,7 @@ public class FHud extends BaseLibrary {
     /**
      * @return an immutable Map of all registered custom textures.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public Map<String, CustomImage> getRegisteredTextures() {
         return ImmutableMap.copyOf(CustomImage.IMAGES);
@@ -122,7 +122,7 @@ public class FHud extends BaseLibrary {
     /**
      * @return the current gui scale factor of minecraft.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getScaleFactor() {
         return mc.options.getGuiScale().getValue();
@@ -293,7 +293,7 @@ public class FHud extends BaseLibrary {
     /**
      * @return the current window width.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getWindowWidth() {
         return mc.getWindow().getWidth();
@@ -302,7 +302,7 @@ public class FHud extends BaseLibrary {
     /**
      * @return the current window height.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getWindowHeight() {
         return mc.getWindow().getHeight();
@@ -310,7 +310,7 @@ public class FHud extends BaseLibrary {
 
     /**
      * @param width the new window width.
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void setWindowWidth(int width) {
         GLFW.glfwSetWindowSize(mc.getWindow().getHandle(), width, getWindowHeight());
@@ -318,7 +318,7 @@ public class FHud extends BaseLibrary {
 
     /**
      * @param height the new window height.
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void setWindowHeight(int height) {
         GLFW.glfwSetWindowSize(mc.getWindow().getHandle(), getWindowWidth(), height);
@@ -327,7 +327,7 @@ public class FHud extends BaseLibrary {
     /**
      * @param width  the new window width.
      * @param height the new window height.
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void setWindowSize(int width, int height) {
         GLFW.glfwSetWindowSize(mc.getWindow().getHandle(), width, height);
@@ -336,7 +336,7 @@ public class FHud extends BaseLibrary {
     /**
      * @param x the new window x position.
      * @param y the new window y position.
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void setWindowPosition(int x, int y) {
         GLFW.glfwSetWindowPos(mc.getWindow().getHandle(), x, y);
@@ -345,7 +345,7 @@ public class FHud extends BaseLibrary {
     /**
      * @param x the new mouse x position.
      * @param y the new mouse y position.
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void setMousePosition(int x, int y) {
         GLFW.glfwSetCursorPos(mc.getWindow().getHandle(), x, y);

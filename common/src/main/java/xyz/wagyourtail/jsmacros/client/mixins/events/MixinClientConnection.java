@@ -16,7 +16,7 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.EventSendPacket;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @Mixin(ClientConnection.class)
 public class MixinClientConnection {

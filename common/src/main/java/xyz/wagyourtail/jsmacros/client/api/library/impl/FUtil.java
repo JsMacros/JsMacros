@@ -96,7 +96,7 @@ import java.util.SplittableRandom;
 
 /**
  * @author Etheradon
- * @since 1.9.0
+ * @since 1.8.4
  */
 @Library("Util")
 @SuppressWarnings("unused")
@@ -109,7 +109,7 @@ public class FUtil extends BaseLibrary {
      *
      * @return a java ArrayList.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public ArrayList<?> createArrayList() {
         return new ArrayList<>();
@@ -122,7 +122,7 @@ public class FUtil extends BaseLibrary {
      * @param <T>   the type of the array
      * @return a java ArrayList from the given array.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public <T> ArrayList<T> createArrayList(T[] array) {
         return Lists.newArrayList(array);
@@ -133,7 +133,7 @@ public class FUtil extends BaseLibrary {
      *
      * @return a java HashMap.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public HashMap<?, ?> createHashMap() {
         return new HashMap<>();
@@ -144,7 +144,7 @@ public class FUtil extends BaseLibrary {
      *
      * @return a java HashSet.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public HashSet<?> createHashSet() {
         return new HashSet<>();
@@ -155,7 +155,7 @@ public class FUtil extends BaseLibrary {
      *
      * @return a java LinkedList.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public LinkedList<?> createLinkedList() {
         return new LinkedList<>();
@@ -166,7 +166,7 @@ public class FUtil extends BaseLibrary {
      * @return the correct instance of {@link BaseHelper} for the given object if it exists and
      *         {@code null} otherwise.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public BaseHelper<?> getHelperFromRaw(Object obj) {
         //didn't implement CommandNodeHelper, TradeOfferHelper
@@ -256,7 +256,7 @@ public class FUtil extends BaseLibrary {
      * @param text the text to check
      * @return the pixel width of the given text for the current font renderer.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getTextWidth(TextHelper text) {
         return mc.textRenderer.getWidth(text.getRaw());
@@ -266,7 +266,7 @@ public class FUtil extends BaseLibrary {
      * @param text the text to check
      * @return the pixel width of the given text for the current font renderer.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public int getTextWidth(String text) {
         return mc.textRenderer.getWidth(text);
@@ -274,7 +274,7 @@ public class FUtil extends BaseLibrary {
 
     /**
      * @param uri the uri to open
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void openLink(String uri) throws URISyntaxException {
         Util.getOperatingSystem().open(new URI(uri));
@@ -282,7 +282,7 @@ public class FUtil extends BaseLibrary {
 
     /**
      * @param path the path top open, relative the config folder
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void openFile(String path) {
         Util.getOperatingSystem().open(JsMacros.core.config.configFolder.toPath().resolve(path).toFile());
@@ -292,7 +292,7 @@ public class FUtil extends BaseLibrary {
      * @param array the array to convert
      * @return the String representation of the given array.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String arrayToString(Object[] array) {
         return Arrays.toString(array);
@@ -305,7 +305,7 @@ public class FUtil extends BaseLibrary {
      * @param array the array to convert
      * @return the String representation of the given array.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String arrayDeepToString(Object[] array) {
         return Arrays.deepToString(array);
@@ -315,7 +315,7 @@ public class FUtil extends BaseLibrary {
      * Copies the text to the clipboard.
      *
      * @param text the text to copy
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public void copyToClipboard(String text) {
         SelectionManager.setClipboard(mc, text);
@@ -324,7 +324,7 @@ public class FUtil extends BaseLibrary {
     /**
      * @return the text from the clipboard
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String getClipboard() {
         return SelectionManager.getClipboard(mc);
@@ -336,7 +336,7 @@ public class FUtil extends BaseLibrary {
      * @param message the message to hash
      * @return the hashed message.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String hashString(String message) {
         return DigestUtils.sha256Hex(message);
@@ -349,7 +349,7 @@ public class FUtil extends BaseLibrary {
      * @param algorithm sha1 | sha256 | sha384 | sha512 | md2 | md5
      * @return the hashed message.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String hashString(String message, String algorithm) {
         return switch (algorithm) {
@@ -369,7 +369,7 @@ public class FUtil extends BaseLibrary {
      * @param message the message to encode
      * @return the encoded message.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String encode(String message) {
         return new String(Base64.encodeBase64(message.getBytes()));
@@ -381,7 +381,7 @@ public class FUtil extends BaseLibrary {
      * @param message the message to decode
      * @return the decoded message.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String decode(String message) {
         return new String(Base64.decodeBase64(message.getBytes()));
@@ -392,7 +392,7 @@ public class FUtil extends BaseLibrary {
      *
      * @return a SplittableRandom
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public SplittableRandom getRandom() {
         return new SplittableRandom();
@@ -405,7 +405,7 @@ public class FUtil extends BaseLibrary {
      * @param seed the seed
      * @return a SplittableRandom
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public SplittableRandom getRandom(long seed) {
         return new SplittableRandom(seed);
@@ -415,7 +415,7 @@ public class FUtil extends BaseLibrary {
      * @param identifier the String representation of the identifier, with the namespace and path
      * @return the raw minecraft Identifier.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public Identifier getIdentifier(String identifier) {
         return new Identifier(identifier);
@@ -427,7 +427,7 @@ public class FUtil extends BaseLibrary {
      * @param text the text to check
      * @return the name of the sender or null if it couldn't be guessed.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String guessName(TextHelper text) {
         return guessName(text.getStringStripFormatting());
@@ -439,7 +439,7 @@ public class FUtil extends BaseLibrary {
      * @param text the text to check
      * @return the name of the sender or null if it couldn't be guessed.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public String guessName(String text) {
         List<String> names = guessNameAndRoles(text);
@@ -453,7 +453,7 @@ public class FUtil extends BaseLibrary {
      * @return a list of names, titles and roles of the sender or an empty list if it couldn't be
      *         guessed.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<String> guessNameAndRoles(TextHelper text) {
         return guessNameAndRoles(text.getStringStripFormatting());
@@ -466,7 +466,7 @@ public class FUtil extends BaseLibrary {
      * @return a list of names, titles and roles of the sender or an empty list if it couldn't be
      *         guessed.
      *
-     * @since 1.9.0
+     * @since 1.8.4
      */
     public List<String> guessNameAndRoles(String text) {
         return NameUtil.guessNameAndRoles(text);
