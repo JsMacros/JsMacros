@@ -1,10 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.*;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
-import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.passive.AbstractDonkeyEntity;
@@ -12,8 +10,6 @@ import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
@@ -21,28 +17,19 @@ import net.minecraft.screen.slot.SlotActionType;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
-import xyz.wagyourtail.jsmacros.client.access.IRecipeBookResults;
-import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.RecipeHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Semaphore;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * @author Wagyourtail
@@ -51,6 +38,7 @@ import java.util.stream.Stream;
 @SuppressWarnings("unused")
 public class Inventory<T extends HandledScreen<?>> {
     protected T inventory;
+    protected ScreenHandler handler;
     protected Map<String, int[]> map;
     protected final ClientPlayerInteractionManager man;
     protected final int syncId;
@@ -66,7 +54,7 @@ public class Inventory<T extends HandledScreen<?>> {
         return inv;
     }
 
-    public static Inventory<?> create(net.minecraft.client.gui.screen.Screen s) {
+    public static Inventory<?> create(Screen s) {
         if (s instanceof HandledScreen) {
             if (s instanceof MerchantScreen merchantScreen) {
                 return new VillagerInventory(merchantScreen);
@@ -90,7 +78,15 @@ public class Inventory<T extends HandledScreen<?>> {
                 return new SmithingInventory(smithingScreen);
             } else if (s instanceof StonecutterScreen stonecutterScreen) {
                 return new StoneCutterInventory(stonecutterScreen);
-            } else if (s instanceof GenericContainerScreen || s instanceof  Generic3x3ContainerScreen || s instanceof  HopperScreen || s instanceof ShulkerBoxScreen) {
+            } else if (s instanceof CraftingScreen craftingScreen) {
+                return new CraftingInventory(craftingScreen);
+            } else if (s instanceof InventoryScreen inventoryScreen) {
+                return new xyz.wagyourtail.jsmacros.client.api.classes.inventory.PlayerInventory(inventoryScreen);
+            } else if (s instanceof CreativeInventoryScreen creativeInventoryScreen) {
+                return new CreativeInventory(creativeInventoryScreen);
+            } else if (s instanceof HorseScreen horseScreen) {
+                return new HorseInventory(horseScreen);
+            } else if (s instanceof GenericContainerScreen || s instanceof Generic3x3ContainerScreen || s instanceof HopperScreen || s instanceof ShulkerBoxScreen) {
                 return new ContainerInventory<>((HandledScreen<?>) s);
             }
             return new Inventory<>((HandledScreen<?>) s);
@@ -100,10 +96,11 @@ public class Inventory<T extends HandledScreen<?>> {
 
     protected Inventory(T inventory) {
         this.inventory = inventory;
+        this.handler = inventory.getScreenHandler();
         this.player = mc.player;
         assert player != null;
         this.man = mc.interactionManager;
-        this.syncId = inventory.getScreenHandler().syncId;
+        this.syncId = handler.syncId;
     }
 
     /**
@@ -356,10 +353,9 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return
      */
     public Inventory<T> closeAndDrop() {
-        ItemStack held = inventory.getScreenHandler().getCursorStack();
+        ItemStack held = handler.getCursorStack();
         if (!held.isEmpty()) man.clickSlot(syncId, -999, 0, SlotActionType.PICKUP, player);
-        mc.execute(player::closeHandledScreen);
-        this.inventory = null;
+        close();
         return this;
     }
 
@@ -368,6 +364,8 @@ public class Inventory<T extends HandledScreen<?>> {
      */
     public void close() {
         mc.execute(player::closeHandledScreen);
+        this.inventory = null;
+        this.handler = null;
     }
 
     /**
@@ -400,9 +398,9 @@ public class Inventory<T extends HandledScreen<?>> {
      */
     public int quickAll(int slot, int button) {
         int count = 0;
-        ItemStack cursorStack = inventory.getScreenHandler().slots.get(slot).getStack().copy();
-        net.minecraft.inventory.Inventory hoverSlotInv = inventory.getScreenHandler().slots.get(slot).inventory;
-        for(Slot slot2 : inventory.getScreenHandler().slots) {
+        ItemStack cursorStack = handler.slots.get(slot).getStack().copy();
+        net.minecraft.inventory.Inventory hoverSlotInv = handler.slots.get(slot).inventory;
+        for(Slot slot2 : handler.slots) {
             if (slot2 != null
                 && slot2.canTakeItems(mc.player)
                 && slot2.hasStack()
@@ -419,7 +417,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return the held (by the mouse) item.
      */
     public ItemStackHelper getHeld() {
-        return new ItemStackHelper(inventory.getScreenHandler().getCursorStack());
+        return new ItemStackHelper(handler.getCursorStack());
     }
 
     /**
@@ -428,14 +426,14 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return the item in the slot.
      */
     public ItemStackHelper getSlot(int slot) {
-        return new ItemStackHelper(this.inventory.getScreenHandler().getSlot(slot).getStack());
+        return new ItemStackHelper(this.handler.getSlot(slot).getStack());
     }
 
     /**
      * @return the size of the container/inventory.
      */
     public int getTotalSlots() {
-        return this.inventory.getScreenHandler().slots.size();
+        return this.handler.slots.size();
     }
 
     /**
@@ -484,7 +482,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * equivelent to hitting the numbers or f for swapping slots to hotbar
+     * equivalent to hitting the numbers or f for swapping slots to hotbar
      *
      * @param slot
      * @param hotbarSlot 0-8 or 40 for offhand
@@ -520,7 +518,7 @@ public class Inventory<T extends HandledScreen<?>> {
         if (this.inventory != mc.currentScreen) throw new RuntimeException("Inventory screen is not open.");
         Slot s = ((IInventory)this.inventory).jsmacros_getSlotUnder(x, y);
         if (s == null) return -999;
-        return this.inventory.getScreenHandler().slots.indexOf(s);
+        return this.handler.slots.indexOf(s);
     }
     
     /**
@@ -562,88 +560,6 @@ public class Inventory<T extends HandledScreen<?>> {
             }
         }
         return null;
-    }
-
-    /**
-     * @return
-     *
-     * @throws InterruptedException
-     * @since 1.3.1
-     */
-    public List<RecipeHelper> getCraftableRecipes() throws InterruptedException {
-        return getCraftableRecipes(true);
-    }
-
-    /**
-     * @param craftable whether only to list craftable recipes
-     * @return a list of recipes that can be crafted in this inventory.
-     *
-     * @throws InterruptedException
-     * @since 1.8.4
-     */
-    public List<RecipeHelper> getCraftableRecipes(boolean craftable) throws InterruptedException {
-        Stream<Recipe<?>> recipes;
-        RecipeBookResults res;
-        IRecipeBookWidget recipeBookWidget = getRecipeBookWidget();
-        if (recipeBookWidget == null) {
-            return null;
-        }
-        if (Core.getInstance().profile.checkJoinedThreadStack()) {
-            if (mc.currentScreen != inventory) {
-                ((RecipeBookWidget)recipeBookWidget).initialize(0, 0, mc, true, (AbstractRecipeScreenHandler<?>) inventory.getScreenHandler());
-            }
-            if (!((RecipeBookWidget) recipeBookWidget).isOpen()) {
-                ((RecipeBookWidget) recipeBookWidget).reset();
-            }
-            try {
-                recipeBookWidget.jsmacros_refreshResultList();
-            } catch (Throwable t) {
-                t.printStackTrace();
-                throw new RuntimeException("refreshing the recipe list threw an error", t);
-            }
-        } else {
-            Semaphore lock = new Semaphore(0);
-            Throwable[] t = new Throwable[1];
-            mc.execute(() -> {
-                try {
-                    if (mc.currentScreen != inventory) {
-                        ((RecipeBookWidget) recipeBookWidget).initialize(0, 0, mc, true, (AbstractRecipeScreenHandler<?>) inventory.getScreenHandler());
-                    }
-                    if (!((RecipeBookWidget) recipeBookWidget).isOpen()) {
-                        ((RecipeBookWidget) recipeBookWidget).reset();
-                    }
-                    recipeBookWidget.jsmacros_refreshResultList();
-                } catch (Throwable e) {
-                    t[0] = e;
-                } finally {
-                    lock.release();
-                }
-            });
-            lock.acquire();
-            if (t[0] != null) {
-                t[0].printStackTrace();
-                throw new RuntimeException("refreshing the recipe list threw an error", t[0]);
-            }
-        }
-        res = recipeBookWidget.jsmacros_getResults();
-        List<RecipeResultCollection> result = ((IRecipeBookResults) res).jsmacros_getResultCollections();
-        recipes = result.stream().flatMap(e -> e.getRecipes(craftable).stream());
-        return recipes.map(e -> new RecipeHelper(e, syncId)).collect(Collectors.toList());
-    }
-
-    @Nullable
-    private IRecipeBookWidget getRecipeBookWidget() {
-        IRecipeBookWidget recipeBookWidget;
-        if (inventory instanceof CraftingScreen) {
-            recipeBookWidget = (IRecipeBookWidget) ((CraftingScreen)inventory).getRecipeBookWidget();
-        } else if (inventory instanceof InventoryScreen) {
-            recipeBookWidget = (IRecipeBookWidget) ((InventoryScreen)inventory).getRecipeBookWidget();
-        } else if (inventory instanceof AbstractFurnaceScreen) {
-            recipeBookWidget = (IRecipeBookWidget) ((AbstractFurnaceScreen<?>)inventory).getRecipeBookWidget();
-        } else {
-            return null;
-        }
-        return recipeBookWidget;
     }
     
     private Map<String, int[]> getMapInternal() {
@@ -722,33 +638,6 @@ public class Inventory<T extends HandledScreen<?>> {
      */
     public boolean isContainer() {
         return inventory instanceof GenericContainerScreen || inventory instanceof Generic3x3ContainerScreen || inventory instanceof HopperScreen || inventory instanceof ShulkerBoxScreen;
-    }
-
-    /**
-     * @return {@code true} if the recipe book is visible, {@code false} otherwise.
-     *
-     * @since 1.8.4
-     */
-    public boolean isRecipeBookOpened() {
-        IRecipeBookWidget recipeBookWidget = getRecipeBookWidget();
-        if (recipeBookWidget == null) {
-            return false;
-        }
-        return ((RecipeBookWidget) recipeBookWidget).isOpen();
-    }
-
-    /**
-     * @param open whether to open or close the recipe book
-     * @since 1.8.4
-     */
-    public void setRecipeBookOpen(boolean open) {
-        IRecipeBookWidget recipeBookWidget = getRecipeBookWidget();
-        if (recipeBookWidget != null) {
-            RecipeBookWidget rbw = (RecipeBookWidget) recipeBookWidget;
-            if (rbw.isOpen() != open) {
-                rbw.toggleOpen();
-            }
-        }
     }
     
     /**

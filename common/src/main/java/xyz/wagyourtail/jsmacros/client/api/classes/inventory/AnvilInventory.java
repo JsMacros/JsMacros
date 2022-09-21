@@ -17,11 +17,28 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
     }
 
     /**
-     * @param name the new name
+     * @param name the new item name
      * @since 1.8.4
      */
     public void rename(String name) {
         ((IAnvilScreen) inventory).jsmacros_rename(name);
+    }
+
+    /**
+     * @return the currently set name to be applied.
+     *
+     * @since 1.8.4
+     */
+    public String getRenameText() {
+        return ((IAnvilScreen) inventory).jsmacros_getRenameText().getText();
+    }
+
+    /**
+     * @param name the new item name
+     * @since 1.8.4
+     */
+    public void setRenameText(String name) {
+        ((IAnvilScreen) inventory).jsmacros_getRenameText().setText(name);
     }
 
     /**
@@ -31,6 +48,24 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
      */
     public int getLevelCost() {
         return inventory.getScreenHandler().getLevelCost();
+    }
+
+    /**
+     * @return the amount of item needed to fully repair the item.
+     *
+     * @since 1.8.4
+     */
+    public int getItemRepairCost() {
+        return getSlot(0).getRepairCost();
+    }
+
+    /**
+     * @return the maximum default level cost.
+     *
+     * @since 1.8.4
+     */
+    public int getMaximumLevelCost() {
+        return 40;
     }
 
     /**

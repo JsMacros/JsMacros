@@ -103,5 +103,14 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
     public ItemStackHelper getItemToEnchant() {
         return getSlot(0);
     }
+
+    /**
+     * @return the slot containing the lapis lazuli.
+     *
+     * @since 1.8.4
+     */
+    public ItemStackHelper getLapis() {
+        return getSlot(1);
+    }
     
 }

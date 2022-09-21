@@ -159,6 +159,33 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
     }
 
     /**
+     * @return the first potion.
+     *
+     * @since 1.8.4
+     */
+    public ItemStackHelper getFirstPotion() {
+        return getSlot(0);
+    }
+
+    /**
+     * @return the second potion.
+     *
+     * @since 1.8.4
+     */
+    public ItemStackHelper getSecondPotion() {
+        return getSlot(1);
+    }
+
+    /**
+     * @return the third potion.
+     *
+     * @since 1.8.4
+     */
+    public ItemStackHelper getThirdPotion() {
+        return getSlot(2);
+    }
+
+    /**
      * @return a list of the potions inside the brewing stand.
      *
      * @since 1.8.4

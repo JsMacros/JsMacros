@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,9 +17,16 @@ public abstract class MixinAnvilScreen implements IAnvilScreen {
     @Shadow
     protected abstract void onRenamed(String name);
 
+    @Shadow
+    private TextFieldWidget nameField;
+
     @Override
     public void jsmacros_rename(String name) {
         onRenamed(name);
     }
 
+    @Override
+    public TextFieldWidget jsmacros_getRenameText() {
+        return nameField;
+    }
 }

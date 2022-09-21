@@ -17,18 +17,29 @@ import java.util.Map;
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
+public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> {
 
     public FurnaceInventory(AbstractFurnaceScreen<?> inventory) {
         super(inventory);
     }
 
     /**
-     * @return the currently smelted item.
+     * @param x the x position of the input, will always be 0
+     * @param y the y position of the input, will always be 0
+     * @return the input item at the given position.
      *
      * @since 1.8.4
      */
-    public ItemStackHelper getInput() {
+    public ItemStackHelper getInput(int x, int y) {
+        return getSmeltedItem();
+    }
+
+    /**
+     * @return the currently smelting item stack.
+     *
+     * @since 1.8.4
+     */
+    public ItemStackHelper getSmeltedItem() {
         return getSlot(0);
     }
 
@@ -39,15 +50,6 @@ public class FurnaceInventory extends Inventory<AbstractFurnaceScreen<?>> {
      */
     public ItemStackHelper getFuel() {
         return getSlot(1);
-    }
-
-    /**
-     * @return the smelted items.
-     *
-     * @since 1.8.4
-     */
-    public ItemStackHelper getResult() {
-        return getSlot(2);
     }
 
     /**
