@@ -17,7 +17,7 @@ import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.helpers.FullOptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ModContainerHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ServerInfoHelper;

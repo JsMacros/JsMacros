@@ -31,4 +31,9 @@ public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
         ((IChatHud) hud).jsmacros_removeMessageById(0);
     }
 
+    @Override
+    public String toString() {
+        return String.format("ChatHudLine:{\"text\": \"%s\", \"creationTick\": %d}", base.content().getString(), base.creationTick());
+    }
+    
 }

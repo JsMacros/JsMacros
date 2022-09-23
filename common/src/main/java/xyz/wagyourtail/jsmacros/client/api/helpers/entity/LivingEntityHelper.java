@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.entity;
 
 import com.google.common.collect.ImmutableList;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 
 import net.minecraft.entity.Entity;
@@ -56,7 +56,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     
     /**
      * @since 1.2.7
-     * @see xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper
+     * @see ItemStackHelper
      * @return the item in the entity's main hand.
      */
     public ItemStackHelper getMainHand() {
@@ -254,6 +254,11 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
             }
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString().replaceFirst("^Entity", "Living");
     }
     
 }

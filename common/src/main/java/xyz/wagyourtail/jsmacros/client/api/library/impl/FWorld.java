@@ -382,7 +382,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @param distance the maximum distance to search for entities.
+     * @param distance the maximum distance to search for entities
      * @return a list of entities within the specified distance to the player.
      *
      * @since 1.8.4
@@ -394,7 +394,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @param distance the maximum distance to search for entities.
+     * @param distance the maximum distance to search for entities
      * @param types the entity types to consider
      * @return a list of entities within the specified distance to the player, that match the specified entity type.
      *

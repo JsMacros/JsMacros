@@ -13,6 +13,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.SuggestionsBuilderHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -199,6 +200,17 @@ public abstract class CommandBuilder {
         return this;
     }
 
+    /**
+     * @param positions the positions to suggest
+     * @return this helper for chaining.
+     *
+     * @since 1.8.4
+     */
+    public CommandBuilder suggestPositions(BlockPosHelper... positions) {
+        suggests((ctx, builder) -> CommandSource.suggestPositions(builder.getRemaining(), Arrays.stream(positions).map(p -> new CommandSource.RelativePosition(String.valueOf(p.getX()), String.valueOf(p.getY()), String.valueOf(p.getZ()))).toList(), builder, s -> true));
+        return this;
+    }
+    
     /**
      * @since 1.6.5
      * @param callback

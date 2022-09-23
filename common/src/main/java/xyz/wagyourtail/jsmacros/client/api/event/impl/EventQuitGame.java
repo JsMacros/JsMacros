@@ -14,8 +14,9 @@ public class EventQuitGame implements BaseEvent {
         profile.triggerEventJoinNoAnything(this);
     }
 
+    @Override
     public String toString() {
-        return getEventName();
+        return String.format("%s:{}", this.getEventName());
     }
     
 }

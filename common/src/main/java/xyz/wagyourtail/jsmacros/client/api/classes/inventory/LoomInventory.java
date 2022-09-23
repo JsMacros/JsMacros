@@ -93,4 +93,9 @@ public class LoomInventory extends Inventory<LoomScreen> {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return String.format("LoomInventory:{}");
+    }
+    
 }

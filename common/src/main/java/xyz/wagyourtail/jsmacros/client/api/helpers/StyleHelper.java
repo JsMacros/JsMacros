@@ -5,6 +5,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.stream.Collectors;
@@ -23,21 +24,52 @@ public class StyleHelper extends BaseHelper<Style> {
         return base.getColor() != null;
     }
 
+    @Deprecated
     public int getColor() {
-        if (base.getColor() == null) return -1;
-        Formatting f = Formatting.byName(base.getColor().getName());
-        if (f == null) return -1;
-        return f.getColorIndex();
+        return getColorIndex();
     }
 
+    /**
+     * @return the color index of this style or {@code -1} if no color is set.
+     *
+     * @since 1.8.4
+     */
+    public int getColorIndex() {
+        if (base.getColor() == null) {
+            return -1;
+        }
+        Formatting f = Formatting.byName(base.getColor().getName());
+        return f == null ? -1 : f.getColorIndex();
+    }
+
+    /**
+     * @return the color value of this style or {@code -1} if it doesn't have one.
+     *
+     * @since 1.8.4
+     */
+    public int getColorValue() {
+        if (base.getColor() == null) {
+            return -1;
+        }
+        Formatting f = Formatting.byName(base.getColor().getName());
+        return f == null || f.getColorValue() == null ? -1 : f.getColorValue();
+    }
+
+    /**
+     * @return the color name of this style or {@code null} if it has no color.
+     *
+     * @since 1.8.4
+     */
+    public String getColorName() {
+        return base.getColor() == null ? null : base.getColor().getName();
+    }
+    
     public boolean hasCustomColor() {
-        if (base.getColor() == null) return false;
-        return base.getColor().getName().startsWith("#");
+        return base.getColor() != null && base.getColor().getName().startsWith("#");
     }
 
     public int getCustomColor() {
-        if (base.getColor() == null) return -1;
-        return base.getColor().getRgb();
+        return base.getColor() == null ? -1 : base.getColor().getRgb();
     }
 
     public boolean bold() {
@@ -69,8 +101,7 @@ public class StyleHelper extends BaseHelper<Style> {
     }
 
     public String getClickValue() {
-        if (base.getClickEvent() == null) return null;
-        return base.getClickEvent().getValue();
+        return base.getClickEvent() == null ? null : base.getClickEvent().getValue();
     }
 
     public Runnable getCustomClickValue() {
@@ -82,8 +113,7 @@ public class StyleHelper extends BaseHelper<Style> {
     }
 
     public String getHoverAction() {
-        if (base.getHoverEvent() == null) return null;
-        return base.getHoverEvent().getAction().getName();
+        return base.getHoverEvent() == null ? null : base.getHoverEvent().getAction().getName();
     }
 
     public Object getHoverValue() {
@@ -101,7 +131,7 @@ public class StyleHelper extends BaseHelper<Style> {
 
     @Override
     public String toString() {
-        return "StyleHelper{\"color\": \"" + (hasColor() ? hasCustomColor() ? getCustomColor() : String.format("%x", getColor()) : "none") + "\"" +
+        return "StyleHelper:{\"color\": \"" + (hasColor() ? hasCustomColor() ? getCustomColor() : String.format("%x", getColorIndex()) : "none") + "\"" +
                     ", \"bold\": " + bold() +
                     ", \"italic\": " + italic() +
                     ", \"underlined\": " + underlined() +

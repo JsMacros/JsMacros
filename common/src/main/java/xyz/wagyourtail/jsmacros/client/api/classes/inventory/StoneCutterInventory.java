@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.StonecutterScreen;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 
 import java.util.List;
 
@@ -65,4 +65,9 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
         return inventory.getScreenHandler().canCraft();
     }
 
+    @Override
+    public String toString() {
+        return String.format("StoneCutterInventory:{}");
+    }
+    
 }

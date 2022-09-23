@@ -80,4 +80,10 @@ public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
     public TextHelper getDisplayName() {
         return new TextHelper(base.getDisplayName());
     }
+
+    @Override
+    public String toString() {
+        return String.format("ScoreboardObjectiveHelper:{\"name\": \"%s\", \"displayName\": \"%s\"}", getName(), getDisplayName());
+    }
+    
 }

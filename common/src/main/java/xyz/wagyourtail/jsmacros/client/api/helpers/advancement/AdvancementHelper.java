@@ -121,4 +121,9 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
         return new AdvancementProgressHelper(((IClientAdvancementManager) player.networkHandler.getAdvancementHandler()).jsmacros_getAdvancementProgress().get(base));
     }
 
+    @Override
+    public String toString() {
+        return String.format("AdvancementHelper:{\"id\": \"%s\"}", getId());
+    }
+    
 }

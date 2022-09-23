@@ -22,4 +22,9 @@ public class ContainerInventory<T extends HandledScreen<?>> extends Inventory<T>
         return findFreeSlot("container");
     }
 
+    @Override
+    public String toString() {
+        return String.format("ContainerInventory:{}");
+    }
+    
 }

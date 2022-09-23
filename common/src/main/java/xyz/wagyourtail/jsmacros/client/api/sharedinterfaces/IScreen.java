@@ -5,7 +5,7 @@ import net.minecraft.client.util.math.MatrixStack;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.ButtonWidgetHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.CheckBoxWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.CyclingButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.LockButtonWidgetHelper;

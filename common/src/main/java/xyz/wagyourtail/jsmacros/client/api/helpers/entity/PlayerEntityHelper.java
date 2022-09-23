@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity;
 
 import net.minecraft.entity.player.PlayerEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PlayerAbilitiesHelper;
 
 /**
@@ -21,7 +21,7 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
      * @return
      */
     public PlayerAbilitiesHelper getAbilities() {
-    	return new PlayerAbilitiesHelper(base.getAbilities());
+        return new PlayerAbilitiesHelper(base.getAbilities());
     }
     
     
@@ -121,8 +121,10 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
     public boolean isSleepingLongEnough() {
         return base.canResetTimeBySleeping();
     }
-    
+
+    @Override
     public String toString() {
-        return "Player"+super.toString();
+        return super.toString().replaceFirst("^Living", "Player");
     }
+    
 }

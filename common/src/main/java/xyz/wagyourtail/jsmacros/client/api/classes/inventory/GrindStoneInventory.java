@@ -4,7 +4,7 @@ import net.minecraft.client.gui.screen.ingame.GrindstoneScreen;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 
 /**
  * @author Etheradon
@@ -61,6 +61,11 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
 
     private int getExperience(ItemStack stack) {
         return EnchantmentHelper.get(stack).entrySet().stream().filter(e -> !e.getKey().isCursed()).mapToInt(e -> e.getKey().getMinPower(e.getValue())).sum();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("GrindStoneInventory:{}");
     }
 
 }

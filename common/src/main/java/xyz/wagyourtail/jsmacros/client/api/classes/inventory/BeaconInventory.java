@@ -106,4 +106,10 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return String.format("BeaconInventory:{}");
+    }
+    
 }

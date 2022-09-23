@@ -389,4 +389,9 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
         }
     }
     
+    @Override
+    public String toString() {
+        return String.format("ButtonWidgetHelper:{\"message\": \"%s\"}", base.getMessage().getString());
+    }
+    
 }

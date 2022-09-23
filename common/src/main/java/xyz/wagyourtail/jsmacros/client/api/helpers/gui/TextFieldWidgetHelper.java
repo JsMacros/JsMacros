@@ -121,7 +121,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     }
 
     /**
-     * @param suggestion the suggestion to set.
+     * @param suggestion the suggestion to set
      * @since 1.8.4
      */
     public void setSuggestion(String suggestion) {
@@ -233,6 +233,11 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
             b.set(new TextFieldWidgetHelper(textField, getZIndex()));
             return b.get();
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.format("TextFieldWidgetHelper:{\"text\": \"%s\"}", base.getText());
     }
     
 }

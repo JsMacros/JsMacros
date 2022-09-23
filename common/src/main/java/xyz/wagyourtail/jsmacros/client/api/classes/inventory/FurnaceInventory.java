@@ -8,7 +8,7 @@ import net.minecraft.util.registry.Registry;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import xyz.wagyourtail.jsmacros.client.access.IAbstractFurnaceScreenHandler;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 
 import java.util.Map;
 
@@ -112,4 +112,9 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
         return inventory.getScreenHandler().isBurning();
     }
 
+    @Override
+    public String toString() {
+        return String.format("FurnaceInventory:{}");
+    }
+    
 }

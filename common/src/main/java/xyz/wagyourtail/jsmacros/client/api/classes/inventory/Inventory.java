@@ -20,7 +20,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
@@ -156,7 +156,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @param slot  the slot to drop
      * @param stack decide whether to drop the whole stack or just a single item
-     * @return this instance for chaining.
+     * @return this helper for chaining.
      *
      * @since 1.8.4
      */
@@ -301,7 +301,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param callback the callback for accepting the items.
+     * @param callback the callback for accepting the items
      * @since 1.8.4
      */
     public void iterateItems(MethodWrapper<ItemStackHelper, Integer, ?, ?> callback) {
@@ -653,6 +653,7 @@ public class Inventory<T extends HandledScreen<?>> {
         return this.inventory;
     }
     
+    @Override
     public String toString() {
         return String.format("Inventory:{\"Type\": \"%s\"}", this.getType());
     }

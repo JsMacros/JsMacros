@@ -86,9 +86,11 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     }
 
     /**
+     * @return a list of all advancements that are not a root.
+     *
      * @since 1.8.4
      */
-    public List<AdvancementHelper> getDependents() {
+    public List<AdvancementHelper> getSubAdvancements() {
         return ((IAdvancementManager) base).jsmacros_getDependents().stream().map(AdvancementHelper::new).toList();
     }
 
@@ -127,6 +129,11 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         assert player != null;
         return ((IClientAdvancementManager) player.networkHandler.getAdvancementHandler()).jsmacros_getAdvancementProgress().entrySet().stream();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("AdvancementManagerHelper:{\"started\": %d, \"missing\": %d, \"completed\": %d}", getStartedAdvancements().size(), getMissingAdvancements().size(), getCompletedAdvancements().size());
     }
 
 }

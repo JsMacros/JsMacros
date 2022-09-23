@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity;
 
 import net.minecraft.entity.ItemEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 
 @SuppressWarnings("unused")
 public class ItemEntityHelper extends EntityHelper<ItemEntity> {

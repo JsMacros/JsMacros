@@ -19,7 +19,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
     }
     
     /**
-    *  select the trade by it's index
+    *  select the trade by its index
     *
      * @param index
      *
@@ -84,4 +84,10 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
         }
         return offers;
     }
+
+    @Override
+    public String toString() {
+        return String.format("VillagerInventory:{\"level\": %d}", getLevelProgress());
+    }
+    
 }

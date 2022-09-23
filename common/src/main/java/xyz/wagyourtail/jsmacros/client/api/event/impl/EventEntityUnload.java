@@ -17,6 +17,7 @@ public class EventEntityUnload implements BaseEvent {
         profile.triggerEvent(this);
     }
 
+    @Override
     public String toString() {
         return String.format("%s:{\"entity\": %s, \"reason\": \"%s\"}", this.getEventName(), entity.toString(), reason);
     }

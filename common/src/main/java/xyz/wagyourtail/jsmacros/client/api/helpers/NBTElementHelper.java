@@ -100,7 +100,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
     }
 
     public String toString() {
-        return String.format("NBTElement:%s", base.toString());
+        return String.format("NBTElementHelper:{%s}", base.toString());
     }
 
     /**

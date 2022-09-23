@@ -1,10 +1,9 @@
-package xyz.wagyourtail.jsmacros.client.api.helpers;
+package xyz.wagyourtail.jsmacros.client.api.helpers.item;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.tag.ItemTags;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -13,13 +12,15 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.registry.Registry;
 
 import com.google.gson.JsonParseException;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EnchantmentHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("unused")
 public class ItemStackHelper extends BaseHelper<ItemStack> {
-    private static Style LORE_STYLE = Style.EMPTY.withColor(Formatting.DARK_PURPLE).withItalic(true);
+    private static final Style LORE_STYLE = Style.EMPTY.withColor(Formatting.DARK_PURPLE).withItalic(true);
     protected static final MinecraftClient mc = MinecraftClient.getInstance();
     
     public ItemStackHelper(ItemStack i) {
@@ -57,6 +58,15 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     public boolean isDamageable() {
         return base.isDamageable();
+    }
+
+    /**
+     * @return {@code true} if this item is unbreakable, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isUnbreakable() {
+        return base.getOrCreateNbt().getBoolean("Unbreakable");
     }
     
     /**
@@ -90,7 +100,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @param id the id of the enchantment to check for.
+     * @param id the id of the enchantment to check for
      * @return the enchantment instance, containing the level, or {@code null} if the item is not enchanted with the specified enchantment.
      *
      * @since 1.8.4
@@ -100,13 +110,25 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @param id the id of the enchantment to check for.
-     * @return {@code true} if the item is enchanted with the specified enchantment, {@code false} otherwise.
+     * @param enchantment the enchantment to check for
+     * @return {@code true} if the specified enchantment can be applied to this item, {@code false}
+     *         otherwise.
      *
      * @since 1.8.4
      */
-    public boolean hasEnchantment(String id) {
-        return getEnchantments().stream().anyMatch(enchantmentHelper -> enchantmentHelper.getName().equals(id));
+    public boolean canBeApplied(EnchantmentHelper enchantment) {
+        return enchantment.canBeApplied(this);
+    }
+
+    /**
+     * @param enchantment the enchantment to check for
+     * @return {@code true} if the item is enchanted with the specified enchantment, {@code false}
+     *         otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean hasEnchantment(EnchantmentHelper enchantment) {
+        return getEnchantments().stream().anyMatch(enchantmentHelper -> enchantment.getRaw().equals(enchantmentHelper.getRaw()));
     }
 
     /**
@@ -341,7 +363,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
     
     public String toString() {
-        return String.format("ItemStack:{\"id\":\"%s\", \"damage\": %d, \"count\": %d}", this.getItemId(), base.getDamage(), base.getCount());
+        return String.format("ItemStackHelper:{\"id\": \"%s\", \"damage\": %d, \"count\": %d}", this.getItemId(), base.getDamage(), base.getCount());
     }
     
     /**
@@ -434,7 +456,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @param block the block to check.
+     * @param block the block to check
      * @return {@code true} if the given block can be mined and drops when broken with this item,
      *         {@code false} otherwise.
      *
@@ -445,7 +467,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @param block the block to check.
+     * @param block the block to check
      * @return {@code true} if the given block can be mined and drops when broken with this item,
      *         {@code false} otherwise.
      *
@@ -456,17 +478,29 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * {@link CreativeItemStackHelper} is a subclass of {@link ItemStackHelper} that adds methods
-     * for manipulating the item's nbt data.
+     * {@link CreativeItemStackHelper} is a subclass of {@link AdvancedItemStackHelper} that adds
+     * methods for manipulating the item's nbt data.
      *
      * @return a {@link CreativeItemStackHelper} instance for this item.
      *
      * @since 1.8.4
      */
-    public CreativeItemStackHelper getCreativeHelper() {
+    public CreativeItemStackHelper getCreative() {
         return new CreativeItemStackHelper(base);
     }
 
+    /**
+     * {@link AdvancedItemStackHelper} is a subclass of {@link ItemStackHelper} that adds methods
+     * more advanced methods for interacting with the item and its nbt data.
+     *
+     * @return a {@link AdvancedItemStackHelper} instance for this item.
+     *
+     * @since 1.8.4
+     */
+    public AdvancedItemStackHelper getAdvanced() {
+        return new AdvancedItemStackHelper(base);
+    }
+    
     /**
      * @return the item this stack is made of.
      *

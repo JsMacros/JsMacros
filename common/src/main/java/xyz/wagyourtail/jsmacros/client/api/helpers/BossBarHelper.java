@@ -1,6 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.entity.boss.BossBar;
+import net.minecraft.util.Formatting;
+
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -91,6 +93,16 @@ public class BossBarHelper extends BaseHelper<BossBar> {
         }
         return style;
     }
+
+    /**
+     * @return the color of this boss bar.
+     *
+     * @since 1.8.4
+     */
+    public int getColorValue() {
+        Formatting f = base.getColor().getTextFormat();
+        return f.getColorValue() == null ? -1 : f.getColorValue();
+    }
     
     /**
      * @since 1.2.1
@@ -100,7 +112,8 @@ public class BossBarHelper extends BaseHelper<BossBar> {
         return new TextHelper(base.getName());
     }
     
+    @Override
     public String toString() {
-        return String.format("BossBar:{\"name:\":\"%s\", \"percent\":%f}", base.getName().getString(), base.getPercent());
+        return String.format("BossBarHelper:{\"name:\": \"%s\", \"percent\": %f}", base.getName().getString(), base.getPercent());
     }
 }

@@ -44,7 +44,7 @@ public abstract class ModContainerHelper<T> extends BaseHelper<T> {
     public abstract String getVersion();
 
     /**
-     * @return the environment the mod is intended for.
+     * @return the environment this mod is intended for.
      *
      * @since 1.8.4
      */
@@ -64,4 +64,9 @@ public abstract class ModContainerHelper<T> extends BaseHelper<T> {
      */
     public abstract List<String> getDependencies();
 
+    @Override
+    public String toString() {
+        return String.format("ModContainerHelper:{\"id\": \"%s\", \"name\": \"%s\", \"version\": \"%s\"}", getId(), getName(), getVersion());
+    }
+    
 }

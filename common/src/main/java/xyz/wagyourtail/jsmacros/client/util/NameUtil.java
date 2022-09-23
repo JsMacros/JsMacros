@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.api.classes.util;
+package xyz.wagyourtail.jsmacros.client.util;
 
 import java.util.LinkedList;
 import java.util.List;

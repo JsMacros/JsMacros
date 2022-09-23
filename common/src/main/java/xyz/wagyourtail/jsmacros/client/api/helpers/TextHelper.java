@@ -28,8 +28,10 @@ public class TextHelper extends BaseHelper<Text> {
      * replace the text in this class with JSON data.
      * @since 1.0.8
      * @param json
+     * @deprecated use {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FChat#createTextHelperFromJSON(String)} instead.
      * @return
      */
+    @Deprecated
     public TextHelper replaceFromJson(String json) {
         base = Text.Serializer.fromJson(json);
         return this;
@@ -39,8 +41,10 @@ public class TextHelper extends BaseHelper<Text> {
      * replace the text in this class with {@link java.lang.String String} data.
      * @since 1.0.8
      * @param content
+     * @deprecated use {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FChat#createTextHelperFromString(String)} instead.
      * @return
      */
+    @Deprecated
     public TextHelper replaceFromString(String content) {
         base = Text.literal(content);
         return this;
@@ -71,19 +75,29 @@ public class TextHelper extends BaseHelper<Text> {
     }
 
     /**
+     * @return the text helper without the formatting applied.
+     *
+     * @since 1.8.4
+     */
+    public TextHelper withoutFormatting() {
+        return new TextHelper(Text.literal(getStringStripFormatting()));
+    }
+    
+    /**
      * @param visitor function with 2 args, no return.
      * @since 1.6.5
      */
-    public void visit(MethodWrapper<StyleHelper, String, Object, ?> visitor) {
+    public TextHelper visit(MethodWrapper<StyleHelper, String, Object, ?> visitor) {
         base.visit((style, string) -> {
             visitor.accept(new StyleHelper(style), string);
             return Optional.empty();
         }, base.getStyle());
+        return this;
     }
 
     /**
      * @since 1.0.8
-     * @deprecated confusing name.
+     * @deprecated confusing name, use {@link #getJson()} instead.
      * @return
      */
      @Deprecated
@@ -95,6 +109,7 @@ public class TextHelper extends BaseHelper<Text> {
      * @since 1.0.8, this used to do the same as {@link #getString}
      * @return String representation of text helper.
      */
+    @Override
     public String toString() {
         return String.format("TextHelper:{\"text\": \"%s\"}", base.getString());
     }

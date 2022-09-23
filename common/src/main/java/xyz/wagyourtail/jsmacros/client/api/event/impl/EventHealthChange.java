@@ -19,6 +19,7 @@ public class EventHealthChange implements BaseEvent {
         profile.triggerEvent(this);
     }
 
+    @Override
     public String toString() {
         return String.format("%s:{\"health\": %f, \"change\": %f}", this.getEventName(), health, change);
     }

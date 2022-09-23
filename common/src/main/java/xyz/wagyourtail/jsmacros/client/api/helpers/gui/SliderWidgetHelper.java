@@ -33,7 +33,7 @@ public class SliderWidgetHelper extends ButtonWidgetHelper<Slider> {
 
     /**
      * @param value the new value
-     * @return this instance for chaining.
+     * @return this helper for chaining.
      *
      * @since 1.8.4
      */
@@ -53,7 +53,7 @@ public class SliderWidgetHelper extends ButtonWidgetHelper<Slider> {
 
     /**
      * @param steps the amount of steps
-     * @return this instance for chaining.
+     * @return this helper for chaining.
      *
      * @since 1.8.4
      */
@@ -114,6 +114,11 @@ public class SliderWidgetHelper extends ButtonWidgetHelper<Slider> {
             b.set(new SliderWidgetHelper(slider, getZIndex()));
             return b.get();
         }
+    }
+
+    @Override
+    public String toString() {
+        return String.format("SliderWidgetHelper:{\"message\": \"%s\", \"value\": %f, \"steps\": %d}", base.getMessage().getString(), getValue(), getSteps());
     }
 
 }

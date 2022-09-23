@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.block;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.util.registry.Registry;
 
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 
@@ -16,6 +17,15 @@ public class FluidStateHelper extends StateHelper<FluidState> {
         super(base);
     }
 
+    /**
+     * @return the block's id.
+     *
+     * @since 1.8.4
+     */
+    public String getId() {
+        return Registry.BLOCK.getId(base.getBlockState().getBlock()).toString();
+    }
+    
     /**
      * @return {@code true} if this fluid is still, {@code false} otherwise.
      *
@@ -95,4 +105,10 @@ public class FluidStateHelper extends StateHelper<FluidState> {
     protected StateHelper<FluidState> create(FluidState base) {
         return new FluidStateHelper(base);
     }
+
+    @Override
+    public String toString() {
+        return String.format("FluidStateHelper:{\"id\": \"%s\", \"properties\": %s}", getId(), toMap());
+    }
+    
 }

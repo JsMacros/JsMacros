@@ -88,4 +88,9 @@ public class CheckBoxWidgetHelper extends ButtonWidgetHelper<CheckBox> {
         }
     }
 
+    @Override
+    public String toString() {
+        return String.format("CheckBoxWidgetHelper:{\"message\": \"%s\", \"checked\": %b}", base.getMessage().getString(), isChecked());
+    }
+
 }

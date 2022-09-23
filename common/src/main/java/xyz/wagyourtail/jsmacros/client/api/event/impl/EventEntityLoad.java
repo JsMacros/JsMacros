@@ -15,6 +15,7 @@ public class EventEntityLoad implements BaseEvent {
         profile.triggerEvent(this);
     }
 
+    @Override
     public String toString() {
         return String.format("%s:{\"entity\": %s}", this.getEventName(), entity.toString());
     }

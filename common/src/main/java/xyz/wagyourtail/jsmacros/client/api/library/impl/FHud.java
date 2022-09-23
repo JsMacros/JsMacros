@@ -309,7 +309,7 @@ public class FHud extends BaseLibrary {
     }
 
     /**
-     * @param width the new window width.
+     * @param width the new window width
      * @since 1.8.4
      */
     public void setWindowWidth(int width) {
@@ -317,7 +317,7 @@ public class FHud extends BaseLibrary {
     }
 
     /**
-     * @param height the new window height.
+     * @param height the new window height
      * @since 1.8.4
      */
     public void setWindowHeight(int height) {
@@ -325,8 +325,8 @@ public class FHud extends BaseLibrary {
     }
 
     /**
-     * @param width  the new window width.
-     * @param height the new window height.
+     * @param width  the new window width
+     * @param height the new window height
      * @since 1.8.4
      */
     public void setWindowSize(int width, int height) {
@@ -334,8 +334,8 @@ public class FHud extends BaseLibrary {
     }
 
     /**
-     * @param x the new window x position.
-     * @param y the new window y position.
+     * @param x the new window x position
+     * @param y the new window y position
      * @since 1.8.4
      */
     public void setWindowPosition(int x, int y) {
@@ -343,8 +343,8 @@ public class FHud extends BaseLibrary {
     }
 
     /**
-     * @param x the new mouse x position.
-     * @param y the new mouse y position.
+     * @param x the new mouse x position
+     * @param y the new mouse y position
      * @since 1.8.4
      */
     public void setMousePosition(int x, int y) {

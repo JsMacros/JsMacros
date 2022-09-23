@@ -7,6 +7,7 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.util.registry.Registry;
 
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
@@ -124,7 +125,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
 
     /**
-     * @param amount the amount of items to craft.
+     * @param amount the amount of items to craft
      * @return {@code true} if the given amount of items can be crafted with the current inventory,
      *         {@code false} otherwise.
      *
@@ -144,9 +145,10 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
         MinecraftClient.getInstance().player.getInventory().populateRecipeFinder(matcher);
         return matcher.countCrafts(base, null);
     }
-    
+
+    @Override
     public String toString() {
-        return String.format("Recipe:{\"id\":\"%s\"}", base.getId().toString());
+        return String.format("RecipeHelper:{\"id\": \"%s\"}", base.getId().toString());
     }
     
 }

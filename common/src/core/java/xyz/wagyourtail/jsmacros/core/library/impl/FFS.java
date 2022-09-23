@@ -95,8 +95,8 @@ public class FFS extends PerExecLibrary {
      * Creates a new file in the specified path, relative to the script's folder. Optionally parent
      * directories can be created if they do not exist.
      *
-     * @param path       relative to the script's folder.
-     * @param name       the name of the file.
+     * @param path       relative to the script's folder
+     * @param name       the name of the file
      * @param createDirs automatically creates the parent folders
      * @return {@code true} if the file was created successfully
      *

@@ -30,4 +30,10 @@ public class EventJoinedRecvPacket implements BaseEvent, ICancelable {
     public boolean isCanceled() {
         return cancel;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s:{}", this.getEventName());
+    }
+    
 }

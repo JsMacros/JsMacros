@@ -137,4 +137,9 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
         return base.getCriterionProgress(criteria).isObtained();
     }
 
+    @Override
+    public String toString() {
+        return String.format("AdvancementProgressHelper:{\"percent\": %f}", getProgressBarPercentage());
+    }
+    
 }

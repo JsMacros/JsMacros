@@ -5,6 +5,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.Team;
+import net.minecraft.util.Formatting;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.entity.PlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -64,6 +65,48 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
     public int getPlayerTeamColorIndex() {
         return getPlayerTeamColorIndex(MinecraftClient.getInstance().player);
     }
+
+    /**
+     * @param player the player to get the team color for
+     * @return the color of the speicifed player's team or {@code -1} if the player is not in a team.
+     *
+     * @since 1.8.4
+     */
+    public int getTeamColor(PlayerEntityHelper<PlayerEntity> player) {
+        Formatting team = getPlayerTeamColor(player.getRaw());
+        return team == null || team.getColorValue() == null ? -1 : team.getColorValue();
+    }
+
+    /**
+     * @return the color of this player's team or {@code -1} if this player is not in a team.
+     *
+     * @since 1.8.4
+     */
+    public int getTeamColor() {
+        Formatting team = getPlayerTeamColor(MinecraftClient.getInstance().player);
+        return team == null || team.getColorValue() == null ? -1 : team.getColorValue();
+    }
+
+    /**
+     * @param player
+     * @return
+     *
+     * @since 1.8.4
+     */
+    public String getTeamColorName(PlayerEntityHelper<PlayerEntity> player) {
+        Formatting team = getPlayerTeamColor(player.getRaw());
+        return team == null ? null : team.getName();
+    }
+
+    /**
+     * @return
+     *
+     * @since 1.8.4
+     */
+    public String getTeamColorName() {
+        Formatting team = getPlayerTeamColor(MinecraftClient.getInstance().player);
+        return team == null ? null : team.getName();
+    }
     
     /**
      * @since 1.3.0
@@ -105,9 +148,22 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
      * @return
      */
     protected int getPlayerTeamColorIndex(PlayerEntity entity) {
-        Team t = base.getPlayerTeam(entity.getEntityName());
-        if (t == null) return -1;
-        return t.getColor().getColorIndex();
+        Formatting color = getPlayerTeamColor(entity);
+        return color == null ? -1 : color.getColorIndex();
+    }
+
+    /**
+     * @param player the player to get the team color for
+     * @return the team color for the player or {@code null} if the player is not in a team.
+     *
+     * @since 1.8.4
+     */
+    protected Formatting getPlayerTeamColor(PlayerEntity player) {
+        Team t = base.getPlayerTeam(player.getEntityName());
+        if (t == null) {
+            return null;
+        }
+        return t.getColor();
     }
     
     /**
@@ -121,8 +177,9 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
         if (h == null) h = getObjectiveSlot(1);
         return h;
     }
-    
+
+    @Override
     public String toString() {
-        return String.format("Scoreboard:{\"current\":%s}", getCurrentScoreboard().toString());
+        return String.format("ScoreboardsHelper:{\"current\": %s}", getCurrentScoreboard().toString());
     }
 }

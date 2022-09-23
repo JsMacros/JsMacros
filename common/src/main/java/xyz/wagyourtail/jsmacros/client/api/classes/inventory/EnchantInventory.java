@@ -6,7 +6,7 @@ import net.minecraft.screen.EnchantmentScreenHandler;
 import net.minecraft.util.registry.Registry;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.EnchantmentHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 
 /**
@@ -111,6 +111,11 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
      */
     public ItemStackHelper getLapis() {
         return getSlot(1);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("EnchantInventory:{}");
     }
     
 }

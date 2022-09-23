@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 
 import xyz.wagyourtail.jsmacros.client.access.ICreativeInventoryScreen;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     }
 
     /**
-     * @param amount the amount to scroll by.
+     * @param amount the amount to scroll by
      * @since 1.8.4
      */
     public void scroll(float amount) {
@@ -36,7 +36,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     }
 
     /**
-     * @param position the position to scroll to.
+     * @param position the position to scroll to
      * @since 1.8.4
      */
     public void scrollTo(float position) {
@@ -83,7 +83,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     }
 
     /**
-     * @param tab the index of the tab to select.
+     * @param tab the index of the tab to select
      * @since 1.8.4
      */
     public void selectTab(int tab) {
@@ -194,4 +194,9 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
         return (ICreativeInventoryScreen) inventory;
     }
 
+    @Override
+    public String toString() {
+        return String.format("CreativeInventory:{}");
+    }
+    
 }

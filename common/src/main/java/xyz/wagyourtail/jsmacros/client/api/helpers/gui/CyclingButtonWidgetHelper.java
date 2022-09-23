@@ -50,7 +50,7 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
 
     /**
      * @param amount the amount to cycle by
-     * @return this instance for chaining.
+     * @return this helper for chaining.
      *
      * @since 1.8.4
      */
@@ -60,7 +60,7 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
     }
 
     /**
-     * @return this instance for chaining.
+     * @return this helper for chaining.
      *
      * @since 1.8.4
      */
@@ -69,7 +69,7 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
     }
 
     /**
-     * @return this instance for chaining.
+     * @return this helper for chaining.
      *
      * @since 1.8.4
      */
@@ -202,4 +202,9 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
         }
     }
 
+    @Override
+    public String toString() {
+        return String.format("CyclingButtonWidgetHelper:{\"value\": \"%s\"}", ((ICyclingButtonWidget) this).jsmacros_getTextValue());
+    }
+    
 }

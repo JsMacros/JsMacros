@@ -60,7 +60,7 @@ public class FoodComponentHelper extends BaseHelper<FoodComponent> {
      *
      * @since 1.8.4
      */
-    public boolean isSnack() {
+    public boolean isFastFood() {
         return base.isSnack();
     }
 
@@ -75,4 +75,9 @@ public class FoodComponentHelper extends BaseHelper<FoodComponent> {
         return effects;
     }
 
+    @Override
+    public String toString() {
+        return String.format("FoodComponentHelper:{\"hunger\": %d, \"saturation\": %f, \"meat\": %b, \"alwaysEdible\": %b, \"fastFood\": %b}", getHunger(), getSaturation(), isMeat(), isAlwaysEdible(), isFastFood());
+    }
+    
 }

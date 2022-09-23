@@ -1,0 +1,12 @@
+Possible special items:
+ - books
+ - written books
+ - maps
+ - shulker boxes
+ - chests
+ - bundles
+ - compass
+ - enchantment book
+ - potion
+ - suspicious stew
+ - banner

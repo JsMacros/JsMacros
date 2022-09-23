@@ -85,6 +85,7 @@ public class EventKey implements BaseEvent {
         profile.triggerEvent(this);
     }
 
+    @Override
     public String toString() {
         return String.format("%s:{\"key\": \"%s\"}", this.getEventName(), key);
     }

@@ -130,7 +130,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param y         the y coordinate to attack
      * @param z         the z coordinate to attack
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
-     * @return this instance for chaining.
+     * @return this helper for chaining.
      *
      * @since 1.8.4
      */
@@ -156,7 +156,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param z         the z coordinate to attack
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
      * @param await     whether to wait for the attack to finish
-     * @return this instance for chaining.
+     * @return this helper for chaining.
      *
      * @since 1.8.4
      */
@@ -276,7 +276,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param y         the y coordinate to interact
      * @param z         the z coordinate to interact
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
-     * @return this instance for chaining.
+     * @return this helper for chaining.
      *
      * @since 1.8.4
      */
@@ -302,7 +302,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param z         the z coordinate to interact
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
      * @param await     whether to wait for the interaction to complete
-     * @return this instance for chaining.
+     * @return this helper for chaining.
      *
      * @since 1.8.4
      */
@@ -477,7 +477,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
     
     /**
-     * @return this instance for chaining.
+     * @return this helper for chaining.
      *
      * @since 1.8.4
      */
@@ -494,8 +494,8 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     public AdvancementManagerHelper getAdvancementManager() {
         return new AdvancementManagerHelper(base.networkHandler.getAdvancementHandler().getManager());
     }
-    
+
+    @Override
     public String toString() {
-        return "Client" + super.toString();
-    }
-}
+        return super.toString().replaceFirst("^Player", "ClientPlayer");
+    }}

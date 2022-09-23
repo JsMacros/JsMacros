@@ -4,7 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryWrapper;
 import net.minecraft.command.argument.BlockArgumentParser;
 import net.minecraft.command.argument.ItemStringReader;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -13,7 +12,7 @@ import net.minecraft.util.registry.Registry;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EnchantmentHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.FluidStateHelper;
@@ -29,7 +28,7 @@ import java.util.List;
 public class RegistryHelper {
 
     /**
-     * @param id the item id.
+     * @param id the item id
      * @return an {@link ItemStackHelper} for the given item.
      *
      * @since 1.8.4
@@ -39,8 +38,8 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id  the item id.
-     * @param nbt the item nbt.
+     * @param id  the item id
+     * @param nbt the item nbt
      * @return an {@link ItemStackHelper} for the given item and nbt data.
      *
      * @throws CommandSyntaxException if the nbt data is invalid.
@@ -61,7 +60,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id the block id.
+     * @param id the block id
      * @return an {@link BlockStateHelper} for the given block.
      *
      * @since 1.8.4
@@ -71,8 +70,8 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id  the block id.
-     * @param nbt the block nbt.
+     * @param id  the block id
+     * @param nbt the block nbt
      * @return an {@link BlockStateHelper} for the given block with the specified nbt.
      *
      * @throws CommandSyntaxException if the nbt data is invalid.
@@ -102,7 +101,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id the enchantment id.
+     * @param id the enchantment id
      * @return an {@link EnchantmentHelper} for the given enchantment.
      *
      * @since 1.8.4
@@ -112,8 +111,8 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id    the enchantment id.
-     * @param level the level of the enchantment.
+     * @param id    the enchantment id
+     * @param level the level of the enchantment
      * @return an {@link EnchantmentHelper} for the given enchantment with the specified level.
      *
      * @since 1.8.4
@@ -132,7 +131,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param type the entity type id.
+     * @param type the entity type id
      * @return an {@link EntityHelper} for the given entity.
      *
      * @since 1.8.4
@@ -142,7 +141,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param type the entity type id.
+     * @param type the entity type id
      * @return an {@link EntityType} for the given entity.
      *
      * @since 1.8.4
@@ -161,7 +160,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id the fluid id.
+     * @param id the fluid id
      * @return an {@link FluidStateHelper} for the given fluid.
      *
      * @since 1.8.4

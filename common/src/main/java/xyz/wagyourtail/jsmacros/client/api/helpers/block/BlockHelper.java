@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.block;
 import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -135,7 +135,7 @@ public class BlockHelper extends BaseHelper<Block> {
 
     @Override
     public String toString() {
-        return String.format("BlockDataHelper:{%s}", getId());
+        return String.format("BlockHelper:{\"id\": \"%s\"}", getId());
     }
 
 }

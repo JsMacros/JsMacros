@@ -2093,7 +2093,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @param val the new fov value.
+         * @param val the new fov value
          * @return the current helper instance for chaining.
          *
          * @since 1.8.4

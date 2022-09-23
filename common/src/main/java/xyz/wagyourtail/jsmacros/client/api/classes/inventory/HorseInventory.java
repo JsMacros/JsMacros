@@ -5,7 +5,7 @@ import net.minecraft.entity.passive.AbstractDonkeyEntity;
 import net.minecraft.entity.passive.AbstractHorseEntity;
 
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -70,7 +70,7 @@ public class HorseInventory extends Inventory<HorseScreen> {
     }
 
     /**
-     * @return {code true} if the horse has equipped a chest, {@code false} otherwise.
+     * @return {@code true} if the horse has equipped a chest, {@code false} otherwise.
      *
      * @since 1.8.4
      */
@@ -95,6 +95,11 @@ public class HorseInventory extends Inventory<HorseScreen> {
     public List<ItemStackHelper> getHorseInventory() {
         final int otherSlots = 2;
         return IntStream.range(otherSlots, getInventorySize() + otherSlots).mapToObj(this::getSlot).toList();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("HorseInventory:{\"hasChest\": %b}", hasChest());
     }
 
 }

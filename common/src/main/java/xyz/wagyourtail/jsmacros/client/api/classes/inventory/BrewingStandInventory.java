@@ -8,7 +8,7 @@ import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.recipe.BrewingRecipeRegistry;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 
 import java.util.List;
 
@@ -192,6 +192,11 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
      */
     public List<ItemStackHelper> getPotions() {
         return List.of(getSlot(0), getSlot(1), getSlot(2));
+    }
+
+    @Override
+    public String toString() {
+        return String.format("BrewingStandInventory:{}");
     }
 
 }

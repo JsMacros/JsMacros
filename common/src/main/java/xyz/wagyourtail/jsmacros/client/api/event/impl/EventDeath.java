@@ -36,7 +36,8 @@ public class EventDeath implements BaseEvent {
         return MinecraftClient.getInstance().player.getLastDeathPos().map(pos -> new BlockPosHelper(pos.getPos())).orElse(null);
     }
     
+    @Override
     public String toString() {
-        return String.format("%s:{}", this.getEventName());
+        return String.format("%s:{\"deathPos\": %s}", this.getEventName(), getLastDeathPos());
     }
 }

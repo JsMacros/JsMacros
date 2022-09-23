@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.gui.screen.ingame.SmithingScreen;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 
 /**
  * @author Etheradon
@@ -42,4 +42,9 @@ public class SmithingInventory extends Inventory<SmithingScreen> {
         return getSlot(2);
     }
 
+    @Override
+    public String toString() {
+        return String.format("SmithingInventory:{}");
+    }
+    
 }

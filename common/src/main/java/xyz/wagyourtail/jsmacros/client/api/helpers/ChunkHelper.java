@@ -1,11 +1,14 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkSection;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
@@ -13,9 +16,13 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
@@ -54,12 +61,30 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @return the maximum {@code y} position of all blocks inside this chunk.
+     * @return the maximum height of this chunk.
      *
      * @since 1.8.4
      */
-    public int getTopY() {
+    public int getMaxBuildHeight() {
         return base.getTopY();
+    }
+
+    /**
+     * @return the minimum height of this chunk.
+     *
+     * @since 1.8.4
+     */
+    public int getMinBuildHeight() {
+        return base.getBottomY();
+    }
+
+    /**
+     * @return the height of this chunk.
+     *
+     * @since 1.8.4
+     */
+    public int getHeight() {
+        return base.getHeight();
     }
 
     /**
@@ -72,15 +97,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      */
     public int getTopYAt(int xOffset, int zOffset, Heightmap heightmap) {
         return heightmap.get(xOffset, zOffset);
-    }
-
-    /**
-     * @return the minimum {@code y} position of all blocks inside this chunk.
-     *
-     * @since 1.8.4
-     */
-    public int getBottomY() {
-        return base.getBottomY();
     }
 
     /**
@@ -111,6 +127,19 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      */
     public String getBiome(int xOffset, int y, int zOffset) {
         return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(base.getPos().getBlockPos(xOffset, y, zOffset)).value()).toString();
+    }
+
+    /**
+     * With an increasing inhabited time, the local difficulty increases and stronger mobs will
+     * spawn. Because the time is cumulative, the more players are in the chunk, the faster the time
+     * will increase.
+     *
+     * @return the cumulative time players have spent inside this chunk.
+     *
+     * @since 1.8.4
+     */
+    public long getInhabitedTime() {
+        return base.getInhabitedTime();
     }
 
     /**
@@ -154,21 +183,40 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
+     * @param blocks the blocks to search for
+     * @return {@code true} if this chunk contains at least one of the specified blocks,
+     *         {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean containsAny(String... blocks) {
+        Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::new).map(Registry.BLOCK::get).collect(Collectors.toSet());
+        Predicate<BlockState> predicate = blockState -> filterBlocks.contains(blockState.getBlock());
+        return Arrays.stream(base.getSectionArray()).anyMatch(section -> section.hasAny(predicate));
+    }
+
+    /**
+     * @param blocks the blocks to search for
+     * @return {@code true} if the chunk contains all the specified blocks, {@code false}
+     *         otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean containsAll(String... blocks) {
+        Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::new).map(Registry.BLOCK::get).collect(Collectors.toSet());
+        for (ChunkSection section : base.getSectionArray()) {
+            filterBlocks.removeIf(block -> section.hasAny(state -> state.getBlock() == block));
+        }
+        return filterBlocks.isEmpty();
+    }
+
+    /**
      * @return a map of the raw heightmap data.
      *
      * @since 1.8.4
      */
-    public Collection<Map.Entry<Heightmap.Type, Heightmap>> getHeightMaps() {
+    public Collection<Map.Entry<Heightmap.Type, Heightmap>> getHeightmaps() {
         return base.getHeightmaps();
-    }
-
-    /**
-     * @return the raw surface world generation heightmap.
-     *
-     * @since 1.8.4
-     */
-    public Heightmap getSurfaceWG() {
-        return base.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG);
     }
 
     /**
@@ -176,17 +224,8 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      *
      * @since 1.8.4
      */
-    public Heightmap getSurface() {
+    public Heightmap getSurfaceHeightmap() {
         return base.getHeightmap(Heightmap.Type.WORLD_SURFACE);
-    }
-
-    /**
-     * @return the raw ocean floor world generation heightmap.
-     *
-     * @since 1.8.4
-     */
-    public Heightmap getOceanFloorWG() {
-        return base.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG);
     }
 
     /**
@@ -194,7 +233,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      *
      * @since 1.8.4
      */
-    public Heightmap getOceanFloor() {
+    public Heightmap getOceanFloorHeightmap() {
         return base.getHeightmap(Heightmap.Type.OCEAN_FLOOR);
     }
 
@@ -203,7 +242,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      *
      * @since 1.8.4
      */
-    public Heightmap getMotionBlocking() {
+    public Heightmap getMotionBlockingHeightmap() {
         return base.getHeightmap(Heightmap.Type.MOTION_BLOCKING);
     }
 
@@ -212,8 +251,13 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      *
      * @since 1.8.4
      */
-    public Heightmap getMotionBlockingNoLeaves() {
+    public Heightmap getMotionBlockingNoLeavesHeightmap() {
         return base.getHeightmap(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES);
     }
 
+    @Override
+    public String toString() {
+        return String.format("ChunkHelper:{\"x\": %d, \"z\": %d}", getChunkX(), getChunkZ());
+    }
+    
 }

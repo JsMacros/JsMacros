@@ -34,7 +34,7 @@ public class LockButtonWidgetHelper extends ButtonWidgetHelper<LockButtonWidget>
 
     /**
      * @param locked whether to lock the button or not
-     * @return this instance for chaining. 
+     * @return this helper for chaining. 
      *
      * @since 1.8.4
      */
@@ -90,4 +90,9 @@ public class LockButtonWidgetHelper extends ButtonWidgetHelper<LockButtonWidget>
         }
     }
 
+    @Override
+    public String toString() {
+        return String.format("LockButtonWidgetHelper:{\"message\": \"%s\", \"locked\": %b}", base.getMessage().getString(), isLocked());
+    }
+    
 }

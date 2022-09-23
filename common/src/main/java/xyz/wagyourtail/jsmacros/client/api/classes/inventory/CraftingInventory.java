@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.gui.screen.ingame.CraftingScreen;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 
 /**
  * @author Etheradon
@@ -25,4 +25,9 @@ public class CraftingInventory extends RecipeInventory<CraftingScreen> {
         return getSlot(x + y * 3 + 1);
     }
 
+    @Override
+    public String toString() {
+        return String.format("CraftingInventory:{}");
+    }
+    
 }

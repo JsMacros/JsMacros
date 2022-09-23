@@ -2,11 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.block;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-
-import java.util.Locale;
 
 /**
  * @author Etheradon
@@ -29,6 +26,15 @@ public class BlockStateHelper extends StateHelper<BlockState> {
     }
 
     /**
+     * @return the block's id.
+     *
+     * @since 1.8.4
+     */
+    public String getId() {
+        return Registry.BLOCK.getId(base.getBlock()).toString();
+    }
+
+    /**
      * @return the fluid state of this block state.
      *
      * @since 1.8.4
@@ -36,7 +42,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
     public FluidStateHelper getFluidState() {
         return new FluidStateHelper(base.getFluidState());
     }
-    
+
     /**
      * @return the hardness.
      *
@@ -133,21 +139,13 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * @since 1.6.5
      */
     public String getPistonBehaviour() {
-        System.out.println(this + " " + base.getPistonBehavior());
-        switch (base.getPistonBehavior()) {
-            case NORMAL:
-                return "NORMAL";
-            case BLOCK:
-                return "BLOCK";
-            case PUSH_ONLY:
-                return "PUSH_ONLY";
-            case DESTROY:
-                return "DESTROY";
-            case IGNORE:
-                return "IGNORE";
-            default:
-                throw new IllegalStateException("Unexpected value: " + base.getPistonBehavior());
-        }
+        return switch (base.getPistonBehavior()) {
+            case NORMAL -> "NORMAL";
+            case BLOCK -> "BLOCK";
+            case PUSH_ONLY -> "PUSH_ONLY";
+            case DESTROY -> "DESTROY";
+            case IGNORE -> "IGNORE";
+        };
     }
 
     /**
@@ -196,8 +194,8 @@ public class BlockStateHelper extends StateHelper<BlockState> {
     }
 
     /**
-     * This will return true for blocks like air and grass, that can be replaced
-     * without breaking them first.
+     * This will return true for blocks like air and grass, that can be replaced without breaking
+     * them first.
      *
      * @return {@code true} if the state can be replaced.
      *
@@ -208,9 +206,10 @@ public class BlockStateHelper extends StateHelper<BlockState> {
     }
 
     /**
-     * @param pos
-     * @param entity
-     * @return {@code true} if the entity can spawn on this block state at the given position in the current world.
+     * @param pos    the position of the block to check
+     * @param entity the entity type to check
+     * @return {@code true} if the entity can spawn on this block state at the given position in the
+     *         current world.
      *
      * @since 1.6.5
      */
@@ -219,8 +218,9 @@ public class BlockStateHelper extends StateHelper<BlockState> {
     }
 
     /**
-     * @param pos
-     * @return {@code true} if an entity can suffocate in this block state at the given position in the current world.
+     * @param pos the position of the block to check
+     * @return {@code true} if an entity can suffocate in this block state at the given position in
+     *         the current world.
      *
      * @since 1.6.5
      */
@@ -236,7 +236,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
     public UniversalBlockStateHelper getUniversalHelper() {
         return new UniversalBlockStateHelper(base);
     }
-    
+
     @Override
     protected StateHelper<BlockState> create(BlockState base) {
         return new BlockStateHelper(base);
@@ -244,7 +244,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     @Override
     public String toString() {
-        return String.format("BlockStateHelper:{%s, %s}", getBlock().getId(), toMap());
+        return String.format("BlockStateHelper:{\"id\": \"%s\", \"properties\": %s}", getId(), toMap());
     }
 
 }

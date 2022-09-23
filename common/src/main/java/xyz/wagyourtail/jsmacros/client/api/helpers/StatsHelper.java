@@ -74,7 +74,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the entity.
+     * @param id the identifier of the entity
      * @return how many times the player has killed the entity.
      *
      * @since 1.8.4
@@ -84,7 +84,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the entity.
+     * @param id the identifier of the entity
      * @return how many times the player has killed the specified entity.
      *
      * @since 1.8.4
@@ -104,7 +104,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the item.
+     * @param id the identifier of the item
      * @return how many times the player has broken the item.
      *
      * @since 1.8.4
@@ -114,7 +114,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the item.
+     * @param id the identifier of the item
      * @return how many times the player has crafted the item.
      *
      * @since 1.8.4
@@ -124,7 +124,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the item.
+     * @param id the identifier of the item
      * @return how many times the player has used the item.
      *
      * @since 1.8.4
@@ -134,7 +134,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the item.
+     * @param id the identifier of the item
      * @return how many times the player has picked up the item.
      *
      * @since 1.8.4
@@ -144,7 +144,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the item.
+     * @param id the identifier of the item
      * @return how many times the player has dropped the item.
      *
      * @since 1.8.4
@@ -154,7 +154,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the custom stat.
+     * @param id the identifier of the custom stat
      * @return the value of the custom stat.
      *
      * @since 1.8.4
@@ -168,7 +168,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the custom stat.
+     * @param id the identifier of the custom stat
      * @return the formatted value of the custom stat.
      *
      * @since 1.8.4
@@ -181,12 +181,20 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     /**
      * Used to request an update of the statistics from the server.
      *
+     * @return this helper for chaining.
+     *
      * @since 1.8.4
      */
-    public void updateStatistics() {
+    public StatsHelper updateStatistics() {
         MinecraftClient mc = MinecraftClient.getInstance();
         assert mc.getNetworkHandler() != null;
         mc.getNetworkHandler().sendPacket(new ClientStatusC2SPacket(ClientStatusC2SPacket.Mode.REQUEST_STATS));
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("StatsHelper:{%s}", getFormattedStatMap());
     }
     
 }

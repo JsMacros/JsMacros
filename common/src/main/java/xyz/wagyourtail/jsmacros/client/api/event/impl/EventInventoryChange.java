@@ -1,11 +1,15 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
+import net.minecraft.client.gui.screen.Screen;
+
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -34,6 +38,11 @@ public class EventInventoryChange implements BaseEvent {
         this.newItems = newItems;
         
         profile.triggerEvent(this);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s:{\"inventory\": %s, \"slots\": %s}", this.getEventName(), inventory, Arrays.toString(slots));
     }
 
 }

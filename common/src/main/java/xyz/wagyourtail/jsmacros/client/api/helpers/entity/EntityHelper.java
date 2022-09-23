@@ -380,7 +380,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     public String toString() {
-        return String.format("Entity:{\"name\":\"%s\", \"type\":\"%s\"}", this.getName(), this.getType());
+        return String.format("Entity:{\"name\": \"%s\", \"type\": \"%s\"}", this.getName(), this.getType());
     }
 
     /**

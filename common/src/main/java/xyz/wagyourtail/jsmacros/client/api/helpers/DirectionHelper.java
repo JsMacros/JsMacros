@@ -32,7 +32,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
      * @since 1.8.4
      */
     public String getAxis() {
-        return base.getAxis().toString();
+        return base.getAxis().getName();
     }
 
     /**
@@ -135,6 +135,11 @@ public class DirectionHelper extends BaseHelper<Direction> {
      */
     public boolean pointsTo(float yaw) {
         return base.pointsTo(yaw);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("DirectionHelper:{\"name\": \"%s\", \"yaw\": %f, \"pitch\": %f}", getName(), getYaw(), getPitch());
     }
 
 }

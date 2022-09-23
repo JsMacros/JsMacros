@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.screen.PlayerScreenHandler;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 
 /**
  * @author Etheradon
@@ -82,4 +82,9 @@ public class PlayerInventory extends RecipeInventory<InventoryScreen> {
         return getSlot(8);
     }
 
+    @Override
+    public String toString() {
+        return String.format("PlayerInventory:{}");
+    }
+    
 }

@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.api.helpers;
+package xyz.wagyourtail.jsmacros.client.api.helpers.item;
 
 import net.minecraft.command.CommandRegistryWrapper;
 import net.minecraft.command.argument.ItemStringReader;
@@ -11,6 +11,7 @@ import net.minecraft.util.registry.Registry;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import xyz.wagyourtail.jsmacros.client.api.helpers.FoodComponentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -46,18 +47,19 @@ public class ItemHelper extends BaseHelper<Item> {
     }
 
     /**
-     * @param stack the possible repair material.
+     * @param stack the possible repair material
      * @return {@code true} if the given item stack can be used to repair item stacks of this item,
      *         {@code false} otherwise.
      *
      * @since 1.8.4
      */
     public boolean canBeRepairedWith(ItemStackHelper stack) {
+        //at least in vanilla the first item stack is never used
         return base.canRepair(null, stack.getRaw());
     }
 
     /**
-     * @param block the block to check.
+     * @param block the block to check
      * @return {@code true} if the given block can be mined and drops when broken with this item,
      *         {@code false} otherwise.
      *
@@ -68,7 +70,7 @@ public class ItemHelper extends BaseHelper<Item> {
     }
 
     /**
-     * @param block the block to check.
+     * @param block the block to check
      * @return {@code true} if the given block can be mined and drops when broken with this item,
      *         {@code false} otherwise.
      *
@@ -83,7 +85,7 @@ public class ItemHelper extends BaseHelper<Item> {
      *
      * @since 1.8.4
      */
-    public boolean isBlock() {
+    public boolean isBlockItem() {
         return base instanceof BlockItem;
     }
 
@@ -94,14 +96,14 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public BlockHelper getBlock() {
-        if (isBlock()) {
+        if (isBlockItem()) {
             return new BlockHelper(((BlockItem) base).getBlock());
         }
         return null;
     }
 
     /**
-     * @param state the block state to check.
+     * @param state the block state to check
      * @return the mining speed of this item against the given block state, returns {@code 1} by
      *         default.
      *
@@ -257,7 +259,7 @@ public class ItemHelper extends BaseHelper<Item> {
     }
 
     /**
-     * @param nbt the nbt data of the item stack.
+     * @param nbt the nbt data of the item stack
      * @return the item stack of this item with a stack size of {@code 1} and the given nbt.
      *
      * @throws CommandSyntaxException if the nbt data is invalid.
@@ -268,4 +270,9 @@ public class ItemHelper extends BaseHelper<Item> {
         return new ItemStackHelper(new ItemStack(itemResult.item()));
     }
 
+    @Override
+    public String toString() {
+        return String.format("ItemHelper:{\"id\": \"%s\"}", getId());
+    }
+    
 }

@@ -132,5 +132,10 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     public boolean isHarmful() {
         return base.getEffectType().getCategory() == StatusEffectCategory.HARMFUL;
     }
+
+    @Override
+    public String toString() {
+        return String.format("StatusEffectHelper:{\"id\": \"%s\", \"strength\": %d, \"time\": %d}", getId(), getStrength(), getTime());
+    }
     
 }

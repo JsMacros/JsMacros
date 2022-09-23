@@ -69,9 +69,18 @@ public class ServerInfoHelper extends BaseHelper<ServerInfo> {
         return NBTElementHelper.resolve(base.toNbt());
     }
 
+    /**
+     * @return {@code true} if the server enforces secure chat, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isSecureChatEnforced() {
+        return base.isSecureChatEnforced();
+    }
+    
     @Override
     public String toString() {
-        return "ServerInfoHelper{" + getNbt().asString() + "}";
+        return "ServerInfoHelper:{" + getNbt().asString() + "}";
     }
 
 }

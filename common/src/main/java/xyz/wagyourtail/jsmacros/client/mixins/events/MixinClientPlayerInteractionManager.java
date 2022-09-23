@@ -32,7 +32,7 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.EventAttackEntity;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventInteractBlock;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventInteractEntity;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventInventoryChange;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockDataHelper;
 
 import java.util.List;

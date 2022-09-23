@@ -10,6 +10,7 @@ public class EventJoinedTick implements BaseEvent {
         profile.triggerEventJoinNoAnything(this);
     }
 
+    @Override
     public String toString() {
         return String.format("%s:{}", this.getEventName());
     }

@@ -20,6 +20,7 @@ public class EventJoinServer implements BaseEvent {
         profile.triggerEvent(this);
     }
 
+    @Override
     public String toString() {
         return String.format("%s:{\"address\": \"%s\"}", this.getEventName(), address);
     }

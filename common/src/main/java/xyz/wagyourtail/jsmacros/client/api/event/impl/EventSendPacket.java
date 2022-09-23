@@ -19,4 +19,9 @@ public class EventSendPacket implements BaseEvent {
         profile.triggerEventNoAnything(this);
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s:{}", this.getEventName());
+    }
+    
 }

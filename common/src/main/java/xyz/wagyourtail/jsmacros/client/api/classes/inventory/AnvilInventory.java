@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 
 import xyz.wagyourtail.jsmacros.client.access.IAnvilScreen;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 
 /**
  * @author Etheradon
@@ -95,4 +95,9 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
         return getSlot(2);
     }
 
+    @Override
+    public String toString() {
+        return String.format("AnvilInventory:{}");
+    }
+    
 }

@@ -47,6 +47,33 @@ public class TeamHelper extends BaseHelper<Team> {
     public int getColor() {
         return base.getColor().getColorIndex();
     }
+
+    /**
+     * @return the color value for this team or {@code -1} if it has no color.
+     *
+     * @since 1.8.4
+     */
+    public int getColorValue() {
+        return base.getColor().getColorValue() == null ? -1 : base.getColor().getColorValue();
+    }
+
+    /**
+     * @return the name of this team's color.
+     *
+     * @since 1.8.4
+     */
+    public String getColorName() {
+        return base.getColor().getName();
+    }
+
+    /**
+     * @return the scoreboard including this team.
+     *
+     * @since 1.8.4
+     */
+    public ScoreboardsHelper getScoreboard() {
+        return new ScoreboardsHelper(base.getScoreboard());
+    }
     
     /**
      * @since 1.3.0
@@ -104,7 +131,8 @@ public class TeamHelper extends BaseHelper<Team> {
         return base.getDeathMessageVisibilityRule().toString();
     }
     
+    @Override
     public String toString() {
-        return String.format("Team:{\"name\":\"%s\"}", getDisplayName().toString());
+        return String.format("TeamHelper:{\"name\": \"%s\"}", getDisplayName().toString());
     }
 }
