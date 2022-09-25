@@ -13,6 +13,7 @@ import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.registry.Registry;
 
+import xyz.wagyourtail.jsmacros.client.api.classes.render.CustomImage;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -34,7 +35,7 @@ public class RenderCommon {
         }
     }
 
-    public static abstract class RenderElementBuilder<T extends RenderElement> {
+    public abstract static class RenderElementBuilder<T extends RenderElement> {
 
         private final IDraw2D<?> draw2D;
 
@@ -42,6 +43,13 @@ public class RenderCommon {
             this.draw2D = draw2D;
         }
 
+        /**
+         * Builds and adds the element to the draw2D the builder was created from.
+         *
+         * @return the newly created element.
+         *
+         * @since 1.8.4
+         */
         public T build() {
             T element = createElement();
             draw2D.reAddElement(element);
@@ -243,20 +251,46 @@ public class RenderCommon {
                 super(draw2D);
             }
 
+            /**
+             * @return the item to draw.
+             *
+             * @since 1.8.4
+             */
             public ItemStackHelper getItem() {
                 return itemStack;
             }
 
+            /**
+             * @param item the item to draw
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder item(ItemStackHelper item) {
-                this.itemStack = item;
+                if (item != null) {
+                    this.itemStack = item;
+                }
                 return this;
             }
 
+            /**
+             * @param item the item id to draw
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder item(String item) {
                 this.itemStack = new ItemStackHelper(Registry.ITEM.get(new Identifier(item)).getDefaultStack());
                 return this;
             }
 
+            /**
+             * @param item  the item to draw
+             * @param count the stack size
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder item(String item, int count) {
                 ItemStack itemStack = Registry.ITEM.get(new Identifier(item)).getDefaultStack();
                 itemStack.setCount(count);
@@ -264,73 +298,157 @@ public class RenderCommon {
                 return this;
             }
 
-            public String getOvText() {
+            /**
+             * @return the overlay text.
+             *
+             * @since 1.8.4
+             */
+            public String getOverlayText() {
                 return ovText;
             }
 
+            /**
+             * @param overlayText the overlay text
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder overlayText(String overlayText) {
                 this.ovText = overlayText;
                 return this;
             }
 
+            /**
+             * @return {@code true} if the overlay should be visible, {@code false} otherwise.
+             *
+             * @since 1.8.4
+             */
             public boolean isOverlayVisible() {
                 return overlay;
             }
 
+            /**
+             * @param overlay whether the overlay should be visible or not
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder overlay(boolean overlay) {
                 this.overlay = overlay;
                 return this;
             }
 
+            /**
+             * @return the scale of the item.
+             *
+             * @since 1.8.4
+             */
             public double getScale() {
                 return scale;
             }
 
+            /**
+             * @param scale the scale of the item
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder scale(double scale) {
-                if (scale == 0) {
-                    throw new IllegalArgumentException("Scale can't be 0");
+                if (scale <= 0) {
+                    throw new IllegalArgumentException("Scale must be positive");
                 }
                 this.scale = scale;
                 return this;
             }
 
+            /**
+             * @return the rotation of the item in degrees.
+             *
+             * @since 1.8.4
+             */
             public float getRotation() {
                 return rotation;
             }
 
+            /**
+             * @param rotation the rotation of the item in degrees
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder rotation(float rotation) {
                 this.rotation = rotation;
                 return this;
             }
 
+            /**
+             * @return the x position of the item.
+             *
+             * @since 1.8.4
+             */
             public int getX() {
                 return x;
             }
 
+            /**
+             * @param x the x position of the item
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder x(int x) {
                 this.x = x;
                 return this;
             }
 
+            /**
+             * @return the y position of the item.
+             *
+             * @since 1.8.4
+             */
             public int getY() {
                 return y;
             }
 
+            /**
+             * @param y the y position of the item
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder y(int y) {
                 this.y = y;
                 return this;
             }
 
+            /**
+             * @param x the x position of the item
+             * @param y the y position of the item
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos(int x, int y) {
                 this.x = x;
                 this.y = y;
                 return this;
             }
 
-            public int getzIndex() {
+            /**
+             * @return the z-index of the item.
+             *
+             * @since 1.8.4
+             */
+            public int getZIndex() {
                 return zIndex;
             }
 
+            /**
+             * @param zIndex the z-index of the item
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder zIndex(int zIndex) {
                 this.zIndex = zIndex;
                 return this;
@@ -343,7 +461,6 @@ public class RenderCommon {
                 return item;
             }
         }
-        
     }
     
     /**
@@ -519,9 +636,8 @@ public class RenderCommon {
             return zIndex;
         }
 
-
         public static final class Builder extends RenderElementBuilder<Image> {
-            private String identifier = "";
+            private String identifier;
             private float rotation = 0;
             private int x = 0;
             private int y = 0;
@@ -531,8 +647,8 @@ public class RenderCommon {
             private int imageY = 0;
             private int regionWidth = 0;
             private int regionHeight = 0;
-            private int textureWidth = 0;
-            private int textureHeight = 0;
+            private int textureWidth = 256;
+            private int textureHeight = 256;
             private int alpha = 0xFF;
             private int color = 0xFFFFFFFF;
             private int zIndex = 0;
@@ -541,183 +657,411 @@ public class RenderCommon {
                 super(draw2D);
             }
 
+            /**
+             * Will automatically set all attributes to the default values of the custom image.
+             * Values set before the call of this method will be overwritten.
+             *
+             * @param customImage the custom image to use
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
+            public Builder fromCustomImage(CustomImage customImage) {
+                this.width = customImage.getWidth();
+                this.height = customImage.getHeight();
+                this.imageX = 0;
+                this.imageY = 0;
+                this.regionWidth = customImage.getWidth();
+                this.regionHeight = customImage.getHeight();
+                this.textureWidth = customImage.getWidth();
+                this.textureHeight = customImage.getHeight();
+                this.identifier = customImage.getIdentifier();
+                return this;
+            }
+
+            /**
+             * @return the identifier of the used image or {@code null} if no image is used.
+             *
+             * @since 1.8.4
+             */
             public String getIdentifier() {
                 return identifier;
             }
 
+            /**
+             * @param identifier the identifier of the image to use
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder identifier(String identifier) {
                 this.identifier = identifier;
                 return this;
             }
 
+            /**
+             * @return the rotation of the image in degrees.
+             *
+             * @since 1.8.4
+             */
             public float getRotation() {
                 return rotation;
             }
 
+            /**
+             * @param rotation the rotation of the image in degrees
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder rotation(float rotation) {
                 this.rotation = rotation;
                 return this;
             }
 
+            /**
+             * @return the x position of the image.
+             *
+             * @since 1.8.4
+             */
             public int getX() {
                 return x;
             }
 
+            /**
+             * @param x the x position of the image
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder x(int x) {
                 this.x = x;
                 return this;
             }
 
+            /**
+             * @return the y position of the image.
+             *
+             * @since 1.8.4
+             */
             public int getY() {
                 return y;
             }
 
+            /**
+             * @param y the y position of the image
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder y(int y) {
                 this.y = y;
                 return this;
             }
 
+            /**
+             * @param x the x position of the image
+             * @param y the y position of the image
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos(int x, int y) {
                 this.x = x;
                 this.y = y;
                 return this;
             }
 
+            /**
+             * @return the width of the image.
+             *
+             * @since 1.8.4
+             */
             public int getWidth() {
                 return width;
             }
 
+            /**
+             * @param width the width of the image
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder width(int width) {
                 this.width = width;
                 return this;
             }
 
+            /**
+             * @return the height of the image.
+             *
+             * @since 1.8.4
+             */
             public int getHeight() {
                 return height;
             }
 
+            /**
+             * @param height the height of the image
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder height(int height) {
                 this.height = height;
                 return this;
             }
 
+            /**
+             * @param width  the width of the image
+             * @param height the height of the image
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder size(int width, int height) {
                 this.width = width;
                 this.height = height;
                 return this;
             }
 
+            /**
+             * @return the x position in the image texture to start drawing from.
+             *
+             * @since 1.8.4
+             */
             public int getImageX() {
                 return imageX;
             }
 
+            /**
+             * @param imageX the x position in the image texture to start drawing from
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder imageX(int imageX) {
                 this.imageX = imageX;
                 return this;
             }
 
+            /**
+             * @return the y position in the image texture to start drawing from.
+             *
+             * @since 1.8.4
+             */
             public int getImageY() {
                 return imageY;
             }
 
+            /**
+             * @param imageY the y position in the image texture to start drawing from
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder imageY(int imageY) {
                 this.imageY = imageY;
                 return this;
             }
 
+            /**
+             * @param imageX the x position in the image texture to start drawing from
+             * @param imageY the y position in the image texture to start drawing from
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder imagePos(int imageX, int imageY) {
                 this.imageX = imageX;
                 this.imageY = imageY;
                 return this;
             }
 
+            /**
+             * @return the width of the region to draw.
+             *
+             * @since 1.8.4
+             */
             public int getRegionWidth() {
                 return regionWidth;
             }
 
+            /**
+             * @param regionWidth the width of the region to draw
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder regionWidth(int regionWidth) {
                 this.regionWidth = regionWidth;
                 return this;
             }
 
+            /**
+             * @return the height of the region to draw.
+             *
+             * @since 1.8.4
+             */
             public int getRegionHeight() {
                 return regionHeight;
             }
 
+            /**
+             * @param regionHeight the height of the region to draw
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder regionHeight(int regionHeight) {
                 this.regionHeight = regionHeight;
                 return this;
             }
 
+            /**
+             * @param regionWidth  the width of the region to draw
+             * @param regionHeight the height of the region to draw
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder regionSize(int regionWidth, int regionHeight) {
                 this.regionWidth = regionWidth;
                 this.regionHeight = regionHeight;
                 return this;
             }
 
+            /**
+             * @return the width of the used texture.
+             *
+             * @since 1.8.4
+             */
             public int getTextureWidth() {
                 return textureWidth;
             }
 
+            /**
+             * @param textureWidth the width of the used texture
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder textureWidth(int textureWidth) {
                 this.textureWidth = textureWidth;
                 return this;
             }
 
+            /**
+             * @return the height of the used texture.
+             *
+             * @since 1.8.4
+             */
             public int getTextureHeight() {
                 return textureHeight;
             }
 
+            /**
+             * @param textureHeight the height of the used texture
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder textureHeight(int textureHeight) {
                 this.textureHeight = textureHeight;
                 return this;
             }
 
+            /**
+             * @param textureWidth  the width of the used texture
+             * @param textureHeight the height of the used texture
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder textureSize(int textureWidth, int textureHeight) {
                 this.textureWidth = textureWidth;
                 this.textureHeight = textureHeight;
                 return this;
             }
 
+            /**
+             * @return the color of the image.
+             *
+             * @since 1.8.4
+             */
             public int getColor() {
                 return color;
             }
 
+            /**
+             * @param color the color of the image
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder color(int color) {
                 this.color = color;
                 return this;
             }
 
+            /**
+             * @return the alpha value of the color.
+             *
+             * @since 1.8.4
+             */
             public int getAlpha() {
                 return alpha;
             }
 
+            /**
+             * @param alpha the alpha value of the color
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder alpha(int alpha) {
                 this.alpha = alpha;
                 return this;
             }
 
+            /**
+             * @param color the color of the image
+             * @param alpha the alpha value of the color
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder color(int color, int alpha) {
                 this.color = color;
                 this.alpha = alpha;
                 return this;
             }
 
-            public int getzIndex() {
+            /**
+             * @return the z-index of the image.
+             *
+             * @since 1.8.4
+             */
+            public int getZIndex() {
                 return zIndex;
             }
 
+            /**
+             * @param zIndex the z-index of the image
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder zIndex(int zIndex) {
                 this.zIndex = zIndex;
                 return this;
             }
+
             @Override
             public Image createElement() {
                 return new Image(x, y, width, height, zIndex, alpha, color, identifier, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
             }
-
         }
-        
     }
     
     /**
@@ -845,8 +1189,7 @@ public class RenderCommon {
             return zIndex;
         }
 
-
-        public static final class Builder extends RenderElementBuilder<Rect>{
+        public static final class Builder extends RenderElementBuilder<Rect> {
             private float rotation = 0;
             private int x1 = 0;
             private int y1 = 0;
@@ -860,63 +1203,141 @@ public class RenderCommon {
                 super(draw2D);
             }
 
+            /**
+             * @return the rotation of the rectangle in degrees.
+             *
+             * @since 1.8.4
+             */
             public float getRotation() {
                 return rotation;
             }
 
+            /**
+             * @param rotation the rotation of the rectangle in degrees
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder rotation(float rotation) {
                 this.rotation = rotation;
                 return this;
             }
 
+            /**
+             * @return the first x position of the rectangle.
+             *
+             * @since 1.8.4
+             */
             public int getX1() {
                 return x1;
             }
 
+            /**
+             * @param x1 the first x position of the rectangle
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder x1(int x1) {
                 this.x1 = x1;
                 return this;
             }
 
+            /**
+             * @return the first y position of the rectangle.
+             *
+             * @since 1.8.4
+             */
             public int getY1() {
                 return y1;
             }
 
+            /**
+             * @param y1 the first y position of the rectangle
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder y1(int y1) {
                 this.y1 = y1;
                 return this;
             }
 
+            /**
+             * @param x1 the first x position of the rectangle
+             * @param y1 the first y position of the rectangle
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos1(int x1, int y1) {
                 this.x1 = x1;
                 this.y1 = y1;
                 return this;
             }
 
+            /**
+             * @return the second x position of the rectangle.
+             *
+             * @since 1.8.4
+             */
             public int getX2() {
                 return x2;
             }
 
+            /**
+             * @param x2 the second x position of the rectangle
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder x2(int x2) {
                 this.x2 = x2;
                 return this;
             }
 
+            /**
+             * @return the second y position of the rectangle.
+             *
+             * @since 1.8.4
+             */
             public int getY2() {
                 return y2;
             }
 
+            /**
+             * @param y2 the second y position of the rectangle
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder y2(int y2) {
                 this.y2 = y2;
                 return this;
             }
 
+            /**
+             * @param x2 the second x position of the rectangle
+             * @param y2 the second y position of the rectangle
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos2(int x2, int y2) {
                 this.x2 = x2;
                 this.y2 = y2;
                 return this;
             }
 
+            /**
+             * @param x1 the first x position of the rectangle
+             * @param y1 the first y position of the rectangle
+             * @param x2 the second x position of the rectangle
+             * @param y2 the second y position of the rectangle
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos(int x1, int y1, int x2, int y2) {
                 this.x1 = x1;
                 this.y1 = y1;
@@ -925,44 +1346,100 @@ public class RenderCommon {
                 return this;
             }
 
+            /**
+             * The width will just set the x2 position to {@code x1 + width}.
+             *
+             * @param width the width of the rectangle
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder width(int width) {
                 this.x2 = this.x1 + width;
                 return this;
             }
-            
+
+            /**
+             * The width will just set the y2 position to {@code y1 + height}.
+             *
+             * @param height the height of the rectangle
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder height(int height) {
                 this.y2 = this.y1 + height;
                 return this;
             }
-            
+
+            /**
+             * @return the color of the rectangle.
+             *
+             * @since 1.8.4
+             */
             public int getColor() {
                 return color;
             }
 
+            /**
+             * @param color the color of the rectangle
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder color(int color) {
                 this.color = color;
                 return this;
             }
 
+            /**
+             * @return the alpha value of the color.
+             *
+             * @since 1.8.4
+             */
             public int getAlpha() {
                 return alpha;
             }
 
+            /**
+             * @param alpha the alpha value of the color
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder alpha(int alpha) {
                 this.alpha = alpha;
                 return this;
             }
 
+            /**
+             * @param color the color of the rectangle
+             * @param alpha the alpha value of the color
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder color(int color, int alpha) {
                 this.color = color;
                 this.alpha = alpha;
                 return this;
             }
 
-            public int getzIndex() {
+            /**
+             * @return the z-index of the rectangle.
+             *
+             * @since 1.8.4
+             */
+            public int getZIndex() {
                 return zIndex;
             }
 
+            /**
+             * @param zIndex the z-index of the rectangle.
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder zIndex(int zIndex) {
                 this.zIndex = zIndex;
                 return this;
@@ -972,9 +1449,7 @@ public class RenderCommon {
             public Rect createElement() {
                 return new Rect(x1, y1, x2, y2, color, alpha, rotation, zIndex);
             }
-
         }
-        
     }
     
     /**
@@ -1125,7 +1600,6 @@ public class RenderCommon {
             return zIndex;
         }
 
-
         public static class Builder extends RenderElementBuilder<Text> {
             private net.minecraft.text.Text text = net.minecraft.text.Text.empty();
             private double scale = 1;
@@ -1140,84 +1614,186 @@ public class RenderCommon {
                 super(draw2D);
             }
 
+            /**
+             * @return the content of the text element.
+             *
+             * @since 1.8.4
+             */
             public TextHelper getText() {
                 return new TextHelper(text);
             }
 
+            /**
+             * @param text the content of the text element
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder text(TextHelper text) {
                 this.text = text.getRaw();
                 return this;
             }
 
+            /**
+             * @param text the content of the text element
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder text(String text) {
                 this.text = net.minecraft.text.Text.literal(text);
                 return this;
             }
 
+            /**
+             * @return the scale of the text element.
+             *
+             * @since 1.8.4
+             */
             public double getScale() {
                 return scale;
             }
 
+            /**
+             * @param scale the scale of the text element
+             * @return self for chaining.
+             *
+             * @throws IllegalArgumentException if the scale is 0.
+             * @since 1.8.4
+             */
             public Builder scale(double scale) {
-                this.scale = scale;
+                if (scale <= 0) {
+                    throw new IllegalArgumentException("Scale must be positive");
+                }
                 return this;
             }
 
+            /**
+             * @return the rotation of the text element in degrees.
+             *
+             * @since 1.8.4
+             */
             public float getRotation() {
                 return rotation;
             }
 
+            /**
+             * @param rotation the rotation of the text element in degrees
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder rotation(float rotation) {
                 this.rotation = rotation;
                 return this;
             }
 
+            /**
+             * @return the x position of the text element.
+             *
+             * @since 1.8.4
+             */
             public int getX() {
                 return x;
             }
 
+            /**
+             * @param x the x position of the text element
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder x(int x) {
                 this.x = x;
                 return this;
             }
 
+            /**
+             * @return the y position of the text element.
+             *
+             * @since 1.8.4
+             */
             public int getY() {
                 return y;
             }
 
+            /**
+             * @param y the y position of the text element
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder y(int y) {
                 this.y = y;
                 return this;
             }
 
+            /**
+             * @param x the x position of the text element
+             * @param y the y position of the text element
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos(int x, int y) {
                 this.x = x;
                 this.y = y;
                 return this;
             }
 
+            /**
+             * @return the color of the text element.
+             *
+             * @since 1.8.4
+             */
             public int getColor() {
                 return color;
             }
 
+            /**
+             * @param color the color of the text element
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder color(int color) {
                 this.color = color;
                 return this;
             }
 
+            /**
+             * @return {@code true} if the text element has a shadow, {@code false} otherwise.
+             *
+             * @since 1.8.4
+             */
             public boolean isShadow() {
                 return shadow;
             }
 
+            /**
+             * @param shadow whether the text should have a shadow or not
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder shadow(boolean shadow) {
                 this.shadow = shadow;
                 return this;
             }
 
-            public int getzIndex() {
+            /**
+             * @return the z-index of the text element.
+             *
+             * @since 1.8.4
+             */
+            public int getZIndex() {
                 return zIndex;
             }
 
+            /**
+             * @param zIndex the z-index of the text element
+             * @return self for chaining.
+             */
             public Builder zIndex(int zIndex) {
                 this.zIndex = zIndex;
                 return this;
@@ -1227,11 +1803,9 @@ public class RenderCommon {
             public Text createElement() {
                 return new Text(new TextHelper(text), x, y, color, zIndex, shadow, scale, rotation);
             }
-
         }
-        
     }
-    
+
     public static class Draw2DElement implements RenderElement {
 
         public float scale;
@@ -1254,6 +1828,12 @@ public class RenderCommon {
             this.rotation = rotation;
         }
 
+        /**
+         * @param zIndex the z-index of this draw2D
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public Draw2DElement setZIndex(int zIndex) {
             this.zIndex = zIndex;
             return this;
@@ -1264,72 +1844,157 @@ public class RenderCommon {
             return zIndex;
         }
 
+        /**
+         * @return the scale of this draw2D.
+         *
+         * @since 1.8.4
+         */
         public float getScale() {
             return scale;
         }
 
+        /**
+         * @param scale the scale
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public Draw2DElement setScale(float scale) {
             this.scale = scale;
             return this;
         }
 
+        /**
+         * @return the rotation of this draw2D.
+         *
+         * @since 1.8.4
+         */
         public float getRotation() {
             return rotation;
         }
 
+        /**
+         * @param rotation the rotation
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public Draw2DElement setRotation(float rotation) {
             this.rotation = rotation;
             return this;
         }
 
+        /**
+         * @return the x position of this draw2D.
+         *
+         * @since 1.8.4
+         */
         public int getX() {
             return x;
         }
 
+        /**
+         * @param x the x position
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public Draw2DElement setX(int x) {
             this.x = x;
             return this;
         }
 
+        /**
+         * @return the y position of this draw2D.
+         *
+         * @since 1.8.4
+         */
         public int getY() {
             return y;
         }
 
+        /**
+         * @param y the y position
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public Draw2DElement setY(int y) {
             this.y = y;
             return this;
         }
 
+        /**
+         * @param x the x position
+         * @param y the y position
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public Draw2DElement setPos(int x, int y) {
             this.x = x;
             this.y = y;
             return this;
         }
 
+        /**
+         * @return the width of this draw2D.
+         *
+         * @since 1.8.4
+         */
         public int getWidth() {
             return width;
         }
 
+        /**
+         * @param width the width
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public Draw2DElement setWidth(int width) {
             this.width = width;
             return this;
         }
 
+        /**
+         * @return the height of this draw2D.
+         *
+         * @since 1.8.4
+         */
         public int getHeight() {
             return height;
         }
 
+        /**
+         * @param height the height
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public Draw2DElement setHeight(int height) {
             this.height = height;
             return this;
         }
 
+        /**
+         * @param width  the width
+         * @param height the height
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public Draw2DElement setSize(int width, int height) {
             this.width = width;
             this.height = height;
             return this;
         }
 
+        /**
+         * @return the internal draw2D this draw2D element is wrapping.
+         *
+         * @since 1.8.4
+         */
         public Draw2D getDraw2D() {
             return draw2D;
         }
@@ -1361,76 +2026,166 @@ public class RenderCommon {
                 this.draw2D = draw2D;
             }
 
+            /**
+             * @return the x position of the draw2D.
+             *
+             * @since 1.8.4
+             */
             public int getX() {
                 return x;
             }
 
+            /**
+             * @param x the x position of the draw2D
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder x(int x) {
                 this.x = x;
                 return this;
             }
 
+            /**
+             * @return the y position of the draw2D.
+             *
+             * @since 1.8.4
+             */
             public int getY() {
                 return y;
             }
 
+            /**
+             * @param y the y position of the draw2D
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder y(int y) {
                 this.y = y;
                 return this;
             }
 
+            /**
+             * @param x the x position of the draw2D
+             * @param y the y position of the draw2D
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos(int x, int y) {
                 this.x = x;
                 this.y = y;
                 return this;
             }
 
+            /**
+             * @return the width of the draw2D.
+             *
+             * @since 1.8.4
+             */
             public int getWidth() {
                 return width;
             }
 
+            /**
+             * @param width the width of the draw2D
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder width(int width) {
                 this.width = width;
                 return this;
             }
 
+            /**
+             * @return the height of the draw2D.
+             *
+             * @since 1.8.4
+             */
             public int getHeight() {
                 return height;
             }
 
+            /**
+             * @param height the height of the draw2D
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder height(int height) {
                 this.height = height;
                 return this;
             }
 
+            /**
+             * @param width  the width of the draw2D
+             * @param height the height of the draw2D
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder size(int width, int height) {
                 this.width = width;
                 this.height = height;
                 return this;
             }
 
+            /**
+             * @return the z-index of the draw2D.
+             *
+             * @since 1.8.4
+             */
             public Builder zIndex(int zIndex) {
                 this.zIndex = zIndex;
                 return this;
             }
 
+            /**
+             * @return the z-index of the draw2D.
+             *
+             * @since 1.8.4
+             */
             public int getZIndex() {
                 return zIndex;
             }
 
+            /**
+             * @return the scale of the draw2D.
+             *
+             * @since 1.8.4
+             */
             public float getScale() {
                 return scale;
             }
 
+            /**
+             * @param scale the scale of the draw2D
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder scale(float scale) {
                 this.scale = scale;
                 return this;
             }
 
+            /**
+             * @return the rotation of the draw2D in degrees.
+             *
+             * @since 1.8.4
+             */
             public float getRotation() {
                 return rotation;
             }
 
+            /**
+             * @param rotation the rotation of the draw2D in degrees
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder rotation(float rotation) {
                 this.rotation = rotation;
                 return this;

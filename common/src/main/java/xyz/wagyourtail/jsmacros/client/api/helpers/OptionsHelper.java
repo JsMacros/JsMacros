@@ -146,11 +146,12 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.8.3
      * @param state false to put it back
      */
-    public void removeServerResourcePack(boolean state) {
+    public OptionsHelper removeServerResourcePack(boolean state) {
         if (state != ((IResourcePackManager) rpm).jsmacros_isServerPacksDisabled()) {
             ((IResourcePackManager) rpm).jsmacros_disableServerPacks(state);
             mc.reloadResources();
         }
+        return this;
     }
     
     /**
@@ -165,12 +166,13 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.1.7
      * @param val
      */
-    public void setRightHanded(boolean val) {
+    public OptionsHelper setRightHanded(boolean val) {
         if (val) {
             base.getMainArm().setValue(Arm.RIGHT);
         } else {
             base.getMainArm().setValue(Arm.LEFT);
         }
+        return this;
     }
     
     /**
@@ -203,8 +205,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.1.7
      * @param d
      */
-    public void setRenderDistance(int d) {
+    public OptionsHelper setRenderDistance(int d) {
         ((MixinSimpleOption)(Object) base.getViewDistance()).forceSetValue(d);
+        return this;
     }
     
     /**
@@ -227,18 +230,20 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.2.6
      * @param w
      */
-    public void setWidth(int w) {
+    public OptionsHelper setWidth(int w) {
         Window win = mc.getWindow();
         GLFW.glfwSetWindowSize(win.getHandle(), w, win.getHeight());
+        return this;
     }
     
     /**
      * @since 1.2.6
      * @param h
      */
-    public void setHeight(int h) {
+    public OptionsHelper setHeight(int h) {
         Window win = mc.getWindow();
         GLFW.glfwSetWindowSize(win.getHandle(), win.getWidth(), h);
+        return this;
     }
     
     /**
@@ -246,9 +251,10 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @param w
      * @param h
      */
-    public void setSize(int w, int h) {
+    public OptionsHelper setSize(int w, int h) {
         Window win = mc.getWindow();
         GLFW.glfwSetWindowSize(win.getHandle(), w, h);
+        return this;
     }
     
     /**
@@ -263,16 +269,18 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.3.0
      * normal values for gamma are between {@code 0} and {@code 1}
      */
-    public void setGamma(double gamma) {
+    public OptionsHelper setGamma(double gamma) {
         ((MixinSimpleOption)(Object) base.getGamma()).forceSetValue(gamma);
+        return this;
     }
     
     /**
      * @since 1.3.1
      * @param vol
      */
-    public void setVolume(double vol) {
+    public OptionsHelper setVolume(double vol) {
         base.setSoundVolume(SoundCategory.MASTER, (float) vol);
+        return this;
     }
     
     /**
@@ -282,8 +290,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @param category
      * @param volume
      */
-    public void setVolume(String category, double volume) {
+    public OptionsHelper setVolume(String category, double volume) {
         base.setSoundVolume(SOUND_CATEGORY_MAP.get(category), (float) volume);
+        return this;
     }
     
     /**
@@ -304,9 +313,10 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.3.1
      * @param scale
      */
-    public void setGuiScale(int scale) {
+    public OptionsHelper setGuiScale(int scale) {
         base.getGuiScale().setValue(scale);
         mc.execute(mc::onResolutionChanged);
+        return this;
     }
     
     /**
@@ -338,8 +348,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @param val
      * @since 1.5.0
      */
-    public void setSmoothCamera(boolean val) {
+    public OptionsHelper setSmoothCamera(boolean val) {
         base.smoothCameraEnabled = val;
+        return this;
     }
 
     /**
@@ -354,7 +365,8 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @param mode 0: first, 2: front
      * @since 1.5.0
      */
-    public void setCameraMode(int mode) {
+    public OptionsHelper setCameraMode(int mode) {
         base.setPerspective(Perspective.values()[mode]);
+        return this;
     }
 }

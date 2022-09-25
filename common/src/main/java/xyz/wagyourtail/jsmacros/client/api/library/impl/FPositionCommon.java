@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
@@ -64,4 +65,17 @@ public class FPositionCommon extends BaseLibrary {
     public PositionCommon.Pos2D createPos(double x, double y) {
         return new PositionCommon.Pos2D(x, y);
     }
+
+    /**
+     * @param x the x position of the block
+     * @param y the y position of the block
+     * @param z the z position of the block
+     * @return a {@link BlockPosHelper} for the given coordinates.
+     *
+     * @since 1.8.4
+     */
+    public BlockPosHelper createBlockPos(int x, int y, int z) {
+        return new BlockPosHelper(x, y, z);
+    }
+    
 }

@@ -114,7 +114,7 @@ public class PlayerAbilitiesHelper extends BaseHelper<PlayerAbilities> {
 
     /**
      * @param speed the new walk speed
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */

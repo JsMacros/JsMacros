@@ -57,7 +57,7 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
 
     /**
      * @param suggestions the strings to match
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -68,7 +68,7 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
 
     /**
      * @param identifiers the identifiers to match
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -79,7 +79,7 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
 
     /**
      * @param positions the positions to suggest
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */

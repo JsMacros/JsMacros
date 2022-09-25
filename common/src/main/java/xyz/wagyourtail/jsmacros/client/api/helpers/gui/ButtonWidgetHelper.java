@@ -187,20 +187,25 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
 
     /**
      * @param tooltips the tooltips to set
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void setTooltip(Object... tooltips) {
+    public ButtonWidgetHelper<T> setTooltip(Object... tooltips) {
         this.tooltips = new ArrayList<>();
         for (Object text : tooltips) {
             addTooltip(text);
         }
+        return this;
     }
 
     /**
      * @param tooltip the tooltips to add
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void addTooltip(Object tooltip) {
+    public ButtonWidgetHelper<T> addTooltip(Object tooltip) {
         if (tooltip instanceof TextBuilder) {
             tooltips.add(((TextBuilder) tooltip).build().getRaw());
         } else if (tooltip instanceof TextHelper) {
@@ -210,11 +215,12 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
         } else {
             tooltips.add(Text.literal(tooltip.toString()));
         }
+        return this;
     }
 
     /**
      * @param index the index of the tooltip to remove
-     * @return
+     * @return {@code true} if the tooltip was removed successfully, {@code false} otherwise.
      *
      * @since 1.8.4
      */
@@ -258,6 +264,10 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
         return zIndex;
     }
 
+    @Override
+    public String toString() {
+        return String.format("ButtonWidgetHelper:{\"message\": \"%s\"}", base.getMessage().getString());
+    }
 
     public static class ButtonBuilder extends AbstractWidgetBuilder<ButtonWidget, ButtonWidgetHelper<ButtonWidget>> {
 
@@ -267,10 +277,46 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
             super(screen);
         }
 
+        /**
+         * @param height this argument is ignored and will always be set to 20
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        @Override
+        public ButtonBuilder height(int height) {
+            super.height(20);
+            return this;
+        }
+
+        /**
+         * @param width  the width of the button
+         * @param height this argument is ignored and will always be set to 20
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        @Override
+        public ButtonBuilder size(int width, int height) {
+            super.size(width, 20);
+            return this;
+        }
+
+        /**
+         * @return the action to run when the button is pressed.
+         *
+         * @since 1.8.4
+         */
         public MethodWrapper<ButtonWidgetHelper<ButtonWidget>, IScreen, Object, ?> getAction() {
             return action;
         }
 
+        /**
+         * @param action the action to run when the button is pressed
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public ButtonBuilder action(MethodWrapper<ButtonWidgetHelper<ButtonWidget>, IScreen, Object, ?> action) {
             this.action = action;
             return this;
@@ -279,7 +325,7 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
         @Override
         public ButtonWidgetHelper<ButtonWidget> createWidget() {
             AtomicReference<ButtonWidgetHelper<ButtonWidget>> b = new AtomicReference<>(null);
-            ButtonWidget button = new ButtonWidget(getX(), getY(), getWidth(), getHeight(), getMessage().getRaw(), btn -> {
+            ButtonWidget button = new ButtonWidget(getX(), getY(), getWidth(), 20, getMessage().getRaw(), btn -> {
                 try {
                     if (action != null) {
                         action.accept(b.get(), screen);
@@ -306,66 +352,153 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
             super(screen);
         }
 
+        @Override
+        public TexturedButtonBuilder action(MethodWrapper<ButtonWidgetHelper<ButtonWidget>, IScreen, Object, ?> action) {
+            super.action(action);
+            return this;
+        }
+
+        /**
+         * @return the x position in the texture to start drawing from
+         *
+         * @since 1.8.4
+         */
         public int getU() {
             return u;
         }
 
+        /**
+         * @param u the x position in the texture to start drawing from
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public TexturedButtonBuilder u(int u) {
             this.u = u;
             return this;
         }
 
+        /**
+         * @return the y position in the texture to start drawing from
+         *
+         * @since 1.8.4
+         */
         public int getV() {
             return v;
         }
 
+        /**
+         * @param v the y position in the texture to start drawing from
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public TexturedButtonBuilder v(int v) {
             this.v = v;
             return this;
         }
 
+        /**
+         * @param u the x position in the texture to start drawing from
+         * @param v the y position in the texture to start drawing from
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public TexturedButtonBuilder uv(int u, int v) {
             this.u = u;
             this.v = v;
             return this;
         }
 
+        /**
+         * @return the hover offset of the button.
+         *
+         * @since 1.8.4
+         */
         public int getHoverOffset() {
             return hoverOffset;
         }
 
+        /**
+         * The hover offset is the vertical amount of pixels to offset the texture when the button
+         * is hovered.
+         *
+         * @param hoverOffset the hover offset
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public TexturedButtonBuilder hoverOffset(int hoverOffset) {
             this.hoverOffset = hoverOffset;
             return this;
         }
 
-        public Identifier getTexture() {
-            return texture;
+        /**
+         * @return the id of the texture to use or {@code null} if none is set.
+         *
+         * @since 1.8.4
+         */
+        public String getTexture() {
+            return texture == null ? null : texture.toString();
         }
 
+        /**
+         * @param texture the texture id to use for the button
+         * @return self for chaining.
+         */
         public TexturedButtonBuilder texture(String texture) {
             this.texture = new Identifier(texture);
             return this;
         }
 
+        /**
+         * @return the width of the texture.
+         *
+         * @since 1.8.4
+         */
         public int getTextureWidth() {
             return textureWidth;
         }
 
+        /**
+         * @param textureWidth the width of the texture
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public TexturedButtonBuilder textureWidth(int textureWidth) {
             this.textureWidth = textureWidth;
             return this;
         }
 
+        /**
+         * @return the height of the texture.
+         *
+         * @since 1.8.4
+         */
         public int getTextureHeight() {
             return textureHeight;
         }
 
+        /**
+         * @param textureHeight the height of the texture
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public TexturedButtonBuilder textureHeight(int textureHeight) {
             this.textureHeight = textureHeight;
             return this;
         }
 
+        /**
+         * @param textureWidth  the width of the texture
+         * @param textureHeight the height of the texture
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public TexturedButtonBuilder textureSize(int textureWidth, int textureHeight) {
             this.textureWidth = textureWidth;
             this.textureHeight = textureHeight;
@@ -387,11 +520,6 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
             b.set(new ButtonWidgetHelper<>(button, getZIndex()));
             return b.get();
         }
-    }
-    
-    @Override
-    public String toString() {
-        return String.format("ButtonWidgetHelper:{\"message\": \"%s\"}", base.getMessage().getString());
     }
     
 }

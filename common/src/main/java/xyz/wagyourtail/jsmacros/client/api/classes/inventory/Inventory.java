@@ -156,7 +156,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @param slot  the slot to drop
      * @param stack decide whether to drop the whole stack or just a single item
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -222,7 +222,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @return a map of all item ids mapped to their total count.
+     * @return a map of all item ids and their total count.
      *
      * @since 1.8.4
      */

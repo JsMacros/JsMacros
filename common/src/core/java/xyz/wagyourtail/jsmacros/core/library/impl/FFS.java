@@ -80,11 +80,11 @@ public class FFS extends PerExecLibrary {
      * work if the parent directory already exists. See {@link #createFile(String, String, boolean)}
      * to automatically create all parent directories.
      *
-     * @param path relative to the script's folder.
+     * @param path the path relative to the script's folder.
      * @param name the name of the file.
-     * @return {@code true} if the file was created successfully
+     * @return {@code true} if the file was created successfully, {@code false} otherwise.
      *
-     * @throws IOException if there occurs an error while creating the file
+     * @throws IOException if there occurs an error while creating the file.
      * @since 1.8.4
      */
     public boolean createFile(String path, String name) throws IOException {
@@ -95,12 +95,12 @@ public class FFS extends PerExecLibrary {
      * Creates a new file in the specified path, relative to the script's folder. Optionally parent
      * directories can be created if they do not exist.
      *
-     * @param path       relative to the script's folder
+     * @param path       the path relative to the script's folder
      * @param name       the name of the file
-     * @param createDirs automatically creates the parent folders
-     * @return {@code true} if the file was created successfully
+     * @param createDirs whether to create parent directories if they do not exist or not
+     * @return {@code true} if the file was created successfully, {@code false} otherwise.
      *
-     * @throws IOException if there occurs an error while creating the file
+     * @throws IOException if there occurs an error while creating the file.
      * @since 1.8.4
      */
     public boolean createFile(String path, String name, boolean createDirs) throws IOException {

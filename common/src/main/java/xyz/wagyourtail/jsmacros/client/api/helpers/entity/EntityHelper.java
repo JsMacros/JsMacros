@@ -200,12 +200,13 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.6.4
      * @param name
      */
-    public void setCustomName(TextHelper name) {
+    public EntityHelper<T> setCustomName(TextHelper name) {
         if (name == null) {
             base.setCustomName(null);
         } else {
             base.setCustomName(name.getRaw());
         }
+        return this;
     }
 
     /**
@@ -213,22 +214,25 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.8.0
      * @param b
      */
-    public void setCustomNameVisible(boolean b) {
+    public EntityHelper<T> setCustomNameVisible(boolean b) {
         base.setCustomNameVisible(b);
+        return this;
     }
 
     /**
      * @param color
      */
-    public void setGlowingColor(int color) {
+    public EntityHelper<T> setGlowingColor(int color) {
         ((IMixinEntity) base).jsmacros_setGlowingColor(color);
+        return this;
     }
 
     /**
      *
      */
-    public void resetGlowingColor() {
+    public EntityHelper<T> resetGlowingColor() {
         ((IMixinEntity) base).jsmacros_resetColor();
+        return this;
     }
 
     /**

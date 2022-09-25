@@ -27,8 +27,9 @@ public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
         return base.creationTick();
     }
 
-    public void deleteById() {
+    public ChatHudLineHelper deleteById() {
         ((IChatHud) hud).jsmacros_removeMessageById(0);
+        return this;
     }
 
     @Override

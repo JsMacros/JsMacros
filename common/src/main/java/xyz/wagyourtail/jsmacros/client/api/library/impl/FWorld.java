@@ -169,7 +169,7 @@ public class FWorld extends BaseLibrary {
      *     .andStateFilter("isToolRequired").is(false)
      *     .build()
      * </pre>
-     * @return a builder to create a WorldScanner
+     * @return a builder to create a WorldScanner.
      *
      * @since 1.6.5
      */
@@ -178,7 +178,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @return a scanner for the current world
+     * @return a scanner for the current world.
      *
      * @since 1.6.5
      */

@@ -47,12 +47,71 @@ public class ClassBuilder<T> {
         return new FieldBuilder(defaultPool.getCtClass(fieldType.getName()), name);
     }
 
+    /**
+     * The code must define the full field, including visibility, type, name and an optional value.
+     * Generic types are not supported and must be explicitly cast in the source code when used.
+     * Annotations are also not supported.
+     * Just like in java, classes from the `java.lang` package don't need a fully qualified name.
+     * Examples are:
+     * <pre>
+     * {@code private String name;}
+     * {@code private java.lang.String name;}
+     * {@code public java.util.List list = new java.util.ArrayList();}
+     * {@code static int value = 10;}
+     * </pre>
+     *
+     * @param code the code for the field
+     * @return self for chaining.
+     *
+     * @throws CannotCompileException
+     * @since 1.8.4
+     */
+    public ClassBuilder<T> addField(String code) throws CannotCompileException {
+        CtField field = CtField.make(code, ctClass);
+        ctClass.addField(field);
+        return this;
+    }
+    
     public MethodBuilder addMethod(Class<?> returnType, String name, Class<?> ...params) throws NotFoundException {
         CtClass[] paramCtClasses = new CtClass[params.length];
         for (int i = 0; i < params.length; i++) {
             paramCtClasses[i] = defaultPool.getCtClass(params[i].getName());
         }
         return new MethodBuilder(defaultPool.getCtClass(returnType.getName()), name, paramCtClasses);
+    }
+
+    /**
+     * The code must define the full method, including visibility, return type, name and parameters.
+     * Generic types are not supported as return values or arguments, neither can varargs be used.
+     * Annotations are also not supported.
+     * Just like in java, classes from the `java.lang` package don't need a fully qualified name.
+     * Examples are:
+     * <pre>
+     * {@code public Object id(Object obj) { return obj; }}
+     * {@code private void print(String text) { System.out.println(text); }}
+     * {@code private static java.util.Map toMap(Object[] keys, Object[] values) {
+     *      java.util.Map map = new java.util.HashMap();
+     *      for (int i = 0; i < keys.length; i++) {
+     *          map.put(keys[i], values[i]);
+     *      }
+     *      return map;
+     * }}
+     * {@code public String toString() {
+     *      System.out.println(super.toString());
+     *      return "Hello World!";
+     *  }}
+     * </pre>
+     * 
+     * @param code the code for the method
+     * @return self for chaining.
+     *
+     * @throws CannotCompileException
+     * @since 1.8.4
+     */
+    public ClassBuilder<T> addMethod(String code) throws CannotCompileException {
+        CtMethod method = CtNewMethod.make(code, ctClass);
+        ctClass.addMethod(method);
+        return this;
     }
 
     public ConstructorBuilder addConstructor(Class<?> ...params) throws NotFoundException {
@@ -63,6 +122,34 @@ public class ClassBuilder<T> {
         return new ConstructorBuilder(paramCtClasses, false);
     }
 
+    /**
+     * The code must define the full constructor, including visibility and parameters.
+     * Generic types are not supported as arguments, neither can varargs be used.
+     * Annotations are also not supported.
+     * Just like in java, classes from the `java.lang` package don't need a fully qualified name.
+     * To make sure the class can be easily instantiated, the visibility of the constructor should be public.
+     * Examples are:
+     * <pre>
+     * {@code public MyClass() { }}
+     * {@code public MyClass(String text) { System.out.println(text); }}
+     * {@code protected MyClass(String text, int number) { super(text, number, ""); }}
+     * {@code public MyClass(String text, int number, String other) {
+     *      this(text, number);
+     *      this.other = other;
+     * }}
+     * </pre>
+     * @param code the code for the constructor
+     * @return self for chaining.
+     *
+     * @throws CannotCompileException
+     * @since 1.8.4
+     */
+    public ClassBuilder<T> addConstructor(String code) throws CannotCompileException {
+        CtConstructor constructor = CtNewConstructor.make(code, ctClass);
+        ctClass.addConstructor(constructor);
+        return this;
+    }
+    
     public ConstructorBuilder addClinit() {
         return new ConstructorBuilder(new CtClass[0], true);
     }

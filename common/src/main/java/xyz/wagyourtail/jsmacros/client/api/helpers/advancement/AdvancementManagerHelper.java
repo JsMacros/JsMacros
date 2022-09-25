@@ -29,7 +29,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     }
 
     /**
-     * @return a map of all advancement ids mapped to their advancement.
+     * @return a map of all advancement ids and their advancement.
      *
      * @since 1.8.4
      */
@@ -105,7 +105,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     }
 
     /**
-     * @return a map of all advancements mapped to their progress.
+     * @return a map of all advancements and their progress.
      *
      * @since 1.8.4
      */

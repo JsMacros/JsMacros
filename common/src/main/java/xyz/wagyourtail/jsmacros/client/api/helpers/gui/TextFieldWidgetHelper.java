@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
 
-/**F
+/**
  * @author Wagyourtail
  * @since 1.0.5
  */
@@ -122,14 +122,19 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
 
     /**
      * @param suggestion the suggestion to set
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void setSuggestion(String suggestion) {
+    public TextFieldWidgetHelper setSuggestion(String suggestion) {
         base.setSuggestion(suggestion);
+        return this;
     }
 
     /**
      * @return the maximum length of this text field.
+     *
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -139,54 +144,78 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
 
     /**
      * @param length the new maximum length
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void setMaxLength(int length) {
+    public TextFieldWidgetHelper setMaxLength(int length) {
         base.setMaxLength(length);
+        return this;
     }
 
-    public void setSelection(int start, int end) {
+    public TextFieldWidgetHelper setSelection(int start, int end) {
         base.setSelectionStart(start);
         base.setSelectionEnd(end);
+        return this;
     }
 
     /**
      * @param predicate the text filter
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void setTextPredicate(MethodWrapper<String, ?, ?, ?> predicate) {
+    public TextFieldWidgetHelper setTextPredicate(MethodWrapper<String, ?, ?, ?> predicate) {
         base.setTextPredicate(predicate);
+        return this;
     }
 
     /**
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void resetTextPredicate() {
+    public TextFieldWidgetHelper resetTextPredicate() {
         base.setTextPredicate(Objects::nonNull);
+        return this;
     }
 
     /**
      * @param position the cursor position
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void setCursorPosition(int position) {
+    public TextFieldWidgetHelper setCursorPosition(int position) {
         base.setCursor(position);
+        return this;
     }
 
     /**
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void setCursorToStart() {
+    public TextFieldWidgetHelper setCursorToStart() {
         base.setCursorToStart();
+        return this;
     }
 
     /**
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void setCursorToEnd() {
+    public TextFieldWidgetHelper setCursorToEnd() {
         base.setCursorToEnd();
+        return this;
     }
 
+    @Override
+    public String toString() {
+        return String.format("TextFieldWidgetHelper:{\"text\": \"%s\"}", base.getText());
+    }
+    
     public static class TextFieldBuilder extends AbstractWidgetBuilder<TextFieldWidget, TextFieldWidgetHelper> {
 
         private String suggestion = "";
@@ -233,11 +262,6 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
             b.set(new TextFieldWidgetHelper(textField, getZIndex()));
             return b.get();
         }
-    }
-
-    @Override
-    public String toString() {
-        return String.format("TextFieldWidgetHelper:{\"text\": \"%s\"}", base.getText());
     }
     
 }

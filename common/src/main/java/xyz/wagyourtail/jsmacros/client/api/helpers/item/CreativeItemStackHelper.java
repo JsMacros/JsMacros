@@ -28,7 +28,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
 
     /**
      * @param damage the damage the item should take
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -38,8 +38,8 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
     }
 
     /**
-     * @param durability the new durability of this item.
-     * @return this helper for chaining.
+     * @param durability the new durability of this item
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -50,7 +50,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
 
     /**
      * @param count the new count of the item
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -61,7 +61,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
 
     /**
      * @param name the new name of the item
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -72,7 +72,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
 
     /**
      * @param name the new name of the item
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -84,7 +84,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
     /**
      * @param id    the id of the enchantment
      * @param level the level of the enchantment
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -95,7 +95,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
 
     /**
      * @param enchantment the enchantment to add
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -105,7 +105,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
     }
 
     /**
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -119,7 +119,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
 
     /**
      * @param enchantment the enchantment to remove
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -129,7 +129,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
 
     /**
      * @param id the id of the enchantment to remove
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -147,7 +147,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
     }
 
     /**
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -161,7 +161,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
 
     /**
      * @param lore the new lore
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -172,7 +172,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
 
     /**
      * @param lore the lore to add
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -190,7 +190,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
 
     /**
      * @param texts the lore to add
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -206,8 +206,8 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
     }
 
     /**
-     * @param unbreakable whether the item should be unbreakable
-     * @return this helper for chaining.
+     * @param unbreakable whether the item should be unbreakable or not
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -217,8 +217,8 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
     }
 
     /**
-     * @param hide whether to hide the enchantments
-     * @return this helper for chaining.
+     * @param hide whether to hide the enchantments or not
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -227,8 +227,8 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
     }
 
     /**
-     * @param hide whether to hide attributes and modifiers
-     * @return this helper for chaining.
+     * @param hide whether to hide attributes and modifiers or not
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -237,8 +237,8 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
     }
 
     /**
-     * @param hide whether to hide the unbreakable flag
-     * @return this helper for chaining.
+     * @param hide whether to hide the unbreakable flag or not
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -248,8 +248,8 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
     }
 
     /**
-     * @param hide whether to hide the blocks this item can destroy
-     * @return this helper for chaining.
+     * @param hide whether to hide the blocks this item can destroy or not
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -258,8 +258,8 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
     }
 
     /**
-     * @param hide whether to hide the blocks this item can be placed on
-     * @return this helper for chaining.
+     * @param hide whether to hide the blocks this item can be placed on or not
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -271,8 +271,8 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
      * These flags are for banner patterns, potion effects, book information and other special
      * flags.
      *
-     * @param hide whether to hide additional flags
-     * @return this helper for chaining.
+     * @param hide whether to hide additional flags or not
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -281,8 +281,8 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
     }
 
     /**
-     * @param hide whether to hide the color of colored leather armor
-     * @return this helper for chaining.
+     * @param hide whether to hide the color of colored leather armor or not
+     * @return self for chaining.
      *
      * @since 1.8.4
      */

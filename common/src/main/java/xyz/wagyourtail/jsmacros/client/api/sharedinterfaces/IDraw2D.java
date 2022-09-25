@@ -69,7 +69,7 @@ public interface IDraw2D<T> extends RenderCommon.RenderElement {
     List<Image> getImages();
 
     /**
-     * @return
+     * @return all registered draw2d elements.
      *
      * @since 1.8.4
      */
@@ -530,8 +530,12 @@ public interface IDraw2D<T> extends RenderCommon.RenderElement {
     /**
      * Tries to add the given draw2d as a child. Fails if cyclic dependencies are detected.
      *
-     * @param draw2D
-     * @return
+     * @param draw2D the draw2d to add
+     * @param x      the x position on this draw2d
+     * @param y      the y position on this draw2d
+     * @param width  the width of the given draw2d
+     * @param height the height of the given draw2d
+     * @return a wrapper for the draw2d.
      *
      * @since 1.8.4
      */
@@ -539,50 +543,62 @@ public interface IDraw2D<T> extends RenderCommon.RenderElement {
 
     /**
      * Tries to add the given draw2d as a child. Fails if cyclic dependencies are detected.
-     * @param draw2D
-     * @param x
-     * @param y
-     * @param width
-     * @param height
-     * @param zIndex
+     *
+     * @param draw2D the draw2d to add
+     * @param x      the x position on this draw2d
+     * @param y      the y position on this draw2d
+     * @param width  the width of the given draw2d
+     * @param height the height of the given draw2d
+     * @param zIndex the z-index for the draw2d
+     * @return a wrapper for the draw2d.
      *
      * @since 1.8.4
-     * @return
      */
     RenderCommon.Draw2DElement addDraw2D(Draw2D draw2D, int x, int y, int width, int height, int zIndex);
 
     /**
-     * @param draw2D
-     * @return
+     * @param draw2D the draw2d to remove
+     * @return self chaining.
      *
      * @since 1.8.4
      */
     T removeDraw2D(RenderCommon.Draw2DElement draw2D);
 
     /**
+     * @return a builder for an {@link Item}.
+     *
      * @since 1.8.4
      */
     Item.Builder getItemBuilder();
 
     /**
+     * @return a builder for an {@link Image}.
+     *
      * @since 1.8.4
      */
     Image.Builder getImageBuilder();
 
     /**
+     * @return a builder for a {@link Rect}.
+     *
      * @since 1.8.4
      */
     Rect.Builder getRectBuilder();
 
     /**
+     * @return a builder for a {@link Text}.
+     *
      * @since 1.8.4
      */
     Text.Builder getTextBuilder();
 
     /**
+     * @param draw2D the draw2d to add
+     * @return a builder for a {@link Draw2D}.
+     *
      * @since 1.8.4
      */
-    Draw2DElement.Builder getDraw2DBuilder(Draw2D element);
+    Draw2DElement.Builder getDraw2DBuilder(Draw2D draw2D);
     
     /**
      * @since 1.2.7

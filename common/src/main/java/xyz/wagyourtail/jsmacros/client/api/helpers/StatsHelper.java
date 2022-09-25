@@ -181,7 +181,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     /**
      * Used to request an update of the statistics from the server.
      *
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */

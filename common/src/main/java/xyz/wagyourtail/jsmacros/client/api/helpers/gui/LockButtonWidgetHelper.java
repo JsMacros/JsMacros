@@ -34,13 +34,18 @@ public class LockButtonWidgetHelper extends ButtonWidgetHelper<LockButtonWidget>
 
     /**
      * @param locked whether to lock the button or not
-     * @return this helper for chaining. 
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
     public LockButtonWidgetHelper setLocked(boolean locked) {
         base.setLocked(locked);
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("LockButtonWidgetHelper:{\"message\": \"%s\", \"locked\": %b}", base.getMessage().getString(), isLocked());
     }
 
     public static class LockButtonBuilder extends AbstractWidgetBuilder<LockButtonWidget, LockButtonWidgetHelper> {
@@ -52,19 +57,41 @@ public class LockButtonWidgetHelper extends ButtonWidgetHelper<LockButtonWidget>
             super(screen);
         }
 
+        /**
+         * @return the initial state of the lock button.
+         *
+         * @since 1.8.4
+         */
         public boolean isLocked() {
             return locked;
         }
 
+        /**
+         * @param locked whether to initially lock the button or not
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public LockButtonBuilder locked(boolean locked) {
             this.locked = locked;
             return this;
         }
 
+        /**
+         * @return the action to run when the button is pressed.
+         *
+         * @since 1.8.4
+         */
         public MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> getAction() {
             return action;
         }
 
+        /**
+         * @param action the action to run when the button is pressed
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public LockButtonBuilder action(MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> action) {
             this.action = action;
             return this;
@@ -90,9 +117,4 @@ public class LockButtonWidgetHelper extends ButtonWidgetHelper<LockButtonWidget>
         }
     }
 
-    @Override
-    public String toString() {
-        return String.format("LockButtonWidgetHelper:{\"message\": \"%s\", \"locked\": %b}", base.getMessage().getString(), isLocked());
-    }
-    
 }

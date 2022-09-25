@@ -63,7 +63,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return
+     * @return a helper for the skin options.
      *
      * @since 1.8.4
      */
@@ -72,7 +72,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return
+     * @return a helper for the video options.
      *
      * @since 1.8.4
      */
@@ -81,7 +81,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return
+     * @return a helper for the music options.
      *
      * @since 1.8.4
      */
@@ -90,7 +90,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return
+     * @return a helper for the control options.
      *
      * @since 1.8.4
      */
@@ -99,7 +99,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return
+     * @return a helper for the chat options.
      *
      * @since 1.8.4
      */
@@ -108,7 +108,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return
+     * @return a helper for the accessibility options.
      *
      * @since 1.8.4
      */
@@ -116,6 +116,11 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         return accessibility;
     }
 
+    /**
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
     public FullOptionsHelper saveOptions() {
         base.write();
         return this;
@@ -143,7 +148,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
      * Set the enabled resource packs to the provided list.
      *
      * @param enabled
-     * @return
+     * @return self for chaining.
      *
      * @since 1.2.0
      */
@@ -170,7 +175,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return
+     * @return the current fov value.
      *
      * @since 1.1.7
      */
@@ -179,18 +184,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @param fov
-     * @return
+     * @param fov the new fov value
+     * @return self for chaining.
      *
      * @since 1.1.7
      */
     public FullOptionsHelper setFov(int fov) {
-        base.getFov().setValue(fov);
+        getBase(base.getFov()).forceSetValue(fov);
         return this;
     }
 
     /**
-     * @return
+     * @return the current view distance.
      *
      * @since 1.8.4
      */
@@ -199,7 +204,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return
+     * @return the active language.
      *
      * @since 1.8.4
      */
@@ -208,7 +213,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return
+     * @param languageCode the language to change to
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -221,7 +227,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return
+     * @return the active difficulty.
      *
      * @since 1.8.4
      */
@@ -230,8 +236,10 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @param name
-     * @return
+     * The name be either "peaceful", "easy", "normal", or "hard".
+     *
+     * @param name the name of the difficulty to change to
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -243,20 +251,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @param ordinal
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public FullOptionsHelper setDifficulty(int ordinal) {
-        if (mc.isIntegratedServerRunning()) {
-            mc.getServer().setDifficulty(Difficulty.byOrdinal(ordinal), true);
-        }
-        return this;
-    }
-
-    /**
-     * @return
+     * @return {@code true} if the difficulty is locked, {@code false} otherwise.
      *
      * @since 1.8.4
      */
@@ -265,7 +260,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -274,7 +269,19 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         return this;
     }
 
-    private MixinSimpleOption getBase(SimpleOption option) {
+    /**
+     * Unlocks the difficulty of the world. This can't be done in an unmodified client.
+     *
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public FullOptionsHelper unlockDifficulty() {
+        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new UpdateDifficultyLockC2SPacket(false));
+        return this;
+    }
+
+    private MixinSimpleOption getBase(SimpleOption<?> option) {
         return (MixinSimpleOption) (Object) option;
     }
 
@@ -286,12 +293,17 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
             parent = FullOptionsHelper;
         }
 
+        /**
+         * @return the parent options helper.
+         *
+         * @since 1.8.4
+         */
         public FullOptionsHelper getParent() {
             return parent;
         }
 
         /**
-         * @return
+         * @return {@code true} if the player's cape should be shown, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -300,7 +312,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if the player's jacket should be shown, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -309,7 +321,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if the player's left sleeve should be shown, {@code false}
+         *         otherwise.
          *
          * @since 1.8.4
          */
@@ -318,7 +331,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if the player's right sleeve should be shown, {@code false}
+         *         otherwise.
          *
          * @since 1.8.4
          */
@@ -327,7 +341,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if the player's left pants should be shown, {@code false}
+         *         otherwise.
          *
          * @since 1.8.4
          */
@@ -336,7 +351,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if the player's right pants should be shown, {@code false}
+         *         otherwise.
          *
          * @since 1.8.4
          */
@@ -345,7 +361,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if the player's hat should be shown, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -354,7 +370,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if the player's main hand is the right one, {@code false}
+         *         otherwise.
          *
          * @since 1.8.4
          */
@@ -363,7 +380,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether the cape should be shown or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -373,7 +391,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether the jacket should be shown or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -383,7 +402,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether the left sleeve should be shown or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -393,7 +413,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether the right sleeve should be shown or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -403,17 +424,19 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether the left pants should be shown or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
-        public SkinOptionsHelper toggleLeftPanTs(boolean val) {
+        public SkinOptionsHelper toggleLeftPants(boolean val) {
             base.togglePlayerModelPart(PlayerModelPart.LEFT_PANTS_LEG, val);
             return this;
         }
 
         /**
-         * @return
+         * @param val whether the right pants should be shown or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -423,7 +446,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether the hat should be shown or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -433,7 +457,10 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * The hand must be either "left" or "right".
+         *
+         * @param hand the hand to set as main hand
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -452,12 +479,17 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
             parent = FullOptionsHelper;
         }
 
+        /**
+         * @return the parent options helper.
+         *
+         * @since 1.8.4
+         */
         public FullOptionsHelper getParent() {
             return parent;
         }
 
         /**
-         * @return
+         * @return the full screen resolution as a string.
          *
          * @since 1.8.4
          */
@@ -466,7 +498,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current biome blend radius
          *
          * @since 1.8.4
          */
@@ -475,17 +507,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param radius the new biome blend radius
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
         public VideoOptionsHelper setBiomeBlendRadius(int radius) {
-            base.getBiomeBlendRadius().setValue(radius);
+            getBase(base.getBiomeBlendRadius()).forceSetValue(radius);
             return this;
         }
 
         /**
-         * @return
+         * @return the selected graphics mode.
          *
          * @since 1.8.4
          */
@@ -494,12 +527,12 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
                 case FAST -> "fast";
                 case FANCY -> "fancy";
                 case FABULOUS -> "fabulous";
-                default -> "";
             };
         }
 
         /**
-         * @return
+         * @param mode the graphics mode to select. Must be either "fast", "fancy" or "fabulous"
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -514,7 +547,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the selected chunk builder mode.
          *
          * @since 1.8.4
          */
@@ -523,12 +556,13 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
                 case NONE -> "none";
                 case NEARBY -> "nearby";
                 case PLAYER_AFFECTED -> "player_affected";
-                default -> "";
             };
         }
 
         /**
-         * @return
+         * @param mode the chunk builder mode to select. Must be either "none", "nearby" or
+         *             "player_affected"
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -543,7 +577,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the selected smooth lightning mode.
          *
          * @since 1.8.4
          */
@@ -552,12 +586,12 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
                 case OFF -> "off";
                 case MIN -> "min";
                 case MAX -> "max";
-                default -> "";
             };
         }
 
         /**
-         * @return
+         * @param mode the smooth lightning mode to select. Must be either "off", "min" or "max"
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -572,7 +606,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current render distance in chunks.
          *
          * @since 1.8.4
          */
@@ -581,7 +615,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param radius the new render distance in chunks
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -591,7 +626,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current simulation distance in chunks.
          *
          * @since 1.8.4
          */
@@ -600,7 +635,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param radius the new simulation distance in chunks
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -610,7 +646,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current upper fps limit.
          *
          * @since 1.8.4
          */
@@ -619,7 +655,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param maxFps the new maximum fps limit
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -629,7 +666,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if vsync is enabled, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -638,7 +675,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to enable vsync or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -648,7 +686,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if view bobbing is enabled, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -657,7 +695,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to enable view bobbing or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -667,7 +706,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current gui scale
          *
          * @since 1.8.4
          */
@@ -676,17 +715,19 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param scale the gui scale to set. Must be 1, 2, 3 or 4
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
         public VideoOptionsHelper setGuiScale(int scale) {
             base.getGuiScale().setValue(scale);
+            mc.execute(mc::onResolutionChanged);
             return this;
         }
 
         /**
-         * @return
+         * @return the current attack indicator type.
          *
          * @since 1.8.4
          */
@@ -695,12 +736,12 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
                 case OFF -> "off";
                 case CROSSHAIR -> "crosshair";
                 case HOTBAR -> "hotbar";
-                default -> "";
             };
         }
 
         /**
-         * @return
+         * @param type the attack indicator type. Must be either "off", "crosshair", or "hotbar"
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -715,7 +756,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current gamma value.
          *
          * @since 1.8.4
          */
@@ -724,7 +765,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param gamma the new gamma value
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -733,7 +775,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current brightness value.
          *
          * @since 1.8.4
          */
@@ -742,17 +784,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param gamma the new brightness value
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
         public VideoOptionsHelper setBrightness(double gamma) {
-            base.getGamma().setValue(gamma);
+            getBase(base.getGamma()).forceSetValue(gamma);
             return this;
         }
 
         /**
-         * @return
+         * @return the current cloud rendering mode.
          *
          * @since 1.8.4
          */
@@ -761,12 +804,12 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
                 case OFF -> "off";
                 case FAST -> "fast";
                 case FANCY -> "fancy";
-                default -> "";
             };
         }
 
         /**
-         * @return
+         * @param mode the cloud rendering mode to select. Must be either "off", "fast" or "fancy"
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -781,7 +824,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if the game is running in fullscreen mode, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -790,17 +833,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param fullscreen whether to enable fullscreen mode or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
-        public VideoOptionsHelper setBrightness(boolean fullscreen) {
+        public VideoOptionsHelper setFullScreen(boolean fullscreen) {
             base.getFullscreen().setValue(fullscreen);
             return this;
         }
 
         /**
-         * @return
+         * @return the current particle rendering mode.
          *
          * @since 1.8.4
          */
@@ -809,12 +853,13 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
                 case MINIMAL -> "minimal";
                 case DECREASED -> "decreased";
                 case ALL -> "all";
-                default -> "";
             };
         }
 
         /**
-         * @return
+         * @param mode the particle rendering mode to select. Must be either "minimal", "decreased"
+         *             or "all"
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -829,7 +874,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current mip map level.
          *
          * @since 1.8.4
          */
@@ -838,7 +883,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new mip map level
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -848,7 +894,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if entity shadows should be rendered, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -857,7 +903,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to enable entity shadows or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -867,16 +914,17 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current distortion effect scale.
          *
          * @since 1.8.4
          */
-        public double getDistortionEffects() {
+        public double getDistortionEffect() {
             return base.getDistortionEffectScale().getValue();
         }
 
         /**
-         * @return
+         * @param val the new distortion effect scale
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -886,7 +934,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current entity render distance.
          *
          * @since 1.8.4
          */
@@ -895,7 +943,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new entity render distance
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -905,7 +954,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current fov value.
          *
          * @since 1.8.4
          */
@@ -914,17 +963,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new fov value
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
         public VideoOptionsHelper setFovEffects(double val) {
-            base.getFovEffectScale().setValue(val);
+            getBase(base.getFovEffectScale()).forceSetValue(val);
             return this;
         }
 
         /**
-         * @return
+         * @return {@code true} if the autosave indicator is enabled, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -933,7 +983,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -952,12 +1002,17 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
             parent = FullOptionsHelper;
         }
 
+        /**
+         * @return the parent options helper.
+         *
+         * @since 1.8.4
+         */
         public FullOptionsHelper getParent() {
             return parent;
         }
 
         /**
-         * @return
+         * @return the current master volume
          *
          * @since 1.8.4
          */
@@ -966,7 +1021,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param volume the new master volume
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -976,7 +1032,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current music volume.
          *
          * @since 1.8.4
          */
@@ -985,7 +1041,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param volume the new music volume
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -995,7 +1052,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current value of played recods.
          *
          * @since 1.8.4
          */
@@ -1004,7 +1061,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param volume the new volume for playing records
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1014,7 +1072,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current volume of the weather.
          *
          * @since 1.8.4
          */
@@ -1023,7 +1081,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param volume the new volume for the weather
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1033,7 +1092,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current volume of block related sounds.
          *
          * @since 1.8.4
          */
@@ -1042,7 +1101,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param volume the new volume for block sounds
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1052,7 +1112,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current volume of hostile mobs.
          *
          * @since 1.8.4
          */
@@ -1061,7 +1121,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param volume the new volume for hostile mobs
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1071,26 +1132,27 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current volume of neutral mobs.
          *
          * @since 1.8.4
          */
-        public double getFriendlyVolume() {
+        public double getNeutralVolume() {
             return base.getSoundVolume(SoundCategory.NEUTRAL);
         }
 
         /**
-         * @return
+         * @param volume the new volume for neutral mobs
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
-        public MusicOptionsHelper setFriendlyVolume(float volume) {
+        public MusicOptionsHelper setNeutralVolume(float volume) {
             base.setSoundVolume(SoundCategory.NEUTRAL, volume);
             return this;
         }
 
         /**
-         * @return
+         * @return the current player volume.
          *
          * @since 1.8.4
          */
@@ -1099,7 +1161,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param volume the new player volume
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1109,7 +1172,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current ambient volume
          *
          * @since 1.8.4
          */
@@ -1118,7 +1181,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param volume the new ambient volume
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1128,7 +1192,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current voice volume.
          *
          * @since 1.8.4
          */
@@ -1137,7 +1201,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1147,7 +1211,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param category the category to get the volume of
+         * @return the volume of the given sound category
          *
          * @since 1.8.4
          */
@@ -1156,7 +1221,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return a map of all sound categories and their volumes.
          *
          * @since 1.8.4
          */
@@ -1169,7 +1234,9 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param category the category to set the volume for
+         * @param volume   the new volume
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1179,7 +1246,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the currently selected sound device.
          *
          * @since 1.8.4
          */
@@ -1188,7 +1255,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param audioDevice the audio device to use
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1203,12 +1271,17 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
             return this;
         }
 
+        /**
+         * @return a list of all connected audio devices.
+         *
+         * @since 1.8.4
+         */
         public List<String> getAudioDevices() {
             return Stream.concat(Stream.of(""), MinecraftClient.getInstance().getSoundManager().getSoundDevices().stream()).toList();
         }
 
         /**
-         * @return
+         * @return {@code true} if subtitles should be shown, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -1217,7 +1290,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether subtitles should be shown or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1236,12 +1310,17 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
             parent = FullOptionsHelper;
         }
 
+        /**
+         * @return the parent options helper.
+         *
+         * @since 1.8.4
+         */
         public FullOptionsHelper getParent() {
             return parent;
         }
 
         /**
-         * @return
+         * @return the current mouse sensitivity.
          *
          * @since 1.8.4
          */
@@ -1250,17 +1329,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new mouse sensitivity
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
         public ControlOptionsHelper setMouseSensitivity(double val) {
-            base.getMouseSensitivity().setValue(val);
+            getBase(base.getMouseSensitivity()).forceSetValue(val);
             return this;
         }
 
         /**
-         * @return
+         * @return {@code true} if the mouse direction should be inverted.
          *
          * @since 1.8.4
          */
@@ -1269,7 +1349,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to invert the mouse direction or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1279,7 +1360,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current mouse wheel sensitivity.
          *
          * @since 1.8.4
          */
@@ -1288,17 +1369,21 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new mouse wheel sensitivity
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
         public ControlOptionsHelper setMouseWheelSensitivity(double val) {
-            base.getMouseWheelSensitivity().setValue(val);
+            getBase(base.getMouseWheelSensitivity()).forceSetValue(val);
             return this;
         }
 
         /**
-         * @return
+         * This option was introduced due to a bug on some systems where the mouse wheel would
+         * scroll too fast.
+         *
+         * @return {@code true} if discrete scrolling is enabled, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -1307,7 +1392,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to enable discrete scrolling or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1317,7 +1403,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if touchscreen mode is enabled, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -1326,7 +1412,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to enable touchscreen mode or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1336,7 +1423,10 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * Raw input is directly reading the mouse data, without any adjustments due to other
+         * programs or the operating system.
+         *
+         * @return {@code true} if raw mouse input is enabled, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -1345,7 +1435,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to enable raw mouse input or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1355,7 +1446,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if auto jump is enabled, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -1364,7 +1455,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to enable auto jump or not or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1374,16 +1466,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if the toggle functionality for sneaking is enabled, {@code false}
+         *         otherwise.
          *
          * @since 1.8.4
          */
-        public boolean isSneakToggled() {
+        public boolean isSneakTogglingEnabled() {
             return base.getSneakToggled().getValue();
         }
 
         /**
-         * @return
+         * @param val whether to enable or disable the toggle functionality for sneaking
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1393,16 +1487,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if the toggle functionality for sprinting is enabled, {@code false}
+         *         otherwise.
          *
          * @since 1.8.4
          */
-        public boolean isSprintToggled() {
+        public boolean isSprintTogglingEnabled() {
             return base.getSprintToggled().getValue();
         }
 
         /**
-         * @return
+         * @param val whether to enable or disable the toggle functionality for sprinting
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1412,7 +1508,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return an array of all raw minecraft keybindings
          *
          * @since 1.8.4
          */
@@ -1421,7 +1517,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return a list of all keybinding catehories.
          *
          * @since 1.8.4
          */
@@ -1430,7 +1526,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return a list of all key names.
          *
          * @since 1.8.4
          */
@@ -1439,7 +1535,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return a map of all keybindings and their bound key.
          *
          * @since 1.8.4
          */
@@ -1453,7 +1549,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param category the category to get keybindings from
+         * @return a map of all keybindings and their bound key in the specified category.
          *
          * @since 1.8.4
          */
@@ -1462,7 +1559,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return a map of all keybinding categories, containing a map of all keybindings in that
+         *         category and their bound key.
          *
          * @since 1.8.4
          */
@@ -1493,12 +1591,17 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
             parent = FullOptionsHelper;
         }
 
+        /**
+         * @return the parent options helper.
+         *
+         * @since 1.8.4
+         */
         public FullOptionsHelper getParent() {
             return parent;
         }
 
         /**
-         * @return
+         * @return the current chat visibility mode
          *
          * @since 1.8.4
          */
@@ -1508,7 +1611,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param mode the new chat visibility mode. Must be "FULL", "SYSTEM" or "HIDDEN
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1523,7 +1627,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if messages can use color codes, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -1532,17 +1636,19 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to allow color codes in messages or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
-        public ChatOptionsHelper setChatVisibility(boolean val) {
+        public ChatOptionsHelper setShowColors(boolean val) {
             base.getChatColors().setValue(val);
             return this;
         }
 
         /**
-         * @return
+         * @return {@code true} if it's allowed to open web links from chat, {@code false}
+         *         otherwise.
          *
          * @since 1.8.4
          */
@@ -1551,7 +1657,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to allow opening web links from chat or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1561,7 +1668,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if a warning prompt before opening links should be shown,
+         *         {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -1570,7 +1678,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to show warning prompts before opening links or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1580,7 +1689,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current chat opacity.
          *
          * @since 1.8.4
          */
@@ -1589,7 +1698,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new chat opacity
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1599,17 +1709,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new background opacity for text
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
         public ChatOptionsHelper setTextBackgroundOpacity(double val) {
-            base.getTextBackgroundOpacity().setValue(val);
+            getBase(base.getTextBackgroundOpacity()).forceSetValue(val);
             return this;
         }
 
         /**
-         * @return
+         * @return the current background opacity of text.
          *
          * @since 1.8.4
          */
@@ -1618,7 +1729,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current text size.
          *
          * @since 1.8.4
          */
@@ -1627,17 +1738,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new text size
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
         public ChatOptionsHelper setTextSize(double val) {
-            base.getChatScale().setValue(val);
+            getBase(base.getChatScale()).forceSetValue(val);
             return this;
         }
 
         /**
-         * @return
+         * @return the current chat line spacing.
          *
          * @since 1.8.4
          */
@@ -1646,17 +1758,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new chat line spacing
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
         public ChatOptionsHelper setChatLineSpacing(double val) {
-            base.getChatLineSpacing().setValue(val);
+            getBase(base.getChatLineSpacing()).forceSetValue(val);
             return this;
         }
 
         /**
-         * @return
+         * @return the current chat delay in seconds.
          *
          * @since 1.8.4
          */
@@ -1665,7 +1778,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new chat delay in seconds
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1675,7 +1789,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current chat width.
          *
          * @since 1.8.4
          */
@@ -1684,7 +1798,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new chat width
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1694,7 +1809,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the focused chat height.
          *
          * @since 1.8.4
          */
@@ -1703,7 +1818,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new focused chat height
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1713,7 +1829,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the unfocused chat height.
          *
          * @since 1.8.4
          */
@@ -1722,17 +1838,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new unfocused chat height
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
         public ChatOptionsHelper setChatUnfocusedHeight(double val) {
-            base.getChatHeightUnfocused().setValue(val);
+            getBase(base.getChatHeightUnfocused()).forceSetValue(val);
             return this;
         }
 
         /**
-         * @return
+         * @return the current narrator mode
          *
          * @since 1.8.4
          */
@@ -1742,7 +1859,9 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param mode the mode to set the narrator to. Must be either "OFF", "ALL", "CHAT", or
+         *             "SYSTEM"
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1758,7 +1877,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if command suggestions are enabled
          *
          * @since 1.8.4
          */
@@ -1767,7 +1886,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to enable command suggestions or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1777,7 +1897,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if messages from blocked users are hidden.
          *
          * @since 1.8.4
          */
@@ -1786,7 +1906,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to hide messages of blocked users or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1796,7 +1917,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if reduced debug info is enabled, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -1805,7 +1926,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to enable reduced debug info or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1824,12 +1946,17 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
             parent = FullOptionsHelper;
         }
 
+        /**
+         * @return the parent options helper.
+         *
+         * @since 1.8.4
+         */
         public FullOptionsHelper getParent() {
             return parent;
         }
 
         /**
-         * @return
+         * @return the current narrator mode.
          *
          * @since 1.8.4
          */
@@ -1839,7 +1966,9 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param mode the mode to set the narrator to. Must be either "OFF", "ALL", "CHAT", or
+         *             "SYSTEM"
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1855,7 +1984,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if subtitles are enabled.
          *
          * @since 1.8.4
          */
@@ -1864,7 +1993,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to show subtitles or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1874,7 +2004,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new opacity for the text background
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1884,7 +2015,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the opacity of the text background.
          *
          * @since 1.8.4
          */
@@ -1902,7 +2033,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1912,7 +2044,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current chat opacity.
          *
          * @since 1.8.4
          */
@@ -1921,7 +2053,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new chat opacity
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1931,7 +2064,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current chat line spacing.
          *
          * @since 1.8.4
          */
@@ -1940,17 +2073,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new chat line spacing
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
         public AccessibilityOptionsHelper setChatLineSpacing(double val) {
-            base.getChatLineSpacing().setValue(val);
+            getBase(base.getChatLineSpacing()).forceSetValue(val);
             return this;
         }
 
         /**
-         * @return
+         * @return the current chat delay in seconds.
          *
          * @since 1.8.4
          */
@@ -1959,17 +2093,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new chat delay in seconds
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
         public AccessibilityOptionsHelper setChatDelay(double val) {
-            base.getChatDelay().setValue(val);
+            getBase(base.getChatDelay()).forceSetValue(val);
             return this;
         }
 
         /**
-         * @return
+         * @return {@code true} if auto jump is enabled, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -1978,7 +2113,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val whether to enable auto jump or not or not
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -1988,16 +2124,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if the toggle functionality for sneaking is enabled, {@code false}
+         *         otherwise.
          *
          * @since 1.8.4
          */
-        public boolean isSneakToggled() {
+        public boolean isSneakTogglingEnabled() {
             return base.getSneakToggled().getValue();
         }
 
         /**
-         * @return
+         * @param val whether to enable or disable the toggle functionality for sneaking
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -2007,16 +2145,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if the toggle functionality for sprinting is enabled, {@code false}
+         *         otherwise.
          *
          * @since 1.8.4
          */
-        public boolean isSprintToggled() {
+        public boolean isSprintTogglingEnabled() {
             return base.getSprintToggled().getValue();
         }
 
         /**
-         * @return
+         * @param val whether to enable or disable the toggle functionality for sprinting
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -2026,7 +2166,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return the current distortion effect scale.
          *
          * @since 1.8.4
          */
@@ -2035,17 +2175,18 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new distortion effect scale
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
         public AccessibilityOptionsHelper setDistortionEffect(double val) {
-            base.getDistortionEffectScale().setValue(val);
+            getBase(base.getDistortionEffectScale()).forceSetValue(val);
             return this;
         }
 
         /**
-         * @return
+         * @return the current fov effect scale.
          *
          * @since 1.8.4
          */
@@ -2054,7 +2195,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @param val the new fov effect scale
+         * @return self for chaining.
          *
          * @since 1.8.4
          */
@@ -2064,7 +2206,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return
+         * @return {@code true} if the monochrome logo is enabled, {@code false} otherwise.
          *
          * @since 1.8.4
          */
@@ -2073,7 +2215,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @param val 
+         * @param val whether to enable the monochrome logo or not
          * @return the current helper instance for chaining.
          *
          * @since 1.8.4
@@ -2094,7 +2236,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
 
         /**
          * @param val the new fov value
-         * @return the current helper instance for chaining.
+         * @return self for chaining.
          *
          * @since 1.8.4
          */

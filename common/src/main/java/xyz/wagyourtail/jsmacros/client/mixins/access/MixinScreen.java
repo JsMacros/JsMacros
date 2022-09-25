@@ -574,9 +574,14 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int textureStartX, int textureStartY, String texture, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback) {
-        return addTexturedButton(x, y, width, height, 0, textureStartX, textureStartY, 0, texture, 256, 256, callback);
+        return addTexturedButton(x, y, width, height, 0, textureStartX, textureStartY, height, texture, 256, 256, callback);
     }
 
+    @Override
+    public ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int zIndex, int textureStartX, int textureStartY, String texture, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback) {
+        return addTexturedButton(x, y, width, height, zIndex, textureStartX, textureStartY, height, texture, 256, 256, callback);
+    }
+    
     @Override
     public ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int textureStartX, int textureStartY, int hoverOffset, String texture, int textureWidth, int textureHeight, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback) {
         return addTexturedButton(x, y, width, height, 0, textureStartX, textureStartY, hoverOffset, texture, textureWidth, textureHeight, callback);

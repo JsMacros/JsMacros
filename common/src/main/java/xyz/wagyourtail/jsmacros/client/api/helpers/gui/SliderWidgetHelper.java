@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.gui;
 
+import net.minecraft.util.math.MathHelper;
+
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -33,7 +35,7 @@ public class SliderWidgetHelper extends ButtonWidgetHelper<Slider> {
 
     /**
      * @param value the new value
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -53,13 +55,18 @@ public class SliderWidgetHelper extends ButtonWidgetHelper<Slider> {
 
     /**
      * @param steps the amount of steps
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
     public SliderWidgetHelper setSteps(int steps) {
         base.setSteps(steps);
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("SliderWidgetHelper:{\"message\": \"%s\", \"value\": %f, \"steps\": %d}", base.getMessage().getString(), getValue(), getSteps());
     }
 
     public static class SliderBuilder extends AbstractWidgetBuilder<Slider, SliderWidgetHelper> {
@@ -72,28 +79,59 @@ public class SliderWidgetHelper extends ButtonWidgetHelper<Slider> {
             super(screen);
         }
 
+        /**
+         * @return the amount of steps of this slider.
+         *
+         * @since 1.8.4
+         */
         public int getSteps() {
             return steps;
         }
 
+        /**
+         * @param steps the amount of steps for the slider. Must be greater or equal to 2
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public SliderBuilder steps(int steps) {
-            this.steps = steps;
+            this.steps = MathHelper.clamp(steps, 2, Integer.MAX_VALUE);
             return this;
         }
 
+        /**
+         * @return the initial value of the slider.
+         *
+         * @since 1.8.4
+         */
         public int getValue() {
             return value;
         }
 
+        /**
+         * @param value the initial value of the slider. Must be between 0 and steps - 1
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public SliderBuilder initially(int value) {
-            this.value = value;
+            this.value = MathHelper.clamp(value, 0, steps - 1);
             return this;
         }
 
+        /**
+         * @return the change listener of the slider.
+         *
+         * @since 1.8.4
+         */
         public MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> getAction() {
             return action;
         }
 
+        /**
+         * @param action the change listener for the slider
+         * @return self for chaining.
+         */
         public SliderBuilder action(MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> action) {
             this.action = action;
             return this;
@@ -114,11 +152,6 @@ public class SliderWidgetHelper extends ButtonWidgetHelper<Slider> {
             b.set(new SliderWidgetHelper(slider, getZIndex()));
             return b.get();
         }
-    }
-
-    @Override
-    public String toString() {
-        return String.format("SliderWidgetHelper:{\"message\": \"%s\", \"value\": %f, \"steps\": %d}", base.getMessage().getString(), getValue(), getSteps());
     }
 
 }

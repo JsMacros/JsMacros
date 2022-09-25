@@ -311,6 +311,23 @@ public class EditorScreen extends BaseScreen {
             cutToClipboard();
             return true;
         }
+        if (Screen.hasControlDown()) {
+            //fix qwerty / qwertz layout
+            if ("z".equals(GLFW.glfwGetKeyName(keyCode, scanCode))) {
+                int i = Screen.hasShiftDown() ? history.redo() : history.undo();
+                if (i != -1) {
+                    compileRenderedText();
+                }
+                return true;
+            } else if ("y".equals(GLFW.glfwGetKeyName(keyCode, scanCode))) {
+                int i = history.redo();
+                if (i != -1) {
+                    compileRenderedText();
+                }
+                return true;
+            }
+        }
+
         String startSpaces;
         int index;
         double currentPage;
@@ -472,30 +489,6 @@ public class EditorScreen extends BaseScreen {
                     }
                 }
                 scrollToCursor();
-                return true;
-            case GLFW.GLFW_KEY_Z:
-                if (Screen.hasControlDown()) {
-                    if (Screen.hasShiftDown()) {
-                        int i = history.redo();
-                        
-                        if (i != -1) {
-                            compileRenderedText();
-                        }
-                    } else {
-                        int i = history.undo();
-                        
-                        if (i != -1) {
-                            compileRenderedText();
-                        }
-                    }
-                }
-                return true;
-            case GLFW.GLFW_KEY_Y:
-                int i = history.redo();
-                
-                if (i != -1) {
-                    compileRenderedText();
-                }
                 return true;
             case GLFW.GLFW_KEY_S:
                 if (Screen.hasControlDown()) {

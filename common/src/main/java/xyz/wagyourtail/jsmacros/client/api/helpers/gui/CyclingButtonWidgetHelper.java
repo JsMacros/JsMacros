@@ -50,7 +50,7 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
 
     /**
      * @param amount the amount to cycle by
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -60,7 +60,7 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
     }
 
     /**
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -69,12 +69,17 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
     }
 
     /**
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
     public CyclingButtonWidgetHelper<T> backward() {
         return cycle(-1);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("CyclingButtonWidgetHelper:{\"value\": \"%s\"}", ((ICyclingButtonWidget) this).jsmacros_getTextValue());
     }
 
     public static class CyclicButtonBuilder<T> extends AbstractWidgetBuilder<CyclingButtonWidget<T>, CyclingButtonWidgetHelper<T>> {
@@ -93,83 +98,217 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
             this.valueToText = valueToText;
         }
 
+        /**
+         * @return the initial value of the slider.
+         *
+         * @since 1.8.4
+         */
         public T getInitialValue() {
             return value;
         }
 
+        /**
+         * @param value the initial value of the slider
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public CyclicButtonBuilder<T> initially(T value) {
             this.value = value;
             return this;
         }
 
-        public TextHelper getMessage() {
+        /**
+         * The option text is a prefix of all values, seperated by a colon.
+         *
+         * @return the option text of the button or an empty text if it is omitted.
+         *
+         * @since 1.8.4
+         */
+        public TextHelper getOption() {
             return new TextHelper(optionText);
         }
 
-        public CyclicButtonBuilder<T> option(String message) {
-            optionText = Text.literal(message);
+        /**
+         * @param option the option text of the button
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public CyclicButtonBuilder<T> option(String option) {
+            if (option != null) {
+                optionText = Text.literal(option);
+            }
             return this;
         }
 
-        public CyclicButtonBuilder<T> option(TextHelper message) {
-            optionText = message.getRaw();
+        /**
+         * @param option the option text of the button
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public CyclicButtonBuilder<T> option(TextHelper option) {
+            if (option != null) {
+                optionText = option.getRaw();
+            }
             return this;
         }
 
+        /**
+         * @return the action to run when the button is pressed.
+         *
+         * @since 1.8.4
+         */
         public MethodWrapper<CyclingButtonWidgetHelper<T>, IScreen, Object, ?> getAction() {
             return action;
         }
 
+        /**
+         * @param action the action to run when the button is pressed
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public CyclicButtonBuilder<T> action(MethodWrapper<CyclingButtonWidgetHelper<T>, IScreen, Object, ?> action) {
             this.action = action;
             return this;
         }
 
+        /**
+         * @return the function to convert a value to a text.
+         *
+         * @since 1.8.4
+         */
         public MethodWrapper<T, ?, TextHelper, ?> getValueToText() {
             return valueToText;
         }
 
+        /**
+         * @param valueToText the function to convert a value to a text
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public CyclicButtonBuilder<T> valueToText(MethodWrapper<T, ?, TextHelper, ?> valueToText) {
-            this.valueToText = valueToText;
+            if (valueToText != null) {
+                this.valueToText = valueToText;
+            }
             return this;
         }
 
+        /**
+         * The button will normally cycle through the default values, but if the alternate toggle is
+         * true, it will cycle through the alternate values.
+         *
+         * @return the list of all default values.
+         *
+         * @since 1.8.4
+         */
         public List<T> getDefaultValues() {
             return defaultValues;
         }
 
+        /**
+         * The button will normally cycle through the default values, but if the alternate toggle is
+         * true, it will cycle through the alternate values.
+         *
+         * @return the list of all alternate values.
+         *
+         * @since 1.8.4
+         */
         public List<T> getAlternateValues() {
             return alternateValues;
         }
 
+        /**
+         * @param values the default values of the button
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         @SafeVarargs
         public final CyclicButtonBuilder<T> values(T... values) {
             this.defaultValues = List.of(values);
             return this;
         }
 
+        /**
+         * @param values the alternate values of the button
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        @SafeVarargs
+        public final CyclicButtonBuilder<T> alternatives(T... values) {
+            this.alternateValues = List.of(values);
+            return this;
+        }
+
+        /**
+         * @param defaults     the default values of the button
+         * @param alternatives the alternate values of the button
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public CyclicButtonBuilder<T> values(T[] defaults, T[] alternatives) {
             return values(List.of(defaults), List.of(alternatives));
         }
 
+        /**
+         * @param defaults     the default values of the button
+         * @param alternatives the alternate values of the button
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public CyclicButtonBuilder<T> values(List<T> defaults, List<T> alternatives) {
             this.defaultValues = defaults;
             this.alternateValues = alternatives;
             return this;
         }
 
+        /**
+         * @return the toggle function to determine if the button should cycle through the default
+         *         or the alternate values.
+         *
+         * @since 1.8.4
+         */
         public MethodWrapper<?, ?, Boolean, ?> getAlternateToggle() {
             return alternateToggle;
         }
 
-        public void alternateToggle(MethodWrapper<?, ?, Boolean, ?> alternateToggle) {
-            this.alternateToggle = alternateToggle;
+        /**
+         * @param alternateToggle the toggle function to determine if the button should cycle
+         *                        through the default or the alternate values
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public CyclicButtonBuilder<T> alternateToggle(MethodWrapper<?, ?, Boolean, ?> alternateToggle) {
+            if (alternateToggle != null) {
+                this.alternateToggle = alternateToggle;
+            }
+            return this;
         }
 
+        /**
+         * @return {@code true} if the prefix option text should be omitted, {@code false}
+         *         otherwise.
+         *
+         * @since 1.8.4
+         */
         public boolean isOptionTextOmitted() {
             return optionTextOmitted;
         }
 
+        /**
+         * @param optionTextOmitted whether the prefix option text should be omitted or not
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public CyclicButtonBuilder<T> omitTextOption(boolean optionTextOmitted) {
             this.optionTextOmitted = optionTextOmitted;
             return this;
@@ -202,9 +341,4 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
         }
     }
 
-    @Override
-    public String toString() {
-        return String.format("CyclingButtonWidgetHelper:{\"value\": \"%s\"}", ((ICyclingButtonWidget) this).jsmacros_getTextValue());
-    }
-    
 }

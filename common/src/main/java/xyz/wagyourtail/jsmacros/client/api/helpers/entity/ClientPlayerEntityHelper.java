@@ -43,9 +43,11 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * Sets the player rotation along the given axis and keeps the other axis the same.
      *
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void lookAt(String direction) {
+    public ClientPlayerEntityHelper<T> lookAt(String direction) {
         Direction dir = Direction.byName(direction.toLowerCase(Locale.ROOT));
         double yaw = getYaw();
         double pitch = getPitch();
@@ -54,7 +56,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         } else {
             pitch = dir == Direction.UP ? -90 : 90;
         }
-        lookAt(yaw, pitch);
+        return lookAt(yaw, pitch);
     }
     
     /**
@@ -130,7 +132,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param y         the y coordinate to attack
      * @param z         the z coordinate to attack
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -156,7 +158,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param z         the z coordinate to attack
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
      * @param await     whether to wait for the attack to finish
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -276,7 +278,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param y         the y coordinate to interact
      * @param z         the z coordinate to interact
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -302,7 +304,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param z         the z coordinate to interact
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
      * @param await     whether to wait for the interaction to complete
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */
@@ -477,7 +479,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
     
     /**
-     * @return this helper for chaining.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */

@@ -44,6 +44,11 @@ public class CheckBoxWidgetHelper extends ButtonWidgetHelper<CheckBox> {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return String.format("CheckBoxWidgetHelper:{\"message\": \"%s\", \"checked\": %b}", base.getMessage().getString(), isChecked());
+    }
+
     public static class CheckBoxBuilder extends AbstractWidgetBuilder<CheckBox, CheckBoxWidgetHelper> {
 
         private boolean checked = false;
@@ -53,19 +58,41 @@ public class CheckBoxWidgetHelper extends ButtonWidgetHelper<CheckBox> {
             super(screen);
         }
 
+        /**
+         * @return {@code true} if the checkbox is initially checked, {@code false} otherwise.
+         *
+         * @since 1.8.4
+         */
         public boolean isChecked() {
             return checked;
         }
 
+        /**
+         * @param checked whether the checkbox is initially checked or not
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public CheckBoxBuilder checked(boolean checked) {
             this.checked = checked;
             return this;
         }
 
+        /**
+         * @return the action to run when the button is pressed.
+         *
+         * @since 1.8.4
+         */
         public MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> getAction() {
             return action;
         }
 
+        /**
+         * @param action the action to run when the button is pressed
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public CheckBoxBuilder action(MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> action) {
             this.action = action;
             return this;
@@ -86,11 +113,6 @@ public class CheckBoxWidgetHelper extends ButtonWidgetHelper<CheckBox> {
             b.set(new CheckBoxWidgetHelper(checkBox, getZIndex()));
             return b.get();
         }
-    }
-
-    @Override
-    public String toString() {
-        return String.format("CheckBoxWidgetHelper:{\"message\": \"%s\", \"checked\": %b}", base.getMessage().getString(), isChecked());
     }
 
 }

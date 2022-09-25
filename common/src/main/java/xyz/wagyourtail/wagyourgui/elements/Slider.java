@@ -29,10 +29,7 @@ public class Slider extends ClickableWidget {
     }
 
     public Slider(int x, int y, int width, int height, Text text, double value, Consumer<Slider> action) {
-        super(x, y, width, height, text);
-        this.value = value;
-        this.action = action;
-        this.steps = Integer.MAX_VALUE;
+        this(x, y, width, height, text, value, action, 2);
     }
 
     @Override
@@ -57,11 +54,7 @@ public class Slider extends ClickableWidget {
     private void applyValue() {
         action.accept(this);
     }
-
-    public void setMessage(String message) {
-        setMessage(Text.literal(message));
-    }
-
+    
     public double getValue() {
         return value;
     }
@@ -110,6 +103,10 @@ public class Slider extends ClickableWidget {
     protected void onDrag(double mouseX, double mouseY, double deltaX, double deltaY) {
         setValueFromMouse(mouseX);
         super.onDrag(mouseX, mouseY, deltaX, deltaY);
+    }
+
+    public void setMessage(String message) {
+        setMessage(Text.literal(message));
     }
 
     @Override

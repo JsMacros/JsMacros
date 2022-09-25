@@ -181,7 +181,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     }
 
     /**
-     * @param draw2d
+     * @param draw2d the draw2d to check for cyclic dependencies
      * @return {@code true} if adding the child to the parent would result in a cyclic dependency.
      *
      * @since 1.8.4
