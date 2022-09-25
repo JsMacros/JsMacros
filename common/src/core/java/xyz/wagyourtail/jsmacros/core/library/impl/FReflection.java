@@ -1,7 +1,9 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
+import com.google.common.collect.ImmutableList;
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
+import org.joor.Reflect;
 import xyz.wagyourtail.Util;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.classes.Mappings;
@@ -38,6 +40,7 @@ import java.util.*;
  @Library("Reflection")
  @SuppressWarnings("unused")
 public class FReflection extends PerExecLibrary {
+    private static final Map<String, List<Class<?>>> JAVA_CLASS_CACHE = new HashMap<>();
     public static final CombinedVariableClassLoader classLoader = new CombinedVariableClassLoader(FReflection.class.getClassLoader());
     private static Mappings remapper = null;
 
@@ -341,7 +344,65 @@ public class FReflection extends PerExecLibrary {
     public LibraryBuilder createLibraryBuilder(String name, boolean perExec, String... acceptedLangs) throws NotFoundException, CannotCompileException {
         return new LibraryBuilder(name, perExec, acceptedLangs);
     }
+
+    /**
+     * To compile a java class, the game must be run with the java development kit (JDK) and not the
+     * default java runtime environment (JRE). To change the used java version, you must first
+     * download the correct JDK for the Minecraft version and then go to the profile options and
+     * change the java executable to the one in the JDK folder. The file should be named "javaw.exe"
+     * and be in a folder called "bin".
+     * <p>
+     * Compiled classes can't be accessed from any guest language, but must be either stored in
+     * GlobalVars or gotten from this library. When creating a new instance of a compiled class,
+     * it's important to be sure which version of the class you are using.
+     *
+     * @param className the fully qualified name of the class, including the package.
+     * @param code      the java code to compile
+     * @return the compiled class.
+     *
+     * @since 1.8.4
+     */
+    public Class<?> compileJavaClass(String className, String code) {
+        Class<?> clazz = Reflect.compile(className, code).type();
+        JAVA_CLASS_CACHE.putIfAbsent(className, new ArrayList<>());
+        JAVA_CLASS_CACHE.get(className).add(clazz);
+        return clazz;
+    }
+
+    /**
+     * @param className the fully qualified name of the class, including the package
+     * @return the latest compiled class or {@code null} if it doesn't exist.
+     *
+     * @since 1.8.4
+     */
+    public Class<?> getCompiledJavaClass(String className) {
+        List<Class<?>> versions = JAVA_CLASS_CACHE.get(className);
+        return versions == null ? null : versions.get(versions.size() - 1);
+    }
+
+    /**
+     * @param className the fully qualified name of the class, including the package
+     * @return all compiled versions of the class.
+     *
+     * @since 1.8.4
+     */
+    public List<Class<?>> getAllCompiledJavaClassVersions(String className) {
+        List<Class<?>> versions = JAVA_CLASS_CACHE.get(className);
+        return versions == null ? List.of() : ImmutableList.copyOf(versions);
+    }
     
+    /**
+     * See <a href="https://github.com/jOOQ/jOOR">jOOR Github</a> for more information.
+     *
+     * @param obj the object to wrap
+     * @return a wrapper for the passed object to do java reflection.
+     *
+     * @since 1.8.4
+     */
+    public Reflect getReflect(Object obj) {
+        return Reflect.on(obj);
+    }
+
     /**
      * Loads a jar file to be accessible with this library.
      *

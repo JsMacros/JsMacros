@@ -39,6 +39,7 @@ dependencies {
     }
     shadowCommon "com.neovisionaries:nv-websocket-client:2.10"
     shadowCommon "org.javassist:javassist:3.28.0-GA"
+    shadowCommon "org.jooq:joor:0.9.14"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
 
