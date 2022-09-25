@@ -31,7 +31,7 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
     }
 
     /**
-     * @return the width of the widget
+     * @return the width of the widget.
      *
      * @since 1.8.4
      */
@@ -51,7 +51,7 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
     }
 
     /**
-     * @return the height of the widget
+     * @return the height of the widget.
      *
      * @since 1.8.4
      */

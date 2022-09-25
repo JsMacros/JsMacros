@@ -125,7 +125,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
 
     /**
      * @param index the index to save the hotbar to, from 0 to 8
-     * @return a list of all saved items in the saved hotbar
+     * @return a list of all items in the saved hotbar.
      *
      * @since 1.8.4
      */

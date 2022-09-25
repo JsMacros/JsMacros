@@ -322,7 +322,7 @@ public class FUtil extends BaseLibrary {
     }
 
     /**
-     * @return the text from the clipboard
+     * @return the text from the clipboard.
      *
      * @since 1.8.4
      */
@@ -390,7 +390,7 @@ public class FUtil extends BaseLibrary {
     /**
      * Returns a {@link SplittableRandom}.
      *
-     * @return a SplittableRandom
+     * @return a SplittableRandom.
      *
      * @since 1.8.4
      */
@@ -403,7 +403,7 @@ public class FUtil extends BaseLibrary {
      * values at all times.
      *
      * @param seed the seed
-     * @return a SplittableRandom
+     * @return a SplittableRandom.
      *
      * @since 1.8.4
      */

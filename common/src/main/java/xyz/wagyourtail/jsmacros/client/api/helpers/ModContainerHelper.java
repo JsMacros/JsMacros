@@ -16,28 +16,28 @@ public abstract class ModContainerHelper<T> extends BaseHelper<T> {
     }
 
     /**
-     * @return the mod id.
+     * @return the mod's id.
      *
      * @since 1.8.4
      */
     public abstract String getId();
 
     /**
-     * @return the mod name.
+     * @return the mod's name.
      *
      * @since 1.8.4
      */
     public abstract String getName();
 
     /**
-     * @return the mod description.
+     * @return the mod's description.
      *
      * @since 1.8.4
      */
     public abstract String getDescription();
 
     /**
-     * @return the mod version.
+     * @return the mod's version.
      *
      * @since 1.8.4
      */

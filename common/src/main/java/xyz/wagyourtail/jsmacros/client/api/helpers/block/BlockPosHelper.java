@@ -194,6 +194,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
+     * @param entity the entity to get the distance to
      * @return the distance of this position to the given entity.
      *
      * @since 1.8.4
@@ -203,6 +204,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
+     * @param pos the position to get the distance to
      * @return the distance of this position to the given position.
      *
      * @since 1.8.4
@@ -212,6 +214,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
+     * @param pos the position to get the distance to
      * @return the distance of this position to the given position.
      *
      * @since 1.8.4
@@ -221,6 +224,9 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
+     * @param x the x coordinate to get the distance to
+     * @param y the y coordinate to get the distance to
+     * @param z the z coordinate to get the distance to
      * @return the distance of this position to the given position.
      *
      * @since 1.8.4

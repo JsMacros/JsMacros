@@ -24,6 +24,6 @@ public class EventStatusEffectUpdate implements BaseEvent {
 
     @Override
     public String toString() {
-        return String.format("%s:{\"effect\": \"%s\", strength: %d, \"added\": %b}", this.getEventName(), effect.getId(), effect.getStrength(), added);
+        return String.format("%s:{\"effect\": \"%s\", strength: %d, \"change\": %s}", this.getEventName(), effect.getId(), effect.getStrength(), added ? "added" : "removed");
     }
 }

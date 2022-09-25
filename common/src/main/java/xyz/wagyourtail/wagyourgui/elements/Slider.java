@@ -8,6 +8,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 
@@ -34,12 +35,11 @@ public class Slider extends ClickableWidget {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        boolean bl = keyCode == 263;
-        if (bl || keyCode == 262) {
-            float f = bl ? -1.0F : 1.0F;
-            setValue(value + (double) (f / steps));
+        if (keyCode == GLFW.GLFW_KEY_LEFT) {
+            setValue(value + (double) (1 / steps));
+        } else if (keyCode == GLFW.GLFW_KEY_RIGHT) {
+            setValue(value - (double) (1 / steps));
         }
-
         return false;
     }
 

@@ -44,7 +44,11 @@ public class FabricModContainer extends ModContainerHelper<ModContainer> {
 
     @Override
     public String getEnv() {
-        return metadata.getEnvironment().name();
+        return switch (metadata.getEnvironment()) {
+            case CLIENT -> "CLIENT";
+            case SERVER -> "SERVER";
+            case UNIVERSAL -> "BOTH";
+        };
     }
 
     @Override

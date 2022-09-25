@@ -58,11 +58,6 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.DirectionHelper;
 @SuppressWarnings("unused")
 public class UniversalBlockStateHelper extends BlockStateHelper {
 
-    /**
-     * Currently missing RAIL_SHAPE, RAIL_SHAPE_STRAIGHT
-     *
-     * @param base
-     */
     public UniversalBlockStateHelper(BlockState base) {
         super(base);
     }

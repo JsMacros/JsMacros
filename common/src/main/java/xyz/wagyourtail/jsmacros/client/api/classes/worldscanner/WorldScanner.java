@@ -38,6 +38,7 @@ import java.util.stream.Stream;
  * @author Etheradon
  * @since 1.6.5
  */
+@SuppressWarnings("unused")
 public class WorldScanner {
 
     private static final MinecraftClient mc = MinecraftClient.getInstance();
@@ -53,9 +54,9 @@ public class WorldScanner {
      * Creates a new World scanner with for the given world. It accepts two boolean functions, 
      * one for {@link BlockHelper} and the other for {@link BlockStateHelper}.
      *
-     * @param world
-     * @param blockFilter
-     * @param stateFilter
+     * @param world       the world to scan
+     * @param blockFilter a filter method for the blocks
+     * @param stateFilter a filter method for the block states
      */
     public WorldScanner(World world, Function<BlockHelper, Boolean> blockFilter, Function<BlockStateHelper, Boolean> stateFilter) {
         this.world = world;
@@ -67,10 +68,10 @@ public class WorldScanner {
     /**
      * Gets a list of all chunks in the given range around the center chunk.
      *
-     * @param centerX
-     * @param centerZ
-     * @param chunkrange
-     * @return
+     * @param centerX    the x coordinate of the center chunk to scan around
+     * @param centerZ    the z coordinate of the center chunk to scan around
+     * @param chunkrange the range to scan around the center chunk
+     * @return a list of all matching block positions.
      */
     public List<ChunkPos> getChunkRange(int centerX, int centerZ, int chunkrange) {
         List<ChunkPos> chunks = new ArrayList<>();
@@ -87,12 +88,12 @@ public class WorldScanner {
      * This will scan in a square with length 2*range + 1. So range = 0 for example will only scan the chunk the player
      * is standing in, while range = 1 will scan in a 3x3 area.
      *
-     * @param range
-     * @return
+     * @param chunkRange the range to scan around the center chunk
+     * @return a list of all matching block positions.
      */
-    public List<PositionCommon.Pos3D> scanAroundPlayer(int range) {
+    public List<PositionCommon.Pos3D> scanAroundPlayer(int chunkRange) {
         assert mc.player != null;
-        return scanChunkRange(mc.player.getChunkPos().x, mc.player.getChunkPos().z, range);
+        return scanChunkRange(mc.player.getChunkPos().x, mc.player.getChunkPos().z, chunkRange);
     }
 
     /**
@@ -100,10 +101,10 @@ public class WorldScanner {
      * This will scan in a square with length 2*range + 1. So range = 0 for example will only scan the specified chunk,
      * while range = 1 will scan in a 3x3 area.
      *
-     * @param centerX
-     * @param centerZ
-     * @param chunkrange
-     * @return the list
+     * @param centerX    the x coordinate of the center chunk to scan around
+     * @param centerZ    the z coordinate of the center chunk to scan around
+     * @param chunkrange the range to scan around the center chunk
+     * @return a list of all matching block positions.
      */
     public List<PositionCommon.Pos3D> scanChunkRange(int centerX, int centerZ, int chunkrange) {
         assert world != null;
@@ -141,33 +142,32 @@ public class WorldScanner {
     }
 
     /**
-     * Gets the amount of all blocks matching the criteria inside the chunk. 
+     * Gets the amount of all blocks matching the criteria inside the chunk.
      *
-     * @param chunkX
-     * @param chunkZ
+     * @param chunkX      the x coordinate of the chunk to scan
+     * @param chunkZ      the z coordinate of the chunk to scan
      * @param ignoreState whether multiple states should be combined to a single block
-     * @return
+     * @return a map of all blocks inside the specified chunk and their respective count.
      */
     public Map<String, Integer> getBlocksInChunk(int chunkX, int chunkZ, boolean ignoreState) {
         return getBlocksInChunks(chunkX, chunkZ, 0, ignoreState);
     }
 
     /**
-     * Gets the amount of all blocks matching the criteria inside square around the center chunk 
-     * with radius chunkrange/2. 
+     * Gets the amount of all blocks matching the criteria inside a square around the player.
      *
-     * @param centerX
-     * @param centerZ 
-     * @param chunkrange
+     * @param centerX     the x coordinate of the center chunk to scan around
+     * @param centerZ     the z coordinate of the center chunk to scan around
+     * @param chunkRange  the range to scan around the center chunk
      * @param ignoreState whether multiple states should be combined to a single block
-     * @return
+     * @return a map of all blocks inside the specified chunks and their respective count.
      */
-    public Map<String, Integer> getBlocksInChunks(int centerX, int centerZ, int chunkrange, boolean ignoreState) {
+    public Map<String, Integer> getBlocksInChunks(int centerX, int centerZ, int chunkRange, boolean ignoreState) {
         assert world != null;
-        if (chunkrange < 0) {
-            throw new IllegalArgumentException("chunkrange must be at least 0");
+        if (chunkRange < 0) {
+            throw new IllegalArgumentException("chunkRange must be at least 0");
         }
-        return getBlocksInChunksInternal(getChunkRange(centerX, centerZ, chunkrange), ignoreState);
+        return getBlocksInChunksInternal(getChunkRange(centerX, centerZ, chunkRange), ignoreState);
     }
 
     private Map<String, Integer> getBlocksInChunksInternal(List<ChunkPos> chunkPositions, boolean ignoreState) {
@@ -228,7 +228,7 @@ public class WorldScanner {
     /**
      * Get the amount of cached block states. This will normally be around 200 - 400.
      *
-     * @return
+     * @return the amount of cached block states.
      */
     public int getCachedAmount() {
         return cachedFilterStates.size();

@@ -243,7 +243,7 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
     }
 
     /**
-     * @return a copy of the tooltips
+     * @return a copy of the tooltips.
      *
      * @since 1.8.4
      */
@@ -359,7 +359,7 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
         }
 
         /**
-         * @return the x position in the texture to start drawing from
+         * @return the x position in the texture to start drawing from.
          *
          * @since 1.8.4
          */
@@ -379,7 +379,7 @@ public class ButtonWidgetHelper<T extends ClickableWidget> extends BaseHelper<T>
         }
 
         /**
-         * @return the y position in the texture to start drawing from
+         * @return the y position in the texture to start drawing from.
          *
          * @since 1.8.4
          */

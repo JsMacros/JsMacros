@@ -498,7 +498,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the current biome blend radius
+         * @return the current biome blend radius.
          *
          * @since 1.8.4
          */
@@ -706,7 +706,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the current gui scale
+         * @return the current gui scale.
          *
          * @since 1.8.4
          */
@@ -1012,7 +1012,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the current master volume
+         * @return the current master volume.
          *
          * @since 1.8.4
          */
@@ -1172,7 +1172,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the current ambient volume
+         * @return the current ambient volume.
          *
          * @since 1.8.4
          */
@@ -1212,7 +1212,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
 
         /**
          * @param category the category to get the volume of
-         * @return the volume of the given sound category
+         * @return the volume of the given sound category.
          *
          * @since 1.8.4
          */
@@ -1508,7 +1508,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return an array of all raw minecraft keybindings
+         * @return an array of all raw minecraft keybindings.
          *
          * @since 1.8.4
          */
@@ -1601,7 +1601,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the current chat visibility mode
+         * @return the current chat visibility mode.
          *
          * @since 1.8.4
          */
@@ -1849,7 +1849,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the current narrator mode
+         * @return the current narrator mode.
          *
          * @since 1.8.4
          */

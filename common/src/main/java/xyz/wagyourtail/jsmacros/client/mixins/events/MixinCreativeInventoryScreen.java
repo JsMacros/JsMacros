@@ -75,6 +75,7 @@ public abstract class MixinCreativeInventoryScreen {
         EventClickSlot event = new EventClickSlot((HandledScreen<?>) (Object) this, actionType.ordinal(), button, slotId);
         if (event.isCanceled()) {
             ci.cancel();
+            return;
         }
         if (actionType == SlotActionType.THROW || slotId == -999) {
             EventDropSlot eventDrop = new EventDropSlot((HandledScreen<?>) (Object) this, slotId, button == 1);

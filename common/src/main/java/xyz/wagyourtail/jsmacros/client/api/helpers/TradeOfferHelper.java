@@ -116,7 +116,8 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
     }
 
     /**
-     * @return
+     * @return {@code true} if after a successful trade xp will be summoned, {@code false}
+     *         otherwise.
      *
      * @since 1.8.4
      */

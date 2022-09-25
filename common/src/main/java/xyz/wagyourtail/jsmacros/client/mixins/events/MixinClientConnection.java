@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventJoinedRecvPacket;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventJoinedSendPacket;
@@ -40,6 +41,7 @@ public class MixinClientConnection {
         EventJoinedRecvPacket event = new EventJoinedRecvPacket(packet);
         if (event.isCanceled() || event.packet == null) {
             ci.cancel();
+            return;
         }
         eventRecvPacket = event;
         new EventRecvPacket(event.packet);
@@ -55,12 +57,13 @@ public class MixinClientConnection {
         EventJoinedSendPacket event = new EventJoinedSendPacket(packet);
         if (event.isCanceled() || event.packet == null) {
             ci.cancel();
+            return;
         }
         eventSendPacket = event;
         new EventSendPacket(event.packet);
     }
 
-    @ModifyArg(method = "sendImmediately", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/ClientConnection;sendInternal(Lnet/minecraft/network/Packet;Lnet/minecraft/network/PacketCallbacks;Lnet/minecraft/network/NetworkState;Lnet/minecraft/network/NetworkState;)V"), index = 0)
+    @ModifyVariable(method = "sendImmediately", at = @At(value = "LOAD"), ordinal = 0, argsOnly = true)
     public Packet<?> modifySendPacket(Packet<?> packet) {
         return eventSendPacket.packet;
     }

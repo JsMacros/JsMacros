@@ -24,6 +24,11 @@ public class StyleHelper extends BaseHelper<Style> {
         return base.getColor() != null;
     }
 
+    /**
+     * @return the color index of this style or {@code -1} if no color is set.
+     *
+     * @deprecated use {@link #getColorIndex()} instead.
+     */
     @Deprecated
     public int getColor() {
         return getColorIndex();

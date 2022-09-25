@@ -37,9 +37,12 @@ public class ForgeModContainer extends ModContainerHelper<IModInfo> {
 
     @Override
     public String getEnv() {
-        return base.getConfig().getConfigElement("side")
-                .map(side -> IModInfo.DependencySide.valueOf((String) side))
-                .orElse(IModInfo.DependencySide.BOTH).name();
+        return switch (base.getConfig().<String>getConfigElement("side").orElse("UNKNOWN")) {
+            case "CLIENT" -> "CLIENT";
+            case "SERVER" -> "SERVER";
+            case "BOTH" -> "BOTH";
+            default -> "UNKNOWN";
+        };
     }
 
     @Override

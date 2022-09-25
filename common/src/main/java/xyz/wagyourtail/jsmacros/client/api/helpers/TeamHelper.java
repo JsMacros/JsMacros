@@ -1,6 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.scoreboard.Team;
+import net.minecraft.util.Formatting;
+
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
@@ -43,11 +45,22 @@ public class TeamHelper extends BaseHelper<Team> {
     /**
      * @since 1.3.0
      * @return
+     * @deprecated use {@link #getColorIndex()} instead.
      */
+    @Deprecated
     public int getColor() {
-        return base.getColor().getColorIndex();
+        return getColorIndex();
     }
 
+    /**
+     * @return the color index of this team.
+     *
+     * @since 1.8.4
+     */
+    public int getColorIndex() {
+        return base.getColor().getColorIndex();
+    }
+    
     /**
      * @return the color value for this team or {@code -1} if it has no color.
      *
@@ -96,7 +109,7 @@ public class TeamHelper extends BaseHelper<Team> {
      * @return
      */
     public String getCollisionRule() {
-        return base.getCollisionRule().toString();
+        return base.getCollisionRule().name;
     }
     
     /**
@@ -120,7 +133,7 @@ public class TeamHelper extends BaseHelper<Team> {
      * @return
      */
     public String nametagVisibility() {
-        return base.getNameTagVisibilityRule().toString();
+        return base.getNameTagVisibilityRule().name;
     }
     
     /**
@@ -128,7 +141,7 @@ public class TeamHelper extends BaseHelper<Team> {
      * @return
      */
     public String deathMessageVisibility() {
-        return base.getDeathMessageVisibilityRule().toString();
+        return base.getDeathMessageVisibilityRule().name;
     }
     
     @Override

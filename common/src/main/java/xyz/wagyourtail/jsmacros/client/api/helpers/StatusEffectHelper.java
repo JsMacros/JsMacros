@@ -66,7 +66,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      *
      * @since 1.8.4
      */
-    public boolean shouldShowIcon() {
+    public boolean hasIcon() {
         return base.shouldShowIcon();
     }
 
@@ -76,7 +76,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      *
      * @since 1.8.4
      */
-    public boolean shouldShowParticles() {
+    public boolean isVisible() {
         return base.shouldShowParticles();
     }
 

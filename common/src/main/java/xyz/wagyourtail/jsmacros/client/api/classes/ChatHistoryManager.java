@@ -44,7 +44,7 @@ public class ChatHistoryManager {
     }
 
     /**
-     * @return the amount of messages in the chat history
+     * @return the amount of messages in the chat history.
      *
      * @throws InterruptedException
      * @since 1.8.4
@@ -61,7 +61,7 @@ public class ChatHistoryManager {
     }
 
     /**
-     * @return all received messages in the chat history
+     * @return all received messages in the chat history.
      *
      * @throws InterruptedException
      * @since 1.8.4

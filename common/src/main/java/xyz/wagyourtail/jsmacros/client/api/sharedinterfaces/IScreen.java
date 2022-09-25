@@ -525,36 +525,50 @@ public interface IScreen extends IDraw2D<IScreen> {
     IScreen reloadScreen();
 
     /**
+     * @return a new builder for buttons.
+     *
      * @since 1.8.4
      */
     ButtonWidgetHelper.ButtonBuilder getButtonBuilder();
 
     /**
+     * @return a new builder for checkboxes.
+     *
      * @since 1.8.4
      */
     CheckBoxWidgetHelper.CheckBoxBuilder getCheckBoxBuilder();
 
     /**
+     * @return a new builder for cycling buttons.
+     *
      * @since 1.8.4
      */
     CyclingButtonWidgetHelper.CyclicButtonBuilder<?> getCyclicButtonBuilder(MethodWrapper<Object, ?, TextHelper, ?> valueToText);
 
     /**
+     * @return a new builder for lock buttons.
+     *
      * @since 1.8.4
      */
     LockButtonWidgetHelper.LockButtonBuilder getLockButtonBuilder();
 
     /**
+     * @return a new builder for sliders.
+     *
      * @since 1.8.4
      */
     SliderWidgetHelper.SliderBuilder getSliderBuilder();
 
     /**
+     * @return a new builder for text fields.
+     *
      * @since 1.8.4
      */
     TextFieldWidgetHelper.TextFieldBuilder getTextFieldBuilder();
 
     /**
+     * @return a new builder for textured buttons.
+     *
      * @since 1.8.4
      */
     ButtonWidgetHelper.TexturedButtonBuilder getTexturedButtonBuilder();

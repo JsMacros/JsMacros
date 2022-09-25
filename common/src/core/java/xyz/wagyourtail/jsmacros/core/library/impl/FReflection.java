@@ -352,9 +352,10 @@ public class FReflection extends PerExecLibrary {
      * change the java executable to the one in the JDK folder. The file should be named "javaw.exe"
      * and be in a folder called "bin".
      * <p>
-     * Compiled classes can't be accessed from any guest language, but must be either stored in
-     * GlobalVars or gotten from this library. When creating a new instance of a compiled class,
-     * it's important to be sure which version of the class you are using.
+     * Compiled classes can't be accessed from any guest language, but must be either stored through
+     * {@link FGlobalVars#putObject(String, Object)} or retrieved from this library. Unlike
+     * normal hot swapping, already created instances of the class will not be updated. Thus, it's
+     * important to know which version of the class you're using when instantiating it.
      *
      * @param className the fully qualified name of the class, including the package.
      * @param code      the java code to compile
@@ -382,7 +383,7 @@ public class FReflection extends PerExecLibrary {
 
     /**
      * @param className the fully qualified name of the class, including the package
-     * @return all compiled versions of the class.
+     * @return all compiled versions of the class, in order of compilation.
      *
      * @since 1.8.4
      */

@@ -82,7 +82,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Calls {@link #key(String, boolean)} with keyState set to true.
      *
-     * @param keyName the key name to press
+     * @param keyName the name of the key to press
      * @since 1.8.4
      */
     public void pressKey(String keyName) {
@@ -92,7 +92,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Calls {@link #key(String, boolean)} with keyState set to false.
      *
-     * @param keyName the key name to press
+     * @param keyName the name of the key to release
      * @since 1.8.4
      */
     public void releaseKey(String keyName) {
@@ -141,8 +141,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Calls {@link #keyBind(String, boolean)} with keyState set to true.
      *
-     * @param keyBind the key bind name to press
-     * @see #key(String, boolean)
+     * @param keyBind the name of the keybinding to press
      * @since 1.8.4
      */
     public void pressKeyBind(String keyBind) {
@@ -152,8 +151,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Calls {@link #keyBind(String, boolean)} with keyState set to false.
      *
-     * @param keyBind the key bind name to press
-     * @see #key(String, boolean)
+     * @param keyBind the name of the keybinding to release
      * @since 1.8.4
      */
     public void releaseKeyBind(String keyBind) {
