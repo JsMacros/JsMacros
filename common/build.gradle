@@ -46,6 +46,8 @@ jar {
 }
 
 task generatePyDoc(type: Javadoc) {
+    group = "documentation"
+    description = "Generates the python documentation for the project"
     source = sourceSets.main.allJava + sourceSets.core.allJava
     classpath = sourceSets.main.compileClasspath
     destinationDir = new File(rootProject.buildDir, "docs/python/JsMacrosAC/")
@@ -55,11 +57,15 @@ task generatePyDoc(type: Javadoc) {
 }
 
 task copyPyDoc(type: Copy, dependsOn: generatePyDoc) {
+    group = "documentation"
+    description = "Copies the python documentation to the build folder"
     from new File(rootProject.rootDir, "docs/python")
     into new File(rootProject.buildDir, "docs/python")
 }
 
 task generateTSDoc(type: Javadoc) {
+    group = "documentation"
+    description = "Generates the typescript documentation for the project"
     source = sourceSets.main.allJava + sourceSets.core.allJava
     classpath = sourceSets.main.compileClasspath
     destinationDir = new File(rootProject.buildDir, "docs/typescript/headers/")
@@ -69,11 +75,15 @@ task generateTSDoc(type: Javadoc) {
 }
 
 task copyTSEnv(type: Copy, dependsOn: generateTSDoc) {
+    group = "documentation"
+    description = "Copies the typescript files to the build folder"
     from new File(rootProject.rootDir, "docs/typescript")
     into new File(rootProject.buildDir, "docs/typescript")
 }
 
 task generateWebDoc(type: Javadoc) {
+    group = "documentation"
+    description = "Generates the web documentation for the project"
     source = sourceSets.main.allJava + sourceSets.core.allJava
     classpath = sourceSets.main.compileClasspath
     destinationDir = new File(rootProject.buildDir, "docs/web/")
@@ -87,6 +97,8 @@ task generateWebDoc(type: Javadoc) {
 }
 
 task copyWebDoc(type: Copy, dependsOn: generateWebDoc) {
+    group = "documentation"
+    description = "Copies the web documentation to the build folder"
     from new File(rootProject.rootDir, "docs/web")
     into new File(rootProject.buildDir, "docs/web")
 }
