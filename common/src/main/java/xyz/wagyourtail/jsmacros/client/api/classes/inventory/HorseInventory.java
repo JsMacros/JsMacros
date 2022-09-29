@@ -79,7 +79,7 @@ public class HorseInventory extends Inventory<HorseScreen> {
     }
 
     /**
-     * @return the inventory size of the horse.
+     * @return the horse's inventory size.
      *
      * @since 1.8.4
      */
@@ -88,7 +88,7 @@ public class HorseInventory extends Inventory<HorseScreen> {
     }
 
     /**
-     * @return a list of the horse's inventory items.
+     * @return a list of items in the horse's inventory.
      *
      * @since 1.8.4
      */

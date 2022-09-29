@@ -29,6 +29,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
     
     /**
+     * @since 1.3.1
      * @return
      */
     public String getId() {
@@ -49,6 +50,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
 
     /**
+     * @since 1.3.1
      * @return
      */
     public ItemStackHelper getOutput() {
@@ -56,6 +58,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
     
     /**
+     * @since 1.3.1
      * @param craftAll
      */
     public RecipeHelper craft(boolean craftAll) {

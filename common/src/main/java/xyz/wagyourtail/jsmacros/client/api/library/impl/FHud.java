@@ -341,14 +341,5 @@ public class FHud extends BaseLibrary {
     public void setWindowPosition(int x, int y) {
         GLFW.glfwSetWindowPos(mc.getWindow().getHandle(), x, y);
     }
-
-    /**
-     * @param x the new mouse x position
-     * @param y the new mouse y position
-     * @since 1.8.4
-     */
-    public void setMousePosition(int x, int y) {
-        GLFW.glfwSetCursorPos(mc.getWindow().getHandle(), x, y);
-    }
     
 }

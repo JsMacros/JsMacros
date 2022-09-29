@@ -7,6 +7,7 @@ import net.minecraft.client.option.HotbarStorage;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.util.math.MathHelper;
 
 import xyz.wagyourtail.jsmacros.client.access.ICreativeInventoryScreen;
 import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
@@ -28,33 +29,36 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     }
 
     /**
-     * @param amount the amount to scroll by
+     * @param amount the amount to scroll by, between -1 and 1
      * @since 1.8.4
      */
     public void scroll(float amount) {
-        handler.scrollItems(getInterface().jsmacros_getScrollPosition() + amount);
+        scrollTo(getInterface().jsmacros_getScrollPosition() + amount);
     }
 
     /**
-     * @param position the position to scroll to
+     * @param position the position to scroll to, between 0 and 1
      * @since 1.8.4
      */
     public void scrollTo(float position) {
-        handler.scrollItems(position);
+        if (getInterface().jsmacros_hasScrollbar()) {
+            position = MathHelper.clamp(position, 0, 1);
+            handler.scrollItems(position);
+        }
     }
 
     /**
      * @since 1.8.4
      */
     public void selectInventory() {
-        getInterface().jsmacros_setSelectedTab(ItemGroup.INVENTORY.getIndex());
+        selectTab(ItemGroup.INVENTORY.getIndex());
     }
 
     /**
      * @since 1.8.4
      */
     public void selectSearch() {
-        getInterface().jsmacros_setSelectedTab(ItemGroup.SEARCH.getIndex());
+        selectTab(ItemGroup.SEARCH.getIndex());
     }
 
     /**
@@ -62,6 +66,9 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public void search(String search) {
+        if (getInterface().jsmacros_getSelectedTab() != ItemGroup.SEARCH.getIndex()) {
+            return;
+        }
         getInterface().jsmacros_getSearchField().setText(search);
         getInterface().jsmacros_search();
     }
@@ -79,7 +86,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public void selectHotbar() {
-        getInterface().jsmacros_setSelectedTab(ItemGroup.HOTBAR.getIndex());
+        selectTab(ItemGroup.HOTBAR.getIndex());
     }
 
     /**
@@ -87,7 +94,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public void selectTab(int tab) {
-        getInterface().jsmacros_setSelectedTab(tab);
+        selectTab(ItemGroup.GROUPS[tab]);
     }
 
     /**
@@ -151,7 +158,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public ItemStackHelper getOffhand() {
-        return getSlot(45);
+        return getSlot(40);
     }
 
     /**
@@ -160,7 +167,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public ItemStackHelper getHelmet() {
-        return getSlot(5);
+        return getSlot(39);
     }
 
     /**
@@ -169,7 +176,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public ItemStackHelper getChestplate() {
-        return getSlot(6);
+        return getSlot(38);
     }
 
     /**
@@ -178,7 +185,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public ItemStackHelper getLeggings() {
-        return getSlot(7);
+        return getSlot(37);
     }
 
     /**
@@ -187,16 +194,20 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public ItemStackHelper getBoots() {
-        return getSlot(8);
+        return getSlot(36);
     }
 
     private ICreativeInventoryScreen getInterface() {
         return (ICreativeInventoryScreen) inventory;
     }
 
+    private void selectTab(ItemGroup group) {
+        mc.execute(() -> getInterface().jsmacros_setSelectedTab(group.getIndex()));
+    }
+
     @Override
     public String toString() {
         return String.format("CreativeInventory:{}");
     }
-    
+
 }

@@ -49,7 +49,10 @@ public class Inventory<T extends HandledScreen<?>> {
         Inventory<?> inv = create(mc.currentScreen);
         if (inv == null) {
             assert mc.player != null;
-            return new Inventory<>(new InventoryScreen(mc.player));
+            if (mc.player.getAbilities().creativeMode) {
+                return new CreativeInventory(new CreativeInventoryScreen(mc.player));
+            }
+            return new xyz.wagyourtail.jsmacros.client.api.classes.inventory.PlayerInventory(new InventoryScreen(mc.player));
         }
         return inv;
     }
@@ -70,7 +73,7 @@ public class Inventory<T extends HandledScreen<?>> {
                 return new BrewingStandInventory(brewingStandScreen);
             } else if (s instanceof CartographyTableScreen cartographyTableScreen) {
                 return new CartographyInventory(cartographyTableScreen);
-            } else if (s instanceof FurnaceScreen furnaceScreen) {
+            } else if (s instanceof AbstractFurnaceScreen furnaceScreen) {
                 return new FurnaceInventory(furnaceScreen);
             } else if (s instanceof GrindstoneScreen grindstoneScreen) {
                 return new GrindStoneInventory(grindstoneScreen);
@@ -426,6 +429,9 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return the item in the slot.
      */
     public ItemStackHelper getSlot(int slot) {
+        if (inventory instanceof CreativeInventoryScreen && ((CreativeInventoryScreen) this.inventory).getSelectedTab() == ItemGroup.INVENTORY.getIndex()) {
+            return new ItemStackHelper(player.getInventory().getStack(slot));
+        }
         return new ItemStackHelper(this.handler.getSlot(slot).getStack());
     }
 
@@ -565,10 +571,17 @@ public class Inventory<T extends HandledScreen<?>> {
     private Map<String, int[]> getMapInternal() {
         Map<String, int[]> map = new HashMap<>();
         int slots = getTotalSlots();
-        if (this.inventory instanceof InventoryScreen || (this.inventory instanceof CreativeInventoryScreen && ((CreativeInventoryScreen) this.inventory).getSelectedTab() == ItemGroup.INVENTORY.getIndex())) {
-            if (this.inventory instanceof CreativeInventoryScreen) {
-                --slots;
-            }
+        if ((this.inventory instanceof CreativeInventoryScreen && ((CreativeInventoryScreen) this.inventory).getSelectedTab() == ItemGroup.INVENTORY.getIndex())) {
+            slots = 41;
+            map.put("hotbar", JsMacros.range(0, 8));
+            map.put("offhand", new int[]{40});
+            map.put("main", JsMacros.range(9, 35));
+            map.put("boots", new int[]{36});
+            map.put("leggings", new int[]{37});
+            map.put("chestplate", new int[]{38});
+            map.put("helmet", new int[]{39});
+            map.put("delete", new int[]{0});
+        } else if (this.inventory instanceof InventoryScreen) {
             map.put("hotbar", JsMacros.range(slots - 10, slots - 1)); // range(36, 45);
             map.put("offhand", new int[] { slots - 1 }); // range(45, 46);
             map.put("main", JsMacros.range(slots - 10 - 27, slots - 10)); // range(9, 36);
@@ -578,11 +591,6 @@ public class Inventory<T extends HandledScreen<?>> {
             map.put("helmet", new int[] { slots - 10 - 27 - 4 }); // range(5, 6);
             map.put("crafting_in", JsMacros.range(slots - 10 - 27 - 4 - 4, slots - 10 - 27 - 4)); // range(1, 5);
             map.put("craft_out", new int[] { slots - 10 - 27 - 4 - 4 - 1 });
-            if (this.inventory instanceof  CreativeInventoryScreen) {
-                map.put("delete", new int[] {0});
-                map.remove("crafting_in");
-                map.remove("craft_out");
-            } 
         } else {
             map.put("hotbar", JsMacros.range(slots - 9, slots));
             map.put("main", JsMacros.range(slots - 9 - 27, slots - 9));

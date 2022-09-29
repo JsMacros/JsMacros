@@ -20,5 +20,7 @@ public interface ICreativeInventoryScreen {
     void jsmacros_setSelectedTab(int tab);
     
     void jsmacros_search();
+    
+    boolean jsmacros_hasScrollbar();
 
 }

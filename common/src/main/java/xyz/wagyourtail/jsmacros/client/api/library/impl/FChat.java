@@ -385,6 +385,6 @@ public class FChat extends BaseLibrary {
      public String stripFormatting(String string) {
      // on 1.15 and lower switch to comment
 //        return string.replaceAll("§#\\d{6}|§.", "");
-        return string.replaceAll("§.", "");
+        return TextHelper.STRIP_FORMATTING_PATTERN.matcher(string).replaceAll("");
     }
 }

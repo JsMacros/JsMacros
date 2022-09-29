@@ -12,6 +12,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Etheradon
@@ -29,6 +30,10 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     public EnchantmentHelper(Enchantment base, int level) {
         super(base);
         this.level = level;
+    }
+
+    public EnchantmentHelper(String enchantment) {
+        this(Registry.ENCHANTMENT.get(new Identifier(enchantment)));
     }
 
     /**
@@ -66,6 +71,18 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      */
     public String getLevelName(int level) {
         return base.getName(level).getString();
+    }
+
+    /**
+     * Because roman numerals only support positive integers in the range of 1 to 3999, this method
+     * will return the arabic numeral for any given level outside that range.
+     *
+     * @return the translated name of this enchantment for the given level in roman numerals.
+     *
+     * @since 1.8.4
+     */
+    public TextHelper getRomanLevelName() {
+        return getRomanLevelName(level);
     }
 
     /**
@@ -294,5 +311,21 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     public String toString() {
         return String.format("EnchantmentHelper:{\"id\": \"%s\", \"level\": %d}", getId(), getLevel());
     }
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof EnchantmentHelper that) || !super.equals(o)) {
+            return false;
+        }
+        return level == 0 || that.level == 0 || level == that.level;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(base, level);
+    }
+
 }

@@ -106,7 +106,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
      * @since 1.8.4
      */
     public int getBrewTime() {
-        return inventory.getScreenHandler().getBrewTime();
+        return BrewingRecipeRegistry.field_30942 * 20 - inventory.getScreenHandler().getBrewTime();
     }
 
     /**
@@ -115,7 +115,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
      * @since 1.8.4
      */
     public int getRemainingTicks() {
-        return BrewingRecipeRegistry.field_30942 * 20 - getBrewTime();
+        return inventory.getScreenHandler().getBrewTime();
     }
 
     /**

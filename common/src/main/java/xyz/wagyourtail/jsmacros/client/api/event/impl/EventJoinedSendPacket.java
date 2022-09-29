@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
 import net.minecraft.network.Packet;
 
+import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 import xyz.wagyourtail.jsmacros.core.event.ICancelable;
@@ -25,8 +26,24 @@ public class EventJoinedSendPacket implements BaseEvent, ICancelable {
         profile.triggerEventJoinNoAnything(this);
     }
 
+    /**
+     * Replaces the packet of this event with a new one of the same type, created from the given
+     * arguments.
+     *
+     * @param args the arguments to pass to the packet's constructor.
+     * @since 1.8.4
+     */
     public void replacePacket(Object... args) {
         packet = REFLECTION.newInstance(packet.getClass(), args);
+    }
+
+    /**
+     * @return a helper for accessing and modifying the packet's data.
+     *
+     * @since 1.8.4
+     */
+    public PacketByteBufferHelper getPacketBuffer() {
+        return new PacketByteBufferHelper(packet);
     }
 
     @Override
@@ -43,5 +60,5 @@ public class EventJoinedSendPacket implements BaseEvent, ICancelable {
     public String toString() {
         return String.format("%s:{}", this.getEventName());
     }
-    
+
 }

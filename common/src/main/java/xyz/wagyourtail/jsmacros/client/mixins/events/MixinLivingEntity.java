@@ -52,7 +52,7 @@ public abstract class MixinLivingEntity {
 
             if ((Object) this instanceof ClientPlayerEntity) {
                 new EventHeal(DamageSource.GENERIC, health, difference);
-                new EventHealthChange(health, -difference);
+                new EventHealthChange(health, difference);
             }
             new EventEntityHealed((Entity)(Object) this, health, difference);
         }

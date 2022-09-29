@@ -15,8 +15,8 @@ public class CraftingInventory extends RecipeInventory<CraftingScreen> {
     }
 
     /**
-     * @param x the x position of the input from 0 -> 2, going left to right.
-     * @param y the y position of the input from 0 -> 2, going top to bottom.
+     * @param x the x position of the input from 0 to 2, going left to right.
+     * @param y the y position of the input from 0 to 2, going top to bottom.
      * @return the input item at the given position.
      *
      * @since 1.8.4

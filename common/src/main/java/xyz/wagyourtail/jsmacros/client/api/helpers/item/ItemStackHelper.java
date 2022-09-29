@@ -1,6 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.item;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.EntityGroup;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -9,6 +13,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import com.google.gson.JsonParseException;
@@ -101,7 +106,8 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
 
     /**
      * @param id the id of the enchantment to check for
-     * @return the enchantment instance, containing the level, or {@code null} if the item is not enchanted with the specified enchantment.
+     * @return the enchantment instance, containing the level, or {@code null} if the item is not
+     *         enchanted with the specified enchantment.
      *
      * @since 1.8.4
      */
@@ -122,13 +128,24 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
 
     /**
      * @param enchantment the enchantment to check for
+     * @return {@code true} if the item is enchanted with the specified enchantment of the same
+     *         level, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean hasEnchantment(EnchantmentHelper enchantment) {
+        return getEnchantments().stream().anyMatch(enchantment::equals);
+    }
+
+    /**
+     * @param enchantment the id of the enchantment to check for
      * @return {@code true} if the item is enchanted with the specified enchantment, {@code false}
      *         otherwise.
      *
      * @since 1.8.4
      */
-    public boolean hasEnchantment(EnchantmentHelper enchantment) {
-        return getEnchantments().stream().anyMatch(enchantmentHelper -> enchantment.getRaw().equals(enchantmentHelper.getRaw()));
+    public boolean hasEnchantment(String enchantment) {
+        return hasEnchantment(new EnchantmentHelper(enchantment));
     }
 
     /**
@@ -146,7 +163,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getPossibleEnchantmentsFromTable() {
-        return Registry.ENCHANTMENT.stream().filter(enchantment -> enchantment.type.isAcceptableItem(base.getItem())).map(EnchantmentHelper::new).toList();
+        return Registry.ENCHANTMENT.stream().filter(enchantment -> enchantment.type.isAcceptableItem(base.getItem()) && !enchantment.isCursed() && !enchantment.isTreasure()).map(EnchantmentHelper::new).toList();
     }
 
     /**
@@ -199,7 +216,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public int getDurability() {
-        return base.getMaxCount() - base.getDamage();
+        return base.getMaxDamage() - base.getDamage();
     }
 
     /**
@@ -234,14 +251,9 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      *
      * @since 1.8.4
      */
-    public float getAttackDamage() {
-        if (base.getItem() instanceof SwordItem swordItem) {
-            return swordItem.getAttackDamage();
-        } else if (base.getItem() instanceof MiningToolItem miningToolItem) {
-            return miningToolItem.getAttackDamage();
-        } else {
-            return 0.5f;
-        }
+    public double getAttackDamage() {
+        double damage = base.getAttributeModifiers(EquipmentSlot.MAINHAND).get(EntityAttributes.GENERIC_ATTACK_DAMAGE).stream().mapToDouble(EntityAttributeModifier::getValue).sum();
+        return damage + mc.player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
     }
     
     /**
@@ -373,7 +385,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     public boolean equals(ItemStackHelper ish) {
         //ItemStack doesn't overwrite the equals method, so we have to do it ourselves
-        return base.isItemEqual(ish.base) && ItemStack.areNbtEqual(base, ish.getRaw());
+        return equals(ish.base);
     }
     
     /**
@@ -382,7 +394,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public boolean equals(ItemStack is) {
-        return base.equals(is);
+        return base.isItemEqual(is) && ItemStack.areNbtEqual(base, is);
     }
     
     /**

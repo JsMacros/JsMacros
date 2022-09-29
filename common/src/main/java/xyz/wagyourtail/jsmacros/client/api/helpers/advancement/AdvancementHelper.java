@@ -98,7 +98,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      * @since 1.8.4
      */
     public String[] getLoot() {
-        return (String[]) Arrays.stream(((IAdvancementRewards) base.getRewards()).jsmacros_getLoot()).map(Identifier::toString).toArray();
+        return Arrays.stream(((IAdvancementRewards) base.getRewards()).jsmacros_getLoot()).map(Identifier::toString).toArray(String[]::new);
     }
 
     /**

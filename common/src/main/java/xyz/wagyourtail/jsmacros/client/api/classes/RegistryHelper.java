@@ -12,11 +12,12 @@ import net.minecraft.util.registry.Registry;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EnchantmentHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.FluidStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 
 import java.util.List;
 
@@ -26,6 +27,16 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class RegistryHelper {
+
+    /**
+     * @param id the item id
+     * @return an {@link ItemHelper} for the given item.
+     *
+     * @since 1.8.4
+     */
+    public ItemHelper getItem(String id) {
+        return new ItemHelper(Registry.ITEM.get(Identifier.tryParse(id)));
+    }
 
     /**
      * @param id the item id
@@ -55,8 +66,27 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredItems() {
+    public List<String> getItemIds() {
         return Registry.ITEM.getIds().stream().map(Identifier::toString).toList();
+    }
+
+    /**
+     * @return a list of all registered items.
+     *
+     * @since 1.8.4
+     */
+    public List<ItemHelper> getItems() {
+        return Registry.ITEM.stream().map(ItemHelper::new).toList();
+    }
+
+    /**
+     * @param id the block id
+     * @return an {@link BlockHelper} for the given block.
+     *
+     * @since 1.8.4
+     */
+    public BlockHelper getBlock(String id) {
+        return new BlockHelper(Registry.BLOCK.get(Identifier.tryParse(id)));
     }
 
     /**
@@ -82,22 +112,21 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id the block id
-     * @return an {@link BlockHelper} for the given block.
-     *
-     * @since 1.8.4
-     */
-    public BlockHelper getBlock(String id) {
-        return new BlockHelper(Registry.BLOCK.get(Identifier.tryParse(id)));
-    }
-
-    /**
      * @return a list of all registered block ids.
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredBlocks() {
+    public List<String> getBlockIds() {
         return Registry.BLOCK.getIds().stream().map(Identifier::toString).toList();
+    }
+
+    /**
+     * @return a list of all registered blocks.
+     *
+     * @since 1.8.4
+     */
+    public List<BlockHelper> getBlocks() {
+        return Registry.BLOCK.stream().map(BlockHelper::new).toList();
     }
 
     /**
@@ -126,8 +155,17 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredEnchantments() {
+    public List<String> getEnchantmentIds() {
         return Registry.ENCHANTMENT.getIds().stream().map(Identifier::toString).toList();
+    }
+
+    /**
+     * @return a list of all registered enchantments.
+     *
+     * @since 1.8.4
+     */
+    public List<EnchantmentHelper> getEnchantments() {
+        return Registry.ENCHANTMENT.stream().map(EnchantmentHelper::new).toList();
     }
 
     /**
@@ -155,7 +193,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredEntityTypes() {
+    public List<String> getEntityTypeIds() {
         return Registry.ENTITY_TYPE.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -174,7 +212,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredFeatures() {
+    public List<String> getFeatureIds() {
         return Registry.FEATURE.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -183,7 +221,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredStructureFeatures() {
+    public List<String> getStructureFeatureIds() {
         return Registry.STRUCTURE_PIECE.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -192,7 +230,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredPaintings() {
+    public List<String> getPaintingIds() {
         return Registry.PAINTING_VARIANT.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -201,7 +239,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredParticleTypes() {
+    public List<String> getParticleTypeIds() {
         return Registry.PARTICLE_TYPE.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -210,7 +248,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredGameEvents() {
+    public List<String> getGameEventNames() {
         return Registry.GAME_EVENT.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -219,7 +257,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredStatusEffects() {
+    public List<String> getStatusEffectIds() {
         return Registry.STATUS_EFFECT.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -228,7 +266,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredBlockEntityTypes() {
+    public List<String> getBlockEntityTypeIds() {
         return Registry.BLOCK_ENTITY_TYPE.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -237,7 +275,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredScreenHandlers() {
+    public List<String> getScreenHandlerIds() {
         return Registry.SCREEN_HANDLER.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -246,7 +284,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredRecipeTypes() {
+    public List<String> getRecipeTypeIds() {
         return Registry.RECIPE_TYPE.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -255,7 +293,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredVillagerTypes() {
+    public List<String> getVillagerTypeIds() {
         return Registry.VILLAGER_TYPE.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -264,7 +302,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredVillagerProfessions() {
+    public List<String> getVillagerProfessionIds() {
         return Registry.VILLAGER_PROFESSION.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -273,7 +311,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredPointOfInterestTypes() {
+    public List<String> getPointOfInterestTypeIds() {
         return Registry.POINT_OF_INTEREST_TYPE.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -282,7 +320,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredMemoryModuleTypes() {
+    public List<String> getMemoryModuleTypeIds() {
         return Registry.MEMORY_MODULE_TYPE.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -291,7 +329,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredSensorTypes() {
+    public List<String> getSensorTypeIds() {
         return Registry.SENSOR_TYPE.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -300,7 +338,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredActivityTypes() {
+    public List<String> getActivityTypeIds() {
         return Registry.ACTIVITY.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -309,7 +347,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredStatTypes() {
+    public List<String> getStatTypeIds() {
         return Registry.STAT_TYPE.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -318,7 +356,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredEntityAttributes() {
+    public List<String> getEntityAttributeIds() {
         return Registry.ATTRIBUTE.getIds().stream().map(Identifier::toString).toList();
     }
 
@@ -327,7 +365,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getRegisteredPotionTypes() {
+    public List<String> getPotionTypeIds() {
         return Registry.POTION.getIds().stream().map(Identifier::toString).toList();
     }
 

@@ -9,6 +9,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * @since 1.6.5
@@ -62,7 +63,17 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
      * @since 1.8.4
      */
     public SuggestionsBuilderHelper suggestMatching(String... suggestions) {
-        CommandSource.suggestMatching(Arrays.asList(suggestions), base);
+        return suggestMatching(Arrays.asList(suggestions));
+    }
+
+    /**
+     * @param suggestions the strings to match
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public SuggestionsBuilderHelper suggestMatching(Collection<String> suggestions) {
+        CommandSource.suggestMatching(suggestions, base);
         return this;
     }
 
@@ -73,7 +84,17 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
      * @since 1.8.4
      */
     public SuggestionsBuilderHelper suggestIdentifier(String... identifiers) {
-        CommandSource.suggestIdentifiers(Arrays.stream(identifiers).map(Identifier::new), base);
+        return suggestIdentifier(Arrays.asList(identifiers));
+    }
+
+    /**
+     * @param identifiers the identifiers to match
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public SuggestionsBuilderHelper suggestIdentifier(Collection<String> identifiers) {
+        CommandSource.suggestIdentifiers(identifiers.stream().map(Identifier::new), base);
         return this;
     }
 
@@ -83,8 +104,21 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
      *
      * @since 1.8.4
      */
-    public SuggestionsBuilderHelper suggestPositions(BlockPosHelper... positions) {
-        CommandSource.suggestPositions(getRemaining(), Arrays.stream(positions).map(p -> new CommandSource.RelativePosition(String.valueOf(p.getX()), String.valueOf(p.getY()), String.valueOf(p.getZ()))).toList(), base, s -> true);
+    public SuggestionsBuilderHelper suggestPositions(String... positions) {
+        return suggestPositions(Arrays.asList(positions));
+    }
+
+    /**
+     * @param positions the relative positions to suggest
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public SuggestionsBuilderHelper suggestPositions(Collection<String> positions) {
+        CommandSource.suggestPositions(getRemaining(), positions.stream().map(p -> {
+            String[] split = p.split(" ");
+            return new CommandSource.RelativePosition(split[0], split[1], split[2]);
+        }).toList(), base, s -> true);
         return this;
     }
     

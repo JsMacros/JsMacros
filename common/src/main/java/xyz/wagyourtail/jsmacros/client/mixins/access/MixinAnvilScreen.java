@@ -15,15 +15,7 @@ import xyz.wagyourtail.jsmacros.client.access.IAnvilScreen;
 public abstract class MixinAnvilScreen implements IAnvilScreen {
 
     @Shadow
-    protected abstract void onRenamed(String name);
-
-    @Shadow
     private TextFieldWidget nameField;
-
-    @Override
-    public void jsmacros_rename(String name) {
-        onRenamed(name);
-    }
 
     @Override
     public TextFieldWidget jsmacros_getRenameText() {

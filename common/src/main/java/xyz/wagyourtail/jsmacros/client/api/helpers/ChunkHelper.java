@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -193,9 +192,21 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @since 1.8.4
      */
     public boolean containsAny(String... blocks) {
+        //don't use section.hasAny because it will take some time to update the block palette
         Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::new).map(Registry.BLOCK::get).collect(Collectors.toSet());
-        Predicate<BlockState> predicate = blockState -> filterBlocks.contains(blockState.getBlock());
-        return Arrays.stream(base.getSectionArray()).anyMatch(section -> section.hasAny(predicate));
+        for (ChunkSection section : base.getSectionArray()) {
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    for (int y = 0; y < 16; y++) {
+                        BlockState state = section.getBlockState(x, y, z);
+                        if (filterBlocks.contains(state)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -206,11 +217,22 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @since 1.8.4
      */
     public boolean containsAll(String... blocks) {
+        //don't use section.hasAny because it will take some time to update the block palette
         Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::new).map(Registry.BLOCK::get).collect(Collectors.toSet());
         for (ChunkSection section : base.getSectionArray()) {
-            filterBlocks.removeIf(block -> section.hasAny(state -> state.getBlock() == block));
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    for (int y = 0; y < 16; y++) {
+                        BlockState state = section.getBlockState(x, y, z);
+                        filterBlocks.remove(state.getBlock());
+                        if (filterBlocks.isEmpty()) {
+                            return true;
+                        }
+                    }
+                }
+            }
         }
-        return filterBlocks.isEmpty();
+        return false;
     }
 
     /**

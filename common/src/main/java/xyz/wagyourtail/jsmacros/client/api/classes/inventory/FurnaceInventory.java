@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.client.gui.screen.ingame.AbstractFurnaceScreen;
 import net.minecraft.item.Item;
+import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.util.registry.Registry;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -86,16 +87,58 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
     }
 
     /**
-     * @return
+     * If the returned value equals {@link #getTotalSmeltingTime()} then the item is done smelting.
+     *
+     * @return the current Smelting progress in ticks.
      *
      * @since 1.8.4
      */
-    public int getCookProgress() {
-        return inventory.getScreenHandler().getCookProgress();
+    public int getSmeltingProgress() {
+        return getPropertyDelegate().get(2);
     }
 
     /**
-     * @return
+     * @return the total smelting time of a single input item in ticks.
+     *
+     * @since 1.8.4
+     */
+    public int getTotalSmeltingTime() {
+        return getPropertyDelegate().get(3);
+    }
+
+    /**
+     * @return the remaining time of the smelting progress in ticks.
+     *
+     * @since 1.8.4
+     */
+    public int getRemainingSmeltingTime() {
+        return getTotalSmeltingTime() - getSmeltingProgress();
+    }
+
+    /**
+     * @return the remaining fuel time in ticks.
+     *
+     * @since 1.8.4
+     */
+    public int getRemainingFuelTime() {
+        return getPropertyDelegate().get(0);
+    }
+
+    /**
+     * @return the total fuel time of the current fuel item in ticks.
+     *
+     * @since 1.8.4
+     */
+    public int getTotalFuelTime() {
+        return getPropertyDelegate().get(1);
+    }
+
+    private PropertyDelegate getPropertyDelegate() {
+        return ((IAbstractFurnaceScreenHandler) inventory.getScreenHandler()).jsmacros_getPropertyDelegate();
+    }
+
+    /**
+     * @return a lower number means the fuel is running out.
      *
      * @since 1.8.4
      */
@@ -116,5 +159,5 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
     public String toString() {
         return String.format("FurnaceInventory:{}");
     }
-    
+
 }

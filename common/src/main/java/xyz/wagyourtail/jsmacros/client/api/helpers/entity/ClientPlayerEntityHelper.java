@@ -500,4 +500,5 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     @Override
     public String toString() {
         return super.toString().replaceFirst("^Player", "ClientPlayer");
-    }}
+    }
+}

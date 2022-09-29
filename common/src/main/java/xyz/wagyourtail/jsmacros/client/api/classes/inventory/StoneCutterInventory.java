@@ -28,6 +28,15 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
     }
 
     /**
+     * @return the output item for the selected recipe.
+     *
+     * @since 1.8.4
+     */
+    public ItemStackHelper getOutput() {
+        return getSlot(1);
+    }
+
+    /**
      * @param idx the index to select
      * @since 1.8.4
      */
@@ -69,5 +78,5 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
     public String toString() {
         return String.format("StoneCutterInventory:{}");
     }
-    
+
 }

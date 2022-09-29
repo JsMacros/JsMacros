@@ -36,6 +36,8 @@ public abstract class MixinCreativeInventoryScreen implements ICreativeInventory
     @Shadow
     protected abstract void search();
 
+    @Shadow protected abstract boolean hasScrollbar();
+
     @Override
     public int jsmacros_getSelectedTab() {
         return selectedTab;
@@ -64,5 +66,10 @@ public abstract class MixinCreativeInventoryScreen implements ICreativeInventory
     @Override
     public void jsmacros_search() {
         search();
+    }
+
+    @Override
+    public boolean jsmacros_hasScrollbar() {
+        return hasScrollbar();
     }
 }

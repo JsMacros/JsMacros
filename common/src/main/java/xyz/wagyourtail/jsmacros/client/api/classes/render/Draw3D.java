@@ -16,7 +16,6 @@ import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -805,141 +804,314 @@ public class Draw3D {
                 this.parent = parent;
             }
 
+            /**
+             * @return the first position of the box.
+             *
+             * @since 1.8.4
+             */
             public PositionCommon.Pos3D getPos1() {
                 return pos1;
             }
 
+            /**
+             * @param pos1 the first position of the box
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos1(PositionCommon.Pos3D pos1) {
                 this.pos1 = pos1;
                 return this;
             }
 
+            /**
+             * @param pos1 the first position of the box
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos1(BlockPosHelper pos1) {
                 this.pos1 = pos1.toPos3D();
                 return this;
             }
 
+            /**
+             * @param x1 the x coordinate of the first position of the box
+             * @param y1 the y coordinate of the first position of the box
+             * @param z1 the z coordinate of the first position of the box
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos1(double x1, double y1, double z1) {
                 this.pos1 = new PositionCommon.Pos3D(x1, y1, z1);
                 return this;
             }
 
+            /**
+             * @return the second position of the box.
+             *
+             * @since 1.8.4
+             */
             public PositionCommon.Pos3D getPos2() {
                 return pos2;
             }
 
+            /**
+             * @param pos2 the second position of the box
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos2(PositionCommon.Pos3D pos2) {
                 this.pos2 = pos2;
                 return this;
             }
 
+            /**
+             * @param pos2 the second position of the box
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos2(BlockPosHelper pos2) {
                 this.pos2 = pos2.toPos3D();
                 return this;
             }
 
+            /**
+             * @param x2 the x coordinate of the second position of the box
+             * @param y2 the y coordinate of the second position of the box
+             * @param z2 the z coordinate of the second position of the box
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos2(int x2, int y2, int z2) {
                 this.pos2 = new PositionCommon.Pos3D(x2, y2, z2);
                 return this;
             }
 
+            /**
+             * @param x1 the x coordinate of the first position of the box
+             * @param y1 the y coordinate of the first position of the box
+             * @param z1 the z coordinate of the first position of the box
+             * @param x2 the x coordinate of the second position of the box
+             * @param y2 the y coordinate of the second position of the box
+             * @param z2 the z coordinate of the second position of the box
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos(int x1, int y1, int z1, int x2, int y2, int z2) {
                 this.pos1 = new PositionCommon.Pos3D(x1, y1, z1);
                 this.pos2 = new PositionCommon.Pos3D(x2, y2, z2);
                 return this;
             }
 
+            /**
+             * @param pos1 the first position of the box
+             * @param pos2 the second position of the box
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos(BlockPosHelper pos1, BlockPosHelper pos2) {
                 this.pos1 = pos1.toPos3D();
                 this.pos2 = pos2.toPos3D();
                 return this;
             }
 
+            /**
+             * @param pos1 the first position of the box
+             * @param pos2 the second position of the box
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos(PositionCommon.Pos3D pos1, PositionCommon.Pos3D pos2) {
                 this.pos1 = pos1;
                 this.pos2 = pos2;
                 return this;
             }
 
+            /**
+             * Highlights the given block position.
+             *
+             * @param x the x coordinate of the block
+             * @param y the y coordinate of the block
+             * @param z the z coordinate of the block
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder forBlock(int x, int y, int z) {
                 this.pos1 = new PositionCommon.Pos3D(x, y, z);
                 this.pos2 = new PositionCommon.Pos3D(x + 1, y + 1, z + 1);
                 return this;
             }
 
+            /**
+             * Highlights the given block position.
+             *
+             * @param pos the block position
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder forBlock(BlockPosHelper pos) {
                 this.pos1 = pos.toPos3D();
                 this.pos2 = pos.offset(1, 1, 1).toPos3D();
                 return this;
             }
 
-            public Builder forBlock(PositionCommon.Pos3D pos1) {
-                this.pos1 = pos1;
-                this.pos2 = pos1.add(1, 1, 1);
+            /**
+             * Highlights the given block position.
+             *
+             * @param pos the block position
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
+            public Builder forBlock(PositionCommon.Pos3D pos) {
+                this.pos1 = pos;
+                this.pos2 = pos.add(1, 1, 1);
                 return this;
             }
 
+            /**
+             * @return the color of the box.
+             *
+             * @since 1.8.4
+             */
             public int getColor() {
                 return color;
             }
 
+            /**
+             * @param color the color of the box
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder color(int color) {
                 this.color = color;
                 return this;
             }
 
-            public int getFillColor() {
-                return fillColor;
-            }
-
-            public Builder fillColor(int fillColor) {
-                this.fillColor = fillColor;
-                return this;
-            }
-
+            /**
+             * @return the alpha value of the box's color.
+             *
+             * @since 1.8.4
+             */
             public int getAlpha() {
                 return alpha;
             }
 
+            /**
+             * @param alpha the alpha value for the box's color
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder alpha(int alpha) {
                 this.alpha = alpha;
                 return this;
             }
 
+            /**
+             * @return the fill color of the box.
+             *
+             * @since 1.8.4
+             */
+            public int getFillColor() {
+                return fillColor;
+            }
+
+            /**
+             * @param fillColor the fill color of the box
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
+            public Builder fillColor(int fillColor) {
+                this.fillColor = fillColor;
+                return this;
+            }
+
+            /**
+             * @return the alpha value of the box's fill color.
+             *
+             * @since 1.8.4
+             */
             public int getFillAlpha() {
                 return fillAlpha;
             }
 
+            /**
+             * @param fillAlpha the alpha value for the box's fill color
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder fillAlpha(int fillAlpha) {
                 this.fillAlpha = fillAlpha;
                 return this;
             }
 
-            public boolean isFill() {
+            /**
+             * @return {@code true} if the box should be filled, {@code false} otherwise.
+             *
+             * @since 1.8.4
+             */
+            public boolean isFilled() {
                 return fill;
             }
 
+            /**
+             * @param fill {@code true} if the box should be filled, {@code false} otherwise.
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder fill(boolean fill) {
                 this.fill = fill;
                 return this;
             }
 
-            public boolean isCull() {
+            /**
+             * @return {@code true} if culling is enabled for this box, {@code false} otherwise.
+             *
+             * @since 1.8.4
+             */
+            public boolean isCulled() {
                 return cull;
             }
 
+            /**
+             * @param cull whether to enable culling or not
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder cull(boolean cull) {
                 this.cull = cull;
                 return this;
             }
 
+            /**
+             * Creates the box for the given values and adds it to the draw3D.
+             *
+             * @return the created box.
+             *
+             * @since 1.8.4
+             */
             public Box build() {
                 Box box = new Box(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, color, alpha, fillColor, fillAlpha, fill, cull);
                 parent.addBox(box);
                 return box;
             }
         }
-        
     }
 
     public static class Line {
@@ -1041,96 +1213,210 @@ public class Draw3D {
                 this.parent = parent;
             }
 
+            /**
+             * @return the first position of the line.
+             *
+             * @since 1.8.4
+             */
             public PositionCommon.Pos3D getPos1() {
                 return pos1;
             }
 
+            /**
+             * @param pos1 the first position of the line
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos1(PositionCommon.Pos3D pos1) {
                 this.pos1 = pos1;
                 return this;
             }
 
+            /**
+             * @param pos1 the first position of the line
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos1(BlockPosHelper pos1) {
                 this.pos1 = pos1.toPos3D();
                 return this;
             }
 
+            /**
+             * @param x1 the x coordinate of the first position of the line
+             * @param y1 the y coordinate of the first position of the line
+             * @param z1 the z coordinate of the first position of the line
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos1(double x1, double y1, double z1) {
                 this.pos1 = new PositionCommon.Pos3D(x1, y1, z1);
                 return this;
             }
 
+            /**
+             * @return the second position of the line.
+             *
+             * @since 1.8.4
+             */
             public PositionCommon.Pos3D getPos2() {
                 return pos2;
             }
 
+            /**
+             * @param pos2 the second position of the line
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos2(PositionCommon.Pos3D pos2) {
                 this.pos2 = pos2;
                 return this;
             }
 
+            /**
+             * @param pos2 the second position of the line
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos2(BlockPosHelper pos2) {
                 this.pos2 = pos2.toPos3D();
                 return this;
             }
 
+            /**
+             * @param x2 the x coordinate of the second position of the line
+             * @param y2 the y coordinate of the second position of the line
+             * @param z2 the z coordinate of the second position of the line
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos2(int x2, int y2, int z2) {
                 this.pos2 = new PositionCommon.Pos3D(x2, y2, z2);
                 return this;
             }
 
+            /**
+             * @param x1 the x coordinate of the first position of the line
+             * @param y1 the y coordinate of the first position of the line
+             * @param z1 the z coordinate of the first position of the line
+             * @param x2 the x coordinate of the second position of the line
+             * @param y2 the x coordinate of the second position of the line
+             * @param z2 the z coordinate of the second position of the line
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos(int x1, int y1, int z1, int x2, int y2, int z2) {
                 this.pos1 = new PositionCommon.Pos3D(x1, y1, z1);
                 this.pos2 = new PositionCommon.Pos3D(x2, y2, z2);
                 return this;
             }
 
+            /**
+             * @param pos1 the first position of the line
+             * @param pos2 the second position of the line
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos(BlockPosHelper pos1, BlockPosHelper pos2) {
                 this.pos1 = pos1.toPos3D();
                 this.pos2 = pos2.toPos3D();
                 return this;
             }
 
+            /**
+             * @param pos1 the first position of the line
+             * @param pos2 the second position of the line
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos(PositionCommon.Pos3D pos1, PositionCommon.Pos3D pos2) {
                 this.pos1 = pos1;
                 this.pos2 = pos2;
                 return this;
             }
 
+            /**
+             * @return the color of the line.
+             *
+             * @since 1.8.4
+             */
             public int getColor() {
                 return color;
             }
 
+            /**
+             * @param color the color of the line
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder color(int color) {
                 this.color = color;
                 return this;
             }
 
+            /**
+             * @return the alpha value of the line's color.
+             *
+             * @since 1.8.4
+             */
             public int getAlpha() {
                 return alpha;
             }
 
+            /**
+             * @param alpha the alpha value for the line's color.
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder alpha(int alpha) {
                 this.alpha = alpha;
                 return this;
             }
 
-            public boolean isCull() {
+            /**
+             * @return {@code true} if the line should be culled, {@code false} otherwise.
+             *
+             * @since 1.8.4
+             */
+            public boolean isCulled() {
                 return cull;
             }
 
+            /**
+             * @param cull whether to cull the line or not
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder cull(boolean cull) {
                 this.cull = cull;
                 return this;
             }
 
+            /**
+             * Creates the line for the given values and adds it to the draw3D.
+             *
+             * @return the created line.
+             *
+             * @since 1.8.4
+             */
             public Line build() {
                 Line line = new Line(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, color, alpha, cull);
                 parent.addLine(line);
                 return line;
             }
         }
-        
     }
 
     /**
@@ -1297,52 +1583,118 @@ public class Draw3D {
                 this.parent = parent;
             }
 
+            /**
+             * @return the position of the surface.
+             *
+             * @since 1.8.4
+             */
             public PositionCommon.Pos3D getPos() {
                 return pos;
             }
 
+            /**
+             * @param pos the position of the surface
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos(PositionCommon.Pos3D pos) {
                 this.pos = pos;
                 return this;
             }
 
+            /**
+             * @param pos the position of the surface
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos(BlockPosHelper pos) {
                 this.pos = pos.toPos3D();
                 return this;
             }
 
+            /**
+             * @param x the x position of the surface
+             * @param y the y position of the surface
+             * @param z the z position of the surface
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder pos(double x, double y, double z) {
                 this.pos = new PositionCommon.Pos3D(x, y, z);
                 return this;
             }
 
+            /**
+             * @return the x rotation of the surface.
+             *
+             * @since 1.8.4
+             */
             public int getXRot() {
                 return xRot;
             }
 
+            /**
+             * @param xRot the x rotation of the surface
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder xRot(int xRot) {
                 this.xRot = xRot;
                 return this;
             }
 
+            /**
+             * @return the y rotation of the surface.
+             *
+             * @since 1.8.4
+             */
             public int getYRot() {
                 return yRot;
             }
 
+            /**
+             * @param yRot the y rotation of the surface
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder yRot(int yRot) {
                 this.yRot = yRot;
                 return this;
             }
 
+            /**
+             * @return the z rotation of the surface.
+             *
+             * @since 1.8.4
+             */
             public int getZRot() {
                 return zRot;
             }
 
+            /**
+             * @param zRot the z rotation of the surface
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder zRot(int zRot) {
                 this.zRot = zRot;
                 return this;
             }
 
+            /**
+             * @param xRot the x rotation of the surface
+             * @param yRot the y rotation of the surface
+             * @param zRot the z rotation of the surface
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder setRot(int xRot, int yRot, int zRot) {
                 this.xRot = xRot;
                 this.yRot = yRot;
@@ -1350,82 +1702,173 @@ public class Draw3D {
                 return this;
             }
 
+            /**
+             * @return the width of the surface.
+             *
+             * @since 1.8.4
+             */
             public int getWidth() {
                 return width;
             }
 
+            /**
+             * @param width the width of the surface
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder width(int width) {
                 this.width = width;
                 return this;
             }
 
+            /**
+             * @return the height of the surface.
+             *
+             * @since 1.8.4
+             */
             public int getHeight() {
                 return height;
             }
 
+            /**
+             * @param height the height of the surface
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder height(int height) {
                 this.height = height;
                 return this;
             }
 
+            /**
+             * @param width  the width of the surface
+             * @param height the height of the surface
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder setSize(int width, int height) {
                 this.width = width;
                 this.height = height;
                 return this;
             }
 
+            /**
+             * @return the minimum number of subdivisions.
+             *
+             * @since 1.8.4
+             */
             public int getMinSubdivisions() {
                 return minSubdivisions;
             }
 
+            /**
+             * @param minSubdivisions the minimum number of subdivisions
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder minSubdivisions(int minSubdivisions) {
                 this.minSubdivisions = minSubdivisions;
                 return this;
             }
 
+            /**
+             * @return the scale of the surface.
+             *
+             * @since 1.8.4
+             */
             public double getScale() {
                 return scale;
             }
 
+            /**
+             * @param scale the scale of the surface
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder scale(double scale) {
                 this.scale = scale;
                 return this;
             }
 
+            /**
+             * @return the scale of the z-index.
+             *
+             * @since 1.8.4
+             */
             public double getZIndexScale() {
                 return zIndexScale;
             }
 
+            /**
+             * @param zIndexScale the scale of the z-index.
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder zIndex(double zIndexScale) {
                 this.zIndexScale = zIndexScale;
                 return this;
             }
 
-            public boolean isRenderBack() {
+            /**
+             * @return {@code true} if the back of the surface should be rendered, {@code false}
+             *         otherwise.
+             *
+             * @since 1.8.4
+             */
+            public boolean shouldRenderBack() {
                 return renderBack;
             }
 
+            /**
+             * @param renderBack whether the back of the surface should be rendered or not
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder renderBack(boolean renderBack) {
                 this.renderBack = renderBack;
                 return this;
             }
 
-            public boolean isCull() {
+            /**
+             * @return {@code true} if culling is enabled for this box, {@code false} otherwise.
+             *
+             * @since 1.8.4
+             */
+            public boolean isCulled() {
                 return cull;
             }
 
+            /**
+             * @param cull whether to enable culling or not
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
             public Builder cull(boolean cull) {
                 this.cull = cull;
                 return this;
             }
 
+            /**
+             * Creates the surface for the given values and adds it to the draw3D.
+             *
+             * @return the surface box.
+             *
+             * @since 1.8.4
+             */
             public Surface build() {
                 Surface surface = new Surface(pos, new PositionCommon.Pos3D(xRot, yRot, zRot), new PositionCommon.Pos2D(width, height), minSubdivisions, renderBack, cull);
                 parent.addSurface(surface);
                 return surface;
             }
         }
-        
     }
 
 }

@@ -45,8 +45,8 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
     }
 
     /**
-     * To calculate the maximum amount of xp, just multiply the return value by 2. The average is
-     * probably 1.5 times the return value.
+     * Returns the minimum amount of xp dropped when disenchanting the input items. To calculate the
+     * maximum amount of xp, just multiply the return value by 2.
      *
      * @return the minimum amount of xp the grindstone should return.
      *

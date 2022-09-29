@@ -7,14 +7,16 @@ import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
+import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookResults;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.RecipeHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.List;
@@ -147,7 +149,7 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
         }
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
             if (mc.currentScreen != inventory) {
-                ((RecipeBookWidget) recipeBookWidget).initialize(0, 0, mc, true, (AbstractRecipeScreenHandler<?>) handler);
+                ((RecipeBookWidget) recipeBookWidget).initialize(0, 0, mc, true, handler);
             }
             if (!((RecipeBookWidget) recipeBookWidget).isOpen()) {
                 ((RecipeBookWidget) recipeBookWidget).reset();
@@ -164,7 +166,7 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
             mc.execute(() -> {
                 try {
                     if (mc.currentScreen != inventory) {
-                        ((RecipeBookWidget) recipeBookWidget).initialize(0, 0, mc, true, (AbstractRecipeScreenHandler<?>) handler);
+                        ((RecipeBookWidget) recipeBookWidget).initialize(0, 0, mc, true, handler);
                     }
                     if (!((RecipeBookWidget) recipeBookWidget).isOpen()) {
                         ((RecipeBookWidget) recipeBookWidget).reset();
@@ -183,8 +185,13 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
             }
         }
         res = recipeBookWidget.jsmacros_getResults();
-        List<RecipeResultCollection> result = ((IRecipeBookResults) res).jsmacros_getResultCollections();
-        recipes = result.stream().flatMap(e -> e.getRecipes(craftable).stream());
+        if (craftable) {
+            List<RecipeResultCollection> result = ((IRecipeBookResults) res).jsmacros_getResultCollections();
+            recipes = result.stream().flatMap(e -> e.getRecipes(true).stream());
+        } else {
+            List<RecipeResultCollection> results = recipeBookWidget.jsmacros_getRecipeBook().getResultsForGroup(RecipeBookGroup.getGroups(handler.getCategory()).get(0));
+            recipes = results.stream().filter(RecipeResultCollection::isInitialized).filter(RecipeResultCollection::hasFittingRecipes).flatMap(e -> e.getAllRecipes().stream());
+        }
         return recipes.map(e -> new RecipeHelper(e, syncId)).collect(Collectors.toList());
     }
 
@@ -220,11 +227,15 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
      * @since 1.8.4
      */
     public void toggleRecipeBook() {
+        if (mc.currentScreen != inventory) {
+            return;
+        }
         IRecipeBookWidget recipeBookWidget = getRecipeBookWidget();
         if (recipeBookWidget == null) {
             return;
         }
         ((RecipeBookWidget) recipeBookWidget).toggleOpen();
+        ((IScreen) inventory).reloadScreen();
     }
 
     /**
@@ -232,11 +243,15 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
      * @since 1.8.4
      */
     public void setRecipeBook(boolean open) {
+        if (mc.currentScreen != inventory) {
+            return;
+        }
         IRecipeBookWidget recipeBookWidget = getRecipeBookWidget();
         if (recipeBookWidget != null) {
             RecipeBookWidget rbw = (RecipeBookWidget) recipeBookWidget;
             if (rbw.isOpen() != open) {
-                rbw.toggleOpen();
+                ((RecipeBookWidget) recipeBookWidget).toggleOpen();
+                ((IScreen) inventory).reloadScreen();
             }
         }
     }

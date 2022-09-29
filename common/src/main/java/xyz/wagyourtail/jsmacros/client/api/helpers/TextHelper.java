@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unused")
 public class TextHelper extends BaseHelper<Text> {
 
-    private static final Pattern STRIP_FORMATTING_PATTERN = Pattern.compile("(?i)\u00a7[0-9A-FK-OR]");
+    public static final Pattern STRIP_FORMATTING_PATTERN = Pattern.compile("(?i)\u00a7[0-9A-FK-OR]");
     
     public TextHelper(String json) {
         super(Text.Serializer.fromJson(json));

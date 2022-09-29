@@ -50,12 +50,15 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     }
 
     /**
+     * Started advancements are advancements that have been started, so at least one task has been
+     * completed so far, but not fully completed.
+     *
      * @return a list of all started advancements.
      *
      * @since 1.8.4
      */
     public List<AdvancementHelper> getStartedAdvancements() {
-        return getProgressStream().filter(advancementProgressEntry -> !advancementProgressEntry.getValue().isAnyObtained()).map(advancementProgressEntry -> new AdvancementHelper(advancementProgressEntry.getKey())).toList();
+        return getProgressStream().filter(progress -> !progress.getValue().isDone() && progress.getValue().isAnyObtained()).map(advancementProgressEntry -> new AdvancementHelper(advancementProgressEntry.getKey())).toList();
     }
 
     /**

@@ -23,6 +23,7 @@ import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
@@ -185,7 +186,17 @@ public abstract class CommandBuilder {
      * @return
      */
     public CommandBuilder suggestMatching(String... suggestions) {
-        suggests((ctx, builder) -> CommandSource.suggestMatching(Arrays.asList(suggestions), builder));
+        return suggestMatching(Arrays.asList(suggestions));
+    }
+
+    /**
+     * @param suggestions the strings to match
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public CommandBuilder suggestMatching(Collection<String> suggestions) {
+        suggests((ctx, builder) -> CommandSource.suggestMatching(suggestions, builder));
         return this;
     }
 
@@ -196,7 +207,17 @@ public abstract class CommandBuilder {
      * @return
      */
     public CommandBuilder suggestIdentifier(String... suggestions) {
-        suggests((ctx, builder) -> CommandSource.suggestIdentifiers(Arrays.stream(suggestions).map(Identifier::new), builder));
+        return suggestIdentifier(Arrays.asList(suggestions));
+    }
+
+    /**
+     * @param suggestions the identifiers to match
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public CommandBuilder suggestIdentifier(Collection<String> suggestions) {
+        suggests((ctx, builder) -> CommandSource.suggestIdentifiers(suggestions.stream().map(Identifier::new), builder));
         return this;
     }
 
@@ -206,8 +227,22 @@ public abstract class CommandBuilder {
      *
      * @since 1.8.4
      */
-    public CommandBuilder suggestPositions(BlockPosHelper... positions) {
-        suggests((ctx, builder) -> CommandSource.suggestPositions(builder.getRemaining(), Arrays.stream(positions).map(p -> new CommandSource.RelativePosition(String.valueOf(p.getX()), String.valueOf(p.getY()), String.valueOf(p.getZ()))).toList(), builder, s -> true));
+    public CommandBuilder suggestPositions(String... positions) {
+        return suggestPositions(Arrays.asList(positions));
+    }
+
+    /**
+     * @param positions the positions to match
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public CommandBuilder suggestPositions(Collection<String> positions) {
+        suggests((ctx, builder) -> CommandSource.suggestPositions(builder.getRemaining(), positions.stream().map(p -> {
+                    String[] split = p.split(" ");
+                    return new CommandSource.RelativePosition(split[0], split[1], split[2]);
+                }).toList(), builder, s -> true)
+        );
         return this;
     }
     

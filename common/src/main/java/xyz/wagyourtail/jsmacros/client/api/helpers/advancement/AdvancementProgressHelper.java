@@ -66,7 +66,7 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
      *
      * @since 1.8.4
      */
-    public float getProgressBarPercentage() {
+    public float getPercentage() {
         return base.getProgressBarPercentage();
     }
 
@@ -75,7 +75,7 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
      *
      * @since 1.8.4
      */
-    public String getProgressBarFraction() {
+    public String getFraction() {
         return base.getProgressBarFraction();
     }
 
@@ -139,7 +139,7 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
 
     @Override
     public String toString() {
-        return String.format("AdvancementProgressHelper:{\"percent\": %f}", getProgressBarPercentage());
+        return String.format("AdvancementProgressHelper:{\"percent\": %f}", getPercentage());
     }
     
 }

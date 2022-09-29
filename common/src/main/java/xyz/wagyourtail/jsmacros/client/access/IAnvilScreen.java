@@ -8,8 +8,6 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
  */
 public interface IAnvilScreen {
 
-    void jsmacros_rename(String name);
-
     TextFieldWidget jsmacros_getRenameText();
     
 }

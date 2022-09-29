@@ -2,7 +2,9 @@ package xyz.wagyourtail.jsmacros.client.mixins.access;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.AbstractFurnaceScreenHandler;
+import net.minecraft.screen.PropertyDelegate;
 
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import xyz.wagyourtail.jsmacros.client.access.IAbstractFurnaceScreenHandler;
@@ -20,6 +22,8 @@ public abstract class MixinAbstractFurnaceScreenHandler implements IAbstractFurn
     @Shadow
     protected abstract boolean isFuel(ItemStack itemStack);
 
+    @Shadow @Final private PropertyDelegate propertyDelegate;
+
     @Override
     public boolean jsmacros_isSmeltable(ItemStack stack) {
         return isSmeltable(stack);
@@ -28,5 +32,10 @@ public abstract class MixinAbstractFurnaceScreenHandler implements IAbstractFurn
     @Override
     public boolean jsmacros_isFuel(ItemStack stack) {
         return isFuel(stack);
+    }
+
+    @Override
+    public PropertyDelegate jsmacros_getPropertyDelegate() {
+        return propertyDelegate;
     }
 }

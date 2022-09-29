@@ -17,14 +17,6 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
     }
 
     /**
-     * @param name the new item name
-     * @since 1.8.4
-     */
-    public void rename(String name) {
-        ((IAnvilScreen) inventory).jsmacros_rename(name);
-    }
-
-    /**
      * @return the currently set name to be applied.
      *
      * @since 1.8.4
@@ -99,5 +91,5 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
     public String toString() {
         return String.format("AnvilInventory:{}");
     }
-    
+
 }

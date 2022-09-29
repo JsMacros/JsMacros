@@ -21,8 +21,11 @@ import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.item.FoodComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.network.Packet;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
@@ -42,16 +45,16 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.util.NameUtil;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BossBarHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ChatHudLineHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ChunkHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.DirectionHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EnchantmentHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.FoodComponentHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.FullOptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PlayerAbilitiesHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PlayerListEntryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.RecipeHelper;
@@ -78,6 +81,8 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.gui.CyclingButtonWidgetHelper
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.LockButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.SliderWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.TextFieldWidgetHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.util.NameUtil;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
@@ -90,7 +95,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.SplittableRandom;
 
@@ -151,17 +155,6 @@ public class FUtil extends BaseLibrary {
     }
 
     /**
-     * Creates a java {@link LinkedList}.
-     *
-     * @return a java LinkedList.
-     *
-     * @since 1.8.4
-     */
-    public LinkedList<?> createLinkedList() {
-        return new LinkedList<>();
-    }
-
-    /**
      * @param obj the object to wrap
      * @return the correct instance of {@link BaseHelper} for the given object if it exists and
      *         {@code null} otherwise.
@@ -169,7 +162,7 @@ public class FUtil extends BaseLibrary {
      * @since 1.8.4
      */
     public BaseHelper<?> getHelperFromRaw(Object obj) {
-        //didn't implement CommandNodeHelper, TradeOfferHelper
+        //didn't implement CommandNodeHelper, TradeOfferHelper, ModContainerHelper
         if (obj instanceof BossBar bossBar) {
             return new BossBarHelper(bossBar);
         } else if (obj instanceof ChatHudLine chatHudLine) {
@@ -182,12 +175,18 @@ public class FUtil extends BaseLibrary {
             return new DirectionHelper(direction);
         } else if (obj instanceof Enchantment enchantment) {
             return new EnchantmentHelper(enchantment);
+        } else if (obj instanceof FoodComponent foodComponent) {
+            return new FoodComponentHelper(foodComponent);
         } else if (obj instanceof ItemStack itemStack) {
             return new ItemStackHelper(itemStack);
+        } else if (obj instanceof GameOptions gameOptions) {
+            return new FullOptionsHelper(gameOptions);
+        } else if (obj instanceof PacketByteBuf packetByteBuf) {
+            return new PacketByteBufferHelper(packetByteBuf);
+        } else if (obj instanceof Packet<?> packet) {
+            return new PacketByteBufferHelper(packet);
         } else if (obj instanceof NbtElement nbtElement) {
             return NBTElementHelper.resolve(nbtElement);
-        } else if (obj instanceof GameOptions gameOptions) {
-            return new OptionsHelper(gameOptions);
         } else if (obj instanceof PlayerAbilities playerAbilities) {
             return new PlayerAbilitiesHelper(playerAbilities);
         } else if (obj instanceof PlayerListEntry playerListEntry) {

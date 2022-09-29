@@ -1,6 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.item;
 
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentLevelEntry;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
@@ -89,8 +93,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper addEnchantment(String id, int level) {
-        base.addEnchantment(Registry.ENCHANTMENT.get(Identifier.tryParse(id)), level);
-        return this;
+        return addEnchantment(Registry.ENCHANTMENT.get(Identifier.tryParse(id)), level);
     }
 
     /**
@@ -100,7 +103,15 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper addEnchantment(EnchantmentHelper enchantment) {
-        base.addEnchantment(enchantment.getRaw(), enchantment.getLevel());
+        return addEnchantment(enchantment.getRaw(), enchantment.getLevel());
+    }
+
+    protected CreativeItemStackHelper addEnchantment(Enchantment enchantment, int level) {
+        if (base.getItem() == Items.ENCHANTED_BOOK) {
+            EnchantedBookItem.addEnchantment(base, new EnchantmentLevelEntry(enchantment, level));
+        } else {
+            base.addEnchantment(enchantment, level);
+        }
         return this;
     }
 
