@@ -9,8 +9,10 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.*;
+import net.minecraft.command.suggestion.SuggestionProviders;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.SuggestionsBuilderHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
@@ -41,53 +43,8 @@ public abstract class CommandBuilder {
 
     public abstract CommandBuilder literalArg(String name);
 
-    public CommandBuilder angleArg(String name) {
-        argument(name, AngleArgumentType::angle);
-        return this;
-    }
-
-    public CommandBuilder blockArg(String name) {
-        argument(name, BlockStateArgumentType::blockState);
-        return this;
-    }
-
     public CommandBuilder booleanArg(String name) {
         argument(name, BoolArgumentType::bool);
-        return this;
-    }
-
-    public CommandBuilder colorArg(String name) {
-        argument(name, ColorArgumentType::color);
-        return this;
-    }
-
-    public CommandBuilder doubleArg(String name) {
-        argument(name, (Supplier<ArgumentType<?>>) DoubleArgumentType::doubleArg);
-        return this;
-    }
-
-    public CommandBuilder doubleArg(String name, double min, double max) {
-        argument(name, () -> DoubleArgumentType.doubleArg(min, max));
-        return this;
-    }
-
-    public CommandBuilder floatRangeArg(String name) {
-        argument(name, NumberRangeArgumentType::floatRange);
-        return this;
-    }
-
-    public CommandBuilder longArg(String name) {
-        argument(name, (Supplier<ArgumentType<?>>) LongArgumentType::longArg);
-        return this;
-    }
-
-    public CommandBuilder longArg(String name, long min, long max) {
-        argument(name, () -> LongArgumentType.longArg(min, max));
-        return this;
-    }
-
-    public CommandBuilder identifierArg(String name) {
-        argument(name, IdentifierArgumentType::identifier);
         return this;
     }
 
@@ -106,13 +63,33 @@ public abstract class CommandBuilder {
         return this;
     }
 
-    public CommandBuilder itemArg(String name) {
-        argument(name, ItemStackArgumentType::itemStack);
+    public CommandBuilder longArg(String name) {
+        argument(name, (Supplier<ArgumentType<?>>) LongArgumentType::longArg);
         return this;
     }
 
-    public CommandBuilder nbtArg(String name) {
-        argument(name, NbtCompoundArgumentType::nbtCompound);
+    public CommandBuilder longArg(String name, long min, long max) {
+        argument(name, () -> LongArgumentType.longArg(min, max));
+        return this;
+    }
+
+    public CommandBuilder floatRangeArg(String name) {
+        argument(name, NumberRangeArgumentType::floatRange);
+        return this;
+    }
+
+    public CommandBuilder doubleArg(String name) {
+        argument(name, (Supplier<ArgumentType<?>>) DoubleArgumentType::doubleArg);
+        return this;
+    }
+
+    public CommandBuilder doubleArg(String name, double min, double max) {
+        argument(name, () -> DoubleArgumentType.doubleArg(min, max));
+        return this;
+    }
+
+    public CommandBuilder uuidArgType(String name) {
+        argument(name, UuidArgumentType::uuid);
         return this;
     }
 
@@ -128,16 +105,6 @@ public abstract class CommandBuilder {
 
     public CommandBuilder wordArg(String name) {
         argument(name, StringArgumentType::word);
-        return this;
-    }
-
-    public CommandBuilder textArgType(String name) {
-        argument(name, TextArgumentType::text);
-        return this;
-    }
-
-    public CommandBuilder uuidArgType(String name) {
-        argument(name, UuidArgumentType::uuid);
         return this;
     }
 
@@ -161,9 +128,145 @@ public abstract class CommandBuilder {
         return this;
     }
 
+    public CommandBuilder textArgType(String name) {
+        argument(name, TextArgumentType::text);
+        return this;
+    }
+
+    public CommandBuilder timeArg(String name) {
+        argument(name, TimeArgumentType::new);
+        return this;
+    }
+
+    public CommandBuilder identifierArg(String name) {
+        argument(name, IdentifierArgumentType::identifier);
+        return this;
+    }
+
+    public CommandBuilder nbtArg(String name) {
+        return nbtCompoundArg(name);
+    }
+
+    public CommandBuilder nbtElementArg(String name) {
+        argument(name, NbtElementArgumentType::nbtElement);
+        return this;
+    }
+
+    public CommandBuilder nbtCompoundArg(String name) {
+        argument(name, (NbtCompoundArgumentType::nbtCompound));
+        return this;
+    }
+
+    public CommandBuilder colorArg(String name) {
+        argument(name, ColorArgumentType::color);
+        return this;
+    }
+
+    public CommandBuilder angleArg(String name) {
+        argument(name, AngleArgumentType::new);
+        return this;
+    }
+
+    public CommandBuilder itemArg(String name) {
+        return itemStackArg(name);
+    }
+
+    public CommandBuilder itemStackArg(String name) {
+        argument(name, ItemStackArgumentType::itemStack);
+        return this;
+    }
+
+    public CommandBuilder itemPredicateArg(String name) {
+        argument(name, ItemPredicateArgumentType::new);
+        return this;
+    }
+
+    public CommandBuilder blockArg(String name) {
+        return blockStateArg(name);
+    }
+
+    public CommandBuilder blockStateArg(String name) {
+        argument(name, BlockStateArgumentType::blockState);
+        return this;
+    }
+
+    public CommandBuilder blockPredicateArg(String name) {
+        argument(name, BlockPredicateArgumentType::new);
+        return this;
+    }
+
+    public CommandBuilder blockPosArg(String name) {
+        argument(name, BlockPosArgumentType::new);
+        return this;
+    }
+
+    public CommandBuilder columnPosArg(String name) {
+        argument(name, ColumnPosArgumentType::new);
+        return this;
+    }
+
+    public CommandBuilder dimensionArg(String name) {
+        argument(name, DimensionArgumentType::new);
+        return this;
+    }
+
+    public CommandBuilder enchantmentArg(String name) {
+        argument(name, EnchantmentArgumentType::new);
+        return this;
+    }
+
+    public CommandBuilder entityTypeArg(String name) {
+        argument(name, EntitySummonArgumentType::new);
+        suggests(SuggestionProviders.SUMMONABLE_ENTITIES);
+        return this;
+    }
+
+    //TODO: Doesn't work client side because EntitySelector requires a server world, clientarguments does it client side.
+/*    public CommandBuilder playerArg(String name) {
+        return entityArg(name, true, true);
+    }
+
+    public CommandBuilder playersArg(String name) {
+        return entityArg(name, false, true);
+    }
+    
+    public CommandBuilder entityArg(String name, boolean singleTarget, boolean playersOnly) {
+        EntityArgumentType entityArgumentType;
+        if (singleTarget) {
+            if (playersOnly) {
+                entityArgumentType = EntityArgumentType.player();
+            } else {
+                entityArgumentType = EntityArgumentType.entity();
+            }
+        } else {
+            if (playersOnly) {
+                entityArgumentType = EntityArgumentType.players();
+            } else {
+                entityArgumentType = EntityArgumentType.entities();
+            }
+        }
+        argument(name, () -> entityArgumentType);
+        return this;
+    }*/
+
+    public CommandBuilder itemSlotArg(String name) {
+        argument(name, ItemSlotArgumentType::new);
+        return this;
+    }
+
+    public CommandBuilder particleArg(String name) {
+        argument(name, ParticleEffectArgumentType::new);
+        return this;
+    }
+
+    public CommandBuilder statusEffectArg(String name) {
+        argument(name, StatusEffectArgumentType::new);
+        return this;
+    }
+
     /**
      *
-     * it is recomended to use {@link xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros#runScript(String, BaseEvent)}
+     * it is recommended to use {@link xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros#runScript(String, BaseEvent)}
      * in the callback if you expect to actually do anything complicated with waits.
      *
      * the {@link CommandContextHelper} arg is an {@link BaseEvent}
@@ -227,11 +330,37 @@ public abstract class CommandBuilder {
      *
      * @since 1.8.4
      */
+    public CommandBuilder suggestBlockPositions(BlockPosHelper... positions) {
+        return suggestPositions(Arrays.stream(positions).map(b -> b.getX() + " " + b.getY() + " " + b.getZ()).toList());
+    }
+
+    /**
+     * @param positions the positions to suggest
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public CommandBuilder suggestBlockPositions(Collection<BlockPosHelper> positions) {
+        return suggestPositions(positions.stream().map(b -> b.getX() + " " + b.getY() + " " + b.getZ()).toList());
+    }
+    
+    /**
+     * Positions are strings of the form "x y z" where x, y, and z are numbers or the default
+     * minecraft selectors "~" and "^" followed by a number.
+     *
+     * @param positions the positions to suggest
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
     public CommandBuilder suggestPositions(String... positions) {
         return suggestPositions(Arrays.asList(positions));
     }
 
     /**
+     * Positions are strings of the form "x y z" where x, y, and z are numbers or the default
+     * minecraft selectors "~" and "^" followed by a number.
+     *
      * @param positions the positions to match
      * @return self for chaining.
      *

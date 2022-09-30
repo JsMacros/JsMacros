@@ -18,14 +18,14 @@ public class PlayerInventory extends RecipeInventory<InventoryScreen> {
     /**
      * @param x the x position of the input from 0 to 1, going left to right
      * @param y the y position of the input from 0 to 1, going top to bottom
-     * @return the input item at the given position.
+     * @return the input item at the given position of the crafting grid.
      *
      * @since 1.8.4
      */
     public ItemStackHelper getInput(int x, int y) {
         return getSlot(x + y * 2 + 1);
     }
-    
+
     /**
      * @param slot the slot to check
      * @return {@code true} if the slot is in the hotbar or the offhand slot, {@code false}
@@ -86,5 +86,5 @@ public class PlayerInventory extends RecipeInventory<InventoryScreen> {
     public String toString() {
         return String.format("PlayerInventory:{}");
     }
-    
+
 }

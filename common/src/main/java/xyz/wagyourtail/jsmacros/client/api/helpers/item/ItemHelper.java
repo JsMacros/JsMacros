@@ -28,12 +28,12 @@ public class ItemHelper extends BaseHelper<Item> {
     }
 
     /**
-     * @return the name of this item's group or {@code "unknown"} if this item is not in a group.
+     * @return the name of this item's group or {@code "UNKNOWN"} if this item is not in a group.
      *
      * @since 1.8.4
      */
     public String getGroup() {
-        return base.getGroup() == null ? "unknown" : base.getGroup().getName();
+        return base.getGroup() == null ? "UNKNOWN" : base.getGroup().getName();
     }
 
     /**
@@ -232,7 +232,7 @@ public class ItemHelper extends BaseHelper<Item> {
      *
      * @since 1.8.4
      */
-    public FoodComponentHelper getFoodHelper() {
+    public FoodComponentHelper getFood() {
         if (isFood()) {
             return new FoodComponentHelper(base.getFoodComponent());
         }

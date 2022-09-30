@@ -1,9 +1,7 @@
 package xyz.wagyourtail.doclet.webdoclet.parsers;
 
-import com.sun.jdi.ClassType;
 import com.sun.source.doctree.*;
 import com.sun.source.util.DocTreePath;
-import org.gradle.internal.impldep.org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.XMLBuilder;
 import xyz.wagyourtail.doclet.webdoclet.Main;
@@ -472,7 +470,8 @@ public class ClassParser {
                         if (param instanceof TypeVariable typeVariable && typeVariable.getUpperBound().equals(type)) {
                             builder.append(typeLink = new XMLBuilder("p", true));
                             typeLink.setClass("type primitiveType");
-                            typeLink.append(typeVariable.asElement().getSimpleName(), ", ");
+                            typeLink.append(typeVariable.asElement().getSimpleName());
+                            builder.append(", ");
                         } else {
                             builder.append(parseType(param), ", ");
                         }

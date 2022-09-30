@@ -88,8 +88,9 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
     }
 
     /**
-     * @param player
-     * @return
+     * @param player the player to get the team color's name for
+     * @return the name of the speicifed player's team color or {@code null} if the player is not in
+     *         a team.
      *
      * @since 1.8.4
      */
@@ -99,7 +100,7 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
     }
 
     /**
-     * @return
+     * @return the color of this player's team or {@code null} if this player is not in a team.
      *
      * @since 1.8.4
      */

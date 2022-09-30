@@ -45,8 +45,6 @@ import java.util.UUID;
 import java.util.function.Function;
 
 /**
- * The type Packet byte buffer helper.
- *
  * @author Etheradon
  * @since 1.8.4
  */

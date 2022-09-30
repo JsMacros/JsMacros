@@ -1,9 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
-import net.minecraft.client.gui.screen.Screen;
-
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -19,21 +16,21 @@ import java.util.Map;
 @Event(value = "InventoryChange")
 public class EventInventoryChange implements BaseEvent {
     public final Inventory<?> inventory;
-    public final int[] slots;
+    public final int[] changedSlots;
     public final Map<Integer, ItemStackHelper> oldItems;
     public final Map<Integer, ItemStackHelper> newItems;
 
-    public EventInventoryChange(Inventory<?> inventory, int[] slots, ItemStackHelper oldItems, ItemStackHelper newItems) {
-        this(inventory, slots, new ItemStackHelper[]{oldItems}, new ItemStackHelper[]{newItems});
+    public EventInventoryChange(Inventory<?> inventory, int[] changedSlots, ItemStackHelper oldItems, ItemStackHelper newItems) {
+        this(inventory, changedSlots, new ItemStackHelper[]{oldItems}, new ItemStackHelper[]{newItems});
     }
 
-    public EventInventoryChange(Inventory<?> inventory, int[] slots, ItemStackHelper[] oldItems, ItemStackHelper[] newItems) {
-        this(inventory, slots, new Int2ObjectArrayMap<>(slots, oldItems), new Int2ObjectArrayMap<>(slots, newItems));
+    public EventInventoryChange(Inventory<?> inventory, int[] changedSlots, ItemStackHelper[] oldItems, ItemStackHelper[] newItems) {
+        this(inventory, changedSlots, new Int2ObjectArrayMap<>(changedSlots, oldItems), new Int2ObjectArrayMap<>(changedSlots, newItems));
     }
 
-    public EventInventoryChange(Inventory<?> inventory, int[] slots, Map<Integer, ItemStackHelper> oldItems, Map<Integer, ItemStackHelper> newItems) {
+    public EventInventoryChange(Inventory<?> inventory, int[] changedSlots, Map<Integer, ItemStackHelper> oldItems, Map<Integer, ItemStackHelper> newItems) {
         this.inventory = inventory;
-        this.slots = slots;
+        this.changedSlots = changedSlots;
         this.oldItems = oldItems;
         this.newItems = newItems;
         
@@ -42,7 +39,7 @@ public class EventInventoryChange implements BaseEvent {
 
     @Override
     public String toString() {
-        return String.format("%s:{\"inventory\": %s, \"slots\": %s}", this.getEventName(), inventory, Arrays.toString(slots));
+        return String.format("%s:{\"inventory\": %s, \"slots\": %s}", this.getEventName(), inventory, Arrays.toString(changedSlots));
     }
 
 }

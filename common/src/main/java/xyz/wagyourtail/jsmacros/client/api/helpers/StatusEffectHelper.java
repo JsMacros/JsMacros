@@ -81,8 +81,8 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     }
 
     /**
-     * @return the type of this effect, which is either {@code HARMFUL}, {@code NEUTRAL} or
-     *         {@code BENEFICIAL}.
+     * @return the type of this effect, which is either {@code "HARMFUL"}, {@code "NEUTRAL"} or
+     *         {@code "BENEFICIAL"}.
      *
      * @since 1.8.4
      */

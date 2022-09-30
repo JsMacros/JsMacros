@@ -21,6 +21,9 @@ public class EventRecvPacket implements BaseEvent {
     }
 
     /**
+     * After modifying the buffer, use {@link PacketByteBufferHelper#toPacket()} to get the modified
+     * packet and replace this packet with the modified one.
+     *
      * @return a helper for accessing and modifying the packet's data.
      *
      * @since 1.8.4

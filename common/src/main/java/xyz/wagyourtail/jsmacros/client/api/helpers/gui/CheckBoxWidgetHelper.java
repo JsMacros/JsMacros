@@ -23,7 +23,7 @@ public class CheckBoxWidgetHelper extends ButtonWidgetHelper<CheckBox> {
     }
 
     /**
-     * @return
+     * @return {@code true} if this button is checked, {@code false} otherwise.
      *
      * @since 1.8.4
      */
@@ -32,8 +32,17 @@ public class CheckBoxWidgetHelper extends ButtonWidgetHelper<CheckBox> {
     }
 
     /**
-     * @param checked
-     * @return
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public CheckBoxWidgetHelper toggle() {
+        return setChecked(!base.isChecked());
+    }
+
+    /**
+     * @param checked wheter to check or uncheck this button.
+     * @return self for chaining.
      *
      * @since 1.8.4
      */

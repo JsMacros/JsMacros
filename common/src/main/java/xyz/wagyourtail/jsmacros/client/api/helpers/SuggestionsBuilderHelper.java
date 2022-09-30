@@ -4,7 +4,6 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.util.Identifier;
 
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -104,11 +103,37 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
      *
      * @since 1.8.4
      */
+    public SuggestionsBuilderHelper suggestBlockPositions(BlockPosHelper... positions) {
+        return suggestPositions(Arrays.stream(positions).map(b -> b.getX() + " " + b.getY() + " " + b.getZ()).toList());
+    }
+
+    /**
+     * @param positions the positions to suggest
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public SuggestionsBuilderHelper suggestBlockPositions(Collection<BlockPosHelper> positions) {
+        return suggestPositions(positions.stream().map(b -> b.getX() + " " + b.getY() + " " + b.getZ()).toList());
+    }
+
+    /**
+     * Positions are strings of the form "x y z" where x, y, and z are numbers or the default
+     * minecraft selectors "~" and "^" followed by a number.
+     *
+     * @param positions the positions to suggest
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
     public SuggestionsBuilderHelper suggestPositions(String... positions) {
         return suggestPositions(Arrays.asList(positions));
     }
 
     /**
+     * Positions are strings of the form "x y z" where x, y, and z are numbers or the default
+     * minecraft selectors "~" and "^" followed by a number.
+     *
      * @param positions the relative positions to suggest
      * @return self for chaining.
      *

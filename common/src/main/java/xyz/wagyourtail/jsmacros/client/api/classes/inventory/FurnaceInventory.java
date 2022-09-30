@@ -27,7 +27,7 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
     /**
      * @param x the x position of the input, will always be 0
      * @param y the y position of the input, will always be 0
-     * @return the input item at the given position.
+     * @return the currently smelting item.
      *
      * @since 1.8.4
      */
@@ -36,7 +36,7 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
     }
 
     /**
-     * @return the currently smelting item stack.
+     * @return the currently smelting item.
      *
      * @since 1.8.4
      */
@@ -135,15 +135,6 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
 
     private PropertyDelegate getPropertyDelegate() {
         return ((IAbstractFurnaceScreenHandler) inventory.getScreenHandler()).jsmacros_getPropertyDelegate();
-    }
-
-    /**
-     * @return a lower number means the fuel is running out.
-     *
-     * @since 1.8.4
-     */
-    public int getFuelProgress() {
-        return inventory.getScreenHandler().getFuelProgress();
     }
 
     /**

@@ -77,7 +77,7 @@ public class FClient extends PerExecLibrary {
      *
      * @since 1.8.4
      */
-    public RegistryHelper getRegistryHelper() {
+    public RegistryHelper getRegistryManager() {
         return new RegistryHelper();
     }
 
@@ -86,7 +86,7 @@ public class FClient extends PerExecLibrary {
      *
      * @since 1.8.4
      */
-    public PacketByteBufferHelper getPacketByteBufferHelper() {
+    public PacketByteBufferHelper getPacketByteBuffer() {
         return new PacketByteBufferHelper();
     }
     
@@ -430,6 +430,24 @@ public class FClient extends PerExecLibrary {
      */
     public List<ItemHelper> getRegisteredItems() {
         return Registry.ITEM.stream().map(ItemHelper::new).toList();
+    }
+
+    /**
+     * Tries to peacefully close the game.
+     *
+     * @since 1.8.4
+     */
+    public void exitGamePeacefully() {
+        mc.scheduleStop();
+    }
+
+    /**
+     * Will close the game forcefully.
+     *
+     * @since 1.8.4
+     */
+    public void exitGameForcefully() {
+        System.exit(0);
     }
     
 }

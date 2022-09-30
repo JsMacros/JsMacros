@@ -7,7 +7,12 @@ import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 public interface IEventListener {
     
     EventContainer<?> trigger(BaseEvent event);
-    
+
+    /**
+     * Used self unregistering events.
+     *
+     * @since 1.8.4
+     */
     default void off() {
         Core.getInstance().eventRegistry.removeListener(this);
     }

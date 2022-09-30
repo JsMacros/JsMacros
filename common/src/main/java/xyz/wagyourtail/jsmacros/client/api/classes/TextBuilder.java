@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
+import xyz.wagyourtail.jsmacros.client.api.helpers.FormattingHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StyleHelper;
@@ -11,6 +12,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -99,6 +101,17 @@ public class TextBuilder {
         if (strikethrough) formattings.add(Formatting.STRIKETHROUGH);
         if (magic) formattings.add(Formatting.OBFUSCATED);
         self.styled(style -> style.withFormatting(formattings.toArray(new Formatting[0])));
+        return this;
+    }
+
+    /**
+     * @param formattings the formattings to apply
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public TextBuilder withFormatting(FormattingHelper... formattings) {
+        self.styled(style -> style.withFormatting(Arrays.stream(formattings).map(FormattingHelper::getRaw).toArray(Formatting[]::new)));
         return this;
     }
     

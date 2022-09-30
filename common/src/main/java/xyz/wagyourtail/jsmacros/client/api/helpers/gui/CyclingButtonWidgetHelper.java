@@ -37,15 +37,24 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
     }
 
     /**
+     * @return the current value in their string representation.
+     *
+     * @since 1.8.4
+     */
+    public String getStringValue() {
+        return ((ICyclingButtonWidget) base).jsmacros_toString(base.getValue());
+    }
+
+    /**
      * @param val the new value
      * @return {@code true} if the value has changed, {@code false} otherwise.
      *
      * @since 1.8.4
      */
     public boolean setValue(T val) {
-        T lastText = base.getValue();
+        T lastVal = base.getValue();
         base.setValue(val);
-        return lastText.equals(base.getValue());
+        return lastVal.equals(base.getValue());
     }
 
     /**

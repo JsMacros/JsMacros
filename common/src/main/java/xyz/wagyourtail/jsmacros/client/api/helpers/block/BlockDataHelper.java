@@ -95,8 +95,19 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
      * @return
      *
      * @since 1.6.5
+     * @deprecated use {@link #getBlock()} instead.
      */
+    @Deprecated
     public BlockHelper getBlockHelper() {
+        return getBlock();
+    }
+
+    /**
+     * @return the block
+     *
+     * @since 1.6.5
+     */
+    public BlockHelper getBlock() {
         return new BlockHelper(base.getBlock());
     }
     

@@ -107,7 +107,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
     }
 
     protected CreativeItemStackHelper addEnchantment(Enchantment enchantment, int level) {
-        if (base.getItem() == Items.ENCHANTED_BOOK) {
+        if (base.isOf(Items.ENCHANTED_BOOK)) {
             EnchantedBookItem.addEnchantment(base, new EnchantmentLevelEntry(enchantment, level));
         } else {
             base.addEnchantment(enchantment, level);

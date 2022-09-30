@@ -38,13 +38,16 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
 
     /**
      * @param idx the index to select
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void selectRecipe(int idx) {
+    public StoneCutterInventory selectRecipe(int idx) {
         if (idx >= 0 && idx < inventory.getScreenHandler().getAvailableRecipeCount()) {
             inventory.getScreenHandler().onButtonClick(mc.player, idx);
             MinecraftClient.getInstance().interactionManager.clickButton(getCurrentSyncId(), idx);
         }
+        return this;
     }
 
     /**

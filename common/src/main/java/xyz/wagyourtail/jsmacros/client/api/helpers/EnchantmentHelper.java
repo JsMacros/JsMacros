@@ -152,21 +152,47 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
+     * Only accounts for enchantments of the same target type.
+     *
      * @return a list of all enchantments that conflict with this one.
      *
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getConflictingEnchantments() {
-        return Registry.ENCHANTMENT.stream().filter(e -> e != base && e.type == base.type && !e.canCombine(base)).map(EnchantmentHelper::new).toList();
+        return getConflictingEnchantments(false);
     }
 
     /**
+     * @param ignoreType whether to check only enchantments that can be applied to the same target
+     *                   type.
+     * @return a list of all enchantments that conflict with this one.
+     *
+     * @since 1.8.4
+     */
+    public List<EnchantmentHelper> getConflictingEnchantments(boolean ignoreType) {
+        return Registry.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && !e.canCombine(base)).map(EnchantmentHelper::new).toList();
+    }
+
+    /**
+     * Only accounts for enchantments of the same target type.
+     *
      * @return a list of all enchantments that can be combined with this one.
      *
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getCompatibleEnchantments() {
-        return Registry.ENCHANTMENT.stream().filter(e -> e != base && e.type == base.type && e.canCombine(base)).map(EnchantmentHelper::new).toList();
+        return getCompatibleEnchantments(false);
+    }
+
+    /**
+     * @param ignoreType whether to check only enchantments that can be applied to the same target
+     *                   type.
+     * @return a list of all enchantments that can be combined with this one.
+     *
+     * @since 1.8.4
+     */
+    public List<EnchantmentHelper> getCompatibleEnchantments(boolean ignoreType) {
+        return Registry.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && e.canCombine(base)).map(EnchantmentHelper::new).toList();
     }
 
     /**

@@ -374,6 +374,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
         return base.isEmpty();
     }
     
+    @Override
     public String toString() {
         return String.format("ItemStackHelper:{\"id\": \"%s\", \"damage\": %d, \"count\": %d}", this.getItemId(), base.getDamage(), base.getCount());
     }

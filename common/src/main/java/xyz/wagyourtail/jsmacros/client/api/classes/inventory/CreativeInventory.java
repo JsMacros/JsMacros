@@ -29,6 +29,8 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     }
 
     /**
+     * The total scroll value is always clamp between 0 and 1.
+     *
      * @param amount the amount to scroll by, between -1 and 1
      * @since 1.8.4
      */
@@ -37,6 +39,8 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     }
 
     /**
+     * The total scroll value is always clamp between 0 and 1.
+     *
      * @param position the position to scroll to, between 0 and 1
      * @since 1.8.4
      */
@@ -48,17 +52,12 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     }
 
     /**
+     * @return a list of all shown items.
+     *
      * @since 1.8.4
      */
-    public void selectInventory() {
-        selectTab(ItemGroup.INVENTORY.getIndex());
-    }
-
-    /**
-     * @since 1.8.4
-     */
-    public void selectSearch() {
-        selectTab(ItemGroup.SEARCH.getIndex());
+    public List<ItemStackHelper> getShownItems() {
+        return handler.itemList.stream().map(ItemStackHelper::new).toList();
     }
 
     /**
@@ -74,15 +73,26 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     }
 
     /**
-     * @return a list of all shown items.
+     * Select the search tab.
      *
      * @since 1.8.4
      */
-    public List<ItemStackHelper> getShownItems() {
-        return handler.itemList.stream().map(ItemStackHelper::new).toList();
+    public void selectSearch() {
+        selectTab(ItemGroup.SEARCH.getIndex());
     }
 
     /**
+     * Select the inventory tab.
+     *
+     * @since 1.8.4
+     */
+    public void selectInventory() {
+        selectTab(ItemGroup.INVENTORY.getIndex());
+    }
+
+    /**
+     * Select the tab where the hotbars are stored.
+     *
      * @since 1.8.4
      */
     public void selectHotbar() {
@@ -97,7 +107,13 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
         selectTab(ItemGroup.GROUPS[tab]);
     }
 
+    private void selectTab(ItemGroup group) {
+        mc.execute(() -> getInterface().jsmacros_setSelectedTab(group.getIndex()));
+    }
+
     /**
+     * Destroys the currently held item.
+     *
      * @since 1.8.4
      */
     public void destroyHeldItem() {
@@ -105,6 +121,8 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     }
 
     /**
+     * Destroys all items in the player's inventory.
+     *
      * @since 1.8.4
      */
     public void destroyAllItems() {
@@ -199,10 +217,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
 
     private ICreativeInventoryScreen getInterface() {
         return (ICreativeInventoryScreen) inventory;
-    }
-
-    private void selectTab(ItemGroup group) {
-        mc.execute(() -> getInterface().jsmacros_setSelectedTab(group.getIndex()));
     }
 
     @Override

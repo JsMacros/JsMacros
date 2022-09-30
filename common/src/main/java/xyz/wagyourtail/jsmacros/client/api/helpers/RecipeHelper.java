@@ -139,7 +139,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
 
     /**
-     * @return how often the recipe can be crafted with the current inventory.
+     * @return how often the recipe can be crafted with the current player inventory.
      *
      * @since 1.8.4
      */

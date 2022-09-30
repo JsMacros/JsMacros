@@ -255,6 +255,11 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
         return this;
     }
 
+    /**
+     * @return the build widget for the set properties.
+     *
+     * @since 1.8.4
+     */
     public final U build() {
         U helper = createWidget();
         T widget = helper.getRaw();

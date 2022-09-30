@@ -25,7 +25,7 @@ public class AdvancedItemStackHelper extends ItemStackHelper {
      *
      * @since 1.8.4
      */
-    public boolean hasCanDestroySet() {
+    public boolean hasDestroyRestrictions() {
         return base.getOrCreateNbt().contains("CanDestroy", 9);
     }
 
@@ -37,7 +37,7 @@ public class AdvancedItemStackHelper extends ItemStackHelper {
      *
      * @since 1.8.4
      */
-    public boolean hasCanPlaceOnSet() {
+    public boolean hasPlaceRestrictions() {
         return base.getOrCreateNbt().contains("CanPlaceOn", 9);
     }
 
@@ -46,8 +46,8 @@ public class AdvancedItemStackHelper extends ItemStackHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getCanDestroyTags() {
-        if (hasCanDestroySet()) {
+    public List<String> getDestroyRestrictions() {
+        if (hasDestroyRestrictions()) {
             return base.getOrCreateNbt().getList("CanDestroy", 8).stream().map(NbtElement::asString).toList();
         }
         return List.of();
@@ -58,8 +58,8 @@ public class AdvancedItemStackHelper extends ItemStackHelper {
      *
      * @since 1.8.4
      */
-    public List<String> getCanPlaceOnTags() {
-        if (hasCanPlaceOnSet()) {
+    public List<String> getPlaceRestrictions() {
+        if (hasPlaceRestrictions()) {
             return base.getOrCreateNbt().getList("CanPlaceOn", 8).stream().map(NbtElement::asString).toList();
         }
         return List.of();

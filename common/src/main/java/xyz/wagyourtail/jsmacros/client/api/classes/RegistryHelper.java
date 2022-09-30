@@ -29,7 +29,7 @@ import java.util.List;
 public class RegistryHelper {
 
     /**
-     * @param id the item id
+     * @param id the item's id
      * @return an {@link ItemHelper} for the given item.
      *
      * @since 1.8.4
@@ -39,7 +39,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id the item id
+     * @param id the item's id
      * @return an {@link ItemStackHelper} for the given item.
      *
      * @since 1.8.4
@@ -49,8 +49,8 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id  the item id
-     * @param nbt the item nbt
+     * @param id  the item's id
+     * @param nbt the item's nbt
      * @return an {@link ItemStackHelper} for the given item and nbt data.
      *
      * @throws CommandSyntaxException if the nbt data is invalid.
@@ -80,7 +80,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id the block id
+     * @param id the block's id
      * @return an {@link BlockHelper} for the given block.
      *
      * @since 1.8.4
@@ -90,7 +90,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id the block id
+     * @param id the block's id
      * @return an {@link BlockStateHelper} for the given block.
      *
      * @since 1.8.4
@@ -100,8 +100,8 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id  the block id
-     * @param nbt the block nbt
+     * @param id  the block's id
+     * @param nbt the block's nbt
      * @return an {@link BlockStateHelper} for the given block with the specified nbt.
      *
      * @throws CommandSyntaxException if the nbt data is invalid.
@@ -130,7 +130,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id the enchantment id
+     * @param id the enchantment's id
      * @return an {@link EnchantmentHelper} for the given enchantment.
      *
      * @since 1.8.4
@@ -140,7 +140,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id    the enchantment id
+     * @param id    the enchantment's id
      * @param level the level of the enchantment
      * @return an {@link EnchantmentHelper} for the given enchantment with the specified level.
      *
@@ -169,7 +169,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param type the entity type id
+     * @param type the id of the entity's type
      * @return an {@link EntityHelper} for the given entity.
      *
      * @since 1.8.4
@@ -179,7 +179,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param type the entity type id
+     * @param type the id of the entity's type
      * @return an {@link EntityType} for the given entity.
      *
      * @since 1.8.4
@@ -198,7 +198,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id the fluid id
+     * @param id the fluid's id
      * @return an {@link FluidStateHelper} for the given fluid.
      *
      * @since 1.8.4

@@ -33,6 +33,7 @@ import net.minecraft.scoreboard.Team;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
@@ -52,6 +53,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.DirectionHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EnchantmentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.FoodComponentHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.FormattingHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.FullOptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
@@ -89,6 +91,8 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.wagyourgui.elements.CheckBox;
 import xyz.wagyourtail.wagyourgui.elements.Slider;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -96,6 +100,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.SplittableRandom;
 
 /**
@@ -211,6 +216,8 @@ public class FUtil extends BaseLibrary {
             return new TeamHelper(team);
         } else if (obj instanceof Text text) {
             return new TextHelper(text);
+        } else if (obj instanceof Formatting formatting) {
+            return new FormattingHelper(formatting);
         }
 
         if (obj instanceof Entity entity) {
@@ -308,6 +315,33 @@ public class FUtil extends BaseLibrary {
      */
     public String arrayDeepToString(Object[] array) {
         return Arrays.deepToString(array);
+    }
+
+    /**
+     * @param obj           the object to get the fields of
+     * @param includeStatic whether to include static fields
+     * @return a map of all the fields and their values in the given object.
+     *
+     * @since 1.8.4
+     */
+    public Map<String, Object> toFieldMap(Object obj, boolean includeStatic) {
+        Map<String, Object> fields = new HashMap<>();
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            for (Field field : clazz.getDeclaredFields()) {
+                if (Modifier.isStatic(field.getModifiers()) && !includeStatic) {
+                    continue;
+                }
+                field.setAccessible(true);
+                try {
+                    fields.put(field.getName(), field.get(obj));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return fields;
     }
 
     /**

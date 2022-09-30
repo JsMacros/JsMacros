@@ -233,7 +233,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      *
      * @since 1.8.4
      */
-    public UniversalBlockStateHelper getUniversalHelper() {
+    public UniversalBlockStateHelper getUniversal() {
         return new UniversalBlockStateHelper(base);
     }
 

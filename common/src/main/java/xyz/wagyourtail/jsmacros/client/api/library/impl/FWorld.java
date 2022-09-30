@@ -17,6 +17,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
+import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -560,7 +563,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @return the name of the loaded world or {@code UNKNOWN_NAME} if no name could be found.
+     * @return the name of the loaded world or {@code "UNKNOWN_NAME"} if no name could be found.
      *
      * @since 1.8.4
      */
@@ -785,6 +788,44 @@ public class FWorld extends BaseLibrary {
         Text footer = ((IPlayerListHud)mc.inGameHud.getPlayerListHud()).jsmacros_getFooter();
         if (footer != null) return new TextHelper(footer);
         return null;
+    }
+
+    /**
+     * Summons the amount of particles at the desired position.
+     *
+     * @param id    the particle id
+     * @param x     the x position to spawn the particle
+     * @param y     the y position to spawn the particle
+     * @param z     the z position to spawn the particle
+     * @param count the amount of particles to spawn
+     * @since 1.8.4
+     */
+    public void spawnParticle(String id, double x, double y, double z, int count) {
+        spawnParticle(id, x, y, z, 0.1, 0.1, 0.1, 1, count, true);
+    }
+
+    /**
+     * Summons the amount of particles at the desired position with some variation of delta and the
+     * given speed.
+     *
+     * @param id     the particle id
+     * @param x      the x position to spawn the particle
+     * @param y      the y position to spawn the particle
+     * @param z      the z position to spawn the particle
+     * @param deltaX the x variation of the particle
+     * @param deltaY the y variation of the particle
+     * @param deltaZ the z variation of the particle
+     * @param speed  the speed of the particle
+     * @param count  the amount of particles to spawn
+     * @param force  whether to show the particle if it's more than 32 blocks away
+     * @since 1.8.4
+     */
+    public void spawnParticle(String id, double x, double y, double z, double deltaX, double deltaY, double deltaZ, float speed, int count, boolean force) {
+        ParticleEffect particle = (ParticleEffect) Registry.PARTICLE_TYPE.get(new Identifier((id)));
+        particle = particle != null ? particle : ParticleTypes.CLOUD;
+
+        ParticleS2CPacket packet = new ParticleS2CPacket(particle, force, x, y, z, (float) deltaX, (float) deltaY, (float) deltaZ, speed, count);
+        mc.execute(() -> mc.player.networkHandler.onParticle(packet));
     }
     
     /**

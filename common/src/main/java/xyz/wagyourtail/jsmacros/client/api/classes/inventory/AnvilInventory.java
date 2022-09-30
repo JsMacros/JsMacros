@@ -21,15 +21,17 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
      *
      * @since 1.8.4
      */
-    public String getRenameText() {
+    public String getName() {
         return ((IAnvilScreen) inventory).jsmacros_getRenameText().getText();
     }
 
     /**
+     * The change will be applied once the item is taken out of the anvil.
+     *
      * @param name the new item name
      * @since 1.8.4
      */
-    public void setRenameText(String name) {
+    public void seName(String name) {
         ((IAnvilScreen) inventory).jsmacros_getRenameText().setText(name);
     }
 

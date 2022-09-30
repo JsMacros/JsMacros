@@ -10,13 +10,15 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
 @Event(value = "StatusEffectUpdate")
 public class EventStatusEffectUpdate implements BaseEvent {
-    
-    public final StatusEffectHelper effect;
+
+    public final StatusEffectHelper oldEffect;
+    public final StatusEffectHelper newEffect;
     public final boolean added;
     public final boolean removed;
 
-    public EventStatusEffectUpdate(StatusEffectHelper effect, boolean added) {
-        this.effect = effect;
+    public EventStatusEffectUpdate(StatusEffectHelper oldEffect, StatusEffectHelper newEffect, boolean added) {
+        this.oldEffect = oldEffect;
+        this.newEffect = newEffect;
         this.added = added;
         this.removed = !added;
         profile.triggerEvent(this);
@@ -24,6 +26,6 @@ public class EventStatusEffectUpdate implements BaseEvent {
 
     @Override
     public String toString() {
-        return String.format("%s:{\"effect\": \"%s\", strength: %d, \"change\": %s}", this.getEventName(), effect.getId(), effect.getStrength(), added ? "added" : "removed");
+        return String.format("%s:{\"effect\": \"%s\", \"strength\": %d, \"time\": %d, \"change\": %s}", this.getEventName(), added ? newEffect.getId() : oldEffect.getId(), added ? newEffect.getStrength() : oldEffect.getStrength(), added ? newEffect.getTime() : oldEffect.getTime(), added ? "added" : "removed");
     }
 }

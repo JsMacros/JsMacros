@@ -1,10 +1,20 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.entity;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.effect.StatusEffectUtil;
+import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.tag.FluidTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -18,6 +28,9 @@ import xyz.wagyourtail.jsmacros.client.access.IItemCooldownEntry;
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownManager;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.api.helpers.advancement.AdvancementManagerHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
 
@@ -497,6 +510,76 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         return new AdvancementManagerHelper(base.networkHandler.getAdvancementHandler().getManager());
     }
 
+    /**
+     * The returned time is an approximation and will likely be off by a few ticks, although it
+     * should always be less than the actual time.
+     *
+     * @param block the block to mine
+     * @return the time in ticks that it will approximately take the player with the currently held
+     *         item to mine said block.
+     */
+    public int calculateMiningSpeed(BlockStateHelper block) {
+        return calculateMiningSpeed(getMainHand(), block);
+    }
+
+    /**
+     * Calculate mining speed for a given block mined with a specified item in ticks. Use air to
+     * calculate the mining speed for the hand. The returned time is an approximation and will
+     * likely be off by a few ticks, although it should always be less than the actual time.
+     *
+     * @param usedItem   the item to mine with
+     * @param blockState the block to mine
+     * @return the time in ticks that it will approximately take the player with the specified item
+     *         to mine said block.
+     *
+     * @since 1.8.4
+     */
+    public int calculateMiningSpeed(ItemStackHelper usedItem, BlockStateHelper blockState) {
+        PlayerEntity player = mc.player;
+        BlockState state = blockState.getRaw();
+        ItemStack item = usedItem.getRaw();
+
+        if (!item.getItem().canMine(state, mc.world, player.getBlockPos(), player)) {
+            return -1;
+        } else if (player.isCreative()) {
+            return 0;
+        }
+        float hardness = state.getHardness(mc.world, null);
+        if (hardness == -1) {
+            return -1;
+        }
+        float speedMultiplier = item.getMiningSpeedMultiplier(state);
+        if (speedMultiplier > 1.0F) {
+            int efficiency = EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, item);
+            if (efficiency > 0 && !item.isEmpty()) {
+                speedMultiplier += (efficiency * efficiency + 1F);
+            }
+        }
+        if (StatusEffectUtil.hasHaste(player)) {
+            speedMultiplier *= 1.0F + (StatusEffectUtil.getHasteAmplifier(player) + 1F) * 0.2F;
+        }
+        if (player.hasStatusEffect(StatusEffects.MINING_FATIGUE)) {
+            switch (player.getStatusEffect(StatusEffects.MINING_FATIGUE).getAmplifier()) {
+                case 0 -> speedMultiplier *= 0.3;
+                case 1 -> speedMultiplier *= 0.09;
+                case 2 -> speedMultiplier *= 0.0027;
+                default -> speedMultiplier *= 0.00081;
+            }
+        }
+        if (player.isSubmergedIn(FluidTags.WATER) && EnchantmentHelper.getLevel(Enchantments.AQUA_AFFINITY, item) == 0) {
+            speedMultiplier /= 5;
+        }
+        if (!player.isOnGround()) {
+            speedMultiplier /= 5;
+        }
+        float damage = speedMultiplier / hardness;
+        damage /= (!state.isToolRequired() || item.isSuitableFor(state)) ? 30 : 100;
+        if (damage >= 1) {
+            return 0;
+        }
+        return (int) Math.ceil(1 / damage);
+    }
+    
     @Override
     public String toString() {
         return super.toString().replaceFirst("^Player", "ClientPlayer");
