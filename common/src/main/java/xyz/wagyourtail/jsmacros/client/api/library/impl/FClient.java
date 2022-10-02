@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.MessageScreen;
+import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.text.Text;
@@ -209,13 +210,10 @@ public class FClient extends PerExecLibrary {
         mc.execute(() -> {
             boolean isWorld = mc.world != null;
             if (isWorld) {
-                boolean bl = mc.isInSingleplayer();
+                // logic in death screen disconnect button
                 if (mc.world != null) mc.world.disconnect();
-                if (bl) {
-                    mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
-                } else {
-                    mc.disconnect();
-                }
+                mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
+                mc.setScreen(new TitleScreen());
             }
             try {
                 if (callback != null)
