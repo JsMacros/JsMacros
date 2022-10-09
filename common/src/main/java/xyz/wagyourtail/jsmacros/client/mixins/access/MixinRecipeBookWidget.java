@@ -15,7 +15,7 @@ public abstract class MixinRecipeBookWidget implements IRecipeBookWidget {
     @Final
     private RecipeBookResults recipesArea;
     
-    @Shadow private boolean searching;
+    @Shadow private boolean field_3087;
     
     @Shadow protected abstract void refreshResults(boolean resetCurrentPage);
 
@@ -28,7 +28,7 @@ public abstract class MixinRecipeBookWidget implements IRecipeBookWidget {
     
     @Override
     public boolean jsmacros_isSearching() {
-        return searching;
+        return field_3087;
     }
     
     @Override
