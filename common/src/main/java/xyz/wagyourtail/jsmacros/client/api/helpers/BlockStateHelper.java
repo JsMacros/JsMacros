@@ -72,7 +72,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean exceedsCube() {
-        return base.exceedsCube();
+        return base.method_17900();
     }
 
     /**

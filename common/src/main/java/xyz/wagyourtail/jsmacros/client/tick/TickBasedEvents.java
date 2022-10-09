@@ -62,7 +62,7 @@ public class TickBasedEvents {
         }
 
         FClient.tickSynchronizer.tick();
-        serverListPinger.tick();
+        serverListPinger.method_3000();
 
         new EventTick();
         new EventJoinedTick();

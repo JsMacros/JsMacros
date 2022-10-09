@@ -4,9 +4,7 @@ import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,8 +17,6 @@ import java.util.Arrays;
 
 @Mixin(CreativeInventoryScreen.class)
 public abstract class MixinCreativeInventoryScreen {
-
-    @Shadow protected abstract boolean isCreativeInventorySlot(@Nullable Slot slot);
 
     @Unique
     private static Class<? extends Slot> lockableSlot;
@@ -70,7 +66,7 @@ public abstract class MixinCreativeInventoryScreen {
     }
 
     @Inject(method = "onMouseClick", at = @At("HEAD"), cancellable = true)
-    public void beforeMouseClick(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
+    private void beforeMouseClick(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
         if (slot != null) slotId = getSlotFromCreativeSlot(slot).id;
         EventClickSlot event = new EventClickSlot((ContainerScreen<?>) (Object) this, actionType.ordinal(), button, slotId);
         if (event.cancel) {

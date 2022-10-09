@@ -7,11 +7,15 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.ScreenshotUtils;
-import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ProjectileUtil;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
@@ -27,7 +31,9 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Functions for getting and modifying the player's state.
@@ -105,7 +111,28 @@ public class FPlayer extends BaseLibrary {
      * @return entity the player entity is currently looking at (if any).
      */
     public EntityHelper<?> rayTraceEntity(int distance) {
-        return DebugRenderer.getTargetedEntity(mc.player, distance).map(EntityHelper::create).orElse(null);
+        return getTargetedEntity(mc.player, distance).map(EntityHelper::create).orElse(null);
+    }
+
+    private static Optional<Entity> getTargetedEntity(@Nullable Entity entity, int distance) {
+        if (entity == null) {
+            return Optional.empty();
+        } else {
+            Vec3d vec3 = entity.getPos().add(0.0D, entity.getEyeHeight(entity.getPose()), 0.0D);
+            Vec3d vec32 = entity.getRotationVec(1.0F).multiply(distance);
+            Vec3d vec33 = vec3.add(vec32);
+            Box aABB = entity.getBoundingBox().stretch(vec32).expand(1.0);
+            int i = distance * distance;
+            Predicate<Entity> predicate = entityx -> !entityx.isSpectator() && !entityx.removed;
+            EntityHitResult entityHitResult = ProjectileUtil.getEntityCollision(entity.world, entity, vec3, vec33, aABB, predicate,
+                i
+            );
+            if (entityHitResult == null) {
+                return Optional.empty();
+            } else {
+                return vec3.squaredDistanceTo(entityHitResult.getPos()) > (double)i ? Optional.empty() : Optional.of(entityHitResult.getEntity());
+            }
+        }
     }
 
     /**
@@ -137,10 +164,10 @@ public class FPlayer extends BaseLibrary {
      */
     public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null;
-        ScreenshotUtils.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(), mc.getFramebuffer(),
-                                       (text) -> {
+        ScreenshotUtils.method_1659(new File(Core.getInstance().config.macroFolder, folder), mc.window.getFramebufferWidth(), mc.window.getFramebufferHeight(),
+            mc.getFramebuffer(), (text) -> {
                 if (callback != null) callback.accept(new TextHelper(text));
-        });
+            });
     }
 
     public StatsHelper getStatistics() {
@@ -160,10 +187,10 @@ public class FPlayer extends BaseLibrary {
      */
     public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null && file != null;
-        ScreenshotUtils.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), file, mc.getWindow().getFramebufferWidth(), mc.getWindow().getFramebufferHeight(), mc.getFramebuffer(),
-                                          (text) -> {
+        ScreenshotUtils.method_1662(new File(Core.getInstance().config.macroFolder, folder), file, mc.window.getFramebufferWidth(), mc.window.getFramebufferHeight(),
+            mc.getFramebuffer(), (text) -> {
                 if (callback != null) callback.accept(new TextHelper(text));
-        });
+            });
     }
 
     /**

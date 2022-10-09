@@ -4,6 +4,8 @@ public interface IMixinEntity {
 
     public void jsmacros_setGlowingColor(int glowingColor);
 
+    public int jsmacros_getGlowingColor();
+
     public void jsmacros_resetColor();
 
     /**

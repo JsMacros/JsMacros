@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.util.math.Vec3d;
@@ -477,12 +477,12 @@ public class Draw3D {
         MinecraftClient mc = MinecraftClient.getInstance();
 
         //setup
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.lineWidth(2.5F);
-        RenderSystem.disableTexture();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+        GlStateManager.lineWidth(2.5F);
+        GlStateManager.disableTexture();
 
-        RenderSystem.pushMatrix();
+        GlStateManager.pushMatrix();
 
         Camera camera = mc.gameRenderer.getCamera();
         Vec3d camPos = camera.getPos();
@@ -490,14 +490,14 @@ public class Draw3D {
         // offsetRender
         //        matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(MathHelper.wrapDegrees(camera.getPitch())));
         //        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(camera.getYaw() + 180F));
-        RenderSystem.rotatef(camera.getPitch(), 1, 0, 0);
-        RenderSystem.rotatef(camera.getYaw() + 180F, 0, 1, 0);
-        RenderSystem.translated(-camPos.x, -camPos.y, -camPos.z);
+//        GlStateManager.rotatef(camera.getPitch(), 1, 0, 0);
+//        GlStateManager.rotatef(camera.getYaw() + 180F, 0, 1, 0);
+        GlStateManager.translated(-camPos.x, -camPos.y, -camPos.z);
 
         //render
         synchronized (boxes) {
             for (Box b : boxes) {
-                b.render();
+                b.render(camPos);
             }
         }
 
@@ -514,8 +514,8 @@ public class Draw3D {
         }
 
         //reset
-        RenderSystem.enableTexture();
-        RenderSystem.popMatrix();
+        GlStateManager.enableTexture();
+        GlStateManager.popMatrix();
 
     }
 
@@ -625,7 +625,7 @@ public class Draw3D {
             this.fill = fill;
         }
 
-        public void render() {
+        public void render(Vec3d camPos) {
             final boolean cull = !this.cull;
             int a = (color >> 24) & 0xFF;
             int r = (color >> 16) & 0xFF;
@@ -640,7 +640,7 @@ public class Draw3D {
             float z2 = (float) pos.z2;
 
             if (cull) {
-                RenderSystem.disableDepthTest();
+                GlStateManager.disableDepthTest();
             }
 
             Tessellator tess = Tessellator.getInstance();
@@ -653,7 +653,7 @@ public class Draw3D {
                 float fb = (fillColor & 0xFF) / 255F;
 
                 //1.15+ culls insides
-                RenderSystem.disableCull();
+                GlStateManager.disableCull();
 
                 buf.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
 
@@ -674,11 +674,11 @@ public class Draw3D {
                 buf.vertex(x2, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-right
 
                 tess.draw();
-                
-                RenderSystem.enableCull();
+
+                GlStateManager.enableCull();
             }
 
-            RenderSystem.lineWidth(2.5F);
+            GlStateManager.lineWidth(2.5F);
             buf.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
 
             buf.vertex(x1, y1, z1).color(r, g, b, a).next();
@@ -721,7 +721,7 @@ public class Draw3D {
             tess.draw();
 
             if (cull) {
-                RenderSystem.enableDepthTest();
+                GlStateManager.enableDepthTest();
             }
         }
 
@@ -792,7 +792,7 @@ public class Draw3D {
         public void render() {
             final boolean cull = !this.cull;
             if (cull) {
-                RenderSystem.disableDepthTest();
+                GlStateManager.disableDepthTest();
             }
 
             int a = (color >> 24) & 0xFF;
@@ -801,14 +801,14 @@ public class Draw3D {
             int b = color & 0xFF;
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
-            RenderSystem.lineWidth(2.5F);
+            GlStateManager.lineWidth(2.5F);
             buf.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
             buf.vertex((float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
             buf.vertex((float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
             tess.draw();
 
             if (cull) {
-                RenderSystem.enableDepthTest();
+                GlStateManager.enableDepthTest();
             }
         }
 
@@ -892,29 +892,29 @@ public class Draw3D {
         }
 
         public void render3D() {
-            RenderSystem.pushMatrix();
+            GlStateManager.pushMatrix();
 
-            RenderSystem.translated(pos.x, pos.y, pos.z);
+            GlStateManager.translated(pos.x, pos.y, pos.z);
 
-            RenderSystem.rotatef((float) rotations.x, 1, 0, 0);
-            RenderSystem.rotatef((float) rotations.y, 0, 1, 0);
-            RenderSystem.rotatef((float) rotations.z, 0, 0, 1);
+            GlStateManager.rotatef((float) rotations.x, 1, 0, 0);
+            GlStateManager.rotatef((float) rotations.y, 0, 1, 0);
+            GlStateManager.rotatef((float) rotations.z, 0, 0, 1);
 
             // fix it so that y axis goes down instead of up
-            RenderSystem.scalef(1, -1, 1);
+            GlStateManager.scalef(1, -1, 1);
 
             // scale so that x or y have minSubdivisions units between them
-            RenderSystem.scaled(scale, scale, scale);
+            GlStateManager.scaled(scale, scale, scale);
 
             render();
 
-            RenderSystem.popMatrix();
+            GlStateManager.popMatrix();
 
             if (!cull) {
-                RenderSystem.enableDepthTest();
+                GlStateManager.enableDepthTest();
             }
             if (renderBack) {
-                RenderSystem.enableCull();
+                GlStateManager.enableCull();
             }
         }
 
@@ -924,20 +924,20 @@ public class Draw3D {
                 float current = 0;
                 while (iter.hasNext()) {
                     if (renderBack) {
-                        RenderSystem.disableCull();
+                        GlStateManager.disableCull();
                     } else {
-                        RenderSystem.enableCull();
+                        GlStateManager.enableCull();
                     }
                     if (!cull) {
-                        RenderSystem.disableDepthTest();
+                        GlStateManager.disableDepthTest();
                     } else {
-                        RenderSystem.enableDepthTest();
+                        GlStateManager.enableDepthTest();
                     }
                     RenderCommon.RenderElement next = iter.next();
-                    RenderSystem.pushMatrix();
-                    RenderSystem.translated(0, 0, zIndexScale * next.getZIndex());
+                    GlStateManager.pushMatrix();
+                    GlStateManager.translated(0, 0, zIndexScale * next.getZIndex());
                     next.render3D(0, 0, 0);
-                    RenderSystem.popMatrix();
+                    GlStateManager.popMatrix();
                 }
             }
         }

@@ -1,11 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.sharedclasses;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
@@ -154,26 +152,26 @@ public class RenderCommon {
     
         @Override
         public void render(int mouseX, int mouseY, float delta) {
-            RenderSystem.pushMatrix();
-            RenderSystem.scaled(scale, scale, 1);
-            RenderSystem.translated(x, y, 0);
-            RenderSystem.rotatef(rotation, 0, 0, 1);
-            RenderSystem.translated(-x, -y, 0);
+            GlStateManager.pushMatrix();
+            GlStateManager.scaled(scale, scale, 1);
+            GlStateManager.translated(x, y, 0);
+            GlStateManager.rotatef(rotation, 0, 0, 1);
+            GlStateManager.translated(-x, -y, 0);
             if (item != null) {
                 ItemRenderer i = mc.getItemRenderer();
                 i.renderGuiItemIcon(item,(int) (x / scale), (int) (y / scale));
                 if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, (int) (x / scale), (int) (y / scale), ovText);
             }
-            RenderSystem.popMatrix();
+            GlStateManager.popMatrix();
         }
 
         @Override
         public void render3D(int mouseX, int mouseY, float delta) {
-            RenderSystem.pushMatrix();
-            RenderSystem.scalef((float) scale, (float) scale, 1);
-            RenderSystem.translatef(x, y, 0);
-            RenderSystem.rotatef(rotation, 0, 0, 1);
-            RenderSystem.translatef(-x, -y, 0);
+            GlStateManager.pushMatrix();
+            GlStateManager.scalef((float) scale, (float) scale, 1);
+            GlStateManager.translatef(x, y, 0);
+            GlStateManager.rotatef(rotation, 0, 0, 1);
+            GlStateManager.translatef(-x, -y, 0);
 
             if (item != null) {
                 ItemRenderer i = mc.getItemRenderer();
@@ -184,7 +182,7 @@ public class RenderCommon {
                 i.zOffset = 0;
             }
 
-            RenderSystem.popMatrix();
+            GlStateManager.popMatrix();
         }
     
         @Override
@@ -324,12 +322,11 @@ public class RenderCommon {
     
         @Override
         public void render(int mouseX, int mouseY, float delta) {
-            RenderSystem.pushMatrix();
-            RenderSystem.translatef(x, y, 0);
-            RenderSystem.rotatef(rotation, 0, 0, 1);
-            RenderSystem.translatef(-x, -y, 0);
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.enableBlend();
+            GlStateManager.pushMatrix();
+            GlStateManager.translatef(x, y, 0);
+            GlStateManager.rotatef(rotation, 0, 0, 1);
+            GlStateManager.translatef(-x, -y, 0);
+            GlStateManager.enableBlend();
             mc.getTextureManager().bindTexture(imageid);
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
@@ -358,8 +355,8 @@ public class RenderCommon {
             buf.vertex(x2, y1, 0).texture(u2, v1).color(r, g, b, a).next(); // Bottom-right
             tess.draw();
 
-            RenderSystem.popMatrix();
-            RenderSystem.disableBlend();
+            GlStateManager.popMatrix();
+            GlStateManager.disableBlend();
         }
     
         @Override
@@ -456,10 +453,10 @@ public class RenderCommon {
     
         @Override
         public void render(int mouseX, int mouseY, float delta) {
-            RenderSystem.pushMatrix();
-            RenderSystem.translatef(x1, y1, 0);
-            RenderSystem.rotatef(rotation, 0, 0, 1);
-            RenderSystem.translatef(-x1, -y1, 0);
+            GlStateManager.pushMatrix();
+            GlStateManager.translatef(x1, y1, 0);
+            GlStateManager.rotatef(rotation, 0, 0, 1);
+            GlStateManager.translatef(-x1, -y1, 0);
 
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
@@ -469,9 +466,8 @@ public class RenderCommon {
             float fg = ((color >> 8) & 0xFF)/255F;
             float fb = (color & 0xFF)/255F;
 
-            RenderSystem.enableBlend();
-            RenderSystem.disableTexture();
-            RenderSystem.defaultBlendFunc();
+            GlStateManager.enableBlend();
+            GlStateManager.disableTexture();
 
             buf.begin(GL11.GL_TRIANGLE_STRIP,  VertexFormats.POSITION_COLOR);
             //draw a rectangle using triangle strips
@@ -481,9 +477,9 @@ public class RenderCommon {
             buf.vertex(x2, y1, 0).color(fr, fg, fb, fa).next(); // Bottom-right
             tess.draw();
 
-            RenderSystem.enableTexture();
-            RenderSystem.disableBlend();
-            RenderSystem.popMatrix();
+            GlStateManager.enableTexture();
+            GlStateManager.disableBlend();
+            GlStateManager.popMatrix();
         }
     
         @Override
@@ -606,28 +602,27 @@ public class RenderCommon {
     
         @Override
         public void render(int mouseX, int mouseY, float delta) {
-            RenderSystem.pushMatrix();
-            RenderSystem.scaled(scale, scale, 1);
-            RenderSystem.translated(x, y, 0);
-            RenderSystem.rotatef(rotation, 0, 0, 1);
-            RenderSystem.translated(-x, -y, 0);
+            GlStateManager.pushMatrix();
+            GlStateManager.scaled(scale, scale, 1);
+            GlStateManager.translated(x, y, 0);
+            GlStateManager.rotatef(rotation, 0, 0, 1);
+            GlStateManager.translated(-x, -y, 0);
             if (shadow) mc.textRenderer.drawWithShadow(text.asFormattedString(), (int)(x / scale), (int)(y / scale), color);
             else mc.textRenderer.draw(text.asFormattedString(), (int)(x / scale), (int)(y / scale), color);
-            RenderSystem.popMatrix();
+            GlStateManager.popMatrix();
         }
 
         @Override
         public void render3D(int mouseX, int mouseY, float delta) {
-            RenderSystem.pushMatrix();
-            RenderSystem.scaled(scale, scale, 1);
-            RenderSystem.translatef(x, y, 0);
-            RenderSystem.rotatef(rotation, 0, 0, 1);
-            RenderSystem.translatef(-x, -y, 0);
+            GlStateManager.pushMatrix();
+            GlStateManager.scaled(scale, scale, 1);
+            GlStateManager.translatef(x, y, 0);
+            GlStateManager.rotatef(rotation, 0, 0, 1);
+            GlStateManager.translatef(-x, -y, 0);
             Tessellator tess = Tessellator.getInstance();
-            VertexConsumerProvider.Immediate buffer = VertexConsumerProvider.immediate(tess.getBuffer());
-            mc.textRenderer.draw(text.asFormattedString(), (float)(x / scale), (float)(y / scale), color, shadow, new MatrixStack().peek().getModel(), buffer, true, 0, 0xF000F0);
-            buffer.draw();
-            RenderSystem.popMatrix();
+            if (shadow) mc.textRenderer.drawWithShadow(text.asFormattedString(), (int)(x / scale), (int)(y / scale), color);
+            else mc.textRenderer.draw(text.asFormattedString(), (int)(x / scale), (int)(y / scale), color);
+            GlStateManager.popMatrix();
         }
 
         @Override

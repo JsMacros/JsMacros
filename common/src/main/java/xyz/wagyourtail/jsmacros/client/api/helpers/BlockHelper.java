@@ -65,7 +65,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public float getJumpVelocityMultiplier() {
-        return base.getJumpVelocityMultiplier();
+        return 1;
     }
 
     /**
@@ -92,7 +92,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public float getVelocityMultiplier() {
-        return base.getVelocityMultiplier();
+        return 1;
     }
 
     /**

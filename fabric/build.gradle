@@ -43,7 +43,7 @@ dependencies {
     include "com.neovisionaries:nv-websocket-client:2.10"
     include "org.javassist:javassist:3.28.0-GA"
 
-    modImplementation "com.terraformersmc:modmenu:${rootProject.modmenu_version}"
+    modImplementation "io.github.prospector:modmenu:${rootProject.modmenu_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     //ij wasn't seeing this, even tho it's part of namedElements...

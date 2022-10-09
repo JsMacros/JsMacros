@@ -17,7 +17,7 @@ class MixinKeyboard {
 
     @Inject(at = @At("HEAD"), method = "onKey", cancellable = true)
     private void onKey(long window, int key, int scancode, int action, int mods, final CallbackInfo info) {
-        if (window != client.getWindow().getHandle()) return;
+        if (window != client.window.getHandle()) return;
         if (key == -1 || action == 2) return;
         if (EventKey.parse(key, scancode, action, mods)) info.cancel();
     }

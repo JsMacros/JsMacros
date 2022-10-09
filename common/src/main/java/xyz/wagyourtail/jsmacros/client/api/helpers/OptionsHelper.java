@@ -195,7 +195,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return
      */
     public int getWidth() {
-        return mc.getWindow().getWidth();
+        return mc.window.getWidth();
     }
     
     /**
@@ -203,7 +203,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return
      */
     public int getHeight() {
-        return mc.getWindow().getHeight();
+        return mc.window.getHeight();
     }
     
     /**
@@ -211,7 +211,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @param w
      */
     public void setWidth(int w) {
-        Window win = mc.getWindow();
+        Window win = mc.window;
         GLFW.glfwSetWindowSize(win.getHandle(), w, win.getHeight());
     }
     
@@ -220,7 +220,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @param h
      */
     public void setHeight(int h) {
-        Window win = mc.getWindow();
+        Window win = mc.window;
         GLFW.glfwSetWindowSize(win.getHandle(), win.getWidth(), h);
     }
     
@@ -230,7 +230,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @param h
      */
     public void setSize(int w, int h) {
-        Window win = mc.getWindow();
+        Window win = mc.window;
         GLFW.glfwSetWindowSize(win.getHandle(), w, h);
     }
     

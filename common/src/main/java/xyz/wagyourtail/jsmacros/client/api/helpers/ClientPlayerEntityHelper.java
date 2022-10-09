@@ -65,7 +65,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @since 1.2.8
      */
     public ClientPlayerEntityHelper<T> lookAt(double x, double y, double z) {
-        PositionCommon.Vec3D vec = new PositionCommon.Vec3D(base.getX(), base.getY() + base.getEyeHeight(base.getPose()), base.getZ(), x, y, z);
+        PositionCommon.Vec3D vec = new PositionCommon.Vec3D(base.x, base.y + base.getEyeHeight(base.getPose()), base.z, x, y, z);
         lookAt(vec.getYaw(), vec.getPitch());
         return this;
     }
@@ -171,14 +171,14 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         if (joinedMain) {
             ActionResult result = mc.interactionManager.interactEntity(mc.player, entity.getRaw(), hand);
             assert mc.player != null;
-            if (result.isAccepted())
+            if (result != ActionResult.FAIL)
                 mc.player.swingHand(hand);
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
                 ActionResult result = mc.interactionManager.interactEntity(mc.player, entity.getRaw(), hand);
                 assert mc.player != null;
-                if (result.isAccepted())
+                if (result != ActionResult.FAIL)
                     mc.player.swingHand(hand);
                 wait.release();
             });
@@ -207,14 +207,14 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         if (joinedMain) {
             ActionResult result = mc.interactionManager.interactItem(mc.player, mc.world, hand);
             assert mc.player != null;
-            if (result.isAccepted())
+            if (result != ActionResult.FAIL)
                 mc.player.swingHand(hand);
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
                 ActionResult result = mc.interactionManager.interactItem(mc.player, mc.world, hand);
                 assert mc.player != null;
-                if (result.isAccepted())
+                if (result != ActionResult.FAIL)
                     mc.player.swingHand(hand);
                 wait.release();
             });
@@ -244,7 +244,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
                 new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
             );
             assert mc.player != null;
-            if (result.isAccepted())
+            if (result != ActionResult.FAIL)
                 mc.player.swingHand(hand);
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
@@ -253,7 +253,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
                     new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
                 );
                 assert mc.player != null;
-                if (result.isAccepted())
+                if (result != ActionResult.FAIL)
                     mc.player.swingHand(hand);
                 wait.release();
             });

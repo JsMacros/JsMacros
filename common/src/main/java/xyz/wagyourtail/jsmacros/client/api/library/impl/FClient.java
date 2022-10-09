@@ -324,7 +324,7 @@ public class FClient extends PerExecLibrary {
      * @since 1.6.5
      */
     public void cancelAllPings() {
-        TickBasedEvents.serverListPinger.cancel();
+        TickBasedEvents.serverListPinger.method_3004();
     }
 
 }
