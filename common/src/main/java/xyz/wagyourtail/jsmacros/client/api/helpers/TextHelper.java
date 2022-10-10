@@ -13,10 +13,6 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 public class TextHelper extends BaseHelper<Text> {
     
-    public TextHelper(String json) {
-        super(Text.Serializer.fromJson(json));
-    }
-    
     public TextHelper(Text t) {
         super(t);
     }
