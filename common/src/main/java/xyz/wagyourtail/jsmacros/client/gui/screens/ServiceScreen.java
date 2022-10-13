@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceContainer;
 import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceListTopbar;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.FileChooser;
@@ -50,8 +50,8 @@ public class ServiceScreen extends MacroScreen {
 
     @Override
     public void removeMacro(MultiElementContainer<MacroScreen> macro) {
-        for (ClickableWidget b : macro.getButtons()) {
-            remove(b);
+        for (AbstractButtonWidget b : macro.getButtons()) {
+            removeButton(b);
         }
         Core.getInstance().services.unregisterService(((ServiceContainer) macro).service);
         macros.remove(macro);

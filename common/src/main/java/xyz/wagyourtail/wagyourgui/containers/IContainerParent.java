@@ -1,16 +1,18 @@
 package xyz.wagyourtail.wagyourgui.containers;
 
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
 public interface IContainerParent {
 
-    <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement);
-    
-    void remove(Element button);
+    <T extends  AbstractButtonWidget > T addButton(T drawableElement);
+
+    default <T extends AbstractButtonWidget> T addDrawableChild(T drawableElement) {
+        return addButton(drawableElement);
+    }
+
+    void removeButton(AbstractButtonWidget button);
     
     void openOverlay(OverlayContainer overlay);
     

@@ -39,7 +39,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
      */
     public List<List<ItemStackHelper>> getIngredients() {
         List<List<ItemStackHelper>> ingredients = new ArrayList<>();
-        for (Ingredient in : base.getIngredients()) {
+        for (Ingredient in : base.getPreviewInputs()) {
             ingredients.add(Arrays.stream(in.getMatchingStacksClient()).map(ItemStackHelper::new).collect(Collectors.toList()));
         }
         return ingredients;

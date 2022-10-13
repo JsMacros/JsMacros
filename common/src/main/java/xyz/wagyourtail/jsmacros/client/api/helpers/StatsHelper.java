@@ -5,6 +5,7 @@ import net.minecraft.stat.Stat;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.stat.StatType;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinStatHandler;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -26,7 +27,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     public Text getStatText(String statKey) {
         for (Stat<?> stat : ImmutableSet.copyOf(((MixinStatHandler) base).getStatMap().keySet())) {
             if (stat.getType().getTranslationKey().equals(statKey)) {
-                return stat.getType().getName();
+                return new TranslatableText(stat.getType().getTranslationKey());
             }
         }
         throw new IllegalArgumentException("Stat not found: " + statKey);

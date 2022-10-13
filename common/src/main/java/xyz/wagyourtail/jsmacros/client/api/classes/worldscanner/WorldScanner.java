@@ -6,10 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.collection.PackedIntegerArray;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
-import net.minecraft.world.chunk.Palette;
-import net.minecraft.world.chunk.PalettedContainer;
+import net.minecraft.world.chunk.*;
 import xyz.wagyourtail.jsmacros.client.access.IChunkSection;
 import xyz.wagyourtail.jsmacros.client.access.IPackedIntegerArray;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainer;
@@ -91,7 +88,7 @@ public class WorldScanner {
      */
     public List<PositionCommon.Pos3D> scanAroundPlayer(int range) {
         assert mc.player != null;
-        return scanChunkRange(mc.player.getChunkPos().x, mc.player.getChunkPos().z, range);
+        return scanChunkRange(mc.player.getBlockPos().getX() >> 4, mc.player.getBlockPos().getZ() >> 4, range);
     }
 
     /**
@@ -206,9 +203,9 @@ public class WorldScanner {
 
     private boolean[] getIncludedFilterIndices(Palette<BlockState> palette) {
         boolean commonBlockFound = false;
-        boolean[] isInFilter = new boolean[palette.getIndexBits()];
+        boolean[] isInFilter = new boolean[((ArrayPalette<BlockState>)palette).getSize()];
 
-        for (int i = 0; i < palette.getIndexBits(); i++) {
+        for (int i = 0; i < ((ArrayPalette<BlockState>)palette).getSize(); i++) {
             BlockState state = palette.getByIndex(i);
             if (getFilterResult(state)) {
                 isInFilter[i] = true;
@@ -262,7 +259,8 @@ public class WorldScanner {
     }
 
     private static boolean isParallelStreamAllowed(Function<?, Boolean> filter) {
-        if (filter instanceof MethodWrapper<?, ?, ?, ?> wrapper) {
+        if (filter instanceof MethodWrapper<?, ?, ?, ?>) {
+            MethodWrapper<?, ?, ?, ?> wrapper = (MethodWrapper<?, ?, ?, ?>) filter;
             if (!wrapper.getCtx().isMultiThreaded()) {
                 return false;
             }
@@ -289,7 +287,7 @@ public class WorldScanner {
 
         int elementsPerLong = ((IPackedIntegerArray) array).jsmacros_getElementsPerLong();
         long maxValue = ((IPackedIntegerArray) array).jsmacros_getMaxValue();
-        int elementBits = array.getElementBits();
+        int elementBits = ((IPackedIntegerArray) array).jsmacros_getElementBits();
         int size = array.getSize();
 
         for (long datum : array.getStorage()) {
@@ -317,9 +315,9 @@ public class WorldScanner {
         Palette<BlockState> palette = (Palette<BlockState>) data.jsmacros_getPaletteProvider();
         PackedIntegerArray storage = data.jsmacros_getData();
 
-        int[] count = new int[palette.getIndexBits()];
+        int[] count = new int[((ArrayPalette<BlockState>)palette).getSize()];
 
-        if (palette.getIndexBits() == 1) {
+        if (((ArrayPalette<BlockState>)palette).getSize() == 1) {
             counter.accept(palette.getByIndex(0), storage.getSize());
         } else {
             storage.forEach(key -> count[key]++);

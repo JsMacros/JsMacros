@@ -1,10 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
@@ -40,10 +38,10 @@ public class CancelScreen extends BaseScreen {
         System.gc();
         topScroll = 10;
         running.clear();
-        s = this.addDrawableChild(new Scrollbar(width - 12, 5, 8, height-10, 0xFFFFFFFF, 0xFF000000, 0x7FFFFFFF, 1, this::onScrollbar));
+        s = this.addButton(new Scrollbar(width - 12, 5, 8, height-10, 0xFFFFFFFF, 0xFF000000, 0x7FFFFFFF, 1, this::onScrollbar));
         
-        this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.back"), (btn) -> this.close()));
-        services = this.addDrawableChild(new AnnotatedCheckBox(this.width / 12 + 5, this.height - 12, 200, 12, textRenderer, 0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.showservices"), false, null));
+        this.addButton(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.back"), (btn) -> this.onClose()));
+        services = this.addButton(new AnnotatedCheckBox(this.width / 12 + 5, this.height - 12, 200, 12, textRenderer, 0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.showservices"), false, null));
     }
 
     public void addContainer(BaseScriptContext<?> t) {
@@ -63,8 +61,9 @@ public class CancelScreen extends BaseScreen {
     }
 
     public void removeContainer(RunningContextContainer t) {
-        for (ClickableWidget b : t.getButtons()) {
-            remove(b);
+        for (AbstractButtonWidget b : t.getButtons()) {
+            buttons.remove(b);
+            children.remove(b);
         }
         running.remove(t);
         s.setScrollPages(running.size() * 15 / (double)(height - 20));
@@ -108,9 +107,8 @@ public class CancelScreen extends BaseScreen {
             addContainer(t);
         }
         
-        for (Element b : ImmutableList.copyOf(this.children())) {
-            if (!(b instanceof Drawable)) continue;
-            ((Drawable) b).render(matrices, mouseX, mouseY, delta);
+        for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
+            b.render(matrices, mouseX, mouseY, delta);
         }
     }
 

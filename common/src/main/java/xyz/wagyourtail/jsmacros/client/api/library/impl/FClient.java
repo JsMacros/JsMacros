@@ -1,13 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.*;
-import net.minecraft.client.network.MultiplayerServerListPinger;
-import net.minecraft.client.network.ServerAddress;
+import net.minecraft.client.gui.screen.ConnectScreen;
+import net.minecraft.client.gui.screen.SaveLevelScreen;
+import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.network.ServerInfo;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.network.ServerAddress;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelStorageException;
@@ -189,7 +187,7 @@ public class FClient extends PerExecLibrary {
             } else {
                 mc.disconnect();
             }
-            ConnectScreen.connect(null, mc, new ServerAddress(ip, port), new ServerInfo("server", new ServerAddress(ip, port).toString(), false));
+            mc.openScreen(new ConnectScreen(null, mc, ip, port));
         });
     }
     

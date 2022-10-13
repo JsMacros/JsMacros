@@ -4,7 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.MultiplayerServerListPinger;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
@@ -36,12 +36,12 @@ public class TickBasedEvents {
             if (a.getTag() == null && b.getTag() == null) {
                 return true;
             } else {
-                NbtCompound at;
-                NbtCompound bt;
+                CompoundTag at;
+                CompoundTag bt;
                 if (a.getTag() != null) at = a.getTag().copy();
-                else at = new NbtCompound();
+                else at = new CompoundTag();
                 if (b.getTag() != null) bt = b.getTag().copy();
-                else bt = new NbtCompound();
+                else bt = new CompoundTag();
                 at.remove("Damage");
                 bt.remove("Damage");
                 return at.equals(bt);
@@ -75,8 +75,8 @@ public class TickBasedEvents {
             }
         }
 
-        if (mc.player != null && mc.player.getInventory() != null) {
-            PlayerInventory inv = mc.player.getInventory();
+        if (mc.player != null && mc.player.inventory != null) {
+            PlayerInventory inv = mc.player.inventory;
 
             ItemStack newMainHand = inv.getMainHandStack();
             if (areNotEqual(newMainHand, mainHand)) {

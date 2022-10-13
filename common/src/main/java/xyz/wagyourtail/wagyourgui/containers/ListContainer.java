@@ -2,7 +2,7 @@ package xyz.wagyourtail.wagyourgui.containers;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.wagyourgui.elements.Button;
@@ -33,7 +33,7 @@ public class ListContainer extends MultiElementContainer<IContainerParent> {
         int w = width - 4;
         topScroll = y + 13;
         
-        scroll = this.addDrawableChild(new Scrollbar(x + width - 10, y + 13, 8, height - 28, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
+        scroll = this.addButton(new Scrollbar(x + width - 10, y + 13, 8, height - 28, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
         
         for (Text element : list) {
             addItem(element);
@@ -42,7 +42,7 @@ public class ListContainer extends MultiElementContainer<IContainerParent> {
     
     public void addItem(Text name) {
         int index = listItems.size();
-        listItems.add(this.addDrawableChild(new Button(x + 3 + (index % 5 * (width - 12) / 5), topScroll + (index / 5 * 12), (width - 12) / 5, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, name, (btn) -> setSelected(index))));
+        listItems.add(this.addButton(new Button(x + 3 + (index % 5 * (width - 12) / 5), topScroll + (index / 5 * 12), (width - 12) / 5, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, name, (btn) -> setSelected(index))));
     }
     
     public void setSelected(int index) {
@@ -65,7 +65,7 @@ public class ListContainer extends MultiElementContainer<IContainerParent> {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         
-        for (ClickableWidget b : ImmutableList.copyOf(this.buttons)) {
+        for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
             if (b instanceof Button && ((Button) b).hovering && ((Button) b).cantRenderAllText()) {
                 // border
                 int width = textRenderer.getWidth(b.getMessage());

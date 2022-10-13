@@ -17,7 +17,19 @@ public class LoomInventory extends Inventory<LoomScreen> {
         super(inventory);
     }
 
+    private static BannerPattern byName(String id) {
+        BannerPattern[] var1 = BannerPattern.values();
+        int var2 = var1.length;
 
+        for(int var3 = 0; var3 < var2; ++var3) {
+            BannerPattern bannerPattern = var1[var3];
+            if (bannerPattern.getName().equals(id)) {
+                return bannerPattern;
+            }
+        }
+
+        return null;
+    }
 
     /**
      * @since 1.5.1
@@ -26,7 +38,7 @@ public class LoomInventory extends Inventory<LoomScreen> {
      */
      @Deprecated
     public boolean selectPatternName(String name) {
-        BannerPattern pattern = BannerPattern.byName(name);
+        BannerPattern pattern = byName(name);
         if (pattern == null) return false;
         int id = pattern.ordinal() - 1;
         if (id >= 0 && id <= BannerPattern.LOOM_APPLICABLE_COUNT && ((ILoomScreen)inventory).jsmacros_canApplyDyePattern() &&

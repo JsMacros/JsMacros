@@ -83,7 +83,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public float getHardness() {
-        return base.getHardness();
+        return base.getDefaultState().getHardness(null, null);
     }
 
     /**
@@ -101,7 +101,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public List<String> getTags() {
-        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().getOrCreateTagGroup(Registry.BLOCK_KEY).getTagsFor(base).stream().map(Identifier::toString).toList();
+        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().getBlocks().getTagsFor(base).stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**

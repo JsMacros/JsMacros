@@ -8,6 +8,8 @@ import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
+import java.util.List;
+
 public class TextOverlay extends OverlayContainer {
     private final Text text;
     public boolean centered = true;
@@ -21,7 +23,7 @@ public class TextOverlay extends OverlayContainer {
     public void init() {
         super.init();
 
-        addDrawableChild(new Button(x + 2, y + this.height - 12, this.width - 4, 10, this.textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.confirm"), (btn) -> {
+        addButton(new Button(x + 2, y + this.height - 12, this.width - 4, 10, this.textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.confirm"), (btn) -> {
             this.close();
         }));
     }

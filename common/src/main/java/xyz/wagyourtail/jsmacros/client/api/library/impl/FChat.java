@@ -6,8 +6,8 @@ import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.ChatHistoryManager;
@@ -179,14 +179,11 @@ public class FChat extends BaseLibrary {
         if (subtitle instanceof TextHelper) subtitlee = ((TextHelper) subtitle).getRaw();
         else if (subtitle != null) subtitlee = new LiteralText(subtitle.toString());
         if (title != null)
-            mc.inGameHud.setTitle(titlee);
+            mc.inGameHud.setTitles(titlee, null, fadeIn, remain, fadeOut);
         if (subtitle != null)
-            mc.inGameHud.setSubtitle(subtitlee);
-        if (title == null && subtitle == null) {
-            mc.inGameHud.setTitle(null);
-            mc.inGameHud.setSubtitle(null);
-        }
-        mc.inGameHud.setTitleTicks(fadeIn, remain, fadeOut);
+            mc.inGameHud.setTitles(null, subtitlee, fadeIn, remain, fadeOut);
+        if (title == null && subtitle == null)
+            mc.inGameHud.setTitles(null, null, fadeIn, remain, fadeOut);
     }
 
     /**
@@ -259,7 +256,7 @@ public class FChat extends BaseLibrary {
      * @return
      */
     public Logger getLogger(String name) {
-        return LoggerFactory.getLogger(name);
+        return LogManager.getLogger(name);
     }
 
     /**

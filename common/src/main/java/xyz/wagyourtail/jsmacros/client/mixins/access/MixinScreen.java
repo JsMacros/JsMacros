@@ -6,10 +6,9 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.AbstractParentElement;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.ClickEvent;
@@ -59,8 +58,8 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Shadow protected MinecraftClient client;
     @Shadow protected TextRenderer textRenderer;
     
-    @Shadow(aliases = {"method_37063", "m_142416_"}) protected abstract <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement);
-    @Shadow(aliases = {"close", "method_25419", "m_7379_"}) public abstract void onClose();
+    @Shadow(aliases = {"method_37063"}) protected abstract <T extends AbstractButtonWidget> T addButton(T button);
+    @Shadow public abstract void onClose();
     @Shadow protected abstract void init();
 
     
@@ -148,7 +147,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     
     @Override
     public List<ButtonWidgetHelper<?>> getButtonWidgets() {
-        Map<ClickableWidget, ButtonWidgetHelper<?>> btns = new LinkedHashMap<>();
+        Map<AbstractButtonWidget, ButtonWidgetHelper<?>> btns = new LinkedHashMap<>();
         for (RenderCommon.RenderElement el : elements) {
             if (el instanceof ButtonWidgetHelper) {
                 btns.put(((ButtonWidgetHelper<?>) el).getRaw(), (ButtonWidgetHelper<?>) el);
@@ -157,7 +156,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         synchronized (children) {
             for (Element e : children) {
                 if ((e instanceof ButtonWidget) && !btns.containsKey(e)) {
-                    btns.put((ClickableWidget) e, new ButtonWidgetHelper<>((ClickableWidget) e));
+                    btns.put((AbstractButtonWidget) e, new ButtonWidgetHelper<>((AbstractButtonWidget) e));
                 }
             }
         }

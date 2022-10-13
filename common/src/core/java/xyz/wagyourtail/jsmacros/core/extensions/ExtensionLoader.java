@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.extensions;
 
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -16,6 +17,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class ExtensionLoader {
     private final Set<Extension> extensions = new HashSet<>();
@@ -122,7 +124,7 @@ public class ExtensionLoader {
             // copy resource to dependencies folder
             Path path = dependenciesPath.resolve(lib.getPath().substring(lib.getPath().lastIndexOf('/') + 1));
             try (InputStream stream = lib.openStream()){
-                Files.write(path, stream.readAllBytes(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+                Files.write(path, IOUtils.toByteArray(stream), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
                 System.out.println("Extracted dependency " + path);
                 classLoader.addURL(path.toUri().toURL());
             } catch (IOException e) {
@@ -131,10 +133,9 @@ public class ExtensionLoader {
         }
 
         // load extensions
-        extensions.addAll(ServiceLoader.load(Extension.class, classLoader)
-            .stream()
-            .map(ServiceLoader.Provider::get)
-            .collect(Collectors.toSet()));
+        for (Extension value : ServiceLoader.load(Extension.class, classLoader)) {
+            extensions.add(value);
+        }
 
         System.out.println("Loaded " + extensions.size() + " extensions");
 
@@ -148,7 +149,7 @@ public class ExtensionLoader {
                 // copy resource to dependencies folder
                 Path path = dependenciesPath.resolve(lib.getPath().substring(lib.getPath().lastIndexOf('/') + 1));
                 try (InputStream stream = lib.openStream()){
-                    Files.write(path, stream.readAllBytes(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+                    Files.write(path, IOUtils.toByteArray(stream), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
                     System.out.println("Extracted dependency " + path);
                     classLoader.addURL(path.toUri().toURL());
                 } catch (IOException e) {

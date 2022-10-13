@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -109,7 +110,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean hasBlockEntity() {
-        return base.hasBlockEntity();
+        return base instanceof BlockEntityProvider;
     }
 
     /**

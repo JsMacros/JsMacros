@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.config;
 
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;

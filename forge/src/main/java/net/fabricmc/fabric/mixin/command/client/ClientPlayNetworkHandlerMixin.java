@@ -45,7 +45,7 @@ abstract class ClientPlayNetworkHandlerMixin {
     private ClientCommandSource commandSource;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    @Inject(method = {"onCommandTree", "m_7443_"}, at = @At("RETURN"))
+    @Inject(method = {"onCommandTree"}, at = @At("RETURN"))
     private void onOnCommandTree(CommandTreeS2CPacket packet, CallbackInfo info) {
         // Add the commands to the vanilla dispatcher for completion.
         // It's done here because both the server and the client commands have

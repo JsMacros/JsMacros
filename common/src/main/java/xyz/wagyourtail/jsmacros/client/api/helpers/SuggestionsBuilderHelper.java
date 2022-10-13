@@ -3,6 +3,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
+import java.util.Locale;
+
 /**
  * @since 1.6.5
  */
@@ -24,7 +26,7 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
     }
 
     public String getRemainingLowerCase() {
-        return base.getRemainingLowerCase();
+        return base.getRemaining().toLowerCase(Locale.ROOT);
     }
 
     public SuggestionsBuilderHelper suggest(String suggestion) {

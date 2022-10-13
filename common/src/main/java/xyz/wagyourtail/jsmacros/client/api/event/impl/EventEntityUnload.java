@@ -8,16 +8,14 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 @Event("EntityUnload")
 public class EventEntityUnload implements BaseEvent {
     public final EntityHelper<?> entity;
-    public final String reason;
 
-    public EventEntityUnload(Entity e, Entity.RemovalReason reason) {
+    public EventEntityUnload(Entity e) {
         this.entity = EntityHelper.create(e);
-        this.reason = reason.toString();
 
         profile.triggerEvent(this);
     }
 
     public String toString() {
-        return String.format("%s:{\"entity\": %s, \"reason\": \"%s\"}", this.getEventName(), entity.toString(), reason);
+        return String.format("%s:{\"entity\": %s}", this.getEventName(), entity.toString());
     }
 }

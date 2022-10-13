@@ -15,6 +15,7 @@ configurations {
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentForge.extendsFrom common
+    include2
 }
 
 loom {
@@ -34,11 +35,11 @@ dependencies {
 //		localRuntime "org.graalvm.compiler:compiler:${project.graal_version}"
 //		localRuntime "org.graalvm.compiler:compiler-management:${project.graal_version}"
 
-    shadowCommon "io.noties:prism4j:${project.prism_version}", {
+    include2 "io.noties:prism4j:${project.prism_version}", {
         exclude module: "annotations-java5"
     }
-    shadowCommon "com.neovisionaries:nv-websocket-client:2.10"
-    shadowCommon "org.javassist:javassist:3.28.0-GA"
+    include2 "com.neovisionaries:nv-websocket-client:2.10"
+    include2 "org.javassist:javassist:3.28.0-GA"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
 
@@ -56,6 +57,7 @@ processResources {
 
     filesMatching("META-INF/mods.toml") {
         expand "version": project.version
+
     }
 
     filesMatching("jsmacros.extension.json") {
@@ -82,6 +84,11 @@ remapJar {
         include '*'
         into "META-INF/jsmacrosdeps"
     }
+
+    from (configurations.include2.files) {
+        include '*'
+        into "META-INF/jars"
+    }
 }
 
 jar {
@@ -90,7 +97,7 @@ jar {
     manifest {
         attributes([
                 'MixinConnector': 'xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser',
-                'JsMacrosDeps': configurations.include.files.collect { it.name }.join(" ")
+                'JsMacrosDeps': configurations.include2.files.collect { it.name }.join(" ")
         ])
     }
 }

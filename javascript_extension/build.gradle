@@ -54,6 +54,13 @@ test {
     useJUnitPlatform()
 }
 
+compileTestJava {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+
+    options.release.set(17)
+}
+
 publishing {
     publications {
         mavenFabric(MavenPublication) {

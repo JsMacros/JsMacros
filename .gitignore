@@ -29,7 +29,7 @@ run/
 
 # javadoc
 
-doc/
+docs/
 *.log
 *.log.gz
 

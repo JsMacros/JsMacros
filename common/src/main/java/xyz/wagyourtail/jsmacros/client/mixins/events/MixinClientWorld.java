@@ -18,8 +18,8 @@ public class MixinClientWorld {
         new EventEntityLoad(entity);
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;onRemoved()V"), method = "removeEntity", locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onRemoveEntity(int entityId, Entity.RemovalReason removalReason, CallbackInfo ci, Entity entity) {
-        new EventEntityUnload(entity, removalReason);
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;remove()V"), method = "removeEntity", locals = LocalCapture.CAPTURE_FAILHARD)
+    public void onRemoveEntity(int entityId, CallbackInfo ci, Entity entity) {
+        new EventEntityUnload(entity);
     }
 }

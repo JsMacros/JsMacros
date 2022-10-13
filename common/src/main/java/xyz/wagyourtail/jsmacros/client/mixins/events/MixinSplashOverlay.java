@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
-import net.minecraft.client.gui.screen.SplashOverlay;
+import net.minecraft.client.gui.screen.SplashScreen;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,11 +10,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventResourcePackLoaded;
 
-@Mixin(SplashOverlay.class)
+@Mixin(SplashScreen.class)
 public class MixinSplashOverlay {
     @Shadow @Final private boolean reloading;
 
-    @Inject(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screen/SplashOverlay;reloadCompleteTime:J", opcode = Opcodes.PUTFIELD))
+    @Inject(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screen/SplashScreen;applyCompleteTime:J", opcode = Opcodes.PUTFIELD))
     private void onReloadComplete(CallbackInfo ci) {
         new EventResourcePackLoaded(!reloading);
     }

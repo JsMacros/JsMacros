@@ -1,8 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
@@ -67,9 +65,8 @@ public class ScriptScreen extends BaseScreen {
 
         super.render(matrices, mouseX, mouseY, delta);
 
-        for (Element button : ImmutableList.copyOf(this.children())) {
-            if (!(button instanceof Drawable)) continue;
-            ((Drawable) button).render(matrices, mouseX, mouseY, delta);
+        for (AbstractButtonWidget button : this.buttons) {
+            button.render(matrices, mouseX, mouseY, delta);
         }
 
         ((IScreenInternal) this).jsmacros_render(matrices, mouseX, mouseY, delta);

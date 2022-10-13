@@ -133,7 +133,6 @@ public class FFS extends PerExecLibrary {
      * @param patha path is relative to the script's folder.
      * @param pathb
      * @return a {@link java.lang.String String} of the combined path.
-     * @throws IOException
      */
     public String combine(String patha, String pathb) {
         return Paths.get(patha, pathb).toString();

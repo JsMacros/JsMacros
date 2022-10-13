@@ -4,6 +4,7 @@ import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.BasicFilt
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.ICompare;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.compare.StringCompareFilter;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +29,7 @@ public class StringifyFilter<T> extends BasicFilter<T> {
     }
 
     public StringifyFilter addOption(String... toAdd) {
-        filterObjects.addAll(List.of(toAdd));
+        filterObjects.addAll(Arrays.asList(toAdd));
         return this;
     }
 
@@ -38,7 +39,7 @@ public class StringifyFilter<T> extends BasicFilter<T> {
     }
     
     public StringifyFilter removeOption(String... toRemove) {
-        List.of(toRemove).forEach(filterObjects::remove);
+        Arrays.stream(toRemove).forEach(filterObjects::remove);
         return this;
     }
 

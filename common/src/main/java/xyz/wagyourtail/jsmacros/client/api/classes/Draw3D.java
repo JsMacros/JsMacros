@@ -5,9 +5,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
@@ -478,15 +481,17 @@ public class Draw3D {
     public void render(MatrixStack matrixStack) {
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        matrixStack.push();
         //setup
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
+        RenderSystem.lineWidth(2.5F);
         RenderSystem.disableTexture();
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        RenderSystem.matrixMode(5889);
 
+        matrixStack.push();
 
-        Vec3d camPos = mc.gameRenderer.getCamera().getPos();
+        Camera camera = mc.gameRenderer.getCamera();
+        Vec3d camPos = camera.getPos();
 
         // offsetRender
         //        matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(MathHelper.wrapDegrees(camera.getPitch())));
@@ -496,7 +501,7 @@ public class Draw3D {
         //render
         synchronized (boxes) {
             for (Box b : boxes) {
-                b.render(matrixStack);
+                b.render();
             }
         }
 
@@ -513,7 +518,7 @@ public class Draw3D {
         }
 
         //reset
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.matrixMode(5888);
         RenderSystem.enableTexture();
 
         matrixStack.pop();
@@ -626,7 +631,7 @@ public class Draw3D {
             this.fill = fill;
         }
 
-        public void render(MatrixStack matrixStack) {
+        public void render() {
             final boolean cull = !this.cull;
             int a = (color >> 24) & 0xFF;
             int r = (color >> 16) & 0xFF;
@@ -646,9 +651,7 @@ public class Draw3D {
 
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
-
-            Matrix4f matrix  = matrixStack.peek().getModel();
-
+            
             if (this.fill) {
                 float fa = ((fillColor >> 24) & 0xFF) / 255F;
                 float fr = ((fillColor >> 16) & 0xFF) / 255F;
@@ -658,68 +661,68 @@ public class Draw3D {
                 //1.15+ culls insides
                 RenderSystem.disableCull();
 
-                buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
+                buf.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
 
                 //draw a cube using triangle strips
-                buf.vertex(matrix, x1, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-left
-                buf.vertex(matrix, x2, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-right
-                buf.vertex(matrix, x1, y1, z2).color(fr, fg, fb, fa).next(); // Front-bottom-left
-                buf.vertex(matrix, x2, y1, z2).color(fr, fg, fb, fa).next(); // Front-bottom-right
-                buf.vertex(matrix, x2, y1, z1).color(fr, fg, fb, fa).next(); // Front-bottom-left
-                buf.vertex(matrix, x2, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-right
-                buf.vertex(matrix, x2, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-right
-                buf.vertex(matrix, x1, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-left
-                buf.vertex(matrix, x1, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-left
-                buf.vertex(matrix, x1, y1, z2).color(fr, fg, fb, fa).next(); // Front-bottom-left
-                buf.vertex(matrix, x1, y1, z1).color(fr, fg, fb, fa).next(); // Back-bottom-left
-                buf.vertex(matrix, x2, y1, z1).color(fr, fg, fb, fa).next(); // Back-bottom-right
-                buf.vertex(matrix, x1, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-left
-                buf.vertex(matrix, x2, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-right
+                buf.vertex(x1, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-left
+                buf.vertex(x2, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-right
+                buf.vertex(x1, y1, z2).color(fr, fg, fb, fa).next(); // Front-bottom-left
+                buf.vertex(x2, y1, z2).color(fr, fg, fb, fa).next(); // Front-bottom-right
+                buf.vertex(x2, y1, z1).color(fr, fg, fb, fa).next(); // Front-bottom-left
+                buf.vertex(x2, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-right
+                buf.vertex(x2, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-right
+                buf.vertex(x1, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-left
+                buf.vertex(x1, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-left
+                buf.vertex(x1, y1, z2).color(fr, fg, fb, fa).next(); // Front-bottom-left
+                buf.vertex(x1, y1, z1).color(fr, fg, fb, fa).next(); // Back-bottom-left
+                buf.vertex(x2, y1, z1).color(fr, fg, fb, fa).next(); // Back-bottom-right
+                buf.vertex(x1, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-left
+                buf.vertex(x2, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-right
 
                 tess.draw();
-
+                
                 RenderSystem.enableCull();
             }
 
             RenderSystem.lineWidth(2.5F);
-            buf.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
+            buf.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
-            buf.vertex(matrix, x1, y1, z1).color(r, g, b, a).next();
-            buf.vertex(matrix, x1, y1, z2).color(r, g, b, a).next();
+            buf.vertex(x1, y1, z1).color(r, g, b, a).next();
+            buf.vertex(x1, y1, z2).color(r, g, b, a).next();
 
-            buf.vertex(matrix, x2, y1, z2).color(r, g, b, a).next();
+            buf.vertex(x2, y1, z2).color(r, g, b, a).next();
 
-            buf.vertex(matrix, x2, y1, z1).color(r, g, b, a).next();
+            buf.vertex(x2, y1, z1).color(r, g, b, a).next();
 
-            buf.vertex(matrix, x1, y1, z1).color(r, g, b, a).next();
+            buf.vertex(x1, y1, z1).color(r, g, b, a).next();
 
-            buf.vertex(matrix, x1, y2, z1).color(r, g, b, a).next();
+            buf.vertex(x1, y2, z1).color(r, g, b, a).next();
 
-            buf.vertex(matrix, x1, y2, z2).color(r, g, b, a).next();
+            buf.vertex(x1, y2, z2).color(r, g, b, a).next();
 
-            buf.vertex(matrix, x2, y2, z2).color(r, g, b, a).next();
+            buf.vertex(x2, y2, z2).color(r, g, b, a).next();
 
-            buf.vertex(matrix, x2, y2, z1).color(r, g, b, a).next();
+            buf.vertex(x2, y2, z1).color(r, g, b, a).next();
 
-            buf.vertex(matrix, x1, y2, z1).color(r, g, b, a).next();
+            buf.vertex(x1, y2, z1).color(r, g, b, a).next();
 
-            buf.vertex(matrix, x1, y2, z1).color(r, g, b, 0).next();
-            buf.vertex(matrix, x2, y1, z1).color(r, g, b, 0).next();
+            buf.vertex(x1, y2, z1).color(r, g, b, 0).next();
+            buf.vertex(x2, y1, z1).color(r, g, b, 0).next();
 
-            buf.vertex(matrix, x2, y1, z1).color(r, g, b, a).next();
-            buf.vertex(matrix, x2, y2, z1).color(r, g, b, a).next();
+            buf.vertex(x2, y1, z1).color(r, g, b, a).next();
+            buf.vertex(x2, y2, z1).color(r, g, b, a).next();
 
-            buf.vertex(matrix, x2, y2, z1).color(r, g, b, 0).next();
-            buf.vertex(matrix, x1, y1, z2).color(r, g, b, 0).next();
+            buf.vertex(x2, y2, z1).color(r, g, b, 0).next();
+            buf.vertex(x1, y1, z2).color(r, g, b, 0).next();
 
-            buf.vertex(matrix, x1, y1, z2).color(r, g, b, a).next();
-            buf.vertex(matrix, x1, y2, z2).color(r, g, b, a).next();
+            buf.vertex(x1, y1, z2).color(r, g, b, a).next();
+            buf.vertex(x1, y2, z2).color(r, g, b, a).next();
 
-            buf.vertex(matrix, x1, y2, z2).color(r, g, b, 0).next();
-            buf.vertex(matrix, x2, y1, z2).color(r, g, b, 0).next();
+            buf.vertex(x1, y2, z2).color(r, g, b, 0).next();
+            buf.vertex(x2, y1, z2).color(r, g, b, 0).next();
 
-            buf.vertex(matrix, x2, y1, z2).color(r, g, b, a).next();
-            buf.vertex(matrix, x2, y2, z2).color(r, g, b, a).next();
+            buf.vertex(x2, y1, z2).color(r, g, b, a).next();
+            buf.vertex(x2, y2, z2).color(r, g, b, a).next();
 
             tess.draw();
 
@@ -806,7 +809,7 @@ public class Draw3D {
             BufferBuilder buf = tess.getBuffer();
             Matrix4f model = matrixStack.peek().getModel();
             RenderSystem.lineWidth(2.5F);
-            buf.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+            buf.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
             buf.vertex(model, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
             buf.vertex(model, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
             tess.draw();
@@ -900,7 +903,7 @@ public class Draw3D {
 
             matrixStack.translate(pos.x, pos.y, pos.z);
 
-            matrixStack.multiply(Quaternion.method_35823(rotations.toVector().toMojangFloatVector()));
+            matrixStack.multiply(fromEulerXyzDegreese(rotations.toVector().toMojangFloatVector()));
 
             // fix it so that y axis goes down instead of up
             matrixStack.scale(1, -1, 1);
@@ -918,6 +921,20 @@ public class Draw3D {
             if (renderBack) {
                 RenderSystem.enableCull();
             }
+        }
+
+        private static Quaternion fromEulerXyz(double x, double y, double z) {
+            Quaternion quaternion = Quaternion.IDENTITY.copy();
+            quaternion.hamiltonProduct(new Quaternion((float)Math.sin(x / 2.0F), 0.0F, 0.0F, (float)Math.cos(x / 2.0F)));
+            quaternion.hamiltonProduct(new Quaternion(0.0F, (float)Math.sin(y / 2.0F), 0.0F, (float)Math.cos(y / 2.0F)));
+            quaternion.hamiltonProduct(new Quaternion(0.0F, 0.0F, (float)Math.sin(z / 2.0F), (float)Math.cos(z / 2.0F)));
+            return quaternion;
+        }
+
+        private static Quaternion fromEulerXyzDegreese(Vector3f vector) {
+            return fromEulerXyz(
+                (float)Math.toRadians(vector.getX()), (float)Math.toRadians(vector.getY()), (float)Math.toRadians(vector.getZ())
+            );
         }
 
         @Override
