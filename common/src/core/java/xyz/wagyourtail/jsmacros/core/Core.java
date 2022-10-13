@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.core;
 
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 import xyz.wagyourtail.SynchronizedWeakHashSet;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.config.ConfigManager;

@@ -5,8 +5,8 @@ plugins {
 subprojects {
     apply plugin: "xyz.wagyourtail.unimined"
 
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 
     archivesBaseName = rootProject.archives_base_name
     version = rootProject.mod_version
@@ -38,8 +38,8 @@ subprojects {
             }
         }
         maven {
-            url "https://maven.terraformersmc.com/releases"
-            name "modmenu maven"
+            name "modmenu repository"
+            url 'https://maven.terraformersmc.com/releases/'
         }
         maven { url 'https://jitpack.io' }
         mavenCentral()
@@ -62,7 +62,7 @@ subprojects {
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
 
-        def version = 16
+        def version = 8
         if (JavaVersion.current().isJava9Compatible()) {
             options.release = version
         }

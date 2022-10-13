@@ -150,7 +150,7 @@ public abstract class CommandBuilder {
     }
 
     public CommandBuilder nbtCompoundArg(String name) {
-        argument(name, (NbtCompoundArgumentType::nbtCompound));
+        argument(name, (CompoundTagArgumentType::nbtCompound));
         return this;
     }
 

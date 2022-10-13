@@ -40,8 +40,8 @@ public class ServiceScreen extends MacroScreen {
 
     @Override
     public void removeMacro(MultiElementContainer<MacroScreen> macro) {
-        for (ClickableWidget b : macro.getButtons()) {
-            remove(b);
+        for (AbstractButtonWidget b : macro.getButtons()) {
+            removeButton(b);
         }
         Core.getInstance().services.unregisterService(((ServiceContainer) macro).service);
         macros.remove(macro);

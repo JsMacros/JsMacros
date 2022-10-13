@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.core.config;
 
 import com.google.common.io.Files;
 import com.google.gson.*;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileReader;

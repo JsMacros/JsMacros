@@ -50,7 +50,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
             }));
         }));
 
-        fileBtn = addDrawableChild(new Button(x + w * 2 / 12 + 1, y + 1, w * 8 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, new LiteralText("./"+getTrigger().file.replaceAll("\\\\", "/")), (btn) -> {
+        fileBtn = addButton(new Button(x + w * 2 / 12 + 1, y + 1, w * 8 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, new LiteralText("./"+getTrigger().file.replaceAll("\\\\", "/")), (btn) -> {
             parent.setFile(this);
         }));
 

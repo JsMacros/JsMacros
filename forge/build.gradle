@@ -100,7 +100,7 @@ jar {
 
     manifest {
         attributes([
-            'MixinConnector': 'xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser',
+                'MixinConnector': 'xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser',
         ])
     }
 }

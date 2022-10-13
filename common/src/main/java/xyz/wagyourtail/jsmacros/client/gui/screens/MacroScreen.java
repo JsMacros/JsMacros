@@ -1,10 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
@@ -76,19 +74,19 @@ public class MacroScreen extends BaseScreen {
         topbar = createTopbar();
 
         topScroll = 40;
-        macroScroll = this.addDrawableChild(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
+        macroScroll = this.addButton(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
     
-        runningBtn = this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.running"), (btn) -> {
+        runningBtn = this.addButton(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.running"), (btn) -> {
             assert client != null;
             client.openScreen(new CancelScreen(this));
         }));
 
-        serviceScreen = this.addDrawableChild(new Button(this.width /12 + 1, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.services"), (btn) -> {
+        serviceScreen = this.addButton(new Button(this.width /12 + 1, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.service"), (btn) -> {
             assert client != null;
             client.openScreen(new ServiceScreen(this));
         }));
 
-        aboutBtn = this.addDrawableChild(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this))));
+        aboutBtn = this.addButton(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this))));
     }
 
     protected MultiElementContainer<MacroScreen> createTopbar() {
@@ -131,8 +129,8 @@ public class MacroScreen extends BaseScreen {
     
     public void removeMacro(MultiElementContainer<MacroScreen> macro) {
         Core.getInstance().eventRegistry.removeScriptTrigger(((MacroContainer) macro).getRawMacro());
-        for (ClickableWidget b : macro.getButtons()) {
-            remove(b);
+        for (AbstractButtonWidget b : macro.getButtons()) {
+            removeButton(b);
         }
         macros.remove(macro);
         setMacroPos();
@@ -195,9 +193,8 @@ public class MacroScreen extends BaseScreen {
         
         topbar.render(matrices, mouseX, mouseY, delta);
 
-        for (Element b : ImmutableList.copyOf(this.children())) {
-            if (b instanceof Drawable)
-                ((Drawable) b).render(matrices, mouseX, mouseY, delta);
+        for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
+            b.render(matrices, mouseX, mouseY, delta);
         }
 
         for (MultiElementContainer<MacroScreen> macro : ImmutableList.copyOf(this.macros)) {

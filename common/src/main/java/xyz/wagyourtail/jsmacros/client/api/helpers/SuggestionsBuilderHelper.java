@@ -33,7 +33,7 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
     }
 
     public String getRemainingLowerCase() {
-        return base.getRemainingLowerCase();
+        return base.getRemaining().toLowerCase(Locale.ROOT);
     }
 
     public SuggestionsBuilderHelper suggest(String suggestion) {

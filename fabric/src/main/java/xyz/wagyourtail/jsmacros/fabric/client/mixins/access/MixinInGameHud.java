@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.fabric.client.mixins.access;
 
 import com.google.common.collect.ImmutableSet;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Mixin(InGameHud.class)
 class MixinInGameHud {
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;debugEnabled:Z"), method = "render")
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/options/GameOptions;debugEnabled:Z"), method = "render")
     public void renderHud(MatrixStack matrixStack, float f, final CallbackInfo info) {
 
         for (IDraw2D<Draw2D> h : ImmutableSet.copyOf(FHud.overlays).stream().sorted(Comparator.comparingInt(IDraw2D::getZIndex)).collect(Collectors.toList())) {
@@ -24,5 +25,8 @@ class MixinInGameHud {
                 h.render(matrixStack);
             } catch (Throwable ignored) {}
         }
+
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.enableAlphaTest();
     }
 }

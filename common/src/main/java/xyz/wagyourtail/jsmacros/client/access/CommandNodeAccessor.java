@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.access;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-
 import java.lang.reflect.Field;
 import java.util.Map;
 
@@ -33,10 +32,10 @@ public class CommandNodeAccessor {
         Map<String, CommandNode> c = (Map<String, CommandNode>) children.get(parent);
         CommandNode<S> node = c.remove(name);
         if (node == null) return null;
-        if (node instanceof LiteralCommandNode<S>) {
+        if (node instanceof LiteralCommandNode) {
             Map<String, LiteralCommandNode<S>> l = (Map<String, LiteralCommandNode<S>>) literals.get(parent);
             l.remove(name);
-        } else if (node instanceof ArgumentCommandNode<S, ?>) {
+        } else if (node instanceof ArgumentCommandNode) {
             Map<String, ArgumentCommandNode<S, ?>> a = (Map<String, ArgumentCommandNode<S, ?>>) arguments.get(parent);
             a.remove(name);
         }

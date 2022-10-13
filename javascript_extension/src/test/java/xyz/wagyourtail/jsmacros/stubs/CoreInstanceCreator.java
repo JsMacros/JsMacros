@@ -1,13 +1,13 @@
 package xyz.wagyourtail.jsmacros.stubs;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.io.File;
 
 public class CoreInstanceCreator {
-    private static final Logger LOGGER = LoggerFactory.getLogger("JsMacros");
+    private static final Logger LOGGER = LogManager.getLogger("JsMacros");
     private static final File configFolder = new File("run/config");
     private static final File macroFolder = new File(configFolder, "macro");
 

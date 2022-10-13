@@ -5,9 +5,9 @@ import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.text.Text;
 
@@ -109,7 +109,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     protected CreativeItemStackHelper addEnchantment(Enchantment enchantment, int level) {
-        if (base.isOf(Items.ENCHANTED_BOOK)) {
+        if (base.getItem().equals(Items.ENCHANTED_BOOK)) {
             EnchantedBookItem.addEnchantment(base, new EnchantmentLevelEntry(enchantment, level));
         } else {
             base.addEnchantment(enchantment, level);
@@ -123,7 +123,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper clearEnchantments() {
-        NbtCompound compound = base.getOrCreateTag();
+        CompoundTag compound = base.getOrCreateTag();
         if (compound.contains("Enchantments", 9)) {
             compound.remove("Enchantments");
         }
@@ -147,9 +147,9 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper removeEnchantment(String id) {
-        NbtCompound compound = base.getOrCreateTag();
+        CompoundTag compound = base.getOrCreateTag();
         if (compound.contains("Enchantments", 9)) {
-            NbtList nbtList = compound.getList("Enchantments", 10);
+            ListTag nbtList = compound.getList("Enchantments", 10);
             nbtList.forEach(nbtElement -> {
                 if (nbtElement.asString().contains(id)) {
                     nbtList.remove(nbtElement);
@@ -165,7 +165,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper clearLore() {
-        NbtCompound nbtCompound = base.getOrCreateSubTag("display");
+        CompoundTag nbtCompound = base.getOrCreateSubTag("display");
         if (nbtCompound.contains("Lore", 9)) {
             nbtCompound.remove("Lore");
         }
@@ -190,11 +190,14 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper addLore(Object... lore) {
-        if (lore instanceof TextHelper[] textHelpers) {
+        if (lore instanceof TextHelper[]) {
+            TextHelper[] textHelpers = (TextHelper[]) lore;
             return addLoreInternal(Arrays.stream(textHelpers).map(BaseHelper::getRaw).toArray(Text[]::new));
-        } else if (lore instanceof TextBuilder[] textBuilders) {
+        } else if (lore instanceof TextBuilder[]) {
+            TextBuilder[] textBuilders = (TextBuilder[]) lore;
             return addLoreInternal(Arrays.stream(textBuilders).map(TextBuilder::build).map(TextHelper::getRaw).toArray(Text[]::new));
-        } else if (lore instanceof String[] strings) {
+        } else if (lore instanceof String[]) {
+            String[] strings = (String[]) lore;
             return addLoreInternal(Arrays.stream(strings).map(TextBackport::literal).toArray(Text[]::new));
         } else {
             return addLoreInternal(Arrays.stream(lore).map(Object::toString).map(TextBackport::literal).toArray(Text[]::new));
@@ -208,10 +211,10 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     private CreativeItemStackHelper addLoreInternal(Text... texts) {
-        NbtCompound nbtCompound = base.getOrCreateSubTag("display");
-        NbtList list = nbtCompound.contains("Lore", 9) ? nbtCompound.getList("Lore", 8) : new NbtList();
+        CompoundTag nbtCompound = base.getOrCreateSubTag("display");
+        ListTag list = nbtCompound.contains("Lore", 9) ? nbtCompound.getList("Lore", 8) : new ListTag();
         for (Text text : texts) {
-            list.add(NbtString.of(Text.Serializer.toJson(text)));
+            list.add(StringTag.of(Text.Serializer.toJson(text)));
         }
         nbtCompound.put("Lore", list);
 
@@ -304,7 +307,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     protected CreativeItemStackHelper setHideFlag(ItemStack.TooltipSection section, boolean hide) {
-        NbtCompound nbtCompound = base.getOrCreateTag();
+        CompoundTag nbtCompound = base.getOrCreateTag();
         if (hide) {
             nbtCompound.putInt("HideFlags", nbtCompound.getInt("HideFlags") | section.getFlag());
         } else {

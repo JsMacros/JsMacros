@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 
@@ -113,7 +114,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean hasBlockEntity() {
-        return base.hasBlockEntity();
+        return base instanceof BlockEntityProvider;
     }
 
     /**

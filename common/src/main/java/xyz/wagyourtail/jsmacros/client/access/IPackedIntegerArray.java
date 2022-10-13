@@ -8,4 +8,6 @@ public interface IPackedIntegerArray {
     int jsmacros_getIndexOffset();
     int jsmacros_getIndexShift();
 
+    int jsmacros_getElementBits();
+
 }

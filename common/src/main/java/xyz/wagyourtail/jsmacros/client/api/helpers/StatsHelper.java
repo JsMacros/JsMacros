@@ -34,7 +34,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     public Text getStatText(String statKey) {
         for (Stat<?> stat : ImmutableSet.copyOf(((MixinStatHandler) base).getStatMap().keySet())) {
             if (stat.getType().getTranslationKey().equals(statKey)) {
-                return stat.getType().getName();
+                return new TranslatableText(stat.getType().getTranslationKey());
             }
         }
         throw new IllegalArgumentException("Stat not found: " + statKey);

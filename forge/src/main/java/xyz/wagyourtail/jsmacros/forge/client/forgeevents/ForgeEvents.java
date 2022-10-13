@@ -6,7 +6,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
@@ -24,7 +23,6 @@ public class ForgeEvents {
     private static final MinecraftClient client = MinecraftClient.getInstance();
 
     public static void init() {
-        OverlayRegistry.registerOverlayBelow(ForgeIngameGui.HUD_TEXT_ELEMENT, "jsmacros_hud", ForgeEvents::renderHudListener);
         MinecraftForge.EVENT_BUS.addListener(ForgeEvents::renderWorldListener);
         MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onTick);
 

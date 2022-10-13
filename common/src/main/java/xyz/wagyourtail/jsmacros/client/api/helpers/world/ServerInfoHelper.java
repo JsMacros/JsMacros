@@ -52,7 +52,7 @@ public class ServerInfoHelper extends BaseHelper<ServerInfo> {
     }
 
     public String resourcePackPolicy() {
-        return ((TranslatableText) base.getResourcePackPolicy().getName()).getKey();
+        return ((TranslatableText) base.getResourcePack().getName()).getKey();
     }
 
     public String getIcon() {
@@ -68,7 +68,7 @@ public class ServerInfoHelper extends BaseHelper<ServerInfo> {
     }
 
     public NBTElementHelper<?> getNbt() {
-        return NBTElementHelper.resolve(base.toNbt());
+        return null;
     }
 
     /**

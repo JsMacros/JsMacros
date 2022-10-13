@@ -5,7 +5,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.*;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.text.MutableText;
@@ -188,7 +188,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
         List<TextHelper> texts = new ArrayList<>();
         if (base.hasTag()) {
             if (base.getTag().contains("display", 10)) {
-                NbtCompound nbtCompound = base.getTag().getCompound("display");
+                CompoundTag nbtCompound = base.getTag().getCompound("display");
                 if (nbtCompound.getType("Lore") == 9) {
                     NbtList nbtList = nbtCompound.getList("Lore", 8);
 
@@ -299,7 +299,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public NBTElementHelper<?> getNBT() {
-        NbtCompound tag = base.getTag();
+        CompoundTag tag = base.getTag();
         if (tag != null) return NBTElementHelper.resolve(tag);
         else return null;
     }
@@ -641,7 +641,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     protected boolean isFlagSet(ItemStack.TooltipSection section) {
-        NbtCompound nbtCompound = base.getOrCreateTag();
+        CompoundTag nbtCompound = base.getOrCreateTag();
         return (nbtCompound.getInt("HideFlags") & section.getFlag()) != 0;
     }
     

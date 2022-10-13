@@ -3,8 +3,8 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3f;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
@@ -249,23 +249,30 @@ public class Surface extends Draw2D implements RenderElement {
         matrixStack.translate(pos.x, pos.y, pos.z);
 
         if (rotateToPlayer) {
-            Vec3f rot = MinecraftClient.getInstance().gameRenderer.getCamera().getRotation().method_35824();
+            Quaternion q = MinecraftClient.getInstance().gameRenderer.getCamera().getRotation();
+            // to euler angles
+            Vector3f rot = new Vector3f(
+                    (float) Math.atan2(2 * (q.getW() * q.getZ() + q.getX() * q.getY()), 1 - 2 * (q.getY() * q.getY() + q.getZ() * q.getZ())),
+                    (float) Math.asin(2 * (q.getW() * q.getY() - q.getZ() * q.getX())),
+                    (float) Math.atan2(2 * (q.getW() * q.getX() + q.getY() * q.getZ()), 1 - 2 * (q.getX() * q.getX() + q.getY() * q.getY()))
+            );
             rotations.x = -rot.getX();
             rotations.y = 180 + rot.getY();
             rotations.z = 0;
         }
         if (rotateCenter) {
             matrixStack.translate(sizes.x / 2, 0, 0);
-            matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float) rotations.y));
+            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((float) rotations.y));
             matrixStack.translate(-sizes.x / 2, 0, 0);
             matrixStack.translate(0, -sizes.y / 2, 0);
-            matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion((float) rotations.x));
+            matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((float) rotations.x));
             matrixStack.translate(0, sizes.y / 2, 0);
             matrixStack.translate(sizes.x / 2, -sizes.y / 2, 0);
-            matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float) rotations.z));
+            matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion((float) rotations.z));
             matrixStack.translate(-sizes.x / 2, sizes.y / 2, 0);
         } else {
-            matrixStack.multiply(Quaternion.method_35823(rotations.toVector().toMojangFloatVector()));
+            Vector3f rot = rotations.toVector().toMojangFloatVector();
+            matrixStack.multiply(new Quaternion(rot.getX(), rot.getY(), rot.getZ(), true));
         }
         // fix it so that y-axis goes down instead of up
         matrixStack.scale(1, -1, 1);
@@ -289,7 +296,8 @@ public class Surface extends Draw2D implements RenderElement {
         while (iter.hasNext()) {
             RenderElement element = iter.next();
             // Render each draw2D element individually so that the cull and renderBack settings are used
-            if (element instanceof Draw2DElement draw2DElement) {
+            if (element instanceof Draw2DElement) {
+                Draw2DElement draw2DElement = (Draw2DElement) element;
                 renderDraw2D3D(matrixStack, draw2DElement);
             } else {
                 renderElement3D(matrixStack, element);
@@ -304,7 +312,7 @@ public class Surface extends Draw2D implements RenderElement {
         if (rotateCenter) {
             matrixStack.translate(draw2DElement.width.getAsInt() / 2d, draw2DElement.height.getAsInt() / 2d, 0);
         }
-        matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(draw2DElement.rotation));
+        matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(draw2DElement.rotation));
         if (rotateCenter) {
             matrixStack.translate(-draw2DElement.width.getAsInt() / 2d, -draw2DElement.height.getAsInt() / 2d, 0);
         }

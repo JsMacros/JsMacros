@@ -23,7 +23,7 @@ import net.minecraft.entity.projectile.WitherSkullEntity;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.entity.vehicle.FurnaceMinecartEntity;
 import net.minecraft.entity.vehicle.TntMinecartEntity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.MathHelper;
 
 import net.minecraft.util.math.Vec3d;
@@ -230,7 +230,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return
      */
     public NBTElementHelper<?> getNBT() {
-        NbtCompound nbt = new NbtCompound();
+        CompoundTag nbt = new CompoundTag();
         base.writeNbt(nbt);
         return NBTElementHelper.resolve(nbt);
     }

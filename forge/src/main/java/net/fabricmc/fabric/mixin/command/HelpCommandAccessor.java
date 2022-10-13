@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-package net.fabricmc.fabric.impl.command.client;
+package net.fabricmc.fabric.mixin.command;
 
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
+
+import net.minecraft.server.command.HelpCommand;
 
 /**
  * This class is from <a target="_blank" href="https://github.com/FabricMC/fabric">Fabric-api</a>
  * under the <a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0 license</a>
- * modified slightly to work on forge by removing net.fabricmc.api.Environment and changing how the mixin is applied.
+ * modified slightly to work on forge by removing net.fabricmc.api.Environment
  */
+@Mixin(HelpCommand.class)
 public interface HelpCommandAccessor {
-
-    SimpleCommandExceptionType getFailedException();
+    @Accessor("FAILED_EXCEPTION")
+    static SimpleCommandExceptionType getFailedException() {
+        throw new AssertionError("mixin");
+    }
 }

@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -85,10 +85,10 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      */
     public ClientPlayerEntityHelper<T> lookAt(double yaw, double pitch) {
         pitch = MathHelper.clamp(pitch, -90.0F, 90.0F);
-        base.prevPitch = base.getPitch();
-        base.prevYaw = base.getYaw();
-        base.setPitch((float)pitch);
-        base.setYaw(MathHelper.wrapDegrees((float)yaw));
+        base.prevPitch = base.pitch;
+        base.prevYaw = base.yaw;
+        base.pitch = (float)pitch;
+        base.yaw = MathHelper.wrapDegrees((float)yaw);
         if (base.getVehicle() != null) {
             base.getVehicle().onPassengerLookAround(base);
         }

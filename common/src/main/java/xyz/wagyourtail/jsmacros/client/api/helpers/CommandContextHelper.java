@@ -66,8 +66,8 @@ public class CommandContextHelper extends BaseHelper<CommandContext<?>> implemen
             arg = ((Identifier) arg).toString();
         } else if (arg instanceof ItemStackArgument) {
             arg = new ItemStackHelper(((ItemStackArgument) arg).createStack(1, false));
-        } else if (arg instanceof NbtElement) {
-            arg = NBTElementHelper.resolve((NbtElement) arg);
+        } else if (arg instanceof Tag) {
+            arg = NBTElementHelper.resolve((Tag) arg);
         } else if (arg instanceof Text) {
             arg = new TextHelper((Text) arg);
         } else if (arg instanceof Formatting) {

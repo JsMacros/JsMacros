@@ -6,6 +6,11 @@ archivesBaseName = archivesBaseName + "-FABRIC"
 
 minecraft {
     fabric()
+
+    mcRemapper.tinyRemapperConf = {
+        ignoreFieldDesc(true)
+        ignoreConflicts(true)
+    }
 }
 
 configurations {
@@ -24,11 +29,11 @@ dependencies {
     modImplementation fabricApi.module("fabric-resource-loader-v0",  project.fapi_version)
     modImplementation fabricApi.module("fabric-command-api-v1",  project.fapi_version)
 
-    include fabricApi.module("fabric-api-base", project.fapi_version)
-    include fabricApi.module("fabric-lifecycle-events-v1", project.fapi_version)
-    include fabricApi.module("fabric-key-binding-api-v1", project.fapi_version)
-    include fabricApi.module("fabric-resource-loader-v0", project.fapi_version)
-    include fabricApi.module("fabric-command-api-v1", project.fapi_version)
+    include fabricApi.module("fabric-api-base",  project.fapi_version)
+    include fabricApi.module("fabric-lifecycle-events-v1",  project.fapi_version)
+    include fabricApi.module("fabric-key-binding-api-v1",  project.fapi_version)
+    include fabricApi.module("fabric-resource-loader-v0",  project.fapi_version)
+    include fabricApi.module("fabric-command-api-v1",  project.fapi_version)
 
     localRuntime "org.graalvm.sdk:graal-sdk:${project.graal_version}"
     localRuntime "org.graalvm.js:js:${project.graal_version}"
