@@ -34,7 +34,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public ItemStackHelper getDefaultItemStack() {
-        return new ItemStackHelper(base.asItem().getDefaultStack());
+        return new ItemStackHelper(base.asItem().getStackForRender());
     }
 
     public boolean canMobSpawnInside() {
@@ -101,7 +101,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public List<String> getTags() {
-        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().getBlocks().getTagsFor(base).stream().map(Identifier::toString).collect(Collectors.toList());
+        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().blocks().getTagsFor(base).stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**

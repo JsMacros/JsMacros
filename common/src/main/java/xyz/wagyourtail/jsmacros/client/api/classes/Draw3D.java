@@ -4,11 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
@@ -478,7 +473,7 @@ public class Draw3D {
         return this;
     }
 
-    public void render(MatrixStack matrixStack) {
+    public void render() {
         MinecraftClient mc = MinecraftClient.getInstance();
 
         //setup
@@ -486,9 +481,8 @@ public class Draw3D {
         RenderSystem.defaultBlendFunc();
         RenderSystem.lineWidth(2.5F);
         RenderSystem.disableTexture();
-        RenderSystem.matrixMode(5889);
 
-        matrixStack.push();
+        RenderSystem.pushMatrix();
 
         Camera camera = mc.gameRenderer.getCamera();
         Vec3d camPos = camera.getPos();
@@ -496,7 +490,9 @@ public class Draw3D {
         // offsetRender
         //        matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(MathHelper.wrapDegrees(camera.getPitch())));
         //        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(camera.getYaw() + 180F));
-        matrixStack.translate(-camPos.x, -camPos.y, -camPos.z);
+        RenderSystem.rotatef(camera.getPitch(), 1, 0, 0);
+        RenderSystem.rotatef(camera.getYaw() + 180F, 0, 1, 0);
+        RenderSystem.translated(-camPos.x, -camPos.y, -camPos.z);
 
         //render
         synchronized (boxes) {
@@ -507,21 +503,19 @@ public class Draw3D {
 
         synchronized (lines) {
             for (Line l : lines) {
-                l.render(matrixStack);
+                l.render();
             }
         }
 
         synchronized (surfaces) {
             for (Surface s : surfaces) {
-                s.render3D(matrixStack);
+                s.render3D();
             }
         }
 
         //reset
-        RenderSystem.matrixMode(5888);
         RenderSystem.enableTexture();
-
-        matrixStack.pop();
+        RenderSystem.popMatrix();
 
     }
 
@@ -651,7 +645,7 @@ public class Draw3D {
 
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
-            
+
             if (this.fill) {
                 float fa = ((fillColor >> 24) & 0xFF) / 255F;
                 float fr = ((fillColor >> 16) & 0xFF) / 255F;
@@ -685,7 +679,7 @@ public class Draw3D {
             }
 
             RenderSystem.lineWidth(2.5F);
-            buf.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
+            buf.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
 
             buf.vertex(x1, y1, z1).color(r, g, b, a).next();
             buf.vertex(x1, y1, z2).color(r, g, b, a).next();
@@ -795,7 +789,7 @@ public class Draw3D {
             this.color = (color & 0xFFFFFF) | (alpha << 24);
         }
 
-        public void render(MatrixStack matrixStack) {
+        public void render() {
             final boolean cull = !this.cull;
             if (cull) {
                 RenderSystem.disableDepthTest();
@@ -807,11 +801,10 @@ public class Draw3D {
             int b = color & 0xFF;
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
-            Matrix4f model = matrixStack.peek().getModel();
             RenderSystem.lineWidth(2.5F);
             buf.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
-            buf.vertex(model, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
-            buf.vertex(model, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
+            buf.vertex((float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
+            buf.vertex((float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
             tess.draw();
 
             if (cull) {
@@ -898,22 +891,24 @@ public class Draw3D {
             super.init();
         }
 
-        public void render3D(MatrixStack matrixStack) {
-            matrixStack.push();
+        public void render3D() {
+            RenderSystem.pushMatrix();
 
-            matrixStack.translate(pos.x, pos.y, pos.z);
+            RenderSystem.translated(pos.x, pos.y, pos.z);
 
-            matrixStack.multiply(fromEulerXyzDegreese(rotations.toVector().toMojangFloatVector()));
+            RenderSystem.rotatef((float) rotations.x, 1, 0, 0);
+            RenderSystem.rotatef((float) rotations.y, 0, 1, 0);
+            RenderSystem.rotatef((float) rotations.z, 0, 0, 1);
 
             // fix it so that y axis goes down instead of up
-            matrixStack.scale(1, -1, 1);
+            RenderSystem.scalef(1, -1, 1);
 
             // scale so that x or y have minSubdivisions units between them
-            matrixStack.scale((float) scale, (float) scale, (float) scale);
+            RenderSystem.scaled(scale, scale, scale);
 
-            render(matrixStack);
+            render();
 
-            matrixStack.pop();
+            RenderSystem.popMatrix();
 
             if (!cull) {
                 RenderSystem.enableDepthTest();
@@ -923,24 +918,7 @@ public class Draw3D {
             }
         }
 
-        private static Quaternion fromEulerXyz(double x, double y, double z) {
-            Quaternion quaternion = Quaternion.IDENTITY.copy();
-            quaternion.hamiltonProduct(new Quaternion((float)Math.sin(x / 2.0F), 0.0F, 0.0F, (float)Math.cos(x / 2.0F)));
-            quaternion.hamiltonProduct(new Quaternion(0.0F, (float)Math.sin(y / 2.0F), 0.0F, (float)Math.cos(y / 2.0F)));
-            quaternion.hamiltonProduct(new Quaternion(0.0F, 0.0F, (float)Math.sin(z / 2.0F), (float)Math.cos(z / 2.0F)));
-            return quaternion;
-        }
-
-        private static Quaternion fromEulerXyzDegreese(Vector3f vector) {
-            return fromEulerXyz(
-                (float)Math.toRadians(vector.getX()), (float)Math.toRadians(vector.getY()), (float)Math.toRadians(vector.getZ())
-            );
-        }
-
-        @Override
-        public void render(MatrixStack matrixStack) {
-            if (matrixStack == null) return;
-
+        public void render() {
             synchronized (elements) {
                 Iterator<RenderCommon.RenderElement> iter = elements.stream().sorted(Comparator.comparingInt(RenderCommon.RenderElement::getZIndex)).iterator();
                 float current = 0;
@@ -956,10 +934,10 @@ public class Draw3D {
                         RenderSystem.enableDepthTest();
                     }
                     RenderCommon.RenderElement next = iter.next();
-                    matrixStack.push();
-                    matrixStack.translate(0, 0, zIndexScale * next.getZIndex());
-                    next.render3D(matrixStack, 0, 0, 0);
-                    matrixStack.pop();
+                    RenderSystem.pushMatrix();
+                    RenderSystem.translated(0, 0, zIndexScale * next.getZIndex());
+                    next.render3D(0, 0, 0);
+                    RenderSystem.popMatrix();
                 }
             }
         }

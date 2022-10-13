@@ -19,14 +19,15 @@ import java.util.function.Predicate;
 public abstract class MixinChatHud implements IChatHud {
 
     @Shadow
-    private void addMessage(Text message, int messageId) {}
+    public void addMessage(Text message, int messageId) {}
 
     @Shadow
     private void addMessage(Text message, int messageId, int timestamp, boolean refresh) {}
 
-    @Shadow @Final private List<ChatHudLine<Text>> messages;
+    @Shadow @Final private List<ChatHudLine> messages;
 
-    @Shadow protected abstract void removeMessage(int messageId);
+    @Shadow
+    public abstract void removeMessage(int messageId);
 
     @Mutable
     @Shadow @Final private List<String> messageHistory;
@@ -42,7 +43,7 @@ public abstract class MixinChatHud implements IChatHud {
     }
 
     @Override
-    public List<ChatHudLine<Text>> jsmacros_getMessages() {
+    public List<ChatHudLine> jsmacros_getMessages() {
         return messages;
     }
 
@@ -78,7 +79,7 @@ public abstract class MixinChatHud implements IChatHud {
     }
 
     @Override
-    public void jsmacros_removeMessagePredicate(Predicate<ChatHudLine<Text>> textfilter) {
+    public void jsmacros_removeMessagePredicate(Predicate<ChatHudLine> textfilter) {
         messages.removeIf(textfilter);
     }
 

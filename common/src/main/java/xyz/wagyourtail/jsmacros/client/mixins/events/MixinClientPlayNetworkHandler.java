@@ -12,8 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.*;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.Entry;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -176,7 +174,9 @@ class MixinClientPlayNetworkHandler {
 
     @Inject(at = @At("TAIL"), method="onChunkDeltaUpdate")
     public void onChunkDeltaUpdate(ChunkDeltaUpdateS2CPacket packet, CallbackInfo info) {
-        packet.visitUpdates((blockPos, blockState) -> new EventBlockUpdate(blockState, world.getBlockEntity(blockPos), new BlockPos(blockPos), "STATE"));
+        for (ChunkDeltaUpdateS2CPacket.ChunkDeltaRecord record : packet.getRecords()) {
+            new EventBlockUpdate(record.getState(), world.getBlockEntity(record.getBlockPos()), record.getBlockPos(), "STATE");
+        }
     }
 
     @Inject(at = @At("TAIL"), method="onBlockEntityUpdate")

@@ -42,7 +42,7 @@ public class LoomInventory extends Inventory<LoomScreen> {
         if (pattern == null) return false;
         int id = pattern.ordinal() - 1;
         if (id >= 0 && id <= BannerPattern.LOOM_APPLICABLE_COUNT && ((ILoomScreen)inventory).jsmacros_canApplyDyePattern() &&
-            inventory.getScreenHandler().onButtonClick(player, id)) {
+            inventory.getContainer().onButtonClick(player, id)) {
             assert mc.interactionManager != null;
             mc.interactionManager.clickButton(syncId, id);
             return true;
@@ -68,7 +68,7 @@ public class LoomInventory extends Inventory<LoomScreen> {
         if (pattern == null) return false;
         int iid = pattern.ordinal();
         if (iid <= BannerPattern.LOOM_APPLICABLE_COUNT && ((ILoomScreen) inventory).jsmacros_canApplyDyePattern() &&
-            inventory.getScreenHandler().onButtonClick(player, iid)) {
+            inventory.getContainer().onButtonClick(player, iid)) {
             assert mc.interactionManager != null;
             mc.interactionManager.clickButton(syncId, iid);
             return true;
@@ -83,7 +83,7 @@ public class LoomInventory extends Inventory<LoomScreen> {
      */
     public boolean selectPattern(int index) {
         if (index >= 0 && index <= BannerPattern.LOOM_APPLICABLE_COUNT && ((ILoomScreen) inventory).jsmacros_canApplyDyePattern() &&
-            inventory.getScreenHandler().onButtonClick(player, index)) {
+            inventory.getContainer().onButtonClick(player, index)) {
             assert mc.interactionManager != null;
             mc.interactionManager.clickButton(syncId, index);
             return true;

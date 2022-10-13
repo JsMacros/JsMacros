@@ -114,7 +114,7 @@ public class Profile extends BaseProfile {
                 e = runner.wrapException(ex);
             } catch (Throwable t) {
                 t.printStackTrace();
-                mc.execute(() -> ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new TranslatableText("jsmacros.errorerror").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED))));
+                mc.execute(() -> ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new TranslatableText("jsmacros.errorerror").formatted(Formatting.DARK_RED)));
                 return;
             }
             Text text = compileError(e);
@@ -122,7 +122,7 @@ public class Profile extends BaseProfile {
                 try {
                     ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
                 } catch (Throwable t) {
-                    ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new TranslatableText("jsmacros.errorerror").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
+                    ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new TranslatableText("jsmacros.errorerror").formatted(Formatting.DARK_RED));
                     t.printStackTrace();
                 }
             });
@@ -140,15 +140,15 @@ public class Profile extends BaseProfile {
         LiteralText text = new LiteralText("");
         do {
             String message = head.message;
-            MutableText line = new LiteralText(message).setStyle(Style.EMPTY.withColor(Formatting.RED));
+            Text line = new LiteralText(message).formatted(Formatting.RED);
             if (head.location != null) {
-                Style locationStyle = Style.EMPTY.withColor(Formatting.GOLD);
+                Style locationStyle = new Style().setColor(Formatting.GOLD);
                 if (head.location instanceof BaseWrappedException.GuestLocation) {
                     BaseWrappedException.GuestLocation loc = (BaseWrappedException.GuestLocation) head.location;
                     if (loc.file != null) {
-                    locationStyle = locationStyle.withHoverEvent(
+                    locationStyle = locationStyle.setHoverEvent(
                         new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("jsmacros.clicktoview"))
-                    ).withClickEvent(new CustomClickEvent(() -> {
+                    ).setClickEvent(new CustomClickEvent(() -> {
                         if (loc.startIndex > -1) {
                             EditorScreen.openAndScrollToIndex(loc.file, loc.startIndex, loc.endIndex);
                         } else if (loc.line > -1) {

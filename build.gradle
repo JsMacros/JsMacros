@@ -30,6 +30,7 @@ subprojects {
         mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
         // non-mod dependencies:
+        implementation 'com.ibm.icu:icu4j:70.1'
         implementation "io.noties:prism4j:${project.prism_version}"
 
         coreImplementation "com.neovisionaries:nv-websocket-client:2.10"

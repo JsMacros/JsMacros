@@ -6,6 +6,7 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 /**
  * @author Wagyourtail
@@ -69,10 +70,14 @@ public class TextHelper extends BaseHelper<Text> {
      * @since 1.6.5
      */
     public void visit(MethodWrapper<StyleHelper, String, Object, ?> visitor) {
-        base.visit((style, string) -> {
-            visitor.accept(new StyleHelper(style), string);
-            return Optional.empty();
-        }, base.getStyle());
+        visit_internal(base, visitor);
+    }
+
+    private static void visit_internal(Text text, BiConsumer<StyleHelper, String> visitor) {
+        visitor.accept(new StyleHelper(text.getStyle()), text.asString());
+        for (Text sibling : text.getSiblings()) {
+            visit_internal(sibling, visitor);
+        }
     }
 
     /**

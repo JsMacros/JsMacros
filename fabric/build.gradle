@@ -24,13 +24,11 @@ dependencies {
     modApi fabricApi.module("fabric-lifecycle-events-v1", project.fapi_version)
     modApi fabricApi.module("fabric-key-binding-api-v1", project.fapi_version)
     modApi fabricApi.module("fabric-resource-loader-v0", project.fapi_version)
-    modApi fabricApi.module("fabric-command-api-v1", project.fapi_version)
 
     include fabricApi.module("fabric-api-base", project.fapi_version)
     include fabricApi.module("fabric-lifecycle-events-v1", project.fapi_version)
     include fabricApi.module("fabric-key-binding-api-v1", project.fapi_version)
     include fabricApi.module("fabric-resource-loader-v0", project.fapi_version)
-    include fabricApi.module("fabric-command-api-v1", project.fapi_version)
 
 
     localRuntime "org.graalvm.sdk:graal-sdk:${project.graal_version}"
@@ -40,10 +38,10 @@ dependencies {
 //		localRuntime "org.graalvm.compiler:compiler:${project.graal_version}"
 //		localRuntime "org.graalvm.compiler:compiler-management:${project.graal_version}"
 
+    include 'com.ibm.icu:icu4j:70.1'
     include "io.noties:prism4j:${project.prism_version}"
     include "com.neovisionaries:nv-websocket-client:2.10"
     include "org.javassist:javassist:3.28.0-GA"
-
 
     modImplementation "com.terraformersmc:modmenu:${rootProject.modmenu_version}"
 

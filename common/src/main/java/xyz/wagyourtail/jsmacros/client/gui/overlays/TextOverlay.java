@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.gui.overlays;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.wagyourgui.elements.Button;
@@ -29,11 +28,11 @@ public class TextOverlay extends OverlayContainer {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        renderBackground(matrices);
-        int x = this.centered ? Math.max(this.x + 3, this.x + 3 + (this.width - 6) / 2 - this.textRenderer.getWidth(this.text) / 2) : this.x + 3;
-        textRenderer.drawTrimmed(this.text, x, this.y + 5, width - 6, 0xFFFFFF);
-        super.render(matrices, mouseX, mouseY, delta);
+    public void render(int mouseX, int mouseY, float delta) {
+        renderBackground();
+        int x = this.centered ? Math.max(this.x + 3, this.x + 3 + (this.width - 6) / 2 - this.textRenderer.getStringWidth(this.text.getString()) / 2) : this.x + 3;
+        textRenderer.drawTrimmed(this.text.getString(), x, this.y + 5, width - 6, 0xFFFFFF);
+        super.render(mouseX, mouseY, delta);
     }
 
 }

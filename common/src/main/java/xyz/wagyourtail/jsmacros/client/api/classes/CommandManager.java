@@ -7,10 +7,8 @@ import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.tree.CommandNode;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.command.CommandSource;
-import net.minecraft.text.Text;
+import net.minecraft.server.command.CommandSource;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandNodeHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 

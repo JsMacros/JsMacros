@@ -209,7 +209,7 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
          * @return
          */
         public boolean isPossiblyUUID() {
-            return base.getType() == 11 && base.size() == 4;
+            return false;
         }
 
         /**
@@ -217,8 +217,7 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
          * @return
          */
         public UUID asUUID() {
-            if (!isPossiblyUUID()) return null;
-            return NbtHelper.toUuid(base);
+            return null;
         }
 
         /**
@@ -238,10 +237,11 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
 
 
         /**
+         * not exist on <=1.15
          * @since 1.5.1
          */
         public int getHeldType() {
-            return base.getElementType();
+            return -1;
         }
     }
 
@@ -252,6 +252,23 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
 
         private NBTCompoundHelper(CompoundTag base) {
             super(base);
+        }
+
+        /**
+         * @since 1.8.3
+         */
+        public boolean isPossiblyUUID() {
+            return base.contains("M") && base.contains("L");
+        }
+
+        /**
+         * @since 1.8.3
+         */
+        public UUID asUUID() {
+            if (isPossiblyUUID()) {
+                return NbtHelper.toUuid(base);
+            }
+            return null;
         }
 
         /**

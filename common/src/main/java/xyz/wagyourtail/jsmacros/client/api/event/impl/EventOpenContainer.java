@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -16,7 +16,7 @@ public class EventOpenContainer implements BaseEvent {
     public final IScreen screen;
     public boolean cancelled = false;
 
-    public EventOpenContainer(HandledScreen<?> screen) {
+    public EventOpenContainer(ContainerScreen<?> screen) {
         this.inventory = Inventory.create(screen);
         this.screen = (IScreen) screen;
         profile.triggerEventJoinNoAnything(this);

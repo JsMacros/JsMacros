@@ -3,7 +3,6 @@ package xyz.wagyourtail.wagyourgui.containers;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
@@ -85,6 +84,6 @@ public abstract class MultiElementContainer<T extends IContainerParent> extends 
         return parent.getFirstOverlayParent();
     }
     
-    public abstract void render(MatrixStack matrices, int mouseX, int mouseY, float delta);
+    public abstract void render(int mouseX, int mouseY, float delta);
     
 }

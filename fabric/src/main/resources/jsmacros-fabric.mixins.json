@@ -4,7 +4,10 @@
     "compatibilityLevel": "JAVA_8",
     "client": [
         "access.MixinGameRenderer",
-        "access.MixinInGameHud"
+        "access.MixinInGameHud",
+        "MixinStyle",
+        "MixinEntity",
+        "MixinTextRenderer"
     ],
     "injectors": {
         "defaultRequire": 1

@@ -3,13 +3,11 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -101,7 +99,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean isToolRequired() {
-        return base.isToolRequired();
+        return !base.getMaterial().canBreakByHand();
     }
 
     /**
@@ -229,20 +227,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean shouldSuffocate(BlockPosHelper pos) {
-        return base.shouldSuffocate(MinecraftClient.getInstance().world, pos.getRaw());
-    }
-
-    private static NavigationType getNavigationType(String navigationType) {
-        switch (navigationType.toUpperCase(Locale.ROOT)) {
-            case "LAND":
-                return NavigationType.LAND;
-            case "WATER":
-                return NavigationType.WATER;
-            case "AIR":
-                return NavigationType.AIR;
-            default:
-                throw new IllegalStateException("Unexpected value: " + navigationType);
-        }
+        return base.canSuffocate(MinecraftClient.getInstance().world, pos.getRaw());
     }
 
     @Override

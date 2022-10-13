@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -60,8 +60,8 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     public void craft(boolean craftAll) {
         MinecraftClient mc = MinecraftClient.getInstance();
         assert mc.player != null;
-        if ((mc.currentScreen instanceof HandledScreen && ((HandledScreen<?>) mc.currentScreen).getScreenHandler().syncId == syncId) ||
-            (mc.currentScreen == null && syncId == mc.player.playerScreenHandler.syncId)) {
+        if ((mc.currentScreen instanceof ContainerScreen && ((ContainerScreen<?>) mc.currentScreen).getContainer().syncId == syncId) ||
+            (mc.currentScreen == null && syncId == mc.player.playerContainer.syncId)) {
             assert mc.interactionManager != null;
             mc.interactionManager.clickRecipe(syncId, base, craftAll);
             return;

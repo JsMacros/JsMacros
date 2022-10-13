@@ -24,7 +24,7 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
      * @return
      */
     public int getLevel() {
-        return inventory.getScreenHandler().getProperties();
+        return inventory.getContainer().getProperties();
     }
 
     /**
@@ -96,9 +96,9 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
      * @return
      */
     public boolean applyEffects() {
-        if (inventory.getScreenHandler().hasPayment()) {
+        if (inventory.getContainer().hasPayment()) {
             mc.getNetworkHandler().sendPacket(new UpdateBeaconC2SPacket(StatusEffect.getRawId(((IBeaconScreen) inventory).jsmacros_getPrimaryEffect()), StatusEffect.getRawId(((IBeaconScreen) inventory).jsmacros_getSecondaryEffect())));
-            player.closeHandledScreen();
+            player.closeContainer();
             return true;
         }
         return false;

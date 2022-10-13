@@ -46,7 +46,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     }
 
     @Shadow
-    public abstract boolean shouldSlowDown();
+    public abstract boolean isHoldingSneakKey();
 
     @Override
     public void setAir(int air) {
@@ -69,7 +69,12 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
                 sign.setTextOnRow(i, new LiteralText(lines.get(i)));
             }
             sign.markDirty();
-            networkHandler.sendPacket(new UpdateSignC2SPacket(sign.getPos(), lines.get(0), lines.get(1), lines.get(2), lines.get(3)));
+            networkHandler.sendPacket(new UpdateSignC2SPacket(sign.getPos(),
+                new LiteralText(lines.get(0)),
+                new LiteralText(lines.get(1)),
+                new LiteralText(lines.get(2)),
+                new LiteralText(lines.get(3))
+            ));
             info.cancel();
             return;
         }
@@ -105,7 +110,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         this.yaw = moveInput.yaw;
         this.pitch = moveInput.pitch;
 
-        if (this.shouldSlowDown()) {
+        if (this.isHoldingSneakKey()) {
             // Don't ask me, this is the way minecraft does it.
             this.input.movementSideways = (float) ((double) this.input.movementSideways * 0.3D);
             this.input.movementForward = (float) ((double) this.input.movementForward * 0.3D);
@@ -117,7 +122,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         new EventRiding(true, entity);
     }
 
-    @Inject(method = "method_29239", at = @At("HEAD"))
+    @Inject(method = "stopRiding", at = @At("HEAD"))
     public void onStopRiding(CallbackInfo ci) {
         if (this.getVehicle() != null)
             new EventRiding(false, this.getVehicle());

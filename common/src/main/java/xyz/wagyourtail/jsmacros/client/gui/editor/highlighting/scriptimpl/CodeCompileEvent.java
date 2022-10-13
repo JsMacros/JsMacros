@@ -85,7 +85,7 @@ import java.util.Map;
      * @return new instance for use with {@link #textLines}
      */
     public TextBuilder createTextBuilder() {
-        return new TextBuilder();
+        return TextBuilder.getTextBuilder.get();
     }
     
     

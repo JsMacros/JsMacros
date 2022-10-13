@@ -89,7 +89,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @return entity's max health
      */
     public float getMaxHealth() {
-        return base.getMaxHealth();
+        return base.getMaximumHealth();
     }
 
     /**

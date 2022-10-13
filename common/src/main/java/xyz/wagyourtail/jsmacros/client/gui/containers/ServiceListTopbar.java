@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.gui.containers;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.gui.screens.ServiceScreen;
@@ -53,7 +52,7 @@ public class ServiceListTopbar extends MultiElementContainer<ServiceScreen> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(int mouseX, int mouseY, float delta) {
 
     }
 

@@ -5,6 +5,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
+import xyz.wagyourtail.jsmacros.client.access.IStyle;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.stream.Collectors;
@@ -30,13 +31,12 @@ public class StyleHelper extends BaseHelper<Style> {
     }
 
     public boolean hasCustomColor() {
-        if (base.getColor() == null) return false;
-        return base.getColor().getName().startsWith("#");
+        return ((IStyle)base).hasCustomColor();
     }
 
     public int getCustomColor() {
         if (base.getColor() == null) return -1;
-        return base.getColor().getRgb();
+        return ((IStyle) base).getCustomColor();
     }
 
     public boolean bold() {
@@ -87,11 +87,9 @@ public class StyleHelper extends BaseHelper<Style> {
 
     public Object getHoverValue() {
         if (base.getHoverEvent() == null) return null;
-        Object value = base.getHoverEvent().getValue(base.getHoverEvent().getAction());
-        if (value instanceof Text) return new TextHelper((Text) value);
-        if (value instanceof HoverEvent.ItemStackContent) return new ItemStackHelper(((HoverEvent.ItemStackContent) value).asStack());
-        if (value instanceof HoverEvent.EntityContent) return ((HoverEvent.EntityContent) value).asTooltip().stream().map(TextHelper::new).collect(Collectors.toList());
-        return value;
+        Text value = base.getHoverEvent().getValue();
+        if (value != null) return new TextHelper(value);
+        return null;
     }
 
     public String getInsertion() {

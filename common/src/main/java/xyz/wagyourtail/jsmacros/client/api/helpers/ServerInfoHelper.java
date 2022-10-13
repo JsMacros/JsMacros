@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -25,11 +26,11 @@ public class ServerInfoHelper extends BaseHelper<ServerInfo> {
     }
 
     public TextHelper getPlayerCountLabel() {
-        return new TextHelper(base.playerCountLabel);
+        return new TextHelper(new LiteralText(base.playerCountLabel));
     }
 
     public TextHelper getLabel() {
-        return new TextHelper(base.label);
+        return new TextHelper(new LiteralText(base.label));
     }
 
     public long getPing() {
@@ -41,11 +42,11 @@ public class ServerInfoHelper extends BaseHelper<ServerInfo> {
     }
 
     public TextHelper getVersion() {
-        return new TextHelper(base.version);
+        return new TextHelper(new LiteralText(base.version));
     }
 
-    public List<TextHelper> getPlayerListSummary() {
-        return base.playerListSummary.stream().map(TextHelper::new).collect(Collectors.toList());
+    public String getPlayerListSummary() {
+        return base.playerListSummary;
     }
 
     public String resourcePackPolicy() {

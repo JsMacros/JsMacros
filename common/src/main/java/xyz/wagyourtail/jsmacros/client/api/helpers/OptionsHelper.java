@@ -4,8 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.CloudRenderMode;
 import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.options.GraphicsMode;
-import net.minecraft.client.options.Perspective;
+import net.minecraft.client.resource.ClientResourcePackProfile;
 import net.minecraft.client.util.Window;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 public class OptionsHelper extends BaseHelper<GameOptions> {
     private static final Map<String, SoundCategory> SOUND_CATEGORY_MAP = Arrays.stream(SoundCategory.values()).collect(Collectors.toMap(SoundCategory::getName, Function.identity()));
     private final MinecraftClient mc = MinecraftClient.getInstance();
-    private final ResourcePackManager rpm = mc.getResourcePackManager();
+    private final ResourcePackManager<ClientResourcePackProfile> rpm = mc.getResourcePackManager();
     
     public OptionsHelper(GameOptions options) {
         super(options);
@@ -69,14 +68,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return
      */
     public int getGraphicsMode() {
-        switch (base.graphicsMode) {
-            case FABULOUS:
-                return 2;
-            case FANCY:
-                return 1;
-            default:
-                return 0;
-        }
+        return base.fancyGraphics ? 1 : 0;
     }
     /**
      * @since 1.1.7
@@ -84,24 +76,15 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return
      */
     public OptionsHelper setGraphicsMode(int mode) {
-        switch(mode) {
-            case 2:
-                base.graphicsMode = GraphicsMode.FABULOUS;
-                return this;
-            case 1:
-                base.graphicsMode = GraphicsMode.FANCY;
-                return this;
-            default:
-                base.graphicsMode = GraphicsMode.FAST;
-                return this;
-        }
+        base.fancyGraphics = mode == 1;
+        return this;
     }
     /**
      * @since 1.1.7
      * @return list of names of resource packs.
      */
     public List<String> getResourcePacks() {
-        return new ArrayList<String>(rpm.getNames());
+        return rpm.getProfiles().stream().map(ResourcePackProfile::getName).collect(Collectors.toList());
     }
     
     /**
@@ -109,7 +92,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return list of names of enabled resource packs.
      */
     public List<String> getEnabledResourcePacks() {
-        return new ArrayList<String>(rpm.getEnabledNames());
+        return rpm.getEnabledProfiles().stream().map(ResourcePackProfile::getName).collect(Collectors.toList());
     }
     
     /**
@@ -120,9 +103,10 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return
      */
     public OptionsHelper setEnabledResourcePacks(String[] enabled) {
-        Collection<String> en = new ArrayList<String>(Arrays.asList(enabled).stream().distinct().collect(Collectors.toList()));
+        Collection<String> en = Arrays.stream(enabled).distinct().collect(Collectors.toList());
         List<String> currentRP = ImmutableList.copyOf(base.resourcePacks);
-        rpm.setEnabledProfiles(en);
+        Collection<ClientResourcePackProfile> prof = en.stream().map(e -> rpm.getProfile(e)).filter(Objects::nonNull).collect(Collectors.toList());
+        rpm.setEnabledProfiles(prof);
         base.resourcePacks.clear();
         base.incompatibleResourcePacks.clear();
         for (ResourcePackProfile p : rpm.getEnabledProfiles()) {
@@ -346,7 +330,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return 0 for 1st person, 2 for in front.
      */
     public int getCameraMode() {
-        return base.getPerspective().ordinal();
+        return base.perspective;
     }
 
     /**
@@ -354,6 +338,6 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.5.0
      */
     public void setCameraMode(int mode) {
-        base.setPerspective(Perspective.values()[mode]);
+        base.perspective = mode;
     }
 }

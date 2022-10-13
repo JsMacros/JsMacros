@@ -38,14 +38,14 @@ public class EventKey implements BaseEvent {
     }
 
     public static boolean parse(int key, int scancode, int action, int mods) {
-        InputUtil.Key keycode;
+        InputUtil.KeyCode keycode;
         if (key <= 7) keycode = InputUtil.Type.MOUSE.createFromCode(key);
         else keycode = InputUtil.Type.KEYSYM.createFromCode(key);
 
-        String keyStr = keycode.getTranslationKey();
+        String keyStr = keycode.getName();
         String modsStr = getKeyModifiers(mods);
-        
-        if (keycode == InputUtil.UNKNOWN_KEY) return false;
+
+        if (keycode == InputUtil.UNKNOWN_KEYCODE) return false;
 
         if (action == 1) FKeyBind.KeyTracker.press(keycode);
         else FKeyBind.KeyTracker.unpress(keycode);

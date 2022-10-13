@@ -1,13 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolItem;
-import net.minecraft.item.Wearable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
-import net.minecraft.tag.ItemTags;
 import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -143,7 +142,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public List<String> getTags() {
-        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().getItems().getTagsFor(base.getItem()).stream().map(Identifier::toString).collect(Collectors.toList());
+        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().items().getTagsFor(base.getItem()).stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
@@ -167,7 +166,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public boolean isWearable() {
-        return base.getItem() instanceof Wearable;
+        return base.getItem() instanceof ArmorItem;
     }
 
     /**
