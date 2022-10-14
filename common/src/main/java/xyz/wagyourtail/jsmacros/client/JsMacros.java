@@ -1,11 +1,10 @@
 package xyz.wagyourtail.jsmacros.client;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.*;
-import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.inventory.*;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
@@ -19,6 +18,7 @@ import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 import java.io.File;
 import java.net.URI;
+import java.util.Objects;
 import java.util.ServiceLoader;
 
 public class JsMacros {
@@ -74,40 +74,40 @@ public class JsMacros {
         }
     }
 
-    static public String getScreenName(Screen s) {
+    static public String getScreenName(GuiScreen s) {
         if (s == null) return null;
-        if (s instanceof HandledScreen) {
+        if (s instanceof GuiContainer) {
             //add more ?
-            if (s instanceof ChestScreen) {
-                return String.format("%d Row Chest", ((ChestScreen) s).screenHandler.slots.size() / 9 - 4);
-            } else if (s instanceof DispenserScreen) {
+            if (s instanceof GuiChest) {
+                return String.format("%d Row Chest", ((GuiChest) s).screenHandler.slots.size() / 9 - 4);
+            } else if (s instanceof GuiDispenser) {
                 return "3x3 Container";
-            } else if (s instanceof AnvilScreen) {
+            } else if (s instanceof GuiRepair) {
                 return "Anvil";
-            } else if (s instanceof BeaconScreen) {
+            } else if (s instanceof GuiBeacon) {
                 return "Beacon";
-            } else if (s instanceof BrewingStandScreen) {
+            } else if (s instanceof GuiBrewingStand) {
                 return "Brewing Stand";
-            } else if (s instanceof CraftingTableScreen) {
+            } else if (s instanceof GuiCrafting) {
                 return "Crafting Table";
-            } else if (s instanceof EnchantingScreen) {
+            } else if (s instanceof GuiEnchantment) {
                 return "Enchanting Table";
-            } else if (s instanceof FurnaceScreen) {
+            } else if (s instanceof GuiFurnace) {
                 return "Furnace";
-            } else if (s instanceof HopperScreen) {
+            } else if (s instanceof GuiHopper) {
                 return "Hopper";
-            } else if (s instanceof VillagerTradingScreen) {
+            } else if (s instanceof GuiMerchant) {
                 return "Villager";
-            } else if (s instanceof SurvivalInventoryScreen) {
+            } else if (s instanceof GuiInventory) {
                 return "Survival Inventory";
-            } else if (s instanceof HorseScreen) {
+            } else if (s instanceof GuiScreenHorseInventory) {
                 return "Horse";
-            } else if (s instanceof CreativeInventoryScreen) {
+            } else if (s instanceof GuiContainerCreative) {
                 return "Creative Inventory";
             } else {
                 return s.getClass().getName();
             }
-        } else if (s instanceof ChatScreen) {
+        } else if (s instanceof GuiChat) {
             return "Chat";
         }
         return s.getClass().getTypeName();
@@ -115,12 +115,12 @@ public class JsMacros {
 
     @Deprecated
     static public String getLocalizedName(int keyCode) {
-        return GameOptions.getFormattedNameForKeyCode(keyCode);
+        return GameSettings.getFormattedNameForKeyCode(keyCode);
     }
 
     @Deprecated
-    static public MinecraftClient getMinecraft() {
-        return MinecraftClient.getInstance();
+    static public Minecraft getMinecraft() {
+        return Minecraft.getInstance();
     }
 
 

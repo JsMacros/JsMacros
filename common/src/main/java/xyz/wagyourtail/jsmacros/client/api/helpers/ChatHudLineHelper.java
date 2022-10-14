@@ -1,15 +1,15 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.client.gui.hud.ChatHud;
-import net.minecraft.client.gui.hud.ChatHudLine;
+import net.minecraft.client.gui.ChatLine;
+import net.minecraft.client.gui.GuiNewChat;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 
-public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
-    private ChatHud hud;
+public class ChatHudLineHelper extends BaseHelper<ChatLine> {
+    private GuiNewChat hud;
 
-    public ChatHudLineHelper(ChatHudLine base, ChatHud hud) {
+    public ChatHudLineHelper(ChatLine base, GuiNewChat hud) {
         super(base);
         this.hud = hud;
     }

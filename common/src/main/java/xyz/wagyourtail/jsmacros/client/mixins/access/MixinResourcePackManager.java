@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
-import net.minecraft.client.resource.ResourcePackLoader;
-import net.minecraft.resource.ResourcePack;
+import net.minecraft.client.resources.IResourcePack;
+import net.minecraft.client.resources.ResourcePackRepository;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.wagyourtail.jsmacros.client.access.IResourcePackManager;
 
-@Mixin(ResourcePackLoader.class)
+@Mixin(ResourcePackRepository.class)
 public class MixinResourcePackManager implements IResourcePackManager {
 
     @Unique
@@ -25,8 +25,8 @@ public class MixinResourcePackManager implements IResourcePackManager {
         return disableServerPacks;
     }
 
-    @Inject(at = @At("HEAD"), method = "method_7039", cancellable = true)
-    public void onBuildPackList(CallbackInfoReturnable<ResourcePack> cir) {
+    @Inject(at = @At("HEAD"), method = "func_148530_e", cancellable = true)
+    public void onBuildPackList(CallbackInfoReturnable<IResourcePack> cir) {
         if (disableServerPacks) {
             cir.setReturnValue(null);
         }

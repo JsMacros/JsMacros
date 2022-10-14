@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="runForge" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="/usr/lib/jvm/java-8-adoptopenjdk/jre" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="MAIN_CLASS_NAME" value="GradleStart" />
+    <module name="jsmacros.forge.main" />
+    <option name="VM_PARAMETERS" value="-Dfml.coreMods.load=xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/forge/run" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

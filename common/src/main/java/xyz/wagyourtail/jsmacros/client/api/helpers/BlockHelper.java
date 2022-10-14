@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -33,7 +34,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public ItemStackHelper getDefaultItemStack() {
-        return new ItemStackHelper(base.getItemStack(null, null, null));
+        return new ItemStackHelper(new ItemStack(base.getPickItem(null, null)));
     }
 
     public boolean canMobSpawnInside() {
@@ -82,7 +83,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public float getHardness() {
-        return base.getStrength(base.getDefaultState(), null, null);
+        return base.getDefaultState().getBlock().getHarvestLevel(base.getDefaultState());
     }
 
     /**

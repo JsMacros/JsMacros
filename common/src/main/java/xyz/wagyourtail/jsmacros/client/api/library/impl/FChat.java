@@ -1,12 +1,17 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.tree.CommandNode;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.command.ICommand;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
+import net.minecraftforge.client.ClientCommandHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.ChatHistoryManager;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
@@ -31,7 +36,7 @@ import java.util.concurrent.Semaphore;
  @Library("Chat")
  @SuppressWarnings("unused")
 public class FChat extends BaseLibrary {
-    private static final MinecraftClient mc = MinecraftClient.getInstance();
+    private static final Minecraft mc = Minecraft.getInstance();
     /**
      * Log to player chat.
      * 
@@ -77,7 +82,7 @@ public class FChat extends BaseLibrary {
 
     private static void logInternal(String message) {
         if (message != null) {
-            LiteralText text = new LiteralText(message);
+            ChatComponentText text = new ChatComponentText(message);
             ((IChatHud)mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
         }
     }
@@ -145,12 +150,12 @@ public class FChat extends BaseLibrary {
     public void open(String message, boolean await) throws InterruptedException {
         if (message == null) message = "";
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
-            throw new UnsupportedOperationException("Cannot open a screen while joined to the main thread");
+            mc.openScreen(new GuiChat(message));
         } else {
             String finalMessage = message;
             final Semaphore semaphore = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                mc.openScreen(new ChatScreen(finalMessage));
+                mc.openScreen(new GuiChat(finalMessage));
                 semaphore.release();
             });
             semaphore.acquire();
@@ -202,9 +207,9 @@ public class FChat extends BaseLibrary {
      */
     public void actionbar(Object text, boolean tinted) {
         assert mc.inGameHud != null;
-        Text textt = null;
+        IChatComponent textt = null;
         if (text instanceof TextHelper) textt = ((TextHelper) text).getRaw();
-        else if (text != null) textt = new LiteralText(text.toString());
+        else if (text != null) textt = new ChatComponentText(text.toString());
         mc.inGameHud.setOverlayMessage(textt, tinted);
     }
     
@@ -235,7 +240,7 @@ public class FChat extends BaseLibrary {
      * @return a new {@link xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper TextHelper}
      */
     public TextHelper createTextHelperFromString(String content) {
-        return new TextHelper(new LiteralText(content));
+        return new TextHelper(new ChatComponentText(content));
     }
 
     /**

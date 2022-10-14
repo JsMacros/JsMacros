@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.world.GameMode;
+import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.world.WorldSettings;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -10,9 +10,9 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
  * @since 1.0.2
  */
 @SuppressWarnings("unused")
-public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
+public class PlayerListEntryHelper extends BaseHelper<NetworkPlayerInfo> {
 
-    public PlayerListEntryHelper(PlayerListEntry p) {
+    public PlayerListEntryHelper(NetworkPlayerInfo p) {
         super(p);
     }
 
@@ -49,9 +49,9 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @return null if unknown
      */
     public String getGamemode() {
-        GameMode gm = base.method_9679();
+        WorldSettings.GameType gm = base.getGameMode();
         if (gm == null) return null;
-        return gm.getGameModeName();
+        return gm.getName();
     }
 
     /**

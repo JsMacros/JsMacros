@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.worldscanner;
 
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IAdvancedFilter;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IFilter;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.impl.BlockFilter;
@@ -272,7 +272,7 @@ public final class WorldScannerBuilder {
     }
 
     public WorldScanner build() {
-        return new WorldScanner(MinecraftClient.getInstance().world, blockFilter, stateFilter);
+        return new WorldScanner(Minecraft.getInstance().world, blockFilter, stateFilter);
     }
 
     private enum Operation {

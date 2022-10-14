@@ -1,10 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.util.Window;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import org.lwjgl.input.Mouse;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
  @SuppressWarnings("unused")
 public class FHud extends BaseLibrary {
     
-    private static final MinecraftClient mc = MinecraftClient.getInstance();
+    private static final Minecraft mc = Minecraft.getInstance();
     /**
      * Don't touch this here
      */
@@ -67,7 +67,7 @@ public class FHud extends BaseLibrary {
      * @param s
      */
     public void openScreen(IScreen s) {
-        Screen screen = (Screen) s;
+        GuiScreen screen = (GuiScreen) s;
         mc.execute(() -> {
             mc.openScreen(screen);
         });
@@ -102,7 +102,7 @@ public class FHud extends BaseLibrary {
      * @return a {@link java.lang.Boolean boolean} denoting if the currently open screen is a container. 
      */
     public boolean isContainer() {
-        return mc.currentScreen instanceof HandledScreen;
+        return mc.currentScreen instanceof GuiContainer;
     }
     
     
@@ -235,7 +235,7 @@ public class FHud extends BaseLibrary {
      * @return the current X coordinate of the mouse
      */
     public double getMouseX() {
-        Window res = new Window(mc);
+        ScaledResolution res = new ScaledResolution(mc);
         return Mouse.getX() * (double)res.getScaledWidth() / (double)mc.width;
     }
     
@@ -245,7 +245,7 @@ public class FHud extends BaseLibrary {
      * @return the current Y coordinate of the mouse
      */
     public double getMouseY() {
-        Window res = new Window(mc);
+        ScaledResolution res = new ScaledResolution(mc);
         return Mouse.getY() * (double)res.getScaledHeight() / (double)mc.height;
     }
 }

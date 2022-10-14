@@ -4,10 +4,16 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
+import org.lwjgl.input.Mouse;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventKey;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandManager;
 import xyz.wagyourtail.jsmacros.forge.client.api.classes.CommandManagerForge;
 import xyz.wagyourtail.jsmacros.forge.client.forgeevents.ForgeEvents;
+import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 @Mod(modid = JsMacros.MOD_ID, version = "@VERSION@", guiFactory = "xyz.wagyourtail.jsmacros.forge.client.JsMacrosModConfigFactory")
 public class JsMacrosForge {

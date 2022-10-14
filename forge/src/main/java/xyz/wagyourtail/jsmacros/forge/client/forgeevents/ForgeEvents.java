@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.forge.client.forgeevents;
 
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -17,7 +17,7 @@ import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 public class ForgeEvents {
-    private static final MinecraftClient client = MinecraftClient.getInstance();
+    private static final Minecraft client = Minecraft.getInstance();
 
     public static void init() {
         MinecraftForge.EVENT_BUS.register(new ForgeEvents());
@@ -46,7 +46,7 @@ public class ForgeEvents {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
-            TickBasedEvents.onTick(MinecraftClient.getInstance());
+            TickBasedEvents.onTick(Minecraft.getInstance());
         }
     }
 

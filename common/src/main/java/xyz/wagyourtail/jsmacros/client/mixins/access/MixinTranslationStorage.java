@@ -3,8 +3,8 @@ package xyz.wagyourtail.jsmacros.client.mixins.access;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.minecraft.client.resource.language.TranslationStorage;
-import net.minecraft.resource.ResourceManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.resources.Locale;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,14 +21,17 @@ import java.io.Reader;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Mixin(TranslationStorage.class)
+@Mixin(Locale.class)
 public class MixinTranslationStorage {
 
     @Shadow Map<String, String> translations;
 
-    @Inject(at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"), method = "method_5945", locals = LocalCapture.CAPTURE_FAILHARD)
-    private void insertFabricLanguageData(ResourceManager container, List<String> list, CallbackInfo ci) {
+    @Inject(at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"), method = {"method_4415", "func_135022_a"}, locals = LocalCapture.CAPTURE_FAILHARD)
+    private void insertFabricLanguageData(IResourceManager container, List<String> list, CallbackInfo ci) {
         Map<String, String> translations = new HashMap<>();
+        if (Core.getInstance() == null) {
+            return;
+        }
         for (String lang : list) {
             Set<Map<String, String>> res = JsMacros.core.extensions.getAllExtensions().stream().map(e -> e.getTranslations(lang)).collect(Collectors.toSet());
             for (Map<String, String> r : res) {

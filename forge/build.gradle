@@ -1,16 +1,8 @@
-plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
-}
-
 archivesBaseName = archivesBaseName + "-FORGE"
-
-architectury {
-    platformSetupLoomIde()
-    forge()
-}
 
 configurations {
     common
+    shadow
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
     include
     compileClasspath.extendsFrom common
@@ -18,94 +10,64 @@ configurations {
     developmentForge.extendsFrom common
 }
 
-loom {
-    forge {
-        mixinConfigs "jsmacros-forge.mixins.json"
-    }
+mixin {
+    add sourceSets.main, "jsmacros-forge.refmap.json"
+    defaultObfuscationEnv searge
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
-
-
-    localRuntime "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-    localRuntime "org.graalvm.js:js:${project.graal_version}"
-    localRuntime "org.graalvm.truffle:truffle-api:${project.graal_version}"
-    localRuntime "org.graalvm.regex:regex:${project.graal_version}"
+    runtime "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+    runtime "org.graalvm.js:js:${project.graal_version}"
+    runtime "org.graalvm.truffle:truffle-api:${project.graal_version}"
+    runtime "org.graalvm.regex:regex:${project.graal_version}"
 //		localRuntime "org.graalvm.compiler:compiler:${project.graal_version}"
 //		localRuntime "org.graalvm.compiler:compiler-management:${project.graal_version}"
 
     include "io.noties:prism4j:${project.prism_version}", {
         exclude module: "annotations-java5"
     }
+
     include 'com.ibm.icu:icu4j:70.1'
     include "com.neovisionaries:nv-websocket-client:2.10"
     include "org.javassist:javassist:3.28.0-GA"
     include "com.mojang:brigadier:${project.brigadier_version}"
 
-
     implementation 'org.spongepowered:mixin:0.7.11-SNAPSHOT'
     shadowCommon "org.spongepowered:mixin:0.7.11-SNAPSHOT"
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    common(project(path: ":common")) { transitive false }
 
     //ij wasn't seeing this, even tho it's part of namedElements...
     implementation(project(":common").sourceSets.core.output)
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
+    shadowCommon(project(path: ":common")) { transitive false }
 
-    common(project(path: ":javascript_extension", configuration: "namedElements")) { transitive false }
-    jsmacrosExtensionInclude(project(path: ":javascript_extension", configuration: "namedElements")) { transitive false }
+    common(project(path: ":javascript_extension")) { transitive false }
+    jsmacrosExtensionInclude(project(path: ":javascript_extension")) { transitive false }
 }
 
 processResources {
+    // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
 
-    filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
-        expand "mcversion": project.minecraft_version
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
     }
 
     filesMatching("jsmacros.extension.json") {
         expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")
     }
-
-    filesMatching("mcmod.info") {
-        expand "version": project.version, "mcversion": project.minecraft_version
-    }
-}
-
-shadowJar {
-    configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
-
-    // exclude icu that's "accidentally" (I hope) included in graaljs jar
-    exclude "com/ibm/**"
-    exclude "META-INF/**.SF"
-    exclude "META-INF/**.RSA"
-    exclude "META-INF/**.DSA"
-
-    mergeServiceFiles()
-}
-
-remapJar {
-    input.set shadowJar.archiveFile
-    dependsOn shadowJar
-    classifier null
-
-    from (configurations.jsmacrosExtensionInclude.files) {
-        include '*'
-        into "META-INF/jsmacrosdeps"
-    }
-
-    from(configurations.include.files) {
-        include '*'
-        into 'META-INF/jars/'
-    }
 }
 
 jar {
-    classifier "dev"
-
     manifest {
         attributes([
                 'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
@@ -115,18 +77,23 @@ jar {
                 'ForceLoadAsMod': true
         ])
     }
-}
 
-sourcesJar {
-    def commonSources = project(":common").sourcesJar
-    dependsOn commonSources
-    from commonSources.archiveFile.map { zipTree(it) }
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
+    from(configurations.include.files) {
+        include '*'
+        into 'META-INF/jars/'
+    }
 
-components.java {
-    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-        skip()
+    from (configurations.jsmacrosExtensionInclude.files) {
+        include '*'
+        into "META-INF/jsmacrosdeps"
+    }
+
+    from {
+        configurations.shadow.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    from {
+        configurations.shadowCommon.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 

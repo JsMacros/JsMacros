@@ -6,9 +6,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ResourceLocation;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -33,14 +33,14 @@ public class CommandContextHelper extends BaseHelper<CommandContext<?>> implemen
         Object arg = base.getArgument(name, Object.class);
         if (arg instanceof Block) {
             arg = Block.REGISTRY.getIdentifier((Block) arg).toString();
-        } else if (arg instanceof Identifier) {
+        } else if (arg instanceof ResourceLocation) {
             arg = arg.toString();
         } else if (arg instanceof Item) {
             arg = new ItemStackHelper(new ItemStack((Item) arg, 1));
-        } else if (arg instanceof NbtElement) {
-            arg = NBTElementHelper.resolve((NbtElement) arg);
-        } else if (arg instanceof Text) {
-            arg = new TextHelper((Text) arg);
+        } else if (arg instanceof NBTBase) {
+            arg = NBTElementHelper.resolve((NBTBase) arg);
+        } else if (arg instanceof IChatComponent) {
+            arg = new TextHelper((IChatComponent) arg);
         }
         return arg;
     }

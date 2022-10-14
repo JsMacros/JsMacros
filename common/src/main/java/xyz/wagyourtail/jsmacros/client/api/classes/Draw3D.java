@@ -1,13 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
@@ -477,7 +476,7 @@ public class Draw3D {
     }
 
     public void render() {
-        MinecraftClient mc = MinecraftClient.getInstance();
+        Minecraft mc = Minecraft.getInstance();
 
         //setup
         GlStateManager.enableBlend();
@@ -488,8 +487,8 @@ public class Draw3D {
         GlStateManager.pushMatrix();
 
         // offsetRender
-        EntityRenderDispatcher camera = mc.getEntityRenderManager();
-        PositionCommon.Pos3D camPos = new PositionCommon.Pos3D(camera.field_2105, camera.field_2106, camera.field_2107);
+        RenderManager camera = mc.getEntityRenderManager();
+        PositionCommon.Pos3D camPos = new PositionCommon.Pos3D(camera.field_78730_l, camera.field_78731_m, camera.field_78728_n);
 
         // offsetRender
         //        matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(MathHelper.wrapDegrees(camera.getPitch())));
@@ -648,7 +647,7 @@ public class Draw3D {
             }
 
             Tessellator tess = Tessellator.getInstance();
-            BufferBuilder buf = tess.getBuffer();
+            WorldRenderer buf = tess.getBuffer();
 
             if (this.fill) {
                 float fa = ((fillColor >> 24) & 0xFF) / 255F;
@@ -659,7 +658,7 @@ public class Draw3D {
                 //1.15+ culls insides
                 GlStateManager.disableCull();
 
-                buf.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
+                buf.begin(GL11.GL_TRIANGLE_STRIP, DefaultVertexFormats.POSITION_COLOR);
 
                 //draw a cube using triangle strips
                 buf.vertex(x1, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-left
@@ -683,7 +682,7 @@ public class Draw3D {
             }
 
             GL11.glLineWidth(2.5F);
-            buf.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
+            buf.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
 
             buf.vertex(x1, y1, z1).color(r, g, b, a).next();
             buf.vertex(x1, y1, z2).color(r, g, b, a).next();
@@ -804,9 +803,9 @@ public class Draw3D {
             int g = (color >> 8) & 0xFF;
             int b = color & 0xFF;
             Tessellator tess = Tessellator.getInstance();
-            BufferBuilder buf = tess.getBuffer();
+            WorldRenderer buf = tess.getBuffer();
             GL11.glLineWidth(2.5F);
-            buf.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
+            buf.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
             buf.vertex((float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
             buf.vertex((float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
             tess.draw();

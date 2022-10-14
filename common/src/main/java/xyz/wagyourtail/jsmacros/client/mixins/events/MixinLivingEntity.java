@@ -1,10 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.DamageSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -16,7 +16,7 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.EventHeal;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventEntityDamaged;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventEntityHealed;
 
-@Mixin(LivingEntity.class)
+@Mixin(EntityLivingBase.class)
 public abstract class MixinLivingEntity {
 
     @Shadow public abstract float getMaxHealth();
@@ -32,14 +32,14 @@ public abstract class MixinLivingEntity {
     @Inject(at = @At("HEAD"), method = "setHealth")
     public void onSetHealth(float health, CallbackInfo ci) {
         //fix for singleplayer worlds, when the client also has the integrated server
-        if ((Object) this instanceof ServerPlayerEntity) {
+        if ((Object) this instanceof EntityPlayerMP) {
             return;
         }
 
         float difference = lastHealth - health;
 
         if (difference > 0) {
-            if ((Object) this instanceof ClientPlayerEntity) {
+            if ((Object) this instanceof EntityPlayerSP) {
                 new EventDamage(DamageSource.GENERIC, health, difference);
             }
             new EventEntityDamaged((Entity)(Object) this, health, difference);
@@ -48,7 +48,7 @@ public abstract class MixinLivingEntity {
 
             difference *= -1;
 
-            if ((Object) this instanceof ClientPlayerEntity) {
+            if ((Object) this instanceof EntityPlayerSP) {
                 new EventHeal(DamageSource.GENERIC, health, difference);
             }
             new EventEntityHealed((Entity)(Object) this, health, difference);

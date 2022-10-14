@@ -2,32 +2,23 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.class_2840;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.sound.SoundCategory;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.sound.Sound;
-import net.minecraft.text.Text;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.LightType;
+import net.minecraft.world.EnumSkyBlock;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.WorldScanner;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.WorldScannerBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
-import xyz.wagyourtail.jsmacros.client.mixins.access.MixinBossBarHud;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
@@ -43,7 +34,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
@@ -56,7 +46,7 @@ import java.util.stream.StreamSupport;
 @SuppressWarnings("unused")
 public class FWorld extends BaseLibrary {
 
-    private static final MinecraftClient mc = MinecraftClient.getInstance();
+    private static final Minecraft mc = Minecraft.getInstance();
     /**
      * Don't modify.
      */
@@ -88,10 +78,10 @@ public class FWorld extends BaseLibrary {
     /**
      * @return players within render distance.
      */
-    public List<PlayerEntityHelper<PlayerEntity>> getLoadedPlayers() {
+    public List<PlayerEntityHelper<EntityPlayer>> getLoadedPlayers() {
         assert mc.world != null;
-        List<PlayerEntityHelper<PlayerEntity>> players = new ArrayList<>();
-        for (PlayerEntity p : ImmutableList.copyOf(mc.world.playerEntities)) {
+        List<PlayerEntityHelper<EntityPlayer>> players = new ArrayList<>();
+        for (EntityPlayer p : ImmutableList.copyOf(mc.world.playerEntities)) {
             players.add(new PlayerEntityHelper<>(p));
         }
         return players;
@@ -101,10 +91,10 @@ public class FWorld extends BaseLibrary {
      * @return players on the tablist.
      */
     public List<PlayerListEntryHelper> getPlayers() {
-        ClientPlayNetworkHandler handler = mc.getNetworkHandler();
+        NetHandlerPlayClient handler = mc.getNetworkHandler();
         assert handler != null;
         List<PlayerListEntryHelper> players = new ArrayList<>();
-        for (PlayerListEntry p : ImmutableList.copyOf(handler.getPlayerList())) {
+        for (NetworkPlayerInfo p : ImmutableList.copyOf(handler.getPlayerList())) {
             players.add(new PlayerListEntryHelper(p));
         }
         return players;
@@ -119,8 +109,8 @@ public class FWorld extends BaseLibrary {
     public BlockDataHelper getBlock(int x, int y, int z) {
         assert mc.world != null;
         BlockPos bp = new BlockPos(x, y, z);
-        BlockState b = mc.world.getBlockState(bp);
-        BlockEntity t = mc.world.getBlockEntity(bp);
+        IBlockState b = mc.world.getBlockState(bp);
+        TileEntity t = mc.world.getBlockEntity(bp);
         if (b.getBlock().equals(Blocks.AIR)) {
             return null;
         }
@@ -290,7 +280,7 @@ public class FWorld extends BaseLibrary {
      * @return
      */
     public BlockDataHelper rayTraceBlock(int x1, int y1, int z1, int x2, int y2, int z2, boolean fluid) {
-        HitResult result = mc.world.rayTrace(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2), fluid);
+        MovingObjectPosition result = mc.world.rayTrace(new Vec3(x1, y1, z1), new Vec3(x2, y2, z2), fluid);
         if (result != null) {
             return new BlockDataHelper(mc.world.getBlockState(result.getBlockPos()), mc.world.getBlockEntity(result.getBlockPos()), result.getBlockPos());
         }
@@ -331,7 +321,7 @@ public class FWorld extends BaseLibrary {
     public String getBiome() {
         assert mc.world != null;
         assert mc.player != null;
-        return mc.world.getBiome(mc.player.getBlockPos()).getName();
+        return mc.world.getBiome(mc.player.getBlockPos()).name;
     }
 
     /**
@@ -397,7 +387,7 @@ public class FWorld extends BaseLibrary {
      */
     public int getSkyLight(int x, int y, int z) {
         assert mc.world != null;
-        return mc.world.getLightAtPos(LightType.SKY, new BlockPos(x, y, z));
+        return mc.world.getLightAtPos(EnumSkyBlock.SKY, new BlockPos(x, y, z));
     }
 
     /**
@@ -410,7 +400,7 @@ public class FWorld extends BaseLibrary {
      */
     public int getBlockLight(int x, int y, int z) {
         assert mc.world != null;
-        return mc.world.getLightAtPos(LightType.BLOCK, new BlockPos(x, y, z));
+        return mc.world.getLightAtPos(EnumSkyBlock.BLOCK, new BlockPos(x, y, z));
     }
 
     /**
@@ -469,13 +459,13 @@ public class FWorld extends BaseLibrary {
      * @since 1.1.7
      */
     public void playSound(String id, double volume, double pitch) {
-        Identifier sound = new Identifier(id);
+        ResourceLocation sound = new ResourceLocation(id);
         assert sound != null;
         assert mc.player != null;
-        double x = mc.player.x;
-        double y = mc.player.y;
-        double z = mc.player.z;
-        mc.execute(() -> mc.getSoundManager().play(new PositionedSoundInstance(Objects.requireNonNull(Sound.REGISTRY.get(sound)), SoundCategory.MASTER, (float) volume, (float) pitch, new BlockPos(x, y, z))));
+        float x = (float) mc.player.x;
+        float y = (float) mc.player.y;
+        float z = (float) mc.player.z;
+        mc.execute(() -> mc.getSoundManager().play(new PositionedSoundRecord(sound, (float) volume, (float) pitch, x, y, z)));
     }
 
     /**
@@ -490,9 +480,9 @@ public class FWorld extends BaseLibrary {
      * @since 1.1.7
      */
     public void playSound(String id, double volume, double pitch, double x, double y, double z) {
-        Identifier sound = new Identifier(id);
+        ResourceLocation sound = new ResourceLocation(id);
         assert sound != null;
-        mc.execute(() -> mc.getSoundManager().play(new PositionedSoundInstance(Objects.requireNonNull(Sound.REGISTRY.get(sound)), SoundCategory.MASTER, (float) volume, (float) pitch, new BlockPos(x, y, z))));
+        mc.execute(() -> mc.getSoundManager().play(new PositionedSoundRecord(sound, (float) volume, (float) pitch, (float) x, (float) y, (float) z)));
     }
 
     /**
@@ -500,8 +490,8 @@ public class FWorld extends BaseLibrary {
      *
      * @since 1.2.1
      */
-    public Map<String, BossBarHelper> getBossBars() {
-        return  ((MixinBossBarHud) mc.inGameHud.method_12167()).getBossBars().entrySet().stream().collect(Collectors.toMap(e -> e.getKey().toString(), e -> new BossBarHelper(e.getValue())));
+    public BossBarHelper getBossBars() {
+        return new BossBarHelper();
     }
 
     /**
@@ -517,7 +507,7 @@ public class FWorld extends BaseLibrary {
         if (mc.world == null) {
             return false;
         }
-        return mc.world.getChunkProvider().isChunkGenerated(chunkX, chunkZ);
+        return mc.world.getChunkProvider().chunkExists(chunkX, chunkZ);
     }
 
     /**
@@ -526,7 +516,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.2.2
      */
     public String getCurrentServerAddress() {
-        ClientConnection h = mc.getNetworkHandler().getClientConnection();
+        NetworkManager h = mc.getNetworkHandler().getClientConnection();
         if (h == null) {
             return null;
         }
@@ -546,7 +536,7 @@ public class FWorld extends BaseLibrary {
      */
     public String getBiomeAt(int x, int z) {
         assert mc.world != null;
-        return mc.world.getBiome(new BlockPos(x, 10, z)).getName();
+        return mc.world.getBiome(new BlockPos(x, 10, z)).name;
     }
 
     /**
@@ -564,7 +554,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.3.1
      */
     public TextHelper getTabListHeader() {
-        Text header = ((IPlayerListHud) mc.inGameHud.getPlayerListWidget()).jsmacros_getHeader();
+        IChatComponent header = ((IPlayerListHud) mc.inGameHud.getPlayerListWidget()).jsmacros_getHeader();
         if (header != null) {
             return new TextHelper(header);
         }
@@ -577,7 +567,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.3.1
      */
     public TextHelper getTabListFooter() {
-        Text footer = ((IPlayerListHud) mc.inGameHud.getPlayerListWidget()).jsmacros_getFooter();
+        IChatComponent footer = ((IPlayerListHud) mc.inGameHud.getPlayerListWidget()).jsmacros_getFooter();
         if (footer != null) {
             return new TextHelper(footer);
         }

@@ -1,11 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.scoreboard.ScoreboardObjective;
-import net.minecraft.scoreboard.ScoreboardPlayerScore;
-import net.minecraft.scoreboard.Team;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.scoreboard.Score;
+import net.minecraft.scoreboard.ScoreObjective;
+import net.minecraft.scoreboard.ScorePlayerTeam;
+import net.minecraft.util.ChatComponentText;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.LinkedHashMap;
@@ -18,9 +17,9 @@ import java.util.stream.Collectors;
  * @since 1.2.9
  */
 @SuppressWarnings("unused")
-public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
+public class ScoreboardObjectiveHelper extends BaseHelper<ScoreObjective> {
     
-    public ScoreboardObjectiveHelper(ScoreboardObjective o) {
+    public ScoreboardObjectiveHelper(ScoreObjective o) {
         super(o);
     }
     
@@ -29,7 +28,7 @@ public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
      */
     public Map<String, Integer> getPlayerScores() {
         Map<String, Integer> scores  = new LinkedHashMap<>();
-        for (ScoreboardPlayerScore pl : base.getScoreboard().getAllPlayerScores(base)) {
+        for (Score pl : base.getScoreboard().getAllPlayerScores(base)) {
             scores.put(pl.getPlayerName(), pl.getScore());
         }
         return scores;
@@ -41,9 +40,9 @@ public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
      */
     public Map<Integer, TextHelper> scoreToDisplayName() {
         Map<Integer, TextHelper> scores  = new LinkedHashMap<>();
-        for (ScoreboardPlayerScore pl : base.getScoreboard().getAllPlayerScores(base)) {
-            Team team = base.getScoreboard().getPlayerTeam(pl.getPlayerName());
-            scores.put(pl.getScore(), new TextHelper(new LiteralText(Team.decorateName(team, pl.getPlayerName()))));
+        for (Score pl : base.getScoreboard().getAllPlayerScores(base)) {
+            ScorePlayerTeam team = base.getScoreboard().getPlayerTeam(pl.getPlayerName());
+            scores.put(pl.getScore(), new TextHelper(new ChatComponentText(ScorePlayerTeam.func_96667_a(team, pl.getPlayerName()))));
         }
         return scores;
     }
@@ -62,7 +61,7 @@ public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
      */
     public List<TextHelper> getKnownPlayersDisplayNames() {
         return ImmutableList.copyOf(base.getScoreboard().getKnownPlayers()).stream()
-            .map(e -> new TextHelper(new LiteralText(Team.decorateName(base.getScoreboard().getPlayerTeam(e), e))))
+            .map(e -> new TextHelper(new ChatComponentText(ScorePlayerTeam.func_96667_a(base.getScoreboard().getPlayerTeam(e), e))))
             .collect(Collectors.toList());
     }
 
@@ -79,6 +78,6 @@ public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
      * @since 1.2.9
      */
     public TextHelper getDisplayName() {
-        return new TextHelper(new LiteralText(base.getDisplayName()));
+        return new TextHelper(new ChatComponentText(base.getDisplayName()));
     }
 }

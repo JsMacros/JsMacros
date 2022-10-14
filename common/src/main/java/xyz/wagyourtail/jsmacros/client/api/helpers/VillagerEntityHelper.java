@@ -1,14 +1,14 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.entity.passive.EntityVillager;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinVillager;
 
 /**
  * @since 1.6.3
  */
-public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
+public class VillagerEntityHelper extends MerchantEntityHelper<EntityVillager> {
 
-    public VillagerEntityHelper(VillagerEntity e) {
+    public VillagerEntityHelper(EntityVillager e) {
         super(e);
     }
 

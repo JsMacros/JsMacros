@@ -1,8 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.text.*;
-import net.minecraft.util.Formatting;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
@@ -21,8 +25,8 @@ import java.util.function.Supplier;
  */
 @SuppressWarnings("unused")
 public abstract class TextBuilder {
-    protected final LiteralText head = new LiteralText("");
-    protected Text self = head;
+    protected final ChatComponentText head = new ChatComponentText("");
+    protected IChatComponent self = head;
 
     public static Supplier<TextBuilder> getTextBuilder;
 
@@ -44,7 +48,7 @@ public abstract class TextBuilder {
     }
     
     private void appendInternal(String text) {
-        head.append(self = new LiteralText(text));
+        head.append(self = new ChatComponentText(text));
     }
     
     private void appendInternal(TextHelper helper) {
@@ -59,7 +63,7 @@ public abstract class TextBuilder {
      * @return
      */
     public TextBuilder withColor(int color) {
-        self.getStyle().setFormatting(Formatting.byColorIndex(color));
+        self.getStyle().setColor(EnumChatFormatting.byColorIndex(color));
         return this;
     }
     
@@ -85,7 +89,7 @@ public abstract class TextBuilder {
      * @return
      */
     public TextBuilder withFormatting(boolean underline, boolean bold, boolean italic, boolean strikethrough, boolean magic) {
-        Style style = self.getStyle();
+        ChatStyle style = self.getStyle();
         style.setUnderline(underline);
         style.setBold(bold);
         style.setItalic(italic);

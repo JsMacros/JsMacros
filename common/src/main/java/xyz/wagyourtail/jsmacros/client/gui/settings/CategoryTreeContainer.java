@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings;
 
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
@@ -22,7 +22,7 @@ public class CategoryTreeContainer extends MultiElementContainer<ICategoryTreePa
     public int topScroll;
     public int btnHeight;
     
-    private CategoryTreeContainer(int x, int y, int width, int height, TextRenderer textRenderer, ICategoryTreeParent parent, String category) {
+    private CategoryTreeContainer(int x, int y, int width, int height, FontRenderer textRenderer, ICategoryTreeParent parent, String category) {
         super(x, y, width, height, textRenderer, parent);
         this.isHead = false;
         this.showChildren = false;
@@ -30,7 +30,7 @@ public class CategoryTreeContainer extends MultiElementContainer<ICategoryTreePa
         this.btnHeight = textRenderer.fontHeight + 2;
     }
     
-    public CategoryTreeContainer(int x, int y, int width, int height, TextRenderer textRenderer, ICategoryTreeParent parent) {
+    public CategoryTreeContainer(int x, int y, int width, int height, FontRenderer textRenderer, ICategoryTreeParent parent) {
         super(x, y, width, height, textRenderer, parent);
         this.isHead = true;
         this.showChildren = true;
@@ -116,10 +116,10 @@ public class CategoryTreeContainer extends MultiElementContainer<ICategoryTreePa
     
     private void initChild(boolean show) {
         if (children.size() > 0) {
-            expandBtn = addButton(new Button(x, y, btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(">"), (btn) -> this.toggleExpand()));
+            expandBtn = addButton(new Button(x, y, btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new ChatComponentText(">"), (btn) -> this.toggleExpand()));
             expandBtn.visible = show;
         }
-        showBtn = addButton(new Button(x + btnHeight, y, width - btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText(category), (btn) -> this.selectCategory()));
+        showBtn = addButton(new Button(x + btnHeight, y, width - btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new ChatComponentTranslation(category), (btn) -> this.selectCategory()));
         showBtn.visible = show;
         showBtn.horizCenter = false;
         
@@ -130,7 +130,7 @@ public class CategoryTreeContainer extends MultiElementContainer<ICategoryTreePa
     
     private void toggleExpand() {
         showChildren = !showChildren;
-        expandBtn.setMessage(new LiteralText(showChildren ? "<" : ">"));
+        expandBtn.setMessage(new ChatComponentText(showChildren ? "<" : ">"));
         updateOffsets();
     }
     

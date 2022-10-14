@@ -1,17 +1,17 @@
 package xyz.wagyourtail.jsmacros.client.gui.overlays;
 
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
 public class TextOverlay extends OverlayContainer {
-    private final Text text;
+    private final IChatComponent text;
     public boolean centered = true;
 
-    public TextOverlay(int x, int y, int width, int height, TextRenderer textRenderer, IOverlayParent parent, Text text) {
+    public TextOverlay(int x, int y, int width, int height, FontRenderer textRenderer, IOverlayParent parent, IChatComponent text) {
         super(x, y, width, height, textRenderer, parent);
         this.text = text;
     }
@@ -20,7 +20,7 @@ public class TextOverlay extends OverlayContainer {
     public void init() {
         super.init();
 
-        addButton(new Button(x + 2, y + this.height - 12, this.width - 4, 10, this.textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.confirm"), (btn) -> {
+        addButton(new Button(x + 2, y + this.height - 12, this.width - 4, 10, this.textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new ChatComponentTranslation("jsmacros.confirm"), (btn) -> {
             this.close();
         }));
     }

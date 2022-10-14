@@ -1,15 +1,15 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.Trader;
-import net.minecraft.village.TradeOffer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IMerchant;
+import net.minecraft.village.MerchantRecipe;
 import xyz.wagyourtail.jsmacros.client.access.IMerchantEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MerchantEntityHelper<T extends LivingEntity & Trader> extends LivingEntityHelper<T> {
+public class MerchantEntityHelper<T extends EntityLivingBase & IMerchant> extends LivingEntityHelper<T> {
     
     public MerchantEntityHelper(T e) {
         super(e);
@@ -21,7 +21,7 @@ public class MerchantEntityHelper<T extends LivingEntity & Trader> extends Livin
      */
     public List<TradeOfferHelper> getTrades() {
         List<TradeOfferHelper> offers = new ArrayList<>();
-        for (TradeOffer offer : base.getOffers(MinecraftClient.getInstance().player)) {
+        for (MerchantRecipe offer : base.getOffers(Minecraft.getInstance().player)) {
             offers.add(new TradeOfferHelper(offer, 0, null));
         }
         return offers;

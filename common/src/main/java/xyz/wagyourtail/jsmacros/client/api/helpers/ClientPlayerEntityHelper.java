@@ -1,16 +1,16 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.KeyBinding;
-import net.minecraft.entity.player.ClientPlayerEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
+import xyz.wagyourtail.jsmacros.client.access.IItemCooldownEntry;
+import xyz.wagyourtail.jsmacros.client.access.IItemCooldownManager;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -25,8 +25,8 @@ import java.util.concurrent.Semaphore;
  * @since 1.0.3
  */
 @SuppressWarnings("unused")
-public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends PlayerEntityHelper<T> {
-    protected final MinecraftClient mc = MinecraftClient.getInstance();
+public class ClientPlayerEntityHelper<T extends EntityPlayerSP> extends PlayerEntityHelper<T> {
+    protected final Minecraft mc = Minecraft.getInstance();
 
     public ClientPlayerEntityHelper(T e) {
         super(e);
@@ -83,13 +83,13 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         if (joinedMain) {
             mc.interactionManager.attackEntity(mc.player, entity.getRaw());
             assert mc.player != null;
-            mc.player.method_13041(Hand.MAIN_HAND);
+            mc.player.swingHand();
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
                 mc.interactionManager.attackEntity(mc.player, entity.getRaw());
                 assert mc.player != null;
-                mc.player.method_13041(Hand.MAIN_HAND);
+                mc.player.swingHand();
                 wait.release();
             });
             wait.acquire();
@@ -123,15 +123,15 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         assert mc.interactionManager != null;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            mc.interactionManager.attackBlock(new BlockPos(x, y, z), Direction.values()[direction]);
+            mc.interactionManager.attackBlock(new BlockPos(x, y, z), EnumFacing.values()[direction]);
             assert mc.player != null;
-            mc.player.method_13041(Hand.MAIN_HAND);
+            mc.player.swingHand();
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                mc.interactionManager.attackBlock(new BlockPos(x, y, z), Direction.values()[direction]);
+                mc.interactionManager.attackBlock(new BlockPos(x, y, z), EnumFacing.values()[direction]);
                 assert mc.player != null;
-                mc.player.method_13041(Hand.MAIN_HAND);
+                mc.player.swingHand();
                 wait.release();
             });
             wait.acquire();
@@ -158,20 +158,35 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     public ClientPlayerEntityHelper<T> interactEntity(EntityHelper<?> entity, boolean offHand, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
         if (entity.getRaw() == mc.player) throw new AssertionError("Can't interact with self!");
-        Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ActionResult result = mc.interactionManager.method_12235(mc.player, entity.getRaw(), hand);
+            boolean result = mc.interactionManager.interactEntityAtLocation(mc.player, entity.getRaw(), mc.result) ||
+                mc.interactionManager.interactEntity(mc.player, entity.getRaw());
             assert mc.player != null;
-            if (result != ActionResult.FAIL)
-                mc.player.method_13041(hand);
+            if (!result) {
+                ItemStack itemstack1 = mc.player.inventory.getMainHandStack();
+
+                boolean result2 = !net.minecraftforge.event.ForgeEventFactory.onPlayerInteract(mc.player, net.minecraftforge.event.entity.player.PlayerInteractEvent.Action.RIGHT_CLICK_AIR, mc.world, null, null).isCanceled();
+                if (result2 && itemstack1 != null && mc.interactionManager.func_78769_a(mc.player, mc.world, itemstack1))
+                {
+                    mc.gameRenderer.firstPersonRenderer.func_78445_c();
+                }
+            }
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ActionResult result = mc.interactionManager.method_12235(mc.player, entity.getRaw(), hand);
+                boolean result = mc.interactionManager.interactEntityAtLocation(mc.player, entity.getRaw(), mc.result) ||
+                    mc.interactionManager.interactEntity(mc.player, entity.getRaw());
                 assert mc.player != null;
-                if (result != ActionResult.FAIL)
-                    mc.player.method_13041(hand);
+                if (!result) {
+                    ItemStack itemstack1 = mc.player.inventory.getMainHandStack();
+
+                    boolean result2 = !net.minecraftforge.event.ForgeEventFactory.onPlayerInteract(mc.player, net.minecraftforge.event.entity.player.PlayerInteractEvent.Action.RIGHT_CLICK_AIR, mc.world, null, null).isCanceled();
+                    if (result2 && itemstack1 != null && mc.interactionManager.func_78769_a(mc.player, mc.world, itemstack1))
+                    {
+                        mc.gameRenderer.firstPersonRenderer.func_78445_c();
+                    }
+                }
                 wait.release();
             });
             wait.acquire();
@@ -194,21 +209,25 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      */
     public ClientPlayerEntityHelper<T> interactItem(boolean offHand, boolean await) throws InterruptedException {
     assert mc.interactionManager != null;
-        assert mc.interactionManager != null;
-        Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ActionResult result = mc.interactionManager.method_12234(mc.player, mc.world, hand);
-            assert mc.player != null;
-            if (result != ActionResult.FAIL)
-                mc.player.method_13041(hand);
+            ItemStack itemstack1 = mc.player.inventory.getMainHandStack();
+
+            boolean result = !net.minecraftforge.event.ForgeEventFactory.onPlayerInteract(mc.player, net.minecraftforge.event.entity.player.PlayerInteractEvent.Action.RIGHT_CLICK_AIR, mc.world, null, null).isCanceled();
+            if (result && itemstack1 != null && mc.interactionManager.func_78769_a(mc.player, mc.world, itemstack1))
+            {
+                mc.gameRenderer.firstPersonRenderer.func_78445_c();
+            }
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ActionResult result = mc.interactionManager.method_12234(mc.player, mc.world, hand);
-                assert mc.player != null;
-                if (result != ActionResult.FAIL)
-                    mc.player.method_13041(hand);
+                ItemStack itemstack1 = mc.player.inventory.getMainHandStack();
+
+                boolean result = !net.minecraftforge.event.ForgeEventFactory.onPlayerInteract(mc.player, net.minecraftforge.event.entity.player.PlayerInteractEvent.Action.RIGHT_CLICK_AIR, mc.world, null, null).isCanceled();
+                if (result && itemstack1 != null && mc.interactionManager.func_78769_a(mc.player, mc.world, itemstack1))
+                {
+                    mc.gameRenderer.firstPersonRenderer.func_78445_c();
+                }
                 wait.release();
             });
             wait.acquire();
@@ -229,21 +248,43 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, int direction, boolean offHand, boolean await) throws InterruptedException {
-        assert mc.interactionManager != null;
-        Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
-        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+    boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ActionResult result = mc.interactionManager.method_13842(mc.player, mc.world, new BlockPos(x, y, z), Direction.values()[direction], new Vec3d(x, y, z), hand);
-            assert mc.player != null;
-            if (result != ActionResult.FAIL)
-                mc.player.method_13041(hand);
+            BlockPos blockpos = new BlockPos(x, y, z);
+            if (!mc.world.isAir(blockpos)) {
+                ItemStack itemstack = mc.player.getMainHandStack();
+                int i = itemstack != null ? itemstack.count : 0;
+                if (mc.interactionManager.onRightClick(mc.player, mc.world, itemstack, blockpos, EnumFacing.values()[direction], new Vec3(x, y, z))) {
+                    mc.player.swingHand();
+                }
+                if (itemstack == null) {
+                    return this;
+                }
+                if (itemstack.count == 0) {
+                    mc.player.inventory.main[mc.player.inventory.selectedSlot] = null;
+                } else if (itemstack.count != i || mc.interactionManager.hasCreativeInventory()) {
+                    mc.gameRenderer.firstPersonRenderer.func_78445_c();
+                }
+            }
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ActionResult result = mc.interactionManager.method_13842(mc.player, mc.world, new BlockPos(x, y, z), Direction.values()[direction], new Vec3d(x, y, z), hand);
-                assert mc.player != null;
-                if (result != ActionResult.FAIL)
-                    mc.player.method_13041(hand);
+                BlockPos blockpos = new BlockPos(x, y, z);
+                if (!mc.world.isAir(blockpos)) {
+                    ItemStack itemstack = mc.player.getMainHandStack();
+                    int i = itemstack != null ? itemstack.count : 0;
+                    if (mc.interactionManager.onRightClick(mc.player, mc.world, itemstack, blockpos, EnumFacing.values()[direction], new Vec3(x, y, z))) {
+                        mc.player.swingHand();
+                    }
+                    if (itemstack == null) {
+                        return;
+                    }
+                    if (itemstack.count == 0) {
+                        mc.player.inventory.main[mc.player.inventory.selectedSlot] = null;
+                    } else if (itemstack.count != i || mc.interactionManager.hasCreativeInventory()) {
+                        mc.gameRenderer.firstPersonRenderer.func_78445_c();
+                    }
+                }
                 wait.release();
             });
             wait.acquire();

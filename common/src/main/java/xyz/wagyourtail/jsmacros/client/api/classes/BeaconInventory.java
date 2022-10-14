@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
-import net.minecraft.block.entity.BeaconBlockEntity;
-import net.minecraft.client.gui.screen.ingame.BeaconScreen;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.client.gui.inventory.GuiBeacon;
+import net.minecraft.potion.Potion;
+import net.minecraft.tileentity.TileEntityBeacon;
+import net.minecraftforge.fml.common.registry.GameData;
 import xyz.wagyourtail.jsmacros.client.access.IBeaconScreen;
 
 import java.util.Arrays;
@@ -12,8 +12,8 @@ import java.util.Arrays;
 /**
  * @since 1.5.1
  */
-public class BeaconInventory extends Inventory<BeaconScreen> {
-    protected BeaconInventory(BeaconScreen inventory) {
+public class BeaconInventory extends Inventory<GuiBeacon> {
+    protected BeaconInventory(GuiBeacon inventory) {
         super(inventory);
     }
 
@@ -30,8 +30,8 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
      * @return
      */
     public String getFirstEffect() {
-        StatusEffect effect = ((IBeaconScreen) inventory).jsmacros_getPrimaryEffect();
-        return StatusEffect.field_3164.getIdentifier(effect).toString();
+        Potion effect = ((IBeaconScreen) inventory).jsmacros_getPrimaryEffect();
+        return GameData.getPotionRegistry().getNameForObject(effect).toString();
     }
 
     /**
@@ -39,8 +39,8 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
      * @return
      */
     public String getSecondEffect() {
-        StatusEffect effect = ((IBeaconScreen) inventory).jsmacros_getSecondaryEffect();
-        return StatusEffect.field_3164.getIdentifier(effect).toString();
+        Potion effect = ((IBeaconScreen) inventory).jsmacros_getSecondaryEffect();
+        return GameData.getPotionRegistry().getNameForObject(effect).toString();
     }
 
     /**
@@ -49,9 +49,9 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
      * @return
      */
     public boolean selectFirstEffect(String id) {
-        StatusEffect matchEffect;
+        Potion matchEffect;
         for (int i = 0; i < Math.min(getLevel(), 2); i++) {
-            matchEffect = Arrays.stream(BeaconBlockEntity.field_5017[i]).filter(e -> StatusEffect.field_3164.getIdentifier(e).toString().equals(id)).findFirst().orElse(null);
+            matchEffect = Arrays.stream(TileEntityBeacon.field_146009_a[i]).filter(e -> GameData.getPotionRegistry().getNameForObject(e).toString().equals(id)).findFirst().orElse(null);
             if (matchEffect != null) {
                 ((IBeaconScreen) inventory).jsmacros_setPrimaryEffect(matchEffect);
                 return true;
@@ -67,17 +67,17 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
      */
     public boolean selectSecondEffect(String id) {
         if (getLevel() >= 3) {
-            StatusEffect primaryEffect = ((IBeaconScreen) inventory).jsmacros_getPrimaryEffect();
+            Potion primaryEffect = ((IBeaconScreen) inventory).jsmacros_getPrimaryEffect();
             if (primaryEffect != null &&
-                StatusEffect.field_3164.getIdentifier(primaryEffect).toString().equals(id)) {
+                GameData.getPotionRegistry().getNameForObject(primaryEffect).toString().equals(id)) {
                 ((IBeaconScreen) inventory).jsmacros_setSecondaryEffect(primaryEffect);
                 return true;
             }
-            StatusEffect matchEffect;
+            Potion matchEffect;
             for (int i = 0; i < getLevel(); i++) {
-                matchEffect = Arrays.stream(BeaconBlockEntity.field_5017[i]).filter(e -> StatusEffect.field_3164.getIdentifier(e).toString().equals(id)).findFirst().orElse(null);
+                matchEffect = Arrays.stream(TileEntityBeacon.field_146009_a[i]).filter(e -> GameData.getPotionRegistry().getNameForObject(e).toString().equals(id)).findFirst().orElse(null);
                 if (matchEffect != null) {
-                    if (primaryEffect != null && matchEffect.equals(StatusEffects.REGENERATION))
+                    if (primaryEffect != null && matchEffect.equals(Potion.REGENERATION))
                         ((IBeaconScreen) inventory).jsmacros_setSecondaryEffect(matchEffect);
                     else {
                         ((IBeaconScreen) inventory).jsmacros_setPrimaryEffect(matchEffect);

@@ -1,25 +1,31 @@
+import org.gradle.internal.jvm.Jvm
+import xyz.wagyourtail.tiny2mcp.Tiny2MCP
+
 buildscript {
     repositories {
         maven {
             name = "forge"
-            url = "https://files.minecraftforge.net/maven"
+            url = "http://files.minecraftforge.net/maven"
         }
-        maven { url "https://maven.fabricmc.net/" }
-        maven { url "https://maven.architectury.dev/" }
         maven { url 'https://repo.spongepowered.org/maven' }
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.github.MsRandom:architectury-loom:0.12.0-legacyfg3-SNAPSHOT'
+        classpath 'com.github.wagyourtail:forgegradle:7747de8fe7'
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.6-SNAPSHOT'
+        classpath files(Jvm.current().toolsJar)
     }
 }
 
-plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-}
-
 subprojects {
-    apply plugin: "dev.architectury.loom"
+    apply plugin: 'net.minecraftforge.gradle.forge'
+    apply plugin: 'org.spongepowered.mixin'
+
+    repositories {
+        flatDir {
+            dirs "$rootProject.rootDir/libs"
+        }
+    }
 
     configurations {
         coreImplementation {
@@ -28,17 +34,25 @@ subprojects {
         jsmacrosExtensionInclude
     }
 
+    minecraft {
+        version = "1.8.9-11.15.1.1722"
+        runDir = "run"
+
+        mappings = Tiny2MCP.remap(new File(rootProject.rootDir, "libs"), "1.8.9", "build.202110221052")
+    }
+
+    configurations {
+        include
+        include.transitive = false
+    }
     sourceSets {
         main {
             compileClasspath += configurations.coreImplementation
             runtimeClasspath += configurations.coreImplementation
         }
     }
-
     dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        // The following line declares the mojmap mappings, you may use other mappings as well
-        mappings fileTree(dir: "$rootDir/libs", include: "**.jar")
+        implementation 'org.spongepowered:mixin:0.7.11-SNAPSHOT'
 
         // non-mod dependencies:
         implementation 'com.ibm.icu:icu4j:70.1'
@@ -47,16 +61,13 @@ subprojects {
         coreImplementation "com.neovisionaries:nv-websocket-client:2.10"
         coreImplementation "org.javassist:javassist:3.28.0-GA"
         implementation "com.mojang:brigadier:${project.brigadier_version}"
-    }
 
-    loom {
-        setIntermediaryUrl('https://maven.legacyfabric.net/net/fabricmc/intermediary/%1$s/intermediary-%1$s-v2.jar');
+        implementation group: 'org.jetbrains', name: 'annotations', version: '16.0.1'
     }
 }
 
 allprojects {
     apply plugin: "java"
-    apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
 
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -75,21 +86,15 @@ allprojects {
         maven {
             name "Modmuss50 Repository"
             url 'https://maven.fabricmc.net/'
-            metadataSources {
-                artifact()
-            }
         }
         maven {
             name = "legacy-fabric"
             url = "https://maven.legacyfabric.net"
         }
         maven { url 'https://jitpack.io' }
-        maven {
-            url "https://maven.terraformersmc.com/releases"
-            name "modmenu maven"
-        }
-        maven { url 'https://repo.spongepowered.org/maven' }
+        maven { url 'https://repo.spongepowered.org/maven/' }
         mavenCentral()
+
     }
 
     tasks.withType(JavaCompile) {
@@ -100,11 +105,6 @@ allprojects {
             options.release = version
         }
     }
-
-    java {
-        withSourcesJar()
-    }
-
     jar {
 
         def files = []

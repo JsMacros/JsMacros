@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
-import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.GuiTextField;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -12,7 +12,7 @@ import xyz.wagyourtail.jsmacros.client.access.IGuiTextField;
 
 import java.util.function.Consumer;
 
-@Mixin(TextFieldWidget.class)
+@Mixin(GuiTextField.class)
 public abstract class MixinGuiTextField implements IGuiTextField {
     @Shadow
     private String text;
@@ -29,7 +29,7 @@ public abstract class MixinGuiTextField implements IGuiTextField {
     }
 
     @Inject(at = @At(value = "INVOKE",
-        target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;moveCursor(I)V",
+        target = "Lnet/minecraft/client/gui/GuiTextField;moveCursor(I)V",
         shift = At.Shift.AFTER), method = "write")
     public void onWriteText(String p_146191_1_, CallbackInfo ci) {
         if (onChange != null)

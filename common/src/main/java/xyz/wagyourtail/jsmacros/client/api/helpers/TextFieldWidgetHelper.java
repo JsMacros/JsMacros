@@ -1,9 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiTextField;
 import xyz.wagyourtail.jsmacros.client.access.IGuiTextField;
-import xyz.wagyourtail.jsmacros.client.access.ITextFieldWidget;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -15,15 +14,15 @@ import java.util.concurrent.Semaphore;
  * @since 1.0.5
  */
 @SuppressWarnings("unused")
-public class TextFieldWidgetHelper extends BaseHelper<TextFieldWidget> implements RenderCommon.RenderElement {
+public class TextFieldWidgetHelper extends BaseHelper<GuiTextField> implements RenderCommon.RenderElement {
     public int zIndex;
 
-    public TextFieldWidgetHelper(TextFieldWidget t) {
+    public TextFieldWidgetHelper(GuiTextField t) {
         super(t);
         zIndex = 0;
     }
 
-    public TextFieldWidgetHelper(TextFieldWidget t, int zIndex) {
+    public TextFieldWidgetHelper(GuiTextField t, int zIndex) {
         super(t);
         zIndex = zIndex;
     }
@@ -99,7 +98,7 @@ public class TextFieldWidgetHelper extends BaseHelper<TextFieldWidget> implement
      * @return
      */
     public TextFieldWidgetHelper setWidth(int width) {
-        ((ITextFieldWidget) base).jsmacros_setWidth(width);
+        base.width = width;
         return this;
     }
 
@@ -139,7 +138,7 @@ public class TextFieldWidgetHelper extends BaseHelper<TextFieldWidget> implement
             base.setText(text);
         } else {
             final Semaphore waiter = new Semaphore(await ? 0 : 1);
-            MinecraftClient.getInstance().execute(() -> {
+            Minecraft.getInstance().execute(() -> {
                 base.setText(text);
                 waiter.release();
             });

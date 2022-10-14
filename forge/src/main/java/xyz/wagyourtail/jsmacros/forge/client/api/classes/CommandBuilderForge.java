@@ -9,15 +9,14 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.minecraft.command.Command;
 import net.minecraft.command.CommandException;
-import net.minecraft.command.CommandSource;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.client.ClientCommandHandler;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
@@ -32,9 +31,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class CommandBuilderForge extends CommandBuilder {
-    public static final CommandDispatcher<CommandSource> dispatcher = new CommandDispatcher<>();
-    private final LiteralArgumentBuilder<CommandSource> head;
-    private final Stack<ArgumentBuilder<CommandSource, ?>> pointer = new Stack<>();
+    private static final CommandDispatcher<ICommandSender> dispatcher = new CommandDispatcher<>();
+    private final LiteralArgumentBuilder<ICommandSender> head;
+    private final Stack<ArgumentBuilder<ICommandSender, ?>> pointer = new Stack<>();
 
     public CommandBuilderForge(String name) {
         head = LiteralArgumentBuilder.literal(name);
@@ -43,14 +42,14 @@ public class CommandBuilderForge extends CommandBuilder {
 
     @Override
     protected void argument(String name, Supplier<ArgumentType<?>> type) {
-        ArgumentBuilder<CommandSource, ?> arg = RequiredArgumentBuilder.argument(name, type.get());
+        ArgumentBuilder<ICommandSender, ?> arg = RequiredArgumentBuilder.argument(name, type.get());
 
         pointer.push(arg);
     }
 
     @Override
     public CommandBuilder literalArg(String name) {
-        ArgumentBuilder<CommandSource, ?> arg = LiteralArgumentBuilder.literal(name);
+        ArgumentBuilder<ICommandSender, ?> arg = LiteralArgumentBuilder.literal(name);
 
         pointer.push(arg);
         return this;
@@ -70,7 +69,7 @@ public class CommandBuilderForge extends CommandBuilder {
     @Override
     public CommandBuilder or() {
         if (pointer.size() > 1) {
-            ArgumentBuilder<CommandSource, ?> oldarg = pointer.pop();
+            ArgumentBuilder<ICommandSender, ?> oldarg = pointer.pop();
             pointer.peek().then(oldarg);
         }
         return this;
@@ -80,7 +79,7 @@ public class CommandBuilderForge extends CommandBuilder {
     public CommandBuilder or(int argumentLevel) {
         argumentLevel = Math.max(1, argumentLevel);
         while (pointer.size() > argumentLevel) {
-            ArgumentBuilder<CommandSource, ?> oldarg = pointer.pop();
+            ArgumentBuilder<ICommandSender, ?> oldarg = pointer.pop();
             pointer.peek().then(oldarg);
         }
         return this;
@@ -88,20 +87,15 @@ public class CommandBuilderForge extends CommandBuilder {
 
     @Override
     public void register() {or(1);
-        LiteralCommandNode<CommandSource> node = dispatcher.register(head);
-        ClientCommandHandler.instance.registerCommand(new Command() {
-            @Override
-            public int compareTo(@NotNull Command o) {
-                return 0;
-            }
-
+        LiteralCommandNode<ICommandSender> node = dispatcher.register(head);
+        ClientCommandHandler.instance.registerCommand(new ICommand() {
             @Override
             public String getCommandName() {
                 return node.getName();
             }
 
             @Override
-            public String getUsageTranslationKey(CommandSource sender) {
+            public String getUsageTranslationKey(ICommandSender sender) {
                 return node.getUsageText();
             }
 
@@ -111,7 +105,7 @@ public class CommandBuilderForge extends CommandBuilder {
             }
 
             @Override
-            public void method_3279(MinecraftServer minecraftServer, CommandSource sender, String[] args) throws CommandException {
+            public void execute(ICommandSender sender, String[] args) throws CommandException {
                 try {
                     dispatcher.execute(getCommandName() + (args.length > 0 ? " " + String.join(" ", args) : ""), sender);
                 } catch (CommandSyntaxException e) {
@@ -120,13 +114,13 @@ public class CommandBuilderForge extends CommandBuilder {
             }
 
             @Override
-            public boolean method_3278(MinecraftServer server, CommandSource source) {
+            public boolean isAccessible(ICommandSender sender) {
                 return true;
             }
 
             @Override
-            public List<String> method_10738(MinecraftServer server, CommandSource sender, String[] args, @Nullable BlockPos pos) {
-                ParseResults<CommandSource> pr = dispatcher.parse(getCommandName() + (args.length > 0 ? " " + String.join(" ", args) : ""), sender);
+            public List<String> getAutoCompleteHints(ICommandSender sender, String[] args, BlockPos pos) {
+                ParseResults<ICommandSender> pr = dispatcher.parse(getCommandName() + (args.length > 0 ? " " + String.join(" ", args) : ""), sender);
                 try {
                     return dispatcher.getCompletionSuggestions(pr).get().getList().stream().map(Suggestion::getText).collect(
                         Collectors.toList());
@@ -139,6 +133,11 @@ public class CommandBuilderForge extends CommandBuilder {
             @Override
             public boolean isUsernameAtIndex(String[] args, int index) {
                 return false;
+            }
+
+            @Override
+            public int compareTo(@NotNull ICommand o) {
+                return getCommandName().compareTo(o.getCommandName());
             }
         });
     }

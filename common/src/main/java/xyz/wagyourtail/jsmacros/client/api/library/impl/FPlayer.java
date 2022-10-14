@@ -1,21 +1,17 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.google.common.base.Predicate;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.SignEditScreen;
-import net.minecraft.client.util.ScreenshotUtils;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.text.Text;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameMode;
+import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldSettings;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
@@ -45,7 +41,7 @@ import java.util.function.Consumer;
 @Library("Player")
 @SuppressWarnings("unused")
 public class FPlayer extends BaseLibrary {
-    private static final MinecraftClient mc = MinecraftClient.getInstance();
+    private static final Minecraft mc = Minecraft.getInstance();
 
     /**
      * @return the Inventory handler
@@ -61,7 +57,7 @@ public class FPlayer extends BaseLibrary {
      * @see xyz.wagyourtail.jsmacros.client.api.helpers.ClientPlayerEntityHelper
      * @since 1.0.3
      */
-    public ClientPlayerEntityHelper<ClientPlayerEntity> getPlayer() {
+    public ClientPlayerEntityHelper<EntityPlayerSP> getPlayer() {
         assert mc.player != null;
         return new ClientPlayerEntityHelper<>(mc.player);
     }
@@ -72,9 +68,9 @@ public class FPlayer extends BaseLibrary {
      */
     public String getGameMode() {
         assert mc.interactionManager != null;
-        GameMode mode = mc.interactionManager.method_9667();
-        if (mode == null) mode = GameMode.NOT_SET;
-        return mode.getGameModeName();
+        WorldSettings.GameType mode = mc.interactionManager.getCurrentGameMode();
+        if (mode == null) mode = WorldSettings.GameType.NOT_SET;
+        return mode.getName();
     }
 
     /**
@@ -87,13 +83,13 @@ public class FPlayer extends BaseLibrary {
     public BlockDataHelper rayTraceBlock(double distance, boolean fluid) {
         assert mc.world != null;
         assert mc.player != null;
-        Vec3d vec3 = mc.player.getCameraPosVec(0);
-        Vec3d vec31 = mc.player.getRotationVector(0);
-        Vec3d vec32 = vec3.add(vec31.x * distance, vec31.y * distance, vec31.z * distance);
-        HitResult h = mc.world.rayTrace(vec3, vec32, fluid, false, true);
-        if (h.type == HitResult.Type.MISS) return null;
-        BlockState b = mc.world.getBlockState(h.getBlockPos());
-        BlockEntity t = mc.world.getBlockEntity(h.getBlockPos());
+        Vec3 vec3 = mc.player.getCameraPosVec(0);
+        Vec3 vec31 = mc.player.getRotationVector(0);
+        Vec3 vec32 = vec3.add(vec31.x * distance, vec31.y * distance, vec31.z * distance);
+        MovingObjectPosition h = mc.world.rayTrace(vec3, vec32, fluid, false, true);
+        if (h.type == MovingObjectPosition.MovingObjectType.MISS) return null;
+        IBlockState b = mc.world.getBlockState(h.getBlockPos());
+        TileEntity t = mc.world.getBlockEntity(h.getBlockPos());
         if (b.getBlock().equals(Blocks.AIR)) return null;
         return new BlockDataHelper(b, t, h.getBlockPos());
     }
@@ -121,10 +117,11 @@ public class FPlayer extends BaseLibrary {
         if (entity == null) {
             return Optional.empty();
         } else {
-            Vec3d vec3 = entity.getPos().add(0.0D, entity.getEyeHeight(), 0.0D);
-            Vec3d vec32 = entity.getRotationVector(1.0F).multiply(distance);
-            Vec3d vec33 = vec3.add(vec32);
-            Box aABB = entity.getBoundingBox().stretch(vec32.x, vec32.y, vec32.z).expand(1.0);
+            Vec3 vec3 = entity.getPos().add(0.0D, entity.getEyeHeight(), 0.0D);
+            Vec3 vec32 = entity.getRotationVector(1.0F);
+            vec32 = new Vec3(vec32.x * distance, vec32.y * distance, vec32.z * distance);
+            Vec3 vec33 = vec3.add(vec32);
+            AxisAlignedBB aABB = expandTowards(entity.getBoundingBox(), vec32.x, vec32.y, vec32.z).expand(1.0, 1.0, 1.0);
             int i = distance * distance;
             Predicate<Entity> predicate = entityx -> !entityx.removed;
             Entity entityHitResult = getEntityHitResult(entity, vec3, vec33, aABB, predicate, i);
@@ -136,16 +133,48 @@ public class FPlayer extends BaseLibrary {
         }
     }
 
+    private static AxisAlignedBB expandTowards(AxisAlignedBB bb, Vec3 vector) {
+        return expandTowards(bb, vector.x, vector.y, vector.z);
+    }
+
+    private static AxisAlignedBB expandTowards(AxisAlignedBB bb, double x, double y, double z) {
+        double d = bb.minX;
+        double e = bb.minY;
+        double f = bb.minZ;
+        double g = bb.maxX;
+        double h = bb.maxY;
+        double i = bb.maxZ;
+        if (x < 0.0) {
+            d += x;
+        } else if (x > 0.0) {
+            g += x;
+        }
+
+        if (y < 0.0) {
+            e += y;
+        } else if (y > 0.0) {
+            h += y;
+        }
+
+        if (z < 0.0) {
+            f += z;
+        } else if (z > 0.0) {
+            i += z;
+        }
+
+        return new AxisAlignedBB(d, e, f, g, h, i);
+    }
+
     @Nullable
-    private static Entity getEntityHitResult(Entity shooter, Vec3d startVec, Vec3d endVec, Box boundingBox, Predicate<Entity> filter, double distance) {
+    private static Entity getEntityHitResult(Entity shooter, Vec3 startVec, Vec3 endVec, AxisAlignedBB boundingBox, Predicate<Entity> filter, double distance) {
         World level = shooter.world;
         double d = distance;
         Entity entity = null;
-        Vec3d vec3 = null;
+        Vec3 vec3 = null;
 
         for(Entity entity2 : level.getEntitiesIn(shooter, boundingBox, filter)) {
-            Box aABB = entity2.getBoundingBox();
-            Optional<Vec3d> optional = Optional.ofNullable(aABB.method_585(startVec, endVec)).map(e -> e.pos);
+            AxisAlignedBB aABB = entity2.getBoundingBox();
+            Optional<Vec3> optional = Optional.ofNullable(aABB.method_2060(startVec, endVec)).map(e -> e.pos);
             if (aABB.contains(startVec)) {
                 if (d >= 0.0) {
                     entity = entity2;
@@ -153,10 +182,10 @@ public class FPlayer extends BaseLibrary {
                     d = 0.0;
                 }
             } else if (optional.isPresent()) {
-                Vec3d vec32 = optional.get();
+                Vec3 vec32 = optional.get();
                 double e = startVec.squaredDistanceTo(vec32);
                 if (e < d || d == 0.0) {
-                    if (entity2.getRootVehicle() == shooter.getRootVehicle()) {
+                    if (getRootVehicle(entity2) == getRootVehicle(shooter)) {
                         if (d == 0.0) {
                             entity = entity2;
                             vec3 = vec32;
@@ -173,6 +202,14 @@ public class FPlayer extends BaseLibrary {
         return entity;
     }
 
+    private static Entity getRootVehicle(Entity e) {
+        Entity entity = e;
+        while(entity.vehicle != null) {
+            entity = entity.vehicle;
+        }
+        return entity;
+    }
+
     /**
      * Write to a sign screen if a sign screen is currently open.
      *
@@ -184,7 +221,7 @@ public class FPlayer extends BaseLibrary {
      * @since 1.2.2
      */
     public boolean writeSign(String l1, String l2, String l3, String l4) {
-        if (mc.currentScreen instanceof SignEditScreen) {
+        if (mc.currentScreen instanceof GuiEditSign) {
             ((ISignEditScreen) mc.currentScreen).jsmacros_setLine(0, l1);
             ((ISignEditScreen) mc.currentScreen).jsmacros_setLine(1, l2);
             ((ISignEditScreen) mc.currentScreen).jsmacros_setLine(2, l3);
@@ -203,7 +240,7 @@ public class FPlayer extends BaseLibrary {
     public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null;
         mc.execute(() -> {
-            Text text = ScreenshotUtils.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), mc.getFramebuffer().viewportWidth, mc.getFramebuffer().viewportHeight, mc.getFramebuffer());
+            IChatComponent text = ScreenShotHelper.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), mc.getFramebuffer().viewportWidth, mc.getFramebuffer().viewportHeight, mc.getFramebuffer());
             if (callback != null) callback.accept(new TextHelper(text));
         });
     }
@@ -226,7 +263,7 @@ public class FPlayer extends BaseLibrary {
     public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null && file != null;
         mc.execute(() -> {
-            Text text = ScreenshotUtils.method_12154(new File(Core.getInstance().config.macroFolder, folder), file, mc.getFramebuffer().viewportWidth, mc.getFramebuffer().viewportHeight, mc.getFramebuffer());
+            IChatComponent text = ScreenShotHelper.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), file, mc.getFramebuffer().viewportWidth, mc.getFramebuffer().viewportHeight, mc.getFramebuffer());
             if (callback != null) callback.accept(new TextHelper(text));
         });
     }

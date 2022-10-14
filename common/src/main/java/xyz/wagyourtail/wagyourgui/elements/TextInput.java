@@ -1,9 +1,9 @@
 package xyz.wagyourtail.wagyourgui.elements;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.LiteralText;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ChatComponentText;
 import org.lwjgl.input.Keyboard;
 
 import java.util.function.Consumer;
@@ -19,8 +19,8 @@ public class TextInput extends Button {
     public int selEndIndex;
     protected int arrowCursor;
 
-    public TextInput(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int hilightColor, int textColor, String message, Consumer<Button> onClick, Consumer<String> onChange) {
-        super(x, y, width, height, textRenderer, color, borderColor, color, textColor, new LiteralText(""), onClick);
+    public TextInput(int x, int y, int width, int height, FontRenderer textRenderer, int color, int borderColor, int hilightColor, int textColor, String message, Consumer<Button> onClick, Consumer<String> onChange) {
+        super(x, y, width, height, textRenderer, color, borderColor, color, textColor, new ChatComponentText(""), onClick);
         this.selColor = hilightColor;
         this.content = message;
         this.onChange = onChange;
@@ -48,7 +48,7 @@ public class TextInput extends Button {
     public boolean selected = false;
 
     @Override
-    public boolean isMouseOver(MinecraftClient mc, int mouseX, int mouseY) {
+    public boolean isMouseOver(Minecraft mc, int mouseX, int mouseY) {
         if (super.isMouseOver(mc, mouseX, mouseY)) {
             selected = true;
             int pos = textRenderer.trimToWidth(content, mouseX - x - 2).length();
@@ -87,22 +87,22 @@ public class TextInput extends Button {
         boolean ctrl;
         if (selected) {
             if (selEndIndex < selStartIndex) swapStartEnd();
-            MinecraftClient mc = MinecraftClient.getInstance();
-            if (Screen.isSelectAll(keyCode)) {
+            Minecraft mc = Minecraft.getInstance();
+            if (GuiScreen.isSelectAll(keyCode)) {
                 this.updateSelStart(0);
                 this.updateSelEnd(content.length());
                 return true;
-            } else if (Screen.isCopy(keyCode)) {
-                Screen.setClipboard(this.content.substring(selStartIndex, selEndIndex));
+            } else if (GuiScreen.isCopy(keyCode)) {
+                GuiScreen.setClipboard(this.content.substring(selStartIndex, selEndIndex));
                 return true;
-            } else if (Screen.isPaste(keyCode)) {
-                content = content.substring(0, selStartIndex) + Screen.getClipboard() + content.substring(selEndIndex);
+            } else if (GuiScreen.isPaste(keyCode)) {
+                content = content.substring(0, selStartIndex) + GuiScreen.getClipboard() + content.substring(selEndIndex);
                 if (onChange != null) onChange.accept(content);
-                updateSelEnd(selStartIndex + Screen.getClipboard().length());
-                arrowCursor = selStartIndex + Screen.getClipboard().length();
+                updateSelEnd(selStartIndex + GuiScreen.getClipboard().length());
+                arrowCursor = selStartIndex + GuiScreen.getClipboard().length();
                 return true;
-            } else if (Screen.isCut(keyCode)) {
-                Screen.setClipboard(this.content.substring(selStartIndex, selEndIndex));
+            } else if (GuiScreen.isCut(keyCode)) {
+                GuiScreen.setClipboard(this.content.substring(selStartIndex, selEndIndex));
                 content = content.substring(0, selStartIndex) + content.substring(selEndIndex);
                 if (onChange != null) onChange.accept(content);
                 updateSelEnd(selStartIndex);
@@ -133,7 +133,7 @@ public class TextInput extends Button {
                     this.updateSelEnd(content.length());
                     return true;
                 case Keyboard.KEY_LEFT:
-                    ctrl = !Screen.hasControlDown();
+                    ctrl = !GuiScreen.hasControlDown();
                     if (arrowCursor > 0) if (arrowCursor < selEndIndex) {
                         updateSelStart(--arrowCursor);
                         if (ctrl) updateSelEnd(selStartIndex);
@@ -143,7 +143,7 @@ public class TextInput extends Button {
                     }
                     return true;
                 case Keyboard.KEY_RIGHT:
-                    ctrl = !Screen.hasControlDown();
+                    ctrl = !GuiScreen.hasControlDown();
                     if (arrowCursor < content.length()) if (arrowCursor < selEndIndex) {
                         updateSelStart(++arrowCursor);
                         if (ctrl) updateSelEnd(selStartIndex);

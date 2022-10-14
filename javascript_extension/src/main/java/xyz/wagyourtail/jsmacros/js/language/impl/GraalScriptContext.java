@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.js.language.impl;
 
-import it.unimi.dsi.fastutil.objects.Object2IntFunction;
 import org.graalvm.polyglot.Context;
 import xyz.wagyourtail.PrioryFiFoTaskQueue;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;

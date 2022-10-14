@@ -1,9 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.block.AirBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.state.property.Property;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.tileentity.TileEntity;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Map;
@@ -14,9 +13,9 @@ import java.util.stream.Collectors;
  * @author Etheradon
  * @since 1.6.5
  */
-public class BlockStateHelper extends BaseHelper<BlockState> {
+public class BlockStateHelper extends BaseHelper<IBlockState> {
 
-    public BlockStateHelper(BlockState base) {
+    public BlockStateHelper(IBlockState base) {
         super(base);
     }
 
@@ -26,7 +25,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public Map<String, String> toMap() {
-        return base.getProperties().stream().collect(Collectors.toMap(Property::getName, entry -> Objects.toString(base.get(entry), "null")));
+        return base.getProperties().stream().collect(Collectors.toMap(IProperty::getName, entry -> Objects.toString(base.get(entry), "null")));
     }
 
     /**
@@ -44,7 +43,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public float getHardness() {
-        return base.getBlock().getStrength(base, null, null);
+        return base.getBlock().getHarvestLevel(base);
     }
 
     /**
@@ -53,7 +52,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public int getLuminance() {
-        return base.getBlock().getLightLevel(base);
+        return base.getBlock().getLightLevel();
     }
 
     /**
@@ -62,7 +61,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean emitsRedstonePower() {
-        return base.getBlock().method_11566(base);
+        return base.getBlock().emitsRedstonePower();
     }
 
     /**
@@ -71,7 +70,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean exceedsCube() {
-        return base.getBlock().isFullBlock(base);
+        return base.getBlock().isFullCube();
     }
 
     /**
@@ -80,7 +79,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean isAir() {
-        return base.getBlock() instanceof AirBlock;
+        return base.getBlock().isAir(null, null);
     }
 
     /**
@@ -89,7 +88,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean isOpaque() {
-        return !base.getBlock().isTransluscent(base);
+        return base.getBlock().getMaterial().isOpaque();
     }
 
     /**
@@ -98,7 +97,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean isToolRequired() {
-        return !base.getBlock().getMaterial(base).doesBlockMovement();
+        return !base.getBlock().getMaterial().doesBlockMovement();
     }
 
     /**
@@ -107,7 +106,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean hasBlockEntity() {
-        return base instanceof BlockEntity;
+        return base instanceof TileEntity;
     }
 
     /**
@@ -125,7 +124,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean hasComparatorOutput() {
-        return base.getBlock().method_11577(base);
+        return base.getBlock().hasComparatorOutput();
     }
 
     /**
@@ -134,7 +133,16 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public String getPistonBehaviour() {
-        return base.getBlock().getPistonBehavior(base).name();
+        switch (base.getBlock().getPistonInteractionType()) {
+            case 0:
+                return "UNDEFINED";
+            case 1:
+                return "NO_PUSHING";
+            case 2:
+                return "IMMOVABLE";
+            default:
+                throw new IllegalStateException("Unexpected value: " + base.getBlock().getPistonInteractionType());
+        }
     }
 
     /**
@@ -143,7 +151,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean blocksLight() {
-        return !base.getBlock().getMaterial(base).isTransluscent();
+        return base.getBlock().getMaterial().isTransluscent();
     }
 
     /**
@@ -152,7 +160,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean blocksMovement() {
-        return base.getBlock().getMaterial(base).doesBlockMovement();
+        return base.getBlock().getMaterial().doesBlockMovement();
     }
 
     /**
@@ -161,7 +169,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean isBurnable() {
-        return base.getBlock().getMaterial(base).isBurnable();
+        return base.getBlock().getMaterial().isBurnable();
     }
 
     /**
@@ -170,7 +178,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5* @since 1.6.5
      */
     public boolean isLiquid() {
-        return base.getBlock().getMaterial(base).isFluid();
+        return base.getBlock().getMaterial().isFluid();
     }
 
     /**
@@ -179,7 +187,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5* @since 1.6.5
      */
     public boolean isSolid() {
-        return base.getBlock().isFullBlock(base);
+        return base.getBlock().isFullBlock();
     }
 
     /**
@@ -191,7 +199,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean isReplaceable() {
-        return base.getBlock().getMaterial(base).isReplaceable();
+        return base.getBlock().getMaterial().isReplaceable();
     }
 
     /**

@@ -1,17 +1,16 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.multiplayer.PlayerControllerMP;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,51 +24,51 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.EventInteractBlock;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventInteractEntity;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper;
 
-@Mixin(ClientPlayerInteractionManager.class)
+@Mixin(PlayerControllerMP.class)
 public class MixinClientPlayerInteractionManager {
 
-    @Shadow @Final private MinecraftClient client;
+    @Shadow @Final private Minecraft client;
 
-    @Inject(at = @At("RETURN"), method = "method_13842")
-    public void onInteractBlock(ClientPlayerEntity clientPlayerEntity, ClientWorld clientWorld, BlockPos blockPos, Direction direction, Vec3d vec3d, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        if (cir.getReturnValue() != ActionResult.FAIL) {
+    @Inject(at = @At("RETURN"), method = "onRightClick")
+    public void onInteractBlock(EntityPlayerSP p_onRightClick_1_, WorldClient p_onRightClick_2_, ItemStack p_onRightClick_3_, BlockPos p_onRightClick_4_, EnumFacing p_onRightClick_5_, Vec3 p_onRightClick_6_, CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValue()) {
             new EventInteractBlock(
-                hand != Hand.MAIN_HAND,
-                cir.getReturnValue().name(),
-                new BlockDataHelper(clientWorld.getBlockState(blockPos), clientWorld.getBlockEntity(blockPos), blockPos),
-                direction.getId()
+                false,
+                cir.getReturnValue().toString(),
+                new BlockDataHelper(p_onRightClick_2_.getBlockState(p_onRightClick_4_), p_onRightClick_2_.getBlockEntity(p_onRightClick_4_), p_onRightClick_4_),
+                p_onRightClick_5_.getId()
             );
         }
     }
 
     @Inject(at = @At("RETURN"), method = "attackBlock")
-    public void onAttackBlock(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+    public void onAttackBlock(BlockPos p_attackBlock_1_, EnumFacing p_attackBlock_2_, CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue()) {
             assert client.world != null;
             new EventAttackBlock(
-                new BlockDataHelper(client.world.getBlockState(pos), client.world.getBlockEntity(pos), pos),
-                direction.getId()
+                new BlockDataHelper(client.world.getBlockState(p_attackBlock_1_), client.world.getBlockEntity(p_attackBlock_1_), p_attackBlock_1_),
+                p_attackBlock_2_.getId()
             );
         }
     }
 
     @Inject(at = @At("RETURN"), method = "attackEntity")
-    public void onAttackEntity(PlayerEntity player, Entity target, CallbackInfo ci) {
-        new EventAttackEntity(target);
+    public void onAttackEntity(EntityPlayer p_attackEntity_1_, Entity p_attackEntity_2_, CallbackInfo ci) {
+        new EventAttackEntity(p_attackEntity_2_);
     }
 
-    @Inject(at = @At("RETURN"), method = "method_12235")
-    public void onInteractEntity(PlayerEntity player, Entity entity, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        if (cir.getReturnValue() != ActionResult.FAIL) {
-            new EventInteractEntity(hand != Hand.MAIN_HAND, cir.getReturnValue().name(), entity);
+    @Inject(at = @At("RETURN"), method = "interactEntity")
+    public void onInteractEntity(EntityPlayer p_interactEntity_1_, Entity p_interactEntity_2_, CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValue()) {
+            new EventInteractEntity(false, cir.getReturnValue().toString(), p_interactEntity_2_);
         }
     }
 
 
-    @Inject(at = @At("RETURN"), method = "method_12236")
-    public void onInteractEntity(PlayerEntity playerEntity, Entity entity, HitResult hitResult, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        if (cir.getReturnValue() != ActionResult.FAIL) {
-            new EventInteractEntity(hand != Hand.MAIN_HAND, cir.getReturnValue().name(), entity);
+    @Inject(at = @At("RETURN"), method = "interactEntityAtLocation")
+    public void onInteractEntity(EntityPlayer p_interactEntityAtLocation_1_, Entity p_interactEntityAtLocation_2_, MovingObjectPosition p_interactEntityAtLocation_3_, CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValue()) {
+            new EventInteractEntity(false, cir.getReturnValue().toString(), p_interactEntityAtLocation_2_);
         }
     }
 }

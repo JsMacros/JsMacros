@@ -1,10 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings;
 
 import com.google.common.collect.Lists;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.*;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
@@ -25,11 +25,11 @@ import java.util.List;
 import java.util.Map;
 
 public class SettingsOverlay extends OverlayContainer implements ICategoryTreeParent {
-    private final Text title = new TranslatableText("jsmacros.settings");
+    private final IChatComponent title = new ChatComponentTranslation("jsmacros.settings");
     private CategoryTreeContainer sections;
     private AbstractSettingContainer category;
     private final SettingTree settings = new SettingTree();
-    public SettingsOverlay(int x, int y, int width, int height, TextRenderer textRenderer, IOverlayParent parent) {
+    public SettingsOverlay(int x, int y, int width, int height, FontRenderer textRenderer, IOverlayParent parent) {
         super(x, y, width, height, textRenderer, parent);
 
         for (Class<?> clazz : Core.getInstance().config.optionClasses.values()) {
@@ -74,10 +74,10 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
         super.init();
         int w = width - 4;
 
-        this.addButton(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> this.close()));
+        this.addButton(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new ChatComponentText("X"), (btn) -> this.close()));
         sections = new CategoryTreeContainer(x + 2, y + 13, w / 3, height - 17, textRenderer, this);
 
-        this.addButton(new Button(x + width / 2, y + 2, width / 2 - 12, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.reloadconfig"), (btn) -> {
+        this.addButton(new Button(x + width / 2, y + 2, width / 2 - 12, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new ChatComponentTranslation("jsmacros.reloadconfig"), (btn) -> {
             try {
                 Core.getInstance().config.loadConfig();
             } catch (IllegalAccessException | InstantiationException | IOException e) {
@@ -129,7 +129,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
                 this.category.addSetting(field);
             }
         } else {
-            openOverlay(new ConfirmOverlay(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.failedsettinggroup"), this, null));
+            openOverlay(new ConfirmOverlay(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, new ChatComponentTranslation("jsmacros.failedsettinggroup"), this, null));
         }
     }
 

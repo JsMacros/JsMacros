@@ -1,13 +1,13 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.ClientPlayerEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.client.multiplayer.PlayerControllerMP;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.renderer.InventoryEffectRenderer;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,34 +19,34 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.EventDimensionChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventOpenContainer;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventOpenScreen;
 
-@Mixin(MinecraftClient.class)
+@Mixin(Minecraft.class)
 public abstract class MixinMinecraftClient {
 
     @Shadow
-    public Screen currentScreen;
+    public GuiScreen currentScreen;
 
-    @Shadow public abstract void openScreen(Screen screen);
+    @Shadow public abstract void openScreen(GuiScreen screen);
 
-    @Shadow public ClientPlayerEntity player;
+    @Shadow public EntityPlayerSP player;
 
-    @Shadow public ClientPlayerInteractionManager interactionManager;
+    @Shadow public PlayerControllerMP interactionManager;
 
-    @Shadow private static MinecraftClient instance;
+    @Shadow private static Minecraft instance;
 
-    @Inject(at = @At("HEAD"), method="connect(Lnet/minecraft/client/world/ClientWorld;)V")
-    public void onJoinWorld(ClientWorld world, CallbackInfo info) {
+    @Inject(at = @At("HEAD"), method="connect(Lnet/minecraft/client/multiplayer/WorldClient;)V")
+    public void onJoinWorld(WorldClient world, CallbackInfo info) {
         if (world != null)
             new EventDimensionChange(world.getLevelProperties().getLevelName());
     }
 
     @Unique
-    private Screen prevScreen;
+    private GuiScreen prevScreen;
     
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", opcode = Opcodes.PUTFIELD), method="openScreen")
-    public void onOpenScreen(Screen screen, CallbackInfo info) {
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;currentScreen:Lnet/minecraft/client/gui/GuiScreen;", opcode = Opcodes.PUTFIELD), method="openScreen")
+    public void onOpenScreen(GuiScreen screen, CallbackInfo info) {
         if (screen != currentScreen) {
-            if (screen instanceof InventoryScreen && interactionManager.hasCreativeInventory()) {
-                if (!(screen instanceof CreativeInventoryScreen)) {
+            if (screen instanceof InventoryEffectRenderer && interactionManager.hasCreativeInventory()) {
+                if (!(screen instanceof GuiContainerCreative)) {
                     prevScreen = currentScreen;
                 }
             } else {
@@ -57,12 +57,12 @@ public abstract class MixinMinecraftClient {
     }
 
     @Inject(at = @At("TAIL"), method = "openScreen")
-    public void afterOpenScreen(Screen screen, CallbackInfo info) {
-        if (screen instanceof HandledScreen) {
-            if (interactionManager.hasCreativeInventory() && !(screen instanceof CreativeInventoryScreen)) {
+    public void afterOpenScreen(GuiScreen screen, CallbackInfo info) {
+        if (screen instanceof GuiContainer) {
+            if (interactionManager.hasCreativeInventory() && !(screen instanceof GuiContainerCreative)) {
                 return;
             }
-            EventOpenContainer event = new EventOpenContainer((HandledScreen) screen);
+            EventOpenContainer event = new EventOpenContainer((GuiContainer) screen);
             if (event.cancelled) {
                 openScreen(prevScreen);
             }

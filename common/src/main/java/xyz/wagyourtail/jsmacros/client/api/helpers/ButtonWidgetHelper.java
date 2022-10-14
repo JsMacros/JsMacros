@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.LiteralText;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.util.ChatComponentText;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -14,7 +14,7 @@ import java.util.concurrent.Semaphore;
  * @since 1.0.5
  */
 @SuppressWarnings("unused")
-public class ButtonWidgetHelper<T extends ButtonWidget> extends BaseHelper<T> implements RenderCommon.RenderElement {
+public class ButtonWidgetHelper<T extends GuiButton> extends BaseHelper<T> implements RenderCommon.RenderElement {
     public int zIndex;
     
     public ButtonWidgetHelper(T btn) {
@@ -103,7 +103,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends BaseHelper<T> im
      * @return current button text.
      */
     public TextHelper getLabel() {
-        return new TextHelper(new LiteralText(base.message));
+        return new TextHelper(new ChatComponentText(base.message));
     }
     
     /**
@@ -158,12 +158,12 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends BaseHelper<T> im
      */
     public ButtonWidgetHelper<T> click(boolean await) throws InterruptedException {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
-            base.isMouseOver(MinecraftClient.getInstance(), base.x, base.y);
+            base.isMouseOver(Minecraft.getInstance(), base.x, base.y);
             base.mouseReleased(base.x, base.y);
         } else {
             final Semaphore waiter = new Semaphore(await ? 0 : 1);
-            MinecraftClient.getInstance().execute(() -> {
-                base.isMouseOver(MinecraftClient.getInstance(), base.x, base.y);
+            Minecraft.getInstance().execute(() -> {
+                base.isMouseOver(Minecraft.getInstance(), base.x, base.y);
                 base.mouseReleased(base.x, base.y);
                 waiter.release();
             });
@@ -174,7 +174,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends BaseHelper<T> im
     
     @Override
     public void render(int mouseX, int mouseY, float delta) {
-        base.method_891(MinecraftClient.getInstance(), mouseX, mouseY, delta);
+        base.render(Minecraft.getInstance(), mouseX, mouseY);
     }
     
     @Override

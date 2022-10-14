@@ -1,6 +1,5 @@
 package xyz.wagyourtail;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -8,7 +7,7 @@ import java.util.function.Function;
 
 public class PrioryFiFoTaskQueue<E> implements Queue<E> {
     E currentTask;
-    Int2ObjectOpenHashMap<List<E>> tasks = new Int2ObjectOpenHashMap<>();
+    Map<Integer, List<E>> tasks = new HashMap<>();
     Set<E> taskSet = new HashSet<>();
     Function<E, Integer> priorityFunction;
 

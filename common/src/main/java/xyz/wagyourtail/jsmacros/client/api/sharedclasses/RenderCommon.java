@@ -1,16 +1,17 @@
 package xyz.wagyourtail.jsmacros.client.api.sharedclasses;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -21,7 +22,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
  */
 @SuppressWarnings("unused")
 public class RenderCommon {
-    private static final MinecraftClient mc = MinecraftClient.getInstance();
+    private static final Minecraft mc = Minecraft.getInstance();
     
     public static interface RenderElement {
         int getZIndex();
@@ -139,7 +140,7 @@ public class RenderCommon {
          * @return
          */
         public Item setItem(String id, int count) {
-            net.minecraft.item.Item it = net.minecraft.item.Item.REGISTRY.get(new Identifier(id));
+            net.minecraft.item.Item it = net.minecraft.item.Item.REGISTRY.get(new ResourceLocation(id));
             this.item = new ItemStack(it, count);
             return this;
         }
@@ -160,8 +161,8 @@ public class RenderCommon {
             GlStateManager.rotatef(rotation, 0, 0, 1);
             GlStateManager.translated(-x, -y, 0);
             if (item != null) {
-                ItemRenderer i = mc.getItemRenderer();
-                i.method_12455(item,(int) (x / scale), (int) (y / scale));
+                RenderItem i = mc.getItemRenderer();
+                i.renderItem(item,(int) (x / scale), (int) (y / scale));
                 if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, (int) (x / scale), (int) (y / scale), ovText);
             }
             GlStateManager.popMatrix();
@@ -176,9 +177,9 @@ public class RenderCommon {
             GlStateManager.translatef(-x, -y, 0);
 
             if (item != null) {
-                ItemRenderer i = mc.getItemRenderer();
+                RenderItem i = mc.getItemRenderer();
                 i.zOffset = -100f;
-                i.method_12455(item,(int) (x / scale), (int) (y / scale));
+                i.renderItem(item,(int) (x / scale), (int) (y / scale));
                 i.zOffset = -200f;
                 if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, (int) (x / scale), (int) (y / scale), ovText);
                 i.zOffset = 0;
@@ -199,7 +200,7 @@ public class RenderCommon {
      * @since 1.2.3
      */
     public static class Image implements RenderElement {
-        private Identifier imageid;
+        private ResourceLocation imageid;
         public float rotation;
         public int x;
         public int y;
@@ -227,7 +228,7 @@ public class RenderCommon {
             this.regionHeight = regionHeight;
             this.textureWidth = textureWidth;
             this.textureHeight = textureHeight;
-            imageid = new Identifier(id);
+            imageid = new ResourceLocation(id);
             this.rotation = rotation;
         }
 
@@ -244,7 +245,7 @@ public class RenderCommon {
             this.regionHeight = regionHeight;
             this.textureWidth = textureWidth;
             this.textureHeight = textureHeight;
-            imageid = new Identifier(id);
+            imageid = new ResourceLocation(id);
             this.rotation = rotation;
         }
 
@@ -305,7 +306,7 @@ public class RenderCommon {
          * @param textureHeight
          */
         public void setImage(String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
-            imageid = new Identifier(id);
+            imageid = new ResourceLocation(id);
             this.imageX = imageX;
             this.imageY = imageY;
             this.regionWidth = regionWidth;
@@ -331,9 +332,9 @@ public class RenderCommon {
             GlStateManager.enableBlend();
             mc.getTextureManager().bindTexture(imageid);
             Tessellator tess = Tessellator.getInstance();
-            BufferBuilder buf = tess.getBuffer();
+            WorldRenderer buf = tess.getBuffer();
             
-            buf.begin(GL11.GL_TRIANGLE_STRIP,  VertexFormats.POSITION_TEXTURE_COLOR);
+            buf.begin(GL11.GL_TRIANGLE_STRIP,  DefaultVertexFormats.POSITION_TEXTURE_COLOR);
 
             float x1 = x;
             float y1 = y;
@@ -461,7 +462,7 @@ public class RenderCommon {
             GlStateManager.translatef(-x1, -y1, 0);
 
             Tessellator tess = Tessellator.getInstance();
-            BufferBuilder buf = tess.getBuffer();
+            WorldRenderer buf = tess.getBuffer();
 
             float fa = ((color >> 24) & 0xFF)/255F;
             float fr = ((color >> 16) & 0xFF)/255F;
@@ -471,7 +472,7 @@ public class RenderCommon {
             GlStateManager.enableBlend();
             GlStateManager.disableTexture();
 
-            buf.begin(GL11.GL_TRIANGLE_STRIP,  VertexFormats.POSITION_COLOR);
+            buf.begin(GL11.GL_TRIANGLE_STRIP,  DefaultVertexFormats.POSITION_COLOR);
             //draw a rectangle using triangle strips
             buf.vertex(x1, y2, 0).color(fr, fg, fb, fa).next(); // Top-left
             buf.vertex(x2, y2, 0).color(fr, fg, fb, fa).next(); // Top-right
@@ -496,7 +497,7 @@ public class RenderCommon {
      * @since 1.0.5
      */
     public static class Text implements RenderElement {
-        public net.minecraft.text.Text text;
+        public IChatComponent text;
         public double scale;
         public float rotation;
         public int x;
@@ -507,7 +508,7 @@ public class RenderCommon {
         public int zIndex;
         
         public Text(String text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
-            this.text = new LiteralText(text);
+            this.text = new ChatComponentText(text);
             this.x = x;
             this.y = y;
             this.color = color;
@@ -570,7 +571,7 @@ public class RenderCommon {
          * @return
          */
         public Text setText(String text) {
-            this.text = new LiteralText(text);
+            this.text = new ChatComponentText(text);
             this.width = mc.textRenderer.getStringWidth(text);
             return this;
         }

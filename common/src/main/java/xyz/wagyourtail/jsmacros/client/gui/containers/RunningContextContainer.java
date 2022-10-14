@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.containers;
 
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.text.LiteralText;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.ChatComponentText;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.logging.log4j.Level;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
@@ -16,7 +16,7 @@ public class RunningContextContainer extends MultiElementContainer<CancelScreen>
     public BaseScriptContext<?> t;
     public boolean service;
     
-    public RunningContextContainer(int x, int y, int width, int height, TextRenderer textRenderer, CancelScreen parent, BaseScriptContext<?> t) {
+    public RunningContextContainer(int x, int y, int width, int height, FontRenderer textRenderer, CancelScreen parent, BaseScriptContext<?> t) {
         super(x, y, width, height, textRenderer, parent);
         this.t = t;
         this.service = this.t.getTriggeringEvent() instanceof EventService;
@@ -26,7 +26,7 @@ public class RunningContextContainer extends MultiElementContainer<CancelScreen>
     @Override
     public void init() {
         super.init();
-        cancelButton = this.addButton(new Button(x+1, y+1, height - 2, height - 2, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> {
+        cancelButton = this.addButton(new Button(x+1, y+1, height - 2, height - 2, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new ChatComponentText("X"), (btn) -> {
                 BaseScriptContext<?> ctx = t;
                 if (ctx != null && !ctx.isContextClosed()) {
                     ctx.closeContext();

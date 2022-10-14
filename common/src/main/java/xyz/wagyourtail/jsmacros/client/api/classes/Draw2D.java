@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.Window;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
@@ -37,12 +37,12 @@ public class Draw2D implements IDraw2D<Draw2D> {
      @Deprecated
     public MethodWrapper<String, Object, Object, ?> catchInit;
     
-    protected final MinecraftClient mc;
-    protected final Window res;
+    protected final Minecraft mc;
+    protected final ScaledResolution res;
     
     public Draw2D() {
-        this.mc = MinecraftClient.getInstance();
-        this.res = new Window(this.mc);
+        this.mc = Minecraft.getInstance();
+        this.res = new ScaledResolution(this.mc);
     }
     
     /**

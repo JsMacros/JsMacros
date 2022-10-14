@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.village.TradeOffer;
+import net.minecraft.village.MerchantRecipe;
 import xyz.wagyourtail.jsmacros.client.api.classes.VillagerInventory;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class TradeOfferHelper extends BaseHelper<TradeOffer> {
+public class TradeOfferHelper extends BaseHelper<MerchantRecipe> {
     private final VillagerInventory inv;
     private final int index;
-    public TradeOfferHelper(TradeOffer base, int index, VillagerInventory inv) {
+    public TradeOfferHelper(MerchantRecipe base, int index, VillagerInventory inv) {
         super(base);
         this.inv = inv;
         this.index = index;
@@ -42,7 +42,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * select trade offer on screen
      */
     public void select() {
-        if (inv != null && MinecraftClient.getInstance().currentScreen == inv.getRawContainer())
+        if (inv != null && Minecraft.getInstance().currentScreen == inv.getRawContainer())
             inv.selectTrade(index);
     }
     
@@ -57,7 +57,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * @return trade offer as nbt tag
      */
     public NBTElementHelper<?> getNBT() {
-        return NBTElementHelper.resolve(base.toNbt());
+        return NBTElementHelper.resolve(base.toTag());
     }
     
     /**

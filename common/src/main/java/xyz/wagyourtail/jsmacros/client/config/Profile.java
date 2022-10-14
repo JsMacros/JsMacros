@@ -1,8 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.config;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.*;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.util.*;
+import scala.tools.nsc.interpreter.Formatting;
+import org.apache.logging.log4j.Logger;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import org.apache.logging.log4j.Logger;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
@@ -35,7 +37,7 @@ public class Profile extends BaseProfile {
     @Override
     protected boolean loadProfile(String profileName) {
         boolean val = super.loadProfile(profileName);
-        final MinecraftClient mc = MinecraftClient.getInstance();
+        final Minecraft mc = Minecraft.getInstance();
         if (mc.currentScreen instanceof MacroScreen) {
             mc.execute(() -> ((MacroScreen) mc.currentScreen).reload());
         }
@@ -107,24 +109,24 @@ public class Profile extends BaseProfile {
                 }
             }
         }
-        MinecraftClient mc = MinecraftClient.getInstance();
+        Minecraft mc = Minecraft.getInstance();
         if (mc.inGameHud != null) {
             BaseWrappedException<?> e;
             try {
                 e = runner.wrapException(ex);
             } catch (Throwable t) {
                 t.printStackTrace();
-                mc.execute(() -> ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new TranslatableText("jsmacros.errorerror").setStyle(new Style().setFormatting(
-                    Formatting.DARK_RED))));
+                mc.execute(() -> ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new ChatComponentTranslation("jsmacros.errorerror").setStyle(new ChatStyle().setColor(
+                    EnumChatFormatting.DARK_RED))));
                 return;
             }
-            Text text = compileError(e);
+            IChatComponent text = compileError(e);
             mc.execute(() -> {
                 try {
                     ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
                 } catch (Throwable t) {
-                    ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new TranslatableText("jsmacros.errorerror").setStyle(new Style().setFormatting(
-                        Formatting.DARK_RED)));
+                    ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new ChatComponentTranslation("jsmacros.errorerror").setStyle(new ChatStyle().setColor(
+                        EnumChatFormatting.DARK_RED)));
                     t.printStackTrace();
                 }
             });
@@ -133,23 +135,23 @@ public class Profile extends BaseProfile {
 
     @Override
     public boolean checkJoinedThreadStack() {
-        return MinecraftClient.getInstance().isOnThread() || joinedThreadStack.contains(Thread.currentThread());
+        return Minecraft.getInstance().isOnThread() || joinedThreadStack.contains(Thread.currentThread());
     }
 
-    private Text compileError(BaseWrappedException<?> ex) {
+    private IChatComponent compileError(BaseWrappedException<?> ex) {
         if (ex == null) return null;
         BaseWrappedException<?> head = ex;
-        Text text = new LiteralText("");
+        ChatComponentText text = new ChatComponentText("");
         do {
             String message = head.message;
-            Text line = new LiteralText(message).setStyle(new Style().setFormatting(Formatting.RED));
+            IChatComponent line = new ChatComponentText(message).setStyle(new ChatStyle().setColor(EnumChatFormatting.RED));
             if (head.location != null) {
-                Style locationStyle = new Style().setFormatting(Formatting.GOLD);
+                ChatStyle locationStyle = new ChatStyle().setColor(EnumChatFormatting.GOLD);
                 if (head.location instanceof BaseWrappedException.GuestLocation) {
                     BaseWrappedException.GuestLocation loc = (BaseWrappedException.GuestLocation) head.location;
                     if (loc.file != null) {
                     locationStyle = locationStyle.setHoverEvent(
-                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("jsmacros.clicktoview"))
+                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentTranslation("jsmacros.clicktoview"))
                     ).setClickEvent(new CustomClickEvent(() -> {
                         if (loc.startIndex > -1) {
                             EditorScreen.openAndScrollToIndex(loc.file, loc.startIndex, loc.endIndex);
@@ -161,7 +163,7 @@ public class Profile extends BaseProfile {
                     }));
                     }
                 }
-                line.append(new LiteralText(" (" + head.location + ")").setStyle(locationStyle));
+                line.append(new ChatComponentText(" (" + head.location + ")").setStyle(locationStyle));
             }
             if ((head = head.next) != null) line.append("\n");
             text.append(line);

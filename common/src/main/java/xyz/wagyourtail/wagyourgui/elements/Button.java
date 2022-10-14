@@ -1,22 +1,22 @@
 package xyz.wagyourtail.wagyourgui.elements;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class Button extends ButtonWidget {
-    protected final TextRenderer textRenderer;
+public class Button extends GuiButton {
+    protected final FontRenderer textRenderer;
     protected int color;
     protected int borderColor;
     protected int hilightColor;
     protected int textColor;
-    protected List<Text> textLines;
+    protected List<IChatComponent> textLines;
     protected int visibleLines;
     protected int verticalCenter;
     public boolean horizCenter = true;
@@ -24,7 +24,7 @@ public class Button extends ButtonWidget {
     public boolean hovering = false;
     public boolean forceHover = false;
 
-    public Button(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int hilightColor, int textColor, Text message, Consumer<Button> onPress) {
+    public Button(int x, int y, int width, int height, FontRenderer textRenderer, int color, int borderColor, int hilightColor, int textColor, IChatComponent message, Consumer<Button> onPress) {
         super(1, x, y, width, height, message.asFormattedString());
         this.textRenderer = textRenderer;
         this.color = color;
@@ -47,14 +47,14 @@ public class Button extends ButtonWidget {
         return this.textLines.size() > this.visibleLines;
     }
 
-    protected void setMessageSuper(Text message) {
+    protected void setMessageSuper(IChatComponent message) {
         this.message = message.asFormattedString();
     }
 
-    public void setMessage(Text message) {
+    public void setMessage(IChatComponent message) {
         this.message = message.asFormattedString();
         this.textLines = textRenderer.wrapLines(message.asFormattedString(), width - 4).stream().map(
-            LiteralText::new).collect(Collectors.toList());
+            ChatComponentText::new).collect(Collectors.toList());
         this.visibleLines = Math.min(Math.max((height - 2) / textRenderer.fontHeight, 1), textLines.size());
         this.verticalCenter = ((height - 4) - (visibleLines * textRenderer.fontHeight)) / 2;
     }
@@ -75,7 +75,7 @@ public class Button extends ButtonWidget {
     }
 
     @Override
-    public void method_891(MinecraftClient mc, int mouseX, int mouseY, float delta) {
+    public void render(Minecraft mc, int mouseX, int mouseY) {
         if (this.visible) {
             // fill
             if (mouseX - x >= 0 && mouseX - x - width <= 0 && mouseY - y >= 0 && mouseY - y - height <= 0 && this.active || forceHover) {

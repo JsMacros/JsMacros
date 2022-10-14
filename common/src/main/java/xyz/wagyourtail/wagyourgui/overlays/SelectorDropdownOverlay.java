@@ -1,8 +1,8 @@
 package xyz.wagyourtail.wagyourgui.overlays;
 
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Keyboard;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
@@ -14,13 +14,13 @@ import java.util.function.Consumer;
 
 public class SelectorDropdownOverlay extends OverlayContainer {
     private final int lineHeight;
-    private final Collection<Text> choices;
+    private final Collection<IChatComponent> choices;
     private final List<Button> scrollChoices = new LinkedList<>();
     private final Consumer<Integer> onChoice;
     protected int selected = -1;
     private final double pages;
     
-    public SelectorDropdownOverlay(int x, int y, int width, int height, Collection<Text> choices, TextRenderer textRenderer, IOverlayParent parent, Consumer<Integer> onChoice) {
+    public SelectorDropdownOverlay(int x, int y, int width, int height, Collection<IChatComponent> choices, FontRenderer textRenderer, IOverlayParent parent, Consumer<Integer> onChoice) {
         super(x, y, width, height, textRenderer, parent);
         this.choices = choices;
         this.lineHeight = textRenderer.fontHeight + 1;
@@ -34,7 +34,7 @@ public class SelectorDropdownOverlay extends OverlayContainer {
         if (pages > 1) this.scroll = addButton(new Scrollbar(x+width-8, y, 8, height, 0, 0xFF000000, 0xFFFFFFFF, pages, this::onScroll));
         int pos = 0;
         int scrollwidth = pages <= 1 ? width - 4 : width - 10;
-        for (Text choice : choices) {
+        for (IChatComponent choice : choices) {
             final int finalPos = pos;
             Button ch = this.addButton(new Button(x + 2, y + pos * lineHeight + 2, scrollwidth, lineHeight, textRenderer, 0, 0xFF000000, 0x4FFFFFFF, 0xFFFFFFFF, choice, (b) -> {
                 if (onChoice != null) onChoice.accept(finalPos);

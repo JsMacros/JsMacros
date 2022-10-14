@@ -1,22 +1,20 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import com.google.common.collect.Lists;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.Trader;
-import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.MathHelper;
-import xyz.wagyourtail.jsmacros.client.access.IEntity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IMerchant;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Wagyourtail
@@ -114,7 +112,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the type of the entity.
      */
     public String getType() {
-        return EntityType.getEntityName(base);
+        return EntityList.getEntityName(base);
     }
     
     /**
@@ -146,7 +144,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the vehicle of the entity.
      */
     public EntityHelper<?> getVehicle() {
-        Entity parent = base.getVehicle();
+        Entity parent = base.vehicle;
         if (parent != null) return EntityHelper.create(parent);
         return null;
     }
@@ -156,7 +154,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the entity passengers.
      */
     public List<EntityHelper<?>> getPassengers() {
-        return base.getPassengerList().stream().map(EntityHelper::create).collect(Collectors.toList());
+        return Lists.newArrayList(EntityHelper.create(base.rider));
         
     }
     
@@ -165,8 +163,8 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return
      */
     public NBTElementHelper<?> getNBT() {
-        NbtCompound nbt = new NbtCompound();
-        base.saveToNbt(nbt);
+        NBTTagCompound nbt = new NBTTagCompound();
+        base.writePlayerData(nbt);
         return NBTElementHelper.resolve(nbt);
     }
 
@@ -262,12 +260,12 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return correct subclass of this.
      */
     public static EntityHelper<?> create(Entity e) {
-        if (e instanceof ClientPlayerEntity) return new ClientPlayerEntityHelper<>((ClientPlayerEntity) e);
-        if (e instanceof PlayerEntity) return new PlayerEntityHelper<>((PlayerEntity) e);
-        if (e instanceof VillagerEntity) return new VillagerEntityHelper((VillagerEntity) e);
-        if (e instanceof Trader && e instanceof LivingEntity) return new MerchantEntityHelper((LivingEntity) e);
-        if (e instanceof LivingEntity) return new LivingEntityHelper<>((LivingEntity) e);
-        if (e instanceof ItemEntity) return new ItemEntityHelper((ItemEntity) e);
+        if (e instanceof EntityPlayerSP) return new ClientPlayerEntityHelper<>((EntityPlayerSP) e);
+        if (e instanceof EntityPlayer) return new PlayerEntityHelper<>((EntityPlayer) e);
+        if (e instanceof EntityVillager) return new VillagerEntityHelper((EntityVillager) e);
+        if (e instanceof IMerchant) return new MerchantEntityHelper((EntityLivingBase) e);
+        if (e instanceof EntityLivingBase) return new LivingEntityHelper<>((EntityLivingBase) e);
+        if (e instanceof EntityItem) return new ItemEntityHelper((EntityItem) e);
         return new EntityHelper<>(e);
     }
 

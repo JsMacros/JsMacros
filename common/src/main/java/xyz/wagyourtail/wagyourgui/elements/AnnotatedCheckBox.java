@@ -1,9 +1,9 @@
 package xyz.wagyourtail.wagyourgui.elements;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class AnnotatedCheckBox extends Button {
     public boolean value;
     
-    public AnnotatedCheckBox(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int hilightColor, int textColor, Text message, boolean initialValue, Consumer<Button> onPress) {
+    public AnnotatedCheckBox(int x, int y, int width, int height, FontRenderer textRenderer, int color, int borderColor, int hilightColor, int textColor, IChatComponent message, boolean initialValue, Consumer<Button> onPress) {
         super(x, y, width, height, textRenderer, color, borderColor, hilightColor, textColor, message, onPress);
         value = initialValue;
         horizCenter = false;
@@ -24,10 +24,10 @@ public class AnnotatedCheckBox extends Button {
     }
     
     @Override
-    public void setMessage(Text message) {
+    public void setMessage(IChatComponent message) {
         setMessageSuper(message);
         int width = this.width - height;
-        this.textLines = textRenderer.wrapLines(message.asFormattedString(), width - 4).stream().map(LiteralText::new).collect(Collectors.toList());
+        this.textLines = textRenderer.wrapLines(message.asFormattedString(), width - 4).stream().map(ChatComponentText::new).collect(Collectors.toList());
         this.visibleLines = Math.min(Math.max((height - 2) / textRenderer.fontHeight, 1), textLines.size());
         this.verticalCenter = ((height - 4) - (visibleLines * textRenderer.fontHeight)) / 2;
     }
@@ -43,7 +43,7 @@ public class AnnotatedCheckBox extends Button {
     }
     
     @Override
-    public void method_891(MinecraftClient mc, int mouseX, int mouseY, float delta) {
+    public void render(Minecraft mc, int mouseX, int mouseY) {
         if (this.visible) {
         this.renderMessage();
         

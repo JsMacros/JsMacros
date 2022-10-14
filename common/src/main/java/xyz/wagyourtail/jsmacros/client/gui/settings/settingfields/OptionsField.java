@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings.settingfields;
 
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.AbstractSettingContainer;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class OptionsField extends AbstractSettingField<Object> {
 
-    public OptionsField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<Object> field) {
+    public OptionsField(int x, int y, int width, FontRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<Object> field) {
         super(x, y, width, textRenderer.fontHeight + 2, textRenderer, parent, field);
     }
 
@@ -25,8 +25,8 @@ public class OptionsField extends AbstractSettingField<Object> {
         super.init();
         try {
             List<Object> values = setting.getOptions();
-            List<Text> textvalues = values.stream().map(e -> new LiteralText(e.toString())).collect(Collectors.toList());
-            this.addButton(new Button(x + width / 2, y, width / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(setting.get().toString()), (btn) -> {
+            List<IChatComponent> textvalues = values.stream().map(e -> new ChatComponentText(e.toString())).collect(Collectors.toList());
+            this.addButton(new Button(x + width / 2, y, width / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new ChatComponentText(setting.get().toString()), (btn) -> {
                 getFirstOverlayParent().openOverlay(new SelectorDropdownOverlay(x + width / 2, y, width / 2, values.size() * (textRenderer.fontHeight + 1) + 4, textvalues, textRenderer, getFirstOverlayParent(), (choice) -> {
                     btn.setMessage(textvalues.get(choice));
                     try {
@@ -44,7 +44,7 @@ public class OptionsField extends AbstractSettingField<Object> {
     @Override
     public void setPos(int x, int y, int width, int height) {
         super.setPos(x, y, width, height);
-        for (ButtonWidget btn : buttons) {
+        for (GuiButton btn : buttons) {
             btn.y = y;
         }
     }

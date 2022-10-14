@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
-import net.minecraft.text.Text;
+import net.minecraft.util.IChatComponent;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -16,7 +16,7 @@ public class EventDisconnect implements BaseEvent {
      */
     public final TextHelper message;
     
-    public EventDisconnect(Text message) {
+    public EventDisconnect(IChatComponent message) {
         this.message = new TextHelper(message);
         profile.triggerEvent(this);
     }

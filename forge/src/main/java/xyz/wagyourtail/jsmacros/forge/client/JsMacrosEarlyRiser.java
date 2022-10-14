@@ -37,14 +37,14 @@ public class JsMacrosEarlyRiser implements IFMLLoadingPlugin {
             LOGGER.log(Level.INFO, "[JsMacros] optifine detected.");
             Mixins.addConfiguration("jsmacros.optifine.mixins.json");
         }
-//        if (hasClass("club.sk1er.patcher.tweaker.PatcherTweaker")) {
-//            LOGGER.log(Level.INFO, "[JsMacros] patcher detected.");
-//            Mixins.addConfiguration("jsmacros.patcher.mixins.json");
-//        }
-//        if (hasClass("bre.smoothfont.asm.CorePlugin")) {
-//            LOGGER.log(Level.INFO, "[JsMacros] SmoothFont detected.");
-//            Mixins.addConfiguration("jsmacros.smoothfont.mixins.json");
-//        }
+        if (hasClass("club.sk1er.patcher.tweaker.PatcherTweaker")) {
+            LOGGER.log(Level.INFO, "[JsMacros] patcher detected.");
+            Mixins.addConfiguration("jsmacros.patcher.mixins.json");
+        }
+        if (hasClass("bre.smoothfont.asm.CorePlugin")) {
+            LOGGER.log(Level.INFO, "[JsMacros] SmoothFont detected.");
+            Mixins.addConfiguration("jsmacros.smoothfont.mixins.json");
+        }
         if (hasClass("cubex2.ttfr.BetterFontsCore")) {
             LOGGER.log(Level.ERROR, "[JsMacros] Editor/Custom Colors are Not Currently Compatible with BetterFonts, try Smooth Font?");
         }

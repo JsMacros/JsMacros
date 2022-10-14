@@ -1,12 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * @author Wagyourtail
  */
 @SuppressWarnings("unused")
-public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelper<T> {
+public class PlayerEntityHelper<T extends EntityPlayer> extends LivingEntityHelper<T> {
     
     public PlayerEntityHelper(T e) {
         super(e);

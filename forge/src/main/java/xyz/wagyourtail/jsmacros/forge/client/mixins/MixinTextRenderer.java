@@ -1,18 +1,21 @@
 package xyz.wagyourtail.jsmacros.forge.client.mixins;
 
-import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.FontRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(TextRenderer.class)
+@Mixin(FontRenderer.class)
 public abstract class MixinTextRenderer {
 
-    @Shadow protected abstract void setColor(float r, float g, float b, float a);
+    @Shadow(remap = false) protected abstract void setColor(float r, float g, float b, float a);
 
     @Shadow protected abstract int getCharacterCountForWidth(String str, int wrapWidth);
 
@@ -21,7 +24,7 @@ public abstract class MixinTextRenderer {
     @Unique float l;
     @Unique boolean wasCustomColor = false;
 
-    @Inject(method = "method_959", at = @At(value = "INVOKE", target = "Ljava/lang/String;charAt(I)C", remap = false, ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "func_78255_a", at = @At(value = "INVOKE", target = "Ljava/lang/String;charAt(I)C", remap = false, ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD)
     public void addCustomColors(String text, boolean shadow, CallbackInfo ci, int i) {
         if (text.charAt(i+1) == '#') {
             try {
@@ -34,8 +37,8 @@ public abstract class MixinTextRenderer {
         }
     }
 
-    @Redirect(method = "method_959", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;setColor(FFFF)V", ordinal = 0))
-    public void setColorModify(TextRenderer fontRenderer, float r, float g, float b, float a) {
+    @Redirect(method = "func_78255_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;setColor(FFFF)V", ordinal = 0, remap = false))
+    public void setColorModify(FontRenderer fontRenderer, float r, float g, float b, float a) {
         if (wasCustomColor) {
             this.setColor(j, k, l, a);
         } else {
@@ -43,7 +46,7 @@ public abstract class MixinTextRenderer {
         }
     }
 
-    @ModifyVariable(method = "method_959", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;setColor(FFFF)V", ordinal = 0, shift = At.Shift.AFTER), ordinal = 0)
+    @ModifyVariable(method = "func_78255_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;setColor(FFFF)V", ordinal = 0, shift = At.Shift.AFTER, remap = false), ordinal = 0)
     public int modifyIndex(int i) {
         if (wasCustomColor) {
             wasCustomColor = false;
@@ -71,7 +74,7 @@ public abstract class MixinTextRenderer {
     @Unique
     boolean extraShiftInTrimString = false;
 
-    @Inject(method = "trimToWidth(Ljava/lang/String;IZ)Ljava/lang/String;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;method_949(C)I"), locals = LocalCapture.CAPTURE_FAILSOFT, require = 0)
+    @Inject(method = "trimToWidth(Ljava/lang/String;IZ)Ljava/lang/String;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;func_78263_a(C)I"), locals = LocalCapture.CAPTURE_FAILSOFT, require = 0)
     public void fixTrimString(String text, int width, boolean rightToLeft, CallbackInfoReturnable<String> cir, StringBuilder stringBuilder, int i, int j, int k, boolean flag, boolean flag1, int l, char c0) {
         if (flag && c0 == '#') {
             extraShiftInTrimString = true;
@@ -79,7 +82,7 @@ public abstract class MixinTextRenderer {
     }
 
 
-    @ModifyVariable(method = "trimToWidth(Ljava/lang/String;IZ)Ljava/lang/String;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;method_949(C)I", shift = At.Shift.AFTER), index = 10, require = 0)
+    @ModifyVariable(method = "trimToWidth(Ljava/lang/String;IZ)Ljava/lang/String;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;func_78263_a(C)I", shift = At.Shift.AFTER), index = 10, require = 0)
     public int shiftIndexTrimString(int index) {
         if (extraShiftInTrimString) return index + 6;
         return index;
@@ -109,8 +112,8 @@ public abstract class MixinTextRenderer {
         return k;
     }
 
-    @Redirect(method = "wrapStringToWidth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;getCharacterCountForWidth(Ljava/lang/String;I)I"))
-    public int sizeStringToWidthFixZero(TextRenderer renderer, String str, int wrapWidth) {
+    @Redirect(method = "wrapStringToWidth", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/FontRenderer;getCharacterCountForWidth(Ljava/lang/String;I)I"))
+    public int sizeStringToWidthFixZero(FontRenderer renderer, String str, int wrapWidth) {
         return Math.max(getCharacterCountForWidth(str, wrapWidth), 1);
     }
 }

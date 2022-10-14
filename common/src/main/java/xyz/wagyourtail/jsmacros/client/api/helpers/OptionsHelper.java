@@ -1,10 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.resource.ResourcePackLoader;
-import net.minecraft.client.sound.SoundCategory;
-import net.minecraft.client.util.Window;
+import com.google.common.collect.ImmutableList;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundCategory;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.ResourcePackRepository;
+import net.minecraft.client.settings.GameSettings;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -20,12 +21,12 @@ import java.util.stream.Collectors;
  * @since 1.1.7
  */
 @SuppressWarnings("unused")
-public class OptionsHelper extends BaseHelper<GameOptions> {
+public class OptionsHelper extends BaseHelper<GameSettings> {
 private static final Map<String, SoundCategory> SOUND_CATEGORY_MAP = Arrays.stream(SoundCategory.values()).collect(Collectors.toMap(SoundCategory::getName, Function.identity()));
-    private final MinecraftClient mc = MinecraftClient.getInstance();
-    private final ResourcePackLoader rpm = mc.getResourcePackLoader();
+    private final Minecraft mc = Minecraft.getInstance();
+    private final ResourcePackRepository rpm = mc.getResourcePackLoader();
     
-    public OptionsHelper(GameOptions options) {
+    public OptionsHelper(GameSettings options) {
         super(options);
     }
     /**
@@ -65,7 +66,7 @@ private static final Map<String, SoundCategory> SOUND_CATEGORY_MAP = Arrays.stre
      * @return list of names of resource packs.
      */
     public List<String> getResourcePacks() {
-        return rpm.method_5904().stream().map(ResourcePackLoader.Entry::getName).collect(Collectors.toList());
+        return rpm.func_110609_b().stream().map(ResourcePackRepository.Entry::getName).collect(Collectors.toList());
     }
     
     /**
@@ -73,7 +74,7 @@ private static final Map<String, SoundCategory> SOUND_CATEGORY_MAP = Arrays.stre
      * @return list of names of enabled resource packs.
      */
     public List<String> getEnabledResourcePacks() {
-        return rpm.method_5905().stream().map(ResourcePackLoader.Entry::getName).collect(Collectors.toList());
+        return rpm.func_110613_c().stream().map(ResourcePackRepository.Entry::getName).collect(Collectors.toList());
     }
     
     /**
@@ -85,15 +86,15 @@ private static final Map<String, SoundCategory> SOUND_CATEGORY_MAP = Arrays.stre
      */
     public OptionsHelper setEnabledResourcePacks(String[] enabled) {
         mc.execute(() -> {
-            ResourcePackLoader.Entry[] enabledRP = new ResourcePackLoader.Entry[enabled.length];
-            for (ResourcePackLoader.Entry e : rpm.method_5904()) {
+            ResourcePackRepository.Entry[] enabledRP = new ResourcePackRepository.Entry[enabled.length];
+            for (ResourcePackRepository.Entry e : rpm.func_110609_b()) {
                 for (int i = 0; i < enabled.length; ++i) {
                     if (e.getName().equals(enabled[i])) {
                         enabledRP[i] = e;
                     }
                 }
             }
-            rpm.method_7038(Arrays.stream(enabledRP).filter(Objects::nonNull).collect(Collectors.toList()));
+            rpm.func_148527_a(Arrays.stream(enabledRP).filter(Objects::nonNull).collect(Collectors.toList()));
             base.save();
             mc.stitchTextures();
         });
@@ -258,7 +259,7 @@ private static final Map<String, SoundCategory> SOUND_CATEGORY_MAP = Arrays.stre
     public void setGuiScale(int scale) {
         base.guiScale = scale;
         mc.execute(() -> {
-            Window scaledresolution = new Window(mc);
+            ScaledResolution scaledresolution = new ScaledResolution(mc);
             mc.currentScreen.resize(mc, scaledresolution.getWidth(), scaledresolution.getHeight());
         });
     }

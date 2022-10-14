@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.stat.Stat;
-import net.minecraft.stat.StatHandler;
-import net.minecraft.text.Text;
+import net.minecraft.stats.StatBase;
+import net.minecraft.stats.StatFileWriter;
+import net.minecraft.util.IChatComponent;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinStatHandler;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -13,17 +13,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
-public class StatsHelper extends BaseHelper<StatHandler> {
-    public StatsHelper(StatHandler base) {
+public class StatsHelper extends BaseHelper<StatFileWriter> {
+    public StatsHelper(StatFileWriter base) {
         super(base);
     }
 
     public List<String> getStatList() {
-        return ((MixinStatHandler) base).getField_9047().keySet().stream().map(s -> s.name).collect(Collectors.toList());
+        return ((MixinStatHandler) base).getField_150875_a().keySet().stream().map(s -> s.name).collect(Collectors.toList());
     }
 
-    public Text getStatText(String statKey) {
-        for (Stat stat : ImmutableSet.copyOf(((MixinStatHandler) base).getField_9047().keySet())) {
+    public IChatComponent getStatText(String statKey) {
+        for (StatBase stat : ImmutableSet.copyOf(((MixinStatHandler) base).getField_150875_a().keySet())) {
             if (stat.name.equals(statKey)) {
                 return stat.getText();
             }
@@ -32,18 +32,18 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     public int getRawStatValue(String statKey) {
-        for (Stat stat : ImmutableSet.copyOf(((MixinStatHandler) base).getField_9047().keySet())) {
-            if (stat.equals(statKey)) {
-                return base.method_1729(stat);
+        for (StatBase stat : ImmutableSet.copyOf(((MixinStatHandler) base).getField_150875_a().keySet())) {
+            if (stat.name.equals(statKey)) {
+                return base.func_77444_a(stat);
             }
         }
         throw new IllegalArgumentException("Stat not found: " + statKey);
     }
 
     public String getFormattedStatValue(String statKey) {
-        for (Stat stat : ImmutableSet.copyOf(((MixinStatHandler) base).getField_9047().keySet())) {
+        for (StatBase stat : ImmutableSet.copyOf(((MixinStatHandler) base).getField_150875_a().keySet())) {
             if (stat.name.equals(statKey)) {
-                return stat.method_2261(base.method_1729(stat));
+                return stat.func_75968_a(base.func_77444_a(stat));
             }
         }
         throw new IllegalArgumentException("Stat not found: " + statKey);
@@ -51,16 +51,16 @@ public class StatsHelper extends BaseHelper<StatHandler> {
 
     public Map<String, String> getFormattedStatMap() {
         Map<String, String> map = new HashMap<>();
-        for (Stat stat : ImmutableSet.copyOf(((MixinStatHandler) base).getField_9047().keySet())) {
-            map.put(stat.name, stat.method_2261(base.method_1729(stat)));
+        for (StatBase stat : ImmutableSet.copyOf(((MixinStatHandler) base).getField_150875_a().keySet())) {
+            map.put(stat.name, stat.func_75968_a(base.func_77444_a(stat)));
         }
         return map;
     }
 
     public Map<String, Integer> getRawStatMap() {
         Map<String, Integer> map = new HashMap<>();
-        for (Stat stat : ImmutableSet.copyOf(((MixinStatHandler) base).getField_9047().keySet())) {
-            map.put(stat.name, base.method_1729(stat));
+        for (StatBase stat : ImmutableSet.copyOf(((MixinStatHandler) base).getField_150875_a().keySet())) {
+            map.put(stat.name, base.func_77444_a(stat));
         }
         return map;
     }

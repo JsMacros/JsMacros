@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
-import net.minecraft.text.Style;
+import net.minecraft.util.ChatStyle;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import xyz.wagyourtail.jsmacros.client.access.IStyle;
 
-@Mixin(Style.class)
+@Mixin(ChatStyle.class)
 public class MixinStyle implements IStyle {
 
     @Unique
@@ -17,10 +17,10 @@ public class MixinStyle implements IStyle {
     @Unique int customColor;
 
     @Override
-    public Style jsmacros_setCustomColor(int color) {
+    public ChatStyle jsmacros_setCustomColor(int color) {
         hasCustomColor = true;
         this.customColor = color;
-        return (Style)(Object)this;
+        return (ChatStyle)(Object)this;
     }
 
     @Override
@@ -34,20 +34,20 @@ public class MixinStyle implements IStyle {
     }
 
     @Inject(method = "copy", at = @At("RETURN"), cancellable = true)
-    public void copyCustomColor(CallbackInfoReturnable<Style> cir) {
+    public void copyCustomColor(CallbackInfoReturnable<ChatStyle> cir) {
         if (this.hasCustomColor) {
             ((IStyle) cir.getReturnValue()).jsmacros_setCustomColor(this.customColor);
         }
     }
 
     @Inject(method = "deepCopy", at = @At("RETURN"), cancellable = true)
-    public void copyCustomColorDeep(CallbackInfoReturnable<Style> cir) {
+    public void copyCustomColorDeep(CallbackInfoReturnable<ChatStyle> cir) {
         if (this.hasCustomColor) {
             ((IStyle) cir.getReturnValue()).jsmacros_setCustomColor(this.customColor);
         }
     }
 
-    @Inject(method = "asString", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/Style;getColor()Lnet/minecraft/util/Formatting;", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "asString", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/ChatStyle;getColor()Lnet/minecraft/util/EnumChatFormatting;", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
     public void asStringCustomColorInject(CallbackInfoReturnable<String> cir, StringBuilder stringBuilder) {
         if (hasCustomColor) {
             String hex = Integer.toHexString(customColor);

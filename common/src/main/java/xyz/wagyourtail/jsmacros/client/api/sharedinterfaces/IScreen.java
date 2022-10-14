@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.sharedinterfaces;
 
-import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.GuiButton;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextFieldWidgetHelper;

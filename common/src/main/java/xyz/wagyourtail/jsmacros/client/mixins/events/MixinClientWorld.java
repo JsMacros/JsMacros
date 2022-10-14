@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventEntityLoad;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventEntityUnload;
 
-@Mixin(ClientWorld.class)
+@Mixin(WorldClient.class)
 public class MixinClientWorld {
 
     @Inject(at = @At("TAIL"), method = "addEntity")

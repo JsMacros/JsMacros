@@ -1,11 +1,11 @@
 package xyz.wagyourtail.wagyourgui.elements;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 
 import java.util.function.Consumer;
 
-public class Scrollbar extends ButtonWidget {
+public class Scrollbar extends GuiButton {
     protected double scrollPages = 1;
     protected double scrollAmount = 0;
     protected double scrollbarHeight;
@@ -59,7 +59,7 @@ public class Scrollbar extends ButtonWidget {
     int prevY = 0;
 
     @Override
-    public boolean isMouseOver(MinecraftClient mc, int mouseX, int mouseY) {
+    public boolean isMouseOver(Minecraft mc, int mouseX, int mouseY) {
         if (this.active && super.isMouseOver(mc, mouseX, mouseY)) {
             prevY = mouseY;
             double mpos = mouseY - y - 1;
@@ -89,7 +89,7 @@ public class Scrollbar extends ButtonWidget {
 
 
     @Override
-    public void method_891(MinecraftClient mc, int mouseX, int mouseY, float delta) {
+    public void render(Minecraft mc, int mouseX, int mouseY) {
         if (this.visible) {
             // mainpart
             fill(x + 1, (int) (y + 1 + scrollAmount), x + width - 1, (int) (y + 1 + scrollAmount + scrollbarHeight), hilightColor);

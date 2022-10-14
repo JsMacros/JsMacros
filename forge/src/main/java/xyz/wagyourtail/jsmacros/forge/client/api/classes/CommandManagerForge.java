@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.forge.client.api.classes;
 
-import net.minecraft.command.Command;
-import net.minecraft.server.command.CommandRegistry;
+import net.minecraft.command.CommandHandler;
+import net.minecraft.command.ICommand;
 import net.minecraftforge.client.ClientCommandHandler;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.CommandManager;
@@ -20,7 +20,7 @@ public class CommandManagerForge extends CommandManager {
 
     @Override
     public CommandNodeHelper unregisterCommand(String command) {
-        Command c = ClientCommandHandler.instance.getCommandMap().get(command);
+        ICommand c = ClientCommandHandler.instance.getCommandMap().get(command);
         if (c == null) {
             return null;
         }
@@ -30,7 +30,7 @@ public class CommandManagerForge extends CommandManager {
 
     @Override
     public void reRegisterCommand(CommandNodeHelper node) {
-        Command c = node.getRaw();
+        ICommand c = node.getRaw();
         if (c == null) {
             return;
         }
@@ -39,10 +39,10 @@ public class CommandManagerForge extends CommandManager {
 
     private static Field commands;
 
-    private static void deleteCommand(Command command) {
+    private static void deleteCommand(ICommand command) {
         if (commands == null) {
             boolean found = false;
-            for (Field declaredField : CommandRegistry.class.getDeclaredFields()) {
+            for (Field declaredField : CommandHandler.class.getDeclaredFields()) {
                 if (declaredField.getType() == Set.class) {
                     commands = declaredField;
                     commands.setAccessible(true);
@@ -56,9 +56,9 @@ public class CommandManagerForge extends CommandManager {
             }
         }
         try {
-            Set<Command> commands = (Set<Command>) CommandRegistry.class.getDeclaredFields()[0].get(null);
+            Set<ICommand> commands = (Set<ICommand>) CommandHandler.class.getDeclaredFields()[0].get(null);
             commands.remove(command);
-            Map<String, Command> map = ClientCommandHandler.instance.getCommandMap();
+            Map<String, ICommand> map = ClientCommandHandler.instance.getCommandMap();
             map.remove(command.getCommandName());
             for (String alias : command.getAliases()) {
                 map.remove(alias);

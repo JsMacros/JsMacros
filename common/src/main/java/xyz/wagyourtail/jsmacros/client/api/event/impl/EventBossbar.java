@@ -1,7 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
-import net.minecraft.class_2957;
-import net.minecraft.client.class_2840;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BossBarHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -18,11 +16,11 @@ public class EventBossbar implements BaseEvent {
     public final String uuid;
     public final String type;
     
-    public EventBossbar(String type, UUID uuid, class_2840 bossBar) {
-        if (bossBar != null) this.bossBar = new BossBarHelper(bossBar);
+    public EventBossbar(BossBarHelper bossBar) {
+        if (bossBar != null) this.bossBar = bossBar;
         else this.bossBar = null;
-        this.uuid = uuid.toString();
-        this.type = type;
+        this.uuid = null;
+        this.type = null;
         
         profile.triggerEvent(this);
     }

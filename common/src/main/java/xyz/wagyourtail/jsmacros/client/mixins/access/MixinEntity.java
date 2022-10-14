@@ -1,9 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.text.HoverEvent;
+import net.minecraft.event.HoverEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import xyz.wagyourtail.jsmacros.client.access.IEntity;
 
 @Mixin(Entity.class)

@@ -2,8 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
@@ -20,8 +20,7 @@ import java.util.*;
  @Library("KeyBind")
  @SuppressWarnings("unused")
  public class FKeyBind extends BaseLibrary {
-    private static final MinecraftClient mc = MinecraftClient.getInstance();
-    
+    private static final Minecraft mc = Minecraft.getInstance();
     /**
      * @since 1.2.2
      *

@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
-import net.minecraft.client.gui.screen.ingame.VillagerTradingScreen;
-import net.minecraft.village.TradeOffer;
+import net.minecraft.client.gui.GuiMerchant;
+import net.minecraft.village.MerchantRecipe;
 import xyz.wagyourtail.jsmacros.client.access.IMerchantScreen;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TradeOfferHelper;
 
@@ -12,9 +12,9 @@ import java.util.List;
  * @since 1.3.1
  */
 @SuppressWarnings("unused")
-public class VillagerInventory extends Inventory<VillagerTradingScreen> {
+public class VillagerInventory extends Inventory<GuiMerchant> {
     
-    protected VillagerInventory(VillagerTradingScreen inventory) {
+    protected VillagerInventory(GuiMerchant inventory) {
         super(inventory);
     }
     
@@ -79,7 +79,7 @@ public class VillagerInventory extends Inventory<VillagerTradingScreen> {
     public List<TradeOfferHelper> getTrades() {
         List<TradeOfferHelper> offers = new LinkedList<>();
         int i = -1;
-        for (TradeOffer offer : inventory.getTrader().getOffers(mc.player)) {
+        for (MerchantRecipe offer : inventory.getTrader().getOffers(mc.player)) {
             offers.add(new TradeOfferHelper(offer, ++i, this));
         }
         return offers;

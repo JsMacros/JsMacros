@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -164,7 +164,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
      * @since 1.6.5
      */
     public BlockPosHelper offset(String direction) {
-        return new BlockPosHelper(base.offset(Direction.byName(direction)));
+        return new BlockPosHelper(base.offset(EnumFacing.byName(direction)));
     }
 
     /**
@@ -175,7 +175,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
      * @since 1.6.5
      */
     public BlockPosHelper offset(String direction, int distance) {
-        return new BlockPosHelper(base.offset(Direction.byName(direction)));
+        return new BlockPosHelper(base.offset(EnumFacing.byName(direction)));
     }
 
     @Override

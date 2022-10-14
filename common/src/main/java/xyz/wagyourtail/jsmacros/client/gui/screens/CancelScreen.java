@@ -1,10 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import org.apache.logging.log4j.Level;
 import org.lwjgl.input.Keyboard;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.gui.containers.RunningContextContainer;
@@ -26,8 +27,8 @@ public class CancelScreen extends BaseScreen {
     private AnnotatedCheckBox services;
     private final List<RunningContextContainer> running = new ArrayList<>();
 
-    public CancelScreen(Screen parent) {
-        super(new LiteralText("Cancel"), parent);
+    public CancelScreen(GuiScreen parent) {
+        super(new ChatComponentText("Cancel"), parent);
     }
 
     @Override
@@ -39,8 +40,8 @@ public class CancelScreen extends BaseScreen {
         running.clear();
         s = this.addButton(new Scrollbar(width - 12, 5, 8, height-10, 0xFFFFFFFF, 0xFF000000, 0x7FFFFFFF, 1, this::onScrollbar));
         
-        this.addButton(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.back"), (btn) -> this.onClose()));
-        services = this.addButton(new AnnotatedCheckBox(this.width / 12 + 5, this.height - 12, 200, 12, textRenderer, 0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.showservices"), false, null));
+        this.addButton(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new ChatComponentTranslation("jsmacros.back"), (btn) -> this.onClose()));
+        services = this.addButton(new AnnotatedCheckBox(this.width / 12 + 5, this.height - 12, 200, 12, textRenderer, 0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new ChatComponentTranslation("jsmacros.showservices"), false, null));
     }
 
     public void addContainer(BaseScriptContext<?> t) {
@@ -60,7 +61,7 @@ public class CancelScreen extends BaseScreen {
     }
 
     public void removeContainer(RunningContextContainer t) {
-        for (ButtonWidget b : t.getButtons()) {
+        for (GuiButton b : t.getButtons()) {
             buttons.remove(b);
         }
         running.remove(t);
@@ -104,8 +105,8 @@ public class CancelScreen extends BaseScreen {
             addContainer(t);
         }
         
-        for (ButtonWidget b : ImmutableList.copyOf(this.buttons)) {
-            b.method_891(client, mouseX, mouseY, delta);
+        for (GuiButton b : ImmutableList.copyOf(this.buttons)) {
+            b.render(client, mouseX, mouseY);
         }
     }
 

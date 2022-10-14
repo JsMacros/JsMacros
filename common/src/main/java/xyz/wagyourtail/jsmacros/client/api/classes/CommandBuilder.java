@@ -13,15 +13,12 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.block.Block;
-import net.minecraft.command.AbstractCommand;
-import net.minecraft.command.InvalidNumberException;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.NumberInvalidException;
 import net.minecraft.item.Item;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtException;
-import net.minecraft.nbt.StringNbtReader;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
@@ -235,22 +232,22 @@ public abstract class CommandBuilder {
      * @return
      */
     public CommandBuilder suggestIdentifier(String... suggestions) {
-        suggests((ctx, builder) -> suggestIdentifiers(Arrays.stream(suggestions).map(Identifier::new)::iterator, builder));
+        suggests((ctx, builder) -> suggestIdentifiers(Arrays.stream(suggestions).map(ResourceLocation::new)::iterator, builder));
         return this;
     }
 
 
-    static CompletableFuture<Suggestions> suggestIdentifiers(Iterable<Identifier> candidates, SuggestionsBuilder builder) {
+    static CompletableFuture<Suggestions> suggestIdentifiers(Iterable<ResourceLocation> candidates, SuggestionsBuilder builder) {
         String string = builder.getRemaining().toLowerCase(Locale.ROOT);
         forEachMatching(candidates, string, identifier -> identifier, identifier -> builder.suggest(identifier.toString()));
         return builder.buildFuture();
     }
 
-    static <T> void forEachMatching(Iterable<T> candidates, String string, Function<T, Identifier> identifier, Consumer<T> action) {
+    static <T> void forEachMatching(Iterable<T> candidates, String string, Function<T, ResourceLocation> identifier, Consumer<T> action) {
         boolean bl = string.indexOf(58) > -1;
 
         for(T object : candidates) {
-            Identifier identifier2 = identifier.apply(object);
+            ResourceLocation identifier2 = identifier.apply(object);
             if (bl) {
                 String string2 = identifier2.toString();
                 if (method_27136(string, string2)) {
@@ -348,7 +345,7 @@ public abstract class CommandBuilder {
                 reader.setCursor(i + m.group(0).length());
                 return args;
             } else {
-                throw new SimpleCommandExceptionType(new TranslatableText("jsmacros.commandfailedregex", "/" + pattern.pattern() + "/")::getString).createWithContext(reader);
+                throw new SimpleCommandExceptionType(new ChatComponentTranslation("jsmacros.commandfailedregex", "/" + pattern.pattern() + "/")::getString).createWithContext(reader);
             }
         }
     }
@@ -360,8 +357,8 @@ public abstract class CommandBuilder {
         @Override
         public Block parse(StringReader reader) throws CommandSyntaxException {
             try {
-                return AbstractCommand.getBlock(null, reader.readStringUntil(' '));
-            } catch (InvalidNumberException e) {
+                return CommandBase.getBlock(null, reader.readStringUntil(' '));
+            } catch (NumberInvalidException e) {
                 throw exception.readerInvalidInt().create(e.getMessage());
             }
         }
@@ -369,18 +366,18 @@ public abstract class CommandBuilder {
         @Override
         public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
             return CompletableFuture.supplyAsync(() -> {
-                List<Suggestion> sugs = AbstractCommand.method_10708(new String[] {builder.getRemaining()}, Block.REGISTRY.getKeySet()).stream().map(e -> new Suggestion(null, e)).collect(Collectors.toList());
+                List<Suggestion> sugs = CommandBase.func_175762_a(new String[] {builder.getRemaining()}, Block.REGISTRY.keySet()).stream().map(e -> new Suggestion(null, e)).collect(Collectors.toList());
                 return new Suggestions(null, sugs);
             });
         }
     }
 
-    public class ColorArgumentType implements ArgumentType<Formatting> {
+    public class ColorArgumentType implements ArgumentType<EnumChatFormatting> {
 
         @Override
-        public Formatting parse(StringReader reader) throws CommandSyntaxException {
+        public EnumChatFormatting parse(StringReader reader) throws CommandSyntaxException {
             try {
-                return Formatting.byName(reader.readStringUntil(' '));
+                return EnumChatFormatting.byName(reader.readStringUntil(' '));
             } catch (IllegalArgumentException e) {
                 throw exception.readerExpectedSymbol().create(e.getMessage());
             }
@@ -389,17 +386,17 @@ public abstract class CommandBuilder {
         @Override
         public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
             return CompletableFuture.supplyAsync(() -> {
-                List<Suggestion> sugs = AbstractCommand.method_10708(new String[] {builder.getRemaining()}, Arrays.stream(Formatting.values()).map(Formatting::getName).collect(Collectors.toList())).stream().map(e -> new Suggestion(null, e)).collect(Collectors.toList());
+                List<Suggestion> sugs = CommandBase.func_175762_a(new String[] {builder.getRemaining()}, Arrays.stream(EnumChatFormatting.values()).map(EnumChatFormatting::getName).collect(Collectors.toList())).stream().map(e -> new Suggestion(null, e)).collect(Collectors.toList());
                 return new Suggestions(null, sugs);
             });
         }
 
     }
 
-    public class NBTArgumentType implements ArgumentType<NbtCompound> {
+    public class NBTArgumentType implements ArgumentType<NBTTagCompound> {
 
         @Override
-        public NbtCompound parse(StringReader reader) throws CommandSyntaxException {
+        public NBTTagCompound parse(StringReader reader) throws CommandSyntaxException {
             try {
                 int cursor = reader.getCursor();
                 String s = reader.getRemaining();
@@ -413,21 +410,21 @@ public abstract class CommandBuilder {
                     }
                 }
                 reader.setCursor(cursor + m.end());
-                return StringNbtReader.parse(s.substring(0, m.end()));
-            } catch (NbtException e) {
+                return JsonToNBT.parse(s.substring(0, m.end()));
+            } catch (NBTException e) {
                 throw exception.readerExpectedSymbol().create(e.getStackTrace());
             }
         }
     }
 
-    public class TextArgumentType implements ArgumentType<Text> {
+    public class TextArgumentType implements ArgumentType<IChatComponent> {
 
         @Override
-        public Text parse(StringReader reader) throws CommandSyntaxException {
+        public IChatComponent parse(StringReader reader) throws CommandSyntaxException {
             int cursor = reader.getCursor();
             String s = reader.getRemaining();
             if (s.startsWith("\"")) {
-                return new LiteralText(reader.readQuotedString());
+                return new ChatComponentText(reader.readQuotedString());
             }
             if (!s.startsWith("{") && !s.startsWith("[")) throw exception.readerExpectedSymbol().create("{");
             Matcher m = Pattern.compile("[\\[\\]{}]").matcher(s);
@@ -440,7 +437,7 @@ public abstract class CommandBuilder {
             }
             reader.setCursor(cursor + m.end());
             try {
-                return Text.Serializer.lenientDeserializeText(s.substring(0, m.end()));
+                return IChatComponent.Serializer.deserialize(s.substring(0, m.end()));
             } catch (JsonSyntaxException e) {
                 throw exception.readerExpectedSymbol().create(e.getMessage());
             }
@@ -452,8 +449,8 @@ public abstract class CommandBuilder {
         @Override
         public Item parse(StringReader reader) throws CommandSyntaxException {
             try {
-                return AbstractCommand.getItem(null, reader.readStringUntil(' '));
-            } catch (InvalidNumberException e) {
+                return CommandBase.getItem(null, reader.readStringUntil(' '));
+            } catch (NumberInvalidException e) {
                 throw exception.readerInvalidInt().create(e.getMessage());
             }
         }
@@ -461,18 +458,18 @@ public abstract class CommandBuilder {
         @Override
         public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
             return CompletableFuture.supplyAsync(() -> {
-                List<Suggestion> sugs = AbstractCommand.method_10708(new String[] {builder.getRemaining()}, Item.REGISTRY.getKeySet()).stream().map(e -> new Suggestion(null, e)).collect(Collectors.toList());
+                List<Suggestion> sugs = CommandBase.func_175762_a(new String[] {builder.getRemaining()}, Item.REGISTRY.keySet()).stream().map(e -> new Suggestion(null, e)).collect(Collectors.toList());
                 return new Suggestions(null, sugs);
             });
         }
 
     }
 
-    public class IdentifierArgumentType implements ArgumentType<Identifier> {
+    public class IdentifierArgumentType implements ArgumentType<ResourceLocation> {
 
         @Override
-        public Identifier parse(StringReader reader) throws CommandSyntaxException {
-            return new Identifier(reader.readStringUntil(' '));
+        public ResourceLocation parse(StringReader reader) throws CommandSyntaxException {
+            return new ResourceLocation(reader.readStringUntil(' '));
         }
 
     }

@@ -1,11 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.state.property.Property;
-import net.minecraft.text.LiteralText;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.HashMap;
@@ -15,12 +15,12 @@ import java.util.Map;
  * @author Wagyourtail
  */
 @SuppressWarnings("unused")
-public class BlockDataHelper extends BaseHelper<BlockState> {
+public class BlockDataHelper extends BaseHelper<IBlockState> {
     private final Block b;
     private final BlockPos bp;
-    private final BlockEntity e;
+    private final TileEntity e;
 
-    public BlockDataHelper(BlockState b, BlockEntity e, BlockPos bp) {
+    public BlockDataHelper(IBlockState b, TileEntity e, BlockPos bp) {
         super(b);
         this.b = b.getBlock();
         this.bp = bp;
@@ -65,7 +65,7 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
      * @return the translated name of the block. (was string before 1.6.5)
      */
     public TextHelper getName() {
-        return new TextHelper(new LiteralText(b.getTranslatedName()));
+        return new TextHelper(new ChatComponentText(b.getTranslatedName()));
     }
 
     /**
@@ -74,7 +74,7 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
      */
     public NBTElementHelper<?> getNBT() {
         if (e == null) return null;
-        return NBTElementHelper.resolve(e.method_11646());
+        return NBTElementHelper.resolve(e.getTileData());
     }
 
     /**
@@ -103,7 +103,7 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
     public Map<String, String> getBlockState() {
         Map<String, String> map = new HashMap<>();
 
-        for (Property<?> e : base.getProperties()) {
+        for (IProperty<?> e : base.getProperties()) {
             map.put(e.getName(), base.get(e).toString());
         }
         return map;
@@ -122,11 +122,11 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
         return b;
     }
 
-    public BlockState getRawBlockState() {
+    public IBlockState getRawBlockState() {
         return base;
     }
 
-    public BlockEntity getRawBlockEntity() {
+    public TileEntity getRawBlockEntity() {
         return e;
     }
 

@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.entity.player.PlayerAbilities;
+import net.minecraft.entity.player.PlayerCapabilities;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -8,9 +8,9 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
  * @since 1.0.3
  */
 @SuppressWarnings("unused")
-public class PlayerAbilitiesHelper extends BaseHelper<PlayerAbilities> {
+public class PlayerAbilitiesHelper extends BaseHelper<PlayerCapabilities> {
 	
-	public PlayerAbilitiesHelper(PlayerAbilities a) {
+	public PlayerAbilitiesHelper(PlayerCapabilities a) {
 		super(a);
 	}
 	

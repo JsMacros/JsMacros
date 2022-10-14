@@ -1,18 +1,18 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
-import net.minecraft.client.gui.screen.ingame.EnchantingScreen;
+import net.minecraft.client.gui.GuiEnchantment;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.screen.EnchantingScreenHandler;
-import net.minecraft.text.LiteralText;
-import net.minecraft.util.Identifier;
+import net.minecraft.inventory.ContainerEnchantment;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ResourceLocation;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 
 /**
  * @since 1.3.1
  */
-public class EnchantInventory extends Inventory<EnchantingScreen> {
+public class EnchantInventory extends Inventory<GuiEnchantment> {
     
-    protected EnchantInventory(EnchantingScreen inventory) {
+    protected EnchantInventory(GuiEnchantment inventory) {
         super(inventory);
     }
     
@@ -21,7 +21,7 @@ public class EnchantInventory extends Inventory<EnchantingScreen> {
      * @since 1.3.1
      */
     public int[] getRequiredLevels() {
-        return ((EnchantingScreenHandler)inventory.screenHandler).enchantmentLevel;
+        return ((ContainerEnchantment)inventory.screenHandler).enchantmentLevel;
     }
     
     /**
@@ -31,16 +31,16 @@ public class EnchantInventory extends Inventory<EnchantingScreen> {
     public TextHelper[] getEnchantments() {
         TextHelper[] enchants = new TextHelper[3];
         for (int j = 0; j < 3; ++j) {
-            Enchantment enchantment = Enchantment.byIndex(((EnchantingScreenHandler)inventory.screenHandler).enchantmentId[j] & 255);
-            if (((EnchantingScreenHandler)inventory.screenHandler).enchantmentId[j] > 0 && (enchantment) != null) {
-                enchants[j] = new TextHelper(new LiteralText(enchantment.getTranslatedName((((EnchantingScreenHandler)inventory.screenHandler).enchantmentId[j] & 65280) >> 8)));
+            Enchantment enchantment = Enchantment.byRawId(((ContainerEnchantment)inventory.screenHandler).enchantmentId[j] & 255);
+            if (((ContainerEnchantment)inventory.screenHandler).enchantmentId[j] > 0 && (enchantment) != null) {
+                enchants[j] = new TextHelper(new ChatComponentText(enchantment.getTranslatedName((((ContainerEnchantment)inventory.screenHandler).enchantmentId[j] & 65280) >> 8)));
             }
         }
         return enchants;
     }
 
     private static String getEnchantId(Enchantment enchantment) {
-        for (Identifier id : Enchantment.REGISTRY.getKeySet()) {
+        for (ResourceLocation id : Enchantment.getSet()) {
             if (Enchantment.getByName(id.toString()) == enchantment) {
                 return id.toString();
             }
@@ -55,8 +55,8 @@ public class EnchantInventory extends Inventory<EnchantingScreen> {
     public String[] getEnchantmentIds() {
         String[] enchants = new String[3];
         for (int j = 0; j < 3; ++j) {
-            Enchantment enchantment =  Enchantment.byIndex(((EnchantingScreenHandler)inventory.screenHandler).enchantmentId[j] & 255);
-            if (((EnchantingScreenHandler)inventory.screenHandler).enchantmentId[j] >= 0 && (enchantment) != null) {
+            Enchantment enchantment =  Enchantment.byRawId(((ContainerEnchantment)inventory.screenHandler).enchantmentId[j] & 255);
+            if (((ContainerEnchantment)inventory.screenHandler).enchantmentId[j] >= 0 && (enchantment) != null) {
                 enchants[j] = getEnchantId(enchantment);
             }
         }
@@ -70,7 +70,7 @@ public class EnchantInventory extends Inventory<EnchantingScreen> {
     public int[] getEnchantmentLevels() {
         int[] list = new int[3];
         for (int i = 0; i < 3; ++i) {
-            list[i] = (((EnchantingScreenHandler)inventory.screenHandler).enchantmentId[i] & 65280) >> 8;
+            list[i] = (((ContainerEnchantment)inventory.screenHandler).enchantmentId[i] & 65280) >> 8;
         }
         return list;
     }

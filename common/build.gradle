@@ -1,26 +1,24 @@
-architectury {
-    injectInjectables = false
-    common("forge")
+configurations {
+    dev
 }
-
 
 sourceSets {
     core {
         configurations.coreImplementation.setCanBeResolved(true)
-        compileClasspath += configurations.coreImplementation + configurations.minecraftLibraries
-        runtimeClasspath += configurations.coreImplementation + configurations.minecraftLibraries
+        compileClasspath += configurations.coreImplementation + configurations.forgeGradleMcDeps
+        runtimeClasspath += configurations.coreImplementation + configurations.forgeGradleMcDeps
     }
     main {
         compileClasspath += core.output
         runtimeClasspath += core.output
     }
 }
+mixin {
+    add sourceSets.main, "jsmacros-common.refmap.json"
+    defaultObfuscationEnv searge
+}
 
 dependencies {
-    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
-    // Do NOT use other classes from fabric loader
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
-//    implementation 'org.spongepowered:mixin:0.7.11-SNAPSHOT'
 }
 
 publishing {
@@ -36,67 +34,10 @@ publishing {
         // Add repositories to publish to here.
     }
 }
-
 jar {
     classifier "dev"
     from sourceSets.main.output, sourceSets.core.output
 
     preserveFileTimestamps = false
     reproducibleFileOrder = true
-
 }
-
-task generatePyDoc(type: Javadoc) {
-    source = sourceSets.main.allJava + sourceSets.core.allJava
-    classpath = sourceSets.main.compileClasspath
-    destinationDir = new File(rootProject.buildDir, "docs/python/JsMacrosAC/")
-    options.doclet = "xyz.wagyourtail.doclet.pydoclet.Main"
-    options.docletpath new File(rootProject.rootDir, "buildSrc/build/libs/buildSrc.jar")
-    options.addStringOption "v", version
-}
-
-task copyPyDoc(type: Copy, dependsOn: generatePyDoc) {
-    from new File(rootProject.rootDir, "docs/python")
-    into new File(rootProject.buildDir, "docs/python")
-}
-
-task generateTSDoc(type: Javadoc) {
-    source = sourceSets.main.allJava + sourceSets.core.allJava
-    classpath = sourceSets.main.compileClasspath
-    destinationDir = new File(rootProject.buildDir, "docs/typescript/headers/")
-    options.doclet = "xyz.wagyourtail.doclet.tsdoclet.Main"
-    options.docletpath new File(rootProject.rootDir, "buildSrc/build/libs/buildSrc.jar")
-    options.addStringOption "v", version
-}
-
-task copyTSEnv(type: Copy, dependsOn: generateTSDoc) {
-    from new File(rootProject.rootDir, "docs/typescript")
-    into new File(rootProject.buildDir, "docs/typescript")
-}
-
-task generateWebDoc(type: Javadoc) {
-    source = sourceSets.main.allJava + sourceSets.core.allJava
-    classpath = sourceSets.main.compileClasspath
-    destinationDir = new File(rootProject.buildDir, "docs/web/")
-    options.doclet = "xyz.wagyourtail.doclet.webdoclet.Main"
-    options.docletpath new File(rootProject.rootDir, "buildSrc/build/libs/buildSrc.jar")
-    options.addStringOption "v", version
-    options.addStringOption "mcv", rootProject.minecraft_version
-    options {
-        links 'https://docs.oracle.com/javase/8/docs/api/', 'https://www.javadoc.io/doc/org.slf4j/slf4j-api/1.7.30/', 'https://javadoc.io/doc/com.neovisionaries/nv-websocket-client/latest/'
-    }
-}
-
-task copyWebDoc(type: Copy, dependsOn: generateWebDoc) {
-    from new File(rootProject.rootDir, "docs/web")
-    into new File(rootProject.buildDir, "docs/web")
-}
-
-task createDist(type: Copy, dependsOn: copyWebDoc) {
-    from(new File(rootProject.buildDir, "docs"))
-    into new File(rootProject.rootDir, "dist")
-}
-
-generatePyDoc.dependsOn(copyTSEnv)
-generateWebDoc.dependsOn(copyPyDoc)
-build.finalizedBy(createDist)
