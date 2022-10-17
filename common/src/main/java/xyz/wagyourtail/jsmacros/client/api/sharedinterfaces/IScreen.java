@@ -232,11 +232,5 @@ public interface IScreen extends IDraw2D<IScreen> {
      */
     IScreen reloadScreen();
 
-    /**
-     * DON'T TOUCH
-     * @since 1.4.1
-     */
-    void onRenderInternal(MatrixStack matrices, int mouseX, int mouseY, float delta);
-
     MethodWrapper<IScreen, Object, Object, ?> getOnClose();
 }
