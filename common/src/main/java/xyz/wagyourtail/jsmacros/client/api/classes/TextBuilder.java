@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
@@ -183,6 +184,15 @@ public class TextBuilder {
     public TextBuilder withStyle(StyleHelper style) {
         self.setStyle(style.getRaw());
         return this;
+    }
+
+    /**
+     * @return the width of this text.
+     *
+     * @since 1.8.4
+     */
+    public int getWidth() {
+        return MinecraftClient.getInstance().textRenderer.getWidth(head);
     }
     
     /**

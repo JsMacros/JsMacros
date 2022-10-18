@@ -4,21 +4,16 @@ import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import xyz.wagyourtail.jsmacros.client.access.IAnvilScreen;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
 /**
  * @author Etheradon
  * @since 1.8.4
  */
 @Mixin(AnvilScreen.class)
-public abstract class MixinAnvilScreen implements IAnvilScreen {
+public interface MixinAnvilScreen {
 
-    @Shadow
-    private TextFieldWidget nameField;
+    @Accessor
+    TextFieldWidget getNameField();
 
-    @Override
-    public TextFieldWidget jsmacros_getRenameText() {
-        return nameField;
-    }
 }

@@ -51,6 +51,7 @@
 	"jsmacros.settings.languages": "Languages",
 	"jsmacros.settings.profile": "Profile",
 	"jsmacros.settings.profile.list": "Profiles",
+	"jsmacros.settings.services": "Services",
 	"jsmacros.history": "History",
 	"jsmacros.autocomplete": "Auto Complete",
 	"jsmacros.font": "Font",
@@ -70,5 +71,9 @@
 	"jsmacros.servicename": "Service Name",
 	"jsmacros.useexternaleditor": "Use external editor",
 	"jsmacros.externaleditorcommand": "Command:",
-	"jsmacros.chat.tag.modified": "This message has been modified by JS Macros."
+	"jsmacros.chat.tag.modified": "This message has been modified by JS Macros.",
+	"jsmacros.showrunningservices": "Show running services",
+	"jsmacros.serviceautoreload": "Auto reload services on change",
+	"jsmacros.sortservices": "Service List Sort Method",
+	"jsmacros.showslotindexes": "Show slot indexes"
 }

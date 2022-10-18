@@ -5,10 +5,10 @@ import net.minecraft.advancement.AdvancementManager;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.util.Identifier;
 
-import xyz.wagyourtail.jsmacros.client.access.IAdvancementManager;
-import xyz.wagyourtail.jsmacros.client.access.IClientAdvancementManager;
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAdvancementManager;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinClientAdvancementManager;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @since 1.8.4
      */
     public Map<String, AdvancementHelper> getAdvancementsForIdentifiers() {
-        return ((IAdvancementManager) base).jsmacros_getAdvancementMap().entrySet().stream().collect(Collectors.toMap(
+        return ((MixinAdvancementManager) base).getAdvancements().entrySet().stream().collect(Collectors.toMap(
                 identifierAdvancementEntry -> identifierAdvancementEntry.getKey().toString(),
                 identifierAdvancementEntry -> new AdvancementHelper(identifierAdvancementEntry.getValue())
         ));
@@ -94,7 +94,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @since 1.8.4
      */
     public List<AdvancementHelper> getSubAdvancements() {
-        return ((IAdvancementManager) base).jsmacros_getDependents().stream().map(AdvancementHelper::new).toList();
+        return ((MixinAdvancementManager) base).getDependents().stream().map(AdvancementHelper::new).toList();
     }
 
     /**
@@ -104,7 +104,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @since 1.8.4
      */
     public AdvancementHelper getAdvancement(String identifier) {
-        return new AdvancementHelper(base.get(new Identifier(identifier)));
+        return new AdvancementHelper(base.get(RegistryHelper.parseIdentifier(identifier)));
     }
 
     /**
@@ -125,13 +125,13 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @since 1.8.4
      */
     public AdvancementProgressHelper getAdvancementProgress(String identifier) {
-        return new AdvancementProgressHelper(((IClientAdvancementManager) MinecraftClient.getInstance().player.networkHandler.getAdvancementHandler()).jsmacros_getAdvancementProgress().get(base.get(new Identifier(identifier))));
+        return new AdvancementProgressHelper(((MixinClientAdvancementManager) MinecraftClient.getInstance().player.networkHandler.getAdvancementHandler()).getAdvancementProgresses().get(base.get(RegistryHelper.parseIdentifier(identifier))));
     }
 
     private Stream<Map.Entry<Advancement, AdvancementProgress>> getProgressStream() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         assert player != null;
-        return ((IClientAdvancementManager) player.networkHandler.getAdvancementHandler()).jsmacros_getAdvancementProgress().entrySet().stream();
+        return ((MixinClientAdvancementManager) player.networkHandler.getAdvancementHandler()).getAdvancementProgresses().entrySet().stream();
     }
 
     @Override

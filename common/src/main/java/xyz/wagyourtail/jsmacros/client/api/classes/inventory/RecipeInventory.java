@@ -16,7 +16,7 @@ import xyz.wagyourtail.jsmacros.client.access.IRecipeBookResults;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
 import xyz.wagyourtail.jsmacros.client.api.helpers.RecipeHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
-import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.render.shared.interfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.List;

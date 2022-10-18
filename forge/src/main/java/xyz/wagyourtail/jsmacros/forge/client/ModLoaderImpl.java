@@ -12,6 +12,7 @@ import java.util.List;
  * @since 1.8.4
  */
 public class ModLoaderImpl implements ModLoader {
+
     @Override
     public boolean isDevEnv() {
         return !FMLEnvironment.production;
@@ -27,4 +28,13 @@ public class ModLoaderImpl implements ModLoader {
         return ModList.get().getMods().stream().map(ForgeModContainer::new).toList();
     }
 
+    @Override
+    public boolean isModLoaded(String modId) {
+        return ModList.get().isLoaded(modId);
+    }
+
+    @Override
+    public ForgeModContainer getMod(String modId) {
+        return ModList.get().getModContainerById(modId).map(c -> new ForgeModContainer(c.getModInfo())).orElse(null);
+    }
 }

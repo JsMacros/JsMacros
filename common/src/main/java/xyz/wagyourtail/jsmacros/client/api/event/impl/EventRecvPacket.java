@@ -11,12 +11,15 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.8.4
  */
 @Event(value = "RecvPacket")
+@SuppressWarnings("unused")
 public class EventRecvPacket implements BaseEvent {
 
     public final Packet<?> packet;
+    public final String type;
 
     public EventRecvPacket(Packet<?> packet) {
         this.packet = packet;
+        this.type = PacketByteBufferHelper.getPacketName(packet);
         profile.triggerEventNoAnything(this);
     }
 
@@ -34,7 +37,7 @@ public class EventRecvPacket implements BaseEvent {
 
     @Override
     public String toString() {
-        return String.format("%s:{}", this.getEventName());
+        return String.format("%s:{\"type\": \"%s\"}", this.getEventName(), type);
     }
 
 }

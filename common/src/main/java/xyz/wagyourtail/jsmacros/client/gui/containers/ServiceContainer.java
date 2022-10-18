@@ -31,7 +31,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
     public void init() {
         super.init();
 
-        int w  = width - 12;
+        int w = width - 12;
         addDrawableChild(new Button(x + 1, y + 1, w * 2 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.literal(service), (btn) -> {
             openOverlay(new TextPrompt(parent.width / 4, parent.height / 4, parent.width / 2, parent.height / 2, textRenderer, Text.literal("Enter new service name"), service, getFirstOverlayParent(), (newService) -> {
                 if (!Core.getInstance().services.renameService(service, newService)) {
@@ -50,7 +50,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
         boolean enabled = getEnabled();
         boolean running = getRunning();
 
-        addDrawableChild(new Button(x + w * 10 / 12 + 1, y + 1, w / 12 - 1, height - 2, textRenderer, enabled ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.translatable("jsmacros." + (enabled ? "enabled" : "disabled")), (btn) -> {
+        addDrawableChild(new Button(x + w * 10 / 12 + 1, y + 1, w / 12, height - 2, textRenderer, enabled ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.translatable("jsmacros." + (enabled ? "enabled" : "disabled")), (btn) -> {
             if (getEnabled()) {
                 Core.getInstance().services.disableService(service);
                 btn.setColor(0x70FF0000);
@@ -62,7 +62,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
             }
         }));
 
-        runningBtn = addDrawableChild(new Button(x + w * 11 / 12 + 1, y + 1, w / 12 - 1, height - 2, textRenderer, running ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.translatable("jsmacros." + (running ? "running" : "stopped")), (btn) -> {
+        runningBtn = addDrawableChild(new Button(x + w * 11 / 12 + 1, y + 1, w / 12, height - 2, textRenderer, running ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.translatable("jsmacros." + (running ? "running" : "stopped")), (btn) -> {
             if (getRunning()) {
                 Core.getInstance().services.stopService(service);
             } else {
@@ -97,6 +97,19 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        int w = width - 12;
+        //seperate
+        fill(matrices, x + w * 2 / 12, y + 1, x + w * 2 / 12 + 1, y + height - 1, 0xFFFFFFFF);
+        fill(matrices, x + w * 10 / 12, y + 1, x + w * 10 / 12 + 1, y + height - 1, 0xFFFFFFFF);
+        fill(matrices, x + w * 11 / 12, y + 1, x + w * 11 / 12 + 1, y + height - 1, 0xFFFFFFFF);
+        fill(matrices, x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
+        
+        // border
+        fill(matrices, x, y, x + width, y + 1, 0xFFFFFFFF);
+        fill(matrices, x, y + height - 1, x + width, y + height, 0xFFFFFFFF);
+        fill(matrices, x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
+        fill(matrices, x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
+        
         if (getRunning()) {
             runningBtn.setColor(0x7000FF00);
             runningBtn.setMessage(Text.translatable("jsmacros.running"));

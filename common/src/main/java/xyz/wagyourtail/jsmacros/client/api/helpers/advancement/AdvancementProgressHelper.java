@@ -4,7 +4,7 @@ import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.criterion.CriterionProgress;
 
 import com.google.common.collect.Iterables;
-import xyz.wagyourtail.jsmacros.client.access.IAdvancementProgress;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAdvancementProgress;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Date;
@@ -46,7 +46,7 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
      * @since 1.8.4
      */
     public Map<String, Date> getCriteria() {
-        return ((IAdvancementProgress) base).jsmacros_getCriteriaProgresses().entrySet().stream().filter(e -> e.getValue().getObtainedDate() != null).collect(Collectors.toMap(
+        return ((MixinAdvancementProgress) base).getCriteriaProgresses().entrySet().stream().filter(e -> e.getValue().getObtainedDate() != null).collect(Collectors.toMap(
                 Map.Entry::getKey,
                 criterionProgressEntry -> criterionProgressEntry.getValue().getObtainedDate()
         ));
@@ -58,7 +58,7 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
      * @since 1.8.4
      */
     public String[][] getRequirements() {
-        return ((IAdvancementProgress) base).jsmacros_getRequirements();
+        return ((MixinAdvancementProgress) base).getRequirements();
     }
 
     /**
@@ -85,7 +85,7 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
      * @since 1.8.4
      */
     public int countObtainedRequirements() {
-        return ((IAdvancementProgress) base).jsmacros_countObtainedRequirements();
+        return ((MixinAdvancementProgress) base).invokeCountObtainedRequirements();
     }
 
     /**
@@ -117,8 +117,8 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
 
     /**
      * @param criteria the criteria
-     * @return the completion date of the given criteria or {@code null} if the criteria is not
-     *         met yet.
+     * @return the completion date of the given criteria or {@code null} if the criteria is not met
+     *         yet.
      *
      * @since 1.8.4
      */
@@ -141,5 +141,5 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
     public String toString() {
         return String.format("AdvancementProgressHelper:{\"percent\": %f}", getPercentage());
     }
-    
+
 }

@@ -2,6 +2,9 @@ package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
+
+import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
+import xyz.wagyourtail.jsmacros.client.config.Sorting;
 import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceContainer;
 import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceListTopbar;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.FileChooser;
@@ -21,22 +24,10 @@ public class ServiceScreen extends MacroScreen {
     @Override
     protected void init() {
         super.init();
-
-        keyScreen.onPress = (btn) -> {
-            this.openParent();
-            if (this.parent instanceof EventMacrosScreen) ((MacroScreen) parent).openParent();
-        };
-        eventScreen.onPress = (btn) -> {
-            this.openParent();
-            if (this.parent instanceof KeyMacrosScreen) client.setScreen(new EventMacrosScreen(parent));
-        };
-
-        serviceScreen.onPress = null;
-
+        serviceScreen.setColor(0x4FFFFFFF);
         List<String> services = new ArrayList<>(Core.getInstance().services.getServices());
 
-        //TODO: sort services from topbar, for name let's just sort alphabetically
-        services.sort(String::compareTo);
+        services.sort(Core.getInstance().config.getOptions(ClientConfigV2.class).getServiceSortComparator());
 
         for (String service : services) {
             addService(service);

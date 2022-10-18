@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity;
 
 import net.minecraft.entity.player.PlayerEntity;
 
+import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.projectile.FishingBobberEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PlayerAbilitiesHelper;
 
@@ -122,9 +123,22 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
         return base.canResetTimeBySleeping();
     }
 
-    @Override
-    public String toString() {
-        return super.toString().replaceFirst("^Living", "Player");
+    /**
+     * @return the fishing bobber of the player, or {@code null} if the player is not fishing.
+     *
+     * @since 1.8.4
+     */
+    public FishingBobberEntityHelper getFishingBobber() {
+        return base.fishHook == null ? null : new FishingBobberEntityHelper(base.fishHook);
+    }
+
+    /**
+     * @return the player's score.
+     *
+     * @since 1.8.4
+     */
+    public int getScore() {
+        return base.getScore();
     }
     
 }

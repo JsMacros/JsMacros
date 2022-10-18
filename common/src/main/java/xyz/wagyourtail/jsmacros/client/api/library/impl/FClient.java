@@ -8,25 +8,26 @@ import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.realms.gui.screen.RealmsMainScreen;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.text.Text;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelStorageException;
 
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.api.helpers.FullOptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.FullOptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ModContainerHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ServerInfoHelper;
-import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemHelper;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.client.tick.TickSync;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -86,7 +87,7 @@ public class FClient extends PerExecLibrary {
      *
      * @since 1.8.4
      */
-    public PacketByteBufferHelper getPacketByteBuffer() {
+    public PacketByteBufferHelper createPacketByteBuffer() {
         return new PacketByteBufferHelper();
     }
     
@@ -373,8 +374,7 @@ public class FClient extends PerExecLibrary {
     public void cancelAllPings() {
         TickBasedEvents.serverListPinger.cancel();
     }
-
-
+    
     /**
      * @return a list of all loaded mods.
      *
@@ -382,6 +382,26 @@ public class FClient extends PerExecLibrary {
      */
     public List<? extends ModContainerHelper<?>> getLoadedMods() {
         return JsMacros.getModLoader().getLoadedMods();
+    }
+
+    /**
+     * @param modId the mod modId
+     * @return {@code true} if the mod with the given modId is loaded, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isModLoaded(String modId) {
+        return JsMacros.getModLoader().isModLoaded(modId);
+    }
+
+    /**
+     * @param modId the mod modId
+     * @return the mod container for the given modId or {@code null} if the mod is not loaded.
+     *
+     * @since 1.8.4
+     */
+    public ModContainerHelper<?> getMod(String modId) {
+        return JsMacros.getModLoader().getMod(modId);
     }
 
     /**
@@ -448,6 +468,24 @@ public class FClient extends PerExecLibrary {
      */
     public void exitGameForcefully() {
         System.exit(0);
+    }
+
+    /**
+     * @param packet the packet to send
+     * @see #createPacketByteBuffer()
+     * @since 1.8.4
+     */
+    public void sendPacket(Packet<?> packet) {
+        mc.getNetworkHandler().sendPacket(packet);
+    }
+
+    /**
+     * @param packet the packet to receive
+     * @see #createPacketByteBuffer()
+     * @since 1.8.4
+     */
+    public void receivePacket(Packet<ClientPlayPacketListener> packet) {
+        packet.apply(mc.getNetworkHandler());
     }
     
 }

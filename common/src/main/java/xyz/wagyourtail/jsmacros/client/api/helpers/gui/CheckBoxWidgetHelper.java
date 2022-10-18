@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.gui;
 
-import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.render.shared.interfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.wagyourgui.elements.CheckBox;
@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public class CheckBoxWidgetHelper extends ButtonWidgetHelper<CheckBox> {
+public class CheckBoxWidgetHelper extends ClickableWidgetHelper<CheckBoxWidgetHelper, CheckBox> {
 
     public CheckBoxWidgetHelper(CheckBox btn) {
         super(btn);
@@ -41,7 +41,7 @@ public class CheckBoxWidgetHelper extends ButtonWidgetHelper<CheckBox> {
     }
 
     /**
-     * @param checked wheter to check or uncheck this button.
+     * @param checked whether to check or uncheck this button
      * @return self for chaining.
      *
      * @since 1.8.4
@@ -58,7 +58,11 @@ public class CheckBoxWidgetHelper extends ButtonWidgetHelper<CheckBox> {
         return String.format("CheckBoxWidgetHelper:{\"message\": \"%s\", \"checked\": %b}", base.getMessage().getString(), isChecked());
     }
 
-    public static class CheckBoxBuilder extends AbstractWidgetBuilder<CheckBox, CheckBoxWidgetHelper> {
+    /**
+     * @author Etheradon
+     * @since 1.8.4
+     */
+    public static class CheckBoxBuilder extends AbstractWidgetBuilder<CheckBoxBuilder, CheckBox, CheckBoxWidgetHelper> {
 
         private boolean checked = false;
         private MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> action;

@@ -221,33 +221,7 @@ public abstract class CommandBuilder {
         return this;
     }
 
-    //TODO: Doesn't work client side because EntitySelector requires a server world, clientarguments does it client side.
-/*    public CommandBuilder playerArg(String name) {
-        return entityArg(name, true, true);
-    }
-
-    public CommandBuilder playersArg(String name) {
-        return entityArg(name, false, true);
-    }
-    
-    public CommandBuilder entityArg(String name, boolean singleTarget, boolean playersOnly) {
-        EntityArgumentType entityArgumentType;
-        if (singleTarget) {
-            if (playersOnly) {
-                entityArgumentType = EntityArgumentType.player();
-            } else {
-                entityArgumentType = EntityArgumentType.entity();
-            }
-        } else {
-            if (playersOnly) {
-                entityArgumentType = EntityArgumentType.players();
-            } else {
-                entityArgumentType = EntityArgumentType.entities();
-            }
-        }
-        argument(name, () -> entityArgumentType);
-        return this;
-    }*/
+    //TODO: Add client side EntitySelector, because the default one requires a server world.
 
     public CommandBuilder itemSlotArg(String name) {
         argument(name, ItemSlotArgumentType::new);
@@ -343,7 +317,7 @@ public abstract class CommandBuilder {
     public CommandBuilder suggestBlockPositions(Collection<BlockPosHelper> positions) {
         return suggestPositions(positions.stream().map(b -> b.getX() + " " + b.getY() + " " + b.getZ()).toList());
     }
-    
+
     /**
      * Positions are strings of the form "x y z" where x, y, and z are numbers or the default
      * minecraft selectors "~" and "^" followed by a number.
@@ -374,7 +348,7 @@ public abstract class CommandBuilder {
         );
         return this;
     }
-    
+
     /**
      * @since 1.6.5
      * @param callback

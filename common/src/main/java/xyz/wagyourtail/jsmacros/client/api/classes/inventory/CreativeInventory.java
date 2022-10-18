@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.math.MathHelper;
 
-import xyz.wagyourtail.jsmacros.client.access.ICreativeInventoryScreen;
 import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinCreativeInventoryScreen;
 
 import java.util.List;
 
@@ -34,8 +34,8 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @param amount the amount to scroll by, between -1 and 1
      * @since 1.8.4
      */
-    public void scroll(float amount) {
-        scrollTo(getInterface().jsmacros_getScrollPosition() + amount);
+    public void scroll(double amount) {
+        scrollTo((float) (((MixinCreativeInventoryScreen) inventory).getScrollPosition() + amount));
     }
 
     /**
@@ -44,10 +44,10 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @param position the position to scroll to, between 0 and 1
      * @since 1.8.4
      */
-    public void scrollTo(float position) {
-        if (getInterface().jsmacros_hasScrollbar()) {
+    public void scrollTo(double position) {
+        if (((MixinCreativeInventoryScreen) inventory).invokeHasScrollbar()) {
             position = MathHelper.clamp(position, 0, 1);
-            handler.scrollItems(position);
+            handler.scrollItems((float) position);
         }
     }
 
@@ -65,11 +65,11 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public void search(String search) {
-        if (getInterface().jsmacros_getSelectedTab() != ItemGroup.SEARCH.getIndex()) {
+        if (((MixinCreativeInventoryScreen) inventory).getSelectedTab() != ItemGroup.SEARCH.getIndex()) {
             return;
         }
-        getInterface().jsmacros_getSearchField().setText(search);
-        getInterface().jsmacros_search();
+        ((MixinCreativeInventoryScreen) inventory).getSearchBox().setText(search);
+        ((MixinCreativeInventoryScreen) inventory).invokeSearch();
     }
 
     /**
@@ -108,7 +108,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     }
 
     private void selectTab(ItemGroup group) {
-        mc.execute(() -> getInterface().jsmacros_setSelectedTab(group.getIndex()));
+        mc.execute(() -> ((MixinCreativeInventoryScreen) inventory).invokeSetSelectedTab(ItemGroup.GROUPS[group.getIndex()]));
     }
 
     /**
@@ -213,10 +213,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      */
     public ItemStackHelper getBoots() {
         return getSlot(36);
-    }
-
-    private ICreativeInventoryScreen getInterface() {
-        return (ICreativeInventoryScreen) inventory;
     }
 
     @Override

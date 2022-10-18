@@ -7,12 +7,12 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import com.google.common.collect.ImmutableMap;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.CustomImage;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.ScriptScreen;
-import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
-import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.render.CustomImage;
+import xyz.wagyourtail.jsmacros.client.api.render.Draw2D;
+import xyz.wagyourtail.jsmacros.client.api.render.Draw3D;
+import xyz.wagyourtail.jsmacros.client.api.render.ScriptScreen;
+import xyz.wagyourtail.jsmacros.client.api.render.shared.interfaces.IDraw2D;
+import xyz.wagyourtail.jsmacros.client.api.render.shared.interfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
@@ -47,24 +47,24 @@ public class FHud extends BaseLibrary {
     
     /**
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen
+     * @see IScreen
      * 
      * @since 1.0.5
      * 
      * @param title
      * @param dirtBG boolean of whether to use a dirt background or not.
-     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen IScreen} Object.
+     * @return a new {@link IScreen IScreen} Object.
      */
     public ScriptScreen createScreen(String title, boolean dirtBG) {
         return new ScriptScreen(title, dirtBG);
     }
     
     /**
-     * Opens a {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen IScreen} Object.
+     * Opens a {@link IScreen IScreen} Object.
      * 
      * @since 1.0.5
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen
+     * @see IScreen
      * 
      * @param s
      */
@@ -79,9 +79,9 @@ public class FHud extends BaseLibrary {
      * 
      * @since 1.2.7
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen
+     * @see IScreen
      * 
-     * @return the currently open Screen as an {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen IScreen}
+     * @return the currently open Screen as an {@link IScreen IScreen}
      */
     public IScreen getOpenScreen() {
         return (IScreen) mc.currentScreen;
@@ -152,7 +152,7 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.5
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
+     * @see IDraw2D
      *
      * @return
      */
@@ -163,9 +163,9 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.5
      * 
-     * Registers an {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D IDraw2D} to be rendered.
+     * Registers an {@link IDraw2D IDraw2D} to be rendered.
      * @deprecated since 1.6.5, use {@link Draw2D#register()} instead.
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
+     * @see IDraw2D
      * 
      * @param overlay
      */
@@ -178,9 +178,9 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.5
      * 
-     * Unregisters an {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D IDraw2D} to stop it being rendered.
+     * Unregisters an {@link IDraw2D IDraw2D} to stop it being rendered.
      * @deprecated since 1.6.5, use {@link Draw2D#unregister()} instead.
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
+     * @see IDraw2D
      * 
      * @param overlay
      */
@@ -192,9 +192,9 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.5
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
+     * @see IDraw2D
      * 
-     * @return A list of current {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D IDraw2Ds}.
+     * @return A list of current {@link IDraw2D IDraw2Ds}.
      */
     public List<IDraw2D<Draw2D>> listDraw2Ds() {
         return ImmutableList.copyOf(overlays);
@@ -205,7 +205,7 @@ public class FHud extends BaseLibrary {
      * 
      * clears the Draw2D render list.
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
+     * @see IDraw2D
      */
     public void clearDraw2Ds() {
         overlays.clear();

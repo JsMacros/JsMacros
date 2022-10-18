@@ -17,6 +17,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import com.google.gson.JsonParseException;
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EnchantmentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -36,6 +37,10 @@ import java.util.stream.Collectors;
 public class ItemStackHelper extends BaseHelper<ItemStack> {
     private static final Style LORE_STYLE = Style.EMPTY.withColor(Formatting.DARK_PURPLE).withItalic(true);
     protected static final MinecraftClient mc = MinecraftClient.getInstance();
+
+    public ItemStackHelper(String id, int count) {
+        super(new ItemStack(Registry.ITEM.get(RegistryHelper.parseIdentifier(id)), count));
+    }
     
     public ItemStackHelper(ItemStack i) {
         super(i);

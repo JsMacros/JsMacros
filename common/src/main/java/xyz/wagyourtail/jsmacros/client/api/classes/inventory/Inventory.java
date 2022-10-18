@@ -47,6 +47,7 @@ public class Inventory<T extends HandledScreen<?>> {
 
     public static Inventory<?> create() {
         Inventory<?> inv = create(mc.currentScreen);
+        //what to do with horses?
         if (inv == null) {
             assert mc.player != null;
             if (mc.player.getAbilities().creativeMode) {
@@ -429,9 +430,6 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return the item in the slot.
      */
     public ItemStackHelper getSlot(int slot) {
-        if (inventory instanceof CreativeInventoryScreen && ((CreativeInventoryScreen) this.inventory).getSelectedTab() == ItemGroup.INVENTORY.getIndex()) {
-            return new ItemStackHelper(player.getInventory().getStack(slot));
-        }
         return new ItemStackHelper(this.handler.getSlot(slot).getStack());
     }
 
@@ -571,26 +569,24 @@ public class Inventory<T extends HandledScreen<?>> {
     private Map<String, int[]> getMapInternal() {
         Map<String, int[]> map = new HashMap<>();
         int slots = getTotalSlots();
-        if ((this.inventory instanceof CreativeInventoryScreen && ((CreativeInventoryScreen) this.inventory).getSelectedTab() == ItemGroup.INVENTORY.getIndex())) {
-            slots = 41;
-            map.put("hotbar", JsMacros.range(0, 8));
-            map.put("offhand", new int[]{40});
-            map.put("main", JsMacros.range(9, 35));
-            map.put("boots", new int[]{36});
-            map.put("leggings", new int[]{37});
-            map.put("chestplate", new int[]{38});
-            map.put("helmet", new int[]{39});
-            map.put("delete", new int[]{0});
-        } else if (this.inventory instanceof InventoryScreen) {
+        if (this.inventory instanceof InventoryScreen || (this.inventory instanceof CreativeInventoryScreen && ((CreativeInventoryScreen) this.inventory).getSelectedTab() == ItemGroup.INVENTORY.getIndex())) {
+            if (this.inventory instanceof CreativeInventoryScreen) {
+                --slots;
+            }
             map.put("hotbar", JsMacros.range(slots - 10, slots - 1)); // range(36, 45);
-            map.put("offhand", new int[] { slots - 1 }); // range(45, 46);
+            map.put("offhand", new int[]{slots - 1}); // range(45, 46);
             map.put("main", JsMacros.range(slots - 10 - 27, slots - 10)); // range(9, 36);
-            map.put("boots", new int[] { slots - 10 - 27 - 1 }); // range(8, 9);
-            map.put("leggings", new int[] { slots - 10 - 27 - 2 }); // range(7, 8);
-            map.put("chestplate", new int[] { slots - 10 - 27 - 3 }); // range(6, 7);
-            map.put("helmet", new int[] { slots - 10 - 27 - 4 }); // range(5, 6);
+            map.put("boots", new int[]{slots - 10 - 27 - 1}); // range(8, 9);
+            map.put("leggings", new int[]{slots - 10 - 27 - 2}); // range(7, 8);
+            map.put("chestplate", new int[]{slots - 10 - 27 - 3}); // range(6, 7);
+            map.put("helmet", new int[]{slots - 10 - 27 - 4}); // range(5, 6);
             map.put("crafting_in", JsMacros.range(slots - 10 - 27 - 4 - 4, slots - 10 - 27 - 4)); // range(1, 5);
-            map.put("craft_out", new int[] { slots - 10 - 27 - 4 - 4 - 1 });
+            map.put("craft_out", new int[]{slots - 10 - 27 - 4 - 4 - 1});
+            if (this.inventory instanceof CreativeInventoryScreen) {
+                map.put("delete", new int[]{46});
+                map.remove("crafting_in");
+                map.remove("craft_out");
+            }
         } else {
             map.put("hotbar", JsMacros.range(slots - 9, slots));
             map.put("main", JsMacros.range(slots - 9 - 27, slots - 9));

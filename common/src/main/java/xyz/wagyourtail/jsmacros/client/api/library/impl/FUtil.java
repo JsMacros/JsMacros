@@ -46,6 +46,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BossBarHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ChatHudLineHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ChunkHelper;
@@ -77,7 +78,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.FluidStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.gui.ButtonWidgetHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.gui.ClickableWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.CheckBoxWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.CyclingButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.LockButtonWidgetHelper;
@@ -253,29 +254,9 @@ public class FUtil extends BaseLibrary {
         } else if (obj instanceof TextFieldWidget textFieldWidget) {
             return new TextFieldWidgetHelper(textFieldWidget);
         } else if (obj instanceof ClickableWidget clickableWidget) {
-            return new ButtonWidgetHelper<>(clickableWidget);
+            return new ClickableWidgetHelper<>(clickableWidget);
         }
         return null;
-    }
-
-    /**
-     * @param text the text to check
-     * @return the pixel width of the given text for the current font renderer.
-     *
-     * @since 1.8.4
-     */
-    public int getTextWidth(TextHelper text) {
-        return mc.textRenderer.getWidth(text.getRaw());
-    }
-
-    /**
-     * @param text the text to check
-     * @return the pixel width of the given text for the current font renderer.
-     *
-     * @since 1.8.4
-     */
-    public int getTextWidth(String text) {
-        return mc.textRenderer.getWidth(text);
     }
 
     /**
@@ -451,7 +432,7 @@ public class FUtil extends BaseLibrary {
      * @since 1.8.4
      */
     public Identifier getIdentifier(String identifier) {
-        return new Identifier(identifier);
+        return RegistryHelper.parseIdentifier(identifier);
     }
 
     /**

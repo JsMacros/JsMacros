@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.gui;
 
 import net.minecraft.client.gui.widget.LockButtonWidget;
 
-import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.render.shared.interfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public class LockButtonWidgetHelper extends ButtonWidgetHelper<LockButtonWidget> {
+public class LockButtonWidgetHelper extends ClickableWidgetHelper<LockButtonWidgetHelper, LockButtonWidget> {
 
     public LockButtonWidgetHelper(LockButtonWidget btn) {
         super(btn);
@@ -48,7 +48,11 @@ public class LockButtonWidgetHelper extends ButtonWidgetHelper<LockButtonWidget>
         return String.format("LockButtonWidgetHelper:{\"message\": \"%s\", \"locked\": %b}", base.getMessage().getString(), isLocked());
     }
 
-    public static class LockButtonBuilder extends AbstractWidgetBuilder<LockButtonWidget, LockButtonWidgetHelper> {
+    /**
+     * @author Etheradon
+     * @since 1.8.4
+     */
+    public static class LockButtonBuilder extends AbstractWidgetBuilder<LockButtonBuilder, LockButtonWidget, LockButtonWidgetHelper> {
 
         private boolean locked = false;
         private MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> action;

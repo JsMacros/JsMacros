@@ -4,8 +4,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 
-import xyz.wagyourtail.jsmacros.client.access.ITextFieldWidget;
-import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.render.shared.interfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinTextFieldWidget;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 1.0.5
  */
 @SuppressWarnings("unused")
-public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
+public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidgetHelper, TextFieldWidget> {
     public TextFieldWidgetHelper(TextFieldWidget t) {
         super(t);
     }
@@ -98,7 +98,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
      * @since 1.8.4
      */
     public boolean isEditable() {
-        return ((ITextFieldWidget) base).jsmacros_isEditable();
+        return ((MixinTextFieldWidget) base).getEditable();
     }
     
     /**
@@ -139,7 +139,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
      * @since 1.8.4
      */
     public int getMaxLength() {
-        return ((ITextFieldWidget) base).jsmacros_getMaxLength();
+        return ((MixinTextFieldWidget) base).getMaxLength();
     }
 
     /**
@@ -215,8 +215,12 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     public String toString() {
         return String.format("TextFieldWidgetHelper:{\"text\": \"%s\"}", base.getText());
     }
-    
-    public static class TextFieldBuilder extends AbstractWidgetBuilder<TextFieldWidget, TextFieldWidgetHelper> {
+
+    /**
+     * @author Etheradon
+     * @since 1.8.4
+     */
+    public static class TextFieldBuilder extends AbstractWidgetBuilder<TextFieldBuilder, TextFieldWidget, TextFieldWidgetHelper> {
 
         private String suggestion = "";
         private MethodWrapper<String, IScreen, Object, ?> action;

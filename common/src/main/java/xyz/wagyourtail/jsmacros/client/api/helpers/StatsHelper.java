@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinStatHandler;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -160,11 +161,11 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @since 1.8.4
      */
     public int getCustomStat(String id) {
-        return base.getStat(Stats.CUSTOM.getOrCreateStat(new Identifier(id)));
+        return base.getStat(Stats.CUSTOM.getOrCreateStat(RegistryHelper.parseIdentifier(id)));
     }
 
     private <T> int getStat(StatType<T> type, Registry<T> registry, String id) {
-        return base.getStat(type.getOrCreateStat(registry.get(Identifier.tryParse(id))));
+        return base.getStat(type.getOrCreateStat(registry.get(RegistryHelper.parseIdentifier(id))));
     }
 
     /**
@@ -174,7 +175,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @since 1.8.4
      */
     public String getCustomFormattedStat(String id) {
-        Stat<Identifier> stat = Stats.CUSTOM.getOrCreateStat(new Identifier(id));
+        Stat<Identifier> stat = Stats.CUSTOM.getOrCreateStat(RegistryHelper.parseIdentifier(id));
         return stat.format(base.getStat(stat));
     }
 

@@ -3,10 +3,9 @@ package xyz.wagyourtail.jsmacros.client.mixins.access;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.criterion.CriterionProgress;
 
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import xyz.wagyourtail.jsmacros.client.access.IAdvancementProgress;
+import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.Map;
 
@@ -15,30 +14,15 @@ import java.util.Map;
  * @since 1.8.4
  */
 @Mixin(AdvancementProgress.class)
-public abstract class MixinAdvancementProgress implements IAdvancementProgress {
+public interface MixinAdvancementProgress {
 
-    @Shadow
-    private String[][] requirements;
+    @Accessor
+    String[][] getRequirements();
 
-    @Shadow
-    protected abstract int countObtainedRequirements();
+    @Invoker
+    int invokeCountObtainedRequirements();
 
-    @Shadow
-    @Final
-    Map<String, CriterionProgress> criteriaProgresses;
+    @Accessor
+    Map<String, CriterionProgress> getCriteriaProgresses();
 
-    @Override
-    public int jsmacros_countObtainedRequirements() {
-        return countObtainedRequirements();
-    }
-
-    @Override
-    public String[][] jsmacros_getRequirements() {
-        return requirements;
-    }
-
-    @Override
-    public Map<String, CriterionProgress> jsmacros_getCriteriaProgresses() {
-        return criteriaProgresses;
-    }
 }

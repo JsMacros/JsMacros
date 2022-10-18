@@ -14,10 +14,6 @@ import java.util.Arrays;
 @Mixin(PalettedContainer.class)
 public class MixinPalettedContainer<T> implements IPalettedContainer<T> {
 
-    @Shadow
-    @Final
-    private PalettedContainer.PaletteProvider paletteProvider;
-
     @Unique
     private Field dataField;
 
@@ -34,11 +30,6 @@ public class MixinPalettedContainer<T> implements IPalettedContainer<T> {
             }
         }
         throw new RuntimeException(Arrays.toString(PalettedContainer.class.getDeclaredFields()));
-    }
-
-    @Override
-    public PalettedContainer.PaletteProvider jsmacros_getPaletteProvider() {
-        return paletteProvider;
     }
 
     private Object getField(Field f) {

@@ -20,7 +20,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.entity.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
+import xyz.wagyourtail.jsmacros.client.api.classes.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.movement.MovementDummy;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -421,10 +421,10 @@ public class FPlayer extends BaseLibrary {
      * @param yaw the relative yaw for the player
      * @since 1.4.0
      */
-    public void moveForward(float yaw) {
+    public void moveForward(double yaw) {
         PlayerInput input = new PlayerInput();
         input.movementForward = 1.0F;
-        input.yaw = getPlayer().getYaw() + yaw;
+        input.yaw = (float) (getPlayer().getYaw() + yaw);
         addInput(input);
     }
 
@@ -434,10 +434,10 @@ public class FPlayer extends BaseLibrary {
      * @param yaw the relative yaw for the player
      * @since 1.4.0
      */
-    public void moveBackward(float yaw) {
+    public void moveBackward(double yaw) {
         PlayerInput input = new PlayerInput();
         input.movementForward = -1.0F;
-        input.yaw = getPlayer().getYaw() + yaw;
+        input.yaw = (float) (getPlayer().getYaw() + yaw);
         addInput(input);
     }
 
@@ -446,10 +446,10 @@ public class FPlayer extends BaseLibrary {
      * @param yaw the relative yaw for the player
      * @since 1.4.2
      */
-    public void moveStrafeLeft(float yaw) {
+    public void moveStrafeLeft(double yaw) {
         PlayerInput input = new PlayerInput();
         input.movementSideways = 1.0F;
-        input.yaw = getPlayer().getYaw() + yaw;
+        input.yaw = (float) (getPlayer().getYaw() + yaw);
         addInput(input);
     }
 
@@ -458,10 +458,10 @@ public class FPlayer extends BaseLibrary {
      * @param yaw the relative yaw for the player
      * @since 1.4.2
      */
-    public void moveStrafeRight(float yaw) {
+    public void moveStrafeRight(double yaw) {
         PlayerInput input = new PlayerInput();
         input.movementSideways = -1.0F;
-        input.yaw = getPlayer().getYaw() + yaw;
+        input.yaw = (float) (getPlayer().getYaw() + yaw);
         addInput(input);
     }
 }

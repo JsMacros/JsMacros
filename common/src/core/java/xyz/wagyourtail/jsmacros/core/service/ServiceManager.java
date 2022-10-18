@@ -1,21 +1,30 @@
 package xyz.wagyourtail.jsmacros.core.service;
 
 import com.google.common.collect.ImmutableSet;
+import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author Wagyourtail
  * @since 1.6.3
  */
 public class ServiceManager {
+    protected Timer timer;
+    protected final Object2LongMap<String> lastModifiedMap = new Object2LongArrayMap<>();
+    protected final Set<String> crashedServices = new HashSet<>();
+    
     protected final Core<?, ?> runner;
     protected final Map<String, Pair<ServiceTrigger, EventContainer<?>>> registeredServices = new LinkedHashMap<>();
 
@@ -160,6 +169,8 @@ public class ServiceManager {
     public synchronized ServiceStatus disableService(String name) {
         Pair<ServiceTrigger, EventContainer<?>> service = registeredServices.get(name);
         if (service == null) return ServiceStatus.UNKNOWN;
+        lastModifiedMap.removeLong(service.getT().file);
+        crashedServices.remove(name);
         if (service.getT().enabled) {
             service.getT().enabled = false;
             return ServiceStatus.ENABLED;
@@ -167,6 +178,32 @@ public class ServiceManager {
         return ServiceStatus.DISABLED;
     }
 
+    /**
+     * @param name the name of the service to check
+     * @return {@code true} if the service is running, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public synchronized boolean isRunning(String name) {
+        Pair<ServiceTrigger, EventContainer<?>> service = registeredServices.get(name);
+        if (service == null) {
+            return false;
+        }
+        ServiceStatus status = status(name);
+        return status == ServiceStatus.RUNNING || status == ServiceStatus.ENABLED;
+    }
+
+    /**
+     * @param name the name of the service to check
+     * @return {@code true} if the service is enabled, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public synchronized boolean isEnabled(String name) {
+        Pair<ServiceTrigger, EventContainer<?>> service = registeredServices.get(name);
+        return service != null && service.getT().enabled;
+    }
+    
     /**
      * @param name service name
      *
@@ -238,6 +275,47 @@ public class ServiceManager {
         runner.config.saveConfig();
     }
 
+    public void stopListener() {
+        timer.cancel();
+    }
+
+    public void startListener() {
+        lastModifiedMap.clear();
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                for (Map.Entry<String, Pair<ServiceTrigger, EventContainer<?>>> service : registeredServices.entrySet()) {
+                    String file = service.getValue().getT().file;
+                    String name = service.getKey();
+                    //only restart enabled and running services, i.e. services that are supposed to run
+                    //if the service is not running because it crashed, try to restart it
+                    if (isEnabled(name) && (isRunning(name) || crashedServices.contains(name))) {
+                        long lastModified = runner.config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile().lastModified();
+                        if (!lastModifiedMap.containsKey(file)) {
+                            lastModifiedMap.put(file, lastModified);
+                            continue;
+                        }
+                        //just assume that if the file was changed, so was the content. Otherwise, use Adler-32 or MD5 checksum
+                        if (lastModifiedMap.getLong(file) != lastModified) {
+                            restartService(name);
+                            lastModifiedMap.put(file, lastModified);
+                            crashedServices.remove(name);
+                        }
+                    }
+                }
+            }
+        }, 0, 1000);
+    }
+
+    public void markCrashed(String serviceName) {
+        crashedServices.add(serviceName);
+    }
+
+    //Enabled = running & enabled
+    //Disabled = !running & !enabled
+    //Running = running & !enabled
+    //Stopped = !running & enabled
     public enum ServiceStatus {
         ENABLED, DISABLED, // returned by start/stop
         RUNNING, STOPPED, // returned by enable/disable

@@ -7,33 +7,37 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.RaycastContext;
+
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownEntry;
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownManager;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.advancement.AdvancementManagerHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
-import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
+import xyz.wagyourtail.jsmacros.client.api.classes.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
@@ -103,6 +107,100 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         PositionCommon.Vec3D vec = new PositionCommon.Vec3D(base.getX(), base.getY() + base.getEyeHeight(base.getPose()), base.getZ(), x, y, z);
         lookAt(vec.getYaw(), vec.getPitch());
         return this;
+    }
+
+    /**
+     * @param x the x coordinate of the block to look at
+     * @param y the y coordinate of the block to look at
+     * @param z the z coordinate of the block to look at
+     * @return {@code true} if the player is targeting the specified block, {@code false}
+     *         otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean tryLookAt(int x, int y, int z) {
+        return tryLookAt(new BlockPosHelper(x, y, z));
+    }
+    
+    /**
+     * Will try many rotations to find one that will make the player target the specified block. If
+     * successful, the player will be turned towards the block and {@code true} will be returned. If
+     * {@code false} is returned, the player will keep its current rotation.
+     *
+     * @param pos the position of the block to look at
+     * @return {@code true} if the player is targeting the specified block, {@code false}
+     *         otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean tryLookAt(BlockPosHelper pos) {
+        BlockState state = MinecraftClient.getInstance().world.getBlockState(pos.getRaw());
+        VoxelShape shape = state.getOutlineShape(MinecraftClient.getInstance().world, pos.getRaw());
+        if (shape.isEmpty()) {
+            return false;
+        }
+        PositionCommon.Pos3D eyePos = getEyePos();
+        double distance = base.getEyePos().distanceTo(new Vec3d(pos.getX(), pos.getY(), pos.getZ()));
+
+        List<Box> bounds = shape.getBoundingBoxes().stream().map(b -> b.offset(pos.getRaw())).toList();
+        //scale offset with distance to the target. Closer targets should have more rays to find a possible angle
+        double offset = Math.min(0.25, 0.01 * Math.max(distance, 0.5));
+        for (Box bound : bounds) {
+            Vec3d center = bound.getCenter();
+            double xDiff = (bound.maxX - bound.minX) / 2;
+            double yDiff = (bound.maxY - bound.minY) / 2;
+            double zDiff = (bound.maxZ - bound.minZ) / 2;
+            //round the offsets down so they perfectly fit the bounds
+            double xOffset = xDiff / Math.ceil(xDiff / offset);
+            double yOffset = yDiff / Math.ceil(yDiff / offset);
+            double zOffset = zDiff / Math.ceil(zDiff / offset);
+            //iterate alternating around the center to iterate outwards which will give smoother results
+            for (int yc = 0; yc < (int) (yDiff / yOffset) * 2 + 2; yc++) {
+                for (int xc = 0; xc < (int) (xDiff / xOffset) * 2 + 2; xc++) {
+                    for (int zc = 0; zc < (int) (zDiff / zOffset) * 2 + 2; zc++) {
+                        //don't remove the integer division, because we want to round down the value
+                        //the 0.999 helps with edge cases, literally
+                        double x = center.x + ((xc & 1) == 0 ? 1 : -1) * xOffset * (xc / 2) * 0.999;
+                        double y = center.y + ((yc & 1) == 0 ? 1 : -1) * yOffset * (yc / 2) * 0.999;
+                        double z = center.z + ((zc & 1) == 0 ? 1 : -1) * zOffset * (zc / 2) * 0.999;
+                        BlockHitResult result = base.world.raycast(new RaycastContext(base.getEyePos(), new Vec3d(x, y, z), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, base));
+                        if (result.getType() == HitResult.Type.BLOCK && result.getBlockPos().equals(pos.getRaw())) {
+                            PositionCommon.Vec3D vec = new PositionCommon.Vec3D(eyePos, new PositionCommon.Pos3D(x, y, z));
+                            lookAt(vec.getYaw(), vec.getPitch());
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public ClientPlayerEntityHelper<T> turnLeft() {
+        return lookAt(getYaw() - 90, getPitch());
+    }
+
+    /**
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public ClientPlayerEntityHelper<T> turnRight() {
+        return lookAt(getYaw() + 90, getPitch());
+    }
+
+    /**
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public ClientPlayerEntityHelper<T> turnBack() {
+        return lookAt(getYaw() + 180, getPitch());
     }
 
     /**
@@ -431,9 +529,9 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      */
     public Map<String, Integer> getItemCooldownsRemainingTicks() {
-        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).getManagerTicks();
-        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).getCooldownItems();
-        return map.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getName().getString(), e -> e.getValue().getEndTick() - tick));
+        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
+        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();
+        return map.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getName().getString(), e -> e.getValue().jsmacros_getEndTick() - tick));
     }
 
     /**
@@ -442,11 +540,11 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      */
     public int getItemCooldownRemainingTicks(String item) {
-        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).getManagerTicks();
-        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).getCooldownItems();
-        IItemCooldownEntry entry = map.get(Registry.ITEM.get(new Identifier(item)));
+        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
+        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();
+        IItemCooldownEntry entry = map.get(Registry.ITEM.get(RegistryHelper.parseIdentifier(item)));
         if (entry == null) return -1;
-        return entry.getEndTick() - tick;
+        return entry.jsmacros_getEndTick() - tick;
     }
 
     /**
@@ -454,9 +552,9 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      */
     public Map<String, Integer>  getTicksSinceCooldownsStart() {
-        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).getManagerTicks();
-        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).getCooldownItems();
-        return map.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getName().getString(), e -> e.getValue().getStartTick() - tick));
+        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
+        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();
+        return map.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getName().getString(), e -> e.getValue().jsmacros_getStartTick() - tick));
     }
 
     /**
@@ -465,11 +563,11 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      */
     public int getTicksSinceCooldownStart(String item) {
-        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).getManagerTicks();
-        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).getCooldownItems();
-        IItemCooldownEntry entry = map.get(Registry.ITEM.get(new Identifier(item)));
+        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
+        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();
+        IItemCooldownEntry entry = map.get(Registry.ITEM.get(RegistryHelper.parseIdentifier(item)));
         if (entry == null) return -1;
-        return entry.getStartTick() - tick;
+        return entry.jsmacros_getStartTick() - tick;
     }
 
     /**
@@ -578,10 +676,5 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
             return 0;
         }
         return (int) Math.ceil(1 / damage);
-    }
-    
-    @Override
-    public String toString() {
-        return super.toString().replaceFirst("^Player", "ClientPlayer");
     }
 }

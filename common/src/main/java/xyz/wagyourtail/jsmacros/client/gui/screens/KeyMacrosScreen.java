@@ -27,11 +27,6 @@ public class KeyMacrosScreen extends MacroScreen {
         super.init();
         keyScreen.setColor(0x4FFFFFFF);
 
-        eventScreen.onPress = (btn) -> {
-            assert client != null;
-            client.setScreen(new EventMacrosScreen(this));
-        };
-
         Set<IEventListener> listeners = Core.getInstance().eventRegistry.getListeners().get(EventKey.class.getAnnotation(Event.class).value());
         List<ScriptTrigger> macros = new ArrayList<>();
 

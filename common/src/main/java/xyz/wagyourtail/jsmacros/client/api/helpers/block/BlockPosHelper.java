@@ -4,7 +4,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
+import xyz.wagyourtail.jsmacros.client.api.classes.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -194,6 +194,24 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     /**
+     * @return the block position converted to the respective nether coordinates.
+     *
+     * @since 1.8.4
+     */
+    public BlockPosHelper toNetherCoords() {
+        return new BlockPosHelper(getX() / 8, getY(), getZ() / 8);
+    }
+
+    /**
+     * @return the block position converted to the respective overworld coordinates.
+     *
+     * @since 1.8.4
+     */
+    public BlockPosHelper toOverworldCoords() {
+        return new BlockPosHelper(getX() * 8, getY(), getZ() * 8);
+    }
+    
+    /**
      * @param entity the entity to get the distance to
      * @return the distance of this position to the given entity.
      *
@@ -231,7 +249,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
      *
      * @since 1.8.4
      */
-    public double distanceTo(float x, float y, float z) {
+    public double distanceTo(double x, double y, double z) {
         return Math.sqrt(base.getSquaredDistance(x, y, z));
     }
 

@@ -6,9 +6,11 @@ import javassist.NotFoundException;
 import org.joor.Reflect;
 import xyz.wagyourtail.Util;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.classes.Mappings;
 import xyz.wagyourtail.jsmacros.core.classes.WrappedClassInstance;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
+import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder;
@@ -346,6 +348,22 @@ public class FReflection extends PerExecLibrary {
     }
 
     /**
+     * A library class always has a {@link Library} annotation containing the name of the library,
+     * which may differ from the actual class name. A library class must also extend
+     * {@link BaseLibrary} in some way, either directly or through
+     * {@link PerExecLibrary PerExecLibrary},
+     * {@link xyz.wagyourtail.jsmacros.core.library.PerExecLanguageLibrary PerExecLanguageLibrary}
+     * or {@link xyz.wagyourtail.jsmacros.core.library.PerLanguageLibrary PerLanguageLibrary}.
+     *
+     * @param className the class name of the library
+     * @param javaCode  the source code of the library
+     * @since 1.8.4
+     */
+    public void createLibrary(String className, String javaCode) {
+        Core.getInstance().libraryRegistry.addLibrary((Class<? extends BaseLibrary>) compileJavaClass(className, javaCode));
+    }
+    
+    /**
      * To compile a java class, the game must be run with the java development kit (JDK) and not the
      * default java runtime environment (JRE). To change the used java version, you must first
      * download the correct JDK for the Minecraft version and then go to the profile options and
@@ -357,7 +375,7 @@ public class FReflection extends PerExecLibrary {
      * normal hot swapping, already created instances of the class will not be updated. Thus, it's
      * important to know which version of the class you're using when instantiating it.
      *
-     * @param className the fully qualified name of the class, including the package.
+     * @param className the fully qualified name of the class, including the package
      * @param code      the java code to compile
      * @return the compiled class.
      *

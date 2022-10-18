@@ -21,12 +21,12 @@ public class MixinItemCooldownManager implements IItemCooldownManager {
     @Shadow private int tick;
 
     @Override
-    public Map<Item, IItemCooldownEntry> getCooldownItems() {
+    public Map<Item, IItemCooldownEntry> jsmacros_getCooldownItems() {
         return entries;
     }
 
     @Override
-    public int getManagerTicks() {
+    public int jsmacros_getManagerTicks() {
         return tick;
     }
 

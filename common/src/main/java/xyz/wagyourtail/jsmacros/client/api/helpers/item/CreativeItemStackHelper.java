@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EnchantmentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -93,7 +94,7 @@ public class CreativeItemStackHelper extends AdvancedItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper addEnchantment(String id, int level) {
-        return addEnchantment(Registry.ENCHANTMENT.get(Identifier.tryParse(id)), level);
+        return addEnchantment(Registry.ENCHANTMENT.get(RegistryHelper.parseIdentifier(id)), level);
     }
 
     /**

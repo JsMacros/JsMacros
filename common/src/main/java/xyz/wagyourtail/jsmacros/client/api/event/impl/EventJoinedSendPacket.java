@@ -20,17 +20,19 @@ public class EventJoinedSendPacket implements BaseEvent, ICancelable {
 
     public boolean cancel;
     public Packet<?> packet;
+    public final String type;
 
     public EventJoinedSendPacket(Packet<?> packet) {
         this.packet = packet;
+        this.type = PacketByteBufferHelper.getPacketName(packet);
         profile.triggerEventJoinNoAnything(this);
     }
 
     /**
      * Replaces the packet of this event with a new one of the same type, created from the given
-     * arguments.
+     * arguments. It's recommended to use {@link #getPacketBuffer()} to modify the packet instead.
      *
-     * @param args the arguments to pass to the packet's constructor.
+     * @param args the arguments to pass to the packet's constructor
      * @since 1.8.4
      */
     public void replacePacket(Object... args) {
@@ -61,7 +63,7 @@ public class EventJoinedSendPacket implements BaseEvent, ICancelable {
 
     @Override
     public String toString() {
-        return String.format("%s:{}", this.getEventName());
+        return String.format("%s:{\"type\": \"%s\"}", this.getEventName(), type);
     }
 
 }

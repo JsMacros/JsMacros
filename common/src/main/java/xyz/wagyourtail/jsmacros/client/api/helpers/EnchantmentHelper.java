@@ -7,6 +7,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -297,7 +298,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public boolean isCompatible(String enchantment) {
-        return base.canCombine(Registry.ENCHANTMENT.get(new Identifier(enchantment)));
+        return base.canCombine(Registry.ENCHANTMENT.get(RegistryHelper.parseIdentifier(enchantment)));
     }
 
     /**

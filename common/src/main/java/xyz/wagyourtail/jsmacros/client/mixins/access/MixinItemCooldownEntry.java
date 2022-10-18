@@ -17,12 +17,12 @@ public class MixinItemCooldownEntry implements IItemCooldownEntry {
     int endTick;
 
     @Override
-    public int getStartTick() {
+    public int jsmacros_getStartTick() {
         return startTick;
     }
 
     @Override
-    public int getEndTick() {
+    public int jsmacros_getEndTick() {
         return endTick;
     }
 

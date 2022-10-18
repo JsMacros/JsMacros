@@ -3,32 +3,20 @@ package xyz.wagyourtail.jsmacros.client.mixins.access;
 import net.minecraft.advancement.AdvancementRewards;
 import net.minecraft.util.Identifier;
 
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import xyz.wagyourtail.jsmacros.client.access.IAdvancementRewards;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
 /**
  * @author Etheradon
  * @since 1.8.4
  */
 @Mixin(AdvancementRewards.class)
-public class MixinAdvancementRewards implements IAdvancementRewards {
-    @Shadow
-    @Final
-    private int experience;
+public interface MixinAdvancementRewards {
 
-    @Shadow
-    @Final
-    private Identifier[] loot;
+    @Accessor
+    int getExperience();
 
-    @Override
-    public int jsmacros_getExperience() {
-        return experience;
-    }
+    @Accessor
+    Identifier[] getLoot();
 
-    @Override
-    public Identifier[] jsmacros_getLoot() {
-        return loot;
-    }
 }

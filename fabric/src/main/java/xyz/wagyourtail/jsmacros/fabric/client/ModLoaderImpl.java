@@ -11,6 +11,7 @@ import java.util.List;
  * @since 1.8.4
  */
 public class ModLoaderImpl implements ModLoader {
+
     @Override
     public boolean isDevEnv() {
         return FabricLoader.getInstance().isDevelopmentEnvironment();
@@ -24,5 +25,15 @@ public class ModLoaderImpl implements ModLoader {
     @Override
     public List<FabricModContainer> getLoadedMods() {
         return FabricLoader.getInstance().getAllMods().stream().map(FabricModContainer::new).toList();
+    }
+
+    @Override
+    public boolean isModLoaded(String modId) {
+        return FabricLoader.getInstance().isModLoaded(modId);
+    }
+
+    @Override
+    public FabricModContainer getMod(String modId) {
+        return FabricLoader.getInstance().getModContainer(modId).map(FabricModContainer::new).orElse(null);
     }
 }

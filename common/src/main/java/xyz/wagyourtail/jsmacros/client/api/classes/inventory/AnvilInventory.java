@@ -2,8 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 
-import xyz.wagyourtail.jsmacros.client.access.IAnvilScreen;
 import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAnvilScreen;
 
 /**
  * @author Etheradon
@@ -22,7 +22,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
      * @since 1.8.4
      */
     public String getName() {
-        return ((IAnvilScreen) inventory).jsmacros_getRenameText().getText();
+        return ((MixinAnvilScreen) inventory).getNameField().getText();
     }
 
     /**
@@ -32,7 +32,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
      * @since 1.8.4
      */
     public void seName(String name) {
-        ((IAnvilScreen) inventory).jsmacros_getRenameText().setText(name);
+        ((MixinAnvilScreen) inventory).getNameField().setText(name);
     }
 
     /**

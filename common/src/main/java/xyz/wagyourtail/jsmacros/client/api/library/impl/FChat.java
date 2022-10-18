@@ -153,6 +153,33 @@ public class FChat extends BaseLibrary {
     }
 
     /**
+     * Sends the formatted message to the server. The message is formatted using the default java
+     * {@link String#format(String, Object...)} syntax.
+     *
+     * @param message the message to format and send to the server
+     * @param args    the arguments used to format the message
+     * @throws InterruptedException
+     * @since 1.8.4
+     */
+    public void sayf(String message, Object... args) throws InterruptedException {
+        say(String.format(message, args), false);
+    }
+
+    /**
+     * Sends the formatted message to the server. The message is formatted using the default java
+     * {@link String#format(String, Object...)} syntax.
+     *
+     * @param message the message to format and send to the server
+     * @param await   whether to wait for message to be sent to chat before continuing
+     * @param args    the arguments used to format the message
+     * @throws InterruptedException
+     * @since 1.8.4
+     */
+    public void sayf(String message, boolean await, Object... args) throws InterruptedException {
+        say(String.format(message, args), await);
+    }
+
+    /**
      * open the chat input box with specific text already typed.
      *
      * @since 1.6.4
@@ -359,6 +386,16 @@ public class FChat extends BaseLibrary {
         return new ChatHistoryManager(mc.inGameHud.getChatHud());
     }
 
+    /**
+     * @param text the text to get the width of
+     * @return the width of the given text in pixels.
+     *
+     * @since 1.8.4
+     */
+    public int getTextWidth(String text) {
+        return mc.textRenderer.getWidth(text);
+    }
+    
     /**
      * @param string
      * @since 1.6.5

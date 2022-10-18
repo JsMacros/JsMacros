@@ -11,12 +11,15 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.8.4
  */
 @Event(value = "SendPacket")
+@SuppressWarnings("unused")
 public class EventSendPacket implements BaseEvent {
 
     public final Packet<?> packet;
+    public final String type;
 
     public EventSendPacket(Packet<?> packet) {
         this.packet = packet;
+        this.type = PacketByteBufferHelper.getPacketName(packet);
         profile.triggerEventNoAnything(this);
     }
 
@@ -34,7 +37,7 @@ public class EventSendPacket implements BaseEvent {
 
     @Override
     public String toString() {
-        return String.format("%s:{}", this.getEventName());
+        return String.format("%s:{\"type\": \"%s\"}", this.getEventName(), type);
     }
 
 }

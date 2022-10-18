@@ -71,7 +71,7 @@ public class ClassBuilder<T> {
         ctClass.addField(field);
         return this;
     }
-    
+
     public MethodBuilder addMethod(Class<?> returnType, String name, Class<?> ...params) throws NotFoundException {
         CtClass[] paramCtClasses = new CtClass[params.length];
         for (int i = 0; i < params.length; i++) {
@@ -101,7 +101,7 @@ public class ClassBuilder<T> {
      *      return "Hello World!";
      *  }}
      * </pre>
-     * 
+     *
      * @param code the code for the method
      * @return self for chaining.
      *
@@ -149,7 +149,7 @@ public class ClassBuilder<T> {
         ctClass.addConstructor(constructor);
         return this;
     }
-    
+
     public ConstructorBuilder addClinit() {
         return new ConstructorBuilder(new CtClass[0], true);
     }
@@ -252,8 +252,8 @@ public class ClassBuilder<T> {
                 return FieldBuilder.this;
             }
 
-            public FieldBuilder setFloat(float value) {
-                FieldBuilder.this.fieldInitializer = CtField.Initializer.constant(value);
+            public FieldBuilder setFloat(double value) {
+                FieldBuilder.this.fieldInitializer = CtField.Initializer.constant((float) value);
                 return FieldBuilder.this;
             }
 
@@ -674,8 +674,8 @@ public class ClassBuilder<T> {
             return this;
         }
 
-        public AnnotationBuilder<T> putFloat(String key, float value) {
-            annotationInstance.addMemberValue(key, new FloatMemberValue(value, constPool));
+        public AnnotationBuilder<T> putFloat(String key, double value) {
+            annotationInstance.addMemberValue(key, new FloatMemberValue((float) value, constPool));
             return this;
         }
 
@@ -762,8 +762,8 @@ public class ClassBuilder<T> {
                 return this;
             }
 
-            public AnnotationArrayBuilder<U> putFloat(float value) {
-                mv.add(new FloatMemberValue(value, constPool));
+            public AnnotationArrayBuilder<U> putFloat(double value) {
+                mv.add(new FloatMemberValue((float) value, constPool));
                 return this;
             }
 
@@ -805,7 +805,7 @@ public class ClassBuilder<T> {
         }
 
     }
-    
+
     public class BodyBuilder {
         private final CtBehavior ctBehavior;
         private final String guestName;

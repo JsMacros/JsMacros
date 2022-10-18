@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.gui;
 
 import net.minecraft.util.math.MathHelper;
 
-import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.render.shared.interfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.wagyourgui.elements.Slider;
@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public class SliderWidgetHelper extends ButtonWidgetHelper<Slider> {
+public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper, Slider> {
 
     public SliderWidgetHelper(Slider btn) {
         super(btn);
@@ -69,7 +69,11 @@ public class SliderWidgetHelper extends ButtonWidgetHelper<Slider> {
         return String.format("SliderWidgetHelper:{\"message\": \"%s\", \"value\": %f, \"steps\": %d}", base.getMessage().getString(), getValue(), getSteps());
     }
 
-    public static class SliderBuilder extends AbstractWidgetBuilder<Slider, SliderWidgetHelper> {
+    /**
+     * @author Etheradon
+     * @since 1.8.4
+     */
+    public static class SliderBuilder extends AbstractWidgetBuilder<SliderBuilder, Slider, SliderWidgetHelper> {
 
         private int steps = 2;
         private int value = 0;

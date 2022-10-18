@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
+import xyz.wagyourtail.jsmacros.client.api.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 
 @Mixin(value = GameRenderer.class)

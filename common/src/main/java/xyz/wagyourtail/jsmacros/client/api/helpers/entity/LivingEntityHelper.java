@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.entity;
 
 import com.google.common.collect.ImmutableList;
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 
@@ -50,7 +51,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @since 1.8.4
      */
     public boolean hasStatusEffect(String id) {
-        StatusEffect effect = Registry.STATUS_EFFECT.get(new Identifier(id));
+        StatusEffect effect = Registry.STATUS_EFFECT.get(RegistryHelper.parseIdentifier(id));
         return base.getStatusEffects().stream().anyMatch(statusEffectInstance -> statusEffectInstance.getEffectType().equals(effect));
     }
     
@@ -199,6 +200,15 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
+     * @return {@code true} if the entity is a baby, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isBaby() {
+        return base.isBaby();
+    }
+
+    /**
      * @param entity the entity to check line of sight to
      * @return {@code true} if the player has line of sight to the specified entity, {@code false}
      *         otherwise.
@@ -256,9 +266,4 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
         return false;
     }
 
-    @Override
-    public String toString() {
-        return super.toString().replaceFirst("^Entity", "Living");
-    }
-    
 }

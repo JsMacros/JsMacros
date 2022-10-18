@@ -4,38 +4,24 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.AbstractFurnaceScreenHandler;
 import net.minecraft.screen.PropertyDelegate;
 
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import xyz.wagyourtail.jsmacros.client.access.IAbstractFurnaceScreenHandler;
+import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
 /**
  * @author Etheradon
  * @since 1.8.4
  */
 @Mixin(AbstractFurnaceScreenHandler.class)
-public abstract class MixinAbstractFurnaceScreenHandler implements IAbstractFurnaceScreenHandler {
+public interface MixinAbstractFurnaceScreenHandler {
 
-    @Shadow
-    protected abstract boolean isSmeltable(ItemStack itemStack);
+    @Invoker
+    boolean invokeIsSmeltable(ItemStack itemStack);
 
-    @Shadow
-    protected abstract boolean isFuel(ItemStack itemStack);
+    @Invoker
+    boolean invokeIsFuel(ItemStack itemStack);
 
-    @Shadow @Final private PropertyDelegate propertyDelegate;
+    @Accessor
+    PropertyDelegate getPropertyDelegate();
 
-    @Override
-    public boolean jsmacros_isSmeltable(ItemStack stack) {
-        return isSmeltable(stack);
-    }
-
-    @Override
-    public boolean jsmacros_isFuel(ItemStack stack) {
-        return isFuel(stack);
-    }
-
-    @Override
-    public PropertyDelegate jsmacros_getPropertyDelegate() {
-        return propertyDelegate;
-    }
 }

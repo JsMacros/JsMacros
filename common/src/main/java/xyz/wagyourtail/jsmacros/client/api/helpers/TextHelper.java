@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -95,6 +96,15 @@ public class TextHelper extends BaseHelper<Text> {
         return this;
     }
 
+    /**
+     * @return the width of this text.
+     *
+     * @since 1.8.4
+     */
+    public int getWidth() {
+        return MinecraftClient.getInstance().textRenderer.getWidth(base);
+    }
+    
     /**
      * @since 1.0.8
      * @deprecated confusing name, use {@link #getJson()} instead.

@@ -5,6 +5,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
+
 /**
  * @author Etheradon
  * @since 1.6.5
@@ -214,7 +216,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean allowsSpawning(BlockPosHelper pos, String entity) {
-        return base.allowsSpawning(MinecraftClient.getInstance().world, pos.getRaw(), Registry.ENTITY_TYPE.get(new Identifier(entity)));
+        return base.allowsSpawning(MinecraftClient.getInstance().world, pos.getRaw(), Registry.ENTITY_TYPE.get(RegistryHelper.parseIdentifier(entity)));
     }
 
     /**

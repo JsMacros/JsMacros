@@ -12,13 +12,16 @@ import xyz.wagyourtail.jsmacros.core.event.ICancelable;
  * @since 1.8.4
  */
 @Event("JoinedRecvPacket")
+@SuppressWarnings("unused")
 public class EventJoinedRecvPacket implements BaseEvent, ICancelable {
 
     public boolean cancel;
     public Packet<?> packet;
+    public final String type;
 
     public EventJoinedRecvPacket(Packet<?> packet) {
         this.packet = packet;
+        this.type = PacketByteBufferHelper.getPacketName(packet);
         profile.triggerEventJoinNoAnything(this);
     }
 
@@ -46,7 +49,7 @@ public class EventJoinedRecvPacket implements BaseEvent, ICancelable {
 
     @Override
     public String toString() {
-        return String.format("%s:{}", this.getEventName());
+        return String.format("%s:{\"type\": \"%s\"}", this.getEventName(), type);
     }
 
 }

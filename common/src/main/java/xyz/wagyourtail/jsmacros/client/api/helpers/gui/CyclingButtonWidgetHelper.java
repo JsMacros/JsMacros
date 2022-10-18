@@ -3,9 +3,9 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.gui;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.text.Text;
 
-import xyz.wagyourtail.jsmacros.client.access.ICyclingButtonWidget;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.render.shared.interfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinCyclingButton;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButtonWidget<T>> {
+public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingButtonWidgetHelper<T>, CyclingButtonWidget<T>> {
 
     public CyclingButtonWidgetHelper(CyclingButtonWidget<T> btn) {
         super(btn);
@@ -42,7 +42,7 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
      * @since 1.8.4
      */
     public String getStringValue() {
-        return ((ICyclingButtonWidget) base).jsmacros_toString(base.getValue());
+        return ((MixinCyclingButton<T>) this).getValueToText().apply(getValue()).getString();
     }
 
     /**
@@ -64,7 +64,7 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
      * @since 1.8.4
      */
     public CyclingButtonWidgetHelper<T> cycle(int amount) {
-        ((ICyclingButtonWidget) base).jsmacros_cycle(amount);
+        ((MixinCyclingButton) base).invokeCycle(amount);
         return this;
     }
 
@@ -88,10 +88,14 @@ public class CyclingButtonWidgetHelper<T> extends ButtonWidgetHelper<CyclingButt
 
     @Override
     public String toString() {
-        return String.format("CyclingButtonWidgetHelper:{\"value\": \"%s\"}", ((ICyclingButtonWidget) this).jsmacros_getTextValue());
+        return String.format("CyclingButtonWidgetHelper:{\"value\": \"%s\"}", getStringValue());
     }
 
-    public static class CyclicButtonBuilder<T> extends AbstractWidgetBuilder<CyclingButtonWidget<T>, CyclingButtonWidgetHelper<T>> {
+    /**
+     * @author Etheradon
+     * @since 1.8.4
+     */
+    public static class CyclicButtonBuilder<T> extends AbstractWidgetBuilder<CyclicButtonBuilder<T>, CyclingButtonWidget<T>, CyclingButtonWidgetHelper<T>> {
 
         private T value = null;
         private Text optionText = Text.empty();

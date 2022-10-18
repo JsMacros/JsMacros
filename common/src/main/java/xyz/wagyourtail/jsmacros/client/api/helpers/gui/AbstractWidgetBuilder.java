@@ -5,14 +5,15 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.render.shared.classes.RenderCommon;
+import xyz.wagyourtail.jsmacros.client.api.render.shared.interfaces.IScreen;
 
 /**
  * @author Etheradon
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends ButtonWidgetHelper<T>> {
+public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T, U>, T extends ClickableWidget, U extends ClickableWidgetHelper<U, T>> implements RenderCommon.Alignable<B> {
 
     protected final IScreen screen;
 
@@ -45,9 +46,9 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
      *
      * @since 1.8.4
      */
-    public AbstractWidgetBuilder<T, U> width(int width) {
+    public B width(int width) {
         this.width = width;
-        return this;
+        return (B) this;
     }
 
     /**
@@ -65,9 +66,9 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
      *
      * @since 1.8.4
      */
-    public AbstractWidgetBuilder<T, U> height(int height) {
+    public B height(int height) {
         this.height = height;
-        return this;
+        return (B) this;
     }
 
     /**
@@ -77,10 +78,10 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
      *
      * @since 1.8.4
      */
-    public AbstractWidgetBuilder<T, U> size(int width, int height) {
+    public B size(int width, int height) {
         this.width = width;
         this.height = height;
-        return this;
+        return (B) this;
     }
 
     /**
@@ -98,9 +99,9 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
      *
      * @since 1.8.4
      */
-    public AbstractWidgetBuilder<T, U> zIndex(int zIndex) {
+    public B zIndex(int zIndex) {
         this.zIndex = zIndex;
-        return this;
+        return (B) this;
     }
 
     /**
@@ -118,9 +119,9 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
      *
      * @since 1.8.4
      */
-    public AbstractWidgetBuilder<T, U> x(int x) {
+    public B x(int x) {
         this.x = x;
-        return this;
+        return (B) this;
     }
 
     /**
@@ -138,9 +139,9 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
      *
      * @since 1.8.4
      */
-    public AbstractWidgetBuilder<T, U> y(int y) {
+    public B y(int y) {
         this.y = y;
-        return this;
+        return (B) this;
     }
 
     /**
@@ -150,10 +151,10 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
      *
      * @since 1.8.4
      */
-    public AbstractWidgetBuilder<T, U> pos(int x, int y) {
+    public B pos(int x, int y) {
         this.x = x;
         this.y = y;
-        return this;
+        return (B) this;
     }
 
     /**
@@ -171,11 +172,11 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
      *
      * @since 1.8.4
      */
-    public AbstractWidgetBuilder<T, U> message(String message) {
+    public B message(String message) {
         if (message != null) {
             this.message = Text.literal(message);
         }
-        return this;
+        return (B) this;
     }
 
     /**
@@ -184,11 +185,11 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
      *
      * @since 1.8.4
      */
-    public AbstractWidgetBuilder<T, U> message(TextHelper message) {
+    public B message(TextHelper message) {
         if (message != null) {
             this.message = message.getRaw();
         }
-        return this;
+        return (B) this;
     }
 
     /**
@@ -210,9 +211,9 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
      *
      * @since 1.8.4
      */
-    public AbstractWidgetBuilder<T, U> active(boolean active) {
+    public B active(boolean active) {
         this.active = active;
-        return this;
+        return (B) this;
     }
 
     /**
@@ -230,9 +231,9 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
      *
      * @since 1.8.4
      */
-    public AbstractWidgetBuilder<T, U> visible(boolean visible) {
+    public B visible(boolean visible) {
         this.visible = visible;
-        return this;
+        return (B) this;
     }
 
     /**
@@ -250,9 +251,9 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
      *
      * @since 1.8.4
      */
-    public AbstractWidgetBuilder<T, U> alpha(float alpha) {
-        this.alpha = MathHelper.clamp(alpha, 0.0F, 1.0F);
-        return this;
+    public B alpha(double alpha) {
+        this.alpha = (float) MathHelper.clamp(alpha, 0.0F, 1.0F);
+        return (B) this;
     }
 
     /**
@@ -272,4 +273,38 @@ public abstract class AbstractWidgetBuilder<T extends ClickableWidget, U extends
 
     protected abstract U createWidget();
 
+    @Override
+    public int getScaledWidth() {
+        return width;
+    }
+
+    @Override
+    public int getParentWidth() {
+        return screen.getWidth();
+    }
+
+    @Override
+    public int getScaledHeight() {
+        return height;
+    }
+
+    @Override
+    public int getParentHeight() {
+        return screen.getHeight();
+    }
+
+    @Override
+    public int getScaledLeft() {
+        return x;
+    }
+
+    @Override
+    public int getScaledTop() {
+        return y;
+    }
+
+    @Override
+    public B moveTo(int x, int y) {
+        return pos(x, y);
+    }
 }

@@ -5,8 +5,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.Identifier;
 
-import xyz.wagyourtail.jsmacros.client.access.IAdvancementRewards;
-import xyz.wagyourtail.jsmacros.client.access.IClientAdvancementManager;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAdvancementRewards;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinClientAdvancementManager;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Arrays;
@@ -77,10 +77,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      * @since 1.8.4
      */
     public Map<String, String> getCriteria() {
-        return base.getCriteria().entrySet().stream().filter(e -> e.getValue().getConditions() != null).collect(Collectors.toMap(
-                Map.Entry::getKey,
-                advancementCriterionEntry -> advancementCriterionEntry.getValue().getConditions().getId().toString()
-        ));
+        return base.getCriteria().entrySet().stream().filter(e -> e.getValue().getConditions() != null).collect(Collectors.toMap(Map.Entry::getKey, advancementCriterionEntry -> advancementCriterionEntry.getValue().getConditions().getId().toString()));
     }
 
     /**
@@ -89,7 +86,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      * @since 1.8.4
      */
     public int getExperience() {
-        return ((IAdvancementRewards) base.getRewards()).jsmacros_getExperience();
+        return ((MixinAdvancementRewards) base.getRewards()).getExperience();
     }
 
     /**
@@ -98,7 +95,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      * @since 1.8.4
      */
     public String[] getLoot() {
-        return Arrays.stream(((IAdvancementRewards) base.getRewards()).jsmacros_getLoot()).map(Identifier::toString).toArray(String[]::new);
+        return Arrays.stream(((MixinAdvancementRewards) base.getRewards()).getLoot()).map(Identifier::toString).toArray(String[]::new);
     }
 
     /**
@@ -118,12 +115,12 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
     public AdvancementProgressHelper getProgress() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         assert player != null;
-        return new AdvancementProgressHelper(((IClientAdvancementManager) player.networkHandler.getAdvancementHandler()).jsmacros_getAdvancementProgress().get(base));
+        return new AdvancementProgressHelper(((MixinClientAdvancementManager) player.networkHandler.getAdvancementHandler()).getAdvancementProgresses().get(base));
     }
 
     @Override
     public String toString() {
         return String.format("AdvancementHelper:{\"id\": \"%s\"}", getId());
     }
-    
+
 }

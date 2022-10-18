@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.js.language.impl.GraalLanguageDefinition;
+import xyz.wagyourtail.jsmacros.js.language.impl.JsExceptionSimplifier;
 import xyz.wagyourtail.jsmacros.js.library.impl.FWrapper;
 
 import java.io.File;
@@ -106,7 +107,7 @@ public class GraalExtension implements Extension {
                     message += ": " + intMessage;
                 }
             } else {
-                message = ex.getMessage();
+                message = JsExceptionSimplifier.simplifyException(ex);
                 if (message == null) {
                     message = "UnknownGuestException";
                 }

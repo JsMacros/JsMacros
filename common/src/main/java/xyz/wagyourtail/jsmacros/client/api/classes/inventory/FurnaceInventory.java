@@ -8,8 +8,8 @@ import net.minecraft.util.registry.Registry;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import xyz.wagyourtail.jsmacros.client.access.IAbstractFurnaceScreenHandler;
 import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAbstractFurnaceScreenHandler;
 
 import java.util.Map;
 
@@ -60,7 +60,7 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
      * @since 1.8.4
      */
     public boolean canUseAsFuel(ItemStackHelper stack) {
-        return ((IAbstractFurnaceScreenHandler) inventory.getScreenHandler()).jsmacros_isFuel(stack.getRaw());
+        return ((MixinAbstractFurnaceScreenHandler) inventory.getScreenHandler()).invokeIsFuel(stack.getRaw());
     }
 
     /**
@@ -70,7 +70,7 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
      * @since 1.8.4
      */
     public boolean isSmeltable(ItemStackHelper stack) {
-        return ((IAbstractFurnaceScreenHandler) inventory.getScreenHandler()).jsmacros_isSmeltable(stack.getRaw());
+        return ((MixinAbstractFurnaceScreenHandler) inventory.getScreenHandler()).invokeIsSmeltable(stack.getRaw());
     }
 
     /**
@@ -134,7 +134,7 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
     }
 
     private PropertyDelegate getPropertyDelegate() {
-        return ((IAbstractFurnaceScreenHandler) inventory.getScreenHandler()).jsmacros_getPropertyDelegate();
+        return ((MixinAbstractFurnaceScreenHandler) inventory.getScreenHandler()).getPropertyDelegate();
     }
 
     /**

@@ -46,9 +46,4 @@ public class MerchantEntityHelper<T extends MerchantEntity> extends LivingEntity
         return base.hasCustomer();
     }
 
-    @Override
-    public String toString() {
-        return super.toString().replaceFirst("^Entity", "Merchant");
-    }
-
 }

@@ -1016,7 +1016,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public double getMasterVolume() {
+        public float getMasterVolume() {
             return base.getSoundVolume(SoundCategory.MASTER);
         }
 
@@ -1026,8 +1026,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public MusicOptionsHelper setMasterVolume(float volume) {
-            base.setSoundVolume(SoundCategory.MASTER, volume);
+        public MusicOptionsHelper setMasterVolume(double volume) {
+            base.setSoundVolume(SoundCategory.MASTER, (float) volume);
             return this;
         }
 
@@ -1036,7 +1036,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public double getMusicVolume() {
+        public float getMusicVolume() {
             return base.getSoundVolume(SoundCategory.MUSIC);
         }
 
@@ -1046,8 +1046,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public MusicOptionsHelper setMusicVolume(float volume) {
-            base.setSoundVolume(SoundCategory.MUSIC, volume);
+        public MusicOptionsHelper setMusicVolume(double volume) {
+            base.setSoundVolume(SoundCategory.MUSIC, (float) volume);
             return this;
         }
 
@@ -1056,7 +1056,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public double getRecordsVolume() {
+        public float getRecordsVolume() {
             return base.getSoundVolume(SoundCategory.RECORDS);
         }
 
@@ -1066,8 +1066,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public MusicOptionsHelper setRecordsVolume(float volume) {
-            base.setSoundVolume(SoundCategory.RECORDS, volume);
+        public MusicOptionsHelper setRecordsVolume(double volume) {
+            base.setSoundVolume(SoundCategory.RECORDS, (float) volume);
             return this;
         }
 
@@ -1076,7 +1076,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public double getWeatherVolume() {
+        public float getWeatherVolume() {
             return base.getSoundVolume(SoundCategory.WEATHER);
         }
 
@@ -1086,8 +1086,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public MusicOptionsHelper setWeatherVolume(float volume) {
-            base.setSoundVolume(SoundCategory.WEATHER, volume);
+        public MusicOptionsHelper setWeatherVolume(double volume) {
+            base.setSoundVolume(SoundCategory.WEATHER, (float) volume);
             return this;
         }
 
@@ -1096,7 +1096,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public double getBlocksVolume() {
+        public float getBlocksVolume() {
             return base.getSoundVolume(SoundCategory.BLOCKS);
         }
 
@@ -1106,8 +1106,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public MusicOptionsHelper setBlocksVolume(float volume) {
-            base.setSoundVolume(SoundCategory.BLOCKS, volume);
+        public MusicOptionsHelper setBlocksVolume(double volume) {
+            base.setSoundVolume(SoundCategory.BLOCKS, (float) volume);
             return this;
         }
 
@@ -1116,7 +1116,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public double getHostileVolume() {
+        public float getHostileVolume() {
             return base.getSoundVolume(SoundCategory.HOSTILE);
         }
 
@@ -1126,8 +1126,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public MusicOptionsHelper setHostileVolume(float volume) {
-            base.setSoundVolume(SoundCategory.HOSTILE, volume);
+        public MusicOptionsHelper setHostileVolume(double volume) {
+            base.setSoundVolume(SoundCategory.HOSTILE, (float) volume);
             return this;
         }
 
@@ -1136,7 +1136,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public double getNeutralVolume() {
+        public float getNeutralVolume() {
             return base.getSoundVolume(SoundCategory.NEUTRAL);
         }
 
@@ -1146,8 +1146,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public MusicOptionsHelper setNeutralVolume(float volume) {
-            base.setSoundVolume(SoundCategory.NEUTRAL, volume);
+        public MusicOptionsHelper setNeutralVolume(double volume) {
+            base.setSoundVolume(SoundCategory.NEUTRAL, (float) volume);
             return this;
         }
 
@@ -1156,7 +1156,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public double getPlayerVolume() {
+        public float getPlayerVolume() {
             return base.getSoundVolume(SoundCategory.PLAYERS);
         }
 
@@ -1166,8 +1166,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public MusicOptionsHelper setPlayerVolume(float volume) {
-            base.setSoundVolume(SoundCategory.PLAYERS, volume);
+        public MusicOptionsHelper setPlayerVolume(double volume) {
+            base.setSoundVolume(SoundCategory.PLAYERS, (float) volume);
             return this;
         }
 
@@ -1176,7 +1176,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public double getAmbientVolume() {
+        public float getAmbientVolume() {
             return base.getSoundVolume(SoundCategory.AMBIENT);
         }
 
@@ -1186,8 +1186,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public MusicOptionsHelper setAmbientVolume(float volume) {
-            base.setSoundVolume(SoundCategory.AMBIENT, volume);
+        public MusicOptionsHelper setAmbientVolume(double volume) {
+            base.setSoundVolume(SoundCategory.AMBIENT, (float) volume);
             return this;
         }
 
@@ -1196,7 +1196,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public double getVoiceVolume() {
+        public float getVoiceVolume() {
             return base.getSoundVolume(SoundCategory.VOICE);
         }
 
@@ -1205,8 +1205,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public MusicOptionsHelper setVoiceVolume(float volume) {
-            base.setSoundVolume(SoundCategory.VOICE, volume);
+        public MusicOptionsHelper setVoiceVolume(double volume) {
+            base.setSoundVolume(SoundCategory.VOICE, (float) volume);
             return this;
         }
 
@@ -1240,8 +1240,8 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public MusicOptionsHelper setVolume(String category, float volume) {
-            base.setSoundVolume(SOUND_CATEGORY_MAP.get(category), volume);
+        public MusicOptionsHelper setVolume(String category, double volume) {
+            base.setSoundVolume(SOUND_CATEGORY_MAP.get(category), (float) volume);
             return this;
         }
 

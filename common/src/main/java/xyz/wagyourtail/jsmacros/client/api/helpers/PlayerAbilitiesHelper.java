@@ -118,8 +118,8 @@ public class PlayerAbilitiesHelper extends BaseHelper<PlayerAbilities> {
      *
      * @since 1.8.4
      */
-    public PlayerAbilitiesHelper setWalkSpeed(float speed) {
-        base.setWalkSpeed(speed);
+    public PlayerAbilitiesHelper setWalkSpeed(double speed) {
+        base.setWalkSpeed((float) speed);
         return this;
     }
 

@@ -81,7 +81,6 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
         return (NBTNumberHelper) this;
     }
 
-
     /**
      * check with {@link #isList()} first
      * @since 1.5.1

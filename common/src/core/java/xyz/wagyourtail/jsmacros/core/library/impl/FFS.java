@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import com.google.common.io.Files;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
@@ -8,7 +9,12 @@ import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.stream.Stream;
 
 /**
  * Better File-System functions.
@@ -62,6 +68,16 @@ public class FFS extends PerExecLibrary {
     public boolean isDir(String path) {
         return ctx.getContainedFolder().toPath().resolve(path).toFile().isDirectory();
     }
+
+    /**
+     * @param path the path relative to the script's folder
+     * @return {@code true} if the path leads to a file, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isFile(String path) {
+        return ctx.getContainedFolder().toPath().resolve(path).toFile().isFile();
+    }
     
     /**
      * Get the last part (name) of a file.
@@ -76,12 +92,22 @@ public class FFS extends PerExecLibrary {
     }
 
     /**
+     * @param absolutePath the absolute path to the file
+     * @return a path relative to the script's folder to the given absolute path.
+     *
+     * @since 1.8.4
+     */
+    public String toRelativePath(String absolutePath) {
+        return ctx.getContainedFolder().toPath().relativize(Paths.get(absolutePath)).toString();
+    }
+    
+    /**
      * Creates a new file in the specified path, relative to the script's folder. This will only
      * work if the parent directory already exists. See {@link #createFile(String, String, boolean)}
      * to automatically create all parent directories.
      *
-     * @param path the path relative to the script's folder.
-     * @param name the name of the file.
+     * @param path the path relative to the script's folder
+     * @param name the name of the file
      * @return {@code true} if the file was created successfully, {@code false} otherwise.
      *
      * @throws IOException if there occurs an error while creating the file.
@@ -203,4 +229,63 @@ public class FFS extends PerExecLibrary {
     public FileHandler open(String path) {
         return new FileHandler(ctx.getContainedFolder().toPath().resolve(path).toFile());
     }
+
+    /**
+     * An advanced method to walk a directory tree and get some information about the files, as well
+     * as their paths.
+     *
+     * @param path        the relative path of the directory to walk through
+     * @param maxDepth    the maximum depth to follow, can cause stack overflow if too high
+     * @param followLinks whether to follow symbolic links
+     * @param visitor     the visitor that is called for each file with the path of the file and its
+     *                    attributes
+     * @throws IOException
+     * @since 1.8.4
+     */
+    public void walkFiles(String path, int maxDepth, boolean followLinks, MethodWrapper<String, BasicFileAttributes, ?, ?> visitor) throws IOException {
+        FileVisitOption[] options = followLinks ? new FileVisitOption[]{FileVisitOption.FOLLOW_LINKS} : new FileVisitOption[0];
+        try (Stream<Path> paths = java.nio.file.Files.walk(ctx.getContainedFolder().toPath().resolve(path), maxDepth, options)) {
+            paths.forEach(p -> {
+                try {
+                    visitor.apply(p.relativize(ctx.getContainedFolder().toPath()).toFile().getPath(), java.nio.file.Files.readAttributes(p, BasicFileAttributes.class));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        } catch (IOException e) {
+            throw e;
+        }
+    }
+
+    /**
+     * @param path the relative path to get the file object for
+     * @return the file object for the specified path
+     *
+     * @since 1.8.4
+     */
+    public File toFile(String path) {
+        return ctx.getContainedFolder().toPath().resolve(path).toFile();
+    }
+
+    /**
+     * @param path the relative path to get the path object for
+     * @return the path object for the specified path
+     *
+     * @since 1.8.4
+     */
+    public Path toPath(String path) {
+        return ctx.getContainedFolder().toPath().resolve(path);
+    }
+
+    /**
+     * @param path the path relative to the script's folder
+     * @return the attributes of the file at the specified path
+     *
+     * @throws IOException
+     * @since 1.8.4
+     */
+    public BasicFileAttributes getAttributes(String path) throws IOException {
+        return java.nio.file.Files.readAttributes(ctx.getContainedFolder().toPath().resolve(path), BasicFileAttributes.class);
+    }
+
 }

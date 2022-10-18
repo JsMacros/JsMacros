@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
-import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon.Pos3D;
+import xyz.wagyourtail.jsmacros.client.api.classes.PositionCommon.Pos3D;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 

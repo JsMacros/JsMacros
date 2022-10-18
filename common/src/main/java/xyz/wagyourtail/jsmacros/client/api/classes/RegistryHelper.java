@@ -35,7 +35,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public ItemHelper getItem(String id) {
-        return new ItemHelper(Registry.ITEM.get(Identifier.tryParse(id)));
+        return new ItemHelper(Registry.ITEM.get(parseIdentifier(id)));
     }
 
     /**
@@ -45,7 +45,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public ItemStackHelper getItemStack(String id) {
-        return new ItemStackHelper(new ItemStack(Registry.ITEM.get(Identifier.tryParse(id))));
+        return new ItemStackHelper(new ItemStack(Registry.ITEM.get(parseIdentifier(id))));
     }
 
     /**
@@ -57,8 +57,10 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public ItemStackHelper getItemStack(String id, String nbt) throws CommandSyntaxException {
-        ItemStringReader.ItemResult itemResult = ItemStringReader.item(new CommandRegistryWrapper.Impl<>(Registry.ITEM), new StringReader(id + nbt));
-        return new ItemStackHelper(new ItemStack(itemResult.item()));
+        ItemStringReader.ItemResult itemResult = ItemStringReader.item(new CommandRegistryWrapper.Impl<>(Registry.ITEM), new StringReader(parseNameSpace(id) + nbt));
+        ItemStack stack = new ItemStack(itemResult.item());
+        stack.setNbt(itemResult.nbt());
+        return new ItemStackHelper(stack);
     }
 
     /**
@@ -86,7 +88,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public BlockHelper getBlock(String id) {
-        return new BlockHelper(Registry.BLOCK.get(Identifier.tryParse(id)));
+        return new BlockHelper(Registry.BLOCK.get(parseIdentifier(id)));
     }
 
     /**
@@ -96,7 +98,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public BlockStateHelper getBlockState(String id) {
-        return new BlockStateHelper(Registry.BLOCK.get(Identifier.tryParse(id)).getDefaultState());
+        return new BlockStateHelper(Registry.BLOCK.get(parseIdentifier(id)).getDefaultState());
     }
 
     /**
@@ -108,7 +110,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public BlockStateHelper getBlockState(String id, String nbt) throws CommandSyntaxException {
-        return new BlockStateHelper(BlockArgumentParser.block(Registry.BLOCK, id + nbt, false).blockState());
+        return new BlockStateHelper(BlockArgumentParser.block(Registry.BLOCK, parseNameSpace(id) + nbt, false).blockState());
     }
 
     /**
@@ -147,7 +149,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public EnchantmentHelper getEnchantment(String id, int level) {
-        return new EnchantmentHelper(Registry.ENCHANTMENT.get(Identifier.tryParse(id)), level);
+        return new EnchantmentHelper(Registry.ENCHANTMENT.get(parseIdentifier(id)), level);
     }
 
     /**
@@ -175,7 +177,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public EntityHelper<?> getEntity(String type) {
-        return EntityHelper.create(Registry.ENTITY_TYPE.get(Identifier.tryParse(type)).create(MinecraftClient.getInstance().world));
+        return EntityHelper.create(Registry.ENTITY_TYPE.get(parseIdentifier(type)).create(MinecraftClient.getInstance().world));
     }
 
     /**
@@ -185,7 +187,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public EntityType<?> getRawEntityType(String type) {
-        return Registry.ENTITY_TYPE.get(Identifier.tryParse(type));
+        return Registry.ENTITY_TYPE.get(parseIdentifier(type));
     }
 
     /**
@@ -204,7 +206,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public FluidStateHelper getFluidState(String id) {
-        return new FluidStateHelper(Registry.FLUID.get(Identifier.tryParse(id)).getDefaultState());
+        return new FluidStateHelper(Registry.FLUID.get(parseIdentifier(id)).getDefaultState());
     }
 
     /**
@@ -367,6 +369,14 @@ public class RegistryHelper {
      */
     public List<String> getPotionTypeIds() {
         return Registry.POTION.getIds().stream().map(Identifier::toString).toList();
+    }
+
+    public static Identifier parseIdentifier(String id) {
+        return new Identifier(parseNameSpace(id));
+    }
+
+    public static String parseNameSpace(String id) {
+        return id.indexOf(':') != -1 ? id : "minecraft:" + id;
     }
 
 }
