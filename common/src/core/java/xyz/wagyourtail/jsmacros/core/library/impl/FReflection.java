@@ -355,24 +355,21 @@ public class FReflection extends PerExecLibrary {
      * {@link xyz.wagyourtail.jsmacros.core.library.PerExecLanguageLibrary PerExecLanguageLibrary}
      * or {@link xyz.wagyourtail.jsmacros.core.library.PerLanguageLibrary PerLanguageLibrary}.
      *
-     * @param className the class name of the library
+     * @param className the fully qualified name of the class, including the package
      * @param javaCode  the source code of the library
      * @since 1.8.4
      */
     public void createLibrary(String className, String javaCode) {
         Core.getInstance().libraryRegistry.addLibrary((Class<? extends BaseLibrary>) compileJavaClass(className, javaCode));
     }
-    
+
     /**
-     * To compile a java class, the game must be run with the java development kit (JDK) and not the
-     * default java runtime environment (JRE). To change the used java version, you must first
-     * download the correct JDK for the Minecraft version and then go to the profile options and
-     * change the java executable to the one in the JDK folder. The file should be named "javaw.exe"
-     * and be in a folder called "bin".
+     * A Java Development Kit (JDK) must be installed (and potentially used to start Minecraft) in
+     * order to compile whole classes.
      * <p>
      * Compiled classes can't be accessed from any guest language, but must be either stored through
-     * {@link FGlobalVars#putObject(String, Object)} or retrieved from this library. Unlike
-     * normal hot swapping, already created instances of the class will not be updated. Thus, it's
+     * {@link FGlobalVars#putObject(String, Object)} or retrieved from this library. Unlike normal
+     * hot swapping, already created instances of the class will not be updated. Thus, it's
      * important to know which version of the class you're using when instantiating it.
      *
      * @param className the fully qualified name of the class, including the package
@@ -414,7 +411,7 @@ public class FReflection extends PerExecLibrary {
      * See <a href="https://github.com/jOOQ/jOOR">jOOR Github</a> for more information.
      *
      * @param obj the object to wrap
-     * @return a wrapper for the passed object to do java reflection.
+     * @return a wrapper for the passed object to do help with java reflection.
      *
      * @since 1.8.4
      */

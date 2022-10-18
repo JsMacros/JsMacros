@@ -21,7 +21,7 @@ public class PufferfishEntityHelper extends FishEntityHelper<PufferfishEntity> {
      *
      * @since 1.8.4
      */
-    public int getPuffState() {
+    public int getSize() {
         return base.getPuffState();
     }
 

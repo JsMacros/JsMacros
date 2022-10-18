@@ -23,7 +23,7 @@ public class AbstractPiglinEntityHelper<T extends AbstractPiglinEntity> extends 
      * @since 1.8.4
      */
     public boolean canBeZombified() {
-        return ((MixinAbstractPiglinEntity) base).invokeIsImmuneToZombification();
+        return !((MixinAbstractPiglinEntity) base).invokeIsImmuneToZombification();
     }
 
 }

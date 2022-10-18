@@ -16,7 +16,9 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface MixinCreativeInventoryScreen {
 
     @Accessor
-    int getSelectedTab();
+    static int getSelectedTab() {
+        throw new RuntimeException("Mixin was not applied correctly!");
+    }
 
     @Accessor
     float getScrollPosition();

@@ -24,18 +24,4 @@ public class IronGolemEntityHelper extends MobEntityHelper<IronGolemEntity> {
         return base.isPlayerCreated();
     }
 
-    /**
-     * @return get the type of cracks this iron golem has.
-     *
-     * @since 1.8.4
-     */
-    public String getCrack() {
-        return switch (base.getCrack()) {
-            case NONE -> "none";
-            case LOW -> "low";
-            case MEDIUM -> "medium";
-            case HIGH -> "high";
-        };
-    }
-
 }

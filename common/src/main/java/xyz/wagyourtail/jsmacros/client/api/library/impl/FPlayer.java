@@ -196,16 +196,6 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
-     * @return {@code true} if the player is currently breaking a block, {@code false} otherwise.
-     *
-     * @since 1.8.4
-     */
-    public boolean isMining() {
-        assert mc.interactionManager != null;
-        return mc.interactionManager.isBreakingBlock();
-    }
-
-    /**
      * @return the current reach distance of the player.
      *
      * @since 1.8.4

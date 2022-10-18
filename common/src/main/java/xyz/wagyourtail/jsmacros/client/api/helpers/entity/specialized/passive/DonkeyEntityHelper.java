@@ -18,7 +18,7 @@ public class DonkeyEntityHelper<T extends AbstractDonkeyEntity> extends Abstract
      *
      * @since 1.8.4
      */
-    boolean hasChest() {
+    public boolean hasChest() {
         return base.hasChest();
     }
 

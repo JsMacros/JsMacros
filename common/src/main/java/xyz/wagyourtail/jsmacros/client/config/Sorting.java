@@ -2,9 +2,7 @@ package xyz.wagyourtail.jsmacros.client.config;
 
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
-import xyz.wagyourtail.jsmacros.core.service.ServiceManager;
 
-import java.io.File;
 import java.util.Comparator;
 
 public class Sorting {
@@ -13,14 +11,6 @@ public class Sorting {
         TriggerName,
         FileName
     }
-    
-    public enum ServiceSortMethod {
-        Name,
-        FileName,
-        Enabled,
-        Running;
-    }
-    
     
     public static class SortByEnabled implements Comparator<ScriptTrigger> {
         @Override
@@ -53,6 +43,21 @@ public class Sorting {
         }
     }
 
+    /**
+     * @author Etheradon
+     * @since 1.8.4
+     */
+    public enum ServiceSortMethod {
+        Name,
+        FileName,
+        Enabled,
+        Running;
+    }
+    
+    /**
+     * @author Etheradon
+     * @since 1.8.4
+     */
     public static class SortServiceByEnabled implements Comparator<String> {
         @Override
         public int compare(String a, String b) {
@@ -66,6 +71,10 @@ public class Sorting {
         }
     }
 
+    /**
+     * @author Etheradon
+     * @since 1.8.4
+     */
     public static class SortServiceByName implements Comparator<String> {
         @Override
         public int compare(String a, String b) {
@@ -73,6 +82,10 @@ public class Sorting {
         }
     }
 
+    /**
+     * @author Etheradon
+     * @since 1.8.4
+     */
     public static class SortServiceByRunning implements Comparator<String> {
         @Override
         public int compare(String a, String b) {
@@ -86,6 +99,10 @@ public class Sorting {
         }
     }
 
+    /**
+     * @author Etheradon
+     * @since 1.8.4
+     */
     public static class SortServiceByFileName implements Comparator<String> {
         @Override
         public int compare(String a, String b) {

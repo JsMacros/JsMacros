@@ -10,6 +10,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon.*;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -26,7 +27,7 @@ import java.util.function.IntSupplier;
  */
 @SuppressWarnings("deprecation")
 public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
-    protected final Set<RenderCommon.RenderElement> elements = new LinkedHashSet<>();
+    protected final Set<RenderElement> elements = new LinkedHashSet<>();
     public final IntSupplier widthSupplier;
     public final IntSupplier heightSupplier;
     public int zIndex;
@@ -75,11 +76,11 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#getTexts()
      */
     @Override
-    public List<RenderCommon.TextElement> getTexts() {
-        List<RenderCommon.TextElement> list = new LinkedList<>();
+    public List<Text> getTexts() {
+        List<Text> list = new LinkedList<>();
         synchronized (elements) {
             for (Drawable e : elements) {
-                if (e instanceof RenderCommon.TextElement) list.add((RenderCommon.TextElement) e);
+                if (e instanceof Text) list.add((Text) e);
             }
         }
         return list;
@@ -90,23 +91,23 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#getRects()
      */
     @Override
-    public List<RenderCommon.RectElement> getRects() {
-        List<RenderCommon.RectElement> list = new LinkedList<>();
+    public List<Rect> getRects() {
+        List<Rect> list = new LinkedList<>();
         synchronized (elements) {
             for (Drawable e : elements) {
-                if (e instanceof RenderCommon.RectElement) list.add((RenderCommon.RectElement) e);
+                if (e instanceof Rect) list.add((Rect) e);
             }
         }
         return list;
     }
 
     @Override
-    public List<RenderCommon.LineElement> getLines() {
-        List<RenderCommon.LineElement> list = new LinkedList<>();
+    public List<Line> getLines() {
+        List<Line> list = new LinkedList<>();
         synchronized (elements) {
             for (Drawable e : elements) {
-                if (e instanceof RenderCommon.LineElement) {
-                    list.add((RenderCommon.LineElement) e);
+                if (e instanceof Line) {
+                    list.add((Line) e);
                 }
             }
         }
@@ -118,11 +119,11 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#getItems()
      */
     @Override
-    public List<RenderCommon.ItemElement> getItems() {
-        List<RenderCommon.ItemElement> list = new LinkedList<>();
+    public List<Item> getItems() {
+        List<Item> list = new LinkedList<>();
         synchronized (elements) {
             for (Drawable e : elements) {
-                if (e instanceof RenderCommon.ItemElement) list.add((RenderCommon.ItemElement) e);
+                if (e instanceof Item) list.add((Item) e);
             }
         }
         return list;
@@ -133,34 +134,34 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#getImages()
      */
     @Override
-    public List<RenderCommon.ImageElement> getImages() {
-        List<RenderCommon.ImageElement> list = new LinkedList<>();
+    public List<Image> getImages() {
+        List<Image> list = new LinkedList<>();
         synchronized (elements) {
             for (Drawable e : elements) {
-                if (e instanceof RenderCommon.ImageElement) list.add((RenderCommon.ImageElement) e);
+                if (e instanceof Image) list.add((Image) e);
             }
         }
         return list;
     }
 
     @Override
-    public List<RenderCommon.Draw2DElement> getDraw2Ds() {
-        List<RenderCommon.Draw2DElement> list = new LinkedList<>();
+    public List<Draw2DElement> getDraw2Ds() {
+        List<Draw2DElement> list = new LinkedList<>();
         synchronized (elements) {
             for (Drawable e : elements) {
-                if (e instanceof RenderCommon.Draw2DElement) list.add((RenderCommon.Draw2DElement) e);
+                if (e instanceof Draw2DElement) list.add((Draw2DElement) e);
             }
         }
         return list;
     }
     
     @Override
-    public List<RenderCommon.RenderElement> getElements() {
+    public List<RenderElement> getElements() {
         return ImmutableList.copyOf(elements);
     }
     
     @Override
-    public Draw2D removeElement(RenderCommon.RenderElement e) {
+    public Draw2D removeElement(RenderElement e) {
         synchronized (elements) {
             elements.remove(e);
         }
@@ -168,8 +169,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     }
 
     @Override
-    public <T extends RenderCommon.RenderElement> T reAddElement(T e) {
-        if (e instanceof RenderCommon.Draw2DElement draw2DElement) {
+    public <T extends RenderElement> T reAddElement(T e) {
+        if (e instanceof Draw2DElement draw2DElement) {
             Draw2D draw2D = draw2DElement.getDraw2D();
             if (draw2DElement.getDraw2D() == null || draw2DElement.getDraw2D() == this || hasCyclicDependencies(draw2D)) {
                 return null;
@@ -185,13 +186,13 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     }
 
     @Override
-    public RenderCommon.Draw2DElement addDraw2D(Draw2D draw2D, int x, int y, int width, int height) {
+    public Draw2DElement addDraw2D(Draw2D draw2D, int x, int y, int width, int height) {
         return addDraw2D(draw2D, x, y, width, height, 0);
     }
 
     @Override
-    public RenderCommon.Draw2DElement addDraw2D(Draw2D draw2D, int x, int y, int width, int height, int zIndex) {
-        RenderCommon.Draw2DElement d = new RenderCommon.Draw2DElement(draw2D, x, y, width, height, zIndex, 1, 0);
+    public Draw2DElement addDraw2D(Draw2D draw2D, int x, int y, int width, int height, int zIndex) {
+        Draw2DElement d = new Draw2DElement(draw2D, x, y, width, height, zIndex, 1, 0);
         return reAddElement(d);
     }
 
@@ -210,13 +211,13 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
             if (this == draw2D) {
                 return true;
             }
-            queue.addAll(draw2D.getDraw2Ds().stream().map(RenderCommon.Draw2DElement::getDraw2D).toList());
+            queue.addAll(draw2D.getDraw2Ds().stream().map(Draw2DElement::getDraw2D).toList());
         }
         return false;
     }
 
     @Override
-    public Draw2D removeDraw2D(RenderCommon.Draw2DElement draw2D) {
+    public Draw2D removeDraw2D(Draw2DElement draw2D) {
         synchronized (elements) {
             elements.remove(draw2D);
         }
@@ -228,13 +229,13 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#addText(String, int, int, int, boolean)
      */
     @Override
-    public RenderCommon.TextElement addText(String text, int x, int y, int color, boolean shadow) {
+    public Text addText(String text, int x, int y, int color, boolean shadow) {
         return addText(text, x, y, color, 0, shadow, 1, 0);
         
     }
     
     @Override
-    public RenderCommon.TextElement addText(String text, int x, int y, int color, int zIndex, boolean shadow) {
+    public Text addText(String text, int x, int y, int color, int zIndex, boolean shadow) {
         return addText(text, x, y, color, 0, shadow, 1, 0);
     }
     
@@ -243,42 +244,42 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#addText(String, int, int, int, boolean, double, double)
      */
     @Override
-    public RenderCommon.TextElement addText(String text, int x, int y, int color, boolean shadow, double scale, double rotation) {
+    public Text addText(String text, int x, int y, int color, boolean shadow, double scale, double rotation) {
         return addText(text, x, y, color, 0, shadow, scale, rotation);
     }
     
     @Override
-    public RenderCommon.TextElement addText(String text, int x, int y, int color, int zIndex, boolean shadow, double scale, double rotation) {
-        return reAddElement(new RenderCommon.TextElement(text, x, y, color, zIndex, shadow, scale, (float) rotation));
+    public Text addText(String text, int x, int y, int color, int zIndex, boolean shadow, double scale, double rotation) {
+        return reAddElement(new Text(text, x, y, color, zIndex, shadow, scale, (float) rotation));
     }
     
     
     @Override
-    public RenderCommon.TextElement addText(TextHelper text, int x, int y, int color, boolean shadow) {
+    public Text addText(TextHelper text, int x, int y, int color, boolean shadow) {
         return addText(text, x, y, color, 0, shadow, 1, 0);
     }
     
     @Override
-    public RenderCommon.TextElement addText(TextHelper text, int x, int y, int color, int zIndex, boolean shadow) {
+    public Text addText(TextHelper text, int x, int y, int color, int zIndex, boolean shadow) {
         return addText(text, x, y, color, zIndex, shadow, 1, 0);
     }
     
     @Override
-    public RenderCommon.TextElement addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, double rotation) {
+    public Text addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, double rotation) {
         return addText(text, x, y, color, 0, shadow, scale, rotation);
     }
     
     @Override
-    public RenderCommon.TextElement addText(TextHelper text, int x, int y, int color, int zIndex, boolean shadow, double scale, double rotation) {
-        return reAddElement(new RenderCommon.TextElement(text, x, y, color, zIndex, shadow, scale, (float) rotation));
+    public Text addText(TextHelper text, int x, int y, int color, int zIndex, boolean shadow, double scale, double rotation) {
+        return reAddElement(new Text(text, x, y, color, zIndex, shadow, scale, (float) rotation));
     }
     
     /**
      * @since 1.0.5
-     * @see IDraw2D#removeText(RenderCommon.TextElement)
+     * @see IDraw2D#removeText(Text)
      */
     @Override
-    public Draw2D removeText(RenderCommon.TextElement t) {
+    public Draw2D removeText(Text t) {
         synchronized (elements) {
             elements.remove(t);
         }
@@ -290,12 +291,12 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#addImage(int, int, int, int, String, int, int, int, int, int, int)
      */
     @Override
-    public RenderCommon.ImageElement addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
+    public Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
         return addImage(x, y, width, height, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, 0);
     }
     
     @Override
-    public RenderCommon.ImageElement addImage(int x, int y, int width, int height, int zIndex, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
+    public Image addImage(int x, int y, int width, int height, int zIndex, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
         return addImage(x, y, width, height, zIndex, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, 0);
     }
     
@@ -304,7 +305,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#addImage(int, int, int, int, String, int, int, int, int, int, int, double)
      */
     @Override
-    public RenderCommon.ImageElement addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
+    public Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
         return addImage(x, y, width, height, 0, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
     }
 
@@ -313,7 +314,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#addImage(int, int, int, int, int, String, int, int, int, int, int, int, double)
      */
     @Override
-    public RenderCommon.ImageElement addImage(int x, int y, int width, int height, int zIndex, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
+    public Image addImage(int x, int y, int width, int height, int zIndex, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
         return addImage(x, y, width, height, zIndex, 0xFFFFFFFF, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
     }
 
@@ -322,24 +323,24 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#addImage(int, int, int, int, int, int, String, int, int, int, int, int, int, double)
      */
     @Override
-    public RenderCommon.ImageElement addImage(int x, int y, int width, int height, int zIndex, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
-        return reAddElement(new RenderCommon.ImageElement(x, y, width, height, zIndex, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation));
+    public Image addImage(int x, int y, int width, int height, int zIndex, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
+        return reAddElement(new Image(x, y, width, height, zIndex, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation));
     }
     /**
      * @since 1.6.5
      * @see IDraw2D#addImage(int, int, int, int, int, int, int, String, int, int, int, int, int, int, double)
      */
     @Override
-    public RenderCommon.ImageElement addImage(int x, int y, int width, int height, int zIndex, int alpha, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
-        return reAddElement(new RenderCommon.ImageElement(x, y, width, height, zIndex, alpha, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation));
+    public Image addImage(int x, int y, int width, int height, int zIndex, int alpha, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
+        return reAddElement(new Image(x, y, width, height, zIndex, alpha, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation));
     }
 
     /**
      * @since 1.2.3
-     * @see IDraw2D#removeImage(RenderCommon.ImageElement)
+     * @see IDraw2D#removeImage(Image)
      */
     @Override
-    public Draw2D removeImage(RenderCommon.ImageElement i) {
+    public Draw2D removeImage(Image i) {
         synchronized (elements) {
             elements.remove(i);
         }
@@ -351,8 +352,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#addRect(int, int, int, int, int)
      */
     @Override
-    public RenderCommon.RectElement addRect(int x1, int y1, int x2, int y2, int color) {
-        return reAddElement(new RenderCommon.RectElement(x1, y1, x2, y2, color, 0F, 0));
+    public Rect addRect(int x1, int y1, int x2, int y2, int color) {
+        return reAddElement(new Rect(x1, y1, x2, y2, color, 0F, 0));
     }
 
     /**
@@ -360,7 +361,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#addRect(int, int, int, int, int, int)
      */
     @Override
-    public RenderCommon.RectElement addRect(int x1, int y1, int x2, int y2, int color, int alpha) {
+    public Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha) {
         return addRect(x1, y1, x2, y2, color, alpha, 0, 0);
     }
 
@@ -369,21 +370,21 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#addRect(int, int, int, int, int, int, double)
      */
     @Override
-    public RenderCommon.RectElement addRect(int x1, int y1, int x2, int y2, int color, int alpha, double rotation) {
+    public Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, double rotation) {
         return addRect(x1, y1, x2, y2, color, alpha, 0, 0);
     }
     
     @Override
-    public RenderCommon.RectElement addRect(int x1, int y1, int x2, int y2, int color, int alpha, double rotation, int zIndex) {
-        return reAddElement(new RenderCommon.RectElement(x1, y1, x2, y2, color, alpha, (float) rotation, zIndex));
+    public Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, double rotation, int zIndex) {
+        return reAddElement(new Rect(x1, y1, x2, y2, color, alpha, (float) rotation, zIndex));
     }
     
     /**
      * @since 1.0.5
-     * @see IDraw2D#removeRect(RenderCommon.RectElement)
+     * @see IDraw2D#removeRect(Rect)
      */
     @Override
-    public Draw2D removeRect(RenderCommon.RectElement r) {
+    public Draw2D removeRect(Rect r) {
         synchronized (elements) {
             elements.remove(r);
         }
@@ -391,33 +392,33 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     }
 
     @Override
-    public RenderCommon.LineElement addLine(int x1, int y1, int x2, int y2, int color) {
+    public Line addLine(int x1, int y1, int x2, int y2, int color) {
         return addLine(x1, y1, x2, y2, color, 0);
     }
 
     @Override
-    public RenderCommon.LineElement addLine(int x1, int y1, int x2, int y2, int color, int zIndex) {
+    public Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex) {
         return addLine(x1, y1, x2, y2, color, zIndex, 1);
     }
 
     @Override
-    public RenderCommon.LineElement addLine(int x1, int y1, int x2, int y2, int color, double width) {
+    public Line addLine(int x1, int y1, int x2, int y2, int color, double width) {
         return addLine(x1, y1, x2, y2, color, 0, width);
     }
 
     @Override
-    public RenderCommon.LineElement addLine(int x1, int y1, int x2, int y2, int color, int zIndex, double width) {
+    public Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex, double width) {
         return addLine(x1, y1, x2, y2, color, zIndex, width, 0);
     }
 
     @Override
-    public RenderCommon.LineElement addLine(int x1, int y1, int x2, int y2, int color, double width, double rotation) {
+    public Line addLine(int x1, int y1, int x2, int y2, int color, double width, double rotation) {
         return addLine(x1, y1, x2, y2, color, 0, width, rotation);
     }
 
     @Override
-    public RenderCommon.LineElement addLine(int x1, int y1, int x2, int y2, int color, int zIndex, double width, double rotation) {
-        RenderCommon.LineElement r = new RenderCommon.LineElement(x1, y1, x2, y2, color, (float) rotation, (float) width, zIndex);
+    public Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex, double width, double rotation) {
+        Line r = new Line(x1, y1, x2, y2, color, (float) rotation, (float) width, zIndex);
         synchronized (elements) {
             elements.add(r);
         }
@@ -425,7 +426,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     }
 
     @Override
-    public Draw2D removeLine(RenderCommon.LineElement l) {
+    public Draw2D removeLine(Line l) {
         synchronized (elements) {
             elements.remove(l);
         }
@@ -437,12 +438,12 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#addItem(int, int, String)
      */
     @Override
-    public RenderCommon.ItemElement addItem(int x, int y, String id) {
+    public Item addItem(int x, int y, String id) {
         return addItem(x, y, id, true);
     }
     
     @Override
-    public RenderCommon.ItemElement addItem(int x, int y, int zIndex, String id) {
+    public Item addItem(int x, int y, int zIndex, String id) {
         return null;
     }
     
@@ -451,12 +452,12 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#addItem(int, int, String, boolean)
      */
     @Override
-    public RenderCommon.ItemElement addItem(int x, int y, String id, boolean overlay) {
+    public Item addItem(int x, int y, String id, boolean overlay) {
         return addItem(x, y, 0, id, overlay, 1, 0);
     }
     
     @Override
-    public RenderCommon.ItemElement addItem(int x, int y, int zIndex, String id, boolean overlay) {
+    public Item addItem(int x, int y, int zIndex, String id, boolean overlay) {
         return addItem(x, y, zIndex, id, overlay, 1, 0);
     }
     
@@ -465,13 +466,13 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#addItem(int, int, String, boolean, double, double)
      */
     @Override
-    public RenderCommon.ItemElement addItem(int x, int y, String id, boolean overlay, double scale, double rotation) {
+    public Item addItem(int x, int y, String id, boolean overlay, double scale, double rotation) {
         return addItem(x, y, 0, id, overlay, scale, rotation);
     }
     
     @Override
-    public RenderCommon.ItemElement addItem(int x, int y, int zIndex, String id, boolean overlay, double scale, double rotation) {
-        return reAddElement(new RenderCommon.ItemElement(x, y, zIndex, id, overlay, scale, (float) rotation));
+    public Item addItem(int x, int y, int zIndex, String id, boolean overlay, double scale, double rotation) {
+        return reAddElement(new Item(x, y, zIndex, id, overlay, scale, (float) rotation));
     }
     
     /**
@@ -479,12 +480,12 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#addItem(int, int, ItemStackHelper)
      */
     @Override
-    public RenderCommon.ItemElement addItem(int x, int y, ItemStackHelper Item) {
+    public Item addItem(int x, int y, ItemStackHelper Item) {
         return addItem(x, y, Item, true);
     }
     
     @Override
-    public RenderCommon.ItemElement addItem(int x, int y, int zIndex, ItemStackHelper item) {
+    public Item addItem(int x, int y, int zIndex, ItemStackHelper item) {
         return null;
     }
     
@@ -493,12 +494,12 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#addItem(int, int, ItemStackHelper, boolean)
      */
     @Override
-    public RenderCommon.ItemElement addItem(int x, int y, ItemStackHelper Item, boolean overlay) {
+    public Item addItem(int x, int y, ItemStackHelper Item, boolean overlay) {
         return addItem(x, y, Item, overlay, 1, 0);
     }
     
     @Override
-    public RenderCommon.ItemElement addItem(int x, int y, int zIndex, ItemStackHelper item, boolean overlay) {
+    public Item addItem(int x, int y, int zIndex, ItemStackHelper item, boolean overlay) {
         return addItem(x, y, zIndex, item, overlay, 1, 0);
     }
     
@@ -507,21 +508,21 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      * @see IDraw2D#addItem(int, int, ItemStackHelper, boolean, double, double)
      */
     @Override
-    public RenderCommon.ItemElement addItem(int x, int y, ItemStackHelper item, boolean overlay, double scale, double rotation) {
+    public Item addItem(int x, int y, ItemStackHelper item, boolean overlay, double scale, double rotation) {
         return addItem(x, y, 0, item, overlay, scale, rotation);
     }
     
     @Override
-    public RenderCommon.ItemElement addItem(int x, int y, int zIndex, ItemStackHelper item, boolean overlay, double scale, double rotation) {
-        return reAddElement(new RenderCommon.ItemElement(x, y, zIndex, item, overlay, scale, (float) rotation));
+    public Item addItem(int x, int y, int zIndex, ItemStackHelper item, boolean overlay, double scale, double rotation) {
+        return reAddElement(new Item(x, y, zIndex, item, overlay, scale, (float) rotation));
     }
     
     /**
      * @since 1.0.5
-     * @see IDraw2D#removeItem(RenderCommon.ItemElement)
+     * @see IDraw2D#removeItem(Item)
      */
     @Override
-    public Draw2D removeItem(RenderCommon.ItemElement i) {
+    public Draw2D removeItem(Item i) {
         synchronized (elements) {
             elements.remove(i);
         }
@@ -553,15 +554,15 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
         if (matrixStack == null) return;
 
         synchronized (elements) {
-            Iterator<RenderCommon.RenderElement> iter = getElementsByZIndex();
+            Iterator<RenderElement> iter = getElementsByZIndex();
             while (iter.hasNext()) {
                 iter.next().render(matrixStack, 0, 0, 0);
             }
         }
     }
 
-    public Iterator<RenderCommon.RenderElement> getElementsByZIndex() {
-        return elements.stream().sorted(Comparator.comparingInt(RenderCommon.RenderElement::getZIndex)).iterator();
+    public Iterator<RenderElement> getElementsByZIndex() {
+        return elements.stream().sorted(Comparator.comparingInt(RenderElement::getZIndex)).iterator();
     }
     
     /**

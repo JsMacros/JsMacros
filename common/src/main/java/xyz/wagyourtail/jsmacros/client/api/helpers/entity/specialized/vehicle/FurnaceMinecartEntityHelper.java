@@ -21,7 +21,7 @@ public class FurnaceMinecartEntityHelper extends EntityHelper<FurnaceMinecartEnt
      *
      * @since 1.8.4
      */
-    public boolean isActive() {
+    public boolean isPowered() {
         return base.getContainedBlock().get(Properties.LIT);
     }
 

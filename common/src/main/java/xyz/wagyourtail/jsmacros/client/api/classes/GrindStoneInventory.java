@@ -22,7 +22,7 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
      *
      * @since 1.8.4
      */
-    public ItemStackHelper getFirstInput() {
+    public ItemStackHelper getTopInput() {
         return getSlot(0);
     }
 
@@ -31,7 +31,7 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
      *
      * @since 1.8.4
      */
-    public ItemStackHelper getSecondInput() {
+    public ItemStackHelper getBottomInput() {
         return getSlot(1);
     }
 
@@ -54,8 +54,8 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
      */
     public int simulateXp() {
         int xp = 0;
-        xp += this.getExperience(getFirstInput().getRaw());
-        xp += this.getExperience(getSecondInput().getRaw());
+        xp += this.getExperience(getTopInput().getRaw());
+        xp += this.getExperience(getBottomInput().getRaw());
         return xp > 0 ? (int) Math.ceil((double) xp / 2.0) : 0;
     }
 

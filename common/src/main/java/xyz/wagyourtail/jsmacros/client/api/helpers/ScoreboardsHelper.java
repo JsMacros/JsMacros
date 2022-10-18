@@ -56,13 +56,35 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
         return getPlayerTeamColorIndex(entity.getRaw());
     }
 
-
     /**
      * @since 1.6.5
      * @return team index for client player
      */
     public int getPlayerTeamColorIndex() {
         return getPlayerTeamColorIndex(MinecraftClient.getInstance().player);
+    }
+
+    /**
+     * @return the formatting for the client player's team, {@code null} if the player is not in a
+     *         team.
+     *
+     * @since 1.8.4
+     */
+    public FormattingHelper getTeamColorFormatting() {
+        Formatting team = getPlayerTeamColor(MinecraftClient.getInstance().player);
+        return team == null ? null : new FormattingHelper(team);
+    }
+
+    /**
+     * @param player the player to get the team color's formatting for.
+     * @return the formatting for the client player's team, {@code null} if the player is not in a
+     *         team.
+     *
+     * @since 1.8.4
+     */
+    public FormattingHelper getTeamColorFormatting(PlayerEntityHelper<PlayerEntity> player) {
+        Formatting team = getPlayerTeamColor(player.getRaw());
+        return team == null ? null : new FormattingHelper(team);
     }
 
     /**

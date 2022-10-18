@@ -22,7 +22,7 @@ public class TridentEntityHelper extends EntityHelper<TridentEntity> {
      * @since 1.8.4
      */
     public boolean hasLoyalty() {
-        return base.getDataTracker().get(((MixinTridentEntity) base).getLoyalty()) > 0;
+        return base.getDataTracker().get(MixinTridentEntity.getLoyalty()) > 0;
     }
 
     /**

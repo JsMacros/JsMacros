@@ -211,8 +211,9 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param mapIdentifiers the identifier used to get the slots from {@link #getMap()}.
-     * @return the first empty slot in the given slots and -1 if there are no empty slots
+     * @param mapIdentifiers the identifier of the inventory sections to check
+     * @return the first empty slot in the given inventory sections, or {@code -1} if there are no
+     *         empty slots.
      *
      * @since 1.8.4
      */
@@ -226,7 +227,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @return a map of all item ids and their total count.
+     * @return a map of all item ids and their total count inside the inventory.
      *
      * @since 1.8.4
      */
@@ -302,34 +303,6 @@ public class Inventory<T extends HandledScreen<?>> {
             }
         }
         return slots.toIntArray();
-    }
-
-    /**
-     * @param callback the callback for accepting the items
-     * @since 1.8.4
-     */
-    public void iterateItems(MethodWrapper<ItemStackHelper, Integer, ?, ?> callback) {
-        int count = getTotalSlots();
-        for (int i = 0; i < count; i++) {
-            ItemStackHelper stack = getSlot(i);
-            if (!stack.isEmpty()) {
-                callback.accept(stack, i);
-            }
-        }
-    }
-
-    /**
-     * @param callback       the callback for accepting the items
-     * @param mapIdentifiers the inventory sections to iterate over
-     * @since 1.8.4
-     */
-    public void iterateItems(MethodWrapper<ItemStackHelper, Integer, ?, ?> callback, String... mapIdentifiers) {
-        IntStream.of(getSlots(mapIdentifiers)).forEach(i -> {
-            ItemStackHelper stack = getSlot(i);
-            if (!stack.isEmpty()) {
-                callback.accept(stack, i);
-            }
-        });
     }
     
     /**

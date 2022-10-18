@@ -21,6 +21,12 @@ public class EnderDragonEntityHelper extends MobEntityHelper<EnderDragonEntity> 
     }
 
     /**
+     * The phases are as follows:
+     * <p>
+     * {@code HoldingPattern}, {@code StrafePlayer}, {@code LandingApproach}, {@code Landing},
+     * {@code Takeoff}, {@code SittingFlaming}, {@code SittingScanning}, {@code SittingAttacking},
+     * {@code ChargingPlayer}, {@code Dying}, {@code Hover}
+     *
      * @return the current phase of the dragon.
      *
      * @since 1.8.4
@@ -49,7 +55,8 @@ public class EnderDragonEntityHelper extends MobEntityHelper<EnderDragonEntity> 
     }
 
     /**
-     * The name can be either {@code head}, {@code neck}, {@code body}, {@code tail} or {@code wing}.
+     * The name can be either {@code head}, {@code neck}, {@code body}, {@code tail} or
+     * {@code wing}.
      *
      * @param name the name of the body part to get
      * @return a list of all body parts of the dragon with the specified name.

@@ -30,7 +30,7 @@ public class FakeServerCommandSource extends ServerCommandSource {
     private final ClientCommandSource source;
 
     public FakeServerCommandSource(ClientCommandSource source, ClientPlayerEntity player) {
-        super(null, player.getPos(), player.getRotationClient(), null, ((IClientPlayerEntity) player).jsmacros_getPermissionLevel(), player.getName().getString(), player.getDisplayName(), null, player);
+        super(null, player.getPos(), player.getRotationClient(), null, 100, player.getName().getString(), player.getDisplayName(), null, player);
         this.source = source;
     }
 
@@ -62,11 +62,6 @@ public class FakeServerCommandSource extends ServerCommandSource {
     @Override
     public Stream<Identifier> getRecipeIds() {
         return source.getRecipeIds();
-    }
-
-    @Override
-    public boolean hasPermissionLevel(int level) {
-        return source.hasPermissionLevel(level);
     }
 
     @Override

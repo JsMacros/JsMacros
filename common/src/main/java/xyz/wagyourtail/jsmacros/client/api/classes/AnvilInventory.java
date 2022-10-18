@@ -67,7 +67,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
      *
      * @since 1.8.4
      */
-    public ItemStackHelper getFirstInput() {
+    public ItemStackHelper getLeftInput() {
         return getSlot(0);
     }
 
@@ -76,7 +76,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
      *
      * @since 1.8.4
      */
-    public ItemStackHelper getSecondInput() {
+    public ItemStackHelper getRightInput() {
         return getSlot(1);
     }
 

@@ -65,7 +65,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public void search(String search) {
-        if (((MixinCreativeInventoryScreen) inventory).getSelectedTab() != ItemGroup.SEARCH.getIndex()) {
+        if (MixinCreativeInventoryScreen.getSelectedTab() != ItemGroup.SEARCH.getIndex()) {
             return;
         }
         ((MixinCreativeInventoryScreen) inventory).getSearchBox().setText(search);

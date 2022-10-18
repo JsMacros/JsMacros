@@ -88,7 +88,7 @@ public abstract class MixinMinecraftClient {
         }
     }
 
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;thread:Ljava/lang/Thread;", shift = At.Shift.AFTER, ordinal = 0), method = "run")
+    @Inject(at = @At("HEAD"), method = "run")
     private void onStart(CallbackInfo ci) {
         new EventLaunchGame(this.session.getUsername());
     }

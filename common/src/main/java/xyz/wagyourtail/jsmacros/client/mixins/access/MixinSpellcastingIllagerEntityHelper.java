@@ -14,6 +14,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface MixinSpellcastingIllagerEntityHelper {
 
     @Accessor("SPELL")
-    TrackedData<Byte> getSpellKey();
+    static TrackedData<Byte> getSpellKey() {
+        throw new RuntimeException("Mixin was not applied correctly!");
+    }
 
 }

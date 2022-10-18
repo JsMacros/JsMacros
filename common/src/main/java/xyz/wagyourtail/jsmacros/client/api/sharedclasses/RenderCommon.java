@@ -11,7 +11,6 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
@@ -458,7 +457,7 @@ public class RenderCommon {
      * @since 1.0.5
      */
     @SuppressWarnings("unused")
-    public static class ItemElement implements RenderElement, Alignable<ItemElement> {
+    public static class Item implements RenderElement, Alignable<Item> {
     
         private static final MinecraftClient mc = MinecraftClient.getInstance();
     
@@ -472,15 +471,15 @@ public class RenderCommon {
         public int y;
         public int zIndex;
     
-        public ItemElement(int x, int y, int zIndex, String id, boolean overlay, double scale, float rotation) {
+        public Item(int x, int y, int zIndex, String id, boolean overlay, double scale, float rotation) {
             this(x, y, zIndex, new ItemStackHelper(id, 1), overlay, scale, rotation);
         }
     
-        public ItemElement(int x, int y, int zIndex, ItemStackHelper i, boolean overlay, double scale, float rotation) {
+        public Item(int x, int y, int zIndex, ItemStackHelper i, boolean overlay, double scale, float rotation) {
             this(x, y, zIndex, i, overlay, scale, rotation, null);
         }
     
-        public ItemElement(int x, int y, int zIndex, ItemStackHelper itemStack, boolean overlay, double scale, float rotation, String ovText) {
+        public Item(int x, int y, int zIndex, ItemStackHelper itemStack, boolean overlay, double scale, float rotation, String ovText) {
             this.x = x;
             this.y = y;
             this.item = itemStack.getRaw();
@@ -497,7 +496,7 @@ public class RenderCommon {
          *
          * @since 1.0.5 [citation needed]
          */
-        public ItemElement setItem(ItemStackHelper i) {
+        public Item setItem(ItemStackHelper i) {
             if (i != null) {
                 this.item = i.getRaw();
             } else {
@@ -513,7 +512,7 @@ public class RenderCommon {
          *
          * @since 1.0.5 [citation needed]
          */
-        public ItemElement setItem(String id, int count) {
+        public Item setItem(String id, int count) {
             this.item = new ItemStack(Registry.ITEM.get(RegistryHelper.parseIdentifier(id)), count);
             return this;
         }
@@ -533,7 +532,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public ItemElement setX(int x) {
+        public Item setX(int x) {
             this.x = x;
             return this;
         }
@@ -553,7 +552,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public ItemElement setY(int y) {
+        public Item setY(int y) {
             this.y = y;
             return this;
         }
@@ -574,7 +573,7 @@ public class RenderCommon {
          *
          * @since 1.0.5
          */
-        public ItemElement setPos(int x, int y) {
+        public Item setPos(int x, int y) {
             this.x = x;
             this.y = y;
             return this;
@@ -587,7 +586,7 @@ public class RenderCommon {
          * @throws IllegalArgumentException
          * @since 1.2.6
          */
-        public ItemElement setScale(double scale) throws IllegalArgumentException {
+        public Item setScale(double scale) throws IllegalArgumentException {
             if (scale == 0) {
                 throw new IllegalArgumentException("Scale can't be 0");
             }
@@ -610,7 +609,7 @@ public class RenderCommon {
          *
          * @since 1.2.6
          */
-        public ItemElement setRotation(double rotation) {
+        public Item setRotation(double rotation) {
             this.rotation = MathHelper.wrapDegrees((float) rotation);
             return this;
         }
@@ -630,7 +629,7 @@ public class RenderCommon {
          *
          * @since 1.2.0
          */
-        public ItemElement setOverlay(boolean overlay) {
+        public Item setOverlay(boolean overlay) {
             this.overlay = overlay;
             return this;
         }
@@ -651,7 +650,7 @@ public class RenderCommon {
          *
          * @since 1.2.0
          */
-        public ItemElement setOverlayText(String ovText) {
+        public Item setOverlayText(String ovText) {
             this.ovText = ovText;
             return this;
         }
@@ -671,7 +670,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public ItemElement setZIndex(int zIndex) {
+        public Item setZIndex(int zIndex) {
             this.zIndex = zIndex;
             return this;
         }
@@ -737,7 +736,7 @@ public class RenderCommon {
             matrices.pop();
         }
     
-        public ItemElement setParent(IDraw2D<?> parent) {
+        public Item setParent(IDraw2D<?> parent) {
             this.parent = parent;
             return this;
         }
@@ -773,7 +772,7 @@ public class RenderCommon {
         }
     
         @Override
-        public ItemElement moveTo(int x, int y) {
+        public Item moveTo(int x, int y) {
             return setPos(x, y);
         }
     
@@ -781,7 +780,7 @@ public class RenderCommon {
          * @author Etheradon
          * @since 1.8.4
          */
-        public static final class Builder extends RenderElementBuilder<ItemElement> implements Alignable<Builder> {
+        public static final class Builder extends RenderElementBuilder<Item> implements Alignable<Builder> {
             private int x = 0;
             private int y = 0;
             private ItemStackHelper itemStack = new ItemStackHelper(ItemStack.EMPTY);
@@ -1000,8 +999,8 @@ public class RenderCommon {
             }
     
             @Override
-            protected ItemElement createElement() {
-                return new ItemElement(x, y, zIndex, itemStack, overlay, scale, rotation, ovText).setParent(parent);
+            protected Item createElement() {
+                return new Item(x, y, zIndex, itemStack, overlay, scale, rotation, ovText).setParent(parent);
             }
     
             @Override
@@ -1046,7 +1045,7 @@ public class RenderCommon {
      * @since 1.2.3
      */
     @SuppressWarnings("unused")
-    public static class ImageElement implements RenderElement, Alignable<ImageElement> {
+    public static class Image implements RenderElement, Alignable<Image> {
     
         private static MinecraftClient mc = MinecraftClient.getInstance();
     
@@ -1066,12 +1065,12 @@ public class RenderCommon {
         public int color;
         public int zIndex;
     
-        public ImageElement(int x, int y, int width, int height, int zIndex, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
+        public Image(int x, int y, int width, int height, int zIndex, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
             this(x, y, width, height, zIndex, 0xFF, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
             setColor(color);
         }
     
-        public ImageElement(int x, int y, int width, int height, int zIndex, int alpha, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
+        public Image(int x, int y, int width, int height, int zIndex, int alpha, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
             setPos(x, y, width, height);
             setColor(color, alpha);
             setImage(id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight);
@@ -1090,7 +1089,7 @@ public class RenderCommon {
          *
          * @since 1.2.3
          */
-        public ImageElement setImage(String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
+        public Image setImage(String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
             imageid = RegistryHelper.parseIdentifier(id);
             this.imageX = imageX;
             this.imageY = imageY;
@@ -1116,7 +1115,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public ImageElement setX(int x) {
+        public Image setX(int x) {
             this.x = x;
             return this;
         }
@@ -1136,7 +1135,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public ImageElement setY(int y) {
+        public Image setY(int y) {
             this.y = y;
             return this;
         }
@@ -1157,7 +1156,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public ImageElement setPos(int x, int y) {
+        public Image setPos(int x, int y) {
             this.x = x;
             this.y = y;
             return this;
@@ -1170,7 +1169,7 @@ public class RenderCommon {
          * @param height
          * @since 1.2.3
          */
-        public ImageElement setPos(int x, int y, int width, int height) {
+        public Image setPos(int x, int y, int width, int height) {
             this.x = x;
             this.y = y;
             this.width = width;
@@ -1184,7 +1183,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public ImageElement setWidth(int width) {
+        public Image setWidth(int width) {
             this.width = width;
             return this;
         }
@@ -1204,7 +1203,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public ImageElement setHeight(int height) {
+        public Image setHeight(int height) {
             this.height = height;
             return this;
         }
@@ -1225,7 +1224,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public ImageElement setSize(int width, int height) {
+        public Image setSize(int width, int height) {
             this.width = width;
             this.height = height;
             return this;
@@ -1237,7 +1236,7 @@ public class RenderCommon {
          *
          * @since 1.6.5
          */
-        public ImageElement setColor(int color) {
+        public Image setColor(int color) {
             if (color <= 0xFFFFFF) {
                 color = color | 0xFF000000;
             }
@@ -1252,7 +1251,7 @@ public class RenderCommon {
          *
          * @since 1.6.5
          */
-        public ImageElement setColor(int color, int alpha) {
+        public Image setColor(int color, int alpha) {
             this.color = (alpha << 24) | (color & 0xFFFFFF);
             return this;
         }
@@ -1281,7 +1280,7 @@ public class RenderCommon {
          *
          * @since 1.2.6
          */
-        public ImageElement setRotation(double rotation) {
+        public Image setRotation(double rotation) {
             this.rotation = MathHelper.wrapDegrees((float) rotation);
             return this;
         }
@@ -1301,7 +1300,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public ImageElement setZIndex(int zIndex) {
+        public Image setZIndex(int zIndex) {
             this.zIndex = zIndex;
             return this;
         }
@@ -1348,7 +1347,7 @@ public class RenderCommon {
             RenderSystem.disableBlend();
         }
     
-        public ImageElement setParent(IDraw2D<?> parent) {
+        public Image setParent(IDraw2D<?> parent) {
             this.parent = parent;
             return this;
         }
@@ -1384,7 +1383,7 @@ public class RenderCommon {
         }
     
         @Override
-        public ImageElement moveTo(int x, int y) {
+        public Image moveTo(int x, int y) {
             return setPos(x, y, width, height);
         }
     
@@ -1392,7 +1391,7 @@ public class RenderCommon {
          * @author Etheradon
          * @since 1.8.4
          */
-        public static final class Builder extends RenderElementBuilder<ImageElement> implements Alignable<Builder> {
+        public static final class Builder extends RenderElementBuilder<Image> implements Alignable<Builder> {
             private String identifier;
             private int x = 0;
             private int y = 0;
@@ -1880,8 +1879,8 @@ public class RenderCommon {
             }
     
             @Override
-            public ImageElement createElement() {
-                return new ImageElement(x, y, width, height, zIndex, alpha, color, identifier, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation).setParent(parent);
+            public Image createElement() {
+                return new Image(x, y, width, height, zIndex, alpha, color, identifier, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation).setParent(parent);
             }
     
             @Override
@@ -1926,7 +1925,7 @@ public class RenderCommon {
      * @since 1.0.5
      */
     @SuppressWarnings("unused")
-    public static class RectElement implements RenderElement, Alignable<RectElement> {
+    public static class Rect implements RenderElement, Alignable<Rect> {
     
         public IDraw2D<?> parent;
         public float rotation;
@@ -1937,12 +1936,12 @@ public class RenderCommon {
         public int color;
         public int zIndex;
     
-        public RectElement(int x1, int y1, int x2, int y2, int color, float rotation, int zIndex) {
+        public Rect(int x1, int y1, int x2, int y2, int color, float rotation, int zIndex) {
             this(x1, y1, x2, y2, color, 0xFF, rotation, zIndex);
             setColor(color);
         }
     
-        public RectElement(int x1, int y1, int x2, int y2, int color, int alpha, float rotation, int zIndex) {
+        public Rect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation, int zIndex) {
             setPos(x1, y1, x2, y2);
             setColor(color, alpha);
             this.rotation = MathHelper.wrapDegrees(rotation);
@@ -1955,7 +1954,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public RectElement setX1(int x1) {
+        public Rect setX1(int x1) {
             this.x1 = x1;
             return this;
         }
@@ -1975,7 +1974,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public RectElement setY1(int y1) {
+        public Rect setY1(int y1) {
             this.y1 = y1;
             return this;
         }
@@ -1996,7 +1995,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public RectElement setPos1(int x1, int y1) {
+        public Rect setPos1(int x1, int y1) {
             this.x1 = x1;
             this.y1 = y1;
             return this;
@@ -2008,7 +2007,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public RectElement setX2(int x2) {
+        public Rect setX2(int x2) {
             this.x2 = x2;
             return this;
         }
@@ -2028,7 +2027,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public RectElement setY2(int y2) {
+        public Rect setY2(int y2) {
             this.y2 = y2;
             return this;
         }
@@ -2049,7 +2048,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public RectElement setPos2(int x2, int y2) {
+        public Rect setPos2(int x2, int y2) {
             this.x2 = x2;
             this.y2 = y2;
             return this;
@@ -2064,7 +2063,7 @@ public class RenderCommon {
          *
          * @since 1.1.8
          */
-        public RectElement setPos(int x1, int y1, int x2, int y2) {
+        public Rect setPos(int x1, int y1, int x2, int y2) {
             this.x1 = x1;
             this.y1 = y1;
             this.x2 = x2;
@@ -2078,7 +2077,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public RectElement setWidth(int width) {
+        public Rect setWidth(int width) {
             if (x1 <= x2) {
                 x2 = x1 + width;
             } else {
@@ -2102,7 +2101,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public RectElement setHeight(int height) {
+        public Rect setHeight(int height) {
             if (y1 <= y2) {
                 y2 = y1 + height;
             } else {
@@ -2127,7 +2126,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public RectElement setSize(int width, int height) {
+        public Rect setSize(int width, int height) {
             setWidth(width);
             setHeight(height);
             return this;
@@ -2139,7 +2138,7 @@ public class RenderCommon {
          *
          * @since 1.0.5
          */
-        public RectElement setColor(int color) {
+        public Rect setColor(int color) {
             if (color <= 0xFFFFFF) {
                 color = color | 0xFF000000;
             }
@@ -2154,7 +2153,7 @@ public class RenderCommon {
          *
          * @since 1.1.8
          */
-        public RectElement setColor(int color, int alpha) {
+        public Rect setColor(int color, int alpha) {
             this.color = (alpha << 24) | (color & 0xFFFFFF);
             return this;
         }
@@ -2165,7 +2164,7 @@ public class RenderCommon {
          *
          * @since 1.1.8
          */
-        public RectElement setAlpha(int alpha) {
+        public Rect setAlpha(int alpha) {
             this.color = (color & 0xFFFFFF) | (alpha << 24);
             return this;
         }
@@ -2194,7 +2193,7 @@ public class RenderCommon {
          *
          * @since 1.2.6
          */
-        public RectElement setRotation(double rotation) {
+        public Rect setRotation(double rotation) {
             this.rotation = MathHelper.wrapDegrees((float) rotation);
             return this;
         }
@@ -2214,7 +2213,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public RectElement setZIndex(int zIndex) {
+        public Rect setZIndex(int zIndex) {
             this.zIndex = zIndex;
             return this;
         }
@@ -2259,7 +2258,7 @@ public class RenderCommon {
             matrices.pop();
         }
     
-        public RectElement setParent(IDraw2D<?> parent) {
+        public Rect setParent(IDraw2D<?> parent) {
             this.parent = parent;
             return this;
         }
@@ -2295,7 +2294,7 @@ public class RenderCommon {
         }
     
         @Override
-        public RectElement moveTo(int x, int y) {
+        public Rect moveTo(int x, int y) {
             return setPos(x, y, x + getScaledWidth(), y + getScaledHeight());
         }
     
@@ -2303,7 +2302,7 @@ public class RenderCommon {
          * @author Etheradon
          * @since 1.8.4
          */
-        public static final class Builder extends RenderElementBuilder<RectElement> implements Alignable<Builder> {
+        public static final class Builder extends RenderElementBuilder<Rect> implements Alignable<Builder> {
             private int x1 = 0;
             private int y1 = 0;
             private int x2 = 0;
@@ -2617,8 +2616,8 @@ public class RenderCommon {
             }
     
             @Override
-            public RectElement createElement() {
-                return new RectElement(x1, y1, x2, y2, color, alpha, rotation, zIndex).setParent(parent);
+            public Rect createElement() {
+                return new Rect(x1, y1, x2, y2, color, alpha, rotation, zIndex).setParent(parent);
             }
     
             @Override
@@ -2663,11 +2662,11 @@ public class RenderCommon {
      * @since 1.0.5
      */
     @SuppressWarnings("unused")
-    public static class TextElement implements RenderElement, Alignable<TextElement> {
+    public static class Text implements RenderElement, Alignable<Text> {
     
         public IDraw2D<?> parent;
     
-        public Text text;
+        public net.minecraft.text.Text text;
         public double scale;
         public float rotation;
         public int x;
@@ -2677,11 +2676,11 @@ public class RenderCommon {
         public boolean shadow;
         public int zIndex;
     
-        public TextElement(String text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
-            this(new TextHelper(Text.literal(text)), x, y, color, zIndex, shadow, scale, rotation);
+        public Text(String text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
+            this(new TextHelper(net.minecraft.text.Text.literal(text)), x, y, color, zIndex, shadow, scale, rotation);
         }
     
-        public TextElement(TextHelper text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
+        public Text(TextHelper text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
             this.text = text.getRaw();
             this.x = x;
             this.y = y;
@@ -2699,7 +2698,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public TextElement setX(int x) {
+        public Text setX(int x) {
             this.x = x;
             return this;
         }
@@ -2719,7 +2718,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public TextElement setY(int y) {
+        public Text setY(int y) {
             this.y = y;
             return this;
         }
@@ -2740,7 +2739,7 @@ public class RenderCommon {
          *
          * @since 1.0.5
          */
-        public TextElement setPos(int x, int y) {
+        public Text setPos(int x, int y) {
             this.x = x;
             this.y = y;
             return this;
@@ -2752,8 +2751,8 @@ public class RenderCommon {
          *
          * @since 1.0.5
          */
-        public TextElement setText(String text) {
-            this.text = Text.literal(text);
+        public Text setText(String text) {
+            this.text = net.minecraft.text.Text.literal(text);
             this.width = mc.textRenderer.getWidth(text);
             return this;
         }
@@ -2764,7 +2763,7 @@ public class RenderCommon {
          *
          * @since 1.2.7
          */
-        public TextElement setText(TextHelper text) {
+        public Text setText(TextHelper text) {
             this.text = text.getRaw();
             this.width = mc.textRenderer.getWidth(this.text);
             return this;
@@ -2803,7 +2802,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public TextElement setShadow(boolean shadow) {
+        public Text setShadow(boolean shadow) {
             this.shadow = shadow;
             return this;
         }
@@ -2825,7 +2824,7 @@ public class RenderCommon {
          * @throws IllegalArgumentException
          * @since 1.0.5
          */
-        public TextElement setScale(double scale) throws IllegalArgumentException {
+        public Text setScale(double scale) throws IllegalArgumentException {
             if (scale == 0) {
                 throw new IllegalArgumentException("Scale can't be 0");
             }
@@ -2848,7 +2847,7 @@ public class RenderCommon {
          *
          * @since 1.0.5
          */
-        public TextElement setRotation(double rotation) {
+        public Text setRotation(double rotation) {
             this.rotation = MathHelper.wrapDegrees((float) rotation);
             return this;
         }
@@ -2868,7 +2867,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public TextElement setColor(int color) {
+        public Text setColor(int color) {
             this.color = color;
             return this;
         }
@@ -2888,7 +2887,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public TextElement setZIndex(int zIndex) {
+        public Text setZIndex(int zIndex) {
             this.zIndex = zIndex;
             return this;
         }
@@ -2927,7 +2926,7 @@ public class RenderCommon {
             matrices.pop();
         }
     
-        public TextElement setParent(IDraw2D<?> parent) {
+        public Text setParent(IDraw2D<?> parent) {
             this.parent = parent;
             return this;
         }
@@ -2963,7 +2962,7 @@ public class RenderCommon {
         }
     
         @Override
-        public TextElement moveTo(int x, int y) {
+        public Text moveTo(int x, int y) {
             return setPos(x, y);
         }
     
@@ -2971,10 +2970,10 @@ public class RenderCommon {
          * @author Etheradon
          * @since 1.8.4
          */
-        public static class Builder extends RenderElementBuilder<TextElement> implements Alignable<Builder> {
+        public static class Builder extends RenderElementBuilder<Text> implements Alignable<Builder> {
             private int x = 0;
             private int y = 0;
-            private Text text = Text.empty();
+            private net.minecraft.text.Text text = net.minecraft.text.Text.empty();
             private int color = 0xFFFFFFFF;
             private double scale = 1;
             private float rotation = 0;
@@ -3019,7 +3018,7 @@ public class RenderCommon {
              */
             public Builder text(String text) {
                 if (text != null) {
-                    this.text = Text.literal(text);
+                    this.text = net.minecraft.text.Text.literal(text);
                 }
                 return this;
             }
@@ -3232,8 +3231,8 @@ public class RenderCommon {
             }
     
             @Override
-            public TextElement createElement() {
-                return new TextElement(new TextHelper(text), x, y, color, zIndex, shadow, scale, rotation).setParent(parent);
+            public Text createElement() {
+                return new Text(new TextHelper(text), x, y, color, zIndex, shadow, scale, rotation).setParent(parent);
             }
     
             @Override
@@ -3278,7 +3277,7 @@ public class RenderCommon {
      * @since 1.8.4
      */
     @SuppressWarnings("unused")
-    public static class LineElement implements RenderElement {
+    public static class Line implements RenderElement {
     
         public int x1;
         public int y1;
@@ -3289,7 +3288,7 @@ public class RenderCommon {
         public float width;
         public int zIndex;
     
-        public LineElement(int x1, int y1, int x2, int y2, int color, float rotation, float width, int zIndex) {
+        public Line(int x1, int y1, int x2, int y2, int color, float rotation, float width, int zIndex) {
             this.x1 = x1;
             this.y1 = y1;
             this.x2 = x2;
@@ -3306,7 +3305,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public LineElement setX1(int x1) {
+        public Line setX1(int x1) {
             this.x1 = x1;
             return this;
         }
@@ -3326,7 +3325,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public LineElement setY1(int y1) {
+        public Line setY1(int y1) {
             this.y1 = y1;
             return this;
         }
@@ -3347,7 +3346,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public LineElement setPos1(int x1, int y1) {
+        public Line setPos1(int x1, int y1) {
             this.x1 = x1;
             this.y1 = y1;
             return this;
@@ -3359,7 +3358,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public LineElement setX2(int x2) {
+        public Line setX2(int x2) {
             this.x2 = x2;
             return this;
         }
@@ -3379,7 +3378,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public LineElement setY2(int y2) {
+        public Line setY2(int y2) {
             this.y2 = y2;
             return this;
         }
@@ -3400,7 +3399,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public LineElement setPos2(int x2, int y2) {
+        public Line setPos2(int x2, int y2) {
             this.x2 = x2;
             this.y2 = y2;
             return this;
@@ -3415,7 +3414,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public LineElement setPos(int x1, int y1, int x2, int y2) {
+        public Line setPos(int x1, int y1, int x2, int y2) {
             this.x1 = x1;
             this.y1 = y1;
             this.x2 = x2;
@@ -3429,7 +3428,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public LineElement setColor(int color) {
+        public Line setColor(int color) {
             if (color < 0xFFFFFF) {
                 color = color | 0xFF000000;
             }
@@ -3444,7 +3443,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public LineElement setColor(int color, int alpha) {
+        public Line setColor(int color, int alpha) {
             this.color = (alpha << 24) | (color & 0xFFFFFF);
             return this;
         }
@@ -3464,7 +3463,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public LineElement setAlpha(int alpha) {
+        public Line setAlpha(int alpha) {
             this.color = (alpha << 24) | (color & 0xFFFFFF);
             return this;
         }
@@ -3484,7 +3483,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public LineElement setRotation(double rotation) {
+        public Line setRotation(double rotation) {
             this.rotation = (float) rotation;
             return this;
         }
@@ -3504,7 +3503,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public LineElement setWidth(double width) {
+        public Line setWidth(double width) {
             this.width = (float) width;
             return this;
         }
@@ -3524,7 +3523,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        public LineElement setZIndex(int zIndex) {
+        public Line setZIndex(int zIndex) {
             this.zIndex = zIndex;
             return this;
         }
@@ -3578,7 +3577,7 @@ public class RenderCommon {
          * @author Etheradon
          * @since 1.8.4
          */
-        public static class Builder extends RenderElementBuilder<LineElement> {
+        public static class Builder extends RenderElementBuilder<Line> {
     
             private int x1 = 0;
             private int y1 = 0;
@@ -3858,8 +3857,8 @@ public class RenderCommon {
             }
     
             @Override
-            protected LineElement createElement() {
-                return new LineElement(x1, y1, x2, y2, (alpha << 24) | (color & 0xFFFFFF), rotation, width, zIndex);
+            protected Line createElement() {
+                return new Line(x1, y1, x2, y2, (alpha << 24) | (color & 0xFFFFFF), rotation, width, zIndex);
             }
         }
     }

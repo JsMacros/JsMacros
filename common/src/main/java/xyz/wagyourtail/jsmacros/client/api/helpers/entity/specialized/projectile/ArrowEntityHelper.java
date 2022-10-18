@@ -17,7 +17,7 @@ public class ArrowEntityHelper extends EntityHelper<PersistentProjectileEntity> 
     }
 
     /**
-     * @return the particle's color of the arrow.
+     * @return the particle's color of the arrow, or {@code -1} if the arrow has no particles.
      *
      * @since 1.8.4
      */

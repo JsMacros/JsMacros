@@ -41,6 +41,15 @@ public class TeamHelper extends BaseHelper<Team> {
     public List<String> getPlayerList() {
         return new ArrayList<>(base.getPlayerList());
     }
+
+    /**
+     * @return the formatting of this team's color.
+     *
+     * @since 1.8.4
+     */
+    public FormattingHelper getColorFormat() {
+        return new FormattingHelper(base.getColor());
+    }
     
     /**
      * @since 1.3.0

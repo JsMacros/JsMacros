@@ -31,7 +31,7 @@ public class SpellcastingIllagerEntityHelper<T extends SpellcastingIllagerEntity
      * @since 1.8.4
      */
     public String getCastedSpell() {
-        return switch (base.getDataTracker().get(((MixinSpellcastingIllagerEntityHelper) base).getSpellKey())) {
+        return switch (base.getDataTracker().get(MixinSpellcastingIllagerEntityHelper.getSpellKey())) {
             case 0 -> "NONE";
             case 1 -> "SUMMON_VEX";
             case 2 -> "FANGS";

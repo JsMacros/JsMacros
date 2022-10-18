@@ -9,7 +9,7 @@ public interface IEventListener {
     EventContainer<?> trigger(BaseEvent event);
 
     /**
-     * Used self unregistering events.
+     * Used for self unregistering events.
      *
      * @since 1.8.4
      */

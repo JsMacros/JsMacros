@@ -161,8 +161,4 @@ public class JsMacros {
         return modLoader;
     }
 
-    public static File getConfigFolder() {
-        return configFolder;
-    }
-    
 }

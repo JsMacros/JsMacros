@@ -34,6 +34,16 @@ public class StyleHelper extends BaseHelper<Style> {
     }
 
     /**
+     * @return the formatting of this style, or {@code null} if no formatting was found.
+     *
+     * @since 1.8.4
+     */
+    public FormattingHelper getFormatting() {
+        Formatting f = Formatting.byName(base.getColor().getName());
+        return f == null ? null : new FormattingHelper(f);
+    }
+    
+    /**
      * @return the color index of this style or {@code -1} if no color is set.
      *
      * @since 1.8.4

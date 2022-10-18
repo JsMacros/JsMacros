@@ -29,7 +29,7 @@ public class EndCrystalEntityHelper extends EntityHelper<EndCrystalEntity> {
     }
 
     /**
-     * @return the target of the crystal's beam or null if there is none.
+     * @return the target of the crystal's beam, or {@code null} if there is none.
      *
      * @since 1.8.4
      */

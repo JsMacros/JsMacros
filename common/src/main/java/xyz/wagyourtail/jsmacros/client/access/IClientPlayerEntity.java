@@ -4,6 +4,4 @@ public interface IClientPlayerEntity {
 
     public void jsmacros_sendChatMessageBypass(String message);
 
-    int jsmacros_getPermissionLevel();
-    
 }

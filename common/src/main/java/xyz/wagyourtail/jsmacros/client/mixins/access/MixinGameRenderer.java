@@ -20,7 +20,11 @@ public class MixinGameRenderer {
     @Shadow @Final private MinecraftClient client;
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onRender(float tickDelta, long startTime, boolean tick, CallbackInfo ci, int i, int j, Window window, Matrix4f matrix4f, MatrixStack matrixStack, MatrixStack matrixStack2) {
+    private void onRender(float tickDelta, long startTime, boolean tick, CallbackInfo ci, int i, int j, MatrixStack matrixStack2) {
+        //happens if using F3 + F4 to switch game modes
+        if (client.currentScreen == null) {
+            return;
+        }
         if (!(client.currentScreen instanceof ScriptScreen)) {
             ((IScreenInternal) client.currentScreen).jsmacros_render(matrixStack2, i, j, client.getLastFrameDuration());
         }

@@ -14,19 +14,30 @@ public class MooshroomEntityHelper extends AnimalEntityHelper<MooshroomEntity> {
     }
 
     /**
+     * @return {@code true} if this mooshroom can be sheared, {@code false} otherwise.
+     *
      * @since 1.8.4
-     * @return
      */
     public boolean isShearable() {
         return base.isShearable();
     }
-    
+
+    /**
+     * @return {@code true} if this mooshroom is a red mooshroom, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
     public boolean isRed() {
         return base.getMooshroomType() == MooshroomEntity.Type.RED;
     }
-    
+
+    /**
+     * @return {@code true} if this mooshroom is a brown mooshroom, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
     public boolean isBrown() {
         return base.getMooshroomType() == MooshroomEntity.Type.BROWN;
     }
-    
+
 }

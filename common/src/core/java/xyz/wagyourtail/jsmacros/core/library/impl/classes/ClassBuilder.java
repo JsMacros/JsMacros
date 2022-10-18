@@ -805,7 +805,7 @@ public class ClassBuilder<T> {
         }
 
     }
-
+    
     public class BodyBuilder {
         private final CtBehavior ctBehavior;
         private final String guestName;

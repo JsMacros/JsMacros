@@ -25,7 +25,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
     public String getId() {
         return Registry.BLOCK.getId(base.getBlockState().getBlock()).toString();
     }
-    
+
     /**
      * @return {@code true} if this fluid is still, {@code false} otherwise.
      *
@@ -75,7 +75,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
 
     /**
      * @param pos the position in the world
-     * @return the velocity vector at the given position for this fluid.
+     * @return the velocity that will be applied to entities at the given position.
      *
      * @since 1.8.4
      */
@@ -110,5 +110,5 @@ public class FluidStateHelper extends StateHelper<FluidState> {
     public String toString() {
         return String.format("FluidStateHelper:{\"id\": \"%s\", \"properties\": %s}", getId(), toMap());
     }
-    
+
 }

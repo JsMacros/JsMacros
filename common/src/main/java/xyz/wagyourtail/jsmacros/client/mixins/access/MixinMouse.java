@@ -19,25 +19,24 @@ public class MixinMouse {
     @Shadow @Final private MinecraftClient client;
 
     @Inject(method = "method_1611", at = @At(value = "HEAD"))
-    private static void onMouseClicked(boolean[] bls, Screen screen, double d, double e, int i, CallbackInfo ci) {
-        ((IScreenInternal) screen).jsmacros_mouseClicked(d, e, i);
+    private static void onMouseClicked(boolean[] bls, Screen screen, double x, double y, int button, CallbackInfo ci) {
+        ((IScreenInternal) screen).jsmacros_mouseClicked(x, y, button);
     }
 
     @Inject(method = "method_1605", at = @At(value = "HEAD"))
-    private static void onMouseReleased(boolean[] bls, Screen screen, double d, double e, int i, CallbackInfo ci) {
-        ((IScreenInternal) screen).jsmacros_mouseReleased(d, e, i);
+    private static void onMouseReleased(boolean[] bls, Screen screen, double x, double y, int button, CallbackInfo ci) {
+        ((IScreenInternal) screen).jsmacros_mouseReleased(x, y, button);
     }
 
     @Inject(method = "method_1602", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;mouseDragged(DDIDD)Z"))
-    private void onMouseDragged(Screen screen, double d, double e, double f, double g, CallbackInfo ci) {
-        ((IScreenInternal) screen).jsmacros_mouseDragged(d, e, activeButton, f, g);
+    private void onMouseDragged(Screen screen, double x, double y, double dx, double dy, CallbackInfo ci) {
+        ((IScreenInternal) screen).jsmacros_mouseDragged(x, y, activeButton, dx, dy);
     }
 
     @Inject(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;mouseScrolled(DDD)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onMouseScrolled(long window, double horizontal, double vertical, CallbackInfo ci, double d, double e, double f) {
+    private void onMouseScrolled(long window, double horizontal, double vertical, CallbackInfo ci, double amount, double x, double y) {
         assert client.currentScreen != null;
-        ((IScreenInternal) client.currentScreen).jsmacros_mouseScrolled(d, e, f);
+        ((IScreenInternal) client.currentScreen).jsmacros_mouseScrolled(x, y, amount);
     }
-
 
 }

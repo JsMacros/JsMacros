@@ -14,6 +14,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface MixinTridentEntity {
     
     @Accessor("LOYALTY")
-    TrackedData<Byte> getLoyalty();
+    static TrackedData<Byte> getLoyalty() {
+        throw new RuntimeException("Mixin was not applied correctly!");
+    }
     
 }

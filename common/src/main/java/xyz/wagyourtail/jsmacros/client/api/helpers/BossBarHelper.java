@@ -59,6 +59,15 @@ public class BossBarHelper extends BaseHelper<BossBar> {
         Formatting f = base.getColor().getTextFormat();
         return f.getColorValue() == null ? -1 : f.getColorValue();
     }
+
+    /**
+     * @return the format of the boss bar's color.
+     *
+     * @since 1.8.4
+     */
+    public FormattingHelper getColorFormat() {
+        return new FormattingHelper(base.getColor().getTextFormat());
+    }
     
     /**
      * @since 1.2.1

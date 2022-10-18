@@ -80,7 +80,8 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
     }
 
     /**
-     * @return {@code true} if the brewing stand can currently brew, {@code false} otherwise.
+     * @return {@code true} if the brewing stand can brew any of the held potions with the current
+     *         ingredient, {@code false} otherwise.
      *
      * @since 1.8.4
      */

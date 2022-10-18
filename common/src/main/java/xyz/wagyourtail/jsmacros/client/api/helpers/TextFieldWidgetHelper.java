@@ -71,8 +71,6 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
         return this;
     }
     
-    
-    
     /**
      * @since 1.0.5
      * @param color
@@ -231,19 +229,41 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
             this.textRenderer = textRenderer;
         }
 
+        /**
+         * @return the callback for when the text is changed.
+         *
+         * @since 1.8.4
+         */
         public MethodWrapper<String, IScreen, Object, ?> getAction() {
             return action;
         }
 
+        /**
+         * @param action the callback for when the text is changed
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public TextFieldBuilder action(MethodWrapper<String, IScreen, Object, ?> action) {
             this.action = action;
             return this;
         }
 
+        /**
+         * @return the current suggestion.
+         *
+         * @since 1.8.4
+         */
         public String getSuggestion() {
             return suggestion;
         }
 
+        /**
+         * @param suggestion the suggestion to use
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
         public TextFieldBuilder suggestion(String suggestion) {
             this.suggestion = suggestion;
             return this;

@@ -22,14 +22,15 @@ public final class NameUtil {
     }
 
     /**
-     * Iterate until <. If found, get the next valid name
+     * An approach to retrieve the name of a player from a chat message.
+     * <p>Iterate until <. If found, get the next valid name
      * <p>Iterate until :. If found, get the last valid name
      * <p>Iterate until >>. If found get the last valid name
      * <p>Iterate until ->. If found get the last valid name (continue if empty)
      * <p>The potential last name is the last value between [] or before >. It's used when the
      * sentence just continues.
      * <p>There are some edge cases like "name > <WrongName>", because it could also be "Guild >
-     * name :". Since the last one is more common, I will stay with this approach.
+     * name :". Since the last one is much more common, I will stay with this approach.
      *
      * @return a list of the name at index 0, will be empty if no name was found and all titles,
      *         which were inside [] or (), as the arguments

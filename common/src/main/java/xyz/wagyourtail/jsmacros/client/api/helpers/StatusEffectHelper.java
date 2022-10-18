@@ -81,20 +81,6 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     }
 
     /**
-     * @return the type of this effect, which is either {@code "HARMFUL"}, {@code "NEUTRAL"} or
-     *         {@code "BENEFICIAL"}.
-     *
-     * @since 1.8.4
-     */
-    public String getType() {
-        return switch (base.getEffectType().getCategory()) {
-            case HARMFUL -> "HARMFUL";
-            case NEUTRAL -> "NEUTRAL";
-            case BENEFICIAL -> "BENEFICIAL";
-        };
-    }
-
-    /**
      * An effect which is instant can still have a duration, but only if it's set through a
      * command.
      *

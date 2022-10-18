@@ -26,8 +26,6 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
     @Shadow @Final protected MinecraftClient client;
 
-    @Shadow protected abstract int getPermissionLevel();
-
     @Override
     public void jsmacros_sendChatMessageBypass(String message) {
         if (message.startsWith("/")) {
@@ -37,8 +35,4 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         }
     }
 
-    @Override
-    public int jsmacros_getPermissionLevel() {
-        return getPermissionLevel();
-    }
 }

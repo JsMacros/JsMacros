@@ -143,7 +143,8 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean hasEnchantment(String enchantment) {
-        return hasEnchantment(new EnchantmentHelper(enchantment));
+        String toCheck = RegistryHelper.parseNameSpace(enchantment);
+        return getEnchantments().stream().anyMatch(e -> e.getId().equals(toCheck));
     }
 
     /**

@@ -307,39 +307,5 @@ public class FHud extends BaseLibrary {
     public int getWindowHeight() {
         return mc.getWindow().getHeight();
     }
-
-    /**
-     * @param width the new window width
-     * @since 1.8.4
-     */
-    public void setWindowWidth(int width) {
-        GLFW.glfwSetWindowSize(mc.getWindow().getHandle(), width, getWindowHeight());
-    }
-
-    /**
-     * @param height the new window height
-     * @since 1.8.4
-     */
-    public void setWindowHeight(int height) {
-        GLFW.glfwSetWindowSize(mc.getWindow().getHandle(), getWindowWidth(), height);
-    }
-
-    /**
-     * @param width  the new window width
-     * @param height the new window height
-     * @since 1.8.4
-     */
-    public void setWindowSize(int width, int height) {
-        GLFW.glfwSetWindowSize(mc.getWindow().getHandle(), width, height);
-    }
-
-    /**
-     * @param x the new window x position
-     * @param y the new window y position
-     * @since 1.8.4
-     */
-    public void setWindowPosition(int x, int y) {
-        GLFW.glfwSetWindowPos(mc.getWindow().getHandle(), x, y);
-    }
     
 }

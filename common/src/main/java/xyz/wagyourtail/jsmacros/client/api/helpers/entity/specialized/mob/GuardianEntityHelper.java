@@ -49,7 +49,7 @@ public class GuardianEntityHelper extends MobEntityHelper<GuardianEntity> {
      *
      * @since 1.8.4
      */
-    public boolean hasSpikes() {
+    public boolean hasSpikesRetracted() {
         return !base.areSpikesRetracted();
     }
 

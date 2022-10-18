@@ -45,7 +45,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      *
      * @since 1.8.4
      */
-    public ItemStackHelper getFirstInput() {
+    public ItemStackHelper getLeftInput() {
         return new ItemStackHelper(base.getAdjustedFirstBuyItem());
     }
 
@@ -57,7 +57,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      *
      * @since 1.8.4
      */
-    public ItemStackHelper getSecondInput() {
+    public ItemStackHelper getRightInput() {
         return new ItemStackHelper(base.getAdjustedFirstBuyItem());
     }
 
