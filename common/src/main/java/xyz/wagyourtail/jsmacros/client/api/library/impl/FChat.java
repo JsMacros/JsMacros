@@ -326,7 +326,9 @@ public class FChat extends BaseLibrary {
      * @return a new {@link xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper TextHelper}
      */
     public TextHelper createTextHelperFromJSON(String json) {
-        return new TextHelper(json);
+        TextHelper t = new TextHelper(null);
+        t.replaceFromJson(json);
+        return t;
     }
     
     /**

@@ -251,13 +251,10 @@ public class FClient extends PerExecLibrary {
             boolean isInSingleplayer = mc.isInSingleplayer();
             boolean isInRealm = mc.isConnectedToRealms();
             if (isWorld) {
-                boolean bl = mc.isInSingleplayer();
+                // logic in death screen disconnect button
                 if (mc.world != null) mc.world.disconnect();
-                if (bl) {
-                    mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
-                } else {
-                    mc.disconnect();
-                }
+                mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
+                mc.setScreen(new TitleScreen());
             }
             if (isInSingleplayer) {
                 mc.setScreen(new TitleScreen());

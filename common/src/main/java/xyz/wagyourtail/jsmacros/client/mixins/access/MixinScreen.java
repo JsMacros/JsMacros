@@ -27,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
+import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.gui.ClickableWidgetHelper;
@@ -60,7 +61,7 @@ import java.util.function.BooleanSupplier;
 
 @Mixin(Screen.class)
 @Implements(@Interface(iface = IScreen.class, prefix = "soft$"))
-public abstract class MixinScreen extends AbstractParentElement implements IScreen {
+public abstract class MixinScreen extends AbstractParentElement implements IScreen, IScreenInternal {
     @Unique private final Set<RenderCommon.RenderElement> elements = new LinkedHashSet<>();
     @Unique private MethodWrapper<PositionCommon.Pos2D, Integer, Object, ?> onMouseDown;
     @Unique private MethodWrapper<PositionCommon.Vec2D, Integer, Object, ?> onMouseDrag;
@@ -879,7 +880,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public void onRenderInternal(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void jsmacros_render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (matrices == null) return;
 
         synchronized (elements) {
@@ -902,23 +903,14 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             }
         }
     }
-
-    @Inject(at = @At("RETURN"), method = "render")
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo info) {
-        onRenderInternal(matrices, mouseX, mouseY, delta);
-    }
     
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public void jsmacros_mouseClicked(double mouseX, double mouseY, int button) {
         if (onMouseDown != null) try {
             onMouseDown.accept(new PositionCommon.Pos2D(mouseX, mouseY), button);
         } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
-        if (super.mouseClicked(mouseX, mouseY, button)) {
-            return true;
-        }
-
         TextElement hoverText = null;
 
         synchronized (elements) {
@@ -933,33 +925,30 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
 
         if (hoverText != null) {
-            return handleTextClick(textRenderer.getTextHandler().getStyleAt(hoverText.text, (int) mouseX - hoverText.x));
+            handleTextClick(textRenderer.getTextHandler().getStyleAt(hoverText.text, (int) mouseX - hoverText.x));
         }
-        return false;
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+    public void jsmacros_mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (onMouseDrag != null) try {
             onMouseDrag.accept(new PositionCommon.Vec2D(mouseX, mouseY, deltaX, deltaY), button);
         } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public void jsmacros_mouseReleased(double mouseX, double mouseY, int button) {
         if (onMouseUp != null) try {
             onMouseUp.accept(new PositionCommon.Pos2D(mouseX, mouseY), button);
         } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
-        return super.mouseReleased(mouseX, mouseY, button);
     }
 
-    @Inject(at = @At("HEAD"), method = "keyPressed")
-    public void keyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> info) {
+    @Override
+    public void jsmacros_keyPressed(int keyCode, int scanCode, int modifiers) {
         if (onKeyPressed != null) try {
             onKeyPressed.accept(keyCode, modifiers);
         } catch (Throwable e) {
@@ -968,13 +957,12 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public void jsmacros_mouseScrolled(double mouseX, double mouseY, double amount) {
         if (onScroll != null) try {
             onScroll.accept(new PositionCommon.Pos2D(mouseX, mouseY), amount);
         } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
-        return super.mouseScrolled(mouseX, mouseY, amount);
     }
     
     @Inject(at = @At("RETURN"), method = "init()V")
@@ -982,7 +970,6 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         synchronized (elements) {
             elements.clear();
         }
-        client.keyboard.setRepeatEvents(true);
         if (onInit != null) {
             try {
                 onInit.accept(this);

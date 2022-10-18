@@ -84,7 +84,7 @@ public class CoreTest {
             null,
             null
         );
-        EventLockWatchdog.startWatchdog(ev, e -> null, 2000);
+        EventLockWatchdog.startWatchdog(ev, e -> null, 3000);
         ev.awaitLock(() -> {});
         assertEquals("[\"a\",\"b\",\"a\",\"b\",\"a\",\"b\",\"a\",\"b\",\"a\",\"b\",\"c\"]", custom.getString("test"));
     }
@@ -143,6 +143,6 @@ public class CoreTest {
         System.out.println("Time: " + custom.getDouble("time"));
         assertEquals("[\"long started\",\"rapid 1\",\"rapid 2\",\"rapid 3\",\"rapid 4\",\"long finished\"]", custom.getString("test"));
         assertTrue(custom.getDouble("time") > 5000);
-       assertTrue(custom.getDouble("time") < 6000);
+        assertTrue(custom.getDouble("time") < 7000);
     }
 }

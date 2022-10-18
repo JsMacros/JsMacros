@@ -6,6 +6,7 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
 import xyz.wagyourtail.jsmacros.client.api.render.shared.interfaces.IScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -75,7 +76,7 @@ public class ScriptScreen extends BaseScreen {
             ((Drawable) button).render(matrices, mouseX, mouseY, delta);
         }
 
-        ((IScreen) this).onRenderInternal(matrices, mouseX, mouseY, delta);
+        ((IScreenInternal) this).jsmacros_render(matrices, mouseX, mouseY, delta);
         try {
             if (onRender != null) onRender.accept(new PositionCommon.Pos3D(mouseX, mouseY, delta), matrices);
         } catch (Throwable e) {
