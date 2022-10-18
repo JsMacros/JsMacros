@@ -29,5 +29,6 @@ public class MixinGameRenderer {
                 e.printStackTrace();
             }
         }
+        client.getProfiler().pop();
     }
 }

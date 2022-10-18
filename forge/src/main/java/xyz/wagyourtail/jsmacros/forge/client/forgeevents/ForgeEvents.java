@@ -51,6 +51,7 @@ public class ForgeEvents {
                 t.printStackTrace();
             }
         }
+        client.getProfiler().pop();
     }
 
 
