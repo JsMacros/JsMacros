@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
@@ -33,10 +34,9 @@ public class MixinMouse {
         ((IScreenInternal) screen).jsmacros_mouseDragged(x, y, activeButton, dx, dy);
     }
 
-    @Inject(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;mouseScrolled(DDD)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onMouseScrolled(long window, double horizontal, double vertical, CallbackInfo ci, double amount, double x, double y) {
-        assert client.currentScreen != null;
-        ((IScreenInternal) client.currentScreen).jsmacros_mouseScrolled(x, y, amount);
+    @Redirect(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;mouseScrolled(DDD)Z"))
+    private boolean onMouseScrolled(Screen instance, double x, double y, double amount) {
+        ((IScreenInternal) instance).jsmacros_mouseScrolled(x, y, amount);
+        return instance.mouseScrolled(x, y, amount);
     }
-
 }

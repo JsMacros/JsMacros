@@ -63,6 +63,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Unique private MethodWrapper<PositionCommon.Pos2D, Integer, Object, ?> onMouseUp;
     @Unique private MethodWrapper<PositionCommon.Pos2D, Double, Object, ?> onScroll;
     @Unique private MethodWrapper<Integer, Integer, Object, ?> onKeyPressed;
+    @Unique private MethodWrapper<Character, Integer, Object, ?> onCharTyped;
     @Unique private MethodWrapper<IScreen, Object, Object, ?> onInit;
     @Unique private MethodWrapper<String, Object, Object, ?> catchInit;
     @Unique private MethodWrapper<IScreen, Object, Object, ?> onClose;
@@ -814,6 +815,12 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
+    public IScreen setOnCharTyped(MethodWrapper<Character, Integer, Object, ?> onCharTyped) {
+        this.onCharTyped = onCharTyped;
+        return this;
+    }
+
+    @Override
     public IScreen setOnInit(MethodWrapper<IScreen, Object, Object, ?> onInit) {
         this.onInit = onInit;
         return this;
@@ -952,7 +959,11 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public void jsmacros_charTyped(char chr, int modifiers) {
-        
+        if (onCharTyped != null) try {
+            onCharTyped.accept(chr, modifiers);
+        } catch (Throwable e) {
+            Core.getInstance().profile.logError(e);
+        }
     }
 
     @Override

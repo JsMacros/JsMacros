@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.sharedinterfaces;
 
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -437,6 +438,13 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @return
      */
     IScreen setOnKeyPressed(MethodWrapper<Integer, Integer, Object, ?> onKeyPressed);
+
+    /**
+     * @since 1.8.4
+     * @param onCharTyped calls your method as a {@link BiConsumer}&lt;{@link Character}, {@link Integer}&gt;
+     * @return
+     */
+    IScreen setOnCharTyped(MethodWrapper<Character, Integer, Object, ?> onCharTyped);
     
     /**
      * @since 1.2.7
@@ -505,5 +513,32 @@ public interface IScreen extends IDraw2D<IScreen> {
      */
     ButtonWidgetHelper.TexturedButtonBuilder texturedButtonBuilder();
 
+    /**
+     * @return {@code true} if the shift key is pressed, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    default boolean isShiftDown() {
+        return Screen.hasShiftDown();
+    }
+
+    /**
+     * @return {@code true} if the ctrl key is pressed, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    default boolean isCtrlDown() {
+        return Screen.hasControlDown();
+    }
+
+    /**
+     * @return {@code true} if the alt key is pressed, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    default boolean isAltDown() {
+        return Screen.hasAltDown();
+    }
+    
     MethodWrapper<IScreen, Object, Object, ?> getOnClose();
 }
