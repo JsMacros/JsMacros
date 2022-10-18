@@ -7,12 +7,12 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import com.google.common.collect.ImmutableMap;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.api.render.CustomImage;
-import xyz.wagyourtail.jsmacros.client.api.render.Draw2D;
-import xyz.wagyourtail.jsmacros.client.api.render.Draw3D;
-import xyz.wagyourtail.jsmacros.client.api.render.ScriptScreen;
-import xyz.wagyourtail.jsmacros.client.api.render.shared.interfaces.IDraw2D;
-import xyz.wagyourtail.jsmacros.client.api.render.shared.interfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
+import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
+import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
+import xyz.wagyourtail.jsmacros.client.api.classes.ScriptScreen;
+import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
+import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 

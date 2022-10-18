@@ -2,8 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob;
 
 import net.minecraft.entity.mob.EndermanEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.MobEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.MobEntityHelper;
 
 /**
  * @author Etheradon

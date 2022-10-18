@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
 import net.minecraft.client.gui.screen.Screen;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.api.render.shared.interfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 

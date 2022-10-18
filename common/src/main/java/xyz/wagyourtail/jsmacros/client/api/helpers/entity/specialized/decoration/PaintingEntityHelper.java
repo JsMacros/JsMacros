@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.decoratio
 
 import net.minecraft.entity.decoration.painting.PaintingEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 
 /**
  * @author Etheradon

@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
 import net.minecraft.client.network.ClientPlayerEntity;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.ClientPlayerEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 

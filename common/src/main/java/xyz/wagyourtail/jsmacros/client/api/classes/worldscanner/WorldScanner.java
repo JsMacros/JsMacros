@@ -14,9 +14,9 @@ import net.minecraft.world.chunk.PalettedContainer;
 import xyz.wagyourtail.jsmacros.client.access.IPackedIntegerArray;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainer;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainerData;
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
-import xyz.wagyourtail.jsmacros.client.api.classes.PositionCommon;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.ArrayList;

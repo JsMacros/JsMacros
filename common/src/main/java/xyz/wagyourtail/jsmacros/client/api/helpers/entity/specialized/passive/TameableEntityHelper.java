@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive;
 
 import net.minecraft.entity.passive.TameableEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.LivingEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.LivingEntityHelper;
 
 /**
  * @author Etheradon

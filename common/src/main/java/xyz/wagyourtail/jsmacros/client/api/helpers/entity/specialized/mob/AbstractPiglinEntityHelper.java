@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob;
 
 import net.minecraft.entity.mob.AbstractPiglinEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.MobEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.MobEntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAbstractPiglinEntity;
 
 /**

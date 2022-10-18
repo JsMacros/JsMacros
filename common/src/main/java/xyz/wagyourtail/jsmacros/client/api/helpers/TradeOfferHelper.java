@@ -4,8 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.village.TradeOffer;
 
-import xyz.wagyourtail.jsmacros.client.api.classes.inventory.VillagerInventory;
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.classes.VillagerInventory;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;

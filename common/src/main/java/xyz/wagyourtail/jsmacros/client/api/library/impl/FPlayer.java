@@ -14,13 +14,13 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.GameMode;
 
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
-import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
+import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockDataHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.ClientPlayerEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.classes.PositionCommon;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ClientPlayerEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.movement.MovementDummy;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 import xyz.wagyourtail.jsmacros.core.Core;

@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive;
 import net.minecraft.entity.passive.FrogEntity;
 import net.minecraft.util.registry.Registry;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 
 /**
  * @author Etheradon

@@ -34,11 +34,9 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import xyz.wagyourtail.Pair;
-import xyz.wagyourtail.jsmacros.client.api.classes.PositionCommon;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 

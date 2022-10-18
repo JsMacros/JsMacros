@@ -3,8 +3,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.vehicle;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.entity.vehicle.ChestBoatEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinBoatEntity;
 
 /**

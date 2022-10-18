@@ -5,7 +5,6 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.stream.Collectors;

@@ -2,8 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.boss;
 
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.MobEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.MobEntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinPhaseType;
 
 import java.util.Arrays;

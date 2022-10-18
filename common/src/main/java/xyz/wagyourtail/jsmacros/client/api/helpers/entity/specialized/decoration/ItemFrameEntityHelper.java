@@ -3,8 +3,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.decoratio
 import net.minecraft.entity.decoration.GlowItemFrameEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 
 /**
  * @author Etheradon

@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 

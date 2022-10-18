@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.vehicle;
 
 import net.minecraft.entity.vehicle.TntMinecartEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 
 /**
  * @author Etheradon

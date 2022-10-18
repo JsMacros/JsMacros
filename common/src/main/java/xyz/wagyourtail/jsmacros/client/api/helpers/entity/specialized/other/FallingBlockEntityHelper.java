@@ -2,9 +2,9 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.other;
 
 import net.minecraft.entity.FallingBlockEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 
 /**
  * @author Etheradon

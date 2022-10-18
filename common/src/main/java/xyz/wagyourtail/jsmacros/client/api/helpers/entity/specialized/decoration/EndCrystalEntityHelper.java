@@ -2,8 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.decoratio
 
 import net.minecraft.entity.decoration.EndCrystalEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 
 /**
  * @author Etheradon

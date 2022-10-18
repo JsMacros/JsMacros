@@ -3,8 +3,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob;
 import net.minecraft.entity.mob.ElderGuardianEntity;
 import net.minecraft.entity.mob.GuardianEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.MobEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.MobEntityHelper;
 
 /**
  * @author Etheradon

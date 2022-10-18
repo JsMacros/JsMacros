@@ -2,9 +2,9 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.util.math.Vec3d;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.classes.PositionCommon;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 

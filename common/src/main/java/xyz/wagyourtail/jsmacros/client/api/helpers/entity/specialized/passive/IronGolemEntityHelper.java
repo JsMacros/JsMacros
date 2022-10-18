@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive;
 
 import net.minecraft.entity.passive.IronGolemEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.MobEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.MobEntityHelper;
 
 /**
  * @author Etheradon

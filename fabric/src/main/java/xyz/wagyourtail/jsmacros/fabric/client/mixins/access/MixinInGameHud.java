@@ -7,10 +7,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.wagyourtail.jsmacros.client.api.render.Draw2D;
+import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
-import xyz.wagyourtail.jsmacros.client.api.render.shared.classes.RenderCommon;
-import xyz.wagyourtail.jsmacros.client.api.render.shared.interfaces.IDraw2D;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
+import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 
 import java.util.Comparator;
 

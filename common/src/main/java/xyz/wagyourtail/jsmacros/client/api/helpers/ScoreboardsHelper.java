@@ -7,7 +7,6 @@ import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.util.Formatting;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.PlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;

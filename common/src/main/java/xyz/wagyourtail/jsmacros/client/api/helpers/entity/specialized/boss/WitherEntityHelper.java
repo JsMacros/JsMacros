@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.boss;
 
 import net.minecraft.entity.boss.WitherEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.MobEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.MobEntityHelper;
 
 /**
  * @author Etheradon

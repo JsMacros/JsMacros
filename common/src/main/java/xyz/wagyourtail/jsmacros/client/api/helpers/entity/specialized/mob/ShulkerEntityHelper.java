@@ -4,7 +4,7 @@ import net.minecraft.entity.mob.ShulkerEntity;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.DirectionHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.DyeColorHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.MobEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.MobEntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinShulkerEntity;
 
 /**

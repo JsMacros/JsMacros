@@ -15,7 +15,7 @@ import net.minecraft.util.Identifier;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.SuggestionsBuilderHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;

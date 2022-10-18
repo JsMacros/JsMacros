@@ -2,8 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive;
 
 import net.minecraft.entity.passive.FoxEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinFoxEntity;
 
 import java.util.List;

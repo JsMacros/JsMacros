@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.decoratio
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.util.math.EulerAngle;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.LivingEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.LivingEntityHelper;
 
 /**
  * @author Etheradon

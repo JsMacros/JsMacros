@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
-import xyz.wagyourtail.jsmacros.client.api.render.ScriptScreen;
+import xyz.wagyourtail.jsmacros.client.api.classes.ScriptScreen;
 
 @Mixin(GameRenderer.class)
 public class MixinGameRenderer {

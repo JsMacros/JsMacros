@@ -7,7 +7,6 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.util.registry.Registry;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;

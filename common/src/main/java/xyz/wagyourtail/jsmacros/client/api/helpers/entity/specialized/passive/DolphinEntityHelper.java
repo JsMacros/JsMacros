@@ -2,8 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive;
 
 import net.minecraft.entity.passive.DolphinEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockPosHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.MobEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.MobEntityHelper;
 
 /**
  * @author Etheradon

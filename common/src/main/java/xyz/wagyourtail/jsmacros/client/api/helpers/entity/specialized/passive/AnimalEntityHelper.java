@@ -2,9 +2,9 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive;
 
 import net.minecraft.entity.passive.AnimalEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.MobEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.MobEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 
 /**
  * @author Etheradon

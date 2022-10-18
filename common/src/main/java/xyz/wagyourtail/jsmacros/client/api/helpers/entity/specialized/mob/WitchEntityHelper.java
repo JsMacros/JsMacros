@@ -2,8 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob;
 
 import net.minecraft.entity.mob.WitchEntity;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.MobEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.MobEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 
 /**
  * @author Etheradon

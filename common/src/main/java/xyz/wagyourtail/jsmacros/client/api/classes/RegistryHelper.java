@@ -12,12 +12,12 @@ import net.minecraft.util.registry.Registry;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EnchantmentHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.BlockStateHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.block.FluidStateHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.item.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.FluidStateHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 
 import java.util.List;
 

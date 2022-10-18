@@ -2,10 +2,10 @@ package xyz.wagyourtail.jsmacros.client.movement;
 
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.Vec3d;
-import xyz.wagyourtail.jsmacros.client.api.render.Draw3D;
+import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
-import xyz.wagyourtail.jsmacros.client.api.classes.PositionCommon;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 
 import java.util.ArrayList;
 import java.util.List;
