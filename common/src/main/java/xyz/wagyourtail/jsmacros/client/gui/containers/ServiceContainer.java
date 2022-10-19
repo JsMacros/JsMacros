@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.client.gui.overlays.TextOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.ServiceScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.service.ServiceManager;
 import xyz.wagyourtail.jsmacros.core.service.ServiceTrigger;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
@@ -18,8 +19,11 @@ import java.io.File;
 
 public class ServiceContainer extends MultiElementContainer<MacroScreen> {
     public String service;
+    protected Button nameBtn;
     protected Button fileBtn;
+    protected Button enableBtn;
     protected Button runningBtn;
+    protected Button delBtn;
 
     public ServiceContainer(int x, int y, int width, int height, TextRenderer textRenderer, ServiceScreen parent, String service) {
         super(x, y, width, height, textRenderer, parent);
@@ -32,7 +36,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
         super.init();
 
         int w = width - 12;
-        addDrawableChild(new Button(x + 1, y + 1, w * 2 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.literal(service), (btn) -> {
+        nameBtn = addDrawableChild(new Button(x + 1, y + 1, w * 2 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.literal(service), (btn) -> {
             openOverlay(new TextPrompt(parent.width / 4, parent.height / 4, parent.width / 2, parent.height / 2, textRenderer, Text.literal("Enter new service name"), service, getFirstOverlayParent(), (newService) -> {
                 if (!Core.getInstance().services.renameService(service, newService)) {
                     openOverlay(new TextOverlay(parent.width / 4, parent.height / 4, parent.width / 2, parent.height / 2, textRenderer, getFirstOverlayParent(), Text.literal("Failed to rename service").styled(s -> s.withColor(Formatting.RED))));
@@ -50,7 +54,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
         boolean enabled = getEnabled();
         boolean running = getRunning();
 
-        addDrawableChild(new Button(x + w * 10 / 12 + 1, y + 1, w / 12, height - 2, textRenderer, enabled ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.translatable("jsmacros." + (enabled ? "enabled" : "disabled")), (btn) -> {
+        enableBtn = addDrawableChild(new Button(x + w * 10 / 12 + 1, y + 1, w / 12, height - 2, textRenderer, enabled ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.translatable("jsmacros." + (enabled ? "enabled" : "disabled")), (btn) -> {
             if (getEnabled()) {
                 Core.getInstance().services.disableService(service);
                 btn.setColor(0x70FF0000);
@@ -70,7 +74,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
             }
         }));
 
-        addDrawableChild(new Button(x + w - 1, y + 1, 12, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("X"), (btn) -> {
+        delBtn = addDrawableChild(new Button(x + w - 1, y + 1, 12, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("X"), (btn) -> {
             parent.confirmRemoveMacro(this);
         }));
 
@@ -93,6 +97,17 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
     public void setFile(File file) {
         getTrigger().file = Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(file.getAbsoluteFile().toPath()).toString();
         fileBtn.setMessage(Text.literal("./"+getTrigger().file.replaceAll("\\\\", "/")));
+    }
+
+    @Override
+    public void setPos(int x, int y, int width, int height) {
+        super.setPos(x, y, width, height);
+        int w = width - 12;
+        nameBtn.setPos(x + 1, y + 1, w * 2 / 12 - 1, height - 2);
+        fileBtn.setPos(x + w * 2 / 12 + 1, y + 1, w * 8 / 12 - 1, height - 2);
+        enableBtn.setPos(x + w * 10 / 12 + 1, y + 1, w / 12, height - 2);
+        runningBtn.setPos(x + w * 11 / 12 + 1, y + 1, w / 12, height - 2);
+        delBtn.setPos(x + w - 1, y + 1, 12, height - 2);
     }
 
     @Override

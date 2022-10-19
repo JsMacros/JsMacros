@@ -50,6 +50,27 @@ public class PositionCommon {
             return new Pos2D(this.x+x, this.y+y);
         }
 
+        /**
+         * @param pos the position to subtract
+         * @return the new position.
+         *
+         * @since 1.8.4
+         */
+        public Pos2D sub(Pos2D pos) {
+            return new Pos2D(x - pos.x, y - pos.y);
+        }
+
+        /**
+         * @param x the x coordinate to subtract
+         * @param y the y coordinate to subtract
+         * @return the new position.
+         *
+         * @since 1.8.4
+         */
+        public Pos2D sub(double x, double y) {
+            return new Pos2D(this.x - x, this.y - y);
+        }
+
         public Pos2D multiply(Pos2D pos) {
             return new Pos2D(x*pos.x, y*pos.y);
         }
@@ -65,6 +86,27 @@ public class PositionCommon {
             return new Pos2D(this.x*x, this.y*y);
         }
 
+        /**
+         * @param pos the position to divide by
+         * @return the new position.
+         *
+         * @since 1.8.4
+         */
+        public Pos2D divide(Pos2D pos) {
+            return new Pos2D(x / pos.x, y / pos.y);
+        }
+
+        /**
+         * @param x the x coordinate to divide by
+         * @param y the y coordinate to divide by
+         * @return the new position.
+         *
+         * @since 1.8.4
+         */
+        public Pos2D divide(double x, double y) {
+            return new Pos2D(this.x / x, this.y / y);
+        }
+        
         /**
          * @since 1.6.3
          * @param scale
@@ -176,6 +218,28 @@ public class PositionCommon {
             return new Pos3D(this.x+x, this.y+y, this.z+z);
         }
 
+        /**
+         * @param pos the position to subtract
+         * @return the new position.
+         *
+         * @since 1.8.4
+         */
+        public Pos3D sub(Pos3D pos) {
+            return new Pos3D(x - pos.x, y - pos.y, z - pos.z);
+        }
+
+        /**
+         * @param x the x coordinate to subtract
+         * @param y the y coordinate to subtract
+         * @param z the z coordinate to subtract
+         * @return the new position.
+         *
+         * @since 1.8.4
+         */
+        public Pos3D sub(double x, double y, double z) {
+            return new Pos3D(this.x - x, this.y - y, this.z - z);
+        }
+        
         public Pos3D multiply(Pos3D pos) {
             return new Pos3D(x*pos.x, y*pos.y, z*pos.z);
         }
@@ -192,6 +256,28 @@ public class PositionCommon {
             return new Pos3D(this.x*x, this.y*y, this.z*z);
         }
 
+        /**
+         * @param pos the position to divide by
+         * @return the new position.
+         *
+         * @since 1.8.4
+         */
+        public Pos3D divide(Pos3D pos) {
+            return new Pos3D(x / pos.x, y / pos.y, z / pos.z);
+        }
+
+        /**
+         * @param x the x coordinate to divide by
+         * @param y the y coordinate to divide by
+         * @param z the z coordinate to divide by
+         * @return the new position.
+         *
+         * @since 1.8.4
+         */
+        public Pos3D divide(double x, double y, double z) {
+            return new Pos3D(this.x / x, this.y / y, this.z / z);
+        }
+        
         /**
          * @since 1.6.3
          * @param scale

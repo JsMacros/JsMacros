@@ -122,7 +122,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         if (draw2D == null) {
             return null;
         }
-        Draw2DElement d = new Draw2DElement(draw2D, x, y, width, height, zIndex, 1, 0);
+        Draw2DElement d = draw2DBuilder(draw2D).pos(x, y).size(width, height).zIndex(zIndex).build();
         synchronized (elements) {
             elements.add(d);
         }
@@ -271,7 +271,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     
     @Override
     public RenderCommon.Text addText(String text, int x, int y, int color, int zIndex, boolean shadow, double scale, double rotation) {
-        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, zIndex, shadow, scale, (float) rotation);
+        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, zIndex, shadow, scale, (float) rotation).setParent(this);
         synchronized (elements) {
             elements.add(t);
         }
@@ -296,7 +296,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     
     @Override
     public RenderCommon.Text addText(TextHelper text, int x, int y, int color, int zIndex, boolean shadow, double scale, double rotation) {
-        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, zIndex, shadow, scale, (float) rotation);
+        RenderCommon.Text t = new RenderCommon.Text(text, x, y, color, zIndex, shadow, scale, (float) rotation).setParent(this);
         synchronized (elements) {
             elements.add(t);
         }
@@ -343,7 +343,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
      */
     @Override
     public Image addImage(int x, int y, int width, int height, int zIndex, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
-        Image i = new Image(x, y, width, height, zIndex, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation);
+        Image i = new Image(x, y, width, height, zIndex, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation).setParent(this);
         synchronized (elements) {
             elements.add(i);
         }
@@ -355,7 +355,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
      */
     @Override
     public Image addImage(int x, int y, int width, int height, int zIndex, int alpha, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
-        Image i = new Image(x, y, width, height, zIndex, alpha, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation);
+        Image i = new Image(x, y, width, height, zIndex, alpha, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation).setParent(this);
         synchronized (elements) {
             elements.add(i);
         }
@@ -372,7 +372,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public Rect addRect(int x1, int y1, int x2, int y2, int color) {
-        Rect r = new Rect(x1, y1, x2, y2, color, 0F, 0);
+        Rect r = new Rect(x1, y1, x2, y2, color, 0F, 0).setParent(this);
         synchronized (elements) {
             elements.add(r);
         }
@@ -392,7 +392,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     
     @Override
     public Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, double rotation, int zIndex) {
-        Rect r = new Rect(x1, y1, x2, y2, color, alpha, (float) rotation, zIndex);
+        Rect r = new Rect(x1, y1, x2, y2, color, alpha, (float) rotation, zIndex).setParent(this);
         synchronized (elements) {
             elements.add(r);
         }
@@ -476,7 +476,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     
     @Override
     public Item addItem(int x, int y, int zIndex, String id, boolean overlay, double scale, double rotation) {
-        Item i = new Item(x, y, zIndex, id, overlay, scale, (float) rotation);
+        Item i = new Item(x, y, zIndex, id, overlay, scale, (float) rotation).setParent(this);
         synchronized (elements) {
             elements.add(i);
         }
@@ -510,7 +510,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     
     @Override
     public Item addItem(int x, int y, int zIndex, ItemStackHelper item, boolean overlay, double scale, double rotation) {
-        Item i = new Item(x, y, zIndex, item, overlay, scale, (float) rotation);
+        Item i = new Item(x, y, zIndex, item, overlay, scale, (float) rotation).setParent(this);
         synchronized (elements) {
             elements.add(i);
         }

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
@@ -485,7 +486,7 @@ public class Draw3D {
     }
 
     /**
-     * @return
+     * @return a new {@link Box.Builder} instance.
      *
      * @since 1.8.4
      */
@@ -494,7 +495,29 @@ public class Draw3D {
     }
 
     /**
-     * @return
+     * @param pos the block position of the box
+     * @return a new {@link Box.Builder} instance.
+     *
+     * @since 1.8.4
+     */
+    public Box.Builder boxBuilder(BlockPosHelper pos) {
+        return new Box.Builder(this).forBlock(pos);
+    }
+
+    /**
+     * @param x the x coordinate of the box
+     * @param y the y coordinate of the box
+     * @param z the z coordinate of the box
+     * @return a new {@link Box.Builder} instance.
+     *
+     * @since 1.8.4
+     */
+    public Box.Builder boxBuilder(int x, int y, int z) {
+        return new Box.Builder(this).forBlock(x, y, z);
+    }
+
+    /**
+     * @return a new {@link Line.Builder} instance.
      *
      * @since 1.8.4
      */
@@ -503,7 +526,7 @@ public class Draw3D {
     }
 
     /**
-     * @return
+     * @return a new {@link Surface.Builder} instance.
      *
      * @since 1.8.4
      */
@@ -545,10 +568,6 @@ public class Draw3D {
 
 
         Vec3d camPos = mc.gameRenderer.getCamera().getPos();
-
-        // offsetRender
-        //        matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(MathHelper.wrapDegrees(camera.getPitch())));
-        //        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(camera.getYaw() + 180F));
         matrixStack.translate(-camPos.x, -camPos.y, -camPos.z);
 
         //render
@@ -876,7 +895,7 @@ public class Draw3D {
              *
              * @since 1.8.4
              */
-            public Builder pos2(int x2, int y2, int z2) {
+            public Builder pos2(double x2, double y2, double z2) {
                 this.pos2 = new PositionCommon.Pos3D(x2, y2, z2);
                 return this;
             }
@@ -901,7 +920,7 @@ public class Draw3D {
              *
              * @since 1.8.4
              */
-            public Builder pos(int x1, int y1, int z1, int x2, int y2, int z2) {
+            public Builder pos(double x1, double y1, double z1, double x2, double y2, double z2) {
                 this.pos1 = new PositionCommon.Pos3D(x1, y1, z1);
                 this.pos2 = new PositionCommon.Pos3D(x2, y2, z2);
                 return this;
@@ -1579,11 +1598,38 @@ public class Draw3D {
             this.cull = cull;
             init();
         }
-    
-        public void setPos(double x, double y, double z) {
+
+        /**
+         * @param pos the position of the surface
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public Surface setPos(PositionCommon.Pos3D pos) {
+            this.pos.x = pos.x;
+            this.pos.y = pos.y;
+            this.pos.z = pos.z;
+            return this;
+        }
+
+        /**
+         * @param pos the position of the surface
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public Surface setPos(BlockPosHelper pos) {
+            this.pos.x = pos.getX();
+            this.pos.y = pos.getY();
+            this.pos.z = pos.getZ();
+            return this;
+        }
+        
+        public Surface setPos(double x, double y, double z) {
             this.pos.x = x;
             this.pos.y = y;
             this.pos.z = z;
+            return this;
         }
     
         public void setRotations(double x, double y, double z) {
@@ -1706,8 +1752,8 @@ public class Draw3D {
             private int xRot = 0;
             private int yRot = 0;
             private int zRot = 0;
-            private int width = 10;
-            private int height = 10;
+            private double width = 10;
+            private double height = 10;
             private int minSubdivisions = 1;
             private double scale = -1;
             private double zIndexScale = 0.001;
@@ -1843,7 +1889,7 @@ public class Draw3D {
              *
              * @since 1.8.4
              */
-            public Builder width(int width) {
+            public Builder width(double width) {
                 this.width = width;
                 return this;
             }
@@ -1853,7 +1899,7 @@ public class Draw3D {
              *
              * @since 1.8.4
              */
-            public int getWidth() {
+            public double getWidth() {
                 return width;
             }
     
@@ -1863,7 +1909,7 @@ public class Draw3D {
              *
              * @since 1.8.4
              */
-            public Builder height(int height) {
+            public Builder height(double height) {
                 this.height = height;
                 return this;
             }
@@ -1873,7 +1919,7 @@ public class Draw3D {
              *
              * @since 1.8.4
              */
-            public int getHeight() {
+            public double getHeight() {
                 return height;
             }
     
@@ -1884,7 +1930,7 @@ public class Draw3D {
              *
              * @since 1.8.4
              */
-            public Builder size(int width, int height) {
+            public Builder size(double width, double height) {
                 this.width = width;
                 this.height = height;
                 return this;

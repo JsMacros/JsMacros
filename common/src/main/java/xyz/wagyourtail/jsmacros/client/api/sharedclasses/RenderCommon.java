@@ -18,15 +18,16 @@ import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.registry.Registry;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
+import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
-import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 
 import java.util.Locale;
+import java.util.function.IntSupplier;
 
 /**
  * @author Wagyourtail
@@ -458,9 +459,9 @@ public class RenderCommon {
      */
     @SuppressWarnings("unused")
     public static class Item implements RenderElement, Alignable<Item> {
-    
+
         private static final MinecraftClient mc = MinecraftClient.getInstance();
-    
+
         public IDraw2D<?> parent;
         public ItemStack item;
         public String ovText;
@@ -470,15 +471,15 @@ public class RenderCommon {
         public int x;
         public int y;
         public int zIndex;
-    
+
         public Item(int x, int y, int zIndex, String id, boolean overlay, double scale, float rotation) {
             this(x, y, zIndex, new ItemStackHelper(id, 1), overlay, scale, rotation);
         }
-    
+
         public Item(int x, int y, int zIndex, ItemStackHelper i, boolean overlay, double scale, float rotation) {
             this(x, y, zIndex, i, overlay, scale, rotation, null);
         }
-    
+
         public Item(int x, int y, int zIndex, ItemStackHelper itemStack, boolean overlay, double scale, float rotation, String ovText) {
             this.x = x;
             this.y = y;
@@ -489,7 +490,7 @@ public class RenderCommon {
             this.zIndex = zIndex;
             this.ovText = ovText;
         }
-    
+
         /**
          * @param i
          * @return
@@ -504,7 +505,7 @@ public class RenderCommon {
             }
             return this;
         }
-    
+
         /**
          * @param id
          * @param count
@@ -516,7 +517,7 @@ public class RenderCommon {
             this.item = new ItemStack(Registry.ITEM.get(RegistryHelper.parseIdentifier(id)), count);
             return this;
         }
-    
+
         /**
          * @return
          *
@@ -525,7 +526,7 @@ public class RenderCommon {
         public ItemStackHelper getItem() {
             return new ItemStackHelper(item);
         }
-    
+
         /**
          * @param x the new x position of this element
          * @return self for chaining.
@@ -536,7 +537,7 @@ public class RenderCommon {
             this.x = x;
             return this;
         }
-    
+
         /**
          * @return the x position of this element.
          *
@@ -545,7 +546,7 @@ public class RenderCommon {
         public int getX() {
             return x;
         }
-    
+
         /**
          * @param y the new y position of this element
          * @return self for chaining.
@@ -565,7 +566,7 @@ public class RenderCommon {
         public int getY() {
             return y;
         }
-    
+
         /**
          * @param x
          * @param y
@@ -578,7 +579,7 @@ public class RenderCommon {
             this.y = y;
             return this;
         }
-    
+
         /**
          * @param scale
          * @return
@@ -593,7 +594,7 @@ public class RenderCommon {
             this.scale = scale;
             return this;
         }
-    
+
         /**
          * @return the scale of this item.
          *
@@ -602,7 +603,7 @@ public class RenderCommon {
         public double getScale() {
             return scale;
         }
-    
+
         /**
          * @param rotation
          * @return
@@ -613,7 +614,7 @@ public class RenderCommon {
             this.rotation = MathHelper.wrapDegrees((float) rotation);
             return this;
         }
-    
+
         /**
          * @return the rotation of this item.
          *
@@ -622,7 +623,7 @@ public class RenderCommon {
         public float getRotation() {
             return rotation;
         }
-    
+
         /**
          * @param overlay
          * @return
@@ -633,17 +634,17 @@ public class RenderCommon {
             this.overlay = overlay;
             return this;
         }
-    
+
         /**
-         * @return {@code true}, if the overlay, i.e. the durability bar, and the overlay text or item
-         *         count should be shown, {@code false} otherwise.
+         * @return {@code true}, if the overlay, i.e. the durability bar, and the overlay text or
+         *         item count should be shown, {@code false} otherwise.
          *
          * @since 1.8.4
          */
         public boolean shouldShowOverlay() {
             return overlay;
         }
-    
+
         /**
          * @param ovText
          * @return
@@ -654,7 +655,7 @@ public class RenderCommon {
             this.ovText = ovText;
             return this;
         }
-    
+
         /**
          * @return the overlay text of this item.
          *
@@ -663,7 +664,7 @@ public class RenderCommon {
         public String getOverlayText() {
             return ovText;
         }
-    
+
         /**
          * @param zIndex the new z-index of this item
          * @return self for chaining.
@@ -674,12 +675,12 @@ public class RenderCommon {
             this.zIndex = zIndex;
             return this;
         }
-    
+
         @Override
         public int getZIndex() {
             return zIndex;
         }
-    
+
         @Override
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             matrices.push();
@@ -701,7 +702,7 @@ public class RenderCommon {
             RenderSystem.applyModelViewMatrix();
             matrices.pop();
         }
-    
+
         @Override
         public void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             //TODO: cull and renderBack still not working, draw this to a FrameBuffer and render that instead.
@@ -710,12 +711,12 @@ public class RenderCommon {
             matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
             matrices.translate(-x, -y, 0);
             matrices.scale((float) scale, (float) scale, 1);
-    
+
             MatrixStack ms = RenderSystem.getModelViewStack();
             ms.push();
             ms.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
             RenderSystem.applyModelViewMatrix();
-    
+
             if (item != null) {
                 ItemRenderer i = mc.getItemRenderer();
                 ms.push();
@@ -735,47 +736,47 @@ public class RenderCommon {
             RenderSystem.applyModelViewMatrix();
             matrices.pop();
         }
-    
+
         public Item setParent(IDraw2D<?> parent) {
             this.parent = parent;
             return this;
         }
-    
+
         @Override
         public int getScaledWidth() {
             return (int) (scale * 17);
         }
-    
+
         @Override
         public int getParentWidth() {
-            return parent != null ? parent.getWidth() : mc.currentScreen.width;
+            return parent != null ? parent.getWidth() : mc.getWindow().getScaledWidth();
         }
-    
+
         @Override
         public int getScaledHeight() {
             return (int) (scale * mc.textRenderer.fontHeight);
         }
-    
+
         @Override
         public int getParentHeight() {
-            return parent != null ? parent.getHeight() : mc.currentScreen.height;
+            return parent != null ? parent.getHeight() : mc.getWindow().getScaledHeight();
         }
-    
+
         @Override
         public int getScaledLeft() {
             return x;
         }
-    
+
         @Override
         public int getScaledTop() {
             return y;
         }
-    
+
         @Override
         public Item moveTo(int x, int y) {
             return setPos(x, y);
         }
-    
+
         /**
          * @author Etheradon
          * @since 1.8.4
@@ -789,11 +790,11 @@ public class RenderCommon {
             private double scale = 1;
             private float rotation = 0;
             private int zIndex = 0;
-    
+
             public Builder(IDraw2D<?> draw2D) {
                 super(draw2D);
             }
-    
+
             /**
              * @param x the x position of the item
              * @return self for chaining.
@@ -804,7 +805,7 @@ public class RenderCommon {
                 this.x = x;
                 return this;
             }
-    
+
             /**
              * @return the x position of the item.
              *
@@ -813,7 +814,7 @@ public class RenderCommon {
             public int getX() {
                 return x;
             }
-    
+
             /**
              * @param y the y position of the item
              * @return self for chaining.
@@ -824,7 +825,7 @@ public class RenderCommon {
                 this.y = y;
                 return this;
             }
-    
+
             /**
              * @return the y position of the item.
              *
@@ -833,7 +834,7 @@ public class RenderCommon {
             public int getY() {
                 return y;
             }
-    
+
             /**
              * @param x the x position of the item
              * @param y the y position of the item
@@ -846,7 +847,7 @@ public class RenderCommon {
                 this.y = y;
                 return this;
             }
-    
+
             /**
              * @param item the item to draw
              * @return self for chaining.
@@ -859,7 +860,7 @@ public class RenderCommon {
                 }
                 return this;
             }
-    
+
             /**
              * @param id the id of the item to draw
              * @return self for chaining.
@@ -870,7 +871,7 @@ public class RenderCommon {
                 this.itemStack = new ItemStackHelper(Registry.ITEM.get(RegistryHelper.parseIdentifier(id)).getDefaultStack());
                 return this;
             }
-    
+
             /**
              * @param id    the id of the item to draw
              * @param count the stack size
@@ -882,7 +883,7 @@ public class RenderCommon {
                 this.itemStack = new ItemStackHelper(id, count);
                 return this;
             }
-    
+
             /**
              * @return the item to be drawn.
              *
@@ -891,7 +892,7 @@ public class RenderCommon {
             public ItemStackHelper getItem() {
                 return itemStack.copy();
             }
-    
+
             /**
              * This also sets the overlay to be shown.
              *
@@ -905,7 +906,7 @@ public class RenderCommon {
                 this.overlay = true;
                 return this;
             }
-    
+
             /**
              * @return the overlay text.
              *
@@ -914,7 +915,7 @@ public class RenderCommon {
             public String getOverlayText() {
                 return ovText;
             }
-    
+
             /**
              * @param visible whether the overlay should be visible or not
              * @return self for chaining.
@@ -925,7 +926,7 @@ public class RenderCommon {
                 this.overlay = visible;
                 return this;
             }
-    
+
             /**
              * @return {@code true} if the overlay should be visible, {@code false} otherwise.
              *
@@ -934,7 +935,7 @@ public class RenderCommon {
             public boolean isOverlayVisible() {
                 return overlay;
             }
-    
+
             /**
              * @param scale the scale of the item
              * @return self for chaining.
@@ -948,7 +949,7 @@ public class RenderCommon {
                 this.scale = scale;
                 return this;
             }
-    
+
             /**
              * @return the scale of the item.
              *
@@ -957,7 +958,7 @@ public class RenderCommon {
             public double getScale() {
                 return scale;
             }
-    
+
             /**
              * @param rotation the rotation (clockwise) of the item in degrees
              * @return self for chaining.
@@ -968,7 +969,7 @@ public class RenderCommon {
                 this.rotation = (float) rotation;
                 return this;
             }
-    
+
             /**
              * @return the rotation (clockwise) of the item in degrees.
              *
@@ -977,7 +978,7 @@ public class RenderCommon {
             public float getRotation() {
                 return rotation;
             }
-    
+
             /**
              * @param zIndex the z-index of the item
              * @return self for chaining.
@@ -988,7 +989,7 @@ public class RenderCommon {
                 this.zIndex = zIndex;
                 return this;
             }
-    
+
             /**
              * @return the z-index of the item.
              *
@@ -997,42 +998,42 @@ public class RenderCommon {
             public int getZIndex() {
                 return zIndex;
             }
-    
+
             @Override
             protected Item createElement() {
                 return new Item(x, y, zIndex, itemStack, overlay, scale, rotation, ovText).setParent(parent);
             }
-    
+
             @Override
             public int getScaledWidth() {
                 return (int) (17 * scale);
             }
-    
+
             @Override
             public int getParentWidth() {
                 return parent.getWidth();
             }
-    
+
             @Override
             public int getScaledHeight() {
                 return (int) (17 * scale);
             }
-    
+
             @Override
             public int getParentHeight() {
                 return parent.getHeight();
             }
-    
+
             @Override
             public int getScaledLeft() {
                 return x;
             }
-    
+
             @Override
             public int getScaledTop() {
                 return y;
             }
-    
+
             @Override
             public Builder moveTo(int x, int y) {
                 return pos(x, y);
@@ -1046,9 +1047,9 @@ public class RenderCommon {
      */
     @SuppressWarnings("unused")
     public static class Image implements RenderElement, Alignable<Image> {
-    
+
         private static MinecraftClient mc = MinecraftClient.getInstance();
-    
+
         private Identifier imageid;
         public IDraw2D<?> parent;
         public float rotation;
@@ -1064,19 +1065,19 @@ public class RenderCommon {
         public int textureHeight;
         public int color;
         public int zIndex;
-    
+
         public Image(int x, int y, int width, int height, int zIndex, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
             this(x, y, width, height, zIndex, 0xFF, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation);
             setColor(color);
         }
-    
+
         public Image(int x, int y, int width, int height, int zIndex, int alpha, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
             setPos(x, y, width, height);
             setColor(color, alpha);
             setImage(id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight);
             this.rotation = rotation;
         }
-    
+
         /**
          * @param id
          * @param imageX
@@ -1099,7 +1100,7 @@ public class RenderCommon {
             this.textureHeight = textureHeight;
             return this;
         }
-    
+
         /**
          * @return
          *
@@ -1108,7 +1109,7 @@ public class RenderCommon {
         public String getImage() {
             return imageid.toString();
         }
-    
+
         /**
          * @param x the new x position of this image
          * @return self for chaining.
@@ -1119,7 +1120,7 @@ public class RenderCommon {
             this.x = x;
             return this;
         }
-    
+
         /**
          * @return the x position of this image.
          *
@@ -1128,7 +1129,7 @@ public class RenderCommon {
         public int getX() {
             return x;
         }
-    
+
         /**
          * @param y the new y position of this image
          * @return self for chaining.
@@ -1139,7 +1140,7 @@ public class RenderCommon {
             this.y = y;
             return this;
         }
-    
+
         /**
          * @return the y position of this image.
          *
@@ -1148,7 +1149,7 @@ public class RenderCommon {
         public int getY() {
             return y;
         }
-    
+
         /**
          * @param x the new x position of this image
          * @param y the new y position of this image
@@ -1161,7 +1162,7 @@ public class RenderCommon {
             this.y = y;
             return this;
         }
-    
+
         /**
          * @param x
          * @param y
@@ -1176,7 +1177,7 @@ public class RenderCommon {
             this.height = height;
             return this;
         }
-    
+
         /**
          * @param width the new width of this image
          * @return self for chaining.
@@ -1187,7 +1188,7 @@ public class RenderCommon {
             this.width = width;
             return this;
         }
-    
+
         /**
          * @return the width of this image.
          *
@@ -1196,7 +1197,7 @@ public class RenderCommon {
         public int getWidth() {
             return width;
         }
-    
+
         /**
          * @param height the new height of this image
          * @return self for chaining.
@@ -1207,7 +1208,7 @@ public class RenderCommon {
             this.height = height;
             return this;
         }
-    
+
         /**
          * @return the height of this image.
          *
@@ -1216,7 +1217,7 @@ public class RenderCommon {
         public int getHeight() {
             return height;
         }
-    
+
         /**
          * @param width  the new width of this image
          * @param height the new height of this image
@@ -1229,7 +1230,7 @@ public class RenderCommon {
             this.height = height;
             return this;
         }
-    
+
         /**
          * @param color
          * @return
@@ -1243,7 +1244,7 @@ public class RenderCommon {
             this.color = color;
             return this;
         }
-    
+
         /**
          * @param color
          * @param alpha
@@ -1255,7 +1256,7 @@ public class RenderCommon {
             this.color = (alpha << 24) | (color & 0xFFFFFF);
             return this;
         }
-    
+
         /**
          * @return the color of this image.
          *
@@ -1264,7 +1265,7 @@ public class RenderCommon {
         public int getColor() {
             return color;
         }
-    
+
         /**
          * @return the alpha value of this image.
          *
@@ -1273,7 +1274,7 @@ public class RenderCommon {
         public int getAlpha() {
             return (color >> 24) & 0xFF;
         }
-    
+
         /**
          * @param rotation
          * @return
@@ -1284,7 +1285,7 @@ public class RenderCommon {
             this.rotation = MathHelper.wrapDegrees((float) rotation);
             return this;
         }
-    
+
         /**
          * @return the rotation of this image.
          *
@@ -1293,7 +1294,7 @@ public class RenderCommon {
         public float getRotation() {
             return rotation;
         }
-    
+
         /**
          * @param zIndex the new z-index of this image
          * @return self for chaining.
@@ -1304,12 +1305,12 @@ public class RenderCommon {
             this.zIndex = zIndex;
             return this;
         }
-    
+
         @Override
         public int getZIndex() {
             return zIndex;
         }
-    
+
         @Override
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             matrices.push();
@@ -1322,71 +1323,71 @@ public class RenderCommon {
             RenderSystem.setShaderTexture(0, imageid);
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
-    
+
             buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_TEXTURE_COLOR);
             Matrix4f matrix = matrices.peek().getPositionMatrix();
-    
+
             float x1 = x;
             float y1 = y;
             float x2 = x + width;
             float y2 = y + height;
-    
+
             float u1 = imageX / (float) textureWidth;
             float v1 = imageY / (float) textureHeight;
             float u2 = (imageX + regionWidth) / (float) textureWidth;
             float v2 = (imageY + regionHeight) / (float) textureHeight;
-    
+
             //draw a rectangle using triangle strips
             buf.vertex(matrix, x1, y2, 0).texture(u1, v2).color(color).next(); // Top-left
             buf.vertex(matrix, x2, y2, 0).texture(u2, v2).color(color).next(); // Top-right
             buf.vertex(matrix, x1, y1, 0).texture(u1, v1).color(color).next(); // Bottom-left
             buf.vertex(matrix, x2, y1, 0).texture(u2, v1).color(color).next(); // Bottom-right
             tess.draw();
-    
+
             matrices.pop();
             RenderSystem.disableBlend();
         }
-    
+
         public Image setParent(IDraw2D<?> parent) {
             this.parent = parent;
             return this;
         }
-    
+
         @Override
         public int getScaledWidth() {
             return width;
         }
-    
+
         @Override
         public int getParentWidth() {
-            return parent != null ? parent.getWidth() : mc.currentScreen.width;
+            return parent != null ? parent.getWidth() : mc.getWindow().getScaledWidth();
         }
-    
+
         @Override
         public int getScaledHeight() {
             return height;
         }
-    
+
         @Override
         public int getParentHeight() {
-            return parent != null ? parent.getHeight() : mc.currentScreen.height;
+            return parent != null ? parent.getHeight() : mc.getWindow().getScaledHeight();
         }
-    
+
         @Override
         public int getScaledLeft() {
             return x;
         }
-    
+
         @Override
         public int getScaledTop() {
             return y;
         }
-    
+
         @Override
         public Image moveTo(int x, int y) {
             return setPos(x, y, width, height);
         }
-    
+
         /**
          * @author Etheradon
          * @since 1.8.4
@@ -1407,14 +1408,14 @@ public class RenderCommon {
             private int alpha = 0xFF;
             private float rotation = 0;
             private int zIndex = 0;
-    
+
             public Builder(IDraw2D<?> draw2D) {
                 super(draw2D);
             }
-    
+
             /**
-             * Will automatically set all attributes to the default values of the custom image. Values
-             * set before the call of this method will be overwritten.
+             * Will automatically set all attributes to the default values of the custom image.
+             * Values set before the call of this method will be overwritten.
              *
              * @param customImage the custom image to use
              * @return self for chaining.
@@ -1433,7 +1434,7 @@ public class RenderCommon {
                 this.identifier = customImage.getIdentifier();
                 return this;
             }
-    
+
             /**
              * @param identifier the identifier of the image to use
              * @return self for chaining.
@@ -1444,7 +1445,7 @@ public class RenderCommon {
                 this.identifier = identifier;
                 return this;
             }
-    
+
             /**
              * @return the identifier of the used image or {@code null} if no image is used.
              *
@@ -1453,7 +1454,7 @@ public class RenderCommon {
             public String getIdentifier() {
                 return identifier;
             }
-    
+
             /**
              * @param x the x position of the image
              * @return self for chaining.
@@ -1464,7 +1465,7 @@ public class RenderCommon {
                 this.x = x;
                 return this;
             }
-    
+
             /**
              * @return the x position of the image.
              *
@@ -1473,7 +1474,7 @@ public class RenderCommon {
             public int getX() {
                 return x;
             }
-    
+
             /**
              * @param y the y position of the image
              * @return self for chaining.
@@ -1484,7 +1485,7 @@ public class RenderCommon {
                 this.y = y;
                 return this;
             }
-    
+
             /**
              * @return the y position of the image.
              *
@@ -1493,7 +1494,7 @@ public class RenderCommon {
             public int getY() {
                 return y;
             }
-    
+
             /**
              * @param x the x position of the image
              * @param y the y position of the image
@@ -1506,7 +1507,7 @@ public class RenderCommon {
                 this.y = y;
                 return this;
             }
-    
+
             /**
              * @param width the width of the image
              * @return self for chaining.
@@ -1517,7 +1518,7 @@ public class RenderCommon {
                 this.width = width;
                 return this;
             }
-    
+
             /**
              * @return the width of the image.
              *
@@ -1526,7 +1527,7 @@ public class RenderCommon {
             public int getWidth() {
                 return width;
             }
-    
+
             /**
              * @param height the height of the image
              * @return self for chaining.
@@ -1537,7 +1538,7 @@ public class RenderCommon {
                 this.height = height;
                 return this;
             }
-    
+
             /**
              * @return the height of the image.
              *
@@ -1546,7 +1547,7 @@ public class RenderCommon {
             public int getHeight() {
                 return height;
             }
-    
+
             /**
              * @param width  the width of the image
              * @param height the height of the image
@@ -1559,7 +1560,7 @@ public class RenderCommon {
                 this.height = height;
                 return this;
             }
-    
+
             /**
              * @param imageX the x position in the image texture to start drawing from
              * @return self for chaining.
@@ -1570,7 +1571,7 @@ public class RenderCommon {
                 this.imageX = imageX;
                 return this;
             }
-    
+
             /**
              * @return the x position in the image texture to start drawing from.
              *
@@ -1579,7 +1580,7 @@ public class RenderCommon {
             public int getImageX() {
                 return imageX;
             }
-    
+
             /**
              * @param imageY the y position in the image texture to start drawing from
              * @return self for chaining.
@@ -1590,7 +1591,7 @@ public class RenderCommon {
                 this.imageY = imageY;
                 return this;
             }
-    
+
             /**
              * @return the y position in the image texture to start drawing from.
              *
@@ -1599,7 +1600,7 @@ public class RenderCommon {
             public int getImageY() {
                 return imageY;
             }
-    
+
             /**
              * @param imageX the x position in the image texture to start drawing from
              * @param imageY the y position in the image texture to start drawing from
@@ -1612,7 +1613,7 @@ public class RenderCommon {
                 this.imageY = imageY;
                 return this;
             }
-    
+
             /**
              * @param regionWidth the width of the region to draw
              * @return self for chaining.
@@ -1623,7 +1624,7 @@ public class RenderCommon {
                 this.regionWidth = regionWidth;
                 return this;
             }
-    
+
             /**
              * @return the width of the region to draw.
              *
@@ -1632,7 +1633,7 @@ public class RenderCommon {
             public int getRegionWidth() {
                 return regionWidth;
             }
-    
+
             /**
              * @param regionHeight the height of the region to draw
              * @return self for chaining.
@@ -1643,7 +1644,7 @@ public class RenderCommon {
                 this.regionHeight = regionHeight;
                 return this;
             }
-    
+
             /**
              * @return the height of the region to draw.
              *
@@ -1652,7 +1653,7 @@ public class RenderCommon {
             public int getRegionHeight() {
                 return regionHeight;
             }
-    
+
             /**
              * @param regionWidth  the width of the region to draw
              * @param regionHeight the height of the region to draw
@@ -1665,7 +1666,7 @@ public class RenderCommon {
                 this.regionHeight = regionHeight;
                 return this;
             }
-    
+
             /**
              * @param x      the x position in the image texture to start drawing from
              * @param y      the y position in the image texture to start drawing from
@@ -1682,7 +1683,7 @@ public class RenderCommon {
                 this.regionHeight = height;
                 return this;
             }
-    
+
             /**
              * @param x             the x position in the image texture to start drawing from
              * @param y             the y position in the image texture to start drawing from
@@ -1703,7 +1704,7 @@ public class RenderCommon {
                 this.textureHeight = textureHeight;
                 return this;
             }
-    
+
             /**
              * @param textureWidth the width of the used texture
              * @return self for chaining.
@@ -1714,7 +1715,7 @@ public class RenderCommon {
                 this.textureWidth = textureWidth;
                 return this;
             }
-    
+
             /**
              * @return the width of the used texture.
              *
@@ -1723,7 +1724,7 @@ public class RenderCommon {
             public int getTextureWidth() {
                 return textureWidth;
             }
-    
+
             /**
              * @param textureHeight the height of the used texture
              * @return self for chaining.
@@ -1734,7 +1735,7 @@ public class RenderCommon {
                 this.textureHeight = textureHeight;
                 return this;
             }
-    
+
             /**
              * @return the height of the used texture.
              *
@@ -1743,7 +1744,7 @@ public class RenderCommon {
             public int getTextureHeight() {
                 return textureHeight;
             }
-    
+
             /**
              * @param textureWidth  the width of the used texture
              * @param textureHeight the height of the used texture
@@ -1756,7 +1757,7 @@ public class RenderCommon {
                 this.textureHeight = textureHeight;
                 return this;
             }
-    
+
             /**
              * @param color the color of the image
              * @return self for chaining.
@@ -1767,7 +1768,7 @@ public class RenderCommon {
                 this.color = color;
                 return this;
             }
-    
+
             /**
              * @param r the red component of the color
              * @param g the green component of the color
@@ -1780,7 +1781,7 @@ public class RenderCommon {
                 this.color = (r << 16) | (g << 8) | b;
                 return this;
             }
-    
+
             /**
              * @param r the red component of the color
              * @param g the green component of the color
@@ -1795,7 +1796,7 @@ public class RenderCommon {
                 this.alpha = a;
                 return this;
             }
-    
+
             /**
              * @param color the color of the image
              * @param alpha the alpha value of the color
@@ -1808,7 +1809,7 @@ public class RenderCommon {
                 this.alpha = alpha;
                 return this;
             }
-    
+
             /**
              * @return the color of the image.
              *
@@ -1817,7 +1818,7 @@ public class RenderCommon {
             public int getColor() {
                 return color;
             }
-    
+
             /**
              * @param alpha the alpha value of the color
              * @return self for chaining.
@@ -1828,7 +1829,7 @@ public class RenderCommon {
                 this.alpha = alpha;
                 return this;
             }
-    
+
             /**
              * @return the alpha value of the color.
              *
@@ -1837,7 +1838,7 @@ public class RenderCommon {
             public int getAlpha() {
                 return alpha;
             }
-    
+
             /**
              * @param rotation the rotation (clockwise) of the image in degrees
              * @return self for chaining.
@@ -1848,7 +1849,7 @@ public class RenderCommon {
                 this.rotation = (float) rotation;
                 return this;
             }
-    
+
             /**
              * @return the rotation (clockwise) of the image in degrees.
              *
@@ -1857,7 +1858,7 @@ public class RenderCommon {
             public float getRotation() {
                 return rotation;
             }
-    
+
             /**
              * @param zIndex the z-index of the image
              * @return self for chaining.
@@ -1868,7 +1869,7 @@ public class RenderCommon {
                 this.zIndex = zIndex;
                 return this;
             }
-    
+
             /**
              * @return the z-index of the image.
              *
@@ -1877,42 +1878,42 @@ public class RenderCommon {
             public int getZIndex() {
                 return zIndex;
             }
-    
+
             @Override
             public Image createElement() {
                 return new Image(x, y, width, height, zIndex, alpha, color, identifier, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation).setParent(parent);
             }
-    
+
             @Override
             public int getScaledWidth() {
                 return width;
             }
-    
+
             @Override
             public int getParentWidth() {
                 return parent.getWidth();
             }
-    
+
             @Override
             public int getScaledHeight() {
                 return height;
             }
-    
+
             @Override
             public int getParentHeight() {
                 return parent.getHeight();
             }
-    
+
             @Override
             public int getScaledLeft() {
                 return x;
             }
-    
+
             @Override
             public int getScaledTop() {
                 return y;
             }
-    
+
             @Override
             public Builder moveTo(int x, int y) {
                 return pos(x, y);
@@ -1926,7 +1927,7 @@ public class RenderCommon {
      */
     @SuppressWarnings("unused")
     public static class Rect implements RenderElement, Alignable<Rect> {
-    
+
         public IDraw2D<?> parent;
         public float rotation;
         public int x1;
@@ -1935,19 +1936,19 @@ public class RenderCommon {
         public int y2;
         public int color;
         public int zIndex;
-    
+
         public Rect(int x1, int y1, int x2, int y2, int color, float rotation, int zIndex) {
             this(x1, y1, x2, y2, color, 0xFF, rotation, zIndex);
             setColor(color);
         }
-    
+
         public Rect(int x1, int y1, int x2, int y2, int color, int alpha, float rotation, int zIndex) {
             setPos(x1, y1, x2, y2);
             setColor(color, alpha);
             this.rotation = MathHelper.wrapDegrees(rotation);
             this.zIndex = zIndex;
         }
-    
+
         /**
          * @param x1 the first x position of this rectangle
          * @return self for chaining.
@@ -1958,7 +1959,7 @@ public class RenderCommon {
             this.x1 = x1;
             return this;
         }
-    
+
         /**
          * @return the first x position of this rectangle.
          *
@@ -1967,7 +1968,7 @@ public class RenderCommon {
         public int getX1() {
             return x1;
         }
-    
+
         /**
          * @param y1 the first y position of this rectangle
          * @return self for chaining.
@@ -1978,7 +1979,7 @@ public class RenderCommon {
             this.y1 = y1;
             return this;
         }
-    
+
         /**
          * @return the first y position of this rectangle.
          *
@@ -1987,7 +1988,7 @@ public class RenderCommon {
         public int getY1() {
             return y1;
         }
-    
+
         /**
          * @param x1 the first x position of this rectangle
          * @param y1 the first y position of this rectangle
@@ -2000,7 +2001,7 @@ public class RenderCommon {
             this.y1 = y1;
             return this;
         }
-    
+
         /**
          * @param x2 the second x position of this rectangle
          * @return self for chaining.
@@ -2011,7 +2012,7 @@ public class RenderCommon {
             this.x2 = x2;
             return this;
         }
-    
+
         /**
          * @return the second x position of this rectangle.
          *
@@ -2020,7 +2021,7 @@ public class RenderCommon {
         public int getX2() {
             return x2;
         }
-    
+
         /**
          * @param y2 the second y position of this rectangle
          * @return self for chaining.
@@ -2031,7 +2032,7 @@ public class RenderCommon {
             this.y2 = y2;
             return this;
         }
-    
+
         /**
          * @return the second y position of the rectangle.
          *
@@ -2040,7 +2041,7 @@ public class RenderCommon {
         public int getY2() {
             return y2;
         }
-    
+
         /**
          * @param x2 the second x position of this rectangle
          * @param y2 the second y position of this rectangle
@@ -2053,7 +2054,7 @@ public class RenderCommon {
             this.y2 = y2;
             return this;
         }
-    
+
         /**
          * @param x1
          * @param y1
@@ -2070,7 +2071,7 @@ public class RenderCommon {
             this.y2 = y2;
             return this;
         }
-    
+
         /**
          * @param width the new width of this rectangle
          * @return self for chaining.
@@ -2118,7 +2119,7 @@ public class RenderCommon {
         public int getHeight() {
             return Math.abs(y2 - y1);
         }
-    
+
         /**
          * @param width  the new width of this rectangle
          * @param height the new height of this rectangle
@@ -2131,7 +2132,7 @@ public class RenderCommon {
             setHeight(height);
             return this;
         }
-    
+
         /**
          * @param color
          * @return
@@ -2145,7 +2146,7 @@ public class RenderCommon {
             this.color = color;
             return this;
         }
-    
+
         /**
          * @param color
          * @param alpha
@@ -2157,7 +2158,7 @@ public class RenderCommon {
             this.color = (alpha << 24) | (color & 0xFFFFFF);
             return this;
         }
-    
+
         /**
          * @param alpha
          * @return
@@ -2168,7 +2169,7 @@ public class RenderCommon {
             this.color = (color & 0xFFFFFF) | (alpha << 24);
             return this;
         }
-    
+
         /**
          * @return the color value of this rectangle.
          *
@@ -2177,7 +2178,7 @@ public class RenderCommon {
         public int getColor() {
             return color;
         }
-    
+
         /**
          * @return the alpha value of this rectangle.
          *
@@ -2186,7 +2187,7 @@ public class RenderCommon {
         public int getAlpha() {
             return (color >> 24) & 0xFF;
         }
-    
+
         /**
          * @param rotation
          * @return
@@ -2197,7 +2198,7 @@ public class RenderCommon {
             this.rotation = MathHelper.wrapDegrees((float) rotation);
             return this;
         }
-    
+
         /**
          * @return the rotation of this rectangle.
          *
@@ -2217,32 +2218,32 @@ public class RenderCommon {
             this.zIndex = zIndex;
             return this;
         }
-    
+
         @Override
         public int getZIndex() {
             return zIndex;
         }
-    
+
         @Override
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             matrices.push();
             matrices.translate(x1, y1, 0);
             matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
             matrices.translate(-x1, -y1, 0);
-    
+
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
-    
+
             float fa = ((color >> 24) & 0xFF) / 255F;
             float fr = ((color >> 16) & 0xFF) / 255F;
             float fg = ((color >> 8) & 0xFF) / 255F;
             float fb = (color & 0xFF) / 255F;
-    
+
             RenderSystem.enableBlend();
             RenderSystem.disableTexture();
             RenderSystem.defaultBlendFunc();
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
-    
+
             buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
             Matrix4f matrix = matrices.peek().getPositionMatrix();
             //draw a rectangle using triangle strips
@@ -2251,53 +2252,53 @@ public class RenderCommon {
             buf.vertex(matrix, x1, y1, 0).color(fr, fg, fb, fa).next(); // Bottom-left
             buf.vertex(matrix, x2, y1, 0).color(fr, fg, fb, fa).next(); // Bottom-right
             tess.draw();
-    
+
             RenderSystem.enableTexture();
             RenderSystem.disableBlend();
-    
+
             matrices.pop();
         }
-    
+
         public Rect setParent(IDraw2D<?> parent) {
             this.parent = parent;
             return this;
         }
-    
+
         @Override
         public int getScaledWidth() {
             return getWidth();
         }
-    
+
         @Override
         public int getParentWidth() {
-            return parent != null ? parent.getWidth() : mc.currentScreen.width;
+            return parent != null ? parent.getWidth() : mc.getWindow().getScaledWidth();
         }
-    
+
         @Override
         public int getScaledHeight() {
             return getHeight();
         }
-    
+
         @Override
         public int getParentHeight() {
-            return parent != null ? parent.getHeight() : mc.currentScreen.height;
+            return parent != null ? parent.getHeight() : mc.getWindow().getScaledHeight();
         }
-    
+
         @Override
         public int getScaledLeft() {
             return Math.min(x1, x2);
         }
-    
+
         @Override
         public int getScaledTop() {
             return Math.min(y1, y2);
         }
-    
+
         @Override
         public Rect moveTo(int x, int y) {
             return setPos(x, y, x + getScaledWidth(), y + getScaledHeight());
         }
-    
+
         /**
          * @author Etheradon
          * @since 1.8.4
@@ -2311,11 +2312,11 @@ public class RenderCommon {
             private int alpha = 0xFF;
             private float rotation = 0;
             private int zIndex = 0;
-    
+
             public Builder(IDraw2D<?> draw2D) {
                 super(draw2D);
             }
-    
+
             /**
              * @param x1 the first x position of the rectangle
              * @return self for chaining.
@@ -2326,7 +2327,7 @@ public class RenderCommon {
                 this.x1 = x1;
                 return this;
             }
-    
+
             /**
              * @return the first x position of the rectangle.
              *
@@ -2335,7 +2336,7 @@ public class RenderCommon {
             public int getX1() {
                 return x1;
             }
-    
+
             /**
              * @param y1 the first y position of the rectangle
              * @return self for chaining.
@@ -2346,7 +2347,7 @@ public class RenderCommon {
                 this.y1 = y1;
                 return this;
             }
-    
+
             /**
              * @return the first y position of the rectangle.
              *
@@ -2355,7 +2356,7 @@ public class RenderCommon {
             public int getY1() {
                 return y1;
             }
-    
+
             /**
              * @param x1 the first x position of the rectangle
              * @param y1 the first y position of the rectangle
@@ -2368,7 +2369,7 @@ public class RenderCommon {
                 this.y1 = y1;
                 return this;
             }
-    
+
             /**
              * @param x2 the second x position of the rectangle
              * @return self for chaining.
@@ -2379,7 +2380,7 @@ public class RenderCommon {
                 this.x2 = x2;
                 return this;
             }
-    
+
             /**
              * @return the second x position of the rectangle.
              *
@@ -2388,7 +2389,7 @@ public class RenderCommon {
             public int getX2() {
                 return x2;
             }
-    
+
             /**
              * @param y2 the second y position of the rectangle
              * @return self for chaining.
@@ -2399,7 +2400,7 @@ public class RenderCommon {
                 this.y2 = y2;
                 return this;
             }
-    
+
             /**
              * @return the second y position of the rectangle.
              *
@@ -2408,7 +2409,7 @@ public class RenderCommon {
             public int getY2() {
                 return y2;
             }
-    
+
             /**
              * @param x2 the second x position of the rectangle
              * @param y2 the second y position of the rectangle
@@ -2421,7 +2422,7 @@ public class RenderCommon {
                 this.y2 = y2;
                 return this;
             }
-    
+
             /**
              * @param x1 the first x position of the rectangle
              * @param y1 the first y position of the rectangle
@@ -2438,7 +2439,7 @@ public class RenderCommon {
                 this.y2 = y2;
                 return this;
             }
-    
+
             /**
              * The width will just set the x2 position to {@code x1 + width}.
              *
@@ -2451,7 +2452,7 @@ public class RenderCommon {
                 this.x2 = this.x1 + width;
                 return this;
             }
-    
+
             /**
              * @return the width of the rectangle.
              *
@@ -2460,7 +2461,7 @@ public class RenderCommon {
             public int getWidth() {
                 return Math.abs(this.x2 - this.x1);
             }
-    
+
             /**
              * The width will just set the y2 position to {@code y1 + height}.
              *
@@ -2473,7 +2474,7 @@ public class RenderCommon {
                 this.y2 = this.y1 + height;
                 return this;
             }
-    
+
             /**
              * @return the height of the rectangle.
              *
@@ -2482,7 +2483,7 @@ public class RenderCommon {
             public int getHeight() {
                 return Math.abs(this.y2 - this.y1);
             }
-    
+
             /**
              * @param width  the width of the rectangle
              * @param height the height of the rectangle
@@ -2493,7 +2494,7 @@ public class RenderCommon {
             public Builder size(int width, int height) {
                 return width(width).height(height);
             }
-    
+
             /**
              * @param color the color of the rectangle
              * @return self for chaining.
@@ -2504,7 +2505,7 @@ public class RenderCommon {
                 this.color = color;
                 return this;
             }
-    
+
             /**
              * @param r the red component of the color
              * @param g the green component of the color
@@ -2517,7 +2518,7 @@ public class RenderCommon {
                 this.color = (r << 16) | (g << 8) | b;
                 return this;
             }
-    
+
             /**
              * @param r the red component of the color
              * @param g the green component of the color
@@ -2532,7 +2533,7 @@ public class RenderCommon {
                 this.alpha = a;
                 return this;
             }
-    
+
             /**
              * @param color the color of the rectangle
              * @param alpha the alpha value of the color
@@ -2545,7 +2546,7 @@ public class RenderCommon {
                 this.alpha = alpha;
                 return this;
             }
-    
+
             /**
              * @return the color of the rectangle.
              *
@@ -2554,7 +2555,7 @@ public class RenderCommon {
             public int getColor() {
                 return color;
             }
-    
+
             /**
              * @param alpha the alpha value of the color
              * @return self for chaining.
@@ -2565,7 +2566,7 @@ public class RenderCommon {
                 this.alpha = alpha;
                 return this;
             }
-    
+
             /**
              * @return the alpha value of the color.
              *
@@ -2574,7 +2575,7 @@ public class RenderCommon {
             public int getAlpha() {
                 return alpha;
             }
-    
+
             /**
              * @param rotation the rotation (clockwise) of the rectangle in degrees
              * @return self for chaining.
@@ -2585,7 +2586,7 @@ public class RenderCommon {
                 this.rotation = (float) rotation;
                 return this;
             }
-    
+
             /**
              * @return the rotation (clockwise) of the rectangle in degrees.
              *
@@ -2594,7 +2595,7 @@ public class RenderCommon {
             public float getRotation() {
                 return rotation;
             }
-    
+
             /**
              * @param zIndex the z-index of the rectangle
              * @return self for chaining.
@@ -2605,7 +2606,7 @@ public class RenderCommon {
                 this.zIndex = zIndex;
                 return this;
             }
-    
+
             /**
              * @return the z-index of the rectangle.
              *
@@ -2614,42 +2615,42 @@ public class RenderCommon {
             public int getZIndex() {
                 return zIndex;
             }
-    
+
             @Override
             public Rect createElement() {
                 return new Rect(x1, y1, x2, y2, color, alpha, rotation, zIndex).setParent(parent);
             }
-    
+
             @Override
             public int getScaledWidth() {
                 return getWidth();
             }
-    
+
             @Override
             public int getParentWidth() {
                 return parent.getWidth();
             }
-    
+
             @Override
             public int getScaledHeight() {
                 return getHeight();
             }
-    
+
             @Override
             public int getParentHeight() {
                 return parent.getHeight();
             }
-    
+
             @Override
             public int getScaledLeft() {
                 return Math.min(x1, x2);
             }
-    
+
             @Override
             public int getScaledTop() {
                 return Math.min(y1, y2);
             }
-    
+
             @Override
             public Builder moveTo(int x, int y) {
                 return pos(x, y, x + getWidth(), y + getHeight());
@@ -2663,9 +2664,9 @@ public class RenderCommon {
      */
     @SuppressWarnings("unused")
     public static class Text implements RenderElement, Alignable<Text> {
-    
+
         public IDraw2D<?> parent;
-    
+
         public net.minecraft.text.Text text;
         public double scale;
         public float rotation;
@@ -2675,11 +2676,11 @@ public class RenderCommon {
         public int width;
         public boolean shadow;
         public int zIndex;
-    
+
         public Text(String text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
             this(new TextHelper(net.minecraft.text.Text.literal(text)), x, y, color, zIndex, shadow, scale, rotation);
         }
-    
+
         public Text(TextHelper text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
             this.text = text.getRaw();
             this.x = x;
@@ -2691,7 +2692,7 @@ public class RenderCommon {
             this.rotation = MathHelper.wrapDegrees(rotation);
             this.zIndex = zIndex;
         }
-    
+
         /**
          * @param x the new x position for this text element
          * @return self for chaining.
@@ -2702,7 +2703,7 @@ public class RenderCommon {
             this.x = x;
             return this;
         }
-    
+
         /**
          * @return the x position of this element.
          *
@@ -2711,7 +2712,7 @@ public class RenderCommon {
         public int getX() {
             return x;
         }
-    
+
         /**
          * @param y the new y position for this text element
          * @return self for chaining.
@@ -2722,7 +2723,7 @@ public class RenderCommon {
             this.y = y;
             return this;
         }
-    
+
         /**
          * @return the y position of this element.
          *
@@ -2731,7 +2732,7 @@ public class RenderCommon {
         public int getY() {
             return y;
         }
-    
+
         /**
          * @param x
          * @param y
@@ -2744,7 +2745,7 @@ public class RenderCommon {
             this.y = y;
             return this;
         }
-    
+
         /**
          * @param text
          * @return
@@ -2756,7 +2757,7 @@ public class RenderCommon {
             this.width = mc.textRenderer.getWidth(text);
             return this;
         }
-    
+
         /**
          * @param text
          * @return
@@ -2768,7 +2769,7 @@ public class RenderCommon {
             this.width = mc.textRenderer.getWidth(this.text);
             return this;
         }
-    
+
         /**
          * @return
          *
@@ -2777,7 +2778,7 @@ public class RenderCommon {
         public TextHelper getText() {
             return new TextHelper(text);
         }
-    
+
         /**
          * @return
          *
@@ -2786,7 +2787,7 @@ public class RenderCommon {
         public int getWidth() {
             return this.width;
         }
-    
+
         /**
          * @return the height of this text.
          *
@@ -2795,7 +2796,7 @@ public class RenderCommon {
         public int getHeight() {
             return mc.textRenderer.fontHeight;
         }
-    
+
         /**
          * @param shadow whether the text should be rendered with a shadow
          * @return self for chaining.
@@ -2806,7 +2807,7 @@ public class RenderCommon {
             this.shadow = shadow;
             return this;
         }
-    
+
         /**
          * @return {@code true} if this text element is rendered with a shadow, {@code false}
          *         otherwise.
@@ -2816,7 +2817,7 @@ public class RenderCommon {
         public boolean hasShadow() {
             return shadow;
         }
-    
+
         /**
          * @param scale
          * @return
@@ -2831,7 +2832,7 @@ public class RenderCommon {
             this.scale = scale;
             return this;
         }
-    
+
         /**
          * @return the scale of this text.
          *
@@ -2840,7 +2841,7 @@ public class RenderCommon {
         public double getScale() {
             return scale;
         }
-    
+
         /**
          * @param rotation
          * @return
@@ -2851,7 +2852,7 @@ public class RenderCommon {
             this.rotation = MathHelper.wrapDegrees((float) rotation);
             return this;
         }
-    
+
         /**
          * @return the rotation of this text.
          *
@@ -2860,7 +2861,7 @@ public class RenderCommon {
         public float getRotation() {
             return rotation;
         }
-    
+
         /**
          * @param color the new color for this text element
          * @return self for chaining.
@@ -2871,7 +2872,7 @@ public class RenderCommon {
             this.color = color;
             return this;
         }
-    
+
         /**
          * @return the color of this text.
          *
@@ -2880,7 +2881,7 @@ public class RenderCommon {
         public int getColor() {
             return this.color;
         }
-    
+
         /**
          * @param zIndex the new z-index for this text element
          * @return self for chaining.
@@ -2891,12 +2892,12 @@ public class RenderCommon {
             this.zIndex = zIndex;
             return this;
         }
-    
+
         @Override
         public int getZIndex() {
             return zIndex;
         }
-    
+
         @Override
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             matrices.push();
@@ -2911,7 +2912,7 @@ public class RenderCommon {
             }
             matrices.pop();
         }
-    
+
         @Override
         public void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             matrices.push();
@@ -2925,47 +2926,47 @@ public class RenderCommon {
             buffer.draw();
             matrices.pop();
         }
-    
+
         public Text setParent(IDraw2D<?> parent) {
             this.parent = parent;
             return this;
         }
-    
+
         @Override
         public int getScaledWidth() {
             return (int) (scale * getWidth());
         }
-    
+
         @Override
         public int getParentWidth() {
-            return parent != null ? parent.getWidth() : mc.currentScreen.width;
+            return parent != null ? parent.getWidth() : mc.getWindow().getScaledWidth();
         }
-    
+
         @Override
         public int getScaledHeight() {
             return (int) (scale * mc.textRenderer.fontHeight);
         }
-    
+
         @Override
         public int getParentHeight() {
-            return parent != null ? parent.getHeight() : mc.currentScreen.height;
+            return parent != null ? parent.getHeight() : mc.getWindow().getScaledHeight();
         }
-    
+
         @Override
         public int getScaledLeft() {
             return x;
         }
-    
+
         @Override
         public int getScaledTop() {
             return y;
         }
-    
+
         @Override
         public Text moveTo(int x, int y) {
             return setPos(x, y);
         }
-    
+
         /**
          * @author Etheradon
          * @since 1.8.4
@@ -2979,11 +2980,11 @@ public class RenderCommon {
             private float rotation = 0;
             private boolean shadow = false;
             private int zIndex = 0;
-    
+
             public Builder(IDraw2D<?> draw2D) {
                 super(draw2D);
             }
-    
+
             /**
              * @param text the content of the text element
              * @return self for chaining.
@@ -2996,7 +2997,7 @@ public class RenderCommon {
                 }
                 return this;
             }
-    
+
             /**
              * @param text the content of the text element
              * @return self for chaining.
@@ -3009,7 +3010,7 @@ public class RenderCommon {
                 }
                 return this;
             }
-    
+
             /**
              * @param text the content of the text element
              * @return self for chaining.
@@ -3022,7 +3023,7 @@ public class RenderCommon {
                 }
                 return this;
             }
-    
+
             /**
              * @return the content of the text element.
              *
@@ -3031,7 +3032,7 @@ public class RenderCommon {
             public TextHelper getText() {
                 return new TextHelper(text.copy());
             }
-    
+
             /**
              * @param x the x position of the text element
              * @return self for chaining.
@@ -3042,7 +3043,7 @@ public class RenderCommon {
                 this.x = x;
                 return this;
             }
-    
+
             /**
              * @return the x position of the text element.
              *
@@ -3051,7 +3052,7 @@ public class RenderCommon {
             public int getX() {
                 return x;
             }
-    
+
             /**
              * @param y the y position of the text element
              * @return self for chaining.
@@ -3062,7 +3063,7 @@ public class RenderCommon {
                 this.y = y;
                 return this;
             }
-    
+
             /**
              * @return the y position of the text element.
              *
@@ -3071,7 +3072,7 @@ public class RenderCommon {
             public int getY() {
                 return y;
             }
-    
+
             /**
              * @param x the x position of the text element
              * @param y the y position of the text element
@@ -3084,7 +3085,7 @@ public class RenderCommon {
                 this.y = y;
                 return this;
             }
-    
+
             /**
              * @return the width of the string.
              *
@@ -3093,7 +3094,7 @@ public class RenderCommon {
             public int getWidth() {
                 return mc.textRenderer.getWidth(text);
             }
-    
+
             /**
              * @return the height of the string.
              *
@@ -3102,7 +3103,7 @@ public class RenderCommon {
             public int getHeight() {
                 return mc.textRenderer.fontHeight;
             }
-    
+
             /**
              * @param color the color of the text element
              * @return self for chaining.
@@ -3113,7 +3114,7 @@ public class RenderCommon {
                 this.color = color;
                 return this;
             }
-    
+
             /**
              * @param r the red component of the color
              * @param g the green component of the color
@@ -3125,7 +3126,7 @@ public class RenderCommon {
             public Builder color(int r, int g, int b) {
                 return color(r, g, b, 255);
             }
-    
+
             /**
              * @param r the red component of the color
              * @param g the green component of the color
@@ -3139,7 +3140,7 @@ public class RenderCommon {
                 this.color = (a << 24) | (r << 16) | (g << 8) | b;
                 return this;
             }
-    
+
             /**
              * @return the color of the text element.
              *
@@ -3148,7 +3149,7 @@ public class RenderCommon {
             public int getColor() {
                 return color;
             }
-    
+
             /**
              * @param scale the scale of the text element
              * @return self for chaining.
@@ -3162,7 +3163,7 @@ public class RenderCommon {
                 this.scale = scale;
                 return this;
             }
-    
+
             /**
              * @return the scale of the text element.
              *
@@ -3171,7 +3172,7 @@ public class RenderCommon {
             public double getScale() {
                 return scale;
             }
-    
+
             /**
              * @param rotation the rotation (clockwise) of the text element in degrees
              * @return self for chaining.
@@ -3182,7 +3183,7 @@ public class RenderCommon {
                 this.rotation = (float) rotation;
                 return this;
             }
-    
+
             /**
              * @return the rotation (clockwise) of the text element in degrees.
              *
@@ -3191,7 +3192,7 @@ public class RenderCommon {
             public float getRotation() {
                 return rotation;
             }
-    
+
             /**
              * @param shadow whether the text should have a shadow or not
              * @return self for chaining.
@@ -3202,7 +3203,7 @@ public class RenderCommon {
                 this.shadow = shadow;
                 return this;
             }
-    
+
             /**
              * @return {@code true} if the text element has a shadow, {@code false} otherwise.
              *
@@ -3211,7 +3212,7 @@ public class RenderCommon {
             public boolean hasShadow() {
                 return shadow;
             }
-    
+
             /**
              * @param zIndex the z-index of the text element
              * @return self for chaining.
@@ -3220,7 +3221,7 @@ public class RenderCommon {
                 this.zIndex = zIndex;
                 return this;
             }
-    
+
             /**
              * @return the z-index of the text element.
              *
@@ -3229,42 +3230,42 @@ public class RenderCommon {
             public int getZIndex() {
                 return zIndex;
             }
-    
+
             @Override
             public Text createElement() {
                 return new Text(new TextHelper(text), x, y, color, zIndex, shadow, scale, rotation).setParent(parent);
             }
-    
+
             @Override
             public int getScaledWidth() {
                 return (int) (scale * getWidth());
             }
-    
+
             @Override
             public int getParentWidth() {
                 return parent.getWidth();
             }
-    
+
             @Override
             public int getScaledHeight() {
                 return (int) (scale * getHeight());
             }
-    
+
             @Override
             public int getParentHeight() {
                 return parent.getHeight();
             }
-    
+
             @Override
             public int getScaledLeft() {
                 return x;
             }
-    
+
             @Override
             public int getScaledTop() {
                 return y;
             }
-    
+
             @Override
             public Builder moveTo(int x, int y) {
                 return pos(x, y);
@@ -3278,7 +3279,7 @@ public class RenderCommon {
      */
     @SuppressWarnings("unused")
     public static class Line implements RenderElement {
-    
+
         public int x1;
         public int y1;
         public int x2;
@@ -3287,7 +3288,7 @@ public class RenderCommon {
         public float rotation;
         public float width;
         public int zIndex;
-    
+
         public Line(int x1, int y1, int x2, int y2, int color, float rotation, float width, int zIndex) {
             this.x1 = x1;
             this.y1 = y1;
@@ -3298,7 +3299,7 @@ public class RenderCommon {
             this.width = width;
             this.zIndex = zIndex;
         }
-    
+
         /**
          * @param x1 the x position of the start of the line
          * @return self for chaining.
@@ -3309,7 +3310,7 @@ public class RenderCommon {
             this.x1 = x1;
             return this;
         }
-    
+
         /**
          * @return the x position of the start of the line.
          *
@@ -3318,7 +3319,7 @@ public class RenderCommon {
         public int getX1() {
             return x1;
         }
-    
+
         /**
          * @param y1 the y position of the start of the line
          * @return self for chaining.
@@ -3329,7 +3330,7 @@ public class RenderCommon {
             this.y1 = y1;
             return this;
         }
-    
+
         /**
          * @return the y position of the start of the line.
          *
@@ -3338,7 +3339,7 @@ public class RenderCommon {
         public int getY1() {
             return y1;
         }
-    
+
         /**
          * @param x1 the x position of the start of the line
          * @param y1 the y position of the start of the line
@@ -3351,7 +3352,7 @@ public class RenderCommon {
             this.y1 = y1;
             return this;
         }
-    
+
         /**
          * @param x2 the x position of the end of the line
          * @return self for chaining.
@@ -3362,7 +3363,7 @@ public class RenderCommon {
             this.x2 = x2;
             return this;
         }
-    
+
         /**
          * @return the x position of the end of the line.
          *
@@ -3371,7 +3372,7 @@ public class RenderCommon {
         public int getX2() {
             return x2;
         }
-    
+
         /**
          * @param y2 the y position of the end of the line
          * @return self for chaining.
@@ -3382,7 +3383,7 @@ public class RenderCommon {
             this.y2 = y2;
             return this;
         }
-    
+
         /**
          * @return the y position of the end of the line.
          *
@@ -3391,7 +3392,7 @@ public class RenderCommon {
         public int getY2() {
             return y2;
         }
-    
+
         /**
          * @param x2 the x position of the end of the line
          * @param y2 the y position of the end of the line
@@ -3404,7 +3405,7 @@ public class RenderCommon {
             this.y2 = y2;
             return this;
         }
-    
+
         /**
          * @param x1 the x position of the start of the line
          * @param y1 the y position of the start of the line
@@ -3421,7 +3422,7 @@ public class RenderCommon {
             this.y2 = y2;
             return this;
         }
-    
+
         /**
          * @param color the color of the line
          * @return self for chaining.
@@ -3435,7 +3436,7 @@ public class RenderCommon {
             this.color = color;
             return this;
         }
-    
+
         /**
          * @param color the color of the line
          * @param alpha the alpha of the line
@@ -3447,7 +3448,7 @@ public class RenderCommon {
             this.color = (alpha << 24) | (color & 0xFFFFFF);
             return this;
         }
-    
+
         /**
          * @return the color of the line.
          *
@@ -3456,7 +3457,7 @@ public class RenderCommon {
         public int getColor() {
             return color;
         }
-    
+
         /**
          * @param alpha the alpha value of the line's color
          * @return self for chaining.
@@ -3467,7 +3468,7 @@ public class RenderCommon {
             this.color = (alpha << 24) | (color & 0xFFFFFF);
             return this;
         }
-    
+
         /**
          * @return the alpha value of the line's color.
          *
@@ -3476,7 +3477,7 @@ public class RenderCommon {
         public int getAlpha() {
             return (color >> 24) & 0xFF;
         }
-    
+
         /**
          * @param rotation the rotation (clockwise) of the line
          * @return self for chaining.
@@ -3487,7 +3488,7 @@ public class RenderCommon {
             this.rotation = (float) rotation;
             return this;
         }
-    
+
         /**
          * @return the rotation (clockwise) of the line.
          *
@@ -3496,7 +3497,7 @@ public class RenderCommon {
         public float getRotation() {
             return rotation;
         }
-    
+
         /**
          * @param width the width of the line
          * @return self for chaining.
@@ -3507,7 +3508,7 @@ public class RenderCommon {
             this.width = (float) width;
             return this;
         }
-    
+
         /**
          * @return the width of the line.
          *
@@ -3516,7 +3517,7 @@ public class RenderCommon {
         public float getWidth() {
             return width;
         }
-    
+
         /**
          * @param zIndex the z-index of the line
          * @return self for chaining.
@@ -3527,31 +3528,31 @@ public class RenderCommon {
             this.zIndex = zIndex;
             return this;
         }
-    
+
         @Override
         public int getZIndex() {
             return zIndex;
         }
-    
+
         @Override
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             matrices.push();
             matrices.translate(x1, y1, 0);
             matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
             matrices.translate(-x1, -y1, 0);
-    
+
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
-    
+
             RenderSystem.enableBlend();
             RenderSystem.disableTexture();
             RenderSystem.defaultBlendFunc();
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
-    
+
             buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
             Matrix4f matrix = matrices.peek().getPositionMatrix();
             //draw a line with the given width using triangle strips
-    
+
             float halfWidth = width / 2;
             float dx = x2 - x1;
             float dy = y2 - y1;
@@ -3560,25 +3561,25 @@ public class RenderCommon {
             dy /= length;
             float px = -dy * halfWidth;
             float py = dx * halfWidth;
-    
+
             buf.vertex(matrix, x1 + px, y1 + py, 0).color(color).next();
             buf.vertex(matrix, x2 + px, y2 + py, 0).color(color).next();
             buf.vertex(matrix, x1 - px, y1 - py, 0).color(color).next();
             buf.vertex(matrix, x2 - px, y2 - py, 0).color(color).next();
             tess.draw();
-    
+
             RenderSystem.enableTexture();
             RenderSystem.disableBlend();
-    
+
             matrices.pop();
         }
-    
+
         /**
          * @author Etheradon
          * @since 1.8.4
          */
         public static class Builder extends RenderElementBuilder<Line> {
-    
+
             private int x1 = 0;
             private int y1 = 0;
             private int x2 = 0;
@@ -3588,11 +3589,11 @@ public class RenderCommon {
             private int alpha = 0xFF;
             private int zIndex = 0;
             private float width = 1;
-    
+
             public Builder(IDraw2D<?> draw2D) {
                 super(draw2D);
             }
-    
+
             /**
              * @param x1 the x position of the first point
              * @return self for chaining.
@@ -3603,7 +3604,7 @@ public class RenderCommon {
                 this.x1 = x1;
                 return this;
             }
-    
+
             /**
              * @return the x position of the first point.
              *
@@ -3612,7 +3613,7 @@ public class RenderCommon {
             public int getX1() {
                 return x1;
             }
-    
+
             /**
              * @param y1 the y position of the first point
              * @return self for chaining.
@@ -3623,7 +3624,7 @@ public class RenderCommon {
                 this.y1 = y1;
                 return this;
             }
-    
+
             /**
              * @return the y position of the first point.
              *
@@ -3632,7 +3633,7 @@ public class RenderCommon {
             public int getY1() {
                 return y1;
             }
-    
+
             /**
              * @param x1 the x position of the first point
              * @param y1 the y position of the first point
@@ -3645,7 +3646,7 @@ public class RenderCommon {
                 this.y1 = y1;
                 return this;
             }
-    
+
             /**
              * @param x2 the x position of the second point
              * @return self for chaining.
@@ -3656,7 +3657,7 @@ public class RenderCommon {
                 this.x2 = x2;
                 return this;
             }
-    
+
             /**
              * @return the x position of the second point.
              *
@@ -3665,7 +3666,7 @@ public class RenderCommon {
             public int getX2() {
                 return x2;
             }
-    
+
             /**
              * @param y2 the y position of the second point
              * @return self for chaining.
@@ -3676,7 +3677,7 @@ public class RenderCommon {
                 this.y2 = y2;
                 return this;
             }
-    
+
             /**
              * @return the y position of the second point.
              *
@@ -3685,7 +3686,7 @@ public class RenderCommon {
             public int getY2() {
                 return y2;
             }
-    
+
             /**
              * @param x2 the x position of the second point
              * @param y2 the y position of the second point
@@ -3698,7 +3699,7 @@ public class RenderCommon {
                 this.y2 = y2;
                 return this;
             }
-    
+
             /**
              * @param x1 the x position of the first point
              * @param y1 the y position of the first point
@@ -3715,7 +3716,7 @@ public class RenderCommon {
                 this.y2 = y2;
                 return this;
             }
-    
+
             /**
              * @param rotation the rotation (clockwise) of the line
              * @return self for chaining.
@@ -3726,7 +3727,7 @@ public class RenderCommon {
                 this.rotation = (float) rotation;
                 return this;
             }
-    
+
             /**
              * @return the rotation (clockwise) of the line.
              *
@@ -3735,7 +3736,7 @@ public class RenderCommon {
             public float getRotation() {
                 return rotation;
             }
-    
+
             /**
              * @param width the width of the line
              * @return self for chaining.
@@ -3746,7 +3747,7 @@ public class RenderCommon {
                 this.width = (float) width;
                 return this;
             }
-    
+
             /**
              * @return the width of the line.
              *
@@ -3755,7 +3756,7 @@ public class RenderCommon {
             public float getWidth() {
                 return width;
             }
-    
+
             /**
              * @param color the color of the line
              * @return self for chaining.
@@ -3766,7 +3767,7 @@ public class RenderCommon {
                 this.color = color;
                 return this;
             }
-    
+
             /**
              * @param color the color of the line
              * @param alpha the alpha component of the color
@@ -3779,7 +3780,7 @@ public class RenderCommon {
                 this.alpha = alpha;
                 return this;
             }
-    
+
             /**
              * @param r the red component of the color
              * @param g the green component of the color
@@ -3792,7 +3793,7 @@ public class RenderCommon {
                 this.color = (r << 16) | (g << 8) | b;
                 return this;
             }
-    
+
             /**
              * @param r the red component of the color
              * @param g the green component of the color
@@ -3806,7 +3807,7 @@ public class RenderCommon {
                 this.color = (a << 24) | (r << 16) | (g << 8) | b;
                 return this;
             }
-    
+
             /**
              * @return the color of the line.
              *
@@ -3815,7 +3816,7 @@ public class RenderCommon {
             public int getColor() {
                 return color;
             }
-    
+
             /**
              * @param alpha the alpha value of the color
              * @return self for chaining.
@@ -3826,7 +3827,7 @@ public class RenderCommon {
                 this.alpha = alpha;
                 return this;
             }
-    
+
             /**
              * @return the alpha value of the color.
              *
@@ -3835,7 +3836,7 @@ public class RenderCommon {
             public int getAlpha() {
                 return alpha;
             }
-    
+
             /**
              * @param zIndex the z-index of the line
              * @return self for chaining.
@@ -3846,7 +3847,7 @@ public class RenderCommon {
                 this.zIndex = zIndex;
                 return this;
             }
-    
+
             /**
              * @return the z-index of the line.
              *
@@ -3855,7 +3856,7 @@ public class RenderCommon {
             public int getZIndex() {
                 return zIndex;
             }
-    
+
             @Override
             protected Line createElement() {
                 return new Line(x1, y1, x2, y2, (alpha << 24) | (color & 0xFFFFFF), rotation, width, zIndex);
@@ -3869,18 +3870,18 @@ public class RenderCommon {
      */
     @SuppressWarnings("unused")
     public static class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
-    
+
         public final Draw2D draw2D;
         public IDraw2D<?> parent;
         public int x;
         public int y;
-        public int width;
-        public int height;
+        public IntSupplier width;
+        public IntSupplier height;
         public float scale;
         public float rotation;
         public int zIndex;
-    
-        public Draw2DElement(Draw2D draw2D, int x, int y, int width, int height, int zIndex, float scale, float rotation) {
+
+        public Draw2DElement(Draw2D draw2D, int x, int y, IntSupplier width, IntSupplier height, int zIndex, float scale, float rotation) {
             this.draw2D = draw2D;
             this.x = x;
             this.y = y;
@@ -3890,7 +3891,7 @@ public class RenderCommon {
             this.scale = scale;
             this.rotation = rotation;
         }
-    
+
         /**
          * @return the internal draw2D this draw2D element is wrapping.
          *
@@ -3899,7 +3900,7 @@ public class RenderCommon {
         public Draw2D getDraw2D() {
             return draw2D;
         }
-    
+
         /**
          * @param x the x position
          * @return self for chaining.
@@ -3910,7 +3911,7 @@ public class RenderCommon {
             this.x = x;
             return this;
         }
-    
+
         /**
          * @return the x position of this draw2D.
          *
@@ -3919,7 +3920,7 @@ public class RenderCommon {
         public int getX() {
             return x;
         }
-    
+
         /**
          * @param y the y position
          * @return self for chaining.
@@ -3930,7 +3931,7 @@ public class RenderCommon {
             this.y = y;
             return this;
         }
-    
+
         /**
          * @return the y position of this draw2D.
          *
@@ -3939,7 +3940,7 @@ public class RenderCommon {
         public int getY() {
             return y;
         }
-    
+
         /**
          * @param x the x position
          * @param y the y position
@@ -3952,7 +3953,7 @@ public class RenderCommon {
             this.y = y;
             return this;
         }
-    
+
         /**
          * @param width the width
          * @return self for chaining.
@@ -3960,19 +3961,19 @@ public class RenderCommon {
          * @since 1.8.4
          */
         public Draw2DElement setWidth(int width) {
-            this.width = width;
+            this.width = () -> width;
             return this;
         }
-    
+
         /**
          * @return the width of this draw2D.
          *
          * @since 1.8.4
          */
         public int getWidth() {
-            return width;
+            return width.getAsInt();
         }
-    
+
         /**
          * @param height the height
          * @return self for chaining.
@@ -3980,19 +3981,19 @@ public class RenderCommon {
          * @since 1.8.4
          */
         public Draw2DElement setHeight(int height) {
-            this.height = height;
+            this.height = () -> height;
             return this;
         }
-    
+
         /**
          * @return the height of this draw2D.
          *
          * @since 1.8.4
          */
         public int getHeight() {
-            return height;
+            return height.getAsInt();
         }
-    
+
         /**
          * @param width  the width
          * @param height the height
@@ -4001,11 +4002,9 @@ public class RenderCommon {
          * @since 1.8.4
          */
         public Draw2DElement setSize(int width, int height) {
-            this.width = width;
-            this.height = height;
-            return this;
+            return setWidth(width).setHeight(height);
         }
-    
+
         /**
          * @param scale the scale
          * @return self for chaining.
@@ -4019,7 +4018,7 @@ public class RenderCommon {
             this.scale = (float) scale;
             return this;
         }
-    
+
         /**
          * @return the scale of this draw2D.
          *
@@ -4028,7 +4027,7 @@ public class RenderCommon {
         public float getScale() {
             return scale;
         }
-    
+
         /**
          * @param rotation the rotation
          * @return self for chaining.
@@ -4039,7 +4038,7 @@ public class RenderCommon {
             this.rotation = (float) rotation;
             return this;
         }
-    
+
         /**
          * @return the rotation of this draw2D.
          *
@@ -4048,7 +4047,7 @@ public class RenderCommon {
         public float getRotation() {
             return rotation;
         }
-    
+
         /**
          * @param zIndex the z-index of this draw2D
          * @return self for chaining.
@@ -4059,64 +4058,64 @@ public class RenderCommon {
             this.zIndex = zIndex;
             return this;
         }
-    
+
         @Override
         public int getZIndex() {
             return zIndex;
         }
-    
+
         @Override
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             matrices.push();
             matrices.translate(x, y, 0);
             matrices.scale(scale, scale, 1);
             matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
-    
+
             draw2D.render(matrices);
-    
+
             matrices.pop();
         }
-    
+
         public Draw2DElement setParent(IDraw2D<?> parent) {
             this.parent = parent;
             return this;
         }
-    
+
         @Override
         public int getScaledWidth() {
-            return (int) (width * scale);
+            return (int) (width.getAsInt() * scale);
         }
-    
+
         @Override
         public int getParentWidth() {
-            return parent != null ? parent.getWidth() : mc.currentScreen.width;
+            return parent != null ? parent.getWidth() : mc.getWindow().getScaledWidth();
         }
-    
+
         @Override
         public int getScaledHeight() {
-            return (int) (height * scale);
+            return (int) (height.getAsInt() * scale);
         }
-    
+
         @Override
         public int getParentHeight() {
-            return parent != null ? parent.getHeight() : mc.currentScreen.height;
+            return parent != null ? parent.getHeight() : mc.getWindow().getScaledHeight();
         }
-    
+
         @Override
         public int getScaledLeft() {
             return x;
         }
-    
+
         @Override
         public int getScaledTop() {
             return y;
         }
-    
+
         @Override
         public Draw2DElement moveTo(int x, int y) {
             return setPos(x, y);
         }
-    
+
         /**
          * @author Etheradon
          * @since 1.8.4
@@ -4125,19 +4124,17 @@ public class RenderCommon {
             private final Draw2D draw2D;
             private int x = 0;
             private int y = 0;
-            private int width = 0;
-            private int height = 0;
+            private int width = -1;
+            private int height = -1;
             private float scale = 1;
             private float rotation = 0;
             private int zIndex = 0;
-    
+
             public Builder(IDraw2D<?> parent, Draw2D draw2D) {
                 super(parent);
                 this.draw2D = draw2D;
-                this.width = draw2D.getWidth();
-                this.height = draw2D.getHeight();
             }
-    
+
             /**
              * @param x the x position of the draw2D
              * @return self for chaining.
@@ -4148,7 +4145,7 @@ public class RenderCommon {
                 this.x = x;
                 return this;
             }
-    
+
             /**
              * @return the x position of the draw2D.
              *
@@ -4157,7 +4154,7 @@ public class RenderCommon {
             public int getX() {
                 return x;
             }
-    
+
             /**
              * @param y the y position of the draw2D
              * @return self for chaining.
@@ -4168,7 +4165,7 @@ public class RenderCommon {
                 this.y = y;
                 return this;
             }
-    
+
             /**
              * @return the y position of the draw2D.
              *
@@ -4177,7 +4174,7 @@ public class RenderCommon {
             public int getY() {
                 return y;
             }
-    
+
             /**
              * @param x the x position of the draw2D
              * @param y the y position of the draw2D
@@ -4190,7 +4187,7 @@ public class RenderCommon {
                 this.y = y;
                 return this;
             }
-    
+
             /**
              * @param width the width of the draw2D
              * @return self for chaining.
@@ -4201,7 +4198,7 @@ public class RenderCommon {
                 this.width = width;
                 return this;
             }
-    
+
             /**
              * @return the width of the draw2D.
              *
@@ -4210,7 +4207,7 @@ public class RenderCommon {
             public int getWidth() {
                 return width;
             }
-    
+
             /**
              * @param height the height of the draw2D
              * @return self for chaining.
@@ -4221,7 +4218,7 @@ public class RenderCommon {
                 this.height = height;
                 return this;
             }
-    
+
             /**
              * @return the height of the draw2D.
              *
@@ -4230,7 +4227,7 @@ public class RenderCommon {
             public int getHeight() {
                 return height;
             }
-    
+
             /**
              * @param width  the width of the draw2D
              * @param height the height of the draw2D
@@ -4243,7 +4240,7 @@ public class RenderCommon {
                 this.height = height;
                 return this;
             }
-    
+
             /**
              * @param scale the scale of the draw2D
              * @return self for chaining.
@@ -4254,7 +4251,7 @@ public class RenderCommon {
                 this.scale = (float) scale;
                 return this;
             }
-    
+
             /**
              * @return the scale of the draw2D.
              *
@@ -4263,7 +4260,7 @@ public class RenderCommon {
             public float getScale() {
                 return scale;
             }
-    
+
             /**
              * @param rotation the rotation (clockwise) of the draw2D in degrees
              * @return self for chaining.
@@ -4274,7 +4271,7 @@ public class RenderCommon {
                 this.rotation = (float) rotation;
                 return this;
             }
-    
+
             /**
              * @return the rotation (clockwise) of the draw2D in degrees.
              *
@@ -4283,7 +4280,7 @@ public class RenderCommon {
             public float getRotation() {
                 return rotation;
             }
-    
+
             /**
              * @return the z-index of the draw2D.
              *
@@ -4293,7 +4290,7 @@ public class RenderCommon {
                 this.zIndex = zIndex;
                 return this;
             }
-    
+
             /**
              * @return the z-index of the draw2D.
              *
@@ -4302,42 +4299,44 @@ public class RenderCommon {
             public int getZIndex() {
                 return zIndex;
             }
-    
+
             @Override
             protected Draw2DElement createElement() {
-                return new Draw2DElement(draw2D, x, y, width, height, zIndex, scale, rotation);
+                IntSupplier widthSup = width < 0 ? () -> draw2D.widthSupplier.getAsInt() : () -> width;
+                IntSupplier heightSup = height < 0 ? () -> draw2D.heightSupplier.getAsInt() : () -> height;
+                return new Draw2DElement(draw2D, x, y, widthSup, heightSup, zIndex, scale, rotation).setParent(parent);
             }
-    
+
             @Override
             public int getScaledWidth() {
-                return (int) (width * scale);
+                return (int) (draw2D.getWidth() * scale);
             }
-    
+
             @Override
             public int getParentWidth() {
                 return parent.getWidth();
             }
-    
+
             @Override
             public int getScaledHeight() {
-                return (int) (height * scale);
+                return (int) (draw2D.getHeight() * scale);
             }
-    
+
             @Override
             public int getParentHeight() {
                 return parent.getHeight();
             }
-    
+
             @Override
             public int getScaledLeft() {
                 return x;
             }
-    
+
             @Override
             public int getScaledTop() {
                 return y;
             }
-    
+
             @Override
             public Builder moveTo(int x, int y) {
                 return pos(x, y);

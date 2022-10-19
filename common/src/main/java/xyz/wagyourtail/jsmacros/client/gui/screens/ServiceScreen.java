@@ -4,7 +4,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
-import xyz.wagyourtail.jsmacros.client.config.Sorting;
 import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceContainer;
 import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceListTopbar;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.FileChooser;
@@ -69,4 +68,3 @@ public class ServiceScreen extends MacroScreen {
     }
 
 }
-    

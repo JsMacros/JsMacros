@@ -31,6 +31,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     public final IntSupplier widthSupplier;
     public final IntSupplier heightSupplier;
     public int zIndex;
+    public boolean visible = true;
     
     /**
      * @since 1.0.5
@@ -185,6 +186,26 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
         return e;
     }
 
+    /**
+     * @param visible whether to render this element.
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public Draw2D setVisible(boolean visible) {
+        this.visible = visible;
+        return this;
+    }
+
+    /**
+     * @return {@code true} if this draw2d is visible, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isVisible() {
+        return visible;
+    }
+    
     @Override
     public Draw2DElement addDraw2D(Draw2D draw2D, int x, int y, int width, int height) {
         return addDraw2D(draw2D, x, y, width, height, 0);
@@ -192,7 +213,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
 
     @Override
     public Draw2DElement addDraw2D(Draw2D draw2D, int x, int y, int width, int height, int zIndex) {
-        Draw2DElement d = new Draw2DElement(draw2D, x, y, width, height, zIndex, 1, 0);
+        Draw2DElement d = draw2DBuilder(draw2D).pos(x, y).size(width, height).zIndex(zIndex).build();
         return reAddElement(d);
     }
 
@@ -250,7 +271,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     
     @Override
     public Text addText(String text, int x, int y, int color, int zIndex, boolean shadow, double scale, double rotation) {
-        return reAddElement(new Text(text, x, y, color, zIndex, shadow, scale, (float) rotation));
+        return reAddElement(new Text(text, x, y, color, zIndex, shadow, scale, (float) rotation).setParent(this));
     }
     
     
@@ -271,7 +292,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     
     @Override
     public Text addText(TextHelper text, int x, int y, int color, int zIndex, boolean shadow, double scale, double rotation) {
-        return reAddElement(new Text(text, x, y, color, zIndex, shadow, scale, (float) rotation));
+        return reAddElement(new Text(text, x, y, color, zIndex, shadow, scale, (float) rotation).setParent(this));
     }
     
     /**
@@ -324,7 +345,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public Image addImage(int x, int y, int width, int height, int zIndex, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
-        return reAddElement(new Image(x, y, width, height, zIndex, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation));
+        return reAddElement(new Image(x, y, width, height, zIndex, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation).setParent(this));
     }
     /**
      * @since 1.6.5
@@ -332,7 +353,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public Image addImage(int x, int y, int width, int height, int zIndex, int alpha, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, double rotation) {
-        return reAddElement(new Image(x, y, width, height, zIndex, alpha, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation));
+        return reAddElement(new Image(x, y, width, height, zIndex, alpha, color, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, (float) rotation).setParent(this));
     }
 
     /**
@@ -353,7 +374,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public Rect addRect(int x1, int y1, int x2, int y2, int color) {
-        return reAddElement(new Rect(x1, y1, x2, y2, color, 0F, 0));
+        return reAddElement(new Rect(x1, y1, x2, y2, color, 0F, 0).setParent(this));
     }
 
     /**
@@ -376,7 +397,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     
     @Override
     public Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, double rotation, int zIndex) {
-        return reAddElement(new Rect(x1, y1, x2, y2, color, alpha, (float) rotation, zIndex));
+        return reAddElement(new Rect(x1, y1, x2, y2, color, alpha, (float) rotation, zIndex).setParent(this));
     }
     
     /**
@@ -472,7 +493,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     
     @Override
     public Item addItem(int x, int y, int zIndex, String id, boolean overlay, double scale, double rotation) {
-        return reAddElement(new Item(x, y, zIndex, id, overlay, scale, (float) rotation));
+        return reAddElement(new Item(x, y, zIndex, id, overlay, scale, (float) rotation).setParent(this));
     }
     
     /**
@@ -514,7 +535,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     
     @Override
     public Item addItem(int x, int y, int zIndex, ItemStackHelper item, boolean overlay, double scale, double rotation) {
-        return reAddElement(new Item(x, y, zIndex, item, overlay, scale, (float) rotation));
+        return reAddElement(new Item(x, y, zIndex, item, overlay, scale, (float) rotation).setParent(this));
     }
     
     /**
@@ -536,6 +557,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
         if (onInit != null) {
             try {
                 onInit.accept(this);
+                getDraw2Ds().forEach(e -> e.getDraw2D().init());
             } catch(Throwable e) {
                 e.printStackTrace();
                 try {
@@ -546,12 +568,11 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
                 }
             }
         }
-        getDraw2Ds().forEach(e -> e.getDraw2D().init());
     }
 
     @Override
     public void render(MatrixStack matrixStack) {
-        if (matrixStack == null) return;
+        if (matrixStack == null || !visible) return;
 
         synchronized (elements) {
             Iterator<RenderElement> iter = getElementsByZIndex();
@@ -579,7 +600,6 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
         this.onInit = onInit;
         return this;
     }
-
     
     /**
      *
