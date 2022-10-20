@@ -4260,8 +4260,8 @@ public class RenderCommon {
          * @since 1.8.4
          */
         public Draw2DElement setWidth(int width) {
-            if (width <= 0) {
-                throw new IllegalArgumentException("Width must be greater than 0");
+            if (width < 0) {
+                throw new IllegalArgumentException("Width must not be negative");
             }
             this.width = () -> width;
             return this;
@@ -4283,8 +4283,8 @@ public class RenderCommon {
          * @since 1.8.4
          */
         public Draw2DElement setHeight(int height) {
-            if (height <= 0) {
-                throw new IllegalArgumentException("Height must be greater than 0");
+            if (height < 0) {
+                throw new IllegalArgumentException("Height  must not be negative");
             }
             this.height = () -> height;
             return this;
@@ -4531,8 +4531,8 @@ public class RenderCommon {
              * @since 1.8.4
              */
             public Builder width(int width) {
-                if (width <= 0) {
-                    throw new IllegalArgumentException("Width must be greater than 0");
+                if (width < 0) {
+                    throw new IllegalArgumentException("Width  must not be negative");
                 }
                 this.width = () -> width;
                 return this;
@@ -4554,8 +4554,8 @@ public class RenderCommon {
              * @since 1.8.4
              */
             public Builder height(int height) {
-                if (height <= 0) {
-                    throw new IllegalArgumentException("Height must be greater than 0");
+                if (height < 0) {
+                    throw new IllegalArgumentException("Height  must not be negative");
                 }
                 this.height = () -> height;
                 return this;

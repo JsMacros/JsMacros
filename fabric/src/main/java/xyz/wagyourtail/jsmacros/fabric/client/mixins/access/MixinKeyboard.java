@@ -1,4 +1,4 @@
-package xyz.wagyourtail.jsmacros.client.mixins.access;
+package xyz.wagyourtail.jsmacros.fabric.client.mixins.access;
 
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.gui.Element;
@@ -18,7 +18,13 @@ public class MixinKeyboard {
     }
 
     @Redirect(method = "method_1458", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Element;charTyped(CI)Z"))
-    private static boolean onCharTyped(Element instance, char chr, int modifiers) {
+    private static boolean onCharTyped1(Element instance, char chr, int modifiers) {
+        ((IScreenInternal) instance).jsmacros_charTyped(chr, modifiers);
+        return instance.charTyped(chr, modifiers);
+    }
+
+    @Redirect(method = "method_1473", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Element;charTyped(CI)Z"))
+    private static boolean onCharTyped2(Element instance, char chr, int modifiers) {
         ((IScreenInternal) instance).jsmacros_charTyped(chr, modifiers);
         return instance.charTyped(chr, modifiers);
     }

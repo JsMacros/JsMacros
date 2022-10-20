@@ -6,12 +6,15 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
+import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
+import xyz.wagyourtail.jsmacros.client.api.classes.ScriptScreen;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
@@ -28,6 +31,46 @@ public class ForgeEvents {
         MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onTick);
         MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onRegisterCommands);
         MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onRegisterGuiOverlays);
+
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenDraw);
+        
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenKeyPressed);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenCharTyped);
+        
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseClicked);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseReleased);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseScroll);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseDragged);
+    }
+
+    public static void onScreenKeyPressed(ScreenEvent.KeyPressed.Pre event) {
+        ((IScreenInternal) event.getScreen()).jsmacros_keyPressed(event.getKeyCode(), event.getScanCode(), event.getModifiers());
+    }
+
+    public static void onScreenCharTyped(ScreenEvent.CharacterTyped.Pre event) {
+        ((IScreenInternal) event.getScreen()).jsmacros_charTyped(event.getCodePoint(), event.getModifiers());
+    }
+    
+    public static void onScreenDraw(ScreenEvent.Render.Post event) {
+        if (!(event.getScreen() instanceof ScriptScreen)) {
+            ((IScreenInternal) event.getScreen()).jsmacros_render(event.getPoseStack(), event.getMouseX(), event.getMouseY(), event.getPartialTick());
+        }
+    }
+    
+    public static void onScreenMouseClicked(ScreenEvent.MouseButtonPressed.Pre event) {
+        ((IScreenInternal) event.getScreen()).jsmacros_mouseClicked(event.getMouseX(), event.getMouseY(), event.getButton());
+    }
+
+    public static void onScreenMouseReleased(ScreenEvent.MouseButtonPressed.Pre event) {
+        ((IScreenInternal) event.getScreen()).jsmacros_mouseReleased(event.getMouseX(), event.getMouseY(), event.getButton());
+    }
+    
+    public static void onScreenMouseScroll(ScreenEvent.MouseScrolled.Pre event) {
+        ((IScreenInternal) event.getScreen()).jsmacros_mouseScrolled(event.getMouseX(), event.getMouseY(), event.getScrollDelta());
+    }
+    
+    public static void onScreenMouseDragged(ScreenEvent.MouseDragged.Pre event) {
+        ((IScreenInternal) event.getScreen()).jsmacros_mouseDragged(event.getMouseX(), event.getMouseY(), event.getMouseButton(), event.getDragX(), event.getDragY());
     }
 
     public static void renderHudListener(ForgeGui gui, MatrixStack mStack, float partialTicks, int width, int height) {
@@ -46,7 +89,7 @@ public class ForgeEvents {
         client.getProfiler().swap("jsmacros_draw3d");
         for (Draw3D d : ImmutableSet.copyOf(FHud.renders)) {
             try {
-                d.render(e.getPoseStack(), tickDelta);
+                d.render(e.getPoseStack(), e.getPartialTick());
             } catch (Throwable t) {
                 t.printStackTrace();
             }

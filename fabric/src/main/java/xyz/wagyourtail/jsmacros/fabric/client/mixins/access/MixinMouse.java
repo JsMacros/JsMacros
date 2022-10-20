@@ -1,7 +1,8 @@
-package xyz.wagyourtail.jsmacros.client.mixins.access;
+package xyz.wagyourtail.jsmacros.fabric.client.mixins.access;
 
 import net.minecraft.client.Mouse;
 import net.minecraft.client.gui.screen.Screen;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,7 +15,7 @@ import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
 public class MixinMouse {
     @Shadow private int activeButton;
 
-    @Inject(method = "method_1611", at = @At(value = "HEAD"))
+    @Inject(method = "method_1611", at = @At(value = "HEAD"), remap = false)
     private static void onMouseClicked(boolean[] bls, Screen screen, double x, double y, int button, CallbackInfo ci) {
         ((IScreenInternal) screen).jsmacros_mouseClicked(x, y, button);
     }
