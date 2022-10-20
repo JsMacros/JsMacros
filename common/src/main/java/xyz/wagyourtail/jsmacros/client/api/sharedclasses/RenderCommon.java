@@ -48,6 +48,24 @@ public class RenderCommon {
         default void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             render(matrices, mouseX, mouseY, delta);
         }
+
+        default void setupMatrix(MatrixStack matrices, double x, double y, float scale, float rotation) {
+            setupMatrix(matrices, x, y, scale, rotation, 0, 0, false);
+        }
+
+        default void setupMatrix(MatrixStack matrices, double x, double y, float scale, float rotation, double width, double height, boolean rotateAroundCenter) {
+            matrices.translate(x, y, 0);
+            matrices.scale(scale, scale, 1);
+            if (rotateAroundCenter) {
+                matrices.translate(width / 2, height / 2, 0);
+            }
+            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
+            if (rotateAroundCenter) {
+                matrices.translate(-width / 2, -height / 2, 0);
+            }
+            matrices.translate(-x, -y, 0);
+        }
+
     }
 
     /**
@@ -460,6 +478,7 @@ public class RenderCommon {
     @SuppressWarnings("unused")
     public static class Item implements RenderElement, Alignable<Item> {
 
+        private static final int DEFAULT_ITEM_SIZE = 16;
         private static final MinecraftClient mc = MinecraftClient.getInstance();
 
         public IDraw2D<?> parent;
@@ -468,6 +487,7 @@ public class RenderCommon {
         public boolean overlay;
         public double scale;
         public float rotation;
+        public boolean rotateCenter;
         public int x;
         public int y;
         public int zIndex;
@@ -625,6 +645,27 @@ public class RenderCommon {
         }
 
         /**
+         * @param rotateCenter whether the item should be rotated around its center
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public Item setRotateCenter(boolean rotateCenter) {
+            this.rotateCenter = rotateCenter;
+            return this;
+        }
+
+        /**
+         * @return {@code true} if this item should be rotated around its center, {@code false}
+         *         otherwise.
+         *
+         * @since 1.8.4
+         */
+        public boolean isRotatingCenter() {
+            return rotateCenter;
+        }
+
+        /**
          * @param overlay
          * @return
          *
@@ -684,10 +725,7 @@ public class RenderCommon {
         @Override
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             matrices.push();
-            matrices.translate(x, y, 0);
-            matrices.scale((float) scale, (float) scale, 1);
-            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
-            matrices.translate(-x, -y, 0);
+            setupMatrix(matrices, x, y, (float) scale, rotation, DEFAULT_ITEM_SIZE, DEFAULT_ITEM_SIZE, rotateCenter);
             MatrixStack ms = RenderSystem.getModelViewStack();
             ms.push();
             ms.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
@@ -707,10 +745,7 @@ public class RenderCommon {
         public void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             //TODO: cull and renderBack still not working, draw this to a FrameBuffer and render that instead.
             matrices.push();
-            matrices.translate(x, y, 0);
-            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
-            matrices.translate(-x, -y, 0);
-            matrices.scale((float) scale, (float) scale, 1);
+            setupMatrix(matrices, x, y, (float) scale, rotation, DEFAULT_ITEM_SIZE, DEFAULT_ITEM_SIZE, rotateCenter);
 
             MatrixStack ms = RenderSystem.getModelViewStack();
             ms.push();
@@ -720,15 +755,16 @@ public class RenderCommon {
             if (item != null) {
                 ItemRenderer i = mc.getItemRenderer();
                 ms.push();
-                ms.scale(1, 1, 0);
+                //make the item really flat, but not too flat to avoid z-fighting
+                ms.scale(1, 1, 0.005f);
                 RenderSystem.applyModelViewMatrix();
                 RenderSystem.disableDepthTest();
-                i.renderGuiItemIcon(item, (int) (x / scale), (int) (y / scale));
+                i.renderGuiItemIcon(item, x, y);
                 ms.pop();
                 RenderSystem.applyModelViewMatrix();
                 i.zOffset = -199.9f;
                 if (overlay) {
-                    i.renderGuiItemOverlay(mc.textRenderer, item, (int) (x / scale), (int) (y / scale), ovText);
+                    i.renderGuiItemOverlay(mc.textRenderer, item, x, y, ovText);
                 }
                 i.zOffset = 0;
             }
@@ -744,7 +780,7 @@ public class RenderCommon {
 
         @Override
         public int getScaledWidth() {
-            return (int) (scale * 17);
+            return (int) (scale * DEFAULT_ITEM_SIZE);
         }
 
         @Override
@@ -754,7 +790,7 @@ public class RenderCommon {
 
         @Override
         public int getScaledHeight() {
-            return (int) (scale * mc.textRenderer.fontHeight);
+            return (int) (scale * DEFAULT_ITEM_SIZE);
         }
 
         @Override
@@ -789,6 +825,7 @@ public class RenderCommon {
             private boolean overlay = false;
             private double scale = 1;
             private float rotation = 0;
+            private boolean rotateCenter = true;
             private int zIndex = 0;
 
             public Builder(IDraw2D<?> draw2D) {
@@ -980,6 +1017,27 @@ public class RenderCommon {
             }
 
             /**
+             * @param rotateCenter whether the item should be rotated around its center
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
+            public Builder rotateCenter(boolean rotateCenter) {
+                this.rotateCenter = rotateCenter;
+                return this;
+            }
+
+            /**
+             * @return {@code true} if this item should be rotated around its center, {@code false}
+             *         otherwise.
+             *
+             * @since 1.8.4
+             */
+            public boolean isRotatingCenter() {
+                return rotateCenter;
+            }
+
+            /**
              * @param zIndex the z-index of the item
              * @return self for chaining.
              *
@@ -1001,12 +1059,12 @@ public class RenderCommon {
 
             @Override
             protected Item createElement() {
-                return new Item(x, y, zIndex, itemStack, overlay, scale, rotation, ovText).setParent(parent);
+                return new Item(x, y, zIndex, itemStack, overlay, scale, rotation, ovText).setRotateCenter(rotateCenter).setParent(parent);
             }
 
             @Override
             public int getScaledWidth() {
-                return (int) (17 * scale);
+                return (int) (DEFAULT_ITEM_SIZE * scale);
             }
 
             @Override
@@ -1016,7 +1074,7 @@ public class RenderCommon {
 
             @Override
             public int getScaledHeight() {
-                return (int) (17 * scale);
+                return (int) (DEFAULT_ITEM_SIZE * scale);
             }
 
             @Override
@@ -1053,6 +1111,7 @@ public class RenderCommon {
         private Identifier imageid;
         public IDraw2D<?> parent;
         public float rotation;
+        public boolean rotateCenter;
         public int x;
         public int y;
         public int width;
@@ -1296,6 +1355,27 @@ public class RenderCommon {
         }
 
         /**
+         * @param rotateCenter whether the image should be rotated around its center
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public Image setRotateCenter(boolean rotateCenter) {
+            this.rotateCenter = rotateCenter;
+            return this;
+        }
+
+        /**
+         * @return {@code true} if this image should be rotated around its center, {@code false}
+         *         otherwise.
+         *
+         * @since 1.8.4
+         */
+        public boolean isRotatingCenter() {
+            return rotateCenter;
+        }
+
+        /**
          * @param zIndex the new z-index of this image
          * @return self for chaining.
          *
@@ -1314,9 +1394,7 @@ public class RenderCommon {
         @Override
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             matrices.push();
-            matrices.translate(x, y, 0);
-            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
-            matrices.translate(-x, -y, 0);
+            setupMatrix(matrices, x, y, 1, rotation, getWidth(), getHeight(), rotateCenter);
             RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableBlend();
@@ -1407,6 +1485,7 @@ public class RenderCommon {
             private int color = 0xFFFFFF;
             private int alpha = 0xFF;
             private float rotation = 0;
+            private boolean rotateCenter = true;
             private int zIndex = 0;
 
             public Builder(IDraw2D<?> draw2D) {
@@ -1860,6 +1939,27 @@ public class RenderCommon {
             }
 
             /**
+             * @param rotateCenter whether the image should be rotated around its center
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
+            public Builder rotateCenter(boolean rotateCenter) {
+                this.rotateCenter = rotateCenter;
+                return this;
+            }
+
+            /**
+             * @return {@code true} if this image should be rotated around its center, {@code false}
+             *         otherwise.
+             *
+             * @since 1.8.4
+             */
+            public boolean isRotatingCenter() {
+                return rotateCenter;
+            }
+
+            /**
              * @param zIndex the z-index of the image
              * @return self for chaining.
              *
@@ -1881,7 +1981,7 @@ public class RenderCommon {
 
             @Override
             public Image createElement() {
-                return new Image(x, y, width, height, zIndex, alpha, color, identifier, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation).setParent(parent);
+                return new Image(x, y, width, height, zIndex, alpha, color, identifier, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, rotation).setRotateCenter(rotateCenter).setParent(parent);
             }
 
             @Override
@@ -1930,6 +2030,7 @@ public class RenderCommon {
 
         public IDraw2D<?> parent;
         public float rotation;
+        public boolean rotateCenter;
         public int x1;
         public int y1;
         public int x2;
@@ -2209,6 +2310,27 @@ public class RenderCommon {
         }
 
         /**
+         * @param rotateCenter whether this rectangle should be rotated around its center
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public Rect setRotateCenter(boolean rotateCenter) {
+            this.rotateCenter = rotateCenter;
+            return this;
+        }
+
+        /**
+         * @return {@code true} if this rectangle should be rotated around its center, {@code false}
+         *         otherwise.
+         *
+         * @since 1.8.4
+         */
+        public boolean isRotatingCenter() {
+            return rotateCenter;
+        }
+
+        /**
          * @param zIndex the new z-index for this rectangle
          * @return self for chaining.
          *
@@ -2227,9 +2349,7 @@ public class RenderCommon {
         @Override
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             matrices.push();
-            matrices.translate(x1, y1, 0);
-            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
-            matrices.translate(-x1, -y1, 0);
+            setupMatrix(matrices, x1, y1, 1, rotation, getWidth(), getHeight(), rotateCenter);
 
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
@@ -2311,6 +2431,7 @@ public class RenderCommon {
             private int color = 0xFFFFFF;
             private int alpha = 0xFF;
             private float rotation = 0;
+            private boolean rotateCenter = true;
             private int zIndex = 0;
 
             public Builder(IDraw2D<?> draw2D) {
@@ -2597,6 +2718,27 @@ public class RenderCommon {
             }
 
             /**
+             * @param rotateCenter whether this rectangle should be rotated around its center
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
+            public Builder rotateCenter(boolean rotateCenter) {
+                this.rotateCenter = rotateCenter;
+                return this;
+            }
+
+            /**
+             * @return {@code true} if this rectangle should be rotated around its center,
+             *         {@code false} otherwise.
+             *
+             * @since 1.8.4
+             */
+            public boolean isRotatingCenter() {
+                return rotateCenter;
+            }
+
+            /**
              * @param zIndex the z-index of the rectangle
              * @return self for chaining.
              *
@@ -2618,7 +2760,7 @@ public class RenderCommon {
 
             @Override
             public Rect createElement() {
-                return new Rect(x1, y1, x2, y2, color, alpha, rotation, zIndex).setParent(parent);
+                return new Rect(x1, y1, x2, y2, color, alpha, rotation, zIndex).setRotateCenter(rotateCenter).setParent(parent);
             }
 
             @Override
@@ -2670,6 +2812,7 @@ public class RenderCommon {
         public net.minecraft.text.Text text;
         public double scale;
         public float rotation;
+        public boolean rotateCenter;
         public int x;
         public int y;
         public int color;
@@ -2863,6 +3006,27 @@ public class RenderCommon {
         }
 
         /**
+         * @param rotateCenter whether this text should be rotated around its center
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public Text setRotateCenter(boolean rotateCenter) {
+            this.rotateCenter = rotateCenter;
+            return this;
+        }
+
+        /**
+         * @return {@code true} if this text should be rotated around its center, {@code false}
+         *         otherwise.
+         *
+         * @since 1.8.4
+         */
+        public boolean isRotatingCenter() {
+            return rotateCenter;
+        }
+
+        /**
          * @param color the new color for this text element
          * @return self for chaining.
          *
@@ -2901,10 +3065,7 @@ public class RenderCommon {
         @Override
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             matrices.push();
-            matrices.translate(x, y, 0);
-            matrices.scale((float) scale, (float) scale, 1);
-            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
-            matrices.translate(-x, -y, 0);
+            setupMatrix(matrices, x, y, (float) scale, rotation, getWidth(), getHeight(), rotateCenter);
             if (shadow) {
                 mc.textRenderer.drawWithShadow(matrices, text, x, y, color);
             } else {
@@ -2916,10 +3077,7 @@ public class RenderCommon {
         @Override
         public void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             matrices.push();
-            matrices.translate(x, y, 0);
-            matrices.scale((float) scale, (float) scale, 0);
-            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
-            matrices.translate(-x, -y, 0);
+            setupMatrix(matrices, x, y, (float) scale, rotation, getWidth(), getHeight(), rotateCenter);
             Tessellator tess = Tessellator.getInstance();
             VertexConsumerProvider.Immediate buffer = VertexConsumerProvider.immediate(tess.getBuffer());
             mc.textRenderer.draw(text, (float) x, (float) y, color, shadow, matrices.peek().getPositionMatrix(), buffer, true, 0, 0xF000F0);
@@ -2978,6 +3136,7 @@ public class RenderCommon {
             private int color = 0xFFFFFFFF;
             private double scale = 1;
             private float rotation = 0;
+            private boolean rotateCenter = true;
             private boolean shadow = false;
             private int zIndex = 0;
 
@@ -3194,6 +3353,27 @@ public class RenderCommon {
             }
 
             /**
+             * @param rotateCenter whether this text should be rotated around its center
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
+            public Builder rotateCenter(boolean rotateCenter) {
+                this.rotateCenter = rotateCenter;
+                return this;
+            }
+
+            /**
+             * @return {@code true} if this text should be rotated around its center, {@code false}
+             *         otherwise.
+             *
+             * @since 1.8.4
+             */
+            public boolean isRotatingCenter() {
+                return rotateCenter;
+            }
+
+            /**
              * @param shadow whether the text should have a shadow or not
              * @return self for chaining.
              *
@@ -3233,7 +3413,7 @@ public class RenderCommon {
 
             @Override
             public Text createElement() {
-                return new Text(new TextHelper(text), x, y, color, zIndex, shadow, scale, rotation).setParent(parent);
+                return new Text(new TextHelper(text), x, y, color, zIndex, shadow, scale, rotation).setRotateCenter(rotateCenter).setParent(parent);
             }
 
             @Override
@@ -3278,14 +3458,16 @@ public class RenderCommon {
      * @since 1.8.4
      */
     @SuppressWarnings("unused")
-    public static class Line implements RenderElement {
+    public static class Line implements RenderElement, Alignable<Line> {
 
+        public IDraw2D<?> parent;
         public int x1;
         public int y1;
         public int x2;
         public int y2;
         public int color;
         public float rotation;
+        public boolean rotateCenter;
         public float width;
         public int zIndex;
 
@@ -3499,6 +3681,27 @@ public class RenderCommon {
         }
 
         /**
+         * @param rotateCenter whether this line should be rotated around its center
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public Line setRotateCenter(boolean rotateCenter) {
+            this.rotateCenter = rotateCenter;
+            return this;
+        }
+
+        /**
+         * @return {@code true} if this line should be rotated around its center, {@code false}
+         *         otherwise.
+         *
+         * @since 1.8.4
+         */
+        public boolean isRotatingCenter() {
+            return rotateCenter;
+        }
+
+        /**
          * @param width the width of the line
          * @return self for chaining.
          *
@@ -3537,9 +3740,7 @@ public class RenderCommon {
         @Override
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             matrices.push();
-            matrices.translate(x1, y1, 0);
-            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
-            matrices.translate(-x1, -y1, 0);
+            setupMatrix(matrices, x1, y1, 1, rotation, getScaledWidth(), getScaledHeight(), rotateCenter);
 
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
@@ -3574,17 +3775,58 @@ public class RenderCommon {
             matrices.pop();
         }
 
+        public Line setParent(IDraw2D<?> parent) {
+            this.parent = parent;
+            return this;
+        }
+
+        @Override
+        public Line moveTo(int x, int y) {
+            return setPos(x, y, x + getScaledWidth(), y + getScaledHeight());
+        }
+
+        @Override
+        public int getScaledWidth() {
+            return Math.abs(x2 - x1);
+        }
+
+        @Override
+        public int getParentWidth() {
+            return parent != null ? parent.getWidth() : mc.getWindow().getScaledWidth();
+        }
+
+        @Override
+        public int getScaledHeight() {
+            return Math.abs(y2 - y1);
+        }
+
+        @Override
+        public int getParentHeight() {
+            return parent != null ? parent.getHeight() : mc.getWindow().getScaledHeight();
+        }
+
+        @Override
+        public int getScaledLeft() {
+            return Math.min(x1, x2);
+        }
+
+        @Override
+        public int getScaledTop() {
+            return Math.min(y1, y2);
+        }
+
         /**
          * @author Etheradon
          * @since 1.8.4
          */
-        public static class Builder extends RenderElementBuilder<Line> {
+        public static class Builder extends RenderElementBuilder<Line> implements Alignable<Builder> {
 
             private int x1 = 0;
             private int y1 = 0;
             private int x2 = 0;
             private int y2 = 0;
             private float rotation = 0;
+            private boolean rotateCenter = true;
             private int color = 0xFFFFFF;
             private int alpha = 0xFF;
             private int zIndex = 0;
@@ -3738,6 +3980,27 @@ public class RenderCommon {
             }
 
             /**
+             * @param rotateCenter whether this line should be rotated around its center
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
+            public Builder rotateCenter(boolean rotateCenter) {
+                this.rotateCenter = rotateCenter;
+                return this;
+            }
+
+            /**
+             * @return {@code true} if this line should be rotated around its center, {@code false}
+             *         otherwise.
+             *
+             * @since 1.8.4
+             */
+            public boolean isRotatingCenter() {
+                return rotateCenter;
+            }
+
+            /**
              * @param width the width of the line
              * @return self for chaining.
              *
@@ -3859,7 +4122,42 @@ public class RenderCommon {
 
             @Override
             protected Line createElement() {
-                return new Line(x1, y1, x2, y2, (alpha << 24) | (color & 0xFFFFFF), rotation, width, zIndex);
+                return new Line(x1, y1, x2, y2, (alpha << 24) | (color & 0xFFFFFF), rotation, width, zIndex).setRotateCenter(rotateCenter).setParent(parent);
+            }
+
+            @Override
+            public Builder moveTo(int x, int y) {
+                return pos(x, y, x + getScaledWidth(), y + getScaledHeight());
+            }
+
+            @Override
+            public int getScaledWidth() {
+                return Math.abs(x2 - x1);
+            }
+
+            @Override
+            public int getParentWidth() {
+                return parent.getWidth();
+            }
+
+            @Override
+            public int getScaledHeight() {
+                return Math.abs(y2 - y1);
+            }
+
+            @Override
+            public int getParentHeight() {
+                return parent.getHeight();
+            }
+
+            @Override
+            public int getScaledLeft() {
+                return Math.min(x1, x2);
+            }
+
+            @Override
+            public int getScaledTop() {
+                return Math.min(y1, y2);
             }
         }
     }
@@ -3879,6 +4177,7 @@ public class RenderCommon {
         public IntSupplier height;
         public float scale;
         public float rotation;
+        public boolean rotateCenter;
         public int zIndex;
 
         public Draw2DElement(Draw2D draw2D, int x, int y, IntSupplier width, IntSupplier height, int zIndex, float scale, float rotation) {
@@ -3961,6 +4260,9 @@ public class RenderCommon {
          * @since 1.8.4
          */
         public Draw2DElement setWidth(int width) {
+            if (width <= 0) {
+                throw new IllegalArgumentException("Width must be greater than 0");
+            }
             this.width = () -> width;
             return this;
         }
@@ -3981,6 +4283,9 @@ public class RenderCommon {
          * @since 1.8.4
          */
         public Draw2DElement setHeight(int height) {
+            if (height <= 0) {
+                throw new IllegalArgumentException("Height must be greater than 0");
+            }
             this.height = () -> height;
             return this;
         }
@@ -4049,6 +4354,27 @@ public class RenderCommon {
         }
 
         /**
+         * @param rotateCenter whether this draw2D should be rotated around its center
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public Draw2DElement setRotateCenter(boolean rotateCenter) {
+            this.rotateCenter = rotateCenter;
+            return this;
+        }
+
+        /**
+         * @return {@code true} if this draw2D should be rotated around its center, {@code false}
+         *         otherwise.
+         *
+         * @since 1.8.4
+         */
+        public boolean isRotatingCenter() {
+            return rotateCenter;
+        }
+
+        /**
          * @param zIndex the z-index of this draw2D
          * @return self for chaining.
          *
@@ -4069,10 +4395,15 @@ public class RenderCommon {
             matrices.push();
             matrices.translate(x, y, 0);
             matrices.scale(scale, scale, 1);
+            if (rotateCenter) {
+                matrices.translate(width.getAsInt() / 2d, height.getAsInt() / 2d, 0);
+            }
             matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
-
+            if (rotateCenter) {
+                matrices.translate(-width.getAsInt() / 2d, -height.getAsInt() / 2d, 0);
+            }
+            //don't translate back
             draw2D.render(matrices);
-
             matrices.pop();
         }
 
@@ -4124,15 +4455,20 @@ public class RenderCommon {
             private final Draw2D draw2D;
             private int x = 0;
             private int y = 0;
-            private int width = -1;
-            private int height = -1;
+            private IntSupplier width;
+            private IntSupplier height;
             private float scale = 1;
             private float rotation = 0;
+            private boolean rotateCenter = true;
             private int zIndex = 0;
 
             public Builder(IDraw2D<?> parent, Draw2D draw2D) {
                 super(parent);
                 this.draw2D = draw2D;
+                this.width = parent::getWidth;
+                this.height = parent::getHeight;
+                this.draw2D.widthSupplier = this.width;
+                this.draw2D.heightSupplier = this.height;
             }
 
             /**
@@ -4195,7 +4531,10 @@ public class RenderCommon {
              * @since 1.8.4
              */
             public Builder width(int width) {
-                this.width = width;
+                if (width <= 0) {
+                    throw new IllegalArgumentException("Width must be greater than 0");
+                }
+                this.width = () -> width;
                 return this;
             }
 
@@ -4205,7 +4544,7 @@ public class RenderCommon {
              * @since 1.8.4
              */
             public int getWidth() {
-                return width;
+                return width.getAsInt();
             }
 
             /**
@@ -4215,7 +4554,10 @@ public class RenderCommon {
              * @since 1.8.4
              */
             public Builder height(int height) {
-                this.height = height;
+                if (height <= 0) {
+                    throw new IllegalArgumentException("Height must be greater than 0");
+                }
+                this.height = () -> height;
                 return this;
             }
 
@@ -4225,7 +4567,7 @@ public class RenderCommon {
              * @since 1.8.4
              */
             public int getHeight() {
-                return height;
+                return height.getAsInt();
             }
 
             /**
@@ -4236,9 +4578,7 @@ public class RenderCommon {
              * @since 1.8.4
              */
             public Builder size(int width, int height) {
-                this.width = width;
-                this.height = height;
-                return this;
+                return width(width).height(height);
             }
 
             /**
@@ -4282,6 +4622,27 @@ public class RenderCommon {
             }
 
             /**
+             * @param rotateCenter whether this draw2D should be rotated around its center
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
+            public Builder rotateCenter(boolean rotateCenter) {
+                this.rotateCenter = rotateCenter;
+                return this;
+            }
+
+            /**
+             * @return {@code true} if this draw2D should be rotated around its center,
+             *         {@code false} otherwise.
+             *
+             * @since 1.8.4
+             */
+            public boolean isRotatingCenter() {
+                return rotateCenter;
+            }
+
+            /**
              * @return the z-index of the draw2D.
              *
              * @since 1.8.4
@@ -4302,14 +4663,12 @@ public class RenderCommon {
 
             @Override
             protected Draw2DElement createElement() {
-                IntSupplier widthSup = width < 0 ? () -> draw2D.widthSupplier.getAsInt() : () -> width;
-                IntSupplier heightSup = height < 0 ? () -> draw2D.heightSupplier.getAsInt() : () -> height;
-                return new Draw2DElement(draw2D, x, y, widthSup, heightSup, zIndex, scale, rotation).setParent(parent);
+                return new Draw2DElement(draw2D, x, y, width, height, zIndex, scale, rotation).setRotateCenter(rotateCenter).setParent(parent);
             }
 
             @Override
             public int getScaledWidth() {
-                return (int) (draw2D.getWidth() * scale);
+                return (int) (width.getAsInt() * scale);
             }
 
             @Override
@@ -4319,7 +4678,7 @@ public class RenderCommon {
 
             @Override
             public int getScaledHeight() {
-                return (int) (draw2D.getHeight() * scale);
+                return (int) (height.getAsInt() * scale);
             }
 
             @Override

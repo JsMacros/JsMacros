@@ -12,10 +12,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
  */
 @Mixin(TridentEntity.class)
 public interface MixinTridentEntity {
-    
+
+    //don't make this static, it will disable the compile and reload feature
     @Accessor("LOYALTY")
-    static TrackedData<Byte> getLoyalty() {
-        throw new RuntimeException("Mixin was not applied correctly!");
-    }
+    TrackedData<Byte> getLoyalty();
     
 }

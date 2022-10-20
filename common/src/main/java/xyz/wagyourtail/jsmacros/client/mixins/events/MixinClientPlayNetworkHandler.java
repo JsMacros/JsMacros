@@ -27,6 +27,8 @@ import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
+import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
+import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -149,6 +151,9 @@ class MixinClientPlayNetworkHandler {
     @Inject(at = @At("TAIL"), method="onGameJoin")
     public void onGameJoin(GameJoinS2CPacket packet, CallbackInfo info) {
         new EventJoinServer(client.player, connection.getAddress().toString());
+        if (Core.getInstance().config.getOptions(ClientConfigV2.class).serviceAutoReload) {
+            Core.getInstance().services.startListener();
+        }
     }
 
     @Inject(at = @At("TAIL"), method="onChunkData")

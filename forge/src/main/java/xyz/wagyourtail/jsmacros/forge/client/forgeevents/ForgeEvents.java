@@ -46,7 +46,7 @@ public class ForgeEvents {
         client.getProfiler().swap("jsmacros_draw3d");
         for (Draw3D d : ImmutableSet.copyOf(FHud.renders)) {
             try {
-                d.render(e.getPoseStack());
+                d.render(e.getPoseStack(), tickDelta);
             } catch (Throwable t) {
                 t.printStackTrace();
             }

@@ -15,10 +15,9 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(CreativeInventoryScreen.class)
 public interface MixinCreativeInventoryScreen {
 
+    //don't make this static, it will disable the compile and reload feature
     @Accessor
-    static int getSelectedTab() {
-        throw new RuntimeException("Mixin was not applied correctly!");
-    }
+    int getSelectedTab();
 
     @Accessor
     float getScrollPosition();

@@ -13,9 +13,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(SpellcastingIllagerEntity.class)
 public interface MixinSpellcastingIllagerEntityHelper {
 
+    //don't make this static, it will disable the compile and reload feature
     @Accessor("SPELL")
-    static TrackedData<Byte> getSpellKey() {
-        throw new RuntimeException("Mixin was not applied correctly!");
-    }
+    TrackedData<Byte> getSpellKey();
 
 }

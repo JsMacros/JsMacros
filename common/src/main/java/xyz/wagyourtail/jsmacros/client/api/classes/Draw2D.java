@@ -28,8 +28,8 @@ import java.util.function.IntSupplier;
 @SuppressWarnings("deprecation")
 public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     protected final Set<RenderElement> elements = new LinkedHashSet<>();
-    public final IntSupplier widthSupplier;
-    public final IntSupplier heightSupplier;
+    public IntSupplier widthSupplier;
+    public IntSupplier heightSupplier;
     public int zIndex;
     public boolean visible = true;
     
@@ -439,7 +439,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
 
     @Override
     public Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex, double width, double rotation) {
-        Line r = new Line(x1, y1, x2, y2, color, (float) rotation, (float) width, zIndex);
+        Line r = new Line(x1, y1, x2, y2, color, (float) rotation, (float) width, zIndex).setParent(this);
         synchronized (elements) {
             elements.add(r);
         }

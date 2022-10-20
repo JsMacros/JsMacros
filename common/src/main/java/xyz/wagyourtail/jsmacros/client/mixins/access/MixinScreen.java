@@ -434,7 +434,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex, double width, double rotation) {
-        Line r = new Line(x1, y1, x2, y2, color, (float) rotation, (float) width, zIndex);
+        Line r = new Line(x1, y1, x2, y2, color, (float) rotation, (float) width, zIndex).setParent(this);
         synchronized (elements) {
             elements.add(r);
         }

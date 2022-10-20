@@ -5,13 +5,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
@@ -556,7 +556,7 @@ public class Draw3D {
         return this;
     }
 
-    public void render(MatrixStack matrixStack) {
+    public void render(MatrixStack matrixStack, float tickDelta) {
         MinecraftClient mc = MinecraftClient.getInstance();
 
         matrixStack.push();
@@ -585,7 +585,7 @@ public class Draw3D {
 
         synchronized (surfaces) {
             for (Surface s : surfaces) {
-                s.render3D(matrixStack, 0, 0, 0);
+                s.render3D(matrixStack, 0, 0, tickDelta);
             }
         }
 
@@ -1573,6 +1573,10 @@ public class Draw3D {
      */
     @SuppressWarnings("unused")
     public static class Surface extends Draw2D {
+        public boolean rotateToPlayer;
+        public boolean rotateCenter;
+        public EntityHelper<?> boundEntity;
+        public PositionCommon.Pos3D boundOffset;
         public final PositionCommon.Pos3D pos;
         public final PositionCommon.Pos3D rotations;
         protected final PositionCommon.Pos2D sizes;
@@ -1631,7 +1635,84 @@ public class Draw3D {
             this.pos.z = z;
             return this;
         }
-    
+
+        /**
+         * The surface will move with the entity at the offset location.
+         *
+         * @param boundEntity the entity to bind the surface to
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public Surface bindToEntity(EntityHelper<?> boundEntity) {
+            this.boundEntity = boundEntity;
+            return this;
+        }
+
+        /**
+         * @return the entity the surface is bound to, or {@code null} if it is not bound to an
+         *         entity.
+         *
+         * @since 1.8.4
+         */
+        public EntityHelper<?> getBoundEntity() {
+            return boundEntity;
+        }
+
+        /**
+         * @param boundOffset the offset from the entity's position to render the surface at
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public Surface setBoundOffset(PositionCommon.Pos3D boundOffset) {
+            this.boundOffset = boundOffset;
+            return this;
+        }
+
+        /**
+         * @param x the x offset from the entity's position to render the surface at
+         * @param y the y offset from the entity's position to render the surface at
+         * @param z the z offset from the entity's position to render the surface at
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public Surface setBoundOffset(double x, double y, double z) {
+            this.boundOffset = new PositionCommon.Pos3D(x, y, z);
+            return this;
+        }
+
+        /**
+         * @return the offset from the entity's position to render the surface at.
+         *
+         * @since 1.8.4
+         */
+        public PositionCommon.Pos3D getBoundOffset() {
+            return boundOffset;
+        }
+
+        /**
+         * @param rotateToPlayer whether to rotate the surface to face the player or not
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public Surface setRotateToPlayer(boolean rotateToPlayer) {
+            this.rotateToPlayer = rotateToPlayer;
+            return this;
+        }
+
+        /**
+         * @return {@code true} if the surface should be rotated to face the player, {@code false}
+         *         otherwise.
+         *
+         * @since 1.8.4
+         */
+        public boolean doesRotateToPlayer() {
+            return rotateToPlayer;
+        }
+        
         public void setRotations(double x, double y, double z) {
             this.rotations.x = x;
             this.rotations.y = y;
@@ -1666,27 +1747,70 @@ public class Draw3D {
         public int getWidth() {
             return (int) (sizes.x / scale);
         }
-    
+
+        /**
+         * @param rotateCenter whether to rotate the surface around its center or not
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public Surface setRotateCenter(boolean rotateCenter) {
+            this.rotateCenter = rotateCenter;
+            return this;
+        }
+
+        /**
+         * @return {@code true} if this surface is rotated around it's center, {@code false}
+         *         otherwise.
+         *
+         * @since 1.8.4
+         */
+        public boolean isRotatingCenter() {
+            return rotateCenter;
+        }
+        
         @Override
         public void init() {
             scale = Math.min(sizes.x, sizes.y) / minSubdivisions;
             super.init();
         }
-    
+
         @Override
         public void render3D(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
             matrixStack.push();
-    
+            if (boundEntity != null && boundEntity.isAlive()) {
+                PositionCommon.Pos3D entityPos = boundEntity.getPos().add(boundOffset);
+                pos.x += (entityPos.x - pos.x) * delta;
+                pos.y += (entityPos.y - pos.y) * delta;
+                pos.z += (entityPos.z - pos.z) * delta;
+            }
+
             matrixStack.translate(pos.x, pos.y, pos.z);
-    
-            matrixStack.multiply(Quaternion.fromEulerXyzDegrees(rotations.toVector().toMojangFloatVector()));
-    
-            // fix it so that y axis goes down instead of up
+
+            if (rotateToPlayer) {
+                Vec3f rot = MinecraftClient.getInstance().gameRenderer.getCamera().getRotation().toEulerXyzDegrees();
+                rotations.x = -rot.getX();
+                rotations.y = 180 + rot.getY();
+                rotations.z = 0;
+            }
+            if (rotateCenter) {
+                matrixStack.translate(sizes.x / 2, 0, 0);
+                matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float) rotations.y));
+                matrixStack.translate(-sizes.x / 2, 0, 0);
+                matrixStack.translate(0, -sizes.y / 2, 0);
+                matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion((float) rotations.x));
+                matrixStack.translate(0, sizes.y / 2, 0);
+                matrixStack.translate(sizes.x / 2, -sizes.y / 2, 0);
+                matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float) rotations.z));
+                matrixStack.translate(-sizes.x / 2, sizes.y / 2, 0);
+            } else {
+                matrixStack.multiply(Quaternion.fromEulerXyzDegrees(rotations.toVector().toMojangFloatVector()));
+            }
+            // fix it so that y-axis goes down instead of up
             matrixStack.scale(1, -1, 1);
-    
             // scale so that x or y have minSubdivisions units between them
             matrixStack.scale((float) scale, (float) scale, (float) scale);
-    
+
             synchronized (elements) {
                 renderElements3D(matrixStack, getElementsByZIndex());
             }
@@ -1714,10 +1838,17 @@ public class Draw3D {
     
         private void renderDraw2D3D(MatrixStack matrixStack, RenderCommon.Draw2DElement draw2DElement) {
             matrixStack.push();
-            Draw2D draw2D = draw2DElement.getDraw2D();
             matrixStack.translate(draw2DElement.x, draw2DElement.y, 0);
             matrixStack.scale(draw2DElement.scale, draw2DElement.scale, 1);
+            if (rotateCenter) {
+                matrixStack.translate(draw2DElement.width.getAsInt() / 2d, draw2DElement.height.getAsInt() / 2d, 0);
+            }
             matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(draw2DElement.rotation));
+            if (rotateCenter) {
+                matrixStack.translate(-draw2DElement.width.getAsInt() / 2d, -draw2DElement.height.getAsInt() / 2d, 0);
+            }
+            //don't translate back
+            Draw2D draw2D = draw2DElement.getDraw2D();
             synchronized (draw2D.getElements()) {
                 renderElements3D(matrixStack, draw2D.getElementsByZIndex());
             }
@@ -1749,13 +1880,16 @@ public class Draw3D {
             private final Draw3D parent;
     
             private PositionCommon.Pos3D pos = new PositionCommon.Pos3D(0, 0, 0);
-            private int xRot = 0;
-            private int yRot = 0;
-            private int zRot = 0;
+            private EntityHelper<?> boundEntity;
+            private PositionCommon.Pos3D boundOffset = PositionCommon.Pos3D.ZERO;
+            private double xRot = 0;
+            private double yRot = 0;
+            private double zRot = 0;
+            private boolean rotateCenter = true;
+            private boolean rotateToPlayer = false;
             private double width = 10;
             private double height = 10;
             private int minSubdivisions = 1;
-            private double scale = -1;
             private double zIndexScale = 0.001;
             private boolean renderBack = true;
             private boolean cull = false;
@@ -1807,14 +1941,70 @@ public class Draw3D {
             public PositionCommon.Pos3D getPos() {
                 return pos;
             }
-    
+
+            /**
+             * The surface will move with the entity at the offset location.
+             *
+             * @param boundEntity the entity to bind the surface to
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
+            public Builder bindToEntity(EntityHelper<?> boundEntity) {
+                this.boundEntity = boundEntity;
+                return this;
+            }
+
+            /**
+             * @return the entity the surface is bound to, or {@code null} if it is not bound to an
+             *         entity.
+             *
+             * @since 1.8.4
+             */
+            public EntityHelper<?> getBoundEntity() {
+                return boundEntity;
+            }
+
+            /**
+             * @param entityOffset the offset from the entity's position to render the surface at
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
+            public Builder boundOffset(PositionCommon.Pos3D entityOffset) {
+                this.boundOffset = entityOffset;
+                return this;
+            }
+
+            /**
+             * @param x the x offset from the entity's position to render the surface at
+             * @param y the y offset from the entity's position to render the surface at
+             * @param z the z offset from the entity's position to render the surface at
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
+            public Builder boundOffset(double x, double y, double z) {
+                this.boundOffset = new PositionCommon.Pos3D(x, y, z);
+                return this;
+            }
+
+            /**
+             * @return the offset from the entity's position to render the surface at.
+             *
+             * @since 1.8.4
+             */
+            public PositionCommon.Pos3D getBoundOffset() {
+                return boundOffset;
+            }
+            
             /**
              * @param xRot the x rotation of the surface
              * @return self for chaining.
              *
              * @since 1.8.4
              */
-            public Builder xRot(int xRot) {
+            public Builder xRotation(double xRot) {
                 this.xRot = xRot;
                 return this;
             }
@@ -1824,7 +2014,7 @@ public class Draw3D {
              *
              * @since 1.8.4
              */
-            public int getXRot() {
+            public double getXRotation() {
                 return xRot;
             }
     
@@ -1834,7 +2024,7 @@ public class Draw3D {
              *
              * @since 1.8.4
              */
-            public Builder yRot(int yRot) {
+            public Builder yRotation(double yRot) {
                 this.yRot = yRot;
                 return this;
             }
@@ -1844,7 +2034,7 @@ public class Draw3D {
              *
              * @since 1.8.4
              */
-            public int getYRot() {
+            public double getYRotation() {
                 return yRot;
             }
     
@@ -1854,7 +2044,7 @@ public class Draw3D {
              *
              * @since 1.8.4
              */
-            public Builder zRot(int zRot) {
+            public Builder zRotation(double zRot) {
                 this.zRot = zRot;
                 return this;
             }
@@ -1864,7 +2054,7 @@ public class Draw3D {
              *
              * @since 1.8.4
              */
-            public int getZRot() {
+            public double getZRotation() {
                 return zRot;
             }
     
@@ -1876,13 +2066,55 @@ public class Draw3D {
              *
              * @since 1.8.4
              */
-            public Builder rot(int xRot, int yRot, int zRot) {
+            public Builder rotation(double xRot, double yRot, double zRot) {
                 this.xRot = xRot;
                 this.yRot = yRot;
                 this.zRot = zRot;
                 return this;
             }
-    
+
+            /**
+             * @param rotateCenter whether to rotate around the center of the surface
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
+            public Builder rotateCenter(boolean rotateCenter) {
+                this.rotateCenter = rotateCenter;
+                return this;
+            }
+
+            /**
+             * @return {@code true} if this surface should be rotated around its center,
+             *         {@code false} otherwise.
+             *
+             * @since 1.8.4
+             */
+            public boolean isRotatingCenter() {
+                return rotateCenter;
+            }
+
+            /**
+             * @param rotateToPlayer whether to rotate the surface to face the player or not
+             * @return self for chaining.
+             *
+             * @since 1.8.4
+             */
+            public Builder rotateToPlayer(boolean rotateToPlayer) {
+                this.rotateToPlayer = rotateToPlayer;
+                return this;
+            }
+
+            /**
+             * @return {@code true} if the surface should be rotated to face the player,
+             *         {@code false} otherwise.
+             *
+             * @since 1.8.4
+             */
+            public boolean doesRotateToPlayer() {
+                return rotateToPlayer;
+            }
+            
             /**
              * @param width the width of the surface
              * @return self for chaining.
@@ -1954,29 +2186,6 @@ public class Draw3D {
              */
             public int getMinSubdivisions() {
                 return minSubdivisions;
-            }
-    
-            /**
-             * @param scale the scale of the surface
-             * @return self for chaining.
-             *
-             * @since 1.8.4
-             */
-            public Builder scale(double scale) {
-                if (scale <= 0) {
-                    throw new IllegalArgumentException("Scale must be greater than 0");
-                }
-                this.scale = scale;
-                return this;
-            }
-    
-            /**
-             * @return the scale of the surface.
-             *
-             * @since 1.8.4
-             */
-            public double getScale() {
-                return scale;
             }
     
             /**
@@ -2059,10 +2268,11 @@ public class Draw3D {
              * @return the build surface.
              */
             public Surface build() {
-                Surface surface = new Surface(pos, new PositionCommon.Pos3D(xRot, yRot, zRot), new PositionCommon.Pos2D(width, height), minSubdivisions, renderBack, cull);
-                if (scale != -1) {
-                    surface.setMinSubdivisions((int) (Math.min(width, height) / scale));
-                }
+                Surface surface = new Surface(pos, new PositionCommon.Pos3D(xRot, yRot, zRot), new PositionCommon.Pos2D(width, height), minSubdivisions, renderBack, cull)
+                        .setRotateCenter(rotateCenter)
+                        .setRotateToPlayer(rotateToPlayer)
+                        .bindToEntity(boundEntity)
+                        .setBoundOffset(boundOffset);
                 return surface;
             }
     

@@ -54,10 +54,7 @@ public class JsMacros {
 
         // Init MovementQueue
         MovementQueue.clear();
-
-        if (core.config.getOptions(ClientConfigV2.class).serviceAutoReload) {
-            core.services.startListener();
-        }
+        
         PacketByteBufferHelper.init();
         
         Runtime.getRuntime().addShutdownHook(new Thread(EventQuitGame::new));
