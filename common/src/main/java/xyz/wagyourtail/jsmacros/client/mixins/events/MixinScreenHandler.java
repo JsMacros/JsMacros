@@ -32,7 +32,7 @@ public class MixinScreenHandler {
 
     @Inject(method = "updateSlotStacks", at = @At(value = "HEAD"))
     public void onUpdateSlotStacks(int revision, List<ItemStack> stacks, ItemStack cursorStack, CallbackInfo ci) {
-        //only called from onInventory in ClientPlayerNetworkHandler
+        // Only called from onInventory in ClientPlayerNetworkHandler
         int[] slots = JsMacros.range(stacks.size());
         ItemStackHelper[] oldItems = Arrays.stream(slots).mapToObj(slot -> this.slots.get(slot).getStack()).map(ItemStackHelper::new).toArray(ItemStackHelper[]::new);
         ItemStackHelper[] newItems = stacks.stream().map(ItemStackHelper::new).toArray(ItemStackHelper[]::new);
@@ -41,7 +41,7 @@ public class MixinScreenHandler {
 
     @Inject(method = "setStackInSlot", at = @At(value = "HEAD"))
     public void onSetStackInSlot(int slot, int revision, ItemStack stack, CallbackInfo ci) {
-        //only called from onScreenHandlerSlotUpdate in ClientPlayerNetworkHandler
+        // Only called from onScreenHandlerSlotUpdate in ClientPlayerNetworkHandler
         new EventInventoryChange(Inventory.create(), new int[]{slot}, new ItemStackHelper(this.slots.get(slot).getStack()), new ItemStackHelper(stack));
     }
 

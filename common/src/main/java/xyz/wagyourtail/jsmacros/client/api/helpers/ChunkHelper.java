@@ -165,7 +165,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @since 1.8.4
      */
     public ChunkHelper forEach(MethodWrapper<BlockDataHelper, ?, ?, ?> callback, boolean includeAir) {
-        //Maybe adapt this to the WorldScanner way?
+        // Maybe adapt this to the WorldScanner way?
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
                 for (int y = base.getBottomY(); y < base.getTopY(); y++) {
@@ -189,7 +189,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @since 1.8.4
      */
     public boolean containsAny(String... blocks) {
-        //don't use section.hasAny because it will take some time to update the block palette
+        // Don't use section.hasAny because it will take some time to update the block palette
         Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::new).map(Registry.BLOCK::get).collect(Collectors.toSet());
         for (ChunkSection section : base.getSectionArray()) {
             for (int x = 0; x < 16; x++) {
@@ -214,7 +214,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @since 1.8.4
      */
     public boolean containsAll(String... blocks) {
-        //don't use section.hasAny because it will take some time to update the block palette
+        // Don't use section.hasAny because it will take some time to update the block palette
         Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::new).map(Registry.BLOCK::get).collect(Collectors.toSet());
         for (ChunkSection section : base.getSectionArray()) {
             for (int x = 0; x < 16; x++) {

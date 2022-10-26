@@ -73,7 +73,6 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
                 ctx.getCtx().unbindThread(Thread.currentThread());
 
                 if (event instanceof EventService) {
-                    //Because we only restart running services, we need to mark crashed services to be restarted on change.
                     runner.services.markCrashed(((EventService) event).serviceName);
                 }
                 

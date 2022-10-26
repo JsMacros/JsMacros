@@ -49,7 +49,7 @@ public class ServiceScreen extends MacroScreen {
     }
 
     @Override
-    public void  setFile(MultiElementContainer<MacroScreen> macro) {
+    public void setFile(MultiElementContainer<MacroScreen> macro) {
         File f = new File(Core.getInstance().config.macroFolder, ((ServiceContainer) macro).getTrigger().file);
         File dir = Core.getInstance().config.macroFolder;
         if (!f.equals(Core.getInstance().config.macroFolder)) dir = f.getParentFile();

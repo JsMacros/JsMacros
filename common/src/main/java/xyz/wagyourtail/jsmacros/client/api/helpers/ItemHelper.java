@@ -51,7 +51,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean canBeRepairedWith(ItemStackHelper stack) {
-        //at least in vanilla the first item stack is never used
+        // At least in vanilla the first item stack is never used
         return base.canRepair(null, stack.getRaw());
     }
 
@@ -107,7 +107,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public float getMiningSpeedMultiplier(BlockStateHelper state) {
-        //at least in vanilla the item stack is never used
+        // At least in vanilla the item stack is never used
         return base.getMiningSpeedMultiplier(null, state.getRaw());
     }
 

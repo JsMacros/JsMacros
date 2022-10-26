@@ -71,7 +71,7 @@ public final class NameUtil {
                     return roles;
                 }
 
-                //optional check for closing bracket >
+                // Optional check for closing bracket >
                 if (current == ' ') {
                     spaceCounter++;
                 } else if (current == '<') {

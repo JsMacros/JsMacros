@@ -139,23 +139,23 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         double distance = base.getEyePos().distanceTo(new Vec3d(pos.getX(), pos.getY(), pos.getZ()));
 
         List<Box> bounds = shape.getBoundingBoxes().stream().map(b -> b.offset(pos.getRaw())).toList();
-        //scale offset with distance to the target. Closer targets should have more rays to find a possible angle
+        // Scale offset with distance to the target. Closer targets should have more rays to find a possible angle
         double offset = Math.min(0.25, 0.01 * Math.max(distance, 0.5));
         for (Box bound : bounds) {
             Vec3d center = bound.getCenter();
             double xDiff = (bound.maxX - bound.minX) / 2;
             double yDiff = (bound.maxY - bound.minY) / 2;
             double zDiff = (bound.maxZ - bound.minZ) / 2;
-            //round the offsets down so they perfectly fit the bounds
+            // Round the offsets down so they perfectly fit the bounds
             double xOffset = xDiff / Math.ceil(xDiff / offset);
             double yOffset = yDiff / Math.ceil(yDiff / offset);
             double zOffset = zDiff / Math.ceil(zDiff / offset);
-            //iterate alternating around the center to iterate outwards which will give smoother results
+            // Iterate alternating around the center to iterate outwards which will give more pleasing results
             for (int yc = 0; yc < (int) (yDiff / yOffset) * 2 + 2; yc++) {
                 for (int xc = 0; xc < (int) (xDiff / xOffset) * 2 + 2; xc++) {
                     for (int zc = 0; zc < (int) (zDiff / zOffset) * 2 + 2; zc++) {
-                        //don't remove the integer division, because we want to round down the value
-                        //the 0.999 helps with edge cases, literally
+                        // Don't remove the integer division, because we want to round down the value
+                        // The 0.999 helps with edge cases, literally
                         double x = center.x + ((xc & 1) == 0 ? 1 : -1) * xOffset * (xc / 2) * 0.999;
                         double y = center.y + ((yc & 1) == 0 ? 1 : -1) * yOffset * (yc / 2) * 0.999;
                         double z = center.z + ((zc & 1) == 0 ? 1 : -1) * zOffset * (zc / 2) * 0.999;

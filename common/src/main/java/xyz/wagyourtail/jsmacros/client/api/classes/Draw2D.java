@@ -226,7 +226,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     private boolean hasCyclicDependencies(Draw2D draw2d) {
         Deque<Draw2D> queue = new ArrayDeque<>();
         queue.addFirst(draw2d);
-        //Basic BFS algorithm to check whether this instance is a descendant of the specified draw2d
+        // Basic BFS algorithm to check whether this instance is a descendant of the specified draw2d
         while (!queue.isEmpty()) {
             Draw2D draw2D = queue.removeFirst();
             if (this == draw2D) {

@@ -70,7 +70,7 @@ public final class JsExceptionSimplifier {
         Class<?> clazz = Class.forName(className);
         StringBuilder builder = new StringBuilder();
         builder.append("ArityError on method ").append(className).append(".").append(functionName).append("\n");
-        //only count public methods, including static ones, defined in that class
+        // Only count public methods, including static ones, defined in that class
         int[] possibleArities = Arrays.stream(clazz.getMethods()).filter(m -> m.getName().equals(functionName)).mapToInt(Method::getParameterCount).sorted().distinct().toArray();
         builder.append("Expected amount of arguments: ")
                 .append(Arrays.toString(possibleArities))
@@ -89,13 +89,13 @@ public final class JsExceptionSimplifier {
         lines.add("Possible overloads:");
         int pos = 0;
         while (pos < overloads.length()) {
-            //all arguments are wrapped in parentheses, so iterate until we find an opening one
+            // All arguments are wrapped in parentheses, so iterate until we find an opening one
             while (pos < overloads.length() && overloads.charAt(pos++) != '(') {
             }
 
-            //if the next character is a closing parenthesis, then there are no arguments
+            // If the next character is a closing parenthesis, then there are no arguments
             if (overloads.charAt(pos) != ')') {
-                //we only want the simple name of the class, and the simple name always starts from the beginning, a comma or a dot.
+                // We only want the simple name of the class, and the simple name always starts from the beginning, a comma or a dot.
                 int lastClassPos = pos;
                 StringBuilder line = new StringBuilder();
                 line.append("[");
@@ -124,7 +124,7 @@ public final class JsExceptionSimplifier {
 
         StringBuilder line = new StringBuilder();
         line.append("[");
-        //this method doesn't work when there are Strings containing commas or paranthesis, but that will be extremely rare
+        // This method doesn't work when there are Strings containing commas or paranthesis, but that will be extremely rare and there is no other way to filter these Strings correctly
         String[] parts = arguments.split(", ");
         for (String part : parts) {
             int index = part.lastIndexOf("(");

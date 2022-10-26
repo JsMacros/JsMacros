@@ -15,13 +15,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author Wagyourtail
  * @since 1.6.3
  */
 public class ServiceManager {
-    protected Timer timer;
+    protected final Timer timer = new Timer("JSMacros-Service-Filechange-Listener", true);
+    protected boolean reloadOnModify;
     protected final Object2LongMap<String> lastModifiedMap = new Object2LongArrayMap<>();
     protected final Set<String> crashedServices = new HashSet<>();
     
@@ -30,6 +32,31 @@ public class ServiceManager {
 
     public ServiceManager(Core<?, ?> runner) {
         this.runner = runner;
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (!reloadOnModify) {
+                    return;
+                }
+                for (Map.Entry<String, Pair<ServiceTrigger, EventContainer<?>>> service : registeredServices.entrySet()) {
+                    String file = service.getValue().getT().file;
+                    String name = service.getKey();
+                    // Only restart enabled and running services, i.e. services that are supposed to be running
+                    // If the service is not running because it crashed, try to restart it
+                    if (isEnabled(name) && (isRunning(name) || crashedServices.contains(name))) {
+                        long lastModified = runner.config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile().lastModified();
+                        if (!lastModifiedMap.containsKey(file)) {
+                            lastModifiedMap.put(file, lastModified);
+                            // Just assume that if the file was changed so was its content. Otherwise, use Adler-32 or MD5 checksum
+                        } else if (lastModifiedMap.getLong(file) != lastModified) {
+                            lastModifiedMap.put(file, lastModified);
+                            crashedServices.remove(name);
+                            restartService(name);
+                        }
+                    }
+                }
+            }
+        }, 0, 500);
     }
 
     /**
@@ -73,9 +100,23 @@ public class ServiceManager {
      */
     public synchronized boolean unregisterService(String name) {
         stopService(name);
+        disableReload(name);
         return registeredServices.remove(name) != null;
     }
 
+    /**
+     * @param serviceName the name of the service to disable the reload feature for
+     * @since 1.8.4
+     */
+    public synchronized void disableReload(String serviceName) {
+        Pair<ServiceTrigger, EventContainer<?>> service = registeredServices.get(serviceName);
+        if (service == null) {
+            return;
+        }
+        crashedServices.remove(serviceName);
+        lastModifiedMap.removeLong(service.getT().file);
+    }
+    
     /**
      * @param oldName
      * @param newName
@@ -84,6 +125,13 @@ public class ServiceManager {
      */
     public synchronized boolean renameService(String oldName, String newName) {
         if (registeredServices.containsKey(newName)) return false;
+        if (crashedServices.contains(oldName)) {
+            crashedServices.remove(oldName);
+            crashedServices.add(newName);
+        }
+        if (lastModifiedMap.containsKey(oldName)) {
+            lastModifiedMap.put(newName, lastModifiedMap.removeLong(oldName));
+        }
         Pair<ServiceTrigger, EventContainer<?>> service = registeredServices.remove(oldName);
         if (service == null) return false;
         registeredServices.put(newName, service);
@@ -169,8 +217,7 @@ public class ServiceManager {
     public synchronized ServiceStatus disableService(String name) {
         Pair<ServiceTrigger, EventContainer<?>> service = registeredServices.get(name);
         if (service == null) return ServiceStatus.UNKNOWN;
-        lastModifiedMap.removeLong(service.getT().file);
-        crashedServices.remove(name);
+        disableReload(name);
         if (service.getT().enabled) {
             service.getT().enabled = false;
             return ServiceStatus.ENABLED;
@@ -275,47 +322,40 @@ public class ServiceManager {
         runner.config.saveConfig();
     }
 
-    public void stopListener() {
-        timer.cancel();
+    /**
+     * Stops the service manager from reloading scrips on file changes.
+     *
+     * @since 1.8.4
+     */
+    public void stopReloadListener() {
+        reloadOnModify = false;
     }
 
-    public void startListener() {
-        lastModifiedMap.clear();
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                for (Map.Entry<String, Pair<ServiceTrigger, EventContainer<?>>> service : registeredServices.entrySet()) {
-                    String file = service.getValue().getT().file;
-                    String name = service.getKey();
-                    //only restart enabled and running services, i.e. services that are supposed to run
-                    //if the service is not running because it crashed, try to restart it
-                    if (isEnabled(name) && (isRunning(name) || crashedServices.contains(name))) {
-                        long lastModified = runner.config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile().lastModified();
-                        if (!lastModifiedMap.containsKey(file)) {
-                            lastModifiedMap.put(file, lastModified);
-                            continue;
-                        }
-                        //just assume that if the file was changed, so was the content. Otherwise, use Adler-32 or MD5 checksum
-                        if (lastModifiedMap.getLong(file) != lastModified) {
-                            restartService(name);
-                            lastModifiedMap.put(file, lastModified);
-                            crashedServices.remove(name);
-                        }
-                    }
-                }
-            }
-        }, 0, 1000);
+    /**
+     * Will make the service manager reload scripts on file changes.
+     *
+     * @since 1.8.4
+     */
+    public void startReloadListener() {
+        reloadOnModify = true;
     }
 
+    /**
+     * Mark a service as crashed so that it can be reloaded when its file changes. Crashed services
+     * must be marked so that file change listener knows to restart them even if they are not
+     * running because they crashed.
+     *
+     * @param serviceName the name of the service to mark as crashed
+     * @since 1.8.4
+     */
     public void markCrashed(String serviceName) {
         crashedServices.add(serviceName);
     }
 
-    //Enabled = running & enabled
-    //Disabled = !running & !enabled
-    //Running = running & !enabled
-    //Stopped = !running & enabled
+    // Enabled = running & enabled
+    // Disabled = !running & !enabled
+    // Running = running & !enabled
+    // Stopped = !running & enabled
     public enum ServiceStatus {
         ENABLED, DISABLED, // returned by start/stop
         RUNNING, STOPPED, // returned by enable/disable

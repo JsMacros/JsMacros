@@ -1827,7 +1827,7 @@ public class Draw3D {
         private void renderElements3D(MatrixStack matrixStack, Iterator<RenderCommon.RenderElement> iter) {
             while (iter.hasNext()) {
                 RenderCommon.RenderElement element = iter.next();
-                //render each draw2D element individually so that the cull and renderBack settings are used
+                // Render each draw2D element individually so that the cull and renderBack settings are used
                 if (element instanceof RenderCommon.Draw2DElement draw2DElement) {
                     renderDraw2D3D(matrixStack, draw2DElement);
                 } else {
@@ -1847,7 +1847,7 @@ public class Draw3D {
             if (rotateCenter) {
                 matrixStack.translate(-draw2DElement.width.getAsInt() / 2d, -draw2DElement.height.getAsInt() / 2d, 0);
             }
-            //don't translate back
+            // Don't translate back!
             Draw2D draw2D = draw2DElement.getDraw2D();
             synchronized (draw2D.getElements()) {
                 renderElements3D(matrixStack, draw2D.getElementsByZIndex());

@@ -97,8 +97,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     }
 
     private static PacketByteBuf getBuffer(Packet<?> packet) {
-        //not sure what the correct way to create a buffer for a packet is.
-        //it may be possible to create a correctly sized buffer from the packet.
         ByteBuf buffer = Unpooled.buffer();
         return new PacketByteBuf(buffer);
     }

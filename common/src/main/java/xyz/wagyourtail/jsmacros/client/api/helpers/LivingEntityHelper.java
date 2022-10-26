@@ -219,7 +219,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     /**
      * @param entity     the entity to check line of sight to
      * @param simpleCast whether to use a simple raycast or a more complex one
-     * @return {@code true} if the player has line of sight to the specified entity, {@code false}
+     * @return {@code true} if the entity has line of sight to the specified entity, {@code false}
      *         otherwise.
      *
      * @since 1.8.4
@@ -250,7 +250,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
         int steps = (int) (bHeight / 0.1);
         double diffX = (boundingBox.maxX - boundingBox.minX) / 2;
         double diffZ = (boundingBox.maxZ - boundingBox.minZ) / 2;
-        //create 4 pillars around the mob to check for visibility
+        // Create 4 pillars around the mob to check for visibility
         for (int i = 0; i < steps; i++) {
             double y = i * 0.1;
             if (canSee.apply(new Vec3d(rawEntity.getX() + diffX, rawEntity.getY() + y, rawEntity.getZ()))

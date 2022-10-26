@@ -168,7 +168,7 @@ public class FUtil extends BaseLibrary {
      * @since 1.8.4
      */
     public BaseHelper<?> getHelperFromRaw(Object obj) {
-        //didn't implement CommandNodeHelper, TradeOfferHelper, ModContainerHelper
+        // Didn't implement CommandNodeHelper, TradeOfferHelper, ModContainerHelper
         if (obj instanceof BossBar bossBar) {
             return new BossBarHelper(bossBar);
         } else if (obj instanceof ChatHudLine chatHudLine) {

@@ -755,7 +755,7 @@ public class RenderCommon {
             if (item != null) {
                 ItemRenderer i = mc.getItemRenderer();
                 ms.push();
-                //make the item really flat, but not too flat to avoid z-fighting
+                // Make the item really flat, but not too flat to avoid z-fighting
                 ms.scale(1, 1, 0.005f);
                 RenderSystem.applyModelViewMatrix();
                 RenderSystem.disableDepthTest();

@@ -151,9 +151,6 @@ class MixinClientPlayNetworkHandler {
     @Inject(at = @At("TAIL"), method="onGameJoin")
     public void onGameJoin(GameJoinS2CPacket packet, CallbackInfo info) {
         new EventJoinServer(client.player, connection.getAddress().toString());
-        if (Core.getInstance().config.getOptions(ClientConfigV2.class).serviceAutoReload) {
-            Core.getInstance().services.startListener();
-        }
     }
 
     @Inject(at = @At("TAIL"), method="onChunkData")

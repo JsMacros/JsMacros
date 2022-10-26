@@ -384,7 +384,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public boolean equals(ItemStackHelper ish) {
-        //ItemStack doesn't overwrite the equals method, so we have to do it ourselves
+        // ItemStack doesn't overwrite the equals method, so we have to do it ourselves
         return equals(ish.base);
     }
     

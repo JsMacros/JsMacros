@@ -20,7 +20,7 @@ public class IllagerEntityHelper<T extends IllagerEntity> extends MobEntityHelpe
     }
 
     public String getState() {
-        //yarn and mojang mappings have the same names
+        // Yarn and mojang mappings have the same names
         return switch (base.getState()) {
             case CROSSED -> "CROSSED";
             case ATTACKING -> "ATTACKING";

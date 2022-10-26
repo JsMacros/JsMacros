@@ -102,9 +102,9 @@ public class ClientConfigV2 {
     public void setServiceAutoReload(boolean value) {
         serviceAutoReload = value;
         if (value) {
-            Core.getInstance().services.startListener();
+            Core.getInstance().services.startReloadListener();
         } else {
-            Core.getInstance().services.stopListener();
+            Core.getInstance().services.stopReloadListener();
         }
     }
     

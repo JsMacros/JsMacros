@@ -47,7 +47,7 @@ public class Inventory<T extends HandledScreen<?>> {
 
     public static Inventory<?> create() {
         Inventory<?> inv = create(mc.currentScreen);
-        //what to do with horses?
+        // What to do with horses? The horse inventory would need to be opened with a packet
         if (inv == null) {
             assert mc.player != null;
             if (mc.player.getAbilities().creativeMode) {

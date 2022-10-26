@@ -74,7 +74,7 @@ public class EventKey implements BaseEvent {
         }
 
         EventJoinedKey ev = new EventJoinedKey(action, keyStr, modsStr);
-        //only call the key event if it's not canceled.
+        // Only call the key event if it's not canceled.
         if (!ev.isCanceled()) {
             new EventKey(action, keyStr, modsStr);
         }

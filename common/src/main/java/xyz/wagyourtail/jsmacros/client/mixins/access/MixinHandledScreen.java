@@ -50,7 +50,7 @@ public class MixinHandledScreen<T extends ScreenHandler> extends Screen implemen
             return;
         }
         matrices.push();
-        //make them render in front of the slot sprites
+        // Make them render in front of the slot sprites, but still behind the tooltip
         matrices.translate(0, 0, 150);
         for (int i = 0; i < handler.slots.size(); i++) {
             Slot slot = handler.slots.get(i);

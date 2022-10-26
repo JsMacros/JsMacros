@@ -96,6 +96,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
 
     public void setFile(File file) {
         getTrigger().file = Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(file.getAbsoluteFile().toPath()).toString();
+        Core.getInstance().services.disableReload(service);
         fileBtn.setMessage(Text.literal("./"+getTrigger().file.replaceAll("\\\\", "/")));
     }
 
