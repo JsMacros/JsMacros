@@ -138,7 +138,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         PositionCommon.Pos3D eyePos = getEyePos();
         double distance = base.getEyePos().distanceTo(new Vec3d(pos.getX(), pos.getY(), pos.getZ()));
 
-        List<Box> bounds = shape.getBoundingBoxes().stream().map(b -> b.offset(pos.getRaw())).toList();
+        List<Box> bounds = shape.getBoundingBoxes().stream().map(b -> b.offset(pos.getRaw())).collect(Collectors.toList());
         // Scale offset with distance to the target. Closer targets should have more rays to find a possible angle
         double offset = Math.min(0.25, 0.01 * Math.max(distance, 0.5));
         for (Box bound : bounds) {
@@ -654,10 +654,18 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         }
         if (player.hasStatusEffect(StatusEffects.MINING_FATIGUE)) {
             switch (player.getStatusEffect(StatusEffects.MINING_FATIGUE).getAmplifier()) {
-                case 0 -> speedMultiplier *= 0.3;
-                case 1 -> speedMultiplier *= 0.09;
-                case 2 -> speedMultiplier *= 0.0027;
-                default -> speedMultiplier *= 0.00081;
+                case 0:
+                    speedMultiplier *= 0.3;
+                    break;
+                case 1:
+                    speedMultiplier *= 0.09;
+                    break;
+                case 2:
+                    speedMultiplier *= 0.0027;
+                    break;
+                default:
+                    speedMultiplier *= 0.00081;
+                    break;
             }
         }
         if (player.isSubmergedIn(FluidTags.WATER) && EnchantmentHelper.getLevel(Enchantments.AQUA_AFFINITY, item) == 0) {

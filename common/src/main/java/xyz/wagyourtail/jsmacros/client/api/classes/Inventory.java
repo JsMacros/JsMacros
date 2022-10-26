@@ -22,13 +22,13 @@ import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
-import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -60,36 +60,36 @@ public class Inventory<T extends HandledScreen<?>> {
 
     public static Inventory<?> create(Screen s) {
         if (s instanceof HandledScreen) {
-            if (s instanceof MerchantScreen merchantScreen) {
-                return new VillagerInventory(merchantScreen);
-            } else if (s instanceof EnchantmentScreen enchantmentScreen) {
-                return new EnchantInventory(enchantmentScreen);
-            } else if (s instanceof LoomScreen loomScreen) {
-                return new LoomInventory(loomScreen);
-            } else if (s instanceof BeaconScreen beaconScreen) {
-                return new BeaconInventory(beaconScreen);
-            } else if (s instanceof AnvilScreen anvilScreen) {
-                return new AnvilInventory(anvilScreen);
-            } else if (s instanceof BrewingStandScreen brewingStandScreen) {
-                return new BrewingStandInventory(brewingStandScreen);
-            } else if (s instanceof CartographyTableScreen cartographyTableScreen) {
-                return new CartographyInventory(cartographyTableScreen);
-            } else if (s instanceof AbstractFurnaceScreen furnaceScreen) {
-                return new FurnaceInventory(furnaceScreen);
-            } else if (s instanceof GrindstoneScreen grindstoneScreen) {
-                return new GrindStoneInventory(grindstoneScreen);
-            } else if (s instanceof SmithingScreen smithingScreen) {
-                return new SmithingInventory(smithingScreen);
-            } else if (s instanceof StonecutterScreen stonecutterScreen) {
-                return new StoneCutterInventory(stonecutterScreen);
-            } else if (s instanceof CraftingScreen craftingScreen) {
-                return new CraftingInventory(craftingScreen);
-            } else if (s instanceof InventoryScreen inventoryScreen) {
-                return new xyz.wagyourtail.jsmacros.client.api.classes.PlayerInventory(inventoryScreen);
-            } else if (s instanceof CreativeInventoryScreen creativeInventoryScreen) {
-                return new CreativeInventory(creativeInventoryScreen);
-            } else if (s instanceof HorseScreen horseScreen) {
-                return new HorseInventory(horseScreen);
+            if (s instanceof MerchantScreen) {
+                return new VillagerInventory((MerchantScreen) s);
+            } else if (s instanceof EnchantmentScreen) {
+                return new EnchantInventory((EnchantmentScreen) s);
+            } else if (s instanceof LoomScreen) {
+                return new LoomInventory((LoomScreen) s);
+            } else if (s instanceof BeaconScreen) {
+                return new BeaconInventory((BeaconScreen) s);
+            } else if (s instanceof AnvilScreen) {
+                return new AnvilInventory((AnvilScreen) s);
+            } else if (s instanceof BrewingStandScreen) {
+                return new BrewingStandInventory((BrewingStandScreen) s);
+            } else if (s instanceof CartographyTableScreen) {
+                return new CartographyInventory((CartographyTableScreen) s);
+            } else if (s instanceof AbstractFurnaceScreen) {
+                return new FurnaceInventory((AbstractFurnaceScreen) s);
+            } else if (s instanceof GrindstoneScreen) {
+                return new GrindStoneInventory((GrindstoneScreen) s);
+            } else if (s instanceof SmithingScreen) {
+                return new SmithingInventory((SmithingScreen) s);
+            } else if (s instanceof StonecutterScreen) {
+                return new StoneCutterInventory((StonecutterScreen) s);
+            } else if (s instanceof CraftingScreen) {
+                return new CraftingInventory((CraftingScreen) s);
+            } else if (s instanceof InventoryScreen) {
+                return new xyz.wagyourtail.jsmacros.client.api.classes.PlayerInventory((InventoryScreen) s);
+            } else if (s instanceof CreativeInventoryScreen) {
+                return new CreativeInventory((CreativeInventoryScreen) s);
+            } else if (s instanceof HorseScreen) {
+                return new HorseInventory((HorseScreen) s);
             } else if (s instanceof GenericContainerScreen || s instanceof Generic3x3ContainerScreen || s instanceof HopperScreen || s instanceof ShulkerBoxScreen) {
                 return new ContainerInventory<>((HandledScreen<?>) s);
             }
@@ -233,7 +233,7 @@ public class Inventory<T extends HandledScreen<?>> {
      */
     public Map<String, Integer> getItemCount() {
         Object2IntOpenHashMap<String> itemMap = new Object2IntOpenHashMap<>();
-        getItems().stream().filter(Predicate.not(ItemStackHelper::isEmpty)).forEach(item -> itemMap.addTo(item.getItemId(), item.getCount()));
+        getItems().stream().filter(i -> !i.isEmpty()).forEach(item -> itemMap.addTo(item.getItemId(), item.getCount()));
         return itemMap;
     }
 
@@ -243,7 +243,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @since 1.8.4
      */
     public List<ItemStackHelper> getItems() {
-        return IntStream.range(0, getTotalSlots()).mapToObj(this::getSlot).filter(Predicate.not(ItemStackHelper::isEmpty)).toList();
+        return IntStream.range(0, getTotalSlots()).mapToObj(this::getSlot).filter(i -> !i.isEmpty()).collect(Collectors.toList());
     }
 
     /**
@@ -253,7 +253,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @since 1.8.4
      */
     public List<ItemStackHelper> getItems(String... mapIdentifiers) {
-        return Arrays.stream(getSlots(mapIdentifiers)).mapToObj(this::getSlot).filter(Predicate.not(ItemStackHelper::isEmpty)).toList();
+        return Arrays.stream(getSlots(mapIdentifiers)).mapToObj(this::getSlot).filter(i -> !i.isEmpty()).collect(Collectors.toList());
     }
 
     /**

@@ -4,7 +4,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Etheradon
@@ -48,9 +51,9 @@ public class AdvancedItemStackHelper extends ItemStackHelper {
      */
     public List<String> getDestroyRestrictions() {
         if (hasDestroyRestrictions()) {
-            return base.getOrCreateNbt().getList("CanDestroy", 8).stream().map(NbtElement::asString).toList();
+            return base.getOrCreateNbt().getList("CanDestroy", 8).stream().map(NbtElement::asString).collect(Collectors.toList());
         }
-        return List.of();
+        return Collections.emptyList();
     }
 
     /**
@@ -60,9 +63,9 @@ public class AdvancedItemStackHelper extends ItemStackHelper {
      */
     public List<String> getPlaceRestrictions() {
         if (hasPlaceRestrictions()) {
-            return base.getOrCreateNbt().getList("CanPlaceOn", 8).stream().map(NbtElement::asString).toList();
+            return base.getOrCreateNbt().getList("CanPlaceOn", 8).stream().map(NbtElement::asString).collect(Collectors.toList());
         }
-        return List.of();
+        return Collections.emptyList();
     }
 
     /**

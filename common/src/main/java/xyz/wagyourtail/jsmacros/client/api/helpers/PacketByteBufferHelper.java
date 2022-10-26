@@ -23,6 +23,8 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Either;
 import io.netty.buffer.ByteBuf;
@@ -295,7 +297,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @since 1.8.4
      */
     public List<String> getPacketNames() {
-        return List.copyOf(PACKETS.keySet());
+        return ImmutableList.copyOf(PACKETS.keySet());
     }
 
     /**
@@ -438,8 +440,8 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @see #writeNullable(Object, MethodWrapper)
      * @since 1.8.4
      */
-    public <T> PacketByteBufferHelper writeOptional(Optional<T> value, MethodWrapper<PacketByteBuf, T, ?, ?> writer) {
-        base.writeOptional(value, writer::accept);
+    public <T> PacketByteBufferHelper writeOptional(T value, MethodWrapper<PacketByteBuf, T, ?, ?> writer) {
+        base.writeOptional(Optional.ofNullable(value), writer::accept);
         return this;
     }
 
@@ -459,7 +461,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param writer the function to write the optional value if it's not null to the buffer
      * @return self for chaining.
      *
-     * @see #writeOptional(Optional, MethodWrapper)
+     * @see #writeOptional(Object, MethodWrapper) 
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeNullable(Object value, MethodWrapper<PacketByteBuf, Object, ?, ?> writer) {
@@ -1091,7 +1093,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      */
     public Map<String, Object> readBlockHitResultMap() {
         BlockHitResult hitResult = readBlockHitResult();
-        return Map.of("side", new DirectionHelper(hitResult.getSide()), "blockPos", new BlockPosHelper(hitResult.getBlockPos()), "missed", hitResult.getType() == HitResult.Type.MISS, "inside", hitResult.isInsideBlock());
+        return ImmutableMap.of("side", new DirectionHelper(hitResult.getSide()), "blockPos", new BlockPosHelper(hitResult.getBlockPos()), "missed", hitResult.getType() == HitResult.Type.MISS, "inside", hitResult.isInsideBlock());
     }
 
     /**

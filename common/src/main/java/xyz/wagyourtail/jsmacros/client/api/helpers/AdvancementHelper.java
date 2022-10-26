@@ -41,7 +41,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      * @since 1.8.4
      */
     public List<AdvancementHelper> getChildren() {
-        return StreamSupport.stream(base.getChildren().spliterator(), false).map(AdvancementHelper::new).toList();
+        return StreamSupport.stream(base.getChildren().spliterator(), false).map(AdvancementHelper::new).collect(Collectors.toList());
     }
 
     /**

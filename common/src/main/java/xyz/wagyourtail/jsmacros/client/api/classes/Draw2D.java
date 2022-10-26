@@ -9,7 +9,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
-import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon.*;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -17,6 +16,7 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.*;
 import java.util.function.IntSupplier;
+import java.util.stream.Collectors;
 
 /**
  * @author Wagyourtail
@@ -171,7 +171,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
 
     @Override
     public <T extends RenderElement> T reAddElement(T e) {
-        if (e instanceof Draw2DElement draw2DElement) {
+        if (e instanceof Draw2DElement) {
+            Draw2DElement draw2DElement = (Draw2DElement) e;
             Draw2D draw2D = draw2DElement.getDraw2D();
             if (draw2DElement.getDraw2D() == null || draw2DElement.getDraw2D() == this || hasCyclicDependencies(draw2D)) {
                 return null;
@@ -232,7 +233,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
             if (this == draw2D) {
                 return true;
             }
-            queue.addAll(draw2D.getDraw2Ds().stream().map(Draw2DElement::getDraw2D).toList());
+            queue.addAll(draw2D.getDraw2Ds().stream().map(Draw2DElement::getDraw2D).collect(Collectors.toList()));
         }
         return false;
     }

@@ -153,7 +153,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.2.0
      */
     public FullOptionsHelper setEnabledResourcePacks(String[] enabled) {
-        Collection<String> en = Arrays.stream(enabled).distinct().toList();
+        Collection<String> en = Arrays.stream(enabled).distinct().collect(Collectors.toList());
         List<String> currentRP = ImmutableList.copyOf(base.resourcePacks);
         rpm.setEnabledProfiles(en);
         base.resourcePacks.clear();
@@ -523,11 +523,16 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public String getGraphicsMode() {
-            return switch (base.getGraphicsMode().getValue()) {
-                case FAST -> "fast";
-                case FANCY -> "fancy";
-                case FABULOUS -> "fabulous";
-            };
+            switch (base.getGraphicsMode().getValue()) {
+                case FAST:
+                    return "fast";
+                case FANCY:
+                    return "fancy";
+                case FABULOUS:
+                    return "fabulous";
+                default:
+                    throw new IllegalArgumentException();
+            }
         }
 
         /**
@@ -537,12 +542,22 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public VideoOptionsHelper setGraphicsMode(String mode) {
-            base.getGraphicsMode().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
-                case "FAST" -> GraphicsMode.FAST;
-                case "FANCY" -> GraphicsMode.FANCY;
-                case "FABULOUS" -> GraphicsMode.FABULOUS;
-                default -> base.getGraphicsMode().getValue();
-            });
+            GraphicsMode newMode;
+            switch (mode.toUpperCase(Locale.ROOT)) {
+                case "FAST":
+                    newMode = GraphicsMode.FAST;
+                    break;
+                case "FANCY":
+                    newMode = GraphicsMode.FANCY;
+                    break;
+                case "FABULOUS":
+                    newMode = GraphicsMode.FABULOUS;
+                    break;
+                default:
+                    newMode = base.getGraphicsMode().getValue();
+                    break;
+            }
+            base.getGraphicsMode().setValue(newMode);
             return this;
         }
 
@@ -552,11 +567,16 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public String getChunkBuilderMode() {
-            return switch (base.getChunkBuilderMode().getValue()) {
-                case NONE -> "none";
-                case NEARBY -> "nearby";
-                case PLAYER_AFFECTED -> "player_affected";
-            };
+            switch (base.getChunkBuilderMode().getValue()) {
+                case NONE:
+                    return "none";
+                case NEARBY:
+                    return "nearby";
+                case PLAYER_AFFECTED:
+                    return "player_affected";
+                default:
+                    throw new IllegalArgumentException();
+            }
         }
 
         /**
@@ -567,12 +587,22 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public VideoOptionsHelper setChunkBuilderMode(String mode) {
-            base.getChunkBuilderMode().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
-                case "NONE" -> ChunkBuilderMode.NONE;
-                case "NEARBY" -> ChunkBuilderMode.NEARBY;
-                case "PLAYER_AFFECTED" -> ChunkBuilderMode.PLAYER_AFFECTED;
-                default -> base.getChunkBuilderMode().getValue();
-            });
+            ChunkBuilderMode newMode;
+            switch (mode.toUpperCase(Locale.ROOT)) {
+                case "NONE":
+                    newMode = ChunkBuilderMode.NONE;
+                    break;
+                case "NEARBY":
+                    newMode = ChunkBuilderMode.NEARBY;
+                    break;
+                case "PLAYER_AFFECTED":
+                    newMode = ChunkBuilderMode.PLAYER_AFFECTED;
+                    break;
+                default:
+                    newMode = base.getChunkBuilderMode().getValue();
+                    break;
+            }
+            base.getChunkBuilderMode().setValue(newMode);
             return this;
         }
 
@@ -582,11 +612,16 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public String getSmoothLightningMode() {
-            return switch (base.getAo().getValue()) {
-                case OFF -> "off";
-                case MIN -> "min";
-                case MAX -> "max";
-            };
+            switch (base.getAo().getValue()) {
+                case OFF:
+                    return "off";
+                case MIN:
+                    return "min";
+                case MAX:
+                    return "max";
+                default:
+                    throw new IllegalArgumentException();
+            }
         }
 
         /**
@@ -596,12 +631,22 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public VideoOptionsHelper setSmoothLightningMode(String mode) {
-            base.getAo().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
-                case "OFF" -> AoMode.OFF;
-                case "MIN" -> AoMode.MIN;
-                case "MAX" -> AoMode.MAX;
-                default -> base.getAo().getValue();
-            });
+            AoMode newMode;
+            switch (mode.toUpperCase(Locale.ROOT)) {
+                case "OFF":
+                    newMode = AoMode.OFF;
+                    break;
+                case "MIN":
+                    newMode = AoMode.MIN;
+                    break;
+                case "MAX":
+                    newMode = AoMode.MAX;
+                    break;
+                default:
+                    newMode = base.getAo().getValue();
+                    break;
+            }
+            base.getAo().setValue(newMode);
             return this;
         }
 
@@ -732,11 +777,16 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public String getAttackIndicatorType() {
-            return switch (base.getAttackIndicator().getValue()) {
-                case OFF -> "off";
-                case CROSSHAIR -> "crosshair";
-                case HOTBAR -> "hotbar";
-            };
+            switch (base.getAttackIndicator().getValue()) {
+                case OFF:
+                    return "off";
+                case CROSSHAIR:
+                    return "crosshair";
+                case HOTBAR:
+                    return "hotbar";
+                default:
+                    throw new IllegalArgumentException();
+            }
         }
 
         /**
@@ -746,12 +796,22 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public VideoOptionsHelper setAttackIndicatorType(String type) {
-            base.getAttackIndicator().setValue(switch (type.toUpperCase(Locale.ROOT)) {
-                case "OFF" -> AttackIndicator.OFF;
-                case "CROSSHAIR" -> AttackIndicator.CROSSHAIR;
-                case "HOTBAR" -> AttackIndicator.HOTBAR;
-                default -> base.getAttackIndicator().getValue();
-            });
+            AttackIndicator newType;
+            switch (type.toUpperCase(Locale.ROOT)) {
+                case "OFF":
+                    newType = AttackIndicator.OFF;
+                    break;
+                case "CROSSHAIR":
+                    newType = AttackIndicator.CROSSHAIR;
+                    break;
+                case "HOTBAR":
+                    newType = AttackIndicator.HOTBAR;
+                    break;
+                default:
+                    newType = base.getAttackIndicator().getValue();
+                    break;
+            }
+            base.getAttackIndicator().setValue(newType);
             return this;
         }
 
@@ -800,11 +860,16 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public String getCloudsMode() {
-            return switch (base.getCloudRenderMode().getValue()) {
-                case OFF -> "off";
-                case FAST -> "fast";
-                case FANCY -> "fancy";
-            };
+            switch (base.getCloudRenderMode().getValue()) {
+                case OFF:
+                    return "off";
+                case FAST:
+                    return "fast";
+                case FANCY:
+                    return "fancy";
+                default:
+                    throw new IllegalArgumentException();
+            }
         }
 
         /**
@@ -814,12 +879,22 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public VideoOptionsHelper setCloudsMode(String mode) {
-            base.getCloudRenderMode().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
-                case "OFF" -> CloudRenderMode.OFF;
-                case "FAST" -> CloudRenderMode.FAST;
-                case "FANCY" -> CloudRenderMode.FANCY;
-                default -> base.getCloudRenderMode().getValue();
-            });
+            CloudRenderMode newMode;
+            switch (mode.toUpperCase(Locale.ROOT)) {
+                case "OFF":
+                    newMode = CloudRenderMode.OFF;
+                    break;
+                case "FAST":
+                    newMode = CloudRenderMode.FAST;
+                    break;
+                case "FANCY":
+                    newMode = CloudRenderMode.FANCY;
+                    break;
+                default:
+                    newMode = base.getCloudRenderMode().getValue();
+                    break;
+            }
+            base.getCloudRenderMode().setValue(newMode);
             return this;
         }
 
@@ -849,11 +924,16 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public String getParticleMode() {
-            return switch (base.getParticles().getValue()) {
-                case MINIMAL -> "minimal";
-                case DECREASED -> "decreased";
-                case ALL -> "all";
-            };
+            switch (base.getParticles().getValue()) {
+                case MINIMAL:
+                    return "minimal";
+                case DECREASED:
+                    return "decreased";
+                case ALL:
+                    return "all";
+                default:
+                    throw new IllegalArgumentException();
+            }
         }
 
         /**
@@ -864,12 +944,22 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public VideoOptionsHelper setParticleMode(String mode) {
-            base.getParticles().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
-                case "MINIMAL" -> ParticlesMode.MINIMAL;
-                case "DECREASED" -> ParticlesMode.DECREASED;
-                case "ALL" -> ParticlesMode.ALL;
-                default -> base.getParticles().getValue();
-            });
+            ParticlesMode newMode;
+            switch (mode.toUpperCase(Locale.ROOT)) {
+                case "MINIMAL":
+                    newMode = ParticlesMode.MINIMAL;
+                    break;
+                case "DECREASED":
+                    newMode = ParticlesMode.DECREASED;
+                    break;
+                case "ALL":
+                    newMode = ParticlesMode.ALL;
+                    break;
+                default:
+                    newMode = base.getParticles().getValue();
+                    break;
+            }
+            base.getParticles().setValue(newMode);
             return this;
         }
 
@@ -1277,7 +1367,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public List<String> getAudioDevices() {
-            return Stream.concat(Stream.of(""), MinecraftClient.getInstance().getSoundManager().getSoundDevices().stream()).toList();
+            return Stream.concat(Stream.of(""), MinecraftClient.getInstance().getSoundManager().getSoundDevices().stream()).collect(Collectors.toList());
         }
 
         /**
@@ -1522,7 +1612,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public List<String> getCategories() {
-            return Arrays.stream(base.allKeys).map(KeyBinding::getCategory).distinct().toList();
+            return Arrays.stream(base.allKeys).map(KeyBinding::getCategory).distinct().collect(Collectors.toList());
         }
 
         /**
@@ -1531,7 +1621,7 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public List<String> getKeys() {
-            return Arrays.stream(base.allKeys).map(KeyBinding::getTranslationKey).toList();
+            return Arrays.stream(base.allKeys).map(KeyBinding::getTranslationKey).collect(Collectors.toList());
         }
 
         /**
@@ -1617,12 +1707,22 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ChatOptionsHelper setChatVisibility(String mode) {
-            base.getChatVisibility().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
-                case "FULL" -> ChatVisibility.FULL;
-                case "SYSTEM" -> ChatVisibility.SYSTEM;
-                case "HIDDEN" -> ChatVisibility.HIDDEN;
-                default -> base.getChatVisibility().getValue();
-            });
+            ChatVisibility newMode;
+            switch (mode.toUpperCase(Locale.ROOT)) {
+                case "FULL":
+                    newMode = ChatVisibility.FULL;
+                    break;
+                case "SYSTEM":
+                    newMode = ChatVisibility.SYSTEM;
+                    break;
+                case "HIDDEN":
+                    newMode = ChatVisibility.HIDDEN;
+                    break;
+                default:
+                    newMode = base.getChatVisibility().getValue();
+                    break;
+            }
+            base.getChatVisibility().setValue(newMode);
             return this;
         }
 
@@ -1866,13 +1966,25 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ChatOptionsHelper setNarratorMode(String mode) {
-            base.getNarrator().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
-                case "OFF" -> NarratorMode.OFF;
-                case "ALL" -> NarratorMode.ALL;
-                case "CHAT" -> NarratorMode.CHAT;
-                case "SYSTEM" -> NarratorMode.SYSTEM;
-                default -> base.getNarrator().getValue();
-            });
+            NarratorMode newMode;
+            switch (mode.toUpperCase(Locale.ROOT)) {
+                case "OFF":
+                    newMode = NarratorMode.OFF;
+                    break;
+                case "ALL":
+                    newMode = NarratorMode.ALL;
+                    break;
+                case "CHAT":
+                    newMode = NarratorMode.CHAT;
+                    break;
+                case "SYSTEM":
+                    newMode = NarratorMode.SYSTEM;
+                    break;
+                default:
+                    newMode = base.getNarrator().getValue();
+                    break;
+            }
+            base.getNarrator().setValue(newMode);
             return this;
         }
 
@@ -1973,13 +2085,25 @@ public class FullOptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public AccessibilityOptionsHelper setNarratorMode(String mode) {
-            base.getNarrator().setValue(switch (mode.toUpperCase(Locale.ROOT)) {
-                case "OFF" -> NarratorMode.OFF;
-                case "ALL" -> NarratorMode.ALL;
-                case "CHAT" -> NarratorMode.CHAT;
-                case "SYSTEM" -> NarratorMode.SYSTEM;
-                default -> base.getNarrator().getValue();
-            });
+            NarratorMode newMode;
+            switch (mode.toUpperCase(Locale.ROOT)) {
+                case "OFF":
+                    newMode = NarratorMode.OFF;
+                    break;
+                case "ALL":
+                    newMode = NarratorMode.ALL;
+                    break;
+                case "CHAT":
+                    newMode = NarratorMode.CHAT;
+                    break;
+                case "SYSTEM":
+                    newMode = NarratorMode.SYSTEM;
+                    break;
+                default:
+                    newMode = base.getNarrator().getValue();
+                    break;
+            }
+            base.getNarrator().setValue(newMode);
             return this;
         }
 

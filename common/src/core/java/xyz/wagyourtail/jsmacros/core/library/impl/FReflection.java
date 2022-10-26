@@ -404,7 +404,7 @@ public class FReflection extends PerExecLibrary {
      */
     public List<Class<?>> getAllCompiledJavaClassVersions(String className) {
         List<Class<?>> versions = JAVA_CLASS_CACHE.get(className);
-        return versions == null ? List.of() : ImmutableList.copyOf(versions);
+        return versions == null ? Collections.emptyList() : ImmutableList.copyOf(versions);
     }
     
     /**

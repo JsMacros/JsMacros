@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -75,7 +76,7 @@ public class HorseInventory extends Inventory<HorseScreen> {
      * @since 1.8.4
      */
     public boolean hasChest() {
-        return horse instanceof AbstractDonkeyEntity donkey && donkey.hasChest();
+        return horse instanceof AbstractDonkeyEntity && ((AbstractDonkeyEntity) horse).hasChest();
     }
 
     /**
@@ -84,7 +85,7 @@ public class HorseInventory extends Inventory<HorseScreen> {
      * @since 1.8.4
      */
     public int getInventorySize() {
-        return horse instanceof AbstractDonkeyEntity donkey ? donkey.getInventoryColumns() * 3 : 0;
+        return horse instanceof AbstractDonkeyEntity ? ((AbstractDonkeyEntity) horse).getInventoryColumns() * 3 : 0;
     }
 
     /**
@@ -94,7 +95,7 @@ public class HorseInventory extends Inventory<HorseScreen> {
      */
     public List<ItemStackHelper> getHorseInventory() {
         final int otherSlots = 2;
-        return IntStream.range(otherSlots, getInventorySize() + otherSlots).mapToObj(this::getSlot).toList();
+        return IntStream.range(otherSlots, getInventorySize() + otherSlots).mapToObj(this::getSlot).collect(Collectors.toList());
     }
 
     @Override

@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.client.mixins.access.MixinPhaseType;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Etheradon
@@ -51,7 +52,7 @@ public class EnderDragonEntityHelper extends MobEntityHelper<EnderDragonEntity> 
      * @since 1.8.4
      */
     public List<? extends EntityHelper<?>> getBodyParts() {
-        return Arrays.stream(base.getBodyParts()).map(EntityHelper::create).toList();
+        return Arrays.stream(base.getBodyParts()).map(EntityHelper::create).collect(Collectors.toList());
     }
 
     /**
@@ -64,7 +65,7 @@ public class EnderDragonEntityHelper extends MobEntityHelper<EnderDragonEntity> 
      * @since 1.8.4
      */
     public List<? extends EntityHelper<?>> getBodyParts(String name) {
-        return Arrays.stream(base.getBodyParts()).filter(e -> e.name.equals(name)).map(EntityHelper::create).toList();
+        return Arrays.stream(base.getBodyParts()).filter(e -> e.name.equals(name)).map(EntityHelper::create).collect(Collectors.toList());
     }
 
 }

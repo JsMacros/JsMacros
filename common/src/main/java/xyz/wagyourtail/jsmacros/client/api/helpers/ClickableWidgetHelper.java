@@ -13,6 +13,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+import java.util.stream.Collectors;
 
 /**
  * @author Wagyourtail
@@ -249,7 +250,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      * @since 1.8.4
      */
     public List<TextHelper> getTooltips() {
-        return tooltips.stream().map(TextHelper::new).toList();
+        return tooltips.stream().map(TextHelper::new).collect(Collectors.toList());
     }
 
     @Override

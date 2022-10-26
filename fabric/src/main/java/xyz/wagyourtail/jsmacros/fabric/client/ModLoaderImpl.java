@@ -5,6 +5,7 @@ import xyz.wagyourtail.jsmacros.client.ModLoader;
 import xyz.wagyourtail.jsmacros.fabric.client.api.classes.FabricModContainer;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Etheradon
@@ -24,7 +25,7 @@ public class ModLoaderImpl implements ModLoader {
 
     @Override
     public List<FabricModContainer> getLoadedMods() {
-        return FabricLoader.getInstance().getAllMods().stream().map(FabricModContainer::new).toList();
+        return FabricLoader.getInstance().getAllMods().stream().map(FabricModContainer::new).collect(Collectors.toList());
     }
 
     @Override

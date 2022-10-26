@@ -145,7 +145,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      */
     public List<? extends EntityHelper<?>> getEntities() {
         return StreamSupport.stream(MinecraftClient.getInstance().world.getEntities().spliterator(), false).
-                filter(entity -> entity.getChunkPos().equals(base.getPos())).map(EntityHelper::create).toList();
+                filter(entity -> entity.getChunkPos().equals(base.getPos())).map(EntityHelper::create).collect(Collectors.toList());
     }
 
     /**
@@ -154,7 +154,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @since 1.8.4
      */
     public List<BlockPosHelper> getTileEntities() {
-        return base.getBlockEntityPositions().stream().map(BlockPosHelper::new).toList();
+        return base.getBlockEntityPositions().stream().map(BlockPosHelper::new).collect(Collectors.toList());
     }
 
     /**

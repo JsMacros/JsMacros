@@ -4,6 +4,7 @@ import net.minecraftforge.forgespi.language.IModInfo;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ModContainerHelper;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Etheradon
@@ -37,12 +38,16 @@ public class ForgeModContainer extends ModContainerHelper<IModInfo> {
 
     @Override
     public String getEnv() {
-        return switch (base.getConfig().<String>getConfigElement("side").orElse("UNKNOWN")) {
-            case "CLIENT" -> "CLIENT";
-            case "SERVER" -> "SERVER";
-            case "BOTH" -> "BOTH";
-            default -> "UNKNOWN";
-        };
+        switch (base.getConfig().<String>getConfigElement("side").orElse("UNKNOWN")) {
+            case "CLIENT":
+                return "CLIENT";
+            case "SERVER":
+                return "SERVER";
+            case "BOTH":
+                return "BOTH";
+            default:
+                return "UNKNOWN";
+        }
     }
 
     @Override
@@ -52,7 +57,7 @@ public class ForgeModContainer extends ModContainerHelper<IModInfo> {
 
     @Override
     public List<String> getDependencies() {
-        return base.getDependencies().stream().map(IModInfo.ModVersion::getModId).toList();
+        return base.getDependencies().stream().map(IModInfo.ModVersion::getModId).collect(Collectors.toList());
     }
 
 }

@@ -125,12 +125,18 @@ public class ClientConfigV2 {
         if (this.sortServicesMethod == null) {
             this.sortServicesMethod = Sorting.ServiceSortMethod.Enabled;
         }
-        return switch (this.sortServicesMethod) {
-            case Enabled -> new Sorting.SortServiceByEnabled();
-            case Name -> new Sorting.SortServiceByName();
-            case Running -> new Sorting.SortServiceByRunning();
-            case FileName -> new Sorting.SortServiceByFileName();
-        };
+        switch (this.sortServicesMethod) {
+            case Enabled:
+                return new Sorting.SortServiceByEnabled();
+            case Name:
+                return new Sorting.SortServiceByName();
+            case Running:
+                return new Sorting.SortServiceByRunning();
+            case FileName:
+                return new Sorting.SortServiceByFileName();
+            default:
+                throw new IllegalArgumentException();
+        }
     }
     
     @Deprecated

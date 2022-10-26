@@ -31,15 +31,22 @@ public class SpellcastingIllagerEntityHelper<T extends SpellcastingIllagerEntity
      * @since 1.8.4
      */
     public String getCastedSpell() {
-        return switch (base.getDataTracker().get(((MixinSpellcastingIllagerEntityHelper) base).getSpellKey())) {
-            case 0 -> "NONE";
-            case 1 -> "SUMMON_VEX";
-            case 2 -> "FANGS";
-            case 3 -> "WOLOLO";
-            case 4 -> "DISAPPEAR";
-            case 5 -> "BLINDNESS";
-            default -> "ERROR";
-        };
+        switch (base.getDataTracker().get(((MixinSpellcastingIllagerEntityHelper) base).getSpellKey())) {
+            case 0:
+                return "NONE";
+            case 1:
+                return "SUMMON_VEX";
+            case 2:
+                return "FANGS";
+            case 3:
+                return "WOLOLO";
+            case 4:
+                return "DISAPPEAR";
+            case 5:
+                return "BLINDNESS";
+            default:
+                return "ERROR";
+        }
     }
 
 }

@@ -20,6 +20,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -716,7 +717,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
         builder.initially(initial);
 
-        if (prefix == null || prefix.isBlank()) {
+        if (prefix == null || StringUtils.isBlank(prefix)) {
             builder.omitKeyText();
         }
 

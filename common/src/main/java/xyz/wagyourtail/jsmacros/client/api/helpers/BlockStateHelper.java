@@ -140,13 +140,20 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * @since 1.6.5
      */
     public String getPistonBehaviour() {
-        return switch (base.getPistonBehavior()) {
-            case NORMAL -> "NORMAL";
-            case BLOCK -> "BLOCK";
-            case PUSH_ONLY -> "PUSH_ONLY";
-            case DESTROY -> "DESTROY";
-            case IGNORE -> "IGNORE";
-        };
+        switch (base.getPistonBehavior()) {
+            case NORMAL:
+                return "NORMAL";
+            case BLOCK:
+                return "BLOCK";
+            case PUSH_ONLY:
+                return "PUSH_ONLY";
+            case DESTROY:
+                return "DESTROY";
+            case IGNORE:
+                return "IGNORE";
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     /**

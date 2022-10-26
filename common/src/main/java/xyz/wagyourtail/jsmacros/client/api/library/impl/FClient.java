@@ -42,6 +42,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Semaphore;
+import java.util.stream.Collectors;
 
 /**
 *
@@ -437,7 +438,7 @@ public class FClient extends PerExecLibrary {
      * @since 1.8.4
      */
     public List<BlockHelper> getRegisteredBlocks() {
-        return Registry.BLOCK.stream().map(BlockHelper::new).toList();
+        return Registry.BLOCK.stream().map(BlockHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -446,7 +447,7 @@ public class FClient extends PerExecLibrary {
      * @since 1.8.4
      */
     public List<ItemHelper> getRegisteredItems() {
-        return Registry.ITEM.stream().map(ItemHelper::new).toList();
+        return Registry.ITEM.stream().map(ItemHelper::new).collect(Collectors.toList());
     }
 
     /**

@@ -12,6 +12,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author Etheradon
@@ -142,12 +143,18 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public String getRarity() {
-        return switch (base.getRarity()) {
-            case COMMON -> "COMMON";
-            case UNCOMMON -> "UNCOMMON";
-            case RARE -> "RARE";
-            case VERY_RARE -> "VERY_RARE";
-        };
+        switch (base.getRarity()) {
+            case COMMON:
+                return "COMMON";
+            case UNCOMMON:
+                return "UNCOMMON";
+            case RARE:
+                return "RARE";
+            case VERY_RARE:
+                return "VERY_RARE";
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     /**
@@ -169,7 +176,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getConflictingEnchantments(boolean ignoreType) {
-        return Registry.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && !e.canCombine(base)).map(EnchantmentHelper::new).toList();
+        return Registry.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && !e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -191,7 +198,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getCompatibleEnchantments(boolean ignoreType) {
-        return Registry.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && e.canCombine(base)).map(EnchantmentHelper::new).toList();
+        return Registry.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -200,22 +207,38 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public String getTargetType() {
-        return switch (base.type) {
-            case ARMOR -> "ARMOR";
-            case ARMOR_FEET -> "ARMOR_FEET";
-            case ARMOR_LEGS -> "ARMOR_LEGS";
-            case ARMOR_CHEST -> "ARMOR_CHEST";
-            case ARMOR_HEAD -> "ARMOR_HEAD";
-            case WEAPON -> "WEAPON";
-            case DIGGER -> "DIGGER";
-            case FISHING_ROD -> "FISHING_ROD";
-            case TRIDENT -> "TRIDENT";
-            case BREAKABLE -> "BREAKABLE";
-            case BOW -> "BOW";
-            case WEARABLE -> "WEARABLE";
-            case CROSSBOW -> "CROSSBOW";
-            case VANISHABLE -> "VANISHABLE";
-        };
+        switch (base.type) {
+            case ARMOR:
+                return "ARMOR";
+            case ARMOR_FEET:
+                return "ARMOR_FEET";
+            case ARMOR_LEGS:
+                return "ARMOR_LEGS";
+            case ARMOR_CHEST:
+                return "ARMOR_CHEST";
+            case ARMOR_HEAD:
+                return "ARMOR_HEAD";
+            case WEAPON:
+                return "WEAPON";
+            case DIGGER:
+                return "DIGGER";
+            case FISHING_ROD:
+                return "FISHING_ROD";
+            case TRIDENT:
+                return "TRIDENT";
+            case BREAKABLE:
+                return "BREAKABLE";
+            case BOW:
+                return "BOW";
+            case WEARABLE:
+                return "WEARABLE";
+            case CROSSBOW:
+                return "CROSSBOW";
+            case VANISHABLE:
+                return "VANISHABLE";
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     /**
@@ -285,7 +308,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<ItemHelper> getAcceptableItems() {
-        return Registry.ITEM.stream().filter(item -> base.type.isAcceptableItem(item)).map(ItemHelper::new).toList();
+        return Registry.ITEM.stream().filter(item -> base.type.isAcceptableItem(item)).map(ItemHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -342,9 +365,10 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof EnchantmentHelper that) || !super.equals(o)) {
+        if (!(o instanceof EnchantmentHelper) || !super.equals(o)) {
             return false;
         }
+        EnchantmentHelper that = (EnchantmentHelper) o;
         return level == 0 || that.level == 0 || level == that.level;
     }
 

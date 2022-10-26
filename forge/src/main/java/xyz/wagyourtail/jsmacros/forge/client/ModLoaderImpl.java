@@ -6,6 +6,7 @@ import xyz.wagyourtail.jsmacros.client.ModLoader;
 import xyz.wagyourtail.jsmacros.forge.client.api.classes.ForgeModContainer;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Etheradon
@@ -25,7 +26,7 @@ public class ModLoaderImpl implements ModLoader {
 
     @Override
     public List<ForgeModContainer> getLoadedMods() {
-        return ModList.get().getMods().stream().map(ForgeModContainer::new).toList();
+        return ModList.get().getMods().stream().map(ForgeModContainer::new).collect(Collectors.toList());
     }
 
     @Override

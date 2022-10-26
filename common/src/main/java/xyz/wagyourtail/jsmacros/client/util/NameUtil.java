@@ -1,5 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.util;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -40,7 +44,7 @@ public final class NameUtil {
 
         Matcher whisperMatcher = PATTERN_WHISPER.matcher(toAnalyze);
         if (whisperMatcher.find()) {
-            return List.of(whisperMatcher.group(1));
+            return Collections.singletonList(whisperMatcher.group(1));
         }
 
         List<String> roles = new LinkedList<>();
@@ -61,7 +65,7 @@ public final class NameUtil {
             if (Character.isLetter(current) || Character.isDigit(current) || current == '_') {
                 nameBuilder.append(current);
             } else {
-                if (!nameBuilder.isEmpty()) {
+                if (nameBuilder.length() != 0) {
                     lastString = nameBuilder.toString();
                     nameBuilder = new StringBuilder(DEFAULT_BUILDER_CAPACITY);
                 }
@@ -104,7 +108,7 @@ public final class NameUtil {
 
             }
         }
-        return List.of("");
+        return Collections.singletonList("");
     }
 
     private static String getNameOrDefault(CharSequence potentialName) {
@@ -112,7 +116,7 @@ public final class NameUtil {
     }
 
     private static String getNameOrDefault(CharSequence potentialName, String defaultValue) {
-        return PATTERN_NAME.matcher(potentialName).matches() ? potentialName.toString() : defaultValue.isBlank() ? "" : getNameOrDefault(defaultValue, "");
+        return PATTERN_NAME.matcher(potentialName).matches() ? potentialName.toString() : StringUtils.isBlank(defaultValue) ? "" : getNameOrDefault(defaultValue, "");
     }
 
 }

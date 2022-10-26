@@ -13,6 +13,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinCreativeInventoryScreen;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Etheradon
@@ -57,7 +58,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public List<ItemStackHelper> getShownItems() {
-        return handler.itemList.stream().map(ItemStackHelper::new).toList();
+        return handler.itemList.stream().map(ItemStackHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -156,7 +157,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      */
     public List<ItemStackHelper> getSavedHotbar(int index) {
         HotbarStorage hotbarStorage = MinecraftClient.getInstance().getCreativeHotbarStorage();
-        return hotbarStorage.getSavedHotbar(index).stream().map(ItemStackHelper::new).toList();
+        return hotbarStorage.getSavedHotbar(index).stream().map(ItemStackHelper::new).collect(Collectors.toList());
     }
 
     /**

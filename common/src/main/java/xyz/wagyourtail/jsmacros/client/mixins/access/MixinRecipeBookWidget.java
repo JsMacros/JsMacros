@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.mixins.access;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.recipebook.ClientRecipeBook;
-import net.minecraft.recipe.book.RecipeBook;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

@@ -115,12 +115,18 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
      * @since 1.8.4
      */
     public String getCategory() {
-        return switch (handler.getCategory()) {
-            case CRAFTING -> "CRAFTING";
-            case FURNACE -> "FURNACE";
-            case BLAST_FURNACE -> "BLAST_FURNACE";
-            case SMOKER -> "SMOKER";
-        };
+        switch (handler.getCategory()) {
+            case CRAFTING:
+                return "CRAFTING";
+            case FURNACE:
+                return "FURNACE";
+            case BLAST_FURNACE:
+                return "BLAST_FURNACE";
+            case SMOKER:
+                return "SMOKER";
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     /**

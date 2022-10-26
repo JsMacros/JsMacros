@@ -14,7 +14,6 @@ import net.minecraft.world.World;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import xyz.wagyourtail.jsmacros.client.access.IClientPlayerEntity;
 
 import java.util.Collection;
 import java.util.Set;

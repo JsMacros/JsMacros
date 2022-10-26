@@ -23,9 +23,7 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.EventDisconnect;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventLaunchGame;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventOpenContainer;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventOpenScreen;
-import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinDisconnectedScreen;
-import xyz.wagyourtail.jsmacros.core.Core;
 
 @Mixin(MinecraftClient.class)
 public abstract class MixinMinecraftClient {

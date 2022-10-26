@@ -30,6 +30,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @since 1.4.2
@@ -305,7 +306,7 @@ public abstract class CommandBuilder {
      * @since 1.8.4
      */
     public CommandBuilder suggestBlockPositions(BlockPosHelper... positions) {
-        return suggestPositions(Arrays.stream(positions).map(b -> b.getX() + " " + b.getY() + " " + b.getZ()).toList());
+        return suggestPositions(Arrays.stream(positions).map(b -> b.getX() + " " + b.getY() + " " + b.getZ()).collect(Collectors.toList()));
     }
 
     /**
@@ -315,7 +316,7 @@ public abstract class CommandBuilder {
      * @since 1.8.4
      */
     public CommandBuilder suggestBlockPositions(Collection<BlockPosHelper> positions) {
-        return suggestPositions(positions.stream().map(b -> b.getX() + " " + b.getY() + " " + b.getZ()).toList());
+        return suggestPositions(positions.stream().map(b -> b.getX() + " " + b.getY() + " " + b.getZ()).collect(Collectors.toList()));
     }
 
     /**
@@ -344,7 +345,7 @@ public abstract class CommandBuilder {
         suggests((ctx, builder) -> CommandSource.suggestPositions(builder.getRemaining(), positions.stream().map(p -> {
                     String[] split = p.split(" ");
                     return new CommandSource.RelativePosition(split[0], split[1], split[2]);
-                }).toList(), builder, s -> true)
+                }).collect(Collectors.toList()), builder, s -> true)
         );
         return this;
     }

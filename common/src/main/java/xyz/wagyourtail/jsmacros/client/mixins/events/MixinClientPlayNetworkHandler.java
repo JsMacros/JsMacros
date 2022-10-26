@@ -27,8 +27,6 @@ import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
-import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
-import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.HashSet;
 import java.util.Map;

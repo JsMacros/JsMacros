@@ -16,8 +16,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventRecvMessage;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 
-import java.util.concurrent.Semaphore;
-
 @Mixin(ChatHud.class)
 class MixinChatHud {
     @Unique

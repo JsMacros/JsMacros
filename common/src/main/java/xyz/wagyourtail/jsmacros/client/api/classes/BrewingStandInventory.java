@@ -10,7 +10,9 @@ import net.minecraft.recipe.BrewingRecipeRegistry;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Etheradon
@@ -138,7 +140,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
      */
     public List<ItemStackHelper> previewPotions() {
         ItemStack ingredient = getIngredient().getRaw();
-        return getPotions().stream().map(stack -> new ItemStackHelper(BrewingRecipeRegistry.craft(ingredient, stack.getRaw()))).toList();
+        return getPotions().stream().map(stack -> new ItemStackHelper(BrewingRecipeRegistry.craft(ingredient, stack.getRaw()))).collect(Collectors.toList());
     }
 
     /**
@@ -192,7 +194,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
      * @since 1.8.4
      */
     public List<ItemStackHelper> getPotions() {
-        return List.of(getSlot(0), getSlot(1), getSlot(2));
+        return Arrays.asList(getSlot(0), getSlot(1), getSlot(2));
     }
 
     @Override

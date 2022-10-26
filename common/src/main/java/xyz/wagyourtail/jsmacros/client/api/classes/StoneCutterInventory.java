@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screen.ingame.StonecutterScreen;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Etheradon
@@ -65,7 +66,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
      * @since 1.8.4
      */
     public List<ItemStackHelper> getRecipes() {
-        return inventory.getScreenHandler().getAvailableRecipes().stream().map(recipe -> new ItemStackHelper(recipe.getOutput())).toList();
+        return inventory.getScreenHandler().getAvailableRecipes().stream().map(recipe -> new ItemStackHelper(recipe.getOutput())).collect(Collectors.toList());
     }
 
     /**

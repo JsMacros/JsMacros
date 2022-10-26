@@ -143,29 +143,42 @@ public class RenderCommon {
             String[] alignments = alignment.toLowerCase(Locale.ROOT).split("on");
             String thisAlignment = alignments[0];
             String toAlignment = alignments[1];
-            int alignToX = switch (toAlignment) {
-                case "left" -> other.getScaledLeft();
-                case "center" -> other.getScaledLeft() + other.getScaledWidth() / 2;
-                case "right" -> other.getScaledRight();
-                default -> {
+            int alignToX;
+            switch (toAlignment) {
+                case "left":
+                    alignToX = other.getScaledLeft();
+                    break;
+                case "center":
+                    alignToX = other.getScaledLeft() + other.getScaledWidth() / 2;
+                    break;
+                case "right":
+                    alignToX = other.getScaledRight();
+                    break;
+                default:
                     int percent = parsePercentage(alignment);
                     if (percent != -1) {
-                        yield other.getScaledLeft() + (other.getScaledWidth() * percent / 100);
+                        alignToX = other.getScaledLeft() + (other.getScaledWidth() * percent / 100);
+                        break;
                     }
                     throw new IllegalArgumentException("Invalid alignment: " + alignment);
-                }
-            };
+            }
             switch (thisAlignment) {
-                case "left" -> moveToX(alignToX + offset);
-                case "center" -> moveToX(alignToX - getScaledWidth() / 2 + offset);
-                case "right" -> moveToX(alignToX - getScaledWidth() + offset);
-                default -> {
+                case "left":
+                    moveToX(alignToX + offset);
+                    break;
+                case "center":
+                    moveToX(alignToX - getScaledWidth() / 2 + offset);
+                    break;
+                case "right":
+                    moveToX(alignToX - getScaledWidth() + offset);
+                    break;
+                default:
                     int percent = parsePercentage(alignment);
                     if (percent != -1) {
                         moveToX(alignToX - (getScaledWidth() * percent / 100) + offset);
+                        break;
                     }
                     throw new IllegalArgumentException("Invalid alignment: " + alignment);
-                }
             }
             return (B) this;
         }
@@ -196,15 +209,21 @@ public class RenderCommon {
             int width = getScaledWidth();
 
             switch (alignment.toLowerCase(Locale.ROOT)) {
-                case "left" -> moveToX(offset);
-                case "center" -> moveToX((parentWidth - width) / 2 + offset);
-                case "right" -> moveToX(parentWidth - width + offset);
-                default -> {
+                case "left":
+                    moveToX(offset);
+                    break;
+                case "center":
+                    moveToX((parentWidth - width) / 2 + offset);
+                    break;
+                case "right":
+                    moveToX(parentWidth - width + offset);
+                    break;
+                default:
                     int percent = parsePercentage(alignment);
                     if (percent != -1) {
                         moveToX((parentWidth - width) * percent / 100 + offset);
                     }
-                }
+                    break;
             }
             return (B) this;
         }
@@ -240,29 +259,42 @@ public class RenderCommon {
             String[] alignments = alignment.toLowerCase(Locale.ROOT).split("on");
             String thisAlignment = alignments[0];
             String toAlignment = alignments[1];
-            int alignToY = switch (toAlignment) {
-                case "top" -> other.getScaledTop();
-                case "center" -> other.getScaledTop() + other.getScaledHeight() / 2;
-                case "bottom" -> other.getScaledBottom();
-                default -> {
+            int alignToY;
+            switch (toAlignment) {
+                case "top":
+                    alignToY = other.getScaledTop();
+                    break;
+                case "center":
+                    alignToY = other.getScaledTop() + other.getScaledHeight() / 2;
+                    break;
+                case "bottom":
+                    alignToY = other.getScaledBottom();
+                    break;
+                default:
                     int percent = parsePercentage(alignment);
                     if (percent != -1) {
-                        yield other.getScaledTop() + (other.getScaledHeight() * percent / 100);
+                        alignToY = other.getScaledTop() + (other.getScaledHeight() * percent / 100);
+                        break;
                     }
                     throw new IllegalArgumentException("Invalid alignment: " + alignment);
-                }
-            };
+            }
             switch (thisAlignment) {
-                case "top" -> moveToY(alignToY + offset);
-                case "center" -> moveToY(alignToY - getScaledHeight() / 2 + offset);
-                case "bottom" -> moveToY(alignToY - getScaledHeight() + offset);
-                default -> {
+                case "top":
+                    moveToY(alignToY + offset);
+                    break;
+                case "center":
+                    moveToY(alignToY - getScaledHeight() / 2 + offset);
+                    break;
+                case "bottom":
+                    moveToY(alignToY - getScaledHeight() + offset);
+                    break;
+                default:
                     int percent = parsePercentage(alignment);
                     if (percent != -1) {
                         moveToY(alignToY - (getScaledHeight() * percent / 100) + offset);
+                        break;
                     }
                     throw new IllegalArgumentException("Invalid alignment: " + alignment);
-                }
             }
             return (B) this;
         }
@@ -293,15 +325,21 @@ public class RenderCommon {
             int height = getScaledHeight();
 
             switch (alignment.toLowerCase(Locale.ROOT)) {
-                case "top" -> moveToY(offset);
-                case "center" -> moveToY((parentHeight - height) / 2 + offset);
-                case "bottom" -> moveToY(parentHeight - height + offset);
-                default -> {
+                case "top":
+                    moveToY(offset);
+                    break;
+                case "center":
+                    moveToY((parentHeight - height) / 2 + offset);
+                    break;
+                case "bottom":
+                    moveToY(parentHeight - height + offset);
+                    break;
+                default:
                     int percent = parsePercentage(alignment);
                     if (percent != -1) {
                         moveToY((parentHeight - height) * percent / 100 + offset);
                     }
-                }
+                    break;
             }
             return (B) this;
         }
@@ -459,7 +497,7 @@ public class RenderCommon {
          *
          * @since 1.8.4
          */
-        private static int parsePercentage(String string) {
+        static int parsePercentage(String string) {
             if (string.endsWith("%")) {
                 int percent = Integer.parseInt(string.substring(0, string.length() - 1));
                 if (percent >= 0 && percent <= 100) {

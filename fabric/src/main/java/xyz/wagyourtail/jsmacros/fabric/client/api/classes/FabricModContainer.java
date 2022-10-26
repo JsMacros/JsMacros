@@ -7,6 +7,7 @@ import net.fabricmc.loader.api.metadata.Person;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ModContainerHelper;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Etheradon
@@ -44,21 +45,25 @@ public class FabricModContainer extends ModContainerHelper<ModContainer> {
 
     @Override
     public String getEnv() {
-        return switch (metadata.getEnvironment()) {
-            case CLIENT -> "CLIENT";
-            case SERVER -> "SERVER";
-            case UNIVERSAL -> "BOTH";
-        };
+        switch (metadata.getEnvironment()) {
+            case CLIENT:
+                return "CLIENT";
+            case SERVER:
+                return "SERVER";
+            case UNIVERSAL:
+                return "BOTH";
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     @Override
     public List<String> getAuthors() {
-        return metadata.getAuthors().stream().map(Person::getName).toList();
+        return metadata.getAuthors().stream().map(Person::getName).collect(Collectors.toList());
     }
 
     @Override
     public List<String> getDependencies() {
-        return metadata.getDependencies().stream().map(ModDependency::getModId).toList();
-    }
+        return metadata.getDependencies().stream().map(ModDependency::getModId).collect(Collectors.toList());    }
 
 }

@@ -9,6 +9,7 @@ import xyz.wagyourtail.jsmacros.client.mixins.access.MixinFoxEntity;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author Etheradon
@@ -67,7 +68,7 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
     }
 
     private List<Optional<UUID>> getTrustedUUIDs() {
-        return ((MixinFoxEntity) base).invokeGetTrustedUuids().stream().map(Optional::ofNullable).toList();
+        return ((MixinFoxEntity) base).invokeGetTrustedUuids().stream().map(Optional::ofNullable).collect(Collectors.toList());
     }
 
     /**

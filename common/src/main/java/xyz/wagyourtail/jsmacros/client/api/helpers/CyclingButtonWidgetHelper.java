@@ -3,11 +3,14 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.text.Text;
 
+import org.apache.commons.lang3.StringUtils;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinCyclingButton;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -102,8 +105,8 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
         private MethodWrapper<T, ?, TextHelper, ?> valueToText;
         private MethodWrapper<?, ?, Boolean, ?> alternateToggle;
         private boolean optionTextOmitted = false;
-        private List<T> defaultValues = List.of();
-        private List<T> alternateValues = List.of();
+        private List<T> defaultValues = Collections.emptyList();
+        private List<T> alternateValues = Collections.emptyList();
 
         public CyclicButtonBuilder(IScreen screen, MethodWrapper<T, ?, TextHelper, ?> valueToText) {
             super(screen);
@@ -241,7 +244,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
          */
         @SafeVarargs
         public final CyclicButtonBuilder<T> values(T... values) {
-            this.defaultValues = List.of(values);
+            this.defaultValues = Arrays.asList(values);
             return this;
         }
 
@@ -253,7 +256,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
          */
         @SafeVarargs
         public final CyclicButtonBuilder<T> alternatives(T... values) {
-            this.alternateValues = List.of(values);
+            this.alternateValues = Arrays.asList(values);
             return this;
         }
 
@@ -265,7 +268,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
          * @since 1.8.4
          */
         public CyclicButtonBuilder<T> values(T[] defaults, T[] alternatives) {
-            return values(List.of(defaults), List.of(alternatives));
+            return values(Arrays.asList(defaults), Arrays.asList(alternatives));
         }
 
         /**
@@ -330,7 +333,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
         public CyclingButtonWidgetHelper<T> createWidget() {
             AtomicReference<CyclingButtonWidgetHelper<T>> b = new AtomicReference<>(null);
             CyclingButtonWidget.Builder<T> builder = CyclingButtonWidget.builder(obj -> valueToText.apply(obj).getRaw());
-            if (optionTextOmitted || optionText.getString().isBlank()) {
+            if (optionTextOmitted || StringUtils.isBlank(optionText.getString())) {
                 builder.omitKeyText();
             }
             if (alternateToggle != null && !alternateValues.isEmpty()) {
@@ -348,7 +351,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
                     Core.getInstance().profile.logError(e);
                 }
             });
-            b.set(new CyclingButtonWidgetHelper<T>(cyclingButton, getZIndex()));
+            b.set(new CyclingButtonWidgetHelper<>(cyclingButton, getZIndex()));
             return b.get();
         }
     }

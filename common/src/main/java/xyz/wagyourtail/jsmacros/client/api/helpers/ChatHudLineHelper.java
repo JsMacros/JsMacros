@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
-import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 

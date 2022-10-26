@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * @since 1.6.5
@@ -103,7 +104,7 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
      * @since 1.8.4
      */
     public SuggestionsBuilderHelper suggestBlockPositions(BlockPosHelper... positions) {
-        return suggestPositions(Arrays.stream(positions).map(b -> b.getX() + " " + b.getY() + " " + b.getZ()).toList());
+        return suggestPositions(Arrays.stream(positions).map(b -> b.getX() + " " + b.getY() + " " + b.getZ()).collect(Collectors.toList()));
     }
 
     /**
@@ -113,7 +114,7 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
      * @since 1.8.4
      */
     public SuggestionsBuilderHelper suggestBlockPositions(Collection<BlockPosHelper> positions) {
-        return suggestPositions(positions.stream().map(b -> b.getX() + " " + b.getY() + " " + b.getZ()).toList());
+        return suggestPositions(positions.stream().map(b -> b.getX() + " " + b.getY() + " " + b.getZ()).collect(Collectors.toList()));
     }
 
     /**
@@ -142,7 +143,7 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
         CommandSource.suggestPositions(getRemaining(), positions.stream().map(p -> {
             String[] split = p.split(" ");
             return new CommandSource.RelativePosition(split[0], split[1], split[2]);
-        }).toList(), base, s -> true);
+        }).collect(Collectors.toList()), base, s -> true);
         return this;
     }
     

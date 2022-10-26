@@ -10,7 +10,6 @@ import xyz.wagyourtail.jsmacros.core.library.impl.classes.FileHandler;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -252,8 +251,6 @@ public class FFS extends PerExecLibrary {
                     e.printStackTrace();
                 }
             });
-        } catch (IOException e) {
-            throw e;
         }
     }
 

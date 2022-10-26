@@ -597,168 +597,168 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      */
     public EntityHelper<?> getSpecialized() {
         if (base instanceof MobEntity) {
-            if (base instanceof EnderDragonEntity dragon) {
-                return new EnderDragonEntityHelper(dragon);
-            } else if (base instanceof WitherEntity wither) {
-                return new WitherEntityHelper(wither);
+            if (base instanceof EnderDragonEntity) {
+                return new EnderDragonEntityHelper(((EnderDragonEntity) base));
+            } else if (base instanceof WitherEntity) {
+                return new WitherEntityHelper(((WitherEntity) base));
             }
 
-            if (base instanceof AbstractPiglinEntity abstractPiglin) {
-                if (base instanceof PiglinEntity piglin) {
-                    return new PiglinEntityHelper(piglin);
+            if (base instanceof AbstractPiglinEntity) {
+                if (base instanceof PiglinEntity) {
+                    return new PiglinEntityHelper(((PiglinEntity) base));
                 } else {
-                    return new AbstractPiglinEntityHelper<>(abstractPiglin);
+                    return new AbstractPiglinEntityHelper<>(((AbstractPiglinEntity) base));
                 }
-            } else if (base instanceof CreeperEntity creeper) {
-                return new CreeperEntityHelper(creeper);
-            } else if (base instanceof ZombieEntity zombie) {
-                if (base instanceof DrownedEntity drowned) {
-                    return new DrownedEntityHelper(drowned);
-                } else if (base instanceof ZombieVillagerEntity zombieVillager) {
-                    return new ZombieVillagerEntityHelper(zombieVillager);
+            } else if (base instanceof CreeperEntity) {
+                return new CreeperEntityHelper(((CreeperEntity) base));
+            } else if (base instanceof ZombieEntity) {
+                if (base instanceof DrownedEntity) {
+                    return new DrownedEntityHelper(((DrownedEntity) base));
+                } else if (base instanceof ZombieVillagerEntity) {
+                    return new ZombieVillagerEntityHelper(((ZombieVillagerEntity) base));
                 } else {
-                    return new ZombieEntityHelper<>(zombie);
+                    return new ZombieEntityHelper<>(((ZombieEntity) base));
                 }
-            } else if (base instanceof EndermanEntity enderman) {
-                return new EndermanEntityHelper(enderman);
-            } else if (base instanceof GhastEntity ghast) {
-                return new GhastEntityHelper(ghast);
-            } else if (base instanceof BlazeEntity blaze) {
-                return new BlazeEntityHelper(blaze);
-            } else if (base instanceof GuardianEntity guardian) {
-                return new GuardianEntityHelper(guardian);
-            } else if (base instanceof PhantomEntity phantom) {
-                return new PhantomEntityHelper(phantom);
-            } else if (base instanceof IllagerEntity illager) {
-                if (base instanceof VindicatorEntity vindicator) {
-                    return new VindicatorEntityHelper(vindicator);
-                } else if (base instanceof PillagerEntity pillager) {
-                    return new PillagerEntityHelper(pillager);
-                } else if (base instanceof SpellcastingIllagerEntity spellcastingIllager) {
-                    return new SpellcastingIllagerEntityHelper<>(spellcastingIllager);
+            } else if (base instanceof EndermanEntity) {
+                return new EndermanEntityHelper(((EndermanEntity) base));
+            } else if (base instanceof GhastEntity) {
+                return new GhastEntityHelper(((GhastEntity) base));
+            } else if (base instanceof BlazeEntity) {
+                return new BlazeEntityHelper(((BlazeEntity) base));
+            } else if (base instanceof GuardianEntity) {
+                return new GuardianEntityHelper(((GuardianEntity) base));
+            } else if (base instanceof PhantomEntity) {
+                return new PhantomEntityHelper(((PhantomEntity) base));
+            } else if (base instanceof IllagerEntity) {
+                if (base instanceof VindicatorEntity) {
+                    return new VindicatorEntityHelper(((VindicatorEntity) base));
+                } else if (base instanceof PillagerEntity) {
+                    return new PillagerEntityHelper(((PillagerEntity) base));
+                } else if (base instanceof SpellcastingIllagerEntity) {
+                    return new SpellcastingIllagerEntityHelper<>(((SpellcastingIllagerEntity) base));
                 } else {
-                    return new IllagerEntityHelper<>(illager);
+                    return new IllagerEntityHelper<>(((IllagerEntity) base));
                 }
-            } else if (base instanceof ShulkerEntity shulker) {
-                return new ShulkerEntityHelper(shulker);
-            } else if (base instanceof SlimeEntity slime) {
-                return new SlimeEntityHelper(slime);
-            } else if (base instanceof SpiderEntity spider) {
-                return new SpiderEntityHelper(spider);
-            } else if (base instanceof VexEntity vex) {
-                return new VexEntityHelper(vex);
-            } else if (base instanceof WardenEntity warden) {
-                return new WardenEntityHelper(warden);
-            } else if (base instanceof WitchEntity witch) {
-                return new WitchEntityHelper(witch);
+            } else if (base instanceof ShulkerEntity) {
+                return new ShulkerEntityHelper(((ShulkerEntity) base));
+            } else if (base instanceof SlimeEntity) {
+                return new SlimeEntityHelper(((SlimeEntity) base));
+            } else if (base instanceof SpiderEntity) {
+                return new SpiderEntityHelper(((SpiderEntity) base));
+            } else if (base instanceof VexEntity) {
+                return new VexEntityHelper(((VexEntity) base));
+            } else if (base instanceof WardenEntity) {
+                return new WardenEntityHelper(((WardenEntity) base));
+            } else if (base instanceof WitchEntity) {
+                return new WitchEntityHelper(((WitchEntity) base));
             }
 
-            if (base instanceof AnimalEntity animal) {
-                if (base instanceof AbstractHorseEntity abstractHorse) {
-                    if (base instanceof HorseEntity horse) {
-                        return new HorseEntityHelper(horse);
-                    } else if (base instanceof AbstractDonkeyEntity donkey) {
-                        if (base instanceof LlamaEntity llama) {
-                            return new LlamaEntityHelper<>(llama);
+            if (base instanceof AnimalEntity) {
+                if (base instanceof AbstractHorseEntity) {
+                    if (base instanceof HorseEntity) {
+                        return new HorseEntityHelper(((HorseEntity) base));
+                    } else if (base instanceof AbstractDonkeyEntity) {
+                        if (base instanceof LlamaEntity) {
+                            return new LlamaEntityHelper<>(((LlamaEntity) base));
                         } else {
-                            return new DonkeyEntityHelper<>(donkey);
+                            return new DonkeyEntityHelper<>(((AbstractDonkeyEntity) base));
                         }
                     } else {
-                        return new AbstractHorseEntityHelper<>(abstractHorse);
+                        return new AbstractHorseEntityHelper<>(((AbstractHorseEntity) base));
                     }
-                } else if (base instanceof AxolotlEntity axolotl) {
-                    return new AxolotlEntityHelper(axolotl);
-                } else if (base instanceof BeeEntity bee) {
-                    return new BeeEntityHelper(bee);
-                } else if (base instanceof FoxEntity fox) {
-                    return new FoxEntityHelper(fox);
-                } else if (base instanceof FrogEntity frog) {
-                    return new FrogEntityHelper(frog);
-                } else if (base instanceof GoatEntity goat) {
-                    return new GoatEntityHelper(goat);
-                } else if (base instanceof MooshroomEntity mooshroom) {
-                    return new MooshroomEntityHelper(mooshroom);
-                } else if (base instanceof OcelotEntity ocelot) {
-                    return new OcelotEntityHelper(ocelot);
-                } else if (base instanceof PandaEntity panda) {
-                    return new PandaEntityHelper(panda);
-                } else if (base instanceof PigEntity pig) {
-                    return new PigEntityHelper(pig);
-                } else if (base instanceof PolarBearEntity polarBear) {
-                    return new PolarBearEntityHelper(polarBear);
-                } else if (base instanceof RabbitEntity rabbit) {
-                    return new RabbitEntityHelper(rabbit);
-                } else if (base instanceof SheepEntity sheep) {
-                    return new SheepEntityHelper(sheep);
-                } else if (base instanceof StriderEntity strider) {
-                    return new StriderEntityHelper(strider);
-                } else if (base instanceof TameableEntity tameable) {
-                    if (base instanceof CatEntity cat) {
-                        return new CatEntityHelper(cat);
-                    } else if (base instanceof WolfEntity wolf) {
-                        return new WolfEntityHelper(wolf);
-                    } else if (base instanceof ParrotEntity parrot) {
-                        return new ParrotEntityHelper(parrot);
+                } else if (base instanceof AxolotlEntity) {
+                    return new AxolotlEntityHelper(((AxolotlEntity) base));
+                } else if (base instanceof BeeEntity) {
+                    return new BeeEntityHelper(((BeeEntity) base));
+                } else if (base instanceof FoxEntity) {
+                    return new FoxEntityHelper(((FoxEntity) base));
+                } else if (base instanceof FrogEntity) {
+                    return new FrogEntityHelper(((FrogEntity) base));
+                } else if (base instanceof GoatEntity) {
+                    return new GoatEntityHelper(((GoatEntity) base));
+                } else if (base instanceof MooshroomEntity) {
+                    return new MooshroomEntityHelper(((MooshroomEntity) base));
+                } else if (base instanceof OcelotEntity) {
+                    return new OcelotEntityHelper(((OcelotEntity) base));
+                } else if (base instanceof PandaEntity) {
+                    return new PandaEntityHelper(((PandaEntity) base));
+                } else if (base instanceof PigEntity) {
+                    return new PigEntityHelper(((PigEntity) base));
+                } else if (base instanceof PolarBearEntity) {
+                    return new PolarBearEntityHelper(((PolarBearEntity) base));
+                } else if (base instanceof RabbitEntity) {
+                    return new RabbitEntityHelper(((RabbitEntity) base));
+                } else if (base instanceof SheepEntity) {
+                    return new SheepEntityHelper(((SheepEntity) base));
+                } else if (base instanceof StriderEntity) {
+                    return new StriderEntityHelper(((StriderEntity) base));
+                } else if (base instanceof TameableEntity) {
+                    if (base instanceof CatEntity) {
+                        return new CatEntityHelper(((CatEntity) base));
+                    } else if (base instanceof WolfEntity) {
+                        return new WolfEntityHelper(((WolfEntity) base));
+                    } else if (base instanceof ParrotEntity) {
+                        return new ParrotEntityHelper(((ParrotEntity) base));
                     } else {
-                        return new TameableEntityHelper<>(tameable);
+                        return new TameableEntityHelper<>(((TameableEntity) base));
                     }
                 } else {
-                    return new AnimalEntityHelper<>(animal);
+                    return new AnimalEntityHelper<>(((AnimalEntity) base));
                 }
             }
 
-            if (base instanceof AllayEntity allay) {
-                return new AllayEntityHelper(allay);
-            } else if (base instanceof BatEntity bat) {
-                return new BatEntityHelper(bat);
-            } else if (base instanceof DolphinEntity dolphin) {
-                return new DolphinEntityHelper(dolphin);
-            } else if (base instanceof IronGolemEntity ironGolem) {
-                return new IronGolemEntityHelper(ironGolem);
-            } else if (base instanceof SnowGolemEntity snowGolem) {
-                return new SnowGolemEntityHelper(snowGolem);
-            } else if (base instanceof FishEntity fish) {
-                if (base instanceof PufferfishEntity pufferfish) {
-                    return new PufferfishEntityHelper(pufferfish);
-                } else if (base instanceof TropicalFishEntity tropicalFish) {
-                    return new TropicalFishEntityHelper(tropicalFish);
+            if (base instanceof AllayEntity) {
+                return new AllayEntityHelper(((AllayEntity) base));
+            } else if (base instanceof BatEntity) {
+                return new BatEntityHelper(((BatEntity) base));
+            } else if (base instanceof DolphinEntity) {
+                return new DolphinEntityHelper(((DolphinEntity) base));
+            } else if (base instanceof IronGolemEntity) {
+                return new IronGolemEntityHelper(((IronGolemEntity) base));
+            } else if (base instanceof SnowGolemEntity) {
+                return new SnowGolemEntityHelper(((SnowGolemEntity) base));
+            } else if (base instanceof FishEntity) {
+                if (base instanceof PufferfishEntity) {
+                    return new PufferfishEntityHelper(((PufferfishEntity) base));
+                } else if (base instanceof TropicalFishEntity) {
+                    return new TropicalFishEntityHelper(((TropicalFishEntity) base));
                 } else {
-                    return new FishEntityHelper<>(fish);
+                    return new FishEntityHelper<>(((FishEntity) base));
                 }
             }
         }
 
         if (base instanceof ProjectileEntity) {
-            if (base instanceof ArrowEntity arrow) {
-                return new ArrowEntityHelper(arrow);
-            } else if (base instanceof FishingBobberEntity fishingBobber) {
-                return new FishingBobberEntityHelper(fishingBobber);
-            } else if (base instanceof TridentEntity trident) {
-                return new TridentEntityHelper(trident);
-            } else if (base instanceof WitherSkullEntity witherSkull) {
-                return new WitherSkullEntityHelper(witherSkull);
+            if (base instanceof ArrowEntity) {
+                return new ArrowEntityHelper(((ArrowEntity) base));
+            } else if (base instanceof FishingBobberEntity) {
+                return new FishingBobberEntityHelper(((FishingBobberEntity) base));
+            } else if (base instanceof TridentEntity) {
+                return new TridentEntityHelper(((TridentEntity) base));
+            } else if (base instanceof WitherSkullEntity) {
+                return new WitherSkullEntityHelper(((WitherSkullEntity) base));
             }
         }
 
-        if (base instanceof ArmorStandEntity armorStand) {
-            return new ArmorStandEntityHelper(armorStand);
-        } else if (base instanceof EndCrystalEntity crystal) {
-            return new EndCrystalEntityHelper(crystal);
-        } else if (base instanceof ItemFrameEntity itemFrame) {
-            return new ItemFrameEntityHelper(itemFrame);
-        } else if (base instanceof PaintingEntity painting) {
-            return new PaintingEntityHelper(painting);
+        if (base instanceof ArmorStandEntity) {
+            return new ArmorStandEntityHelper(((ArmorStandEntity) base));
+        } else if (base instanceof EndCrystalEntity) {
+            return new EndCrystalEntityHelper(((EndCrystalEntity) base));
+        } else if (base instanceof ItemFrameEntity) {
+            return new ItemFrameEntityHelper(((ItemFrameEntity) base));
+        } else if (base instanceof PaintingEntity) {
+            return new PaintingEntityHelper(((PaintingEntity) base));
         }
 
-        if (base instanceof BoatEntity boat) {
-            return new BoatEntityHelper(boat);
-        } else if (base instanceof FurnaceMinecartEntity furnaceMinecart) {
-            return new FurnaceMinecartEntityHelper(furnaceMinecart);
-        } else if (base instanceof TntMinecartEntity tntMinecart) {
-            return new TntMinecartEntityHelper(tntMinecart);
+        if (base instanceof BoatEntity) {
+            return new BoatEntityHelper(((BoatEntity) base));
+        } else if (base instanceof FurnaceMinecartEntity) {
+            return new FurnaceMinecartEntityHelper(((FurnaceMinecartEntity) base));
+        } else if (base instanceof TntMinecartEntity) {
+            return new TntMinecartEntityHelper(((TntMinecartEntity) base));
         }
 
-        return this;
+        return EntityHelper.create(base);
     }
     
     /**

@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.scoreboard.Team;
-import net.minecraft.util.Formatting;
 
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 

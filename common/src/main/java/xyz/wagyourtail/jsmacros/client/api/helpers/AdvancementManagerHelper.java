@@ -46,7 +46,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @since 1.8.4
      */
     public List<AdvancementHelper> getAdvancements() {
-        return base.getAdvancements().stream().map(AdvancementHelper::new).toList();
+        return base.getAdvancements().stream().map(AdvancementHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -58,7 +58,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @since 1.8.4
      */
     public List<AdvancementHelper> getStartedAdvancements() {
-        return getProgressStream().filter(progress -> !progress.getValue().isDone() && progress.getValue().isAnyObtained()).map(advancementProgressEntry -> new AdvancementHelper(advancementProgressEntry.getKey())).toList();
+        return getProgressStream().filter(progress -> !progress.getValue().isDone() && progress.getValue().isAnyObtained()).map(advancementProgressEntry -> new AdvancementHelper(advancementProgressEntry.getKey())).collect(Collectors.toList());
     }
 
     /**
@@ -67,7 +67,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @since 1.8.4
      */
     public List<AdvancementHelper> getMissingAdvancements() {
-        return getProgressStream().filter(advancementProgressEntry -> !advancementProgressEntry.getValue().isDone()).map(advancementProgressEntry -> new AdvancementHelper(advancementProgressEntry.getKey())).toList();
+        return getProgressStream().filter(advancementProgressEntry -> !advancementProgressEntry.getValue().isDone()).map(advancementProgressEntry -> new AdvancementHelper(advancementProgressEntry.getKey())).collect(Collectors.toList());
     }
 
     /**
@@ -76,7 +76,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @since 1.8.4
      */
     public List<AdvancementHelper> getCompletedAdvancements() {
-        return getProgressStream().filter(advancementProgressEntry -> advancementProgressEntry.getValue().isDone()).map(advancementProgressEntry -> new AdvancementHelper(advancementProgressEntry.getKey())).toList();
+        return getProgressStream().filter(advancementProgressEntry -> advancementProgressEntry.getValue().isDone()).map(advancementProgressEntry -> new AdvancementHelper(advancementProgressEntry.getKey())).collect(Collectors.toList());
     }
 
     /**
@@ -85,7 +85,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @since 1.8.4
      */
     public List<AdvancementHelper> getRootAdvancements() {
-        return StreamSupport.stream(base.getRoots().spliterator(), false).map(AdvancementHelper::new).toList();
+        return StreamSupport.stream(base.getRoots().spliterator(), false).map(AdvancementHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -94,7 +94,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @since 1.8.4
      */
     public List<AdvancementHelper> getSubAdvancements() {
-        return ((MixinAdvancementManager) base).getDependents().stream().map(AdvancementHelper::new).toList();
+        return ((MixinAdvancementManager) base).getDependents().stream().map(AdvancementHelper::new).collect(Collectors.toList());
     }
 
     /**

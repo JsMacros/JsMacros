@@ -47,15 +47,28 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.AdvancementHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.AdvancementManagerHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.AdvancementProgressHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BossBarHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ChatHudLineHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.CheckBoxWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ChunkHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ClickableWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.CyclingButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.DirectionHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EnchantmentHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.FluidStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.FoodComponentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.FormattingHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.FullOptionsHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.LockButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PlayerAbilitiesHelper;
@@ -64,27 +77,14 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.RecipeHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ScoreboardObjectiveHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ScoreboardsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ServerInfoHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.SliderWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StyleHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.SuggestionsBuilderHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TeamHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.AdvancementHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.AdvancementManagerHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.AdvancementProgressHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPosHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.FluidStateHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ClickableWidgetHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.CheckBoxWidgetHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.CyclingButtonWidgetHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.LockButtonWidgetHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.SliderWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextFieldWidgetHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.util.NameUtil;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
@@ -161,100 +161,100 @@ public class FUtil extends BaseLibrary {
     }
 
     /**
-     * @param obj the object to wrap
+     * @param raw the object to wrap
      * @return the correct instance of {@link BaseHelper} for the given object if it exists and
      *         {@code null} otherwise.
      *
      * @since 1.8.4
      */
-    public BaseHelper<?> getHelperFromRaw(Object obj) {
+    public BaseHelper<?> getHelperFromRaw(Object raw) {
         // Didn't implement CommandNodeHelper, TradeOfferHelper, ModContainerHelper
-        if (obj instanceof BossBar bossBar) {
-            return new BossBarHelper(bossBar);
-        } else if (obj instanceof ChatHudLine chatHudLine) {
-            return new ChatHudLineHelper(chatHudLine, mc.inGameHud.getChatHud());
-        } else if (obj instanceof Chunk chunk) {
-            return new ChunkHelper(chunk);
-        } else if (obj instanceof CommandContext<?> commandContext) {
-            return new CommandContextHelper(commandContext);
-        } else if (obj instanceof Direction direction) {
-            return new DirectionHelper(direction);
-        } else if (obj instanceof Enchantment enchantment) {
-            return new EnchantmentHelper(enchantment);
-        } else if (obj instanceof FoodComponent foodComponent) {
-            return new FoodComponentHelper(foodComponent);
-        } else if (obj instanceof ItemStack itemStack) {
-            return new ItemStackHelper(itemStack);
-        } else if (obj instanceof GameOptions gameOptions) {
-            return new FullOptionsHelper(gameOptions);
-        } else if (obj instanceof PacketByteBuf packetByteBuf) {
-            return new PacketByteBufferHelper(packetByteBuf);
-        } else if (obj instanceof Packet<?> packet) {
-            return new PacketByteBufferHelper(packet);
-        } else if (obj instanceof NbtElement nbtElement) {
-            return NBTElementHelper.resolve(nbtElement);
-        } else if (obj instanceof PlayerAbilities playerAbilities) {
-            return new PlayerAbilitiesHelper(playerAbilities);
-        } else if (obj instanceof PlayerListEntry playerListEntry) {
-            return new PlayerListEntryHelper(playerListEntry);
-        } else if (obj instanceof Recipe<?> recipe) {
-            return new RecipeHelper(recipe, -1);
-        } else if (obj instanceof ScoreboardObjective scoreboardObjective) {
-            return new ScoreboardObjectiveHelper(scoreboardObjective);
-        } else if (obj instanceof Scoreboard scoreboard) {
-            return new ScoreboardsHelper(scoreboard);
-        } else if (obj instanceof ServerInfo serverInfo) {
-            return new ServerInfoHelper(serverInfo);
-        } else if (obj instanceof StatHandler statHandler) {
-            return new StatsHelper(statHandler);
-        } else if (obj instanceof StatusEffectInstance statusEffectInstance) {
-            return new StatusEffectHelper(statusEffectInstance);
-        } else if (obj instanceof Style style) {
-            return new StyleHelper(style);
-        } else if (obj instanceof SuggestionsBuilder suggestionsBuilder) {
-            return new SuggestionsBuilderHelper(suggestionsBuilder);
-        } else if (obj instanceof Team team) {
-            return new TeamHelper(team);
-        } else if (obj instanceof Text text) {
-            return new TextHelper(text);
-        } else if (obj instanceof Formatting formatting) {
-            return new FormattingHelper(formatting);
+        if (raw instanceof BossBar) {
+            return new BossBarHelper((BossBar) raw);
+        } else if (raw instanceof ChatHudLine) {
+            return new ChatHudLineHelper(((ChatHudLine) raw), mc.inGameHud.getChatHud());
+        } else if (raw instanceof Chunk) {
+            return new ChunkHelper(((Chunk) raw));
+        } else if (raw instanceof CommandContext<?>) {
+            return new CommandContextHelper(((CommandContext<?>) raw));
+        } else if (raw instanceof Direction) {
+            return new DirectionHelper(((Direction) raw));
+        } else if (raw instanceof Enchantment) {
+            return new EnchantmentHelper(((Enchantment) raw));
+        } else if (raw instanceof FoodComponent) {
+            return new FoodComponentHelper(((FoodComponent) raw));
+        } else if (raw instanceof ItemStack) {
+            return new ItemStackHelper(((ItemStack) raw));
+        } else if (raw instanceof GameOptions) {
+            return new FullOptionsHelper(((GameOptions) raw));
+        } else if (raw instanceof PacketByteBuf) {
+            return new PacketByteBufferHelper(((PacketByteBuf) raw));
+        } else if (raw instanceof Packet<?>) {
+            return new PacketByteBufferHelper(((Packet<?>) raw));
+        } else if (raw instanceof NbtElement) {
+            return NBTElementHelper.resolve(((NbtElement) raw));
+        } else if (raw instanceof PlayerAbilities) {
+            return new PlayerAbilitiesHelper(((PlayerAbilities) raw));
+        } else if (raw instanceof PlayerListEntry) {
+            return new PlayerListEntryHelper(((PlayerListEntry) raw));
+        } else if (raw instanceof Recipe<?>) {
+            return new RecipeHelper(((Recipe<?>) raw), -1);
+        } else if (raw instanceof ScoreboardObjective) {
+            return new ScoreboardObjectiveHelper(((ScoreboardObjective) raw));
+        } else if (raw instanceof Scoreboard) {
+            return new ScoreboardsHelper(((Scoreboard) raw));
+        } else if (raw instanceof ServerInfo) {
+            return new ServerInfoHelper(((ServerInfo) raw));
+        } else if (raw instanceof StatHandler) {
+            return new StatsHelper(((StatHandler) raw));
+        } else if (raw instanceof StatusEffectInstance) {
+            return new StatusEffectHelper(((StatusEffectInstance) raw));
+        } else if (raw instanceof Style) {
+            return new StyleHelper(((Style) raw));
+        } else if (raw instanceof SuggestionsBuilder) {
+            return new SuggestionsBuilderHelper(((SuggestionsBuilder) raw));
+        } else if (raw instanceof Team) {
+            return new TeamHelper(((Team) raw));
+        } else if (raw instanceof Text) {
+            return new TextHelper(((Text) raw));
+        } else if (raw instanceof Formatting) {
+            return new FormattingHelper(((Formatting) raw));
         }
 
-        if (obj instanceof Entity entity) {
-            return EntityHelper.create(entity);
+        if (raw instanceof Entity) {
+            return EntityHelper.create(((Entity) raw));
         }
 
-        if (obj instanceof Advancement advancement) {
-            return new AdvancementHelper(advancement);
-        } else if (obj instanceof AdvancementManager advancementManager) {
-            return new AdvancementManagerHelper(advancementManager);
-        } else if (obj instanceof AdvancementProgress advancementProgress) {
-            return new AdvancementProgressHelper(advancementProgress);
+        if (raw instanceof Advancement) {
+            return new AdvancementHelper(((Advancement) raw));
+        } else if (raw instanceof AdvancementManager) {
+            return new AdvancementManagerHelper(((AdvancementManager) raw));
+        } else if (raw instanceof AdvancementProgress) {
+            return new AdvancementProgressHelper(((AdvancementProgress) raw));
         }
 
-        if (obj instanceof Block block) {
-            return new BlockHelper(block);
-        } else if (obj instanceof BlockPos blockPos) {
-            return new BlockPosHelper(blockPos);
-        } else if (obj instanceof BlockState blockState) {
-            return new BlockStateHelper(blockState);
-        } else if (obj instanceof FluidState fluidState) {
-            return new FluidStateHelper(fluidState);
+        if (raw instanceof Block) {
+            return new BlockHelper(((Block) raw));
+        } else if (raw instanceof BlockPos) {
+            return new BlockPosHelper(((BlockPos) raw));
+        } else if (raw instanceof BlockState) {
+            return new BlockStateHelper(((BlockState) raw));
+        } else if (raw instanceof FluidState) {
+            return new FluidStateHelper(((FluidState) raw));
         }
 
-        if (obj instanceof CheckBox checkBox) {
-            return new CheckBoxWidgetHelper(checkBox);
-        } else if (obj instanceof CyclingButtonWidget<?> cyclingButtonWidget) {
-            return new CyclingButtonWidgetHelper<>(cyclingButtonWidget);
-        } else if (obj instanceof LockButtonWidget lockButtonWidget) {
-            return new LockButtonWidgetHelper(lockButtonWidget);
-        } else if (obj instanceof Slider slider) {
-            return new SliderWidgetHelper(slider);
-        } else if (obj instanceof TextFieldWidget textFieldWidget) {
-            return new TextFieldWidgetHelper(textFieldWidget);
-        } else if (obj instanceof ClickableWidget clickableWidget) {
-            return new ClickableWidgetHelper<>(clickableWidget);
+        if (raw instanceof CheckBox) {
+            return new CheckBoxWidgetHelper(((CheckBox) raw));
+        } else if (raw instanceof CyclingButtonWidget<?>) {
+            return new CyclingButtonWidgetHelper<>(((CyclingButtonWidget<?>) raw));
+        } else if (raw instanceof LockButtonWidget) {
+            return new LockButtonWidgetHelper(((LockButtonWidget) raw));
+        } else if (raw instanceof Slider) {
+            return new SliderWidgetHelper(((Slider) raw));
+        } else if (raw instanceof TextFieldWidget) {
+            return new TextFieldWidgetHelper(((TextFieldWidget) raw));
+        } else if (raw instanceof ClickableWidget) {
+            return new ClickableWidgetHelper<>(((ClickableWidget) raw));
         }
         return null;
     }
@@ -366,15 +366,22 @@ public class FUtil extends BaseLibrary {
      * @since 1.8.4
      */
     public String hashString(String message, String algorithm) {
-        return switch (algorithm) {
-            case "sha256" -> DigestUtils.sha256Hex(message);
-            case "sha512" -> DigestUtils.sha512Hex(message);
-            case "sha1" -> DigestUtils.sha1Hex(message);
-            case "sha384" -> DigestUtils.sha384Hex(message);
-            case "md2" -> DigestUtils.md2Hex(message);
-            case "md5" -> DigestUtils.md5Hex(message);
-            default -> message;
-        };
+        switch (algorithm) {
+            case "sha256":
+                return DigestUtils.sha256Hex(message);
+            case "sha512":
+                return DigestUtils.sha512Hex(message);
+            case "sha1":
+                return DigestUtils.sha1Hex(message);
+            case "sha384":
+                return DigestUtils.sha384Hex(message);
+            case "md2":
+                return DigestUtils.md2Hex(message);
+            case "md5":
+                return DigestUtils.md5Hex(message);
+            default:
+                return message;
+        }
     }
 
     /**
