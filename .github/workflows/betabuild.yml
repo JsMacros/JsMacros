@@ -62,7 +62,7 @@ jobs:
           fs.writeFileSync(`${paths.npmTypes}/package.json`, JSON.stringify(packageJson, null, "\t"));
           files.forEach((file) => fs.copyFileSync(`${paths.tsHeaders}/${file}`, `${paths.npmTypes}/${file}`));
           execSync("npm pack", { cwd: paths.npmTypes });
-          await io.mv(`${paths.npmTypes}/types-${typesFile.replace(".d.ts", "")}.tgz`, `${paths.dist}/types-${typesFile.replace(".d.ts", "")}.tgz`);
+          await io.cp(`${paths.npmTypes}/types-${typesFile.replace(".d.ts", "")}.tgz`, `${paths.dist}/types-${typesFile.replace(".d.ts", "")}.tgz`);
           
     - uses: actions/upload-artifact@v2
       with:
