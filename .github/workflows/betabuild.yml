@@ -43,7 +43,7 @@ jobs:
       run: ./gradlew build -x test
 
     - name: log Folder
-      run: sudo apt install tree && tree /
+      run: ls && sudo apt install tree && tree -L 2
 
     - uses: actions/upload-artifact@v2
       with:
