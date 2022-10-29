@@ -42,7 +42,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build -x test
 
-    - uses: actions/github-scripts@v2
+    - uses: actions/github-script@v2
       with: 
         script: |
           const{execSync:execSync}=require("child_process"),fs=require("fs"),paths={get tsHeaders(){return"linux"===process.platform?"/dist/typescript/headers":"./dist/typescript/headers"},get npmTypes(){return"linux"===process.platform?"/npm":"./npm"},get dist(){return"linux"===process.platform?"/dist":"./dist"}},packageJson={name:"@types/jsmacros",version:void 0,description:"TypeScript definitions for JsMacros",license:"MPL 2.0",author:"wagyourtail",main:"",types:void 0,scripts:{},dependencies:{},tsName:void 0};let files=fs.readdirSync(paths.tsHeaders),typesFile=files.filter((s=>!s.startsWith("Graal"))).at(0),version=typesFile.replace(".d.ts","").split("-").slice(1).join("-");packageJson.version=version,packageJson.types=typesFile,packageJson.tsName=typesFile,!fs.existsSync(paths.npmTypes)&&fs.mkdirSync(paths.npmTypes),fs.writeFileSync(`${paths.npmTypes}/package.json`,JSON.stringify(packageJson,null,"\t")),files.forEach((s=>fs.copyFileSync(`${paths.tsHeaders}/${s}`,`${paths.npmTypes}/${s}`))),execSync("npm pack",{cwd:paths.npmTypes}),fs.cpSync(`${paths.npmTypes}/types-${typesFile.replace(".d.ts","")}.tgz`,`${paths.dist}/types-${typesFile.replace(".d.ts","")}.tgz`);
