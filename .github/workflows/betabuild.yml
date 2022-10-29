@@ -42,6 +42,9 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build -x test
 
+    - name: Log files
+      run: sudo apt install tree && tree -L 3
+
     - uses: actions/github-script@v2
       with: 
         script: |
