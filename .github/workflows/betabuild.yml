@@ -42,10 +42,8 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build -x test
 
-    - name: Log files
-      run: sudo apt install tree && tree -L 3
-
-    - uses: actions/github-script@v6
+    - name: Create NPM types
+      uses: actions/github-script@v6
       with: 
         script: |
           const { execSync } = require("child_process");
