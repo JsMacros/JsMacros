@@ -1,10 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.entity.player.ClientPlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -19,14 +19,14 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.EventEntityHealed;
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity {
 
-    @Shadow public abstract float getMaximumHealth();
+    @Shadow public abstract float getMaxHealth();
 
     @Unique
     private float lastHealth;
 
     @Inject(at = @At("RETURN"), method = "<init>")
     private void onInit(CallbackInfo ci) {
-        lastHealth = getMaximumHealth();
+        lastHealth = getMaxHealth();
     }
 
     @Inject(at = @At("HEAD"), method = "setHealth")

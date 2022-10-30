@@ -1,7 +1,6 @@
 package xyz.wagyourtail;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2IntFunction;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

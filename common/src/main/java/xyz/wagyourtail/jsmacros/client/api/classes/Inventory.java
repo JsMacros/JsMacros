@@ -1,45 +1,37 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
+import net.minecraft.class_3136;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.*;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
-import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.container.Container;
-import net.minecraft.container.CraftingContainer;
-import net.minecraft.container.Slot;
-import net.minecraft.container.SlotActionType;
-import net.minecraft.entity.passive.AbstractDonkeyEntity;
+import net.minecraft.client.util.Window;
 import net.minecraft.entity.passive.HorseBaseEntity;
+import net.minecraft.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.inventory.slot.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Recipe;
+import net.minecraft.item.itemgroup.ItemGroup;
+import net.minecraft.screen.ChestScreenHandler;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.util.ItemAction;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
-import xyz.wagyourtail.jsmacros.client.access.IRecipeBookResults;
-import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
+import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.RecipeHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
-import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Semaphore;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Wagyourtail
  * @since 1.0.8
  */
  @SuppressWarnings("unused")
-public class Inventory<T extends ContainerScreen<?>> {
+public class Inventory<T extends HandledScreen> {
     protected T inventory;
     protected Map<String, int[]> map;
     protected final ClientPlayerInteractionManager man;
@@ -51,18 +43,17 @@ public class Inventory<T extends ContainerScreen<?>> {
         Inventory<?> inv = create(mc.currentScreen);
         if (inv == null) {
             assert mc.player != null;
-            return new Inventory<>(new InventoryScreen(mc.player));
+            return new Inventory<>(new SurvivalInventoryScreen(mc.player));
         }
         return inv;
     }
 
-    public static Inventory<?> create(net.minecraft.client.gui.screen.Screen s) {
-        if (s instanceof ContainerScreen) {
-            if (s instanceof MerchantScreen) return new VillagerInventory((MerchantScreen) s);
+    public static Inventory<?> create(Screen s) {
+        if (s instanceof HandledScreen) {
+            if (s instanceof VillagerTradingScreen) return new VillagerInventory((VillagerTradingScreen) s);
             if (s instanceof EnchantingScreen) return new EnchantInventory((EnchantingScreen) s);
-            if (s instanceof LoomScreen) return new LoomInventory((LoomScreen) s);
             if (s instanceof BeaconScreen) return new BeaconInventory((BeaconScreen) s);
-            return new Inventory<>((ContainerScreen<?>) s);
+            return new Inventory<>((HandledScreen) s);
         }
         return null;
     }
@@ -72,7 +63,7 @@ public class Inventory<T extends ContainerScreen<?>> {
         this.player = mc.player;
         assert player != null;
         this.man = mc.interactionManager;
-        this.syncId = this.inventory.getContainer().syncId;
+        this.syncId = this.inventory.screenHandler.syncId;
     }
 
     /**
@@ -94,8 +85,8 @@ public class Inventory<T extends ContainerScreen<?>> {
      * @return
      */
     public Inventory<T> click(int slot, int mousebutton) {
-        SlotActionType act = mousebutton == 2 ? SlotActionType.CLONE : SlotActionType.PICKUP;
-        man.method_2906(syncId, slot, mousebutton, act, player);
+        int act = mousebutton == 2 ? 3 : 0;
+        man.method_1224(syncId, slot, mousebutton, ItemAction.PICKUP, player);
         return this;
     }
 
@@ -108,11 +99,11 @@ public class Inventory<T extends ContainerScreen<?>> {
      */
     public Inventory<T> dragClick(int[] slots, int mousebutton) {
         mousebutton = mousebutton == 0 ? 1 : 5;
-        man.method_2906(syncId, -999, mousebutton - 1, SlotActionType.QUICK_CRAFT, player); // start drag click
+        man.method_1224(syncId, -999, mousebutton - 1, ItemAction.QUICK_CRAFT, player); // start drag click
         for (int i : slots) {
-            man.method_2906(syncId, i, mousebutton, SlotActionType.QUICK_CRAFT, player);
+            man.method_1224(syncId, i, mousebutton, ItemAction.QUICK_CRAFT, player);
         }
-        man.method_2906(syncId, -999, mousebutton + 1, SlotActionType.QUICK_CRAFT, player);
+        man.method_1224(syncId, -999, mousebutton + 1, ItemAction.QUICK_CRAFT, player);
         return this;
     }
 
@@ -121,7 +112,7 @@ public class Inventory<T extends ContainerScreen<?>> {
      * @param slot
      */
     public Inventory<T> dropSlot(int slot) {
-        man.method_2906(syncId, slot, 0, SlotActionType.THROW, player);
+        man.method_1224(syncId, slot, 0, ItemAction.THROW, player);
         return this;
     }
     
@@ -140,7 +131,7 @@ public class Inventory<T extends ContainerScreen<?>> {
      * @param index
      */
     public void setSelectedHotbarSlotIndex(int index) {
-        if (PlayerInventory.isValidHotbarIndex(index))
+        if (index >= 0 && index < PlayerInventory.getHotbarSize())
             player.inventory.selectedSlot = index;
     }
 
@@ -151,8 +142,8 @@ public class Inventory<T extends ContainerScreen<?>> {
      */
     public Inventory<T> closeAndDrop() {
         ItemStack held = player.inventory.getCursorStack();
-        if (!held.isEmpty()) man.method_2906(syncId, -999, 0, SlotActionType.PICKUP, player);
-        mc.execute(player::closeContainer);
+        if (!held.isEmpty()) man.method_1224(syncId, -999, 0, ItemAction.PICKUP, player);
+        mc.execute(player::closeHandledScreen);
         this.inventory = null;
         return this;
     }
@@ -161,7 +152,7 @@ public class Inventory<T extends ContainerScreen<?>> {
      * Closes the inventory, and open gui if applicable.
      */
     public void close() {
-        mc.execute(player::closeContainer);
+        mc.execute(player::closeHandledScreen);
     }
 
     /**
@@ -172,7 +163,7 @@ public class Inventory<T extends ContainerScreen<?>> {
      * @return
      */
     public Inventory<T> quick(int slot) {
-        man.method_2906(syncId, slot, 0, SlotActionType.QUICK_MOVE, player);
+        man.method_1224(syncId, slot, 0, ItemAction.QUICK_MOVE, player);
         return this;
     }
 
@@ -194,16 +185,16 @@ public class Inventory<T extends ContainerScreen<?>> {
      */
     public int quickAll(int slot, int button) {
         int count = 0;
-        ItemStack cursorStack = inventory.getContainer().slots.get(slot).getStack().copy();
-        net.minecraft.inventory.Inventory hoverSlotInv = inventory.getContainer().slots.get(slot).inventory;
-        for(Slot slot2 : inventory.getContainer().slots) {
+        ItemStack cursorStack = inventory.screenHandler.slots.get(slot).getStack().copy();
+        net.minecraft.inventory.Inventory hoverSlotInv = inventory.screenHandler.slots.get(slot).inventory;
+        for(Slot slot2 : inventory.screenHandler.slots) {
             if (slot2 != null
                 && slot2.canTakeItems(mc.player)
                 && slot2.hasStack()
                 && slot2.inventory == hoverSlotInv
-                && Container.canInsertItemIntoSlot(slot2, cursorStack, true)) {
+                && ScreenHandler.canInsertItemIntoSlot(slot2, cursorStack, true)) {
                 count += slot2.getStack().getCount();
-                man.method_2906(syncId, slot2.id, button, SlotActionType.QUICK_MOVE, player);
+                man.method_1224(syncId, slot2.id, button, ItemAction.QUICK_MOVE, player);
             }
         }
         return count;
@@ -222,14 +213,14 @@ public class Inventory<T extends ContainerScreen<?>> {
      * @return the item in the slot.
      */
     public ItemStackHelper getSlot(int slot) {
-        return new ItemStackHelper(this.inventory.getContainer().getSlot(slot).getStack());
+        return new ItemStackHelper(this.inventory.screenHandler.getSlot(slot).getStack());
     }
 
     /**
      * @return the size of the container/inventory.
      */
     public int getTotalSlots() {
-        return this.inventory.getContainer().slots.size();
+        return this.inventory.screenHandler.slots.size();
     }
 
     /**
@@ -243,8 +234,8 @@ public class Inventory<T extends ContainerScreen<?>> {
     public Inventory<T> split(int slot1, int slot2) throws Exception {
         if (slot1 == slot2) throw new Exception("must be 2 different slots.");
         if (!getSlot(slot1).isEmpty() || !getSlot(slot2).isEmpty()) throw new Exception("slots must be empty.");
-        man.method_2906(syncId, slot1, 1, SlotActionType.PICKUP, player);
-        man.method_2906(syncId, slot2, 0, SlotActionType.PICKUP, player);
+        man.method_1224(syncId, slot1, 1, ItemAction.PICKUP, player);
+        man.method_1224(syncId, slot2, 0, ItemAction.PICKUP, player);
         return this;
     }
 
@@ -255,8 +246,8 @@ public class Inventory<T extends ContainerScreen<?>> {
      * @return
      */
     public Inventory<T> grabAll(int slot) {
-        man.method_2906(syncId, slot, 0, SlotActionType.PICKUP, player);
-        man.method_2906(syncId, slot, 0, SlotActionType.PICKUP_ALL, player);
+        man.method_1224(syncId, slot, 0, ItemAction.PICKUP, player);
+        man.method_1224(syncId, slot, 0, ItemAction.PICKUP_ALL, player);
         return this;
     }
 
@@ -271,9 +262,9 @@ public class Inventory<T extends ContainerScreen<?>> {
         boolean is1 = getSlot(slot1).isEmpty();
         boolean is2 = getSlot(slot2).isEmpty();
         if (is1 && is2) return this;
-        if (!is1) man.method_2906(syncId, slot1, 0, SlotActionType.PICKUP, player);
-        man.method_2906(syncId, slot2, 0, SlotActionType.PICKUP, player);
-        if (!is2) man.method_2906(syncId, slot1, 0, SlotActionType.PICKUP, player);
+        if (!is1) man.method_1224(syncId, slot1, 0, ItemAction.PICKUP, player);
+        man.method_1224(syncId, slot2, 0, ItemAction.PICKUP, player);
+        if (!is2) man.method_1224(syncId, slot1, 0, ItemAction.PICKUP, player);
         return this;
     }
 
@@ -290,7 +281,7 @@ public class Inventory<T extends ContainerScreen<?>> {
             if (hotbarSlot < 0 || hotbarSlot > 8)
                 throw new IllegalArgumentException("hotbarSlot must be between 0 and 8 or 40 for offhand.");
         }
-        man.method_2906(syncId, slot, hotbarSlot, SlotActionType.SWAP, player);
+        man.method_1224(syncId, slot, hotbarSlot, ItemAction.SWAP, player);
         return this;
     }
     
@@ -309,12 +300,13 @@ public class Inventory<T extends ContainerScreen<?>> {
      */
     public int getSlotUnderMouse() {
         MinecraftClient mc = MinecraftClient.getInstance();
-        double x = mc.mouse.getX() * (double)mc.window.getScaledWidth() / (double)mc.window.getWidth();
-        double y = mc.mouse.getY() * (double)mc.window.getScaledHeight() / (double)mc.window.getHeight();
+        Window window = new Window(mc);
+        double x = mc.mouse.x * (double)window.getScaledWidth() / (double)window.getWidth();
+        double y = mc.mouse.y * (double)window.getScaledHeight() / (double)window.getHeight();
         if (this.inventory != mc.currentScreen) throw new RuntimeException("Inventory screen is not open.");
-        Slot s = ((IInventory)this.inventory).jsmacros_getSlotUnder(x, y);
+        Slot s = ((IInventory)this.inventory).jsmacros_getSlotUnder((int) x, (int) y);
         if (s == null) return -999;
-        return this.inventory.getContainer().slots.indexOf(s);
+        return this.inventory.screenHandler.slots.indexOf(s);
     }
     
     /**
@@ -363,65 +355,13 @@ public class Inventory<T extends ContainerScreen<?>> {
      * @return all craftable recipes
      */
     public List<RecipeHelper> getCraftableRecipes() throws InterruptedException {
-        Stream<Recipe<?>> recipes;
-        RecipeBookResults res;
-        IRecipeBookWidget recipeBookWidget;
-        if (inventory instanceof CraftingTableScreen) {
-            recipeBookWidget = (IRecipeBookWidget) ((CraftingTableScreen)inventory).getRecipeBookWidget();
-        } else if (inventory instanceof InventoryScreen) {
-            recipeBookWidget = (IRecipeBookWidget) ((InventoryScreen)inventory).getRecipeBookWidget();
-        } else if (inventory instanceof AbstractFurnaceScreen) {
-            recipeBookWidget = (IRecipeBookWidget) ((AbstractFurnaceScreen<?>)inventory).getRecipeBookWidget();
-        } else {
-            return null;
-        }
-        if (Core.getInstance().profile.checkJoinedThreadStack()) {
-            if (mc.currentScreen != inventory) {
-                ((RecipeBookWidget)recipeBookWidget).initialize(0, 0, mc, true, (CraftingContainer<?>) inventory.getContainer());
-            }
-            if (!((RecipeBookWidget) recipeBookWidget).isOpen()) {
-                ((RecipeBookWidget) recipeBookWidget).reset(true);
-            }
-            try {
-                recipeBookWidget.jsmacros_refreshResultList();
-            } catch (Throwable t) {
-                t.printStackTrace();
-                throw new RuntimeException("refreshing the recipe list threw an error", t);
-            }
-        } else {
-            Semaphore lock = new Semaphore(0);
-            Throwable[] t = new Throwable[1];
-            mc.execute(() -> {
-                try {
-                    if (mc.currentScreen != inventory) {
-                        ((RecipeBookWidget) recipeBookWidget).initialize(0, 0, mc, true, (CraftingContainer<?>) inventory.getContainer());
-                    }
-                    if (!((RecipeBookWidget) recipeBookWidget).isOpen()) {
-                        ((RecipeBookWidget) recipeBookWidget).reset(true);
-                    }
-                    recipeBookWidget.jsmacros_refreshResultList();
-                } catch (Throwable e) {
-                    t[0] = e;
-                } finally {
-                    lock.release();
-                }
-            });
-            lock.acquire();
-            if (t[0] != null) {
-                t[0].printStackTrace();
-                throw new RuntimeException("refreshing the recipe list threw an error", t[0]);
-            }
-        }
-        res = recipeBookWidget.jsmacros_getResults();
-        List<RecipeResultCollection> result = ((IRecipeBookResults) res).jsmacros_getResultCollections();
-        recipes = result.stream().flatMap(e -> e.getRecipes(true).stream());
-        return recipes.map(e -> new RecipeHelper(e, syncId)).collect(Collectors.toList());
+        throw new NullPointerException("Not implemented yet, it's theoretically possible, but no recipe book means it's harder.");
     }
     
     private Map<String, int[]> getMapInternal() {
         Map<String, int[]> map = new HashMap<>();
         int slots = getTotalSlots();
-        if (this.inventory instanceof InventoryScreen || (this.inventory instanceof CreativeInventoryScreen && ((CreativeInventoryScreen) this.inventory).method_2469() == ItemGroup.INVENTORY.getIndex())) {
+        if (this.inventory instanceof InventoryScreen || (this.inventory instanceof CreativeInventoryScreen && ((CreativeInventoryScreen) this.inventory).getSelectedTab() == ItemGroup.INVENTORY.getIndex())) {
             if (this.inventory instanceof CreativeInventoryScreen) {
                 --slots;
             }
@@ -445,11 +385,11 @@ public class Inventory<T extends ContainerScreen<?>> {
             if (inventory instanceof CreativeInventoryScreen) {
                 map.remove("main");
                 map.put("creative", JsMacros.range(slots - 9));
-            } else if (inventory instanceof GenericContainerScreen || inventory instanceof Generic3x3ContainerScreen || inventory instanceof HopperScreen || inventory instanceof ShulkerBoxScreen) {
+            } else if (inventory instanceof ChestScreen || inventory instanceof DispenserScreen || inventory instanceof HopperScreen) {
                 map.put("container", JsMacros.range(slots - 9 - 27));
             } else if (inventory instanceof BeaconScreen) {
                 map.put("slot", new int[] { slots - 9 - 27 - 1 });
-            } else if (inventory instanceof BlastFurnaceScreen || inventory instanceof FurnaceScreen || inventory instanceof SmokerScreen) {
+            } else if ( inventory instanceof FurnaceScreen) {
                 map.put("output", new int[] { slots - 9 - 27 - 1 });
                 map.put("fuel", new int[] { slots - 9 - 27 - 2 });
                 map.put("input", new int[] { slots - 9 - 27 - 3 });
@@ -463,22 +403,14 @@ public class Inventory<T extends ContainerScreen<?>> {
             } else if (inventory instanceof EnchantingScreen) {
                 map.put("lapis", new int[] { slots - 9 - 27 - 1 });
                 map.put("item", new int[] { slots - 9 - 27 - 2 });
-            } else if (inventory instanceof LoomScreen) {
-                map.put("output", new int[] { slots - 9 - 27 - 1 });
-                map.put("pattern", new int[] { slots - 9 - 27 - 2 });
-                map.put("dye", new int[] { slots - 9 - 27 - 3 });
-                map.put("banner", new int[] { slots - 9 - 27 - 4 });
-            } else if (inventory instanceof StonecutterScreen) {
-                map.put("output", new int[] { slots - 9 - 27 - 1 });
-                map.put("input", new int[] { slots - 9 - 27 - 2 });
             } else if (inventory instanceof HorseScreen) {
-                HorseBaseEntity h = (HorseBaseEntity) ((IHorseScreen)this.inventory).jsmacros_getEntity();
-                if (h.canBeSaddled()) map.put("saddle", new int[] {0});
-                if (h.canEquip()) map.put("armor", new int[] {1});
-                if (h instanceof AbstractDonkeyEntity && ((AbstractDonkeyEntity) h).hasChest()) {
+                class_3136 h = (class_3136) ((IHorseScreen)this.inventory).jsmacros_getEntity();
+                if (h.method_13990()) map.put("saddle", new int[] {0});
+                if (h.method_13984()) map.put("armor", new int[] {1});
+                if (h.method_13089()) {
                     map.put("container", JsMacros.range(2, slots - 9 - 27));
                 }
-            } else if (inventory instanceof AnvilScreen || inventory instanceof MerchantScreen || inventory instanceof GrindstoneScreen || inventory instanceof CartographyTableScreen) {
+            } else if (inventory instanceof AnvilScreen || inventory instanceof VillagerTradingScreen) {
                 map.put("output", new int[] { slots - 9 - 27 - 1 });
                 map.put("input", JsMacros.range(slots - 9 - 27 - 1));
             }
@@ -493,7 +425,7 @@ public class Inventory<T extends ContainerScreen<?>> {
      * @return
      */
     public String getContainerTitle() {
-        return this.inventory.getTitle().getString();
+        return ((ChestScreenHandler)(inventory.screenHandler)).getInventory().getName().asFormattedString();
     }
     
     public T getRawContainer() {

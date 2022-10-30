@@ -1,8 +1,8 @@
 package xyz.wagyourtail.wagyourgui.overlays;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.TextInput;
 
@@ -34,9 +34,8 @@ public class TextPrompt extends OverlayContainer {
             if (this.accept != null) this.accept.accept(ti.content);
             close();
         }));
-        
-        setFocused(ti);
-        ti.setSelected(true);
+
+        ti.selected = true;
     }
 
     @Override

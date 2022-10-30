@@ -1,5 +1,6 @@
 package xyz.wagyourtail.wagyourgui.elements;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -26,7 +27,7 @@ public class AnnotatedCheckBox extends Button {
     public void setMessage(Text message) {
         setMessageSuper(message);
         int width = this.width - height;
-        this.textLines = textRenderer.wrapStringToWidthAsList(message.asFormattedString(), width - 4).stream().map(LiteralText::new).collect(Collectors.toList());
+        this.textLines = textRenderer.wrapLines(message.asFormattedString(), width - 4).stream().map(LiteralText::new).collect(Collectors.toList());
         this.visibleLines = Math.min(Math.max((height - 2) / textRenderer.fontHeight, 1), textLines.size());
         this.verticalCenter = ((height - 4) - (visibleLines * textRenderer.fontHeight)) / 2;
     }
@@ -36,12 +37,13 @@ public class AnnotatedCheckBox extends Button {
         int width = this.width - height;
         for (int i = 0; i < visibleLines; ++i) {
             int w = textRenderer.getStringWidth(textLines.get(i).asFormattedString());
-            textRenderer.draw(textLines.get(i).asFormattedString(), horizCenter ? x + width / 2F - w / 2F : x + 1, y + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
+            textRenderer.draw(textLines.get(i).asFormattedString(),
+                horizCenter ? (int) (x + width / 2F - w / 2F) : x + 1, y + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
         }
     }
     
     @Override
-    public void render(int mouseX, int mouseY, float delta) {
+    public void method_891(MinecraftClient mc, int mouseX, int mouseY, float delta) {
         if (this.visible) {
         this.renderMessage();
         

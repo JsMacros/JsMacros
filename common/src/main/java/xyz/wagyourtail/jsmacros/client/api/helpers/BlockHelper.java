@@ -1,11 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.item.ItemStack;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +33,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public ItemStackHelper getDefaultItemStack() {
-        return new ItemStackHelper(base.asItem().getStackForRender());
+        return new ItemStackHelper(base.getItemStack(null, null, null));
     }
 
     public boolean canMobSpawnInside() {
@@ -47,7 +46,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public boolean hasDynamicBounds() {
-        return base.hasDynamicBounds();
+        return false;
     }
 
     /**
@@ -56,7 +55,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public float getBlastResistance() {
-        return base.getBlastResistance();
+        return base.getBlastResistance(null);
     }
 
     /**
@@ -74,7 +73,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public float getSlipperiness() {
-        return base.getSlipperiness();
+        return base.slipperiness;
     }
 
     /**
@@ -83,7 +82,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public float getHardness() {
-        return base.getDefaultState().getHardness(null, null);
+        return base.getStrength(base.getDefaultState(), null, null);
     }
 
     /**
@@ -101,7 +100,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public List<String> getTags() {
-        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().blocks().getTagsFor(base).stream().map(Identifier::toString).collect(Collectors.toList());
+        return new ArrayList<>();
     }
 
     /**
@@ -110,7 +109,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public List<BlockStateHelper> getStates() {
-        return base.getStateManager().getStates().stream().map(BlockStateHelper::new).collect(Collectors.toList());
+        return base.getStateManager().getBlockStates().stream().map(BlockStateHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -119,7 +118,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public String getId() {
-        return Registry.BLOCK.getId(base).toString();
+        return Block.REGISTRY.getIdentifier(base).toString();
     }
 
     @Override

@@ -3,8 +3,8 @@ package xyz.wagyourtail.jsmacros.client.gui.settings;
 import com.google.common.collect.Lists;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.*;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
@@ -31,7 +31,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
     private final SettingTree settings = new SettingTree();
     public SettingsOverlay(int x, int y, int width, int height, TextRenderer textRenderer, IOverlayParent parent) {
         super(x, y, width, height, textRenderer, parent);
-    
+
         for (Class<?> clazz : Core.getInstance().config.optionClasses.values()) {
             for (Field f : clazz.getDeclaredFields()) {
                 if (f.isAnnotationPresent(Option.class)) {
@@ -68,12 +68,12 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
             }
         }
     }
-    
+
     @Override
     public void init() {
         super.init();
         int w = width - 4;
-    
+
         this.addButton(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> this.close()));
         sections = new CategoryTreeContainer(x + 2, y + 13, w / 3, height - 17, textRenderer, this);
 
@@ -89,17 +89,17 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
         for (String[] group : settings.groups()) {
             sections.addCategory(group);
         }
-        
+
         sections.init();
     }
-    
+
     public void clearCategory() {
         if (category != null) {
             category.getButtons().forEach(this::removeButton);
             category = null;
         }
     }
-    
+
     @Override
     public void selectCategory(String[] category) {
         int w = width - 4;
@@ -132,37 +132,37 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
             openOverlay(new ConfirmOverlay(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.failedsettinggroup"), this, null));
         }
     }
-    
+
     @Override
     public void render(int mouseX, int mouseY, float delta) {
         renderBackground();
         int w = width - 4;
-        
+
         if (mouseX < x + w / 3) {
             scroll = sections.scroll;
         } else if (category != null) {
             scroll = category.scroll;
         }
-        
+
         sections.render(mouseX, mouseY, delta);
-        
+
         textRenderer.drawTrimmed(title.asFormattedString(), x + 3, y + 3, width - 14, 0xFFFFFF);
         fill(x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
-        
+
         //sep
         fill(x + w / 3, y + 13, x + w / 3 + 1, y + height, 0xFFFFFFFF);
-        
+
         if (category != null) {
             category.render(mouseX, mouseY, delta);
         }
-        
+
         super.render(mouseX, mouseY, delta);
     }
-    
+
     static class SettingTree {
         Map<String, SettingTree> children = new HashMap<>();
         List<SettingField<?>> settings = new LinkedList<>();
-        
+
         void addChild(String[] group, SettingField<?> field) {
             if (group.length > 0) {
                 String[] childGroup = new String[group.length - 1];
@@ -172,7 +172,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
                 settings.add(field);
             }
         }
-        
+
         public List<String[]> groups() {
             if (children.size() > 0) {
                 List<String[]> groups = new LinkedList<>();
@@ -189,7 +189,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
             }
             return new LinkedList<>();
         }
-        
+
         public List<SettingField<?>> getSettings(String[] group) {
             if (group.length > 0) {
                 String[] childGroup = new String[group.length - 1];
@@ -199,13 +199,13 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
             return settings;
         }
     }
-    
+
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         super.keyPressed(keyCode, scanCode, modifiers);
         return true;
     }
-    
+
     @Override
     public void onClose() {
         Core.getInstance().config.saveConfig();
@@ -213,7 +213,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
         while (!(parent instanceof BaseScreen)) parent = ((OverlayContainer)parent).parent;
         ((BaseScreen)parent).updateSettings();
     }
-    
+
     public static class SettingField<T> {
         public final Class<T> type;
         public final Option option;
@@ -221,7 +221,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
         final Field field;
         final Method getter;
         final Method setter;
-        
+
         public SettingField(Option option, Object containingClass, Field f, Method getter, Method setter, Class<T> type) {
             this.option = option;
             this.containingClass = containingClass;
@@ -230,7 +230,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
             this.setter = setter;
             this.type = type;
         }
-        
+
         public void set(T o) throws IllegalAccessException, InvocationTargetException {
             if (setter == null) {
                 field.set(containingClass, o);
@@ -238,7 +238,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
                 setter.invoke(containingClass, o);
             }
         }
-        
+
         @SuppressWarnings("unchecked")
         public T get() throws IllegalAccessException, InvocationTargetException {
             if (getter == null) {
@@ -247,11 +247,11 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
                 return (T) getter.invoke(containingClass);
             }
         }
-        
+
         public boolean hasOptions() {
             return !option.options().equals("") || type.isEnum();
         }
-        
+
         @SuppressWarnings("unchecked")
         public List<T> getOptions() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
             if (!option.options().equals(""))
@@ -260,7 +260,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
                 return Lists.newArrayList(type.getEnumConstants());
             return null;
         }
-        
+
         public boolean isSimple() {
             return !List.class.isAssignableFrom(type) && !Map.class.isAssignableFrom(type) && !type.isArray();
         }

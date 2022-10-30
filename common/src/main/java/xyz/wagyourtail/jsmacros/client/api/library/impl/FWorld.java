@@ -1,70 +1,61 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.ClientBossBar;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.class_2840;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.sound.SoundCategory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.Sound;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.*;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
-import net.minecraft.world.RayTraceContext;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
-import net.minecraft.world.dimension.DimensionType;
-import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.WorldScanner;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.WorldScannerBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinBossBarHud;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
 import java.io.IOException;
+import java.net.SocketAddress;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- *
  * Functions for getting and using world data.
- * 
  * An instance of this class is passed to scripts as the {@code World} variable.
- * 
+ *
  * @author Wagyourtail
  */
- @Library("World")
- @SuppressWarnings("unused")
+@Library("World")
+@SuppressWarnings("unused")
 public class FWorld extends BaseLibrary {
-    
+
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     /**
      * Don't modify.
@@ -82,11 +73,13 @@ public class FWorld extends BaseLibrary {
      * Don't modify.
      */
     public static double server15MAverageTPS = 20;
-    
+
     /**
      * returns whether a world is currently loaded
-     * @since 1.3.0
+     *
      * @return
+     *
+     * @since 1.3.0
      */
     public boolean isWorldLoaded() {
         return mc.world != null;
@@ -98,12 +91,12 @@ public class FWorld extends BaseLibrary {
     public List<PlayerEntityHelper<PlayerEntity>> getLoadedPlayers() {
         assert mc.world != null;
         List<PlayerEntityHelper<PlayerEntity>> players = new ArrayList<>();
-        for (AbstractClientPlayerEntity p : ImmutableList.copyOf(mc.world.getPlayers())) {
+        for (PlayerEntity p : ImmutableList.copyOf(mc.world.playerEntities)) {
             players.add(new PlayerEntityHelper<>(p));
         }
         return players;
     }
-    
+
     /**
      * @return players on the tablist.
      */
@@ -116,9 +109,8 @@ public class FWorld extends BaseLibrary {
         }
         return players;
     }
-    
+
     /**
-     * 
      * @param x
      * @param y
      * @param z
@@ -129,7 +121,9 @@ public class FWorld extends BaseLibrary {
         BlockPos bp = new BlockPos(x, y, z);
         BlockState b = mc.world.getBlockState(bp);
         BlockEntity t = mc.world.getBlockEntity(bp);
-        if (b.getBlock().equals(Blocks.VOID_AIR)) return null;
+        if (b.getBlock().equals(Blocks.AIR)) {
+            return null;
+        }
         return new BlockDataHelper(b, t, bp);
     }
 
@@ -142,8 +136,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * Usage: <br>
-     * This will return all blocks that are facing south, don't require a tool to break, 
+     * Usage: <br> This will return all blocks that are facing south, don't require a tool to break,
      * have a hardness of 10 or less and whose name contains either chest or barrel.
      * <pre>
      * World.getWorldScanner()
@@ -153,6 +146,7 @@ public class FWorld extends BaseLibrary {
      *     .andStateFilter("isToolRequired").is(false)
      *     .build()
      * </pre>
+     *
      * @return a builder to create a WorldScanner
      *
      * @since 1.6.5
@@ -169,74 +163,73 @@ public class FWorld extends BaseLibrary {
     public WorldScanner getWorldScanner(MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter) {
         return new WorldScanner(mc.world, blockFilter, stateFilter);
     }
-    
+
     /**
-     * @since 1.6.4
      * @param id
      * @param chunkrange
-     *
      * @return
+     *
+     * @since 1.6.4
      */
     public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, String id, int chunkrange) {
-        return new WorldScanner(mc.world, block -> Registry.BLOCK.getId(block.getRaw()).toString().equals(id), null).scanChunkRange(centerX, centerZ, chunkrange);
+        return new WorldScanner(mc.world, block -> Block.REGISTRY.getIdentifier(block.getRaw()).toString().equals(id), null).scanChunkRange(centerX, centerZ, chunkrange);
     }
 
     /**
-     * @since 1.6.4
      * @param id
      * @param chunkrange
-     *
      * @return
+     *
+     * @since 1.6.4
      */
     public List<PositionCommon.Pos3D> findBlocksMatching(String id, int chunkrange) {
         assert mc.player != null;
         int playerChunkX = mc.player.getBlockPos().getX() >> 4;
         int playerChunkZ = mc.player.getBlockPos().getZ() >> 4;
-        return new WorldScanner(mc.world, block -> Registry.BLOCK.getId(block.getRaw()).toString().equals(id), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
+        return new WorldScanner(mc.world, block -> Block.REGISTRY.getIdentifier(block.getRaw()).toString().equals(id), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
     }
 
-
     /**
-     * @since 1.6.4
      * @param ids
      * @param chunkrange
-     *
      * @return
+     *
+     * @since 1.6.4
      */
     public List<PositionCommon.Pos3D> findBlocksMatching(String[] ids, int chunkrange) {
         assert mc.player != null;
         int playerChunkX = (int) mc.player.x >> 4;
         int playerChunkZ = (int) mc.player.z >> 4;
         Set<String> ids2 = new HashSet<>(Arrays.asList(ids));
-        return new WorldScanner(mc.world, block -> ids2.contains(Registry.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
+        return new WorldScanner(mc.world, block -> ids2.contains(Block.REGISTRY.getIdentifier(block.getRaw()).toString()), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
     }
 
     /**
-     * @since 1.6.4
      * @param centerX
      * @param centerZ
      * @param ids
      * @param chunkrange
-     *
      * @return
+     *
+     * @since 1.6.4
      */
     public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, String[] ids, int chunkrange) {
         Set<String> ids2 = new HashSet<>(Arrays.asList(ids));
-        return new WorldScanner(mc.world, block -> ids2.contains(Registry.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(centerX, centerZ, chunkrange);
+        return new WorldScanner(mc.world, block -> ids2.contains(Block.REGISTRY.getIdentifier(block.getRaw()).toString()), null).scanChunkRange(centerX, centerZ, chunkrange);
     }
 
-
-
     /**
-     * @since 1.6.4
      * @param blockFilter
      * @param stateFilter
      * @param chunkrange
-     *
      * @return
+     *
+     * @since 1.6.4
      */
     public List<PositionCommon.Pos3D> findBlocksMatching(MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter, int chunkrange) {
-        if (blockFilter == null) throw new IllegalArgumentException("idFilter cannot be null");
+        if (blockFilter == null) {
+            throw new IllegalArgumentException("idFilter cannot be null");
+        }
         assert mc.player != null;
         int playerChunkX = mc.player.getBlockPos().getX() >> 4;
         int playerChunkZ = mc.player.getBlockPos().getZ() >> 4;
@@ -244,95 +237,39 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @since 1.6.4
      * @param chunkX
      * @param chunkZ
      * @param blockFilter
      * @param stateFilter
      * @param chunkrange
-     *
      * @return
+     *
+     * @since 1.6.4
      */
     public List<PositionCommon.Pos3D> findBlocksMatching(int chunkX, int chunkZ, MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter, int chunkrange) {
-        if (blockFilter == null) throw new IllegalArgumentException("block filter cannot be null");
+        if (blockFilter == null) {
+            throw new IllegalArgumentException("block filter cannot be null");
+        }
         return new WorldScanner(mc.world, blockFilter, stateFilter).scanChunkRange(chunkX, chunkZ, chunkrange);
     }
 
-    private List<PositionCommon.Pos3D> findBlocksMatchingInternal(int centerX, int centerZ, Function<Block, Boolean> stateFilter, Function<BlockState, Boolean> entityFilter, int chunkrange) {
-        assert mc.world != null;
-        if (chunkrange < 0) throw new IllegalArgumentException("chunkrange must be at least 0");
-
-        List<ChunkPos> chunks = new ArrayList<>();
-        for (int x = centerX - chunkrange; x <= centerX + chunkrange; x++) {
-            for (int z = centerZ - chunkrange; z <= centerZ + chunkrange; z++) {
-                if (mc.world.isChunkLoaded(x, z)) {
-                    chunks.add(new ChunkPos(x, z));
-                }
-            }
-        }
-
-        return findBlocksMatchingInternal(chunks, stateFilter, entityFilter);
-
-    }
-
-    private List<PositionCommon.Pos3D> findBlocksMatchingInternal(List<ChunkPos> pos, Function<Block, Boolean> stateFilter, Function<BlockState, Boolean> entityFilter) {
-        assert mc.world != null;
-
-        return pos.stream().flatMap(c -> {
-            if (!mc.world.isChunkLoaded(c.x, c.z)) {
-                return Stream.empty();
-            }
-            Chunk chunk = mc.world.getChunk(c.x, c.z);
-            ChunkSection[] sections = chunk.getSectionArray();
-            return IntStream.range(0, sections.length).boxed().flatMap(i -> {
-                AtomicBoolean found = new AtomicBoolean(false);
-                if (sections[i].isEmpty()) {
-                    return Stream.empty();
-                }
-                sections[i].getContainer().method_21732((s, n) -> {
-                    if (stateFilter.apply(s.getBlock())) {
-                        found.set(true);
-                    }
-                });
-                if (!found.get()) {
-                    return (Stream<PositionCommon.Pos3D>) (Stream) Stream.empty();
-                }
-                return IntStream.range(0, 4096).mapToObj(e -> {
-                    int y = e >> 8;
-                    int x = (e & 255) >> 4;
-                    int z = e & 15;
-                    BlockState state = sections[i].getBlockState(x, y, z);
-                    if (stateFilter.apply(state.getBlock())) {
-                        if (entityFilter != null) {
-                            if (entityFilter.apply(state)) {
-                                return new PositionCommon.Pos3D(c.x << 4 | x, y + (i << 4), c.z << 4 | z);
-                            }
-                        } else {
-                            return new PositionCommon.Pos3D(c.x << 4 | x, y + (i << 4), c.z << 4 | z);
-                        }
-                    }
-                    return null;
-                }).filter(Objects::nonNull);
-            });
-        }).collect(Collectors.toList());
-    }
-
     /**
-     * @since 1.2.9
      * @return a helper for the scoreboards provided to the client.
+     *
+     * @since 1.2.9
      */
     public ScoreboardsHelper getScoreboards() {
         assert mc.world != null;
         return new ScoreboardsHelper(mc.world.getScoreboard());
     }
-    
+
     /**
      * @return all entities in the render distance.
      */
     public List<EntityHelper<?>> getEntities() {
         assert mc.world != null;
         List<EntityHelper<?>> entities = new ArrayList<>();
-        for (Entity e : ImmutableList.copyOf(mc.world.getEntities())) {
+        for (Entity e : ImmutableList.copyOf(mc.world.loadedEntities)) {
             entities.add(EntityHelper.create(e));
         }
         return entities;
@@ -353,8 +290,8 @@ public class FWorld extends BaseLibrary {
      * @return
      */
     public BlockDataHelper rayTraceBlock(int x1, int y1, int z1, int x2, int y2, int z2, boolean fluid) {
-        BlockHitResult result = mc.world.rayTrace(new RayTraceContext(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2), RayTraceContext.ShapeType.COLLIDER, fluid ? RayTraceContext.FluidHandling.ANY : RayTraceContext.FluidHandling.NONE, mc.player));
-        if (result.getType() != BlockHitResult.Type.MISS) {
+        HitResult result = mc.world.rayTrace(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2), fluid);
+        if (result != null) {
             return new BlockDataHelper(mc.world.getBlockState(result.getBlockPos()), mc.world.getBlockEntity(result.getBlockPos()), result.getBlockPos());
         }
         return null;
@@ -372,290 +309,312 @@ public class FWorld extends BaseLibrary {
      * @return
      */
     public EntityHelper<?> rayTraceEntity(int x1, int y1, int z1, int x2, int y2, int z2) {
-        TargetPredicate target = new TargetPredicate();
-        target.setPredicate((e) -> e.getBoundingBox().rayTrace(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2)).isPresent());
-        List<LivingEntity> entities = (List) StreamSupport.stream(mc.world.getEntities().spliterator(), false).filter(e -> e instanceof LivingEntity).collect(Collectors.toList());
-        LivingEntity e = mc.world.getClosestEntity(entities, target, null, x1, y1, z1);
-        if (e != null) {
-            return EntityHelper.create(e);
-        }
         return null;
     }
 
     /**
      * @since 1.1.2
      * @return the current dimension.
+     *
+     * @since 1.1.2
      */
     public String getDimension() {
         assert mc.world != null;
-        return DimensionType.getId(mc.world.getDimension().getType()).toString();
+        return mc.world.getLevelProperties().getLevelName();
     }
-    
+
     /**
-     * @since 1.1.5
      * @return the current biome.
+     *
+     * @since 1.1.5
      */
     public String getBiome() {
         assert mc.world != null;
         assert mc.player != null;
-        return Registry.BIOME.getId(mc.world.getBiome(mc.player.getBlockPos())).toString();
+        return mc.world.getBiome(mc.player.getBlockPos()).getName();
     }
-    
+
     /**
-     * @since 1.1.5
      * @return the current world time.
+     *
+     * @since 1.1.5
      */
     public long getTime() {
         assert mc.world != null;
-        return mc.world.getTime();
+        return mc.world.getLastUpdateTime();
     }
-    
+
     /**
-     * This is supposed to be time of day, but it appears to be the same as {@link FWorld#getTime()} to me...
-     * @since 1.1.5
-     * 
+     * This is supposed to be time of day, but it appears to be the same as {@link FWorld#getTime()}
+     * to me...
+     *
      * @return the current world time of day.
+     *
+     * @since 1.1.5
      */
     public long getTimeOfDay() {
         assert mc.world != null;
         return mc.world.getTimeOfDay();
     }
-    
+
     /**
-     * @since 1.2.6
      * @return respawn position.
+     *
+     * @since 1.2.6
      */
     public BlockPosHelper getRespawnPos() {
         assert mc.world != null;
-        return new BlockPosHelper( mc.world.getSpawnPos());
+        return new BlockPosHelper(mc.world.getSpawnPos());
     }
-    
+
     /**
-     * @since 1.2.6
      * @return world difficulty as an {@link java.lang.Integer Integer}.
+     *
+     * @since 1.2.6
      */
     public int getDifficulty() {
         assert mc.world != null;
-        return mc.world.getDifficulty().getId();
+        return mc.world.getGlobalDifficulty().getId();
     }
-    
+
     /**
-     * @since 1.2.6
      * @return moon phase as an {@link java.lang.Integer Integer}.
-     */    
+     *
+     * @since 1.2.6
+     */
     public int getMoonPhase() {
         assert mc.world != null;
-        return mc.world.getMoonPhase();
+        return (int) (mc.world.getMoonPhase() * 4);
     }
-    
+
     /**
-     * @since 1.1.2
      * @param x
      * @param y
      * @param z
      * @return sky light as an {@link java.lang.Integer Integer}.
+     *
+     * @since 1.1.2
      */
     public int getSkyLight(int x, int y, int z) {
         assert mc.world != null;
-        return mc.world.getLightLevel(LightType.SKY, new BlockPos(x, y, z));
+        return mc.world.getLightAtPos(LightType.SKY, new BlockPos(x, y, z));
     }
-    
+
     /**
-     * @since 1.1.2
      * @param x
      * @param y
      * @param z
      * @return block light as an {@link java.lang.Integer Integer}.
+     *
+     * @since 1.1.2
      */
     public int getBlockLight(int x, int y, int z) {
         assert mc.world != null;
-        return mc.world.getLightLevel(LightType.BLOCK, new BlockPos(x, y, z));
+        return mc.world.getLightAtPos(LightType.BLOCK, new BlockPos(x, y, z));
     }
-    
+
     /**
      * plays a sound file using javax's sound stuff.
-     * @since 1.1.7
-     * 
+     *
      * @param file
      * @param volume
      * @return
+     *
      * @throws LineUnavailableException
      * @throws IOException
      * @throws UnsupportedAudioFileException
+     * @since 1.1.7
      */
     public Clip playSoundFile(String file, double volume) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
         Clip clip = AudioSystem.getClip();
         clip.open(AudioSystem.getAudioInputStream(new File(Core.getInstance().config.macroFolder, file)));
-        FloatControl gainControl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
+        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         double min = gainControl.getMinimum();
         double range = gainControl.getMaximum() - min;
         float gain = (float) ((range * volume) + min);
         gainControl.setValue(gain);
         clip.addLineListener(event -> {
-            if(event.getType().equals(LineEvent.Type.STOP)) {
+            if (event.getType().equals(LineEvent.Type.STOP)) {
                 clip.close();
             }
         });
         clip.start();
         return clip;
     }
-    
+
     /**
-     * @since 1.1.7
-     * @see FWorld#playSound(String, double, double, double, double, double)
      * @param id
+     * @see FWorld#playSound(String, double, double, double, double, double)
+     * @since 1.1.7
      */
     public void playSound(String id) {
         playSound(id, 1F);
     }
-    
+
     /**
-     * @since 1.1.7
-     * @see FWorld#playSound(String, double, double, double, double, double)
      * @param id
      * @param volume
+     * @see FWorld#playSound(String, double, double, double, double, double)
+     * @since 1.1.7
      */
     public void playSound(String id, double volume) {
         playSound(id, volume, 0.25F);
     }
-    
+
     /**
-     * @since 1.1.7
-     * @see FWorld#playSound(String, double, double, double, double, double)
      * @param id
      * @param volume
      * @param pitch
+     * @see FWorld#playSound(String, double, double, double, double, double)
+     * @since 1.1.7
      */
     public void playSound(String id, double volume, double pitch) {
-        SoundEvent sound = Registry.SOUND_EVENT.get(new Identifier(id));
+        Identifier sound = new Identifier(id);
         assert sound != null;
-        mc.execute(() -> mc.getSoundManager().play(PositionedSoundInstance.master(sound, (float) pitch, (float) volume)));
+        assert mc.player != null;
+        double x = mc.player.x;
+        double y = mc.player.y;
+        double z = mc.player.z;
+        mc.execute(() -> mc.getSoundManager().play(new PositionedSoundInstance(Objects.requireNonNull(Sound.REGISTRY.get(sound)), SoundCategory.MASTER, (float) volume, (float) pitch, new BlockPos(x, y, z))));
     }
-    
+
     /**
      * plays a minecraft sound using the internal system.
-     * @since 1.1.7
+     *
      * @param id
      * @param volume
      * @param pitch
      * @param x
      * @param y
      * @param z
+     * @since 1.1.7
      */
     public void playSound(String id, double volume, double pitch, double x, double y, double z) {
-        assert mc.world != null;
-        SoundEvent sound = Registry.SOUND_EVENT.get(new Identifier(id));
+        Identifier sound = new Identifier(id);
         assert sound != null;
-        mc.execute(() -> mc.world.playSound(x, y, z, sound, SoundCategory.MASTER, (float) volume, (float) pitch, true));
+        mc.execute(() -> mc.getSoundManager().play(new PositionedSoundInstance(Objects.requireNonNull(Sound.REGISTRY.get(sound)), SoundCategory.MASTER, (float) volume, (float) pitch, new BlockPos(x, y, z))));
     }
-    
+
     /**
-     * @since 1.2.1
      * @return a map of boss bars by the boss bar's UUID.
+     *
+     * @since 1.2.1
      */
     public Map<String, BossBarHelper> getBossBars() {
-        assert mc.inGameHud != null;
-        Map<UUID, ClientBossBar> bars = ImmutableMap.copyOf(((IBossBarHud) mc.inGameHud.getBossBarHud()).jsmacros_GetBossBars());
-        Map<String, BossBarHelper> out = new HashMap<>();
-        for (Map.Entry<UUID, ClientBossBar> e : ImmutableList.copyOf(bars.entrySet())) {
-            out.put(e.getKey().toString(), new BossBarHelper(e.getValue()));
-        }
-        return out;
+        return  ((MixinBossBarHud) mc.inGameHud.method_12167()).getBossBars().entrySet().stream().collect(Collectors.toMap(e -> e.getKey().toString(), e -> new BossBarHelper(e.getValue())));
     }
-    
+
     /**
      * Check whether a chunk is within the render distance and loaded.
-     * @since 1.2.2
+     *
      * @param chunkX
      * @param chunkZ
      * @return
+     *
+     * @since 1.2.2
      */
     public boolean isChunkLoaded(int chunkX, int chunkZ) {
-        if (mc.world == null) return false;
-        return mc.world.getChunkManager().isChunkLoaded(chunkX, chunkZ);
+        if (mc.world == null) {
+            return false;
+        }
+        return mc.world.getChunkProvider().isChunkGenerated(chunkX, chunkZ);
     }
-    
+
     /**
-     * @since 1.2.2
      * @return the current server address as a string ({@code server.address/server.ip:port}).
+     *
+     * @since 1.2.2
      */
     public String getCurrentServerAddress() {
-        ClientPlayNetworkHandler h = mc.getNetworkHandler();
-        if (h == null) return null;
-        ClientConnection c = h.getConnection();
-        if (c == null) return null;
-        return c.getAddress().toString();
+        ClientConnection h = mc.getNetworkHandler().getClientConnection();
+        if (h == null) {
+            return null;
+        }
+        SocketAddress c = h.getAddress();
+        if (c == null) {
+            return null;
+        }
+        return c.toString();
     }
-    
+
     /**
-     * @since 1.2.2 [Citation Needed]
      * @param x
      * @param z
      * @return biome at specified location, only works if the block/chunk is loaded.
+     *
+     * @since 1.2.2 [Citation Needed]
      */
     public String getBiomeAt(int x, int z) {
         assert mc.world != null;
-        return Registry.BIOME.getId(mc.world.getBiome(new BlockPos(x, 10, z))).toString();
+        return mc.world.getBiome(new BlockPos(x, 10, z)).getName();
     }
-    
+
     /**
-     * @since 1.2.7
      * @return best attempt to measure and give the server tps with various timings.
+     *
+     * @since 1.2.7
      */
     public String getServerTPS() {
         return String.format("%.2f, 1M: %.1f, 5M: %.1f, 15M: %.1f", serverInstantTPS, server1MAverageTPS, server5MAverageTPS, server15MAverageTPS);
     }
-    
+
     /**
-     * @since 1.3.1
      * @return text helper for the top part of the tab list (above the players)
+     *
+     * @since 1.3.1
      */
     public TextHelper getTabListHeader() {
-        Text header = ((IPlayerListHud)mc.inGameHud.getPlayerListWidget()).jsmacros_getHeader();
-        if (header != null) return new TextHelper(header);
+        Text header = ((IPlayerListHud) mc.inGameHud.getPlayerListWidget()).jsmacros_getHeader();
+        if (header != null) {
+            return new TextHelper(header);
+        }
         return null;
     }
-    
+
     /**
+     * @return text helper for the bottom part of the tab list (below the players)
+     *
      * @since 1.3.1
-     * @return  text helper for the bottom part of the tab list (below the players)
      */
     public TextHelper getTabListFooter() {
-        Text footer = ((IPlayerListHud)mc.inGameHud.getPlayerListWidget()).jsmacros_getFooter();
-        if (footer != null) return new TextHelper(footer);
+        Text footer = ((IPlayerListHud) mc.inGameHud.getPlayerListWidget()).jsmacros_getFooter();
+        if (footer != null) {
+            return new TextHelper(footer);
+        }
         return null;
     }
-    
+
     /**
-     * @since 1.2.7
      * @return best attempt to measure and give the server tps.
+     *
+     * @since 1.2.7
      */
     public double getServerInstantTPS() {
         return serverInstantTPS;
     }
-    
 
     /**
-     * @since 1.2.7
      * @return best attempt to measure and give the server tps over the previous 1 minute average.
+     *
+     * @since 1.2.7
      */
     public double getServer1MAverageTPS() {
         return server1MAverageTPS;
     }
-    
 
     /**
-     * @since 1.2.7
      * @return best attempt to measure and give the server tps over the previous 5 minute average.
+     *
+     * @since 1.2.7
      */
     public double getServer5MAverageTPS() {
         return server5MAverageTPS;
     }
-    
 
     /**
-     * @since 1.2.7
      * @return best attempt to measure and give the server tps over the previous 15 minute average.
+     *
+     * @since 1.2.7
      */
     public double getServer15MAverageTPS() {
         return server15MAverageTPS;

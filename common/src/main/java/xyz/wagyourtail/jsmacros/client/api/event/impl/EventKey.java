@@ -1,11 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.InputUtil;
-import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FKeyBind;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -24,12 +20,12 @@ import java.util.Set;
 public class EventKey implements BaseEvent {
     static final MinecraftClient mc = MinecraftClient.getInstance();
     public final int action;
-    public final String key;
-    public final String mods;
+    public final int key;
+    public final int mods;
 
     private static final Set<Integer> wasNullOnDown = new HashSet<>();
 
-    public EventKey(int action, String key, String mods) {
+    public EventKey(int action, int key, int mods) {
         this.action = action;
         this.key = key;
         this.mods = mods;
@@ -38,25 +34,14 @@ public class EventKey implements BaseEvent {
     }
 
     public static boolean parse(int key, int scancode, int action, int mods) {
-        InputUtil.KeyCode keycode;
-        if (key <= 7) keycode = InputUtil.Type.MOUSE.createFromCode(key);
-        else keycode = InputUtil.Type.KEYSYM.createFromCode(key);
 
-        String keyStr = keycode.getName();
-        String modsStr = getKeyModifiers(mods);
-
-        if (keycode == InputUtil.UNKNOWN_KEYCODE) return false;
-
-        if (action == 1) FKeyBind.KeyTracker.press(keycode);
-        else FKeyBind.KeyTracker.unpress(keycode);
+        if (action == 1) FKeyBind.KeyTracker.press(key);
+        else FKeyBind.KeyTracker.unpress(key);
 
         if (mc.currentScreen != null) {
             if (action != 0 || !wasNullOnDown.contains(key)) {
                 if (Core.getInstance().config.getOptions(ClientConfigV2.class).disableKeyWhenScreenOpen) return false;
                 if (mc.currentScreen instanceof BaseScreen) return false;
-                Element focused = mc.currentScreen.getFocused();
-                if (focused instanceof TextFieldWidget) return false;
-                if (focused instanceof RecipeBookWidget && ((IRecipeBookWidget) focused).jsmacros_isSearching()) return false;
             }
         } else if (action == 1) {
             wasNullOnDown.add(key);
@@ -73,8 +58,8 @@ public class EventKey implements BaseEvent {
             else if (key == 342 || key == 346) mods -= 4;
         }
 
-        new EventKey(action, keyStr, modsStr);
-        EventJoinedKey ev = new EventJoinedKey(action, keyStr, modsStr);
+        new EventKey(action, key, mods);
+        EventJoinedKey ev = new EventJoinedKey(action, key, mods);
         return ev.cancel;
     }
 
@@ -84,57 +69,5 @@ public class EventKey implements BaseEvent {
 
     public String toString() {
         return String.format("%s:{\"key\": \"%s\"}", this.getEventName(), key);
-    }
-    
-
-    
-    /**
-     * turn an {@link java.lang.Integer Integer} for key modifiers into a Translation Key. 
-     * @param mods
-     * @return
-     */
-    public static String getKeyModifiers(int mods) {
-        String s = "";
-        if ((mods & 1) == 1) {
-            s += "key.keyboard.left.shift";
-        }
-        if ((mods & 2) == 2) {
-            if (s.length() > 0) s += "+";
-            s += "key.keyboard.left.control";
-        }
-        if ((mods & 4) == 4) {
-            if (s.length() > 0) s += "+";
-            s += "key.keyboard.left.alt";
-        }
-        return s;
-    }
-    
-    /**
-     * turn a Translation Key for modifiers into an {@link java.lang.Integer Integer}. 
-     * @param mods
-     * @return
-     */
-    public static int getModInt(String mods) {
-        int i = 0;
-        String[] modArr = mods.split("\\+");
-        for (String mod : modArr) {
-            switch (mod) {
-                case "key.keyboard.left.shift":
-                case "key.keyboard.right.shift":
-                    i |= 1;
-                    break;
-                case "key.keyboard.left.control":
-                case "key.keyboard.right.control":
-                    i |= 2;
-                    break;
-                case "key.keyboard.left.alt":
-                case "key.keyboard.right.alt":
-                    i |= 4;
-                    break;
-                default:
-            }
-        }
-        return i;
-        
     }
 }

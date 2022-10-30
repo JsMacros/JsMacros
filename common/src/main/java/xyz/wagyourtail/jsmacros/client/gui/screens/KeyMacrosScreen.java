@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.InputUtil;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventKey;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroContainer;
@@ -28,8 +27,8 @@ public class KeyMacrosScreen extends MacroScreen {
         keyScreen.setColor(0x4FFFFFFF);
 
         eventScreen.onPress = (btn) -> {
-            assert minecraft != null;
-            minecraft.openScreen(new EventMacrosScreen(this));
+            assert client != null;
+            client.openScreen(new EventMacrosScreen(this));
         };
 
         Set<IEventListener> listeners = Core.getInstance().eventRegistry.getListeners().get(EventKey.class.getAnnotation(Event.class).value());
@@ -48,27 +47,26 @@ public class KeyMacrosScreen extends MacroScreen {
 
     @Override
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
-        String translationKey = EventKey.getKeyModifiers(modifiers);
-        if (!translationKey.equals("")) translationKey += "+";
-        translationKey += InputUtil.getKeyCode(keyCode, scanCode).getName();
+        StringBuilder translationKey = new StringBuilder();
+        if (modifiers != 0) {
+            translationKey.append(modifiers).append("+");
+        }
+        translationKey.append(keyCode);
         for (MacroContainer macro : (List<MacroContainer>)(List) macros) {
-            if (!macro.onKey(translationKey)) return false;
+            if (!macro.onKey(translationKey.toString())) return false;
         }
         return super.keyReleased(keyCode, scanCode, modifiers);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        int mods = 0;
-        if (hasShiftDown()) mods += 1;
-        if (hasControlDown()) mods += 2;
-        if (hasAltDown()) mods += 4;
-        String translationKey = EventKey.getKeyModifiers(mods);
+    public void mouseReleased(int mouseX, int mouseY, int button) {
+        int mods = createModifiers();
+        String translationKey = mods > 0 ? Integer.toString(mods) : "";
         if (!translationKey.equals("")) translationKey += "+";
-        translationKey += InputUtil.Type.MOUSE.createFromCode(button).getName();
+        translationKey += (button-100);
         for (MacroContainer macro : (List<MacroContainer>)(List) macros) {
-            if (!macro.onKey(translationKey)) return false;
+            if (!macro.onKey(translationKey)) return;
         }
-        return super.mouseReleased(mouseX, mouseY, button);
+        super.mouseReleased(mouseX, mouseY, button);
     }
 }

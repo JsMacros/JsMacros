@@ -2,8 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.client.toast.SystemToast;
-import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
@@ -85,7 +83,6 @@ public class FChat extends BaseLibrary {
     }
     
     private static void logInternal(TextHelper text) {
-        MinecraftClient mc = MinecraftClient.getInstance();
         ((IChatHud)mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text.getRaw());
     }
     
@@ -220,12 +217,12 @@ public class FChat extends BaseLibrary {
      * @param desc
      */
     public void toast(Object title, Object desc) {
-        ToastManager t = mc.getToastManager();
-        if (t != null) {
-            Text titlee = (title instanceof TextHelper) ? ((TextHelper) title).getRaw() : title != null ? new LiteralText(title.toString()) : null;
-            Text descc = (desc instanceof TextHelper) ? ((TextHelper) desc).getRaw() : desc != null ? new LiteralText(desc.toString()) : null;
-            if (titlee != null) t.add(new SystemToast(null, titlee, descc));
-        }
+//        ToastManager t = mc.getToastManager();
+//        if (t != null) {
+//            Text titlee = (title instanceof TextHelper) ? ((TextHelper) title).getRaw() : title != null ? new LiteralText(title.toString()) : null;
+//            Text descc = (desc instanceof TextHelper) ? ((TextHelper) desc).getRaw() : desc != null ? new LiteralText(desc.toString()) : null;
+//            if (titlee != null) t.add(new SystemToast(null, titlee, descc));
+//        }
     }
     
     /**

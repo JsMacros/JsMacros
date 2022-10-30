@@ -2,7 +2,7 @@ package xyz.wagyourtail.wagyourgui.containers;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MultiElementContainer<T extends IContainerParent> extends DrawableHelper implements IContainerParent {
-    protected List<AbstractButtonWidget> buttons = new ArrayList<>();
+    protected List<ButtonWidget> buttons = new ArrayList<>();
     protected TextRenderer textRenderer;
     protected boolean visible = true;
     public final T parent;
@@ -38,7 +38,7 @@ public abstract class MultiElementContainer<T extends IContainerParent> extends 
     }
     
     public void setVisible(boolean visible) {
-        for (AbstractButtonWidget btn : buttons) {
+        for (ButtonWidget btn : buttons) {
             btn.visible = visible;
             btn.active = visible;
         }
@@ -46,13 +46,13 @@ public abstract class MultiElementContainer<T extends IContainerParent> extends 
     }
     
     @Override
-    public <T extends AbstractButtonWidget> T addButton(T btn) {
+    public <T extends ButtonWidget> T addButton(T btn) {
         buttons.add(btn);
         parent.addButton(btn);
         return btn;
     }
     
-    public List<AbstractButtonWidget> getButtons() {
+    public List<ButtonWidget> getButtons() {
         return buttons;
     }
     
@@ -74,7 +74,7 @@ public abstract class MultiElementContainer<T extends IContainerParent> extends 
     }
     
     @Override
-    public void removeButton(AbstractButtonWidget button) {
+    public void removeButton(ButtonWidget button) {
         this.buttons.remove(button);
         parent.removeButton(button);
     }

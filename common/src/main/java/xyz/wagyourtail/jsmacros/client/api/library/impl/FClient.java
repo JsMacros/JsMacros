@@ -1,15 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
+import net.minecraft.client.ClientException;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
-import net.minecraft.client.gui.screen.SaveLevelScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.network.ServerAddress;
-import net.minecraft.network.ServerAddress;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.world.level.storage.LevelStorage;
-import net.minecraft.world.level.storage.LevelStorageException;
 import net.minecraft.world.level.storage.LevelSummary;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ServerInfoHelper;
@@ -29,11 +26,8 @@ import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Semaphore;
 
 /**
 *
@@ -141,21 +135,21 @@ public class FClient extends PerExecLibrary {
      *
      * @param folderName
      */
-    public void loadWorld(String folderName) throws LevelStorageException {
+    public void loadWorld(String folderName) throws ClientException {
 
-        Optional<LevelSummary> o = mc.getLevelStorage().getLevelList().stream().filter(e -> e.getName().equals(folderName)).findFirst();
-        if (!o.isPresent()) throw new RuntimeException("Level Not Found!");
+        Optional<LevelSummary> o = mc.getCurrentSave().getLevelList().stream().filter(e -> e.getFileName().equals(folderName)).findFirst();
+
+        if (!o.isPresent()) {
+            throw new RuntimeException("Level Not Found!");
+        }
 
         mc.execute(() -> {
             boolean bl = mc.isInSingleplayer();
-            if (mc.world != null) mc.world.disconnect();
-            if (bl) {
-                mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
-            } else {
-                mc.disconnect();
-            }
-            mc.openScreen(new SaveLevelScreen(new TranslatableText("selectWorld.data_read")));
-            mc.startIntegratedServer(o.get().getName(), o.get().getDisplayName(), null);
+            if (mc.world != null)
+                mc.world.disconnect();
+            mc.connect(null);
+            mc.startGame(o.get().getFileName(), o.get().getDisplayName(), null);
+//            FMLClientHandler.instance().tryLoadExistingWorld(null, o.get().getFileName(), o.get().getDisplayName());
         });
     }
     
@@ -181,13 +175,9 @@ public class FClient extends PerExecLibrary {
      */
     public void connect(String ip, int port) {
         mc.execute(() -> {
-            boolean bl = mc.isInSingleplayer();
-            if (mc.world != null) mc.world.disconnect();
-            if (bl) {
-                mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
-            } else {
-                mc.disconnect();
-            }
+            if (mc.world != null)
+                mc.world.disconnect();
+            mc.connect(null);
             mc.openScreen(new ConnectScreen(null, mc, ip, port));
         });
     }
@@ -216,7 +206,7 @@ public class FClient extends PerExecLibrary {
             if (isWorld) {
                 // logic in death screen disconnect button
                 if (mc.world != null) mc.world.disconnect();
-                mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
+                mc.connect(null);
                 mc.openScreen(new TitleScreen());
             }
             try {
@@ -313,7 +303,7 @@ public class FClient extends PerExecLibrary {
             ServerInfo info = new ServerInfo("", ip, false);
             try {
                 TickBasedEvents.serverListPinger.add(info);
-                callback.accept(new ServerInfoHelper(info));
+                callback.accept(new ServerInfoHelper(info), null);
             } catch (IOException e) {
                 callback.accept(null , e);
             }
@@ -324,7 +314,7 @@ public class FClient extends PerExecLibrary {
      * @since 1.6.5
      */
     public void cancelAllPings() {
-        TickBasedEvents.serverListPinger.method_3004();
+        TickBasedEvents.serverListPinger.cancel();
     }
 
 }

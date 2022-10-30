@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings.settingfields;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class OptionsField extends AbstractSettingField<Object> {
-    
+
     public OptionsField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<Object> field) {
         super(x, y, width, textRenderer.fontHeight + 2, textRenderer, parent, field);
     }
-    
+
     @Override
     public void init() {
         super.init();
@@ -40,18 +40,18 @@ public class OptionsField extends AbstractSettingField<Object> {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public void setPos(int x, int y, int width, int height) {
         super.setPos(x, y, width, height);
-        for (AbstractButtonWidget btn : buttons) {
+        for (ButtonWidget btn : buttons) {
             btn.y = y;
         }
     }
-    
+
     @Override
     public void render(int mouseX, int mouseY, float delta) {
         textRenderer.draw(BaseScreen.trimmed(textRenderer, settingName.asFormattedString(), width / 2), x, y + 1, 0xFFFFFF);
     }
-    
+
 }

@@ -5,6 +5,7 @@ import net.minecraft.client.gui.hud.ChatHudLine;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
+
 public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
     private ChatHud hud;
 

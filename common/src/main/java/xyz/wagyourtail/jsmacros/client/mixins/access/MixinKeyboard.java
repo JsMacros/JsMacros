@@ -1,20 +1,50 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
-import net.minecraft.client.Keyboard;
-import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
+import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
 
-@Mixin(Keyboard.class)
-public class MixinKeyboard {
+@Mixin(Screen.class)
+public abstract class MixinKeyboard {
 
-    @Redirect(method = "method_1454", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;keyPressed(III)Z"))
-    private boolean onKeyPressed(Screen instance, int keyCode, int scanCode, int modifiers) {
-        ((IScreenInternal) instance).jsmacros_keyPressed(keyCode, scanCode, modifiers);
-        return instance.keyPressed(keyCode, scanCode, modifiers);
+
+    @Shadow
+    public static boolean hasShiftDown() {
+        return false;
+    }
+
+    @Shadow
+    public static boolean hasControlDown() {
+        return false;
+    }
+
+    @Shadow
+    public static boolean hasAltDown() {
+        return false;
+    }
+
+    @Unique
+    private static int createModifiers() {
+        int i = 0;
+        if (hasShiftDown())
+            i |= 1;
+        if (hasControlDown())
+            i |= 2;
+        if (hasAltDown())
+            i |= 4;
+        return i;
+    }
+
+    @Inject(method = "handleKeyboard", at = @At("HEAD"))
+    private void onKeyPressed(CallbackInfo ci) {
+        if (Keyboard.getEventKeyState())
+            ((IScreenInternal) this).jsmacros_keyPressed(Keyboard.getEventKey(), 0, createModifiers());
     }
 
 //    @Redirect(method = "method_1458", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Element;charTyped(CI)Z"))

@@ -114,7 +114,8 @@ public class Profile extends BaseProfile {
                 e = runner.wrapException(ex);
             } catch (Throwable t) {
                 t.printStackTrace();
-                mc.execute(() -> ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new TranslatableText("jsmacros.errorerror").formatted(Formatting.DARK_RED)));
+                mc.execute(() -> ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new TranslatableText("jsmacros.errorerror").setStyle(new Style().setFormatting(
+                    Formatting.DARK_RED))));
                 return;
             }
             Text text = compileError(e);
@@ -122,7 +123,8 @@ public class Profile extends BaseProfile {
                 try {
                     ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
                 } catch (Throwable t) {
-                    ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new TranslatableText("jsmacros.errorerror").formatted(Formatting.DARK_RED));
+                    ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(new TranslatableText("jsmacros.errorerror").setStyle(new Style().setFormatting(
+                        Formatting.DARK_RED)));
                     t.printStackTrace();
                 }
             });
@@ -137,12 +139,12 @@ public class Profile extends BaseProfile {
     private Text compileError(BaseWrappedException<?> ex) {
         if (ex == null) return null;
         BaseWrappedException<?> head = ex;
-        LiteralText text = new LiteralText("");
+        Text text = new LiteralText("");
         do {
             String message = head.message;
-            Text line = new LiteralText(message).formatted(Formatting.RED);
+            Text line = new LiteralText(message).setStyle(new Style().setFormatting(Formatting.RED));
             if (head.location != null) {
-                Style locationStyle = new Style().setColor(Formatting.GOLD);
+                Style locationStyle = new Style().setFormatting(Formatting.GOLD);
                 if (head.location instanceof BaseWrappedException.GuestLocation) {
                     BaseWrappedException.GuestLocation loc = (BaseWrappedException.GuestLocation) head.location;
                     if (loc.file != null) {

@@ -2,7 +2,10 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.util.Window;
+import org.lwjgl.input.Mouse;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
@@ -64,7 +67,7 @@ public class FHud extends BaseLibrary {
      * @param s
      */
     public void openScreen(IScreen s) {
-        net.minecraft.client.gui.screen.Screen screen = (net.minecraft.client.gui.screen.Screen) s;
+        Screen screen = (Screen) s;
         mc.execute(() -> {
             mc.openScreen(screen);
         });
@@ -99,7 +102,7 @@ public class FHud extends BaseLibrary {
      * @return a {@link java.lang.Boolean boolean} denoting if the currently open screen is a container. 
      */
     public boolean isContainer() {
-        return mc.currentScreen instanceof ContainerScreen;
+        return mc.currentScreen instanceof HandledScreen;
     }
     
     
@@ -232,7 +235,8 @@ public class FHud extends BaseLibrary {
      * @return the current X coordinate of the mouse
      */
     public double getMouseX() {
-        return mc.mouse.getX() * (double)mc.window.getScaledWidth() / (double)mc.window.getWidth();
+        Window res = new Window(mc);
+        return Mouse.getX() * (double)res.getScaledWidth() / (double)mc.width;
     }
     
     /**
@@ -241,6 +245,7 @@ public class FHud extends BaseLibrary {
      * @return the current Y coordinate of the mouse
      */
     public double getMouseY() {
-        return mc.mouse.getY() * (double)mc.window.getScaledHeight() / (double)mc.window.getHeight();
+        Window res = new Window(mc);
+        return Mouse.getY() * (double)res.getScaledHeight() / (double)mc.height;
     }
 }

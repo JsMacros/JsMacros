@@ -1,15 +1,17 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.nbt.*;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAbstractNbtNumber;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Set;
 import java.util.UUID;
 
+
 /**
  * @since 1.5.1
  */
-public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
+public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
 
     private NBTElementHelper(T base) {
         super(base);
@@ -50,7 +52,7 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
      * @since 1.5.1
      */
     public boolean isList() {
-        return base.getType() == 7 || base.getType() == 9 || base.getType() == 11 || base.getType() == 12;
+        return base.getType() == 7 || base.getType() == 9 || base.getType() == 11;
     }
 
 
@@ -68,7 +70,9 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
      * @since 1.5.1
      */
     public String asString() {
-        return base.asString();
+        if (base instanceof NbtString)
+            return ((NbtString)base).asString();
+        return base.toString();
     }
 
 
@@ -105,7 +109,7 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
     /**
      * @since 1.5.1
      */
-    public static NBTElementHelper<?> resolve(Tag element) {
+    public static NBTElementHelper<?> resolve(NbtElement element) {
         if (element == null) return null;
         switch (element.getType()) {
             case 0: //Tag.NULL_TYPE
@@ -116,14 +120,15 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
             case 4: //Tag.LONG_TYPE
             case 5: //Tag.FLOAT_TYPE
             case 6: //Tag.DOUBLE_TYPE
-                return new NBTNumberHelper((AbstractNumberTag) element);
+                return new NBTNumberHelper(element);
             case 7: //Tag.BYTE_ARRAY_TYPE
+                return new NBTByteArrayHelper((NbtByteArray) element);
             case 9: //Tag.LIST_TYPE
+                return new NBTTagListHelper((NbtList) element);
             case 11: //Tag.INT_ARRAY_TYPE
-            case 12: //Tag.LONG_ARRAY_TYPE
-                return new NBTListHelper((AbstractListTag<?>) element);
+                return new NBTIntArrayHelper((NbtIntArray) element);
             case 10: //NbtElement.COMPOUND_TYPE
-                return new NBTCompoundHelper((CompoundTag) element);
+                return new NBTCompoundHelper((NbtCompound) element);
             case 8: //NbtElement.STRING_TYPE
         }
         return new NBTElementHelper<>(element);
@@ -132,9 +137,9 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
     /**
      * @since 1.5.1
      */
-    public static class NBTNumberHelper extends NBTElementHelper<AbstractNumberTag> {
+    public static class NBTNumberHelper extends NBTElementHelper<NbtElement> {
 
-        private NBTNumberHelper(AbstractNumberTag base) {
+        private NBTNumberHelper(NbtElement base) {
             super(base);
         }
 
@@ -143,7 +148,7 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
          * @since 1.5.1
          */
         public long asLong() {
-            return base.getLong();
+            return ((MixinAbstractNbtNumber) base).jsmacros_getLong();
         }
 
 
@@ -151,7 +156,7 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
          * @since 1.5.1
          */
         public int asInt() {
-            return base.getInt();
+            return ((MixinAbstractNbtNumber) base).jsmacros_getInt();
         }
 
 
@@ -159,7 +164,7 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
          * @since 1.5.1
          */
         public short asShort() {
-            return base.getShort();
+            return ((MixinAbstractNbtNumber) base).jsmacros_getShort();
         }
 
 
@@ -167,7 +172,7 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
          * @since 1.5.1
          */
         public byte asByte() {
-            return base.getByte();
+            return ((MixinAbstractNbtNumber) base).jsmacros_getByte();
         }
 
 
@@ -175,7 +180,7 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
          * @since 1.5.1
          */
         public float asFloat() {
-            return base.getFloat();
+            return ((MixinAbstractNbtNumber) base).jsmacros_getFloat();
         }
 
 
@@ -183,7 +188,7 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
          * @since 1.5.1
          */
         public double asDouble() {
-            return base.getDouble();
+            return ((MixinAbstractNbtNumber) base).jsmacros_getDouble();
         }
 
 
@@ -191,16 +196,30 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
          * @since 1.5.1
          */
         public Number asNumber() {
-            return base.getNumber();
+            switch (base.getType()) {
+                case 1: //Tag.BYTE_TYPE
+                    return ((MixinAbstractNbtNumber) base).jsmacros_getByte();
+                case 2: //Tag.SHORT_TYPE
+                    return ((MixinAbstractNbtNumber) base).jsmacros_getShort();
+                case 3: //Tag.INT_TYPE
+                    return ((MixinAbstractNbtNumber) base).jsmacros_getInt();
+                case 4: //Tag.LONG_TYPE
+                    return ((MixinAbstractNbtNumber) base).jsmacros_getLong();
+                case 5: //Tag.FLOAT_TYPE
+                    return ((MixinAbstractNbtNumber) base).jsmacros_getFloat();
+                case 6: //Tag.DOUBLE_TYPE
+                    return ((MixinAbstractNbtNumber) base).jsmacros_getDouble();
+            }
+            return null;
         }
     }
 
     /**
      * @since 1.5.1
      */
-    public static class NBTListHelper extends NBTElementHelper<AbstractListTag<?>> {
+    public static abstract class NBTListHelper<T extends NbtElement> extends NBTElementHelper<T> {
 
-        private NBTListHelper(AbstractListTag<?> base) {
+        private NBTListHelper(T base) {
             super(base);
         }
 
@@ -224,16 +243,12 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
          * @since 1.5.1
          * @return
          */
-        public int length() {
-            return base.size();
-        }
+        public abstract int length();
 
         /**
          * @since 1.5.1
          */
-        public NBTElementHelper<?> get(int index) {
-            return resolve(base.get(index));
-        }
+        public abstract NBTElementHelper<?> get(int index);
 
 
         /**
@@ -245,12 +260,67 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
         }
     }
 
+    private static class NBTByteArrayHelper extends NBTListHelper<NbtByteArray> {
+
+        private NBTByteArrayHelper(NbtByteArray base) {
+            super(base);
+        }
+
+        @Override
+        public int length() {
+            return base.getArray().length;
+        }
+
+        @Override
+        public NBTElementHelper<?> get(int index) {
+            return new NBTNumberHelper(new NbtByte(base.getArray()[index]));
+        }
+
+
+    }
+
+    private static class NBTTagListHelper extends NBTListHelper<NbtList> {
+
+        private NBTTagListHelper(NbtList base) {
+            super(base);
+        }
+
+        @Override
+        public int length() {
+            return base.size();
+        }
+
+        @Override
+        public NBTElementHelper<?> get(int index) {
+            return resolve(base.get(index));
+        }
+
+    }
+
+    private static class NBTIntArrayHelper extends NBTListHelper<NbtIntArray> {
+
+        private NBTIntArrayHelper(NbtIntArray base) {
+            super(base);
+        }
+
+        @Override
+        public int length() {
+            return base.getIntArray().length;
+        }
+
+        @Override
+        public NBTElementHelper<?> get(int index) {
+            return new NBTNumberHelper(new NbtInt(base.getIntArray()[index]));
+        }
+
+    }
+
     /**
      * @since 1.5.1
      */
-    public static class NBTCompoundHelper extends NBTElementHelper<CompoundTag> {
+    public static class NBTCompoundHelper extends NBTElementHelper<NbtCompound> {
 
-        private NBTCompoundHelper(CompoundTag base) {
+        private NBTCompoundHelper(NbtCompound base) {
             super(base);
         }
 
@@ -291,7 +361,7 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
          * @since 1.5.1
          */
         public boolean has(String key) {
-            return base.contains(key);
+            return base.getKeys().contains(key);
         }
 
 
@@ -307,7 +377,7 @@ public class NBTElementHelper<T extends Tag> extends BaseHelper<T> {
          * @since 1.5.1
          */
         public String asString(String key) {
-            return base.get(key).asString();
+            return base.getString(key);
         }
 
     }

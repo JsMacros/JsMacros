@@ -24,9 +24,9 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      */
     public List<ItemStackHelper> getInput() {
         List<ItemStackHelper> items = new ArrayList<>();
-        ItemStack first = base.getAdjustedFirstBuyItem();
+        ItemStack first = base.getFirstStack();
         if (!first.isEmpty()) items.add(new ItemStackHelper(first));
-        ItemStack second = base.getSecondBuyItem();
+        ItemStack second = base.getSecondStack();
         if (second != null && !second.isEmpty()) items.add(new ItemStackHelper(second));
         return items;
     }
@@ -35,7 +35,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * @return output item that will be recieved
      */
     public ItemStackHelper getOutput() {
-        return new ItemStackHelper(base.getSellItem());
+        return new ItemStackHelper(base.getResult());
     }
     
     /**
@@ -57,7 +57,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * @return trade offer as nbt tag
      */
     public NBTElementHelper<?> getNBT() {
-        return NBTElementHelper.resolve(base.toTag());
+        return NBTElementHelper.resolve(base.toNbt());
     }
     
     /**
@@ -78,14 +78,14 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * @return experience gained for trade
      */
     public int getExperience() {
-        return base.getTraderExperience();
+        return 0;
     }
-    
+
     /**
      * @return current price adjustment, negative is discount.
      */
     public int getCurrentPriceAdjustment() {
-        return base.getAdjustedFirstBuyItem().getCount() - base.getOriginalFirstBuyItem().getCount();
+        return 0;
     }
     
     public String toString() {

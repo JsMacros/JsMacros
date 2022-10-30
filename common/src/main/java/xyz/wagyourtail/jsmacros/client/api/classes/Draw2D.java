@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.util.Window;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
@@ -22,7 +22,7 @@ import java.util.*;
  * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
  */
 @SuppressWarnings("deprecation")
-public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
+public class Draw2D implements IDraw2D<Draw2D> {
     protected final Set<RenderCommon.RenderElement> elements = new LinkedHashSet<>();
     /**
      * @since 1.0.5
@@ -38,9 +38,11 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     public MethodWrapper<String, Object, Object, ?> catchInit;
     
     protected final MinecraftClient mc;
+    protected final Window res;
     
     public Draw2D() {
         this.mc = MinecraftClient.getInstance();
+        this.res = new Window(this.mc);
     }
     
     /**
@@ -49,7 +51,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public int getWidth() {
-        return mc.window.getScaledWidth();
+        return res.getWidth();
     }
 
     /**
@@ -58,7 +60,7 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
      */
     @Override
     public int getHeight() {
-        return mc.window.getScaledHeight();
+        return res.getHeight();
     }
 
     /**

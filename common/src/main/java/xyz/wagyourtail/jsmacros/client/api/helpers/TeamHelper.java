@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.scoreboard.Team;
+import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class TeamHelper extends BaseHelper<Team> {
      * @return
      */
     public TextHelper getDisplayName() {
-        return new TextHelper(base.getDisplayName());
+        return new TextHelper(new LiteralText(base.getName()));
     }
     
     /**
@@ -45,7 +46,7 @@ public class TeamHelper extends BaseHelper<Team> {
      * @return
      */
     public int getColor() {
-        return base.getColor().getColorIndex();
+        return base.method_12130().getColorIndex();
     }
     
     /**
@@ -53,7 +54,7 @@ public class TeamHelper extends BaseHelper<Team> {
      * @return
      */
     public TextHelper getPrefix() {
-        return new TextHelper(base.getPrefix());
+        return new TextHelper(new LiteralText(base.getPrefix()));
     }
     
     /**
@@ -61,7 +62,7 @@ public class TeamHelper extends BaseHelper<Team> {
      * @return
      */
     public TextHelper getSuffix() {
-        return new TextHelper(base.getSuffix());
+        return new TextHelper(new LiteralText(base.getSuffix()));
     }
     
     /**
@@ -93,7 +94,7 @@ public class TeamHelper extends BaseHelper<Team> {
      * @return
      */
     public String nametagVisibility() {
-        return base.getNameTagVisibilityRule().toString();
+        return base.method_12129().toString();
     }
     
     /**

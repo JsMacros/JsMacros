@@ -1,7 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.potion.Potion;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -20,7 +21,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      * @return
      */
     public String getId() {
-        return Registry.STATUS_EFFECT.getId(base.getEffectType()).toString();
+        return StatusEffect.field_3164.getIdentifier(base.getStatusEffect()).toString();
     }
     
     /**

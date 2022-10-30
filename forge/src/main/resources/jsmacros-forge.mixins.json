@@ -4,7 +4,8 @@
     "mixins": [
     ],
     "client": [
-        "MixinForgeIngameGui"
+        "MixinInGameHud",
+        "MixinTextRenderer"
     ],
     "injectors": {
         "defaultRequire": 1

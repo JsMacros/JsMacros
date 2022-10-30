@@ -1,7 +1,8 @@
 package xyz.wagyourtail.wagyourgui.elements;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.AbstractPressableButtonWidget;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class Button extends AbstractPressableButtonWidget {
+public class Button extends ButtonWidget {
     protected final TextRenderer textRenderer;
     protected int color;
     protected int borderColor;
@@ -22,9 +23,9 @@ public class Button extends AbstractPressableButtonWidget {
     public Consumer<Button> onPress;
     public boolean hovering = false;
     public boolean forceHover = false;
-    
+
     public Button(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int hilightColor, int textColor, Text message, Consumer<Button> onPress) {
-        super(x, y, width, height, message.asFormattedString());
+        super(1, x, y, width, height, message.asFormattedString());
         this.textRenderer = textRenderer;
         this.color = color;
         this.borderColor = borderColor;
@@ -33,7 +34,7 @@ public class Button extends AbstractPressableButtonWidget {
         this.onPress = onPress;
         this.setMessage(message);
     }
-    
+
     public Button setPos(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
@@ -41,39 +42,40 @@ public class Button extends AbstractPressableButtonWidget {
         this.height = height;
         return this;
     }
-    
+
     public boolean cantRenderAllText() {
         return this.textLines.size() > this.visibleLines;
     }
-    
+
     protected void setMessageSuper(Text message) {
-        super.setMessage(message.asFormattedString());
+        this.message = message.asFormattedString();
     }
-    
+
     public void setMessage(Text message) {
-        super.setMessage(message.asFormattedString());
-        this.textLines = textRenderer.wrapStringToWidthAsList(message.asFormattedString(), width - 4).stream().map(LiteralText::new).collect(Collectors.toList());
+        this.message = message.asFormattedString();
+        this.textLines = textRenderer.wrapLines(message.asFormattedString(), width - 4).stream().map(
+            LiteralText::new).collect(Collectors.toList());
         this.visibleLines = Math.min(Math.max((height - 2) / textRenderer.fontHeight, 1), textLines.size());
         this.verticalCenter = ((height - 4) - (visibleLines * textRenderer.fontHeight)) / 2;
     }
-    
+
     public void setColor(int color) {
         this.color = color;
     }
-    
+
     public void setHilightColor(int color) {
         this.hilightColor = color;
     }
-    
+
     protected void renderMessage() {
         for (int i = 0; i < visibleLines; ++i) {
             int w = textRenderer.getStringWidth(textLines.get(i).asFormattedString());
-            textRenderer.draw(textLines.get(i).asFormattedString(), horizCenter ? x + width / 2F - w / 2F : x + 1, y + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
+            textRenderer.drawWithShadow(textLines.get(i).asFormattedString(), horizCenter ? (int) (x + width / 2F - w / 2F) : x + 1, y + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
         }
     }
-    
+
     @Override
-    public void render(int mouseX, int mouseY, float delta) {
+    public void method_891(MinecraftClient mc, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             // fill
             if (mouseX - x >= 0 && mouseX - x - width <= 0 && mouseY - y >= 0 && mouseY - y - height <= 0 && this.active || forceHover) {
@@ -91,18 +93,16 @@ public class Button extends AbstractPressableButtonWidget {
             this.renderMessage();
         }
     }
-    
+
+
     @Override
-    public void onClick(double mouseX, double mouseY) {
-        //super.onClick(mouseX, mouseY);
+    public void mouseReleased(int mouseX, int mouseY)
+    {
+        if(this.active && this.visible && mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height) {
+            onPress();
+        }
     }
-    
-    @Override
-    public void onRelease(double mouseX, double mouseY) {
-        super.onClick(mouseX, mouseY);
-    }
-    
-    @Override
+
     public void onPress() {
         if (onPress != null) onPress.accept(this);
     }

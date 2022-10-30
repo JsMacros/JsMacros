@@ -8,10 +8,11 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.TranslationUtil;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
-import xyz.wagyourtail.jsmacros.client.TranslationUtil;
+import xyz.wagyourtail.wagyourgui.BaseScreen;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 
@@ -65,16 +66,16 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
         }));
         if (macro.triggerType != ScriptTrigger.TriggerType.EVENT) keyStateBtn = addButton(new Button(x + w / 4 - height, y + 1, height, height - 2, textRenderer,0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText(""), (btn) -> {
             switch(macro.triggerType) {
-            default:
-            case KEY_RISING:
-                macro.triggerType = ScriptTrigger.TriggerType.KEY_FALLING;
-                break;
-            case KEY_FALLING:
-                macro.triggerType = ScriptTrigger.TriggerType.KEY_BOTH;
-                break;
-            case KEY_BOTH:
-                macro.triggerType = ScriptTrigger.TriggerType.KEY_RISING;
-                break;
+                default:
+                case KEY_RISING:
+                    macro.triggerType = ScriptTrigger.TriggerType.KEY_FALLING;
+                    break;
+                case KEY_FALLING:
+                    macro.triggerType = ScriptTrigger.TriggerType.KEY_BOTH;
+                    break;
+                case KEY_BOTH:
+                    macro.triggerType = ScriptTrigger.TriggerType.KEY_RISING;
+                    break;
             }
         }));
 
@@ -127,10 +128,18 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
     public static Text buildKeyName(String translationKeys) {
         LiteralText text = new LiteralText("");
         boolean notfirst = false;
-        for (String s : translationKeys.split("\\+")) {
-            if (notfirst) text.append("+");
-            text.append(JsMacros.getKeyText(s));
-            notfirst = true;
+        String[] s = translationKeys.split("\\+");
+        if (s.length == 1) {
+            if (s[0].equals("")) s[0] = "0";
+            s = new String[] {"0", s[0]};
+        }
+        try {
+            for (int mod : BaseScreen.unpackModifiers(Integer.parseInt(s[0]))) {
+                text.append(JsMacros.getLocalizedName(mod) + "+");
+            }
+            text.append(JsMacros.getLocalizedName(Integer.parseInt(s[1])));
+        } catch(NumberFormatException ex) {
+            text.append("NONE");
         }
         return text;
     }
@@ -151,23 +160,23 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
             fill(x + (w / 12), y + 1, x + (w / 12) + 1, y + height - 1, 0xFFFFFFFF);
             fill(x + (w / 4), y + 1, x + (w / 4) + 1, y + height - 1, 0xFFFFFFFF);
             fill(x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
-            
+
             // icon for keystate
             if (macro.triggerType != ScriptTrigger.TriggerType.EVENT) {
                 switch (macro.triggerType) {
-                default:
-                case KEY_FALLING:
-                    this.mc.getTextureManager().bindTexture(key_up_tex);
-                    break;
-                case KEY_RISING:
-                    this.mc.getTextureManager().bindTexture(key_down_tex);
-                    break;
-                case KEY_BOTH:
-                    this.mc.getTextureManager().bindTexture(key_both_tex);
-                    break;
+                    default:
+                    case KEY_FALLING:
+                        this.mc.getTextureManager().bindTexture(key_up_tex);
+                        break;
+                    case KEY_RISING:
+                        this.mc.getTextureManager().bindTexture(key_down_tex);
+                        break;
+                    case KEY_BOTH:
+                        this.mc.getTextureManager().bindTexture(key_both_tex);
+                        break;
                 }
                 GlStateManager.enableBlend();
-                blit(x + w / 4 - height + 2, y + 2, height-4, height-4, 0, 0, 32, 32, 32, 32);
+                drawTexture(x + w / 4 - height + 2, y + 2, 0, 0, 32, 32, height-4, height-4,32, 32);
                 GlStateManager.disableBlend();
             }
 
@@ -179,17 +188,17 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
 
             // overlay
             if (keyBtn.hovering && keyBtn.cantRenderAllText()) {
-                fill(mouseX-2, mouseY-textRenderer.fontHeight - 3, mouseX+textRenderer.getStringWidth(keyBtn.getMessage())+2, mouseY, 0xFF000000);
-                drawString(textRenderer, keyBtn.getMessage(), mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
+                fill(mouseX-2, mouseY-textRenderer.fontHeight - 3, mouseX+textRenderer.getStringWidth(keyBtn.message)+2, mouseY, 0xFF000000);
+                drawWithShadow(textRenderer, keyBtn.message, mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
             }
             if (fileBtn.hovering && fileBtn.cantRenderAllText()) {
-                List<String> lines = textRenderer.wrapStringToWidthAsList(fileBtn.getMessage(), this.x + this.width - mouseX);
+                List<String> lines = textRenderer.wrapLines(fileBtn.message, this.x + this.width - mouseX);
                 int top = mouseY-(textRenderer.fontHeight*lines.size())-2;
                 int width = lines.stream().map(e -> textRenderer.getStringWidth(e)).reduce(0, (e, t) -> Math.max(e, t));
                 fill(mouseX-2, top - 1, mouseX+width+2, mouseY, 0xFF000000);
                 for (int i = 0; i < lines.size(); ++i) {
                     int wi = textRenderer.getStringWidth(lines.get(i)) / 2;
-                    textRenderer.draw(lines.get(i), mouseX + width/2 - wi, top+textRenderer.fontHeight*i, 0xFFFFFF);
+                    textRenderer.drawWithShadow(lines.get(i), mouseX + width/2 - wi, top+textRenderer.fontHeight*i, 0xFFFFFF);
                 }
             }
         }

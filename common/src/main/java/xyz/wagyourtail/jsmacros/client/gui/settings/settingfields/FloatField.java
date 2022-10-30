@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings.settingfields;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
 import xyz.wagyourtail.wagyourgui.elements.TextInput;
 import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.AbstractSettingContainer;
@@ -38,7 +38,7 @@ public class FloatField extends AbstractSettingField<Float> {
     @Override
     public void setPos(int x, int y, int width, int height) {
         super.setPos(x, y, width, height);
-        for (AbstractButtonWidget btn : buttons) {
+        for (ButtonWidget btn : buttons) {
             btn.y = y;
         }
     }

@@ -1,14 +1,6 @@
 architectury {
     injectInjectables = false
-    common("fabric")
-}
-
-configurations {
-    dev
-}
-
-artifacts {
-    dev(jar)
+    common("forge")
 }
 
 
@@ -28,8 +20,7 @@ dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
-
-    modCompileOnly fabricApi.module("fabric-command-api-v1", "0.42.0+1.16")
+//    implementation 'org.spongepowered:mixin:0.7.11-SNAPSHOT'
 }
 
 publishing {

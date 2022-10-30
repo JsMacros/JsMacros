@@ -2,10 +2,10 @@ package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
-import org.apache.logging.log4j.Level;
+import org.lwjgl.input.Keyboard;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.gui.containers.RunningContextContainer;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -39,8 +39,8 @@ public class CancelScreen extends BaseScreen {
         running.clear();
         s = this.addButton(new Scrollbar(width - 12, 5, 8, height-10, 0xFFFFFFFF, 0xFF000000, 0x7FFFFFFF, 1, this::onScrollbar));
         
-        this.addButton(new Button(0, this.height - 12, this.width / 12, 12, font, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.back"), (btn) -> this.onClose()));
-        services = this.addButton(new AnnotatedCheckBox(this.width / 12 + 5, this.height - 12, 200, 12, font, 0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.showservices"), false, null));
+        this.addButton(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.back"), (btn) -> this.onClose()));
+        services = this.addButton(new AnnotatedCheckBox(this.width / 12 + 5, this.height - 12, 200, 12, textRenderer, 0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.showservices"), false, null));
     }
 
     public void addContainer(BaseScriptContext<?> t) {
@@ -56,13 +56,12 @@ public class CancelScreen extends BaseScreen {
         } else {
             JsMacros.LOGGER.warn("Closed context {} was still in list", t.getMainThread().getName());
         }
-            running.add(new RunningContextContainer(10, topScroll + running.size() * 15, width - 26, 13, font, this, t));
+            running.add(new RunningContextContainer(10, topScroll + running.size() * 15, width - 26, 13, textRenderer, this, t));
     }
 
     public void removeContainer(RunningContextContainer t) {
-        for (AbstractButtonWidget b : t.getButtons()) {
+        for (ButtonWidget b : t.getButtons()) {
             buttons.remove(b);
-            children.remove(b);
         }
         running.remove(t);
         s.setScrollPages(running.size() * 15 / (double)(height - 20));
@@ -85,7 +84,7 @@ public class CancelScreen extends BaseScreen {
     }
     
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(int mouseX, int mouseY, int amount) {
         s.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
@@ -105,15 +104,15 @@ public class CancelScreen extends BaseScreen {
             addContainer(t);
         }
         
-        for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
-            b.render(mouseX, mouseY, delta);
+        for (ButtonWidget b : ImmutableList.copyOf(this.buttons)) {
+            b.method_891(client, mouseX, mouseY, delta);
         }
     }
 
     @Override
     public void removed() {
-        assert minecraft != null;
-        minecraft.keyboard.enableRepeatEvents(false);
+        assert client != null;
+        Keyboard.enableRepeatEvents(false);
     }
 
     @Override

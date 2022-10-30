@@ -1,13 +1,13 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import com.mojang.brigadier.tree.CommandNode;
+import net.minecraft.command.Command;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
-public class CommandNodeHelper extends BaseHelper<CommandNode<?>> {
-    public final CommandNode fabric;
+public class CommandNodeHelper extends BaseHelper<Command> {
+    public boolean client;
 
-    public CommandNodeHelper(CommandNode base, CommandNode fabric) {
+    public CommandNodeHelper(Command base, boolean client) {
         super(base);
-        this.fabric = fabric;
+        this.client = client;
     }
 }

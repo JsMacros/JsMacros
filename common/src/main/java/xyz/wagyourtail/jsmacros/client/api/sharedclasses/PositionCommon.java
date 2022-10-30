@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.api.sharedclasses;
 
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -148,7 +147,7 @@ public class PositionCommon {
         public double z;
 
         public Pos3D(Vec3d vec) {
-            this(vec.getX(), vec.getY(), vec.getZ());
+            this(vec.x, vec.y, vec.z);
         }
 
         public Pos3D(double x, double y, double z) {
@@ -649,14 +648,6 @@ public class PositionCommon {
         @Override
         public String toString() {
             return String.format("%f, %f, %f -> %f, %f, %f", x1, y1, z1, x2, y2, z2);
-        }
-
-        /**
-         * @since 1.6.5
-         * @return
-         */
-        public Vector3f toMojangFloatVector() {
-            return new Vector3f((float) (x2-x1), (float) (y2-y1), (float) (z2-z1));
         }
     }
 

@@ -1,16 +1,17 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.client.network.ClientPlayerEntity;
+import com.google.common.collect.Lists;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.AbstractTraderEntity;
+import net.minecraft.entity.data.Trader;
 import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.MathHelper;
-import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
+import xyz.wagyourtail.jsmacros.client.access.IEntity;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -82,7 +83,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the current eye height offset for the entitye.
      */
     public double getEyeHeight() {
-        return base.getEyeHeight(base.getPose());
+        return base.getEyeHeight();
     }
 
     /**
@@ -113,7 +114,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the type of the entity.
      */
     public String getType() {
-        return EntityType.getId(base.getType()).toString();
+        return EntityType.getEntityName(base);
     }
     
     /**
@@ -121,7 +122,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return if the entity has the glowing effect.
      */
     public boolean isGlowing() {
-        return base.isGlowing();
+        return false;
     }
     
     /**
@@ -129,7 +130,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return if the entity is in lava.
      */
     public boolean isInLava() {
-        return base.isInLava();
+        return base.isTouchingLava();
     }
     
     /**
@@ -155,8 +156,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the entity passengers.
      */
     public List<EntityHelper<?>> getPassengers() {
-        List<EntityHelper<?>> entities = base.getPassengerList().stream().map(EntityHelper::create).collect(Collectors.toList());
-        return entities.size() == 0 ? null : entities;
+        return base.getPassengerList().stream().map(EntityHelper::create).collect(Collectors.toList());
         
     }
     
@@ -165,8 +165,8 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return
      */
     public NBTElementHelper<?> getNBT() {
-        CompoundTag nbt = new CompoundTag();
-        base.toTag(nbt);
+        NbtCompound nbt = new NbtCompound();
+        base.saveToNbt(nbt);
         return NBTElementHelper.resolve(nbt);
     }
 
@@ -178,7 +178,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         if (name == null) {
             base.setCustomName(null);
         } else {
-            base.setCustomName(name.getRaw());
+        base.setCustomName(name.getRaw().asFormattedString());
         }
     }
 
@@ -195,23 +195,22 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @param color
      */
     public void setGlowingColor(int color) {
-        ((IMixinEntity) base).jsmacros_setGlowingColor(color);
+
     }
 
     /**
      *
      */
     public void resetGlowingColor() {
-        ((IMixinEntity) base).jsmacros_resetColor();
+
     }
 
     /**
-     * warning: affected by setGlowingColor
      * @since 1.8.2
      * @return glow color
      */
     public int getGlowingColor() {
-        return ((IMixinEntity) base).jsmacros_getGlowingColor();
+        return 0xFFFFFF;
     }
 
     /**
@@ -221,7 +220,6 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return
      */
     public EntityHelper<T> setGlowing(boolean val) {
-        ((IMixinEntity) base).jsmacros_setForceGlowing(val ? 2 : 0);
         return this;
     }
 
@@ -231,7 +229,6 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return
      */
     public EntityHelper<T> resetGlowing() {
-        ((IMixinEntity) base).jsmacros_setForceGlowing(1);
         return this;
     }
     
@@ -268,7 +265,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         if (e instanceof ClientPlayerEntity) return new ClientPlayerEntityHelper<>((ClientPlayerEntity) e);
         if (e instanceof PlayerEntity) return new PlayerEntityHelper<>((PlayerEntity) e);
         if (e instanceof VillagerEntity) return new VillagerEntityHelper((VillagerEntity) e);
-        if (e instanceof AbstractTraderEntity) return new MerchantEntityHelper<>((AbstractTraderEntity) e);
+        if (e instanceof Trader && e instanceof LivingEntity) return new MerchantEntityHelper((LivingEntity) e);
         if (e instanceof LivingEntity) return new LivingEntityHelper<>((LivingEntity) e);
         if (e instanceof ItemEntity) return new ItemEntityHelper((ItemEntity) e);
         return new EntityHelper<>(e);

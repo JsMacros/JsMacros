@@ -4,7 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.LiteralText;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.input.Keyboard;
 
 import java.util.function.Consumer;
 
@@ -18,7 +18,7 @@ public class TextInput extends Button {
     protected int selEnd;
     public int selEndIndex;
     protected int arrowCursor;
-    
+
     public TextInput(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int hilightColor, int textColor, String message, Consumer<Button> onClick, Consumer<String> onChange) {
         super(x, y, width, height, textRenderer, color, borderColor, color, textColor, new LiteralText(""), onClick);
         this.selColor = hilightColor;
@@ -29,7 +29,6 @@ public class TextInput extends Button {
         this.arrowCursor = content.length();
     }
 
-    @Override
     public void setMessage(String message) {
         content = message;
     }
@@ -46,26 +45,35 @@ public class TextInput extends Button {
         else selEnd = x + 3 + textRenderer.getStringWidth(content.substring(0, endIndex));
     }
 
+    public boolean selected = false;
+
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        this.clicked(mouseX, mouseY);
-        if (this.isFocused()) {
-            int pos = textRenderer.trimToWidth(content, (int) (mouseX - x - 2)).length();
+    public boolean isMouseOver(MinecraftClient mc, int mouseX, int mouseY) {
+        if (super.isMouseOver(mc, mouseX, mouseY)) {
+            selected = true;
+            int pos = textRenderer.trimToWidth(content, mouseX - x - 2).length();
             updateSelStart(pos);
             updateSelEnd(pos);
             arrowCursor = pos;
+            return true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        selected = false;
+        return false;
+    }
+
+
+    public boolean mouseDragged(int mouseX, int mouseY, int button, int dX, int dY) {
+        if (selected) {
+            int pos = textRenderer.trimToWidth(content, mouseX - x - 2).length();
+            updateSelEnd(pos);
+            arrowCursor = pos;
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if (this.isFocused()) {
-            int pos = textRenderer.trimToWidth(content, (int) (mouseX - x - 2)).length();
-            updateSelEnd(pos);
-            arrowCursor = pos;
-        }
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    public void mouseReleased(int mouseX, int mouseY) {
     }
 
     public void swapStartEnd() {
@@ -75,79 +83,92 @@ public class TextInput extends Button {
 
     }
 
-    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         boolean ctrl;
-        if (this.isFocused()) {
+        if (selected) {
             if (selEndIndex < selStartIndex) swapStartEnd();
             MinecraftClient mc = MinecraftClient.getInstance();
             if (Screen.isSelectAll(keyCode)) {
                 this.updateSelStart(0);
                 this.updateSelEnd(content.length());
+                return true;
             } else if (Screen.isCopy(keyCode)) {
-                mc.keyboard.setClipboard(this.content.substring(selStartIndex, selEndIndex));
+                Screen.setClipboard(this.content.substring(selStartIndex, selEndIndex));
+                return true;
             } else if (Screen.isPaste(keyCode)) {
-                content = content.substring(0, selStartIndex) + mc.keyboard.getClipboard() + content.substring(selEndIndex);
+                content = content.substring(0, selStartIndex) + Screen.getClipboard() + content.substring(selEndIndex);
                 if (onChange != null) onChange.accept(content);
-                updateSelEnd(selStartIndex + mc.keyboard.getClipboard().length());
-                arrowCursor = selStartIndex + mc.keyboard.getClipboard().length();
+                updateSelEnd(selStartIndex + Screen.getClipboard().length());
+                arrowCursor = selStartIndex + Screen.getClipboard().length();
+                return true;
             } else if (Screen.isCut(keyCode)) {
-                mc.keyboard.setClipboard(this.content.substring(selStartIndex, selEndIndex));
+                Screen.setClipboard(this.content.substring(selStartIndex, selEndIndex));
                 content = content.substring(0, selStartIndex) + content.substring(selEndIndex);
                 if (onChange != null) onChange.accept(content);
                 updateSelEnd(selStartIndex);
                 arrowCursor = selStartIndex;
+                return true;
             }
             switch (keyCode) {
-            case GLFW.GLFW_KEY_BACKSPACE:
-                if (selStartIndex == selEndIndex && selStartIndex > 0) updateSelStart(selStartIndex - 1);
-                content = content.substring(0, selStartIndex) + content.substring(selEndIndex);
-                if (onChange != null) onChange.accept(content);
-                updateSelEnd(selStartIndex);
-                arrowCursor = selStartIndex;
-                break;
-            case GLFW.GLFW_KEY_DELETE:
-                if (selStartIndex == selEndIndex && selStartIndex < content.length()) updateSelEnd(selEndIndex + 1);
-                content = content.substring(0, selStartIndex) + content.substring(selEndIndex);
-                if (onChange != null) onChange.accept(content);
-                updateSelEnd(selStartIndex);
-                arrowCursor = selStartIndex;
-                break;
-            case GLFW.GLFW_KEY_HOME:
-                updateSelStart(0);
-                updateSelEnd(0);
-                break;
-            case GLFW.GLFW_KEY_END:
-                this.updateSelStart(content.length());
-                this.updateSelEnd(content.length());
-                break;
-            case GLFW.GLFW_KEY_LEFT:
-                ctrl = !Screen.hasControlDown();
-                if (arrowCursor > 0) if (arrowCursor < selEndIndex) {
-                    updateSelStart(--arrowCursor);
-                    if (ctrl) updateSelEnd(selStartIndex);
-                } else if (arrowCursor >= selEndIndex) {
-                    updateSelEnd(--arrowCursor);
-                    if (ctrl) updateSelStart(selEndIndex);
-                }
-                break;
-            case GLFW.GLFW_KEY_RIGHT:
-                ctrl = !Screen.hasControlDown();
-                if (arrowCursor < content.length()) if (arrowCursor < selEndIndex) {
-                    updateSelStart(++arrowCursor);
-                    if (ctrl) updateSelEnd(selStartIndex);
-                } else {
-                    updateSelEnd(++arrowCursor);
-                    if (ctrl) updateSelStart(selEndIndex);
-                }
-                break;
-            default:
+                case Keyboard.KEY_BACK:
+                    if (selStartIndex == selEndIndex && selStartIndex > 0) updateSelStart(selStartIndex - 1);
+                    content = content.substring(0, selStartIndex) + content.substring(selEndIndex);
+                    if (onChange != null) onChange.accept(content);
+                    updateSelEnd(selStartIndex);
+                    arrowCursor = selStartIndex;
+                    return true;
+                case Keyboard.KEY_DELETE:
+                    if (selStartIndex == selEndIndex && selStartIndex < content.length()) updateSelEnd(selEndIndex + 1);
+                    content = content.substring(0, selStartIndex) + content.substring(selEndIndex);
+                    if (onChange != null) onChange.accept(content);
+                    updateSelEnd(selStartIndex);
+                    arrowCursor = selStartIndex;
+                    return true;
+                case Keyboard.KEY_HOME:
+                    updateSelStart(0);
+                    updateSelEnd(0);
+                    return true;
+                case Keyboard.KEY_END:
+                    this.updateSelStart(content.length());
+                    this.updateSelEnd(content.length());
+                    return true;
+                case Keyboard.KEY_LEFT:
+                    ctrl = !Screen.hasControlDown();
+                    if (arrowCursor > 0) if (arrowCursor < selEndIndex) {
+                        updateSelStart(--arrowCursor);
+                        if (ctrl) updateSelEnd(selStartIndex);
+                    } else if (arrowCursor >= selEndIndex) {
+                        updateSelEnd(--arrowCursor);
+                        if (ctrl) updateSelStart(selEndIndex);
+                    }
+                    return true;
+                case Keyboard.KEY_RIGHT:
+                    ctrl = !Screen.hasControlDown();
+                    if (arrowCursor < content.length()) if (arrowCursor < selEndIndex) {
+                        updateSelStart(++arrowCursor);
+                        if (ctrl) updateSelEnd(selStartIndex);
+                    } else {
+                        updateSelEnd(++arrowCursor);
+                        if (ctrl) updateSelStart(selEndIndex);
+                    }
+                    return true;
+                case Keyboard.KEY_LCONTROL:
+                case Keyboard.KEY_RCONTROL:
+                case Keyboard.KEY_LMETA:
+                case Keyboard.KEY_RMETA:
+                case Keyboard.KEY_LMENU:
+                case Keyboard.KEY_RMENU:
+                case Keyboard.KEY_CAPITAL:
+                case Keyboard.KEY_LSHIFT:
+                case Keyboard.KEY_RSHIFT:
+                    return true;
+                default:
             }
+            return charTyped(Keyboard.getEventCharacter(), keyCode);
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return false;
     }
 
-    @Override
     public boolean charTyped(char chr, int keyCode) {
         if (selEndIndex < selStartIndex) swapStartEnd();
         String newContent = content.substring(0, selStartIndex) + chr + content.substring(selEndIndex);
@@ -162,19 +183,8 @@ public class TextInput extends Button {
     }
 
     @Override
-    public boolean clicked(double mouseX, double mouseY) {
-        boolean bl = super.clicked(mouseX, mouseY);
-        if (this.isFocused() ^ bl) this.changeFocus(true);
-        return bl;
-    }
-    
-    public void setSelected(boolean sel) {
-        this.setFocused(sel);
-    }
-
-    @Override
     protected void renderMessage() {
         fill(selStart, height > 9 ? y + 2 : y, Math.min(selEnd, x + width - 2), (height > 9 ? y + 2 : y) + textRenderer.fontHeight, selColor);
-        drawString(textRenderer, textRenderer.trimToWidth(content, width - 4), x + 2, height > 9 ? y + 2 : y, textColor);
+        drawWithShadow(textRenderer, textRenderer.trimToWidth(content, width - 4), x + 2, height > 9 ? y + 2 : y, textColor);
     }
 }

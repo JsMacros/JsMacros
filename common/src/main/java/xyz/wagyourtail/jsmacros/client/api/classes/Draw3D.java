@@ -3,8 +3,11 @@ package xyz.wagyourtail.jsmacros.client.api.classes;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.*;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
@@ -479,13 +482,14 @@ public class Draw3D {
         //setup
         GlStateManager.enableBlend();
         GlStateManager.blendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-        GlStateManager.lineWidth(2.5F);
+        GL11.glLineWidth(2.5F);
         GlStateManager.disableTexture();
 
         GlStateManager.pushMatrix();
 
-        Camera camera = mc.gameRenderer.getCamera();
-        Vec3d camPos = camera.getPos();
+        // offsetRender
+        EntityRenderDispatcher camera = mc.getEntityRenderManager();
+        PositionCommon.Pos3D camPos = new PositionCommon.Pos3D(camera.field_2105, camera.field_2106, camera.field_2107);
 
         // offsetRender
         //        matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(MathHelper.wrapDegrees(camera.getPitch())));
@@ -625,7 +629,7 @@ public class Draw3D {
             this.fill = fill;
         }
 
-        public void render(Vec3d camPos) {
+        public void render(PositionCommon.Pos3D camPos) {
             final boolean cull = !this.cull;
             int a = (color >> 24) & 0xFF;
             int r = (color >> 16) & 0xFF;
@@ -678,8 +682,8 @@ public class Draw3D {
                 GlStateManager.enableCull();
             }
 
-            GlStateManager.lineWidth(2.5F);
-            buf.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
+            GL11.glLineWidth(2.5F);
+            buf.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
             buf.vertex(x1, y1, z1).color(r, g, b, a).next();
             buf.vertex(x1, y1, z2).color(r, g, b, a).next();
@@ -801,7 +805,7 @@ public class Draw3D {
             int b = color & 0xFF;
             Tessellator tess = Tessellator.getInstance();
             BufferBuilder buf = tess.getBuffer();
-            GlStateManager.lineWidth(2.5F);
+            GL11.glLineWidth(2.5F);
             buf.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
             buf.vertex((float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
             buf.vertex((float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();

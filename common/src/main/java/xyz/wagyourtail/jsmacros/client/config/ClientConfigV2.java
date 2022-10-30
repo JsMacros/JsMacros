@@ -2,10 +2,6 @@ package xyz.wagyourtail.jsmacros.client.config;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
-import xyz.wagyourtail.jsmacros.client.access.IFontManager;
-import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.Option;
@@ -16,7 +12,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ClientConfigV2 {
     @Option(translationKey = "jsmacros.sort", group = "jsmacros.settings.gui")
@@ -37,7 +32,7 @@ public class ClientConfigV2 {
     @Option(translationKey = "jsmacros.autocomplete", group = "jsmacros.settings.editor")
     public boolean editorSuggestions = true;
     
-    @Option(translationKey = "jsmacros.font", group = "jsmacros.settings.editor", options = "getFonts")
+    @Option(translationKey = "jsmacros.font", group = "jsmacros.settings.editor")
     public String editorFont = "jsmacros:jetbrainsmono";
 
     @Option(translationKey = "jsmacros.useexternaleditor", group = "jsmacros.settings.editor")
@@ -48,10 +43,6 @@ public class ClientConfigV2 {
 
     public List<String> languages() {
         return EditorScreen.langs;
-    }
-    
-    public List<String> getFonts() {
-        return ((IFontManager)((IMinecraftClient)MinecraftClient.getInstance()).jsmacros_getFontManager()).jsmacros_getFontList().stream().map(Identifier::toString).collect(Collectors.toList());
     }
     
     public Map<String, short[]> getThemeData() {

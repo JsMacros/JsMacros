@@ -11,11 +11,11 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
  */
 @SuppressWarnings("unused")
 public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
-    
+
     public PlayerListEntryHelper(PlayerListEntry p) {
         super(p);
     }
-    
+
     /**
      * @since 1.1.9
      * @return
@@ -25,7 +25,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
         if (prof == null) return null;
         return prof.getId().toString();
     }
-    
+
     /**
      * @since 1.0.2
      * @return
@@ -49,9 +49,9 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @return null if unknown
      */
     public String getGamemode() {
-        GameMode gm = base.getGameMode();
+        GameMode gm = base.method_9679();
         if (gm == null) return null;
-        return gm.getName();
+        return gm.getGameModeName();
     }
 
     /**

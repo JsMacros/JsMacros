@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.entity.boss.BossBar;
+import net.minecraft.client.class_2840;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -8,10 +8,10 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
  * @since 1.2.1
  */
 @SuppressWarnings("unused")
-public class BossBarHelper extends BaseHelper<BossBar> {
+public class BossBarHelper extends BaseHelper<class_2840> {
 
-    public BossBarHelper(BossBar b) {
-        super(b);
+    public BossBarHelper(class_2840 bossBar) {
+        super(bossBar);
     }
     
     /**
@@ -19,7 +19,7 @@ public class BossBarHelper extends BaseHelper<BossBar> {
      * @return boss bar uuid.
      */
     public String getUUID() {
-        return base.getUuid().toString();
+        return base.method_12924().toString();
     }
     
     /**
@@ -27,7 +27,7 @@ public class BossBarHelper extends BaseHelper<BossBar> {
      * @return percent of boss bar remaining.
      */
     public float getPercent() {
-        return base.getPercent();
+        return base.method_12926();
     }
     
     /**
@@ -35,33 +35,7 @@ public class BossBarHelper extends BaseHelper<BossBar> {
      * @return boss bar color.
      */
     public String getColor() {
-        String color = null;
-        switch (base.getColor()) {
-            case BLUE:
-                color = "BLUE";
-                break;
-            case GREEN:
-                color = "GREEN";
-                break;
-            case PINK:
-                color = "PINK";
-                break;
-            case PURPLE:
-                color = "PURPLE";
-                break;
-            case RED:
-                color = "RED";
-                break;
-            case WHITE:
-                color = "WHITE";
-                break;
-            case YELLOW:
-                color = "YELLOW";
-                break;
-            default:
-                break;
-        }
-        return color;
+        return base.method_12927().name();
     }
     
     /**
@@ -69,27 +43,7 @@ public class BossBarHelper extends BaseHelper<BossBar> {
      * @return boss bar notch style.
      */
     public String getStyle() {
-        String style = null;
-        switch (base.getOverlay()) {
-        case NOTCHED_10:
-            style = "NOTCHED_10";
-            break;
-        case NOTCHED_12:
-            style = "NOTCHED_12";
-            break;
-        case NOTCHED_20:
-            style = "NOTCHED_20";
-            break;
-        case NOTCHED_6:
-            style = "NOTCHED_6";
-            break;
-        case PROGRESS:
-            style = "PROGRESS";
-            break;
-        default:
-            break;
-        }
-        return style;
+        return base.method_12928().name();
     }
     
     /**
@@ -97,10 +51,10 @@ public class BossBarHelper extends BaseHelper<BossBar> {
      * @return name of boss bar
      */
     public TextHelper getName() {
-        return new TextHelper(base.getName());
+        return new TextHelper(base.method_12925());
     }
     
     public String toString() {
-        return String.format("BossBar:{\"name:\":\"%s\", \"percent\":%f}", base.getName().getString(), base.getPercent());
+        return String.format("BossBar:{\"name:\":\"%s\", \"percent\":%f}", base.method_12925().asString(), base.method_12926());
     }
 }

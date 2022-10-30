@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
-import net.minecraft.client.gui.screen.ingame.MerchantScreen;
+import net.minecraft.client.gui.screen.ingame.VillagerTradingScreen;
 import net.minecraft.village.TradeOffer;
 import xyz.wagyourtail.jsmacros.client.access.IMerchantScreen;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TradeOfferHelper;
@@ -12,9 +12,9 @@ import java.util.List;
  * @since 1.3.1
  */
 @SuppressWarnings("unused")
-public class VillagerInventory extends Inventory<MerchantScreen> {
+public class VillagerInventory extends Inventory<VillagerTradingScreen> {
     
-    protected VillagerInventory(MerchantScreen inventory) {
+    protected VillagerInventory(VillagerTradingScreen inventory) {
         super(inventory);
     }
     
@@ -37,7 +37,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
      * @since 1.3.1
      */
     public int getExperience() {
-        return inventory.getContainer().getExperience();
+        return 0;
     }
     
     /**
@@ -45,7 +45,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
      * @since 1.3.1
      */
     public int getLevelProgress() {
-        return inventory.getContainer().getLevelProgress();
+        return 0;
     }
     
     /**
@@ -53,7 +53,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
      * @since 1.3.1
      */
     public int getMerchantRewardedExperience() {
-        return inventory.getContainer().getTraderRewardedExperience();
+        return 0;
     }
     
     /**
@@ -61,7 +61,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
      * @since 1.3.1
      */
     public boolean canRefreshTrades() {
-        return inventory.getContainer().canRefreshTrades();
+        return false;
     }
     
     /**
@@ -69,7 +69,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
      * @since 1.3.1
      */
     public boolean isLeveled() {
-        return inventory.getContainer().isLevelled();
+        return false;
     }
     
     /**
@@ -79,7 +79,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
     public List<TradeOfferHelper> getTrades() {
         List<TradeOfferHelper> offers = new LinkedList<>();
         int i = -1;
-        for (TradeOffer offer : inventory.getContainer().getRecipes()) {
+        for (TradeOffer offer : inventory.getTrader().getOffers(mc.player)) {
             offers.add(new TradeOfferHelper(offer, ++i, this));
         }
         return offers;

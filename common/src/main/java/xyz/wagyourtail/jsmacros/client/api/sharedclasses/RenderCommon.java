@@ -2,13 +2,15 @@ package xyz.wagyourtail.jsmacros.client.api.sharedclasses;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
 import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -137,7 +139,7 @@ public class RenderCommon {
          * @return
          */
         public Item setItem(String id, int count) {
-            net.minecraft.item.Item it = Registry.ITEM.get(new Identifier(id));
+            net.minecraft.item.Item it = net.minecraft.item.Item.REGISTRY.get(new Identifier(id));
             this.item = new ItemStack(it, count);
             return this;
         }
@@ -159,7 +161,7 @@ public class RenderCommon {
             GlStateManager.translated(-x, -y, 0);
             if (item != null) {
                 ItemRenderer i = mc.getItemRenderer();
-                i.renderGuiItemIcon(item,(int) (x / scale), (int) (y / scale));
+                i.method_12455(item,(int) (x / scale), (int) (y / scale));
                 if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, (int) (x / scale), (int) (y / scale), ovText);
             }
             GlStateManager.popMatrix();
@@ -176,7 +178,7 @@ public class RenderCommon {
             if (item != null) {
                 ItemRenderer i = mc.getItemRenderer();
                 i.zOffset = -100f;
-                i.renderGuiItemIcon(item,(int) (x / scale), (int) (y / scale));
+                i.method_12455(item,(int) (x / scale), (int) (y / scale));
                 i.zOffset = -200f;
                 if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, (int) (x / scale), (int) (y / scale), ovText);
                 i.zOffset = 0;

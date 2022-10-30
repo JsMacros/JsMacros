@@ -6,7 +6,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 public class EventJoinedKey extends EventKey {
     public boolean cancel;
 
-    public EventJoinedKey(int action, String key, String mods) {
+    public EventJoinedKey(int action, int key, int mods) {
         super(action, key, mods);
     }
 

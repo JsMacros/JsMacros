@@ -17,7 +17,7 @@ public class MixinSignEditScreen implements ISignEditScreen {
     
     @Override
     public void jsmacros_setLine(int line, String text) {
-        this.sign.setTextOnRow(line, new LiteralText(text));
+        this.sign.text[line] =  new LiteralText(text);
     }
     
 }

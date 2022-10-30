@@ -29,7 +29,7 @@ public class ConfirmOverlay extends OverlayContainer {
     }
     
     public void setMessage(Text message) {
-        this.text = textRenderer.wrapStringToWidthAsList(message.asFormattedString(), width - 6).stream().map(LiteralText::new).collect(Collectors.toList());
+        this.text = textRenderer.wrapLines(message.asFormattedString(), width - 6).stream().map(LiteralText::new).collect(Collectors.toList());
         this.lines = Math.min(Math.max((height - 15) / textRenderer.fontHeight, 1), text.size());
         this.vcenter = ((height - 15) - (lines * textRenderer.fontHeight)) / 2;
     }
@@ -53,7 +53,7 @@ public class ConfirmOverlay extends OverlayContainer {
         for (int i = 0; i < lines; ++i) {
             int w = textRenderer.getStringWidth(text.get(i).asFormattedString());
             float centeredX = hcenter ? x + width / 2F - w / 2F : x + 3;
-            textRenderer.draw(text.get(i).asFormattedString(), centeredX, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF);
+            textRenderer.draw(text.get(i).asFormattedString(), (int) centeredX, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF);
         }
     }
     

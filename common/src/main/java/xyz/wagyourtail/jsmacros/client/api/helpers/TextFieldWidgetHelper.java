@@ -2,7 +2,11 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import xyz.wagyourtail.jsmacros.client.access.IGuiTextField;
+import xyz.wagyourtail.jsmacros.client.access.ITextFieldWidget;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.RenderCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.concurrent.Semaphore;
 
@@ -11,15 +15,95 @@ import java.util.concurrent.Semaphore;
  * @since 1.0.5
  */
 @SuppressWarnings("unused")
-public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
+public class TextFieldWidgetHelper extends BaseHelper<TextFieldWidget> implements RenderCommon.RenderElement {
+    public int zIndex;
+
     public TextFieldWidgetHelper(TextFieldWidget t) {
         super(t);
+        zIndex = 0;
     }
-    
+
     public TextFieldWidgetHelper(TextFieldWidget t, int zIndex) {
-        super(t, zIndex);
+        super(t);
+        zIndex = zIndex;
     }
-    
+
+    /**
+     * @since 1.0.5
+     * @return the {@code x} coordinate of the button.
+     */
+    public int getX() {
+        return base.x;
+    }
+
+    /**
+     * @since 1.0.5
+     * @return the {@code y} coordinate of the button.
+     */
+    public int getY() {
+        return base.y;
+    }
+
+    /**
+     * Set the button position.
+     *
+     * @since 1.0.5
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    public TextFieldWidgetHelper setPos(int x, int y) {
+        base.x = x;
+        base.y = y;
+        return this;
+    }
+
+    /**
+     * @since 1.0.5
+     *
+     * @return
+     */
+    public int getWidth() {
+        return base.getInnerWidth();
+    }
+
+    /**
+     * @since 1.0.5
+     *
+     * @return button clickable state.
+     */
+    public boolean getActive() {
+        return ((IGuiTextField)base).isEnabled();
+    }
+
+    /**
+     * set the button clickable state.
+     *
+     * @since 1.0.5
+     *
+     * @param t
+     * @return
+     */
+    public TextFieldWidgetHelper setActive(boolean t) {
+        base.setEditable(t);
+        return this;
+    }
+
+    /**
+     * set the button width.
+     *
+     * @since 1.0.5
+     *
+     * @param width
+     * @return
+     */
+    public TextFieldWidgetHelper setWidth(int width) {
+        ((ITextFieldWidget) base).jsmacros_setWidth(width);
+        return this;
+    }
+
+
     /**
      * @since 1.0.5
      * @return the currently entered {@link java.lang.String String}.
@@ -27,7 +111,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
     public String getText() {
         return base.getText();
     }
-    
+
     /**
      *
      * @since 1.0.5
@@ -38,7 +122,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
         setText(text, true);
         return this;
     }
-    
+
     /**
      * set the currently entered {@link java.lang.String String}.
      *
@@ -63,9 +147,9 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
         }
         return this;
     }
-    
-    
-    
+
+
+
     /**
      * @since 1.0.5
      * @param color
@@ -75,7 +159,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
         base.setEditableColor(color);
         return this;
     }
-    
+
     /**
      * @since 1.0.5
      * @param edit
@@ -85,7 +169,7 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
         base.setEditable(edit);
         return this;
     }
-    
+
     /**
      * @since 1.0.5
      * @param color
@@ -95,4 +179,15 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
         base.setUneditableColor(color);
         return this;
     }
+
+    @Override
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        base.render();
+    }
+
+    @Override
+    public int getZIndex() {
+        return zIndex;
+    }
+
 }

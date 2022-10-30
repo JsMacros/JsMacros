@@ -1,28 +1,23 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.options.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.item.Item;
+import net.minecraft.entity.player.ClientPlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
-import xyz.wagyourtail.jsmacros.client.access.IItemCooldownEntry;
-import xyz.wagyourtail.jsmacros.client.access.IItemCooldownManager;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
-import java.util.stream.Collectors;
 
 /**
  * @author Wagyourtail
@@ -49,9 +44,6 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         base.prevYaw = base.yaw;
         base.pitch = (float)pitch;
         base.yaw = MathHelper.wrapDegrees((float)yaw);
-        if (base.getVehicle() != null) {
-            base.getVehicle().onPassengerLookAround(base);
-        }
         return this;
     }
 
@@ -65,7 +57,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @since 1.2.8
      */
     public ClientPlayerEntityHelper<T> lookAt(double x, double y, double z) {
-        PositionCommon.Vec3D vec = new PositionCommon.Vec3D(base.x, base.y + base.getEyeHeight(base.getPose()), base.z, x, y, z);
+        PositionCommon.Vec3D vec = new PositionCommon.Vec3D(base.x, base.y + base.getEyeHeight(), base.z, x, y, z);
         lookAt(vec.getYaw(), vec.getPitch());
         return this;
     }
@@ -91,13 +83,13 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         if (joinedMain) {
             mc.interactionManager.attackEntity(mc.player, entity.getRaw());
             assert mc.player != null;
-            mc.player.swingHand(Hand.MAIN_HAND);
+            mc.player.method_13041(Hand.MAIN_HAND);
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
                 mc.interactionManager.attackEntity(mc.player, entity.getRaw());
                 assert mc.player != null;
-                mc.player.swingHand(Hand.MAIN_HAND);
+                mc.player.method_13041(Hand.MAIN_HAND);
                 wait.release();
             });
             wait.acquire();
@@ -133,13 +125,13 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         if (joinedMain) {
             mc.interactionManager.attackBlock(new BlockPos(x, y, z), Direction.values()[direction]);
             assert mc.player != null;
-            mc.player.swingHand(Hand.MAIN_HAND);
+            mc.player.method_13041(Hand.MAIN_HAND);
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
                 mc.interactionManager.attackBlock(new BlockPos(x, y, z), Direction.values()[direction]);
                 assert mc.player != null;
-                mc.player.swingHand(Hand.MAIN_HAND);
+                mc.player.method_13041(Hand.MAIN_HAND);
                 wait.release();
             });
             wait.acquire();
@@ -169,17 +161,17 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ActionResult result = mc.interactionManager.interactEntity(mc.player, entity.getRaw(), hand);
+            ActionResult result = mc.interactionManager.method_12235(mc.player, entity.getRaw(), hand);
             assert mc.player != null;
             if (result != ActionResult.FAIL)
-                mc.player.swingHand(hand);
+                mc.player.method_13041(hand);
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ActionResult result = mc.interactionManager.interactEntity(mc.player, entity.getRaw(), hand);
+                ActionResult result = mc.interactionManager.method_12235(mc.player, entity.getRaw(), hand);
                 assert mc.player != null;
                 if (result != ActionResult.FAIL)
-                    mc.player.swingHand(hand);
+                    mc.player.method_13041(hand);
                 wait.release();
             });
             wait.acquire();
@@ -201,21 +193,22 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param await
      */
     public ClientPlayerEntityHelper<T> interactItem(boolean offHand, boolean await) throws InterruptedException {
+    assert mc.interactionManager != null;
         assert mc.interactionManager != null;
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ActionResult result = mc.interactionManager.interactItem(mc.player, mc.world, hand);
+            ActionResult result = mc.interactionManager.method_12234(mc.player, mc.world, hand);
             assert mc.player != null;
             if (result != ActionResult.FAIL)
-                mc.player.swingHand(hand);
+                mc.player.method_13041(hand);
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ActionResult result = mc.interactionManager.interactItem(mc.player, mc.world, hand);
+                ActionResult result = mc.interactionManager.method_12234(mc.player, mc.world, hand);
                 assert mc.player != null;
                 if (result != ActionResult.FAIL)
-                    mc.player.swingHand(hand);
+                    mc.player.method_13041(hand);
                 wait.release();
             });
             wait.acquire();
@@ -240,21 +233,17 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, hand,
-                new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
-            );
+            ActionResult result = mc.interactionManager.method_13842(mc.player, mc.world, new BlockPos(x, y, z), Direction.values()[direction], new Vec3d(x, y, z), hand);
             assert mc.player != null;
             if (result != ActionResult.FAIL)
-                mc.player.swingHand(hand);
+                mc.player.method_13041(hand);
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, hand,
-                    new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
-                );
+                ActionResult result = mc.interactionManager.method_13842(mc.player, mc.world, new BlockPos(x, y, z), Direction.values()[direction], new Vec3d(x, y, z), hand);
                 assert mc.player != null;
                 if (result != ActionResult.FAIL)
-                    mc.player.swingHand(hand);
+                    mc.player.method_13041(hand);
                 wait.release();
             });
             wait.acquire();
@@ -320,8 +309,8 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      */
     public ClientPlayerEntityHelper<T> setLongAttack(boolean stop) {
-        if (!stop) KeyBinding.onKeyPressed(InputUtil.fromName(mc.options.keyAttack.getName()));
-        else KeyBinding.setKeyPressed(InputUtil.fromName(mc.options.keyAttack.getName()), false);
+        if (!stop) KeyBinding.onKeyPressed(mc.options.keyAttack.getCode());
+        else KeyBinding.setKeyPressed(mc.options.keyAttack.getCode(), false);
         return this;
     }
 
@@ -331,8 +320,8 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      */
     public ClientPlayerEntityHelper<T> setLongInteract(boolean stop) {
-        if (!stop) KeyBinding.onKeyPressed(InputUtil.fromName(mc.options.keyUse.getName()));
-        else KeyBinding.setKeyPressed(InputUtil.fromName(mc.options.keyUse.getName()), false);
+        if (!stop) KeyBinding.onKeyPressed(mc.options.keyUse.getCode());
+        else KeyBinding.setKeyPressed(mc.options.keyUse.getCode(), false);
         return this;
     }
 
@@ -341,9 +330,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      */
     public Map<String, Integer> getItemCooldownsRemainingTicks() {
-        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).getManagerTicks();
-        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).getCooldownItems();
-        return map.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getName().getString(), e -> e.getValue().getEndTick() - tick));
+        return new HashMap<>();
     }
 
     /**
@@ -352,11 +339,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      */
     public int getItemCooldownRemainingTicks(String item) {
-        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).getManagerTicks();
-        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).getCooldownItems();
-        IItemCooldownEntry entry = map.get(Registry.ITEM.get(new Identifier(item)));
-        if (entry == null) return -1;
-        return entry.getEndTick() - tick;
+        return 0;
     }
 
     /**
@@ -364,9 +347,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      */
     public Map<String, Integer>  getTicksSinceCooldownsStart() {
-        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).getManagerTicks();
-        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).getCooldownItems();
-        return map.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getName().getString(), e -> e.getValue().getStartTick() - tick));
+        return new HashMap<>();
     }
 
     /**
@@ -375,11 +356,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      */
     public int getTicksSinceCooldownStart(String item) {
-        int tick = ((IItemCooldownManager) base.getItemCooldownManager()).getManagerTicks();
-        Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).getCooldownItems();
-        IItemCooldownEntry entry = map.get(Registry.ITEM.get(new Identifier(item)));
-        if (entry == null) return -1;
-        return entry.getStartTick() - tick;
+        return -1;
     }
 
     /**

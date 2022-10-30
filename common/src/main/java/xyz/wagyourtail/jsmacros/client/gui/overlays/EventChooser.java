@@ -2,10 +2,10 @@ package xyz.wagyourtail.jsmacros.client.gui.overlays;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.client.TranslationUtil;
 import xyz.wagyourtail.wagyourgui.elements.Button;
@@ -110,10 +110,10 @@ public class EventChooser extends OverlayContainer {
 //        textRenderer.draw(, mouseX, mouseY, color, shadow, matrix, vertexConsumers, seeThrough, backgroundColor, light)
         super.render(mouseX, mouseY, delta);
 
-        for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
+        for (ButtonWidget b : ImmutableList.copyOf(this.buttons)) {
             if (b instanceof Button && ((Button) b).hovering && ((Button) b).cantRenderAllText()) {
                 // border
-                int width = textRenderer.getStringWidth(b.getMessage());
+                int width = textRenderer.getStringWidth(b.message);
                 fill(mouseX-3, mouseY, mouseX+width+3, mouseY+1, 0x7F7F7F7F);
                 fill(mouseX+width+2, mouseY-textRenderer.fontHeight - 3, mouseX+width+3, mouseY, 0x7F7F7F7F);
                 fill(mouseX-3, mouseY-textRenderer.fontHeight - 3, mouseX-2, mouseY, 0x7F7F7F7F);
@@ -121,7 +121,7 @@ public class EventChooser extends OverlayContainer {
 
                 // fill
                 fill(mouseX-2, mouseY-textRenderer.fontHeight - 3, mouseX+width+2, mouseY, 0xFF000000);
-                drawString(textRenderer, b.getMessage(), mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
+                drawWithShadow(textRenderer, b.message, mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
             }
         }
     }

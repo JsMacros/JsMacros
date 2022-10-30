@@ -1,20 +1,21 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
+import com.google.common.base.Predicate;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.ScreenshotUtils;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ProjectileUtil;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.entity.player.ClientPlayerEntity;
+import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.text.Text;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
@@ -33,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 /**
  * Functions for getting and modifying the player's state.
@@ -72,9 +72,9 @@ public class FPlayer extends BaseLibrary {
      */
     public String getGameMode() {
         assert mc.interactionManager != null;
-        GameMode mode = mc.interactionManager.getCurrentGameMode();
+        GameMode mode = mc.interactionManager.method_9667();
         if (mode == null) mode = GameMode.NOT_SET;
-        return mode.getName();
+        return mode.getGameModeName();
     }
 
     /**
@@ -87,11 +87,14 @@ public class FPlayer extends BaseLibrary {
     public BlockDataHelper rayTraceBlock(double distance, boolean fluid) {
         assert mc.world != null;
         assert mc.player != null;
-        BlockHitResult h = (BlockHitResult) mc.player.rayTrace(distance, 0, fluid);
-        if (h.getType() == HitResult.Type.MISS) return null;
+        Vec3d vec3 = mc.player.getCameraPosVec(0);
+        Vec3d vec31 = mc.player.getRotationVector(0);
+        Vec3d vec32 = vec3.add(vec31.x * distance, vec31.y * distance, vec31.z * distance);
+        HitResult h = mc.world.rayTrace(vec3, vec32, fluid, false, true);
+        if (h.type == HitResult.Type.MISS) return null;
         BlockState b = mc.world.getBlockState(h.getBlockPos());
         BlockEntity t = mc.world.getBlockEntity(h.getBlockPos());
-        if (b.getBlock().equals(Blocks.VOID_AIR)) return null;
+        if (b.getBlock().equals(Blocks.AIR)) return null;
         return new BlockDataHelper(b, t, h.getBlockPos());
     }
 
@@ -118,21 +121,56 @@ public class FPlayer extends BaseLibrary {
         if (entity == null) {
             return Optional.empty();
         } else {
-            Vec3d vec3 = entity.getPos().add(0.0D, entity.getEyeHeight(entity.getPose()), 0.0D);
-            Vec3d vec32 = entity.getRotationVec(1.0F).multiply(distance);
+            Vec3d vec3 = entity.getPos().add(0.0D, entity.getEyeHeight(), 0.0D);
+            Vec3d vec32 = entity.getRotationVector(1.0F).multiply(distance);
             Vec3d vec33 = vec3.add(vec32);
-            Box aABB = entity.getBoundingBox().stretch(vec32).expand(1.0);
+            Box aABB = entity.getBoundingBox().stretch(vec32.x, vec32.y, vec32.z).expand(1.0);
             int i = distance * distance;
-            Predicate<Entity> predicate = entityx -> !entityx.isSpectator() && !entityx.removed;
-            EntityHitResult entityHitResult = ProjectileUtil.getEntityCollision(entity.world, entity, vec3, vec33, aABB, predicate,
-                i
-            );
+            Predicate<Entity> predicate = entityx -> !entityx.removed;
+            Entity entityHitResult = getEntityHitResult(entity, vec3, vec33, aABB, predicate, i);
             if (entityHitResult == null) {
                 return Optional.empty();
             } else {
-                return vec3.squaredDistanceTo(entityHitResult.getPos()) > (double)i ? Optional.empty() : Optional.of(entityHitResult.getEntity());
+                return vec3.squaredDistanceTo(entityHitResult.getPos()) > (double)i ? Optional.empty() : Optional.ofNullable(entityHitResult.getEntity());
             }
         }
+    }
+
+    @Nullable
+    private static Entity getEntityHitResult(Entity shooter, Vec3d startVec, Vec3d endVec, Box boundingBox, Predicate<Entity> filter, double distance) {
+        World level = shooter.world;
+        double d = distance;
+        Entity entity = null;
+        Vec3d vec3 = null;
+
+        for(Entity entity2 : level.getEntitiesIn(shooter, boundingBox, filter)) {
+            Box aABB = entity2.getBoundingBox();
+            Optional<Vec3d> optional = Optional.ofNullable(aABB.method_585(startVec, endVec)).map(e -> e.pos);
+            if (aABB.contains(startVec)) {
+                if (d >= 0.0) {
+                    entity = entity2;
+                    vec3 = optional.orElse(startVec);
+                    d = 0.0;
+                }
+            } else if (optional.isPresent()) {
+                Vec3d vec32 = optional.get();
+                double e = startVec.squaredDistanceTo(vec32);
+                if (e < d || d == 0.0) {
+                    if (entity2.getRootVehicle() == shooter.getRootVehicle()) {
+                        if (d == 0.0) {
+                            entity = entity2;
+                            vec3 = vec32;
+                        }
+                    } else {
+                        entity = entity2;
+                        vec3 = vec32;
+                        d = e;
+                    }
+                }
+            }
+        }
+
+        return entity;
     }
 
     /**
@@ -164,10 +202,10 @@ public class FPlayer extends BaseLibrary {
      */
     public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null;
-        ScreenshotUtils.method_1659(new File(Core.getInstance().config.macroFolder, folder), mc.window.getFramebufferWidth(), mc.window.getFramebufferHeight(),
-            mc.getFramebuffer(), (text) -> {
-                if (callback != null) callback.accept(new TextHelper(text));
-            });
+        mc.execute(() -> {
+            Text text = ScreenshotUtils.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), mc.getFramebuffer().viewportWidth, mc.getFramebuffer().viewportHeight, mc.getFramebuffer());
+            if (callback != null) callback.accept(new TextHelper(text));
+        });
     }
 
     public StatsHelper getStatistics() {
@@ -187,10 +225,10 @@ public class FPlayer extends BaseLibrary {
      */
     public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null && file != null;
-        ScreenshotUtils.method_1662(new File(Core.getInstance().config.macroFolder, folder), file, mc.window.getFramebufferWidth(), mc.window.getFramebufferHeight(),
-            mc.getFramebuffer(), (text) -> {
-                if (callback != null) callback.accept(new TextHelper(text));
-            });
+        mc.execute(() -> {
+            Text text = ScreenshotUtils.method_12154(new File(Core.getInstance().config.macroFolder, folder), file, mc.getFramebuffer().viewportWidth, mc.getFramebuffer().viewportHeight, mc.getFramebuffer());
+            if (callback != null) callback.accept(new TextHelper(text));
+        });
     }
 
     /**

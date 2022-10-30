@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class DefaultCodeCompiler extends AbstractRenderCodeCompiler {
     private final Map<String, short[]> themeData = Core.getInstance().config.getOptions(ClientConfigV2.class).getThemeData();
     private final AutoCompleteSuggestor suggestor;
-    private LiteralText[] compiledText = new LiteralText[0];
+    private Text[] compiledText = new Text[0];
     private List<AutoCompleteSuggestion> suggestions = new LinkedList<>();
     
     public DefaultCodeCompiler(String language, EditorScreen screen) {
@@ -34,7 +34,7 @@ public class DefaultCodeCompiler extends AbstractRenderCodeCompiler {
             compiledText = new LiteralText[] {new LiteralText("")};
         } else {
             final List<Prism4j.Node> nodes = Prism.getNodes(text, language);
-            final TextStyleCompiler visitor = TextStyleCompiler.getTextStyleCompiler.apply(
+            final TextStyleCompiler visitor = new TextStyleCompiler(
                 EditorScreen.defaultStyle,
                 themeData
             );

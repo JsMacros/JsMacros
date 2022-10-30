@@ -1,10 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.access;
 
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.widget.ButtonWidget;
+
+import java.io.IOException;
 
 public interface IScreenInternal {
     void jsmacros_render(int mouseX, int mouseY, float delta);
-    
+
     void jsmacros_mouseClicked(double mouseX, double mouseY, int button);
 
     void jsmacros_mouseReleased(double mouseX, double mouseY, int button);
@@ -15,5 +17,12 @@ public interface IScreenInternal {
 
     void jsmacros_keyPressed(int keyCode, int scanCode, int modifiers);
 
-//    void jsmacros_charTyped(char chr, int modifiers);
+    void jsmacros_mouseScrolled(int mouseX, int mouseY, int amount);
+    //    void jsmacros_charTyped(char chr, int modifiers);
+
+    ButtonWidget getFocused();
+
+    boolean mouseScrolled(int mouseX, int mouseY, int amount);
+
+    void clickBtn(ButtonWidget btn) throws IOException;
 }

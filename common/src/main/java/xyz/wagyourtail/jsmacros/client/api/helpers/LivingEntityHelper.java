@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.util.Hand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      */
     public List<StatusEffectHelper> getStatusEffects() {
         List<StatusEffectHelper> l = new ArrayList<>();
-        for (StatusEffectInstance i : ImmutableList.copyOf(base.getStatusEffects())) {
+        for (StatusEffectInstance i : ImmutableList.copyOf(base.getStatusEffects().values())) {
             l.add(new StatusEffectHelper(i));
         }
         return l;
@@ -33,7 +34,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @return the item in the entity's main hand.
      */
     public ItemStackHelper getMainHand() {
-        return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.MAINHAND));
+        return new ItemStackHelper(base.getStackInHand(Hand.MAIN_HAND));
     }
     
     /**
@@ -41,7 +42,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @return the item in the entity's off hand.
      */
     public ItemStackHelper getOffHand() {
-        return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.OFFHAND));
+        return new ItemStackHelper(base.getStackInHand(Hand.OFF_HAND));
     }
     
     /**
@@ -49,7 +50,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @return the item in the entity's head armor slot.
      */
     public ItemStackHelper getHeadArmor() {
-        return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.HEAD));
+        return new ItemStackHelper(base.method_13043(EquipmentSlot.HEAD));
     }
     
     /**
@@ -57,7 +58,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @return the item in the entity's chest armor slot.
      */
     public ItemStackHelper getChestArmor() {
-        return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.CHEST));
+        return new ItemStackHelper(base.method_13043(EquipmentSlot.CHEST));
     }
     
     /**
@@ -65,7 +66,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @return the item in the entity's leg armor slot.
      */
     public ItemStackHelper getLegArmor() {
-        return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.LEGS));
+        return new ItemStackHelper(base.method_13043(EquipmentSlot.LEGS));
     }
     
     /**
@@ -73,7 +74,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @return the item in the entity's foot armor slot.
      */
     public ItemStackHelper getFootArmor() {
-        return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.FEET));
+        return new ItemStackHelper(base.method_13043(EquipmentSlot.FEET));
     }
     
     /**
@@ -89,7 +90,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @return entity's max health
      */
     public float getMaxHealth() {
-        return base.getMaximumHealth();
+        return base.getMaxHealth();
     }
 
     /**
@@ -105,7 +106,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @return if the entity has elytra deployed
      */
     public boolean isFallFlying() {
-        return base.isFallFlying();
+        return base.method_13055();
     }
     
 }

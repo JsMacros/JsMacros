@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.gui.containers;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
-import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.config.Sorting;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
