@@ -244,7 +244,7 @@ public class WorldScanner {
     
     private void streamChunkSections(Chunk chunk, BiConsumer<ChunkSection, boolean[]> consumer) {
         for (ChunkSection section : chunk.getSectionArray()) {
-            if (section.isEmpty()) {
+            if (section == null || section.isEmpty()) {
                 continue;
             }
 
