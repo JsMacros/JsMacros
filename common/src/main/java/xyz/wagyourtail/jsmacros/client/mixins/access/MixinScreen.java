@@ -813,8 +813,9 @@ public abstract class MixinScreen extends DrawableHelper implements IScreen, ISc
         }
     }
 
-    public void onButtonClicked() {
-
+    @Override
+    public ButtonWidget getFocused() {
+        return prevClickedButton;
     }
 
     @Override
