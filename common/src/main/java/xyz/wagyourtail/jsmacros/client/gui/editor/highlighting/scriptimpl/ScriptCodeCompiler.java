@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.scriptimpl;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCodeCompiler;
@@ -51,7 +50,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
             }
         }
         getRClickActions = compileEvent.rightClickActions;
-        compiledText = compileEvent.textLines.stream().map(e -> ((MutableText) e.getRaw()).setStyle(EditorScreen.defaultStyle)).toArray(Text[]::new);
+        compiledText = compileEvent.textLines.stream().map(e -> (e.getRaw()).setStyle(EditorScreen.defaultStyle)).toArray(Text[]::new);
         suggestions = compileEvent.autoCompleteSuggestions;
     }
     

@@ -2,9 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
@@ -144,7 +143,7 @@ public class FHud extends BaseLibrary {
      * @return a {@link java.lang.Boolean boolean} denoting if the currently open screen is a container. 
      */
     public boolean isContainer() {
-        return mc.currentScreen instanceof HandledScreen;
+        return mc.currentScreen instanceof ContainerScreen;
     }
     
     

@@ -11,6 +11,6 @@ pluginManagement {
 include("common")
 include("javascript_extension")
 include("fabric")
-include("forge")
+//include("forge")
 
 rootProject.name = "jsmacros"

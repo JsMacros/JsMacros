@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.function.BiConsumer;
 
 import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.literal;
 
@@ -87,12 +88,15 @@ public class TextHelper extends BaseHelper<Text> {
      * @param visitor function with 2 args, no return.
      * @since 1.6.5
      */
-    public TextHelper visit(MethodWrapper<StyleHelper, String, Object, ?> visitor) {
-        base.visit((style, string) -> {
-            visitor.accept(new StyleHelper(style), string);
-            return Optional.empty();
-        }, base.getStyle());
-        return this;
+    public void visit(MethodWrapper<StyleHelper, String, Object, ?> visitor) {
+        visit_internal(base, visitor);
+    }
+
+    private static void visit_internal(Text text, BiConsumer<StyleHelper, String> visitor) {
+        visitor.accept(new StyleHelper(text.getStyle()), text.asString());
+        for (Text sibling : text.getSiblings()) {
+            visit_internal(sibling, visitor);
+        }
     }
 
     /**

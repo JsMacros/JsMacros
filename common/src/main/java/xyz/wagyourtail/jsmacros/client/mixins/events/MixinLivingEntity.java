@@ -20,14 +20,14 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventHealthChange;
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity {
 
-    @Shadow public abstract float getMaxHealth();
+    @Shadow public abstract float getMaximumHealth();
 
     @Unique
     private float lastHealth;
 
     @Inject(at = @At("RETURN"), method = "<init>")
     private void onInit(CallbackInfo ci) {
-        lastHealth = getMaxHealth();
+        lastHealth = getMaximumHealth();
     }
 
     @Inject(at = @At("HEAD"), method = "setHealth")

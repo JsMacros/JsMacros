@@ -139,7 +139,8 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     public OptionsHelper setEnabledResourcePacks(String[] enabled) {
         Collection<String> en = Arrays.stream(enabled).distinct().collect(Collectors.toList());
         List<String> currentRP = ImmutableList.copyOf(base.resourcePacks);
-        rpm.setEnabledProfiles(en);
+        Collection<ClientResourcePackProfile> prof = en.stream().map(e -> rpm.getProfile(e)).filter(Objects::nonNull).collect(Collectors.toList());
+        rpm.setEnabledProfiles(prof);
         base.resourcePacks.clear();
         base.incompatibleResourcePacks.clear();
         for (ResourcePackProfile p : rpm.getEnabledProfiles()) {

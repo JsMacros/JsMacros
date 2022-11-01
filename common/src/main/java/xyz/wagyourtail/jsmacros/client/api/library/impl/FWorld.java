@@ -34,9 +34,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
-import net.minecraft.world.RaycastContext;
+import net.minecraft.world.RayTraceContext;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
+import net.minecraft.world.dimension.DimensionType;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -541,7 +542,7 @@ public class FWorld extends BaseLibrary {
      * @return
      */
     public BlockDataHelper rayTraceBlock(int x1, int y1, int z1, int x2, int y2, int z2, boolean fluid) {
-        BlockHitResult result = mc.world.raycast(new RaycastContext(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2), RaycastContext.ShapeType.COLLIDER, fluid ? RaycastContext.FluidHandling.ANY : RaycastContext.FluidHandling.NONE, mc.player));
+        BlockHitResult result = mc.world.rayTrace(new RayTraceContext(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2), RayTraceContext.ShapeType.COLLIDER, fluid ? RayTraceContext.FluidHandling.ANY : RayTraceContext.FluidHandling.NONE, mc.player));
         if (result.getType() != BlockHitResult.Type.MISS) {
             return new BlockDataHelper(mc.world.getBlockState(result.getBlockPos()), mc.world.getBlockEntity(result.getBlockPos()), result.getBlockPos());
         }
@@ -561,7 +562,7 @@ public class FWorld extends BaseLibrary {
      */
     public EntityHelper<?> rayTraceEntity(int x1, int y1, int z1, int x2, int y2, int z2) {
         TargetPredicate target = new TargetPredicate();
-        target.setPredicate((e) -> e.getBoundingBox().raycast(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2)).isPresent());
+        target.setPredicate((e) -> e.getBoundingBox().rayTrace(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2)).isPresent());
         List<LivingEntity> entities = (List) StreamSupport.stream(mc.world.getEntities().spliterator(), false).filter(e -> e instanceof LivingEntity).collect(Collectors.toList());
         LivingEntity e = mc.world.getClosestEntity(entities, target, null, x1, y1, z1);
         if (e != null) {
@@ -576,7 +577,7 @@ public class FWorld extends BaseLibrary {
      */
     public String getDimension() {
         assert mc.world != null;
-        return mc.world.getRegistryKey().getValue().toString();
+        return DimensionType.getId(mc.world.getDimension().getType()).toString();
     }
     
     /**
@@ -585,7 +586,8 @@ public class FWorld extends BaseLibrary {
      */
     public String getBiome() {
         assert mc.world != null;
-        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(mc.player.getBlockPos())).toString();
+        assert mc.player != null;
+        return Registry.BIOME.getId(mc.world.getBiome(mc.player.getBlockPos())).toString();
     }
     
     /**
@@ -679,8 +681,7 @@ public class FWorld extends BaseLibrary {
      */
     public BlockPosHelper getRespawnPos() {
         assert mc.world != null;
-        if (mc.world.getDimension().isNatural()) return new BlockPosHelper( mc.world.getSpawnPos());
-        return null;
+        return new BlockPosHelper( mc.world.getSpawnPos());
     }
     
     /**
@@ -848,7 +849,7 @@ public class FWorld extends BaseLibrary {
      */
     public String getBiomeAt(int x, int z) {
         assert mc.world != null;
-        return mc.world.getRegistryManager().get(Registry.BIOME_KEY).getId(mc.world.getBiome(new BlockPos(x, 10, z))).toString();
+        return Registry.BIOME.getId(mc.world.getBiome(new BlockPos(x, 10, z))).toString();
     }
     
     /**

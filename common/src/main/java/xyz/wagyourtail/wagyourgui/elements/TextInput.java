@@ -3,7 +3,6 @@ package xyz.wagyourtail.wagyourgui.elements;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import org.lwjgl.glfw.GLFW;
 
@@ -30,6 +29,7 @@ public class TextInput extends Button {
         this.arrowCursor = content.length();
     }
 
+    @Override
     public void setMessage(String message) {
         content = message;
     }
@@ -37,13 +37,13 @@ public class TextInput extends Button {
     public void updateSelStart(int startIndex) {
         selStartIndex = startIndex;
         if (startIndex == 0) selStart = x + 1;
-        else selStart = x + 2 + textRenderer.getWidth(content.substring(0, startIndex));
+        else selStart = x + 2 + textRenderer.getStringWidth(content.substring(0, startIndex));
     }
 
     public void updateSelEnd(int endIndex) {
         selEndIndex = endIndex;
         if (endIndex == 0) selEnd = x + 2;
-        else selEnd = x + 3 + textRenderer.getWidth(content.substring(0, endIndex));
+        else selEnd = x + 3 + textRenderer.getStringWidth(content.substring(0, endIndex));
     }
 
     @Override

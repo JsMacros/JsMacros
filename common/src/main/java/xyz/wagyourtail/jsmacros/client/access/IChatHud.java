@@ -10,7 +10,7 @@ public interface IChatHud {
     
     void jsmacros_addMessageBypass(Text message);
 
-    List<ChatHudLine<Text>> jsmacros_getMessages();
+    List<ChatHudLine> jsmacros_getMessages();
 
     void jsmacros_removeMessageById(int messageId);
 
@@ -20,5 +20,5 @@ public interface IChatHud {
 
     void jsmacros_removeMessageByText(Text text);
 
-    void jsmacros_removeMessagePredicate(Predicate<ChatHudLine<Text>> textfilter);
+    void jsmacros_removeMessagePredicate(Predicate<ChatHudLine> textfilter);
 }

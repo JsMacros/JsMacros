@@ -41,42 +41,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public String getEastWallShape() {
-        return base.get(Properties.EAST_WALL_SHAPE).asString();
-    }
-
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public String getNorthWallShape() {
-        return base.get(Properties.NORTH_WALL_SHAPE).asString();
-    }
-
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public String getSouthWallShape() {
-        return base.get(Properties.SOUTH_WALL_SHAPE).asString();
-    }
-
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public String getWestWallShape() {
-        return base.get(Properties.WEST_WALL_SHAPE).asString();
-    }
-
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
     public String getEastWireConnection() {
         return base.get(Properties.EAST_WIRE_CONNECTION).asString();
     }
@@ -142,15 +106,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      */
     public String getStraightRailShape() {
         return base.get(Properties.STRAIGHT_RAIL_SHAPE).asString();
-    }
-
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public String getOrientation() {
-        return base.get(Properties.ORIENTATION).asString();
     }
 
     /**
@@ -821,15 +776,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
         return base.get(Properties.COMPARATOR_MODE).asString();
     }
 
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public boolean isVineEnd() {
-        return base.get(Properties.VINE_END);
-    }
-
     // don't make static, causes crash in main function below
     private final IntProperty[] ages = {
         Properties.AGE_1,
@@ -967,17 +913,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      */
     public int getStage() {
         return base.get(Properties.STAGE);
-    }
-
-    /**
-     * Used on respawn anchors.
-     *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public int getCharges() {
-        return base.get(Properties.CHARGES);
     }
 
     /**

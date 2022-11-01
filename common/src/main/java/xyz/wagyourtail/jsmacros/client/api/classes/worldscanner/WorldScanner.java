@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.worldscanner;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.collection.PackedIntegerArray;
+import net.minecraft.util.PackedIntegerArray;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.*;
@@ -128,7 +128,7 @@ public class WorldScanner {
         streamChunkSections(world.getChunk(pos.x, pos.z), (section, isInFilter) -> {
             int yOffset = section.getYOffset();
             PackedIntegerArray array = ((IPalettedContainer<?>) section.getContainer()).jsmacros_getData();
-            forEach(array, isInFilter, place -> blocks.add(new Pos3D(
+            forEach(array, isInFilter, place -> blocks.add(new PositionCommon.Pos3D(
                     chunkX + ((place & 255) & 15),
                     yOffset + (place >> 8),
                     chunkZ + ((place & 255) >> 4)
@@ -203,9 +203,17 @@ public class WorldScanner {
 
     private boolean[] getIncludedFilterIndices(Palette<BlockState> palette) {
         boolean commonBlockFound = false;
-        boolean[] isInFilter = new boolean[((ArrayPalette<BlockState>)palette).getSize()];
+        int size = 0;
 
-        for (int i = 0; i < ((ArrayPalette<BlockState>)palette).getSize(); i++) {
+        if (palette instanceof ArrayPalette) {
+            size = ((ArrayPalette<BlockState>) palette).getSize();
+        } else if (palette instanceof BiMapPalette) {
+            size = ((BiMapPalette<BlockState>) palette).getIndexBits();
+        }
+
+        boolean[] isInFilter = new boolean[size];
+
+        for (int i = 0; i < size; i++) {
             BlockState state = palette.getByIndex(i);
             if (getFilterResult(state)) {
                 isInFilter[i] = true;
@@ -284,40 +292,48 @@ public class WorldScanner {
     
     private static void forEach(PackedIntegerArray array, boolean[] isInFilter, IntConsumer action) {
         int counter = 0;
-
-        int elementsPerLong = ((IPackedIntegerArray) array).jsmacros_getElementsPerLong();
+        long[] storage = array.getStorage();
+        int arraySize = array.getSize();
+        int elementBits = array.getElementBits();
         long maxValue = ((IPackedIntegerArray) array).jsmacros_getMaxValue();
-        int elementBits = ((IPackedIntegerArray) array).jsmacros_getElementBits();
-        int size = array.getSize();
+        int storageLength = storage.length;
 
-        for (long datum : array.getStorage()) {
-            long row = datum;
-            if (row == 0) {
-                counter += elementsPerLong;
-                continue;
-            }
-            for (int idx = 0; idx < elementsPerLong; idx++) {
-                if (isInFilter[(int) (row & maxValue)]) {
-                    action.accept(counter);
+        if (storageLength != 0) {
+            int lastStorageIdx = 0;
+            long row = storage[0];
+            long nextRow = storageLength > 1 ? storage[1] : 0L;
+
+            for (int idx = 0; idx < arraySize; idx++) {
+                int n = idx * elementBits;
+                int storageIdx = n >> 6;
+                int p = (idx + 1) * elementBits - 1 >> 6;
+                int q = n ^ storageIdx << 6;
+                if (storageIdx != lastStorageIdx) {
+                    row = nextRow;
+                    nextRow = storageIdx + 1 < storageLength ? storage[storageIdx + 1] : 0L;
+                    lastStorageIdx = storageIdx;
                 }
-
-                row >>= elementBits;
-                counter++;
-                if (counter >= size) {
-                    return;
+                if (storageIdx == p) {
+                    if (isInFilter[(int) (row >>> q & maxValue)]) {
+                        action.accept(counter);
+                    } else {
+                        if (isInFilter[(int) ((row >>> q | nextRow << (64 - q)) & maxValue)]) {
+                            action.accept(counter);
+                        }
+                    }
                 }
             }
         }
     }
-    
+
     private static void count(PalettedContainer<BlockState> container, boolean[] isInFilter, PalettedContainer.CountConsumer<BlockState> counter) {
         IPalettedContainer<BlockState> data = ((IPalettedContainer<BlockState>) container);
         Palette<BlockState> palette = (Palette<BlockState>) data.jsmacros_getPaletteProvider();
         PackedIntegerArray storage = data.jsmacros_getData();
 
-        int[] count = new int[((ArrayPalette<BlockState>)palette).getSize()];
+        int[] count = new int[((ArrayPalette<BlockState>) palette).getSize()];
 
-        if (((ArrayPalette<BlockState>)palette).getSize() == 1) {
+        if (((ArrayPalette<BlockState>) palette).getSize() == 1) {
             counter.accept(palette.getByIndex(0), storage.getSize());
         } else {
             storage.forEach(key -> count[key]++);

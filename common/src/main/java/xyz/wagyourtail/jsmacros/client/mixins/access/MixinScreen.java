@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.AbstractParentElement;
-import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
@@ -66,24 +65,27 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Unique private MethodWrapper<IScreen, Object, Object, ?> onInit;
     @Unique private MethodWrapper<String, Object, Object, ?> catchInit;
     @Unique private MethodWrapper<IScreen, Object, Object, ?> onClose;
-    
+
     @Shadow public int width;
     @Shadow public int height;
     @Shadow @Final protected Text title;
-    @Shadow protected MinecraftClient client;
-    @Shadow protected TextRenderer textRenderer;
-    
-    @Shadow(aliases = {"method_37063"}) protected abstract <T extends AbstractButtonWidget> T addButton(T button);
+    @Shadow protected MinecraftClient minecraft;
+    @Shadow protected TextRenderer font;
+    @Shadow @Final protected List<Element> children;
+
+    @Shadow protected abstract <T extends AbstractButtonWidget> T addButton(T button);
     @Shadow public abstract void onClose();
     @Shadow protected abstract void init();
 
     @Shadow public abstract void tick();
-    
-    @Shadow @Final private List<Element> children;
 
-    @Shadow protected abstract void renderTextHoverEffect(MatrixStack matrices, @Nullable Style style, int x, int y);
+    @Shadow public abstract boolean shouldCloseOnEsc();
 
-    @Shadow public abstract boolean handleTextClick(@Nullable Style style);
+    @Shadow @Final protected List<AbstractButtonWidget> buttons;
+
+    @Shadow protected abstract void renderComponentHoverEffect(Text component, int x, int y);
+
+    @Shadow public abstract boolean handleComponentClicked(Text component);
 
     @Override
     public int getWidth() {
@@ -199,16 +201,16 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
                 btns.put(((TextFieldWidgetHelper) el).getRaw(), (TextFieldWidgetHelper) el);
             }
         }
-        synchronized (children) {
-            for (Element e : children) {
+        synchronized (buttons) {
+            for (AbstractButtonWidget e : buttons) {
                 if (e instanceof TextFieldWidget && !btns.containsKey(e)) {
-                    btns.put((TextFieldWidget) e, new TextFieldWidgetHelper((TextFieldWidget) e));
+                    btns.put(e, new TextFieldWidgetHelper((TextFieldWidget) e));
                 }
             }
         }
         return ImmutableList.copyOf(btns.values());
     }
-    
+
     @Override
     public List<ClickableWidgetHelper<?, ?>> getButtonWidgets() {
         Map<AbstractButtonWidget, ClickableWidgetHelper<?, ?>> btns = new LinkedHashMap<>();
@@ -226,12 +228,12 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
         return ImmutableList.copyOf(btns.values());
     }
-    
+
     @Override
     public List<RenderElement> getElements() {
         return ImmutableList.copyOf(elements);
     }
-    
+
     @Override
     public IScreen removeElement(RenderElement e) {
         synchronized (elements) {
@@ -249,22 +251,22 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
         return e;
     }
-    
+
     @Override
     public xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text addText(String text, int x, int y, int color, boolean shadow) {
         return addText(text, x, y, color, 0, shadow, 1, 0);
     }
-    
+
     @Override
     public xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text addText(String text, int x, int y, int color, int zIndex, boolean shadow) {
         return addText(text, x, y, color, zIndex, shadow, 1, 0);
     }
-    
+
     @Override
     public xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text addText(String text, int x, int y, int color, boolean shadow, double scale, double rotation) {
         return addText(text, x, y, color, 0, shadow, scale, rotation);
     }
-    
+
     @Override
     public xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text addText(String text, int x, int y, int color, int zIndex, boolean shadow, double scale, double rotation) {
         xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text t = new xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text(text, x, y, color, zIndex, shadow, scale, (float) rotation).setParent(this);
@@ -278,17 +280,17 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text addText(TextHelper text, int x, int y, int color, boolean shadow) {
         return addText(text, x, y, color, 0, shadow, 1, 0);
     }
-    
+
     @Override
     public xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text addText(TextHelper text, int x, int y, int color, int zIndex, boolean shadow) {
         return addText(text, x, y, color, zIndex, shadow, 1, 0);
     }
-    
+
     @Override
     public xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text addText(TextHelper text, int x, int y, int color, boolean shadow, double scale, double rotation) {
         return addText(text, x, y, color, 0, shadow, scale, rotation);
     }
-    
+
     @Override
     public xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text addText(TextHelper text, int x, int y, int color, int zIndex, boolean shadow, double scale, double rotation) {
         xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text t = new xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text(text, x, y, color, zIndex, shadow, scale, (float) rotation).setParent(this);
@@ -297,7 +299,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
         return t;
     }
-    
+
     @Override
     public IScreen removeText(xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text t) {
         synchronized (elements) {
@@ -311,12 +313,12 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
                                        int regionHeight, int textureWidth, int textureHeight) {
         return addImage(x, y, width, height, 0, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, 0);
     }
-    
+
     @Override
     public Image addImage(int x, int y, int width, int height, int zIndex, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
         return addImage(x, y, width, height, zIndex, id, imageX, imageY, regionWidth, regionHeight, textureWidth, textureHeight, 0);
     }
-    
+
     @Override
     public Image addImage(int x, int y, int width, int height, String id, int imageX, int imageY, int regionWidth,
                                        int regionHeight, int textureWidth, int textureHeight, double rotation) {
@@ -378,13 +380,13 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha) {
         return addRect(x1, y1, x2, y2, color, alpha, 0, 0);
     }
-    
-    
+
+
     @Override
     public Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, double rotation) {
         return addRect(x1, y1, x2, y2, color, alpha, rotation, 0);
     }
-    
+
     @Override
     public Rect addRect(int x1, int y1, int x2, int y2, int color, int alpha, double rotation, int zIndex) {
         Rect r = new Rect(x1, y1, x2, y2, color, alpha, (float) rotation, zIndex).setParent(this);
@@ -448,27 +450,27 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public Item addItem(int x, int y, String id) {
         return addItem(x, y, 0, id, true, 1, 0);
     }
-    
+
     @Override
     public Item addItem(int x, int y, int zIndex, String id) {
         return addItem(x, y, zIndex, id, true, 1, 0);
     }
-    
+
     @Override
     public Item addItem(int x, int y, String id, boolean overlay) {
         return addItem(x, y, 0, id, overlay, 1, 0);
     }
-    
+
     @Override
     public Item addItem(int x, int y, int zIndex, String id, boolean overlay) {
         return addItem(x, y, zIndex, id, overlay, 1, 0);
     }
-    
+
     @Override
     public Item addItem(int x, int y, String id, boolean overlay, double scale, double rotation) {
         return addItem(x, y, 0, id, overlay, scale, rotation);
     }
-    
+
     @Override
     public Item addItem(int x, int y, int zIndex, String id, boolean overlay, double scale, double rotation) {
         Item i = new Item(x, y, zIndex, id, overlay, scale, (float) rotation).setParent(this);
@@ -477,32 +479,32 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
         return i;
     }
-    
+
     @Override
     public Item addItem(int x, int y, ItemStackHelper item) {
         return addItem(x, y, 0, item, true, 1, 0);
     }
-    
+
     @Override
     public Item addItem(int x, int y, int zIndex, ItemStackHelper item) {
         return addItem(x, y, zIndex, item, true, 1, 0);
     }
-    
+
     @Override
     public Item addItem(int x, int y, ItemStackHelper item, boolean overlay) {
         return addItem(x, y, 0, item, overlay, 1, 0);
     }
-    
+
     @Override
     public Item addItem(int x, int y, int zIndex, ItemStackHelper item, boolean overlay) {
         return addItem(x, y, zIndex, item, overlay, 1, 0);
     }
-    
+
     @Override
     public Item addItem(int x, int y, ItemStackHelper item, boolean overlay, double scale, double rotation) {
         return addItem(x, y, 0, item, overlay, scale, rotation);
     }
-    
+
     @Override
     public Item addItem(int x, int y, int zIndex, ItemStackHelper item, boolean overlay, double scale, double rotation) {
         Item i = new Item(x, y, zIndex, item, overlay, scale, (float) rotation).setParent(this);
@@ -519,12 +521,12 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
         return this;
     }
-    
+
     @Override
     public String getScreenClassName() {
         return IScreen.super.getScreenClassName();
     }
-    
+
     @Override
     public String getTitleText() {
         return title.text.getString();
@@ -535,7 +537,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
                                               MethodWrapper<ClickableWidgetHelper<?, ?>, IScreen, Object, ?> callback) {
         return addButton(x, y, width, height, 0, text, callback);
     }
-    
+
     @Override
     public ClickableWidgetHelper<?, ?> addButton(int x, int y, int width, int height, int zIndex, String text, MethodWrapper<ClickableWidgetHelper<?, ?>, IScreen, Object, ?> callback) {
         AtomicReference<ClickableWidgetHelper<?, ?>> b = new AtomicReference<>(null);
@@ -697,7 +699,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         MethodWrapper<String, IScreen, Object, ?> onChange) {
         return addTextInput(x, y, width, height, 0, message, onChange);
     }
-    
+
     @Override
     public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, int zIndex, String message, MethodWrapper<String, IScreen, Object, ?> onChange) {
         TextFieldWidget field = new TextFieldWidget(this.textRenderer, x, y, width, height, literal(message));
@@ -717,7 +719,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
         return w;
     }
-    
+
     @Override
     public IScreen removeTextInput(TextFieldWidgetHelper inp) {
         synchronized (elements) {
@@ -730,6 +732,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Intrinsic
     public void soft$close() {
         onClose();
+
     }
 
     @Override
@@ -779,16 +782,16 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         this.catchInit = catchInit;
         return this;
     }
-    
+
     @Override
     public IScreen setOnClose(MethodWrapper<IScreen, Object, Object, ?> onClose) {
         this.onClose = onClose;
         return this;
     }
-    
+
     @Override
     public IScreen reloadScreen() {
-        client.execute(() -> client.openScreen((Screen) (Object) this));
+        minecraft.execute(() -> minecraft.openScreen((Screen) (Object) this));
         return this;
     }
 
@@ -853,11 +856,41 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             }
 
             if (hoverText != null) {
-                renderTextHoverEffect(matrices, textRenderer.getTextHandler().getStyleAt(hoverText.text, mouseX - hoverText.x), mouseX, mouseY);
+                renderComponentHoverEffect(jsmacros_getTextComponentUnderMouse(hoverText.text, mouseX - hoverText.x), mouseX, mouseY);
             }
         }
     }
-    
+
+
+    @Unique
+    public Text jsmacros_getTextComponentUnderMouse(Text message, int mouseX) {
+        if (message == null) {
+            return null;
+        } else {
+            int i = this.minecraft.textRenderer.getStringWidth(message.asFormattedString());
+            int j = this.width / 2 - i / 2;
+            int k = this.width / 2 + i / 2;
+            int l = j;
+            if (mouseX >= j && mouseX <= k) {
+                for(Text text : message) {
+                    l += this.minecraft.textRenderer.getStringWidth(Texts.getRenderChatMessage(text.asString(), false));
+                    if (l > mouseX) {
+                        return text;
+                    }
+                }
+
+                return null;
+            } else {
+                return null;
+            }
+        }
+    }
+
+    @Inject(at = @At("RETURN"), method = "render")
+    public void render(int mouseX, int mouseY, float delta, CallbackInfo info) {
+        jsmacros_render(mouseX, mouseY, delta);
+    }
+
     @Override
     public void jsmacros_mouseClicked(double mouseX, double mouseY, int button) {
         if (onMouseDown != null) try {
@@ -879,7 +912,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
 
         if (hoverText != null) {
-            handleTextClick(textRenderer.getTextHandler().getStyleAt(hoverText.text, (int) mouseX - hoverText.x));
+            handleComponentClicked(jsmacros_getTextComponentUnderMouse(hoverText.text, (int) mouseX - hoverText.x));
         }
     }
 
@@ -927,7 +960,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             Core.getInstance().profile.logError(e);
         }
     }
-    
+
     @Inject(at = @At("RETURN"), method = "init()V")
     protected void init(CallbackInfo info) {
         synchronized (elements) {
@@ -947,11 +980,11 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
         getDraw2Ds().forEach(e -> e.getDraw2D().init());
     }
-    
+
     //TODO: switch to enum extention with mixin 9.0 or whenever Mumfrey gets around to it
-    @Inject(at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "handleTextClick", cancellable = true)
-    public void handleCustomClickEvent(Style style, CallbackInfoReturnable<Boolean> cir) {
-        ClickEvent clickEvent = style.getClickEvent();
+    @Inject(at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "handleComponentClicked", cancellable = true)
+    public void handleCustomClickEvent(Text t, CallbackInfoReturnable<Boolean> cir) {
+        ClickEvent clickEvent = t.getStyle().getClickEvent();
         if (clickEvent instanceof CustomClickEvent) {
             ((CustomClickEvent) clickEvent).getEvent().run();
             cir.setReturnValue(true);

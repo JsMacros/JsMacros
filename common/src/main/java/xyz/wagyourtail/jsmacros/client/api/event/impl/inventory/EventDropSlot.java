@@ -1,7 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.inventory;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
@@ -19,7 +20,7 @@ import xyz.wagyourtail.jsmacros.core.event.ICancelable;
 public class EventDropSlot implements BaseEvent, ICancelable {
     protected static final MinecraftClient mc = MinecraftClient.getInstance();
 
-    protected final HandledScreen<?> screen;
+    protected final ContainerScreen<?> screen;
     public final int slot;
     /**
      *  whether it's all or a single item being dropped
@@ -30,7 +31,7 @@ public class EventDropSlot implements BaseEvent, ICancelable {
      */
     public boolean cancel = false;
 
-    public EventDropSlot(HandledScreen<?> screen, int slot, boolean all) {
+    public EventDropSlot(ContainerScreen<?> screen, int slot, boolean all) {
         this.screen = screen;
         this.slot = slot;
         this.all = all;

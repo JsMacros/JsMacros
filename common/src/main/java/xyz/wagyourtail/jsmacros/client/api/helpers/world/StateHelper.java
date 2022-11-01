@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public abstract class StateHelper<U extends State<?, ?>> extends BaseHelper<U> {
+public abstract class StateHelper<U extends State<?>> extends BaseHelper<U> {
 
     public StateHelper(U base) {
         super(base);

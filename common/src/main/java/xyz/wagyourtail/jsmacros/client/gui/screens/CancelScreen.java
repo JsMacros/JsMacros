@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.gui.screens;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import org.apache.logging.log4j.Level;
 import net.minecraft.text.TranslatableText;
@@ -55,12 +54,12 @@ public class CancelScreen extends BaseScreen {
             return;
         }
         if (!t.isContextClosed()) {
-            running.add(new RunningContextContainer(10, topScroll + running.size() * 15, width - 26, 13, textRenderer, this, t));
             running.sort(new RTCSort());
             s.setScrollPages(running.size() * 15 / (double) (height - 20));
         } else {
             JsMacros.LOGGER.warn("Closed context {} was still in list", t.getMainThread().getName());
         }
+            running.add(new RunningContextContainer(10, topScroll + running.size() * 15, width - 26, 13, font, this, t));
     }
 
     public void removeContainer(RunningContextContainer t) {
@@ -95,15 +94,14 @@ public class CancelScreen extends BaseScreen {
     }
     
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (matrices == null) return;
-        this.renderBackground(matrices, 0);
+    public void render(int mouseX, int mouseY, float delta) {
+        this.renderBackground(0);
         List<BaseScriptContext<?>> tl = new ArrayList<>(Core.getInstance().getContexts());
         
         for (RunningContextContainer r : ImmutableList.copyOf(this.running)) {
             tl.remove(r.t);
             if (!services.value && r.service) removeContainer(r);
-            r.render(matrices, mouseX, mouseY, delta);
+            r.render(mouseX, mouseY, delta);
         }
         
         for (BaseScriptContext<?> t : tl) {
@@ -111,7 +109,7 @@ public class CancelScreen extends BaseScreen {
         }
         
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
-            b.render(matrices, mouseX, mouseY, delta);
+            b.render(mouseX, mouseY, delta);
         }
     }
 
@@ -121,7 +119,7 @@ public class CancelScreen extends BaseScreen {
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         this.openParent();
     }
 

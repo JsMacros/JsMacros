@@ -77,21 +77,21 @@ public class MacroScreen extends BaseScreen {
         topScroll = 40;
         macroScroll = this.addButton(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
     
-        runningBtn = this.addButton(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.running"), (btn) -> {
-            assert client != null;
-            client.openScreen(new CancelScreen(this));
+        runningBtn = this.addButton(new Button(0, this.height - 12, this.width / 12, 12, font, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.running"), (btn) -> {
+            assert minecraft != null;
+            minecraft.openScreen(new CancelScreen(this));
         }));
 
-        serviceScreen = this.addButton(new Button(this.width /12 + 1, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.service"), (btn) -> {
-            assert client != null;
-            client.openScreen(new ServiceScreen(this));
+        serviceScreen = this.addButton(new Button(this.width /12 + 1, this.height - 12, this.width / 12, 12, font, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.service"), (btn) -> {
+            assert minecraft != null;
+            minecraft.openScreen(new ServiceScreen(this));
         }));
 
-        aboutBtn = this.addButton(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this))));
+        aboutBtn = this.addButton(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, font, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, font, this))));
     }
 
     protected MultiElementContainer<MacroScreen> createTopbar() {
-        return new MacroListTopbar(this, this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer, ScriptTrigger.TriggerType.KEY_RISING);
+        return new MacroListTopbar(this, this.width / 12, 25, this.width * 5 / 6, 14, this.font, ScriptTrigger.TriggerType.KEY_RISING);
     }
     
     @Override
@@ -103,7 +103,7 @@ public class MacroScreen extends BaseScreen {
     }
 
     public void addMacro(ScriptTrigger macro) {
-        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this));
+        macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.font, macro, this));
         macroScroll.setScrollPages(((macros.size() + 1) * 16) / (double) Math.max(1, this.height - 40));
     }
 
@@ -111,21 +111,21 @@ public class MacroScreen extends BaseScreen {
         File f = new File(Core.getInstance().config.macroFolder, ((MacroContainer) macro).getRawMacro().scriptFile);
         File dir = Core.getInstance().config.macroFolder;
         if (!f.equals(Core.getInstance().config.macroFolder)) dir = f.getParentFile();
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this, ((MacroContainer) macro)::setFile, this::editFile));
+        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.font, dir, f, this, ((MacroContainer) macro)::setFile, this::editFile));
     }
     
     public void setEvent(MacroContainer macro) {
-        openOverlay(new EventChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, macro.getRawMacro().event, this, macro::setEventType));
+        openOverlay(new EventChooser(width / 4, height / 4, width / 2, height / 2, this.font, macro.getRawMacro().event, this, macro::setEventType));
     }
     
     public void runFile() {
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, Core.getInstance().config.macroFolder, null, this, (file) -> {
+        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.font, Core.getInstance().config.macroFolder, null, this, (file) -> {
             Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null);
         }, this::editFile));
     }
 
     public void confirmRemoveMacro(MultiElementContainer<MacroScreen> macro) {
-        openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, this.textRenderer, new TranslatableText("jsmacros.confirmdeletemacro"), this, (conf) -> removeMacro(macro)));
+        openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, this.font, new TranslatableText("jsmacros.confirmdeletemacro"), this, (conf) -> removeMacro(macro)));
     }
     
     public void removeMacro(MultiElementContainer<MacroScreen> macro) {
@@ -182,24 +182,23 @@ public class MacroScreen extends BaseScreen {
                 System.out.println(System.getenv("PATH"));
                 System.out.printf("Failed to run cmd '%s'", Core.getInstance().config.getOptions(ClientConfigV2.class).externalEditorCommand);
             }
-            assert client != null;
-            client.openScreen(new EditorScreen(this, file));
+            assert minecraft != null;
+            minecraft.openScreen(new EditorScreen(this, file));
         }
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (matrices == null) return;
-        this.renderBackground(matrices, 0);
+    public void render(int mouseX, int mouseY, float delta) {
+        this.renderBackground(0);
         
-        topbar.render(matrices, mouseX, mouseY, delta);
+        topbar.render(mouseX, mouseY, delta);
 
         for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
-            b.render(matrices, mouseX, mouseY, delta);
+            b.render(mouseX, mouseY, delta);
         }
 
         for (MultiElementContainer<MacroScreen> macro : ImmutableList.copyOf(this.macros)) {
-            macro.render(matrices, mouseX, mouseY, delta);
+            macro.render(mouseX, mouseY, delta);
         }
         
         drawCenteredText(matrices, this.textRenderer, new LiteralText(Core.getInstance().profile.getCurrentProfileName()), this.width * 8 / 12, 5, 0x7F7F7F);
@@ -210,7 +209,7 @@ public class MacroScreen extends BaseScreen {
         fill(matrices, this.width / 6 * 3 + 1, 0, this.width / 6 * 3 + 3, 20, 0xFFFFFFFF);
         fill(matrices, 0, 20, width, 22, 0xFFFFFFFF);
 
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(mouseX, mouseY, delta);
     }
     
     @Override
@@ -219,8 +218,8 @@ public class MacroScreen extends BaseScreen {
     }
     
     @Override
-    public void close() {
+    public void onClose() {
         Core.getInstance().profile.saveProfile();
-        super.close();
+        super.onClose();
     }
 }

@@ -1,8 +1,6 @@
 package xyz.wagyourtail.wagyourgui.elements;
 
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 
 import java.util.function.Consumer;
 
@@ -86,17 +84,17 @@ public class Scrollbar extends AbstractButtonWidget {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(int mouseX, int mouseY, float delta) {
         if (this.visible) {
             // mainpart
             fill(matrices, x + 1, (int) (y + 1 + scrollAmount), x + width - 1, (int) (y + 1 + scrollAmount + scrollbarHeight), highlightColor);
 
             // outline and back
-            fill(matrices, x + 1, y + 1, x + width - 1, y + height - 1, color);
-            fill(matrices, x, y, x + 1, y + height, borderColor);
-            fill(matrices, x + width - 1, y, x + width, y + height, borderColor);
-            fill(matrices, x + 1, y, x + width - 1, y + 1, borderColor);
-            fill(matrices, x + 1, y + height - 1, x + width - 1, y + height, borderColor);
+            fill(x + 1, y + 1, x + width - 1, y + height - 1, color);
+            fill(x, y, x + 1, y + height, borderColor);
+            fill(x + width - 1, y, x + width, y + height, borderColor);
+            fill(x + 1, y, x + width - 1, y + 1, borderColor);
+            fill(x + 1, y + height - 1, x + width - 1, y + height, borderColor);
         }
     }
     

@@ -10,16 +10,13 @@ import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 
 @Mixin(SignEditScreen.class)
 public abstract class MixinSignEditScreen implements ISignEditScreen {
-
-    @Shadow @Final
-    private String[] text;
-
-    @Shadow @Final
+    
+    @Shadow
+    @Final
     private SignBlockEntity sign;
 
     @Override
     public void jsmacros_setLine(int line, String text) {
-        this.text[line] = text;
         this.sign.setTextOnRow(line, new LiteralText(text));
     }
 

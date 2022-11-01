@@ -7,6 +7,9 @@
         "access.MixinInGameHud",
         "access.MixinKeyboard",
         "access.MixinMouse"
+        "MixinStyle",
+        "MixinEntity",
+        "MixinTextRenderer"
     ],
     "injectors": {
         "defaultRequire": 1

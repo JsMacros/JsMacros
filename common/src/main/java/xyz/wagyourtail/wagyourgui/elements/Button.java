@@ -2,12 +2,12 @@ package xyz.wagyourtail.wagyourgui.elements;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.AbstractPressableButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.OrderedText;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class Button extends AbstractPressableButtonWidget {
     protected final TextRenderer textRenderer;
@@ -15,7 +15,7 @@ public class Button extends AbstractPressableButtonWidget {
     protected int borderColor;
     protected int highlightColor;
     protected int textColor;
-    protected List<OrderedText> textLines;
+    protected List<Text> textLines;
     protected int visibleLines;
     protected int verticalCenter;
     public boolean horizCenter = true;
@@ -47,13 +47,12 @@ public class Button extends AbstractPressableButtonWidget {
     }
     
     protected void setMessageSuper(Text message) {
-        super.setMessage(message);
+        super.setMessage(message.asFormattedString());
     }
     
-    @Override
     public void setMessage(Text message) {
-        super.setMessage(message);
-        this.textLines = textRenderer.wrapLines(message, width - 4);
+        super.setMessage(message.asFormattedString());
+        this.textLines = textRenderer.wrapStringToWidthAsList(message.asFormattedString(), width - 4).stream().map(LiteralText::new).collect(Collectors.toList());
         this.visibleLines = Math.min(Math.max((height - 2) / textRenderer.fontHeight, 1), textLines.size());
         this.verticalCenter = ((height - 4) - (visibleLines * textRenderer.fontHeight)) / 2;
     }
@@ -66,15 +65,15 @@ public class Button extends AbstractPressableButtonWidget {
         this.highlightColor = color;
     }
     
-    protected void renderMessage(MatrixStack matrices) {
+    protected void renderMessage() {
         for (int i = 0; i < visibleLines; ++i) {
-            int w = textRenderer.getWidth(textLines.get(i));
-            textRenderer.draw(matrices, textLines.get(i), horizCenter ? x + width / 2F - w / 2F : x + 1, y + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
+            int w = textRenderer.getStringWidth(textLines.get(i).asFormattedString());
+            textRenderer.draw(textLines.get(i).asFormattedString(), horizCenter ? x + width / 2F - w / 2F : x + 1, y + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
         }
     }
     
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(int mouseX, int mouseY, float delta) {
         if (this.visible) {
             // fill
             if (mouseX - x >= 0 && mouseX - x - width <= 0 && mouseY - y >= 0 && mouseY - y - height <= 0 && this.active || forceHover) {
@@ -82,14 +81,14 @@ public class Button extends AbstractPressableButtonWidget {
                 fill(matrices, x + 1, y + 1, x + width - 1, y + height - 1, highlightColor);
             } else {
                 hovering = false;
-                fill(matrices, x + 1, y + 1, x + width - 1, y + height - 1, color);
+                fill(x + 1, y + 1, x + width - 1, y + height - 1, color);
             }
             // outline
-            fill(matrices, x, y, x + 1, y + height, borderColor);
-            fill(matrices, x + width - 1, y, x + width, y + height, borderColor);
-            fill(matrices, x + 1, y, x + width - 1, y + 1, borderColor);
-            fill(matrices, x + 1, y + height - 1, x + width - 1, y + height, borderColor);
-            this.renderMessage(matrices);
+            fill(x, y, x + 1, y + height, borderColor);
+            fill(x + width - 1, y, x + width, y + height, borderColor);
+            fill(x + 1, y, x + width - 1, y + 1, borderColor);
+            fill(x + 1, y + height - 1, x + width - 1, y + height, borderColor);
+            this.renderMessage();
         }
     }
     

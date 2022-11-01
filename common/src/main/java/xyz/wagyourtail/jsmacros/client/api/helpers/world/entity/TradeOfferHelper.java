@@ -130,7 +130,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * @return experience gained for trade
      */
     public int getExperience() {
-        return base.getMerchantExperience();
+        return base.getTraderExperience();
     }
     
     /**

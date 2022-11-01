@@ -8,6 +8,8 @@ import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandManager;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.fabric.client.api.classes.CommandBuilderFabric;
+import xyz.wagyourtail.jsmacros.fabric.client.api.classes.TextBuilderFabric;
+import xyz.wagyourtail.jsmacros.fabric.client.gui.editor.hilighting.impl.TextStyleCompilerFabric;
 import xyz.wagyourtail.jsmacros.fabric.client.api.classes.CommandManagerFabric;
 
 public class JsMacrosFabric implements ModInitializer, ClientModInitializer {
@@ -23,6 +25,8 @@ public class JsMacrosFabric implements ModInitializer, ClientModInitializer {
 
         // initialize loader-specific stuff
         CommandManager.instance = new CommandManagerFabric();
+        TextBuilder.getTextBuilder = TextBuilderFabric::new;
+        TextStyleCompiler.getTextStyleCompiler = TextStyleCompilerFabric::new;
         ClientTickEvents.END_CLIENT_TICK.register(TickBasedEvents::onTick);
         KeyBindingHelper.registerKeyBinding(JsMacros.keyBinding);
     }

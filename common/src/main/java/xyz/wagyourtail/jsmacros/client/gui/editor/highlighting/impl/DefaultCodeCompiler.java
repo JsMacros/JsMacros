@@ -34,7 +34,10 @@ public class DefaultCodeCompiler extends AbstractRenderCodeCompiler {
             compiledText = new LiteralText[] {new LiteralText("")};
         } else {
             final List<Prism4j.Node> nodes = Prism.getNodes(text, language);
-            final TextStyleCompiler visitor = new TextStyleCompiler(EditorScreen.defaultStyle, themeData);
+            final TextStyleCompiler visitor = TextStyleCompiler.getTextStyleCompiler.apply(
+                EditorScreen.defaultStyle,
+                themeData
+            );
             visitor.visit(nodes);
             compiledText = visitor.getResult().toArray(new LiteralText[0]);
         }

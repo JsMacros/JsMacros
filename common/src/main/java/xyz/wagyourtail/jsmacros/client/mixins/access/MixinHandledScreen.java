@@ -17,7 +17,7 @@ import xyz.wagyourtail.jsmacros.client.access.IInventory;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.core.Core;
 
-@Mixin(HandledScreen.class)
+@Mixin(ContainerScreen.class)
 public class MixinHandledScreen<T extends ScreenHandler> extends Screen implements IInventory {
 
     protected MixinHandledScreen(Text title) {

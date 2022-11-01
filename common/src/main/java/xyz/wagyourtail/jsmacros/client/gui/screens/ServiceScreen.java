@@ -34,7 +34,7 @@ public class ServiceScreen extends MacroScreen {
     }
 
     public void addService(String service) {
-        macros.add(new ServiceContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, this, service));
+        macros.add(new ServiceContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.font, this, service));
         macroScroll.setScrollPages(((macros.size() + 1) * 16) / (double) Math.max(1, this.height - 40));
     }
 
@@ -53,18 +53,18 @@ public class ServiceScreen extends MacroScreen {
         File f = new File(Core.getInstance().config.macroFolder, ((ServiceContainer) macro).getTrigger().file);
         File dir = Core.getInstance().config.macroFolder;
         if (!f.equals(Core.getInstance().config.macroFolder)) dir = f.getParentFile();
-        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this, ((ServiceContainer) macro)::setFile, this::editFile));
+        openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.font, dir, f, this, ((ServiceContainer) macro)::setFile, this::editFile));
     }
 
     @Override
     protected MultiElementContainer<MacroScreen> createTopbar() {
-        return (MultiElementContainer) new ServiceListTopbar(this, this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer);
+        return (MultiElementContainer) new ServiceListTopbar(this, this.width / 12, 25, this.width * 5 / 6, 14, this.font);
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         Core.getInstance().services.save();
-        super.close();
+        super.onClose();
     }
 
 }
