@@ -29,31 +29,31 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     public List<String> getStatList() {
-        return ((MixinStatHandler) base).getStatMap().keySet().stream().map(Stat::getType).map(StatType::getTranslationKey).collect(Collectors.toList());
+        return ((MixinStatHandler) base).getField_9047().keySet().stream().map(s -> s.name).collect(Collectors.toList());
     }
 
     public Text getStatText(String statKey) {
-        for (Stat<?> stat : ImmutableSet.copyOf(((MixinStatHandler) base).getStatMap().keySet())) {
-            if (stat.getType().getTranslationKey().equals(statKey)) {
-                return new TranslatableText(stat.getType().getTranslationKey());
+        for (Stat stat : ImmutableSet.copyOf(((MixinStatHandler) base).getField_9047().keySet())) {
+            if (stat.name.equals(statKey)) {
+                return stat.getText();
             }
         }
         throw new IllegalArgumentException("Stat not found: " + statKey);
     }
 
     public int getRawStatValue(String statKey) {
-        for (Stat<?> stat : ImmutableSet.copyOf(((MixinStatHandler) base).getStatMap().keySet())) {
-            if (stat.getType().getTranslationKey().equals(statKey)) {
-                return base.getStat(stat);
+        for (Stat stat : ImmutableSet.copyOf(((MixinStatHandler) base).getField_9047().keySet())) {
+            if (stat.equals(statKey)) {
+                return base.method_1729(stat);
             }
         }
         throw new IllegalArgumentException("Stat not found: " + statKey);
     }
 
     public String getFormattedStatValue(String statKey) {
-        for (Stat<?> stat : ImmutableSet.copyOf(((MixinStatHandler) base).getStatMap().keySet())) {
-            if (stat.getType().getTranslationKey().equals(statKey)) {
-                return stat.format(base.getStat(stat));
+        for (Stat stat : ImmutableSet.copyOf(((MixinStatHandler) base).getField_9047().keySet())) {
+            if (stat.name.equals(statKey)) {
+                return stat.method_2261(base.method_1729(stat));
             }
         }
         throw new IllegalArgumentException("Stat not found: " + statKey);
@@ -61,16 +61,16 @@ public class StatsHelper extends BaseHelper<StatHandler> {
 
     public Map<String, String> getFormattedStatMap() {
         Map<String, String> map = new HashMap<>();
-        for (Stat<?> stat : ImmutableSet.copyOf(((MixinStatHandler) base).getStatMap().keySet())) {
-            map.put(stat.getType().getTranslationKey(), stat.format(base.getStat(stat)));
+        for (Stat stat : ImmutableSet.copyOf(((MixinStatHandler) base).getField_9047().keySet())) {
+            map.put(stat.name, stat.method_2261(base.method_1729(stat)));
         }
         return map;
     }
 
     public Map<String, Integer> getRawStatMap() {
         Map<String, Integer> map = new HashMap<>();
-        for (Stat<?> stat : ImmutableSet.copyOf(((MixinStatHandler) base).getStatMap().keySet())) {
-            map.put(stat.getType().getTranslationKey(), base.getStat(stat));
+        for (Stat stat : ImmutableSet.copyOf(((MixinStatHandler) base).getField_9047().keySet())) {
+            map.put(stat.name, base.method_1729(stat));
         }
         return map;
     }

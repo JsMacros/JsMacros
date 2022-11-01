@@ -2,7 +2,7 @@ package xyz.wagyourtail.wagyourgui.containers;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
@@ -64,10 +64,10 @@ public class ListContainer extends MultiElementContainer<IContainerParent> {
     @Override
     public void render(int mouseX, int mouseY, float delta) {
         
-        for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
+        for (ButtonWidget b : ImmutableList.copyOf(this.buttons)) {
             if (b instanceof Button && ((Button) b).hovering && ((Button) b).cantRenderAllText()) {
                 // border
-                int width = textRenderer.getStringWidth(b.getMessage());
+                int width = textRenderer.getStringWidth(b.message);
                 fill(mouseX - 3, mouseY, mouseX + width + 3, mouseY + 1, 0x7F7F7F7F);
                 fill(mouseX+width+2, mouseY-textRenderer.fontHeight - 3, mouseX + width + 3, mouseY, 0x7F7F7F7F);
                 fill(mouseX-3, mouseY-textRenderer.fontHeight - 3, mouseX-2, mouseY, 0x7F7F7F7F);
@@ -75,7 +75,7 @@ public class ListContainer extends MultiElementContainer<IContainerParent> {
                 
                 // fill
                 fill(mouseX-2, mouseY - textRenderer.fontHeight - 3, mouseX+width+2, mouseY, 0xFF000000);
-                drawString(textRenderer, b.getMessage(), mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
+                drawWithShadow(textRenderer, b.message, mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
             }
         }
     }

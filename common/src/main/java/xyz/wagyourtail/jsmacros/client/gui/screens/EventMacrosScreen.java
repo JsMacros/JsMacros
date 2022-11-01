@@ -20,7 +20,7 @@ public class EventMacrosScreen extends MacroScreen {
     }
     
     @Override
-    protected void init() {
+    public void init() {
         super.init();
         eventScreen.setColor(0x4FFFFFFF);
         

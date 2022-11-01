@@ -14,7 +14,7 @@ public class StringMapSetting extends AbstractMapSettingContainer<String, String
         super(x, y, width, height, textRenderer, parent, group);
         defaultValue = () -> "";
     }
-    
+
     @Override
     public void addField(String key, String value) {
         if (map.containsKey(key)) return;
@@ -28,13 +28,13 @@ public class StringMapSetting extends AbstractMapSettingContainer<String, String
             onScrollbar(0);
         }
     }
-    
+
     public static class StringEntry extends AbstractMapSettingContainer.MapSettingEntry<String> {
-    
+
         public StringEntry(int x, int y, int width, TextRenderer textRenderer, StringMapSetting parent, String key, String value) {
             super(x, y, width, textRenderer, (AbstractMapSettingContainer) parent, key, value);
         }
-    
+
         @Override
         public void init() {
             super.init();

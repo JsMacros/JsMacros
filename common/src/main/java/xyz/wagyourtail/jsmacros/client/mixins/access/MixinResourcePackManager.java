@@ -1,14 +1,15 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
-import net.minecraft.resource.ResourcePackManager;
-import net.minecraft.resource.ResourcePackProfile;
+import net.minecraft.client.resource.ResourcePackLoader;
+import net.minecraft.resource.ResourcePack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.wagyourtail.jsmacros.client.access.IResourcePackManager;
 
-@Mixin(ResourcePackManager.class)
+@Mixin(ResourcePackLoader.class)
 public class MixinResourcePackManager implements IResourcePackManager {
 
     @Unique
@@ -24,11 +25,10 @@ public class MixinResourcePackManager implements IResourcePackManager {
         return disableServerPacks;
     }
 
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/ResourcePackProfile;isAlwaysEnabled()Z"), method = "setEnabledProfiles")
-    public boolean onBuildPackList(ResourcePackProfile instance) {
-        if (instance.getName().equals("server")) {
-            return instance.isAlwaysEnabled() && !disableServerPacks;
+    @Inject(at = @At("HEAD"), method = "method_7039", cancellable = true)
+    public void onBuildPackList(CallbackInfoReturnable<ResourcePack> cir) {
+        if (disableServerPacks) {
+            cir.setReturnValue(null);
         }
-        return instance.isAlwaysEnabled();
     }
 }

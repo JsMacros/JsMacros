@@ -1,0 +1,12 @@
+{
+    "required": true,
+    "package": "xyz.wagyourtail.jsmacros.forge.client.mixins",
+    "compatibilityLevel": "JAVA_8",
+    "client": [
+        "modcompat.MixinOptifineFontRenderer"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "refmap": "jsmacros-1.12.2-FORGE-forge-refmap.json"
+}

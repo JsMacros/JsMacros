@@ -34,7 +34,7 @@ public class TextHelper extends BaseHelper<Text> {
      */
     @Deprecated
     public TextHelper replaceFromJson(String json) {
-        base = Text.Serializer.fromJson(json);
+        base = Text.Serializer.lenientDeserializeText(json);
         return this;
     }
     
@@ -56,7 +56,7 @@ public class TextHelper extends BaseHelper<Text> {
      * @return JSON data representation.
      */
     public String getJson() {
-        return Text.Serializer.toJson(base);
+        return Text.Serializer.serialize(base);
     }
 
     /**

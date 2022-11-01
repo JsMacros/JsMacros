@@ -1,16 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.util.Session;
 import net.minecraft.client.world.ClientWorld;
-import org.jetbrains.annotations.Nullable;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.entity.player.ClientPlayerEntity;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,17 +28,17 @@ public abstract class MixinMinecraftClient {
     @Shadow
     public Screen currentScreen;
 
-    @Shadow public abstract void openScreen(@Nullable Screen screen);
+    @Shadow public abstract void openScreen(Screen screen);
 
-    @Shadow @Nullable public ClientPlayerInteractionManager interactionManager;
+    @Shadow public ClientPlayerEntity player;
 
     @Shadow @Final
     private Session session;
 
-    @Inject(at = @At("HEAD"), method="joinWorld")
+    @Inject(at = @At("HEAD"), method="connect(Lnet/minecraft/client/world/ClientWorld;)V")
     public void onJoinWorld(ClientWorld world, CallbackInfo info) {
         if (world != null)
-            new EventDimensionChange(DimensionType.getId(world.getDimension().getType()).toString());
+            new EventDimensionChange(world.getLevelProperties().getLevelName());
     }
 
     @Unique
@@ -51,7 +47,7 @@ public abstract class MixinMinecraftClient {
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", opcode = Opcodes.PUTFIELD), method="openScreen")
     public void onOpenScreen(Screen screen, CallbackInfo info) {
         if (screen != currentScreen) {
-            if (screen instanceof AbstractInventoryScreen && interactionManager.hasCreativeInventory()) {
+            if (screen instanceof InventoryScreen && interactionManager.hasCreativeInventory()) {
                 if (!(screen instanceof CreativeInventoryScreen)) {
                     prevScreen = currentScreen;
                 }
@@ -64,7 +60,7 @@ public abstract class MixinMinecraftClient {
 
     @Inject(at = @At("TAIL"), method = "openScreen")
     public void afterOpenScreen(Screen screen, CallbackInfo info) {
-        if (screen instanceof ContainerScreen<?>) {
+        if (screen instanceof HandledScreen) {
             if (interactionManager.hasCreativeInventory() && !(screen instanceof CreativeInventoryScreen)) {
                 return;
             }

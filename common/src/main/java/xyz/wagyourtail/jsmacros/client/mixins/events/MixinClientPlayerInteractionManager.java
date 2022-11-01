@@ -2,13 +2,13 @@ package xyz.wagyourtail.jsmacros.client.mixins.events;
 
 import com.google.common.collect.Lists;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -44,15 +44,14 @@ public class MixinClientPlayerInteractionManager {
 
     @Shadow @Final private MinecraftClient client;
 
-    @Inject(at = @At("RETURN"), method = "interactBlock")
-    public void onInteractBlock(ClientPlayerEntity player, ClientWorld world, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
+    @Inject(at = @At("RETURN"), method = "method_13842")
+    public void onInteractBlock(ClientPlayerEntity clientPlayerEntity, ClientWorld clientWorld, BlockPos blockPos, Direction direction, Vec3d vec3d, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
         if (cir.getReturnValue() != ActionResult.FAIL) {
-            BlockPos pos = hitResult.getBlockPos();
             new EventInteractBlock(
                 hand != Hand.MAIN_HAND,
                 cir.getReturnValue().name(),
-                new BlockDataHelper(world.getBlockState(pos), world.getBlockEntity(pos), pos),
-                hitResult.getSide().getId()
+                new BlockDataHelper(clientWorld.getBlockState(blockPos), clientWorld.getBlockEntity(blockPos), blockPos),
+                direction.getId()
             );
         }
     }
@@ -73,7 +72,7 @@ public class MixinClientPlayerInteractionManager {
         new EventAttackEntity(target);
     }
 
-    @Inject(at = @At("RETURN"), method = "interactEntity")
+    @Inject(at = @At("RETURN"), method = "method_12235")
     public void onInteractEntity(PlayerEntity player, Entity entity, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
         if (cir.getReturnValue() != ActionResult.FAIL) {
             new EventInteractEntity(hand != Hand.MAIN_HAND, cir.getReturnValue().name(), entity);
@@ -123,4 +122,12 @@ public class MixinClientPlayerInteractionManager {
         new EventInventoryChange(Inventory.create(), oldItems.keySet().toIntArray(), oldItems, newItems);
     }
     
+
+
+    @Inject(at = @At("RETURN"), method = "method_12236")
+    public void onInteractEntity(PlayerEntity playerEntity, Entity entity, HitResult hitResult, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+        if (cir.getReturnValue() != ActionResult.FAIL) {
+            new EventInteractEntity(hand != Hand.MAIN_HAND, cir.getReturnValue().name(), entity);
+        }
+    }
 }

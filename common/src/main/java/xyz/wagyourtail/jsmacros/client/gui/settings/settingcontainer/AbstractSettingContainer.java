@@ -13,7 +13,7 @@ public abstract class AbstractSettingContainer extends MultiElementContainer<Set
         this.group = group;
         init();
     }
-    
+
     public abstract void addSetting(SettingsOverlay.SettingField<?> setting);
-    
+
 }

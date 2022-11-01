@@ -5,7 +5,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
@@ -15,6 +14,7 @@ import xyz.wagyourtail.jsmacros.client.api.classes.render.ScriptScreen;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
+import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -75,8 +75,9 @@ public class ForgeEvents {
         }
     }
 
-    public static void renderWorldListener(RenderWorldLastEvent e) {
-        client.getProfiler().swap("jsmacros_draw3d");
+    @SubscribeEvent
+    public void renderWorldListener(RenderWorldLastEvent e) {
+        client.profiler.swap("jsmacros_draw3d");
         for (Draw3D d : ImmutableSet.copyOf(FHud.renders)) {
             try {
                 d.render(e.getMatrixStack(), e.getPartialTicks());
@@ -87,10 +88,26 @@ public class ForgeEvents {
         client.getProfiler().pop();
     }
 
-
-    public static void onTick(TickEvent.ClientTickEvent event) {
+    @SubscribeEvent
+    public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             TickBasedEvents.onTick(MinecraftClient.getInstance());
         }
+    }
+
+    @SubscribeEvent
+    public void onKey(InputEvent.KeyInputEvent keyEvent) {
+        if (Keyboard.getEventKeyState() ^ FKeyBind.KeyTracker.getPressedKeys().contains(Keyboard.getEventKey()))
+            if (EventKey.parse(Keyboard.getEventKey(), 0, Keyboard.getEventKeyState() ? 1 : 0, BaseScreen.createModifiers())) {
+                keyEvent.setCanceled(true);
+            }
+    }
+
+    @SubscribeEvent
+    public void onMouse(InputEvent.MouseInputEvent mouseEvent) {
+        if (Mouse.getEventButtonState() ^ FKeyBind.KeyTracker.getPressedKeys().contains(Mouse.getEventButton() - 100))
+            if (EventKey.parse(Mouse.getEventButton() - 100, 0, Mouse.getEventButtonState() ? 1 : 0, BaseScreen.createModifiers())) {
+                mouseEvent.setCanceled(true);
+            }
     }
 }

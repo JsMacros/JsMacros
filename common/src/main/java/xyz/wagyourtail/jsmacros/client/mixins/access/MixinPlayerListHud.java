@@ -8,8 +8,6 @@ import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 
 @Mixin(PlayerListHud.class)
 public class MixinPlayerListHud implements IPlayerListHud {
-    
-    
     @Shadow private Text header;
     
     @Shadow private Text footer;

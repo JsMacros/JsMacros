@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.container.Slot;
-import net.minecraft.container.SlotActionType;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.inventory.slot.Slot;
+import net.minecraft.util.ItemAction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -65,8 +65,8 @@ public abstract class MixinCreativeInventoryScreen {
         throw new NullPointerException("Unknown slot class");
     }
 
-    @Inject(method = "onMouseClick", at = @At("HEAD"), cancellable = true)
-    private void beforeMouseClick(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
+    @Inject(method = "method_1131", at = @At("HEAD"), cancellable = true)
+    private void beforeMouseClick(Slot slot, int slotId, int button, ItemAction actionType, CallbackInfo ci) {
         if (slot != null) slotId = getSlotFromCreativeSlot(slot).id;
         EventClickSlot event = new EventClickSlot((ContainerScreen<?>) (Object) this, actionType.ordinal(), button, slotId);
         if (event.isCanceled()) {

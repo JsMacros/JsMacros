@@ -16,6 +16,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @since 1.6.0
  */
+/**
+ * @since 1.6.0
+ */
 public class ChatHistoryManager {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     private final ChatHud hud;
@@ -95,7 +98,7 @@ public class ChatHistoryManager {
      */
     public void insertRecvText(int index, TextHelper line, int timeTicks) throws InterruptedException {
         insertRecvText(index, line, timeTicks, false);
-     }
+    }
 
     /**
      * @param index
@@ -214,9 +217,9 @@ public class ChatHistoryManager {
      * this will reset the view of visible messages
      * @since 1.6.0
      */
-     public void refreshVisible() throws InterruptedException {
+    public void refreshVisible() throws InterruptedException {
         refreshVisible(false);
-     }
+    }
 
     /**
      * @param await
@@ -252,12 +255,14 @@ public class ChatHistoryManager {
      */
     public void clearRecv(boolean await) throws InterruptedException {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
-            hud.clear(false);
+            ((IChatHud) hud).jsmacros_getMessages().clear();
+            hud.reset();
             return;
         }
         final Semaphore semaphore = new Semaphore(await ? 0 : 1);
         mc.execute(() -> {
-            hud.clear(false);
+            ((IChatHud) hud).jsmacros_getMessages().clear();
+            hud.reset();
             semaphore.release();
         });
         semaphore.acquire();
@@ -274,9 +279,9 @@ public class ChatHistoryManager {
     /**
      * @since 1.6.0
      */
-     public void clearSent() throws InterruptedException {
+    public void clearSent() throws InterruptedException {
         clearSent(false);
-     }
+    }
 
     /**
      * @param await

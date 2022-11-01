@@ -1,11 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.access;
 
-import net.minecraft.util.PackedIntegerArray;
-import net.minecraft.world.chunk.Palette;
+import net.minecraft.class_2748;
+import net.minecraft.class_2928;
 
-public interface IPalettedContainer<T> {
+public interface IPalettedContainer {
 
-    PackedIntegerArray jsmacros_getData();
-    Palette<?> jsmacros_getPaletteProvider();
-
+    class_2928 jsmacros_getData();
+    class_2748 jsmacros_getPaletteProvider();
 }

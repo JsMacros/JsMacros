@@ -23,6 +23,10 @@ public class MovementQueue {
 
     private static boolean doDrawPredictions = false;
 
+    public static double getMagnitude(Vec3d vec) {
+        return Math.sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+    }
+
     public synchronized static PlayerInput tick(ClientPlayerEntity newPlayer) {
         if (queuePos == queue.size()) {
             return null;
@@ -31,9 +35,9 @@ public class MovementQueue {
         player = newPlayer;
 
         if (predictions.size() == queue.size() - queuePos + 1 && queuePos != 0) {
-            Vec3d diff = new Vec3d(player.x - predictions.get(0).getX(), player.y - predictions.get(0).getY(), player.z - predictions.get(0).getZ());
-            if (diff.length() > 0.01D) {
-                LOGGER.debug("Pred of by x={}, y={}, z={}", diff.getX(), diff.getY(), diff.getZ());
+            Vec3d diff = new Vec3d(player.x - predictions.get(0).x, player.y - predictions.get(0).y, player.z - predictions.get(0).z);
+            if (getMagnitude(diff) > 0.01D) {
+                LOGGER.debug("Pred of by x={}, y={}, z={}", diff.x, diff.y, diff.z);
                 LOGGER.debug("Player pos x={}, y={}, z={}", player.x, player.y, player.z);
                 predPoints.addPoint(player.x, player.y, player.z, 0.02, 0xde070a);
                 reCalcPredictions = true;
@@ -53,7 +57,7 @@ public class MovementQueue {
         }
 
         if (predictions.size() > 0)
-            LOGGER.debug("Predic pos x={}, y={}, z={}", predictions.get(0).getX(), predictions.get(0).getY(), predictions.get(0).getZ());
+            LOGGER.debug("Predic pos x={}, y={}, z={}", predictions.get(0).x, predictions.get(0).y, predictions.get(0).z);
 
         queuePos++;
         return queue.get(queuePos - 1);

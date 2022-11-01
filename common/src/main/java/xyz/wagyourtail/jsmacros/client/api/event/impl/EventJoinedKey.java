@@ -7,7 +7,7 @@ import xyz.wagyourtail.jsmacros.core.event.ICancelable;
 public class EventJoinedKey extends EventKey implements ICancelable {
     public boolean cancel;
 
-    public EventJoinedKey(int action, String key, String mods) {
+    public EventJoinedKey(int action, int key, int mods) {
         super(action, key, mods);
     }
 

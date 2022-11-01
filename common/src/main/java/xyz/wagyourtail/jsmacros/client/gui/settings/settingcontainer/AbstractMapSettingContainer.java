@@ -1,10 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
@@ -121,7 +121,8 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
 
     @Override
     public void render(int mouseX, int mouseY, float delta) {
-        textRenderer.draw(settingName.asFormattedString(), x + width / 2F - textRenderer.getStringWidth(settingName.asFormattedString()) / 2F + 20, y + 1, 0xFFFFFF);
+        textRenderer.draw(settingName.asFormattedString(),
+            (int) (x + width / 2F - textRenderer.getStringWidth(settingName.asFormattedString()) / 2F + 20), y + 1, 0xFFFFFF);
         fill(x, y + 10, x+width,y + 11,0xFFFFFFFF);
     }
 
@@ -176,7 +177,7 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
         @Override
         public void setPos(int x, int y, int width, int height) {
             super.setPos(x, y, width, height);
-            for (AbstractButtonWidget btn : buttons) {
+            for (ButtonWidget btn : buttons) {
                 btn.y = y;
             }
         }
@@ -194,7 +195,7 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
 
         @Override
         public void render(int mouseX, int mouseY, float delta) {
-        
+
         }
     }
 }

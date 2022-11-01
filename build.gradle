@@ -40,10 +40,15 @@ subprojects {
             }
         }
         maven {
+            name = "legacy-fabric"
+            url = "https://maven.legacyfabric.net"
+        }
+        maven {
             name "modmenu repository"
             url 'https://maven.terraformersmc.com/releases/'
         }
         maven { url 'https://jitpack.io' }
+        maven { url 'https://repo.spongepowered.org/maven' }
         mavenCentral()
     }
 

@@ -3,7 +3,7 @@ package xyz.wagyourtail.wagyourgui.overlays;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.input.Keyboard;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 
@@ -74,15 +74,15 @@ public class SelectorDropdownOverlay extends OverlayContainer {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         switch (keyCode) {
-            case GLFW.GLFW_KEY_UP:
+            case Keyboard.KEY_UP:
                 if (selected == -1) return false;
                 setSelected(selected - 1);
                 return true;
-            case GLFW.GLFW_KEY_DOWN:
+            case Keyboard.KEY_DOWN:
                 setSelected(selected + 1);
                 return true;
-            case GLFW.GLFW_KEY_ENTER:
-            case GLFW.GLFW_KEY_TAB:
+            case Keyboard.KEY_RETURN:
+            case Keyboard.KEY_TAB:
                 if (onChoice != null) onChoice.accept(selected);
                 close();
                 return true;

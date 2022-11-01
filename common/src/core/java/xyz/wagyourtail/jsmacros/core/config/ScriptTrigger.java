@@ -6,9 +6,7 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import java.io.File;
 
 public class ScriptTrigger {
-    @SerializedName(value = "triggerType", alternate = "type")
     public TriggerType triggerType;
-    @SerializedName(value = "event", alternate = "eventkey")
     public String event;
     public String scriptFile;
     public boolean enabled;

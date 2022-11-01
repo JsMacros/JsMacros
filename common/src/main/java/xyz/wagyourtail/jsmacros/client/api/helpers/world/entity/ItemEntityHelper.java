@@ -10,7 +10,7 @@ public class ItemEntityHelper extends EntityHelper<ItemEntity> {
     }
 
     public ItemStackHelper getContainedItemStack() {
-        return new ItemStackHelper(base.getStack());
+        return new ItemStackHelper(base.getItemStack());
     }
 
     @Override

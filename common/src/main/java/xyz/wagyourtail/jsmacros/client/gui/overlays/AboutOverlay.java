@@ -2,9 +2,9 @@ package xyz.wagyourtail.jsmacros.client.gui.overlays;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Util;
+import net.minecraft.text.Text;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
@@ -26,19 +26,20 @@ public class AboutOverlay extends OverlayContainer {
         super.init();
         int w = width - 4;
         this.addButton(new Button(x + width - 12, y + 2, 10, 10, textRenderer,0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("X"), (btn) -> this.close()));
-        
-        this.addButton(new Button(x + 2, y + height - 14, w / 3, 12, textRenderer,0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Website"), (btn) -> Util.getOperatingSystem().open("https://jsmacros.wagyourtail.xyz")));
-        
-        this.addButton(new Button(x + w / 3 + 2, y + height - 14, w / 3, 12, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Discord"), (btn) -> Util.getOperatingSystem().open("https://discord.gg/P6W58J8")));
-        
 
-        this.addButton(new Button(x + w * 2 / 3 + 2, y + height - 14, w / 3, 12, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("CurseForge"), (btn) -> Util.getOperatingSystem().open("https://www.curseforge.com/minecraft/mc-mods/jsmacros")));
-        
+        this.addButton(new Button(x + 2, y + height - 14, w / 3, 12, textRenderer,0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Website"), (btn) -> JsMacros.openURI("https://jsmacros.wagyourtail.xyz")));
+
+        this.addButton(new Button(x + w / 3 + 2, y + height - 14, w / 3, 12, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("Discord"), (btn) -> JsMacros.openURI("https://discord.gg/P6W58J8")));
+
+
+        this.addButton(new Button(x + w * 2 / 3 + 2, y + height - 14, w / 3, 12, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, new LiteralText("CurseForge"), (btn) -> JsMacros.openURI("https://www.curseforge.com/minecraft/mc-mods/jsmacros")));
+
         this.setMessage(new TranslatableText("jsmacros.aboutinfo"));
     }
     
     public void setMessage(Text message) {
-        this.text = textRenderer.wrapStringToWidthAsList(message.asFormattedString(), width - 6).stream().map(LiteralText::new).collect(Collectors.toList());
+        this.text = textRenderer.wrapLines(message.asFormattedString(), width - 6).stream().map(
+            LiteralText::new).collect(Collectors.toList());
         this.lines = Math.min(Math.max((height - 27) / textRenderer.fontHeight, 1), text.size());
         this.vcenter = ((height - 12) - (lines * textRenderer.fontHeight)) / 2;
     }
@@ -46,7 +47,8 @@ public class AboutOverlay extends OverlayContainer {
     protected void renderMessage() {
         for (int i = 0; i < lines; ++i) {
             int w = textRenderer.getStringWidth(text.get(i).asFormattedString());
-            textRenderer.draw(text.get(i).asFormattedString(), x + width / 2F - w / 2F, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF);
+            textRenderer.draw(text.get(i).asFormattedString(),
+                (int) (x + width / 2F - w / 2F), y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF);
         }
     }
     

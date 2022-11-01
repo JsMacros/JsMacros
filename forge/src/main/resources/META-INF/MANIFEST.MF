@@ -1,2 +1,5 @@
 Manifest-Version: 1.0
-MixinConnector: xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser
+TweakClass: org.spongepowered.asm.launch.MixinTweaker,
+FMLCorePlugin: xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser
+FMLCorePluginContainsFMLMod: true
+ForceLoadAsMod: true

@@ -6,6 +6,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.jsmacros.client.access.IStyle;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,13 +14,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-public abstract class TextStyleCompiler extends AbsVisitor {
+public class TextStyleCompiler extends AbsVisitor {
     protected final Style defaultStyle;
     protected final Map<String, short[]> themeData;
     protected final List<LiteralText> result = new LinkedList<>();
 
-    public static BiFunction<Style, Map<String, short[]>, TextStyleCompiler> getTextStyleCompiler;
-    
     public TextStyleCompiler(Style defaultStyle, Map<String, short[]> themeData) {
         this.defaultStyle = defaultStyle;
         this.themeData = themeData;
@@ -35,7 +34,16 @@ public abstract class TextStyleCompiler extends AbsVisitor {
             if (++i < lines.length) result.add((LiteralText) new LiteralText("").setStyle(defaultStyle.copy()));
         }
     }
-    
+
+    @Override
+    protected void visitSyntax(@NotNull Prism4j.Syntax syntax) {
+        Optional<Integer> update = colorForSyntax(syntax.type(), syntax.alias());
+        Style newStyle = update.isPresent() ? ((IStyle)defaultStyle.copy()).jsmacros_setCustomColor(update.get()) : defaultStyle.copy();
+        final TextStyleCompiler child = new TextStyleCompiler(newStyle, themeData);
+        child.visit(syntax.children());
+        appendChildResult(child.getResult());
+    }
+
     protected void appendChildResult(List<LiteralText> childResult) {
         LiteralText first = childResult.remove(0);
         result.get(result.size() - 1).append(first);

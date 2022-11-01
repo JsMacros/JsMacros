@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.LiteralText;
 import org.apache.logging.log4j.Level;
 import net.minecraft.text.TranslatableText;
@@ -59,13 +59,12 @@ public class CancelScreen extends BaseScreen {
         } else {
             JsMacros.LOGGER.warn("Closed context {} was still in list", t.getMainThread().getName());
         }
-            running.add(new RunningContextContainer(10, topScroll + running.size() * 15, width - 26, 13, font, this, t));
+            running.add(new RunningContextContainer(10, topScroll + running.size() * 15, width - 26, 13, textRenderer, this, t));
     }
 
     public void removeContainer(RunningContextContainer t) {
-        for (AbstractButtonWidget b : t.getButtons()) {
+        for (ButtonWidget b : t.getButtons()) {
             buttons.remove(b);
-            children.remove(b);
         }
         running.remove(t);
         s.setScrollPages(running.size() * 15 / (double)(height - 20));
@@ -88,7 +87,7 @@ public class CancelScreen extends BaseScreen {
     }
     
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(int mouseX, int mouseY, int amount) {
         s.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
@@ -108,8 +107,8 @@ public class CancelScreen extends BaseScreen {
             addContainer(t);
         }
         
-        for (AbstractButtonWidget b : ImmutableList.copyOf(this.buttons)) {
-            b.render(mouseX, mouseY, delta);
+        for (ButtonWidget b : ImmutableList.copyOf(this.buttons)) {
+            b.method_891(client, mouseX, mouseY, delta);
         }
     }
 

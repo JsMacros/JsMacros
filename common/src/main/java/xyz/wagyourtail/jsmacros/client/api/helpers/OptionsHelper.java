@@ -138,25 +138,19 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.2.0
      */
     public OptionsHelper setEnabledResourcePacks(String[] enabled) {
-        Collection<String> en = Arrays.stream(enabled).distinct().collect(Collectors.toList());
-        List<String> currentRP = ImmutableList.copyOf(base.resourcePacks);
-        Collection<ClientResourcePackProfile> prof = en.stream().map(e -> rpm.getProfile(e)).filter(Objects::nonNull).collect(Collectors.toList());
-        rpm.setEnabledProfiles(prof);
-        base.resourcePacks.clear();
-        base.incompatibleResourcePacks.clear();
-        for (ResourcePackProfile p : rpm.getEnabledProfiles()) {
-            if (!p.isPinned()) {
-                base.resourcePacks.add(p.getName());
-                if (!p.getCompatibility().isCompatible()) {
-                    base.incompatibleResourcePacks.add(p.getName());
+        mc.execute(() -> {
+            ResourcePackLoader.Entry[] enabledRP = new ResourcePackLoader.Entry[enabled.length];
+            for (ResourcePackLoader.Entry e : rpm.method_5904()) {
+                for (int i = 0; i < enabled.length; ++i) {
+                    if (e.getName().equals(enabled[i])) {
+                        enabledRP[i] = e;
+                    }
                 }
             }
-        }
-        base.write();
-        List<String> newRP = ImmutableList.copyOf(base.resourcePacks);
-        if (!currentRP.equals(newRP)) {
-            mc.reloadResources();
-        }
+            rpm.method_7038(Arrays.stream(enabledRP).filter(Objects::nonNull).collect(Collectors.toList()));
+            base.save();
+            mc.stitchTextures();
+        });
         return this;
     }
 
@@ -167,7 +161,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     public OptionsHelper removeServerResourcePack(boolean state) {
         if (state != ((IResourcePackManager) rpm).jsmacros_isServerPacksDisabled()) {
             ((IResourcePackManager) rpm).jsmacros_disableServerPacks(state);
-            mc.reloadResources();
+            mc.stitchTextures();
         }
         return this;
     }
@@ -312,7 +306,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.2.6
      */
     public int getWidth() {
-        return mc.window.getWidth();
+        return mc.width;
     }
 
     /**
@@ -321,7 +315,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.2.6
      */
     public int getHeight() {
-        return mc.window.getHeight();
+        return mc.height;
     }
 
     /**

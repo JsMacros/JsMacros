@@ -47,12 +47,12 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
     }
 
     public SuggestionsBuilderHelper suggestWithTooltip(String suggestion, TextHelper tooltip) {
-        base.suggest(suggestion, tooltip.getRaw());
+        base.suggest(suggestion, new LiteralMessage(tooltip.getRaw().getString()));
         return this;
     }
 
     public SuggestionsBuilderHelper suggestWithTooltip(int value, TextHelper tooltip) {
-        base.suggest(String.valueOf(value), tooltip.getRaw());
+        base.suggest(String.valueOf(value), new LiteralMessage(tooltip.getRaw().getString()));
         return this;
     }
 

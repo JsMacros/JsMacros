@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.gui.editor;
 
+
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
