@@ -13,6 +13,7 @@ import xyz.wagyourtail.wagyourgui.elements.TextInput;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -174,7 +175,7 @@ public abstract class BaseScreen extends GuiScreen implements IOverlayParent {
     }
 
     public boolean mouseDragged(int mouseX, int mouseY, int button, int deltaX, int deltaY) {
-        GuiButton focused = ((IScreen) this).getFocused();
+        GuiButton focused = ((IScreenInternal) this).getFocused();
         if (focused instanceof Scrollbar) {
             ((Scrollbar) focused).mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
             return true;
