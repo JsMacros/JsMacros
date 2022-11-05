@@ -1070,9 +1070,9 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     public PacketByteBufferHelper writeBlockHitResult(PositionCommon.Pos3D pos, String direction, BlockPosHelper blockPos, boolean missed, boolean insideBlock) {
         BlockHitResult result;
         if (missed) {
-            result = BlockHitResult.createMissed(pos.toRawVec3d(), Direction.valueOf(direction), blockPos.getRaw());
+            result = BlockHitResult.createMissed(pos.toMojangDoubleVector(), Direction.valueOf(direction), blockPos.getRaw());
         } else {
-            result = new BlockHitResult(pos.toRawVec3d(), Direction.valueOf(direction), blockPos.getRaw(), insideBlock);
+            result = new BlockHitResult(pos.toMojangDoubleVector(), Direction.valueOf(direction), blockPos.getRaw(), insideBlock);
         }
         return writeBlockHitResult(result);
     }

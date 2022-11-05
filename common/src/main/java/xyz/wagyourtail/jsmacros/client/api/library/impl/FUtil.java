@@ -108,7 +108,7 @@ import java.util.SplittableRandom;
  * @author Etheradon
  * @since 1.8.4
  */
-@Library("Util")
+@Library("JavaUtils")
 @SuppressWarnings("unused")
 public class FUtil extends BaseLibrary {
 
@@ -169,6 +169,20 @@ public class FUtil extends BaseLibrary {
      */
     public BaseHelper<?> getHelperFromRaw(Object raw) {
         // Didn't implement CommandNodeHelper, TradeOfferHelper, ModContainerHelper
+        if (raw instanceof Entity) {
+            return EntityHelper.create(((Entity) raw));
+        }
+
+        if (raw instanceof Block) {
+            return new BlockHelper(((Block) raw));
+        } else if (raw instanceof BlockPos) {
+            return new BlockPosHelper(((BlockPos) raw));
+        } else if (raw instanceof BlockState) {
+            return new BlockStateHelper(((BlockState) raw));
+        } else if (raw instanceof FluidState) {
+            return new FluidStateHelper(((FluidState) raw));
+        }
+        
         if (raw instanceof BossBar) {
             return new BossBarHelper((BossBar) raw);
         } else if (raw instanceof ChatHudLine) {
@@ -221,26 +235,12 @@ public class FUtil extends BaseLibrary {
             return new FormattingHelper(((Formatting) raw));
         }
 
-        if (raw instanceof Entity) {
-            return EntityHelper.create(((Entity) raw));
-        }
-
         if (raw instanceof Advancement) {
             return new AdvancementHelper(((Advancement) raw));
         } else if (raw instanceof AdvancementManager) {
             return new AdvancementManagerHelper(((AdvancementManager) raw));
         } else if (raw instanceof AdvancementProgress) {
             return new AdvancementProgressHelper(((AdvancementProgress) raw));
-        }
-
-        if (raw instanceof Block) {
-            return new BlockHelper(((Block) raw));
-        } else if (raw instanceof BlockPos) {
-            return new BlockPosHelper(((BlockPos) raw));
-        } else if (raw instanceof BlockState) {
-            return new BlockStateHelper(((BlockState) raw));
-        } else if (raw instanceof FluidState) {
-            return new FluidStateHelper(((FluidState) raw));
         }
 
         if (raw instanceof CheckBox) {
@@ -296,33 +296,6 @@ public class FUtil extends BaseLibrary {
      */
     public String arrayDeepToString(Object[] array) {
         return Arrays.deepToString(array);
-    }
-
-    /**
-     * @param obj           the object to get the fields of
-     * @param includeStatic whether to include static fields
-     * @return a map of all the fields and their values in the given object.
-     *
-     * @since 1.8.4
-     */
-    public Map<String, Object> toFieldMap(Object obj, boolean includeStatic) {
-        Map<String, Object> fields = new HashMap<>();
-        Class<?> clazz = obj.getClass();
-        while (clazz != null) {
-            for (Field field : clazz.getDeclaredFields()) {
-                if (Modifier.isStatic(field.getModifiers()) && !includeStatic) {
-                    continue;
-                }
-                field.setAccessible(true);
-                try {
-                    fields.put(field.getName(), field.get(obj));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-            clazz = clazz.getSuperclass();
-        }
-        return fields;
     }
 
     /**

@@ -33,7 +33,7 @@ public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
 
     @Override
     public String toString() {
-        return String.format("ChatHudLine:{\"text\": \"%s\", \"creationTick\": %d}", base.content().getString(), base.creationTick());
+        return String.format("ChatHudLineHelper:{\"text\": \"%s\", \"creationTick\": %d}", base.content().getString(), base.creationTick());
     }
     
 }

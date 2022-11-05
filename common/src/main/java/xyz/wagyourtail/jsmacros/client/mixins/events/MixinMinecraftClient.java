@@ -35,9 +35,6 @@ public abstract class MixinMinecraftClient {
 
     @Shadow @Nullable public ClientPlayerInteractionManager interactionManager;
 
-    @Shadow
-    static MinecraftClient instance;
-
     @Shadow @Final
     private Session session;
 

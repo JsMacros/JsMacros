@@ -296,17 +296,17 @@ public class FWorld extends BaseLibrary {
      * @since 1.8.4
      */
     public void iterateSphere(BlockPosHelper pos, int radius, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
-        iterateSphere(pos, radius, callback, true);
+        iterateSphere(pos, radius, true, callback);
     }
 
     /**
      * @param pos the center position
      * @param radius the radius to scan
-     * @param callback the callback to call for each block
      * @param ignoreAir whether to ignore air blocks
+     * @param callback the callback to call for each block
      * @since 1.8.4
      */
-    public void iterateSphere(BlockPosHelper pos, int radius, MethodWrapper<BlockDataHelper, ?, ?, ?> callback, boolean ignoreAir) {
+    public void iterateSphere(BlockPosHelper pos, int radius, boolean ignoreAir, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
         if (radius < 0) {
             throw new IllegalArgumentException("radius cannot be negative");
         }
@@ -347,7 +347,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.8.4
      */
     public void iterateBox(BlockPosHelper pos1, BlockPosHelper pos2, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
-        iterateBox(pos1, pos2, callback, true);
+        iterateBox(pos1, pos2, true, callback);
     }
 
     /**
@@ -357,7 +357,7 @@ public class FWorld extends BaseLibrary {
      * @param ignoreAir whether to ignore air blocks
      * @since 1.8.4
      */
-    public void iterateBox(BlockPosHelper pos1, BlockPosHelper pos2, MethodWrapper<BlockDataHelper, ?, ?, ?> callback, boolean ignoreAir) {
+    public void iterateBox(BlockPosHelper pos1, BlockPosHelper pos2, boolean ignoreAir, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
         assert mc.world != null;
         BlockPos.stream(pos1.getRaw().withY(MathHelper.clamp(mc.world.getBottomY(), pos1.getY(), mc.world.getHeight())), pos2.getRaw().withY(MathHelper.clamp(mc.world.getBottomY(), pos2.getY(), mc.world.getHeight()))).forEach(bp -> {
             BlockState state = mc.world.getBlockState(bp);
@@ -575,11 +575,12 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @return the name of the loaded world or {@code "UNKNOWN_NAME"} if no name could be found.
+     * @return an identifier for the loaded world, that is mostly unique if , or
+     *         {@code "UNKNOWN_NAME"} if no name could be found.
      *
      * @since 1.8.4
      */
-    public String getServerName() {
+    public String getWorldIdentifier() {
         IntegratedServer server = mc.getServer();
         if (server != null) {
             return "LOCAL_" + server.getSavePath(WorldSavePath.ROOT).normalize().getFileName();

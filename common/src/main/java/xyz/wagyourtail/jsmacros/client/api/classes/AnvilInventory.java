@@ -29,10 +29,13 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
      * The change will be applied once the item is taken out of the anvil.
      *
      * @param name the new item name
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void seName(String name) {
+    public AnvilInventory seName(String name) {
         ((MixinAnvilScreen) inventory).getNameField().setText(name);
+        return this;
     }
 
     /**

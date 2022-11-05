@@ -152,7 +152,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      *
      * @since 1.8.4
      */
-    SliderWidgetHelper addSlider(int x, int y, int width, int height, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback, int steps);
+    SliderWidgetHelper addSlider(int x, int y, int width, int height, String text, double value, int steps, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback);
 
     /**
      * @param x        the x position of the slider
@@ -168,7 +168,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      *
      * @since 1.8.4
      */
-    SliderWidgetHelper addSlider(int x, int y, int width, int height, int zIndex, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback, int steps);
+    SliderWidgetHelper addSlider(int x, int y, int width, int height, int zIndex, String text, double value, int steps, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback);
 
     /**
      * @param x        the x position of the slider
@@ -307,7 +307,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      *
      * @since 1.8.4
      */
-    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String initial);
+    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, String[] values, String initial, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback);
 
     /**
      * @param x        the x position of the cylcing button
@@ -323,7 +323,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      *
      * @since 1.8.4
      */
-    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String initial);
+    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String initial, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback);
 
     /**
      * @param x            the x position of the cylcing button
@@ -341,7 +341,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      *
      * @since 1.8.4
      */
-    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String[] alternatives, String initial, String prefix);
+    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback);
 
     /**
      * @param x               the x position of the cylcing button
@@ -361,7 +361,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      *
      * @since 1.8.4
      */
-    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<?, ?, Boolean, ?> alternateToggle);
+    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<?, ?, Boolean, ?> alternateToggle, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback);
 
     /**
      * @since 1.0.5
@@ -479,6 +479,14 @@ public interface IScreen extends IDraw2D<IScreen> {
     CheckBoxWidgetHelper.CheckBoxBuilder checkBoxBuilder();
 
     /**
+     * @param checked whether the checkbox should be checked by default
+     * @return a new builder for checkboxes.
+     *
+     * @since 1.8.4
+     */
+    CheckBoxWidgetHelper.CheckBoxBuilder checkBoxBuilder(boolean checked);
+    
+    /**
      * @return a new builder for cycling buttons.
      *
      * @since 1.8.4
@@ -492,6 +500,14 @@ public interface IScreen extends IDraw2D<IScreen> {
      */
     LockButtonWidgetHelper.LockButtonBuilder lockButtonBuilder();
 
+    /**
+     * @param locked whether the lock button should be locked by default
+     * @return a new builder for lock buttons.
+     *
+     * @since 1.8.4
+     */
+    LockButtonWidgetHelper.LockButtonBuilder lockButtonBuilder(boolean locked);
+    
     /**
      * @return a new builder for sliders.
      *

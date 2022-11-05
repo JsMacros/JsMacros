@@ -45,7 +45,7 @@ public class MixinHandledScreen<T extends ScreenHandler> extends Screen implemen
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/util/math/MatrixStack;II)V", shift = At.Shift.BEFORE))
-    public void onDrawSlot(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    public void onDrawForeground(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (!Core.getInstance().config.getOptions(ClientConfigV2.class).showSlotIndexes) {
             return;
         }

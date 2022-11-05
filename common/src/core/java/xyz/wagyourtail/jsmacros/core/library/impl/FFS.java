@@ -256,32 +256,32 @@ public class FFS extends PerExecLibrary {
 
     /**
      * @param path the relative path to get the file object for
-     * @return the file object for the specified path
+     * @return the file object for the specified path.
      *
      * @since 1.8.4
      */
-    public File toFile(String path) {
-        return ctx.getContainedFolder().toPath().resolve(path).toFile();
+    public File toRawFile(String path) {
+        return toRawPath(path).toFile();
     }
 
     /**
      * @param path the relative path to get the path object for
-     * @return the path object for the specified path
+     * @return the path object for the specified path.
      *
      * @since 1.8.4
      */
-    public Path toPath(String path) {
+    public Path toRawPath(String path) {
         return ctx.getContainedFolder().toPath().resolve(path);
     }
 
     /**
      * @param path the path relative to the script's folder
-     * @return the attributes of the file at the specified path
+     * @return the attributes of the file at the specified path.
      *
      * @throws IOException
      * @since 1.8.4
      */
-    public BasicFileAttributes getAttributes(String path) throws IOException {
+    public BasicFileAttributes getRawAttributes(String path) throws IOException {
         return java.nio.file.Files.readAttributes(ctx.getContainedFolder().toPath().resolve(path), BasicFileAttributes.class);
     }
 

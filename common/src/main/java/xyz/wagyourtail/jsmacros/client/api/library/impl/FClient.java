@@ -137,7 +137,9 @@ public class FClient extends PerExecLibrary {
      * @since 1.1.7 (was in the {@code jsmacros} library until 1.2.9)
      *
      * @return an {@link xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper OptionsHelper} for the game options.
+     * @deprecated use {@link #getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper getGameOptions() {
         return new OptionsHelper(mc.options);
     }

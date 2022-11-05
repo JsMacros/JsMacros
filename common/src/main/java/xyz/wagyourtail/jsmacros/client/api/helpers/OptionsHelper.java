@@ -36,7 +36,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.1.7
      * @return 0: off, 2: fancy
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public int getCloudMode() {
         switch (base.getCloudRenderMode().getValue()) {
             case FANCY:
@@ -51,7 +53,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.1.7
      * @param mode 0: off, 2: fancy 
      * @return
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper setCloudMode(int mode) {
         switch(mode) {
             case 2:
@@ -68,7 +72,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.1.7
      * @return
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public int getGraphicsMode() {
         switch (base.getGraphicsMode().getValue()) {
             case FABULOUS:
@@ -83,7 +89,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.1.7
      * @param mode 0: fast, 2: fabulous
      * @return
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper setGraphicsMode(int mode) {
         switch(mode) {
             case 2:
@@ -100,7 +108,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.1.7
      * @return list of names of resource packs.
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public List<String> getResourcePacks() {
         return new ArrayList<String>(rpm.getNames());
     }
@@ -108,7 +118,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.2.0
      * @return list of names of enabled resource packs.
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public List<String> getEnabledResourcePacks() {
         return new ArrayList<String>(rpm.getEnabledNames());
     }
@@ -119,7 +131,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.2.0
      * @param enabled
      * @return
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper setEnabledResourcePacks(String[] enabled) {
         Collection<String> en = new ArrayList<String>(Arrays.asList(enabled).stream().distinct().collect(Collectors.toList()));
         List<String> currentRP = ImmutableList.copyOf(base.resourcePacks);
@@ -145,7 +159,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.8.3
      * @param state false to put it back
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper removeServerResourcePack(boolean state) {
         if (state != ((IResourcePackManager) rpm).jsmacros_isServerPacksDisabled()) {
             ((IResourcePackManager) rpm).jsmacros_disableServerPacks(state);
@@ -157,7 +173,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.1.7
      * @return
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public boolean isRightHanded() {
         return base.getMainArm().getValue() == Arm.RIGHT;
     }
@@ -165,7 +183,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.1.7
      * @param val
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper setRightHanded(boolean val) {
         if (val) {
             base.getMainArm().setValue(Arm.RIGHT);
@@ -178,7 +198,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.1.7
      * @return
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public double getFov() {
         return base.getFov().getValue();
     }
@@ -187,7 +209,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.1.7
      * @param fov (int since 1.7.0)
      * @return
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper setFov(int fov) {
         ((MixinSimpleOption)(Object) base.getFov()).forceSetValue(fov);
         return this;
@@ -196,7 +220,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.1.7
      * @return
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public int getRenderDistance() {
         return base.getViewDistance().getValue();
     }
@@ -204,7 +230,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.1.7
      * @param d
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper setRenderDistance(int d) {
         ((MixinSimpleOption)(Object) base.getViewDistance()).forceSetValue(d);
         return this;
@@ -213,7 +241,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.2.6
      * @return
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public int getWidth() {
         return mc.getWindow().getWidth();
     }
@@ -221,7 +251,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.2.6
      * @return
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public int getHeight() {
         return mc.getWindow().getHeight();
     }
@@ -229,7 +261,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.2.6
      * @param w
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper setWidth(int w) {
         Window win = mc.getWindow();
         GLFW.glfwSetWindowSize(win.getHandle(), w, win.getHeight());
@@ -239,7 +273,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.2.6
      * @param h
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper setHeight(int h) {
         Window win = mc.getWindow();
         GLFW.glfwSetWindowSize(win.getHandle(), win.getWidth(), h);
@@ -250,7 +286,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.2.6
      * @param w
      * @param h
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper setSize(int w, int h) {
         Window win = mc.getWindow();
         GLFW.glfwSetWindowSize(win.getHandle(), w, h);
@@ -260,7 +298,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.3.0
      * normal values for gamam are between {@code 0} and {@code 1}
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public double getGamma() {
         return base.getGamma().getValue();
     }
@@ -268,7 +308,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.3.0
      * normal values for gamma are between {@code 0} and {@code 1}
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper setGamma(double gamma) {
         ((MixinSimpleOption)(Object) base.getGamma()).forceSetValue(gamma);
         return this;
@@ -277,7 +319,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.3.1
      * @param vol
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper setVolume(double vol) {
         base.setSoundVolume(SoundCategory.MASTER, (float) vol);
         return this;
@@ -289,7 +333,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.3.1
      * @param category
      * @param volume
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper setVolume(String category, double volume) {
         base.setSoundVolume(SOUND_CATEGORY_MAP.get(category), (float) volume);
         return this;
@@ -298,7 +344,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.3.1
      * @return
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public Map<String, Float> getVolumes() {
         Map<String, Float> volumes = new HashMap<>();
         for (SoundCategory category : SoundCategory.values()) {
@@ -312,7 +360,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      *
      * @since 1.3.1
      * @param scale
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper setGuiScale(int scale) {
         base.getGuiScale().setValue(scale);
         mc.execute(mc::onResolutionChanged);
@@ -322,7 +372,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.3.1
      * @return gui scale, {@code 0} for auto.
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public int getGuiScale() {
         return base.getGuiScale().getValue();
     }
@@ -331,7 +383,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @param category
      * @since 1.3.1
      * @return
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public float getVolume(String category) {
         return base.getSoundVolume(SOUND_CATEGORY_MAP.get(category));
     }
@@ -339,7 +393,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.5.0
      * @return
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public boolean getSmoothCamera() {
         return base.smoothCameraEnabled;
     }
@@ -347,7 +403,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @param val
      * @since 1.5.0
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper setSmoothCamera(boolean val) {
         base.smoothCameraEnabled = val;
         return this;
@@ -356,7 +414,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @since 1.5.0
      * @return 0 for 1st person, 2 for in front.
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public int getCameraMode() {
         return base.getPerspective().ordinal();
     }
@@ -364,7 +424,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * @param mode 0: first, 2: front
      * @since 1.5.0
+     * @deprecated use the respective method in {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FClient#getFullGameOptions()} instead.
      */
+    @Deprecated
     public OptionsHelper setCameraMode(int mode) {
         base.setPerspective(Perspective.values()[mode]);
         return this;

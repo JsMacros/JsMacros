@@ -6,6 +6,7 @@ import net.minecraft.entity.passive.AbstractHorseEntity;
 
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.AbstractHorseEntityHelper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -96,6 +97,15 @@ public class HorseInventory extends Inventory<HorseScreen> {
     public List<ItemStackHelper> getHorseInventory() {
         final int otherSlots = 2;
         return IntStream.range(otherSlots, getInventorySize() + otherSlots).mapToObj(this::getSlot).collect(Collectors.toList());
+    }
+
+    /**
+     * @return the horse this inventory belongs to.
+     *
+     * @since 1.8.4
+     */
+    public AbstractHorseEntityHelper<?> getHorse() {
+        return new AbstractHorseEntityHelper<>(horse);
     }
 
     @Override

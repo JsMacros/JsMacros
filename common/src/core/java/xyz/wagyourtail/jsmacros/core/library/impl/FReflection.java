@@ -26,6 +26,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
@@ -488,6 +489,33 @@ public class FReflection extends PerExecLibrary {
      */
     public WrappedClassInstance<?> getWrappedClass(String className) throws ClassNotFoundException {
         return new WrappedClassInstance(null, Class.forName(className.replace("/", ".")));
+    }
+
+    /**
+     * @param obj           the object to get the fields of
+     * @param includeStatic whether to include static fields
+     * @return a map of all fields and their respective values in the given object.
+     *
+     * @since 1.8.4
+     */
+    public Map<String, Object> toFieldMap(Object obj, boolean includeStatic) {
+        Map<String, Object> fields = new HashMap<>();
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            for (Field field : clazz.getDeclaredFields()) {
+                if (Modifier.isStatic(field.getModifiers()) && !includeStatic) {
+                    continue;
+                }
+                field.setAccessible(true);
+                try {
+                    fields.put(field.getName(), field.get(obj));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return fields;
     }
     
     /**

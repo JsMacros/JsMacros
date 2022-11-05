@@ -10,9 +10,9 @@ import xyz.wagyourtail.jsmacros.client.access.IBeaconScreen;
 @Mixin(BeaconScreen.class)
 public class MixinBeaconScreen implements IBeaconScreen {
 
-    @Shadow @Nullable StatusEffect primaryEffect;
+    @Shadow @Nullable private StatusEffect primaryEffect;
 
-    @Shadow @Nullable StatusEffect secondaryEffect;
+    @Shadow @Nullable private StatusEffect secondaryEffect;
 
     @Override
     public StatusEffect jsmacros_getPrimaryEffect() {

@@ -381,8 +381,13 @@ public class PositionCommon {
         public BlockPos toRawBlockPos() {
             return new BlockPos(Math.floor(x), Math.floor(y), Math.floor(z));
         }
-        
-        public Vec3d toRawVec3d() {
+
+        /**
+         * @return the raw minecraft double vector with the same coordinates as this position.
+         *
+         * @since 1.8.4
+         */
+        public Vec3d toMojangDoubleVector() {
             return new Vec3d(x, y, z);
         }
     }

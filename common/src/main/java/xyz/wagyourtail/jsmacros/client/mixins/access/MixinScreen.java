@@ -79,11 +79,8 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Shadow(aliases = {"close", "method_25419", "m_7379_"}) public abstract void onClose();
     @Shadow protected abstract void init();
 
-    
     @Shadow public abstract void tick();
     
-    @Shadow public abstract boolean shouldCloseOnEsc();
-
     @Shadow @Final private List<Element> children;
 
     @Shadow protected abstract void renderTextHoverEffect(MatrixStack matrices, @Nullable Style style, int x, int y);
@@ -278,7 +275,6 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
         return t;
     }
-    
     
     @Override
     public RenderCommon.Text addText(TextHelper text, int x, int y, int color, boolean shadow) {
@@ -597,13 +593,13 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public SliderWidgetHelper addSlider(int x, int y, int width, int height, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback, int steps) {
-        return addSlider(x, y, width, height, 0, text, value, callback, steps);
+    public SliderWidgetHelper addSlider(int x, int y, int width, int height, String text, double value, int steps, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback) {
+        return addSlider(x, y, width, height, 0, text, value, steps, callback);
     }
 
     @Override
     public SliderWidgetHelper addSlider(int x, int y, int width, int height, int zIndex, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback) {
-        return addSlider(x, y, width, height, zIndex, text, value, callback, Integer.MAX_VALUE);
+        return addSlider(x, y, width, height, zIndex, text, value, Integer.MAX_VALUE, callback);
     }
 
     @Override
@@ -612,7 +608,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public SliderWidgetHelper addSlider(int x, int y, int width, int height, int zIndex, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback, int steps) {
+    public SliderWidgetHelper addSlider(int x, int y, int width, int height, int zIndex, String text, double value, int steps, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback) {
         AtomicReference<SliderWidgetHelper> ref = new AtomicReference<>(null);
 
         Slider slider = new Slider(x, y, width, height, net.minecraft.text.Text.literal(text), value, (btn) -> {
@@ -690,22 +686,22 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String initial) {
-        return addCyclingButton(x, y, width, height, 0, callback, values, initial);
+    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, String[] values, String initial, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback) {
+        return addCyclingButton(x, y, width, height, 0, values, initial, callback);
     }
 
     @Override
-    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String initial) {
-        return addCyclingButton(x, y, width, height, 0, callback, values, null, initial, null);
+    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String initial, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback) {
+        return addCyclingButton(x, y, width, height, 0, values, null, initial, null, callback);
     }
 
     @Override
-    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String[] alternatives, String initial, String prefix) {
-        return addCyclingButton(x, y, width, height, 0, callback, values, alternatives, initial, prefix, null);
+    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback) {
+        return addCyclingButton(x, y, width, height, 0, values, alternatives, initial, prefix, null, callback);
     }
 
     @Override
-    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<?, ?, Boolean, ?> alternateToggle) {
+    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<?, ?, Boolean, ?> alternateToggle, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback) {
         AtomicReference<CyclingButtonWidgetHelper<?>> ref = new AtomicReference<>(null);
         CyclingButtonWidget<String> cyclingButton;
         CyclingButtonWidget.Builder<String> builder = CyclingButtonWidget.builder(net.minecraft.text.Text::literal);
@@ -857,6 +853,11 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
+    public CheckBoxWidgetHelper.CheckBoxBuilder checkBoxBuilder(boolean checked) {
+        return new CheckBoxWidgetHelper.CheckBoxBuilder(this).checked(checked);
+    }
+
+    @Override
     public CyclingButtonWidgetHelper.CyclicButtonBuilder<?> cyclicButtonBuilder(MethodWrapper<Object, ?, TextHelper, ?> valueToText) {
         return new CyclingButtonWidgetHelper.CyclicButtonBuilder<>(this, valueToText);
     }
@@ -866,6 +867,11 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         return new LockButtonWidgetHelper.LockButtonBuilder(this);
     }
 
+    @Override
+    public LockButtonWidgetHelper.LockButtonBuilder lockButtonBuilder(boolean locked) {
+        return new LockButtonWidgetHelper.LockButtonBuilder(this).locked(locked);
+    }
+    
     @Override
     public SliderWidgetHelper.SliderBuilder sliderBuilder() {
         return new SliderWidgetHelper.SliderBuilder(this);
@@ -996,7 +1002,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         getDraw2Ds().forEach(e -> e.getDraw2D().init());
     }
     
-    //TODO: switch to enum extention with mixin 9.0 or whenever Mumfrey gets around to it
+    //TODO: switch to enum extension with mixin 9.0 or whenever Mumfrey gets around to it
     @Inject(at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "handleTextClick", cancellable = true)
     public void handleCustomClickEvent(Style style, CallbackInfoReturnable<Boolean> cir) {
         ClickEvent clickEvent = style.getClickEvent();

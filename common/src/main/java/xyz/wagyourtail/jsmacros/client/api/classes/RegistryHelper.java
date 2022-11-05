@@ -11,6 +11,7 @@ import net.minecraft.util.registry.Registry;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import xyz.wagyourtail.jsmacros.client.api.helpers.CreativeItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EnchantmentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
@@ -46,7 +47,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public ItemStackHelper getItemStack(String id) {
-        return new ItemStackHelper(new ItemStack(Registry.ITEM.get(parseIdentifier(id))));
+        return new CreativeItemStackHelper(new ItemStack(Registry.ITEM.get(parseIdentifier(id))));
     }
 
     /**
@@ -61,7 +62,7 @@ public class RegistryHelper {
         ItemStringReader.ItemResult itemResult = ItemStringReader.item(new CommandRegistryWrapper.Impl<>(Registry.ITEM), new StringReader(parseNameSpace(id) + nbt));
         ItemStack stack = new ItemStack(itemResult.item());
         stack.setNbt(itemResult.nbt());
-        return new ItemStackHelper(stack);
+        return new CreativeItemStackHelper(stack);
     }
 
     /**

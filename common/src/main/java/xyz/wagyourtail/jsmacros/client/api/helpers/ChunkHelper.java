@@ -158,13 +158,13 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     }
 
     /**
-     * @param callback   the callback function
      * @param includeAir whether to include air blocks or not
+     * @param callback   the callback function
      * @return self for chaining.
      *
      * @since 1.8.4
      */
-    public ChunkHelper forEach(MethodWrapper<BlockDataHelper, ?, ?, ?> callback, boolean includeAir) {
+    public ChunkHelper forEach(boolean includeAir, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
         // Maybe adapt this to the WorldScanner way?
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {

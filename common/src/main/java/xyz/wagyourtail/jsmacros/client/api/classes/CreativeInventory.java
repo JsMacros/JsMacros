@@ -33,23 +33,29 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * The total scroll value is always clamp between 0 and 1.
      *
      * @param amount the amount to scroll by, between -1 and 1
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void scroll(double amount) {
+    public CreativeInventory scroll(double amount) {
         scrollTo((float) (((MixinCreativeInventoryScreen) inventory).getScrollPosition() + amount));
+        return this;
     }
 
     /**
      * The total scroll value is always clamp between 0 and 1.
      *
      * @param position the position to scroll to, between 0 and 1
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void scrollTo(double position) {
+    public CreativeInventory scrollTo(double position) {
         if (((MixinCreativeInventoryScreen) inventory).invokeHasScrollbar()) {
             position = MathHelper.clamp(position, 0, 1);
             handler.scrollItems((float) position);
         }
+        return this;
     }
 
     /**
@@ -63,90 +69,142 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
 
     /**
      * @param search the string to search for
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void search(String search) {
-        if (((MixinCreativeInventoryScreen) inventory).getSelectedTab() != ItemGroup.SEARCH.getIndex()) {
-            return;
+    public CreativeInventory search(String search) {
+        if (((MixinCreativeInventoryScreen) inventory).getSelectedTab() == ItemGroup.SEARCH.getIndex()) {
+            ((MixinCreativeInventoryScreen) inventory).getSearchBox().setText(search);
+            ((MixinCreativeInventoryScreen) inventory).invokeSearch();
         }
-        ((MixinCreativeInventoryScreen) inventory).getSearchBox().setText(search);
-        ((MixinCreativeInventoryScreen) inventory).invokeSearch();
+        return this;
     }
 
     /**
      * Select the search tab.
      *
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void selectSearch() {
+    public CreativeInventory selectSearch() {
         selectTab(ItemGroup.SEARCH.getIndex());
+        return this;
     }
 
     /**
      * Select the inventory tab.
      *
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void selectInventory() {
+    public CreativeInventory selectInventory() {
         selectTab(ItemGroup.INVENTORY.getIndex());
+        return this;
     }
 
     /**
      * Select the tab where the hotbars are stored.
      *
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void selectHotbar() {
+    public CreativeInventory selectHotbar() {
         selectTab(ItemGroup.HOTBAR.getIndex());
+        return this;
     }
 
     /**
      * @param tab the index of the tab to select
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void selectTab(int tab) {
+    public CreativeInventory selectTab(int tab) {
         selectTab(ItemGroup.GROUPS[tab]);
+        return this;
     }
 
-    private void selectTab(ItemGroup group) {
+    private CreativeInventory selectTab(ItemGroup group) {
         mc.execute(() -> ((MixinCreativeInventoryScreen) inventory).invokeSetSelectedTab(ItemGroup.GROUPS[group.getIndex()]));
+        return this;
     }
 
     /**
      * Destroys the currently held item.
      *
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void destroyHeldItem() {
+    public CreativeInventory destroyHeldItem() {
         handler.setCursorStack(ItemStack.EMPTY);
+        return this;
     }
 
     /**
      * Destroys all items in the player's inventory.
      *
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void destroyAllItems() {
+    public CreativeInventory destroyAllItems() {
         ClientPlayerInteractionManager interactionManager = MinecraftClient.getInstance().interactionManager;
         for (int i = 0; i < getTotalSlots(); i++) {
             interactionManager.clickCreativeStack(ItemStack.EMPTY, i);
         }
+        return this;
+    }
+
+    /**
+     * @param stack the item stack to drag
+     * @return self for chaining.
+     *
+     * @see RegistryHelper#getItemStack(String, String)
+     * @since 1.8.4
+     */
+    public CreativeInventory setCursorStack(ItemStackHelper stack) {
+        handler.setCursorStack(stack.getRaw());
+        return this;
+    }
+
+    /**
+     * @param slot  the slot to insert the item into
+     * @param stack the item stack to insert
+     * @return self for chaining.
+     *
+     * @see RegistryHelper#getItemStack(String, String)
+     * @since 1.8.4
+     */
+    public CreativeInventory setStack(int slot, ItemStackHelper stack) {
+        MinecraftClient.getInstance().interactionManager.clickCreativeStack(stack.getRaw(), slot);
+        return this;
     }
 
     /**
      * @param index the index to save the hotbar to, from 0 to 8
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void saveHotbar(int index) {
+    public CreativeInventory saveHotbar(int index) {
         CreativeInventoryScreen.onHotbarKeyPress(MinecraftClient.getInstance(), index, false, true);
+        return this;
     }
 
     /**
      * @param index the index to save the hotbar to, from 0 to 8
+     * @return self for chaining.
+     *
      * @since 1.8.4
      */
-    public void restoreHotbar(int index) {
+    public CreativeInventory restoreHotbar(int index) {
         CreativeInventoryScreen.onHotbarKeyPress(MinecraftClient.getInstance(), index, true, false);
+        return this;
     }
 
     /**

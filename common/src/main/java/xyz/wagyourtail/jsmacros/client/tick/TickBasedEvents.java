@@ -19,6 +19,7 @@ public class TickBasedEvents {
     private static ItemStack chestArmor = ItemStack.EMPTY;
     private static ItemStack headArmor = ItemStack.EMPTY;
     private static boolean previousFallFlyState = false;
+    private static long counter = 0;
 
 
 
@@ -67,6 +68,10 @@ public class TickBasedEvents {
         new EventTick();
         new EventJoinedTick();
 
+        if (++counter % 10 == 0) {
+            JsMacros.core.services.tickReloadListener();
+        }
+        
         if (mc.player != null) {
             boolean state = mc.player.isFallFlying();
             if (previousFallFlyState ^ state) {

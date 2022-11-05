@@ -12,60 +12,8 @@ import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.decoration.EndCrystalEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.decoration.painting.PaintingEntity;
-import net.minecraft.entity.mob.AbstractPiglinEntity;
-import net.minecraft.entity.mob.BlazeEntity;
-import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.entity.mob.DrownedEntity;
-import net.minecraft.entity.mob.EndermanEntity;
-import net.minecraft.entity.mob.GhastEntity;
-import net.minecraft.entity.mob.GuardianEntity;
-import net.minecraft.entity.mob.IllagerEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.PhantomEntity;
-import net.minecraft.entity.mob.PiglinEntity;
-import net.minecraft.entity.mob.PillagerEntity;
-import net.minecraft.entity.mob.ShulkerEntity;
-import net.minecraft.entity.mob.SlimeEntity;
-import net.minecraft.entity.mob.SpellcastingIllagerEntity;
-import net.minecraft.entity.mob.SpiderEntity;
-import net.minecraft.entity.mob.VexEntity;
-import net.minecraft.entity.mob.VindicatorEntity;
-import net.minecraft.entity.mob.WardenEntity;
-import net.minecraft.entity.mob.WitchEntity;
-import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.entity.mob.ZombieVillagerEntity;
-import net.minecraft.entity.passive.AbstractDonkeyEntity;
-import net.minecraft.entity.passive.AbstractHorseEntity;
-import net.minecraft.entity.passive.AllayEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.AxolotlEntity;
-import net.minecraft.entity.passive.BatEntity;
-import net.minecraft.entity.passive.BeeEntity;
-import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.entity.passive.DolphinEntity;
-import net.minecraft.entity.passive.FishEntity;
-import net.minecraft.entity.passive.FoxEntity;
-import net.minecraft.entity.passive.FrogEntity;
-import net.minecraft.entity.passive.GoatEntity;
-import net.minecraft.entity.passive.HorseEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.LlamaEntity;
-import net.minecraft.entity.passive.MerchantEntity;
-import net.minecraft.entity.passive.MooshroomEntity;
-import net.minecraft.entity.passive.OcelotEntity;
-import net.minecraft.entity.passive.PandaEntity;
-import net.minecraft.entity.passive.ParrotEntity;
-import net.minecraft.entity.passive.PigEntity;
-import net.minecraft.entity.passive.PolarBearEntity;
-import net.minecraft.entity.passive.PufferfishEntity;
-import net.minecraft.entity.passive.RabbitEntity;
-import net.minecraft.entity.passive.SheepEntity;
-import net.minecraft.entity.passive.SnowGolemEntity;
-import net.minecraft.entity.passive.StriderEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.TropicalFishEntity;
-import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.entity.passive.WolfEntity;
+import net.minecraft.entity.mob.*;
+import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.FishingBobberEntity;
@@ -83,68 +31,11 @@ import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.boss.EnderDragonEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.boss.WitherEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.decoration.ArmorStandEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.decoration.EndCrystalEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.decoration.ItemFrameEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.decoration.PaintingEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.AbstractPiglinEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.BlazeEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.CreeperEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.DrownedEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.EndermanEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.GhastEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.GuardianEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.IllagerEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.PhantomEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.PiglinEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.PillagerEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.ShulkerEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.SlimeEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.SpellcastingIllagerEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.SpiderEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.VexEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.VindicatorEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.WardenEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.WitchEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.ZombieEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.ZombieVillagerEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.AbstractHorseEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.AllayEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.AnimalEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.AxolotlEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.BatEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.BeeEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.CatEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.DolphinEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.DonkeyEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.FishEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.FoxEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.FrogEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.GoatEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.HorseEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.IronGolemEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.LlamaEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.MooshroomEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.OcelotEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.PandaEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.ParrotEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.PigEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.PolarBearEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.PufferfishEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.RabbitEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.SheepEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.SnowGolemEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.StriderEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.TameableEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.TropicalFishEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.WolfEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.projectile.ArrowEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.projectile.FishingBobberEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.projectile.TridentEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.projectile.WitherSkullEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.vehicle.BoatEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.vehicle.FurnaceMinecartEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.vehicle.TntMinecartEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.decoration.*;
+import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.*;
+import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.*;
+import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.projectile.*;
+import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.vehicle.*;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;
@@ -530,11 +421,183 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return correct subclass of this.
      */
     public static EntityHelper<?> create(Entity e) {
+        // Players
         if (e instanceof ClientPlayerEntity) return new ClientPlayerEntityHelper<>((ClientPlayerEntity) e);
         if (e instanceof PlayerEntity) return new PlayerEntityHelper<>((PlayerEntity) e);
-        if (e instanceof VillagerEntity) return new VillagerEntityHelper((VillagerEntity) e);
-        if (e instanceof MerchantEntity) return new MerchantEntityHelper<>((MerchantEntity) e);
-        if (e instanceof AnimalEntity) return new AnimalEntityHelper<>((AnimalEntity) e);
+        
+        if (e instanceof MobEntity) {
+            // Merchants
+            if (e instanceof VillagerEntity) return new VillagerEntityHelper((VillagerEntity) e);
+            if (e instanceof MerchantEntity) return new MerchantEntityHelper<>((MerchantEntity) e);
+            
+            // Bosses
+            if (e instanceof EnderDragonEntity) {
+                return new EnderDragonEntityHelper(((EnderDragonEntity) e));
+            } else if (e instanceof WitherEntity) {
+                return new WitherEntityHelper(((WitherEntity) e));
+            }
+
+            // Hostile mobs
+            if (e instanceof AbstractPiglinEntity) {
+                if (e instanceof PiglinEntity) {
+                    return new PiglinEntityHelper(((PiglinEntity) e));
+                } else {
+                    return new AbstractPiglinEntityHelper<>(((AbstractPiglinEntity) e));
+                }
+            } else if (e instanceof CreeperEntity) {
+                return new CreeperEntityHelper(((CreeperEntity) e));
+            } else if (e instanceof ZombieEntity) {
+                if (e instanceof DrownedEntity) {
+                    return new DrownedEntityHelper(((DrownedEntity) e));
+                } else if (e instanceof ZombieVillagerEntity) {
+                    return new ZombieVillagerEntityHelper(((ZombieVillagerEntity) e));
+                } else {
+                    return new ZombieEntityHelper<>(((ZombieEntity) e));
+                }
+            } else if (e instanceof EndermanEntity) {
+                return new EndermanEntityHelper(((EndermanEntity) e));
+            } else if (e instanceof GhastEntity) {
+                return new GhastEntityHelper(((GhastEntity) e));
+            } else if (e instanceof BlazeEntity) {
+                return new BlazeEntityHelper(((BlazeEntity) e));
+            } else if (e instanceof GuardianEntity) {
+                return new GuardianEntityHelper(((GuardianEntity) e));
+            } else if (e instanceof PhantomEntity) {
+                return new PhantomEntityHelper(((PhantomEntity) e));
+            } else if (e instanceof IllagerEntity) {
+                if (e instanceof VindicatorEntity) {
+                    return new VindicatorEntityHelper(((VindicatorEntity) e));
+                } else if (e instanceof PillagerEntity) {
+                    return new PillagerEntityHelper(((PillagerEntity) e));
+                } else if (e instanceof SpellcastingIllagerEntity) {
+                    return new SpellcastingIllagerEntityHelper<>(((SpellcastingIllagerEntity) e));
+                } else {
+                    return new IllagerEntityHelper<>(((IllagerEntity) e));
+                }
+            } else if (e instanceof ShulkerEntity) {
+                return new ShulkerEntityHelper(((ShulkerEntity) e));
+            } else if (e instanceof SlimeEntity) {
+                return new SlimeEntityHelper(((SlimeEntity) e));
+            } else if (e instanceof SpiderEntity) {
+                return new SpiderEntityHelper(((SpiderEntity) e));
+            } else if (e instanceof VexEntity) {
+                return new VexEntityHelper(((VexEntity) e));
+            } else if (e instanceof WardenEntity) {
+                return new WardenEntityHelper(((WardenEntity) e));
+            } else if (e instanceof WitchEntity) {
+                return new WitchEntityHelper(((WitchEntity) e));
+            }
+
+            // Animals
+            if (e instanceof AnimalEntity) {
+                if (e instanceof AbstractHorseEntity) {
+                    if (e instanceof HorseEntity) {
+                        return new HorseEntityHelper(((HorseEntity) e));
+                    } else if (e instanceof AbstractDonkeyEntity) {
+                        if (e instanceof LlamaEntity) {
+                            return new LlamaEntityHelper<>(((LlamaEntity) e));
+                        } else {
+                            return new DonkeyEntityHelper<>(((AbstractDonkeyEntity) e));
+                        }
+                    } else {
+                        return new AbstractHorseEntityHelper<>(((AbstractHorseEntity) e));
+                    }
+                } else if (e instanceof AxolotlEntity) {
+                    return new AxolotlEntityHelper(((AxolotlEntity) e));
+                } else if (e instanceof BeeEntity) {
+                    return new BeeEntityHelper(((BeeEntity) e));
+                } else if (e instanceof FoxEntity) {
+                    return new FoxEntityHelper(((FoxEntity) e));
+                } else if (e instanceof FrogEntity) {
+                    return new FrogEntityHelper(((FrogEntity) e));
+                } else if (e instanceof GoatEntity) {
+                    return new GoatEntityHelper(((GoatEntity) e));
+                } else if (e instanceof MooshroomEntity) {
+                    return new MooshroomEntityHelper(((MooshroomEntity) e));
+                } else if (e instanceof OcelotEntity) {
+                    return new OcelotEntityHelper(((OcelotEntity) e));
+                } else if (e instanceof PandaEntity) {
+                    return new PandaEntityHelper(((PandaEntity) e));
+                } else if (e instanceof PigEntity) {
+                    return new PigEntityHelper(((PigEntity) e));
+                } else if (e instanceof PolarBearEntity) {
+                    return new PolarBearEntityHelper(((PolarBearEntity) e));
+                } else if (e instanceof RabbitEntity) {
+                    return new RabbitEntityHelper(((RabbitEntity) e));
+                } else if (e instanceof SheepEntity) {
+                    return new SheepEntityHelper(((SheepEntity) e));
+                } else if (e instanceof StriderEntity) {
+                    return new StriderEntityHelper(((StriderEntity) e));
+                } else if (e instanceof TameableEntity) {
+                    if (e instanceof CatEntity) {
+                        return new CatEntityHelper(((CatEntity) e));
+                    } else if (e instanceof WolfEntity) {
+                        return new WolfEntityHelper(((WolfEntity) e));
+                    } else if (e instanceof ParrotEntity) {
+                        return new ParrotEntityHelper(((ParrotEntity) e));
+                    } else {
+                        return new TameableEntityHelper<>(((TameableEntity) e));
+                    }
+                } else {
+                    return new AnimalEntityHelper<>(((AnimalEntity) e));
+                }
+            }
+
+            // Neutral mobs
+            if (e instanceof AllayEntity) {
+                return new AllayEntityHelper(((AllayEntity) e));
+            } else if (e instanceof BatEntity) {
+                return new BatEntityHelper(((BatEntity) e));
+            } else if (e instanceof DolphinEntity) {
+                return new DolphinEntityHelper(((DolphinEntity) e));
+            } else if (e instanceof IronGolemEntity) {
+                return new IronGolemEntityHelper(((IronGolemEntity) e));
+            } else if (e instanceof SnowGolemEntity) {
+                return new SnowGolemEntityHelper(((SnowGolemEntity) e));
+            } else if (e instanceof FishEntity) {
+                if (e instanceof PufferfishEntity) {
+                    return new PufferfishEntityHelper(((PufferfishEntity) e));
+                } else if (e instanceof TropicalFishEntity) {
+                    return new TropicalFishEntityHelper(((TropicalFishEntity) e));
+                } else {
+                    return new FishEntityHelper<>(((FishEntity) e));
+                }
+            }
+        }
+
+        // Projectiles
+        if (e instanceof ProjectileEntity) {
+            if (e instanceof ArrowEntity) {
+                return new ArrowEntityHelper(((ArrowEntity) e));
+            } else if (e instanceof FishingBobberEntity) {
+                return new FishingBobberEntityHelper(((FishingBobberEntity) e));
+            } else if (e instanceof TridentEntity) {
+                return new TridentEntityHelper(((TridentEntity) e));
+            } else if (e instanceof WitherSkullEntity) {
+                return new WitherSkullEntityHelper(((WitherSkullEntity) e));
+            }
+        }
+
+        // Decorations
+        if (e instanceof ArmorStandEntity) {
+            return new ArmorStandEntityHelper(((ArmorStandEntity) e));
+        } else if (e instanceof EndCrystalEntity) {
+            return new EndCrystalEntityHelper(((EndCrystalEntity) e));
+        } else if (e instanceof ItemFrameEntity) {
+            return new ItemFrameEntityHelper(((ItemFrameEntity) e));
+        } else if (e instanceof PaintingEntity) {
+            return new PaintingEntityHelper(((PaintingEntity) e));
+        }
+
+        // Vehicles
+        if (e instanceof BoatEntity) {
+            return new BoatEntityHelper(((BoatEntity) e));
+        } else if (e instanceof FurnaceMinecartEntity) {
+            return new FurnaceMinecartEntityHelper(((FurnaceMinecartEntity) e));
+        } else if (e instanceof TntMinecartEntity) {
+            return new TntMinecartEntityHelper(((TntMinecartEntity) e));
+        }
+        
         if (e instanceof LivingEntity) return new LivingEntityHelper<>((LivingEntity) e);
         if (e instanceof ItemEntity) return new ItemEntityHelper((ItemEntity) e);
         return new EntityHelper<>(e);
@@ -588,177 +651,6 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      */
     public LivingEntityHelper<?> asAnimal() {
         return (AnimalEntityHelper<?>) this;
-    }
-
-    /**
-     * @return a specialized helper for this entity if it exists and self otherwise.
-     *
-     * @since 1.8.4
-     */
-    public EntityHelper<?> getSpecialized() {
-        if (base instanceof MobEntity) {
-            if (base instanceof EnderDragonEntity) {
-                return new EnderDragonEntityHelper(((EnderDragonEntity) base));
-            } else if (base instanceof WitherEntity) {
-                return new WitherEntityHelper(((WitherEntity) base));
-            }
-
-            if (base instanceof AbstractPiglinEntity) {
-                if (base instanceof PiglinEntity) {
-                    return new PiglinEntityHelper(((PiglinEntity) base));
-                } else {
-                    return new AbstractPiglinEntityHelper<>(((AbstractPiglinEntity) base));
-                }
-            } else if (base instanceof CreeperEntity) {
-                return new CreeperEntityHelper(((CreeperEntity) base));
-            } else if (base instanceof ZombieEntity) {
-                if (base instanceof DrownedEntity) {
-                    return new DrownedEntityHelper(((DrownedEntity) base));
-                } else if (base instanceof ZombieVillagerEntity) {
-                    return new ZombieVillagerEntityHelper(((ZombieVillagerEntity) base));
-                } else {
-                    return new ZombieEntityHelper<>(((ZombieEntity) base));
-                }
-            } else if (base instanceof EndermanEntity) {
-                return new EndermanEntityHelper(((EndermanEntity) base));
-            } else if (base instanceof GhastEntity) {
-                return new GhastEntityHelper(((GhastEntity) base));
-            } else if (base instanceof BlazeEntity) {
-                return new BlazeEntityHelper(((BlazeEntity) base));
-            } else if (base instanceof GuardianEntity) {
-                return new GuardianEntityHelper(((GuardianEntity) base));
-            } else if (base instanceof PhantomEntity) {
-                return new PhantomEntityHelper(((PhantomEntity) base));
-            } else if (base instanceof IllagerEntity) {
-                if (base instanceof VindicatorEntity) {
-                    return new VindicatorEntityHelper(((VindicatorEntity) base));
-                } else if (base instanceof PillagerEntity) {
-                    return new PillagerEntityHelper(((PillagerEntity) base));
-                } else if (base instanceof SpellcastingIllagerEntity) {
-                    return new SpellcastingIllagerEntityHelper<>(((SpellcastingIllagerEntity) base));
-                } else {
-                    return new IllagerEntityHelper<>(((IllagerEntity) base));
-                }
-            } else if (base instanceof ShulkerEntity) {
-                return new ShulkerEntityHelper(((ShulkerEntity) base));
-            } else if (base instanceof SlimeEntity) {
-                return new SlimeEntityHelper(((SlimeEntity) base));
-            } else if (base instanceof SpiderEntity) {
-                return new SpiderEntityHelper(((SpiderEntity) base));
-            } else if (base instanceof VexEntity) {
-                return new VexEntityHelper(((VexEntity) base));
-            } else if (base instanceof WardenEntity) {
-                return new WardenEntityHelper(((WardenEntity) base));
-            } else if (base instanceof WitchEntity) {
-                return new WitchEntityHelper(((WitchEntity) base));
-            }
-
-            if (base instanceof AnimalEntity) {
-                if (base instanceof AbstractHorseEntity) {
-                    if (base instanceof HorseEntity) {
-                        return new HorseEntityHelper(((HorseEntity) base));
-                    } else if (base instanceof AbstractDonkeyEntity) {
-                        if (base instanceof LlamaEntity) {
-                            return new LlamaEntityHelper<>(((LlamaEntity) base));
-                        } else {
-                            return new DonkeyEntityHelper<>(((AbstractDonkeyEntity) base));
-                        }
-                    } else {
-                        return new AbstractHorseEntityHelper<>(((AbstractHorseEntity) base));
-                    }
-                } else if (base instanceof AxolotlEntity) {
-                    return new AxolotlEntityHelper(((AxolotlEntity) base));
-                } else if (base instanceof BeeEntity) {
-                    return new BeeEntityHelper(((BeeEntity) base));
-                } else if (base instanceof FoxEntity) {
-                    return new FoxEntityHelper(((FoxEntity) base));
-                } else if (base instanceof FrogEntity) {
-                    return new FrogEntityHelper(((FrogEntity) base));
-                } else if (base instanceof GoatEntity) {
-                    return new GoatEntityHelper(((GoatEntity) base));
-                } else if (base instanceof MooshroomEntity) {
-                    return new MooshroomEntityHelper(((MooshroomEntity) base));
-                } else if (base instanceof OcelotEntity) {
-                    return new OcelotEntityHelper(((OcelotEntity) base));
-                } else if (base instanceof PandaEntity) {
-                    return new PandaEntityHelper(((PandaEntity) base));
-                } else if (base instanceof PigEntity) {
-                    return new PigEntityHelper(((PigEntity) base));
-                } else if (base instanceof PolarBearEntity) {
-                    return new PolarBearEntityHelper(((PolarBearEntity) base));
-                } else if (base instanceof RabbitEntity) {
-                    return new RabbitEntityHelper(((RabbitEntity) base));
-                } else if (base instanceof SheepEntity) {
-                    return new SheepEntityHelper(((SheepEntity) base));
-                } else if (base instanceof StriderEntity) {
-                    return new StriderEntityHelper(((StriderEntity) base));
-                } else if (base instanceof TameableEntity) {
-                    if (base instanceof CatEntity) {
-                        return new CatEntityHelper(((CatEntity) base));
-                    } else if (base instanceof WolfEntity) {
-                        return new WolfEntityHelper(((WolfEntity) base));
-                    } else if (base instanceof ParrotEntity) {
-                        return new ParrotEntityHelper(((ParrotEntity) base));
-                    } else {
-                        return new TameableEntityHelper<>(((TameableEntity) base));
-                    }
-                } else {
-                    return new AnimalEntityHelper<>(((AnimalEntity) base));
-                }
-            }
-
-            if (base instanceof AllayEntity) {
-                return new AllayEntityHelper(((AllayEntity) base));
-            } else if (base instanceof BatEntity) {
-                return new BatEntityHelper(((BatEntity) base));
-            } else if (base instanceof DolphinEntity) {
-                return new DolphinEntityHelper(((DolphinEntity) base));
-            } else if (base instanceof IronGolemEntity) {
-                return new IronGolemEntityHelper(((IronGolemEntity) base));
-            } else if (base instanceof SnowGolemEntity) {
-                return new SnowGolemEntityHelper(((SnowGolemEntity) base));
-            } else if (base instanceof FishEntity) {
-                if (base instanceof PufferfishEntity) {
-                    return new PufferfishEntityHelper(((PufferfishEntity) base));
-                } else if (base instanceof TropicalFishEntity) {
-                    return new TropicalFishEntityHelper(((TropicalFishEntity) base));
-                } else {
-                    return new FishEntityHelper<>(((FishEntity) base));
-                }
-            }
-        }
-
-        if (base instanceof ProjectileEntity) {
-            if (base instanceof ArrowEntity) {
-                return new ArrowEntityHelper(((ArrowEntity) base));
-            } else if (base instanceof FishingBobberEntity) {
-                return new FishingBobberEntityHelper(((FishingBobberEntity) base));
-            } else if (base instanceof TridentEntity) {
-                return new TridentEntityHelper(((TridentEntity) base));
-            } else if (base instanceof WitherSkullEntity) {
-                return new WitherSkullEntityHelper(((WitherSkullEntity) base));
-            }
-        }
-
-        if (base instanceof ArmorStandEntity) {
-            return new ArmorStandEntityHelper(((ArmorStandEntity) base));
-        } else if (base instanceof EndCrystalEntity) {
-            return new EndCrystalEntityHelper(((EndCrystalEntity) base));
-        } else if (base instanceof ItemFrameEntity) {
-            return new ItemFrameEntityHelper(((ItemFrameEntity) base));
-        } else if (base instanceof PaintingEntity) {
-            return new PaintingEntityHelper(((PaintingEntity) base));
-        }
-
-        if (base instanceof BoatEntity) {
-            return new BoatEntityHelper(((BoatEntity) base));
-        } else if (base instanceof FurnaceMinecartEntity) {
-            return new FurnaceMinecartEntityHelper(((FurnaceMinecartEntity) base));
-        } else if (base instanceof TntMinecartEntity) {
-            return new TntMinecartEntityHelper(((TntMinecartEntity) base));
-        }
-
-        return EntityHelper.create(base);
     }
     
     /**
