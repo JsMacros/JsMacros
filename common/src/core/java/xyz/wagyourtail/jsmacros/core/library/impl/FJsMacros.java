@@ -265,7 +265,9 @@ public class FJsMacros extends PerExecLibrary {
      * @since 1.1.8
      * 
      * @param path relative to the script's folder.
+     * @deprecated use the Utils library instead.
      */
+    @Deprecated
     public void open(String path) throws IOException {
         openUrl(ctx.getContainedFolder().toPath().resolve(path).toUri().toURL());
     }
@@ -276,7 +278,9 @@ public class FJsMacros extends PerExecLibrary {
      * @param url
      *
      * @throws MalformedURLException
+     * @deprecated use the Utils library instead.
      */
+    @Deprecated
     public void openUrl(String url) throws IOException {
         openUrl(new URL(url));
     }
@@ -494,7 +498,7 @@ public class FJsMacros extends PerExecLibrary {
      * @param event the event to remove all listeners from
      * @since 1.8.4
      */
-    public void disableUserListeners(String event) {
+    public void disableScriptListeners(String event) {
         for (IEventListener listener : ImmutableList.copyOf(Core.getInstance().eventRegistry.getListeners(event))) {
             if (listener instanceof ScriptEventListener) {
                 listener.off();
@@ -510,7 +514,7 @@ public class FJsMacros extends PerExecLibrary {
      *
      * @since 1.8.4
      */
-    public void disableUserListeners() {
+    public void disableScriptListeners() {
         for (Map.Entry<String, Set<IEventListener>> entry : Core.getInstance().eventRegistry.getListeners().entrySet()) {
             for (IEventListener listener : ImmutableList.copyOf(entry.getValue())) {
                 if (listener instanceof ScriptEventListener) {
@@ -604,10 +608,8 @@ public class FJsMacros extends PerExecLibrary {
 
                 @Override
                 public void off() {
-                    lock.release();
-                    lock2.release();
-                    done[0] = true;
                     Core.getInstance().eventRegistry.removeListener(event, this);
+                    th.interrupt();
                 }
 
                 @Override

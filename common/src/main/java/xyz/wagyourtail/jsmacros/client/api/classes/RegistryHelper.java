@@ -373,6 +373,16 @@ public class RegistryHelper {
         return Registry.POTION.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
+    /**
+     * @param identifier the String representation of the identifier, with the namespace and path
+     * @return the raw minecraft Identifier.
+     *
+     * @since 1.8.4
+     */
+    public Identifier getIdentifier(String identifier) {
+        return parseIdentifier(identifier);
+    }
+
     public static Identifier parseIdentifier(String id) {
         return new Identifier(parseNameSpace(id));
     }

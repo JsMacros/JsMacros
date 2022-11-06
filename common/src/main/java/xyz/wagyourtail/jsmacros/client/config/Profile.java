@@ -228,7 +228,8 @@ public class Profile extends BaseProfile {
         runner.libraryRegistry.addLibrary(FKeyBind.class);
         runner.libraryRegistry.addLibrary(FPlayer.class);
         runner.libraryRegistry.addLibrary(FPositionCommon.class);
-        runner.libraryRegistry.addLibrary(FUtil.class);
+        runner.libraryRegistry.addLibrary(FJavaUtils.class);
+        runner.libraryRegistry.addLibrary(FUtils.class);
         runner.libraryRegistry.addLibrary(FWorld.class);
     }
 }

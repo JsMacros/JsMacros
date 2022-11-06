@@ -17,9 +17,8 @@ import net.minecraft.world.level.storage.LevelStorageException;
 
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.FullOptionsHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ModContainerHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ModContainerHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ServerInfoHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
@@ -132,25 +131,12 @@ public class FClient extends PerExecLibrary {
     }
 
     /**
-     * @see xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper
-     *
-     * @since 1.1.7 (was in the {@code jsmacros} library until 1.2.9)
-     *
-     * @return an {@link xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper OptionsHelper} for the game options.
-     * @deprecated use {@link #getFullGameOptions()} instead.
-     */
-    @Deprecated
-    public OptionsHelper getGameOptions() {
-        return new OptionsHelper(mc.options);
-    }
-
-    /**
      * @return a helper which gives access to all game options and some other useful features.
      *
      * @since 1.8.4
      */
-    public FullOptionsHelper getFullGameOptions() {
-        return new FullOptionsHelper(mc.options);
+    public OptionsHelper getGameOptions() {
+        return new OptionsHelper(mc.options);
     }
     
     /**

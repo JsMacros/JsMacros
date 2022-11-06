@@ -14,7 +14,6 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.util.SelectionManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.BossBar;
@@ -35,7 +34,6 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.chunk.Chunk;
@@ -45,7 +43,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
-import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.AdvancementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.AdvancementManagerHelper;
@@ -66,10 +63,10 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.FluidStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.FoodComponentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.FormattingHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.FullOptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.LockButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PlayerAbilitiesHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PlayerListEntryHelper;
@@ -85,23 +82,16 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.SuggestionsBuilderHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TeamHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextFieldWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.client.util.NameUtil;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.wagyourgui.elements.CheckBox;
 import xyz.wagyourtail.wagyourgui.elements.Slider;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.SplittableRandom;
 
 /**
@@ -110,7 +100,7 @@ import java.util.SplittableRandom;
  */
 @Library("JavaUtils")
 @SuppressWarnings("unused")
-public class FUtil extends BaseLibrary {
+public class FJavaUtils extends BaseLibrary {
 
     private static final MinecraftClient mc = MinecraftClient.getInstance();
 
@@ -161,6 +151,30 @@ public class FUtil extends BaseLibrary {
     }
 
     /**
+     * Returns a {@link SplittableRandom}.
+     *
+     * @return a SplittableRandom.
+     *
+     * @since 1.8.4
+     */
+    public SplittableRandom getRandom() {
+        return new SplittableRandom();
+    }
+
+    /**
+     * Returns {@link SplittableRandom}, initialized with the seed to get identical sequences of
+     * values at all times.
+     *
+     * @param seed the seed
+     * @return a SplittableRandom.
+     *
+     * @since 1.8.4
+     */
+    public SplittableRandom getRandom(long seed) {
+        return new SplittableRandom(seed);
+    }
+
+    /**
      * @param raw the object to wrap
      * @return the correct instance of {@link BaseHelper} for the given object if it exists and
      *         {@code null} otherwise.
@@ -182,7 +196,7 @@ public class FUtil extends BaseLibrary {
         } else if (raw instanceof FluidState) {
             return new FluidStateHelper(((FluidState) raw));
         }
-        
+
         if (raw instanceof BossBar) {
             return new BossBarHelper((BossBar) raw);
         } else if (raw instanceof ChatHudLine) {
@@ -200,7 +214,7 @@ public class FUtil extends BaseLibrary {
         } else if (raw instanceof ItemStack) {
             return new ItemStackHelper(((ItemStack) raw));
         } else if (raw instanceof GameOptions) {
-            return new FullOptionsHelper(((GameOptions) raw));
+            return new OptionsHelper(((GameOptions) raw));
         } else if (raw instanceof PacketByteBuf) {
             return new PacketByteBufferHelper(((PacketByteBuf) raw));
         } else if (raw instanceof Packet<?>) {
@@ -260,22 +274,6 @@ public class FUtil extends BaseLibrary {
     }
 
     /**
-     * @param uri the uri to open
-     * @since 1.8.4
-     */
-    public void openLink(String uri) throws URISyntaxException {
-        Util.getOperatingSystem().open(new URI(uri));
-    }
-
-    /**
-     * @param path the path top open, relative the config folder
-     * @since 1.8.4
-     */
-    public void openFile(String path) {
-        Util.getOperatingSystem().open(JsMacros.core.config.configFolder.toPath().resolve(path).toFile());
-    }
-
-    /**
      * @param array the array to convert
      * @return the String representation of the given array.
      *
@@ -296,174 +294,6 @@ public class FUtil extends BaseLibrary {
      */
     public String arrayDeepToString(Object[] array) {
         return Arrays.deepToString(array);
-    }
-
-    /**
-     * Copies the text to the clipboard.
-     *
-     * @param text the text to copy
-     * @since 1.8.4
-     */
-    public void copyToClipboard(String text) {
-        SelectionManager.setClipboard(mc, text);
-    }
-
-    /**
-     * @return the text from the clipboard.
-     *
-     * @since 1.8.4
-     */
-    public String getClipboard() {
-        return SelectionManager.getClipboard(mc);
-    }
-
-    /**
-     * Hashes the given string with sha-256.
-     *
-     * @param message the message to hash
-     * @return the hashed message.
-     *
-     * @since 1.8.4
-     */
-    public String hashString(String message) {
-        return DigestUtils.sha256Hex(message);
-    }
-
-    /**
-     * Hashes the given string with sha-256 the selected algorithm.
-     *
-     * @param message   the message to hash
-     * @param algorithm sha1 | sha256 | sha384 | sha512 | md2 | md5
-     * @return the hashed message.
-     *
-     * @since 1.8.4
-     */
-    public String hashString(String message, String algorithm) {
-        switch (algorithm) {
-            case "sha256":
-                return DigestUtils.sha256Hex(message);
-            case "sha512":
-                return DigestUtils.sha512Hex(message);
-            case "sha1":
-                return DigestUtils.sha1Hex(message);
-            case "sha384":
-                return DigestUtils.sha384Hex(message);
-            case "md2":
-                return DigestUtils.md2Hex(message);
-            case "md5":
-                return DigestUtils.md5Hex(message);
-            default:
-                return message;
-        }
-    }
-
-    /**
-     * Encodes the given string with Base64.
-     *
-     * @param message the message to encode
-     * @return the encoded message.
-     *
-     * @since 1.8.4
-     */
-    public String encode(String message) {
-        return new String(Base64.encodeBase64(message.getBytes()));
-    }
-
-    /**
-     * Decodes the given string with Base64.
-     *
-     * @param message the message to decode
-     * @return the decoded message.
-     *
-     * @since 1.8.4
-     */
-    public String decode(String message) {
-        return new String(Base64.decodeBase64(message.getBytes()));
-    }
-
-    /**
-     * Returns a {@link SplittableRandom}.
-     *
-     * @return a SplittableRandom.
-     *
-     * @since 1.8.4
-     */
-    public SplittableRandom getRandom() {
-        return new SplittableRandom();
-    }
-
-    /**
-     * Returns {@link SplittableRandom}, initialized with the seed to get identical sequences of
-     * values at all times.
-     *
-     * @param seed the seed
-     * @return a SplittableRandom.
-     *
-     * @since 1.8.4
-     */
-    public SplittableRandom getRandom(long seed) {
-        return new SplittableRandom(seed);
-    }
-
-    /**
-     * @param identifier the String representation of the identifier, with the namespace and path
-     * @return the raw minecraft Identifier.
-     *
-     * @since 1.8.4
-     */
-    public Identifier getIdentifier(String identifier) {
-        return RegistryHelper.parseIdentifier(identifier);
-    }
-
-    /**
-     * Tries to guess the name of the sender of a given message.
-     *
-     * @param text the text to check
-     * @return the name of the sender or null if it couldn't be guessed.
-     *
-     * @since 1.8.4
-     */
-    public String guessName(TextHelper text) {
-        return guessName(text.getStringStripFormatting());
-    }
-
-    /**
-     * Tries to guess the name of the sender of a given message.
-     *
-     * @param text the text to check
-     * @return the name of the sender or null if it couldn't be guessed.
-     *
-     * @since 1.8.4
-     */
-    public String guessName(String text) {
-        List<String> names = guessNameAndRoles(text);
-        return names.isEmpty() ? null : names.get(0);
-    }
-
-    /**
-     * Tries to guess the name, as well as the titles and roles of the sender of the given message.
-     *
-     * @param text the text to check
-     * @return a list of names, titles and roles of the sender or an empty list if it couldn't be
-     *         guessed.
-     *
-     * @since 1.8.4
-     */
-    public List<String> guessNameAndRoles(TextHelper text) {
-        return guessNameAndRoles(text.getStringStripFormatting());
-    }
-
-    /**
-     * Tries to guess the name, as well as the titles and roles of the sender of the given message.
-     *
-     * @param text the text to check
-     * @return a list of names, titles and roles of the sender or an empty list if it couldn't be
-     *         guessed.
-     *
-     * @since 1.8.4
-     */
-    public List<String> guessNameAndRoles(String text) {
-        return NameUtil.guessNameAndRoles(text);
     }
 
 }

@@ -575,8 +575,9 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @return an identifier for the loaded world, that is mostly unique if , or
-     *         {@code "UNKNOWN_NAME"} if no name could be found.
+     * @return an identifier for the loaded world that is based on the world's name or server ip and
+     *         thus most likely unique enough to identify a specific world, or
+     *         {@code "UNKNOWN_NAME"} if no world was found.
      *
      * @since 1.8.4
      */
