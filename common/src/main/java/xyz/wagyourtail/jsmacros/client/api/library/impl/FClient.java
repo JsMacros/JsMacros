@@ -133,7 +133,7 @@ public class FClient extends PerExecLibrary {
     /**
      * @return a helper which gives access to all game options and some other useful features.
      *
-     * @since 1.8.4
+     * @since 1.1.7 (was in the {@code jsmacros} library until 1.2.9)
      */
     public OptionsHelper getGameOptions() {
         return new OptionsHelper(mc.options);

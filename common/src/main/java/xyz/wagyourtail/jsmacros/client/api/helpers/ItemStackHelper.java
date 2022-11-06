@@ -6,6 +6,7 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
@@ -19,6 +20,7 @@ import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -490,8 +492,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * {@link CreativeItemStackHelper} is a subclass of {@link AdvancedItemStackHelper} that adds
-     * methods for manipulating the item's nbt data.
+     * {@link CreativeItemStackHelper} adds methods for manipulating the item's nbt data.
      *
      * @return a {@link CreativeItemStackHelper} instance for this item.
      *
@@ -499,18 +500,6 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     public CreativeItemStackHelper getCreative() {
         return new CreativeItemStackHelper(base);
-    }
-
-    /**
-     * {@link AdvancedItemStackHelper} is a subclass of {@link ItemStackHelper} that adds methods
-     * more advanced methods for interacting with the item and its nbt data.
-     *
-     * @return a {@link AdvancedItemStackHelper} instance for this item.
-     *
-     * @since 1.8.4
-     */
-    public AdvancedItemStackHelper getAdvanced() {
-        return new AdvancedItemStackHelper(base);
     }
     
     /**
@@ -529,4 +518,122 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     public ItemStackHelper copy() {
         return new ItemStackHelper(base.copy());
     }
+
+
+    /**
+     * This flag only affects players in adventure mode and makes sure only specified blocks can be
+     * destroyed by this item.
+     *
+     * @return {@code true} if the can destroy flag is set, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean hasDestroyRestrictions() {
+        return base.getOrCreateNbt().contains("CanDestroy", 9);
+    }
+
+    /**
+     * This flag only affects players in adventure mode and makes sure this item can only be placed
+     * on specified blocks.
+     *
+     * @return {@code true} if the can place on flag is set, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean hasPlaceRestrictions() {
+        return base.getOrCreateNbt().contains("CanPlaceOn", 9);
+    }
+
+    /**
+     * @return a list of all filters set for the can destroy flag.
+     *
+     * @since 1.8.4
+     */
+    public List<String> getDestroyRestrictions() {
+        if (hasDestroyRestrictions()) {
+            return base.getOrCreateNbt().getList("CanDestroy", 8).stream().map(NbtElement::asString).collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
+    /**
+     * @return a list of all filters set for the can place on flag.
+     *
+     * @since 1.8.4
+     */
+    public List<String> getPlaceRestrictions() {
+        if (hasPlaceRestrictions()) {
+            return base.getOrCreateNbt().getList("CanPlaceOn", 8).stream().map(NbtElement::asString).collect(Collectors.toList());
+        }
+        return Collections.emptyList();
+    }
+
+    /**
+     * @return {@code true} if enchantments are hidden, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean areEnchantmentsHidden() {
+        return isFlagSet(ItemStack.TooltipSection.ENCHANTMENTS);
+    }
+
+    /**
+     * @return {@code true} if modifiers are hidden, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean areModifiersHidden() {
+        return isFlagSet(ItemStack.TooltipSection.MODIFIERS);
+    }
+
+    /**
+     * @return {@code true} if the unbreakable flag is hidden, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isUnbreakableHidden() {
+        return isFlagSet(ItemStack.TooltipSection.UNBREAKABLE);
+    }
+
+    /**
+     * @return {@code true} if the can destroy flag is hidden, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isCanDestroyHidden() {
+        return isFlagSet(ItemStack.TooltipSection.CAN_DESTROY);
+    }
+
+    /**
+     * @return {@code true} if the can place flag is hidden, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isCanPlaceHidden() {
+        return isFlagSet(ItemStack.TooltipSection.CAN_PLACE);
+    }
+
+    /**
+     * @return {@code true} if additional attributes are hidden, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean areAdditionalsHidden() {
+        return isFlagSet(ItemStack.TooltipSection.ADDITIONAL);
+    }
+
+    /**
+     * @return {@code true} if dye of colored leather armor is hidden, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isDyeHidden() {
+        return isFlagSet(ItemStack.TooltipSection.DYE);
+    }
+
+    protected boolean isFlagSet(ItemStack.TooltipSection section) {
+        NbtCompound nbtCompound = base.getOrCreateNbt();
+        return (nbtCompound.getInt("HideFlags") & section.getFlag()) != 0;
+    }
+    
 }

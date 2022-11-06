@@ -22,7 +22,7 @@ import java.util.Arrays;
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public class CreativeItemStackHelper extends AdvancedItemStackHelper {
+public class CreativeItemStackHelper extends ItemStackHelper {
 
     public CreativeItemStackHelper(ItemStack itemStack) {
         super(itemStack);
