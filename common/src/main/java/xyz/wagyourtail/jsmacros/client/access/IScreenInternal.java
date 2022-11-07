@@ -15,5 +15,5 @@ public interface IScreenInternal {
 
     void jsmacros_keyPressed(int keyCode, int scanCode, int modifiers);
 
-//    void jsmacros_charTyped(char chr, int modifiers);
+    void jsmacros_charTyped(char chr, int modifiers);
 }

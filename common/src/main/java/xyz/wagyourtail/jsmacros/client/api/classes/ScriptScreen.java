@@ -7,29 +7,31 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
-import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
 
 /**
- * just go look at {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen IScreen}
+ * just go look at {@link IScreen IScreen}
  * since all the methods are done through a mixin...
  * 
  * @author Wagyourtail
  * 
  * @since 1.0.5
  * 
- * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen
+ * @see IScreen
  */
 public class ScriptScreen extends BaseScreen {
+    public boolean drawTitle;
     private final int bgStyle;
     private MethodWrapper<PositionCommon.Pos3D, MatrixStack, Object, ?> onRender;
     
     public ScriptScreen(String title, boolean dirt) {
         super(Text.literal(title), null);
         this.bgStyle = dirt ? 0 : 1;
+        this.drawTitle = true;
     }
 
     @Override
@@ -63,7 +65,9 @@ public class ScriptScreen extends BaseScreen {
         if (bgStyle == 0) this.renderBackgroundTexture(0);
         else if (bgStyle == 1) this.renderBackground(matrices, 0);
 
-        drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+        if (drawTitle) {
+            drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+        }
 
         super.render(matrices, mouseX, mouseY, delta);
 

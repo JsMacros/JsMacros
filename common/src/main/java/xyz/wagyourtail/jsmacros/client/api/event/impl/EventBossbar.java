@@ -26,6 +26,7 @@ public class EventBossbar implements BaseEvent {
         profile.triggerEvent(this);
     }
 
+    @Override
     public String toString() {
         return String.format("%s:{\"bossBar\": %s}", this.getEventName(), bossBar != null ? bossBar.toString() : uuid);
     }

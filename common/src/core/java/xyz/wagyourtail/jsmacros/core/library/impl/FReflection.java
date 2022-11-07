@@ -1,12 +1,16 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
+import com.google.common.collect.ImmutableList;
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
+import org.joor.Reflect;
 import xyz.wagyourtail.Util;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.classes.Mappings;
 import xyz.wagyourtail.jsmacros.core.classes.WrappedClassInstance;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
+import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder;
@@ -22,10 +26,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Functions for getting and using raw java classes, methods and functions.
@@ -38,6 +45,7 @@ import java.util.*;
  @Library("Reflection")
  @SuppressWarnings("unused")
 public class FReflection extends PerExecLibrary {
+    private static final Map<String, List<Class<?>>> JAVA_CLASS_CACHE = new HashMap<>();
     public static final CombinedVariableClassLoader classLoader = new CombinedVariableClassLoader(FReflection.class.getClassLoader());
     private static Mappings remapper = null;
 
@@ -260,7 +268,7 @@ public class FReflection extends PerExecLibrary {
     /**
      * Attempts to create a new instance of a class. You probably don't have to use this one and can just call {@code
      * new} on a {@link java.lang.Class Class} unless you're in LUA, but then you also have the (kinda poorly
-     * doccumented, can someone find a better docs link for me)
+     * documented, can someone find a better docs link for me)
      * <a target="_blank" href= "http://luaj.sourceforge.net/api/3.2/org/luaj/vm2/lib/jse/LuajavaLib.html">LuaJava Library</a>.
      *
      * @param c
@@ -341,7 +349,79 @@ public class FReflection extends PerExecLibrary {
     public LibraryBuilder createLibraryBuilder(String name, boolean perExec, String... acceptedLangs) throws NotFoundException, CannotCompileException {
         return new LibraryBuilder(name, perExec, acceptedLangs);
     }
+
+    /**
+     * A library class always has a {@link Library} annotation containing the name of the library,
+     * which may differ from the actual class name. A library class must also extend
+     * {@link BaseLibrary} in some way, either directly or through
+     * {@link PerExecLibrary PerExecLibrary},
+     * {@link xyz.wagyourtail.jsmacros.core.library.PerExecLanguageLibrary PerExecLanguageLibrary}
+     * or {@link xyz.wagyourtail.jsmacros.core.library.PerLanguageLibrary PerLanguageLibrary}.
+     *
+     * @param className the fully qualified name of the class, including the package
+     * @param javaCode  the source code of the library
+     * @since 1.8.4
+     */
+    public void createLibrary(String className, String javaCode) {
+        Core.getInstance().libraryRegistry.addLibrary((Class<? extends BaseLibrary>) compileJavaClass(className, javaCode));
+    }
+
+    /**
+     * A Java Development Kit (JDK) must be installed (and potentially used to start Minecraft) in
+     * order to compile whole classes.
+     * <p>
+     * Compiled classes can't be accessed from any guest language, but must be either stored through
+     * {@link FGlobalVars#putObject(String, Object)} or retrieved from this library. Unlike normal
+     * hot swapping, already created instances of the class will not be updated. Thus, it's
+     * important to know which version of the class you're using when instantiating it.
+     *
+     * @param className the fully qualified name of the class, including the package
+     * @param code      the java code to compile
+     * @return the compiled class.
+     *
+     * @since 1.8.4
+     */
+    public Class<?> compileJavaClass(String className, String code) {
+        Class<?> clazz = Reflect.compile(className, code).type();
+        JAVA_CLASS_CACHE.putIfAbsent(className, new ArrayList<>());
+        JAVA_CLASS_CACHE.get(className).add(clazz);
+        return clazz;
+    }
+
+    /**
+     * @param className the fully qualified name of the class, including the package
+     * @return the latest compiled class or {@code null} if it doesn't exist.
+     *
+     * @since 1.8.4
+     */
+    public Class<?> getCompiledJavaClass(String className) {
+        List<Class<?>> versions = JAVA_CLASS_CACHE.get(className);
+        return versions == null ? null : versions.get(versions.size() - 1);
+    }
+
+    /**
+     * @param className the fully qualified name of the class, including the package
+     * @return all compiled versions of the class, in order of compilation.
+     *
+     * @since 1.8.4
+     */
+    public List<Class<?>> getAllCompiledJavaClassVersions(String className) {
+        List<Class<?>> versions = JAVA_CLASS_CACHE.get(className);
+        return versions == null ? Collections.emptyList() : ImmutableList.copyOf(versions);
+    }
     
+    /**
+     * See <a href="https://github.com/jOOQ/jOOR">jOOR Github</a> for more information.
+     *
+     * @param obj the object to wrap
+     * @return a wrapper for the passed object to do help with java reflection.
+     *
+     * @since 1.8.4
+     */
+    public Reflect getReflect(Object obj) {
+        return Reflect.on(obj);
+    }
+
     /**
      * Loads a jar file to be accessible with this library.
      *

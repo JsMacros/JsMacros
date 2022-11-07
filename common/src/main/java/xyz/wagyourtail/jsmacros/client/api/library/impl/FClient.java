@@ -4,24 +4,35 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.MessageScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.client.realms.gui.screen.RealmsMainScreen;
+import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.text.Text;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelStorageException;
+
+import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ModContainerHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ServerInfoHelper;
-import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemHelper;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.client.tick.TickSync;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.PerExecLibrary;
 
@@ -30,6 +41,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Semaphore;
+import java.util.stream.Collectors;
 
 /**
 *
@@ -61,6 +73,24 @@ public class FClient extends PerExecLibrary {
         return mc;
     }
 
+    /**
+     * @return a helper for interacting with minecraft's registry.
+     *
+     * @since 1.8.4
+     */
+    public RegistryHelper getRegistryManager() {
+        return new RegistryHelper();
+    }
+
+    /**
+     * @return a helper to modify and send minecraft packets.
+     *
+     * @since 1.8.4
+     */
+    public PacketByteBufferHelper createPacketByteBuffer() {
+        return new PacketByteBufferHelper();
+    }
+    
     /**
      * Run your task on the main minecraft thread
      * @param runnable task to run
@@ -101,11 +131,9 @@ public class FClient extends PerExecLibrary {
     }
 
     /**
-     * @see xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper
+     * @return a helper which gives access to all game options and some other useful features.
      *
      * @since 1.1.7 (was in the {@code jsmacros} library until 1.2.9)
-     *
-     * @return an {@link xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper OptionsHelper} for the game options.
      */
     public OptionsHelper getGameOptions() {
         return new OptionsHelper(mc.options);
@@ -209,11 +237,20 @@ public class FClient extends PerExecLibrary {
     public void disconnect(MethodWrapper<Boolean, Object, Object, ?> callback) {
         mc.execute(() -> {
             boolean isWorld = mc.world != null;
+            boolean isInSingleplayer = mc.isInSingleplayer();
+            boolean isInRealm = mc.isConnectedToRealms();
             if (isWorld) {
                 // logic in death screen disconnect button
                 if (mc.world != null) mc.world.disconnect();
                 mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
                 mc.setScreen(new TitleScreen());
+            }
+            if (isInSingleplayer) {
+                mc.setScreen(new TitleScreen());
+            } else if (isInRealm) {
+                mc.setScreen(new RealmsMainScreen(new TitleScreen()));
+            } else {
+                mc.setScreen(new MultiplayerScreen(new TitleScreen()));
             }
             try {
                 if (callback != null)
@@ -323,5 +360,118 @@ public class FClient extends PerExecLibrary {
     public void cancelAllPings() {
         TickBasedEvents.serverListPinger.cancel();
     }
+    
+    /**
+     * @return a list of all loaded mods.
+     *
+     * @since 1.8.4
+     */
+    public List<? extends ModContainerHelper<?>> getLoadedMods() {
+        return JsMacros.getModLoader().getLoadedMods();
+    }
 
+    /**
+     * @param modId the mod modId
+     * @return {@code true} if the mod with the given modId is loaded, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isModLoaded(String modId) {
+        return JsMacros.getModLoader().isModLoaded(modId);
+    }
+
+    /**
+     * @param modId the mod modId
+     * @return the mod container for the given modId or {@code null} if the mod is not loaded.
+     *
+     * @since 1.8.4
+     */
+    public ModContainerHelper<?> getMod(String modId) {
+        return JsMacros.getModLoader().getMod(modId);
+    }
+
+    /**
+     * Makes minecraft believe that the mouse is currently inside the window.
+     * This will automatically set pause on lost focus to false.
+     *
+     * @since 1.8.4
+     */
+    public void grabMouse() {
+        mc.options.pauseOnLostFocus = false;
+        mc.onWindowFocusChanged(true);
+        mc.mouse.lockCursor();
+    }
+
+    /**
+     * @return {@code true} if the mod is loaded inside a development environment, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isDevEnv() {
+        return JsMacros.getModLoader().isDevEnv();
+    }
+
+    /**
+     * @return the name of the mod loader.
+     *
+     * @since 1.8.4
+     */
+    public String getModLoader() {
+        return JsMacros.getModLoader().getName();
+    }
+
+    /**
+     * @return a list of all loaded blocks as {@link BlockHelper BlockHelper} objects.
+     *
+     * @since 1.8.4
+     */
+    public List<BlockHelper> getRegisteredBlocks() {
+        return Registry.BLOCK.stream().map(BlockHelper::new).collect(Collectors.toList());
+    }
+
+    /**
+     * @return a list of all loaded items as {@link ItemHelper ItemHelper} objects.
+     *
+     * @since 1.8.4
+     */
+    public List<ItemHelper> getRegisteredItems() {
+        return Registry.ITEM.stream().map(ItemHelper::new).collect(Collectors.toList());
+    }
+
+    /**
+     * Tries to peacefully close the game.
+     *
+     * @since 1.8.4
+     */
+    public void exitGamePeacefully() {
+        mc.scheduleStop();
+    }
+
+    /**
+     * Will close the game forcefully.
+     *
+     * @since 1.8.4
+     */
+    public void exitGameForcefully() {
+        System.exit(0);
+    }
+
+    /**
+     * @param packet the packet to send
+     * @see #createPacketByteBuffer()
+     * @since 1.8.4
+     */
+    public void sendPacket(Packet<?> packet) {
+        mc.getNetworkHandler().sendPacket(packet);
+    }
+
+    /**
+     * @param packet the packet to receive
+     * @see #createPacketByteBuffer()
+     * @since 1.8.4
+     */
+    public void receivePacket(Packet<ClientPlayPacketListener> packet) {
+        packet.apply(mc.getNetworkHandler());
+    }
+    
 }

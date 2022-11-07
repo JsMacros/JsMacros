@@ -467,7 +467,14 @@ public class ClassParser {
                 if (params != null && !params.isEmpty()) {
                     builder.append("<");
                     for (TypeMirror param : params) {
-                        builder.append(parseType(param), ", ");
+                        if (param instanceof TypeVariable typeVariable && typeVariable.getUpperBound().equals(type)) {
+                            builder.append(typeLink = new XMLBuilder("p", true));
+                            typeLink.setClass("type primitiveType");
+                            typeLink.append(typeVariable.asElement().getSimpleName());
+                            builder.append(", ");
+                        } else {
+                            builder.append(parseType(param), ", ");
+                        }
                     }
                     builder.pop();
                     builder.append(">");

@@ -9,6 +9,7 @@ import java.util.UUID;
 /**
  * @since 1.5.1
  */
+@SuppressWarnings("unused")
 public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
 
     private NBTElementHelper(T base) {
@@ -80,7 +81,6 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
         return (NBTNumberHelper) this;
     }
 
-
     /**
      * check with {@link #isList()} first
      * @since 1.5.1
@@ -99,7 +99,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
     }
 
     public String toString() {
-        return String.format("NBTElement:%s", base.toString());
+        return String.format("NBTElementHelper:{%s}", base.toString());
     }
 
     /**

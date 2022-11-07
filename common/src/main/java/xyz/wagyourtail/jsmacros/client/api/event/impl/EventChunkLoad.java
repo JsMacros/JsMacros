@@ -21,6 +21,7 @@ public class EventChunkLoad implements BaseEvent {
         profile.triggerEvent(this);
     }
     
+    @Override
     public String toString() {
         return String.format("%s:{\"x\": %d, \"z\": %d}", this.getEventName(), x, z);
     }

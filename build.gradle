@@ -32,6 +32,7 @@ subprojects {
         // non-mod dependencies:
         implementation "io.noties:prism4j:${project.prism_version}"
 
+        coreImplementation "org.jooq:joor:0.9.14"
         coreImplementation "com.neovisionaries:nv-websocket-client:2.10"
         coreImplementation "org.javassist:javassist:3.28.0-GA"
     }

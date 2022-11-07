@@ -7,7 +7,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.extensions.ExtensionLoader;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 import xyz.wagyourtail.wagyourgui.overlays.ConfirmOverlay;

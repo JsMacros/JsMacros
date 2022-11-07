@@ -16,12 +16,13 @@ public class MixinHandledScreen {
     @Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;clickSlot(IIILnet/minecraft/screen/slot/SlotActionType;Lnet/minecraft/entity/player/PlayerEntity;)V"), cancellable = true)
     public void beforeMouseClick(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
         EventClickSlot event = new EventClickSlot((HandledScreen<?>) (Object) this, actionType.ordinal(), button, slotId);
-        if (event.cancel) {
+        if (event.isCanceled()) {
             ci.cancel();
+            return;
         }
         if (actionType == SlotActionType.THROW || slotId == -999) {
             EventDropSlot eventDrop = new EventDropSlot((HandledScreen<?>) (Object) this, slotId, button == 1);
-            if (eventDrop.cancel) {
+            if (eventDrop.isCanceled()) {
                 ci.cancel();
             }
         }

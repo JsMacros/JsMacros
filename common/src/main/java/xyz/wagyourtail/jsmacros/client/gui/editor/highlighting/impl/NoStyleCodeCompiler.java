@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl;
 
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCodeCompiler;

@@ -46,10 +46,27 @@ public class MacroScreen extends BaseScreen {
     protected void init() {
         super.init();
         macros.clear();
-        keyScreen = this.addDrawableChild(new Button(0, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.keys"), null));
+        keyScreen = this.addDrawableChild(new Button(0, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.keys"), btn -> {
+            assert client != null;
+            if (client.currentScreen.getClass() != KeyMacrosScreen.class) {
+                client.setScreen(new KeyMacrosScreen(this));
+            }
+        }));
 
-        eventScreen = this.addDrawableChild(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.events"), null));
+        eventScreen = this.addDrawableChild(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.events"), btn -> {
+            assert client != null;
+            if (client.currentScreen.getClass() != EventMacrosScreen.class) {
+                client.setScreen(new EventMacrosScreen(this));
+            }
+        }));
 
+        serviceScreen = this.addDrawableChild(new Button(2 * this.width / 6 + 2, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.services"), btn -> {
+            assert client != null;
+            if (client.currentScreen.getClass() != ServiceScreen.class) {
+                client.setScreen(new ServiceScreen(this));
+            }
+        }));
+        
         this.addDrawableChild(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.settings"), (btn) -> {
             openOverlay(new SettingsOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this));
         }));
@@ -62,11 +79,6 @@ public class MacroScreen extends BaseScreen {
         runningBtn = this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.running"), (btn) -> {
             assert client != null;
             client.setScreen(new CancelScreen(this));
-        }));
-
-        serviceScreen = this.addDrawableChild(new Button(this.width /12 + 1, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.services"), (btn) -> {
-            assert client != null;
-            client.setScreen(new ServiceScreen(this));
         }));
 
         aboutBtn = this.addDrawableChild(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this))));
@@ -185,11 +197,12 @@ public class MacroScreen extends BaseScreen {
             macro.render(matrices, mouseX, mouseY, delta);
         }
         
-        drawCenteredText(matrices, this.textRenderer, Core.getInstance().profile.getCurrentProfileName(), this.width * 7 / 12, 5, 0x7F7F7F);
+        drawCenteredText(matrices, this.textRenderer, Core.getInstance().profile.getCurrentProfileName(), this.width * 8 / 12, 5, 0x7F7F7F);
 
         fill(matrices, this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
         fill(matrices, this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);
         fill(matrices, this.width / 6 * 2, 0, this.width / 6 * 2 + 2, 20, 0xFFFFFFFF);
+        fill(matrices, this.width / 6 * 3 + 1, 0, this.width / 6 * 3 + 3, 20, 0xFFFFFFFF);
         fill(matrices, 0, 20, width, 22, 0xFFFFFFFF);
 
         super.render(matrices, mouseX, mouseY, delta);

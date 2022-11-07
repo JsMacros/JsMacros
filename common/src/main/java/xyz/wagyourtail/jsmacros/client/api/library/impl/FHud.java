@@ -3,7 +3,10 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+
+import com.google.common.collect.ImmutableMap;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.ScriptScreen;
@@ -13,6 +16,7 @@ import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -42,24 +46,24 @@ public class FHud extends BaseLibrary {
     
     /**
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen
+     * @see IScreen
      * 
      * @since 1.0.5
      * 
      * @param title
      * @param dirtBG boolean of whether to use a dirt background or not.
-     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen IScreen} Object.
+     * @return a new {@link IScreen IScreen} Object.
      */
     public ScriptScreen createScreen(String title, boolean dirtBG) {
         return new ScriptScreen(title, dirtBG);
     }
     
     /**
-     * Opens a {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen IScreen} Object.
+     * Opens a {@link IScreen IScreen} Object.
      * 
      * @since 1.0.5
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen
+     * @see IScreen
      * 
      * @param s
      */
@@ -74,12 +78,53 @@ public class FHud extends BaseLibrary {
      * 
      * @since 1.2.7
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen
+     * @see IScreen
      * 
-     * @return the currently open Screen as an {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen IScreen}
+     * @return the currently open Screen as an {@link IScreen IScreen}
      */
     public IScreen getOpenScreen() {
         return (IScreen) mc.currentScreen;
+    }
+
+    /**
+     * @param width  the width of the canvas
+     * @param height the height of the canvas
+     * @return a {@link CustomImage} that can be used as a texture for screen backgrounds, rendering
+     *         images, etc.
+     *
+     * @since 1.8.4
+     */
+    public CustomImage createTexture(int width, int height, String name) {
+        return CustomImage.createWidget(width, height, name);
+    }
+
+    /**
+     * @param path absolute path to an image file
+     * @return a {@link CustomImage} that can be used as a texture for screen backgrounds, rendering
+     *         images, etc.
+     *
+     * @since 1.8.4
+     */
+    public CustomImage createTexture(String path, String name) {
+        return CustomImage.createWidget(path, name);
+    }
+
+    /**
+     * @return an immutable Map of all registered custom textures.
+     *
+     * @since 1.8.4
+     */
+    public Map<String, CustomImage> getRegisteredTextures() {
+        return ImmutableMap.copyOf(CustomImage.IMAGES);
+    }
+    
+    /**
+     * @return the current gui scale factor of minecraft.
+     *
+     * @since 1.8.4
+     */
+    public int getScaleFactor() {
+        return mc.options.getGuiScale().getValue();
     }
     
     /**
@@ -106,7 +151,7 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.5
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
+     * @see IDraw2D
      *
      * @return
      */
@@ -117,9 +162,9 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.5
      * 
-     * Registers an {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D IDraw2D} to be rendered.
+     * Registers an {@link IDraw2D IDraw2D} to be rendered.
      * @deprecated since 1.6.5, use {@link Draw2D#register()} instead.
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
+     * @see IDraw2D
      * 
      * @param overlay
      */
@@ -132,9 +177,9 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.5
      * 
-     * Unregisters an {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D IDraw2D} to stop it being rendered.
+     * Unregisters an {@link IDraw2D IDraw2D} to stop it being rendered.
      * @deprecated since 1.6.5, use {@link Draw2D#unregister()} instead.
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
+     * @see IDraw2D
      * 
      * @param overlay
      */
@@ -146,9 +191,9 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.5
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
+     * @see IDraw2D
      * 
-     * @return A list of current {@link xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D IDraw2Ds}.
+     * @return A list of current {@link IDraw2D IDraw2Ds}.
      */
     public List<IDraw2D<Draw2D>> listDraw2Ds() {
         return ImmutableList.copyOf(overlays);
@@ -159,7 +204,7 @@ public class FHud extends BaseLibrary {
      * 
      * clears the Draw2D render list.
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D
+     * @see IDraw2D
      */
     public void clearDraw2Ds() {
         overlays.clear();
@@ -168,9 +213,9 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.6
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.classes.Draw3D
+     * @see Draw3D
      * 
-     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.classes.Draw3D Draw3D}.
+     * @return a new {@link Draw3D Draw3D}.
      */
     public Draw3D createDraw3D() {
         return new Draw3D();
@@ -179,9 +224,9 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.6
      * 
-     * Registers an {@link xyz.wagyourtail.jsmacros.client.api.classes.Draw3D Draw3D} to be rendered.
+     * Registers an {@link Draw3D Draw3D} to be rendered.
      * @deprecated since 1.6.5 use {@link Draw3D#register()} instead.
-     * @see xyz.wagyourtail.jsmacros.client.api.classes.Draw3D
+     * @see Draw3D
      * 
      * @param draw
      */
@@ -193,9 +238,9 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.6
      * 
-     * Unregisters an {@link xyz.wagyourtail.jsmacros.client.api.classes.Draw3D Draw3D} to stop it being rendered.
+     * Unregisters an {@link Draw3D Draw3D} to stop it being rendered.
      * @since 1.6.5 use {@link Draw3D#unregister()} instead.
-     * @see xyz.wagyourtail.jsmacros.client.api.classes.Draw3D
+     * @see Draw3D
      * 
      * @param draw
      */
@@ -207,9 +252,9 @@ public class FHud extends BaseLibrary {
     /**
      * @since 1.0.6
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.classes.Draw3D
+     * @see Draw3D
      * 
-     * @return A list of current {@link xyz.wagyourtail.jsmacros.client.api.classes.Draw3D Draw3D}.
+     * @return A list of current {@link Draw3D Draw3D}.
      */
     public List<Draw3D> listDraw3Ds() {
         return ImmutableList.copyOf(renders);
@@ -220,7 +265,7 @@ public class FHud extends BaseLibrary {
      * 
      * clears the Draw2D render list.
      * 
-     * @see xyz.wagyourtail.jsmacros.client.api.classes.Draw3D
+     * @see Draw3D
      */
     public void clearDraw3Ds() {
         renders.clear();
@@ -243,4 +288,23 @@ public class FHud extends BaseLibrary {
     public double getMouseY() {
         return mc.mouse.getY() * (double)mc.getWindow().getScaledHeight() / (double)mc.getWindow().getHeight();
     }
+
+    /**
+     * @return the current window width.
+     *
+     * @since 1.8.4
+     */
+    public int getWindowWidth() {
+        return mc.getWindow().getWidth();
+    }
+
+    /**
+     * @return the current window height.
+     *
+     * @since 1.8.4
+     */
+    public int getWindowHeight() {
+        return mc.getWindow().getHeight();
+    }
+    
 }

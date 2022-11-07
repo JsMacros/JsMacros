@@ -7,8 +7,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import org.apache.logging.log4j.Level;
+
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.RunningContextContainer;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
@@ -42,7 +43,7 @@ public class CancelScreen extends BaseScreen {
         s = this.addDrawableChild(new Scrollbar(width - 12, 5, 8, height-10, 0xFFFFFFFF, 0xFF000000, 0x7FFFFFFF, 1, this::onScrollbar));
         
         this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.back"), (btn) -> this.close()));
-        services = this.addDrawableChild(new AnnotatedCheckBox(this.width / 12 + 5, this.height - 12, 200, 12, textRenderer, 0, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.showservices"), false, null));
+        services = this.addDrawableChild(new AnnotatedCheckBox(this.width / 12 + 5, this.height - 12, 200, 12, textRenderer, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.showservices"), Core.getInstance().config.getOptions(ClientConfigV2.class).showRunningServices, btn -> Core.getInstance().config.getOptions(ClientConfigV2.class).showRunningServices = ((AnnotatedCheckBox) btn).value));
     }
 
     public void addContainer(BaseScriptContext<?> t) {

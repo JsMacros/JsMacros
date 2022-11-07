@@ -2,6 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.entity.player.PlayerEntity;
 
+import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.projectile.FishingBobberEntityHelper;
+
 /**
  * @author Wagyourtail
  */
@@ -18,7 +20,7 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
      * @return
      */
     public PlayerAbilitiesHelper getAbilities() {
-    	return new PlayerAbilitiesHelper(base.getAbilities());
+        return new PlayerAbilitiesHelper(base.getAbilities());
     }
     
     
@@ -118,8 +120,23 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
     public boolean isSleepingLongEnough() {
         return base.canResetTimeBySleeping();
     }
-    
-    public String toString() {
-        return "Player"+super.toString();
+
+    /**
+     * @return the fishing bobber of the player, or {@code null} if the player is not fishing.
+     *
+     * @since 1.8.4
+     */
+    public FishingBobberEntityHelper getFishingBobber() {
+        return base.fishHook == null ? null : new FishingBobberEntityHelper(base.fishHook);
     }
+
+    /**
+     * @return the player's score.
+     *
+     * @since 1.8.4
+     */
+    public int getScore() {
+        return base.getScore();
+    }
+    
 }

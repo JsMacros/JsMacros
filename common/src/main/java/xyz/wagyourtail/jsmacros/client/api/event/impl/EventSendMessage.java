@@ -16,6 +16,7 @@ public class EventSendMessage implements BaseEvent {
         profile.triggerEventJoinNoAnything(this);
     }
 
+    @Override
     public String toString() {
         return String.format("%s:{\"message\": \"%s\"}", this.getEventName(), message);
     }

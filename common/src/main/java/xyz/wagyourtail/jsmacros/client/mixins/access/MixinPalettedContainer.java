@@ -1,9 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
 import net.minecraft.world.chunk.PalettedContainer;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainer;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainerData;
@@ -13,10 +11,6 @@ import java.util.Arrays;
 
 @Mixin(PalettedContainer.class)
 public class MixinPalettedContainer<T> implements IPalettedContainer<T> {
-
-    @Shadow
-    @Final
-    private PalettedContainer.PaletteProvider paletteProvider;
 
     @Unique
     private Field dataField;
@@ -34,11 +28,6 @@ public class MixinPalettedContainer<T> implements IPalettedContainer<T> {
             }
         }
         throw new RuntimeException(Arrays.toString(PalettedContainer.class.getDeclaredFields()));
-    }
-
-    @Override
-    public PalettedContainer.PaletteProvider jsmacros_getPaletteProvider() {
-        return paletteProvider;
     }
 
     private Object getField(Field f) {

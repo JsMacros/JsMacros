@@ -37,6 +37,7 @@ public class EventEXPChange implements BaseEvent {
         profile.triggerEvent(this);
     }
     
+    @Override
     public String toString() {
         return String.format("%s:{\"total\": %d}", this.getEventName(), total);
     }

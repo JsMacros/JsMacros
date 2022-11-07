@@ -1,7 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.entity.boss.BossBar;
+import net.minecraft.util.Formatting;
+
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+
+import java.util.Locale;
 
 /**
  * @author Wagyourtail
@@ -35,33 +39,7 @@ public class BossBarHelper extends BaseHelper<BossBar> {
      * @return boss bar color.
      */
     public String getColor() {
-        String color = null;
-        switch (base.getColor()) {
-            case BLUE:
-                color = "BLUE";
-                break;
-            case GREEN:
-                color = "GREEN";
-                break;
-            case PINK:
-                color = "PINK";
-                break;
-            case PURPLE:
-                color = "PURPLE";
-                break;
-            case RED:
-                color = "RED";
-                break;
-            case WHITE:
-                color = "WHITE";
-                break;
-            case YELLOW:
-                color = "YELLOW";
-                break;
-            default:
-                break;
-        }
-        return color;
+        return base.getColor().getName().toUpperCase(Locale.ROOT);
     }
     
     /**
@@ -69,27 +47,26 @@ public class BossBarHelper extends BaseHelper<BossBar> {
      * @return boss bar notch style.
      */
     public String getStyle() {
-        String style = null;
-        switch (base.getStyle()) {
-        case NOTCHED_10:
-            style = "NOTCHED_10";
-            break;
-        case NOTCHED_12:
-            style = "NOTCHED_12";
-            break;
-        case NOTCHED_20:
-            style = "NOTCHED_20";
-            break;
-        case NOTCHED_6:
-            style = "NOTCHED_6";
-            break;
-        case PROGRESS:
-            style = "PROGRESS";
-            break;
-        default:
-            break;
-        }
-        return style;
+        return base.getStyle().getName().toUpperCase(Locale.ROOT);
+    }
+
+    /**
+     * @return the color of this boss bar.
+     *
+     * @since 1.8.4
+     */
+    public int getColorValue() {
+        Formatting f = base.getColor().getTextFormat();
+        return f.getColorValue() == null ? -1 : f.getColorValue();
+    }
+
+    /**
+     * @return the format of the boss bar's color.
+     *
+     * @since 1.8.4
+     */
+    public FormattingHelper getColorFormat() {
+        return new FormattingHelper(base.getColor().getTextFormat());
     }
     
     /**
@@ -100,7 +77,8 @@ public class BossBarHelper extends BaseHelper<BossBar> {
         return new TextHelper(base.getName());
     }
     
+    @Override
     public String toString() {
-        return String.format("BossBar:{\"name:\":\"%s\", \"percent\":%f}", base.getName().getString(), base.getPercent());
+        return String.format("BossBarHelper:{\"name:\": \"%s\", \"percent\": %f}", base.getName().getString(), base.getPercent());
     }
 }

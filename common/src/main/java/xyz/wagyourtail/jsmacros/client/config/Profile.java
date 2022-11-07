@@ -21,7 +21,6 @@ import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
-import xyz.wagyourtail.jsmacros.core.library.impl.FTime;
 
 import java.util.Arrays;
 
@@ -191,26 +190,35 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventEntityUnload.class);
         runner.eventRegistry.addEvent(EventEXPChange.class);
         runner.eventRegistry.addEvent(EventFallFlying.class);
+        runner.eventRegistry.addEvent(EventHealthChange.class);
         runner.eventRegistry.addEvent(EventHeldItemChange.class);
         runner.eventRegistry.addEvent(EventHungerChange.class);
         runner.eventRegistry.addEvent(EventInteractBlock.class);
         runner.eventRegistry.addEvent(EventInteractEntity.class);
+        runner.eventRegistry.addEvent(EventInventoryChange.class);
         runner.eventRegistry.addEvent(EventItemDamage.class);
         runner.eventRegistry.addEvent(EventItemPickup.class);
         runner.eventRegistry.addEvent(EventJoinedKey.class);
+        runner.eventRegistry.addEvent(EventJoinedRecvPacket.class);
+        runner.eventRegistry.addEvent(EventJoinedSendPacket.class);
         runner.eventRegistry.addEvent(EventJoinedTick.class);
         runner.eventRegistry.addEvent(EventJoinServer.class);
         runner.eventRegistry.addEvent(EventKey.class);
+        runner.eventRegistry.addEvent(EventLaunchGame.class);
         runner.eventRegistry.addEvent(EventOpenContainer.class);
         runner.eventRegistry.addEvent(EventOpenScreen.class);
+        runner.eventRegistry.addEvent(EventRecvPacket.class);
+        runner.eventRegistry.addEvent(EventSendPacket.class);
         runner.eventRegistry.addEvent(EventPlayerJoin.class);
         runner.eventRegistry.addEvent(EventPlayerLeave.class);
+        runner.eventRegistry.addEvent(EventQuitGame.class);
         runner.eventRegistry.addEvent(EventRecvMessage.class);
         runner.eventRegistry.addEvent(EventRiding.class);
         runner.eventRegistry.addEvent(EventResourcePackLoaded.class);
         runner.eventRegistry.addEvent(EventSendMessage.class);
         runner.eventRegistry.addEvent(EventSignEdit.class);
         runner.eventRegistry.addEvent(EventSound.class);
+        runner.eventRegistry.addEvent(EventStatusEffectUpdate.class);
         runner.eventRegistry.addEvent(EventTick.class);
         runner.eventRegistry.addEvent(EventTitle.class);
 
@@ -220,6 +228,8 @@ public class Profile extends BaseProfile {
         runner.libraryRegistry.addLibrary(FKeyBind.class);
         runner.libraryRegistry.addLibrary(FPlayer.class);
         runner.libraryRegistry.addLibrary(FPositionCommon.class);
+        runner.libraryRegistry.addLibrary(FJavaUtils.class);
+        runner.libraryRegistry.addLibrary(FUtils.class);
         runner.libraryRegistry.addLibrary(FWorld.class);
     }
 }

@@ -20,9 +20,9 @@ public class TextInput extends Button {
     public int selEndIndex;
     protected int arrowCursor;
     
-    public TextInput(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int hilightColor, int textColor, String message, Consumer<Button> onClick, Consumer<String> onChange) {
+    public TextInput(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int highlightColor, int textColor, String message, Consumer<Button> onClick, Consumer<String> onChange) {
         super(x, y, width, height, textRenderer, color, borderColor, color, textColor, Text.literal(""), onClick);
-        this.selColor = hilightColor;
+        this.selColor = highlightColor;
         this.content = message;
         this.onChange = onChange;
         this.updateSelStart(content.length());

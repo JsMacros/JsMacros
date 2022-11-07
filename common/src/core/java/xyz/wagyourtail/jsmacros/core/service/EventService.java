@@ -5,7 +5,6 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -320,7 +319,7 @@ public class EventService implements BaseEvent {
     }
 
     /**
-     * removes a key from the global varaible space.
+     * removes a key from the global variable space.
      *
      * @param key
      *

@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -25,8 +26,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -260,7 +265,9 @@ public class FJsMacros extends PerExecLibrary {
      * @since 1.1.8
      * 
      * @param path relative to the script's folder.
+     * @deprecated use the Utils library instead.
      */
+    @Deprecated
     public void open(String path) throws IOException {
         openUrl(ctx.getContainedFolder().toPath().resolve(path).toUri().toURL());
     }
@@ -271,7 +278,9 @@ public class FJsMacros extends PerExecLibrary {
      * @param url
      *
      * @throws MalformedURLException
+     * @deprecated use the Utils library instead.
      */
+    @Deprecated
     public void openUrl(String url) throws IOException {
         openUrl(new URL(url));
     }
@@ -350,7 +359,12 @@ public class FJsMacros extends PerExecLibrary {
             public MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> getWrapper() {
                 return callback;
             }
-    
+
+            @Override
+            public void off() {
+                Core.getInstance().eventRegistry.removeListener(event, this);
+            }
+
             @Override
             public String toString() {
                 return String.format("ScriptEventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", th.getName(), event);
@@ -407,7 +421,12 @@ public class FJsMacros extends PerExecLibrary {
             public MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> getWrapper() {
                 return callback;
             }
-    
+
+            @Override
+            public void off() {
+                Core.getInstance().eventRegistry.removeListener(event, this);
+            }
+
             @Override
             public String toString() {
                 return String.format("OnceScriptEventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", th.getName(), event);
@@ -445,6 +464,66 @@ public class FJsMacros extends PerExecLibrary {
         return Core.getInstance().eventRegistry.removeListener(event, listener);
     }
 
+    /**
+     * Will also disable all listeners for the given event, including JsMacros own event listeners.
+     *
+     * @param event the event to remove all listeners from
+     * @since 1.8.4
+     */
+    public void disableAllListeners(String event) {
+        for (IEventListener listener : ImmutableList.copyOf(Core.getInstance().eventRegistry.getListeners(event))) {
+            listener.off();
+        }
+    }
+
+    /**
+     * Will also disable all listeners, including JsMacros own event listeners.
+     *
+     * @since 1.8.4
+     */
+    public void disableAllListeners() {
+        for (Map.Entry<String, Set<IEventListener>> entry : Core.getInstance().eventRegistry.getListeners().entrySet()) {
+            for (IEventListener listener : ImmutableList.copyOf(entry.getValue())) {
+                listener.off();
+            }
+        }
+    }
+
+    /**
+     * Will only disable user created event listeners for the given event. This includes listeners
+     * created from {@link #on(String, MethodWrapper)}, {@link #once(String, MethodWrapper)},
+     * {@link #waitForEvent(String)}, {@link #waitForEvent(String, MethodWrapper)} and
+     * {@link #waitForEvent(String, MethodWrapper, MethodWrapper)}.
+     *
+     * @param event the event to remove all listeners from
+     * @since 1.8.4
+     */
+    public void disableScriptListeners(String event) {
+        for (IEventListener listener : ImmutableList.copyOf(Core.getInstance().eventRegistry.getListeners(event))) {
+            if (listener instanceof ScriptEventListener) {
+                listener.off();
+            }
+        }
+    }
+
+    /**
+     * Will only disable user created event listeners.  This includes listeners created from
+     * {@link #on(String, MethodWrapper)}, {@link #once(String, MethodWrapper)},
+     * {@link #waitForEvent(String)}, {@link #waitForEvent(String, MethodWrapper)} and
+     * {@link #waitForEvent(String, MethodWrapper, MethodWrapper)}.
+     *
+     * @since 1.8.4
+     */
+    public void disableScriptListeners() {
+        for (Map.Entry<String, Set<IEventListener>> entry : Core.getInstance().eventRegistry.getListeners().entrySet()) {
+            for (IEventListener listener : ImmutableList.copyOf(entry.getValue())) {
+                if (listener instanceof ScriptEventListener) {
+                    listener.off();
+                }
+            }
+        }
+    }
+    
     /**
      * @param event event to wait for
      * @since 1.5.0
@@ -487,7 +566,7 @@ public class FJsMacros extends PerExecLibrary {
                 throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
             }
 
-            //get curent thread establish the lock to use for waiting blah blah blah
+            //get current thread establish the lock to use for waiting blah blah blah
             Thread th = Thread.currentThread();
             Semaphore lock = new Semaphore(0);
             Semaphore lock2 = new Semaphore(0);
@@ -499,7 +578,7 @@ public class FJsMacros extends PerExecLibrary {
                 @Override
                 public EventContainer<?> trigger(BaseEvent evt) {
                     ev[0] = evt;
-                    // allow for initial thread to run it's filter
+                    // allow for initial thread to run its filter
                     lock.release();
                     try {
                         // wait for filter to finish
@@ -525,6 +604,12 @@ public class FJsMacros extends PerExecLibrary {
                 @Override
                 public MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> getWrapper() {
                     return null;
+                }
+
+                @Override
+                public void off() {
+                    Core.getInstance().eventRegistry.removeListener(event, this);
+                    th.interrupt();
                 }
 
                 @Override

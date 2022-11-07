@@ -1,10 +1,14 @@
-package xyz.wagyourtail.jsmacros.client;
+package xyz.wagyourtail.jsmacros.client.util;
 
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
 
 import java.util.Locale;
 
+/**
+ * @author Etheradon
+ * @since 1.6.4
+ */
 public final class TranslationUtil {
 
     private TranslationUtil() {

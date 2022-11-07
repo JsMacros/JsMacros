@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.client.access.IMerchantEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class MerchantEntityHelper<T extends MerchantEntity> extends LivingEntityHelper<T> {
     
     public MerchantEntityHelper(T e) {
@@ -42,11 +43,6 @@ public class MerchantEntityHelper<T extends MerchantEntity> extends LivingEntity
      */
     public boolean hasCustomer() {
         return base.hasCustomer();
-    }
-
-    @Override
-    public String toString() {
-        return "Merchant" + super.toString();
     }
 
 }

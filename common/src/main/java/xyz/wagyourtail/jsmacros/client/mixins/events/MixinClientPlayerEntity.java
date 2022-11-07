@@ -10,9 +10,8 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.UpdateSignC2SPacket;
-import net.minecraft.text.LiteralTextContent;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -25,7 +24,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.wagyourtail.jsmacros.client.access.IClientPlayerEntity;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
+import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
+import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 
 import java.util.ArrayList;
@@ -133,9 +134,13 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     public void onDropSelected(boolean entireStack, CallbackInfoReturnable<Boolean> cir) {
         int selectedHotbarIndex = getInventory().selectedSlot;
         EventDropSlot event = new EventDropSlot(null, 36 + selectedHotbarIndex, entireStack);
-        if (event.cancel) {
+        if (event.isCanceled()) {
             cir.setReturnValue(false);
         }
+        int[] slots = new int[]{getInventory().selectedSlot + 36};
+        ItemStackHelper[] oldItems = new ItemStackHelper[]{new ItemStackHelper(getInventory().getMainHandStack())};
+        ItemStackHelper[] newItems = new ItemStackHelper[]{new ItemStackHelper(entireStack ? Items.AIR.getDefaultStack() : getInventory().getMainHandStack())};
+        new EventInventoryChange(Inventory.create(), slots, oldItems, newItems);
     }
 
     @Inject(method = "sendChatMessage(Ljava/lang/String;Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)

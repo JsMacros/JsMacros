@@ -2,10 +2,10 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
-import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
+@SuppressWarnings("unused")
 public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
     private ChatHud hud;
 
@@ -26,8 +26,14 @@ public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
         return base.creationTick();
     }
 
-    public void deleteById() {
+    public ChatHudLineHelper deleteById() {
         ((IChatHud) hud).jsmacros_removeMessageById(0);
+        return this;
     }
 
+    @Override
+    public String toString() {
+        return String.format("ChatHudLineHelper:{\"text\": \"%s\", \"creationTick\": %d}", base.content().getString(), base.creationTick());
+    }
+    
 }

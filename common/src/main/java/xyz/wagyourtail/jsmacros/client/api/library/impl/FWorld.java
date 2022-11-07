@@ -10,24 +10,32 @@ import net.minecraft.client.gui.hud.ClientBossBar;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
+import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.LightType;
 import net.minecraft.world.RaycastContext;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.WorldScanner;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.WorldScannerBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
@@ -41,6 +49,7 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -107,6 +116,19 @@ public class FWorld extends BaseLibrary {
         }
         return players;
     }
+
+    /**
+     * @param name the name of the player to get the entry for
+     * @return player entry for the given player's name or {@code null} if not found.
+     *
+     * @since 1.8.4
+     */
+    public PlayerListEntryHelper getPlayerEntry(String name) {
+        ClientPlayNetworkHandler handler = mc.getNetworkHandler();
+        assert handler != null;
+        PlayerListEntry entry = handler.getPlayerListEntry(name);
+        return entry != null ? new PlayerListEntryHelper(entry) : null;
+    }
     
     /**
      * 
@@ -133,6 +155,20 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
+     * The x and z position of the chunk can be calculated by the following formula: xChunk = x >>
+     * 4; zChunk = z >> 4;
+     *
+     * @param x the x coordinate of the chunk, not the absolute position
+     * @param z the z coordinate of the chunk, not the absolute position
+     * @return ChunkHelper for the chunk coordinates {@link ChunkHelper}.
+     *
+     * @since 1.8.4
+     */
+    public ChunkHelper getChunk(int x, int z) {
+        return new ChunkHelper(mc.world.getChunk(x, z));
+    }
+    
+    /**
      * Usage: <br>
      * This will return all blocks that are facing south, don't require a tool to break, 
      * have a hardness of 10 or less and whose name contains either chest or barrel.
@@ -144,7 +180,7 @@ public class FWorld extends BaseLibrary {
      *     .andStateFilter("isToolRequired").is(false)
      *     .build()
      * </pre>
-     * @return a builder to create a WorldScanner
+     * @return a builder to create a WorldScanner.
      *
      * @since 1.6.5
      */
@@ -153,7 +189,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @return a scanner for the current world
+     * @return a scanner for the current world.
      *
      * @since 1.6.5
      */
@@ -169,7 +205,8 @@ public class FWorld extends BaseLibrary {
      * @return
      */
     public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, String id, int chunkrange) {
-        return new WorldScanner(mc.world, block -> Registry.BLOCK.getId(block.getRaw()).toString().equals(id), null).scanChunkRange(centerX, centerZ, chunkrange);
+        String finalId = RegistryHelper.parseNameSpace(id);
+        return new WorldScanner(mc.world, block -> Registry.BLOCK.getId(block.getRaw()).toString().equals(finalId), null).scanChunkRange(centerX, centerZ, chunkrange);
     }
 
     /**
@@ -181,9 +218,10 @@ public class FWorld extends BaseLibrary {
      */
     public List<PositionCommon.Pos3D> findBlocksMatching(String id, int chunkrange) {
         assert mc.player != null;
+        String finalId = RegistryHelper.parseNameSpace(id);
         int playerChunkX = mc.player.getBlockX() >> 4;
         int playerChunkZ = mc.player.getBlockZ() >> 4;
-        return new WorldScanner(mc.world, block -> Registry.BLOCK.getId(block.getRaw()).toString().equals(id), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
+        return new WorldScanner(mc.world, block -> Registry.BLOCK.getId(block.getRaw()).toString().equals(finalId), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
     }
 
 
@@ -198,7 +236,7 @@ public class FWorld extends BaseLibrary {
         assert mc.player != null;
         int playerChunkX = mc.player.getBlockX() >> 4;
         int playerChunkZ = mc.player.getBlockZ() >> 4;
-        Set<String> ids2 = new HashSet<>(Arrays.asList(ids));
+        Set<String> ids2 = Arrays.stream(ids).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         return new WorldScanner(mc.world, block -> ids2.contains(Registry.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
     }
 
@@ -212,7 +250,7 @@ public class FWorld extends BaseLibrary {
      * @return
      */
     public List<PositionCommon.Pos3D> findBlocksMatching(int centerX, int centerZ, String[] ids, int chunkrange) {
-        Set<String> ids2 = new HashSet<>(Arrays.asList(ids));
+        Set<String> ids2 = Arrays.stream(ids).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         return new WorldScanner(mc.world, block -> ids2.contains(Registry.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(centerX, centerZ, chunkrange);
     }
 
@@ -250,6 +288,87 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
+     * By default, air blocks are ignored and the callback is only called for real blocks.
+     *
+     * @param pos      the center position
+     * @param radius   the radius to scan
+     * @param callback the callback to call for each block
+     * @since 1.8.4
+     */
+    public void iterateSphere(BlockPosHelper pos, int radius, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
+        iterateSphere(pos, radius, true, callback);
+    }
+
+    /**
+     * @param pos the center position
+     * @param radius the radius to scan
+     * @param ignoreAir whether to ignore air blocks
+     * @param callback the callback to call for each block
+     * @since 1.8.4
+     */
+    public void iterateSphere(BlockPosHelper pos, int radius, boolean ignoreAir, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
+        if (radius < 0) {
+            throw new IllegalArgumentException("radius cannot be negative");
+        }
+        assert mc.world != null;
+        int xStart = pos.getX() - radius;
+        int yStart = MathHelper.clamp(mc.world.getBottomY(), pos.getY() - radius, mc.world.getHeight());
+        int zStart = pos.getZ() - radius;
+        int xEnd = pos.getX() + radius;
+        int yEnd = MathHelper.clamp(mc.world.getBottomY(), pos.getY() + radius, mc.world.getHeight());
+        int zEnd = pos.getZ() + radius;
+        int radiusSq = radius * radius;
+
+        BlockPos.Mutable blockPos = new BlockPos.Mutable();
+
+        for (int x = xStart; x <= xEnd; x++) {
+            int dx = x - pos.getX();
+            for (int y = yStart; y <= yEnd; y++) {
+                int dy = y - pos.getY();
+                for (int z = zStart; z <= zEnd; z++) {
+                    int dz = z - pos.getZ();
+                    blockPos.set(x, y, z);
+                    BlockState state = mc.world.getBlockState(blockPos);
+                    if (ignoreAir && state.isAir()) {
+                        continue;
+                    }
+                    if (dx * dx + dy * dy + dz * dz <= radiusSq) {
+                        callback.accept(new BlockDataHelper(state, mc.world.getBlockEntity(blockPos), blockPos));
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param pos1 the first position
+     * @param pos2 the second position
+     * @param callback the callback to call for each block
+     * @since 1.8.4
+     */
+    public void iterateBox(BlockPosHelper pos1, BlockPosHelper pos2, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
+        iterateBox(pos1, pos2, true, callback);
+    }
+
+    /**
+     * @param pos1 the first position
+     * @param pos2 the second position
+     * @param callback the callback to call for each block
+     * @param ignoreAir whether to ignore air blocks
+     * @since 1.8.4
+     */
+    public void iterateBox(BlockPosHelper pos1, BlockPosHelper pos2, boolean ignoreAir, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
+        assert mc.world != null;
+        BlockPos.stream(pos1.getRaw().withY(MathHelper.clamp(mc.world.getBottomY(), pos1.getY(), mc.world.getHeight())), pos2.getRaw().withY(MathHelper.clamp(mc.world.getBottomY(), pos2.getY(), mc.world.getHeight()))).forEach(bp -> {
+            BlockState state = mc.world.getBlockState(bp);
+            if (ignoreAir && state.isAir()) {
+                return;
+            }
+            callback.accept(new BlockDataHelper(state, mc.world.getBlockEntity(bp), bp));
+        });
+    }
+    
+    /**
      * @since 1.2.9
      * @return a helper for the scoreboards provided to the client.
      */
@@ -262,14 +381,77 @@ public class FWorld extends BaseLibrary {
      * @return all entities in the render distance.
      */
     public List<EntityHelper<?>> getEntities() {
+        return getEntitiesInternal(entity -> true);
+    }
+
+    /**
+     * @param types the entity types to consider
+     * @return all entities in the render distance, that match the specified entity type.
+     *
+     * @since 1.8.4
+     */
+    public List<EntityHelper<?>> getEntities(String... types) {
+        Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
+        Predicate<Entity> typePredicate = entity -> uniqueTypes.contains(Registry.ENTITY_TYPE.getId(entity.getType()).toString());
+        return getEntitiesInternal(typePredicate);
+    }
+
+    /**
+     * @param distance the maximum distance to search for entities
+     * @return a list of entities within the specified distance to the player.
+     *
+     * @since 1.8.4
+     */
+    public List<EntityHelper<?>> getEntities(double distance) {
+        assert mc.player != null;
+        Predicate<Entity> distancePredicate = e -> e.distanceTo(mc.player) <= distance;
+        return getEntitiesInternal(distancePredicate);
+    }
+
+    /**
+     * @param distance the maximum distance to search for entities
+     * @param types the entity types to consider
+     * @return a list of entities within the specified distance to the player, that match the specified entity type.
+     *
+     * @since 1.8.4
+     */
+    public List<EntityHelper<?>> getEntities(double distance, String... types) {
+        Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
+        assert mc.player != null;
+        Predicate<Entity> distancePredicate = e -> e.distanceTo(mc.player) <= distance;
+        Predicate<Entity> typePredicate = entity -> uniqueTypes.contains(Registry.ENTITY_TYPE.getId(entity.getType()).toString());
+        return getEntitiesInternal(distancePredicate.and(typePredicate));
+    }
+
+    /**
+     * @param filter the entity filter
+     * @return a list of entities that match the specified filter.
+     *
+     * @since 1.8.4
+     */
+    public List<EntityHelper<?>> getEntities(MethodWrapper<EntityHelper<?>, ?, ?, ?> filter) {
         assert mc.world != null;
         List<EntityHelper<?>> entities = new ArrayList<>();
         for (Entity e : ImmutableList.copyOf(mc.world.getEntities())) {
-            entities.add(EntityHelper.create(e));
+            EntityHelper<?> entity = EntityHelper.create(e);
+            if (filter.test(entity)) {
+                entities.add(entity);
+            }
         }
         return entities;
     }
-
+    
+    private List<EntityHelper<?>> getEntitiesInternal(Predicate<Entity> filter) {
+        assert mc.world != null;
+        List<EntityHelper<?>> entities = new ArrayList<>();
+        for (Entity e : ImmutableList.copyOf(mc.world.getEntities())) {
+            if (filter.test(e)) {
+                entities.add(EntityHelper.create(e));
+            }
+        }
+        return entities;
+    }
+    
     /**
      * raytrace between two points returning the first block hit.
      *
@@ -350,6 +532,71 @@ public class FWorld extends BaseLibrary {
     public long getTimeOfDay() {
         assert mc.world != null;
         return mc.world.getTimeOfDay();
+    }
+
+    /**
+     * @return {@code true} if it is daytime, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isDay() {
+        assert mc.world != null;
+        return mc.world.isDay();
+    }
+
+    /**
+     * @return {@code true} if it is nighttime, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isNight() {
+        assert mc.world != null;
+        return mc.world.isNight();
+    }
+
+    /**
+     * @return {@code true} if it is raining, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isRaining() {
+        assert mc.world != null;
+        return mc.world.isRaining();
+    }
+
+    /**
+     * @return {@code true} if it is thundering, {@code false} otherwise.
+     *
+     * @since 1.8.4
+     */
+    public boolean isThundering() {
+        assert mc.world != null;
+        return mc.world.isThundering();
+    }
+
+    /**
+     * @return an identifier for the loaded world that is based on the world's name or server ip and
+     *         thus most likely unique enough to identify a specific world, or
+     *         {@code "UNKNOWN_NAME"} if no world was found.
+     *
+     * @since 1.8.4
+     */
+    public String getWorldIdentifier() {
+        IntegratedServer server = mc.getServer();
+        if (server != null) {
+            return "LOCAL_" + server.getSavePath(WorldSavePath.ROOT).normalize().getFileName();
+        }
+        ServerInfo multiplayerServer = mc.getCurrentServerEntry();
+        if (multiplayerServer != null) {
+            if (mc.isConnectedToRealms()) {
+                return "REALM_" + multiplayerServer.name;
+            }
+            if (multiplayerServer.isLocal()) {
+                return "LAN_" + multiplayerServer.name;
+            }
+            return multiplayerServer.address.replace(":25565", "").replace(":", "_");
+        }
+        return "UNKNOWN_NAME";
     }
     
     /**
@@ -555,6 +802,44 @@ public class FWorld extends BaseLibrary {
         Text footer = ((IPlayerListHud)mc.inGameHud.getPlayerListHud()).jsmacros_getFooter();
         if (footer != null) return new TextHelper(footer);
         return null;
+    }
+
+    /**
+     * Summons the amount of particles at the desired position.
+     *
+     * @param id    the particle id
+     * @param x     the x position to spawn the particle
+     * @param y     the y position to spawn the particle
+     * @param z     the z position to spawn the particle
+     * @param count the amount of particles to spawn
+     * @since 1.8.4
+     */
+    public void spawnParticle(String id, double x, double y, double z, int count) {
+        spawnParticle(id, x, y, z, 0.1, 0.1, 0.1, 1, count, true);
+    }
+
+    /**
+     * Summons the amount of particles at the desired position with some variation of delta and the
+     * given speed.
+     *
+     * @param id     the particle id
+     * @param x      the x position to spawn the particle
+     * @param y      the y position to spawn the particle
+     * @param z      the z position to spawn the particle
+     * @param deltaX the x variation of the particle
+     * @param deltaY the y variation of the particle
+     * @param deltaZ the z variation of the particle
+     * @param speed  the speed of the particle
+     * @param count  the amount of particles to spawn
+     * @param force  whether to show the particle if it's more than 32 blocks away
+     * @since 1.8.4
+     */
+    public void spawnParticle(String id, double x, double y, double z, double deltaX, double deltaY, double deltaZ, double speed, int count, boolean force) {
+        ParticleEffect particle = (ParticleEffect) Registry.PARTICLE_TYPE.get(RegistryHelper.parseIdentifier(id));
+        particle = particle != null ? particle : ParticleTypes.CLOUD;
+
+        ParticleS2CPacket packet = new ParticleS2CPacket(particle, force, x, y, z, (float) deltaX, (float) deltaY, (float) deltaZ, (float) speed, count);
+        mc.execute(() -> mc.player.networkHandler.onParticle(packet));
     }
     
     /**

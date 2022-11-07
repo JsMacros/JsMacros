@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
+
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
  * @author Etheradon
  * @since 1.6.5
  */
+@SuppressWarnings("unused")
 public class BlockHelper extends BaseHelper<Block> {
 
     public BlockHelper(Block base) {
@@ -120,9 +122,18 @@ public class BlockHelper extends BaseHelper<Block> {
         return Registry.BLOCK.getId(base).toString();
     }
 
+    /**
+     * @return the name of the block.
+     *
+     * @since 1.8.4
+     */
+    public TextHelper getName() {
+        return new TextHelper(base.getName());
+    }
+
     @Override
     public String toString() {
-        return String.format("BlockDataHelper:{%s}", getId());
+        return String.format("BlockHelper:{\"id\": \"%s\"}", getId());
     }
 
 }

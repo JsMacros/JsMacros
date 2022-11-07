@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  * @since 1.6.5
  * @param <T> the type of the wrapped class
  */
+@SuppressWarnings("unused")
 public class WrappedClassInstance<T> {
     protected final T instance;
     protected final Class<T> tClass;

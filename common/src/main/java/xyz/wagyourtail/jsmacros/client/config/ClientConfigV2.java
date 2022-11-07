@@ -21,6 +21,12 @@ import java.util.stream.Collectors;
 public class ClientConfigV2 {
     @Option(translationKey = "jsmacros.sort", group = "jsmacros.settings.gui")
     public Sorting.MacroSortMethod sortMethod = Sorting.MacroSortMethod.Enabled;
+
+    @Option(translationKey = "jsmacros.sortservices", group = "jsmacros.settings.gui")
+    public Sorting.ServiceSortMethod sortServicesMethod = Sorting.ServiceSortMethod.Enabled;
+
+    @Option(translationKey = "jsmacros.showslotindexes", group = "jsmacros.settings.gui")
+    public boolean showSlotIndexes = false;
     
     @Option(translationKey = "jsmacros.disablewithscreen", group = "jsmacros.settings.general")
     public boolean disableKeyWhenScreenOpen = true;
@@ -46,6 +52,12 @@ public class ClientConfigV2 {
     @Option(translationKey = "jsmacros.externaleditorcommand", group = "jsmacros.settings.editor")
     public String externalEditorCommand = "code %MacroFolder %File";
 
+    @Option(translationKey = "jsmacros.showrunningservices", group = "jsmacros.settings.services")
+    public boolean showRunningServices = false;
+
+    @Option(translationKey = "jsmacros.serviceautoreload", group = "jsmacros.settings.services", setter = "setServiceAutoReload")
+    public boolean serviceAutoReload = false;
+    
     public List<String> languages() {
         return EditorScreen.langs;
     }
@@ -87,6 +99,15 @@ public class ClientConfigV2 {
         return editorTheme;
     }
     
+    public void setServiceAutoReload(boolean value) {
+        serviceAutoReload = value;
+        if (value) {
+            Core.getInstance().services.startReloadListener();
+        } else {
+            Core.getInstance().services.stopReloadListener();
+        }
+    }
+    
     public Comparator<ScriptTrigger> getSortComparator() {
         if (this.sortMethod == null) this.sortMethod = Sorting.MacroSortMethod.Enabled;
         switch(this.sortMethod) {
@@ -97,6 +118,24 @@ public class ClientConfigV2 {
                 return new Sorting.SortByFileName();
             case TriggerName:
                 return new Sorting.SortByTriggerName();
+        }
+    }
+
+    public Comparator<String> getServiceSortComparator() {
+        if (this.sortServicesMethod == null) {
+            this.sortServicesMethod = Sorting.ServiceSortMethod.Enabled;
+        }
+        switch (this.sortServicesMethod) {
+            case Enabled:
+                return new Sorting.SortServiceByEnabled();
+            case Name:
+                return new Sorting.SortServiceByName();
+            case Running:
+                return new Sorting.SortServiceByRunning();
+            case FileName:
+                return new Sorting.SortServiceByFileName();
+            default:
+                throw new IllegalArgumentException();
         }
     }
     

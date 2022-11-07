@@ -19,6 +19,7 @@ public class EventItemPickup implements BaseEvent {
         profile.triggerEvent(this);
     }
     
+    @Override
     public String toString() {
         return String.format("%s:{\"item\": %s}", this.getEventName(), item.toString());
     }

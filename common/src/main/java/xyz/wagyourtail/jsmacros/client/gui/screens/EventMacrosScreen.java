@@ -24,8 +24,6 @@ public class EventMacrosScreen extends MacroScreen {
         super.init();
         eventScreen.setColor(0x4FFFFFFF);
         
-        keyScreen.onPress = (btn) -> this.openParent();
-
         ((MacroListTopbar)topbar).updateType(ScriptTrigger.TriggerType.EVENT);
         
         List<ScriptTrigger> macros = new ArrayList<>();

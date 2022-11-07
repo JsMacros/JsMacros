@@ -10,4 +10,18 @@ public abstract class BaseHelper<T> {
     public T getRaw() {
         return base;
     }
+
+    @Override
+    public int hashCode() {
+        return base.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof BaseHelper) {
+            return base.equals(((BaseHelper<?>) obj).base);
+        }
+        return base.equals(obj);
+    }
+    
 }

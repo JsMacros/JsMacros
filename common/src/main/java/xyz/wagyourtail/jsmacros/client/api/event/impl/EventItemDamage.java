@@ -21,7 +21,8 @@ public class EventItemDamage implements BaseEvent {
         profile.triggerEvent(this);
     }
     
+    @Override
     public String toString() {
-        return String.format("%s:{\"item\": %d}", this.getEventName(), item.toString());
+        return String.format("%s:{\"item\": %s}", this.getEventName(), item.toString());
     }
 }

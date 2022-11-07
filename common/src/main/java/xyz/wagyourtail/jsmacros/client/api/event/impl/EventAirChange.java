@@ -17,6 +17,7 @@ public class EventAirChange implements BaseEvent {
         profile.triggerEvent(this);
     }
     
+    @Override
     public String toString() {
         return String.format("%s:{\"air\": %d}", this.getEventName(), air);
     }

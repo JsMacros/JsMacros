@@ -1,9 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
+import xyz.wagyourtail.jsmacros.client.api.helpers.FormattingHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StyleHelper;
@@ -11,6 +13,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -101,6 +104,17 @@ public class TextBuilder {
         self.styled(style -> style.withFormatting(formattings.toArray(new Formatting[0])));
         return this;
     }
+
+    /**
+     * @param formattings the formattings to apply
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public TextBuilder withFormatting(FormattingHelper... formattings) {
+        self.styled(style -> style.withFormatting(Arrays.stream(formattings).map(FormattingHelper::getRaw).toArray(Formatting[]::new)));
+        return this;
+    }
     
     /**
      * set current section's hover event to show text
@@ -170,6 +184,15 @@ public class TextBuilder {
     public TextBuilder withStyle(StyleHelper style) {
         self.setStyle(style.getRaw());
         return this;
+    }
+
+    /**
+     * @return the width of this text.
+     *
+     * @since 1.8.4
+     */
+    public int getWidth() {
+        return MinecraftClient.getInstance().textRenderer.getWidth(head);
     }
     
     /**

@@ -118,8 +118,8 @@ public class History {
         current = step.applyStep(current);
         if (undo.size() > 0) {
             HistoryStep prev = undo.get(undo.size() - 1);
-            if (prev instanceof ShiftLine && ((ShiftLine) prev).shiftDown == shiftDown && ((ShiftLine) prev).lineCount == lines && startLine == ((ShiftLine) prev).startLine + (shiftDown ? ((ShiftLine) prev).shiftAmmount : -((ShiftLine) prev).shiftAmmount)) {
-                ++((ShiftLine) prev).shiftAmmount;
+            if (prev instanceof ShiftLine && ((ShiftLine) prev).shiftDown == shiftDown && ((ShiftLine) prev).lineCount == lines && startLine == ((ShiftLine) prev).startLine + (shiftDown ? ((ShiftLine) prev).shiftAmount : -((ShiftLine) prev).shiftAmount)) {
+                ++((ShiftLine) prev).shiftAmount;
                 if (onChange != null) onChange.accept(current);
                 return false;
             }
@@ -300,28 +300,28 @@ public class History {
     protected static class ShiftLine extends HistoryStep {
         int startLine;
         int lineCount;
-        int shiftAmmount;
+        int shiftAmount;
         boolean shiftDown;
         
-        protected ShiftLine(int startLine, int lineCount, int shiftAmmount, boolean shiftDown, SelectCursor cursor) {
+        protected ShiftLine(int startLine, int lineCount, int shiftAmount, boolean shiftDown, SelectCursor cursor) {
             this.startLine = startLine;
             this.lineCount = lineCount;
-            this.shiftAmmount = shiftAmmount;
+            this.shiftAmount = shiftAmount;
             this.shiftDown = shiftDown;
             this.cursor = cursor;
         }
         
         @Override
         protected String applyStep(String input) {
-            return shift(input, startLine, lineCount, shiftAmmount, shiftDown);
+            return shift(input, startLine, lineCount, shiftAmount, shiftDown);
         }
         
         @Override
         protected String unApplyStep(String input) {
-            return shift(input, shiftDown ? startLine + shiftAmmount : startLine - shiftAmmount, lineCount, shiftAmmount, !shiftDown);
+            return shift(input, shiftDown ? startLine + shiftAmount : startLine - shiftAmount, lineCount, shiftAmount, !shiftDown);
         }
         
-        private String shift(String input, int startLine, int lineCount, int shiftAmmount, boolean shiftDown) {
+        private String shift(String input, int startLine, int lineCount, int shiftAmount, boolean shiftDown) {
             String[] lines = input.split("\n", -1);
             String[] shifted = new String[lines.length];
             int i;
@@ -332,7 +332,7 @@ public class History {
                     shifted[i] = lines[i];
                     startIndex += shifted[i].length() + 1;
                 }
-                for (int j = 0; j < shiftAmmount; ++j, ++i) {
+                for (int j = 0; j < shiftAmount; ++j, ++i) {
                     shifted[i] = lines[startLine + lineCount + j];
                     startIndex += shifted[i].length() + 1;
                 }
@@ -342,7 +342,7 @@ public class History {
                     endIndex += shifted[i].length() + 1;
                 }
             } else {
-                for (i = 0; i < startLine - shiftAmmount; ++i) {
+                for (i = 0; i < startLine - shiftAmount; ++i) {
                     shifted[i] = lines[i];
                     startIndex += shifted[i].length() + 1;
                 }
@@ -351,7 +351,7 @@ public class History {
                     shifted[i] = lines[startLine + j];
                     endIndex += shifted[i].length() + 1;
                 }
-                for (int j = startLine - shiftAmmount; j < startLine; ++j, ++i) {
+                for (int j = startLine - shiftAmount; j < startLine; ++j, ++i) {
                     shifted[i] = lines[j];
                 }
             }
