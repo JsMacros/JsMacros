@@ -10,6 +10,8 @@ import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.ScriptScreen;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BossBarHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
@@ -305,6 +307,59 @@ public class FHud extends BaseLibrary {
      */
     public int getWindowHeight() {
         return mc.getWindow().getHeight();
+    }
+
+    /**
+     * @since 1.6.5
+     * @param name Title of the BossBar
+     * @param percentage Percentage filled should be between 0 and 1
+     * @param color one of the following: "pink", "blue", "red", "green", "yellow", "purple", "white"
+     * @param style one of the following: "progress", "notched_6", "notched_10", "notched_12", "notched_20"
+     * @return A BossBarHelper instance
+     */
+    public BossBarHelper createBossBar(TextHelper name, float percentage, String color, String style){
+        return new BossBarHelper(name, percentage, color, style);
+    }
+
+    /**
+     * @since 1.6.5
+     * @param name Title of the BossBar
+     * @param percentage Percentage filled should be between 0 and 1
+     * @param color one of the following: "pink", "blue", "red", "green", "yellow", "purple", "white"
+     * @param style one of the following: "progress", "notched_6", "notched_10", "notched_12", "notched_20"
+     * @return A BossBarHelper instance
+     */
+    public BossBarHelper createBossBar(String name, float percentage, String color, String style){
+        return new BossBarHelper(name, percentage, color, style);
+    }
+
+    /**
+     * @since 1.6.5
+     * @param name Title of the BossBar
+     * @param percentage Percentage filled should be between 0 and 1
+     * @return A BossBarHelper instance
+     */
+    public BossBarHelper createBossBar(TextHelper name, float percentage){
+        return new BossBarHelper(name, percentage);
+    }
+
+    /**
+     * @since 1.6.5
+     * @param name Title of the BossBar
+     * @param percentage Percentage filled should be between 0 and 1
+     * @return A BossBarHelper instance
+     */
+    public BossBarHelper createBossBar(String name, float percentage){
+        return new BossBarHelper(name, percentage);
+    }
+
+    /**
+     * @since 1.6.5
+     * @param uuid UUID of the BossBar
+     * @return A BossBarHelper instance
+     */
+    public BossBarHelper getBossBarFromUUID(String uuid){
+        return new BossBarHelper(uuid);
     }
     
 }

@@ -1,23 +1,157 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.hud.ClientBossBar;
 import net.minecraft.entity.boss.BossBar;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-
+import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Wagyourtail
  * @since 1.2.1
  */
-@SuppressWarnings("unused")
 public class BossBarHelper extends BaseHelper<BossBar> {
+
+    private BossBarHelper(UUID uuid, Text name, float percentage, BossBar.Color color, BossBar.Style style){
+        super(new ClientBossBar(uuid, name, percentage, color, style, false, false, false));
+    }
+
+    /**
+     * @since 1.6.5
+     * @param name Title of the BossBar
+     * @param percentage Percentage filled should be between 0 and 1
+     * @param color one of the following: "pink", "blue", "red", "green", "yellow", "purple", "white"
+     * @param style one of the following: "progress", "notched_6", "notched_10", "notched_12", "notched_20"
+     */
+    public BossBarHelper(TextHelper name, float percentage, String color, String style){
+        this(UUID.randomUUID(), name.getRaw(), percentage, BossBar.Color.byName(color.toUpperCase(Locale.ROOT)), BossBar.Style.byName(style.toLowerCase(Locale.ROOT)));
+    }
+
+    /**
+     * @since 1.6.5
+     * @param name Title of the BossBar
+     * @param percentage Percentage filled should be between 0 and 1
+     * @param color one of the following: "pink", "blue", "red", "green", "yellow", "purple", "white"
+     * @param style one of the following: "progress", "notched_6", "notched_10", "notched_12", "notched_20"
+     */
+    public BossBarHelper(String name, float percentage, String color, String style){
+        this(UUID.randomUUID(), Text.literal(name), percentage, BossBar.Color.byName(color.toUpperCase(Locale.ROOT)), BossBar.Style.byName(style.toLowerCase(Locale.ROOT)));
+    }
+
+    /**
+     * @since 1.6.5
+     * @param name Title of the BossBar
+     * @param percentage Percentage filled should be between 0 and 1
+     */
+    public BossBarHelper(String name, float percentage){
+        this(UUID.randomUUID(), Text.literal(name), percentage, BossBar.Color.WHITE, BossBar.Style.PROGRESS);
+    }
+
+    /**
+     * @since 1.6.5
+     * @param name Title of the BossBar
+     * @param percentage Percentage filled should be between 0 and 1
+     */
+    public BossBarHelper(TextHelper name, float percentage){
+        this(UUID.randomUUID(), name.getRaw(), percentage, BossBar.Color.WHITE, BossBar.Style.PROGRESS);
+    }
+
+    /**
+     * @since 1.6.5
+     * @param uuid Get BossBarHelper from uuid. If this bossbar does not exist it creates a new one
+     */
+    public BossBarHelper(String uuid){
+        this(((IBossBarHud) MinecraftClient.getInstance().inGameHud.getBossBarHud()).jsmacros_GetBossBars().getOrDefault(UUID.fromString(uuid), new ClientBossBar(UUID.fromString(uuid), Text.literal("-"), 0f, BossBar.Color.WHITE, BossBar.Style.PROGRESS, false, false, false)));
+    }
 
     public BossBarHelper(BossBar b) {
         super(b);
     }
-    
+
+    /**
+     * Add the Bossbar to the hud if not already
+     * @since 1.6.5
+     */
+    public void add(){
+        assert getRaw() instanceof ClientBossBar;
+        Map<UUID, ClientBossBar> bars = getBossBars();
+        if(!bars.containsKey(getRaw().getUuid())) bars.put(getRaw().getUuid(), (ClientBossBar) getRaw());
+    }
+
+    /**
+     * Remove the Bossbar from the hud
+     * @since 1.6.5
+     */
+    public void remove(){
+        getBossBars().remove(getRaw().getUuid());
+    }
+
+    /**
+     * Check if a bossbar is already displayed
+     * @since 1.6.5
+     */
+    public boolean isShown(){
+        return getBossBars().containsKey(getRaw().getUuid());
+    }
+
+    /**
+     * Set the Percentage of the bossbar
+     * @since 1.6.5
+     * @param percentage Percentage of the Bossbar. Should be between 0 and 1
+     */
+    public void setPercent(float percentage){
+        getRaw().setPercent(percentage);
+    }
+
+    /**
+     * Set the title of the bossbar
+     * @since 1.6.5
+     * @param name Title of the Hotbar
+     */
+    public void setName(TextHelper name){
+        getRaw().setName(name.getRaw());
+    }
+
+    /**
+     * Set the title of the bossbar
+     * @since 1.6.5
+     * @param name Title of the Hotbar
+     */
+    public void setName(String name){
+        getRaw().setName(Text.literal(name));
+    }
+
+    /**
+     * Set the color of the bossbar
+     * @since 1.6.5
+     * @param color one of the following: "pink", "blue", "red", "green", "yellow", "purple", "white"
+     */
+    public void setColor(String color){
+        getRaw().setColor(BossBar.Color.byName(color.toLowerCase(Locale.ROOT)));
+    }
+
+    /**
+     * Set the style of the Bossbar
+     * @since 1.6.5
+     * @param style one of the following: "progress", "notched_6", "notched_10", "notched_12", "notched_20"
+     */
+    public void setStyle(String style){
+        getRaw().setStyle(BossBar.Style.byName(style.toLowerCase(Locale.ROOT)));
+    }
+
+
+    private Map<UUID, ClientBossBar> getBossBars(){
+        assert MinecraftClient.getInstance().inGameHud != null;
+        return ((IBossBarHud) MinecraftClient.getInstance().inGameHud.getBossBarHud()).jsmacros_GetBossBars();
+    }
+
+
     /**
      * @since 1.2.1
      * @return boss bar uuid.
