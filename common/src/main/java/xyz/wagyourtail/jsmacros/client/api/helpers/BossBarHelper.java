@@ -23,60 +23,32 @@ public class BossBarHelper extends BaseHelper<BossBar> {
     }
 
     /**
-     * @since 1.6.5
+     * @since 1.8.4
      * @param name Title of the BossBar
      * @param percentage Percentage filled should be between 0 and 1
      * @param color one of the following: "pink", "blue", "red", "green", "yellow", "purple", "white"
      * @param style one of the following: "progress", "notched_6", "notched_10", "notched_12", "notched_20"
      */
     public BossBarHelper(TextHelper name, float percentage, String color, String style){
-        this(UUID.randomUUID(), name.getRaw(), percentage, BossBar.Color.byName(color.toUpperCase(Locale.ROOT)), BossBar.Style.byName(style.toLowerCase(Locale.ROOT)));
+        this(UUID.randomUUID(), name.getRaw(), percentage, BossBar.Color.byName(color.toUpperCase(Locale.ROOT)), BossBar.Style.byName(style.toUpperCase(Locale.ROOT)));
     }
 
     /**
-     * @since 1.6.5
-     * @param name Title of the BossBar
-     * @param percentage Percentage filled should be between 0 and 1
-     * @param color one of the following: "pink", "blue", "red", "green", "yellow", "purple", "white"
-     * @param style one of the following: "progress", "notched_6", "notched_10", "notched_12", "notched_20"
-     */
-    public BossBarHelper(String name, float percentage, String color, String style){
-        this(UUID.randomUUID(), Text.literal(name), percentage, BossBar.Color.byName(color.toUpperCase(Locale.ROOT)), BossBar.Style.byName(style.toLowerCase(Locale.ROOT)));
-    }
-
-    /**
-     * @since 1.6.5
-     * @param name Title of the BossBar
-     * @param percentage Percentage filled should be between 0 and 1
-     */
-    public BossBarHelper(String name, float percentage){
-        this(UUID.randomUUID(), Text.literal(name), percentage, BossBar.Color.WHITE, BossBar.Style.PROGRESS);
-    }
-
-    /**
-     * @since 1.6.5
-     * @param name Title of the BossBar
-     * @param percentage Percentage filled should be between 0 and 1
-     */
-    public BossBarHelper(TextHelper name, float percentage){
-        this(UUID.randomUUID(), name.getRaw(), percentage, BossBar.Color.WHITE, BossBar.Style.PROGRESS);
-    }
-
-    /**
-     * @since 1.6.5
+     * @since 1.8.4
      * @param uuid Get BossBarHelper from uuid. If this bossbar does not exist it creates a new one
      */
     public BossBarHelper(String uuid){
         this(((IBossBarHud) MinecraftClient.getInstance().inGameHud.getBossBarHud()).jsmacros_GetBossBars().getOrDefault(UUID.fromString(uuid), new ClientBossBar(UUID.fromString(uuid), Text.literal("-"), 0f, BossBar.Color.WHITE, BossBar.Style.PROGRESS, false, false, false)));
     }
 
+    //Default constructor used in the event
     public BossBarHelper(BossBar b) {
         super(b);
     }
 
     /**
      * Add the Bossbar to the hud if not already
-     * @since 1.6.5
+     * @since 1.8.4
      */
     public void add(){
         assert getRaw() instanceof ClientBossBar;
@@ -86,7 +58,7 @@ public class BossBarHelper extends BaseHelper<BossBar> {
 
     /**
      * Remove the Bossbar from the hud
-     * @since 1.6.5
+     * @since 1.8.4
      */
     public void remove(){
         getBossBars().remove(getRaw().getUuid());
@@ -94,7 +66,7 @@ public class BossBarHelper extends BaseHelper<BossBar> {
 
     /**
      * Check if a bossbar is already displayed
-     * @since 1.6.5
+     * @since 1.8.4
      */
     public boolean isShown(){
         return getBossBars().containsKey(getRaw().getUuid());
@@ -102,7 +74,7 @@ public class BossBarHelper extends BaseHelper<BossBar> {
 
     /**
      * Set the Percentage of the bossbar
-     * @since 1.6.5
+     * @since 1.8.4
      * @param percentage Percentage of the Bossbar. Should be between 0 and 1
      */
     public void setPercent(float percentage){
@@ -111,7 +83,7 @@ public class BossBarHelper extends BaseHelper<BossBar> {
 
     /**
      * Set the title of the bossbar
-     * @since 1.6.5
+     * @since 1.8.4
      * @param name Title of the Hotbar
      */
     public void setName(TextHelper name){
@@ -120,7 +92,7 @@ public class BossBarHelper extends BaseHelper<BossBar> {
 
     /**
      * Set the title of the bossbar
-     * @since 1.6.5
+     * @since 1.8.4
      * @param name Title of the Hotbar
      */
     public void setName(String name){
@@ -129,7 +101,7 @@ public class BossBarHelper extends BaseHelper<BossBar> {
 
     /**
      * Set the color of the bossbar
-     * @since 1.6.5
+     * @since 1.8.4
      * @param color one of the following: "pink", "blue", "red", "green", "yellow", "purple", "white"
      */
     public void setColor(String color){
@@ -138,7 +110,7 @@ public class BossBarHelper extends BaseHelper<BossBar> {
 
     /**
      * Set the style of the Bossbar
-     * @since 1.6.5
+     * @since 1.8.4
      * @param style one of the following: "progress", "notched_6", "notched_10", "notched_12", "notched_20"
      */
     public void setStyle(String style){
