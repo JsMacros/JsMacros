@@ -68,7 +68,8 @@ public class MovementQueue {
     }
 
     private synchronized static void calcPredictions() {
-        List<PlayerInput> toCalc = ImmutableList.copyOf(queue).subList(queuePos, queue.size());
+        List<PlayerInput> toCalc = ImmutableList.copyOf(queue);
+        toCalc = toCalc.subList(queuePos, toCalc.size());
         predictions.clear();
         MovementDummy dummy = new MovementDummy(player);
         for (PlayerInput input : toCalc) {
