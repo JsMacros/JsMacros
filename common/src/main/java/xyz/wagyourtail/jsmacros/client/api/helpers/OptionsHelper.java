@@ -139,15 +139,15 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      */
     public OptionsHelper setEnabledResourcePacks(String[] enabled) {
         mc.execute(() -> {
-            ResourcePackLoader.Entry[] enabledRP = new ResourcePackLoader.Entry[enabled.length];
-            for (ResourcePackLoader.Entry e : rpm.method_5904()) {
+            ResourcePackRepository.Entry[] enabledRP = new ResourcePackRepository.Entry[enabled.length];
+            for (ResourcePackRepository.Entry e : rpm.func_110609_b()) {
                 for (int i = 0; i < enabled.length; ++i) {
                     if (e.getName().equals(enabled[i])) {
                         enabledRP[i] = e;
                     }
                 }
             }
-            rpm.method_7038(Arrays.stream(enabledRP).filter(Objects::nonNull).collect(Collectors.toList()));
+            rpm.func_148527_a(Arrays.stream(enabledRP).filter(Objects::nonNull).collect(Collectors.toList()));
             base.save();
             mc.stitchTextures();
         });

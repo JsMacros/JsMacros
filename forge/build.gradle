@@ -10,6 +10,7 @@ archivesBaseName = archivesBaseName + "-FORGE"
 
 configurations {
     common
+    shadow
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
     include
     compileClasspath.extendsFrom common
@@ -62,20 +63,20 @@ dependencies {
 }
 
 processResources {
+    // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
 
     filesMatching("META-INF/mods.toml") {
         expand "version": project.version
     }
 
-    filesMatching("jsmacros.extension.json") {
-        expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
     }
 
-    filesMatching("mcmod.info") {
-        expand "version": project.version, "mcversion": project.minecraft_version
-    }
-}
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
 
 shadowJar {
     configurations = [project.configurations.shadowCommon]
@@ -102,8 +103,6 @@ remapJar {
 }
 
 jar {
-    classifier "dev"
-
     manifest {
         attributes([
                 'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
@@ -113,18 +112,23 @@ jar {
                 'ForceLoadAsMod': true
         ])
     }
-}
 
-sourcesJar {
-    def commonSources = project(":common").sourcesJar
-    dependsOn commonSources
-    from commonSources.archiveFile.map { zipTree(it) }
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
+    from(configurations.include.files) {
+        include '*'
+        into 'META-INF/jars/'
+    }
 
-components.java {
-    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-        skip()
+    from (configurations.jsmacrosExtensionInclude.files) {
+        include '*'
+        into "META-INF/jsmacrosdeps"
+    }
+
+    from {
+        configurations.shadow.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+    from {
+        configurations.shadowCommon.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 

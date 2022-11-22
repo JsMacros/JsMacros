@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
  @SuppressWarnings("unused")
 public class FHud extends BaseLibrary {
     
-    private static final MinecraftClient mc = MinecraftClient.getInstance();
+    private static final Minecraft mc = Minecraft.getInstance();
     /**
      * Don't touch this here
      */
@@ -67,7 +67,7 @@ public class FHud extends BaseLibrary {
      * @param s
      */
     public void openScreen(IScreen s) {
-        Screen screen = (Screen) s;
+        GuiScreen screen = (GuiScreen) s;
         mc.execute(() -> {
             mc.openScreen(screen);
         });
@@ -143,7 +143,7 @@ public class FHud extends BaseLibrary {
      * @return a {@link java.lang.Boolean boolean} denoting if the currently open screen is a container. 
      */
     public boolean isContainer() {
-        return mc.currentScreen instanceof HandledScreen;
+        return mc.currentScreen instanceof GuiContainer;
     }
     
     
@@ -276,7 +276,7 @@ public class FHud extends BaseLibrary {
      * @return the current X coordinate of the mouse
      */
     public double getMouseX() {
-        Window res = new Window(mc);
+        ScaledResolution res = new ScaledResolution(mc);
         return Mouse.getX() * (double)res.getScaledWidth() / (double)mc.width;
     }
     
@@ -286,7 +286,7 @@ public class FHud extends BaseLibrary {
      * @return the current Y coordinate of the mouse
      */
     public double getMouseY() {
-        Window res = new Window(mc);
+        ScaledResolution res = new ScaledResolution(mc);
         return Mouse.getY() * (double)res.getScaledHeight() / (double)mc.height;
     }
 

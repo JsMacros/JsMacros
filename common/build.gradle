@@ -1,13 +1,17 @@
 sourceSets {
     core {
         configurations.coreImplementation.setCanBeResolved(true)
-        compileClasspath += configurations.coreImplementation + configurations.minecraftLibraries
-        runtimeClasspath += configurations.coreImplementation + configurations.minecraftLibraries
+        compileClasspath += configurations.coreImplementation + configurations.forgeGradleMcDeps
+        runtimeClasspath += configurations.coreImplementation + configurations.forgeGradleMcDeps
     }
     main {
         compileClasspath += core.output
         runtimeClasspath += core.output
     }
+}
+mixin {
+    add sourceSets.main, "jsmacros-common.refmap.json"
+    defaultObfuscationEnv searge
 }
 
 minecraft {

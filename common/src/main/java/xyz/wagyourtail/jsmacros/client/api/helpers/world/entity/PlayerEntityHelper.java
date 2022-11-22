@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.EntityPlayer;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.projectile.FishingBobberEntityHelper;
@@ -9,7 +9,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.proj
  * @author Wagyourtail
  */
 @SuppressWarnings("unused")
-public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelper<T> {
+public class PlayerEntityHelper<T extends EntityPlayer> extends LivingEntityHelper<T> {
     
     public PlayerEntityHelper(T e) {
         super(e);

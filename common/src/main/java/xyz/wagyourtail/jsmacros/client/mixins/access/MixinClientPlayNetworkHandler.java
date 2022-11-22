@@ -1,10 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.network.packet.s2c.play.CommandSuggestionsS2CPacket;
-import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
-import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
-import net.minecraft.text.Text;
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.network.play.server.S01PacketJoinGame;
+import net.minecraft.network.play.server.S03PacketTimeUpdate;
+import net.minecraft.util.IChatComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,7 +18,7 @@ import xyz.wagyourtail.jsmacros.client.api.library.impl.FWorld;
 import java.util.LinkedList;
 import java.util.List;
 
-@Mixin(ClientPlayNetworkHandler.class)
+@Mixin(NetHandlerPlayClient.class)
 public class MixinClientPlayNetworkHandler {
 
     @Unique
@@ -40,7 +39,7 @@ public class MixinClientPlayNetworkHandler {
     
     
     @Inject(at = @At("HEAD"), method="onWorldTimeUpdate")
-    public void onServerTime(WorldTimeUpdateS2CPacket packet, CallbackInfo info) {
+    public void onServerTime(S03PacketTimeUpdate packet, CallbackInfo info) {
         synchronized (timeSync) {
             final long tick = packet.getTime();
             final long time = System.currentTimeMillis();
@@ -81,7 +80,7 @@ public class MixinClientPlayNetworkHandler {
     }
     
     @Inject(at = @At("TAIL"), method="onGameJoin")
-    public void onGameJoin(GameJoinS2CPacket packet, CallbackInfo info) {
+    public void onGameJoin(S01PacketJoinGame packet, CallbackInfo info) {
         synchronized (timeSync) {
             lastServerTimeRecvTime = 0;
             lastServerTimeRecvTick = 0;
@@ -92,13 +91,8 @@ public class MixinClientPlayNetworkHandler {
         }
     }
 
-    @Inject(at = @At("TAIL"), method = "onCommandSuggestions", locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onOnCommandSuggestions(CommandSuggestionsS2CPacket packet, CallbackInfo ci, String[] suggestions) {
-        CommandManager.instance.pathNodeMaker.method_12185(suggestions);
-    }
-
     @Inject(method = "onDisconnected", at = @At("HEAD"))
-    public void onDisconnected(Text p_onDisconnected_1_, CallbackInfo ci) {
+    public void onDisconnected(IChatComponent p_onDisconnected_1_, CallbackInfo ci) {
         new EventDisconnect(p_onDisconnected_1_);
     }
 }

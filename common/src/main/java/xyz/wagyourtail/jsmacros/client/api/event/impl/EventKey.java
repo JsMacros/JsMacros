@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.Minecraft;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FKeyBind;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -18,7 +17,7 @@ import java.util.Set;
  */
  @Event(value = "Key", oldName = "KEY")
 public class EventKey implements BaseEvent {
-    static final MinecraftClient mc = MinecraftClient.getInstance();
+    static final Minecraft mc = Minecraft.getInstance();
     public final int action;
     public final int key;
     public final int mods;

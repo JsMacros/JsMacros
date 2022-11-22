@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.ChatHud;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiNewChat;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.ChatHudLineHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -20,10 +20,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 1.6.0
  */
 public class ChatHistoryManager {
-    private static final MinecraftClient mc = MinecraftClient.getInstance();
-    private final ChatHud hud;
+    private static final Minecraft mc = Minecraft.getInstance();
+    private final GuiNewChat hud;
 
-    public ChatHistoryManager(ChatHud hud) {
+    public ChatHistoryManager(GuiNewChat hud) {
         this.hud = hud;
     }
 

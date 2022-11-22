@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl;
 
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import org.jetbrains.annotations.NotNull;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCodeCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSuggestion;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class NoStyleCodeCompiler extends AbstractRenderCodeCompiler {
-    private Text[] compiledText = new Text[0];
+    private IChatComponent[] compiledText = new IChatComponent[0];
 
     public NoStyleCodeCompiler(String language, EditorScreen screen) {
         super(language, screen);
@@ -22,12 +22,12 @@ public class NoStyleCodeCompiler extends AbstractRenderCodeCompiler {
     @Override
     public void recompileRenderedText(@NotNull String text) {
         if (text.length() == 0) {
-            compiledText = new Text[] {new LiteralText("")};
+            compiledText = new IChatComponent[] {new ChatComponentText("")};
         } else {
             String[] t2 = text.split("\n");
-            compiledText = new Text[t2.length];
+            compiledText = new IChatComponent[t2.length];
             for (int i = 0; i < t2.length; i++) {
-                compiledText[i] = new LiteralText(t2[i]).setStyle(EditorScreen.defaultStyle);
+                compiledText[i] = new ChatComponentText(t2[i]).setStyle(EditorScreen.defaultStyle);
             }
         }
     }
@@ -38,7 +38,7 @@ public class NoStyleCodeCompiler extends AbstractRenderCodeCompiler {
     }
 
     @Override
-    public @NotNull Text[] getRenderedText() {
+    public @NotNull IChatComponent[] getRenderedText() {
         return compiledText;
     }
 

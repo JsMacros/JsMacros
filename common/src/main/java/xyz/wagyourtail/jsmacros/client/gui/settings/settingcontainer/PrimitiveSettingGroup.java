@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer;
 
-import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.FontRenderer;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.settings.settingfields.*;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
@@ -13,7 +13,7 @@ public class PrimitiveSettingGroup extends AbstractSettingContainer {
     int topScroll = 0;
     int settingHeight = 0;
     
-    public PrimitiveSettingGroup(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
+    public PrimitiveSettingGroup(int x, int y, int width, int height, FontRenderer textRenderer, SettingsOverlay parent, String[] group) {
         super(x, y, width, height, textRenderer, parent, group);
     }
     

@@ -1,9 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.inventory.slot.Slot;
-import net.minecraft.util.ItemAction;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,7 +14,7 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventDropSlot;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-@Mixin(CreativeInventoryScreen.class)
+@Mixin(GuiContainerCreative.class)
 public abstract class MixinCreativeInventoryScreen {
 
     @Unique
@@ -65,8 +64,8 @@ public abstract class MixinCreativeInventoryScreen {
         throw new NullPointerException("Unknown slot class");
     }
 
-    @Inject(method = "method_1131", at = @At("HEAD"), cancellable = true)
-    private void beforeMouseClick(Slot slot, int slotId, int button, ItemAction actionType, CallbackInfo ci) {
+    @Inject(method = "onMouseClick", at = @At("HEAD"), cancellable = true)
+    private void beforeMouseClick(Slot slot, int slotId, int button, int actionType, CallbackInfo ci) {
         if (slot != null) slotId = getSlotFromCreativeSlot(slot).id;
         EventClickSlot event = new EventClickSlot((ContainerScreen<?>) (Object) this, actionType.ordinal(), button, slotId);
         if (event.isCanceled()) {

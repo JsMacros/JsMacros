@@ -1,42 +1,42 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
 import io.netty.buffer.Unpooled;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.ingame.VillagerTradingScreen;
-import net.minecraft.entity.data.Trader;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.VillagerScreenHandler;
-import net.minecraft.util.PacketByteBuf;
-import net.minecraft.village.TraderOfferList;
+import net.minecraft.client.gui.GuiMerchant;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.IMerchant;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ContainerMerchant;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
+import net.minecraft.village.MerchantRecipeList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import xyz.wagyourtail.jsmacros.client.access.IMerchantScreen;
 
-@Mixin(VillagerTradingScreen.class)
-public abstract class MixinMerchantScreen extends HandledScreen implements IMerchantScreen {
+@Mixin(GuiMerchant.class)
+public abstract class MixinMerchantScreen extends GuiContainer implements IMerchantScreen {
     
     @Shadow private int page;
-    @Shadow private Trader trader;
+    @Shadow private IMerchant trader;
 
     @Override
     public void jsmacros_selectIndex(int index) {
-        TraderOfferList merchantrecipelist = this.trader.getOffers(this.client.player);
+        MerchantRecipeList merchantrecipelist = this.trader.getOffers(this.client.player);
         if (merchantrecipelist != null && !merchantrecipelist.isEmpty()) {
             if (index < 0 || index >= merchantrecipelist.size()) {
                 return;
             }
             page = index;
-            ((VillagerScreenHandler) this.screenHandler).setRecipeIndex(this.page);
-            PacketByteBuf packetbuffer = new PacketByteBuf(Unpooled.buffer());
+            ((ContainerMerchant) this.screenHandler).setRecipeIndex(this.page);
+            PacketBuffer packetbuffer = new PacketBuffer(Unpooled.buffer());
             packetbuffer.writeInt(this.page);
-            this.client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket("MC|TrSel", packetbuffer));
+            this.client.getNetworkHandler().sendPacket(new C17PacketCustomPayload("MC|TrSel", packetbuffer));
         }
     }
 
 
     // ignore
-    public MixinMerchantScreen(ScreenHandler p_i1072_1_) {
+    public MixinMerchantScreen(Container p_i1072_1_) {
         super(p_i1072_1_);
     }
     

@@ -67,20 +67,20 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Unique private MethodWrapper<IScreen, Object, Object, ?> onClose;
 
     @Unique
-    private Map<ButtonWidget, Consumer<ButtonWidget>> customButtons = new HashMap<>();
+    private Map<GuiButton, Consumer<GuiButton>> customButtons = new HashMap<>();
     @Unique
-    private Set<TextFieldWidget> customTextFields = new HashSet<>();
+    private Set<GuiTextField> customTextFields = new HashSet<>();
 
     @Shadow
     public int width;
     @Shadow
     public int height;
     @Shadow
-    protected MinecraftClient client;
+    protected Minecraft client;
     @Shadow
-    protected TextRenderer textRenderer;
+    protected FontRenderer textRenderer;
     @Shadow
-    private ButtonWidget prevClickedButton;
+    private GuiButton prevClickedButton;
 
     @Shadow
     public abstract void removed();
@@ -104,14 +104,14 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Shadow public abstract boolean handleComponentClicked(net.minecraft.text.Text component);
 
     @Shadow
-    protected abstract void buttonClicked(ButtonWidget button) throws IOException;
+    protected abstract void buttonClicked(GuiButton button) throws IOException;
 
     @Shadow
-    protected List<ButtonWidget> buttons;
+    protected List<GuiButton> buttons;
 
-    @Shadow protected abstract void renderTextHoverEffect(Text component, int x, int y);
+    @Shadow protected abstract void renderTextHoverEffect(IChatComponent component, int x, int y);
 
-    @Shadow public abstract boolean handleTextClick(Text component);
+    @Shadow public abstract boolean handleTextClick(IChatComponent component);
 
     @Override
     public int getWidth() {
@@ -251,7 +251,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
                     btns.put((AbstractButtonWidget) e, new ClickableWidgetHelper<>((AbstractButtonWidget) e));
                 }
             }
-            for (ButtonWidget e : customButtons.keySet()) {
+            for (GuiButton e : customButtons.keySet()) {
                 if (!btns.containsKey(e)) {
                     btns.put(e, new ButtonWidgetHelper<>(e));
                 }
@@ -828,7 +828,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public IScreen reloadScreen() {
-        client.execute(() -> client.openScreen((Screen) (Object) this));
+        client.execute(() -> client.openScreen((GuiScreen) (Object) this));
         return this;
     }
 
@@ -1019,14 +1019,14 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Inject(at = @At("RETURN"), method = "mouseClicked")
     public void onMouseClick(int mouseX, int mouseY, int mouseButton, CallbackInfo ci) {
         if (mouseButton == 0) {
-            for (ButtonWidget btn : customButtons.keySet()) {
+            for (GuiButton btn : customButtons.keySet()) {
                 if (btn.isMouseOver(this.client, mouseX, mouseY)) {
                     prevClickedButton = btn;
                     customButtons.get(btn).accept(btn);
                 }
             }
-            for (TextFieldWidget field : customTextFields) {
-                field.method_920(mouseX, mouseY, mouseButton);
+            for (GuiTextField field : customTextFields) {
+                field.mouseClicked(mouseX, mouseY, mouseButton);
             }
         }
     }
@@ -1037,8 +1037,8 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public void clickBtn(ButtonWidget btn) throws IOException {
-        ButtonWidget prev = prevClickedButton;
+    public void clickBtn(GuiButton btn) throws IOException {
+        GuiButton prev = prevClickedButton;
         if (buttons.contains(btn)) {
             prevClickedButton = btn;
             btn.playDownSound(this.client.getSoundManager());
@@ -1048,7 +1048,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public ButtonWidget getFocused() {
+    public GuiButton getFocused() {
         return prevClickedButton;
     }
 

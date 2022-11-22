@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings.settingfields;
 
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
 import xyz.wagyourtail.wagyourgui.elements.TextInput;
 import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.AbstractSettingContainer;
@@ -11,7 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class LongField extends AbstractSettingField<Long> {
     
-    public LongField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<Long> field) {
+    public LongField(int x, int y, int width, FontRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<Long> field) {
         super(x, y, width, textRenderer.fontHeight + 2, textRenderer, parent, field);
     }
     
@@ -38,7 +38,7 @@ public class LongField extends AbstractSettingField<Long> {
     @Override
     public void setPos(int x, int y, int width, int height) {
         super.setPos(x, y, width, height);
-        for (ButtonWidget btn : buttons) {
+        for (GuiButton btn : buttons) {
             btn.y = y;
         }
     }

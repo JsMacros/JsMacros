@@ -1,25 +1,23 @@
 package xyz.wagyourtail.jsmacros.client.movement;
 
-import net.minecraft.client.gui.screen.options.HandOption;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.ClientPlayerEntity;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
+import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @SuppressWarnings("EntityConstructor")
-public class MovementDummy extends LivingEntity {
+public class MovementDummy extends EntityLivingBase {
 
-    private List<Vec3d> coordsHistory = new ArrayList<>();
+    private List<Vec3> coordsHistory = new ArrayList<>();
     private List<PlayerInput> inputs = new ArrayList<>();
 
     private PlayerInput currentInput;
@@ -29,20 +27,23 @@ public class MovementDummy extends LivingEntity {
     private float walkSpeed;
 
     public MovementDummy(MovementDummy player) {
-        this(player.world, player.getPos(), new Vec3d(player.velocityX, player.velocityY, player.velocityZ), player.getBoundingBox(), player.onGround, player.isSprinting(), player.isSneaking());
+        this(player.world, player.getPos(), new Vec3(player.velocityX, player.velocityY, player.velocityZ), player.getBoundingBox(), player.onGround, player.isSprinting(), player.isSneaking());
         this.inputs = new ArrayList<>(player.getInputs());
         this.coordsHistory = new ArrayList<>(player.getCoordsHistory());
         this.jumpingCooldown = player.jumpingCooldown;
         this.armorStack.addAll(player.armorStack);
     }
 
-    public MovementDummy(ClientPlayerEntity player) {
-        this(player.world, player.getPos(), new Vec3d(player.velocityX, player.velocityY, player.velocityZ), player.getBoundingBox(), player.onGround, player.isSprinting(), player.isSneaking());
+    public MovementDummy(EntityPlayerSP player) {
+        this(player.world, player.getPos(), new Vec3(player.velocityX, player.velocityY, player.velocityZ), player.getBoundingBox(), player.onGround, player.isSprinting(), player.isSneaking());
         this.walkSpeed = player.abilities.getWalkSpeed();
-        this.armorStack.addAll(StreamSupport.stream(player.getArmorItems().spliterator(), false).map(ItemStack::copy).collect(Collectors.toList()));
+        this.armorStack.addAll(Arrays.stream(player.getArmorStacks()).map((e) -> {
+            if (e != null) return e.copy();
+            return null;
+        }).collect(Collectors.toList()));
     }
 
-    public MovementDummy(World world, Vec3d pos, Vec3d velocity, Box hitBox, boolean onGround, boolean isSprinting, boolean isSneaking) {
+    public MovementDummy(World world, Vec3 pos, Vec3 velocity, AxisAlignedBB hitBox, boolean onGround, boolean isSprinting, boolean isSneaking) {
         super(world);
         this.x = pos.x;
         this.y = pos.y;
@@ -58,7 +59,7 @@ public class MovementDummy extends LivingEntity {
         this.coordsHistory.add(this.getPos());
     }
 
-    public List<Vec3d> getCoordsHistory() {
+    public List<Vec3> getCoordsHistory() {
         return coordsHistory;
     }
 
@@ -66,12 +67,12 @@ public class MovementDummy extends LivingEntity {
         return inputs;
     }
 
-    public Vec3d applyInput(PlayerInput input) {
+    public Vec3 applyInput(PlayerInput input) {
         inputs.add(input); // We use this and not the clone, since the clone may be modified?
         PlayerInput currentInput = input.clone();
         this.yaw = currentInput.yaw;
 
-        Vec3d velocity = new Vec3d(this.velocityX, this.velocityY, this.velocityZ);
+        Vec3 velocity = new Vec3(this.velocityX, this.velocityY, this.velocityZ);
         double velX = velocity.x;
         double velY = velocity.y;
         double velZ = velocity.z;
@@ -99,7 +100,7 @@ public class MovementDummy extends LivingEntity {
 
         /** Sprinting start **/
         boolean hasHungerToSprint = true;
-        if (!this.isSprinting() && !currentInput.sneaking && hasHungerToSprint && !this.hasStatusEffect(StatusEffects.BLINDNESS) && currentInput.sprinting) {
+        if (!this.isSprinting() && !currentInput.sneaking && hasHungerToSprint && !this.hasStatusEffect(Potion.BLINDNESS) && currentInput.sprinting) {
             this.setSprinting(true);
         }
 
@@ -137,13 +138,13 @@ public class MovementDummy extends LivingEntity {
      * so this is why we need to set the y-velocity to 0.<p>
      */
     @Override
-    public boolean method_13071(double x, double y, double z) {
+    public void move(double x, double y, double z) {
         if (this.isClimbing() && y < 0.0D && this.isSneaking()) {
             this.velocityX = x;
             this.velocityY = 0.0D;
             this.velocityZ = z;
         }
-        return super.method_13071(x, y, z);
+        super.move(x, y, z);
     }
 
     @Override
@@ -155,34 +156,29 @@ public class MovementDummy extends LivingEntity {
     public boolean canMoveVoluntarily() {
         return true;
     }
+    @Override
+    public ItemStack[] getArmorStacks() {
+        return new ItemStack[0];
+    }
 
     @Override
-    public HandOption method_13060() {
+    public ItemStack getStackInHand() {
         return null;
     }
 
     @Override
-    public Iterable<ItemStack> getArmorItems() {
-        return armorStack;
+    public ItemStack getMainSlot(int i) {
+        return null;
     }
 
     @Override
-    public ItemStack method_13043(EquipmentSlot equipmentSlot) {
-        if (equipmentSlot.getType() == EquipmentSlot.Type.HAND) {
-            return ItemStack.EMPTY;
-        }
-        return armorStack.get(equipmentSlot.method_13032());
+    public ItemStack func_82169_q(int i) {
+        return null;
     }
 
     @Override
-    public void equipStack(EquipmentSlot slot, ItemStack stack) {
+    public void setArmorSlot(int i, ItemStack itemStack) {
 
-    }
-
-    @Override
-    public void setSprinting(boolean sprinting) {
-        super.setSprinting(sprinting);
-        this.setMovementSpeed(sprinting ? 0.13F : 0.1F);
     }
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")

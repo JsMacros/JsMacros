@@ -21,7 +21,7 @@ public class TextHelper extends BaseHelper<Text> {
 
     public static final Pattern STRIP_FORMATTING_PATTERN = Pattern.compile("\u00a7[0-9A-FK-OR]", Pattern.CASE_INSENSITIVE);
     
-    public TextHelper(Text t) {
+    public TextHelper(IChatComponent t) {
         super(t);
     }
     
@@ -34,7 +34,7 @@ public class TextHelper extends BaseHelper<Text> {
      */
     @Deprecated
     public TextHelper replaceFromJson(String json) {
-        base = Text.Serializer.lenientDeserializeText(json);
+        base = IChatComponent.Serializer.deserialize(json);
         return this;
     }
     
@@ -47,7 +47,7 @@ public class TextHelper extends BaseHelper<Text> {
      */
     @Deprecated
     public TextHelper replaceFromString(String content) {
-        base = new LiteralText(content);
+        base = new ChatComponentText(content);
         return this;
     }
     
@@ -56,7 +56,7 @@ public class TextHelper extends BaseHelper<Text> {
      * @return JSON data representation.
      */
     public String getJson() {
-        return Text.Serializer.serialize(base);
+        return IChatComponent.Serializer.serialize(base);
     }
 
     /**
@@ -92,9 +92,9 @@ public class TextHelper extends BaseHelper<Text> {
         visit_internal(base, visitor);
     }
 
-    private static void visit_internal(Text text, BiConsumer<StyleHelper, String> visitor) {
+    private static void visit_internal(IChatComponent text, BiConsumer<StyleHelper, String> visitor) {
         visitor.accept(new StyleHelper(text.getStyle()), text.asString());
-        for (Text sibling : text.getSiblings()) {
+        for (IChatComponent sibling : text.getSiblings()) {
             visit_internal(sibling, visitor);
         }
     }

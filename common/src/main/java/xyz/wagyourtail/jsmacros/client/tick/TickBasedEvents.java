@@ -1,10 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.tick;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.MultiplayerServerListPinger;
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.network.OldServerPinger;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NBTTagCompound;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventItemDamage;
@@ -25,7 +25,7 @@ public class TickBasedEvents {
     private static boolean previousFallFlyState = false;
     private static long counter = 0;
 
-    public static final MultiplayerServerListPinger serverListPinger = new MultiplayerServerListPinger();
+    public static final OldServerPinger serverListPinger = new OldServerPinger();
 
 
     public static boolean areEqualNoDamage(ItemStack a, ItemStack b) {
@@ -33,23 +33,22 @@ public class TickBasedEvents {
     }
 
     public static boolean areNotEqual(ItemStack a, ItemStack b) {
-        return (a != null || b != null) && (a == null || b == null || !a.equalsIgnoreNbt(b) || a.getCount() !=
-            b.getCount() || !ItemStack.equalsIgnoreDamage(a, b) || a.getDamage() != b.getDamage());
+        return (a != null || b != null) && (a == null || b == null || !a.equalsIgnoreTags(b) || a.count != b.count || !ItemStack.equalsIgnoreDamage(a, b) || a.getDamage() != b.getDamage());
     }
 
     public static boolean areTagsEqualIgnoreDamage(ItemStack a, ItemStack b) {
         if (a == null && b == null) {
             return true;
         } else if (a != null && b != null) {
-            if (a.getNbt() == null && b.getNbt() == null) {
+            if (a.getTag() == null && b.getTag() == null) {
                 return true;
             } else {
-                NbtCompound at;
-                NbtCompound bt;
-                if (a.getNbt() != null) at = a.getNbt().copy();
-                else at = new NbtCompound();
-                if (b.getNbt() != null) bt = b.getNbt().copy();
-                else bt = new NbtCompound();
+                NBTTagCompound at;
+                NBTTagCompound bt;
+                if (a.getTag() != null) at = (NBTTagCompound) a.getTag().copy();
+                else at = new NBTTagCompound();
+                if (b.getTag() != null) bt = (NBTTagCompound) b.getTag().copy();
+                else bt = new NBTTagCompound();
                 at.remove("Damage");
                 bt.remove("Damage");
                 return at.equals(bt);
@@ -65,7 +64,7 @@ public class TickBasedEvents {
     }
 
 
-    public static void onTick(MinecraftClient mc) {
+    public static void onTick(Minecraft mc) {
 
         if (JsMacros.keyBinding.isPressed() && mc.currentScreen == null) {
             mc.openScreen(JsMacros.prevScreen);
@@ -90,7 +89,7 @@ public class TickBasedEvents {
         }
 
         if (mc.player != null && mc.player.inventory != null) {
-            PlayerInventory inv = mc.player.inventory;
+            InventoryPlayer inv = mc.player.inventory;
 
             ItemStack newMainHand = inv.getMainHandStack();
             if (areNotEqual(newMainHand, mainHand)) {
@@ -101,7 +100,7 @@ public class TickBasedEvents {
                 mainHand = newMainHand != null ? newMainHand.copy() : null;
             }
 
-            ItemStack newHeadArmor = inv.getArmor(3);
+            ItemStack newHeadArmor = inv.armor[3];
             if (areNotEqual(newHeadArmor, headArmor)) {
                 if (areEqualIgnoreDamage(newHeadArmor, headArmor)) {
                     new EventItemDamage(newHeadArmor, newHeadArmor.getDamage());
@@ -110,7 +109,7 @@ public class TickBasedEvents {
                 headArmor = newHeadArmor != null ? newHeadArmor.copy() : null;
             }
 
-            ItemStack newChestArmor = inv.getArmor(2);
+            ItemStack newChestArmor = inv.armor[2];
             if (areNotEqual(newChestArmor, chestArmor)) {
                 if (areEqualIgnoreDamage(newChestArmor, chestArmor)) {
                     new EventItemDamage(newChestArmor, newChestArmor.getDamage());
@@ -120,7 +119,7 @@ public class TickBasedEvents {
 
             }
 
-            ItemStack newLegArmor = inv.getArmor(1);
+            ItemStack newLegArmor = inv.armor[1];
             if (areNotEqual(newLegArmor, legArmor)) {
                 if (areEqualIgnoreDamage(newLegArmor, legArmor)) {
                     new EventItemDamage(newLegArmor, newLegArmor.getDamage());
@@ -129,7 +128,7 @@ public class TickBasedEvents {
                 legArmor = newLegArmor != null ? newLegArmor.copy() : null;
             }
 
-            ItemStack newFootArmor = inv.getArmor(0);
+            ItemStack newFootArmor = inv.armor[0];
             if (areNotEqual(newFootArmor, footArmor)) {
                 if (areEqualIgnoreDamage(newFootArmor, footArmor)) {
                     new EventItemDamage(newFootArmor, newFootArmor.getDamage());

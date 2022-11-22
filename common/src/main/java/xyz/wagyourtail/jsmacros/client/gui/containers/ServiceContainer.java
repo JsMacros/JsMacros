@@ -1,10 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.gui.containers;
 
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import scala.tools.nsc.interpreter.Formatting;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.TextOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.ServiceScreen;
@@ -28,7 +29,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
     protected Button runningBtn;
     protected Button delBtn;
 
-    public ServiceContainer(int x, int y, int width, int height, TextRenderer textRenderer, ServiceScreen parent, String service) {
+    public ServiceContainer(int x, int y, int width, int height, FontRenderer textRenderer, ServiceScreen parent, String service) {
         super(x, y, width, height, textRenderer, parent);
         this.service = service;
         init();
@@ -42,16 +43,16 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
         nameBtn = addDrawableChild(new Button(x + 1, y + 1, w * 2 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, literal(service), (btn) -> {
             openOverlay(new TextPrompt(parent.width / 4, parent.height / 4, parent.width / 2, parent.height / 2, textRenderer, literal("Enter new service name"), service, getFirstOverlayParent(), (newService) -> {
                 if (!Core.getInstance().services.renameService(service, newService)) {
-                    openOverlay(new TextOverlay(parent.width / 4, parent.height / 4, parent.width / 2, parent.height / 2, textRenderer, getFirstOverlayParent(), new LiteralText("Failed to rename service").setStyle(new Style().setFormatting(
-                        Formatting.RED))));
+                    openOverlay(new TextOverlay(parent.width / 4, parent.height / 4, parent.width / 2, parent.height / 2, textRenderer, getFirstOverlayParent(), new ChatComponentText("Failed to rename service").setStyle(new ChatStyle().setColor(
+                        EnumChatFormatting.RED))));
                     return;
                 }
                 service = newService;
-                btn.setMessage(new LiteralText(newService));
+                btn.setMessage(new ChatComponentText(newService));
             }));
         }));
 
-        fileBtn = addButton(new Button(x + w * 2 / 12 + 1, y + 1, w * 8 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, new LiteralText("./"+getTrigger().file.replaceAll("\\\\", "/")), (btn) -> {
+        fileBtn = addButton(new Button(x + w * 2 / 12 + 1, y + 1, w * 8 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, new ChatComponentText("./"+getTrigger().file.replaceAll("\\\\", "/")), (btn) -> {
             parent.setFile(this);
         }));
 
@@ -62,11 +63,11 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
             if (getEnabled()) {
                 Core.getInstance().services.disableService(service);
                 btn.setColor(0x70FF0000);
-                btn.setMessage(new TranslatableText("jsmacros.disabled"));
+                btn.setMessage(new ChatComponentTranslation("jsmacros.disabled"));
             } else {
                 Core.getInstance().services.enableService(service);
                 btn.setColor(0x7000FF00);
-                btn.setMessage(new TranslatableText("jsmacros.enabled"));
+                btn.setMessage(new ChatComponentTranslation("jsmacros.enabled"));
             }
         }));
 
@@ -132,10 +133,10 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
         
         if (getRunning()) {
             runningBtn.setColor(0x7000FF00);
-            runningBtn.setMessage(new TranslatableText("jsmacros.running"));
+            runningBtn.setMessage(new ChatComponentTranslation("jsmacros.running"));
         } else {
             runningBtn.setColor(0x70FF0000);
-            runningBtn.setMessage(new TranslatableText("jsmacros.stopped"));
+            runningBtn.setMessage(new ChatComponentTranslation("jsmacros.stopped"));
         }
     }
 }

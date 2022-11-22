@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer;
 
-import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.FontRenderer;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
@@ -14,7 +14,7 @@ import java.util.Map;
 public class ProfileSetting extends AbstractMapSettingContainer<List<ScriptTrigger>, ProfileSetting.ProfileEntry> {
     
     
-    public ProfileSetting(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
+    public ProfileSetting(int x, int y, int width, int height, FontRenderer textRenderer, SettingsOverlay parent, String[] group) {
         super(x, y, width, height, textRenderer, parent, group);
         defaultValue = ArrayList::new;
     }
@@ -60,7 +60,7 @@ public class ProfileSetting extends AbstractMapSettingContainer<List<ScriptTrigg
     
     public static class ProfileEntry extends AbstractMapSettingContainer.MapSettingEntry<List<ScriptTrigger>> {
     
-        public ProfileEntry(int x, int y, int width, TextRenderer textRenderer, ProfileSetting parent, String key, List<ScriptTrigger> value) {
+        public ProfileEntry(int x, int y, int width, FontRenderer textRenderer, ProfileSetting parent, String key, List<ScriptTrigger> value) {
             super(x, y, width, textRenderer, (AbstractMapSettingContainer) parent, key, value);
         }
     

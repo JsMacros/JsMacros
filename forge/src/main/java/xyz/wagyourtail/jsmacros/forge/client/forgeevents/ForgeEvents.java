@@ -20,7 +20,7 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 
 public class ForgeEvents {
-    private static final MinecraftClient client = MinecraftClient.getInstance();
+    private static final Minecraft client = Minecraft.getInstance();
 
     public static void init() {
         MinecraftForge.EVENT_BUS.addListener(ForgeEvents::renderWorldListener);
@@ -91,7 +91,7 @@ public class ForgeEvents {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
-            TickBasedEvents.onTick(MinecraftClient.getInstance());
+            TickBasedEvents.onTick(Minecraft.getInstance());
         }
     }
 
@@ -109,5 +109,12 @@ public class ForgeEvents {
             if (EventKey.parse(Mouse.getEventButton() - 100, 0, Mouse.getEventButtonState() ? 1 : 0, BaseScreen.createModifiers())) {
                 mouseEvent.setCanceled(true);
             }
+    }
+
+    @SubscribeEvent
+    public void onScreenRender(GuiScreenEvent.DrawScreenEvent.Post e) {
+        if (!(e.gui instanceof ScriptScreen)) {
+            ((IScreenInternal) e.gui).jsmacros_render(e.mouseX, e.mouseY, e.renderPartialTicks);
+        }
     }
 }

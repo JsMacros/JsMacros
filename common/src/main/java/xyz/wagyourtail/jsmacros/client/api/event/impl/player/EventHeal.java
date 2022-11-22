@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 
-import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.util.DamageSource;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 

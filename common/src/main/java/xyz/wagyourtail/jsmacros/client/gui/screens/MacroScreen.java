@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ChatComponentTranslation;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroContainer;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroListTopbar;
@@ -37,8 +37,8 @@ public class MacroScreen extends BaseScreen {
     protected Button runningBtn;
     protected Button aboutBtn;
 
-    public MacroScreen(Screen parent) {
-        super(new TranslatableText("jsmacros.title"), parent);
+    public MacroScreen(GuiScreen parent) {
+        super(new ChatComponentTranslation("jsmacros.title"), parent);
     }
 
     @Override
@@ -75,17 +75,17 @@ public class MacroScreen extends BaseScreen {
         topScroll = 40;
         macroScroll = this.addButton(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
 
-        runningBtn = this.addButton(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.running"), (btn) -> {
+        runningBtn = this.addButton(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new ChatComponentTranslation("jsmacros.running"), (btn) -> {
             assert client != null;
             client.openScreen(new CancelScreen(this));
         }));
 
-        serviceScreen = this.addButton(new Button(this.width /12 + 1, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.service"), (btn) -> {
+        serviceScreen = this.addButton(new Button(this.width /12 + 1, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new ChatComponentTranslation("jsmacros.service"), (btn) -> {
             assert client != null;
             client.openScreen(new ServiceScreen(this));
         }));
 
-        aboutBtn = this.addButton(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this))));
+        aboutBtn = this.addButton(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new ChatComponentTranslation("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this))));
     }
 
     protected MultiElementContainer<MacroScreen> createTopbar() {
@@ -123,12 +123,12 @@ public class MacroScreen extends BaseScreen {
     }
 
     public void confirmRemoveMacro(MultiElementContainer<MacroScreen> macro) {
-        openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, this.textRenderer, new TranslatableText("jsmacros.confirmdeletemacro"), this, (conf) -> removeMacro(macro)));
+        openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, this.textRenderer, new ChatComponentTranslation("jsmacros.confirmdeletemacro"), this, (conf) -> removeMacro(macro)));
     }
 
     public void removeMacro(MultiElementContainer<MacroScreen> macro) {
         Core.getInstance().eventRegistry.removeScriptTrigger(((MacroContainer) macro).getRawMacro());
-        for (ButtonWidget b : macro.getButtons()) {
+        for (GuiButton b : macro.getButtons()) {
             removeButton(b);
         }
         macros.remove(macro);
@@ -191,8 +191,8 @@ public class MacroScreen extends BaseScreen {
 
         topbar.render(mouseX, mouseY, delta);
 
-        for (ButtonWidget b : ImmutableList.copyOf(this.buttons)) {
-            b.method_891(client, mouseX, mouseY, delta);
+        for (GuiButton b : ImmutableList.copyOf(this.buttons)) {
+            b.render(client, mouseX, mouseY);
         }
 
         for (MultiElementContainer<MacroScreen> macro : ImmutableList.copyOf(this.macros)) {

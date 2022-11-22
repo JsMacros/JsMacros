@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.access.IStyle;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -130,7 +130,7 @@ public class StyleHelper extends BaseHelper<Style> {
 
     public Object getHoverValue() {
         if (base.getHoverEvent() == null) return null;
-        Text value = base.getHoverEvent().getValue();
+        IChatComponent value = base.getHoverEvent().getValue();
         if (value != null) return new TextHelper(value);
         return null;
     }

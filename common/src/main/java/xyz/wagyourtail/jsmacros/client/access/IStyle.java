@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.access;
 
-import net.minecraft.text.Style;
+import net.minecraft.util.ChatStyle;
 
 public interface IStyle {
-    Style jsmacros_setCustomColor(int color);
+    ChatStyle jsmacros_setCustomColor(int color);
 
     boolean hasCustomColor();
 

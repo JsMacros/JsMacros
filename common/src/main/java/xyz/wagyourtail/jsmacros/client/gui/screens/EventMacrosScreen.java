@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.GuiScreen;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroListTopbar;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -14,7 +14,7 @@ import java.util.List;
 
 public class EventMacrosScreen extends MacroScreen {
     
-    public EventMacrosScreen(Screen parent) {
+    public EventMacrosScreen(GuiScreen parent) {
         super(parent);
         this.parent = parent;
     }

@@ -17,7 +17,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class ExtensionLoader {
     private final Set<Extension> extensions = new HashSet<>();
@@ -118,7 +117,9 @@ public class ExtensionLoader {
         }
 
         // add internal extensions
-        Set<URL> internalExtensions = Extension.getDependenciesInternal(ExtensionLoader.class, "jsmacros.extension.json");
+        Set<URL> internalExtensions = Extension.getDependenciesInternal(ExtensionLoader.class,
+            "jsmacros.extension.json"
+        );
         for (URL lib : internalExtensions) {
             System.out.println("Adding internal extension: " + lib);
             // copy resource to dependencies folder

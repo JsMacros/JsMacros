@@ -1,17 +1,16 @@
 package xyz.wagyourtail.jsmacros.client.access;
 
-import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.potion.Potion;
 
 public interface IBeaconScreen {
 
-    StatusEffect jsmacros_getPrimaryEffect();
+    Potion jsmacros_getPrimaryEffect();
 
-    void jsmacros_setPrimaryEffect(StatusEffect effect);
+    void jsmacros_setPrimaryEffect(Potion effect);
 
-    StatusEffect jsmacros_getSecondaryEffect();
+    Potion jsmacros_getSecondaryEffect();
 
-    void jsmacros_setSecondaryEffect(StatusEffect effect);
+    void jsmacros_setSecondaryEffect(Potion effect);
 
     int jsmacros_getLevel();
 

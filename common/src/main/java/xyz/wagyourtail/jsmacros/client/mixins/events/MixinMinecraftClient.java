@@ -22,15 +22,15 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventOpenContain
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventOpenScreen;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinDisconnectedScreen;
 
-@Mixin(MinecraftClient.class)
+@Mixin(Minecraft.class)
 public abstract class MixinMinecraftClient {
 
     @Shadow
-    public Screen currentScreen;
+    public GuiScreen currentScreen;
 
-    @Shadow public abstract void openScreen(Screen screen);
+    @Shadow public abstract void openScreen(GuiScreen screen);
 
-    @Shadow public ClientPlayerEntity player;
+    @Shadow public EntityPlayerSP player;
 
     @Shadow @Final
     private Session session;
@@ -42,13 +42,13 @@ public abstract class MixinMinecraftClient {
     }
 
     @Unique
-    private Screen prevScreen;
+    private GuiScreen prevScreen;
     
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", opcode = Opcodes.PUTFIELD), method="openScreen")
-    public void onOpenScreen(Screen screen, CallbackInfo info) {
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;currentScreen:Lnet/minecraft/client/gui/GuiScreen;", opcode = Opcodes.PUTFIELD), method="openScreen")
+    public void onOpenScreen(GuiScreen screen, CallbackInfo info) {
         if (screen != currentScreen) {
-            if (screen instanceof InventoryScreen && interactionManager.hasCreativeInventory()) {
-                if (!(screen instanceof CreativeInventoryScreen)) {
+            if (screen instanceof InventoryEffectRenderer && interactionManager.hasCreativeInventory()) {
+                if (!(screen instanceof GuiContainerCreative)) {
                     prevScreen = currentScreen;
                 }
             } else {
@@ -59,9 +59,9 @@ public abstract class MixinMinecraftClient {
     }
 
     @Inject(at = @At("TAIL"), method = "openScreen")
-    public void afterOpenScreen(Screen screen, CallbackInfo info) {
-        if (screen instanceof HandledScreen) {
-            if (interactionManager.hasCreativeInventory() && !(screen instanceof CreativeInventoryScreen)) {
+    public void afterOpenScreen(GuiScreen screen, CallbackInfo info) {
+        if (screen instanceof GuiContainer) {
+            if (interactionManager.hasCreativeInventory() && !(screen instanceof GuiContainerCreative)) {
                 return;
             }
             EventOpenContainer event = new EventOpenContainer(((ContainerScreen<?>) screen));

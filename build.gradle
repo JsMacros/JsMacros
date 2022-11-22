@@ -25,6 +25,17 @@ subprojects {
         jsmacrosExtensionInclude
     }
 
+    minecraft {
+        version = "1.8.9-11.15.1.1722"
+        runDir = "run"
+
+        mappings = Tiny2MCP.remap(new File(rootProject.rootDir, "libs"), "1.8.9", "build.202110221052")
+    }
+
+    configurations {
+        include
+        include.transitive = false
+    }
     sourceSets {
         main {
             compileClasspath += configurations.coreImplementation + configurations.jsmacrosExtensionInclude
@@ -35,9 +46,6 @@ subprojects {
     repositories {
         maven {
             url 'https://maven.fabricmc.net/'
-            metadataSources {
-                artifact()
-            }
         }
         maven {
             name = "legacy-fabric"
@@ -50,6 +58,7 @@ subprojects {
         maven { url 'https://jitpack.io' }
         maven { url 'https://repo.spongepowered.org/maven' }
         mavenCentral()
+
     }
 
     dependencies {

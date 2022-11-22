@@ -14,7 +14,7 @@ import xyz.wagyourtail.wagyourgui.overlays.TextPrompt;
 
 public class ServiceListTopbar extends MultiElementContainer<ServiceScreen> {
 
-    public ServiceListTopbar(ServiceScreen parent, int x, int y, int width, int height, TextRenderer textRenderer) {
+    public ServiceListTopbar(ServiceScreen parent, int x, int y, int width, int height, FontRenderer textRenderer) {
         super(x, y, width, height, textRenderer, parent);
         init();
     }
@@ -45,8 +45,8 @@ public class ServiceListTopbar extends MultiElementContainer<ServiceScreen> {
             parent.reload();
         }));
 
-        addButton(new Button(x + w - 1, y+1, 11, height - 3, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new LiteralText("+"), (btn) -> {
-            openOverlay(new TextPrompt(parent.width / 4, parent.height / 4, parent.width / 2, parent.height / 2, textRenderer, new TranslatableText("jsmacros.servicename"), "", getFirstOverlayParent(), (name) -> {
+        addButton(new Button(x + w - 1, y+1, 11, height - 3, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, new ChatComponentText("+"), (btn) -> {
+            openOverlay(new TextPrompt(parent.width / 4, parent.height / 4, parent.width / 2, parent.height / 2, textRenderer, new ChatComponentTranslation("jsmacros.servicename"), "", getFirstOverlayParent(), (name) -> {
                 if (Core.getInstance().services.registerService(name, new ServiceTrigger(Core.getInstance().config.macroFolder, false)))
                     parent.addService(name);
             }));

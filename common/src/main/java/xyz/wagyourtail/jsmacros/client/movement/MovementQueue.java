@@ -15,19 +15,19 @@ import static xyz.wagyourtail.jsmacros.client.JsMacros.LOGGER;
 
 public class MovementQueue {
     private static final List<PlayerInput> queue = new ArrayList<>();
-    private static final List<Vec3d> predictions = new ArrayList<>();
+    private static final List<Vec3> predictions = new ArrayList<>();
     public static Draw3D predPoints = new Draw3D();
-    private static ClientPlayerEntity player;
+    private static EntityPlayerSP player;
     private static int queuePos = 0;
     private static boolean reCalcPredictions;
 
     private static boolean doDrawPredictions = false;
 
-    public static double getMagnitude(Vec3d vec) {
+    public static double getMagnitude(Vec3 vec) {
         return Math.sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
     }
 
-    public synchronized static PlayerInput tick(ClientPlayerEntity newPlayer) {
+    public synchronized static PlayerInput tick(EntityPlayerSP newPlayer) {
         if (queuePos == queue.size()) {
             return null;
         }
@@ -35,7 +35,11 @@ public class MovementQueue {
         player = newPlayer;
 
         if (predictions.size() == queue.size() - queuePos + 1 && queuePos != 0) {
-            Vec3d diff = new Vec3d(player.x - predictions.get(0).x, player.y - predictions.get(0).y, player.z - predictions.get(0).z);
+            Vec3 diff = new Vec3(
+                player.x - predictions.get(0).x,
+                player.y - predictions.get(0).y,
+                player.z - predictions.get(0).z
+            );
             if (getMagnitude(diff) > 0.01D) {
                 LOGGER.debug("Pred of by x={}, y={}, z={}", diff.x, diff.y, diff.z);
                 LOGGER.debug("Player pos x={}, y={}, z={}", player.x, player.y, player.z);
@@ -77,7 +81,7 @@ public class MovementQueue {
         predictions.forEach(point -> predPoints.addPoint(new Pos3D(point.getX(), point.getY(), point.getZ()), 0.01, 0xffd000));
     }
 
-    public static void append(PlayerInput input, ClientPlayerEntity newPlayer) {
+    public static void append(PlayerInput input, EntityPlayerSP newPlayer) {
         reCalcPredictions = true;
         player = newPlayer;
         // We do the clone step here, since somewhere one could maybe change the input

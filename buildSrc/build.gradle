@@ -1,14 +1,6 @@
-plugins {
-    id 'java'
-}
-
 repositories {
     mavenCentral()
 }
-
-
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
 
 dependencies {
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'

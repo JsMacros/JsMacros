@@ -2,16 +2,11 @@ package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.*;
-import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Keyboard;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
@@ -40,9 +35,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class EditorScreen extends BaseScreen {
-    private final static Text ellipses = new LiteralText("...");
+    private final static IChatComponent ellipses = new ChatComponentText("...");
     static {
-        ellipses.getStyle().setFormatting(Formatting.DARK_GRAY);
+        ellipses.getStyle().setColor(EnumChatFormatting.DARK_GRAY);
     }
     public static final List<String> langs = Lists.newArrayList(
         "javascript",
@@ -57,14 +52,14 @@ public class EditorScreen extends BaseScreen {
         "kotlin",
         "none"
     );
-    public static Style defaultStyle = new Style();
+    public static ChatStyle defaultStyle = new ChatStyle();
     protected final File file;
     protected final FileHandler handler;
     public final History history;
     public final SelectCursor cursor;
     private int ellipsesWidth;
     protected String savedString;
-    protected Text fileName = new LiteralText("");
+    protected IChatComponent fileName = new ChatComponentText("");
     protected String lineCol = "";
     protected Scrollbar scrollbar;
     protected Button saveBtn;
@@ -78,8 +73,8 @@ public class EditorScreen extends BaseScreen {
     public String language;
     public AbstractRenderCodeCompiler codeCompiler;
 
-    public EditorScreen(Screen parent, @NotNull File file) {
-        super(new LiteralText("Editor"), parent);
+    public EditorScreen(GuiScreen parent, @NotNull File file) {
+        super(new ChatComponentText("Editor"), parent);
         this.file = file;
         FileHandler handler = new FileHandler(file);
         String content;
@@ -96,7 +91,7 @@ public class EditorScreen extends BaseScreen {
         savedString = content;
 
         this.handler = handler;
-        defaultStyle = new Style();
+        defaultStyle = new ChatStyle();
 
         cursor = new SelectCursor(defaultStyle, textRenderer);
 
@@ -132,7 +127,7 @@ public class EditorScreen extends BaseScreen {
     }
 
     public static void openAndScrollToIndex(@NotNull File file, int startIndex, int endIndex) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         int finalEndIndex = endIndex == -1 ? startIndex : endIndex;
         client.execute(() -> {
             EditorScreen screen;
@@ -153,7 +148,7 @@ public class EditorScreen extends BaseScreen {
     }
 
     public static void openAndScrollToLine(@NotNull File file, int line, int col, int endCol) {
-        MinecraftClient client = MinecraftClient.getInstance();
+        Minecraft client = Minecraft.getInstance();
         client.execute(() -> {
             EditorScreen screen;
             try {
@@ -217,7 +212,7 @@ public class EditorScreen extends BaseScreen {
     public void init() {
         super.init();
         //TODO:
-        //this.font = new TextRenderer(client.gameSettings).getTextRenderer(new Identifier("jsmacros", "ubuntumono"));
+        //this.font = new FontRenderer(client.gameSettings).getFontRenderer(new Identifier("jsmacros", "ubuntumono"));
         cursor.textRenderer = this.textRenderer;
 
         ellipsesWidth = textRenderer.getStringWidth(ellipses.asFormattedString());
@@ -225,9 +220,9 @@ public class EditorScreen extends BaseScreen {
         int width = this.width - 10;
 
         scrollbar = addButton(new Scrollbar(width, 12, 10, height - 24, 0, 0xFF000000, 0xFFFFFFFF, 1, this::setScroll));
-        saveBtn = addButton(new Button(width / 2, 0, width / 6, 12, textRenderer, needSave() ? 0xFFA0A000 : 0xFF00A000, 0xFF000000, needSave() ? 0xFF707000 : 0xFF007000, 0xFFFFFF, new TranslatableText("jsmacros.save"), (btn) -> save()));
-        addButton(new Button(width * 4 / 6, 0, width / 6, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.close"), (btn) -> openParent()));
-        addButton(new Button(width, 0, 10, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(client.world == null ? "X" : "-"), (btn) -> onClose()));
+        saveBtn = addButton(new Button(width / 2, 0, width / 6, 12, textRenderer, needSave() ? 0xFFA0A000 : 0xFF00A000, 0xFF000000, needSave() ? 0xFF707000 : 0xFF007000, 0xFFFFFF, new ChatComponentTranslation("jsmacros.save"), (btn) -> save()));
+        addButton(new Button(width * 4 / 6, 0, width / 6, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new ChatComponentTranslation("jsmacros.close"), (btn) -> openParent()));
+        addButton(new Button(width, 0, 10, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new ChatComponentText(client.world == null ? "X" : "-"), (btn) -> onClose()));
 
         if (language == null)
             setLanguage(getDefaultLanguage());
@@ -254,19 +249,19 @@ public class EditorScreen extends BaseScreen {
         };
 
 
-        addButton(new Button(this.width - width / 8, height - 12, width / 8, 12, textRenderer,0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new LiteralText(language), (btn) -> {
+        addButton(new Button(this.width - width / 8, height - 12, width / 8, 12, textRenderer,0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new ChatComponentText(language), (btn) -> {
             int height = langs.size() * (textRenderer.fontHeight + 1) + 4;
-            openOverlay(new SelectorDropdownOverlay(btn.x, btn.y - height, btn.getWidth(), height, langs.stream().map(LiteralText::new).collect(Collectors.toList()), textRenderer, this, (i) -> {
+            openOverlay(new SelectorDropdownOverlay(btn.x, btn.y - height, btn.getWidth(), height, langs.stream().map(ChatComponentText::new).collect(Collectors.toList()), textRenderer, this, (i) -> {
                 setLanguage(langs.get(i));
-                btn.setMessage(new LiteralText(langs.get(i)));
+                btn.setMessage(new ChatComponentText(langs.get(i)));
             }));
         }));
 
-        addButton(new Button(this.width - width / 4, height - 12, width / 8, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new TranslatableText("jsmacros.settings"), (btn) -> {
+        addButton(new Button(this.width - width / 4, height - 12, width / 8, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, new ChatComponentTranslation("jsmacros.settings"), (btn) -> {
             openOverlay(new SettingsOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this));
         }));
 
-        this.fileName = new LiteralText(textRenderer.trimToWidth(file.getName(), (width - 10) / 2));
+        this.fileName = new ChatComponentText(textRenderer.trimToWidth(file.getName(), (width - 10) / 2));
 
         setScroll(0);
         scrollToCursor();
@@ -274,18 +269,18 @@ public class EditorScreen extends BaseScreen {
 
     public void copyToClipboard() {
         assert client != null;
-        Screen.setClipboard(history.current.substring(cursor.startIndex, cursor.endIndex));
+        GuiScreen.setClipboard(history.current.substring(cursor.startIndex, cursor.endIndex));
     }
 
     public void pasteFromClipboard() {
-        String pasteContent = Screen.getClipboard();
+        String pasteContent = GuiScreen.getClipboard();
         history.replace(cursor.startIndex, cursor.endIndex - cursor.startIndex, pasteContent);
         compileRenderedText();
     }
 
     public void cutToClipboard() {
         assert client != null;
-        Screen.setClipboard(history.current.substring(cursor.startIndex, cursor.endIndex));
+        GuiScreen.setClipboard(history.current.substring(cursor.startIndex, cursor.endIndex));
         history.replace(cursor.startIndex, cursor.endIndex - cursor.startIndex, "");
         compileRenderedText();
     }
@@ -297,19 +292,19 @@ public class EditorScreen extends BaseScreen {
         } else if (overlay.keyPressed(keyCode, scanCode, modifiers)) {
             return true;
         }
-        if (Screen.isSelectAll(keyCode)) {
+        if (GuiScreen.isSelectAll(keyCode)) {
             cursor.updateStartIndex(0, history.current);
             cursor.updateEndIndex(history.current.length(), history.current);
             cursor.arrowEnd = true;
 
             return true;
-        } else if (Screen.isCopy(keyCode)) {
+        } else if (GuiScreen.isCopy(keyCode)) {
             copyToClipboard();
             return true;
-        } else if (Screen.isPaste(keyCode)) {
+        } else if (GuiScreen.isPaste(keyCode)) {
             pasteFromClipboard();
             return true;
-        } else if (Screen.isCut(keyCode)) {
+        } else if (GuiScreen.isCut(keyCode)) {
             cutToClipboard();
             return true;
         }
@@ -342,7 +337,7 @@ public class EditorScreen extends BaseScreen {
                 } else {
                     cursor.updateStartIndex(cursor.startIndex - cursor.startLineIndex + startSpaces.length(), history.current);
                 }
-                if (!Screen.hasShiftDown())
+                if (!GuiScreen.hasShiftDown())
                     cursor.updateEndIndex(cursor.startIndex, history.current);
 /*
                     //home to start of file impl
@@ -355,7 +350,7 @@ public class EditorScreen extends BaseScreen {
             case Keyboard.KEY_END:
                 int endLineLength = history.current.split("\n", -1)[cursor.endLine].length();
                 cursor.updateEndIndex(cursor.endIndex + (endLineLength - cursor.endLineIndex), history.current);
-                if (!Screen.hasShiftDown())
+                if (!GuiScreen.hasShiftDown())
                     cursor.updateStartIndex(cursor.endIndex, history.current);
 /*
                     //end to end of file impl
@@ -365,7 +360,7 @@ public class EditorScreen extends BaseScreen {
 */
                 return true;
             case Keyboard.KEY_LEFT:
-                if (Screen.hasShiftDown()) {
+                if (GuiScreen.hasShiftDown()) {
                     if (cursor.arrowEnd && cursor.startIndex != cursor.endIndex) {
                         cursor.updateEndIndex(cursor.endIndex - 1, history.current);
                         cursor.arrowLineIndex = cursor.endLineIndex;
@@ -386,7 +381,7 @@ public class EditorScreen extends BaseScreen {
                 scrollToCursor();
                 return true;
             case Keyboard.KEY_RIGHT:
-                if (Screen.hasShiftDown()) {
+                if (GuiScreen.hasShiftDown()) {
                     if (cursor.arrowEnd || cursor.endIndex == cursor.startIndex) {
                         cursor.updateEndIndex(cursor.endIndex + 1, history.current);
                         cursor.arrowLineIndex = cursor.endLineIndex;
@@ -407,7 +402,7 @@ public class EditorScreen extends BaseScreen {
                 scrollToCursor();
                 return true;
             case Keyboard.KEY_UP:
-                if (Screen.hasAltDown()) {
+                if (GuiScreen.hasAltDown()) {
                     history.shiftLine(cursor.startLine, cursor.endLine - cursor.startLine + 1, false);
                     cursor.arrowEnd = false;
                     compileRenderedText();
@@ -421,7 +416,7 @@ public class EditorScreen extends BaseScreen {
                         }
                         index += Math.min(lines[line].length(), cursor.arrowLineIndex);
                     }
-                    if (Screen.hasShiftDown()) {
+                    if (GuiScreen.hasShiftDown()) {
                         if (cursor.arrowEnd && index >= cursor.startIndex) {
                             cursor.updateEndIndex(index, history.current);
                             cursor.arrowEnd = true;
@@ -439,7 +434,7 @@ public class EditorScreen extends BaseScreen {
                 scrollToCursor();
                 return true;
             case Keyboard.KEY_DOWN:
-                if (Screen.hasAltDown()) {
+                if (GuiScreen.hasAltDown()) {
                     history.shiftLine(cursor.startLine, cursor.endLine - cursor.startLine + 1, true);
                     cursor.arrowEnd = true;
                     compileRenderedText();
@@ -455,7 +450,7 @@ public class EditorScreen extends BaseScreen {
                     } else {
                         index = history.current.length();
                     }
-                    if (Screen.hasShiftDown()) {
+                    if (GuiScreen.hasShiftDown()) {
                         if (!cursor.arrowEnd && index <= cursor.endIndex) {
                             cursor.updateStartIndex(index, history.current);
                             cursor.arrowEnd = false;
@@ -475,8 +470,8 @@ public class EditorScreen extends BaseScreen {
                 scrollToCursor();
                 return true;
             case Keyboard.KEY_Z:
-                if (Screen.hasControlDown()) {
-                    if (Screen.hasShiftDown()) {
+                if (GuiScreen.hasControlDown()) {
+                    if (GuiScreen.hasShiftDown()) {
                         int i = history.redo();
 
                         if (i != -1) {
@@ -516,8 +511,8 @@ public class EditorScreen extends BaseScreen {
                 compileRenderedText();
                 return true;
             case Keyboard.KEY_TAB:
-                if (cursor.startIndex != cursor.endIndex || Screen.hasShiftDown()) {
-                    history.tabLines(cursor.startLine, cursor.endLine - cursor.startLine + 1, Screen.hasShiftDown());
+                if (cursor.startIndex != cursor.endIndex || GuiScreen.hasShiftDown()) {
+                    history.tabLines(cursor.startLine, cursor.endLine - cursor.startLine + 1, GuiScreen.hasShiftDown());
                 } else {
                     history.addChar(cursor.startIndex, '\t');
                 }
@@ -542,14 +537,14 @@ public class EditorScreen extends BaseScreen {
             case Keyboard.KEY_RSHIFT:
                 return true;
             case Keyboard.KEY_RBRACKET:
-                if (Screen.hasControlDown()) {
+                if (GuiScreen.hasControlDown()) {
                     history.tabLinesKeepCursor(cursor.startLine, cursor.startLineIndex, cursor.endLineIndex, cursor.endLine - cursor.startLine + 1, false);
                     compileRenderedText();
                     return true;
                 }
                 break;
             case Keyboard.KEY_LBRACKET:
-                if (Screen.hasControlDown()) {
+                if (GuiScreen.hasControlDown()) {
                     history.tabLinesKeepCursor(cursor.startLine, cursor.startLineIndex, cursor.endLineIndex, cursor.endLine - cursor.startLine + 1, true);
                     compileRenderedText();
                     return true;
@@ -580,7 +575,7 @@ public class EditorScreen extends BaseScreen {
             suggestionList.sort(Comparator.comparing(a -> a.suggestion));
             int startIndex = cursor.startIndex;
             int maxWidth = 0;
-            List<Text> displayList = new LinkedList<>();
+            List<IChatComponent> displayList = new LinkedList<>();
             for (AutoCompleteSuggestion sug : suggestionList) {
                 if (sug.startIndex < startIndex) startIndex = sug.startIndex;
                 int width = textRenderer.getStringWidth(sug.displayText.asFormattedString());
@@ -588,7 +583,7 @@ public class EditorScreen extends BaseScreen {
                 displayList.add(sug.displayText);
             }
             String[] lines = history.current.substring(0, startIndex).split("\n", -1);
-            Text line = new LiteralText(lines[lines.length - 1]);
+            IChatComponent line = new ChatComponentText(lines[lines.length - 1]);
             line.setStyle(defaultStyle);
             int startCol = textRenderer.getStringWidth(line.asFormattedString());
             int add = lineSpread - scroll % lineSpread;
@@ -635,7 +630,7 @@ public class EditorScreen extends BaseScreen {
                 saveBtn.setColor(0xFF00A000);
                 saveBtn.setHighlightColor(0xFF707000);
             } catch (IOException e) {
-                openOverlay(new ConfirmOverlay(this.width / 4, height / 4, this.width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.errorsaving").append(new LiteralText("\n\n" + e.getMessage())), this, null));
+                openOverlay(new ConfirmOverlay(this.width / 4, height / 4, this.width / 2, height / 2, textRenderer, new ChatComponentTranslation("jsmacros.errorsaving").append(new ChatComponentText("\n\n" + e.getMessage())), this, null));
             }
         }
     }
@@ -672,7 +667,7 @@ public class EditorScreen extends BaseScreen {
         if (add == lineSpread) add = 0;
         int y = 13;
 
-        final Text[] renderedText = codeCompiler.getRenderedText();
+        final IChatComponent[] renderedText = codeCompiler.getRenderedText();
 
         for (int i = 0, j = firstLine; j <= lastLine && j < renderedText.length; ++i, ++j) {
             if (cursor.startLine == j && cursor.endLine == j) {
@@ -684,19 +679,19 @@ public class EditorScreen extends BaseScreen {
             } else if (cursor.endLine == j) {
                 fill(29, y + add + i * lineSpread, 30 + cursor.endCol, y + add + (i + 1) * lineSpread, 0xFF33508F);
             }
-            LiteralText lineNum = new LiteralText(String.format("%d.", j + 1));
+            ChatComponentText lineNum = new ChatComponentText(String.format("%d.", j + 1));
             textRenderer.draw(lineNum.asFormattedString(), 28 - textRenderer.getStringWidth(lineNum.asFormattedString()), y + add + i * lineSpread, 0xD8D8D8);
             textRenderer.draw(trim(renderedText[j]), 30, y + add + i * lineSpread, 0xFFFFFF);
         }
 
-        for (ButtonWidget b : ImmutableList.copyOf(this.buttons)) {
-            b.method_891(client, mouseX, mouseY, delta);
+        for (GuiButton b : ImmutableList.copyOf(this.buttons)) {
+            b.render(client, mouseX, mouseY);
         }
 
         super.render(mouseX, mouseY, delta);
     }
 
-    private String trim(Text text) {
+    private String trim(IChatComponent text) {
         assert client != null;
         if (textRenderer.getStringWidth(text.asFormattedString()) > width - 30) {
             String trimmed = textRenderer.trimToWidth(text.asFormattedString(), width - 40 - ellipsesWidth);
@@ -709,23 +704,23 @@ public class EditorScreen extends BaseScreen {
     @Override
     public void openParent() {
         if (needSave()) {
-            openOverlay(new ConfirmOverlay(width / 4, height / 4, width / 2, height / 2, textRenderer, new TranslatableText("jsmacros.nosave"), this, (container) -> super.openParent()));
+            openOverlay(new ConfirmOverlay(width / 4, height / 4, width / 2, height / 2, textRenderer, new ChatComponentTranslation("jsmacros.nosave"), this, (container) -> super.openParent()));
         } else {
             super.openParent();
         }
     }
 
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int btn) {
+    public void mouseClicked(int mouseX, int mouseY, int btn) throws IOException {
         super.mouseClicked(mouseX, mouseY, btn);
         //if (!handled) {
         //if (this.selectedButton == null) {
-        for (ButtonWidget b : buttons) {
+        for (GuiButton b : buttons) {
             if (b.isMouseOver(this.client, mouseX, mouseY)) return;
         }
         int index = getIndexPosition(mouseX - 30, mouseY - 12 + 1);
         if (btn != 1 || (cursor.startIndex > index || cursor.endIndex < index)) {
-            if (Screen.hasShiftDown()) {
+            if (GuiScreen.hasShiftDown()) {
                 if (index < cursor.dragStartIndex) {
                     cursor.updateEndIndex(cursor.dragStartIndex, history.current);
                     cursor.updateStartIndex(index, history.current);
@@ -762,7 +757,7 @@ public class EditorScreen extends BaseScreen {
         }
         options.put("paste", this::pasteFromClipboard);
         options.putAll(codeCompiler.getRightClickOptions(index));
-        openOverlay(new SelectorDropdownOverlay(mouseX, mouseY, 100, (textRenderer.fontHeight + 1) * options.size() + 4, options.keySet().stream().map(LiteralText::new).collect(Collectors.toList()), textRenderer, this, i -> options.values().toArray(new Runnable[0])[i].run()));
+        openOverlay(new SelectorDropdownOverlay(mouseX, mouseY, 100, (textRenderer.fontHeight + 1) * options.size() + 4, options.keySet().stream().map(ChatComponentText::new).collect(Collectors.toList()), textRenderer, this, i -> options.values().toArray(new Runnable[0])[i].run()));
     }
 
     private int getIndexPosition(double x, double y) {

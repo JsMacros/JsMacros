@@ -29,8 +29,8 @@ public class CancelScreen extends BaseScreen {
     private AnnotatedCheckBox services;
     private final List<RunningContextContainer> running = new ArrayList<>();
 
-    public CancelScreen(Screen parent) {
-        super(new LiteralText("Cancel"), parent);
+    public CancelScreen(GuiScreen parent) {
+        super(new ChatComponentText("Cancel"), parent);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class CancelScreen extends BaseScreen {
     }
 
     public void removeContainer(RunningContextContainer t) {
-        for (ButtonWidget b : t.getButtons()) {
+        for (GuiButton b : t.getButtons()) {
             buttons.remove(b);
         }
         running.remove(t);
@@ -107,8 +107,8 @@ public class CancelScreen extends BaseScreen {
             addContainer(t);
         }
         
-        for (ButtonWidget b : ImmutableList.copyOf(this.buttons)) {
-            b.method_891(client, mouseX, mouseY, delta);
+        for (GuiButton b : ImmutableList.copyOf(this.buttons)) {
+            b.render(client, mouseX, mouseY);
         }
     }
 

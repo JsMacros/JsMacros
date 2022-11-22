@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.GuiScreen;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventKey;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroContainer;
@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class KeyMacrosScreen extends MacroScreen {
 
-    public KeyMacrosScreen(Screen parent) {
+    public KeyMacrosScreen(GuiScreen parent) {
         super(parent);
     }
 

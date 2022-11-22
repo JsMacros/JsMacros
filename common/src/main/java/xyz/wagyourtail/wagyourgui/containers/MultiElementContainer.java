@@ -1,17 +1,17 @@
 package xyz.wagyourtail.wagyourgui.containers;
 
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MultiElementContainer<T extends IContainerParent> extends DrawableHelper implements IContainerParent {
-    protected List<ButtonWidget> buttons = new ArrayList<>();
-    protected TextRenderer textRenderer;
+public abstract class MultiElementContainer<T extends IContainerParent> extends Gui implements IContainerParent {
+    protected List<GuiButton> buttons = new ArrayList<>();
+    protected FontRenderer textRenderer;
     protected boolean visible = true;
     public final T parent;
     public int x;
@@ -19,7 +19,7 @@ public abstract class MultiElementContainer<T extends IContainerParent> extends 
     public int width;
     public int height;
     
-    public MultiElementContainer(int x, int y, int width, int height, TextRenderer textRenderer, T parent) {
+    public MultiElementContainer(int x, int y, int width, int height, FontRenderer textRenderer, T parent) {
         this.textRenderer = textRenderer;
         this.x = x;
         this.y = y;
@@ -38,7 +38,7 @@ public abstract class MultiElementContainer<T extends IContainerParent> extends 
     }
     
     public void setVisible(boolean visible) {
-        for (ButtonWidget btn : buttons) {
+        for (GuiButton btn : buttons) {
             btn.visible = visible;
             btn.active = visible;
         }
@@ -46,13 +46,13 @@ public abstract class MultiElementContainer<T extends IContainerParent> extends 
     }
     
     @Override
-    public <T extends ButtonWidget> T addButton(T btn) {
+    public <T extends GuiButton> T addButton(T btn) {
         buttons.add(btn);
         parent.addButton(btn);
         return btn;
     }
     
-    public List<ButtonWidget> getButtons() {
+    public List<GuiButton> getButtons() {
         return buttons;
     }
     
@@ -74,7 +74,7 @@ public abstract class MultiElementContainer<T extends IContainerParent> extends 
     }
     
     @Override
-    public void removeButton(ButtonWidget button) {
+    public void removeButton(GuiButton button) {
         this.buttons.remove(button);
         parent.removeButton(button);
     }

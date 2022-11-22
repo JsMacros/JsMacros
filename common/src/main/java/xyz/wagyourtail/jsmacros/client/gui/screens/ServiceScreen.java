@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ServiceScreen extends MacroScreen {
 
-    public ServiceScreen(Screen parent) {
+    public ServiceScreen(GuiScreen parent) {
         super(parent);
     }
 
@@ -40,7 +40,7 @@ public class ServiceScreen extends MacroScreen {
 
     @Override
     public void removeMacro(MultiElementContainer<MacroScreen> macro) {
-        for (ButtonWidget b : macro.getButtons()) {
+        for (GuiButton b : macro.getButtons()) {
             removeButton(b);
         }
         Core.getInstance().services.unregisterService(((ServiceContainer) macro).service);

@@ -1,16 +1,15 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.stat.Stat;
-import net.minecraft.stat.StatHandler;
-import net.minecraft.util.JsonIntSerializable;
+import net.minecraft.stats.StatBase;
+import net.minecraft.stats.StatFileWriter;
+import net.minecraft.util.TupleIntJsonSerializable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.Map;
 
-@Mixin(StatHandler.class)
+@Mixin(StatFileWriter.class)
 public interface MixinStatHandler {
     @Accessor
-    Map<Stat, JsonIntSerializable> getField_9047();
+    Map<StatBase, TupleIntJsonSerializable> getField_150875_a();
 }

@@ -1,9 +1,9 @@
 package xyz.wagyourtail.wagyourgui;
 
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.IChatComponent;
 import org.lwjgl.input.Keyboard;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
@@ -13,23 +13,24 @@ import xyz.wagyourtail.wagyourgui.elements.TextInput;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseScreen extends Screen implements IOverlayParent {
-    public Screen parent;
+public abstract class BaseScreen extends GuiScreen implements IOverlayParent {
+    public GuiScreen parent;
     protected OverlayContainer overlay;
-    protected Text title;
+    protected IChatComponent title;
     private final int[] prevMouseX = new int[] {0,0,0,0,0,0};
     private final int[] prevMouseY = new int[] {0,0,0,0,0,0};
 
-    protected BaseScreen(Text title, Screen parent) {
+    protected BaseScreen(IChatComponent title, GuiScreen parent) {
         super();
         this.title = title;
         this.parent = parent;
     }
 
-    public static String trimmed(TextRenderer textRenderer, String str, int width) {
+    public static String trimmed(FontRenderer textRenderer, String str, int width) {
         return textRenderer.trimToWidth(str, width);
     }
 
@@ -74,7 +75,7 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
             return;
         }
         if (disableButtons) {
-            for (ButtonWidget b : buttons) {
+            for (GuiButton b : buttons) {
                 overlay.savedBtnStates.put(b, b.active);
                 b.active = false;
             }
@@ -86,10 +87,10 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
     @Override
     public void closeOverlay(OverlayContainer overlay) {
         if (overlay == null) return;
-        for (ButtonWidget b : overlay.getButtons()) {
+        for (GuiButton b : overlay.getButtons()) {
             removeButton(b);
         }
-        for (ButtonWidget b : overlay.savedBtnStates.keySet()) {
+        for (GuiButton b : overlay.savedBtnStates.keySet()) {
             b.active = overlay.savedBtnStates.get(b);
         }
         overlay.onClose();
@@ -97,18 +98,18 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
     }
 
     @Override
-    public void removeButton(ButtonWidget btn) {
+    public void removeButton(GuiButton btn) {
         buttons.remove(btn);
     }
 
     @Override
-    public <T extends ButtonWidget> T addButton(T button) {
+    public <T extends GuiButton> T addButton(T button) {
         buttons.add(button);
         return button;
     }
 
     @Override
-    public void handleKeyboard() {
+    public void handleKeyboard() throws IOException {
         if (Keyboard.getEventKeyState()) {
             if (!keyPressed(Keyboard.getEventKey(), 0, createModifiers())) {
                 this.keyPressed(Keyboard.getEventCharacter(), Keyboard.getEventKey());
@@ -120,9 +121,9 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
 
     public static int createModifiers() {
         int i = 0;
-        if (Screen.hasShiftDown()) i |= 1;
-        if (Screen.hasControlDown()) i |= 2;
-        if (Screen.hasAltDown()) i |= 4;
+        if (GuiScreen.hasShiftDown()) i |= 1;
+        if (GuiScreen.hasControlDown()) i |= 2;
+        if (GuiScreen.hasAltDown()) i |= 4;
         return i;
     }
 
@@ -154,7 +155,7 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
             this.onClose();
             return true;
         }
-        for (ButtonWidget b : buttons) {
+        for (GuiButton b : buttons) {
             if (b instanceof TextInput && ((TextInput) b).keyPressed(keyCode, scanCode, modifiers)) {
                 return true;
             }
@@ -172,12 +173,12 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
     }
 
     public boolean mouseDragged(int mouseX, int mouseY, int button, int deltaX, int deltaY) {
-        ButtonWidget focused = ((IScreenInternal) this).getFocused();
+        GuiButton focused = ((IScreenInternal) this).getFocused();
         if (focused instanceof Scrollbar) {
             ((Scrollbar) focused).mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
             return true;
         }
-        for (ButtonWidget b : buttons) {
+        for (GuiButton b : buttons) {
             if (b instanceof TextInput) {
                 if (((TextInput) b).selected) return ((TextInput) b).mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
             }
@@ -186,7 +187,7 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
     }
 
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int button) {
+    public void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         if (overlay != null) overlay.onClick(mouseX, mouseY, button);
         super.mouseClicked(mouseX, mouseY, button);
     }

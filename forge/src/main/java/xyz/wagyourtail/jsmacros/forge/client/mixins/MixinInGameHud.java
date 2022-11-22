@@ -1,7 +1,8 @@
 package xyz.wagyourtail.jsmacros.forge.client.mixins;
 
+import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.renderer.GlStateManager;
 import com.google.common.collect.ImmutableSet;
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraftforge.client.GuiIngameForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,9 +14,8 @@ import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 
 @Mixin(GuiIngameForge.class)
 class MixinInGameHud {
-
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/options/GameOptions;debugEnabled:Z"), method = "renderHUDText")
-    protected void renderHud(int wi, int he, CallbackInfo ci) {
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/settings/GameSettings;debugEnabled:Z"), method = "renderHUDText")
+    public void renderHud(int wi, int he, CallbackInfo ci) {
         
         for (IDraw2D<Draw2D> h : ImmutableSet.copyOf(FHud.overlays)) {
             try {

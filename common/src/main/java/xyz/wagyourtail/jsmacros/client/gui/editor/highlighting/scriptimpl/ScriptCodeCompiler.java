@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.scriptimpl;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import org.jetbrains.annotations.NotNull;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCodeCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSuggestion;
@@ -24,7 +24,7 @@ import java.util.*;
  */
 public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
     private final ScriptTrigger scriptTrigger;
-    private Text[] compiledText = new Text[] {new LiteralText("")};
+    private IChatComponent[] compiledText = new IChatComponent[] {new ChatComponentText("")};
     private MethodWrapper<Integer, Object, Map<String, MethodWrapper<Object, Object, Object, ?>>, ?> getRClickActions = null;
     private List<AutoCompleteSuggestion> suggestions = new LinkedList<>();
     
@@ -37,10 +37,10 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
     public void recompileRenderedText(@NotNull String text) {
         CodeCompileEvent compileEvent = new CodeCompileEvent(text, language, screen);
         EventContainer<?> t = Core.getInstance().exec(scriptTrigger, compileEvent, null, (ex) -> {
-            TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
+            FontRenderer renderer = Minecraft.getInstance().textRenderer;
             StringWriter st = new StringWriter();
             ex.printStackTrace(new PrintWriter(st));
-            Text error = new LiteralText(st.toString().replaceAll("\r", "").replaceAll("\t", "    ")).setStyle(EditorScreen.defaultStyle);
+            IChatComponent error = new ChatComponentText(st.toString().replaceAll("\r", "").replaceAll("\t", "    ")).setStyle(EditorScreen.defaultStyle);
             screen.openOverlay(new ConfirmOverlay(screen.width / 4, screen.height / 4, screen.width / 2, screen.height / 2, false, renderer, error, screen, (e) -> screen.openParent()));
         });
         if (t != null) {
@@ -50,7 +50,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
             }
         }
         getRClickActions = compileEvent.rightClickActions;
-        compiledText = compileEvent.textLines.stream().map(e -> (e.getRaw()).setStyle(EditorScreen.defaultStyle)).toArray(Text[]::new);
+        compiledText = compileEvent.textLines.stream().map(e -> (e.getRaw()).setStyle(EditorScreen.defaultStyle)).toArray(IChatComponent[]::new);
         suggestions = compileEvent.autoCompleteSuggestions;
     }
     
@@ -70,7 +70,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
     
     @NotNull
     @Override
-    public Text[] getRenderedText() {
+    public IChatComponent[] getRenderedText() {
         return compiledText;
     }
     

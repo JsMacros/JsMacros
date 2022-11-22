@@ -16,9 +16,9 @@ public interface IScreenInternal {
     void jsmacros_mouseScrolled(int mouseX, int mouseY, int amount);
     //    void jsmacros_charTyped(char chr, int modifiers);
 
-    ButtonWidget getFocused();
+    GuiButton getFocused();
 
     boolean mouseScrolled(int mouseX, int mouseY, int amount);
 
-    void clickBtn(ButtonWidget btn) throws IOException;
+    void clickBtn(GuiButton btn) throws IOException;
 }

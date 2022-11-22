@@ -38,14 +38,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Mixin(ClientPlayerEntity.class)
-abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
+@Mixin(EntityPlayerSP.class)
+abstract class MixinClientPlayerEntity extends AbstractClientPlayer {
     @Shadow
-    protected MinecraftClient client;
+    protected Minecraft client;
 
     @Shadow
     @Final
-    public ClientPlayNetworkHandler networkHandler;
+    public NetHandlerPlayClient networkHandler;
 
 
     // IGNORE
@@ -54,7 +54,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     }
 
     @Shadow
-    public Input input;
+    public MovementInput input;
 
     @Shadow public abstract boolean isSneaking();
 
@@ -70,17 +70,17 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     }
 
     @Inject(at = @At("HEAD"), method = "openEditSignScreen", cancellable = true)
-    public void onOpenEditSignScreen(SignBlockEntity sign, CallbackInfo info) {
+    public void onOpenEditSignScreen(TileEntitySign sign, CallbackInfo info) {
         List<String> lines = new ArrayList<>(Arrays.asList("", "", "", ""));
         final EventSignEdit event = new EventSignEdit(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ());
         lines = event.signText;
         if (event.closeScreen) {
             for (int i = 0; i < 4; ++i) {
-                sign.text[i] = new LiteralText(lines.get(i));
+                sign.field_145915_a[i] = new ChatComponentText(lines.get(i));
             }
             sign.markDirty();
-            networkHandler.sendPacket(new UpdateSignC2SPacket(sign.getPos(), lines.stream().map(LiteralText::new).toArray(
-                LiteralText[]::new)));
+            networkHandler.sendPacket(new C12PacketUpdateSign(sign.getPos(), lines.stream().map(ChatComponentText::new).toArray(
+                IChatComponent[]::new)));
             info.cancel();
             return;
         }
@@ -93,7 +93,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
             }
         } //else
         if (cancel) {
-            final SignEditScreen signScreen = new SignEditScreen(sign);
+            final GuiEditSign signScreen = new GuiEditSign(sign);
             client.openScreen(signScreen);
             for (int i = 0; i < 4; ++i) {
                 ((ISignEditScreen) signScreen).jsmacros_setLine(i, lines.get(i));
@@ -102,7 +102,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         }
     }
 
-    @Inject(method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/input/Input;method_1302()V", shift = At.Shift.AFTER))
+    @Inject(method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/MovementInput;func_78898_a()V", shift = At.Shift.AFTER))
     public void overwriteInputs(CallbackInfo ci) {
         PlayerInput moveInput = MovementQueue.tick(client.player);
         if (moveInput == null) {

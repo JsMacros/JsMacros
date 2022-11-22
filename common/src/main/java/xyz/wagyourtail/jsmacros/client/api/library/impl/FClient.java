@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
 @Library("Client")
 @SuppressWarnings("unused")
 public class FClient extends PerExecLibrary {
-    private static final MinecraftClient mc = MinecraftClient.getInstance();
+    private static final Minecraft mc = Minecraft.getInstance();
     /**
      * Don't touch this plz xd.
      */
@@ -68,7 +68,7 @@ public class FClient extends PerExecLibrary {
     * @since 1.0.0 (was in the {@code jsmacros} library until 1.2.9)
      * @return the raw minecraft client class, it may be useful to use <a target="_blank" href="https://wagyourtail.xyz/Projects/Minecraft%20Mappings%20Viewer/App">Minecraft Mappings Viewer</a> for this.
      */
-    public MinecraftClient getMinecraft() {
+    public Minecraft getMinecraft() {
         return mc;
     }
 
@@ -164,9 +164,9 @@ public class FClient extends PerExecLibrary {
      *
      * @param folderName
      */
-    public void loadWorld(String folderName) throws ClientException {
+    public void loadWorld(String folderName) throws AnvilConverterException {
 
-        Optional<LevelSummary> o = mc.getCurrentSave().getLevelList().stream().filter(e -> e.getFileName().equals(folderName)).findFirst();
+        Optional<SaveFormatComparator> o = mc.getCurrentSave().getLevelList().stream().filter(e -> e.getFileName().equals(folderName)).findFirst();
 
         if (!o.isPresent()) {
             throw new RuntimeException("Level Not Found!");
@@ -177,8 +177,7 @@ public class FClient extends PerExecLibrary {
             if (mc.world != null)
                 mc.world.disconnect();
             mc.connect(null);
-            mc.startGame(o.get().getFileName(), o.get().getDisplayName(), null);
-//            FMLClientHandler.instance().tryLoadExistingWorld(null, o.get().getFileName(), o.get().getDisplayName());
+            FMLClientHandler.instance().tryLoadExistingWorld(null, o.get().getFileName(), o.get().getDisplayName());
         });
     }
     
@@ -207,7 +206,7 @@ public class FClient extends PerExecLibrary {
             if (mc.world != null)
                 mc.world.disconnect();
             mc.connect(null);
-            mc.openScreen(new ConnectScreen(null, mc, ip, port));
+            mc.openScreen(new GuiConnecting(null, mc, ip, port));
         });
     }
     
@@ -238,7 +237,7 @@ public class FClient extends PerExecLibrary {
                 // logic in death screen disconnect button
                 if (mc.world != null) mc.world.disconnect();
                 mc.connect(null);
-                mc.openScreen(new TitleScreen());
+                mc.openScreen(new GuiMainMenu());
             }
             if (isInSingleplayer) {
                 mc.openScreen(new TitleScreen());
@@ -322,7 +321,7 @@ public class FClient extends PerExecLibrary {
      * @throws InterruptedException
      */
     public ServerInfoHelper ping(String ip) throws UnknownHostException, InterruptedException {
-        ServerInfo info = new ServerInfo("", ip, false);
+        ServerData info = new ServerData("", ip, false);
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
             throw new IllegalThreadStateException("pinging from main thread is not supported!");
         }
@@ -339,7 +338,7 @@ public class FClient extends PerExecLibrary {
      */
     public void pingAsync(String ip, MethodWrapper<ServerInfoHelper, IOException, Object, ?> callback) {
         CompletableFuture.runAsync(() -> {
-            ServerInfo info = new ServerInfo("", ip, false);
+            ServerData info = new ServerData("", ip, false);
             try {
                 TickBasedEvents.serverListPinger.add(info);
                 callback.accept(new ServerInfoHelper(info), null);

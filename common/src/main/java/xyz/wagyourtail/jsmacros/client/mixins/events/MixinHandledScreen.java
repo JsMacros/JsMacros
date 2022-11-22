@@ -1,8 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.inventory.slot.Slot;
-import net.minecraft.util.ItemAction;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -10,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventClickSlot;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventDropSlot;
 
-@Mixin(HandledScreen.class)
+@Mixin(GuiContainer.class)
 public class MixinHandledScreen {
 
     @Inject(method = "method_1131", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;method_1224(IIILnet/minecraft/util/ItemAction;Lnet/minecraft/entity/player/PlayerEntity;)Lnet/minecraft/item/ItemStack;"), cancellable = true)
