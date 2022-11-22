@@ -33,7 +33,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-@Mixin(Screen.class)
+@Mixin(GuiScreen.class)
 @Implements(@Interface(iface = IScreen.class, prefix = "soft$"))
 public abstract class MixinScreen extends Gui implements IScreen, IScreenInternal {
     @Unique private final Set<RenderCommon.RenderElement> elements = new LinkedHashSet<>();
@@ -810,7 +810,7 @@ public abstract class MixinScreen extends Gui implements IScreen, IScreenInterna
     }
 
     @Override
-    public ButtonWidget getFocused() {
+    public GuiButton getFocused() {
         return prevClickedButton;
     }
 

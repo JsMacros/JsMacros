@@ -9,7 +9,6 @@
         "access.MixinClientPlayNetworkHandler",
         "access.MixinEntity",
         "access.MixinExtendedBlockStorage",
-        "access.MixinGameRenderer",
         "access.MixinGuiTextField",
         "access.MixinHorseScreen",
         "access.MixinKeyboard",
