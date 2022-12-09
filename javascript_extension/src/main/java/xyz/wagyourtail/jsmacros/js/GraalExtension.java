@@ -33,7 +33,7 @@ public class GraalExtension implements Extension {
         });
         t.start();
         try {
-            Core.getInstance().config.addOptions("js", JSConfig.class);
+            Core.getInstance().config.addOptions("js", GraalConfig.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

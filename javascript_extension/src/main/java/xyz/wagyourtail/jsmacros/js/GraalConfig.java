@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.core.config.OptionType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JSConfig {
+public class GraalConfig {
 
     @Option(translationKey = "jsmacros.settings.languages.extragraaloptions", group = {"jsmacros.settings.languages", "jsmacros.settings.languages.graaloptions"}, type = @OptionType("string"))
     public Map<String, String> extraGraalOptions = new HashMap<>();
