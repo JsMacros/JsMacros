@@ -7,6 +7,7 @@ import net.minecraft.state.property.Property;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
+
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.HashMap;
@@ -92,8 +93,19 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
      * @return
      *
      * @since 1.6.5
+     * @deprecated use {@link #getBlock()} instead.
      */
+    @Deprecated
     public BlockHelper getBlockHelper() {
+        return getBlock();
+    }
+
+    /**
+     * @return the block
+     *
+     * @since 1.6.5
+     */
+    public BlockHelper getBlock() {
         return new BlockHelper(base.getBlock());
     }
     
@@ -133,6 +145,6 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
     
     @Override
     public String toString() {
-        return String.format("BlockDataHelper:{\"x\":%d, \"y\":%d, \"z\":%d, \"id\":\"%s\"}", bp.getX(), bp.getY(), bp.getZ(), this.getId());
+        return String.format("BlockDataHelper:{\"x\": %d, \"y\": %d, \"z\": %d, \"id\": \"%s\"}", bp.getX(), bp.getY(), bp.getZ(), this.getId());
     }
 }

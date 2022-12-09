@@ -15,4 +15,10 @@ public class EventAttackBlock implements BaseEvent {
 
         profile.triggerEvent(this);
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s:{\"block\": %s}", this.getEventName(), block);
+    }
+    
 }

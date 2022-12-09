@@ -34,4 +34,5 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
             sendChatMessageInternal(message, null);
         }
     }
+
 }

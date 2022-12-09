@@ -238,6 +238,9 @@ public class ClassParser {
                             (t + "").startsWith("java.lang.StackTraceElement")) {
                         //Main.reporter.print(Diagnostic.Kind.NOTE, typeVars + "");
                         if (!importTypeVar) importTypeVar = true;
+                        if (t.getKind() == TypeKind.ARRAY) {
+                            t = ((ArrayType) t).getComponentType();
+                        }
                         typeVars.put(
                                 getClassName((TypeElement) Main.typeUtils.asElement(t)),
                                 new AbstractMap.SimpleEntry<>(t + "", false)

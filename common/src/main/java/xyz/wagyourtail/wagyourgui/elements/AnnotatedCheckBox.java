@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 public class AnnotatedCheckBox extends Button {
     public boolean value;
     
-    public AnnotatedCheckBox(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int hilightColor, int textColor, Text message, boolean initialValue, Consumer<Button> onPress) {
-        super(x, y, width, height, textRenderer, color, borderColor, hilightColor, textColor, message, onPress);
+    public AnnotatedCheckBox(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int highlightColor, int textColor, Text message, boolean initialValue, Consumer<Button> onPress) {
+        super(x, y, width, height, textRenderer, color, borderColor, highlightColor, textColor, message, onPress);
         value = initialValue;
         horizCenter = false;
     }
@@ -47,7 +47,7 @@ public class AnnotatedCheckBox extends Button {
             // fill
             if (mouseX - x >= 0 && mouseX - x - width <= 0 && mouseY - y >= 0 && mouseY - y - height <= 0 && this.active || forceHover) {
                 hovering = true;
-                fill(matrices, x + width - height + 1, y + 1, x + width - 1, y + height - 1, hilightColor);
+                fill(matrices, x + width - height + 1, y + 1, x + width - 1, y + height - 1, highlightColor);
             } else {
                 hovering = false;
                 if (value) {

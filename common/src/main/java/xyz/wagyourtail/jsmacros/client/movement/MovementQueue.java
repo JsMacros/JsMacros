@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.movement;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
@@ -59,7 +60,8 @@ public class MovementQueue {
     }
 
     private synchronized static void calcPredictions() {
-        List<PlayerInput> toCalc = new ArrayList<>(queue.subList(queuePos, queue.size()));
+        List<PlayerInput> toCalc = ImmutableList.copyOf(queue);
+        toCalc = toCalc.subList(queuePos, toCalc.size());
         predictions.clear();
         MovementDummy dummy = new MovementDummy(player);
         for (PlayerInput input : toCalc) {

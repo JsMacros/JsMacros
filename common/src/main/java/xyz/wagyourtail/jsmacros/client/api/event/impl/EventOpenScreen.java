@@ -22,6 +22,7 @@ public class EventOpenScreen implements BaseEvent {
         profile.triggerEvent(this);
     }
     
+    @Override
     public String toString() {
         return String.format("%s:{\"screenName\": \"%s\"}", this.getEventName(), screenName);
     }

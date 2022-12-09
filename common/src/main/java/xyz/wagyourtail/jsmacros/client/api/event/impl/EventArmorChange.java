@@ -23,7 +23,8 @@ public class EventArmorChange implements BaseEvent {
         profile.triggerEvent(this);
     }
     
+    @Override
     public String toString() {
-        return String.format("%s:{\"slot\": %d}", this.getEventName(), slot);
+        return String.format("%s:{\"slot\": %s}", this.getEventName(), slot);
     }
 }

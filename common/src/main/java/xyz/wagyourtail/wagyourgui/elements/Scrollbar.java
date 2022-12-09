@@ -14,14 +14,14 @@ public class Scrollbar extends ClickableWidget {
     protected double scrollDistance;
     protected int color;
     protected int borderColor;
-    protected int hilightColor;
+    protected int highlightColor;
     protected Consumer<Double> onChange;
 
-    public Scrollbar(int x, int y, int width, int height, int color, int borderColor, int hilightColor, double scrollPages, Consumer<Double> onChange) {
+    public Scrollbar(int x, int y, int width, int height, int color, int borderColor, int highlightColor, double scrollPages, Consumer<Double> onChange) {
         super(x, y, width, height, Text.literal(""));
         this.color = color;
         this.borderColor = borderColor;
-        this.hilightColor = hilightColor;
+        this.highlightColor = highlightColor;
         this.onChange = onChange;
         this.setScrollPages(scrollPages);
     }
@@ -90,7 +90,7 @@ public class Scrollbar extends ClickableWidget {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             // mainpart
-            fill(matrices, x + 1, (int) (y + 1 + scrollAmount), x + width - 1, (int) (y + 1 + scrollAmount + scrollbarHeight), hilightColor);
+            fill(matrices, x + 1, (int) (y + 1 + scrollAmount), x + width - 1, (int) (y + 1 + scrollAmount + scrollbarHeight), highlightColor);
 
             // outline and back
             fill(matrices, x + 1, y + 1, x + width - 1, y + height - 1, color);

@@ -21,7 +21,8 @@ public class EventTitle implements BaseEvent {
         profile.triggerEventJoinNoAnything(this);
     }
     
+    @Override
     public String toString() {
-        return String.format("%s:{\"type\": \"%s\", \"message\": %s}", this.getEventName(), type, message.toString());
+        return String.format("%s:{\"type\": \"%s\", \"message\": \"%s\"}", this.getEventName(), type, message.toString());
     }
 }

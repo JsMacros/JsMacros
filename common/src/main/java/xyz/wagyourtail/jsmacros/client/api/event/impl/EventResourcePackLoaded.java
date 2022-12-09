@@ -28,6 +28,6 @@ public class EventResourcePackLoaded implements BaseEvent {
 
     @Override
     public String toString() {
-        return String.format("%s:{\"isGameStart\": %s, \"loadedPacks\": %s}", this.getEventName(), isGameStart, loadedPacks);
+        return String.format("%s:{\"isGameStart\": %b, \"loadedPacks\": %s}", this.getEventName(), isGameStart, loadedPacks);
     }
 }

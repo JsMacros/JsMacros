@@ -23,6 +23,7 @@ public class EventSignEdit implements BaseEvent {
         profile.triggerEventJoinNoAnything(this);
     }
     
+    @Override
     public String toString() {
         return String.format("%s:{\"pos\": [%s]}", this.getEventName(), pos.toString());
     }

@@ -16,6 +16,7 @@ public class EventDimensionChange implements BaseEvent {
         profile.triggerEvent(this);
     }
     
+    @Override
     public String toString() {
         return String.format("%s:{\"dimension\": \"%s\"}", this.getEventName(), dimension);
     }

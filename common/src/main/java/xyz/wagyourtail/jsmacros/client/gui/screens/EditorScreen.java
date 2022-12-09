@@ -105,7 +105,7 @@ public class EditorScreen extends BaseScreen {
     
     public String getDefaultLanguage() {
         final String[] fname = file.getName().split("\\.", -1);
-        String ext = fname[fname.length - 1].toLowerCase();
+        String ext = fname[fname.length - 1].toLowerCase(Locale.ROOT);
         
         switch (ext) {
             case "py":
@@ -231,10 +231,10 @@ public class EditorScreen extends BaseScreen {
         history.onChange = (content) -> {
             if (savedString.equals(content)) {
                 saveBtn.setColor(0xFF00A000);
-                saveBtn.setHilightColor(0xFF007000);
+                saveBtn.setHighlightColor(0xFF007000);
             } else {
                 saveBtn.setColor(0xFFA0A000);
-                saveBtn.setHilightColor(0xFF707000);
+                saveBtn.setHighlightColor(0xFF707000);
             }
         };
         
@@ -477,13 +477,13 @@ public class EditorScreen extends BaseScreen {
                 if (Screen.hasControlDown()) {
                     if (Screen.hasShiftDown()) {
                         int i = history.redo();
-                        
+
                         if (i != -1) {
                             compileRenderedText();
                         }
                     } else {
                         int i = history.undo();
-                        
+
                         if (i != -1) {
                             compileRenderedText();
                         }
@@ -492,11 +492,10 @@ public class EditorScreen extends BaseScreen {
                 return true;
             case GLFW.GLFW_KEY_Y:
                 int i = history.redo();
-                
+
                 if (i != -1) {
                     compileRenderedText();
                 }
-                return true;
             case GLFW.GLFW_KEY_S:
                 if (Screen.hasControlDown()) {
                     save();
@@ -619,7 +618,7 @@ public class EditorScreen extends BaseScreen {
                 handler.write(current);
                 savedString = current;
                 saveBtn.setColor(0xFF00A000);
-                saveBtn.setHilightColor(0xFF707000);
+                saveBtn.setHighlightColor(0xFF707000);
             } catch (IOException e) {
                 openOverlay(new ConfirmOverlay(this.width / 4, height / 4, this.width / 2, height / 2, textRenderer, Text.translatable("jsmacros.errorsaving").append(Text.literal("\n\n" + e.getMessage())), this, null));
             }

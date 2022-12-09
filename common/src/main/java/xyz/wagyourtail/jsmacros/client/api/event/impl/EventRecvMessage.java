@@ -43,6 +43,6 @@ public class EventRecvMessage implements BaseEvent {
     }
     
     public String toString() {
-        return String.format("%s:{\"text\": %s, \"signature\": %s, \"messageType\": \"%s\"}", this.getEventName(), text, signature != null && signature.length > 0, messageType);
+        return String.format("%s:{\"text\": \"%s\", \"signature\": %s, \"messageType\": \"%s\"}", this.getEventName(), text, signature != null && signature.length > 0, messageType);
     }
 }

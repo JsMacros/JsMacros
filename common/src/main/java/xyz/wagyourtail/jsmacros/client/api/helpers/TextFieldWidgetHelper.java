@@ -1,17 +1,24 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+
+import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinTextFieldWidget;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
+import java.util.Objects;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicReference;
 
-/**F
+/**
  * @author Wagyourtail
  * @since 1.0.5
  */
 @SuppressWarnings("unused")
-public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
+public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidgetHelper, TextFieldWidget> {
     public TextFieldWidgetHelper(TextFieldWidget t) {
         super(t);
     }
@@ -64,8 +71,6 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
         return this;
     }
     
-    
-    
     /**
      * @since 1.0.5
      * @param color
@@ -85,6 +90,14 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
         base.setEditable(edit);
         return this;
     }
+
+    /**
+     * @return {@code true} if the text field is editable, {@code false} otherwise.
+     * @since 1.8.4
+     */
+    public boolean isEditable() {
+        return ((MixinTextFieldWidget) base).getEditable();
+    }
     
     /**
      * @since 1.0.5
@@ -95,4 +108,184 @@ public class TextFieldWidgetHelper extends ButtonWidgetHelper<TextFieldWidget> {
         base.setUneditableColor(color);
         return this;
     }
+
+    /**
+     * @return the selected text.
+     *
+     * @since 1.8.4
+     */
+    public String getSelectedText() {
+        return base.getSelectedText();
+    }
+
+    /**
+     * @param suggestion the suggestion to set
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public TextFieldWidgetHelper setSuggestion(String suggestion) {
+        base.setSuggestion(suggestion);
+        return this;
+    }
+
+    /**
+     * @return the maximum length of this text field.
+     *
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public int getMaxLength() {
+        return ((MixinTextFieldWidget) base).getMaxLength();
+    }
+
+    /**
+     * @param length the new maximum length
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public TextFieldWidgetHelper setMaxLength(int length) {
+        base.setMaxLength(length);
+        return this;
+    }
+
+    public TextFieldWidgetHelper setSelection(int start, int end) {
+        base.setSelectionStart(start);
+        base.setSelectionEnd(end);
+        return this;
+    }
+
+    /**
+     * @param predicate the text filter
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public TextFieldWidgetHelper setTextPredicate(MethodWrapper<String, ?, ?, ?> predicate) {
+        base.setTextPredicate(predicate);
+        return this;
+    }
+
+    /**
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public TextFieldWidgetHelper resetTextPredicate() {
+        base.setTextPredicate(Objects::nonNull);
+        return this;
+    }
+
+    /**
+     * @param position the cursor position
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public TextFieldWidgetHelper setCursorPosition(int position) {
+        base.setCursor(position);
+        return this;
+    }
+
+    /**
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public TextFieldWidgetHelper setCursorToStart() {
+        base.setCursorToStart();
+        return this;
+    }
+
+    /**
+     * @return self for chaining.
+     *
+     * @since 1.8.4
+     */
+    public TextFieldWidgetHelper setCursorToEnd() {
+        base.setCursorToEnd();
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("TextFieldWidgetHelper:{\"text\": \"%s\"}", base.getText());
+    }
+
+    /**
+     * @author Etheradon
+     * @since 1.8.4
+     */
+    public static class TextFieldBuilder extends AbstractWidgetBuilder<TextFieldBuilder, TextFieldWidget, TextFieldWidgetHelper> {
+
+        private String suggestion = "";
+        private MethodWrapper<String, IScreen, Object, ?> action;
+        private final TextRenderer textRenderer;
+
+        public TextFieldBuilder(IScreen screen, TextRenderer textRenderer) {
+            super(screen);
+            this.textRenderer = textRenderer;
+        }
+
+        /**
+         * @return the callback for when the text is changed.
+         *
+         * @since 1.8.4
+         */
+        public MethodWrapper<String, IScreen, Object, ?> getAction() {
+            return action;
+        }
+
+        /**
+         * @param action the callback for when the text is changed
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public TextFieldBuilder action(MethodWrapper<String, IScreen, Object, ?> action) {
+            this.action = action;
+            return this;
+        }
+
+        /**
+         * @return the current suggestion.
+         *
+         * @since 1.8.4
+         */
+        public String getSuggestion() {
+            return suggestion;
+        }
+
+        /**
+         * @param suggestion the suggestion to use
+         * @return self for chaining.
+         *
+         * @since 1.8.4
+         */
+        public TextFieldBuilder suggestion(String suggestion) {
+            this.suggestion = suggestion;
+            return this;
+        }
+
+        @Override
+        public TextFieldWidgetHelper createWidget() {
+            AtomicReference<TextFieldWidgetHelper> b = new AtomicReference<>(null);
+            TextFieldWidget textField = new TextFieldWidget(textRenderer, getX(), getY(), getWidth(), getHeight(), getMessage().getRaw());
+            textField.setChangedListener(text -> {
+                try {
+                    if (action != null) {
+                        action.accept(text, screen);
+                    }
+                } catch (Throwable e) {
+                    Core.getInstance().profile.logError(e);
+                }
+            });
+            textField.setSuggestion(suggestion);
+            b.set(new TextFieldWidgetHelper(textField, getZIndex()));
+            return b.get();
+        }
+    }
+    
 }

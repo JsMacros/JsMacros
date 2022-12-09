@@ -21,6 +21,7 @@ public class EventDisconnect implements BaseEvent {
         profile.triggerEvent(this);
     }
 
+    @Override
     public String toString() {
         return String.format("%s:{}", this.getEventName());
     }

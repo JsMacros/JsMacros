@@ -22,7 +22,8 @@ public class EventEntityDamaged implements BaseEvent {
         profile.triggerEvent(this);
     }
 
+    @Override
     public String toString() {
-        return String.format("%s:{\"entity\": %s, \"health\": %s, \"damage\": %f}", this.getEventName(), entity.toString(), health, damage);
+        return String.format("%s:{\"entity\": %s, \"health\": %f, \"damage\": %f}", this.getEventName(), entity.toString(), health, damage);
     }
 }

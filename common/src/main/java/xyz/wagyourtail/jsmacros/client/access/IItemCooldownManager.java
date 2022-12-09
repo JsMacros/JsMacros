@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface IItemCooldownManager {
 
-    Map<Item, IItemCooldownEntry> getCooldownItems();
+    Map<Item, IItemCooldownEntry> jsmacros_getCooldownItems();
 
-    int getManagerTicks();
+    int jsmacros_getManagerTicks();
 }

@@ -38,7 +38,12 @@ public abstract class BaseListener implements IEventListener {
         }
         return super.equals(o);
     }
-    
+
+    @Override
+    public void off() {
+        trigger.enabled = false;
+    }
+
     public String toString() {
         return trigger.toString().substring(3);
     }

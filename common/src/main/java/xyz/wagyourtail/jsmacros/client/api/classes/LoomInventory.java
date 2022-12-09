@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 /**
  * @since 1.5.1
  */
+@SuppressWarnings("unused")
 public class LoomInventory extends Inventory<LoomScreen> {
 
     protected LoomInventory(LoomScreen inventory) {
@@ -92,4 +93,9 @@ public class LoomInventory extends Inventory<LoomScreen> {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return String.format("LoomInventory:{}");
+    }
+    
 }

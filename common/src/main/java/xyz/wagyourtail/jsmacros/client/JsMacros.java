@@ -11,6 +11,8 @@ import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventQuitGame;
+import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.config.Profile;
 import xyz.wagyourtail.jsmacros.client.event.EventRegistry;
@@ -28,6 +30,7 @@ public class JsMacros {
     public static KeyBinding keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title"));
     public static BaseScreen prevScreen;
     protected static final File configFolder = ServiceLoader.load(ConfigFolder.class).findFirst().orElseThrow().getFolder();
+    protected static final ModLoader modLoader = ServiceLoader.load(ModLoader.class).findFirst().orElseThrow();
 
     public static final Core<Profile, EventRegistry> core = Core.createInstance(EventRegistry::new, Profile::new, configFolder.getAbsoluteFile(), new File(configFolder, "Macros"), LOGGER);
 
@@ -51,6 +54,12 @@ public class JsMacros {
 
         // Init MovementQueue
         MovementQueue.clear();
+
+        if (Core.getInstance().config.getOptions(ClientConfigV2.class).serviceAutoReload) {
+            Core.getInstance().services.startReloadListener();
+        }
+        PacketByteBufferHelper.init();
+        Runtime.getRuntime().addShutdownHook(new Thread(EventQuitGame::new));
     }
 
     static public Text getKeyText(String translationKey) {
@@ -146,4 +155,9 @@ public class JsMacros {
         }
         return a;
     }
+
+    public static ModLoader getModLoader() {
+        return modLoader;
+    }
+
 }

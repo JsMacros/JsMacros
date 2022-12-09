@@ -20,7 +20,8 @@ public class EventRiding implements BaseEvent {
         profile.triggerEvent(this);
     }
 
+    @Override
     public String toString() {
-        return String.format("%s:{\"state\": %s, \"entity\": %s}", this.getEventName(), state, entity.toString());
+        return String.format("%s:{\"state\": %b, \"entity\": %s}", this.getEventName(), state, entity.toString());
     }
 }

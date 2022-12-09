@@ -5,6 +5,7 @@ import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.extensions.Extension;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
+import xyz.wagyourtail.jsmacros.core.service.EventService;
 
 import java.io.File;
 import java.nio.file.FileSystemException;
@@ -55,7 +56,11 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
                     }
                 } else {
                     macro.enabled = false;
-                    throw new FileSystemException("file \"" + file.getPath() + "\" does not exist or is a directory!");
+                    if (staticMacro.scriptFile.isEmpty()) {
+                        throw new RuntimeException("No script file was selected for trigger" + staticMacro.event + "!");
+                    } else {
+                        throw new FileSystemException("file \"" + file.getPath() + "\" does not exist or is a directory!");
+                    }
                 }
             } catch (Throwable e) {
                 try {
@@ -67,6 +72,10 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
             } finally {
                 ctx.getCtx().unbindThread(Thread.currentThread());
 
+                if (event instanceof EventService) {
+                    runner.services.markCrashed(((EventService) event).serviceName);
+                }
+                
                 EventContainer<?> cc = ctx.getCtx().events.get(Thread.currentThread());
                 if (cc != null) cc.releaseLock();
 

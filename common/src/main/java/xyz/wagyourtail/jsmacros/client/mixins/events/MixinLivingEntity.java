@@ -15,6 +15,7 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.EventDamage;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventHeal;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventEntityDamaged;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventEntityHealed;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventHealthChange;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity {
@@ -41,6 +42,7 @@ public abstract class MixinLivingEntity {
         if (difference > 0) {
             if ((Object) this instanceof ClientPlayerEntity) {
                 new EventDamage(DamageSource.GENERIC, health, difference);
+                new EventHealthChange(health, -difference);
             }
             new EventEntityDamaged((Entity)(Object) this, health, difference);
         }
@@ -50,6 +52,7 @@ public abstract class MixinLivingEntity {
 
             if ((Object) this instanceof ClientPlayerEntity) {
                 new EventHeal(DamageSource.GENERIC, health, difference);
+                new EventHealthChange(health, difference);
             }
             new EventEntityHealed((Entity)(Object) this, health, difference);
         }

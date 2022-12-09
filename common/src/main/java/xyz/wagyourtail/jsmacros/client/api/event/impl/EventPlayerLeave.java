@@ -23,6 +23,7 @@ public class EventPlayerLeave implements BaseEvent {
         profile.triggerEvent(this);
     }
     
+    @Override
     public String toString() {
         return String.format("%s:{\"player\": %s}", this.getEventName(), player.toString());
     }

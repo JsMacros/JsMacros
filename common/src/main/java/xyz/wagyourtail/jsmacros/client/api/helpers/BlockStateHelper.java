@@ -2,33 +2,19 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.registry.Registry;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Collectors;
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 
 /**
  * @author Etheradon
  * @since 1.6.5
  */
-public class BlockStateHelper extends BaseHelper<BlockState> {
+@SuppressWarnings("unused")
+public class BlockStateHelper extends StateHelper<BlockState> {
 
     public BlockStateHelper(BlockState base) {
         super(base);
-    }
-
-    /**
-     * @return a map of the state properties with its identifier and value.
-     *
-     * @since 1.6.5
-     */
-    public Map<String, String> toMap() {
-        return base.getEntries().entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey().getName(), entry -> Util.getValueAsString(entry.getKey(), entry.getValue())));
     }
 
     /**
@@ -38,6 +24,24 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      */
     public BlockHelper getBlock() {
         return new BlockHelper(base.getBlock());
+    }
+
+    /**
+     * @return the block's id.
+     *
+     * @since 1.8.4
+     */
+    public String getId() {
+        return Registry.BLOCK.getId(base.getBlock()).toString();
+    }
+
+    /**
+     * @return the fluid state of this block state.
+     *
+     * @since 1.8.4
+     */
+    public FluidStateHelper getFluidState() {
+        return new FluidStateHelper(base.getFluidState());
     }
 
     /**
@@ -136,7 +140,6 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
      * @since 1.6.5
      */
     public String getPistonBehaviour() {
-        System.out.println(this + " " + base.getPistonBehavior());
         switch (base.getPistonBehavior()) {
             case NORMAL:
                 return "NORMAL";
@@ -149,7 +152,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
             case IGNORE:
                 return "IGNORE";
             default:
-                throw new IllegalStateException("Unexpected value: " + base.getPistonBehavior());
+                throw new IllegalArgumentException();
         }
     }
 
@@ -183,7 +186,7 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
     /**
      * @return {@code true} if the state is a liquid.
      *
-     * @since 1.6.5* @since 1.6.5
+     * @since 1.6.5
      */
     public boolean isLiquid() {
         return base.getMaterial().isLiquid();
@@ -192,15 +195,15 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
     /**
      * @return {@code true} if the state is solid.
      *
-     * @since 1.6.5* @since 1.6.5
+     * @since 1.6.5
      */
     public boolean isSolid() {
         return base.getMaterial().isSolid();
     }
 
     /**
-     * This will return true for blocks like air and grass, that can be replaced
-     * without breaking them first.
+     * This will return true for blocks like air and grass, that can be replaced without breaking
+     * them first.
      *
      * @return {@code true} if the state can be replaced.
      *
@@ -211,19 +214,21 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
     }
 
     /**
-     * @param pos
-     * @param entity
-     * @return {@code true} if the entity can spawn on this block state at the given position in the current world.
+     * @param pos    the position of the block to check
+     * @param entity the entity type to check
+     * @return {@code true} if the entity can spawn on this block state at the given position in the
+     *         current world.
      *
      * @since 1.6.5
      */
     public boolean allowsSpawning(BlockPosHelper pos, String entity) {
-        return base.allowsSpawning(MinecraftClient.getInstance().world, pos.getRaw(), Registry.ENTITY_TYPE.get(new Identifier(entity)));
+        return base.allowsSpawning(MinecraftClient.getInstance().world, pos.getRaw(), Registry.ENTITY_TYPE.get(RegistryHelper.parseIdentifier(entity)));
     }
 
     /**
-     * @param pos
-     * @return {@code true} if an entity can suffocate in this block state at the given position in the current world.
+     * @param pos the position of the block to check
+     * @return {@code true} if an entity can suffocate in this block state at the given position in
+     *         the current world.
      *
      * @since 1.6.5
      */
@@ -231,22 +236,23 @@ public class BlockStateHelper extends BaseHelper<BlockState> {
         return base.shouldSuffocate(MinecraftClient.getInstance().world, pos.getRaw());
     }
 
-    private static NavigationType getNavigationType(String navigationType) {
-        switch (navigationType.toUpperCase(Locale.ROOT)) {
-            case "LAND":
-                return NavigationType.LAND;
-            case "WATER":
-                return NavigationType.WATER;
-            case "AIR":
-                return NavigationType.AIR;
-            default:
-                throw new IllegalStateException("Unexpected value: " + navigationType);
-        }
+    /**
+     * @return an {@link UniversalBlockStateHelper} to access all properties of this block state.
+     *
+     * @since 1.8.4
+     */
+    public UniversalBlockStateHelper getUniversal() {
+        return new UniversalBlockStateHelper(base);
+    }
+
+    @Override
+    protected StateHelper<BlockState> create(BlockState base) {
+        return new BlockStateHelper(base);
     }
 
     @Override
     public String toString() {
-        return String.format("BlockStateHelper:{%s, %s}", getBlock().getId(), toMap());
+        return String.format("BlockStateHelper:{\"id\": \"%s\", \"properties\": %s}", getId(), toMap());
     }
 
 }

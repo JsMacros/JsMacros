@@ -10,8 +10,6 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
-//added line breaks sow it will be displayed correctly on the website
-
 /**
  * The builder can be used to create a world scanner with native java functions. This is especially useful for languages like javascript that
  * don't support multithreading, which causes streams to run sequential instead of parallel.

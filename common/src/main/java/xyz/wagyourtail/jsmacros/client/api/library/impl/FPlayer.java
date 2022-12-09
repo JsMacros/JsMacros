@@ -8,10 +8,11 @@ import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.util.ScreenshotRecorder;
-import net.minecraft.entity.Entity;
+import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.GameMode;
+
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
@@ -27,6 +28,7 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
 
 /**
@@ -43,7 +45,7 @@ public class FPlayer extends BaseLibrary {
 
     /**
      * @return the Inventory handler
-     * @see xyz.wagyourtail.jsmacros.client.api.classes.Inventory
+     * @see Inventory
      */
     public Inventory<?> openInventory() {
         assert mc.player != null && mc.player.getInventory() != null;
@@ -52,7 +54,7 @@ public class FPlayer extends BaseLibrary {
 
     /**
      * @return the player entity wrapper.
-     * @see xyz.wagyourtail.jsmacros.client.api.helpers.ClientPlayerEntityHelper
+     * @see ClientPlayerEntityHelper
      * @since 1.0.3
      */
     public ClientPlayerEntityHelper<ClientPlayerEntity> getPlayer() {
@@ -71,10 +73,20 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
+     * @param gameMode possible values are survival, creative, adventure, spectator (case insensitive)
+     *
+     * @since 1.8.4
+     */
+    public void setGameMode(String gameMode) {
+        assert mc.interactionManager != null;
+        mc.interactionManager.setGameMode(GameMode.byName(gameMode.toLowerCase(Locale.ROOT), mc.interactionManager.getCurrentGameMode()));
+    }
+    
+    /**
      * @param distance
      * @param fluid
      * @return the block/liquid the player is currently looking at.
-     * @see xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper
+     * @see BlockDataHelper
      * @since 1.0.5
      */
     public BlockDataHelper rayTraceBlock(double distance, boolean fluid) {
@@ -90,7 +102,7 @@ public class FPlayer extends BaseLibrary {
 
     /**
      * @return the entity the camera is currently looking at.
-     * @see xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper
+     * @see EntityHelper
      * @since 1.0.5
      */
     public EntityHelper<?> rayTraceEntity() {
@@ -142,11 +154,6 @@ public class FPlayer extends BaseLibrary {
         });
     }
 
-    public StatsHelper getStatistics() {
-        assert mc.player != null;
-        return new StatsHelper(mc.player.getStatHandler());
-    }
-
     /**
      * Take a screenshot and save to a file.
      * <p>
@@ -160,11 +167,41 @@ public class FPlayer extends BaseLibrary {
     public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null && file != null;
         ScreenshotRecorder.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), file, mc.getFramebuffer(),
-                                          (text) -> {
-                if (callback != null) callback.accept(new TextHelper(text));
-        });
+                (text) -> {
+                    if (callback != null) callback.accept(new TextHelper(text));
+                });
     }
 
+    /**
+     * @param folder   the folder to save the screenshot to, relative to the macro folder
+     * @param width    the width of the panorama
+     * @param height   the height of the panorama
+     * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
+     * @since 1.8.4
+     */
+    public void takePanorama(String folder, int width, int height, MethodWrapper<TextHelper, Object, Object, ?> callback) {
+        assert folder != null;
+        Text result = mc.takePanorama(new File(Core.getInstance().config.macroFolder, folder), width, height);
+        if (callback != null) {
+            callback.accept(new TextHelper(result));
+        }
+    }
+    
+    public StatsHelper getStatistics() {
+        assert mc.player != null;
+        return new StatsHelper(mc.player.getStatHandler());
+    }
+
+    /**
+     * @return the current reach distance of the player.
+     *
+     * @since 1.8.4
+     */
+    public float getReach() {
+        assert mc.interactionManager != null;
+        return mc.interactionManager.getReachDistance();
+    }
+    
     /**
      * Creates a new PlayerInput object.
      *
@@ -371,10 +408,10 @@ public class FPlayer extends BaseLibrary {
      * @param yaw the relative yaw for the player
      * @since 1.4.0
      */
-    public void moveForward(float yaw) {
+    public void moveForward(double yaw) {
         PlayerInput input = new PlayerInput();
         input.movementForward = 1.0F;
-        input.yaw = getPlayer().getYaw() + yaw;
+        input.yaw = (float) (getPlayer().getYaw() + yaw);
         addInput(input);
     }
 
@@ -384,10 +421,10 @@ public class FPlayer extends BaseLibrary {
      * @param yaw the relative yaw for the player
      * @since 1.4.0
      */
-    public void moveBackward(float yaw) {
+    public void moveBackward(double yaw) {
         PlayerInput input = new PlayerInput();
         input.movementForward = -1.0F;
-        input.yaw = getPlayer().getYaw() + yaw;
+        input.yaw = (float) (getPlayer().getYaw() + yaw);
         addInput(input);
     }
 
@@ -396,10 +433,10 @@ public class FPlayer extends BaseLibrary {
      * @param yaw the relative yaw for the player
      * @since 1.4.2
      */
-    public void moveStrafeLeft(float yaw) {
+    public void moveStrafeLeft(double yaw) {
         PlayerInput input = new PlayerInput();
         input.movementSideways = 1.0F;
-        input.yaw = getPlayer().getYaw() + yaw;
+        input.yaw = (float) (getPlayer().getYaw() + yaw);
         addInput(input);
     }
 
@@ -408,10 +445,10 @@ public class FPlayer extends BaseLibrary {
      * @param yaw the relative yaw for the player
      * @since 1.4.2
      */
-    public void moveStrafeRight(float yaw) {
+    public void moveStrafeRight(double yaw) {
         PlayerInput input = new PlayerInput();
         input.movementSideways = -1.0F;
-        input.yaw = getPlayer().getYaw() + yaw;
+        input.yaw = (float) (getPlayer().getYaw() + yaw);
         addInput(input);
     }
 }

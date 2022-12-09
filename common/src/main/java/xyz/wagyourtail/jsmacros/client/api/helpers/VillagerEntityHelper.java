@@ -5,6 +5,7 @@ import net.minecraft.entity.passive.VillagerEntity;
 /**
  * @since 1.6.3
  */
+@SuppressWarnings("unused")
 public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
 
     public VillagerEntityHelper(VillagerEntity e) {
@@ -16,7 +17,7 @@ public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
      * @return
      */
     public String getProfession() {
-        return base.getVillagerData().getProfession().toString();
+        return base.getVillagerData().getProfession().id();
     }
 
     /**
@@ -33,11 +34,6 @@ public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
      */
     public int getLevel() {
         return base.getVillagerData().getLevel();
-    }
-
-    @Override
-    public String toString() {
-        return super.toString().replaceFirst("^Merchant", "Villager");
     }
 
 }

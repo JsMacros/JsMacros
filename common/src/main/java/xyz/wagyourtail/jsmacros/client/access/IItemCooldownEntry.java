@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.access;
 
 public interface IItemCooldownEntry {
 
-    int getStartTick();
+    int jsmacros_getStartTick();
 
-    int getEndTick();
+    int jsmacros_getEndTick();
 }

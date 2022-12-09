@@ -77,6 +77,33 @@ public class FChat extends BaseLibrary {
         }
     }
 
+    /**
+     * Logs the formatted message to the player's chat. The message is formatted using the default
+     * java {@link String#format(String, Object...)} syntax.
+     *
+     * @param message the message to format and log
+     * @param args    the arguments used to format the message
+     * @throws InterruptedException
+     * @since 1.8.4
+     */
+    public void logf(String message, Object... args) throws InterruptedException {
+        log(String.format(message, args), false);
+    }
+
+    /**
+     * Logs the formatted message to the player's chat. The message is formatted using the default
+     * java {@link String#format(String, Object...)} syntax.
+     *
+     * @param message the message to format and log
+     * @param await   whether to wait for message to be sent to chat before continuing
+     * @param args    the arguments used to format the message
+     * @throws InterruptedException
+     * @since 1.8.4
+     */
+    public void logf(String message, boolean await, Object... args) throws InterruptedException {
+        log(String.format(message, args), await);
+    }
+
     private static void logInternal(String message) {
         if (message != null) {
             Text text = Text.literal(message);
@@ -123,6 +150,33 @@ public class FChat extends BaseLibrary {
             });
             semaphore.acquire();
         }
+    }
+
+    /**
+     * Sends the formatted message to the server. The message is formatted using the default java
+     * {@link String#format(String, Object...)} syntax.
+     *
+     * @param message the message to format and send to the server
+     * @param args    the arguments used to format the message
+     * @throws InterruptedException
+     * @since 1.8.4
+     */
+    public void sayf(String message, Object... args) throws InterruptedException {
+        say(String.format(message, args), false);
+    }
+
+    /**
+     * Sends the formatted message to the server. The message is formatted using the default java
+     * {@link String#format(String, Object...)} syntax.
+     *
+     * @param message the message to format and send to the server
+     * @param await   whether to wait for message to be sent to chat before continuing
+     * @param args    the arguments used to format the message
+     * @throws InterruptedException
+     * @since 1.8.4
+     */
+    public void sayf(String message, boolean await, Object... args) throws InterruptedException {
+        say(String.format(message, args), await);
     }
 
     /**
@@ -335,6 +389,16 @@ public class FChat extends BaseLibrary {
     }
 
     /**
+     * @param text the text to get the width of
+     * @return the width of the given text in pixels.
+     *
+     * @since 1.8.4
+     */
+    public int getTextWidth(String text) {
+        return mc.textRenderer.getWidth(text);
+    }
+    
+    /**
      * @param string
      * @since 1.6.5
      * @return &#167; -> &amp;
@@ -360,6 +424,6 @@ public class FChat extends BaseLibrary {
      public String stripFormatting(String string) {
      // on 1.15 and lower switch to comment
 //        return string.replaceAll("§#\\d{6}|§.", "");
-        return string.replaceAll("§.", "");
+        return TextHelper.STRIP_FORMATTING_PATTERN.matcher(string).replaceAll("");
     }
 }

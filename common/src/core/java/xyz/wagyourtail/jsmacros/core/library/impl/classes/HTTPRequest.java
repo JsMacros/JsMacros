@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mojang.authlib.yggdrasil.response.Response;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -84,6 +85,140 @@ public class HTTPRequest {
         InputStream stream = conn.getInputStream();
         return new Response(stream, conn.getResponseCode(), conn.getHeaderFields());
     }
+
+    /**
+     * @since 1.8.4
+     *
+     * @param data
+     * @return
+     * @throws IOException
+     */
+    public Response post(byte[] data) throws IOException {
+        HttpURLConnection conn = (HttpURLConnection) this.conn.openConnection();
+        for (Entry<String, String> e : headers.entrySet()) {
+            conn.addRequestProperty(e.getKey(), e.getValue());
+        }
+        conn.addRequestProperty("Content-Length", Integer.toString(data.length));
+        conn.setRequestMethod("POST");
+
+        conn.setDoOutput(true);
+        OutputStream os = conn.getOutputStream();
+        os.write(data);
+        os.flush();
+        os.close();
+
+
+        InputStream stream = conn.getInputStream();
+        return new Response(stream, conn.getResponseCode(), conn.getHeaderFields());
+    }
+
+    /**
+     * @since 1.8.4
+     *
+     * @param data
+     * @return
+     * @throws IOException
+     */
+    public Response put(String data) throws IOException {
+        byte[] b = data.getBytes(StandardCharsets.UTF_8);
+        HttpURLConnection conn = (HttpURLConnection) this.conn.openConnection();
+        for (Entry<String, String> e : headers.entrySet()) {
+            conn.addRequestProperty(e.getKey(), e.getValue());
+        }
+        conn.addRequestProperty("Content-Length", Integer.toString(b.length));
+        conn.setRequestMethod("PUT");
+
+        conn.setDoOutput(true);
+        OutputStream os = conn.getOutputStream();
+        os.write(b);
+        os.flush();
+        os.close();
+
+
+        InputStream stream = conn.getInputStream();
+        return new Response(stream, conn.getResponseCode(), conn.getHeaderFields());
+    }
+
+    /**
+     * @since 1.8.4
+     *
+     * @param data
+     * @return
+     * @throws IOException
+     */
+    public Response put(byte[] data) throws IOException {
+        HttpURLConnection conn = (HttpURLConnection) this.conn.openConnection();
+        for (Entry<String, String> e : headers.entrySet()) {
+            conn.addRequestProperty(e.getKey(), e.getValue());
+        }
+        conn.addRequestProperty("Content-Length", Integer.toString(data.length));
+        conn.setRequestMethod("PUT");
+
+        conn.setDoOutput(true);
+        OutputStream os = conn.getOutputStream();
+        os.write(data);
+        os.flush();
+        os.close();
+
+        InputStream stream = conn.getInputStream();
+        return new Response(stream, conn.getResponseCode(), conn.getHeaderFields());
+    }
+
+    /**
+     * @since 1.8.4
+     *
+     * @param method
+     * @param data
+     * @return
+     * @throws IOException
+     */
+    public Response send(String method, String data) throws IOException {
+        byte[] b = data.getBytes(StandardCharsets.UTF_8);
+        HttpURLConnection conn = (HttpURLConnection) this.conn.openConnection();
+        for (Entry<String, String> e : headers.entrySet()) {
+            conn.addRequestProperty(e.getKey(), e.getValue());
+        }
+        conn.addRequestProperty("Content-Length", Integer.toString(b.length));
+        conn.setRequestMethod(method);
+
+        conn.setDoOutput(true);
+        OutputStream os = conn.getOutputStream();
+        os.write(b);
+        os.flush();
+        os.close();
+
+
+        InputStream stream = conn.getInputStream();
+        return new Response(stream, conn.getResponseCode(), conn.getHeaderFields());
+    }
+
+    /**
+     * @since 1.8.4
+     *
+     * @param method
+     * @param data
+     * @return
+     * @throws IOException
+     */
+    public Response send(String method, byte[] data) throws IOException {
+        HttpURLConnection conn = (HttpURLConnection) this.conn.openConnection();
+        for (Entry<String, String> e : headers.entrySet()) {
+            conn.addRequestProperty(e.getKey(), e.getValue());
+        }
+        conn.addRequestProperty("Content-Length", Integer.toString(data.length));
+        conn.setRequestMethod(method);
+
+        conn.setDoOutput(true);
+        OutputStream os = conn.getOutputStream();
+        os.write(data);
+        os.flush();
+        os.close();
+
+
+        InputStream stream = conn.getInputStream();
+        return new Response(stream, conn.getResponseCode(), conn.getHeaderFields());
+    }
+
 
     /**
      * @author Wagyourtail

@@ -14,7 +14,7 @@ public class Button extends PressableWidget {
     protected final TextRenderer textRenderer;
     protected int color;
     protected int borderColor;
-    protected int hilightColor;
+    protected int highlightColor;
     protected int textColor;
     protected List<OrderedText> textLines;
     protected int visibleLines;
@@ -24,12 +24,12 @@ public class Button extends PressableWidget {
     public boolean hovering = false;
     public boolean forceHover = false;
     
-    public Button(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int hilightColor, int textColor, Text message, Consumer<Button> onPress) {
+    public Button(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int highlightColor, int textColor, Text message, Consumer<Button> onPress) {
         super(x, y, width, height, message);
         this.textRenderer = textRenderer;
         this.color = color;
         this.borderColor = borderColor;
-        this.hilightColor = hilightColor;
+        this.highlightColor = highlightColor;
         this.textColor = textColor;
         this.onPress = onPress;
         this.setMessage(message);
@@ -63,8 +63,8 @@ public class Button extends PressableWidget {
         this.color = color;
     }
     
-    public void setHilightColor(int color) {
-        this.hilightColor = color;
+    public void setHighlightColor(int color) {
+        this.highlightColor = color;
     }
     
     protected void renderMessage(MatrixStack matrices) {
@@ -80,7 +80,7 @@ public class Button extends PressableWidget {
             // fill
             if (mouseX - x >= 0 && mouseX - x - width <= 0 && mouseY - y >= 0 && mouseY - y - height <= 0 && this.active || forceHover) {
                 hovering = true;
-                fill(matrices, x + 1, y + 1, x + width - 1, y + height - 1, hilightColor);
+                fill(matrices, x + 1, y + 1, x + width - 1, y + height - 1, highlightColor);
             } else {
                 hovering = false;
                 fill(matrices, x + 1, y + 1, x + width - 1, y + height - 1, color);
