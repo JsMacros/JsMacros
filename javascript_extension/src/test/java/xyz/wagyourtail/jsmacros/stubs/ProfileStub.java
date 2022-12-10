@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
+import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 
@@ -46,7 +47,8 @@ public class ProfileStub extends BaseProfile {
 
     @Override
     public void logError(Throwable ex) {
-        LOGGER.error("", ex);
+        BaseWrappedException e = Core.getInstance().wrapException(ex);
+        LOGGER.error(e.message, ex);
     }
 
     @Override
