@@ -94,7 +94,7 @@ public final class GuestExceptionSimplifier {
             }
 
             lines.add("OverloadError on method " + classNameNoPackage + "." + functionName);
-            lines.add("Expected arguments: ");
+            lines.add("  Expected arguments: ");
             Arrays.stream(clazz.getMethods()).filter(e -> e.getName().equals(functionName)).sorted((a, b) -> {
                 if (a.getParameterCount() == b.getParameterCount()) {
                     // Sort by parameter type
@@ -109,7 +109,7 @@ public final class GuestExceptionSimplifier {
                 return a.getParameterCount() < b.getParameterCount() ? -1 : 1;
             }).forEach(e -> {
                 StringBuilder builder = new StringBuilder();
-                builder.append("  (");
+                builder.append("    (");
                 Class<?>[] params = e.getParameterTypes();
                 for (int i = 0; i < params.length; i++) {
                     // Remove package name
@@ -127,10 +127,10 @@ public final class GuestExceptionSimplifier {
                 lines.add(builder.toString());
             });
 
-            lines.add("Given arguments:");
+            lines.add("  Given arguments:");
 
             StringBuilder line = new StringBuilder();
-            line.append("  (");
+            line.append("    (");
 
             for (Object part : exception.getSuppliedValues()) {
                 if (part instanceof Number) {
