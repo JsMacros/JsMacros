@@ -13,11 +13,11 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -59,7 +59,7 @@ public class RenderCommon {
             if (rotateAroundCenter) {
                 matrices.translate(width / 2, height / 2, 0);
             }
-            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
+            matrices.multiply(new Quaternionf().rotateLocalZ(rotation));
             if (rotateAroundCenter) {
                 matrices.translate(-width / 2, -height / 2, 0);
             }
@@ -572,7 +572,7 @@ public class RenderCommon {
          * @since 1.0.5 [citation needed]
          */
         public Item setItem(String id, int count) {
-            this.item = new ItemStack(Registry.ITEM.get(RegistryHelper.parseIdentifier(id)), count);
+            this.item = new ItemStack(Registries.ITEM.get(RegistryHelper.parseIdentifier(id)), count);
             return this;
         }
 
@@ -943,7 +943,7 @@ public class RenderCommon {
              * @since 1.8.4
              */
             public Builder item(String id) {
-                this.itemStack = new ItemStackHelper(Registry.ITEM.get(RegistryHelper.parseIdentifier(id)).getDefaultStack());
+                this.itemStack = new ItemStackHelper(Registries.ITEM.get(RegistryHelper.parseIdentifier(id)).getDefaultStack());
                 return this;
             }
 
@@ -1433,7 +1433,7 @@ public class RenderCommon {
         public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
             matrices.push();
             setupMatrix(matrices, x, y, 1, rotation, getWidth(), getHeight(), rotateCenter);
-            RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+            RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableBlend();
             RenderSystem.setShaderTexture(0, imageid);
@@ -2400,7 +2400,7 @@ public class RenderCommon {
             RenderSystem.enableBlend();
             RenderSystem.disableTexture();
             RenderSystem.defaultBlendFunc();
-            RenderSystem.setShader(GameRenderer::getPositionColorShader);
+            RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 
             buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
             Matrix4f matrix = matrices.peek().getPositionMatrix();
@@ -3786,7 +3786,7 @@ public class RenderCommon {
             RenderSystem.enableBlend();
             RenderSystem.disableTexture();
             RenderSystem.defaultBlendFunc();
-            RenderSystem.setShader(GameRenderer::getPositionColorShader);
+            RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 
             buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
             Matrix4f matrix = matrices.peek().getPositionMatrix();
@@ -4436,7 +4436,7 @@ public class RenderCommon {
             if (rotateCenter) {
                 matrices.translate(width.getAsInt() / 2d, height.getAsInt() / 2d, 0);
             }
-            matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
+            matrices.multiply(new Quaternionf().rotateLocalZ(rotation));
             if (rotateCenter) {
                 matrices.translate(-width.getAsInt() / 2d, -height.getAsInt() / 2d, 0);
             }

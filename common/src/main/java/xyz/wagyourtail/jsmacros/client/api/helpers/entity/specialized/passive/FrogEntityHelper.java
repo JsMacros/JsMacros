@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive;
 
 import net.minecraft.entity.passive.FrogEntity;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 
@@ -22,7 +22,7 @@ public class FrogEntityHelper extends AnimalEntityHelper<FrogEntity> {
      * @since 1.8.4
      */
     public String getVariant() {
-        return Registry.FROG_VARIANT.getId(base.getVariant()).toString();
+        return Registries.FROG_VARIANT.getId(base.getVariant()).toString();
     }
 
     /**

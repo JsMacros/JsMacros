@@ -1,17 +1,17 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.command.CommandRegistryWrapper;
 import net.minecraft.command.argument.ItemStringReader;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ToolItem;
-import net.minecraft.item.Wearable;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.item.*;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.registry.Registries;
+import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Etheradon
@@ -24,13 +24,17 @@ public class ItemHelper extends BaseHelper<Item> {
         super(base);
     }
 
+    private Stream<ItemGroup> getGroups() {
+        return ItemGroups.getGroups().parallelStream().filter(group -> !group.isSpecial() && group.getDisplayStacks().parallelStream().anyMatch(e -> e.isOf(base)));
+    }
+
     /**
      * @return the name of this item's group or {@code "UNKNOWN"} if this item is not in a group.
      *
      * @since 1.8.4
      */
-    public String getGroup() {
-        return base.getGroup() == null ? "UNKNOWN" : base.getGroup().getName();
+    public List<TextHelper> getCreativeTab() {
+        return getGroups().map(ItemGroup::getDisplayName).map(TextHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -39,8 +43,8 @@ public class ItemHelper extends BaseHelper<Item> {
      *
      * @since 1.8.4
      */
-    public ItemStackHelper getGroupIcon() {
-        return base.getGroup() == null ? null : new ItemStackHelper(base.getGroup().getIcon());
+    public List<ItemStackHelper> getGroupIcon() {
+        return getGroups() == null ? null : getGroups().map(ItemGroup::getIcon).map(ItemStackHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -165,7 +169,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public String getId() {
-        return Registry.ITEM.getId(base).toString();
+        return Registries.ITEM.getId(base).toString();
     }
 
     /**
@@ -263,7 +267,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public ItemStackHelper getStackWithNbt(String nbt) throws CommandSyntaxException {
-        ItemStringReader.ItemResult itemResult = ItemStringReader.item(new CommandRegistryWrapper.Impl<>(Registry.ITEM), new StringReader(getId() + nbt));
+        ItemStringReader.ItemResult itemResult = ItemStringReader.item(Registries.ITEM.getReadOnlyWrapper(), new StringReader(getId() + nbt));
         return new ItemStackHelper(new ItemStack(itemResult.item()));
     }
 

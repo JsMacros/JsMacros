@@ -18,35 +18,44 @@ public class TropicalFishEntityHelper extends FishEntityHelper<TropicalFishEntit
      *
      * @since 1.8.4
      */
-    public int getVariant() {
-        return base.getVariant();
+    public String getVariant() {
+        return base.getVariant().asString();
     }
 
     /**
-     * @return the shape of this tropical fish's variant.
+     * @return the size of this tropical fish's variant.
      *
      * @since 1.8.4
      */
-    public int getShape() {
-        return base.getShape();
+    public String getSize() {
+        return base.getVariant().getSize().name();
     }
 
     /**
-     * @return the pattern of this tropical fish's variant.
+     * @return the base color of this tropical fish's pattern.
      *
      * @since 1.8.4
      */
-    public int getPattern() {
-        return Math.min((getVariant() & 0xFF00) >> 8, 5);
+    public int getBaseColor() {
+        return base.getBaseColorComponents().getId();
     }
+
+    /**
+     * @return the pattern color of this tropical fish's pattern.
+     *
+     * @since 1.8.4
+     */
+     public int getPatternColor() {
+         return base.getPatternColorComponents().getId();
+     }
 
     /**
      * @return the id of this tropical fish's variant.
      *
      * @since 1.8.4
      */
-    public String getVarietyId() {
-        return base.getVarietyId().toString();
+    public int getVarietyId() {
+        return base.getVariant().getId();
     }
 
 }

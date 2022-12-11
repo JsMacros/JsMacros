@@ -85,7 +85,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
         @Override
         public ButtonWidgetHelper<ButtonWidget> createWidget() {
             AtomicReference<ButtonWidgetHelper<ButtonWidget>> b = new AtomicReference<>(null);
-            ButtonWidget button = new ButtonWidget(getX(), getY(), getWidth(), 20, getMessage().getRaw(), btn -> {
+            ButtonWidget button = ButtonWidget.builder(getMessage().getRaw(), btn -> {
                 try {
                     if (action != null) {
                         action.accept(b.get(), screen);
@@ -93,7 +93,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
                 } catch (Throwable e) {
                     Core.getInstance().profile.logError(e);
                 }
-            });
+            }).position(getX(), getY()).size(getWidth(), 20).build();
             b.set(new ButtonWidgetHelper(button, getZIndex()));
             return b.get();
         }

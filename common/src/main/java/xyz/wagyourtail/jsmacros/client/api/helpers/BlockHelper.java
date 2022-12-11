@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.block.Block;
-import net.minecraft.util.registry.Registry;
 
+import net.minecraft.registry.Registries;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;
@@ -119,7 +119,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.6.5
      */
     public String getId() {
-        return Registry.BLOCK.getId(base).toString();
+        return Registries.BLOCK.getId(base).toString();
     }
 
     /**

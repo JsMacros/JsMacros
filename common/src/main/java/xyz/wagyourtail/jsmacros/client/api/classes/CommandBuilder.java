@@ -211,16 +211,16 @@ public abstract class CommandBuilder {
         return this;
     }
 
-    public CommandBuilder enchantmentArg(String name) {
-        argument(name, EnchantmentArgumentType::new);
-        return this;
-    }
-
-    public CommandBuilder entityTypeArg(String name) {
-        argument(name, EntitySummonArgumentType::new);
-        suggests(SuggestionProviders.SUMMONABLE_ENTITIES);
-        return this;
-    }
+//    public CommandBuilder enchantmentArg(String name) {
+//        argument(name, EnchantmentA::new);
+//        return this;
+//    }
+//
+//    public CommandBuilder entityTypeArg(String name) {
+//        argument(name, EntitySummonArgumentType::new);
+//        suggests(SuggestionProviders.SUMMONABLE_ENTITIES);
+//        return this;
+//    }
 
     //TODO: Add client side EntitySelector, because the default one requires a server world.
 
@@ -234,10 +234,10 @@ public abstract class CommandBuilder {
         return this;
     }
 
-    public CommandBuilder statusEffectArg(String name) {
-        argument(name, StatusEffectArgumentType::new);
-        return this;
-    }
+//    public CommandBuilder statusEffectArg(String name) {
+//        argument(name, StatusEffectArgumentType::new);
+//        return this;
+//    }
 
     /**
      *

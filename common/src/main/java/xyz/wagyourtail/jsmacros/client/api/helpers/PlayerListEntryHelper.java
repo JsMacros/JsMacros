@@ -64,7 +64,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @return
      */
     public byte[] getPublicKey() {
-        return base.getPublicKeyData().data().key().getEncoded();
+        return base.getSession().publicKeyData().data().key().getEncoded();
     }
 
     /**

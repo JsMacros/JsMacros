@@ -12,7 +12,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tag.FluidTags;
+import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -22,7 +22,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.RaycastContext;
 
@@ -538,7 +538,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     public int getItemCooldownRemainingTicks(String item) {
         int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
         Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();
-        IItemCooldownEntry entry = map.get(Registry.ITEM.get(RegistryHelper.parseIdentifier(item)));
+        IItemCooldownEntry entry = map.get(Registries.ITEM.get(RegistryHelper.parseIdentifier(item)));
         if (entry == null) return -1;
         return entry.jsmacros_getEndTick() - tick;
     }
@@ -561,7 +561,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     public int getTicksSinceCooldownStart(String item) {
         int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
         Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();
-        IItemCooldownEntry entry = map.get(Registry.ITEM.get(RegistryHelper.parseIdentifier(item)));
+        IItemCooldownEntry entry = map.get(Registries.ITEM.get(RegistryHelper.parseIdentifier(item)));
         if (entry == null) return -1;
         return entry.jsmacros_getStartTick() - tick;
     }

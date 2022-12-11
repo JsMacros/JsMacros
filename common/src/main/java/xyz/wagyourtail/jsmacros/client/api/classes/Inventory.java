@@ -51,7 +51,7 @@ public class Inventory<T extends HandledScreen<?>> {
         if (inv == null) {
             assert mc.player != null;
             if (mc.player.getAbilities().creativeMode) {
-                return new CreativeInventory(new CreativeInventoryScreen(mc.player));
+                return new CreativeInventory(new CreativeInventoryScreen(mc.player, mc.world.getEnabledFeatures(), mc.player.isCreativeLevelTwoOp()));
             }
             return new xyz.wagyourtail.jsmacros.client.api.classes.PlayerInventory(new InventoryScreen(mc.player));
         }
@@ -542,7 +542,7 @@ public class Inventory<T extends HandledScreen<?>> {
     private Map<String, int[]> getMapInternal() {
         Map<String, int[]> map = new HashMap<>();
         int slots = getTotalSlots();
-        if (this.inventory instanceof InventoryScreen || (this.inventory instanceof CreativeInventoryScreen && ((CreativeInventoryScreen) this.inventory).getSelectedTab() == ItemGroup.INVENTORY.getIndex())) {
+        if (this.inventory instanceof InventoryScreen || (this.inventory instanceof CreativeInventoryScreen && ((CreativeInventoryScreen) this.inventory).isInventoryTabSelected())) {
             if (this.inventory instanceof CreativeInventoryScreen) {
                 --slots;
             }

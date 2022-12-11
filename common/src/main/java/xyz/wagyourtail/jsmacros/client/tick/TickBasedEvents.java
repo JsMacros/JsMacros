@@ -10,7 +10,6 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 
 public class TickBasedEvents {
-    private static boolean initialized = false;
     private static ItemStack mainHand = ItemStack.EMPTY;
     private static ItemStack offHand = ItemStack.EMPTY;
 
@@ -27,7 +26,7 @@ public class TickBasedEvents {
 
 
     public static boolean areNotEqual(ItemStack a, ItemStack b) {
-        return (!a.isEmpty() || !b.isEmpty()) && (a.isEmpty() || b.isEmpty() || !a.isItemEqualIgnoreDamage(b) || a.getCount() != b.getCount() || !ItemStack.areNbtEqual(a, b) || a.getDamage() != b.getDamage());
+        return (!a.isEmpty() || !b.isEmpty()) && (a.isEmpty() || b.isEmpty() || !a.isItemEqual(b) || a.getCount() != b.getCount() || !ItemStack.areNbtEqual(a, b) || a.getDamage() != b.getDamage());
     }
     
     public static boolean areTagsEqualIgnoreDamage(ItemStack a, ItemStack b) {
@@ -54,7 +53,7 @@ public class TickBasedEvents {
     }
     
     public static boolean areEqualIgnoreDamage(ItemStack a, ItemStack b) {
-        return (a.isEmpty() && b.isEmpty()) || (!a.isEmpty() && !b.isEmpty() && a.isItemEqualIgnoreDamage(b) && a.getCount() == b.getCount() && areTagsEqualIgnoreDamage(a, b));    
+        return (a.isEmpty() && b.isEmpty()) || (!a.isEmpty() && !b.isEmpty() && a.isItemEqual(b) && a.getCount() == b.getCount() && areTagsEqualIgnoreDamage(a, b));
     }
     
     public static void onTick(MinecraftClient mc) {

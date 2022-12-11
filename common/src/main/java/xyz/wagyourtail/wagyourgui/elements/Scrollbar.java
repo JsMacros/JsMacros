@@ -27,8 +27,8 @@ public class Scrollbar extends ClickableWidget {
     }
     
     public Scrollbar setPos(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
+        this.setX(x);
+        this.setY(y);
         this.width = width;
         this.height = height;
         this.scrollbarHeight = (height - 2) / (scrollPages + 1);
@@ -61,7 +61,7 @@ public class Scrollbar extends ClickableWidget {
     @Override
     public void onClick(double mouseX, double mouseY) {
         if (this.active) {
-            double mpos = mouseY - y - 1;
+            double mpos = mouseY - getY() - 1;
             if (mpos < scrollAmount) {
                 scrollAmount = Math.max(mpos - (scrollbarHeight / 2), 0);
                 onChange();
@@ -90,20 +90,20 @@ public class Scrollbar extends ClickableWidget {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             // mainpart
-            fill(matrices, x + 1, (int) (y + 1 + scrollAmount), x + width - 1, (int) (y + 1 + scrollAmount + scrollbarHeight), highlightColor);
+            fill(matrices, getX() + 1, (int) (getY() + 1 + scrollAmount), getX() + width - 1, (int) (getY() + 1 + scrollAmount + scrollbarHeight), highlightColor);
 
             // outline and back
-            fill(matrices, x + 1, y + 1, x + width - 1, y + height - 1, color);
-            fill(matrices, x, y, x + 1, y + height, borderColor);
-            fill(matrices, x + width - 1, y, x + width, y + height, borderColor);
-            fill(matrices, x + 1, y, x + width - 1, y + 1, borderColor);
-            fill(matrices, x + 1, y + height - 1, x + width - 1, y + height, borderColor);
+            fill(matrices, getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, color);
+            fill(matrices, getX(), getY(), getX() + 1, getY() + height, borderColor);
+            fill(matrices, getX() + width - 1, getY(), getX() + width, getY() + height, borderColor);
+            fill(matrices, getX() + 1, getY(), getX() + width - 1, getY() + 1, borderColor);
+            fill(matrices, getX() + 1, getY() + height - 1, getX() + width - 1, getY() + height, borderColor);
         }
     }
 
     @Override
-    public void appendNarrations(NarrationMessageBuilder builder) {
-        //TODO
+    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
+
     }
 
 }

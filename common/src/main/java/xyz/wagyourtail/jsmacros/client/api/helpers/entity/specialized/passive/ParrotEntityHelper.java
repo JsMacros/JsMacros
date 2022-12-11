@@ -19,8 +19,8 @@ public class ParrotEntityHelper extends TameableEntityHelper<ParrotEntity> {
      *
      * @since 1.8.4
      */
-    public int getVariant() {
-        return base.getVariant();
+    public String getVariant() {
+        return base.getVariant().asString();
     }
 
     /**

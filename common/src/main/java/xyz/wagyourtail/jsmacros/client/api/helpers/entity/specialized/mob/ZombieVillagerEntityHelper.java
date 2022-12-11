@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob;
 
 import net.minecraft.entity.mob.ZombieVillagerEntity;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 
 /**
  * @author Etheradon
@@ -30,7 +30,7 @@ public class ZombieVillagerEntityHelper extends ZombieEntityHelper<ZombieVillage
      * @since 1.8.4
      */
     public String getVillagerBiomeType() {
-        return Registry.VILLAGER_TYPE.getId(base.getVillagerData().getType()).toString();
+        return Registries.VILLAGER_TYPE.getId(base.getVillagerData().getType()).toString();
     }
 
     /**

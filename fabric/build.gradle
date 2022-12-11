@@ -47,7 +47,7 @@ dependencies {
 
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
     //for modmenu
-    modImplementation "net.fabricmc.fabric-api:fabric-screen-api-v1:1.0.9+d882b915d2"
+    modImplementation fabricApi.module("fabric-screen-api-v1",  project.fapi_version)
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     //ij wasn't seeing this, even tho it's part of namedElements...

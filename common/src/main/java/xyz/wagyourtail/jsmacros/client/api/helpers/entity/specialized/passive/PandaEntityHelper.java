@@ -28,7 +28,7 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
      * @since 1.8.4
      */
     public String getMainGeneName() {
-        return base.getMainGene().getName();
+        return base.getMainGene().asString();
     }
 
     /**
@@ -55,7 +55,7 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
      * @since 1.8.4
      */
     public String getHiddenGeneName() {
-        return base.getHiddenGene().getName();
+        return base.getHiddenGene().asString();
     }
 
     /**

@@ -17,7 +17,6 @@
         "access.MixinChatHud",
         "access.MixinChunkSelection",
         "access.MixinClientAdvancementManager",
-        "access.MixinClientPlayerEntity",
         "access.MixinClientPlayNetworkHandler",
         "access.MixinCreativeInventoryScreen",
         "access.MixinCreeperEntity",

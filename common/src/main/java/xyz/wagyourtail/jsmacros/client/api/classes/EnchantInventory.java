@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes;
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.screen.EnchantmentScreenHandler;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.EnchantmentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
@@ -65,7 +65,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
         for (int j = 0; j < 3; ++j) {
             Enchantment enchantment = Enchantment.byRawId(inventory.getScreenHandler().enchantmentId[j]);
             if ((enchantment) != null) {
-                enchants[j] = Registry.ENCHANTMENT.getId(enchantment).toString();
+                enchants[j] = Registries.ENCHANTMENT.getId(enchantment).toString();
             }
         }
         return enchants;

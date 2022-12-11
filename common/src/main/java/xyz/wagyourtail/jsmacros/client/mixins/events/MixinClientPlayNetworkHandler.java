@@ -22,17 +22,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import xyz.wagyourtail.jsmacros.client.access.BossBarConsumer;
 import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Mixin(ClientPlayNetworkHandler.class)
 class MixinClientPlayNetworkHandler {
@@ -59,41 +56,14 @@ class MixinClientPlayNetworkHandler {
     @Unique
     private final Set<UUID> newPlayerEntries = new HashSet<>();
 
-    @Inject(at = @At("HEAD"), method = "onPlayerList")
-    public void onPlayerList(PlayerListS2CPacket packet, CallbackInfo info) {
-        if (this.client.isOnThread()) {
-            PlayerListS2CPacket.Action action = packet.getAction();
-            if (action == PlayerListS2CPacket.Action.ADD_PLAYER) {
-                for (Entry e : packet.getEntries()) {
-                    synchronized (newPlayerEntries) {
-                        if (playerListEntries.get(e.getProfile().getId()) == null) {
-                            newPlayerEntries.add(e.getProfile().getId());
-                        }
-                    }
-                }
-            } else if (action == PlayerListS2CPacket.Action.REMOVE_PLAYER) {
-                for (Entry e : packet.getEntries()) {
-                    if (playerListEntries.get(e.getProfile().getId()) != null) {
-                        PlayerListEntry p = playerListEntries.get(e.getProfile().getId());
-                        new EventPlayerLeave(e.getProfile().getId(), p);
-                    }
-                }
-            }
-        }
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/SocialInteractionsManager;setPlayerOnline(Lnet/minecraft/client/network/PlayerListEntry;)V"), method = "onPlayerList", locals = LocalCapture.CAPTURE_FAILHARD)
+    public void onPlayerList(PlayerListS2CPacket packet, CallbackInfo ci, Iterator var2, Entry entry, PlayerListEntry playerListEntry) {
+        new EventPlayerJoin(entry.profileId(), playerListEntry);
     }
 
-    @Inject(at = @At("TAIL"), method = "onPlayerList")
-    public void onPlayerListEnd(PlayerListS2CPacket packet, CallbackInfo info) {
-        if (packet.getAction() == PlayerListS2CPacket.Action.ADD_PLAYER) {
-            for (Entry e : packet.getEntries()) {
-                synchronized (newPlayerEntries) {
-                    if (newPlayerEntries.contains(e.getProfile().getId())) {
-                        new EventPlayerJoin(e.getProfile().getId(), playerListEntries.get(e.getProfile().getId()));
-                        newPlayerEntries.remove(e.getProfile().getId());
-                    }
-                }
-            }
-        }
+    @Inject(at = @At(value = "INVOKE", target = "Ljava/util/Set;remove(Ljava/lang/Object;)Z"), method = "onPlayerRemove", locals = LocalCapture.CAPTURE_FAILHARD)
+    public void onPlayerListEnd(PlayerRemoveS2CPacket packet, CallbackInfo ci, Iterator var2, UUID uUID, PlayerListEntry playerListEntry) {
+        new EventPlayerLeave(uUID, playerListEntry);
     }
 
     @ModifyArg(method = "onTitle", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;setTitle(Lnet/minecraft/text/Text;)V"))
@@ -180,7 +150,6 @@ class MixinClientPlayNetworkHandler {
     public void onEntityStatusEffect(EntityStatusEffectS2CPacket packet, CallbackInfo info) {
         if (packet.getEntityId() == client.player.getId()) {
             StatusEffectInstance newEffect = new StatusEffectInstance(packet.getEffectId(), packet.getDuration(), packet.getAmplifier(), packet.isAmbient(), packet.shouldShowParticles(), packet.shouldShowIcon(), (StatusEffectInstance) null, Optional.ofNullable(packet.getFactorCalculationData()));
-            newEffect.setPermanent(packet.isPermanent());
             StatusEffectInstance oldEffect = client.player.getStatusEffect(packet.getEffectId());
             new EventStatusEffectUpdate(oldEffect == null ? null : new StatusEffectHelper(oldEffect), new StatusEffectHelper(newEffect), true);
         }

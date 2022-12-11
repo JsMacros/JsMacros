@@ -8,12 +8,12 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.registry.Registry;
 
 import com.google.gson.JsonParseException;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -34,7 +34,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     protected static final MinecraftClient mc = MinecraftClient.getInstance();
 
     public ItemStackHelper(String id, int count) {
-        super(new ItemStack(Registry.ITEM.get(RegistryHelper.parseIdentifier(id)), count));
+        super(new ItemStack(Registries.ITEM.get(RegistryHelper.parseIdentifier(id)), count));
     }
     
     public ItemStackHelper(ItemStack i) {
@@ -155,7 +155,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getPossibleEnchantments() {
-        return Registry.ENCHANTMENT.stream().filter(enchantment -> enchantment.isAcceptableItem(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registries.ENCHANTMENT.stream().filter(enchantment -> enchantment.isAcceptableItem(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -164,7 +164,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getPossibleEnchantmentsFromTable() {
-        return Registry.ENCHANTMENT.stream().filter(enchantment -> enchantment.type.isAcceptableItem(base.getItem()) && !enchantment.isCursed() && !enchantment.isTreasure()).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registries.ENCHANTMENT.stream().filter(enchantment -> enchantment.type.isAcceptableItem(base.getItem()) && !enchantment.isCursed() && !enchantment.isTreasure()).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -300,12 +300,8 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.1.3
      * @return
      */
-    public String getCreativeTab() {
-        ItemGroup g = base.getItem().getGroup();
-        if (g != null)
-            return g.getName();
-        else
-            return null;
+    public List<TextHelper> getCreativeTab() {
+        return ItemGroups.getGroups().parallelStream().filter(group -> !group.isSpecial() && group.getDisplayStacks().parallelStream().anyMatch(e -> e.isItemEqual(base))).map(ItemGroup::getDisplayName).map(TextHelper::new).collect(Collectors.toList());
     }
     
     /**
@@ -321,7 +317,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public String getItemId() {
-        return Registry.ITEM.getId(base.getItem()).toString();
+        return Registries.ITEM.getId(base.getItem()).toString();
     }
 
     /**
@@ -423,7 +419,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public boolean isItemEqualIgnoreDamage(ItemStackHelper ish) {
-        return base.isItemEqualIgnoreDamage(ish.getRaw());
+        return base.isItemEqual(ish.getRaw());
     }
     
     /**
@@ -432,7 +428,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public boolean isItemEqualIgnoreDamage(ItemStack is) {
-        return base.isItemEqualIgnoreDamage(is);
+        return base.isItemEqual(is);
     }
     
     /**

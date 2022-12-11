@@ -6,7 +6,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -61,7 +61,7 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
      * @return the item ID of the block.
      */
     public String getId() {
-        return Registry.BLOCK.getId(b).toString();
+        return Registries.BLOCK.getId(b).toString();
     }
     
     /**

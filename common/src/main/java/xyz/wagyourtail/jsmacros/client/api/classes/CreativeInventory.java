@@ -5,11 +5,13 @@ import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.option.HotbarStorage;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.math.MathHelper;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinCreativeInventoryScreen;
 
 import java.util.List;
@@ -74,7 +76,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public CreativeInventory search(String search) {
-        if (((MixinCreativeInventoryScreen) inventory).getSelectedTab() == ItemGroup.SEARCH.getIndex()) {
+        if (((MixinCreativeInventoryScreen) inventory).getSelectedTab() == ItemGroups.getSearchGroup()) {
             ((MixinCreativeInventoryScreen) inventory).getSearchBox().setText(search);
             ((MixinCreativeInventoryScreen) inventory).invokeSearch();
         }
@@ -89,7 +91,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public CreativeInventory selectSearch() {
-        selectTab(ItemGroup.SEARCH.getIndex());
+        selectTab(ItemGroups.getSearchGroup());
         return this;
     }
 
@@ -101,7 +103,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public CreativeInventory selectInventory() {
-        selectTab(ItemGroup.INVENTORY.getIndex());
+        ItemGroups.getGroups().stream().filter(e -> e.getType().equals(ItemGroup.Type.INVENTORY)).findFirst().ifPresent(this::selectTab);
         return this;
     }
 
@@ -113,23 +115,32 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public CreativeInventory selectHotbar() {
-        selectTab(ItemGroup.HOTBAR.getIndex());
+        ItemGroups.getGroups().stream().filter(e -> e.getType().equals(ItemGroup.Type.HOTBAR)).findFirst().ifPresent(this::selectTab);
         return this;
     }
 
     /**
-     * @param tab the index of the tab to select
+     * @param tabName the name of the tab to select
      * @return self for chaining.
      *
      * @since 1.8.4
      */
-    public CreativeInventory selectTab(int tab) {
-        selectTab(ItemGroup.GROUPS[tab]);
+    public CreativeInventory selectTab(String tabName) {
+        //TODO detect if translatable and use translate id instead
+        selectTab(ItemGroups.getGroups().stream().filter(e -> e.getDisplayName().getString().equals(tabName)).findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid tab name")));
         return this;
     }
 
+    public List<String> getTabNames() {
+        return ItemGroups.getGroups().stream().map(e -> e.getDisplayName().getString()).collect(Collectors.toList());
+    }
+
+    public List<TextHelper> getTabTexts() {
+        return ItemGroups.getGroups().stream().map(e -> new TextHelper(e.getDisplayName())).collect(Collectors.toList());
+    }
+
     private CreativeInventory selectTab(ItemGroup group) {
-        mc.execute(() -> ((MixinCreativeInventoryScreen) inventory).invokeSetSelectedTab(ItemGroup.GROUPS[group.getIndex()]));
+        mc.execute(() -> ((MixinCreativeInventoryScreen) inventory).invokeSetSelectedTab(group));
         return this;
     }
 

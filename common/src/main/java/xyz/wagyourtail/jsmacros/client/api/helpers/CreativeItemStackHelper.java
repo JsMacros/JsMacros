@@ -8,8 +8,8 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
-import net.minecraft.util.registry.Registry;
 
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
@@ -91,7 +91,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper addEnchantment(String id, int level) {
-        return addEnchantment(Registry.ENCHANTMENT.get(RegistryHelper.parseIdentifier(id)), level);
+        return addEnchantment(Registries.ENCHANTMENT.get(RegistryHelper.parseIdentifier(id)), level);
     }
 
     /**

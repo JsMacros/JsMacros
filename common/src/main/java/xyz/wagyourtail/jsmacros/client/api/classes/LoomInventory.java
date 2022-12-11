@@ -6,9 +6,9 @@ import net.minecraft.client.gui.screen.ingame.LoomScreen;
 import net.minecraft.item.BannerPatternItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tag.BannerPatternTags;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.BannerPatternTags;
 import xyz.wagyourtail.jsmacros.client.access.ILoomScreen;
 
 import java.util.List;
@@ -26,12 +26,12 @@ public class LoomInventory extends Inventory<LoomScreen> {
 
     private List<RegistryEntry<BannerPattern>> getPatternsFor(ItemStack stack) {
         if (stack.isEmpty()) {
-            return (List) Registry.BANNER_PATTERN.getEntryList(BannerPatternTags.NO_ITEM_REQUIRED).map(ImmutableList::copyOf).orElse(ImmutableList.of());
+            return (List) Registries.BANNER_PATTERN.getEntryList(BannerPatternTags.NO_ITEM_REQUIRED).map(ImmutableList::copyOf).orElse(ImmutableList.of());
         } else {
             Item var3 = stack.getItem();
             if (var3 instanceof BannerPatternItem) {
                 BannerPatternItem bannerPatternItem = (BannerPatternItem)var3;
-                return (List)Registry.BANNER_PATTERN.getEntryList(bannerPatternItem.getPattern()).map(ImmutableList::copyOf).orElse(ImmutableList.of());
+                return (List)Registries.BANNER_PATTERN.getEntryList(bannerPatternItem.getPattern()).map(ImmutableList::copyOf).orElse(ImmutableList.of());
             } else {
                 return List.of();
             }

@@ -541,13 +541,13 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Override
     public ClickableWidgetHelper<?, ?> addButton(int x, int y, int width, int height, int zIndex, String text, MethodWrapper<ClickableWidgetHelper<?, ?>, IScreen, Object, ?> callback) {
         AtomicReference<ClickableWidgetHelper<?, ?>> b = new AtomicReference<>(null);
-        ButtonWidget button = new ButtonWidget(x, y, width, height, net.minecraft.text.Text.literal(text), (btn) -> {
+        ButtonWidget button = ButtonWidget.builder(Text.literal(text), (btn) -> {
             try {
                 callback.accept(b.get(), this);
             } catch (Throwable e) {
                 Core.getInstance().profile.logError(e);
             }
-        });
+        }).position(x, y).size(width, height).build();
         b.set(new ClickableWidgetHelper<>(button, zIndex));
         synchronized (elements) {
             elements.add(b.get());

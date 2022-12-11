@@ -21,7 +21,7 @@ public class HorseEntityHelper extends AbstractHorseEntityHelper<HorseEntity> {
      * @since 1.8.4
      */
     public int getVariant() {
-        return ((MixinHorseEntity) base).invokeGetVariant();
+        return ((MixinHorseEntity) base).invokeGetHorseVariant();
     }
 
 }

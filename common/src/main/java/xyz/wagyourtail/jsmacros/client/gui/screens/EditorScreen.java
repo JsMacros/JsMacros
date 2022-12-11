@@ -250,7 +250,7 @@ public class EditorScreen extends BaseScreen {
         
         this.addDrawableChild(new Button(this.width - width / 8, height - 12, width / 8, 12, textRenderer,0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(language), (btn) -> {
             int height = langs.size() * (textRenderer.fontHeight + 1) + 4;
-            openOverlay(new SelectorDropdownOverlay(btn.x, btn.y - height, btn.getWidth(), height, langs.stream().map(Text::literal).collect(Collectors.toList()), textRenderer, this, (i) -> {
+            openOverlay(new SelectorDropdownOverlay(btn.getX(), btn.getY() - height, btn.getWidth(), height, langs.stream().map(Text::literal).collect(Collectors.toList()), textRenderer, this, (i) -> {
                 setLanguage(langs.get(i));
                 btn.setMessage(Text.literal(langs.get(i)));
             }));

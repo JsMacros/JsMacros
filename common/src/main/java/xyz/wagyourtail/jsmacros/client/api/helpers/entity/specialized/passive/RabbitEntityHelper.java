@@ -18,8 +18,8 @@ public class RabbitEntityHelper extends AnimalEntityHelper<RabbitEntity> {
      *
      * @since 1.8.4
      */
-    public int getVariant() {
-        return base.getRabbitType();
+    public String getVariant() {
+        return base.getVariant().asString();
     }
 
     /**
@@ -28,7 +28,7 @@ public class RabbitEntityHelper extends AnimalEntityHelper<RabbitEntity> {
      * @since 1.8.4
      */
     public boolean isKillerBunny() {
-        return base.getRabbitType() == 99;
+        return base.getVariant() ==  RabbitEntity.RabbitType.EVIL;
     }
 
 }

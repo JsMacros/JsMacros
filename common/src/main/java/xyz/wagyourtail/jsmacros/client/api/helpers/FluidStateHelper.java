@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.fluid.FluidState;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
 
@@ -23,7 +23,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
      * @since 1.8.4
      */
     public String getId() {
-        return Registry.BLOCK.getId(base.getBlockState().getBlock()).toString();
+        return Registries.BLOCK.getId(base.getBlockState().getBlock()).toString();
     }
 
     /**

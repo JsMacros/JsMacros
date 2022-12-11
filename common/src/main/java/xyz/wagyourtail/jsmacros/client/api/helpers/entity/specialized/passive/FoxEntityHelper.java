@@ -37,7 +37,7 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
      * @since 1.8.4
      */
     public boolean isSnowFox() {
-        return base.getFoxType() == FoxEntity.Type.SNOW;
+        return base.getVariant() == FoxEntity.Type.SNOW;
     }
 
     /**
@@ -46,7 +46,7 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
      * @since 1.8.4
      */
     public boolean isRedFox() {
-        return base.getFoxType() == FoxEntity.Type.RED;
+        return base.getVariant() == FoxEntity.Type.RED;
     }
 
     /**

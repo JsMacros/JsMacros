@@ -24,8 +24,9 @@ import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.entity.vehicle.FurnaceMinecartEntity;
 import net.minecraft.entity.vehicle.TntMinecartEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 
 import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
 import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
@@ -405,7 +406,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.8.4
      */
     public String getBiome() {
-        return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(base.getBlockPos()).value()).toString();
+        return MinecraftClient.getInstance().world.getRegistryManager().get(RegistryKeys.BIOME).getId(MinecraftClient.getInstance().world.getBiome(base.getBlockPos()).value()).toString();
     }
 
     @Override

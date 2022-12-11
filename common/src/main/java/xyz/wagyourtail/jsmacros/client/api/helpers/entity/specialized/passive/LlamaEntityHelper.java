@@ -20,8 +20,8 @@ public class LlamaEntityHelper<T extends LlamaEntity> extends DonkeyEntityHelper
      *
      * @since 1.8.4
      */
-    public int getVariant() {
-        return base.getVariant();
+    public String getVariant() {
+        return base.getVariant().asString();
     }
 
     /**

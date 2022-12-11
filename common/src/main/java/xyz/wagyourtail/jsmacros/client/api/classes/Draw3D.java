@@ -5,11 +5,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
 
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
@@ -564,7 +564,7 @@ public class Draw3D {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableTexture();
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 
 
         Vec3d camPos = mc.gameRenderer.getCamera().getPos();
@@ -590,7 +590,7 @@ public class Draw3D {
         }
 
         //reset
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.enableTexture();
 
         matrixStack.pop();
@@ -1793,23 +1793,27 @@ public class Draw3D {
             matrixStack.translate(pos.x, pos.y, pos.z);
 
             if (rotateToPlayer) {
-                Vec3f rot = MinecraftClient.getInstance().gameRenderer.getCamera().getRotation().toEulerXyzDegrees();
-                rotations.x = -rot.getX();
-                rotations.y = 180 + rot.getY();
+                Vector3f rot = MinecraftClient.getInstance().gameRenderer.getCamera().getRotation().getEulerAnglesXYZ(new Vector3f());
+                rotations.x = -rot.x();
+                rotations.y = 180 + rot.y();
                 rotations.z = 0;
             }
             if (rotateCenter) {
                 matrixStack.translate(sizes.x / 2, 0, 0);
-                matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float) rotations.y));
+                matrixStack.multiply(new Quaternionf().rotateLocalY((float) rotations.y));
                 matrixStack.translate(-sizes.x / 2, 0, 0);
                 matrixStack.translate(0, -sizes.y / 2, 0);
-                matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion((float) rotations.x));
+                matrixStack.multiply(new Quaternionf().rotateLocalX((float) rotations.x));
                 matrixStack.translate(0, sizes.y / 2, 0);
                 matrixStack.translate(sizes.x / 2, -sizes.y / 2, 0);
-                matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float) rotations.z));
+                matrixStack.multiply(new Quaternionf().rotateLocalZ((float) rotations.z));
                 matrixStack.translate(-sizes.x / 2, sizes.y / 2, 0);
             } else {
-                matrixStack.multiply(Quaternion.fromEulerXyzDegrees(rotations.toVector().toMojangFloatVector()));
+                Quaternionf q = new Quaternionf();
+                q.rotateLocalY((float) rotations.y);
+                q.rotateLocalX((float) rotations.x);
+                q.rotateLocalZ((float) rotations.z);
+                matrixStack.multiply(q);
             }
             // fix it so that y-axis goes down instead of up
             matrixStack.scale(1, -1, 1);
@@ -1848,7 +1852,7 @@ public class Draw3D {
             if (rotateCenter) {
                 matrixStack.translate(draw2DElement.width.getAsInt() / 2d, draw2DElement.height.getAsInt() / 2d, 0);
             }
-            matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(draw2DElement.rotation));
+            matrixStack.multiply(new Quaternionf().rotateLocalZ(draw2DElement.rotation));
             if (rotateCenter) {
                 matrixStack.translate(-draw2DElement.width.getAsInt() / 2d, -draw2DElement.height.getAsInt() / 2d, 0);
             }
