@@ -639,7 +639,6 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
         this.zIndex = zIndex;
     }
 
-    @Override
     public int getZIndex() {
         return zIndex;
     }

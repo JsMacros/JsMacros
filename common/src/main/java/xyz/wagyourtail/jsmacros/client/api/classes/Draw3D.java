@@ -1572,7 +1572,7 @@ public class Draw3D {
      * @since 1.6.5
      */
     @SuppressWarnings("unused")
-    public static class Surface extends Draw2D {
+    public static class Surface extends Draw2D implements RenderCommon.RenderElement {
         public boolean rotateToPlayer;
         public boolean rotateCenter;
         public EntityHelper<?> boundEntity;
@@ -1776,6 +1776,11 @@ public class Draw3D {
         }
 
         @Override
+        public int getZIndex() {
+            return 0;
+        }
+
+        @Override
         public void render3D(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
             matrixStack.push();
             if (boundEntity != null && boundEntity.isAlive()) {
@@ -1871,7 +1876,12 @@ public class Draw3D {
             element.render3D(matrixStack, 0, 0, 0);
             matrixStack.pop();
         }
-    
+
+        @Override
+        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+
+        }
+
         /**
          * @author Etheradon
          * @since 1.8.4

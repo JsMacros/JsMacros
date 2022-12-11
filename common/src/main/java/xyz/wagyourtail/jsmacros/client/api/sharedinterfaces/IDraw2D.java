@@ -16,12 +16,7 @@ import java.util.function.Consumer;
  * @since 1.2.7
  * @param <T>
  */
-public interface IDraw2D<T> extends RenderElement {
-
-    @Override
-    default void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        render(matrices);
-    }
+public interface IDraw2D<T> {
     
     /**
      * @since 1.2.7
@@ -795,4 +790,16 @@ public interface IDraw2D<T> extends RenderElement {
      * @param matrixStack
      */
     void render(MatrixStack matrixStack);
+
+    /**
+     * @since 1.8.4
+     * @param zIndex
+     */
+    void setZIndex(int zIndex);
+
+    /**
+     * @since 1.8.4
+     * @return
+     */
+    int getZIndex();
 }

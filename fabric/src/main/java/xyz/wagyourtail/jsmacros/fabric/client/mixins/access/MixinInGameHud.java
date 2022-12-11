@@ -20,7 +20,7 @@ class MixinInGameHud {
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;debugEnabled:Z"), method = "render")
     public void renderHud(MatrixStack matrixStack, float f, final CallbackInfo info) {
 
-        for (IDraw2D<Draw2D> h : ImmutableSet.copyOf(FHud.overlays).stream().sorted(Comparator.comparingInt(RenderCommon.RenderElement::getZIndex)).collect(Collectors.toList())) {
+        for (IDraw2D<Draw2D> h : ImmutableSet.copyOf(FHud.overlays).stream().sorted(Comparator.comparingInt(IDraw2D::getZIndex)).collect(Collectors.toList())) {
             try {
                 h.render(matrixStack);
             } catch (Throwable ignored) {}

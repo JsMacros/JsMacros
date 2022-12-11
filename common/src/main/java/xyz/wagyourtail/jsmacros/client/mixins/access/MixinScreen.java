@@ -1017,10 +1017,5 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public MethodWrapper<IScreen, Object, Object, ?> getOnClose() {
         return onClose;
     }
-
-    @Override
-    public int getZIndex() {
-        return 0;
-    }
     
 }
