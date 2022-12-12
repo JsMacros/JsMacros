@@ -59,6 +59,7 @@
         "access.MixinTridentEntity",
         "access.MixinTrueTypeFont",
         "events.MixinChatHud",
+        "events.MixinChatScreen",
         "events.MixinClientConnection",
         "events.MixinClientPlayerEntity",
         "events.MixinClientPlayerInteractionManager",
