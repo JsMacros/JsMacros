@@ -1,53 +1,20 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.block.BambooBlock;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.BrewingStandBlock;
-import net.minecraft.block.BubbleColumnBlock;
-import net.minecraft.block.CakeBlock;
-import net.minecraft.block.CampfireBlock;
-import net.minecraft.block.CandleBlock;
-import net.minecraft.block.CaveVinesHeadBlock;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.block.CommandBlock;
-import net.minecraft.block.ComparatorBlock;
-import net.minecraft.block.ComposterBlock;
-import net.minecraft.block.DaylightDetectorBlock;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.EndPortalFrameBlock;
-import net.minecraft.block.FarmlandBlock;
-import net.minecraft.block.FenceGateBlock;
-import net.minecraft.block.HopperBlock;
-import net.minecraft.block.JukeboxBlock;
-import net.minecraft.block.LanternBlock;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.LecternBlock;
-import net.minecraft.block.LeveledCauldronBlock;
-import net.minecraft.block.NoteBlock;
-import net.minecraft.block.PistonBlock;
-import net.minecraft.block.PistonHeadBlock;
-import net.minecraft.block.PointedDripstoneBlock;
-import net.minecraft.block.RepeaterBlock;
-import net.minecraft.block.RespawnAnchorBlock;
-import net.minecraft.block.ScaffoldingBlock;
-import net.minecraft.block.SculkCatalystBlock;
-import net.minecraft.block.SculkSensorBlock;
-import net.minecraft.block.SculkShriekerBlock;
-import net.minecraft.block.SeaPickleBlock;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.block.SnowBlock;
-import net.minecraft.block.SnowyBlock;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.block.StructureBlock;
-import net.minecraft.block.TntBlock;
-import net.minecraft.block.TripwireBlock;
-import net.minecraft.block.TripwireHookBlock;
-import net.minecraft.block.TurtleEggBlock;
-import net.minecraft.fluid.FlowableFluid;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Etheradon
@@ -227,7 +194,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public DirectionHelper getFacingHopper() {
+    public DirectionHelper getHopperFacing() {
         return new DirectionHelper(base.get(Properties.HOPPER_FACING));
     }
 
@@ -245,7 +212,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isFacingUp() {
+    public boolean isUp() {
         return base.get(Properties.UP);
     }
 
@@ -254,7 +221,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isFacingDown() {
+    public boolean isDown() {
         return base.get(Properties.DOWN);
     }
 
@@ -263,7 +230,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isFacingNorth() {
+    public boolean isNorth() {
         return base.get(Properties.NORTH);
     }
 
@@ -272,7 +239,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isFacingSouth() {
+    public boolean isSouth() {
         return base.get(Properties.SOUTH);
     }
 
@@ -281,7 +248,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isFacingEast() {
+    public boolean isEast() {
         return base.get(Properties.EAST);
     }
 
@@ -290,7 +257,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isFacingWest() {
+    public boolean isWest() {
         return base.get(Properties.WEST);
     }
 
@@ -302,7 +269,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @since 1.8.4
      */
     public int getHoneyLevel() {
-        return base.get(BeehiveBlock.HONEY_LEVEL);
+        return base.get(Properties.HONEY_LEVEL);
     }
 
     /**
@@ -312,8 +279,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isScaffoldingAtBottom() {
-        return base.get(ScaffoldingBlock.BOTTOM);
+    public boolean isBottom() {
+        return base.get(Properties.BOTTOM);
     }
 
     /**
@@ -323,8 +290,9 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean doesBubbleColumnDragDown() {
-        return base.get(BubbleColumnBlock.DRAG);
+    @Ignore({ "hasDrag" })
+    public boolean isBubbleColumnDown() {
+        return base.get(Properties.DRAG);
     }
 
     /**
@@ -334,8 +302,9 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean doesBubbleColumnLiftUp() {
-        return !base.get(BubbleColumnBlock.DRAG);
+    @Ignore
+    public boolean isBubbleColumnUp() {
+        return !base.get(Properties.DRAG);
     }
 
     /**
@@ -345,8 +314,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isTripWireHookAttached() {
-        return base.get(TripwireHookBlock.ATTACHED);
+    public boolean isAttached() {
+        return base.get(Properties.ATTACHED);
     }
 
     /**
@@ -356,20 +325,10 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isTripWireDisarmed() {
-        return base.get(TripwireBlock.DISARMED);
+    public boolean isDisarmed() {
+        return base.get(Properties.DISARMED);
     }
 
-    /**
-     * Used on trip wires.
-     *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public boolean isTripWireAttached() {
-        return base.get(TripwireBlock.ATTACHED);
-    }
 
     /**
      * Used on command blocks.
@@ -378,8 +337,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isCommandBlockConditional() {
-        return base.get(CommandBlock.CONDITIONAL);
+    public boolean isConditional() {
+        return base.get(Properties.CONDITIONAL);
     }
 
     /**
@@ -389,8 +348,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isHopperEnabled() {
-        return base.get(HopperBlock.ENABLED);
+    public boolean isEnabled() {
+        return base.get(Properties.ENABLED);
     }
 
     /**
@@ -400,8 +359,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isPistonExtended() {
-        return base.get(PistonBlock.EXTENDED);
+    public boolean isExtended() {
+        return base.get(Properties.EXTENDED);
     }
 
     /**
@@ -411,8 +370,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isPistonHeadShort() {
-        return base.get(PistonHeadBlock.SHORT);
+    public boolean isShort() {
+        return base.get(Properties.SHORT);
     }
 
     /**
@@ -422,8 +381,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean hasEndPortalEye() {
-        return base.get(EndPortalFrameBlock.EYE);
+    public boolean hasEye() {
+        return base.get(Properties.EYE);
     }
 
     /**
@@ -433,19 +392,61 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isFluidFalling() {
-        return base.get(FlowableFluid.FALLING);
+    public boolean isFalling() {
+        return base.get(Properties.FALLING);
     }
 
+    // don't make static, causes crash in main function below
+    private final IntProperty[] levels = {
+        Properties.LEVEL_1_8,
+        Properties.LEVEL_3,
+        Properties.LEVEL_8,
+        Properties.LEVEL_15
+    };
+
     /**
-     * Used on fluids.
+     * Used on fluids and stuff
      *
      * @return
      *
      * @since 1.8.4
      */
-    public int getFluidLevel() {
-        return base.get(FlowableFluid.LEVEL);
+     @Ignore({ "getLevel1_8", "getLevel3", "getLevel8", "getLevel15" })
+    public int getLevel() {
+        for (IntProperty level : levels) {
+            if (base.contains(level)) {
+                return base.get(level);
+            }
+        }
+        throw new IllegalStateException("No level property found");
+    }
+
+    /**
+     * @since 1.8.4
+     * @return
+     */
+    @Ignore
+    public int getMaxLevel() {
+        for (IntProperty level : levels) {
+            if (base.contains(level)) {
+                return level.getValues().stream().max(Integer::compare).orElse(-1);
+            }
+        }
+        throw new IllegalStateException("No level property found");
+    }
+
+    /**
+     * @since 1.8.4
+     * @return
+     */
+    @Ignore
+    public int getMinLevel() {
+        for (IntProperty level : levels) {
+            if (base.contains(level)) {
+                return level.getValues().stream().min(Integer::compare).orElse(-1);
+            }
+        }
+        throw new IllegalStateException("No level property found");
     }
 
     /**
@@ -455,8 +456,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isLanternHanging() {
-        return base.get(LanternBlock.HANGING);
+    public boolean isHanging() {
+        return base.get(Properties.HANGING);
     }
 
     /**
@@ -466,8 +467,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean hasBrewingStandFirstBottle() {
-        return base.get(BrewingStandBlock.BOTTLE_PROPERTIES[0]);
+    public boolean hasBottle0() {
+        return base.get(Properties.HAS_BOTTLE_0);
     }
 
     /**
@@ -477,8 +478,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean hasBrewingStandSecondBottle() {
-        return base.get(BrewingStandBlock.BOTTLE_PROPERTIES[1]);
+    public boolean hasBottle1() {
+        return base.get(Properties.HAS_BOTTLE_1);
     }
 
     /**
@@ -488,8 +489,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean hasBrewingStandThirdBottle() {
-        return base.get(BrewingStandBlock.BOTTLE_PROPERTIES[2]);
+    public boolean hasBottle2() {
+        return base.get(Properties.HAS_BOTTLE_2);
     }
 
     /**
@@ -499,8 +500,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean hasJukeboxRecord() {
-        return base.get(JukeboxBlock.HAS_RECORD);
+    public boolean hasRecord() {
+        return base.get(Properties.HAS_RECORD);
     }
 
     /**
@@ -510,8 +511,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean hasLecternBook() {
-        return base.get(LecternBlock.HAS_BOOK);
+    public boolean hasBook() {
+        return base.get(Properties.HAS_BOOK);
     }
 
     /**
@@ -521,19 +522,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isDayLightSenser() {
-        return !base.get(DaylightDetectorBlock.INVERTED);
-    }
-
-    /**
-     * Used on daylight sensors.
-     *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public boolean isNightLightSenser() {
-        return base.get(DaylightDetectorBlock.INVERTED);
+    public boolean isInverted() {
+        return base.get(Properties.INVERTED);
     }
 
     /**
@@ -543,8 +533,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isFenceGateInWall() {
-        return base.get(FenceGateBlock.IN_WALL);
+    public boolean isInWall() {
+        return base.get(Properties.IN_WALL);
     }
 
     /**
@@ -565,7 +555,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isBlockLit() {
+    public boolean isLit() {
         return base.get(Properties.LIT);
     }
 
@@ -576,8 +566,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isRepeaterLocked() {
-        return base.get(RepeaterBlock.LOCKED);
+    public boolean isLocked() {
+        return base.get(Properties.LOCKED);
     }
 
     /**
@@ -587,8 +577,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public int getRepeaterDelay() {
-        return base.get(RepeaterBlock.DELAY);
+    public int getDelay() {
+        return base.get(Properties.DELAY);
     }
 
     /**
@@ -598,8 +588,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isBedOccupied() {
-        return base.get(BedBlock.OCCUPIED);
+    public boolean isOccupied() {
+        return base.get(Properties.OCCUPIED);
     }
 
     /**
@@ -609,19 +599,64 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isLeavePersistent() {
-        return base.get(LeavesBlock.PERSISTENT);
+    public boolean isPersistent() {
+        return base.get(Properties.PERSISTENT);
     }
 
+    private final IntProperty distance[] = {
+        Properties.DISTANCE_0_7,
+        Properties.DISTANCE_1_7
+    };
+
     /**
-     * Used on leaves.
+     * Used on leaves and scaffold.
      *
      * @return
      *
      * @since 1.8.4
      */
-    public int getLeaveDistance() {
-        return base.get(LeavesBlock.DISTANCE);
+    @Ignore({ "getDistance0_7", "getDistance1_7" })
+    public int getDistance() {
+        for (IntProperty d : distance) {
+            if (base.contains(d)) {
+                return base.get(d);
+            }
+        }
+        throw new IllegalStateException("No distance property found");
+    }
+
+    /**
+     * Used on leaves and scaffold.
+     *
+     * @return
+     *
+     * @since 1.8.4
+     */
+     @Ignore
+     public int getMaxDistance() {
+        for (IntProperty d : distance) {
+            if (base.contains(d)) {
+                return d.getValues().stream().max(Integer::compare).orElse(-1);
+            }
+        }
+        throw new IllegalStateException("No distance property found");
+     }
+
+    /**
+     * Used on leaves and scaffold.
+     *
+     * @return
+     *
+     * @since 1.8.4
+     */
+    @Ignore
+    public int getMinDistance() {
+        for (IntProperty d : distance) {
+            if (base.contains(d)) {
+                return d.getValues().stream().min(Integer::compare).orElse(-1);
+            }
+        }
+        throw new IllegalStateException("No distance property found");
     }
 
     /**
@@ -633,7 +668,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isBlockPowered() {
+    public boolean isPowered() {
         return base.get(Properties.POWERED);
     }
 
@@ -644,8 +679,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean doesCampfireSignalFire() {
-        return base.get(CampfireBlock.SIGNAL_FIRE);
+    public boolean isSignalFire() {
+        return base.get(Properties.SIGNAL_FIRE);
     }
 
     /**
@@ -655,8 +690,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isSnowyDirtSnowy() {
-        return base.get(SnowyBlock.SNOWY);
+    public boolean isSnowy() {
+        return base.get(Properties.SNOWY);
     }
 
     /**
@@ -666,8 +701,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isDispenserTriggered() {
-        return base.get(DispenserBlock.TRIGGERED);
+    public boolean isTriggered() {
+        return base.get(Properties.TRIGGERED);
     }
 
     /**
@@ -677,8 +712,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isTntUnstable() {
-        return base.get(TntBlock.UNSTABLE);
+    public boolean isUnstable() {
+        return base.get(Properties.UNSTABLE);
     }
 
     /**
@@ -691,7 +726,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isBlockWaterlogged() {
+    public boolean isWaterlogged() {
         return base.get(Properties.WATERLOGGED);
     }
 
@@ -701,7 +736,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @since 1.8.4
      */
     public String getBedPart() {
-        return base.get(BedBlock.PART).asString();
+        return base.get(Properties.BED_PART).asString();
     }
 
     /**
@@ -710,7 +745,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @since 1.8.4
      */
     public String getDoorHinge() {
-        return base.get(DoorBlock.HINGE).asString();
+        return base.get(Properties.DOOR_HINGE).asString();
     }
 
     /**
@@ -719,7 +754,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @since 1.8.4
      */
     public String getInstrument() {
-        return base.get(NoteBlock.INSTRUMENT).asString();
+        return base.get(Properties.INSTRUMENT).asString();
     }
 
     /**
@@ -728,7 +763,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @since 1.8.4
      */
     public String getPistonType() {
-        return base.get(PistonHeadBlock.TYPE).asString();
+        return base.get(Properties.PISTON_TYPE).asString();
     }
 
     /**
@@ -737,7 +772,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @since 1.8.4
      */
     public String getSlabType() {
-        return base.get(SlabBlock.TYPE).asString();
+        return base.get(Properties.SLAB_TYPE).asString();
     }
 
     /**
@@ -746,7 +781,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @since 1.8.4
      */
     public String getStairShape() {
-        return base.get(StairsBlock.SHAPE).asString();
+        return base.get(Properties.STAIR_SHAPE).asString();
     }
 
     /**
@@ -755,7 +790,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @since 1.8.4
      */
     public String getStructureBlockMode() {
-        return base.get(StructureBlock.MODE).asString();
+        return base.get(Properties.STRUCTURE_BLOCK_MODE).asString();
     }
 
     /**
@@ -763,8 +798,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public String getBambooLeabes() {
-        return base.get(BambooBlock.LEAVES).asString();
+    public String getBambooLeaves() {
+        return base.get(Properties.BAMBOO_LEAVES).asString();
     }
 
     /**
@@ -772,7 +807,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public String getTitle() {
+    public String getTilt() {
         return base.get(Properties.TILT).asString();
     }
 
@@ -782,7 +817,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @since 1.8.4
      */
     public String getVerticalDirection() {
-        return base.get(PointedDripstoneBlock.VERTICAL_DIRECTION).asString();
+        return base.get(Properties.VERTICAL_DIRECTION).asString();
     }
 
     /**
@@ -791,7 +826,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @since 1.8.4
      */
     public String getThickness() {
-        return base.get(PointedDripstoneBlock.THICKNESS).asString();
+        return base.get(Properties.THICKNESS).asString();
     }
 
     /**
@@ -800,7 +835,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @since 1.8.4
      */
     public String getChestType() {
-        return base.get(ChestBlock.CHEST_TYPE).asString();
+        return base.get(Properties.CHEST_TYPE).asString();
     }
 
     /**
@@ -809,7 +844,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @since 1.8.4
      */
     public String getComparatorMode() {
-        return base.get(ComparatorBlock.MODE).asString();
+        return base.get(Properties.COMPARATOR_MODE).asString();
     }
 
     /**
@@ -828,87 +863,48 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean hasCaveVineBerries() {
-        return base.get(CaveVinesHeadBlock.BERRIES);
+    public boolean hasBerries() {
+        return base.get(Properties.BERRIES);
     }
+
+    // don't make static, causes crash in main function below
+    private final IntProperty[] ages = {
+        Properties.AGE_1,
+        Properties.AGE_2,
+        Properties.AGE_3,
+        Properties.AGE_4,
+        Properties.AGE_5,
+        Properties.AGE_7,
+        Properties.AGE_15,
+        Properties.AGE_25
+    };
 
     /**
-     * Used on bamboo.
+     * crop age and such
      *
      * @return
-     *
+     * @author Wagyourtail
      * @since 1.8.4
      */
-    public int getGrowthStageFromAge1() {
-        return base.get(Properties.AGE_1);
+    @Ignore({ "getAge1", "getAge2", "getAge3", "getAge4", "getAge5", "getAge7", "getAge15", "getAge25"})
+    public int getAge() {
+        for (IntProperty property : ages) {
+            if (base.contains(property)) {
+                return base.get(property);
+            }
+        }
+        throw new IllegalStateException("No age property found");
     }
 
-    /**
-     * Used on cocoa plants.
-     *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public int getGrowthStageFromAge2() {
-        return base.get(Properties.AGE_2);
+    @Ignore
+    public int getMaxAge() {
+        for (IntProperty property : ages) {
+            if (base.contains(property)) {
+                return property.getValues().stream().max(Integer::compareTo).orElse(-1);
+            }
+        }
+        throw new IllegalStateException("No age property found");
     }
-
-    /**
-     * Used on beetroot, frosted ice, nether warts, sweet berries.
-     *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public int getGrowthStageFromAge3() {
-        return base.get(Properties.AGE_3);
-    }
-
-    /**
-     * Used on chorus flowers.
-     *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public int getGrowthStageFromAge5() {
-        return base.get(Properties.AGE_5);
-    }
-
-    /**
-     * Used on crop and stem blocks, i.e. wheat, pumpkin and melon stems
-     *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public int getGrowthStageFromAge7() {
-        return base.get(Properties.AGE_7);
-    }
-
-    /**
-     * Used on cactus, fire, sugar cane.
-     *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public int getGrowthStageFromAge15() {
-        return base.get(Properties.AGE_15);
-    }
-
-    /**
-     * Used on growing plant heads.
-     *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public int getGrowthStageFromAge25() {
-        return base.get(Properties.AGE_25);
-    }
-
     /**
      * Used on cakes.
      *
@@ -916,8 +912,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public int getBitesFromCake() {
-        return base.get(CakeBlock.BITES);
+    public int getBites() {
+        return base.get(Properties.BITES);
     }
 
     /**
@@ -927,8 +923,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public int getCandleCount() {
-        return base.get(CandleBlock.CANDLES);
+    public int getCandles() {
+        return base.get(Properties.CANDLES);
     }
 
     /**
@@ -938,8 +934,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public int getTurtleEggCount() {
-        return base.get(TurtleEggBlock.EGGS);
+    public int getEggs() {
+        return base.get(Properties.EGGS);
     }
 
     /**
@@ -949,8 +945,9 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public int getHatchedTurtleEggCount() {
-        return base.get(TurtleEggBlock.HATCH);
+    @Ignore("getHatch")
+    public int getHatched() {
+        return base.get(Properties.HATCH);
     }
 
     /**
@@ -960,31 +957,10 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public int getSnowLayers() {
-        return base.get(SnowBlock.LAYERS);
+    public int getLayers() {
+        return base.get(Properties.LAYERS);
     }
 
-    /**
-     * Used on snow cauldrons.
-     *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public int getCauldronSnowLayers() {
-        return base.get(LeveledCauldronBlock.LEVEL);
-    }
-
-    /**
-     * Used on composters.
-     *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public int getComposterLevel() {
-        return base.get(ComposterBlock.LEVEL);
-    }
 
     /**
      * Used on farmland.
@@ -993,8 +969,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public int getFarmlandMoistureLevel() {
-        return base.get(FarmlandBlock.MOISTURE);
+    public int getMoisture() {
+        return base.get(Properties.MOISTURE);
     }
 
     /**
@@ -1004,8 +980,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public int getNoteFromNoteblock() {
-        return base.get(NoteBlock.NOTE);
+    public int getNote() {
+        return base.get(Properties.NOTE);
     }
 
     /**
@@ -1015,8 +991,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public int getSeaPickleCount() {
-        return base.get(SeaPickleBlock.PICKLES);
+    public int getPickles() {
+        return base.get(Properties.PICKLES);
     }
 
     /**
@@ -1027,7 +1003,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public int getBlockPower() {
+    public int getPower() {
         return base.get(Properties.POWER);
     }
 
@@ -1038,19 +1014,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public int getGrowthStage() {
+    public int getStage() {
         return base.get(Properties.STAGE);
-    }
-
-    /**
-     * Used on scaffolding.
-     *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public int getScaffoldingDistance() {
-        return base.get(ScaffoldingBlock.DISTANCE);
     }
 
     /**
@@ -1060,35 +1025,43 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public int getRespawnAnchorCharges() {
-        return base.get(RespawnAnchorBlock.CHARGES);
+    public int getCharges() {
+        return base.get(Properties.CHARGES);
     }
 
     /**
+    *
+    * Used on sculk sensors.
+    *
      * @return
      *
      * @since 1.8.4
      */
     public boolean isShrieking() {
-        return base.get(SculkShriekerBlock.SHRIEKING);
+        return base.get(Properties.SHRIEKING);
     }
 
     /**
+     * Used on sculk sensors.
+    *
      * @return
      *
      * @since 1.8.4
      */
     public boolean canSummon() {
-        return base.get(SculkShriekerBlock.CAN_SUMMON);
+        return base.get(Properties.CAN_SUMMON);
     }
 
     /**
+    *
+     * Used on sculk sensors.
+    *
      * @return
      *
      * @since 1.8.4
      */
     public String getSculkSensorPhase() {
-        return base.get(SculkSensorBlock.SCULK_SENSOR_PHASE).asString();
+        return base.get(Properties.SCULK_SENSOR_PHASE).asString();
     }
 
     /**
@@ -1096,8 +1069,159 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      *
      * @since 1.8.4
      */
-    public boolean isBlooming() {
-        return base.get(SculkCatalystBlock.BLOOM);
+    public boolean isBloom() {
+        return base.get(Properties.BLOOM);
     }
 
+    /**
+     * @return
+     *
+     * @since 1.8.4
+     */
+    public int getRotation() {
+        return base.get(Properties.ROTATION);
+    }
+
+
+    /**
+     * @return
+     *
+     * @since 1.8.4
+     */
+    public boolean isSlot0Occupied() {
+        return base.get(Properties.SLOT_0_OCCUPIED);
+    }
+
+
+    /**
+     * @return
+     *
+     * @since 1.8.4
+     */
+    public boolean isSlot1Occupied() {
+        return base.get(Properties.SLOT_1_OCCUPIED);
+    }
+
+
+    /**
+     * @return
+     *
+     * @since 1.8.4
+     */
+    public boolean isSlot2Occupied() {
+        return base.get(Properties.SLOT_2_OCCUPIED);
+    }
+
+
+    /**
+     * @return
+     *
+     * @since 1.8.4
+     */
+    public boolean isSlot3Occupied() {
+        return base.get(Properties.SLOT_3_OCCUPIED);
+    }
+
+
+    /**
+     * @return
+     *
+     * @since 1.8.4
+     */
+    public boolean isSlot4Occupied() {
+        return base.get(Properties.SLOT_4_OCCUPIED);
+    }
+
+
+    /**
+     * @return
+     *
+     * @since 1.8.4
+     */
+    public boolean isSlot5Occupied() {
+        return base.get(Properties.SLOT_5_OCCUPIED);
+    }
+
+    @Ignore
+    private static String SCREAMING_SNAKE_CASE_TO_PascalCase(String input) {
+        StringBuilder result = new StringBuilder();
+        String[] allWords = input.split("_");
+        for (String word : allWords) {
+            if (word.equalsIgnoreCase("has") || word.equalsIgnoreCase("is") || word.equalsIgnoreCase("can")) continue;
+            //test if previous ended with a number and current starts with a number
+            if (result.length() > 0 && Character.isDigit(result.charAt(result.length() - 1))) {
+                if (Character.isDigit(word.charAt(0))) {
+                    result.append("_");
+                }
+            }
+            result.append(Character.toUpperCase(word.charAt(0)));
+            result.append(word.substring(1).toLowerCase());
+        }
+        return result.toString();
+    }
+
+    @Ignore
+    public static void main(String[] args) {
+        Set<String> properties = new HashSet<>();
+        for (Method declaredMethod : UniversalBlockStateHelper.class.getDeclaredMethods()) {
+            if (declaredMethod.isAnnotationPresent(Ignore.class)) {
+                properties.addAll(Arrays.asList(declaredMethod.getAnnotation(Ignore.class).value()));
+            } else {
+                properties.add(declaredMethod.getName());
+            }
+        }
+
+        System.out.println("Properties to add:");
+
+        StringBuilder builder = new StringBuilder();
+
+        for (Field field : Properties.class.getDeclaredFields()) {
+            if (Property.class.isAssignableFrom(field.getType())) {
+                if (BooleanProperty.class.isAssignableFrom(field.getType())) {
+                    if (!properties.remove("is" + SCREAMING_SNAKE_CASE_TO_PascalCase(field.getName())) &&
+                        !properties.remove("has" + SCREAMING_SNAKE_CASE_TO_PascalCase(field.getName())) &&
+                        !properties.remove("can" + SCREAMING_SNAKE_CASE_TO_PascalCase(field.getName()))) {
+                        System.out.println("public boolean is" + SCREAMING_SNAKE_CASE_TO_PascalCase(field.getName()) + "() {");
+                        System.out.println("    return base.get(Properties." + field.getName() + ");");
+                        System.out.println("}");
+                        System.out.println();
+                    }
+                } else {
+                    if (!properties.remove("get" + SCREAMING_SNAKE_CASE_TO_PascalCase(field.getName()))) {
+                        // get type of property
+                        String type = field.getType().getSimpleName();
+                        type = type.substring(0, type.length() - "Property".length());
+                        // lowercase first letter
+                        type = Character.toLowerCase(type.charAt(0)) + type.substring(1);
+                        if (type.equals("enum")) {
+                            type = "String";
+                        }
+                        System.out.println("public " + type + " get" + SCREAMING_SNAKE_CASE_TO_PascalCase(field.getName()) + "() {");
+                        System.out.print("    return base.get(Properties." + field.getName() + ")");
+                        if (type.equals("String")) {
+                            System.out.print(".asString()");
+                        }
+                        System.out.println(";");
+                        System.out.println("}");
+                        System.out.println();
+                    }
+                }
+            }
+        }
+
+        System.out.println("Properties not found:");
+
+        System.out.println(builder);
+
+        for (String property : properties) {
+            System.out.println(property);
+        }
+    }
+
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD})
+    private @interface Ignore {
+        String[] value() default {};
+    }
 }
