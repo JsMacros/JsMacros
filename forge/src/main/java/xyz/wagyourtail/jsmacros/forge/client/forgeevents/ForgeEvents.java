@@ -12,11 +12,11 @@ import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
-import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
-import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.ScriptScreen;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.ScriptScreen;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
-import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.forge.client.api.classes.CommandBuilderForge;
 

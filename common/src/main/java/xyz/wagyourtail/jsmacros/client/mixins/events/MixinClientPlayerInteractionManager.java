@@ -26,14 +26,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventAttackBlock;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventAttackEntity;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventInteractBlock;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventInteractEntity;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventInventoryChange;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventAttackBlock;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventAttackEntity;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventInteractBlock;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventInteractEntity;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventInventoryChange;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
 
 import java.util.List;
 

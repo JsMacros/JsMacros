@@ -14,10 +14,9 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.command.CommandRegistryAccess;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
-import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
+import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
-import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 import java.util.*;
 import java.util.function.Function;

@@ -25,6 +25,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registries;
 
 import xyz.wagyourtail.jsmacros.client.api.classes.FakeServerCommandSource;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;

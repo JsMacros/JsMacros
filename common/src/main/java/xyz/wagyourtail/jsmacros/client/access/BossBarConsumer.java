@@ -5,7 +5,7 @@ import net.minecraft.client.gui.hud.ClientBossBar;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.network.packet.s2c.play.BossBarS2CPacket;
 import net.minecraft.text.Text;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventBossbar;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventBossbar;
 
 import java.util.UUID;
 

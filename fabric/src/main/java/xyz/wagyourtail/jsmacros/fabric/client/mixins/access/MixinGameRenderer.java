@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
-import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.ScriptScreen;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.ScriptScreen;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 
 @Mixin(value = GameRenderer.class)

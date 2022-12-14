@@ -21,10 +21,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
-import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
+import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventDropSlot;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventInventoryChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventAirChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventEXPChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventRiding;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventSignEdit;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 
 import java.util.ArrayList;

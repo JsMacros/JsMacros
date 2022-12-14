@@ -24,9 +24,14 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import xyz.wagyourtail.jsmacros.client.access.BossBarConsumer;
-import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
+import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventInventoryChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventItemPickup;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventDeath;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventStatusEffectUpdate;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.world.*;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 
 import java.util.*;

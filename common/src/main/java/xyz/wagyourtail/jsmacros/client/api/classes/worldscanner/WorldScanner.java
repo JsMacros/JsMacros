@@ -14,9 +14,9 @@ import net.minecraft.world.chunk.PalettedContainer;
 import xyz.wagyourtail.jsmacros.client.access.IPackedIntegerArray;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainer;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainerData;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
-import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
+import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public class WorldScanner {
      * @param chunkRange the range to scan around the center chunk
      * @return a list of all matching block positions.
      */
-    public List<PositionCommon.Pos3D> scanAroundPlayer(int chunkRange) {
+    public List<Pos3D> scanAroundPlayer(int chunkRange) {
         assert mc.player != null;
         return scanChunkRange(mc.player.getChunkPos().x, mc.player.getChunkPos().z, chunkRange);
     }
@@ -106,7 +106,7 @@ public class WorldScanner {
      * @param chunkrange the range to scan around the center chunk
      * @return a list of all matching block positions.
      */
-    public List<PositionCommon.Pos3D> scanChunkRange(int centerX, int centerZ, int chunkrange) {
+    public List<Pos3D> scanChunkRange(int centerX, int centerZ, int chunkrange) {
         assert world != null;
         if (chunkrange < 0) {
             throw new IllegalArgumentException("chunkrange must be at least 0");
@@ -114,12 +114,12 @@ public class WorldScanner {
         return scanChunksInternal(getChunkRange(centerX, centerZ, chunkrange));
     }
 
-    private List<PositionCommon.Pos3D> scanChunksInternal(List<ChunkPos> chunkPositions) {
+    private List<Pos3D> scanChunksInternal(List<ChunkPos> chunkPositions) {
         assert world != null;
         return getBestStream(chunkPositions).flatMap(this::scanChunkInternal).collect(Collectors.toList());
     }
 
-    private Stream<PositionCommon.Pos3D> scanChunkInternal(ChunkPos pos) {
+    private Stream<Pos3D> scanChunkInternal(ChunkPos pos) {
         if (!world.isChunkLoaded(pos.x, pos.z)) {
             return Stream.empty();
         }
@@ -127,12 +127,12 @@ public class WorldScanner {
         long chunkX = (long) pos.x << 4;
         long chunkZ = (long) pos.z << 4;
 
-        List<PositionCommon.Pos3D> blocks = new ArrayList<>();
+        List<Pos3D> blocks = new ArrayList<>();
 
         streamChunkSections(world.getChunk(pos.x, pos.z), (section, isInFilter) -> {
             int yOffset = section.getYOffset();
             PackedIntegerArray array = (PackedIntegerArray) ((IPalettedContainer<?>) section.getBlockStateContainer()).jsmacros_getData().jsmacros_getStorage();
-            forEach(array, isInFilter, place -> blocks.add(new PositionCommon.Pos3D(
+            forEach(array, isInFilter, place -> blocks.add(new Pos3D(
                     chunkX + ((place & 255) & 15),
                     yOffset + (place >> 8),
                     chunkZ + ((place & 255) >> 4)

@@ -18,11 +18,11 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventDimensionChange;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventDisconnect;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventDimensionChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventDisconnect;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventLaunchGame;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventOpenContainer;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventOpenScreen;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventOpenContainer;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventOpenScreen;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinDisconnectedScreen;
 
 @Mixin(MinecraftClient.class)

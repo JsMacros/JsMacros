@@ -14,10 +14,9 @@ import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
-import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
+import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
-import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 import java.util.HashMap;
 import java.util.Map;

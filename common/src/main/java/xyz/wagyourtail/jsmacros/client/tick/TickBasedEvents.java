@@ -7,6 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventItemDamage;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventArmorChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventFallFlying;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventHeldItemChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventTick;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 
 public class TickBasedEvents {

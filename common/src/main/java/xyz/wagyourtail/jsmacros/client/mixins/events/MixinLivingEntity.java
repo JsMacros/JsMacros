@@ -11,11 +11,11 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventDamage;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventHeal;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventEntityDamaged;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventEntityHealed;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventHealthChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventDamage;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventHeal;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventEntityDamaged;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventEntityHealed;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventHealthChange;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity {

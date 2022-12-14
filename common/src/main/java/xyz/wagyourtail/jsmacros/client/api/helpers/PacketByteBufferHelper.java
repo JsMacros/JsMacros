@@ -22,7 +22,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.GlobalPos;
-import net.minecraft.registry.Registries;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -39,15 +38,16 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import xyz.wagyourtail.Pair;
-import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.ChunkHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.DirectionHelper;
+import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.security.PublicKey;
 import java.time.Instant;
@@ -1069,7 +1069,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      *
      * @since 1.8.4
      */
-    public PacketByteBufferHelper writeBlockHitResult(PositionCommon.Pos3D pos, String direction, BlockPosHelper blockPos, boolean missed, boolean insideBlock) {
+    public PacketByteBufferHelper writeBlockHitResult(Pos3D pos, String direction, BlockPosHelper blockPos, boolean missed, boolean insideBlock) {
         BlockHitResult result;
         if (missed) {
             result = BlockHitResult.createMissed(pos.toMojangDoubleVector(), Direction.valueOf(direction), blockPos.getRaw());

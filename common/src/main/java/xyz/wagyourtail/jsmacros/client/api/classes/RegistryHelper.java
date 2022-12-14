@@ -10,14 +10,14 @@ import net.minecraft.util.Identifier;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import xyz.wagyourtail.jsmacros.client.api.helpers.CreativeItemStackHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.EnchantmentHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockStateHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.FluidStateHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.CreativeItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.FluidStateHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
 import java.util.List;
 import java.util.stream.Collectors;
