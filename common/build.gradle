@@ -1,9 +1,3 @@
-architectury {
-    injectInjectables = false
-    common("fabric", "forge")
-}
-
-
 sourceSets {
     core {
         configurations.coreImplementation.setCanBeResolved(true)
@@ -16,24 +10,22 @@ sourceSets {
     }
 }
 
-dependencies {
-    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
-    // Do NOT use other classes from fabric loader
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
+minecraft {
+    runs.off = true
+
+    combinedSourceSets = [sourceSets.main]
 }
 
-publishing {
-    publications {
-        mavenCommon(MavenPublication) {
-            artifactId = rootProject.archives_base_name
-            from components.java
-        }
+repositories {
+    maven {
+        name = "spongepowered"
+        url = "https://repo.spongepowered.org/maven"
     }
+}
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-    }
+dependencies {
+    implementation "org.spongepowered:mixin:0.8.5"
+    implementation "org.ow2.asm:asm:9.3"
 }
 
 jar {
@@ -42,14 +34,20 @@ jar {
 
     preserveFileTimestamps = false
     reproducibleFileOrder = true
+}
 
+remapJar {
+    targetNamespace = "named"
+    fallbackTargetNamespace = "intermediary"
 }
 
 task generatePyDoc(type: Javadoc) {
     group = "documentation"
     description = "Generates the python documentation for the project"
     source = sourceSets.main.allJava + sourceSets.core.allJava
-    classpath = sourceSets.main.compileClasspath
+    doFirst {
+        classpath = sourceSets.main.compileClasspath
+    }
     destinationDir = new File(rootProject.buildDir, "docs/python/JsMacrosAC/")
     options.doclet = "xyz.wagyourtail.doclet.pydoclet.Main"
     options.docletpath new File(rootProject.rootDir, "buildSrc/build/libs/buildSrc.jar")
@@ -67,7 +65,9 @@ task generateTSDoc(type: Javadoc) {
     group = "documentation"
     description = "Generates the typescript documentation for the project"
     source = sourceSets.main.allJava + sourceSets.core.allJava
-    classpath = sourceSets.main.compileClasspath
+    doFirst {
+        classpath = sourceSets.main.compileClasspath
+    }
     destinationDir = new File(rootProject.buildDir, "docs/typescript/headers/")
     options.doclet = "xyz.wagyourtail.doclet.tsdoclet.Main"
     options.docletpath new File(rootProject.rootDir, "buildSrc/build/libs/buildSrc.jar")
@@ -85,7 +85,9 @@ task generateWebDoc(type: Javadoc) {
     group = "documentation"
     description = "Generates the web documentation for the project"
     source = sourceSets.main.allJava + sourceSets.core.allJava
-    classpath = sourceSets.main.compileClasspath
+    doFirst {
+        classpath = sourceSets.main.compileClasspath
+    }
     destinationDir = new File(rootProject.buildDir, "docs/web/")
     options.doclet = "xyz.wagyourtail.doclet.webdoclet.Main"
     options.docletpath new File(rootProject.rootDir, "buildSrc/build/libs/buildSrc.jar")
