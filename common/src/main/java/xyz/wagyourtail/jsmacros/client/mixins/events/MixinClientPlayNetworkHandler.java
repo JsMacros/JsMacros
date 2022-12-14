@@ -61,7 +61,7 @@ class MixinClientPlayNetworkHandler {
         new EventPlayerJoin(entry.profileId(), playerListEntry);
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Ljava/util/Set;remove(Ljava/lang/Object;)Z"), method = "onPlayerRemove", locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(at = @At(value = "INVOKE", target = "Ljava/util/Set;remove(Ljava/lang/Object;)Z", remap = false), method = "onPlayerRemove", locals = LocalCapture.CAPTURE_FAILHARD)
     public void onPlayerListEnd(PlayerRemoveS2CPacket packet, CallbackInfo ci, Iterator var2, UUID uUID, PlayerListEntry playerListEntry) {
         new EventPlayerLeave(uUID, playerListEntry);
     }
