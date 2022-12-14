@@ -1,5 +1,5 @@
 plugins {
-    id "xyz.wagyourtail.unimined" version "0.3.4" apply false
+    id "xyz.wagyourtail.unimined" version "0.3.5" apply false
 }
 
 subprojects {
