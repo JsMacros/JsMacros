@@ -16,18 +16,18 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
  * @author Wagyourtail
  */
 @SuppressWarnings("unused")
-public class Line {
+public class Line3D {
     public Vec3D pos;
     public int color;
     public boolean cull;
 
-    public Line(double x1, double y1, double z1, double x2, double y2, double z2, int color, boolean cull) {
+    public Line3D(double x1, double y1, double z1, double x2, double y2, double z2, int color, boolean cull) {
         setPos(x1, y1, z1, x2, y2, z2);
         setColor(color);
         this.cull = cull;
     }
 
-    public Line(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, boolean cull) {
+    public Line3D(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, boolean cull) {
         setPos(x1, y1, z1, x2, y2, z2);
         setColor(color, alpha);
         this.cull = cull;
@@ -373,8 +373,8 @@ public class Line {
          *
          * @since 1.8.4
          */
-        public Line buildAndAdd() {
-            Line line = build();
+        public Line3D buildAndAdd() {
+            Line3D line = build();
             parent.addLine(line);
             return line;
         }
@@ -384,8 +384,8 @@ public class Line {
          *
          * @return the build line.
          */
-        public Line build() {
-            return new Line(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, color, alpha, cull);
+        public Line3D build() {
+            return new Line3D(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, color, alpha, cull);
         }
 
     }

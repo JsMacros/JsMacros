@@ -7,12 +7,10 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.*;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Surface;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
-import xyz.wagyourtail.jsmacros.client.api.sharedclasses.render.*;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
@@ -105,12 +103,12 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     }
 
     @Override
-    public List<xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line> getLines() {
-        List<xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line> list = new LinkedList<>();
+    public List<Line> getLines() {
+        List<Line> list = new LinkedList<>();
         synchronized (elements) {
             for (Drawable e : elements) {
-                if (e instanceof xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line) {
-                    list.add((xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line) e);
+                if (e instanceof Line) {
+                    list.add((Line) e);
                 }
             }
         }
@@ -416,33 +414,33 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     }
 
     @Override
-    public xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line addLine(int x1, int y1, int x2, int y2, int color) {
+    public Line addLine(int x1, int y1, int x2, int y2, int color) {
         return addLine(x1, y1, x2, y2, color, 0);
     }
 
     @Override
-    public xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex) {
+    public Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex) {
         return addLine(x1, y1, x2, y2, color, zIndex, 1);
     }
 
     @Override
-    public xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line addLine(int x1, int y1, int x2, int y2, int color, double width) {
+    public Line addLine(int x1, int y1, int x2, int y2, int color, double width) {
         return addLine(x1, y1, x2, y2, color, 0, width);
     }
 
     @Override
-    public xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex, double width) {
+    public Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex, double width) {
         return addLine(x1, y1, x2, y2, color, zIndex, width, 0);
     }
 
     @Override
-    public xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line addLine(int x1, int y1, int x2, int y2, int color, double width, double rotation) {
+    public Line addLine(int x1, int y1, int x2, int y2, int color, double width, double rotation) {
         return addLine(x1, y1, x2, y2, color, 0, width, rotation);
     }
 
     @Override
-    public xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex, double width, double rotation) {
-        xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line r = new xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line(x1, y1, x2, y2, color, (float) rotation, (float) width, zIndex).setParent(this);
+    public Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex, double width, double rotation) {
+        Line r = new Line(x1, y1, x2, y2, color, (float) rotation, (float) width, zIndex).setParent(this);
         synchronized (elements) {
             elements.add(r);
         }

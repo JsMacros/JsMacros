@@ -8,7 +8,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3d;
 
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Box;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Surface;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
@@ -27,7 +27,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class Draw3D {
     private final List<Box> boxes = new ArrayList<>();
-    private final List<Line> lines = new ArrayList<>();
+    private final List<Line3D> lines = new ArrayList<>();
 
     private final List<Surface> surfaces = new ArrayList<>();
 
@@ -45,7 +45,7 @@ public class Draw3D {
      *
      * @since 1.0.6
      */
-    public List<Line> getLines() {
+    public List<Line3D> getLines() {
         return ImmutableList.copyOf(lines);
     }
 
@@ -72,7 +72,7 @@ public class Draw3D {
      * @param line
      * @since 1.8.4
      */
-    public void addLine(Line line) {
+    public void addLine(Line3D line) {
         synchronized (lines) {
             lines.add(line);
         }
@@ -184,11 +184,11 @@ public class Draw3D {
      * @param z2
      * @param color
      *
-     * @return the {@link Line} you added.
+     * @return the {@link Line3D} you added.
      *
      * @since 1.0.6
      */
-    public Line addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color) {
+    public Line3D addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color) {
         return addLine(x1, y1, z1, x2, y2, z2, color, false);
     }
 
@@ -207,8 +207,8 @@ public class Draw3D {
      *
      * @since 1.3.1
      */
-    public Line addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color, boolean cull) {
-        Line l = new Line(x1, y1, z1, x2, y2, z2, color, cull);
+    public Line3D addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color, boolean cull) {
+        Line3D l = new Line3D(x1, y1, z1, x2, y2, z2, color, cull);
         synchronized (lines) {
             lines.add(l);
         }
@@ -225,12 +225,12 @@ public class Draw3D {
      * @param color
      * @param alpha
      *
-     * @return the {@link Line} you added.
+     * @return the {@link Line3D} you added.
      *
      * @since 1.1.8
      */
 
-    public Line addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha) {
+    public Line3D addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha) {
         return addLine(x1, y1, z1, x2, y2, z2, color, alpha, false);
     }
 
@@ -249,8 +249,8 @@ public class Draw3D {
      *
      * @since 1.3.1
      */
-    public Line addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, boolean cull) {
-        Line l = new Line(x1, y1, z1, x2, y2, z2, color, alpha, cull);
+    public Line3D addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, boolean cull) {
+        Line3D l = new Line3D(x1, y1, z1, x2, y2, z2, color, alpha, cull);
         synchronized (lines) {
             lines.add(l);
         }
@@ -264,7 +264,7 @@ public class Draw3D {
      *
      * @since 1.0.6
      */
-    public Draw3D removeLine(Line l) {
+    public Draw3D removeLine(Line3D l) {
         synchronized (lines) {
             lines.remove(l);
         }
@@ -515,12 +515,12 @@ public class Draw3D {
     }
 
     /**
-     * @return a new {@link Line.Builder} instance.
+     * @return a new {@link Line3D.Builder} instance.
      *
      * @since 1.8.4
      */
-    public Line.Builder lineBuilder() {
-        return new Line.Builder(this);
+    public Line3D.Builder lineBuilder() {
+        return new Line3D.Builder(this);
     }
 
     /**
@@ -576,7 +576,7 @@ public class Draw3D {
         }
 
         synchronized (lines) {
-            for (Line l : lines) {
+            for (Line3D l : lines) {
                 l.render(matrixStack);
             }
         }

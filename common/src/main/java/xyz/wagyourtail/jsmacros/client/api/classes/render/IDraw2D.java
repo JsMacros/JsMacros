@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render;
 import net.minecraft.client.util.math.MatrixStack;
 
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.*;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -49,7 +48,7 @@ public interface IDraw2D<T> {
      *
      * @since 1.8.4
      */
-    List<xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line> getLines();
+    List<Line> getLines();
     
     /**
      * @since 1.2.7
@@ -396,7 +395,7 @@ public interface IDraw2D<T> {
      *
      * @since 1.8.4
      */
-    xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line addLine(int x1, int y1, int x2, int y2, int color);
+    Line addLine(int x1, int y1, int x2, int y2, int color);
 
     /**
      * @param x1     the x position of the start
@@ -409,7 +408,7 @@ public interface IDraw2D<T> {
      *
      * @since 1.8.4
      */
-    xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex);
+    Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex);
 
     /**
      * @param x1    the x position of the start
@@ -422,7 +421,7 @@ public interface IDraw2D<T> {
      *
      * @since 1.8.4
      */
-    xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line addLine(int x1, int y1, int x2, int y2, int color, double width);
+    Line addLine(int x1, int y1, int x2, int y2, int color, double width);
 
     /**
      * @param x1     the x position of the start
@@ -436,7 +435,7 @@ public interface IDraw2D<T> {
      *
      * @since 1.8.4
      */
-    xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex, double width);
+    Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex, double width);
 
     /**
      * @param x1       the x position of the start
@@ -450,7 +449,7 @@ public interface IDraw2D<T> {
      *
      * @since 1.8.4
      */
-    xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line addLine(int x1, int y1, int x2, int y2, int color, double width, double rotation);
+    Line addLine(int x1, int y1, int x2, int y2, int color, double width, double rotation);
 
     /**
      * @param x1       the x position of the start
@@ -465,7 +464,7 @@ public interface IDraw2D<T> {
      *
      * @since 1.8.4
      */
-    xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex, double width, double rotation);
+    Line addLine(int x1, int y1, int x2, int y2, int color, int zIndex, double width, double rotation);
 
     /**
      * @param l the line to remove
@@ -473,7 +472,7 @@ public interface IDraw2D<T> {
      *
      * @since 1.8.4
      */
-    T removeLine(xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line l);
+    T removeLine(Line l);
      
     /**
      * @since 1.2.7
@@ -711,12 +710,12 @@ public interface IDraw2D<T> {
     }
 
     /**
-     * @return a builder for a {@link xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line}.
+     * @return a builder for a {@link Line}.
      *
      * @since 1.8.4
      */
-    default xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line.Builder lineBuilder() {
-        return new xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line.Builder(this);
+    default Line.Builder lineBuilder() {
+        return new Line.Builder(this);
     }
 
     /**
@@ -724,11 +723,11 @@ public interface IDraw2D<T> {
      * @param y1 the y position of the first point
      * @param x2 the x position of the second point
      * @param y2 the y position of the second point
-     * @return a builder for a {@link xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line}.
+     * @return a builder for a {@link Line}.
      *
      * @since 1.8.4
      */
-    default xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line.Builder lineBuilder(int x1, int y1, int x2, int y2) {
+    default Line.Builder lineBuilder(int x1, int y1, int x2, int y2) {
         return new Line.Builder(this).pos(x1, y1, x2, y2);
     }
     

@@ -49,11 +49,6 @@ import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.boss.EnderDragonEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.boss.WitherEntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.decoration.*;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.mob.*;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.passive.*;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.projectile.*;
-import xyz.wagyourtail.jsmacros.client.api.helpers.entity.specialized.vehicle.*;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;

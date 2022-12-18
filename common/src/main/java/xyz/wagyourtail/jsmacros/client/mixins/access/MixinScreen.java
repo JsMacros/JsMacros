@@ -42,7 +42,6 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.screen.TextFieldWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec2D;
-import xyz.wagyourtail.jsmacros.client.api.sharedclasses.render.*;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
