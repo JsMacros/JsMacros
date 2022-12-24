@@ -740,6 +740,27 @@ public class FWorld extends BaseLibrary {
         }
         return out;
     }
+
+    /**
+     * @since 1.8.4
+     * @param name Title of the BossBar
+     * @param percentage Percentage filled should be between 0 and 1
+     * @param color one of the following: "pink", "blue", "red", "green", "yellow", "purple", "white"
+     * @param style one of the following: "progress", "notched_6", "notched_10", "notched_12", "notched_20"
+     * @return A BossBarHelper instance
+     */
+    public BossBarHelper createBossBar(TextHelper name, float percentage, String color, String style){
+        return new BossBarHelper(name, percentage, color, style);
+    }
+
+    /**
+     * @since 1.8.4
+     * @param uuid UUID of the BossBar
+     * @return A BossBarHelper instance
+     */
+    public BossBarHelper getBossBarFromUUID(String uuid){
+        return new BossBarHelper(uuid);
+    }
     
     /**
      * Check whether a chunk is within the render distance and loaded.

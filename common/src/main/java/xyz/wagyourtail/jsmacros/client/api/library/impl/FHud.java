@@ -10,6 +10,8 @@ import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.ScriptScreen;
+import xyz.wagyourtail.jsmacros.client.api.helpers.BossBarHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
@@ -306,5 +308,5 @@ public class FHud extends BaseLibrary {
     public int getWindowHeight() {
         return mc.getWindow().getHeight();
     }
-    
+
 }
