@@ -14,10 +14,9 @@ import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
-import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
+import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
-import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -103,7 +102,7 @@ public class CommandBuilderForge extends CommandBuilder {
         if (dispatcher != null) {
             ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
             if (networkHandler != null) {
-                LiteralArgumentBuilder lb = (LiteralArgumentBuilder) head.apply(new CommandRegistryAccess(networkHandler.getRegistryManager()));
+                LiteralArgumentBuilder lb = (LiteralArgumentBuilder) head.apply(CommandRegistryAccess.of(networkHandler.getRegistryManager(), networkHandler.getEnabledFeatures()));
                 dispatcher.register(lb);
                 networkHandler.getCommandDispatcher().register(lb);
             }
@@ -124,7 +123,8 @@ public class CommandBuilderForge extends CommandBuilder {
 
     public static void onRegisterEvent(RegisterClientCommandsEvent event) {
         CommandDispatcher<ServerCommandSource> dispatcher = event.getDispatcher();
-        CommandRegistryAccess registryAccess = new CommandRegistryAccess(MinecraftClient.getInstance().getNetworkHandler().getRegistryManager());
+        MinecraftClient mc = MinecraftClient.getInstance();
+        CommandRegistryAccess registryAccess = CommandRegistryAccess.of(mc.getNetworkHandler().getRegistryManager(), mc.getNetworkHandler().getEnabledFeatures());
         for (Function<CommandRegistryAccess, ArgumentBuilder<ServerCommandSource, ?>> command : commands.values()) {
             dispatcher.register((LiteralArgumentBuilder<ServerCommandSource>) command.apply(registryAccess));
         }

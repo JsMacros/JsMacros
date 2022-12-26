@@ -14,10 +14,9 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.command.CommandRegistryAccess;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
-import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
+import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
-import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 import java.util.*;
 import java.util.function.Function;
@@ -96,7 +95,7 @@ public class CommandBuilderFabric extends CommandBuilder {
         if (dispatcher != null) {
             ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
             if (networkHandler != null) {
-                LiteralArgumentBuilder lb = (LiteralArgumentBuilder) head.apply(new CommandRegistryAccess(networkHandler.getRegistryManager()));
+                LiteralArgumentBuilder lb = (LiteralArgumentBuilder) head.apply(CommandRegistryAccess.of(networkHandler.getRegistryManager(), networkHandler.getEnabledFeatures()));
                 dispatcher.register(lb);
                 networkHandler.getCommandDispatcher().register(lb);
             }

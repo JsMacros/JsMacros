@@ -13,7 +13,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.UpdateSignC2SPacket;
 import net.minecraft.text.Text;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,12 +20,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.wagyourtail.jsmacros.client.access.IClientPlayerEntity;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
+import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
-import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventDropSlot;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventInventoryChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventAirChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventEXPChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventRiding;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventSignEdit;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 
 import java.util.ArrayList;
@@ -47,13 +50,11 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
 
     // IGNORE
     public MixinClientPlayerEntity(ClientWorld world, GameProfile profile) {
-        super(world, profile, null);
+        super(world, profile);
     }
 
     @Shadow
     public abstract boolean shouldSlowDown();
-
-    @Shadow public abstract void sendChatMessage(String message, @Nullable Text preview);
 
     @Override
     public void setAir(int air) {
@@ -141,27 +142,5 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         ItemStackHelper[] oldItems = new ItemStackHelper[]{new ItemStackHelper(getInventory().getMainHandStack())};
         ItemStackHelper[] newItems = new ItemStackHelper[]{new ItemStackHelper(entireStack ? Items.AIR.getDefaultStack() : getInventory().getMainHandStack())};
         new EventInventoryChange(Inventory.create(), slots, oldItems, newItems);
-    }
-
-    @Inject(method = "sendChatMessage(Ljava/lang/String;Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
-    public void onSendChatMessage(String message, Text preview, CallbackInfo ci) {
-        final String result = new EventSendMessage(message).message;
-        if (result == null || result.equals("")) {
-            ci.cancel();
-        } else if (!result.equals(message)) {
-            ci.cancel();
-            ((IClientPlayerEntity) this).jsmacros_sendChatMessageBypass(result);
-        }
-    }
-
-    @Inject(method = "sendCommand(Ljava/lang/String;Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
-    public void onSendCommand(String command, Text preview, CallbackInfo ci) {
-        final String result = new EventSendMessage("/" + command).message;
-        if (result == null || result.equals("")) {
-            ci.cancel();
-        } else if (!result.equals("/" + command)) {
-            ci.cancel();
-            ((IClientPlayerEntity) this).jsmacros_sendChatMessageBypass(result);
-        }
     }
 }

@@ -19,7 +19,7 @@ public class EventRecvMessage implements BaseEvent {
     /**
      * @since 1.8.2
      */
-    public byte @Nullable [] signature;
+    public byte[] signature;
 
     /**
      * @since 1.8.2

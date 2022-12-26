@@ -62,6 +62,8 @@ public interface Extension {
             URL resource = clazz.getResource("/META-INF/jsmacrosdeps/" + dependency.trim());
             if (resource != null) {
                 dependenciesSet.add(resource);
+            } else {
+                System.err.println("[JsMacrosExtensionManager] Could not find dependency: " + dependency);
             }
         }
         return dependenciesSet;

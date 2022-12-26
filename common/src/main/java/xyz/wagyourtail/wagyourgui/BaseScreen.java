@@ -45,13 +45,11 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
         super.init();
         overlay = null;
         JsMacros.prevScreen = this;
-        client.keyboard.setRepeatEvents(true);
     }
 
     @Override
     public void removed() {
         assert client != null;
-        client.keyboard.setRepeatEvents(false);
     }
     
     @Override

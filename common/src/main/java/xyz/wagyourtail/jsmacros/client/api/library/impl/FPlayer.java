@@ -14,10 +14,14 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.GameMode;
 
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
-import xyz.wagyourtail.jsmacros.client.api.classes.Inventory;
+import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
-import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.ClientPlayerEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.StatsHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.movement.MovementDummy;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -341,7 +345,7 @@ public class FPlayer extends BaseLibrary {
      * @see #predictInput(PlayerInput, boolean)
      * @since 1.4.0
      */
-    public PositionCommon.Pos3D predictInput(PlayerInput input) {
+    public Pos3D predictInput(PlayerInput input) {
         return predictInput(input, false);
     }
 
@@ -353,7 +357,7 @@ public class FPlayer extends BaseLibrary {
      * @return the position after the input
      * @since 1.4.0
      */
-    public PositionCommon.Pos3D predictInput(PlayerInput input, boolean draw) {
+    public Pos3D predictInput(PlayerInput input, boolean draw) {
         return predictInputs(new PlayerInput[]{input}, draw).get(0);
     }
 
@@ -366,7 +370,7 @@ public class FPlayer extends BaseLibrary {
      * @see #predictInputs(PlayerInput[], boolean)
      * @since 1.4.0
      */
-    public List<PositionCommon.Pos3D> predictInputs(PlayerInput[] inputs) {
+    public List<Pos3D> predictInputs(PlayerInput[] inputs) {
         return predictInputs(inputs, false);
     }
 
@@ -387,15 +391,15 @@ public class FPlayer extends BaseLibrary {
      * @return the position after each input
      * @since 1.4.0
      */
-    public List<PositionCommon.Pos3D> predictInputs(PlayerInput[] inputs, boolean draw) {
+    public List<Pos3D> predictInputs(PlayerInput[] inputs, boolean draw) {
         assert mc.player != null;
         MovementDummy dummy = new MovementDummy(mc.player);
-        List<PositionCommon.Pos3D> predictions = new ArrayList<>();
+        List<Pos3D> predictions = new ArrayList<>();
         for (PlayerInput input : inputs) {
-            predictions.add(new PositionCommon.Pos3D(dummy.applyInput(input)));
+            predictions.add(new Pos3D(dummy.applyInput(input)));
         }
         if (draw) {
-            for (PositionCommon.Pos3D point : predictions) {
+            for (Pos3D point : predictions) {
                 MovementQueue.predPoints.addPoint(point, 0.01, 0xff9500);
             }
         }

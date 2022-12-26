@@ -153,7 +153,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
             fill(matrices, x + (w / 12), y + 1, x + (w / 12) + 1, y + height - 1, 0xFFFFFFFF);
             fill(matrices, x + (w / 4), y + 1, x + (w / 4) + 1, y + height - 1, 0xFFFFFFFF);
             fill(matrices, x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShader(GameRenderer::getPositionTexProgram);
             // icon for keystate
             if (macro.triggerType != ScriptTrigger.TriggerType.EVENT) {
                 switch (macro.triggerType) {

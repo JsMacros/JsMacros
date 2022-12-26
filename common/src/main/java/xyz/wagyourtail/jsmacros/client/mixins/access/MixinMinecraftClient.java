@@ -10,10 +10,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
-import xyz.wagyourtail.jsmacros.client.api.classes.Draw2D;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
-import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IDraw2D;
-import xyz.wagyourtail.jsmacros.client.api.sharedinterfaces.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.function.Consumer;

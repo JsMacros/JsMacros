@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventClickSlot;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventDropSlot;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventClickSlot;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventDropSlot;
 
 @Mixin(HandledScreen.class)
 public class MixinHandledScreen {

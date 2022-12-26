@@ -3,10 +3,10 @@ package xyz.wagyourtail.jsmacros.client.movement;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.Vec3d;
-import xyz.wagyourtail.jsmacros.client.api.classes.Draw3D;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
-import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
+import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class MovementQueue {
     }
 
     private synchronized static void drawPredictions() {
-        predictions.forEach(point -> predPoints.addPoint(new PositionCommon.Pos3D(point.getX(), point.getY(), point.getZ()), 0.01, 0xffd000));
+        predictions.forEach(point -> predPoints.addPoint(new Pos3D(point.getX(), point.getY(), point.getZ()), 0.01, 0xffd000));
     }
 
     public static void append(PlayerInput input, ClientPlayerEntity newPlayer) {

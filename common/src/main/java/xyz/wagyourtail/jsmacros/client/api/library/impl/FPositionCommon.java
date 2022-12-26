@@ -2,9 +2,12 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.util.math.Vec3d;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPosHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.sharedclasses.PositionCommon;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
+import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
+import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec2D;
+import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec3D;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
@@ -28,8 +31,8 @@ public class FPositionCommon extends BaseLibrary {
      *
      * @return
      */
-    public PositionCommon.Vec3D createVec(double x1, double y1, double z1, double x2, double y2, double z2) {
-        return new PositionCommon.Vec3D(x1, y1, z1, x2, y2, z2);
+    public Vec3D createVec(double x1, double y1, double z1, double x2, double y2, double z2) {
+        return new Vec3D(x1, y1, z1, x2, y2, z2);
     }
 
     /**
@@ -37,9 +40,9 @@ public class FPositionCommon extends BaseLibrary {
      * @param entity
      * @return
      */
-    public PositionCommon.Vec3D createLookingVector(EntityHelper<?> entity) {
+    public Vec3D createLookingVector(EntityHelper<?> entity) {
         Vec3d rotation = entity.getRaw().getRotationVector();
-        return new PositionCommon.Vec3D(0, 0, 0, rotation.x, rotation.y, rotation.z);
+        return new Vec3D(0, 0, 0, rotation.x, rotation.y, rotation.z);
     }
 
     /**
@@ -48,9 +51,9 @@ public class FPositionCommon extends BaseLibrary {
      * @param pitch
      * @return
      */
-    public PositionCommon.Vec3D createLookingVector(double yaw, double pitch) {
+    public Vec3D createLookingVector(double yaw, double pitch) {
         Vec3d rotation = Vec3d.fromPolar((float) pitch, (float) yaw);
-        return new PositionCommon.Vec3D(0, 0, 0, rotation.x, rotation.y, rotation.z);
+        return new Vec3D(0, 0, 0, rotation.x, rotation.y, rotation.z);
     }
 
     /**
@@ -62,8 +65,8 @@ public class FPositionCommon extends BaseLibrary {
      *
      * @return
      */
-    public PositionCommon.Vec2D createVec(double x1, double y1, double x2, double y2) {
-        return new PositionCommon.Vec2D(x1, y1, x2, y2);
+    public Vec2D createVec(double x1, double y1, double x2, double y2) {
+        return new Vec2D(x1, y1, x2, y2);
     }
 
     /**
@@ -74,8 +77,8 @@ public class FPositionCommon extends BaseLibrary {
      *
      * @return
      */
-    public PositionCommon.Pos3D createPos(double x, double y, double z) {
-        return new PositionCommon.Pos3D(x, y, z);
+    public Pos3D createPos(double x, double y, double z) {
+        return new Pos3D(x, y, z);
     }
 
     /**
@@ -86,8 +89,8 @@ public class FPositionCommon extends BaseLibrary {
      *
      * @return
      */
-    public PositionCommon.Pos2D createPos(double x, double y) {
-        return new PositionCommon.Pos2D(x, y);
+    public Pos2D createPos(double x, double y) {
+        return new Pos2D(x, y);
     }
 
     /**

@@ -22,9 +22,14 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 
 import xyz.wagyourtail.jsmacros.client.api.classes.FakeServerCommandSource;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -82,9 +87,9 @@ public class CommandContextHelper extends BaseHelper<CommandContext<?>> implemen
         } else if (arg instanceof EntitySelector) {
             arg = ((EntitySelector) arg).getEntities(fakeServerSource).stream().map(EntityHelper::create).collect(Collectors.toList());
         } else if (arg instanceof ParticleEffect) {
-            arg = Registry.PARTICLE_TYPE.getId(((ParticleEffect) arg).getType()).toString();
+            arg = Registries.PARTICLE_TYPE.getId(((ParticleEffect) arg).getType()).toString();
         } else if (arg instanceof StatusEffect) {
-            arg = Registry.STATUS_EFFECT.getId(((StatusEffect) arg)).toString();
+            arg = Registries.STATUS_EFFECT.getId(((StatusEffect) arg)).toString();
         }
         return arg;
     }

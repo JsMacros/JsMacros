@@ -4,6 +4,7 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.util.Identifier;
 
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Arrays;

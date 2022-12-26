@@ -11,7 +11,7 @@ import net.minecraft.client.realms.gui.screen.RealmsMainScreen;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.text.Text;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelStorageException;
 
@@ -20,9 +20,9 @@ import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ModContainerHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ServerInfoHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ItemHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.ServerInfoHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemHelper;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.client.tick.TickSync;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -426,7 +426,7 @@ public class FClient extends PerExecLibrary {
      * @since 1.8.4
      */
     public List<BlockHelper> getRegisteredBlocks() {
-        return Registry.BLOCK.stream().map(BlockHelper::new).collect(Collectors.toList());
+        return Registries.BLOCK.stream().map(BlockHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -435,7 +435,7 @@ public class FClient extends PerExecLibrary {
      * @since 1.8.4
      */
     public List<ItemHelper> getRegisteredItems() {
-        return Registry.ITEM.stream().map(ItemHelper::new).collect(Collectors.toList());
+        return Registries.ITEM.stream().map(ItemHelper::new).collect(Collectors.toList());
     }
 
     /**

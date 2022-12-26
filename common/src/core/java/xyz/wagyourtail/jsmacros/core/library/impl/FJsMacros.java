@@ -88,7 +88,6 @@ public class FJsMacros extends PerExecLibrary {
      * @since 1.1.5
      * 
      * @param file
-     * @return
      */
     public EventContainer<?> runScript(String file) {
         return runScript(file, (EventCustom) null, null);

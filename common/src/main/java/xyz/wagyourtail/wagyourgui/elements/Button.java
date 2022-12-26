@@ -36,8 +36,8 @@ public class Button extends PressableWidget {
     }
     
     public Button setPos(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
+        this.setX(x);
+        this.setY(y);
         this.width = width;
         this.height = height;
         return this;
@@ -70,7 +70,7 @@ public class Button extends PressableWidget {
     protected void renderMessage(MatrixStack matrices) {
         for (int i = 0; i < visibleLines; ++i) {
             int w = textRenderer.getWidth(textLines.get(i));
-            textRenderer.draw(matrices, textLines.get(i), horizCenter ? x + width / 2F - w / 2F : x + 1, y + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
+            textRenderer.draw(matrices, textLines.get(i), horizCenter ? getX() + width / 2F - w / 2F : getX() + 1, getY() + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
         }
     }
     
@@ -78,18 +78,18 @@ public class Button extends PressableWidget {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             // fill
-            if (mouseX - x >= 0 && mouseX - x - width <= 0 && mouseY - y >= 0 && mouseY - y - height <= 0 && this.active || forceHover) {
+            if (mouseX - getX() >= 0 && mouseX - getX() - width <= 0 && mouseY - getY() >= 0 && mouseY - getY() - height <= 0 && this.active || forceHover) {
                 hovering = true;
-                fill(matrices, x + 1, y + 1, x + width - 1, y + height - 1, highlightColor);
+                fill(matrices, getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, highlightColor);
             } else {
                 hovering = false;
-                fill(matrices, x + 1, y + 1, x + width - 1, y + height - 1, color);
+                fill(matrices, getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, color);
             }
             // outline
-            fill(matrices, x, y, x + 1, y + height, borderColor);
-            fill(matrices, x + width - 1, y, x + width, y + height, borderColor);
-            fill(matrices, x + 1, y, x + width - 1, y + 1, borderColor);
-            fill(matrices, x + 1, y + height - 1, x + width - 1, y + height, borderColor);
+            fill(matrices, getX(), getY(), getX() + 1, getY() + height, borderColor);
+            fill(matrices, getX() + width - 1, getY(), getX() + width, getY() + height, borderColor);
+            fill(matrices, getX() + 1, getY(), getX() + width - 1, getY() + 1, borderColor);
+            fill(matrices, getX() + 1, getY() + height - 1, getX() + width - 1, getY() + height, borderColor);
             this.renderMessage(matrices);
         }
     }
@@ -110,8 +110,8 @@ public class Button extends PressableWidget {
     }
 
     @Override
-    public void appendNarrations(NarrationMessageBuilder builder) {
-        //TODO
+    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
+
     }
 
 }

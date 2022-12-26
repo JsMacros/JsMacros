@@ -4,6 +4,10 @@ plugins {
 
 archivesBaseName = archivesBaseName + "-js-extension"
 
+minecraft {
+    runs.off = true
+}
+
 configurations {
     common
     compileClasspath.extendsFrom common
@@ -11,10 +15,6 @@ configurations {
 }
 
 dependencies {
-    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
-    // Do NOT use other classes from fabric loader
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
-
     implementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
     implementation "org.graalvm.js:js:${project.graal_version}"
     implementation "org.graalvm.truffle:truffle-api:${project.graal_version}"
@@ -54,16 +54,7 @@ test {
     useJUnitPlatform()
 }
 
-publishing {
-    publications {
-        mavenFabric(MavenPublication) {
-            artifactId = rootProject.archives_base_name + "-" + project.name
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-    }
+remapJar {
+    targetNamespace = "named"
+    fallbackTargetNamespace = "intermediary"
 }

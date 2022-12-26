@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.impl;
 
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.ClassWrapperFilter;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
 
 import java.lang.reflect.Method;
 import java.util.Map;

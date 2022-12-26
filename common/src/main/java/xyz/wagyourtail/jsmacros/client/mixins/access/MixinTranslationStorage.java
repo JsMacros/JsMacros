@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Mixin(TranslationStorage.class)
 public class MixinTranslationStorage {
 
-    @Inject(at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"), method = "load(Lnet/minecraft/resource/ResourceManager;Ljava/util/List;)Lnet/minecraft/client/resource/language/TranslationStorage;", locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;", remap = false), method = "load(Lnet/minecraft/resource/ResourceManager;Ljava/util/List;)Lnet/minecraft/client/resource/language/TranslationStorage;", locals = LocalCapture.CAPTURE_FAILHARD)
     private static void insertFabricLanguageData(ResourceManager p_239497_0_, List<LanguageDefinition> p_239497_1_, CallbackInfoReturnable<TranslationStorage> cir, Map<String, String> map) {
         Map<String, String> translations = new LinkedHashMap<>();
         for (LanguageDefinition lang : p_239497_1_) {

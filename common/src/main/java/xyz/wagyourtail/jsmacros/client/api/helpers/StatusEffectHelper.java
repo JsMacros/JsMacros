@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -21,7 +21,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      * @return
      */
     public String getId() {
-        return Registry.STATUS_EFFECT.getId(base.getEffectType()).toString();
+        return Registries.STATUS_EFFECT.getId(base.getEffectType()).toString();
     }
     
     /**
@@ -46,7 +46,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      * @since 1.8.4
      */
     public boolean isPermanent() {
-        return base.isPermanent();
+        return false;
     }
 
     /**

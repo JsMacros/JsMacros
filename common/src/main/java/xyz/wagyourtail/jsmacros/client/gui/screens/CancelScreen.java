@@ -117,7 +117,6 @@ public class CancelScreen extends BaseScreen {
     @Override
     public void removed() {
         assert client != null;
-        client.keyboard.setRepeatEvents(false);
     }
 
     @Override

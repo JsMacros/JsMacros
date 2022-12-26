@@ -4,28 +4,27 @@ plugins {
 
 archivesBaseName = archivesBaseName + "-FORGE"
 
-architectury {
-    platformSetupLoomIde()
-    forge()
-}
-
 configurations {
     common
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
-    developmentForge.extendsFrom common
 }
 
-loom {
+minecraft {
     forge {
-        mixinConfigs "jsmacros-forge.mixins.json"
+        mixinConfig = ["jsmacros-forge.mixins.json", "jsmacros.mixins.json"]
+        devFallbackNamespace = "intermediary"
+    }
+
+    mcRemapper.tinyRemapperConf = {
+        ignoreFieldDesc(true)
+        ignoreConflicts(true)
     }
 }
 
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
-
 
     localRuntime "org.graalvm.sdk:graal-sdk:${project.graal_version}"
     localRuntime "org.graalvm.js:js:${project.graal_version}"
@@ -41,15 +40,14 @@ dependencies {
     shadowCommon "org.javassist:javassist:3.28.0-GA"
     shadowCommon "org.jooq:joor:0.9.14"
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    for (sourceSet in project(":common").sourceSets) {
+        if (sourceSet == project(":common").sourceSets.test) continue
+        common sourceSet.output
+        shadowCommon sourceSet.output
+    }
 
-    //ij wasn't seeing this, even tho it's part of namedElements...
-    implementation(project(":common").sourceSets.core.output)
-
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive false }
-
-    common(project(path: ":javascript_extension", configuration: "namedElements")) { transitive false }
-    jsmacrosExtensionInclude(project(path: ":javascript_extension", configuration: "namedElements")) { transitive false }
+    implementation project(":javascript_extension").sourceSets.main.output
+    jsmacrosExtensionInclude(project(":javascript_extension")) { transitive = false }
 }
 
 processResources {
@@ -75,7 +73,7 @@ shadowJar {
 }
 
 remapJar {
-    input.set shadowJar.archiveFile
+    inputFile.set shadowJar.archiveFile
     dependsOn shadowJar
     classifier null
 
@@ -83,6 +81,8 @@ remapJar {
         include '*'
         into "META-INF/jsmacrosdeps"
     }
+
+    remapThroughOfficial = true
 }
 
 jar {
@@ -90,8 +90,7 @@ jar {
 
     manifest {
         attributes([
-                'MixinConnector': 'xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser',
-                'JsMacrosDeps': configurations.include.files.collect { it.name }.join(" ")
+            'MixinConnector': 'xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser',
         ])
     }
 }
@@ -106,20 +105,6 @@ sourcesJar {
 components.java {
     withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
         skip()
-    }
-}
-
-publishing {
-    publications {
-        mavenForge(MavenPublication) {
-            artifactId = rootProject.archives_base_name + "-" + project.name
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
     }
 }
 

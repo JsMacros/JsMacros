@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventHungerChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventHungerChange;
 
 @Mixin(HungerManager.class)
 public class MixinHungerManager {

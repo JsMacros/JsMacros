@@ -1,14 +1,20 @@
 plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "0.12.0-SNAPSHOT" apply false
-}
-
-architectury {
-    minecraft = rootProject.minecraft_version
+    id "xyz.wagyourtail.unimined" version "0.3.5" apply false
 }
 
 subprojects {
-    apply plugin: "dev.architectury.loom"
+    apply plugin: "xyz.wagyourtail.unimined"
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+
+    archivesBaseName = rootProject.archives_base_name
+    version = rootProject.mod_version
+    group = rootProject.maven_group
+
+    java {
+        withSourcesJar()
+    }
 
     configurations {
         coreImplementation {
@@ -19,14 +25,30 @@ subprojects {
 
     sourceSets {
         main {
-            compileClasspath += configurations.coreImplementation
-            runtimeClasspath += configurations.coreImplementation
+            compileClasspath += configurations.coreImplementation + configurations.jsmacrosExtensionInclude
+            runtimeClasspath += configurations.coreImplementation + configurations.jsmacrosExtensionInclude
         }
     }
 
+    repositories {
+        maven {
+            url 'https://maven.fabricmc.net/'
+            metadataSources {
+                artifact()
+            }
+        }
+        maven {
+            name "modmenu repository"
+            url 'https://maven.terraformersmc.com/releases/'
+        }
+        maven { url 'https://jitpack.io' }
+        mavenCentral()
+    }
+
     dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        // The following line declares the mojmap mappings, you may use other mappings as well
+        minecraft "net.minecraft:minecraft:${rootProject.minecraft_version}"
+
+        mappings "net.fabricmc:intermediary:${rootProject.minecraft_version}:v2"
         mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 
         // non-mod dependencies:
@@ -36,47 +58,9 @@ subprojects {
         coreImplementation "com.neovisionaries:nv-websocket-client:2.10"
         coreImplementation "org.javassist:javassist:3.28.0-GA"
     }
-}
-
-allprojects {
-    apply plugin: "java"
-    apply plugin: "architectury-plugin"
-    apply plugin: "maven-publish"
-
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-
-    archivesBaseName = rootProject.archives_base_name
-    version = rootProject.mod_version
-    group = rootProject.maven_group
-
-    repositories {
-        // Add repositories to retrieve artifacts from in here.
-        // You should only use this when depending on other mods because
-        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-        // for more information about repositories.
-        maven {
-            name "Modmuss50 Repository"
-            url 'https://maven.fabricmc.net/'
-            metadataSources {
-                artifact()
-            }
-        }
-        maven { url 'https://jitpack.io' }
-        maven {
-            name "modmenu repository"
-            url 'https://maven.terraformersmc.com/releases/'
-        }
-        mavenCentral()
-    }
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
-    }
-
-    java {
-        withSourcesJar()
     }
 
     jar {
@@ -145,10 +129,10 @@ allprojects {
             })
         }
     }
-}
 
-task removeDist(type: Delete) {
-    delete new File(rootProject.rootDir, "dist")
-}
+    task removeDist(type: Delete) {
+        delete new File(rootProject.rootDir, "dist")
+    }
 
-clean.finalizedBy(removeDist)
+    clean.finalizedBy(removeDist)
+}
