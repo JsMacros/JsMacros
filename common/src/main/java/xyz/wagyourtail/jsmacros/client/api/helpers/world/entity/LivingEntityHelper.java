@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 
 import net.minecraft.entity.Entity;
@@ -13,7 +14,6 @@ import net.minecraft.item.BowItem;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.registry.Registries;
 import net.minecraft.world.RaycastContext;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
@@ -50,7 +50,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @since 1.8.4
      */
     public boolean hasStatusEffect(String id) {
-        StatusEffect effect = Registries.STATUS_EFFECT.get(RegistryHelper.parseIdentifier(id));
+        StatusEffect effect = Registry.STATUS_EFFECT.get(RegistryHelper.parseIdentifier(id));
         return base.getStatusEffects().stream().anyMatch(statusEffectInstance -> statusEffectInstance.getEffectType().equals(effect));
     }
     

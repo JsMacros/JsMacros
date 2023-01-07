@@ -33,7 +33,7 @@ public class BoatEntityHelper extends EntityHelper<BoatEntity> {
      * @since 1.8.4
      */
     public BlockHelper getBoatBlockType() {
-        return new BlockHelper(base.getVariant().getBaseBlock());
+        return new BlockHelper(base.getBoatType().getBaseBlock());
     }
 
     /**
@@ -42,7 +42,7 @@ public class BoatEntityHelper extends EntityHelper<BoatEntity> {
      * @since 1.8.4
      */
     public String getBoatType() {
-        return base.getVariant().getName();
+        return base.getBoatType().getName();
     }
 
     /**

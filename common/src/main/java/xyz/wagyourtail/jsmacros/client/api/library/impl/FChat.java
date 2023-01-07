@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
+import xyz.wagyourtail.jsmacros.client.access.IClientPlayerEntity;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.ChatHistoryManager;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandManager;
@@ -139,23 +140,15 @@ public class FChat extends BaseLibrary {
         if (message == null) return;
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
             assert mc.player != null;
-            sayInternal(message);
+            ((IClientPlayerEntity) mc.player).jsmacros_sendChatMessageBypass(message);
         } else {
             final Semaphore semaphore = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
                 assert mc.player != null;
-                sayInternal(message);
+                ((IClientPlayerEntity) mc.player).jsmacros_sendChatMessageBypass(message);
                 semaphore.release();
             });
             semaphore.acquire();
-        }
-    }
-
-    private void sayInternal(String message) {
-        if (message.startsWith("/")) {
-            mc.getNetworkHandler().sendChatCommand(message.substring(1));
-        } else {
-            mc.getNetworkHandler().sendChatMessage(message);
         }
     }
 

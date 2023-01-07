@@ -5,7 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.math.MathHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
@@ -76,7 +76,7 @@ public class Item implements RenderElement, Alignable<Item> {
      * @since 1.0.5 [citation needed]
      */
     public Item setItem(String id, int count) {
-        this.item = new ItemStack(Registries.ITEM.get(RegistryHelper.parseIdentifier(id)), count);
+        this.item = new ItemStack(Registry.ITEM.get(RegistryHelper.parseIdentifier(id)), count);
         return this;
     }
 
@@ -461,7 +461,7 @@ public class Item implements RenderElement, Alignable<Item> {
          * @since 1.8.4
          */
         public Builder item(String id) {
-            this.itemStack = new ItemStackHelper(Registries.ITEM.get(RegistryHelper.parseIdentifier(id))
+            this.itemStack = new ItemStackHelper(Registry.ITEM.get(RegistryHelper.parseIdentifier(id))
                 .getDefaultStack());
             return this;
         }

@@ -4,6 +4,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.util.Identifier;
 
+import xyz.wagyourtail.jsmacros.client.access.backports.ButtonWidgetBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -85,7 +86,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
         @Override
         public ButtonWidgetHelper<ButtonWidget> createWidget() {
             AtomicReference<ButtonWidgetHelper<ButtonWidget>> b = new AtomicReference<>(null);
-            ButtonWidget button = ButtonWidget.builder(getMessage().getRaw(), btn -> {
+            ButtonWidget button = ButtonWidgetBuilder.builder(getMessage().getRaw(), btn -> {
                 try {
                     if (action != null) {
                         action.accept(b.get(), screen);

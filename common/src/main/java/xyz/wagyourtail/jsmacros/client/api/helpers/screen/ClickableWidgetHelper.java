@@ -41,7 +41,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      * @return the {@code x} coordinate of the button.
      */
     public int getX() {
-        return base.getX();
+        return base.x;
     }
 
     /**
@@ -49,7 +49,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      * @return the {@code y} coordinate of the button.
      */
     public int getY() {
-        return base.getY();
+        return base.y;
     }
     
     /**
@@ -62,7 +62,8 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      * @return
      */
     public B setPos(int x, int y) {
-        base.setPos(x, y);
+        base.x = x;
+        base.y = y;
         return (B) this;
     }
     
@@ -174,13 +175,13 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      */
     public B click(boolean await) throws InterruptedException {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
-            base.mouseClicked(base.getX(), base.getY(), 0);
-            base.mouseReleased(base.getX(), base.getY(), 0);
+            base.mouseClicked(base.x, base.y, 0);
+            base.mouseReleased(base.x, base.y, 0);
         } else {
             final Semaphore waiter = new Semaphore(await ? 0 : 1);
             MinecraftClient.getInstance().execute(() -> {
-                base.mouseClicked(base.getX(), base.getY(), 0);
-                base.mouseReleased(base.getX(), base.getY(), 0);
+                base.mouseClicked(base.x, base.y, 0);
+                base.mouseReleased(base.x, base.y, 0);
                 waiter.release();
             });
             waiter.acquire();

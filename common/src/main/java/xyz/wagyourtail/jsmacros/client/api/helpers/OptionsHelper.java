@@ -1,16 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.AttackIndicator;
-import net.minecraft.client.option.ChatVisibility;
-import net.minecraft.client.option.CloudRenderMode;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.option.GraphicsMode;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.option.NarratorMode;
-import net.minecraft.client.option.ParticlesMode;
-import net.minecraft.client.option.Perspective;
-import net.minecraft.client.option.SimpleOption;
+import net.minecraft.client.option.*;
 import net.minecraft.client.render.ChunkBuilderMode;
 import net.minecraft.client.render.entity.PlayerModelPart;
 import net.minecraft.client.resource.language.LanguageDefinition;
@@ -711,8 +702,8 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public boolean getSmoothLightningMode() {
-            return base.getAo().getValue();
+        public String getSmoothLightningMode() {
+            return base.getAo().getValue().getTranslationKey();
         }
 
         /**
@@ -721,8 +712,8 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        public VideoOptionsHelper setSmoothLightningMode(boolean mode) {
-            base.getAo().setValue(mode);
+        public VideoOptionsHelper setSmoothLightningMode(String mode) {
+            AoMode newMode = Arrays.stream(AoMode.values()).filter(m -> m.getTranslationKey().equals(mode)).findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid mode: " + mode));
             return this;
         }
 
@@ -1193,7 +1184,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public MusicOptionsHelper setMasterVolume(double volume) {
-            base.getSoundVolumeOption(SoundCategory.MASTER).setValue(volume);
+            base.setSoundVolume(SoundCategory.MASTER, (float) volume);
             return this;
         }
 
@@ -1213,7 +1204,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public MusicOptionsHelper setMusicVolume(double volume) {
-            base.getSoundVolumeOption(SoundCategory.MUSIC).setValue(volume);
+            base.setSoundVolume(SoundCategory.MUSIC, (float) volume);
             return this;
         }
 
@@ -1233,7 +1224,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public MusicOptionsHelper setRecordsVolume(double volume) {
-            base.getSoundVolumeOption(SoundCategory.RECORDS).setValue(volume);
+            base.setSoundVolume(SoundCategory.RECORDS, (float) volume);
             return this;
         }
 
@@ -1253,7 +1244,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public MusicOptionsHelper setWeatherVolume(double volume) {
-            base.getSoundVolumeOption(SoundCategory.WEATHER).setValue(volume);
+            base.setSoundVolume(SoundCategory.WEATHER, (float) volume);
             return this;
         }
 
@@ -1273,7 +1264,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public MusicOptionsHelper setBlocksVolume(double volume) {
-            base.getSoundVolumeOption(SoundCategory.BLOCKS).setValue(volume);
+            base.setSoundVolume(SoundCategory.BLOCKS, (float) volume);
             return this;
         }
 
@@ -1293,7 +1284,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public MusicOptionsHelper setHostileVolume(double volume) {
-            base.getSoundVolumeOption(SoundCategory.HOSTILE).setValue(volume);
+            base.setSoundVolume(SoundCategory.HOSTILE, (float) volume);
             return this;
         }
 
@@ -1313,7 +1304,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public MusicOptionsHelper setNeutralVolume(double volume) {
-            base.getSoundVolumeOption(SoundCategory.NEUTRAL).setValue(volume);
+            base.setSoundVolume(SoundCategory.NEUTRAL, (float) volume);
             return this;
         }
 
@@ -1333,7 +1324,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public MusicOptionsHelper setPlayerVolume(double volume) {
-            base.getSoundVolumeOption(SoundCategory.PLAYERS).setValue(volume);
+            base.setSoundVolume(SoundCategory.PLAYERS, (float) volume);
             return this;
         }
 
@@ -1353,7 +1344,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public MusicOptionsHelper setAmbientVolume(double volume) {
-            base.getSoundVolumeOption(SoundCategory.AMBIENT).setValue(volume);
+            base.setSoundVolume(SoundCategory.AMBIENT, (float) volume);
             return this;
         }
 
@@ -1372,7 +1363,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public MusicOptionsHelper setVoiceVolume(double volume) {
-            base.getSoundVolumeOption(SoundCategory.VOICE).setValue(volume);
+            base.setSoundVolume(SoundCategory.VOICE, (float) volume);
             return this;
         }
 
@@ -1407,7 +1398,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public MusicOptionsHelper setVolume(String category, double volume) {
-            base.getSoundVolumeOption(SOUND_CATEGORY_MAP.get(category)).setValue(volume);
+            base.setSoundVolume(SOUND_CATEGORY_MAP.get(category), (float) volume);
             return this;
         }
 
@@ -2601,7 +2592,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      */
     @Deprecated
     public OptionsHelper setVolume(double vol) {
-        base.getSoundVolumeOption(SoundCategory.MASTER).setValue(vol);
+        base.setSoundVolume(SoundCategory.MASTER, (float) vol);
         return this;
     }
 
@@ -2615,7 +2606,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      */
     @Deprecated
     public OptionsHelper setVolume(String category, double volume) {
-        base.getSoundVolumeOption(Arrays.stream(SoundCategory.values()).filter(e -> e.getName().equals(category)).findFirst().orElseThrow(() -> new IllegalArgumentException("unknown sound category"))).setValue(volume);
+        base.setSoundVolume(Arrays.stream(SoundCategory.values()).filter(e -> e.getName().equals(category)).findFirst().orElseThrow(() -> new IllegalArgumentException("unknown sound category")), (float) volume);
         return this;
     }
 

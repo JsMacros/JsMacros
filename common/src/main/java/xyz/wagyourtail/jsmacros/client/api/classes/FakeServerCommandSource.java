@@ -3,11 +3,11 @@ package xyz.wagyourtail.jsmacros.client.api.classes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientCommandSource;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.DynamicRegistryManager;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 
 import com.mojang.brigadier.context.CommandContext;
@@ -52,7 +52,7 @@ public class FakeServerCommandSource extends ServerCommandSource {
     }
 
     @Override
-    public Stream<Identifier> getSoundIds() {
+    public Collection<Identifier> getSoundIds() {
         return source.getSoundIds();
     }
 

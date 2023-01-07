@@ -11,7 +11,7 @@ import net.minecraft.client.realms.gui.screen.RealmsMainScreen;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.text.Text;
-import net.minecraft.registry.Registries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelStorageException;
 
@@ -426,7 +426,7 @@ public class FClient extends PerExecLibrary {
      * @since 1.8.4
      */
     public List<BlockHelper> getRegisteredBlocks() {
-        return Registries.BLOCK.stream().map(BlockHelper::new).collect(Collectors.toList());
+        return Registry.BLOCK.stream().map(BlockHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -435,7 +435,7 @@ public class FClient extends PerExecLibrary {
      * @since 1.8.4
      */
     public List<ItemHelper> getRegisteredItems() {
-        return Registries.ITEM.stream().map(ItemHelper::new).collect(Collectors.toList());
+        return Registry.ITEM.stream().map(ItemHelper::new).collect(Collectors.toList());
     }
 
     /**

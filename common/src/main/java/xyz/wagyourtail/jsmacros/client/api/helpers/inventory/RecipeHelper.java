@@ -5,7 +5,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeMatcher;
-import net.minecraft.registry.Registries;
+import net.minecraft.util.registry.Registry;
 
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -111,7 +111,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
      * @since 1.8.4
      */
     public String getType() {
-        return Registries.RECIPE_TYPE.getId(base.getType()).toString();
+        return Registry.RECIPE_TYPE.getId(base.getType()).toString();
     }
 
     /**

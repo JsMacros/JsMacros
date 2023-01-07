@@ -26,9 +26,9 @@ public abstract class MixinChatScreen extends Screen {
         } else if (!result.equals(chatText)) {
             cir.setReturnValue(true);
             if (result.startsWith("/")) {
-                this.client.player.networkHandler.sendChatCommand(result.substring(1));
+                this.client.player.sendCommand(result.substring(1));
             } else {
-                this.client.player.networkHandler.sendChatMessage(result);
+                this.client.player.sendChatMessage(result, null);
             }
         }
     }

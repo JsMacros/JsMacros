@@ -18,8 +18,8 @@ public class TropicalFishEntityHelper extends FishEntityHelper<TropicalFishEntit
      *
      * @since 1.8.4
      */
-    public String getVariant() {
-        return base.getVariant().asString();
+    public int getVariant() {
+        return base.getVariant();
     }
 
     /**
@@ -28,7 +28,7 @@ public class TropicalFishEntityHelper extends FishEntityHelper<TropicalFishEntit
      * @since 1.8.4
      */
     public String getSize() {
-        return base.getVariant().getSize().name();
+        return base.getShape() == 0 ? "small" : "large";
     }
 
     /**
@@ -37,7 +37,7 @@ public class TropicalFishEntityHelper extends FishEntityHelper<TropicalFishEntit
      * @since 1.8.4
      */
     public int getBaseColor() {
-        return base.getBaseColorComponents().getId();
+        return TropicalFishEntity.getBaseDyeColor(base.getVariant()).getId();
     }
 
     /**
@@ -46,7 +46,7 @@ public class TropicalFishEntityHelper extends FishEntityHelper<TropicalFishEntit
      * @since 1.8.4
      */
      public int getPatternColor() {
-         return base.getPatternColorComponents().getId();
+         return TropicalFishEntity.getPatternDyeColor(base.getVariant()).getId();
      }
 
     /**
@@ -54,8 +54,8 @@ public class TropicalFishEntityHelper extends FishEntityHelper<TropicalFishEntit
      *
      * @since 1.8.4
      */
-    public int getVarietyId() {
-        return base.getVariant().getId();
+    public String getVarietyId() {
+        return base.getVarietyId().toString();
     }
 
 }

@@ -78,7 +78,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
      * @since 1.8.4
      */
     public int getMaxFuelUses() {
-        return BrewingStandBlockEntity.MAX_FUEL_USES;
+        return BrewingStandBlockEntity.field_31324;
     }
 
     /**

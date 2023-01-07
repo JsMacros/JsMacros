@@ -61,14 +61,41 @@ class MixinClientPlayNetworkHandler {
     @Unique
     private final Set<UUID> newPlayerEntries = new HashSet<>();
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/SocialInteractionsManager;setPlayerOnline(Lnet/minecraft/client/network/PlayerListEntry;)V"), method = "onPlayerList", locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onPlayerList(PlayerListS2CPacket packet, CallbackInfo ci, Iterator var2, Entry entry, PlayerListEntry playerListEntry) {
-        new EventPlayerJoin(entry.profileId(), playerListEntry);
+    @Inject(at = @At("HEAD"), method = "onPlayerList")
+    public void onPlayerList(PlayerListS2CPacket packet, CallbackInfo info) {
+        if (this.client.isOnThread()) {
+            PlayerListS2CPacket.Action action = packet.getAction();
+            if (action == PlayerListS2CPacket.Action.ADD_PLAYER) {
+                for (Entry e : packet.getEntries()) {
+                    synchronized (newPlayerEntries) {
+                        if (playerListEntries.get(e.getProfile().getId()) == null) {
+                            newPlayerEntries.add(e.getProfile().getId());
+                        }
+                    }
+                }
+            } else if (action == PlayerListS2CPacket.Action.REMOVE_PLAYER) {
+                for (Entry e : packet.getEntries()) {
+                    if (playerListEntries.get(e.getProfile().getId()) != null) {
+                        PlayerListEntry p = playerListEntries.get(e.getProfile().getId());
+                        new EventPlayerLeave(e.getProfile().getId(), p);
+                    }
+                }
+            }
+        }
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Ljava/util/Set;remove(Ljava/lang/Object;)Z", remap = false), method = "onPlayerRemove", locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onPlayerListEnd(PlayerRemoveS2CPacket packet, CallbackInfo ci, Iterator var2, UUID uUID, PlayerListEntry playerListEntry) {
-        new EventPlayerLeave(uUID, playerListEntry);
+    @Inject(at = @At("TAIL"), method = "onPlayerList")
+    public void onPlayerListEnd(PlayerListS2CPacket packet, CallbackInfo info) {
+        if (packet.getAction() == PlayerListS2CPacket.Action.ADD_PLAYER) {
+            for (Entry e : packet.getEntries()) {
+                synchronized (newPlayerEntries) {
+                    if (newPlayerEntries.contains(e.getProfile().getId())) {
+                        new EventPlayerJoin(e.getProfile().getId(), playerListEntries.get(e.getProfile().getId()));
+                        newPlayerEntries.remove(e.getProfile().getId());
+                    }
+                }
+            }
+        }
     }
 
     @ModifyArg(method = "onTitle", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;setTitle(Lnet/minecraft/text/Text;)V"))

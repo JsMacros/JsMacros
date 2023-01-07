@@ -29,6 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
+import xyz.wagyourtail.jsmacros.client.access.backports.ButtonWidgetBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
@@ -539,7 +540,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Override
     public ClickableWidgetHelper<?, ?> addButton(int x, int y, int width, int height, int zIndex, String text, MethodWrapper<ClickableWidgetHelper<?, ?>, IScreen, Object, ?> callback) {
         AtomicReference<ClickableWidgetHelper<?, ?>> b = new AtomicReference<>(null);
-        ButtonWidget button = ButtonWidget.builder(Text.literal(text), (btn) -> {
+        ButtonWidget button = ButtonWidgetBuilder.builder(Text.literal(text), (btn) -> {
             try {
                 callback.accept(b.get(), this);
             } catch (Throwable e) {

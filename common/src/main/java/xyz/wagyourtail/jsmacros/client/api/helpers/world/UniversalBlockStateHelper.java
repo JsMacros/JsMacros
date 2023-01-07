@@ -1082,66 +1082,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
         return base.get(Properties.ROTATION);
     }
 
-
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public boolean isSlot0Occupied() {
-        return base.get(Properties.SLOT_0_OCCUPIED);
-    }
-
-
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public boolean isSlot1Occupied() {
-        return base.get(Properties.SLOT_1_OCCUPIED);
-    }
-
-
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public boolean isSlot2Occupied() {
-        return base.get(Properties.SLOT_2_OCCUPIED);
-    }
-
-
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public boolean isSlot3Occupied() {
-        return base.get(Properties.SLOT_3_OCCUPIED);
-    }
-
-
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public boolean isSlot4Occupied() {
-        return base.get(Properties.SLOT_4_OCCUPIED);
-    }
-
-
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public boolean isSlot5Occupied() {
-        return base.get(Properties.SLOT_5_OCCUPIED);
-    }
-
     @Ignore
     private static String SCREAMING_SNAKE_CASE_TO_PascalCase(String input) {
         StringBuilder result = new StringBuilder();

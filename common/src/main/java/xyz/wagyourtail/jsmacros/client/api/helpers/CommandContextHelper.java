@@ -22,7 +22,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.registry.Registries;
+import net.minecraft.util.registry.Registry;
 
 import xyz.wagyourtail.jsmacros.client.api.classes.FakeServerCommandSource;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
@@ -87,9 +87,9 @@ public class CommandContextHelper extends BaseHelper<CommandContext<?>> implemen
         } else if (arg instanceof EntitySelector) {
             arg = ((EntitySelector) arg).getEntities(fakeServerSource).stream().map(EntityHelper::create).collect(Collectors.toList());
         } else if (arg instanceof ParticleEffect) {
-            arg = Registries.PARTICLE_TYPE.getId(((ParticleEffect) arg).getType()).toString();
+            arg = Registry.PARTICLE_TYPE.getId(((ParticleEffect) arg).getType()).toString();
         } else if (arg instanceof StatusEffect) {
-            arg = Registries.STATUS_EFFECT.getId(((StatusEffect) arg)).toString();
+            arg = Registry.STATUS_EFFECT.getId(((StatusEffect) arg)).toString();
         }
         return arg;
     }

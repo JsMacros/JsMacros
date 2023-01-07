@@ -17,7 +17,7 @@ public interface MixinCreativeInventoryScreen {
 
     // Don't make this static, it will disable the compile and reload feature!
     @Accessor
-    ItemGroup getSelectedTab();
+    int getSelectedTab();
 
     @Accessor
     float getScrollPosition();

@@ -3,10 +3,9 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.registry.Registries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
@@ -124,7 +123,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @since 1.8.4
      */
     public String getBiome(int xOffset, int y, int zOffset) {
-        return MinecraftClient.getInstance().world.getRegistryManager().get(RegistryKeys.BIOME).getId(MinecraftClient.getInstance().world.getBiome(base.getPos().getBlockPos(xOffset, y, zOffset)).value()).toString();
+        return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(base.getPos().getBlockPos(xOffset, y, zOffset)).value()).toString();
     }
 
     /**
@@ -192,7 +191,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      */
     public boolean containsAny(String... blocks) {
         // Don't use section.hasAny because it will take some time to update the block palette
-        Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::new).map(Registries.BLOCK::get).collect(Collectors.toSet());
+        Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::new).map(Registry.BLOCK::get).collect(Collectors.toSet());
         for (ChunkSection section : base.getSectionArray()) {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
@@ -217,7 +216,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      */
     public boolean containsAll(String... blocks) {
         // Don't use section.hasAny because it will take some time to update the block palette
-        Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::new).map(Registries.BLOCK::get).collect(Collectors.toSet());
+        Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::new).map(Registry.BLOCK::get).collect(Collectors.toSet());
         for (ChunkSection section : base.getSectionArray()) {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {

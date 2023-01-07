@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.registry.Registries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -34,7 +34,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     public EnchantmentHelper(String enchantment) {
-        this(Registries.ENCHANTMENT.get(new Identifier(enchantment)));
+        this(Registry.ENCHANTMENT.get(new Identifier(enchantment)));
     }
 
     /**
@@ -135,7 +135,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public String getId() {
-        return Registries.ENCHANTMENT.getId(base).toString();
+        return Registry.ENCHANTMENT.getId(base).toString();
     }
 
     /**
@@ -177,7 +177,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getConflictingEnchantments(boolean ignoreType) {
-        return Registries.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && !e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registry.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && !e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -199,7 +199,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getCompatibleEnchantments(boolean ignoreType) {
-        return Registries.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registry.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -309,7 +309,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<ItemHelper> getAcceptableItems() {
-        return Registries.ITEM.stream().filter(item -> base.type.isAcceptableItem(item)).map(ItemHelper::new).collect(Collectors.toList());
+        return Registry.ITEM.stream().filter(item -> base.type.isAcceptableItem(item)).map(ItemHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -320,7 +320,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public boolean isCompatible(String enchantment) {
-        return base.canCombine(Registries.ENCHANTMENT.get(RegistryHelper.parseIdentifier(enchantment)));
+        return base.canCombine(Registry.ENCHANTMENT.get(RegistryHelper.parseIdentifier(enchantment)));
     }
 
     /**

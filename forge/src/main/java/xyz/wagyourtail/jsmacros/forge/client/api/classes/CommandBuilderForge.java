@@ -102,7 +102,7 @@ public class CommandBuilderForge extends CommandBuilder {
         if (dispatcher != null) {
             ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
             if (networkHandler != null) {
-                LiteralArgumentBuilder lb = (LiteralArgumentBuilder) head.apply(CommandRegistryAccess.of(networkHandler.getRegistryManager(), networkHandler.getEnabledFeatures()));
+                LiteralArgumentBuilder lb = (LiteralArgumentBuilder) head.apply(new CommandRegistryAccess(networkHandler.getRegistryManager()));
                 dispatcher.register(lb);
                 networkHandler.getCommandDispatcher().register(lb);
             }
@@ -124,7 +124,7 @@ public class CommandBuilderForge extends CommandBuilder {
     public static void onRegisterEvent(RegisterClientCommandsEvent event) {
         CommandDispatcher<ServerCommandSource> dispatcher = event.getDispatcher();
         MinecraftClient mc = MinecraftClient.getInstance();
-        CommandRegistryAccess registryAccess = CommandRegistryAccess.of(mc.getNetworkHandler().getRegistryManager(), mc.getNetworkHandler().getEnabledFeatures());
+        CommandRegistryAccess registryAccess = new CommandRegistryAccess(mc.getNetworkHandler().getRegistryManager());
         for (Function<CommandRegistryAccess, ArgumentBuilder<ServerCommandSource, ?>> command : commands.values()) {
             dispatcher.register((LiteralArgumentBuilder<ServerCommandSource>) command.apply(registryAccess));
         }

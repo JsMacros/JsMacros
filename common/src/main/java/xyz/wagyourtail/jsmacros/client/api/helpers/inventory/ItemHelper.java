@@ -1,16 +1,18 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 
+import net.minecraft.command.CommandRegistryWrapper;
 import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.item.*;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.registry.Registries;
+import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -27,7 +29,7 @@ public class ItemHelper extends BaseHelper<Item> {
     }
 
     private Stream<ItemGroup> getGroups() {
-        return ItemGroups.getGroups().parallelStream().filter(group -> !group.isSpecial() && group.getDisplayStacks().parallelStream().anyMatch(e -> e.isOf(base)));
+        return Arrays.asList(base.getGroup()).stream();
     }
 
     /**
@@ -171,7 +173,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public String getId() {
-        return Registries.ITEM.getId(base).toString();
+        return Registry.ITEM.getId(base).toString();
     }
 
     /**
@@ -269,7 +271,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public ItemStackHelper getStackWithNbt(String nbt) throws CommandSyntaxException {
-        ItemStringReader.ItemResult itemResult = ItemStringReader.item(Registries.ITEM.getReadOnlyWrapper(), new StringReader(getId() + nbt));
+        ItemStringReader.ItemResult itemResult = ItemStringReader.item(new CommandRegistryWrapper.Impl<>(Registry.ITEM), new StringReader(getId() + nbt));
         return new ItemStackHelper(new ItemStack(itemResult.item()));
     }
 

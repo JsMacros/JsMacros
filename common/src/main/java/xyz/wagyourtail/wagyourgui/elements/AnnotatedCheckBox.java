@@ -35,7 +35,7 @@ public class AnnotatedCheckBox extends Button {
         int width = this.width - height;
         for (int i = 0; i < visibleLines; ++i) {
             int w = textRenderer.getWidth(textLines.get(i));
-            textRenderer.draw(matrices, textLines.get(i), horizCenter ? getX() + width / 2F - w / 2F : getX() + 1, getY() + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
+            textRenderer.draw(matrices, textLines.get(i), horizCenter ? x + width / 2F - w / 2F : x + 1, y + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
         }
     }
     
@@ -45,20 +45,20 @@ public class AnnotatedCheckBox extends Button {
             this.renderMessage(matrices);
         
             // fill
-            if (mouseX - getX() >= 0 && mouseX - getX() - width <= 0 && mouseY - getY() >= 0 && mouseY - getY() - height <= 0 && this.active || forceHover) {
+            if (mouseX - x >= 0 && mouseX - x - width <= 0 && mouseY - y >= 0 && mouseY - y - height <= 0 && this.active || forceHover) {
                 hovering = true;
-                fill(matrices, getX() + width - height + 1, getY() + 1, getX() + width - 1, getY() + height - 1, highlightColor);
+                fill(matrices, x + width - height + 1, y + 1, x + width - 1, y + height - 1, highlightColor);
             } else {
                 hovering = false;
                 if (value) {
-                    fill(matrices, getX() + width - height + 1, getY() + 1, getX() + width - 1, getY() + height - 1, color);
+                    fill(matrices, x + width - height + 1, y + 1, x + width - 1, y + height - 1, color);
                 }
             }
             // outline
-            fill(matrices, getX() + width - height, getY(), getX() + width - height + 1, getY() + height, borderColor);
-            fill(matrices, getX() + width - 1, getY(), getX() + width, getY() + height, borderColor);
-            fill(matrices, getX() + width - height + 1, getY(), getX() + width - 1, getY() + 1, borderColor);
-            fill(matrices, getX() + width - height + 1, getY() + height - 1, getX() + width - 1, getY() + height, borderColor);
+            fill(matrices, x + width - height, y, x + width - height + 1, y + height, borderColor);
+            fill(matrices, x + width - 1, y, x + width, y + height, borderColor);
+            fill(matrices, x + width - height + 1, y, x + width - 1, y + 1, borderColor);
+            fill(matrices, x + width - height + 1, y + height - 1, x + width - 1, y + height, borderColor);
         }
     }
 }

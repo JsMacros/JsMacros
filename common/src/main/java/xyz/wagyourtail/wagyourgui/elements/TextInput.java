@@ -36,21 +36,21 @@ public class TextInput extends Button {
 
     public void updateSelStart(int startIndex) {
         selStartIndex = startIndex;
-        if (startIndex == 0) selStart = getX() + 1;
-        else selStart = getX() + 2 + textRenderer.getWidth(content.substring(0, startIndex));
+        if (startIndex == 0) selStart = x + 1;
+        else selStart = x + 2 + textRenderer.getWidth(content.substring(0, startIndex));
     }
 
     public void updateSelEnd(int endIndex) {
         selEndIndex = endIndex;
-        if (endIndex == 0) selEnd = getX() + 2;
-        else selEnd = getX() + 3 + textRenderer.getWidth(content.substring(0, endIndex));
+        if (endIndex == 0) selEnd = x + 2;
+        else selEnd = x + 3 + textRenderer.getWidth(content.substring(0, endIndex));
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.clicked(mouseX, mouseY);
         if (this.isFocused()) {
-            int pos = textRenderer.trimToWidth(content, (int) (mouseX - getX() - 2)).length();
+            int pos = textRenderer.trimToWidth(content, (int) (mouseX - x - 2)).length();
             updateSelStart(pos);
             updateSelEnd(pos);
             arrowCursor = pos;
@@ -61,7 +61,7 @@ public class TextInput extends Button {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.isFocused()) {
-            int pos = textRenderer.trimToWidth(content, (int) (mouseX - getX() - 2)).length();
+            int pos = textRenderer.trimToWidth(content, (int) (mouseX - x - 2)).length();
             updateSelEnd(pos);
             arrowCursor = pos;
         }
@@ -174,8 +174,8 @@ public class TextInput extends Button {
 
     @Override
     protected void renderMessage(MatrixStack matrices) {
-        fill(matrices, selStart, height > 9 ? getY() + 2 : getY(), Math.min(selEnd, getX() + width - 2), (height > 9 ? getY() + 2 : getY()) + textRenderer.fontHeight, selColor);
-        drawStringWithShadow(matrices, textRenderer, textRenderer.trimToWidth(content, width - 4), getX() + 2, height > 9 ? getY() + 2 :
-            getY(), textColor);
+        fill(matrices, selStart, height > 9 ? y + 2 : y, Math.min(selEnd, x + width - 2), (height > 9 ? y + 2 : y) + textRenderer.fontHeight, selColor);
+        drawStringWithShadow(matrices, textRenderer, textRenderer.trimToWidth(content, width - 4), x + 2, height > 9 ? y + 2 :
+            y, textColor);
     }
 }

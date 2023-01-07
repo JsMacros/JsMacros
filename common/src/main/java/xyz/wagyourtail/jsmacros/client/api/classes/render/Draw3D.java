@@ -562,7 +562,7 @@ public class Draw3D {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableTexture();
-        RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 
 
         Vec3d camPos = mc.gameRenderer.getCamera().getPos();
@@ -588,7 +588,7 @@ public class Draw3D {
         }
 
         //reset
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.enableTexture();
 
         matrixStack.pop();

@@ -6,7 +6,7 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import org.joml.Matrix4f;
+import net.minecraft.util.math.Matrix4f;
 import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
@@ -336,7 +336,7 @@ public class Image implements RenderElement, Alignable<Image> {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         matrices.push();
         setupMatrix(matrices, x, y, 1, rotation, getWidth(), getHeight(), rotateCenter);
-        RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableBlend();
         RenderSystem.setShaderTexture(0, imageid);

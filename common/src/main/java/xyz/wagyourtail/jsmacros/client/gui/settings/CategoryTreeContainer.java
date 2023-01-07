@@ -76,12 +76,12 @@ public class CategoryTreeContainer extends MultiElementContainer<ICategoryTreePa
     private int updateOffsets(int y, int minShow, int maxShow, boolean parentShowChildren) {
         this.y = y;
         if (this.expandBtn != null) {
-            this.expandBtn.setY(y);
+            this.expandBtn.y = y;
             if (y < minShow || y + btnHeight > maxShow) this.expandBtn.visible = false;
             else this.expandBtn.visible = parentShowChildren;
         }
         if (this.showBtn != null) {
-            this.showBtn.setY(y);
+            this.showBtn.y = y;
             if (y < minShow || y + btnHeight > maxShow) this.showBtn.visible = false;
             else this.showBtn.visible = parentShowChildren;
         }

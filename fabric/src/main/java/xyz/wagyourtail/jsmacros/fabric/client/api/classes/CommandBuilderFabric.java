@@ -95,7 +95,7 @@ public class CommandBuilderFabric extends CommandBuilder {
         if (dispatcher != null) {
             ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
             if (networkHandler != null) {
-                LiteralArgumentBuilder lb = (LiteralArgumentBuilder) head.apply(CommandRegistryAccess.of(networkHandler.getRegistryManager(), networkHandler.getEnabledFeatures()));
+                LiteralArgumentBuilder lb = (LiteralArgumentBuilder) head.apply(new CommandRegistryAccess(networkHandler.getRegistryManager()));
                 dispatcher.register(lb);
                 networkHandler.getCommandDispatcher().register(lb);
             }
