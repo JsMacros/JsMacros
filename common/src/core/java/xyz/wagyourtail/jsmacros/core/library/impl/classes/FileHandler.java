@@ -1,6 +1,9 @@
 package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  * @author Wagyourtail
@@ -11,13 +14,31 @@ import java.io.*;
 @SuppressWarnings("unused")
 public class FileHandler {
     private final File f;
+    private final Charset charset;
     
     public FileHandler(String path) {
-        this(new File(path));
+        this(new File(path), StandardCharsets.UTF_8);
     }
-    
+
+    public FileHandler(String path, String charset) {
+        this(new File(path), charset);
+    }
+
+    public FileHandler(File path, String charset) {
+        this(path, Objects.requireNonNull(Charset.forName(charset), () -> "Charset " + charset + " not found."));
+    }
+
+    public FileHandler(String path, Charset charset) {
+        this(new File(path), charset);
+    }
+
     public FileHandler(File path) {
-        f = path;
+        this(path, StandardCharsets.UTF_8);
+    }
+
+    public FileHandler(File path, Charset charset) {
+        this.f = path;
+        this.charset = charset;
     }
     
     /**
@@ -30,7 +51,7 @@ public class FileHandler {
      * @throws IOException
      */
     public FileHandler write(String s) throws IOException {
-        try (FileWriter out = new FileWriter(f, false)) {
+        try (FileWriter out = new FileWriter(f, charset, false)) {
             out.write(s);
         }
         return this;
@@ -45,7 +66,7 @@ public class FileHandler {
      * @throws IOException
      */
     public FileHandler write(byte[] b) throws IOException {
-        try (FileOutputStream out = new FileOutputStream(f,false)) {
+        try (FileOutputStream out = new FileOutputStream(f, false)) {
             out.write(b);
         }
         return this;
@@ -59,7 +80,7 @@ public class FileHandler {
      */
     public String read() throws IOException {
         String ret = "";
-        try (BufferedReader in = new BufferedReader(new FileReader(f))) {
+        try (BufferedReader in = new BufferedReader(new FileReader(f, charset))) {
             String line = in.readLine();
             while (line != null) {
                 ret += line + "\n";
@@ -91,7 +112,7 @@ public class FileHandler {
      * @throws IOException
      */
     public FileHandler append(String s) throws IOException {
-        try (FileWriter out = new FileWriter(f, true)) {
+        try (FileWriter out = new FileWriter(f, charset, true)) {
             out.write(s);
         }
         return this;
