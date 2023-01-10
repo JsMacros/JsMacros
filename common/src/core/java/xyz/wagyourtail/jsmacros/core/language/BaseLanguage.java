@@ -87,6 +87,7 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
         });
         ctx.setLockThread(t);
         ctx.getCtx().setMainThread(t);
+        t.setPriority(4);
         t.start();
         return ctx;
     }
@@ -125,6 +126,7 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
         });
         ctx.setLockThread(t);
         ctx.getCtx().setMainThread(t);
+        t.setPriority(4);
         t.start();
         return ctx;
     }
