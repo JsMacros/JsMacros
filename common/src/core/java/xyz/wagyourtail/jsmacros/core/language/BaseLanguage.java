@@ -10,6 +10,7 @@ import xyz.wagyourtail.jsmacros.core.service.EventService;
 import java.io.File;
 import java.nio.file.FileSystemException;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 /**
@@ -87,8 +88,7 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
         });
         ctx.setLockThread(t);
         ctx.getCtx().setMainThread(t);
-        t.setPriority(4);
-        t.start();
+        CompletableFuture.runAsync(t::start);
         return ctx;
     }
     
@@ -126,8 +126,7 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
         });
         ctx.setLockThread(t);
         ctx.getCtx().setMainThread(t);
-        t.setPriority(4);
-        t.start();
+        CompletableFuture.runAsync(t::start);
         return ctx;
     }
     
