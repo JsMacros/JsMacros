@@ -1,3 +1,7 @@
+import org.objectweb.asm.ClassReader
+import org.objectweb.asm.util.CheckClassAdapter
+import java.nio.file.Files
+
 plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
@@ -21,6 +25,12 @@ minecraft {
         ignoreFieldDesc(true)
         ignoreConflicts(true)
     }
+
+//    mcRemapper.afterRemap = {
+//        ClassReader reader = new ClassReader(Files.newInputStream(getPath("/net/minecraft/entity/mob/MobEntity.class")))
+//        CheckClassAdapter.verify(reader, false, new PrintWriter(System.out))
+//        System.out.println("Verified!")
+//    }
 }
 
 dependencies {

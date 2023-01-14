@@ -24,6 +24,15 @@ import xyz.wagyourtail.wagyourgui.BaseScreen;
  */
 public class ScriptScreen extends BaseScreen {
     public boolean drawTitle;
+    /**
+     * @since 1.8.4
+     * WARNING: this can break the game if you set it false and don't have a way to close the screen.
+     */
+    public boolean shouldCloseOnEsc = true;
+    /**
+     * @since 1.8.4
+     */
+    public boolean shouldPause = true;
     private final int bgStyle;
     private MethodWrapper<Pos3D, MatrixStack, Object, ?> onRender;
     
@@ -87,5 +96,15 @@ public class ScriptScreen extends BaseScreen {
     @Override
     public void close() {
         openParent();
+    }
+
+    @Override
+    public boolean shouldPause() {
+        return shouldPause;
+    }
+
+    @Override
+    public boolean shouldCloseOnEsc() {
+        return shouldCloseOnEsc && super.shouldCloseOnEsc();
     }
 }

@@ -24,7 +24,7 @@ if __name__ == "":
     event = EventAirChange() #No need of arguments
 ```
 
-#Modules
+# Modules
 There are some modules in JsMacrosAC that can be imported as well, so you don't have to import all the files.\
 These Modules are:
 > - libraries (Contains all libraries and constants like Chat or GlobalVars)

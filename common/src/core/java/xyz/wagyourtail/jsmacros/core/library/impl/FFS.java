@@ -230,6 +230,21 @@ public class FFS extends PerExecLibrary {
     }
 
     /**
+     * Open a FileHandler for the file at the specified path.
+     *
+     * @since 1.8.4
+     *
+     * @see FileHandler
+     *
+     * @param path relative to the script's folder.
+     * @param charset the charset to use for reading/writing the file (default is UTF-8)
+     * @return a {@link FileHandler FileHandler} for the file path.
+     */
+    public FileHandler open(String path, String charset) {
+        return new FileHandler(ctx.getContainedFolder().toPath().resolve(path).toFile(), charset);
+    }
+
+    /**
      * An advanced method to walk a directory tree and get some information about the files, as well
      * as their paths.
      *

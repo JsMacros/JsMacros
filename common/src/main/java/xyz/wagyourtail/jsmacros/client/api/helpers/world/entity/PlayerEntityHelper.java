@@ -132,6 +132,22 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
     }
 
     /**
+     * @since 1.8.4
+     * @return
+     */
+    public float getAttackCooldownProgress() {
+        return base.getAttackCooldownProgress(0);
+    }
+
+    /**
+     * @since 1.8.4
+     * @return
+     */
+    public float getAttackCooldownProgressPerTick() {
+        return base.getAttackCooldownProgressPerTick();
+    }
+
+    /**
      * @return the player's score.
      *
      * @since 1.8.4
