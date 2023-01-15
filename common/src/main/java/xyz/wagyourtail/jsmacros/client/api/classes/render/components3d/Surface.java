@@ -249,28 +249,26 @@ public class Surface extends Draw2D implements RenderElement {
         matrixStack.translate(pos.x, pos.y, pos.z);
 
         if (rotateToPlayer) {
-            Vector3f rot = MinecraftClient.getInstance().gameRenderer.getCamera()
-                .getRotation()
-                .getEulerAnglesXYZ(new Vector3f());
+            Vector3f rot = toEulerDegrees(MinecraftClient.getInstance().gameRenderer.getCamera().getRotation());
             rotations.x = -rot.x();
             rotations.y = 180 + rot.y();
             rotations.z = 0;
         }
         if (rotateCenter) {
             matrixStack.translate(sizes.x / 2, 0, 0);
-            matrixStack.multiply(new Quaternionf().rotateLocalY((float) rotations.y));
+            matrixStack.multiply(new Quaternionf().rotateLocalY((float) Math.toRadians(rotations.y)));
             matrixStack.translate(-sizes.x / 2, 0, 0);
             matrixStack.translate(0, -sizes.y / 2, 0);
-            matrixStack.multiply(new Quaternionf().rotateLocalX((float) rotations.x));
+            matrixStack.multiply(new Quaternionf().rotateLocalX((float) Math.toRadians(rotations.x)));
             matrixStack.translate(0, sizes.y / 2, 0);
             matrixStack.translate(sizes.x / 2, -sizes.y / 2, 0);
-            matrixStack.multiply(new Quaternionf().rotateLocalZ((float) rotations.z));
+            matrixStack.multiply(new Quaternionf().rotateLocalZ((float) Math.toRadians(rotations.z)));
             matrixStack.translate(-sizes.x / 2, sizes.y / 2, 0);
         } else {
             Quaternionf q = new Quaternionf();
-            q.rotateLocalY((float) rotations.y);
-            q.rotateLocalX((float) rotations.x);
-            q.rotateLocalZ((float) rotations.z);
+            q.rotateLocalY((float) Math.toRadians(rotations.y));
+            q.rotateLocalX((float) Math.toRadians(rotations.x));
+            q.rotateLocalZ((float) Math.toRadians(rotations.z));
             matrixStack.multiply(q);
         }
         // fix it so that y-axis goes down instead of up
@@ -289,6 +287,33 @@ public class Surface extends Draw2D implements RenderElement {
         if (renderBack) {
             RenderSystem.enableCull();
         }
+    }
+
+    private static Vector3f toEulerDegrees(Quaternionf quaternion) {
+        // The old method
+        float w = quaternion.w();
+        float x = quaternion.x();
+        float y = quaternion.y();
+        float z = quaternion.z();
+
+        float wSquared = w * w;
+        float xSquared = x * x;
+        float ySquared = y * y;
+        float zSquared = z * z;
+        float sumSquared = wSquared + xSquared + ySquared + zSquared;
+        float k = 2.0F * w * x - 2.0F * y * z;
+        
+        double radianX = Math.asin(k / sumSquared);
+        double radianY;
+        double radianZ;
+        if (Math.abs(k) > 0.999F * sumSquared) {
+            radianY = 2.0F * Math.atan2(y, w);
+            radianZ = 0.0F;
+        } else {
+            radianY = Math.atan2(2.0F * x * z + 2.0F * y * w, wSquared - xSquared - ySquared + zSquared);
+            radianZ = Math.atan2(2.0F * x * y + 2.0F * w * z, wSquared - xSquared + ySquared - zSquared);
+        }
+        return new Vector3f((float) Math.toDegrees(radianX), (float) Math.toDegrees(radianY), (float) Math.toDegrees(radianZ));
     }
 
     private void renderElements3D(MatrixStack matrixStack, Iterator<RenderElement> iter) {
