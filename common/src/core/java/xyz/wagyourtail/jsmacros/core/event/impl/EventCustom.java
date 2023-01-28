@@ -41,7 +41,7 @@ public class EventCustom implements BaseEvent {
      * @param callback used as a {@link Runnable}, so no args, no return value.
      */
     public void trigger(MethodWrapper<Object, Object, Object, ?> callback) {
-        Thread t = new Thread(() -> {
+         Core.getInstance().threadPool.runTask(() -> {
             profile.triggerEventJoinNoAnything(this);
             try {
                 callback.run();
@@ -49,7 +49,6 @@ public class EventCustom implements BaseEvent {
                 Core.getInstance().profile.logError(e);
             }
         });
-        t.start();
     }
     
     /**

@@ -62,7 +62,7 @@ public class EventContainer<T extends BaseScriptContext<?>> {
             }
         }
     }
-    
+
     /**
     * can be released earlier in a script or language impl.
     * @since 1.4.0
