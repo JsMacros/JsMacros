@@ -158,7 +158,7 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
                 ((RecipeBookWidget) recipeBookWidget).initialize(0, 0, mc, true, handler);
             }
             if (!((RecipeBookWidget) recipeBookWidget).isOpen()) {
-                ((RecipeBookWidget) recipeBookWidget).reset();
+                ((RecipeBookWidget) recipeBookWidget).reset(false);
             }
             try {
                 recipeBookWidget.jsmacros_refreshResultList();
@@ -175,7 +175,7 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
                         ((RecipeBookWidget) recipeBookWidget).initialize(0, 0, mc, true, handler);
                     }
                     if (!((RecipeBookWidget) recipeBookWidget).isOpen()) {
-                        ((RecipeBookWidget) recipeBookWidget).reset();
+                        ((RecipeBookWidget) recipeBookWidget).reset(false);
                     }
                     recipeBookWidget.jsmacros_refreshResultList();
                 } catch (Throwable e) {
@@ -195,7 +195,7 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
             List<RecipeResultCollection> result = ((IRecipeBookResults) res).jsmacros_getResultCollections();
             recipes = result.stream().flatMap(e -> e.getRecipes(true).stream());
         } else {
-            List<RecipeResultCollection> results = recipeBookWidget.jsmacros_getRecipeBook().getResultsForGroup(RecipeBookGroup.getGroups(handler.getCategory()).get(0));
+            List<RecipeResultCollection> results = recipeBookWidget.jsmacros_getRecipeBook().getResultsForGroup(RecipeBookGroup.method_30285(handler.getCategory()).get(0));
             recipes = results.stream().filter(RecipeResultCollection::isInitialized).filter(RecipeResultCollection::hasFittingRecipes).flatMap(e -> e.getAllRecipes().stream());
         }
         return recipes.map(e -> new RecipeHelper(e, syncId)).collect(Collectors.toList());

@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.util.Formatting;
 
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinFormatting;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -50,7 +51,7 @@ public class FormattingHelper extends BaseHelper<Formatting> {
      * @since 1.8.4
      */
     public char getCode() {
-        return base.getCode();
+        return ((MixinFormatting)(Object) base).getCode();
     }
 
     /**

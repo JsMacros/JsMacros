@@ -6,6 +6,8 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
+import java.io.IOException;
+
 /**
  * @author Etheradon
  * @since 1.8.4
@@ -31,7 +33,7 @@ public class EventSendPacket implements BaseEvent {
      *
      * @since 1.8.4
      */
-    public PacketByteBufferHelper getPacketBuffer() {
+    public PacketByteBufferHelper getPacketBuffer() throws IOException {
         return new PacketByteBufferHelper(packet);
     }
 

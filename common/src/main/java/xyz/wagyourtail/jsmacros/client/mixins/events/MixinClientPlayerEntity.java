@@ -139,9 +139,9 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         if (event.isCanceled()) {
             cir.setReturnValue(false);
         }
-        int[] slots = new int[]{getInventory().selectedSlot + 36};
-        ItemStackHelper[] oldItems = new ItemStackHelper[]{new ItemStackHelper(getInventory().getMainHandStack())};
-        ItemStackHelper[] newItems = new ItemStackHelper[]{new ItemStackHelper(entireStack ? Items.AIR.getDefaultStack() : getInventory().getMainHandStack())};
+        int[] slots = new int[]{inventory.selectedSlot + 36};
+        ItemStackHelper[] oldItems = new ItemStackHelper[]{new ItemStackHelper(inventory.getMainHandStack())};
+        ItemStackHelper[] newItems = new ItemStackHelper[]{new ItemStackHelper(entireStack ? Items.AIR.getDefaultStack() : inventory.getMainHandStack())};
         new EventInventoryChange(Inventory.create(), slots, oldItems, newItems);
     }
 }

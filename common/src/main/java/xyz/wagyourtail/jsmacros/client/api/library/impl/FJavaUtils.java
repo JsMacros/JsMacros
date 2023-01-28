@@ -7,13 +7,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHudLine;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.CyclingButtonWidget;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.LockButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.network.ServerInfo;
-import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.options.GameOptions;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.BossBar;
@@ -22,7 +21,7 @@ import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.FoodComponent;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Recipe;
@@ -52,7 +51,6 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.screen.CheckBoxWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.ChunkHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.ClickableWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.screen.CyclingButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.DirectionHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
@@ -84,6 +82,7 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.wagyourgui.elements.CheckBox;
 import xyz.wagyourtail.wagyourgui.elements.Slider;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -177,7 +176,7 @@ public class FJavaUtils extends BaseLibrary {
      *
      * @since 1.8.4
      */
-    public BaseHelper<?> getHelperFromRaw(Object raw) {
+    public BaseHelper<?> getHelperFromRaw(Object raw) throws IOException {
         // Didn't implement CommandNodeHelper, TradeOfferHelper, ModContainerHelper
         if (raw instanceof Entity) {
             return EntityHelper.create(((Entity) raw));
@@ -215,8 +214,8 @@ public class FJavaUtils extends BaseLibrary {
             return new PacketByteBufferHelper(((PacketByteBuf) raw));
         } else if (raw instanceof Packet<?>) {
             return new PacketByteBufferHelper(((Packet<?>) raw));
-        } else if (raw instanceof NbtElement) {
-            return NBTElementHelper.resolve(((NbtElement) raw));
+        } else if (raw instanceof Tag) {
+            return NBTElementHelper.resolve(((Tag) raw));
         } else if (raw instanceof PlayerAbilities) {
             return new PlayerAbilitiesHelper(((PlayerAbilities) raw));
         } else if (raw instanceof PlayerListEntry) {
@@ -255,16 +254,14 @@ public class FJavaUtils extends BaseLibrary {
 
         if (raw instanceof CheckBox) {
             return new CheckBoxWidgetHelper(((CheckBox) raw));
-        } else if (raw instanceof CyclingButtonWidget<?>) {
-            return new CyclingButtonWidgetHelper<>(((CyclingButtonWidget<?>) raw));
         } else if (raw instanceof LockButtonWidget) {
             return new LockButtonWidgetHelper(((LockButtonWidget) raw));
         } else if (raw instanceof Slider) {
             return new SliderWidgetHelper(((Slider) raw));
         } else if (raw instanceof TextFieldWidget) {
             return new TextFieldWidgetHelper(((TextFieldWidget) raw));
-        } else if (raw instanceof ClickableWidget) {
-            return new ClickableWidgetHelper<>(((ClickableWidget) raw));
+        } else if (raw instanceof AbstractButtonWidget) {
+            return new ClickableWidgetHelper<>(((AbstractButtonWidget) raw));
         }
         return null;
     }

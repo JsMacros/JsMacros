@@ -9,6 +9,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +34,7 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
     }
 
     public String getRemainingLowerCase() {
-        return base.getRemaining().toLowerCase(Locale.ROOT);
+        return base.getRemaining().toLowerCase();
     }
 
     public SuggestionsBuilderHelper suggest(String suggestion) {

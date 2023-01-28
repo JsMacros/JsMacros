@@ -24,7 +24,7 @@ public class EventDeath implements BaseEvent {
      
     public EventDeath() {
         this.deathPos = new BlockPosHelper(MinecraftClient.getInstance().player.getBlockPos());
-        PlayerInventory inv = MinecraftClient.getInstance().player.getInventory();
+        PlayerInventory inv = MinecraftClient.getInstance().player.inventory;
         inventory = new ArrayList<>();
         for (int i = 0; i < inv.size(); i++) {
             this.inventory.add(new ItemStackHelper(inv.getStack(i)));

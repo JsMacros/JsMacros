@@ -9,14 +9,11 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.client.gui.widget.LockButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.ClickEvent;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.util.Identifier;
 
@@ -37,7 +34,6 @@ import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.ClickableWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.CheckBoxWidgetHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.screen.CyclingButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.LockButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.SliderWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.TextFieldWidgetHelper;
@@ -215,7 +211,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     
     @Override
     public List<ClickableWidgetHelper<?, ?>> getButtonWidgets() {
-        Map<ClickableWidget, ClickableWidgetHelper<?, ?>> btns = new LinkedHashMap<>();
+        Map<AbstractButtonWidget, ClickableWidgetHelper<?, ?>> btns = new LinkedHashMap<>();
         for (RenderElement el : elements) {
             if (el instanceof ClickableWidgetHelper) {
                 btns.put(((ClickableWidgetHelper<?, ?>) el).getRaw(), (ClickableWidgetHelper<?, ?>) el);
@@ -224,7 +220,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         synchronized (children) {
             for (Element e : children) {
                 if ((e instanceof ButtonWidget) && !btns.containsKey(e)) {
-                    btns.put((ClickableWidget) e, new ClickableWidgetHelper<>((ClickableWidget) e));
+                    btns.put((AbstractButtonWidget) e, new ClickableWidgetHelper<>((AbstractButtonWidget) e));
                 }
             }
         }
@@ -688,53 +684,6 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, String[] values, String initial, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback) {
-        return addCyclingButton(x, y, width, height, 0, values, initial, callback);
-    }
-
-    @Override
-    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String initial, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback) {
-        return addCyclingButton(x, y, width, height, 0, values, null, initial, null, callback);
-    }
-
-    @Override
-    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback) {
-        return addCyclingButton(x, y, width, height, 0, values, alternatives, initial, prefix, null, callback);
-    }
-
-    @Override
-    public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<?, ?, Boolean, ?> alternateToggle, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback) {
-        AtomicReference<CyclingButtonWidgetHelper<?>> ref = new AtomicReference<>(null);
-        CyclingButtonWidget<String> cyclingButton;
-        CyclingButtonWidget.Builder<String> builder = CyclingButtonWidget.builder(TextBackport::literal);
-        if (alternatives != null) {
-            BooleanSupplier supplier = alternateToggle == null ? Screen::hasAltDown : alternateToggle::get;
-            builder.values(supplier, Arrays.asList(values), Arrays.asList(alternatives));
-        } else {
-            builder.values(values);
-        }
-        builder.initially(initial);
-
-        if (prefix == null || StringUtils.isBlank(prefix)) {
-            builder.omitKeyText();
-        }
-
-        cyclingButton = builder.build(x, y, width, height, literal(prefix), (btn, val) -> {
-            try {
-                callback.accept(ref.get(), this);
-            } catch (Exception e) {
-                Core.getInstance().profile.logError(e);
-            }
-        });
-        ref.set(new CyclingButtonWidgetHelper<>(cyclingButton, zIndex));
-        synchronized (elements) {
-            elements.add(ref.get());
-            children.add(cyclingButton);
-        }
-        return ref.get();
-    }
-    
-    @Override
     public IScreen removeButton(ClickableWidgetHelper<?, ?> btn) {
         synchronized (elements) {
             elements.remove(btn);
@@ -857,11 +806,6 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Override
     public CheckBoxWidgetHelper.CheckBoxBuilder checkBoxBuilder(boolean checked) {
         return new CheckBoxWidgetHelper.CheckBoxBuilder(this).checked(checked);
-    }
-
-    @Override
-    public CyclingButtonWidgetHelper.CyclicButtonBuilder<?> cyclicButtonBuilder(MethodWrapper<Object, ?, TextHelper, ?> valueToText) {
-        return new CyclingButtonWidgetHelper.CyclicButtonBuilder<>(this, valueToText);
     }
 
     @Override

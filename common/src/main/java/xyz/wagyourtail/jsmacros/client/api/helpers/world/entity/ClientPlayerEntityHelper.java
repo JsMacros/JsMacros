@@ -5,6 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.effect.StatusEffectUtil;
@@ -141,7 +142,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
             return false;
         }
         Pos3D eyePos = getEyePos();
-        double distance = base.getEyePos().distanceTo(new Vec3d(pos.getX(), pos.getY(), pos.getZ()));
+        double distance = eyePos.toVector(pos.getX(), pos.getY(), pos.getZ()).getMagnitude();
 
         List<Box> bounds = shape.getBoundingBoxes().stream().map(b -> b.offset(pos.getRaw())).collect(Collectors.toList());
         // Scale offset with distance to the target. Closer targets should have more rays to find a possible angle
@@ -164,7 +165,8 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
                         double x = center.x + ((xc & 1) == 0 ? 1 : -1) * xOffset * (xc / 2) * 0.999;
                         double y = center.y + ((yc & 1) == 0 ? 1 : -1) * yOffset * (yc / 2) * 0.999;
                         double z = center.z + ((zc & 1) == 0 ? 1 : -1) * zOffset * (zc / 2) * 0.999;
-                        BlockHitResult result = base.world.raycast(new RaycastContext(base.getEyePos(), new Vec3d(x, y, z), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, base));
+                        Vec3d eyeVec = base.getPos().add(0, base.getEyeHeight(base.getPose()), 0);
+                        BlockHitResult result = base.world.raycast(new RaycastContext(eyeVec, new Vec3d(x, y, z), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, base));
                         if (result.getType() == HitResult.Type.BLOCK && result.getBlockPos().equals(pos.getRaw())) {
                             Vec3D vec = new Vec3D(eyePos, new Pos3D(x, y, z));
                             lookAt(vec.getYaw(), vec.getPitch());
@@ -680,7 +682,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
             speedMultiplier /= 5;
         }
         float damage = speedMultiplier / hardness;
-        damage /= (!state.isToolRequired() || item.isSuitableFor(state)) ? 30 : 100;
+        damage /= (!state.isToolRequired() || item.isEffectiveOn(state)) ? 30 : 100;
         if (damage >= 1) {
             return 0;
         }

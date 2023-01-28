@@ -47,7 +47,7 @@ public class ParrotEntityHelper extends TameableEntityHelper<ParrotEntity> {
      * @since 1.8.4
      */
     public boolean isPartying() {
-        return base.isSongPlaying();
+        return base.getSongPlaying();
     }
 
     /**
@@ -66,6 +66,7 @@ public class ParrotEntityHelper extends TameableEntityHelper<ParrotEntity> {
      * @since 1.8.4
      */
     public boolean isSittingOnShoulder() {
+        assert MinecraftClient.getInstance().world != null;
         return MinecraftClient.getInstance().world.getPlayers().stream().anyMatch(
                 p -> p.getShoulderEntityLeft().getUuid("UUID").equals(base.getUuid())
                         || p.getShoulderEntityRight().getUuid("UUID").equals(base.getUuid())

@@ -8,6 +8,8 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 import xyz.wagyourtail.jsmacros.core.event.ICancelable;
 import xyz.wagyourtail.jsmacros.core.library.impl.FReflection;
 
+import java.io.IOException;
+
 /**
  * @author Etheradon
  * @since 1.8.4
@@ -47,7 +49,7 @@ public class EventJoinedSendPacket implements BaseEvent, ICancelable {
      *
      * @since 1.8.4
      */
-    public PacketByteBufferHelper getPacketBuffer() {
+    public PacketByteBufferHelper getPacketBuffer() throws IOException {
         return new PacketByteBufferHelper(packet);
     }
 

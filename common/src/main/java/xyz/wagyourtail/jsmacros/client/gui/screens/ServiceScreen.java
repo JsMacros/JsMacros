@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ClickableWidget;
 
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceContainer;
 import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceListTopbar;

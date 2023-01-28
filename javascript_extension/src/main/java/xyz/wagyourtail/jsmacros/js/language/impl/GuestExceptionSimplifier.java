@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.js.language.impl;
 import com.oracle.truffle.api.exception.AbstractTruffleException;
 import com.oracle.truffle.api.interop.ArityException;
 import com.oracle.truffle.api.interop.UnsupportedTypeException;
-import com.oracle.truffle.api.strings.TruffleString;
 import com.oracle.truffle.js.runtime.objects.Nullish;
 import org.graalvm.polyglot.PolyglotException;
 import xyz.wagyourtail.jsmacros.js.ValueAccessor;
@@ -138,7 +137,7 @@ public final class GuestExceptionSimplifier {
                 } else if (part instanceof Nullish) {
                     line.append(((Nullish) part).getClassName().toString());
                 } else {
-                    if (part instanceof TruffleString) {
+                    if (part instanceof String) {
                         //                        line.append("\"" + part.toString().replace("\"", "\\\"") + "\"");
                         line.append("String");
                     } else {

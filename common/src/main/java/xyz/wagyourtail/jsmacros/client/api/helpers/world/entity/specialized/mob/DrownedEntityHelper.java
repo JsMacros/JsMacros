@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob
 
 import net.minecraft.entity.mob.DrownedEntity;
 import net.minecraft.item.Items;
+import net.minecraft.item.TridentItem;
 
 /**
  * @author Etheradon
@@ -20,7 +21,7 @@ public class DrownedEntityHelper extends ZombieEntityHelper<DrownedEntity> {
      * @since 1.8.4
      */
     public boolean hasTrident() {
-        return base.getMainHandStack().isOf(Items.TRIDENT);
+        return base.getMainHandStack().getItem() instanceof TridentItem;
     }
 
     /**
@@ -29,7 +30,7 @@ public class DrownedEntityHelper extends ZombieEntityHelper<DrownedEntity> {
      * @since 1.8.4
      */
     public boolean hasNautilusShell() {
-        return base.getMainHandStack().isOf(Items.NAUTILUS_SHELL);
+        return base.getMainHandStack().getItem() == Items.NAUTILUS_SHELL;
     }
 
 }

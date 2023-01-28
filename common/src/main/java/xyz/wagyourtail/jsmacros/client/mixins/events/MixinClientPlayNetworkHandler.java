@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.*;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.Entry;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,10 +21,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import xyz.wagyourtail.jsmacros.client.access.BossBarConsumer;
+import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventInventoryChange;
@@ -55,8 +52,8 @@ class MixinClientPlayNetworkHandler {
     private Map<UUID, PlayerListEntry> playerListEntries;
 
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;showsDeathScreen()Z"), method="onDeathMessage")
-    private void onDeath(DeathMessageS2CPacket packet, CallbackInfo info) {
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;showsDeathScreen()Z"), method="onCombatEvent")
+    private void onDeath(CombatEventS2CPacket packet, CallbackInfo info) {
         new EventDeath();
     }
 
@@ -198,16 +195,16 @@ class MixinClientPlayNetworkHandler {
         new EventChunkUnload(packet.getX(), packet.getZ());
     }
 
-    @Inject(method = "onEntityStatusEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/thread/ThreadExecutor;)V", shift = At.Shift.AFTER))
+    @Inject(method = "onEntityPotionEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/thread/ThreadExecutor;)V", shift = At.Shift.AFTER))
     public void onEntityStatusEffect(EntityStatusEffectS2CPacket packet, CallbackInfo info) {
-        if (packet.getEntityId() == client.player.getId()) {
+        if (packet.getEntityId() == client.player.getEntityId()) {
             StatusEffectInstance newEffect = new StatusEffectInstance(StatusEffect.byRawId(packet.getEffectId()), packet.getDuration(), packet.getAmplifier(), packet.isAmbient(), packet.shouldShowParticles(), packet.shouldShowIcon(), (StatusEffectInstance) null);
             StatusEffectInstance oldEffect = client.player.getStatusEffect(StatusEffect.byRawId(packet.getEffectId()));
             new EventStatusEffectUpdate(oldEffect == null ? null : new StatusEffectHelper(oldEffect), new StatusEffectHelper(newEffect), true);
         }
     }
 
-    @Inject(method = "onRemoveEntityStatusEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/thread/ThreadExecutor;)V", shift = At.Shift.AFTER))
+    @Inject(method = "onRemoveEntityEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/thread/ThreadExecutor;)V", shift = At.Shift.AFTER))
     public void onEntityStatusEffect(RemoveEntityStatusEffectS2CPacket packet, CallbackInfo info) {
         if (packet.getEntity(client.world) == client.player) {
             new EventStatusEffectUpdate(new StatusEffectHelper(client.player.getStatusEffect(packet.getEffectType())), null, false);
@@ -219,7 +216,7 @@ class MixinClientPlayNetworkHandler {
         if (packet.getSyncId() != -2) {
             return;
         }
-        new EventInventoryChange(Inventory.create(), new int[]{packet.getSlot()}, new ItemStackHelper(client.player.getInventory().getStack(packet.getSlot())), new ItemStackHelper(packet.getItemStack()));
+        new EventInventoryChange(Inventory.create(), new int[]{packet.getSlot()}, new ItemStackHelper(client.player.inventory.getStack(packet.getSlot())), new ItemStackHelper(packet.getItemStack()));
     }
     
 }

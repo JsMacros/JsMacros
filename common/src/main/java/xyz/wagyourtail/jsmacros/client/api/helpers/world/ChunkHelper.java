@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.chunk.Chunk;
@@ -39,7 +40,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @since 1.8.4
      */
     public BlockPosHelper getStartingBlock() {
-        return new BlockPosHelper(base.getPos().getBlockPos(0, 0, 0));
+        return new BlockPosHelper(base.getPos().getStartPos());
     }
 
     /**
@@ -54,7 +55,8 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @since 1.8.4
      */
     public BlockPosHelper getOffsetBlock(int xOffset, int y, int zOffset) {
-        return new BlockPosHelper(base.getPos().getBlockPos(xOffset, y, zOffset));
+        ChunkPos pos = base.getPos();
+        return new BlockPosHelper(pos.getStartX() + xOffset, y, pos.getStartZ() + zOffset);
     }
 
     /**
@@ -63,7 +65,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @since 1.8.4
      */
     public int getMaxBuildHeight() {
-        return base.getTopY();
+        return base.getHeight();
     }
 
     /**
@@ -72,7 +74,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @since 1.8.4
      */
     public int getMinBuildHeight() {
-        return base.getBottomY();
+        return 0;
     }
 
     /**
@@ -123,7 +125,8 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @since 1.8.4
      */
     public String getBiome(int xOffset, int y, int zOffset) {
-        return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(base.getPos().getBlockPos(xOffset, y, zOffset))).toString();
+        ChunkPos pos = base.getPos();
+        return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(new BlockPos(pos.getStartX() + xOffset, y, pos.getStartZ() + zOffset))).toString();
     }
 
     /**
@@ -145,8 +148,9 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @since 1.8.4
      */
     public List<? extends EntityHelper<?>> getEntities() {
+        ChunkPos pos = base.getPos();
         return StreamSupport.stream(MinecraftClient.getInstance().world.getEntities().spliterator(), false).
-                filter(entity -> entity.getChunkPos().equals(base.getPos())).map(EntityHelper::create).collect(Collectors.toList());
+                filter(entity -> entity.chunkX == pos.x && entity.chunkZ == pos.z).map(EntityHelper::create).collect(Collectors.toList());
     }
 
     /**
@@ -169,8 +173,9 @@ public class ChunkHelper extends BaseHelper<Chunk> {
         // Maybe adapt this to the WorldScanner way?
         for (int x = 0; x < 16; x++) {
             for (int z = 0; z < 16; z++) {
-                for (int y = base.getBottomY(); y < base.getTopY(); y++) {
-                    BlockPos pos = base.getPos().getBlockPos(x, y, z);
+                for (int y = 0; y < base.getHeight(); y++) {
+                    ChunkPos chunkPos = base.getPos();
+                    BlockPos pos = new BlockPos(chunkPos.getStartX() + x, y, chunkPos.getStartZ() + z);
                     BlockState state = base.getBlockState(pos);
                     if (!includeAir && state.isAir()) {
                         continue;

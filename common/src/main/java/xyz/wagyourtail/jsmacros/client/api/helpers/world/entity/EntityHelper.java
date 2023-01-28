@@ -88,7 +88,8 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.8.4
      */
     public Pos3D getEyePos() {
-        return new Pos3D(base.getEyePos());
+        Vec3d pos = base.getPos();
+        return new Pos3D(pos.x, pos.y + base.getEyeHeight(base.getPose()), pos.z);
     }
     
     /**
@@ -97,7 +98,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.6.5
      */
     public Pos2D getChunkPos() {
-        return new Pos2D(base.getChunkPos().x, base.getChunkPos().z);
+        return new Pos2D(base.chunkX, base.chunkZ);
     }
     
     /**
@@ -137,7 +138,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the {@code pitch} value of the entity.
      */
     public float getPitch() {
-        return base.getPitch();
+        return base.getPitch(0);
     }
     
     /**
@@ -145,7 +146,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the {@code yaw} value of the entity.
      */
     public float getYaw() {
-        return MathHelper.wrapDegrees(base.getYaw());
+        return MathHelper.wrapDegrees(base.getYaw(0));
     }
     
     /**
@@ -231,7 +232,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      */
     public NBTElementHelper<?> getNBT() {
         CompoundTag nbt = new CompoundTag();
-        base.writeNbt(nbt);
+        base.toTag(nbt);
         return NBTElementHelper.resolve(nbt);
     }
 
@@ -515,14 +516,10 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
                     } else {
                         return new AbstractHorseEntityHelper<>(((HorseBaseEntity) e));
                     }
-                } else if (e instanceof AxolotlEntity) {
-                    return new AxolotlEntityHelper(((AxolotlEntity) e));
                 } else if (e instanceof BeeEntity) {
                     return new BeeEntityHelper(((BeeEntity) e));
                 } else if (e instanceof FoxEntity) {
                     return new FoxEntityHelper(((FoxEntity) e));
-                } else if (e instanceof GoatEntity) {
-                    return new GoatEntityHelper(((GoatEntity) e));
                 } else if (e instanceof MooshroomEntity) {
                     return new MooshroomEntityHelper(((MooshroomEntity) e));
                 } else if (e instanceof OcelotEntity) {
@@ -680,7 +677,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         if (!client.isIntegratedServerRunning()) {
             return null;
         }
-        Entity entity = client.getServer().getPlayerManager().getPlayer(client.player.getUuid()).world.getEntityById(base.getId());
+        Entity entity = client.getServer().getPlayerManager().getPlayer(client.player.getUuid()).world.getEntityById(base.getEntityId());
         if (entity == null) {
             return null;
         } else {

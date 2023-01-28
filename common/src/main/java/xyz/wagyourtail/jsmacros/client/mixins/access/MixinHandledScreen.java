@@ -54,9 +54,9 @@ public class MixinHandledScreen<T extends ScreenHandler> extends Screen implemen
         matrices.translate(0, 0, 150);
         for (int i = 0; i < handler.slots.size(); i++) {
             Slot slot = handler.slots.get(i);
-            if (slot.isEnabled()) {
+//            if (slot.isEnabled()) {
                 textRenderer.draw(matrices, String.valueOf(i), slot.x, slot.y, 0xFFFFFF);
-            }
+//            }
         }
         matrices.pop();
     }

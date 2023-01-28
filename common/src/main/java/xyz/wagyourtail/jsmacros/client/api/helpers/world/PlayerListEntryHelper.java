@@ -74,7 +74,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @since 1.8.4
      */
     public boolean hasCape() {
-        return base.hasCape();
+        return base.getCapeTexture() != null;
     }
 
     /**

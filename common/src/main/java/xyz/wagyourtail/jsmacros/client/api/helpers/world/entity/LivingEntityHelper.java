@@ -229,8 +229,8 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     public boolean canSeeEntity(EntityHelper<?> entity, boolean simpleCast) {
         Entity rawEntity = entity.getRaw();
         
-        Vec3d baseEyePos = new Vec3d(base.getX(), base.getEyeY(), base.getZ());
-        Vec3d vec3d = base.getEyePos();
+        Vec3d baseEyePos = new Vec3d(base.getX(), base.getY() + base.getEyeHeight(base.getPose()), base.getZ());
+        Vec3d vec3d = baseEyePos;
         Vec3d vec3d2 = base.getRotationVec(1.0F).multiply(10);
         Vec3d vec3d3 = vec3d.add(vec3d2);
         Box box = base.getBoundingBox().stretch(vec3d2).expand(1.0);

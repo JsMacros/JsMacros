@@ -46,7 +46,7 @@ public abstract class CommandBuilder {
     }
 
     public CommandBuilder intArg(String name) {
-        argument(name, (Supplier<ArgumentType<?>>) IntegerArgumentType::integer);
+        argument(name, IntegerArgumentType::integer);
         return this;
     }
 
@@ -56,7 +56,7 @@ public abstract class CommandBuilder {
     }
 
     public CommandBuilder intRangeArg(String name) {
-        argument(name, NumberRangeArgumentType::intRange);
+        argument(name, NumberRangeArgumentType::numberRange);
         return this;
     }
 
@@ -71,7 +71,7 @@ public abstract class CommandBuilder {
     }
 
     public CommandBuilder floatRangeArg(String name) {
-        argument(name, NumberRangeArgumentType::floatRange);
+        argument(name, NumberRangeArgumentType::method_30918);
         return this;
     }
 
@@ -145,12 +145,12 @@ public abstract class CommandBuilder {
     }
 
     public CommandBuilder nbtElementArg(String name) {
-        argument(name, NbtElementArgumentType::nbtElement);
+        argument(name, NbtTagArgumentType::nbtTag);
         return this;
     }
 
     public CommandBuilder nbtCompoundArg(String name) {
-        argument(name, (CompoundTagArgumentType::nbtCompound));
+        argument(name, NbtCompoundTagArgumentType::nbtCompound);
         return this;
     }
 
@@ -226,7 +226,7 @@ public abstract class CommandBuilder {
     }
 
     public CommandBuilder particleArg(String name) {
-        argument(name, ParticleEffectArgumentType::new);
+        argument(name, ParticleArgumentType::new);
         return this;
     }
 

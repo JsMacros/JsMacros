@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroContainer;
@@ -201,7 +202,7 @@ public class MacroScreen extends BaseScreen {
             macro.render(matrices, mouseX, mouseY, delta);
         }
         
-        drawCenteredText(matrices, this.textRenderer, Core.getInstance().profile.getCurrentProfileName(), this.width * 8 / 12, 5, 0x7F7F7F);
+        drawCenteredText(matrices, this.textRenderer, new LiteralText(Core.getInstance().profile.getCurrentProfileName()), this.width * 8 / 12, 5, 0x7F7F7F);
 
         fill(matrices, this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
         fill(matrices, this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);

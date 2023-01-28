@@ -5,6 +5,7 @@ import net.minecraft.scoreboard.Team;
 import xyz.wagyourtail.jsmacros.client.api.helpers.FormattingHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.ScoreboardsHelper;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinTeam;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
@@ -96,9 +97,9 @@ public class TeamHelper extends BaseHelper<Team> {
      * @since 1.8.4
      */
     public ScoreboardsHelper getScoreboard() {
-        return new ScoreboardsHelper(base.getScoreboard());
+        return new ScoreboardsHelper(((MixinTeam) base).getScoreboard());
     }
-    
+
     /**
      * @since 1.3.0
      * @return

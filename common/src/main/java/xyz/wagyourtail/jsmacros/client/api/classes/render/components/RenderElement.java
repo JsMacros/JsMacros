@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.client.util.math.Vector3f;
 
 /**
  * @author Wagyourtail
@@ -28,7 +28,7 @@ public interface RenderElement extends Drawable {
         if (rotateAroundCenter) {
             matrices.translate(width / 2, height / 2, 0);
         }
-        matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
+        matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(rotation));
         if (rotateAroundCenter) {
             matrices.translate(-width / 2, -height / 2, 0);
         }

@@ -4,7 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeMatcher;
+import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.util.registry.Registry;
 
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -90,7 +90,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
      * @since 1.8.4
      */
     public boolean hasRecipeRemainders() {
-        return base.getIngredients().stream().anyMatch(ingredient -> ingredient.getMatchingStacksClient()[0].getItem().hasRecipeRemainder());
+        return base.getPreviewInputs().stream().anyMatch(ingredient -> ingredient.getMatchingStacksClient()[0].getItem().hasRecipeRemainder());
     }
 
     /**
@@ -99,7 +99,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
      * @since 1.8.4
      */
     public List<List<ItemStackHelper>> getRecipeRemainders() {
-        return base.getIngredients().stream()
+        return base.getPreviewInputs().stream()
                 .filter(ingredient -> ingredient.getMatchingStacksClient().length > 0 && ingredient.getMatchingStacksClient()[0].getItem().hasRecipeRemainder())
                 .map(ingredient -> Arrays.stream(ingredient.getMatchingStacksClient()).map(ItemStackHelper::new).collect(Collectors.toList()))
                 .collect(Collectors.toList());
@@ -121,9 +121,9 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
      * @since 1.8.4
      */
     public boolean canCraft() {
-        RecipeMatcher matcher = new RecipeMatcher();
-        MinecraftClient.getInstance().player.getInventory().populateRecipeFinder(matcher);
-        return matcher.match(base, null);
+        RecipeFinder matcher = new RecipeFinder();
+        MinecraftClient.getInstance().player.inventory.populateRecipeFinder(matcher);
+        return matcher.findRecipe(base, null);
     }
 
     /**
@@ -143,9 +143,9 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
      * @since 1.8.4
      */
     public int getCraftableAmount() {
-        RecipeMatcher matcher = new RecipeMatcher();
-        MinecraftClient.getInstance().player.getInventory().populateRecipeFinder(matcher);
-        return matcher.countCrafts(base, null);
+        RecipeFinder matcher = new RecipeFinder();
+        MinecraftClient.getInstance().player.inventory.populateRecipeFinder(matcher);
+        return matcher.countRecipeCrafts(base, null);
     }
 
     @Override

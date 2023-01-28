@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.item.*;
 
@@ -70,7 +72,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean isSuitableFor(BlockHelper block) {
-        return base.isSuitableFor(block.getDefaultState().getRaw());
+        return base.isEffectiveOn(block.getDefaultState().getRaw());
     }
 
     /**
@@ -81,7 +83,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean isSuitableFor(BlockStateHelper block) {
-        return base.isSuitableFor(block.getRaw());
+        return base.isEffectiveOn(block.getRaw());
     }
 
     /**
@@ -250,7 +252,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean canBeNested() {
-        return base.canBeNested();
+        return !(Block.getBlockFromItem(base) instanceof ShulkerBoxBlock);
     }
 
     /**
@@ -273,7 +275,7 @@ public class ItemHelper extends BaseHelper<Item> {
         ItemStringReader reader = new ItemStringReader(new StringReader(getId() + nbt), false);
         reader.consume();
         ItemStack stack = reader.getItem().getDefaultStack();
-        stack.setTag(reader.getNbt());
+        stack.setTag(reader.getTag());
         return new ItemStackHelper(stack);
     }
 

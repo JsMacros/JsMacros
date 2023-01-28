@@ -4,17 +4,23 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.ScreenshotUtils;
 import net.minecraft.client.render.debug.DebugRenderer;
-import net.minecraft.client.util.ScreenshotRecorder;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.GameMode;
 
+import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
+import xyz.wagyourtail.jsmacros.client.access.backports.TextBackport;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
@@ -23,6 +29,8 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinGameRenderer;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinWorldRenderer;
 import xyz.wagyourtail.jsmacros.client.movement.MovementDummy;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -187,10 +195,91 @@ public class FPlayer extends BaseLibrary {
      */
     public void takePanorama(String folder, int width, int height, MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null;
-        Text result = mc.takePanorama(new File(Core.getInstance().config.macroFolder, folder), width, height);
+        Text result = takePanorama(new File(Core.getInstance().config.macroFolder, folder), width, height);
         if (callback != null) {
             callback.accept(new TextHelper(result));
         }
+    }
+
+    private Text takePanorama(File directory, int width, int height) {
+        int i = mc.getWindow().getFramebufferWidth();
+        int j = mc.getWindow().getFramebufferHeight();
+        Framebuffer framebuffer = new Framebuffer(width, height, true, mc.IS_SYSTEM_MAC);
+        assert mc.player != null;
+        float f = mc.player.getPitch(0);
+        float g = mc.player.getYaw(0);
+        float h = mc.player.prevPitch;
+        float k = mc.player.prevYaw;
+        ((MixinGameRenderer) mc.gameRenderer).setBlockOutlineEnabled(false);
+
+        MutableText var12;
+        try {
+            ((MixinGameRenderer) mc.gameRenderer).setRenderingPanorama(true);
+            ((MixinWorldRenderer) mc.worldRenderer).invokeLoadTransparencyShader();
+            GLFW.glfwSetWindowSize(mc.getWindow().getHandle(), width, height);
+
+            for(int l = 0; l < 6; ++l) {
+                switch(l) {
+                    case 0:
+                        mc.player.setYaw(g);
+                        mc.player.pitch = 0.0F;
+                        break;
+                    case 1:
+                        mc.player.setYaw((g + 90.0F) % 360.0F);
+                        mc.player.pitch = 0.0F;
+                        break;
+                    case 2:
+                        mc.player.setYaw((g + 180.0F) % 360.0F);
+                        mc.player.pitch = 0.0F;
+                        break;
+                    case 3:
+                        mc.player.setYaw((g - 90.0F) % 360.0F);
+                        mc.player.pitch = 0.0F;
+                        break;
+                    case 4:
+                        mc.player.setYaw(g);
+                        mc.player.pitch = -90.0F;
+                        break;
+                    case 5:
+                    default:
+                        mc.player.setYaw(g);
+                        mc.player.pitch = 90.0F;
+                }
+
+                mc.player.prevYaw = mc.player.getYaw(0);
+                mc.player.prevPitch = mc.player.getPitch(0);
+                framebuffer.beginWrite(true);
+                mc.gameRenderer.renderWorld(1.0F, 0L, new MatrixStack());
+
+                try {
+                    Thread.sleep(10L);
+                } catch (InterruptedException var17) {
+                }
+
+                ScreenshotUtils.saveScreenshot(directory, "panorama_" + l + ".png", framebuffer.viewportWidth, framebuffer.viewportHeight, framebuffer, message -> {
+                });
+            }
+
+            Text text = TextBackport.literal(directory.getName())
+                .formatted(Formatting.UNDERLINE)
+                .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, directory.getAbsolutePath())));
+            return TextBackport.translatable("screenshot.success", new Object[]{text});
+        } catch (Exception var18) {
+            var12 = TextBackport.translatable("screenshot.failure", new Object[]{var18.getMessage()});
+        } finally {
+            mc.player.pitch = f;
+            mc.player.setYaw(g);
+            mc.player.prevPitch = h;
+            mc.player.prevYaw = k;
+            ((MixinGameRenderer) mc.gameRenderer).setBlockOutlineEnabled(true);
+            GLFW.glfwSetWindowSize(mc.getWindow().getHandle(), i, j);
+            framebuffer.delete();
+            ((MixinGameRenderer) mc.gameRenderer).setRenderingPanorama(false);
+            mc.worldRenderer.reload();
+            mc.getFramebuffer().beginWrite(true);
+        }
+
+        return var12;
     }
     
     public StatsHelper getStatistics() {

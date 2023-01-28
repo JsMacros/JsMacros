@@ -1,8 +1,7 @@
 package xyz.wagyourtail.wagyourgui.elements;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
@@ -18,7 +17,7 @@ import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.lite
  * @author Etheradon
  * @since 1.8.4
  */
-public class Slider extends ClickableWidget {
+public class Slider extends AbstractButtonWidget {
 
     private int steps;
     private double value;
@@ -83,9 +82,10 @@ public class Slider extends ClickableWidget {
     }
 
     @Override
-    protected void renderBackground(MatrixStack matrices, MinecraftClient client, int mouseX, int mouseY) {
-        RenderSystem.setShaderTexture(0, WIDGETS_TEXTURE);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        MinecraftClient lv = MinecraftClient.getInstance();
+        lv.getTextureManager().bindTexture(WIDGETS_LOCATION);
+        RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
         int offset = (isHovered() ? 2 : 1) * 20;
         drawTexture(matrices, x + (int) (value * (double) (width - 8)), y, 0, 46 + offset, 4, 20);
         drawTexture(matrices, x + (int) (value * (double) (width - 8)) + 4, y, 196, 46 + offset, 4, 20);
@@ -116,8 +116,4 @@ public class Slider extends ClickableWidget {
         super.setMessage(message);
     }
 
-    @Override
-    public void appendNarrations(NarrationMessageBuilder builder) {
-
-    }
 }

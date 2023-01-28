@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
@@ -24,7 +24,7 @@ import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.lite
  * @since 1.0.5
  */
 @SuppressWarnings("unused")
-public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T extends ClickableWidget> extends BaseHelper<T> implements RenderElement, Alignable<B> {
+public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T extends AbstractButtonWidget> extends BaseHelper<T> implements RenderElement, Alignable<B> {
     public int zIndex;
     public List<Text> tooltips;
 

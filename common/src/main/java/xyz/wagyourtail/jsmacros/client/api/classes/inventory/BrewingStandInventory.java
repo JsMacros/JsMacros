@@ -1,13 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
-import net.minecraft.block.entity.BrewingStandBlockEntity;
 import net.minecraft.client.gui.screen.ingame.BrewingStandScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.recipe.BrewingRecipeRegistry;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
 import java.util.Arrays;
@@ -78,7 +76,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
      * @since 1.8.4
      */
     public int getMaxFuelUses() {
-        return BrewingStandBlockEntity.field_31324;
+        return 20;
     }
 
     /**
@@ -109,7 +107,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
      * @since 1.8.4
      */
     public int getBrewTime() {
-        return BrewingRecipeRegistry.field_30942 * 20 - inventory.getScreenHandler().getBrewTime();
+        return 20 * 20 - inventory.getScreenHandler().getBrewTime();
     }
 
     /**

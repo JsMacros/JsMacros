@@ -19,4 +19,7 @@ public interface MixinAdvancementRewards {
     @Accessor
     Identifier[] getLoot();
 
+    @Accessor
+    Identifier[] getRecipes();
+
 }

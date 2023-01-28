@@ -5,6 +5,7 @@ import net.minecraft.entity.passive.FoxEntity;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinFoxEntity;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinLivingEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -141,7 +142,7 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
      * @since 1.8.4
      */
     public boolean isJumping() {
-        return base.isJumping();
+        return ((MixinLivingEntity) base).isJumping();
     }
 
     /**

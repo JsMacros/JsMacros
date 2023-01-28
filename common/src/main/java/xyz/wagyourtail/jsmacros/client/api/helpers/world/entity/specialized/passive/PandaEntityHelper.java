@@ -155,7 +155,7 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
      * @since 1.8.4
      */
     public boolean isBrown() {
-        return base.isBrown();
+        return base.getMainGene() == PandaEntity.Gene.BROWN;
     }
 
     /**

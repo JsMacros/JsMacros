@@ -261,7 +261,7 @@ public class FWorld extends BaseLibrary {
      * @return
      */
     public List<Pos3D> findBlocksMatching(int centerX, int centerZ, String[] ids, int chunkrange) {
-        Set<String> ids2 = Arrays.stream(ids).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
+        Set<String> ids2 = Arrays.stream(ids).map(RegistryHelper::parseNameSpace).collect(Collectors.toSet());
         return new WorldScanner(mc.world, block -> ids2.contains(Registry.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(centerX, centerZ, chunkrange);
     }
 
@@ -345,10 +345,10 @@ public class FWorld extends BaseLibrary {
                     if (stateFilter.apply(state.getBlock())) {
                         if (entityFilter != null) {
                             if (entityFilter.apply(state)) {
-                                return new PositionCommon.Pos3D(c.x << 4 | x, y + (i << 4), c.z << 4 | z);
+                                return new Pos3D(c.x << 4 | x, y + (i << 4), c.z << 4 | z);
                             }
                         } else {
-                            return new PositionCommon.Pos3D(c.x << 4 | x, y + (i << 4), c.z << 4 | z);
+                            return new Pos3D(c.x << 4 | x, y + (i << 4), c.z << 4 | z);
                         }
                     }
                     return null;
@@ -382,10 +382,10 @@ public class FWorld extends BaseLibrary {
         }
         assert mc.world != null;
         int xStart = pos.getX() - radius;
-        int yStart = MathHelper.clamp(mc.world.getBottomY(), pos.getY() - radius, mc.world.getHeight());
+        int yStart = MathHelper.clamp(0, pos.getY() - radius, mc.world.getHeight());
         int zStart = pos.getZ() - radius;
         int xEnd = pos.getX() + radius;
-        int yEnd = MathHelper.clamp(mc.world.getBottomY(), pos.getY() + radius, mc.world.getHeight());
+        int yEnd = MathHelper.clamp(0, pos.getY() + radius, mc.world.getHeight());
         int zEnd = pos.getZ() + radius;
         int radiusSq = radius * radius;
 
@@ -429,7 +429,11 @@ public class FWorld extends BaseLibrary {
      */
     public void iterateBox(BlockPosHelper pos1, BlockPosHelper pos2, boolean ignoreAir, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
         assert mc.world != null;
-        BlockPos.stream(pos1.getRaw().withY(MathHelper.clamp(mc.world.getBottomY(), pos1.getY(), mc.world.getHeight())), pos2.getRaw().withY(MathHelper.clamp(mc.world.getBottomY(), pos2.getY(), mc.world.getHeight()))).forEach(bp -> {
+        BlockPos p1 = pos1.getRaw();
+        BlockPos p2 = pos2.getRaw();
+        p1 = new BlockPos(p1.getX(), MathHelper.clamp(0, p1.getY(), mc.world.getHeight()), p1.getZ());
+        p2 = new BlockPos(p2.getX(), MathHelper.clamp(0, p2.getY(), mc.world.getHeight()), p2.getZ());
+        BlockPos.stream(p1, p2).forEach(bp -> {
             BlockState state = mc.world.getBlockState(bp);
             if (ignoreAir && state.isAir()) {
                 return;
@@ -461,7 +465,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.8.4
      */
     public List<EntityHelper<?>> getEntities(String... types) {
-        Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
+        Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toSet());
         Predicate<Entity> typePredicate = entity -> uniqueTypes.contains(Registry.ENTITY_TYPE.getId(entity.getType()).toString());
         return getEntitiesInternal(typePredicate);
     }
@@ -486,7 +490,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.8.4
      */
     public List<EntityHelper<?>> getEntities(double distance, String... types) {
-        Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
+        Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toSet());
         assert mc.player != null;
         Predicate<Entity> distancePredicate = e -> e.distanceTo(mc.player) <= distance;
         Predicate<Entity> typePredicate = entity -> uniqueTypes.contains(Registry.ENTITY_TYPE.getId(entity.getType()).toString());

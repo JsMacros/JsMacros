@@ -802,32 +802,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
         return base.get(Properties.BAMBOO_LEAVES).asString();
     }
 
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public String getTilt() {
-        return base.get(Properties.TILT).asString();
-    }
-
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public String getVerticalDirection() {
-        return base.get(Properties.VERTICAL_DIRECTION).asString();
-    }
-
-    /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public String getThickness() {
-        return base.get(Properties.THICKNESS).asString();
-    }
 
     /**
      * @return
@@ -854,17 +828,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      */
     public boolean isVineEnd() {
         return base.get(Properties.VINE_END);
-    }
-
-    /**
-     * Used on cave vine roots.
-     *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public boolean hasBerries() {
-        return base.get(Properties.BERRIES);
     }
 
     // don't make static, causes crash in main function below
@@ -913,17 +876,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      */
     public int getBites() {
         return base.get(Properties.BITES);
-    }
-
-    /**
-     * Used on candles.
-     *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public int getCandles() {
-        return base.get(Properties.CANDLES);
     }
 
     /**
@@ -1026,19 +978,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      */
     public int getCharges() {
         return base.get(Properties.CHARGES);
-    }
-
-
-    /**
-    *
-     * Used on sculk sensors.
-    *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public String getSculkSensorPhase() {
-        return base.get(Properties.SCULK_SENSOR_PHASE).asString();
     }
 
     /**

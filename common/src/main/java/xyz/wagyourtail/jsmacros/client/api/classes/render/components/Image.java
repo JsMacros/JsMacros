@@ -7,6 +7,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
+import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
@@ -336,14 +337,13 @@ public class Image implements RenderElement, Alignable<Image> {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         matrices.push();
         setupMatrix(matrices, x, y, 1, rotation, getWidth(), getHeight(), rotateCenter);
-        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableBlend();
-        RenderSystem.setShaderTexture(0, imageid);
+        mc.getTextureManager().bindTexture(imageid);
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buf = tess.getBuffer();
 
-        buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_TEXTURE_COLOR);
+        buf.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_TEXTURE_COLOR);
         Matrix4f matrix = matrices.peek().getModel();
 
         float x1 = x;

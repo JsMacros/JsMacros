@@ -49,7 +49,27 @@ public class BossBarHelper extends BaseHelper<BossBar> {
      * @return boss bar notch style.
      */
     public String getStyle() {
-        return base.getStyle().getName().toUpperCase(Locale.ROOT);
+        String style = null;
+        switch (base.getOverlay()) {
+            case NOTCHED_10:
+                style = "NOTCHED_10";
+                break;
+            case NOTCHED_12:
+                style = "NOTCHED_12";
+                break;
+            case NOTCHED_20:
+                style = "NOTCHED_20";
+                break;
+            case NOTCHED_6:
+                style = "NOTCHED_6";
+                break;
+            case PROGRESS:
+                style = "PROGRESS";
+                break;
+            default:
+                break;
+        }
+        return style;
     }
 
     /**

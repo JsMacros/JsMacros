@@ -20,7 +20,7 @@ public class FabricModContainer extends ModContainerHelper<ModContainer> {
     public FabricModContainer(ModContainer base) {
         super(base);
         metadata = base.getMetadata();
-        metadata.getDependencies();
+        metadata.getDepends();
     }
 
     @Override

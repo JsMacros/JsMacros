@@ -104,7 +104,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      * @since 1.8.4
      */
     public String[] getRecipes() {
-        return (String[]) Arrays.stream(base.getRewards().getRecipes()).map(Identifier::toString).toArray();
+        return (String[]) Arrays.stream(((MixinAdvancementRewards) base.getRewards()).getRecipes()).map(Identifier::toString).toArray();
     }
 
     /**

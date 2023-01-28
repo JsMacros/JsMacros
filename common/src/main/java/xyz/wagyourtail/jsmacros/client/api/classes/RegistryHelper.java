@@ -61,7 +61,7 @@ public class RegistryHelper {
         ItemStringReader itemResult = new ItemStringReader(new StringReader(parseNameSpace(id) + nbt), false);
         itemResult.consume();
         ItemStack stack = itemResult.getItem().getDefaultStack();
-        stack.setTag(itemResult.getNbt());
+        stack.setTag(itemResult.getTag());
         return new CreativeItemStackHelper(stack);
     }
 
@@ -248,16 +248,7 @@ public class RegistryHelper {
     public List<String> getParticleTypeIds() {
         return Registry.PARTICLE_TYPE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
-
-    /**
-     * @return a list of all game event names.
-     *
-     * @since 1.8.4
-     */
-    public List<String> getGameEventNames() {
-        return Registry.GAME_EVENT.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
-    }
-
+    
     /**
      * @return a list of all status effect ids.
      *

@@ -28,7 +28,7 @@ public class RabbitEntityHelper extends AnimalEntityHelper<RabbitEntity> {
      * @since 1.8.4
      */
     public boolean isKillerBunny() {
-        return base.getRabbitType() == RabbitEntity.KILLER_BUNNY_TYPE;
+        return base.getRabbitType() == 99;
     }
 
 }

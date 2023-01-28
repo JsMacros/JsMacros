@@ -21,7 +21,7 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
      * @return
      */
     public PlayerAbilitiesHelper getAbilities() {
-        return new PlayerAbilitiesHelper(base.getAbilities());
+        return new PlayerAbilitiesHelper(base.abilities);
     }
     
     

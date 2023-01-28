@@ -32,7 +32,7 @@ public abstract class StateHelper<U extends State<?, ?>> extends BaseHelper<U> {
 
     public <T extends Comparable<?>> StateHelper<U> with(String property, String value) {
         Optional<Property<?>> prop = base.getProperties().stream().filter(p -> p.getName().equals(property)).findFirst();
-        if (prop.isEmpty()) {
+        if (!prop.isPresent()) {
             throw new IllegalArgumentException("Property " + property + " does not exist for this state");
         }
         return with(prop.get(), value);
@@ -40,7 +40,7 @@ public abstract class StateHelper<U extends State<?, ?>> extends BaseHelper<U> {
 
     private <T extends Comparable<T>> StateHelper<U> with(Property<T> property, String value) {
         Optional<T> arg = property.parse(value);
-        if (arg.isEmpty()) {
+        if (!arg.isPresent()) {
             throw new IllegalArgumentException("Value " + value + " is not valid for the property " + property);
         }
         return create((U) base.with(property, arg.get()));

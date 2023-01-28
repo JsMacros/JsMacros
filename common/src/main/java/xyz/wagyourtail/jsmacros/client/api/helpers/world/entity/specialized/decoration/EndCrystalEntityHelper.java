@@ -25,7 +25,7 @@ public class EndCrystalEntityHelper extends EntityHelper<EndCrystalEntity> {
      * @since 1.8.4
      */
     public boolean isNatural() {
-        return base.shouldShowBottom();
+        return base.getShowBottom();
     }
 
     /**

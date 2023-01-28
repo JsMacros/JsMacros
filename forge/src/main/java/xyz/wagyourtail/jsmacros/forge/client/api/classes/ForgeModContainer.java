@@ -38,7 +38,7 @@ public class ForgeModContainer extends ModContainerHelper<IModInfo> {
 
     @Override
     public String getEnv() {
-        switch (base.getConfig().<String>getConfigElement("side").orElse("UNKNOWN")) {
+        switch ((String) base.getModProperties().getOrDefault("side", "UNKNOWN")) {
             case "CLIENT":
                 return "CLIENT";
             case "SERVER":

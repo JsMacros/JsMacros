@@ -6,8 +6,8 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -190,7 +190,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
             if (base.getTag().contains("display", 10)) {
                 CompoundTag nbtCompound = base.getTag().getCompound("display");
                 if (nbtCompound.getType("Lore") == 9) {
-                    NbtList nbtList = nbtCompound.getList("Lore", 8);
+                    ListTag nbtList = nbtCompound.getList("Lore", 8);
 
                     for (int i = 0; i < nbtList.size(); i++) {
                         String string = nbtList.getString(i);
@@ -338,7 +338,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public List<String> getTags() {
-        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().getOrCreateTagGroup(Registry.ITEM_KEY).getTagsFor(base.getItem()).stream().map(Identifier::toString).collect(Collectors.toList());
+        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().getItems().getTagsFor(base.getItem()).stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
@@ -486,7 +486,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean isSuitableFor(BlockHelper block) {
-        return base.isSuitableFor(block.getDefaultState().getRaw());
+        return base.isEffectiveOn(block.getDefaultState().getRaw());
     }
 
     /**
@@ -497,7 +497,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean isSuitableFor(BlockStateHelper block) {
-        return base.isSuitableFor(block.getRaw());
+        return base.isEffectiveOn(block.getRaw());
     }
 
     /**
@@ -560,7 +560,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     public List<String> getDestroyRestrictions() {
         if (hasDestroyRestrictions()) {
-            return base.getOrCreateTag().getList("CanDestroy", 8).stream().map(NbtElement::asString).collect(Collectors.toList());
+            return base.getOrCreateTag().getList("CanDestroy", 8).stream().map(Tag::asString).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
@@ -572,7 +572,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     public List<String> getPlaceRestrictions() {
         if (hasPlaceRestrictions()) {
-            return base.getOrCreateTag().getList("CanPlaceOn", 8).stream().map(NbtElement::asString).collect(Collectors.toList());
+            return base.getOrCreateTag().getList("CanPlaceOn", 8).stream().map(Tag::asString).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }

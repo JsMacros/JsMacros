@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.decoration;
 
-import net.minecraft.entity.decoration.GlowItemFrameEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
@@ -23,7 +22,7 @@ public class ItemFrameEntityHelper extends EntityHelper<ItemFrameEntity> {
      * @since 1.8.4
      */
     public boolean isGlowingFrame() {
-        return base instanceof GlowItemFrameEntity;
+        return false;
     }
 
     /**

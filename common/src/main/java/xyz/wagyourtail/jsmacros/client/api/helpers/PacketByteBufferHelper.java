@@ -93,7 +93,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         this.original = base.copy();
     }
 
-    public PacketByteBufferHelper(Packet<?> packet) {
+    public PacketByteBufferHelper(Packet<?> packet) throws IOException {
         super(getBuffer(packet));
         this.packet = packet;
         base.markReaderIndex();
@@ -150,7 +150,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @since 1.8.4
      */
     public Packet<?> toPacket(boolean clientbound, int packetId) {
-        return NetworkState.PLAY.getPacketHandler(clientbound ? NetworkSide.CLIENTBOUND : NetworkSide.SERVERBOUND, packetId, base);
+        return NetworkState.PLAY.getPacketHandler(clientbound ? NetworkSide.CLIENTBOUND : NetworkSide.SERVERBOUND, packetId);
     }
 
     /**
@@ -316,104 +316,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         return this;
     }
 
-    /**
-     * @param collection the collection to store
-     * @param writer     the function that writes the collection's elements to the buffer
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public <T> PacketByteBufferHelper writeCollection(Collection<T> collection, MethodWrapper<PacketByteBuf, T, ?, ?> writer) {
-        base.writeCollection(collection, writer::accept);
-        return this;
-    }
-
-    /**
-     * @param reader the function that reads the collection's elements from the buffer
-     * @return the read list.
-     *
-     * @since 1.8.4
-     */
-    public <T> List<T> readList(MethodWrapper<PacketByteBuf, ?, T, ?> reader) {
-        return base.readList(reader::apply);
-    }
-
-    /**
-     * @param list the integer list to store
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeIntList(Collection<Integer> list) {
-        base.writeIntList(new IntArrayList(list));
-        return this;
-    }
-
-    /**
-     * @return the read integer list.
-     *
-     * @since 1.8.4
-     */
-    public IntList readIntList() {
-        return base.readIntList();
-    }
-
-    /**
-     * @param map         the map to store
-     * @param keyWriter   the function to write the map's keys to the buffer
-     * @param valueWriter the function to write the map's values to the buffer
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public <K, V> PacketByteBufferHelper writeMap(Map<K, V> map, MethodWrapper<PacketByteBuf, K, ?, ?> keyWriter, MethodWrapper<PacketByteBuf, V, ?, ?> valueWriter) {
-        base.writeMap(map, keyWriter::accept, valueWriter::accept);
-        return this;
-    }
-
-    /**
-     * @param keyReader   the function to read the map's keys from the buffer
-     * @param valueReader the function to read the map's values from the buffer
-     * @return the read map.
-     *
-     * @since 1.8.4
-     */
-    public <K, V> Map<K, V> readMap(MethodWrapper<PacketByteBuf, ?, K, ?> keyReader, MethodWrapper<PacketByteBuf, ?, V, ?> valueReader) {
-        return base.readMap(keyReader::apply, valueReader::apply);
-    }
-
-    /**
-     * @param reader the function to read the collection's elements from the buffer
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper forEachInCollection(MethodWrapper<PacketByteBuf, ?, Object, ?> reader) {
-        base.forEachInCollection(reader);
-        return this;
-    }
-
-    /**
-     * @param value  the optional value to store
-     * @param writer the function to write the optional value if present to the buffer
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public <T> PacketByteBufferHelper writeOptional(T value, MethodWrapper<PacketByteBuf, T, ?, ?> writer) {
-        base.writeOptional(Optional.ofNullable(value), writer::accept);
-        return this;
-    }
-
-    /**
-     * @param reader the function to read the optional value from the buffer if present
-     * @return the optional value.
-     *
-     * @since 1.8.4
-     */
-    public <T> Optional<T> readOptional(MethodWrapper<PacketByteBuf, ?, T, ?> reader) {
-        return base.readOptional(reader::apply);
-    }
 
     /**
      * @param bytes the bytes to store
@@ -497,7 +399,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @since 1.8.4
      */
     public long[] readLongArray() {
-        return base.readLongArray();
+        return base.readLongArray(null);
     }
 
     /**
@@ -543,75 +445,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      */
     public BlockPosHelper readBlockPos() {
         return new BlockPosHelper(base.readBlockPos());
-    }
-
-    /**
-     * @param x the x coordinate of the chunk to store
-     * @param z the z coordinate of the chunk to store
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeChunkPos(int x, int z) {
-        base.writeChunkPos(new ChunkPos(x, z));
-        return this;
-    }
-
-    /**
-     * @param chunk the chunk to store
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeChunkPos(ChunkHelper chunk) {
-        base.writeChunkPos(chunk.getRaw().getPos());
-        return this;
-    }
-
-    /**
-     * @return the position of the read chunk, x at index 0, z at index 1.
-     *
-     * @since 1.8.4
-     */
-    public int[] readChunkPos() {
-        ChunkPos pos = base.readChunkPos();
-        return new int[]{pos.x, pos.z};
-    }
-
-    /**
-     * @return a {@link ChunkHelper} for the read chunk position.
-     *
-     * @since 1.8.4
-     */
-    public ChunkHelper readChunkHelper() {
-        ChunkPos pos = base.readChunkPos();
-        Chunk chunk = MinecraftClient.getInstance().world.getChunk(pos.x, pos.z);
-        return chunk == null ? null : new ChunkHelper(chunk);
-    }
-
-    /**
-     * @param chunkX the x coordinate of the chunk to store
-     * @param y      the y coordinate to store
-     * @param chunkZ the z coordinate of the chunk to store
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeChunkSectionPos(int chunkX, int y, int chunkZ) {
-        base.writeChunkSectionPos(ChunkSectionPos.from(chunkX, y, chunkZ));
-        return this;
-    }
-
-    /**
-     * @param chunk the chunk whose position should be stored
-     * @param y     the y to store
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeChunkSectionPos(ChunkHelper chunk, int y) {
-        base.writeChunkSectionPos(ChunkSectionPos.from(chunk.getRaw().getPos(), y));
-        return this;
     }
 
     /**
@@ -748,7 +581,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeNbt(NBTElementHelper.NBTCompoundHelper nbt) {
-        base.writeNbt(nbt.getRaw());
+        base.writeCompoundTag(nbt.getRaw());
         return this;
     }
 
@@ -758,7 +591,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @since 1.8.4
      */
     public NBTElementHelper<?> readNbt() {
-        return NBTElementHelper.resolve(base.readNbt());
+        return NBTElementHelper.resolve(base.readCompoundTag());
     }
 
     /**
@@ -915,26 +748,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     public Map<String, Object> readBlockHitResultMap() {
         BlockHitResult hitResult = readBlockHitResult();
         return ImmutableMap.of("side", new DirectionHelper(hitResult.getSide()), "blockPos", new BlockPosHelper(hitResult.getBlockPos()), "missed", hitResult.getType() == HitResult.Type.MISS, "inside", hitResult.isInsideBlock());
-    }
-
-    /**
-     * @param bitSet the bit set to store
-     * @return self for chaining.
-     *
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeBitSet(BitSet bitSet) {
-        base.writeBitSet(bitSet);
-        return this;
-    }
-
-    /**
-     * @return the read bit set.
-     *
-     * @since 1.8.4
-     */
-    public BitSet readBitSet() {
-        return base.readBitSet();
     }
 
     /**
@@ -1636,7 +1449,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("BlockEventS2CPacket", net.minecraft.network.packet.s2c.play.BlockEventS2CPacket.class);
         PACKETS.put("BlockEntityUpdateS2CPacket", net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket.class);
         PACKETS.put("BossBarS2CPacket", net.minecraft.network.packet.s2c.play.BossBarS2CPacket.class);
-        PACKETS.put("ClearTitleS2CPacket", net.minecraft.network.packet.s2c.play.ClearTitleS2CPacket.class);
         PACKETS.put("BlockUpdateS2CPacket", net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket.class);
         PACKETS.put("CommandSuggestionsS2CPacket", net.minecraft.network.packet.s2c.play.CommandSuggestionsS2CPacket.class);
         PACKETS.put("CloseScreenS2CPacket", net.minecraft.network.packet.s2c.play.CloseScreenS2CPacket.class);
@@ -1667,13 +1479,8 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("OpenWrittenBookS2CPacket", net.minecraft.network.packet.s2c.play.OpenWrittenBookS2CPacket.class);
         PACKETS.put("SignEditorOpenS2CPacket", net.minecraft.network.packet.s2c.play.SignEditorOpenS2CPacket.class);
         PACKETS.put("OpenScreenS2CPacket", net.minecraft.network.packet.s2c.play.OpenScreenS2CPacket.class);
-        PACKETS.put("WorldBorderInitializeS2CPacket", net.minecraft.network.packet.s2c.play.WorldBorderInitializeS2CPacket.class);
-        PACKETS.put("PlayPingS2CPacket", net.minecraft.network.packet.s2c.play.PlayPingS2CPacket.class);
         PACKETS.put("CraftFailedResponseS2CPacket", net.minecraft.network.packet.s2c.play.CraftFailedResponseS2CPacket.class);
-        PACKETS.put("EndCombatS2CPacket", net.minecraft.network.packet.s2c.play.EndCombatS2CPacket.class);
-        PACKETS.put("EnterCombatS2CPacket", net.minecraft.network.packet.s2c.play.EnterCombatS2CPacket.class);
         PACKETS.put("PlayerAbilitiesS2CPacket", net.minecraft.network.packet.s2c.play.PlayerAbilitiesS2CPacket.class);
-        PACKETS.put("DeathMessageS2CPacket", net.minecraft.network.packet.s2c.play.DeathMessageS2CPacket.class);
         PACKETS.put("PlayerPositionLookS2CPacket", net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket.class);
         PACKETS.put("LookAtS2CPacket", net.minecraft.network.packet.s2c.play.LookAtS2CPacket.class);
         PACKETS.put("PlayerListS2CPacket", net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.class);
@@ -1685,15 +1492,11 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("PlayerRespawnS2CPacket", net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket.class);
         PACKETS.put("KeepAliveS2CPacket", net.minecraft.network.packet.s2c.play.KeepAliveS2CPacket.class);
         PACKETS.put("ChunkDataS2CPacket", net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket.class);
-        PACKETS.put("OverlayMessageS2CPacket", net.minecraft.network.packet.s2c.play.OverlayMessageS2CPacket.class);
         PACKETS.put("ChunkDeltaUpdateS2CPacket", net.minecraft.network.packet.s2c.play.ChunkDeltaUpdateS2CPacket.class);
         PACKETS.put("SetTradeOffersS2CPacket", net.minecraft.network.packet.s2c.play.SetTradeOffersS2CPacket.class);
         PACKETS.put("SelectAdvancementTabS2CPacket", net.minecraft.network.packet.s2c.play.SelectAdvancementTabS2CPacket.class);
-        PACKETS.put("WorldBorderCenterChangedS2CPacket", net.minecraft.network.packet.s2c.play.WorldBorderCenterChangedS2CPacket.class);
-        PACKETS.put("WorldBorderInterpolateSizeS2CPacket", net.minecraft.network.packet.s2c.play.WorldBorderInterpolateSizeS2CPacket.class);
         PACKETS.put("RemoveEntityStatusEffectS2CPacket", net.minecraft.network.packet.s2c.play.RemoveEntityStatusEffectS2CPacket.class);
         PACKETS.put("ChunkRenderDistanceCenterS2CPacket", net.minecraft.network.packet.s2c.play.ChunkRenderDistanceCenterS2CPacket.class);
-        PACKETS.put("UpdateSelectedSlotS2CPacket", net.minecraft.network.packet.s2c.play.UpdateSelectedSlotS2CPacket.class);
         PACKETS.put("ScoreboardDisplayS2CPacket", net.minecraft.network.packet.s2c.play.ScoreboardDisplayS2CPacket.class);
         PACKETS.put("EntityTrackerUpdateS2CPacket", net.minecraft.network.packet.s2c.play.EntityTrackerUpdateS2CPacket.class);
         PACKETS.put("EntityVelocityUpdateS2CPacket", net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket.class);
@@ -1703,19 +1506,14 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("EntityPassengersSetS2CPacket", net.minecraft.network.packet.s2c.play.EntityPassengersSetS2CPacket.class);
         PACKETS.put("UnlockRecipesS2CPacket", net.minecraft.network.packet.s2c.play.UnlockRecipesS2CPacket.class);
         PACKETS.put("ChunkLoadDistanceS2CPacket", net.minecraft.network.packet.s2c.play.ChunkLoadDistanceS2CPacket.class);
-        PACKETS.put("WorldBorderSizeChangedS2CPacket", net.minecraft.network.packet.s2c.play.WorldBorderSizeChangedS2CPacket.class);
         PACKETS.put("PlayerSpawnPositionS2CPacket", net.minecraft.network.packet.s2c.play.PlayerSpawnPositionS2CPacket.class);
         PACKETS.put("TitleS2CPacket", net.minecraft.network.packet.s2c.play.TitleS2CPacket.class);
         PACKETS.put("WorldTimeUpdateS2CPacket", net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket.class);
-        PACKETS.put("TitleFadeS2CPacket", net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket.class);
         PACKETS.put("TeamS2CPacket", net.minecraft.network.packet.s2c.play.TeamS2CPacket.class);
         PACKETS.put("StopSoundS2CPacket", net.minecraft.network.packet.s2c.play.StopSoundS2CPacket.class);
         PACKETS.put("PlaySoundFromEntityS2CPacket", net.minecraft.network.packet.s2c.play.PlaySoundFromEntityS2CPacket.class);
         PACKETS.put("PlaySoundS2CPacket", net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket.class);
-        PACKETS.put("WorldBorderWarningBlocksChangedS2CPacket", net.minecraft.network.packet.s2c.play.WorldBorderWarningBlocksChangedS2CPacket.class);
-        PACKETS.put("NbtQueryResponseS2CPacket", net.minecraft.network.packet.s2c.play.NbtQueryResponseS2CPacket.class);
         PACKETS.put("ItemPickupAnimationS2CPacket", net.minecraft.network.packet.s2c.play.ItemPickupAnimationS2CPacket.class);
-        PACKETS.put("WorldBorderWarningTimeChangedS2CPacket", net.minecraft.network.packet.s2c.play.WorldBorderWarningTimeChangedS2CPacket.class);
         PACKETS.put("ScoreboardObjectiveUpdateS2CPacket", net.minecraft.network.packet.s2c.play.ScoreboardObjectiveUpdateS2CPacket.class);
         PACKETS.put("EntityPositionS2CPacket", net.minecraft.network.packet.s2c.play.EntityPositionS2CPacket.class);
         PACKETS.put("SynchronizeRecipesS2CPacket", net.minecraft.network.packet.s2c.play.SynchronizeRecipesS2CPacket.class);
@@ -1737,7 +1535,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("BookUpdateC2SPacket", net.minecraft.network.packet.c2s.play.BookUpdateC2SPacket.class);
         PACKETS.put("KeepAliveC2SPacket", net.minecraft.network.packet.c2s.play.KeepAliveC2SPacket.class);
         PACKETS.put("JigsawGeneratingC2SPacket", net.minecraft.network.packet.c2s.play.JigsawGeneratingC2SPacket.class);
-        PACKETS.put("SubtitleS2CPacket", net.minecraft.network.packet.s2c.play.SubtitleS2CPacket.class);
         PACKETS.put("SetCameraEntityS2CPacket", net.minecraft.network.packet.s2c.play.SetCameraEntityS2CPacket.class);
         PACKETS.put("ChatMessageC2SPacket", net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket.class);
         PACKETS.put("PickFromInventoryC2SPacket", net.minecraft.network.packet.c2s.play.PickFromInventoryC2SPacket.class);
@@ -1745,7 +1542,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("UpdatePlayerAbilitiesC2SPacket", net.minecraft.network.packet.c2s.play.UpdatePlayerAbilitiesC2SPacket.class);
         PACKETS.put("PlayerActionC2SPacket", net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket.class);
         PACKETS.put("ClientCommandC2SPacket", net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket.class);
-        PACKETS.put("PlayPongC2SPacket", net.minecraft.network.packet.c2s.play.PlayPongC2SPacket.class);
         PACKETS.put("PlayerInputC2SPacket", net.minecraft.network.packet.c2s.play.PlayerInputC2SPacket.class);
         PACKETS.put("RecipeBookDataC2SPacket", net.minecraft.network.packet.c2s.play.RecipeBookDataC2SPacket.class);
         PACKETS.put("GameMessageS2CPacket", net.minecraft.network.packet.s2c.play.GameMessageS2CPacket.class);
@@ -1759,10 +1555,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("RequestCommandCompletionsC2SPacket", net.minecraft.network.packet.c2s.play.RequestCommandCompletionsC2SPacket.class);
         PACKETS.put("UpdateDifficultyLockC2SPacket", net.minecraft.network.packet.c2s.play.UpdateDifficultyLockC2SPacket.class);
         PACKETS.put("PlayerMoveC2SPacket", net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket.class);
-        PACKETS.put("PlayerMoveC2SPacket$OnGroundOnly", net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket.OnGroundOnly.class);
-        PACKETS.put("PlayerMoveC2SPacket$LookAndOnGround", net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket.LookAndOnGround.class);
-        PACKETS.put("PlayerMoveC2SPacket$PositionAndOnGround", net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket.PositionAndOnGround.class);
-        PACKETS.put("PlayerMoveC2SPacket$Full", net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket.Full.class);
         PACKETS.put("VehicleMoveC2SPacket", net.minecraft.network.packet.c2s.play.VehicleMoveC2SPacket.class);
         PACKETS.put("AdvancementTabC2SPacket", net.minecraft.network.packet.c2s.play.AdvancementTabC2SPacket.class);
         PACKETS.put("UpdateCommandBlockC2SPacket", net.minecraft.network.packet.c2s.play.UpdateCommandBlockC2SPacket.class);

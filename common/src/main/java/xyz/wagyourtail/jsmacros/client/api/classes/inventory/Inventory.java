@@ -49,7 +49,7 @@ public class Inventory<T extends HandledScreen<?>> {
         // What to do with horses? The horse inventory would need to be opened with a packet
         if (inv == null) {
             assert mc.player != null;
-            if (mc.player.getAbilities().creativeMode) {
+            if (mc.player.abilities.creativeMode) {
                 return new CreativeInventory(new CreativeInventoryScreen(mc.player));
             }
             return new xyz.wagyourtail.jsmacros.client.api.classes.inventory.PlayerInventory(new InventoryScreen(mc.player));
@@ -310,7 +310,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return the index of the selected hotbar slot.
      */
     public int getSelectedHotbarSlotIndex() {
-        return player.getInventory().selectedSlot;
+        return player.inventory.selectedSlot;
     }
     
     /**
@@ -320,7 +320,7 @@ public class Inventory<T extends HandledScreen<?>> {
      */
     public void setSelectedHotbarSlotIndex(int index) {
         if (PlayerInventory.isValidHotbarIndex(index))
-            player.getInventory().selectedSlot = index;
+            player.inventory.selectedSlot = index;
     }
 
     /**
@@ -329,7 +329,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return
      */
     public Inventory<T> closeAndDrop() {
-        ItemStack held = handler.getCursorStack();
+        ItemStack held = player.inventory.getCursorStack();
         if (!held.isEmpty()) man.clickSlot(syncId, -999, 0, SlotActionType.PICKUP, player);
         close();
         return this;
@@ -393,7 +393,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return the held (by the mouse) item.
      */
     public ItemStackHelper getHeld() {
-        return new ItemStackHelper(handler.getCursorStack());
+        return new ItemStackHelper(player.inventory.getCursorStack());
     }
 
     /**

@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.option.HotbarStorage;
+import net.minecraft.client.options.HotbarStorage;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
@@ -154,7 +154,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public CreativeInventory destroyHeldItem() {
-        handler.setCursorStack(ItemStack.EMPTY);
+        player.inventory.setCursorStack(ItemStack.EMPTY);
         return this;
     }
 
@@ -181,7 +181,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public CreativeInventory setCursorStack(ItemStackHelper stack) {
-        handler.setCursorStack(stack.getRaw());
+        player.inventory.setCursorStack(stack.getRaw());
         return this;
     }
 
@@ -239,7 +239,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public boolean isInHotbar(int slot) {
-        return PlayerScreenHandler.method_36211(slot);
+        return slot >= 36 && slot < 45 || slot == 45;
     }
 
     /**

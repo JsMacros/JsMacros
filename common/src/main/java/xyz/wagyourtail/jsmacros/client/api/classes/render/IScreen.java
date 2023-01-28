@@ -7,7 +7,6 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.ButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.ClickableWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.CheckBoxWidgetHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.screen.CyclingButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.LockButtonWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.SliderWidgetHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.TextFieldWidgetHelper;
@@ -296,75 +295,6 @@ public interface IScreen extends IDraw2D<IScreen> {
     LockButtonWidgetHelper addLockButton(int x, int y, int zIndex, MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> callback);
 
     /**
-     * @param x        the x position of the cylcing button
-     * @param y        the y position of the cylcing button
-     * @param width    the width of the cylcing button
-     * @param height   the height of the cycling button
-     * @param callback calls your method as a
-     *                 {@link Consumer}&lt;{@link CyclingButtonWidgetHelper}&gt;
-     * @param values   the values to cycle through
-     * @param initial  the initial value of the cycling button
-     * @return {@link CyclingButtonWidgetHelper} for the given input.
-     *
-     * @since 1.8.4
-     */
-    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, String[] values, String initial, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback);
-
-    /**
-     * @param x        the x position of the cylcing button
-     * @param y        the y position of the cylcing button
-     * @param width    the width of the cylcing button
-     * @param height   the height of the cycling button
-     * @param zIndex   the z-index of the cycling button
-     * @param callback calls your method as a
-     *                 {@link Consumer}&lt;{@link CyclingButtonWidgetHelper}&gt;
-     * @param values   the values to cycle through
-     * @param initial  the initial value of the cycling button
-     * @return {@link CyclingButtonWidgetHelper} for the given input.
-     *
-     * @since 1.8.4
-     */
-    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String initial, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback);
-
-    /**
-     * @param x            the x position of the cylcing button
-     * @param y            the y position of the cylcing button
-     * @param width        the width of the cylcing button
-     * @param height       the height of the cycling button
-     * @param zIndex       the z-index of the cycling button
-     * @param callback     calls your method as a
-     *                     {@link Consumer}&lt;{@link CyclingButtonWidgetHelper}&gt;
-     * @param values       the values to cycle through
-     * @param alternatives the alternative values to cycle through
-     * @param prefix       the prefix of the values
-     * @param initial      the initial value of the cycling button
-     * @return {@link CyclingButtonWidgetHelper} for the given input.
-     *
-     * @since 1.8.4
-     */
-    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback);
-
-    /**
-     * @param x               the x position of the cylcing button
-     * @param y               the y position of the cylcing button
-     * @param width           the width of the cylcing button
-     * @param height          the height of the cycling button
-     * @param zIndex          the z-index of the cycling button
-     * @param callback        calls your method as a
-     *                        {@link Consumer}&lt;{@link CyclingButtonWidgetHelper}&gt;
-     * @param values          the values to cycle through
-     * @param alternatives    the alternative values to cycle through
-     * @param prefix          the prefix of the values
-     * @param initial         the initial value of the cycling button
-     * @param alternateToggle the method to determine if the cycling button should use the
-     *                        alternative values
-     * @return {@link CyclingButtonWidgetHelper} for the given input.
-     *
-     * @since 1.8.4
-     */
-    CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<?, ?, Boolean, ?> alternateToggle, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback);
-
-    /**
      * @since 1.0.5
      * @param btn
      * @return
@@ -486,13 +416,6 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @since 1.8.4
      */
     CheckBoxWidgetHelper.CheckBoxBuilder checkBoxBuilder(boolean checked);
-    
-    /**
-     * @return a new builder for cycling buttons.
-     *
-     * @since 1.8.4
-     */
-    CyclingButtonWidgetHelper.CyclicButtonBuilder<?> cyclicButtonBuilder(MethodWrapper<Object, ?, TextHelper, ?> valueToText);
 
     /**
      * @return a new builder for lock buttons.

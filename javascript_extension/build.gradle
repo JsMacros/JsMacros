@@ -50,11 +50,15 @@ jar {
     }
 }
 
+compileTestJava {
+    sourceCompatibility = JavaVersion.VERSION_17
+    options.release = 17
+}
+
 test {
     useJUnitPlatform()
 }
 
 remapJar {
-    targetNamespace = "named"
-    fallbackTargetNamespace = "intermediary"
+    target = "yarn"
 }

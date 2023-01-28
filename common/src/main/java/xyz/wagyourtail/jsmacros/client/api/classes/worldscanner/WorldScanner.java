@@ -89,7 +89,7 @@ public class WorldScanner {
      */
     public List<Pos3D> scanAroundPlayer(int chunkRange) {
         assert mc.player != null;
-        return scanChunkRange(mc.player.getBlockPos().getX() >> 4, mc.player.getBlockPos().getZ() >> 4, range);
+        return scanChunkRange(mc.player.getBlockPos().getX() >> 4, mc.player.getBlockPos().getZ() >> 4, chunkRange);
     }
 
     /**

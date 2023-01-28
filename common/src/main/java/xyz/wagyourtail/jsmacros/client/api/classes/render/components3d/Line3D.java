@@ -7,6 +7,7 @@ import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Matrix4f;
+import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
@@ -92,7 +93,7 @@ public class Line3D {
         BufferBuilder buf = tess.getBuffer();
         Matrix4f model = matrixStack.peek().getModel();
         RenderSystem.lineWidth(2.5F);
-        buf.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+        buf.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
         buf.vertex(model, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
         buf.vertex(model, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
         tess.draw();

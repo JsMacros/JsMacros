@@ -1,12 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 
-import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
-
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.components.Alignable;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components.Alignable;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 
 import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.empty;
 import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.literal;
@@ -16,7 +15,7 @@ import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.lite
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T, U>, T extends ClickableWidget, U extends ClickableWidgetHelper<U, T>> implements Alignable<B> {
+public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T, U>, T extends AbstractButtonWidget, U extends ClickableWidgetHelper<U, T>> implements Alignable<B> {
 
     protected final IScreen screen;
 

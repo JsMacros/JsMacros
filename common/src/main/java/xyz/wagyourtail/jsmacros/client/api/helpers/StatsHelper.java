@@ -9,6 +9,7 @@ import net.minecraft.stat.StatHandler;
 import net.minecraft.stat.StatType;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 

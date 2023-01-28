@@ -7,6 +7,7 @@ import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Matrix4f;
+import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
@@ -153,7 +154,7 @@ public class Box {
             //1.15+ culls insides
             RenderSystem.disableCull();
 
-            buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
+            buf.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
 
             //draw a cube using triangle strips
             buf.vertex(matrix, x1, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-left
@@ -177,7 +178,7 @@ public class Box {
         }
 
         RenderSystem.lineWidth(2.5F);
-        buf.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
+        buf.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
         buf.vertex(matrix, x1, y1, z1).color(r, g, b, a).next();
         buf.vertex(matrix, x1, y1, z2).color(r, g, b, a).next();

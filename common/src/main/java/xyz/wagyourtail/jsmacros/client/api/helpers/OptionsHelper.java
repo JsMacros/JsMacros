@@ -1,10 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.*;
+import net.minecraft.client.options.*;
 import net.minecraft.client.render.entity.PlayerModelPart;
 import net.minecraft.client.resource.language.LanguageDefinition;
-import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.util.Window;
 import net.minecraft.network.packet.c2s.play.UpdateDifficultyLockC2SPacket;
 import net.minecraft.resource.ResourcePackManager;
@@ -13,23 +13,14 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Arm;
 import net.minecraft.world.Difficulty;
-
-import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.access.IResourcePackManager;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.translatable;
 
@@ -385,7 +376,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public boolean isCapeActivated() {
-            return base.isPlayerModelPartEnabled(PlayerModelPart.CAPE);
+            return base.getEnabledPlayerModelParts().contains(PlayerModelPart.CAPE);
         }
 
         /**
@@ -394,7 +385,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public boolean isJacketActivated() {
-            return base.isPlayerModelPartEnabled(PlayerModelPart.JACKET);
+            return base.getEnabledPlayerModelParts().contains(PlayerModelPart.JACKET);
         }
 
         /**
@@ -404,7 +395,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public boolean isLeftSleeveActivated() {
-            return base.isPlayerModelPartEnabled(PlayerModelPart.LEFT_SLEEVE);
+            return base.getEnabledPlayerModelParts().contains(PlayerModelPart.LEFT_SLEEVE);
         }
 
         /**
@@ -414,7 +405,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public boolean isRightSleeveActivated() {
-            return base.isPlayerModelPartEnabled(PlayerModelPart.RIGHT_SLEEVE);
+            return base.getEnabledPlayerModelParts().contains(PlayerModelPart.RIGHT_SLEEVE);
         }
 
         /**
@@ -424,7 +415,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public boolean isLeftPantsActivated() {
-            return base.isPlayerModelPartEnabled(PlayerModelPart.LEFT_PANTS_LEG);
+            return base.getEnabledPlayerModelParts().contains(PlayerModelPart.LEFT_PANTS_LEG);
         }
 
         /**
@@ -434,7 +425,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public boolean isRightPantsActivated() {
-            return base.isPlayerModelPartEnabled(PlayerModelPart.RIGHT_PANTS_LEG);
+            return base.getEnabledPlayerModelParts().contains(PlayerModelPart.RIGHT_PANTS_LEG);
         }
 
         /**
@@ -443,7 +434,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public boolean isHatActivated() {
-            return base.isPlayerModelPartEnabled(PlayerModelPart.HAT);
+            return base.getEnabledPlayerModelParts().contains(PlayerModelPart.HAT);
         }
 
         /**
@@ -472,7 +463,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleCape(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.CAPE, val);
+            base.setPlayerModelPart(PlayerModelPart.CAPE, val);
             return this;
         }
 
@@ -483,7 +474,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleJacket(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.JACKET, val);
+            base.setPlayerModelPart(PlayerModelPart.JACKET, val);
             return this;
         }
 
@@ -494,7 +485,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleLeftSleeve(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.LEFT_SLEEVE, val);
+            base.setPlayerModelPart(PlayerModelPart.LEFT_SLEEVE, val);
             return this;
         }
 
@@ -505,7 +496,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleRightSleeve(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.RIGHT_SLEEVE, val);
+            base.setPlayerModelPart(PlayerModelPart.RIGHT_SLEEVE, val);
             return this;
         }
 
@@ -516,7 +507,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleLeftPants(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.LEFT_PANTS_LEG, val);
+            base.setPlayerModelPart(PlayerModelPart.LEFT_PANTS_LEG, val);
             return this;
         }
 
@@ -527,7 +518,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleRightPants(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.RIGHT_PANTS_LEG, val);
+            base.setPlayerModelPart(PlayerModelPart.RIGHT_PANTS_LEG, val);
             return this;
         }
 
@@ -538,7 +529,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public SkinOptionsHelper toggleHat(boolean val) {
-            base.togglePlayerModelPart(PlayerModelPart.HAT, val);
+            base.setPlayerModelPart(PlayerModelPart.HAT, val);
             return this;
         }
 
@@ -1971,25 +1962,6 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
             return this;
         }
 
-        /**
-         * @return {@code true} if messages from blocked users are hidden.
-         *
-         * @since 1.8.4
-         */
-        public boolean areMatchedNamesHidden() {
-            return base.hideMatchedNames;
-        }
-
-        /**
-         * @param val whether to hide messages of blocked users or not
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public ChatOptionsHelper enableHideMatchedNames(boolean val) {
-            base.hideMatchedNames = val;
-            return this;
-        }
 
         /**
          * @return {@code true} if reduced debug info is enabled, {@code false} otherwise.
@@ -2289,26 +2261,6 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          */
         public AccessibilityOptionsHelper setFovEffect(double val) {
             base.fovEffectScale = (float) val;
-            return this;
-        }
-
-        /**
-         * @return {@code true} if the monochrome logo is enabled, {@code false} otherwise.
-         *
-         * @since 1.8.4
-         */
-        public boolean isMonochromeLogoEnabled() {
-            return base.monochromeLogo;
-        }
-
-        /**
-         * @param val whether to enable the monochrome logo or not
-         * @return the current helper instance for chaining.
-         *
-         * @since 1.8.4
-         */
-        public AccessibilityOptionsHelper enableMonochromeLogo(boolean val) {
-            base.monochromeLogo = val;
             return this;
         }
     }

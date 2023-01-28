@@ -31,7 +31,7 @@ public class CreeperEntityHelper extends MobEntityHelper<CreeperEntity> {
      * @since 1.8.4
      */
     public boolean isIgnited() {
-        return base.isIgnited();
+        return base.getIgnited();
     }
 
     /**

@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob
 
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.PillagerEntity;
+import net.minecraft.item.BannerItem;
 import net.minecraft.item.Items;
 
 /**
@@ -21,7 +22,7 @@ public class PillagerEntityHelper extends IllagerEntityHelper<PillagerEntity> {
      * @since 1.8.4
      */
     public boolean isCaptain() {
-        return base.getEquippedStack(EquipmentSlot.HEAD).isOf(Items.WHITE_BANNER);
+        return base.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof BannerItem;
     }
 
 }
