@@ -62,16 +62,16 @@ public class JsMacrosThreadPool {
                             wait();
                         }
                     }
+                    synchronized (freeThreads) {
+                        if (freeThreads.size() < minFreeThreads) {
+                            PoolThread t = new PoolThread();
+                            t.start();
+                            freeThreads.add(t);
+                        }
+                    }
                     task.run();
                 } catch (Throwable ignored) {
                     interrupted();
-                }
-                synchronized (freeThreads) {
-                    if (freeThreads.size() < minFreeThreads) {
-                        PoolThread t = new PoolThread();
-                        t.start();
-                        freeThreads.add(t);
-                    }
                 }
                 task = null;
                 synchronized (freeThreads) {
