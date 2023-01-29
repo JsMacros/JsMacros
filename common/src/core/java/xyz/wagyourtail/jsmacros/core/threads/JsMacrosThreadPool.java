@@ -6,13 +6,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class JsMacrosThreadPool {
-    public Set<PoolThread> freeThreads = new SynchronizedWeakHashSet<>();
+    private final Set<PoolThread> freeThreads = new SynchronizedWeakHashSet<>();
 
     public final int minFreeThreads;
     public final int maxFreeThreads;
 
     public JsMacrosThreadPool() {
-        this(2, 12);
+        this(4, 12);
     }
 
     public JsMacrosThreadPool(int minFreeThreads, int maxFreeThreads) {
