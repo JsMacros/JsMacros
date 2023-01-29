@@ -1,10 +1,12 @@
 package xyz.wagyourtail.jsmacros.core.threads;
 
+import xyz.wagyourtail.SynchronizedWeakHashSet;
+
 import java.util.HashSet;
 import java.util.Set;
 
 public class JsMacrosThreadPool {
-    public Set<PoolThread> freeThreads = new HashSet<>();
+    public Set<PoolThread> freeThreads = new SynchronizedWeakHashSet<>();
 
     public final int minFreeThreads;
     public final int maxFreeThreads;
@@ -19,7 +21,6 @@ public class JsMacrosThreadPool {
         for (int i = 0; i < minFreeThreads; i++) {
             PoolThread t = new PoolThread();
             t.start();
-            freeThreads.add(t);
         }
     }
 
@@ -46,6 +47,12 @@ public class JsMacrosThreadPool {
             setDaemon(true);
         }
 
+        @Override
+        public synchronized void start() {
+            super.start();
+            freeThreads.add(this);
+        }
+
         public void runTask(Runnable task) {
             synchronized (this) {
                 this.task = task;
@@ -55,7 +62,7 @@ public class JsMacrosThreadPool {
 
         @Override
         public void run() {
-            while (true) {
+            while (task != null || freeThreads.contains(this)) {
                 try {
                     synchronized (this) {
                         while (task == null) {
@@ -66,7 +73,6 @@ public class JsMacrosThreadPool {
                         if (freeThreads.size() < minFreeThreads) {
                             PoolThread t = new PoolThread();
                             t.start();
-                            freeThreads.add(t);
                         }
                     }
                     task.run();
