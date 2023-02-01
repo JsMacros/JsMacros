@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentLevelEntry;
+import net.minecraft.enchantment.InfoEnchantment;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -110,7 +110,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
 
     protected CreativeItemStackHelper addEnchantment(Enchantment enchantment, int level) {
         if (base.getItem().equals(Items.ENCHANTED_BOOK)) {
-            EnchantedBookItem.addEnchantment(base, new EnchantmentLevelEntry(enchantment, level));
+            EnchantedBookItem.addEnchantment(base, new InfoEnchantment(enchantment, level));
         } else {
             base.addEnchantment(enchantment, level);
         }
@@ -239,7 +239,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideEnchantments(boolean hide) {
-        return setHideFlag(ItemStack.TooltipSection.ENCHANTMENTS, hide);
+        return setHideFlag(1, hide);
     }
 
     /**
@@ -249,7 +249,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideModifiers(boolean hide) {
-        return setHideFlag(ItemStack.TooltipSection.MODIFIERS, hide);
+        return setHideFlag(2, hide);
     }
 
     /**
@@ -260,7 +260,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      */
 
     public CreativeItemStackHelper hideUnbreakable(boolean hide) {
-        return setHideFlag(ItemStack.TooltipSection.UNBREAKABLE, hide);
+        return setHideFlag(4, hide);
     }
 
     /**
@@ -270,7 +270,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideCanDestroy(boolean hide) {
-        return setHideFlag(ItemStack.TooltipSection.CAN_DESTROY, hide);
+        return setHideFlag(8, hide);
     }
 
     /**
@@ -280,7 +280,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideCanPlace(boolean hide) {
-        return setHideFlag(ItemStack.TooltipSection.CAN_PLACE, hide);
+        return setHideFlag(16, hide);
     }
 
     /**
@@ -293,7 +293,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideAdditional(boolean hide) {
-        return setHideFlag(ItemStack.TooltipSection.ADDITIONAL, hide);
+        return setHideFlag(32, hide);
     }
 
     /**
@@ -303,15 +303,15 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideDye(boolean hide) {
-        return setHideFlag(ItemStack.TooltipSection.DYE, hide);
+        return setHideFlag(64, hide);
     }
 
-    protected CreativeItemStackHelper setHideFlag(ItemStack.TooltipSection section, boolean hide) {
+    protected CreativeItemStackHelper setHideFlag(int section, boolean hide) {
         CompoundTag nbtCompound = base.getOrCreateTag();
         if (hide) {
-            nbtCompound.putInt("HideFlags", nbtCompound.getInt("HideFlags") | section.getFlag());
+            nbtCompound.putInt("HideFlags", nbtCompound.getInt("HideFlags") | section);
         } else {
-            nbtCompound.putInt("HideFlags", nbtCompound.getInt("HideFlags") & ~section.getFlag());
+            nbtCompound.putInt("HideFlags", nbtCompound.getInt("HideFlags") & ~section);
         }
         return this;
     }

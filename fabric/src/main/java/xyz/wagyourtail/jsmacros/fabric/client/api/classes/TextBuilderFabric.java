@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.fabric.client.api.classes;
 
 import net.minecraft.entity.Entity;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
-import xyz.wagyourtail.jsmacros.client.api.helpers.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.fabric.client.access.IEntity;
 import xyz.wagyourtail.jsmacros.client.access.IStyle;
 

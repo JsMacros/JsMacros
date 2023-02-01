@@ -31,7 +31,7 @@ public class EndermanEntityHelper extends MobEntityHelper<EndermanEntity> {
      * @since 1.8.4
      */
     public boolean isProvoked() {
-        return base.isProvoked();
+        return base.isAngry();
     }
 
     /**

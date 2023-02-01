@@ -2,11 +2,13 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ShulkerBoxBlock;
-import net.minecraft.command.argument.ItemStringReader;
+import net.minecraft.command.arguments.ItemStringReader;
 import net.minecraft.item.*;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
@@ -39,7 +41,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public List<TextHelper> getCreativeTab() {
-        return getGroups().map(ItemGroup::getTranslationKey).map(TextHelper::new).collect(Collectors.toList());
+        return getGroups().map(ItemGroup::getTranslationKey).map(TranslatableText::new).map(TextHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -117,7 +119,7 @@ public class ItemHelper extends BaseHelper<Item> {
      */
     public float getMiningSpeedMultiplier(BlockStateHelper state) {
         // At least in vanilla the item stack is never used
-        return base.getMiningSpeedMultiplier(null, state.getRaw());
+        return base.getMiningSpeed(null, state.getRaw());
     }
 
     /**
@@ -203,7 +205,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean isFireproof() {
-        return base.isFireproof();
+        return false;
     }
 
     /**
@@ -221,7 +223,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean isWearable() {
-        return base instanceof Wearable;
+        return base instanceof ArmorItem;
     }
 
     /**
@@ -261,7 +263,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public ItemStackHelper getDefaultStack() {
-        return new ItemStackHelper(base.getDefaultStack());
+        return new ItemStackHelper(base.getStackForRender());
     }
 
     /**
@@ -274,7 +276,7 @@ public class ItemHelper extends BaseHelper<Item> {
     public ItemStackHelper getStackWithNbt(String nbt) throws CommandSyntaxException {
         ItemStringReader reader = new ItemStringReader(new StringReader(getId() + nbt), false);
         reader.consume();
-        ItemStack stack = reader.getItem().getDefaultStack();
+        ItemStack stack = reader.getItem().getStackForRender();
         stack.setTag(reader.getTag());
         return new ItemStackHelper(stack);
     }

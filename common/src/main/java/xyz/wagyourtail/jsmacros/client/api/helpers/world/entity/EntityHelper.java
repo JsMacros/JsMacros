@@ -9,7 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.entity.decoration.EndCrystalEntity;
+import net.minecraft.entity.decoration.EnderCrystalEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.decoration.painting.PaintingEntity;
 import net.minecraft.entity.mob.*;
@@ -421,7 +421,10 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.8.4
      */
     public String getBiome() {
-        return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(base.getBlockPos())).toString();
+        MinecraftClient mc = MinecraftClient.getInstance();
+        assert mc.world != null;
+        assert mc.player != null;
+        return Registry.BIOME.getId(mc.world.getBiome(base.getBlockPos())).toString();
     }
 
     @Override
@@ -444,7 +447,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         if (e instanceof MobEntity) {
             // Merchants
             if (e instanceof VillagerEntity) return new VillagerEntityHelper((VillagerEntity) e);
-            if (e instanceof MerchantEntity) return new MerchantEntityHelper<>((MerchantEntity) e);
+            if (e instanceof AbstractTraderEntity) return new MerchantEntityHelper<>((AbstractTraderEntity) e);
             
             // Bosses
             if (e instanceof EnderDragonEntity) {
@@ -454,13 +457,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
             }
 
             // Hostile mobs
-            if (e instanceof AbstractPiglinEntity) {
-                if (e instanceof PiglinEntity) {
-                    return new PiglinEntityHelper(((PiglinEntity) e));
-                } else {
-                    return new AbstractPiglinEntityHelper<>(((AbstractPiglinEntity) e));
-                }
-            } else if (e instanceof CreeperEntity) {
+            if (e instanceof CreeperEntity) {
                 return new CreeperEntityHelper(((CreeperEntity) e));
             } else if (e instanceof ZombieEntity) {
                 if (e instanceof DrownedEntity) {
@@ -534,8 +531,6 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
                     return new RabbitEntityHelper(((RabbitEntity) e));
                 } else if (e instanceof SheepEntity) {
                     return new SheepEntityHelper(((SheepEntity) e));
-                } else if (e instanceof StriderEntity) {
-                    return new StriderEntityHelper(((StriderEntity) e));
                 } else if (e instanceof TameableEntity) {
                     if (e instanceof CatEntity) {
                         return new CatEntityHelper(((CatEntity) e));
@@ -587,8 +582,8 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         // Decorations
         if (e instanceof ArmorStandEntity) {
             return new ArmorStandEntityHelper(((ArmorStandEntity) e));
-        } else if (e instanceof EndCrystalEntity) {
-            return new EndCrystalEntityHelper(((EndCrystalEntity) e));
+        } else if (e instanceof EnderCrystalEntity) {
+            return new EndCrystalEntityHelper(((EnderCrystalEntity) e));
         } else if (e instanceof ItemFrameEntity) {
             return new ItemFrameEntityHelper(((ItemFrameEntity) e));
         } else if (e instanceof PaintingEntity) {

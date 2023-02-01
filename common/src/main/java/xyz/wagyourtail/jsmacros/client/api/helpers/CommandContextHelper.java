@@ -8,12 +8,7 @@ import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientCommandSource;
 import net.minecraft.command.EntitySelector;
-import net.minecraft.command.argument.AngleArgumentType;
-import net.minecraft.command.argument.BlockPredicateArgumentType;
-import net.minecraft.command.argument.BlockStateArgument;
-import net.minecraft.command.argument.ItemPredicateArgumentType;
-import net.minecraft.command.argument.ItemStackArgument;
-import net.minecraft.command.argument.PosArgument;
+import net.minecraft.command.arguments.*;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.particle.ParticleEffect;
@@ -72,8 +67,6 @@ public class CommandContextHelper extends BaseHelper<CommandContext<?>> implemen
             arg = new TextHelper((Text) arg);
         } else if (arg instanceof Formatting) {
             arg = new FormattingHelper((Formatting) arg);
-        } else if (arg instanceof AngleArgumentType.Angle) {
-            arg = ((AngleArgumentType.Angle) arg).getAngle(fakeServerSource);
         } else if (arg instanceof ItemPredicateArgumentType.ItemPredicateArgument) {
             ItemPredicateArgumentType.ItemPredicateArgument itemPredicate = (ItemPredicateArgumentType.ItemPredicateArgument) arg;
             arg = itemPredicate.create(null);

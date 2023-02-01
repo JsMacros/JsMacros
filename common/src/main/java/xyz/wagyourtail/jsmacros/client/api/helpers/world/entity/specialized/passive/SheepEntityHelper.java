@@ -30,7 +30,7 @@ public class SheepEntityHelper extends AnimalEntityHelper<SheepEntity> {
      * @since 1.8.4
      */
     public boolean isShearable() {
-        return base.isShearable();
+        return !base.isSheared();
     }
 
     /**

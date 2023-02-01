@@ -73,7 +73,7 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
      * @since 1.8.4
      */
     public boolean isIdle() {
-        return base.isIdle();
+        return base.method_18442();
     }
 
     /**
@@ -137,7 +137,7 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
      * @since 1.8.4
      */
     public boolean isScaredByThunderstorm() {
-        return base.isScaredByThunderstorm();
+        return base.method_6524();
     }
 
     /**

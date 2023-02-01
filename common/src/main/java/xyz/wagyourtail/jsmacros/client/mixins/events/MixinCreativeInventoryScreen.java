@@ -72,13 +72,13 @@ public abstract class MixinCreativeInventoryScreen {
     @Inject(method = "onMouseClick", at = @At("HEAD"), cancellable = true)
     public void beforeMouseClick(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
         if (slot != null) slotId = getSlotFromCreativeSlot(slot).id;
-        EventClickSlot event = new EventClickSlot((HandledScreen<?>) (Object) this, actionType.ordinal(), button, slotId);
+        EventClickSlot event = new EventClickSlot((ContainerScreen<?>) (Object) this, actionType.ordinal(), button, slotId);
         if (event.isCanceled()) {
             ci.cancel();
             return;
         }
         if (actionType == SlotActionType.THROW || slotId == -999) {
-            EventDropSlot eventDrop = new EventDropSlot((HandledScreen<?>) (Object) this, slotId, button == 1);
+            EventDropSlot eventDrop = new EventDropSlot((ContainerScreen<?>) (Object) this, slotId, button == 1);
             if (eventDrop.isCanceled()) {
                 ci.cancel();
             }

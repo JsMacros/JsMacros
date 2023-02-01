@@ -7,6 +7,7 @@ import net.minecraft.entity.passive.HorseBaseEntity;
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive.AbstractHorseEntityHelper;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAbstractDonkeyEntity;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -59,7 +60,7 @@ public class HorseInventory extends Inventory<HorseScreen> {
      * @since 1.8.4
      */
     public boolean hasArmorSlot() {
-        return horse.hasArmorSlot();
+        return horse.canEquip();
     }
 
     /**
@@ -86,7 +87,7 @@ public class HorseInventory extends Inventory<HorseScreen> {
      * @since 1.8.4
      */
     public int getInventorySize() {
-        return horse instanceof AbstractDonkeyEntity ? ((AbstractDonkeyEntity) horse).getInventoryColumns() * 3 : 0;
+        return horse instanceof AbstractDonkeyEntity ? ((MixinAbstractDonkeyEntity) horse).invokeGetInventorySize() : 0;
     }
 
     /**

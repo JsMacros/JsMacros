@@ -9,16 +9,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.api.helpers.FormattingHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StyleHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.function.Supplier;
 
 
@@ -110,7 +107,27 @@ public abstract class TextBuilder {
      * @since 1.8.4
      */
     public TextBuilder withFormatting(FormattingHelper... formattings) {
-        self.styled(style -> style.withFormatting(Arrays.stream(formattings).map(FormattingHelper::getRaw).toArray(Formatting[]::new)));
+        self.styled(style -> {
+            for (FormattingHelper formatting : formattings) {
+                switch (formatting.getRaw()) {
+                    case BOLD:
+                        style.setBold(true);
+                        break;
+                    case ITALIC:
+                        style.setItalic(true);
+                        break;
+                    case UNDERLINE:
+                        style.setUnderline(true);
+                        break;
+                    case STRIKETHROUGH:
+                        style.setStrikethrough(true);
+                        break;
+                    case OBFUSCATED:
+                        style.setObfuscated(true);
+                        break;
+                }
+            }
+        });
         return this;
     }
     
@@ -186,7 +203,7 @@ public abstract class TextBuilder {
      * @since 1.8.4
      */
     public int getWidth() {
-        return MinecraftClient.getInstance().textRenderer.getWidth(head);
+        return MinecraftClient.getInstance().textRenderer.getStringWidth(head.asFormattedString());
     }
     
     /**

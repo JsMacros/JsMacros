@@ -134,7 +134,7 @@ public class CustomImage {
         NativeImage ni = texture.getImage();
         for (int y = 0; y < image.getHeight(); y++) {
             for (int x = 0; x < image.getWidth(); x++) {
-                ni.setPixelColor(x, y, nativeARGBFlip(image.getRGB(x, y)));
+                ni.setPixelRgba(x, y, nativeARGBFlip(image.getRGB(x, y)));
             }
         }
         texture.upload();

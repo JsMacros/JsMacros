@@ -26,7 +26,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -660,7 +659,7 @@ public class FWorld extends BaseLibrary {
     public String getWorldIdentifier() {
         IntegratedServer server = mc.getServer();
         if (server != null) {
-            return "LOCAL_" + server.getSavePath(WorldSavePath.ROOT).normalize().getFileName();
+            return "LOCAL_" + server.getWorld(DimensionType.OVERWORLD).getSaveHandler().getWorldDir().getName();
         }
         ServerInfo multiplayerServer = mc.getCurrentServerEntry();
         if (multiplayerServer != null) {

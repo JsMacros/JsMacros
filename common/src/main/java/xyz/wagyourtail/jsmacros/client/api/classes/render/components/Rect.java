@@ -2,9 +2,9 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.*;
+import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 
@@ -350,9 +350,8 @@ public class Rect implements RenderElement, Alignable<Rect> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        matrices.push();
-        setupMatrix(matrices, x1, y1, 1, rotation, getWidth(), getHeight(), rotateCenter);
+    public void render(int mouseX, int mouseY, float delta) {
+//        setupMatrix(matrices, x1, y1, 1, rotation, getWidth(), getHeight(), rotateCenter);
 
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buf = tess.getBuffer();
@@ -367,18 +366,18 @@ public class Rect implements RenderElement, Alignable<Rect> {
         RenderSystem.defaultBlendFunc();
 
         buf.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-        Matrix4f matrix = matrices.peek().getModel();
+//        Matrix4f matrix = matrices.peek().getModel();
         //draw a rectangle using triangle strips
-        buf.vertex(matrix, x1, y2, 0).color(fr, fg, fb, fa).next(); // Top-left
-        buf.vertex(matrix, x2, y2, 0).color(fr, fg, fb, fa).next(); // Top-right
-        buf.vertex(matrix, x1, y1, 0).color(fr, fg, fb, fa).next(); // Bottom-left
-        buf.vertex(matrix, x2, y1, 0).color(fr, fg, fb, fa).next(); // Bottom-right
+        buf.vertex(x1, y2, 0).color(fr, fg, fb, fa).next(); // Top-left
+        buf.vertex(x2, y2, 0).color(fr, fg, fb, fa).next(); // Top-right
+        buf.vertex(x1, y1, 0).color(fr, fg, fb, fa).next(); // Bottom-left
+        buf.vertex(x2, y1, 0).color(fr, fg, fb, fa).next(); // Bottom-right
         tess.draw();
 
         RenderSystem.enableTexture();
         RenderSystem.disableBlend();
 
-        matrices.pop();
+//        matrices.pop();
     }
 
     public Rect setParent(IDraw2D<?> parent) {

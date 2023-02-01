@@ -554,41 +554,41 @@ public class Draw3D {
         return this;
     }
 
-    public void render(MatrixStack matrixStack, float tickDelta) {
+    public void render(float tickDelta) {
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        matrixStack.push();
+        RenderSystem.pushMatrix();
         //setup
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableTexture();
 
         Vec3d camPos = mc.gameRenderer.getCamera().getPos();
-        matrixStack.translate(-camPos.x, -camPos.y, -camPos.z);
+        RenderSystem.translated(-camPos.x, -camPos.y, -camPos.z);
 
         //render
         synchronized (boxes) {
             for (Box b : boxes) {
-                b.render(matrixStack);
+                b.render();
             }
         }
 
         synchronized (lines) {
             for (Line3D l : lines) {
-                l.render(matrixStack);
+                l.render();
             }
         }
 
         synchronized (surfaces) {
             for (Surface s : surfaces) {
-                s.render3D(matrixStack, 0, 0, tickDelta);
+                s.render3D(0, 0, tickDelta);
             }
         }
 
         //reset
         RenderSystem.enableTexture();
 
-        matrixStack.pop();
+        RenderSystem.popMatrix();
 
     }
 

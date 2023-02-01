@@ -47,29 +47,29 @@ public class MacroScreen extends BaseScreen {
     protected void init() {
         super.init();
         macros.clear();
-        keyScreen = this.addDrawableChild(new Button(0, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.keys"), btn -> {
-            assert client != null;
-            if (client.currentScreen.getClass() != KeyMacrosScreen.class) {
-                client.openScreen(new KeyMacrosScreen(this));
+        keyScreen = this.addDrawableChild(new Button(0, 0, this.width / 6 - 1, 20, font, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.keys"), btn -> {
+            assert minecraft != null;
+            if (minecraft.currentScreen.getClass() != KeyMacrosScreen.class) {
+                minecraft.openScreen(new KeyMacrosScreen(this));
             }
         }));
 
-        eventScreen = this.addDrawableChild(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.events"), btn -> {
-            assert client != null;
-            if (client.currentScreen.getClass() != EventMacrosScreen.class) {
-                client.openScreen(new EventMacrosScreen(this));
+        eventScreen = this.addDrawableChild(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, font, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.events"), btn -> {
+            assert minecraft != null;
+            if (minecraft.currentScreen.getClass() != EventMacrosScreen.class) {
+                minecraft.openScreen(new EventMacrosScreen(this));
             }
         }));
 
-        serviceScreen = this.addDrawableChild(new Button(2 * this.width / 6 + 2, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.services"), btn -> {
-            assert client != null;
-            if (client.currentScreen.getClass() != ServiceScreen.class) {
-                client.openScreen(new ServiceScreen(this));
+        serviceScreen = this.addDrawableChild(new Button(2 * this.width / 6 + 2, 0, this.width / 6 - 1, 20, font, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.services"), btn -> {
+            assert minecraft != null;
+            if (minecraft.currentScreen.getClass() != ServiceScreen.class) {
+                minecraft.openScreen(new ServiceScreen(this));
             }
         }));
         
-        this.addDrawableChild(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.settings"), (btn) -> {
-            openOverlay(new SettingsOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this));
+        this.addDrawableChild(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, font, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.settings"), (btn) -> {
+            openOverlay(new SettingsOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, font, this));
         }));
 
         topbar = createTopbar();
@@ -201,13 +201,13 @@ public class MacroScreen extends BaseScreen {
             macro.render(mouseX, mouseY, delta);
         }
         
-        drawCenteredText(matrices, this.textRenderer, new LiteralText(Core.getInstance().profile.getCurrentProfileName()), this.width * 8 / 12, 5, 0x7F7F7F);
+        drawCenteredString(this.font, Core.getInstance().profile.getCurrentProfileName(), this.width * 8 / 12, 5, 0x7F7F7F);
 
-        fill(matrices, this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
-        fill(matrices, this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);
-        fill(matrices, this.width / 6 * 2, 0, this.width / 6 * 2 + 2, 20, 0xFFFFFFFF);
-        fill(matrices, this.width / 6 * 3 + 1, 0, this.width / 6 * 3 + 3, 20, 0xFFFFFFFF);
-        fill(matrices, 0, 20, width, 22, 0xFFFFFFFF);
+        fill(this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
+        fill(this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);
+        fill(this.width / 6 * 2, 0, this.width / 6 * 2 + 2, 20, 0xFFFFFFFF);
+        fill(this.width / 6 * 3 + 1, 0, this.width / 6 * 3 + 3, 20, 0xFFFFFFFF);
+        fill(0, 20, width, 22, 0xFFFFFFFF);
 
         super.render(mouseX, mouseY, delta);
     }

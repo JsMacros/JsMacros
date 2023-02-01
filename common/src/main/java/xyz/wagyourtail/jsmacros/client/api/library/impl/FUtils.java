@@ -49,7 +49,7 @@ public class FUtils extends BaseLibrary {
      * @since 1.8.4
      */
     public void copyToClipboard(String text) {
-        SelectionManager.setClipboard(mc, text);
+        mc.keyboard.setClipboard(text);
     }
 
     /**
@@ -58,7 +58,7 @@ public class FUtils extends BaseLibrary {
      * @since 1.8.4
      */
     public String getClipboard() {
-        return SelectionManager.getClipboard(mc);
+        return mc.keyboard.getClipboard();
     }
 
     /**

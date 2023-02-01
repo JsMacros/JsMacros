@@ -15,7 +15,7 @@ public class Scrollbar extends AbstractButtonWidget {
     protected Consumer<Double> onChange;
 
     public Scrollbar(int x, int y, int width, int height, int color, int borderColor, int highlightColor, double scrollPages, Consumer<Double> onChange) {
-        super(x, y, width, height, new LiteralText(""));
+        super(x, y, width, height, "");
         this.color = color;
         this.borderColor = borderColor;
         this.highlightColor = highlightColor;
@@ -87,7 +87,7 @@ public class Scrollbar extends AbstractButtonWidget {
     public void render(int mouseX, int mouseY, float delta) {
         if (this.visible) {
             // mainpart
-            fill(matrices, x + 1, (int) (y + 1 + scrollAmount), x + width - 1, (int) (y + 1 + scrollAmount + scrollbarHeight), highlightColor);
+            fill(x + 1, (int) (y + 1 + scrollAmount), x + width - 1, (int) (y + 1 + scrollAmount + scrollbarHeight), highlightColor);
 
             // outline and back
             fill(x + 1, y + 1, x + width - 1, y + height - 1, color);

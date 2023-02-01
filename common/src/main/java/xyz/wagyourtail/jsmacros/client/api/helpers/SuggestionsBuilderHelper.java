@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.command.CommandSource;
+import net.minecraft.server.command.CommandSource;
 import net.minecraft.util.Identifier;
 
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
@@ -9,7 +9,6 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**

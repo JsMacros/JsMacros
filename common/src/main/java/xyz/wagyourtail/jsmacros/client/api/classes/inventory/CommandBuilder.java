@@ -6,8 +6,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.argument.*;
+import net.minecraft.command.arguments.*;
+import net.minecraft.server.command.CommandSource;
 import net.minecraft.util.Identifier;
 
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
@@ -71,7 +71,7 @@ public abstract class CommandBuilder {
     }
 
     public CommandBuilder floatRangeArg(String name) {
-        argument(name, NumberRangeArgumentType::method_30918);
+        argument(name, NumberRangeArgumentType.FloatRangeArgumentType::new);
         return this;
     }
 
@@ -86,8 +86,7 @@ public abstract class CommandBuilder {
     }
 
     public CommandBuilder uuidArgType(String name) {
-        argument(name, UuidArgumentType::uuid);
-        return this;
+        throw new NullPointerException("does not exist in <=1.15.2");
     }
 
     public CommandBuilder greedyStringArg(String name) {
@@ -160,8 +159,7 @@ public abstract class CommandBuilder {
     }
 
     public CommandBuilder angleArg(String name) {
-        argument(name, AngleArgumentType::new);
-        return this;
+        throw new NullPointerException("does not exist in <=1.16.1");
     }
 
     public CommandBuilder itemArg(String name) {

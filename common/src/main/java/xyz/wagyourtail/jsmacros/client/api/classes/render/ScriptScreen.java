@@ -66,24 +66,23 @@ public class ScriptScreen extends BaseScreen {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (matrices == null) return;
-        if (bgStyle == 0) this.renderBackgroundTexture(0);
-        else if (bgStyle == 1) this.renderBackground(matrices, 0);
+    public void render(int mouseX, int mouseY, float delta) {
+        if (bgStyle == 0) this.renderDirtBackground(0);
+        else if (bgStyle == 1) this.renderBackground(0);
 
         if (drawTitle) {
-            drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+            drawCenteredString(this.font, this.title.asFormattedString(), this.width / 2, 20, 0xFFFFFF);
         }
 
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(mouseX, mouseY, delta);
 
         for (AbstractButtonWidget button : this.buttons) {
-            button.render(matrices, mouseX, mouseY, delta);
+            button.render(mouseX, mouseY, delta);
         }
 
-        ((IScreenInternal) this).jsmacros_render(matrices, mouseX, mouseY, delta);
+        ((IScreenInternal) this).jsmacros_render(mouseX, mouseY, delta);
         try {
-            if (onRender != null) onRender.accept(new Pos3D(mouseX, mouseY, delta), matrices);
+            if (onRender != null) onRender.accept(new Pos3D(mouseX, mouseY, delta));
         } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
             onRender = null;

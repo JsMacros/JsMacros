@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.AbstractParentElement;
+import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
@@ -11,6 +12,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.LockButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
+import net.minecraft.client.util.Texts;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Style;
@@ -83,9 +85,9 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Shadow @Final protected List<AbstractButtonWidget> buttons;
 
-    @Shadow protected abstract void renderComponentHoverEffect(Text component, int x, int y);
+    @Shadow protected abstract void renderComponentHoverEffect(net.minecraft.text.Text component, int x, int y);
 
-    @Shadow public abstract boolean handleComponentClicked(Text component);
+    @Shadow public abstract boolean handleComponentClicked(net.minecraft.text.Text component);
 
     @Override
     public int getWidth() {
@@ -204,7 +206,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         synchronized (buttons) {
             for (AbstractButtonWidget e : buttons) {
                 if (e instanceof TextFieldWidget && !btns.containsKey(e)) {
-                    btns.put(e, new TextFieldWidgetHelper((TextFieldWidget) e));
+                    btns.put((TextFieldWidget) e, new TextFieldWidgetHelper((TextFieldWidget) e));
                 }
             }
         }
@@ -576,7 +578,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, int zIndex, String text, boolean checked, boolean showMessage, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback) {
         AtomicReference<CheckBoxWidgetHelper> ref = new AtomicReference<>(null);
 
-        CheckBox checkbox = new CheckBox(x, y, width, height, literal(text), checked, showMessage, (btn) -> {
+        CheckBox checkbox = new CheckBox(x, y, width, height, literal(text), checked, (btn) -> {
             try {
                 callback.accept(ref.get(), this);
             } catch (Exception e) {
@@ -702,7 +704,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, int zIndex, String message, MethodWrapper<String, IScreen, Object, ?> onChange) {
-        TextFieldWidget field = new TextFieldWidget(this.textRenderer, x, y, width, height, literal(message));
+        TextFieldWidget field = new TextFieldWidget(this.font, x, y, width, height, message);
         if (onChange != null) {
             field.setChangedListener(str -> {
                 try {
@@ -828,7 +830,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public TextFieldWidgetHelper.TextFieldBuilder textFieldBuilder() {
-        return new TextFieldWidgetHelper.TextFieldBuilder(this, textRenderer);
+        return new TextFieldWidgetHelper.TextFieldBuilder(this, font);
     }
 
     @Override
@@ -837,8 +839,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public void jsmacros_render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (matrices == null) return;
+    public void jsmacros_render(int mouseX, int mouseY, float delta) {
 
         synchronized (elements) {
             Iterator<RenderElement> iter = elements.stream().sorted(Comparator.comparingInt(RenderElement::getZIndex)).iterator();
@@ -846,10 +847,10 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
             while (iter.hasNext()) {
                 RenderElement e = iter.next();
-                e.render(matrices, mouseX, mouseY, delta);
+                e.render(mouseX, mouseY, delta);
                 if (e instanceof xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text) {
                     xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text t = (xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text) e;
-                    if (mouseX > t.x && mouseX < t.x + t.width && mouseY > t.y && mouseY < t.y + textRenderer.fontHeight) {
+                    if (mouseX > t.x && mouseX < t.x + t.width && mouseY > t.y && mouseY < t.y + font.fontHeight) {
                         hoverText = t;
                     }
                 }
@@ -863,7 +864,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
 
     @Unique
-    public Text jsmacros_getTextComponentUnderMouse(Text message, int mouseX) {
+    public net.minecraft.text.Text jsmacros_getTextComponentUnderMouse(net.minecraft.text.Text message, int mouseX) {
         if (message == null) {
             return null;
         } else {
@@ -872,7 +873,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             int k = this.width / 2 + i / 2;
             int l = j;
             if (mouseX >= j && mouseX <= k) {
-                for(Text text : message) {
+                for(net.minecraft.text.Text text : message) {
                     l += this.minecraft.textRenderer.getStringWidth(Texts.getRenderChatMessage(text.asString(), false));
                     if (l > mouseX) {
                         return text;
@@ -904,7 +905,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             for (RenderElement e : elements) {
                 if (e instanceof xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text) {
                     xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text t = (xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text) e;
-                    if (mouseX > t.x && mouseX < t.x + t.width && mouseY > t.y && mouseY < t.y + textRenderer.fontHeight) {
+                    if (mouseX > t.x && mouseX < t.x + t.width && mouseY > t.y && mouseY < t.y + font.fontHeight) {
                         hoverText = t;
                     }
                 }
@@ -983,7 +984,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     //TODO: switch to enum extention with mixin 9.0 or whenever Mumfrey gets around to it
     @Inject(at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "handleComponentClicked", cancellable = true)
-    public void handleCustomClickEvent(Text t, CallbackInfoReturnable<Boolean> cir) {
+    public void handleCustomClickEvent(net.minecraft.text.Text t, CallbackInfoReturnable<Boolean> cir) {
         ClickEvent clickEvent = t.getStyle().getClickEvent();
         if (clickEvent instanceof CustomClickEvent) {
             ((CustomClickEvent) clickEvent).getEvent().run();

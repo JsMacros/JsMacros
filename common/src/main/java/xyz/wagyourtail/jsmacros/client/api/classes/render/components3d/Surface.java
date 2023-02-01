@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.math.Quaternion;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
@@ -237,8 +236,8 @@ public class Surface extends Draw2D implements RenderElement {
     }
 
     @Override
-    public void render3D(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
-        matrixStack.push();
+    public void render3D(int mouseX, int mouseY, float delta) {
+        RenderSystem.pushMatrix();
         if (boundEntity != null && boundEntity.isAlive()) {
             Pos3D entityPos = boundEntity.getPos().add(boundOffset);
             pos.x += (entityPos.x - pos.x) * delta;
@@ -246,43 +245,49 @@ public class Surface extends Draw2D implements RenderElement {
             pos.z += (entityPos.z - pos.z) * delta;
         }
 
-        matrixStack.translate(pos.x, pos.y, pos.z);
+        RenderSystem.translated(pos.x, pos.y, pos.z);
 
         if (rotateToPlayer) {
             Quaternion q = MinecraftClient.getInstance().gameRenderer.getCamera().getRotation();
             // to euler angles
             Vector3f rot = new Vector3f(
-                    (float) Math.atan2(2 * (q.getW() * q.getZ() + q.getX() * q.getY()), 1 - 2 * (q.getY() * q.getY() + q.getZ() * q.getZ())),
-                    (float) Math.asin(2 * (q.getW() * q.getY() - q.getZ() * q.getX())),
-                    (float) Math.atan2(2 * (q.getW() * q.getX() + q.getY() * q.getZ()), 1 - 2 * (q.getX() * q.getX() + q.getY() * q.getY()))
+                    (float) Math.atan2(2 * (q.getA() * q.getD() + q.getB() * q.getC()), 1 - 2 * (q.getC() * q.getC() + q.getD() * q.getD())),
+                    (float) Math.asin(2 * (q.getA() * q.getC() - q.getD() * q.getB())),
+                    (float) Math.atan2(2 * (q.getA() * q.getB() + q.getC() * q.getD()), 1 - 2 * (q.getB() * q.getB() + q.getC() * q.getC()))
             );
             rotations.x = -rot.getX();
             rotations.y = 180 + rot.getY();
             rotations.z = 0;
         }
         if (rotateCenter) {
-            matrixStack.translate(sizes.x / 2, 0, 0);
-            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((float) rotations.y));
-            matrixStack.translate(-sizes.x / 2, 0, 0);
-            matrixStack.translate(0, -sizes.y / 2, 0);
-            matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((float) rotations.x));
-            matrixStack.translate(0, sizes.y / 2, 0);
-            matrixStack.translate(sizes.x / 2, -sizes.y / 2, 0);
-            matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion((float) rotations.z));
-            matrixStack.translate(-sizes.x / 2, sizes.y / 2, 0);
+            RenderSystem.translated(sizes.x / 2, 0, 0);
+//            RenderSystem.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((float) rotations.y));
+            RenderSystem.rotatef((float) rotations.y, 0, 1, 0);
+            RenderSystem.translated(-sizes.x / 2, 0, 0);
+            RenderSystem.translated(0, -sizes.y / 2, 0);
+//            RenderSystem.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((float) rotations.x));
+            RenderSystem.rotatef((float) rotations.x, 1, 0, 0);
+            RenderSystem.translated(0, sizes.y / 2, 0);
+            RenderSystem.translated(sizes.x / 2, -sizes.y / 2, 0);
+//            RenderSystem.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion((float) rotations.z));
+            RenderSystem.rotatef((float) rotations.z, 0, 0, 1);
+            RenderSystem.translated(-sizes.x / 2, sizes.y / 2, 0);
         } else {
             Vector3f rot = rotations.toVector().toMojangFloatVector();
-            matrixStack.multiply(new Quaternion(rot.getX(), rot.getY(), rot.getZ(), true));
+//            RenderSystem.multiply(new Quaternion(rot.getX(), rot.getY(), rot.getZ(), true));
+            RenderSystem.rotatef(rot.getX(), 1, 0, 0);
+            RenderSystem.rotatef(rot.getY(), 0, 1, 0);
+            RenderSystem.rotatef(rot.getZ(), 0, 0, 1);
         }
         // fix it so that y-axis goes down instead of up
-        matrixStack.scale(1, -1, 1);
+        RenderSystem.scaled(1, -1, 1);
         // scale so that x or y have minSubdivisions units between them
-        matrixStack.scale((float) scale, (float) scale, (float) scale);
+        RenderSystem.scaled((float) scale, (float) scale, (float) scale);
 
         synchronized (elements) {
-            renderElements3D(matrixStack, getElementsByZIndex());
+            renderElements3D(getElementsByZIndex());
         }
-        matrixStack.pop();
+        RenderSystem.popMatrix();
 
         if (!cull) {
             RenderSystem.enableDepthTest();
@@ -292,39 +297,39 @@ public class Surface extends Draw2D implements RenderElement {
         }
     }
 
-    private void renderElements3D(MatrixStack matrixStack, Iterator<RenderElement> iter) {
+    private void renderElements3D(Iterator<RenderElement> iter) {
         while (iter.hasNext()) {
             RenderElement element = iter.next();
             // Render each draw2D element individually so that the cull and renderBack settings are used
             if (element instanceof Draw2DElement) {
                 Draw2DElement draw2DElement = (Draw2DElement) element;
-                renderDraw2D3D(matrixStack, draw2DElement);
+                renderDraw2D3D(draw2DElement);
             } else {
-                renderElement3D(matrixStack, element);
+                renderElement3D(element);
             }
         }
     }
 
-    private void renderDraw2D3D(MatrixStack matrixStack, Draw2DElement draw2DElement) {
-        matrixStack.push();
-        matrixStack.translate(draw2DElement.x, draw2DElement.y, 0);
-        matrixStack.scale(draw2DElement.scale, draw2DElement.scale, 1);
+    private void renderDraw2D3D(Draw2DElement draw2DElement) {
+        RenderSystem.pushMatrix();
+        RenderSystem.translated(draw2DElement.x, draw2DElement.y, 0);
+        RenderSystem.scaled(draw2DElement.scale, draw2DElement.scale, 1);
         if (rotateCenter) {
-            matrixStack.translate(draw2DElement.width.getAsInt() / 2d, draw2DElement.height.getAsInt() / 2d, 0);
+            RenderSystem.translated(draw2DElement.width.getAsInt() / 2d, draw2DElement.height.getAsInt() / 2d, 0);
         }
-        matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(draw2DElement.rotation));
+        RenderSystem.rotatef(draw2DElement.rotation, 0, 0, 1);
         if (rotateCenter) {
-            matrixStack.translate(-draw2DElement.width.getAsInt() / 2d, -draw2DElement.height.getAsInt() / 2d, 0);
+            RenderSystem.translated(-draw2DElement.width.getAsInt() / 2d, -draw2DElement.height.getAsInt() / 2d, 0);
         }
         // Don't translate back!
         Draw2D draw2D = draw2DElement.getDraw2D();
         synchronized (draw2D.getElements()) {
-            renderElements3D(matrixStack, draw2D.getElementsByZIndex());
+            renderElements3D(draw2D.getElementsByZIndex());
         }
-        matrixStack.pop();
+        RenderSystem.popMatrix();
     }
 
-    private void renderElement3D(MatrixStack matrixStack, RenderElement element) {
+    private void renderElement3D(RenderElement element) {
         if (renderBack) {
             RenderSystem.disableCull();
         } else {
@@ -335,14 +340,14 @@ public class Surface extends Draw2D implements RenderElement {
         } else {
             RenderSystem.enableDepthTest();
         }
-        matrixStack.push();
-        matrixStack.translate(0, 0, zIndexScale * element.getZIndex());
-        element.render3D(matrixStack, 0, 0, 0);
-        matrixStack.pop();
+        RenderSystem.pushMatrix();
+        RenderSystem.translated(0, 0, zIndexScale * element.getZIndex());
+        element.render3D(0, 0, 0);
+        RenderSystem.popMatrix();
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(int mouseX, int mouseY, float delta) {
 
     }
 

@@ -44,7 +44,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
      * @since 1.8.4
      */
     public int getLevelCost() {
-        return inventory.getScreenHandler().getLevelCost();
+        return inventory.getContainer().getLevelCost();
     }
 
     /**

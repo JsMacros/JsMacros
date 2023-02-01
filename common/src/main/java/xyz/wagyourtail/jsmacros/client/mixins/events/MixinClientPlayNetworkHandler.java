@@ -213,12 +213,12 @@ class MixinClientPlayNetworkHandler {
         }
     }
 
-    @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/thread/ThreadExecutor;)V", shift = At.Shift.AFTER))
-    public void onScreenHandlerSlotUpdate(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo info) {
+    @Inject(method = "onContainerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/thread/ThreadExecutor;)V", shift = At.Shift.AFTER))
+    public void onScreenHandlerSlotUpdate(ContainerSlotUpdateS2CPacket packet, CallbackInfo info) {
         if (packet.getSyncId() != -2) {
             return;
         }
-        new EventInventoryChange(Inventory.create(), new int[]{packet.getSlot()}, new ItemStackHelper(client.player.inventory.getStack(packet.getSlot())), new ItemStackHelper(packet.getItemStack()));
+        new EventInventoryChange(Inventory.create(), new int[]{packet.getSlot()}, new ItemStackHelper(client.player.inventory.getInvStack(packet.getSlot())), new ItemStackHelper(packet.getItemStack()));
     }
     
 }

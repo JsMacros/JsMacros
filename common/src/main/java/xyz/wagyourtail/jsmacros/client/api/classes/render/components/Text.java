@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
@@ -40,7 +41,7 @@ public class Text implements RenderElement, Alignable<Text> {
         this.x = x;
         this.y = y;
         this.color = color;
-        this.width = mc.textRenderer.getWidth(this.text);
+        this.width = mc.textRenderer.getStringWidth(this.text.asFormattedString());
         this.shadow = shadow;
         this.scale = scale;
         this.rotation = MathHelper.wrapDegrees(rotation);
@@ -112,7 +113,7 @@ public class Text implements RenderElement, Alignable<Text> {
      */
     public Text setText(String text) {
         this.text = literal(text);
-        this.width = mc.textRenderer.getWidth(text);
+        this.width = mc.textRenderer.getStringWidth(this.text.asFormattedString());
         return this;
     }
 
@@ -125,7 +126,7 @@ public class Text implements RenderElement, Alignable<Text> {
      */
     public Text setText(TextHelper text) {
         this.text = text.getRaw();
-        this.width = mc.textRenderer.getWidth(this.text);
+        this.width = mc.textRenderer.getStringWidth(this.text.asFormattedString());
         return this;
     }
 
@@ -285,37 +286,26 @@ public class Text implements RenderElement, Alignable<Text> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        matrices.push();
-        setupMatrix(matrices, x, y, (float) scale, rotation, getWidth(), getHeight(), rotateCenter);
+    public void render(int mouseX, int mouseY, float delta) {
         if (shadow) {
-            mc.textRenderer.drawWithShadow(matrices, text, x, y, color);
+            mc.textRenderer.drawWithShadow(text.asFormattedString(), x, y, color);
         } else {
-            mc.textRenderer.draw(matrices, text, x, y, color);
+            mc.textRenderer.draw(text.asFormattedString(), x, y, color);
         }
-        matrices.pop();
     }
 
     @Override
-    public void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        matrices.push();
-        setupMatrix(matrices, x, y, (float) scale, rotation, getWidth(), getHeight(), rotateCenter);
+    public void render3D(int mouseX, int mouseY, float delta) {
+        RenderSystem.pushMatrix();
+        RenderSystem.scaled(scale, scale, 1);
+        RenderSystem.translatef(x, y, 0);
+        RenderSystem.rotatef(rotation, 0, 0, 1);
+        RenderSystem.translatef(-x, -y, 0);
         Tessellator tess = Tessellator.getInstance();
         VertexConsumerProvider.Immediate buffer = VertexConsumerProvider.immediate(tess.getBuffer());
-        mc.textRenderer.draw(
-            text,
-            (float) x,
-            (float) y,
-            color,
-            shadow,
-            matrices.peek().getModel(),
-            buffer,
-            true,
-            0,
-            0xF000F0
-        );
+        mc.textRenderer.draw(text.asFormattedString(), (float)(x / scale), (float)(y / scale), color, shadow, new MatrixStack().peek().getModel(), buffer, true, 0, 0xF000F0);
         buffer.draw();
-        matrices.pop();
+        RenderSystem.popMatrix();
     }
 
     public Text setParent(IDraw2D<?> parent) {
@@ -490,7 +480,7 @@ public class Text implements RenderElement, Alignable<Text> {
          * @since 1.8.4
          */
         public int getWidth() {
-            return mc.textRenderer.getWidth(text);
+            return mc.textRenderer.getStringWidth(text.asFormattedString());
         }
 
         /**

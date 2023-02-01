@@ -14,11 +14,7 @@ public class CheckBox extends CheckboxWidget {
     private final Consumer<CheckBox> action;
 
     public CheckBox(int x, int y, int width, int height, Text text, boolean checked, Consumer<CheckBox> action) {
-        this(x, y, width, height, text, checked, true, action);
-    }
-
-    public CheckBox(int x, int y, int width, int height, Text text, boolean checked, boolean showMessage, Consumer<CheckBox> action) {
-        super(x, y, width, height, text, checked, showMessage);
+        super(x, y, width, height, text.asFormattedString(), checked);
         this.action = action;
     }
 

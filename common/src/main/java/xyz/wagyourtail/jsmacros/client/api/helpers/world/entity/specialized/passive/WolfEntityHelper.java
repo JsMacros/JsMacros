@@ -40,7 +40,7 @@ public class WolfEntityHelper extends TameableEntityHelper<WolfEntity> {
      * @since 1.8.4
      */
     public boolean isAngry() {
-        return base.hasAngerTime();
+        return base.isAngry();
     }
 
     /**

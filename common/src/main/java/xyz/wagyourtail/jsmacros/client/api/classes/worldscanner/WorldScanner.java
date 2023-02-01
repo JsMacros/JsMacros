@@ -128,7 +128,7 @@ public class WorldScanner {
         streamChunkSections(world.getChunk(pos.x, pos.z), (section, isInFilter) -> {
             int yOffset = section.getYOffset();
             PackedIntegerArray array = ((IPalettedContainer<?>) section.getContainer()).jsmacros_getData();
-            forEach(array, isInFilter, place -> blocks.add(new PositionCommon.Pos3D(
+            forEach(array, isInFilter, place -> blocks.add(new Pos3D(
                     chunkX + ((place & 255) & 15),
                     yOffset + (place >> 8),
                     chunkZ + ((place & 255) >> 4)

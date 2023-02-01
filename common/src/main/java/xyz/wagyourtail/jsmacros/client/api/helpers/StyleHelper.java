@@ -84,7 +84,7 @@ public class StyleHelper extends BaseHelper<Style> {
     }
 
     public int getCustomColor() {
-        return base.getColor() == null ? -1 : base.getColor().getRgb();
+        return base.getColor() == null ? -1 : base.getColor().getColorValue();
     }
 
     public boolean bold() {

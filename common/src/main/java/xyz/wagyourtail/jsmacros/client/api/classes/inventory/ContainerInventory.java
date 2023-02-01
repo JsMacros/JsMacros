@@ -1,13 +1,14 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
+
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 
 /**
  * @author Etheradon
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public class ContainerInventory<T extends HandledScreen<?>> extends Inventory<T> {
+public class ContainerInventory<T extends ContainerScreen<?>> extends Inventory<T> {
 
     public ContainerInventory(T inventory) {
         super(inventory);

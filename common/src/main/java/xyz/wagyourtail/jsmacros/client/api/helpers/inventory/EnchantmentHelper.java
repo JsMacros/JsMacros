@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -54,7 +53,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public int getMinLevel() {
-        return base.getMinLevel();
+        return base.getMinimumLevel();
     }
 
     /**
@@ -63,7 +62,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public int getMaxLevel() {
-        return base.getMaxLevel();
+        return base.getMaximumLevel();
     }
 
     /**
@@ -98,7 +97,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public TextHelper getRomanLevelName(int level) {
-        MutableText mutableText = translatable(base.getTranslationKey());
+        Text mutableText = translatable(base.getTranslationKey());
         mutableText.formatted(base.isCursed() ? Formatting.RED : Formatting.GRAY);
         if (level != 1 || this.getMaxLevel() != 1) {
             mutableText.append(" ").append(getRomanNumeral(level));
@@ -146,7 +145,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public String getRarity() {
-        switch (base.getRarity()) {
+        switch (base.getWeight()) {
             case COMMON:
                 return "COMMON";
             case UNCOMMON:
@@ -179,7 +178,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getConflictingEnchantments(boolean ignoreType) {
-        return Registry.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && !e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registry.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && !e.isDifferent(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -201,7 +200,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getCompatibleEnchantments(boolean ignoreType) {
-        return Registry.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registry.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && e.isDifferent(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -237,8 +236,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
                 return "WEARABLE";
             case CROSSBOW:
                 return "CROSSBOW";
-            case VANISHABLE:
-                return "VANISHABLE";
             default:
                 throw new IllegalArgumentException();
         }
@@ -254,7 +251,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public int getWeight() {
-        return base.getRarity().getWeight();
+        return base.getWeight().getWeight();
     }
 
     /**
@@ -291,7 +288,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public boolean canBeApplied(ItemHelper item) {
-        return base.isAcceptableItem(item.getRaw().getDefaultStack());
+        return base.isAcceptableItem(item.getRaw().getStackForRender());
     }
 
     /**
@@ -322,7 +319,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public boolean isCompatible(String enchantment) {
-        return base.canCombine(Registry.ENCHANTMENT.get(RegistryHelper.parseIdentifier(enchantment)));
+        return base.isDifferent(Registry.ENCHANTMENT.get(RegistryHelper.parseIdentifier(enchantment)));
     }
 
     /**
@@ -333,7 +330,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public boolean isCompatible(EnchantmentHelper enchantment) {
-        return base.canCombine(enchantment.getRaw());
+        return base.isDifferent(enchantment.getRaw());
     }
 
     /**

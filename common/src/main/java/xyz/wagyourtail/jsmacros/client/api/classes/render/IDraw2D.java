@@ -786,9 +786,8 @@ public interface IDraw2D<T> {
 
     /**
      * internal
-     * @param matrixStack
      */
-    void render(MatrixStack matrixStack);
+    void render();
 
     /**
      * @since 1.8.4

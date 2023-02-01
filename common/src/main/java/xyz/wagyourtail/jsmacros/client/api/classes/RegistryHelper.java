@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.command.argument.BlockArgumentParser;
-import net.minecraft.command.argument.ItemStringReader;
+import net.minecraft.command.arguments.BlockArgumentParser;
+import net.minecraft.command.arguments.ItemStringReader;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.registry.Registry;
@@ -60,7 +60,7 @@ public class RegistryHelper {
     public ItemStackHelper getItemStack(String id, String nbt) throws CommandSyntaxException {
         ItemStringReader itemResult = new ItemStringReader(new StringReader(parseNameSpace(id) + nbt), false);
         itemResult.consume();
-        ItemStack stack = itemResult.getItem().getDefaultStack();
+        ItemStack stack = itemResult.getItem().getStackForRender();
         stack.setTag(itemResult.getTag());
         return new CreativeItemStackHelper(stack);
     }
@@ -273,7 +273,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public List<String> getScreenHandlerIds() {
-        return Registry.SCREEN_HANDLER.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
+        return Registry.CONTAINER.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
@@ -346,15 +346,6 @@ public class RegistryHelper {
      */
     public List<String> getStatTypeIds() {
         return Registry.STAT_TYPE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
-    }
-
-    /**
-     * @return a list of all entity attribute ids.
-     *
-     * @since 1.8.4
-     */
-    public List<String> getEntityAttributeIds() {
-        return Registry.ATTRIBUTE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**

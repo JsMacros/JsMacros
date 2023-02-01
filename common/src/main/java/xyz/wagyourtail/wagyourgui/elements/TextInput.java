@@ -173,9 +173,9 @@ public class TextInput extends Button {
     }
 
     @Override
-    protected void renderMessage(MatrixStack matrices) {
-        fill(matrices, selStart, height > 9 ? y + 2 : y, Math.min(selEnd, x + width - 2), (height > 9 ? y + 2 : y) + textRenderer.fontHeight, selColor);
-        drawStringWithShadow(matrices, textRenderer, textRenderer.trimToWidth(content, width - 4), x + 2, height > 9 ? y + 2 :
+    protected void renderMessage() {
+        fill(selStart, height > 9 ? y + 2 : y, Math.min(selEnd, x + width - 2), (height > 9 ? y + 2 : y) + textRenderer.fontHeight, selColor);
+        textRenderer.drawWithShadow(textRenderer.trimToWidth(content, width - 4), x + 2, height > 9 ? y + 2 :
             y, textColor);
     }
 }

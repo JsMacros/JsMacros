@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.decoration;
 
-import net.minecraft.entity.decoration.EndCrystalEntity;
-
+import net.minecraft.entity.decoration.EnderCrystalEntity;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
@@ -10,9 +9,9 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public class EndCrystalEntityHelper extends EntityHelper<EndCrystalEntity> {
+public class EndCrystalEntityHelper extends EntityHelper<EnderCrystalEntity> {
 
-    public EndCrystalEntityHelper(EndCrystalEntity base) {
+    public EndCrystalEntityHelper(EnderCrystalEntity base) {
         super(base);
     }
 

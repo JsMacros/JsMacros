@@ -66,7 +66,7 @@ public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper
 
     @Override
     public String toString() {
-        return String.format("SliderWidgetHelper:{\"message\": \"%s\", \"value\": %f, \"steps\": %d}", base.getMessage().getString(), getValue(), getSteps());
+        return String.format("SliderWidgetHelper:{\"message\": \"%s\", \"value\": %f, \"steps\": %d}", base.getMessage(), getValue(), getSteps());
     }
 
     /**

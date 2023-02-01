@@ -105,7 +105,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean isToolRequired() {
-        return base.isToolRequired();
+        return base.getMaterial().canBreakByHand();
     }
 
     /**
@@ -234,7 +234,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean shouldSuffocate(BlockPosHelper pos) {
-        return base.shouldSuffocate(MinecraftClient.getInstance().world, pos.getRaw());
+        return base.canSuffocate(MinecraftClient.getInstance().world, pos.getRaw());
     }
 
     /**

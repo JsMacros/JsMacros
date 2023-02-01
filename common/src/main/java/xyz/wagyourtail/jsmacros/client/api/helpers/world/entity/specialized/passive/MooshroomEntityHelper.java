@@ -19,7 +19,7 @@ public class MooshroomEntityHelper extends AnimalEntityHelper<MooshroomEntity> {
      * @since 1.8.4
      */
     public boolean isShearable() {
-        return base.isShearable();
+        return !base.isBaby();
     }
 
     /**

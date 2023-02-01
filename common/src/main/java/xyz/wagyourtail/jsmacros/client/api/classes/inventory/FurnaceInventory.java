@@ -2,8 +2,9 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.client.gui.screen.ingame.AbstractFurnaceScreen;
+import net.minecraft.container.PropertyDelegate;
 import net.minecraft.item.Item;
-import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.registry.Registry;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -35,6 +36,11 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
         return getSmeltedItem();
     }
 
+    @Override
+    protected RecipeType<?> getRecipeType() {
+        return RecipeType.SMELTING;
+    }
+
     /**
      * @return the currently smelting item.
      *
@@ -60,7 +66,7 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
      * @since 1.8.4
      */
     public boolean canUseAsFuel(ItemStackHelper stack) {
-        return ((MixinAbstractFurnaceScreenHandler) inventory.getScreenHandler()).invokeIsFuel(stack.getRaw());
+        return ((MixinAbstractFurnaceScreenHandler) inventory.getContainer()).invokeIsFuel(stack.getRaw());
     }
 
     /**
@@ -70,7 +76,7 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
      * @since 1.8.4
      */
     public boolean isSmeltable(ItemStackHelper stack) {
-        return ((MixinAbstractFurnaceScreenHandler) inventory.getScreenHandler()).invokeIsSmeltable(stack.getRaw());
+        return ((MixinAbstractFurnaceScreenHandler) inventory.getContainer()).invokeIsSmeltable(stack.getRaw());
     }
 
     /**
@@ -134,7 +140,7 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
     }
 
     private PropertyDelegate getPropertyDelegate() {
-        return ((MixinAbstractFurnaceScreenHandler) inventory.getScreenHandler()).getPropertyDelegate();
+        return ((MixinAbstractFurnaceScreenHandler) inventory.getContainer()).getPropertyDelegate();
     }
 
     /**
@@ -143,7 +149,7 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
      * @since 1.8.4
      */
     public boolean isBurning() {
-        return inventory.getScreenHandler().isBurning();
+        return inventory.getContainer().isBurning();
     }
 
     @Override

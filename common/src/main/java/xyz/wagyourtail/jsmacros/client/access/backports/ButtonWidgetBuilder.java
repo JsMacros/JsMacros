@@ -33,6 +33,6 @@ public class ButtonWidgetBuilder {
     }
 
     public ButtonWidget build() {
-        return new ButtonWidget(x, y, width, height, text, pressAction);
+        return new ButtonWidget(x, y, width, height, text.asFormattedString(), pressAction);
     }
 }

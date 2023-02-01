@@ -321,7 +321,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
                 } catch (Throwable e) {
                     Core.getInstance().profile.logError(e);
                 }
-            }, getMessage().getRaw());
+            }, getMessage().getRaw().asFormattedString());
             b.set(new ButtonWidgetHelper(button, getZIndex()));
             return b.get();
         }

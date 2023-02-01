@@ -2,9 +2,9 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.*;
+import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 
@@ -307,9 +307,8 @@ public class Line implements RenderElement, Alignable<Line> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        matrices.push();
-        setupMatrix(matrices, x1, y1, 1, rotation, getScaledWidth(), getScaledHeight(), rotateCenter);
+    public void render(int mouseX, int mouseY, float delta) {
+//        setupMatrix(matrices, x1, y1, 1, rotation, getScaledWidth(), getScaledHeight(), rotateCenter);
 
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buf = tess.getBuffer();
@@ -319,7 +318,7 @@ public class Line implements RenderElement, Alignable<Line> {
         RenderSystem.defaultBlendFunc();
 
         buf.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-        Matrix4f matrix = matrices.peek().getModel();
+//        Matrix4f matrix = matrices.peek().getModel();
         //draw a line with the given width using triangle strips
 
         float halfWidth = width / 2;
@@ -336,16 +335,14 @@ public class Line implements RenderElement, Alignable<Line> {
         float b = (color & 0xFF) / 255f;
         float a = ((color >> 24) & 0xFF) / 255f;
 
-        buf.vertex(matrix, x1 + px, y1 + py, 0).color(r, g, b, a).next();
-        buf.vertex(matrix, x2 + px, y2 + py, 0).color(r, g, b, a).next();
-        buf.vertex(matrix, x1 - px, y1 - py, 0).color(r, g, b, a).next();
-        buf.vertex(matrix, x2 - px, y2 - py, 0).color(r, g, b, a).next();
+        buf.vertex(x1 + px, y1 + py, 0).color(r, g, b, a).next();
+        buf.vertex(x2 + px, y2 + py, 0).color(r, g, b, a).next();
+        buf.vertex(x1 - px, y1 - py, 0).color(r, g, b, a).next();
+        buf.vertex(x2 - px, y2 - py, 0).color(r, g, b, a).next();
         tess.draw();
 
         RenderSystem.enableTexture();
         RenderSystem.disableBlend();
-
-        matrices.pop();
     }
 
     public Line setParent(IDraw2D<?> parent) {

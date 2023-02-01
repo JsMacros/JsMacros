@@ -29,7 +29,7 @@ public class ParrotEntityHelper extends TameableEntityHelper<ParrotEntity> {
      * @since 1.8.4
      */
     public boolean isSitting() {
-        return base.isInSittingPose();
+        return base.isSitting();
     }
 
     /**

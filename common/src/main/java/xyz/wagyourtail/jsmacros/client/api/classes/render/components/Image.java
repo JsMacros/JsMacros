@@ -3,10 +3,10 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
+import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -334,9 +334,7 @@ public class Image implements RenderElement, Alignable<Image> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        matrices.push();
-        setupMatrix(matrices, x, y, 1, rotation, getWidth(), getHeight(), rotateCenter);
+    public void render(int mouseX, int mouseY, float delta) {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableBlend();
         mc.getTextureManager().bindTexture(imageid);
@@ -344,7 +342,6 @@ public class Image implements RenderElement, Alignable<Image> {
         BufferBuilder buf = tess.getBuffer();
 
         buf.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_TEXTURE_COLOR);
-        Matrix4f matrix = matrices.peek().getModel();
 
         float x1 = x;
         float y1 = y;
@@ -362,13 +359,12 @@ public class Image implements RenderElement, Alignable<Image> {
         float a = ((color >> 24) & 0xFF) / 255f;
 
         //draw a rectangle using triangle strips
-        buf.vertex(matrix, x1, y2, 0).texture(u1, v2).color(r, g, b, a).next(); // Top-left
-        buf.vertex(matrix, x2, y2, 0).texture(u2, v2).color(r, g, b, a).next(); // Top-right
-        buf.vertex(matrix, x1, y1, 0).texture(u1, v1).color(r, g, b, a).next(); // Bottom-left
-        buf.vertex(matrix, x2, y1, 0).texture(u2, v1).color(r, g, b, a).next(); // Bottom-right
+        buf.vertex(x1, y2, 0).texture(u1, v2).color(r, g, b, a).next(); // Top-left
+        buf.vertex(x2, y2, 0).texture(u2, v2).color(r, g, b, a).next(); // Top-right
+        buf.vertex(x1, y1, 0).texture(u1, v1).color(r, g, b, a).next(); // Bottom-left
+        buf.vertex(x2, y1, 0).texture(u2, v1).color(r, g, b, a).next(); // Bottom-right
         tess.draw();
 
-        matrices.pop();
         RenderSystem.disableBlend();
     }
 

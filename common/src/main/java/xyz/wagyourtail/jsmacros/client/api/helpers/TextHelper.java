@@ -105,7 +105,7 @@ public class TextHelper extends BaseHelper<Text> {
      * @since 1.8.4
      */
     public int getWidth() {
-        return MinecraftClient.getInstance().textRenderer.getWidth(base);
+        return MinecraftClient.getInstance().textRenderer.getStringWidth(base.asFormattedString());
     }
     
     /**

@@ -272,7 +272,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
         @Override
         public TextFieldWidgetHelper createWidget() {
             AtomicReference<TextFieldWidgetHelper> b = new AtomicReference<>(null);
-            TextFieldWidget textField = new TextFieldWidget(textRenderer, getX(), getY(), getWidth(), getHeight(), getMessage().getRaw());
+            TextFieldWidget textField = new TextFieldWidget(textRenderer, getX(), getY(), getWidth(), getHeight(), getMessage().getRaw().asFormattedString());
             textField.setChangedListener(text -> {
                 try {
                     if (action != null) {

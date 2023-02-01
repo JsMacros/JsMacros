@@ -1,18 +1,19 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
+import com.google.common.collect.Lists;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.container.Container;
+import net.minecraft.container.Slot;
+import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Hand;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -79,15 +80,42 @@ public class MixinClientPlayerInteractionManager {
         }
     }
 
-    @Inject(method = "clickSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/ScreenHandler;onSlotClick(IILnet/minecraft/screen/slot/SlotActionType;Lnet/minecraft/entity/player/PlayerEntity;)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onClickSlot(int syncId, int slotId, int button, SlotActionType actionType, PlayerEntity player, CallbackInfo ci, ScreenHandler screenHandler, DefaultedList<Slot> defaultedList, int size, List<ItemStack> list) {
+    private static boolean areEqual(ItemStack left, ItemStack right) {
+        if (left.isEmpty() && right.isEmpty()) {
+            return true;
+        } else {
+            return !left.isEmpty() && !right.isEmpty() ? isEqual(left, right) : false;
+        }
+    }
+    private static boolean isEqual(ItemStack left, ItemStack right) {
+        if (left.getCount() != right.getCount()) {
+            return false;
+        } else if (!left.getItem().equals(right.getItem())) {
+            return false;
+        } else if (left.getTag() == null && right.getTag() != null) {
+            return false;
+        } else {
+            return left.getTag() == null || left.getTag().equals(right.getTag());
+        }
+    }
+
+    @Inject(method = "clickSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/container/Container;onSlotClick(IILnet/minecraft/container/SlotActionType;Lnet/minecraft/entity/player/PlayerEntity;)Lnet/minecraft/item/ItemStack;", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
+    public void onClickSlot(int syncId, int slotId, int mouseButton, SlotActionType actionType, PlayerEntity player, CallbackInfoReturnable<ItemStack> cir, short s) {
         Int2ObjectMap<ItemStackHelper> oldItems = new Int2ObjectOpenHashMap<>();
         Int2ObjectMap<ItemStackHelper> newItems = new Int2ObjectOpenHashMap<>();
+
+        Container screenHandler = player.container;
+        List<Slot> defaultedList = screenHandler.slots;
+        int size = defaultedList.size();
+        List<ItemStack> list = Lists.newArrayListWithCapacity(size);
+        for (Slot slot : defaultedList) {
+            list.add(slot.getStack().copy());
+        }
 
         for (int idx = 0; idx < size; idx++) {
             ItemStack oldStack = list.get(idx);
             ItemStack newStack = defaultedList.get(idx).getStack();
-            if (!ItemStack.areEqual(oldStack, newStack)) {
+            if (!areEqual(oldStack, newStack)) {
                 oldItems.put(idx, new ItemStackHelper(oldStack));
                 newItems.put(idx, new ItemStackHelper(newStack));
             }

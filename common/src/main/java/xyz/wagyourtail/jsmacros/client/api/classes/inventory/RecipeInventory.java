@@ -1,22 +1,20 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
-import net.minecraft.client.gui.screen.ingame.AbstractFurnaceScreen;
-import net.minecraft.client.gui.screen.ingame.CraftingScreen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.gui.screen.recipebook.RecipeBookProvider;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
-import net.minecraft.client.recipebook.RecipeBookGroup;
+import net.minecraft.client.recipe.book.ClientRecipeBook;
+import net.minecraft.container.CraftingContainer;
 import net.minecraft.recipe.Recipe;
-import net.minecraft.screen.AbstractRecipeScreenHandler;
-
+import net.minecraft.recipe.RecipeType;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookResults;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.RecipeHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.RecipeHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.List;
@@ -24,18 +22,20 @@ import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static net.minecraft.recipe.RecipeType.CRAFTING;
+
 /**
  * @author Etheradon
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public abstract class RecipeInventory<T extends HandledScreen<? extends AbstractRecipeScreenHandler<?>>> extends Inventory<T> {
+public abstract class RecipeInventory<T extends ContainerScreen<? extends CraftingContainer<?>>> extends Inventory<T> {
 
-    private final AbstractRecipeScreenHandler<?> handler;
+    private final CraftingContainer<?> handler;
 
     protected RecipeInventory(T inventory) {
         super(inventory);
-        this.handler = inventory.getScreenHandler();
+        this.handler = inventory.getContainer();
     }
 
     /**
@@ -115,19 +115,20 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
      * @since 1.8.4
      */
     public String getCategory() {
-        switch (handler.getCategory()) {
-            case CRAFTING:
-                return "CRAFTING";
-            case FURNACE:
-                return "FURNACE";
-            case BLAST_FURNACE:
-                return "BLAST_FURNACE";
-            case SMOKER:
-                return "SMOKER";
-            default:
-                throw new IllegalArgumentException();
+        RecipeType<?> recipeType = getRecipeType();
+        if (recipeType.equals(CRAFTING)) {
+            return "CRAFTING";
+        } else if (recipeType.equals(RecipeType.SMELTING)) {
+            return "FURNACE";
+        } else if (recipeType.equals(RecipeType.BLASTING)) {
+            return "BLAST_FURNACE";
+        } else if (recipeType.equals(RecipeType.SMOKING)) {
+            return "SMOKER";
         }
+        throw new IllegalArgumentException();
     }
+
+    protected abstract RecipeType<?> getRecipeType();
 
     /**
      * @return
@@ -195,7 +196,9 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
             List<RecipeResultCollection> result = ((IRecipeBookResults) res).jsmacros_getResultCollections();
             recipes = result.stream().flatMap(e -> e.getRecipes(true).stream());
         } else {
-            List<RecipeResultCollection> results = recipeBookWidget.jsmacros_getRecipeBook().getResultsForGroup(RecipeBookGroup.method_30285(handler.getCategory()).get(0));
+            List<RecipeResultCollection> results = recipeBookWidget.jsmacros_getRecipeBook().getResultsForGroup(
+                ClientRecipeBook.getGroupsForContainer(handler).get(0)
+            );
             recipes = results.stream().filter(RecipeResultCollection::isInitialized).filter(RecipeResultCollection::hasFittingRecipes).flatMap(e -> e.getAllRecipes().stream());
         }
         return recipes.map(e -> new RecipeHelper(e, syncId)).collect(Collectors.toList());
@@ -204,12 +207,8 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
     @Nullable
     private IRecipeBookWidget getRecipeBookWidget() {
         IRecipeBookWidget recipeBookWidget;
-        if (inventory instanceof CraftingScreen) {
-            recipeBookWidget = (IRecipeBookWidget) ((CraftingScreen) inventory).getRecipeBookWidget();
-        } else if (inventory instanceof InventoryScreen) {
-            recipeBookWidget = (IRecipeBookWidget) ((InventoryScreen) inventory).getRecipeBookWidget();
-        } else if (inventory instanceof AbstractFurnaceScreen) {
-            recipeBookWidget = (IRecipeBookWidget) ((AbstractFurnaceScreen<?>) inventory).getRecipeBookWidget();
+        if (inventory instanceof RecipeBookProvider) {
+            recipeBookWidget = (IRecipeBookWidget) ((RecipeBookProvider) inventory).getRecipeBookWidget();
         } else {
             return null;
         }

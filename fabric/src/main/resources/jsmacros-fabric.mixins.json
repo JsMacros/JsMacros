@@ -6,7 +6,7 @@
         "access.MixinGameRenderer",
         "access.MixinInGameHud",
         "access.MixinKeyboard",
-        "access.MixinMouse"
+        "access.MixinMouse",
         "MixinStyle",
         "MixinEntity",
         "MixinTextRenderer"

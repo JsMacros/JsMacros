@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.*;
 import net.minecraft.client.render.entity.PlayerModelPart;
+import net.minecraft.client.resource.ClientResourcePackProfile;
 import net.minecraft.client.resource.language.LanguageDefinition;
 import net.minecraft.client.util.Window;
 import net.minecraft.network.packet.c2s.play.UpdateDifficultyLockC2SPacket;
@@ -33,7 +34,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
 
     private static final Map<String, SoundCategory> SOUND_CATEGORY_MAP = Arrays.stream(SoundCategory.values()).collect(Collectors.toMap(SoundCategory::getName, Function.identity()));
     private final MinecraftClient mc = MinecraftClient.getInstance();
-    private final ResourcePackManager rpm = mc.getResourcePackManager();
+    private final ResourcePackManager<ClientResourcePackProfile> rpm = mc.getResourcePackManager();
 
     public final SkinOptionsHelper skin = new SkinOptionsHelper(this);
     public final VideoOptionsHelper video = new VideoOptionsHelper(this);
@@ -116,7 +117,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.1.7
      */
     public List<String> getResourcePacks() {
-        return new ArrayList<>(rpm.getNames());
+        return rpm.getProfiles().stream().map(ResourcePackProfile::getName).collect(Collectors.toList());
     }
 
     /**
@@ -125,7 +126,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.2.0
      */
     public List<String> getEnabledResourcePacks() {
-        return new ArrayList<>(rpm.getEnabledNames());
+        return rpm.getEnabledProfiles().stream().map(ResourcePackProfile::getName).collect(Collectors.toList());
     }
 
     /**
@@ -275,7 +276,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.5.0
      */
     public int getCameraMode() {
-        return base.getPerspective().ordinal();
+        return base.perspective;
     }
 
     /**
@@ -283,7 +284,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.5.0
      */
     public OptionsHelper setCameraMode(int mode) {
-        base.setPerspective(Perspective.values()[mode]);
+        base.perspective = mode;
         return this;
     }
 
@@ -601,15 +602,10 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public String getGraphicsMode() {
-            switch (base.graphicsMode) {
-                case FAST:
-                    return "fast";
-                case FANCY:
-                    return "fancy";
-                case FABULOUS:
-                    return "fabulous";
-                default:
-                    throw new IllegalArgumentException();
+            if (base.fancyGraphics) {
+                return "fancy";
+            } else {
+                return "fast";
             }
         }
 
@@ -620,43 +616,33 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public VideoOptionsHelper setGraphicsMode(String mode) {
-            GraphicsMode newMode;
-            switch (mode.toUpperCase(Locale.ROOT)) {
-                case "FAST":
-                    newMode = GraphicsMode.FAST;
-                    break;
-                case "FANCY":
-                    newMode = GraphicsMode.FANCY;
-                    break;
-                case "FABULOUS":
-                    newMode = GraphicsMode.FABULOUS;
-                    break;
-                default:
-                    newMode = base.graphicsMode;
-                    break;
-            }
-            base.graphicsMode = newMode;
+//            GraphicsMode newMode;
+//            switch (mode.toUpperCase(Locale.ROOT)) {
+//                case "FAST":
+//                    newMode = GraphicsMode.FAST;
+//                    break;
+//                case "FANCY":
+//                    newMode = GraphicsMode.FANCY;
+//                    break;
+//                case "FABULOUS":
+//                    newMode = GraphicsMode.FABULOUS;
+//                    break;
+//                default:
+//                    newMode = base.graphicsMode;
+//                    break;
+//            }
+//            base.graphicsMode = newMode;
+            if (mode.toUpperCase(Locale.ROOT).equals("FANCY"))
+                base.fancyGraphics = true;
+            else if (mode.toUpperCase(Locale.ROOT).equals("FAST"))
+                base.fancyGraphics = false;
+            else
+                throw new IllegalArgumentException("Invalid graphics mode: " + mode);
             return this;
         }
 
-        /**
-         * @return the selected chunk builder mode.
-         *
-         * @since 1.8.4
-         */
-        public boolean getChunkBuilderMode() {
-            return base.syncChunkWrites;
-        }
-
-        /**
-         * @param mode the chunk builder mode to select. Must be either "none", "nearby" or
-         *             "player_affected"
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public VideoOptionsHelper setChunkBuilderMode(boolean mode) {
-            base.syncChunkWrites = mode;
+        public VideoOptionsHelper setGraphicsMode(boolean mode) {
+            base.fancyGraphics = mode;
             return this;
         }
 
@@ -676,7 +662,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public VideoOptionsHelper setSmoothLightningMode(String mode) {
-            AoMode newMode = Arrays.stream(AoMode.values()).filter(m -> m.getTranslationKey().equals(mode)).findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid mode: " + mode));
+            AoOption newMode = Arrays.stream(AoOption.values()).filter(m -> m.getTranslationKey().equals(mode)).findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid mode: " + mode));
             return this;
         }
 
@@ -954,16 +940,16 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public VideoOptionsHelper setParticleMode(String mode) {
-            ParticlesMode newMode;
+            ParticlesOption newMode;
             switch (mode.toUpperCase(Locale.ROOT)) {
                 case "MINIMAL":
-                    newMode = ParticlesMode.MINIMAL;
+                    newMode = ParticlesOption.MINIMAL;
                     break;
                 case "DECREASED":
-                    newMode = ParticlesMode.DECREASED;
+                    newMode = ParticlesOption.DECREASED;
                     break;
                 case "ALL":
-                    newMode = ParticlesMode.ALL;
+                    newMode = ParticlesOption.ALL;
                     break;
                 default:
                     newMode = base.particles;
@@ -1010,66 +996,6 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          */
         public VideoOptionsHelper enableEntityShadows(boolean val) {
             base.entityShadows = val;
-            return this;
-        }
-
-        /**
-         * @return the current distortion effect scale.
-         *
-         * @since 1.8.4
-         */
-        public double getDistortionEffect() {
-            return base.distortionEffectScale;
-        }
-
-        /**
-         * @param val the new distortion effect scale
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public VideoOptionsHelper setDistortionEffects(double val) {
-            base.distortionEffectScale = (float) val;
-            return this;
-        }
-
-        /**
-         * @return the current entity render distance.
-         *
-         * @since 1.8.4
-         */
-        public double getEntityDistance() {
-            return base.entityDistanceScaling;
-        }
-
-        /**
-         * @param val the new entity render distance
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public VideoOptionsHelper setEntityDistance(double val) {
-            base.entityDistanceScaling = (float) val;
-            return this;
-        }
-
-        /**
-         * @return the current fov value.
-         *
-         * @since 1.8.4
-         */
-        public double getFovEffects() {
-            return base.fovEffectScale;
-        }
-
-        /**
-         * @param val the new fov value
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public VideoOptionsHelper setFovEffects(double val) {
-            base.fovEffectScale = (float) val;
             return this;
         }
     }
@@ -1576,7 +1502,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public List<String> getKeys() {
-            return Arrays.stream(base.keysAll).map(KeyBinding::getTranslationKey).collect(Collectors.toList());
+            return Arrays.stream(base.keysAll).map(KeyBinding::getId).collect(Collectors.toList());
         }
 
         /**
@@ -1588,7 +1514,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
             Map<String, String> keyBinds = new HashMap<>(base.keysAll.length);
 
             for (KeyBinding key : base.keysAll) {
-                keyBinds.put(translatable(key.getTranslationKey()).getString(), key.getBoundKeyLocalizedText().getString());
+                keyBinds.put(translatable(key.getId()).getString(), key.getName());
             }
             return keyBinds;
         }
@@ -1621,7 +1547,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
                 } else {
                     categoryMap = entries.get(category);
                 }
-                categoryMap.put(translatable(key.getTranslationKey()).getString(), key.getBoundKeyLocalizedText().getString());
+                categoryMap.put(translatable(key.getId()).getString(), key.getName());
             }
             return entries;
         }
@@ -1804,46 +1730,6 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the current chat line spacing.
-         *
-         * @since 1.8.4
-         */
-        public double getChatLineSpacing() {
-            return base.chatLineSpacing;
-        }
-
-        /**
-         * @param val the new chat line spacing
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public ChatOptionsHelper setChatLineSpacing(double val) {
-            base.chatLineSpacing = val;
-            return this;
-        }
-
-        /**
-         * @return the current chat delay in seconds.
-         *
-         * @since 1.8.4
-         */
-        public double getChatDelay() {
-            return base.chatDelay;
-        }
-
-        /**
-         * @param val the new chat delay in seconds
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public ChatOptionsHelper setChatDelay(double val) {
-            base.chatDelay = val;
-            return this;
-        }
-
-        /**
          * @return the current chat width.
          *
          * @since 1.8.4
@@ -1909,7 +1795,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public String getNarratorMode() {
-            String narratorKey = ((TranslatableText) (base.narrator.getName())).getKey();
+            String narratorKey = base.narrator.getTranslationKey();
             return narratorKey.substring(narratorKey.lastIndexOf('.'));
         }
 
@@ -1921,19 +1807,19 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ChatOptionsHelper setNarratorMode(String mode) {
-            NarratorMode newMode;
+            NarratorOption newMode;
             switch (mode.toUpperCase(Locale.ROOT)) {
                 case "OFF":
-                    newMode = NarratorMode.OFF;
+                    newMode = NarratorOption.OFF;
                     break;
                 case "ALL":
-                    newMode = NarratorMode.ALL;
+                    newMode = NarratorOption.ALL;
                     break;
                 case "CHAT":
-                    newMode = NarratorMode.CHAT;
+                    newMode = NarratorOption.CHAT;
                     break;
                 case "SYSTEM":
-                    newMode = NarratorMode.SYSTEM;
+                    newMode = NarratorOption.SYSTEM;
                     break;
                 default:
                     newMode = base.narrator;
@@ -2009,7 +1895,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public String getNarratorMode() {
-            String narratorKey = ((TranslatableText) (base.narrator.getName())).getKey();
+            String narratorKey = base.narrator.getTranslationKey();
             return narratorKey.substring(narratorKey.lastIndexOf('.'));
         }
 
@@ -2021,19 +1907,19 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public AccessibilityOptionsHelper setNarratorMode(String mode) {
-            NarratorMode newMode;
+            NarratorOption newMode;
             switch (mode.toUpperCase(Locale.ROOT)) {
                 case "OFF":
-                    newMode = NarratorMode.OFF;
+                    newMode = NarratorOption.OFF;
                     break;
                 case "ALL":
-                    newMode = NarratorMode.ALL;
+                    newMode = NarratorOption.ALL;
                     break;
                 case "CHAT":
-                    newMode = NarratorMode.CHAT;
+                    newMode = NarratorOption.CHAT;
                     break;
                 case "SYSTEM":
-                    newMode = NarratorMode.SYSTEM;
+                    newMode = NarratorOption.SYSTEM;
                     break;
                 default:
                     newMode = base.narrator;
@@ -2124,46 +2010,6 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the current chat line spacing.
-         *
-         * @since 1.8.4
-         */
-        public double getChatLineSpacing() {
-            return base.chatLineSpacing;
-        }
-
-        /**
-         * @param val the new chat line spacing
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public AccessibilityOptionsHelper setChatLineSpacing(double val) {
-            base.chatLineSpacing = val;
-            return this;
-        }
-
-        /**
-         * @return the current chat delay in seconds.
-         *
-         * @since 1.8.4
-         */
-        public double getChatDelay() {
-            return base.chatDelay;
-        }
-
-        /**
-         * @param val the new chat delay in seconds
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public AccessibilityOptionsHelper setChatDelay(double val) {
-            base.chatDelay = val;
-            return this;
-        }
-
-        /**
          * @return {@code true} if auto jump is enabled, {@code false} otherwise.
          *
          * @since 1.8.4
@@ -2224,46 +2070,6 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
             base.sprintToggled = val;
             return this;
         }
-
-        /**
-         * @return the current distortion effect scale.
-         *
-         * @since 1.8.4
-         */
-        public double getDistortionEffect() {
-            return base.distortionEffectScale;
-        }
-
-        /**
-         * @param val the new distortion effect scale
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public AccessibilityOptionsHelper setDistortionEffect(double val) {
-            base.distortionEffectScale = (float) val;
-            return this;
-        }
-
-        /**
-         * @return the current fov effect scale.
-         *
-         * @since 1.8.4
-         */
-        public double getFovEffect() {
-            return base.fovEffectScale;
-        }
-
-        /**
-         * @param val the new fov effect scale
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public AccessibilityOptionsHelper setFovEffect(double val) {
-            base.fovEffectScale = (float) val;
-            return this;
-        }
     }
 
     /**
@@ -2314,13 +2120,10 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      */
     @Deprecated
     public int getGraphicsMode() {
-        switch (base.graphicsMode) {
-            case FABULOUS:
-                return 2;
-            case FANCY:
-                return 1;
-            default:
-                return 0;
+        if (base.fancyGraphics) {
+            return 1;
+        } else {
+            return 0;
         }
     }
 
@@ -2335,13 +2138,11 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     public OptionsHelper setGraphicsMode(int mode) {
         switch (mode) {
             case 2:
-                base.graphicsMode = GraphicsMode.FABULOUS;
-                return this;
             case 1:
-                base.graphicsMode = GraphicsMode.FANCY;
+                base.fancyGraphics = true;
                 return this;
             default:
-                base.graphicsMode = GraphicsMode.FAST;
+                base.fancyGraphics = false;
                 return this;
         }
     }

@@ -1,6 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
@@ -134,7 +136,11 @@ public class DirectionHelper extends BaseHelper<Direction> {
      * @since 1.8.4
      */
     public boolean pointsTo(double yaw) {
-        return base.method_30928((float) yaw);
+        float f = (float) yaw * (float) (Math.PI / 180.0);
+        float g = -MathHelper.sin(f);
+        float h = MathHelper.cos(f);
+        Vector3f vec = base.getUnitVector();
+        return vec.getX() * g + vec.getZ() * h > 0.0F;
     }
 
     @Override

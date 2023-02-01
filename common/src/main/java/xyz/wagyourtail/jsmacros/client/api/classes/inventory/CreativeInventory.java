@@ -6,7 +6,7 @@ import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.options.HotbarStorage;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.MathHelper;
 
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -25,11 +25,11 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
 
-    private final CreativeInventoryScreen.CreativeScreenHandler handler;
+    private final CreativeInventoryScreen.CreativeContainer handler;
 
     protected CreativeInventory(CreativeInventoryScreen inventory) {
         super(inventory);
-        this.handler = inventory.getScreenHandler();
+        this.handler = inventory.getContainer();
     }
 
     /**
@@ -138,7 +138,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
 
     public List<TextHelper> getTabTexts() {
 //        return ItemGroups.getGroups().stream().map(e -> new TextHelper(e.getDisplayName())).collect(Collectors.toList());
-        return Arrays.stream(ItemGroup.GROUPS).map(e -> new TextHelper(e.getTranslationKey())).collect(Collectors.toList());
+        return Arrays.stream(ItemGroup.GROUPS).map(e -> new TextHelper(new TranslatableText(e.getTranslationKey()))).collect(Collectors.toList());
     }
 
     private CreativeInventory selectTab(ItemGroup group) {

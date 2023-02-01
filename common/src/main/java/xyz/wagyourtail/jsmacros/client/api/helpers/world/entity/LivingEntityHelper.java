@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.RayTraceContext;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 
 import net.minecraft.entity.Entity;
@@ -14,7 +15,6 @@ import net.minecraft.item.BowItem;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 
@@ -143,7 +143,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @since 1.8.4
      */
     public int getDefaultHealth() {
-        return base.defaultMaxHealth;
+        return base.defaultMaximumHealth;
     }
 
     /**
@@ -235,7 +235,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
         Vec3d vec3d3 = vec3d.add(vec3d2);
         Box box = base.getBoundingBox().stretch(vec3d2).expand(1.0);
         
-        Function<Vec3d, Boolean> canSee = pos -> base.world.raycast(new RaycastContext(baseEyePos, pos, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, base)).getType() == HitResult.Type.MISS;
+        Function<Vec3d, Boolean> canSee = pos -> base.world.rayTrace(new RayTraceContext(baseEyePos, pos, RayTraceContext.ShapeType.COLLIDER, RayTraceContext.FluidHandling.NONE, base)).getType() == HitResult.Type.MISS;
 
         if (canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getEyeY(), rawEntity.getZ()))
                 || canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getY() + 0.5, rawEntity.getZ()))
@@ -248,10 +248,10 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
         }
 
         Box boundingBox = rawEntity.getBoundingBox();
-        double bHeight = boundingBox.maxY - boundingBox.minY;
+        double bHeight = boundingBox.y2 - boundingBox.y1;
         int steps = (int) (bHeight / 0.1);
-        double diffX = (boundingBox.maxX - boundingBox.minX) / 2;
-        double diffZ = (boundingBox.maxZ - boundingBox.minZ) / 2;
+        double diffX = (boundingBox.x2 - boundingBox.x1) / 2;
+        double diffZ = (boundingBox.z2 - boundingBox.z1) / 2;
         // Create 4 pillars around the mob to check for visibility
         for (int i = 0; i < steps; i++) {
             double y = i * 0.1;

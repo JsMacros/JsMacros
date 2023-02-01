@@ -572,13 +572,11 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     }
 
     @Override
-    public void render(MatrixStack matrixStack) {
-        if (matrixStack == null || !visible) return;
-
+    public void render() {
         synchronized (elements) {
             Iterator<RenderElement> iter = getElementsByZIndex();
             while (iter.hasNext()) {
-                iter.next().render(matrixStack, 0, 0, 0);
+                iter.next().render(0, 0, 0);
             }
         }
     }

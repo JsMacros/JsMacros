@@ -60,7 +60,7 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
     }
 
     private int getExperience(ItemStack stack) {
-        return EnchantmentHelper.get(stack).entrySet().stream().filter(e -> !e.getKey().isCursed()).mapToInt(e -> e.getKey().getMinPower(e.getValue())).sum();
+        return EnchantmentHelper.getEnchantments(stack).entrySet().stream().filter(e -> !e.getKey().isCursed()).mapToInt(e -> e.getKey().getMinimumPower(e.getValue())).sum();
     }
 
     @Override

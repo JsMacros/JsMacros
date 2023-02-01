@@ -8,10 +8,10 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Formatting;
 
 import com.google.gson.JsonParseException;
@@ -38,7 +38,7 @@ import static xyz.wagyourtail.jsmacros.client.access.backports.TextBackport.lite
  */
 @SuppressWarnings("unused")
 public class ItemStackHelper extends BaseHelper<ItemStack> {
-    private static final Style LORE_STYLE = Style.EMPTY.withColor(Formatting.DARK_PURPLE).withItalic(true);
+    private static final Style LORE_STYLE = new Style().setColor(Formatting.DARK_PURPLE).setItalic(true);
     protected static final MinecraftClient mc = MinecraftClient.getInstance();
 
     public ItemStackHelper(String id, int count) {
@@ -106,7 +106,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     public List<EnchantmentHelper> getEnchantments() {
         List<EnchantmentHelper> enchantments = new ArrayList<>();
-        net.minecraft.enchantment.EnchantmentHelper.get(base).forEach((enchantment, value) -> {
+        net.minecraft.enchantment.EnchantmentHelper.getEnchantments(base).forEach((enchantment, value) -> {
             enchantments.add(new EnchantmentHelper(enchantment, value));
         });
         return enchantments;
@@ -195,7 +195,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
                     for (int i = 0; i < nbtList.size(); i++) {
                         String string = nbtList.getString(i);
                         try {
-                            MutableText mutableText2 = Text.Serializer.fromJson(string);
+                            Text mutableText2 = Text.Serializer.fromJson(string);
                             if (mutableText2 != null) {
                                 Texts.setStyleIfAbsent(mutableText2, LORE_STYLE);
                                 texts.add(new TextHelper(mutableText2));
@@ -261,8 +261,8 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public double getAttackDamage() {
-        double damage = base.getAttributeModifiers(EquipmentSlot.MAINHAND).get(EntityAttributes.GENERIC_ATTACK_DAMAGE).stream().mapToDouble(EntityAttributeModifier::getValue).sum();
-        return damage + mc.player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+        double damage = base.getAttributeModifiers(EquipmentSlot.MAINHAND).get(EntityAttributes.ATTACK_DAMAGE.getId()).stream().mapToDouble(EntityAttributeModifier::getAmount).sum();
+        return damage + mc.player.getAttributeInstance(EntityAttributes.ATTACK_DAMAGE).getBaseValue();
     }
     
     /**
@@ -338,7 +338,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public List<String> getTags() {
-        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().getItems().getTagsFor(base.getItem()).stream().map(Identifier::toString).collect(Collectors.toList());
+        return MinecraftClient.getInstance().getNetworkHandler().getTagManager().items().getTagsFor(base.getItem()).stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
@@ -362,7 +362,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public boolean isWearable() {
-        return base.getItem() instanceof Wearable;
+        return base.getItem() instanceof ArmorItem;
     }
 
     /**
@@ -583,7 +583,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean areEnchantmentsHidden() {
-        return isFlagSet(ItemStack.TooltipSection.ENCHANTMENTS);
+        return isFlagSet(1);
     }
 
     /**
@@ -592,7 +592,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean areModifiersHidden() {
-        return isFlagSet(ItemStack.TooltipSection.MODIFIERS);
+        return isFlagSet(2);
     }
 
     /**
@@ -601,7 +601,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean isUnbreakableHidden() {
-        return isFlagSet(ItemStack.TooltipSection.UNBREAKABLE);
+        return isFlagSet(4);
     }
 
     /**
@@ -610,7 +610,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean isCanDestroyHidden() {
-        return isFlagSet(ItemStack.TooltipSection.CAN_DESTROY);
+        return isFlagSet(8);
     }
 
     /**
@@ -619,7 +619,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean isCanPlaceHidden() {
-        return isFlagSet(ItemStack.TooltipSection.CAN_PLACE);
+        return isFlagSet(16);
     }
 
     /**
@@ -628,7 +628,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean areAdditionalsHidden() {
-        return isFlagSet(ItemStack.TooltipSection.ADDITIONAL);
+        return isFlagSet(32);
     }
 
     /**
@@ -637,12 +637,12 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean isDyeHidden() {
-        return isFlagSet(ItemStack.TooltipSection.DYE);
+        return isFlagSet(64);
     }
 
-    protected boolean isFlagSet(ItemStack.TooltipSection section) {
+    protected boolean isFlagSet(int flag) {
         CompoundTag nbtCompound = base.getOrCreateTag();
-        return (nbtCompound.getInt("HideFlags") & section.getFlag()) != 0;
+        return (nbtCompound.getInt("HideFlags") & flag) != 0;
     }
     
 }

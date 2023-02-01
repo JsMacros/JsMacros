@@ -392,7 +392,7 @@ public class FChat extends BaseLibrary {
      * @since 1.8.4
      */
     public int getTextWidth(String text) {
-        return mc.textRenderer.getWidth(text);
+        return mc.textRenderer.getStringWidth(text);
     }
     
     /**

@@ -274,40 +274,43 @@ public class Item implements RenderElement, Alignable<Item> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        matrices.push();
-        setupMatrix(matrices, x, y, (float) scale, rotation, DEFAULT_ITEM_SIZE, DEFAULT_ITEM_SIZE, rotateCenter);
+    public void render(int mouseX, int mouseY, float delta) {
         if (item != null) {
+            RenderSystem.pushMatrix();
+            RenderSystem.scaled(scale, scale, 1);
+            RenderSystem.translated(x, y, 0);
+            RenderSystem.rotatef(rotation, 0, 0, 1);
+            RenderSystem.translated(-x, -y, 0);
+
             ItemRenderer i = mc.getItemRenderer();
-            i.renderGuiItemIcon(item, x, y);
-            if (overlay) {
-                i.renderGuiItemOverlay(mc.textRenderer, item, x, y, ovText);
-            }
+            i.renderGuiItemIcon(item,(int) (x / scale), (int) (y / scale));
+            if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, (int) (x / scale), (int) (y / scale), ovText);
+
+            RenderSystem.popMatrix();
         }
-        matrices.pop();
     }
 
     @Override
-    public void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render3D(int mouseX, int mouseY, float delta) {
         //TODO: cull and renderBack still not working, draw this to a FrameBuffer and render that instead.
-        matrices.push();
-        setupMatrix(matrices, x, y, (float) scale, rotation, DEFAULT_ITEM_SIZE, DEFAULT_ITEM_SIZE, rotateCenter);
 
         if (item != null) {
+
+            RenderSystem.pushMatrix();
+            RenderSystem.scalef((float) scale, (float) scale, 1);
+            RenderSystem.translatef(x, y, 0);
+            RenderSystem.rotatef(rotation, 0, 0, 1);
+            RenderSystem.translatef(-x, -y, 0);
+
             ItemRenderer i = mc.getItemRenderer();
-            matrices.push();
-            // Make the item really flat, but not too flat to avoid z-fighting
-            matrices.scale(1, 1, 0.005f);
-            RenderSystem.disableDepthTest();
-            i.renderGuiItemIcon(item, x, y);
-            matrices.pop();
-            i.zOffset = -199.9f;
-            if (overlay) {
-                i.renderGuiItemOverlay(mc.textRenderer, item, x, y, ovText);
-            }
+            i.zOffset = -100f;
+            i.renderGuiItemIcon(item,(int) (x / scale), (int) (y / scale));
+            i.zOffset = -200f;
+            if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, (int) (x / scale), (int) (y / scale), ovText);
             i.zOffset = 0;
+
+            RenderSystem.popMatrix();
         }
-        matrices.pop();
     }
 
     public Item setParent(IDraw2D<?> parent) {
@@ -448,7 +451,7 @@ public class Item implements RenderElement, Alignable<Item> {
          */
         public Builder item(String id) {
             this.itemStack = new ItemStackHelper(Registry.ITEM.get(RegistryHelper.parseIdentifier(id))
-                .getDefaultStack());
+                .getStackForRender());
             return this;
         }
 

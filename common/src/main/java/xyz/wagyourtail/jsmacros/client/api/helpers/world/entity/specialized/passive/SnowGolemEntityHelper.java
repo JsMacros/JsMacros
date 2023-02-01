@@ -30,7 +30,7 @@ public class SnowGolemEntityHelper extends MobEntityHelper<SnowGolemEntity> {
      * @since 1.8.4
      */
     public boolean isShearable() {
-        return base.isShearable();
+        return false;
     }
 
 }

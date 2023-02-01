@@ -25,7 +25,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
      * @since 1.8.4
      */
     public int getSelectedRecipeIndex() {
-        return inventory.getScreenHandler().getSelectedRecipe();
+        return inventory.getContainer().getSelectedRecipe();
     }
 
     /**
@@ -44,8 +44,8 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
      * @since 1.8.4
      */
     public StoneCutterInventory selectRecipe(int idx) {
-        if (idx >= 0 && idx < inventory.getScreenHandler().getAvailableRecipeCount()) {
-            inventory.getScreenHandler().onButtonClick(mc.player, idx);
+        if (idx >= 0 && idx < inventory.getContainer().getAvailableRecipeCount()) {
+            inventory.getContainer().onButtonClick(mc.player, idx);
             MinecraftClient.getInstance().interactionManager.clickButton(getCurrentSyncId(), idx);
         }
         return this;
@@ -57,7 +57,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
      * @since 1.8.4
      */
     public int getAvailableRecipeCount() {
-        return inventory.getScreenHandler().getAvailableRecipeCount();
+        return inventory.getContainer().getAvailableRecipeCount();
     }
 
     /**
@@ -66,7 +66,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
      * @since 1.8.4
      */
     public List<ItemStackHelper> getRecipes() {
-        return inventory.getScreenHandler().getAvailableRecipes().stream().map(recipe -> new ItemStackHelper(recipe.getOutput())).collect(Collectors.toList());
+        return inventory.getContainer().getAvailableRecipes().stream().map(recipe -> new ItemStackHelper(recipe.getOutput())).collect(Collectors.toList());
     }
 
     /**
@@ -75,7 +75,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
      * @since 1.8.4
      */
     public boolean canCraft() {
-        return inventory.getScreenHandler().canCraft();
+        return inventory.getContainer().canCraft();
     }
 
     @Override

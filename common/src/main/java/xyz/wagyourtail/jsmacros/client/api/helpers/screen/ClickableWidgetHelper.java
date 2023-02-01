@@ -9,6 +9,7 @@ import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.Alignable;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.RenderElement;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAbstractButtonWidget;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -84,7 +85,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      * @since 1.8.4
      */
     public int getHeight() {
-        return base.getHeight();
+        return ((MixinAbstractButtonWidget) base).getHeight();
     }
     
     /**
@@ -98,7 +99,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      */
      @Deprecated
     public B setLabel(String label) {
-        base.setMessage(literal(label));
+        base.setMessage(label);
         return (B) this;
     }
     
@@ -112,7 +113,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      * @return
      */
     public B setLabel(TextHelper helper) {
-        base.setMessage(helper.getRaw());
+        base.setMessage(helper.getRaw().asFormattedString());
         return (B) this;
     }
     
@@ -122,7 +123,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      * @return current button text.
      */
     public TextHelper getLabel() {
-        return new TextHelper(base.getMessage());
+        return new TextHelper(literal(base.getMessage()));
     }
     
     /**
@@ -258,10 +259,10 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        base.render(matrices, mouseX, mouseY, delta);
+    public void render(int mouseX, int mouseY, float delta) {
+        base.render(mouseX, mouseY, delta);
         if (base.isMouseOver(mouseX, mouseY) && tooltips.size() > 0) {
-            MinecraftClient.getInstance().currentScreen.renderTooltip(matrices, tooltips, mouseX, mouseY);
+            MinecraftClient.getInstance().currentScreen.renderTooltip(tooltips.stream().map(Text::asFormattedString).collect(Collectors.toList()), mouseX, mouseY);
         }
     }
     
@@ -272,7 +273,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
 
     @Override
     public String toString() {
-        return String.format("ButtonWidgetHelper:{\"message\": \"%s\"}", base.getMessage().getString());
+        return String.format("ButtonWidgetHelper:{\"message\": \"%s\"}", base.getMessage());
     }
 
     @Override

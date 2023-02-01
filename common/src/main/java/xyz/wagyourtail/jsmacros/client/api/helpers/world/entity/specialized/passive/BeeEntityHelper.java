@@ -28,7 +28,7 @@ public class BeeEntityHelper extends AnimalEntityHelper<BeeEntity> {
      * @since 1.8.4
      */
     public boolean isAngry() {
-        return base.hasAngerTime();
+        return base.isAngry();
     }
 
     /**

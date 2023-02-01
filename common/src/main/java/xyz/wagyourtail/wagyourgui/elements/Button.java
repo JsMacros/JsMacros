@@ -24,7 +24,7 @@ public class Button extends AbstractPressableButtonWidget {
     public boolean forceHover = false;
     
     public Button(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int highlightColor, int textColor, Text message, Consumer<Button> onPress) {
-        super(x, y, width, height, message);
+        super(x, y, width, height, message.asFormattedString());
         this.textRenderer = textRenderer;
         this.color = color;
         this.borderColor = borderColor;
@@ -78,7 +78,7 @@ public class Button extends AbstractPressableButtonWidget {
             // fill
             if (mouseX - x >= 0 && mouseX - x - width <= 0 && mouseY - y >= 0 && mouseY - y - height <= 0 && this.active || forceHover) {
                 hovering = true;
-                fill(matrices, x + 1, y + 1, x + width - 1, y + height - 1, highlightColor);
+                fill(x + 1, y + 1, x + width - 1, y + height - 1, highlightColor);
             } else {
                 hovering = false;
                 fill(x + 1, y + 1, x + width - 1, y + height - 1, color);

@@ -72,7 +72,7 @@ public class FoodComponentHelper extends BaseHelper<FoodComponent> {
      */
     public Map<StatusEffectHelper, Float> getStatusEffects() {
         Object2FloatArrayMap<StatusEffectHelper> effects = new Object2FloatArrayMap<>();
-        base.getStatusEffects().forEach(e -> effects.put(new StatusEffectHelper(e.getFirst()), e.getSecond().floatValue()));
+        base.getStatusEffects().forEach(e -> effects.put(new StatusEffectHelper(e.getKey()), e.getValue().floatValue()));
         return effects;
     }
 

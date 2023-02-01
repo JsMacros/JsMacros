@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.fabric.client.mixins.access;
 
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.ParentElement;
 import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,8 +12,8 @@ import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
 @Mixin(Keyboard.class)
 public class MixinKeyboard {
 
-    @Redirect(method = "method_1454", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;keyPressed(III)Z"))
-    private static boolean onKeyPressed(Screen instance, int keyCode, int scanCode, int modifiers) {
+    @Redirect(method = "method_1454", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/ParentElement;keyPressed(III)Z"))
+    private static boolean onKeyPressed(ParentElement instance, int keyCode, int scanCode, int modifiers) {
         ((IScreenInternal) instance).jsmacros_keyPressed(keyCode, scanCode, modifiers);
         return instance.keyPressed(keyCode, scanCode, modifiers);
     }

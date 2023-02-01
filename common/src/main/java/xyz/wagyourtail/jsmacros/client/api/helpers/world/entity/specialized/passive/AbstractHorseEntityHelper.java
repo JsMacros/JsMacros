@@ -77,7 +77,7 @@ public class AbstractHorseEntityHelper<T extends HorseBaseEntity> extends Animal
      * @since 1.8.4
      */
     public boolean canWearArmor() {
-        return base.hasArmorSlot();
+        return base.canEquip();
     }
 
     /**
@@ -143,7 +143,7 @@ public class AbstractHorseEntityHelper<T extends HorseBaseEntity> extends Animal
      * @since 1.8.4
      */
     public double getSpeedStat() {
-        return base.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+        return base.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).getBaseValue();
     }
 
     /**
@@ -181,7 +181,7 @@ public class AbstractHorseEntityHelper<T extends HorseBaseEntity> extends Animal
      * @since 1.8.4
      */
     public double getHealthStat() {
-        return base.getMaxHealth();
+        return base.getMaximumHealth();
     }
 
     /**

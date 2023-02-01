@@ -44,7 +44,7 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
 
     @Override
     public void removed() {
-        assert client != null;
+        assert minecraft != null;
     }
     
     @Override

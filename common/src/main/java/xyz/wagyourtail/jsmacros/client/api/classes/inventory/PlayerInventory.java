@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.recipe.RecipeType;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
 /**
@@ -22,6 +23,11 @@ public class PlayerInventory extends RecipeInventory<InventoryScreen> {
      */
     public ItemStackHelper getInput(int x, int y) {
         return getSlot(x + y * 2 + 1);
+    }
+
+    @Override
+    protected RecipeType<?> getRecipeType() {
+        return RecipeType.CRAFTING;
     }
 
     /**

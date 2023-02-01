@@ -1,18 +1,18 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
+import com.mojang.realmsclient.RealmsMainScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.SaveLevelScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.ServerInfo;
-import net.minecraft.client.realms.gui.screen.RealmsMainScreen;
 import net.minecraft.network.Packet;
 import net.minecraft.network.ServerAddress;
 import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.realms.RealmsBridge;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelStorageException;
 import net.minecraft.world.level.storage.LevelSummary;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
@@ -250,7 +250,8 @@ public class FClient extends PerExecLibrary {
             if (isInSingleplayer) {
                 mc.openScreen(new TitleScreen());
             } else if (isInRealm) {
-                mc.openScreen(new RealmsMainScreen(new TitleScreen()));
+                RealmsBridge realmsBridge = new RealmsBridge();
+                realmsBridge.switchToRealms(new TitleScreen());
             } else {
                 mc.openScreen(new MultiplayerScreen(new TitleScreen()));
             }

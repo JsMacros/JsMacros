@@ -48,7 +48,7 @@ public class AnnotatedCheckBox extends Button {
             // fill
             if (mouseX - x >= 0 && mouseX - x - width <= 0 && mouseY - y >= 0 && mouseY - y - height <= 0 && this.active || forceHover) {
                 hovering = true;
-                fill(matrices, x + width - height + 1, y + 1, x + width - 1, y + height - 1, highlightColor);
+                fill(x + width - height + 1, y + 1, x + width - 1, y + height - 1, highlightColor);
             } else {
                 hovering = false;
                 if (value) {
@@ -56,10 +56,10 @@ public class AnnotatedCheckBox extends Button {
                 }
             }
             // outline
-            fill(matrices, x + width - height, y, x + width - height + 1, y + height, borderColor);
-            fill(matrices, x + width - 1, y, x + width, y + height, borderColor);
-            fill(matrices, x + width - height + 1, y, x + width - 1, y + 1, borderColor);
-            fill(matrices, x + width - height + 1, y + height - 1, x + width - 1, y + height, borderColor);
+            fill(x + width - height, y, x + width - height + 1, y + height, borderColor);
+            fill(x + width - 1, y, x + width, y + height, borderColor);
+            fill(x + width - height + 1, y, x + width - 1, y + 1, borderColor);
+            fill(x + width - height + 1, y + height - 1, x + width - 1, y + height, borderColor);
         }
     }
 }

@@ -33,7 +33,7 @@ public class FishingBobberEntityHelper extends EntityHelper<FishingBobberEntity>
      * @since 1.8.4
      */
     public boolean isInOpenWater() {
-        return base.isInOpenWater();
+        return true;
     }
 
     /**
@@ -42,7 +42,7 @@ public class FishingBobberEntityHelper extends EntityHelper<FishingBobberEntity>
      * @since 1.8.4
      */
     public boolean hasEntityHooked() {
-        return base.getHookedEntity() != null;
+        return base.hookedEntity != null;
     }
 
     /**
@@ -51,7 +51,7 @@ public class FishingBobberEntityHelper extends EntityHelper<FishingBobberEntity>
      * @since 1.8.4
      */
     public EntityHelper<?> getHookedEntity() {
-        return hasEntityHooked() ? EntityHelper.create(base.getHookedEntity()) : null;
+        return hasEntityHooked() ? EntityHelper.create(base.hookedEntity) : null;
     }
 
 }

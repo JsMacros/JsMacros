@@ -31,7 +31,8 @@ public abstract class StateHelper<U extends State<?>> extends BaseHelper<U> {
     }
 
     public <T extends Comparable<?>> StateHelper<U> with(String property, String value) {
-        Optional<Property<?>> prop = base.getProperties().stream().filter(p -> p.getName().equals(property)).findFirst();
+
+        Optional<Property<?>> prop = base.getEntries().keySet().stream().filter(p -> p.getName().equals(property)).findFirst();
         if (!prop.isPresent()) {
             throw new IllegalArgumentException("Property " + property + " does not exist for this state");
         }

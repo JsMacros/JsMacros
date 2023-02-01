@@ -24,7 +24,7 @@ public class Slider extends AbstractButtonWidget {
     private final Consumer<Slider> action;
 
     public Slider(int x, int y, int width, int height, Text text, double value, Consumer<Slider> action, int steps) {
-        super(x, y, width, height, text);
+        super(x, y, width, height, text.asFormattedString());
         this.action = action;
         this.steps = (steps > 1 ? steps : 2) - 1;
         this.value = roundValue(value);
@@ -82,13 +82,13 @@ public class Slider extends AbstractButtonWidget {
     }
 
     @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void renderButton(int mouseX, int mouseY, float delta) {
         MinecraftClient lv = MinecraftClient.getInstance();
         lv.getTextureManager().bindTexture(WIDGETS_LOCATION);
         RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
         int offset = (isHovered() ? 2 : 1) * 20;
-        drawTexture(matrices, x + (int) (value * (double) (width - 8)), y, 0, 46 + offset, 4, 20);
-        drawTexture(matrices, x + (int) (value * (double) (width - 8)) + 4, y, 196, 46 + offset, 4, 20);
+        blit(x + (int) (value * (double) (width - 8)), y, 0, 46 + offset, 4, 20);
+        blit(x + (int) (value * (double) (width - 8)) + 4, y, 196, 46 + offset, 4, 20);
     }
 
     @Override
@@ -107,13 +107,13 @@ public class Slider extends AbstractButtonWidget {
         super.onDrag(mouseX, mouseY, deltaX, deltaY);
     }
 
+    @Override
     public void setMessage(String message) {
         setMessage(literal(message));
     }
 
-    @Override
     public void setMessage(Text message) {
-        super.setMessage(message);
+        super.setMessage(message.asFormattedString());
     }
 
 }

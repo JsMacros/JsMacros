@@ -1,16 +1,17 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
-import net.minecraft.client.gui.screen.ingame.CraftingScreen;
 
+import net.minecraft.client.gui.screen.ingame.CraftingTableScreen;
+import net.minecraft.recipe.RecipeType;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
 /**
  * @author Etheradon
  * @since 1.8.4
  */
-public class CraftingInventory extends RecipeInventory<CraftingScreen> {
+public class CraftingInventory extends RecipeInventory<CraftingTableScreen> {
 
-    protected CraftingInventory(CraftingScreen inventory) {
+    protected CraftingInventory(CraftingTableScreen inventory) {
         super(inventory);
     }
 
@@ -23,6 +24,11 @@ public class CraftingInventory extends RecipeInventory<CraftingScreen> {
      */
     public ItemStackHelper getInput(int x, int y) {
         return getSlot(x + y * 3 + 1);
+    }
+
+    @Override
+    protected RecipeType<?> getRecipeType() {
+        return RecipeType.CRAFTING;
     }
 
     @Override

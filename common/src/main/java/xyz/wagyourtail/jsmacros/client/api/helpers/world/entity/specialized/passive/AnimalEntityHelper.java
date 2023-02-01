@@ -25,7 +25,7 @@ public class AnimalEntityHelper<T extends AnimalEntity> extends MobEntityHelper<
      * @since 1.8.4
      */
     public boolean isFood(ItemHelper item) {
-        return base.isBreedingItem(item.getRaw().getDefaultStack());
+        return base.isBreedingItem(item.getRaw().getStackForRender());
     }
 
     /**

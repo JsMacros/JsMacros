@@ -14,25 +14,7 @@ public interface RenderElement extends Drawable {
 
     int getZIndex();
 
-    default void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        render(matrices, mouseX, mouseY, delta);
+    default void render3D(int mouseX, int mouseY, float delta) {
+        render(mouseX, mouseY, delta);
     }
-
-    default void setupMatrix(MatrixStack matrices, double x, double y, float scale, float rotation) {
-        setupMatrix(matrices, x, y, scale, rotation, 0, 0, false);
-    }
-
-    default void setupMatrix(MatrixStack matrices, double x, double y, float scale, float rotation, double width, double height, boolean rotateAroundCenter) {
-        matrices.translate(x, y, 0);
-        matrices.scale(scale, scale, 1);
-        if (rotateAroundCenter) {
-            matrices.translate(width / 2, height / 2, 0);
-        }
-        matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(rotation));
-        if (rotateAroundCenter) {
-            matrices.translate(-width / 2, -height / 2, 0);
-        }
-        matrices.translate(-x, -y, 0);
-    }
-
 }

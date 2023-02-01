@@ -11,7 +11,6 @@ import net.minecraft.client.util.ScreenshotUtils;
 import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.ClickEvent;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.hit.BlockHitResult;
@@ -212,7 +211,7 @@ public class FPlayer extends BaseLibrary {
         float k = mc.player.prevYaw;
         ((MixinGameRenderer) mc.gameRenderer).setBlockOutlineEnabled(false);
 
-        MutableText var12;
+        Text var12;
         try {
             ((MixinGameRenderer) mc.gameRenderer).setRenderingPanorama(true);
             ((MixinWorldRenderer) mc.worldRenderer).invokeLoadTransparencyShader();
@@ -262,7 +261,7 @@ public class FPlayer extends BaseLibrary {
 
             Text text = TextBackport.literal(directory.getName())
                 .formatted(Formatting.UNDERLINE)
-                .styled(style -> style.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, directory.getAbsolutePath())));
+                .styled(style -> style.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, directory.getAbsolutePath())));
             return TextBackport.translatable("screenshot.success", new Object[]{text});
         } catch (Exception var18) {
             var12 = TextBackport.translatable("screenshot.failure", new Object[]{var18.getMessage()});

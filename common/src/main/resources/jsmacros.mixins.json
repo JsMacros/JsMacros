@@ -5,7 +5,6 @@
     "client": [
         "access.MixinAbstractFurnaceScreenHandler",
         "access.MixinAbstractHorseEntity",
-        "access.MixinAbstractPiglinEntity",
         "access.MixinAdvancementManager",
         "access.MixinAdvancementProgress",
         "access.MixinAdvancementRewards",
@@ -80,6 +79,7 @@
         "defaultRequire": 1
     },
     "mixins": [
+        "access.MixinAbstractDonkeyEntity",
         "access.MixinFishEntity",
         "access.MixinFormatting",
         "access.MixinTeam"

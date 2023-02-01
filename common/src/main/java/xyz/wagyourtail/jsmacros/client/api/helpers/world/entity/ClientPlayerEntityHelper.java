@@ -25,8 +25,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.RaycastContext;
 
+import net.minecraft.world.RayTraceContext;
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownEntry;
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownManager;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
@@ -149,9 +149,9 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         double offset = Math.min(0.25, 0.01 * Math.max(distance, 0.5));
         for (Box bound : bounds) {
             Vec3d center = bound.getCenter();
-            double xDiff = (bound.maxX - bound.minX) / 2;
-            double yDiff = (bound.maxY - bound.minY) / 2;
-            double zDiff = (bound.maxZ - bound.minZ) / 2;
+            double xDiff = (bound.x2 - bound.x1) / 2;
+            double yDiff = (bound.y2 - bound.y1) / 2;
+            double zDiff = (bound.z2 - bound.z1) / 2;
             // Round the offsets down so they perfectly fit the bounds
             double xOffset = xDiff / Math.ceil(xDiff / offset);
             double yOffset = yDiff / Math.ceil(yDiff / offset);
@@ -166,7 +166,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
                         double y = center.y + ((yc & 1) == 0 ? 1 : -1) * yOffset * (yc / 2) * 0.999;
                         double z = center.z + ((zc & 1) == 0 ? 1 : -1) * zOffset * (zc / 2) * 0.999;
                         Vec3d eyeVec = base.getPos().add(0, base.getEyeHeight(base.getPose()), 0);
-                        BlockHitResult result = base.world.raycast(new RaycastContext(eyeVec, new Vec3d(x, y, z), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, base));
+                        BlockHitResult result = base.world.rayTrace(new RayTraceContext(eyeVec, new Vec3d(x, y, z), RayTraceContext.ShapeType.OUTLINE, RayTraceContext.FluidHandling.NONE, base));
                         if (result.getType() == HitResult.Type.BLOCK && result.getBlockPos().equals(pos.getRaw())) {
                             Vec3D vec = new Vec3D(eyePos, new Pos3D(x, y, z));
                             lookAt(vec.getYaw(), vec.getPitch());
@@ -649,7 +649,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         if (hardness == -1) {
             return -1;
         }
-        float speedMultiplier = item.getMiningSpeedMultiplier(state);
+        float speedMultiplier = item.getMiningSpeed(state);
         if (speedMultiplier > 1.0F) {
             int efficiency = EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, item);
             if (efficiency > 0 && !item.isEmpty()) {
@@ -675,14 +675,14 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
                     break;
             }
         }
-        if (player.isSubmergedIn(FluidTags.WATER) && EnchantmentHelper.getLevel(Enchantments.AQUA_AFFINITY, item) == 0) {
+        if (player.isSubmergedIn(FluidTags.WATER, true) && EnchantmentHelper.getLevel(Enchantments.AQUA_AFFINITY, item) == 0) {
             speedMultiplier /= 5;
         }
-        if (!player.isOnGround()) {
+        if (!player.onGround) {
             speedMultiplier /= 5;
         }
         float damage = speedMultiplier / hardness;
-        damage /= (!state.isToolRequired() || item.isEffectiveOn(state)) ? 30 : 100;
+        damage /= (state.getMaterial().canBreakByHand() || item.isEffectiveOn(state)) ? 30 : 100;
         if (damage >= 1) {
             return 0;
         }

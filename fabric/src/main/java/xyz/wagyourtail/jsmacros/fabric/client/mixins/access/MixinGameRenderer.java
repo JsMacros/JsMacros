@@ -23,11 +23,11 @@ public class MixinGameRenderer {
     @Final
     private MinecraftClient client;
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V"))
-    private void onRender(Screen instance, MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        instance.render(matrices, mouseX, mouseY, delta);
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(IIF)V"))
+    private void onRender(Screen instance, int mouseX, int mouseY, float delta) {
+        instance.render(mouseX, mouseY, delta);
         if (!(client.currentScreen instanceof ScriptScreen)) {
-            ((IScreenInternal) instance).jsmacros_render(matrices, mouseX, mouseY, delta);
+            ((IScreenInternal) instance).jsmacros_render(mouseX, mouseY, delta);
         }
     }
     
@@ -36,7 +36,7 @@ public class MixinGameRenderer {
         client.getProfiler().swap("jsmacros_draw3d");
         for (Draw3D d : ImmutableSet.copyOf(FHud.renders)) {
             try {
-                d.render(matrix, tickDelta);
+                d.render(tickDelta);
             } catch (Throwable e) {
                 e.printStackTrace();
             }

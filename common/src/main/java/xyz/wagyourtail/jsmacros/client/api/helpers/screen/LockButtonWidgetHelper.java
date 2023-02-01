@@ -45,7 +45,7 @@ public class LockButtonWidgetHelper extends ClickableWidgetHelper<LockButtonWidg
 
     @Override
     public String toString() {
-        return String.format("LockButtonWidgetHelper:{\"message\": \"%s\", \"locked\": %b}", base.getMessage().getString(), isLocked());
+        return String.format("LockButtonWidgetHelper:{\"message\": \"%s\", \"locked\": %b}", base.getMessage(), isLocked());
     }
 
     /**

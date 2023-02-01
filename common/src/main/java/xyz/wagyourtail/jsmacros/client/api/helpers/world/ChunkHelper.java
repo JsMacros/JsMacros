@@ -40,7 +40,8 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @since 1.8.4
      */
     public BlockPosHelper getStartingBlock() {
-        return new BlockPosHelper(base.getPos().getStartPos());
+        ChunkPos pos = base.getPos();
+        return new BlockPosHelper(new BlockPos(pos.getStartX(), 0, pos.getStartZ()));
     }
 
     /**
@@ -126,7 +127,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      */
     public String getBiome(int xOffset, int y, int zOffset) {
         ChunkPos pos = base.getPos();
-        return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(new BlockPos(pos.getStartX() + xOffset, y, pos.getStartZ() + zOffset))).toString();
+        return Registry.BIOME.getId(MinecraftClient.getInstance().world.getBiome(new BlockPos(pos.getStartX() + xOffset, y, pos.getStartZ() + zOffset))).toString();
     }
 
     /**
