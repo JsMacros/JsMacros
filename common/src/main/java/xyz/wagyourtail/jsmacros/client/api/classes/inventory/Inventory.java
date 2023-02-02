@@ -547,7 +547,7 @@ public class Inventory<T extends HandledScreen<?>> {
      */
     public Pos2D getSlotPos(int slot) {
         Slot s = handler.getSlot(slot);
-        return new Pos2D(s.x, s.y);
+        return new Pos2D(s.x - ((IInventory) inventory).getX(), s.y - ((IInventory) inventory).getY());
     }
     
     private Map<String, int[]> getMapInternal() {
