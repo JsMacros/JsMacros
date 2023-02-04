@@ -18,6 +18,7 @@ configurations {
 minecraft {
     forge {
         mixinConfig = ["jsmacros-forge.mixins.json", "jsmacros.mixins.json"]
+        devNamespace = "yarn"
         devFallbackNamespace = "intermediary"
     }
 
@@ -91,8 +92,6 @@ remapJar {
         include '*'
         into "META-INF/jsmacrosdeps"
     }
-
-    remapThroughOfficial = true
 }
 
 jar {

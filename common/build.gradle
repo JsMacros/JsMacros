@@ -37,8 +37,7 @@ jar {
 }
 
 remapJar {
-    targetNamespace = "named"
-    fallbackTargetNamespace = "intermediary"
+    target = "yarn"
 }
 
 task generatePyDoc(type: Javadoc) {
