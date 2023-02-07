@@ -19,6 +19,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
+import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 
@@ -535,6 +536,18 @@ public class Inventory<T extends HandledScreen<?>> {
             }
         }
         return null;
+    }
+
+
+
+    /**
+     * @return the x/y position of the specified slot index
+     *
+     * @since 1.8.4
+     */
+    public Pos2D getSlotPos(int slot) {
+        Slot s = handler.getSlot(slot);
+        return new Pos2D(s.x - ((IInventory) inventory).getX(), s.y - ((IInventory) inventory).getY());
     }
     
     private Map<String, int[]> getMapInternal() {

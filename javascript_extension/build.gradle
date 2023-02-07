@@ -55,6 +55,5 @@ test {
 }
 
 remapJar {
-    targetNamespace = "named"
-    fallbackTargetNamespace = "intermediary"
+    target = "yarn"
 }

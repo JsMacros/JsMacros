@@ -14,7 +14,17 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
     public PlayerEntityHelper(T e) {
         super(e);
     }
-    
+
+    /**
+     * get player's actual name. (not display name)
+     * @since 1.8.4
+     */
+    public String getPlayerName() {
+        return base.getGameProfile().getName();
+    }
+
+
+
     /**
      * @since 1.0.3
      * @see PlayerAbilitiesHelper

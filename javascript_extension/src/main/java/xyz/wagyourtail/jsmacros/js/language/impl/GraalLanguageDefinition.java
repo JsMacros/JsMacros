@@ -50,6 +50,7 @@ public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptCo
         build.currentWorkingDirectory(currentDir.toPath().toAbsolutePath());
 
         if (isJsInstalled) {
+            build.option("js.commonjs-require", "true");
             build.option("js.commonjs-require-cwd", currentDir.getCanonicalPath());
         }
 
