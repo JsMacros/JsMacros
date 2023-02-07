@@ -55,6 +55,7 @@ public class JsMacrosThreadPool {
 
         public void runTask(Runnable task) {
             synchronized (this) {
+                this.setContextClassLoader(Thread.currentThread().getContextClassLoader());
                 this.task = task;
                 notify();
             }
