@@ -17,7 +17,10 @@ public class EventBlockUpdate implements BaseEvent {
     public final String updateType;
     
     public EventBlockUpdate(IBlockState block, TileEntity blockEntity, BlockPos blockPos, String updateType) {
-        this.block = new BlockDataHelper(block, blockEntity, blockPos);
+        if (block != null)
+            this.block = new BlockDataHelper(block, blockEntity, blockPos);
+        else
+            this.block = null;
         this.updateType = updateType;
         
         profile.triggerEvent(this);
