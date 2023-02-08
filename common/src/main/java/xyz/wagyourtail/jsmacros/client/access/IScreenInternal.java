@@ -18,9 +18,6 @@ public interface IScreenInternal {
 
     void jsmacros_keyPressed(int keyCode, int scanCode, int modifiers);
 
-    void jsmacros_mouseScrolled(int mouseX, int mouseY, int amount);
-    //    void jsmacros_charTyped(char chr, int modifiers);
-
     GuiButton getFocused();
 
     boolean mouseScrolled(int mouseX, int mouseY, int amount);
