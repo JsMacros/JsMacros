@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.math;
 
+import java.util.Iterator;
+
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
@@ -227,6 +229,11 @@ public class Pos3D extends Pos2D {
      */
     public Vec3d toMojangDoubleVector() {
         return new Vec3d(x, y, z);
+    }
+
+    @Override
+    public Iterator<Double> iterator() {
+        return new PosIterator(x, y, z);
     }
 
 }

@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.math;
 
+import java.util.Iterator;
+
 import net.minecraft.util.math.MathHelper;
 import org.joml.Vector3f;
 
@@ -234,6 +236,11 @@ public class Vec3D extends Vec2D {
      */
     public Vector3f toMojangFloatVector() {
         return new Vector3f((float) (x2 - x1), (float) (y2 - y1), (float) (z2 - z1));
+    }
+
+    @Override
+    public Iterator<Double> iterator() {
+        return new PosIterator(x1, y1, z1, x2, y2, z2);
     }
 
 }

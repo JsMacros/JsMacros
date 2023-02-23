@@ -1,10 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.math;
 
+import java.util.Iterator;
+
 /**
  * @author Wagyourtail
  * @since 1.2.6 [citation needed]
  */
-public class Vec2D {
+public class Vec2D implements Iterable<Double> {
     public double x1;
     public double y1;
     public double x2;
@@ -150,6 +152,11 @@ public class Vec2D {
 
     public Vec3D to3D() {
         return new Vec3D(x1, y1, 0, x2, y2, 0);
+    }
+
+    @Override
+    public Iterator<Double> iterator() {
+        return new PosIterator(x1, y1, x2, y2);
     }
 
 }
