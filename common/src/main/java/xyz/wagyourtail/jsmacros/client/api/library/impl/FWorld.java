@@ -780,6 +780,18 @@ public class FWorld extends BaseLibrary {
         assert mc.world != null;
         return mc.world.getRegistryManager().get(RegistryKeys.BIOME).getId(mc.world.getBiome(new BlockPos(x, 10, z)).value()).toString();
     }
+
+    /**
+     * @since 1.8.4
+     * @param x
+     * @param y
+     * @param z
+     * @return biome at specified location, only works if the block/chunk is loaded.
+     */
+    public String getBiomeAt(int x, int y, int z) {
+        assert mc.world != null;
+        return mc.world.getRegistryManager().get(RegistryKeys.BIOME).getId(mc.world.getBiome(new BlockPos(x, y, z)).value()).toString();
+    }
     
     /**
      * @since 1.2.7
