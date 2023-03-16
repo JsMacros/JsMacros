@@ -107,14 +107,9 @@ public class GraalExtension implements Extension {
                     message += ": " + intMessage;
                 }
             } else {
-                try {
-                    message = GuestExceptionSimplifier.simplifyException(ex);
-                    if (message == null) {
-                        message = "UnknownGuestException";
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    message = ex.getMessage();
+                message = GuestExceptionSimplifier.simplifyException(ex);
+                if (message == null) {
+                    message = "UnknownGuestException";
                 }
             }
             return new BaseWrappedException<>(ex, message, wrapLocation(((PolyglotException) ex).getSourceLocation()), frames.hasNext() ? internalWrap(frames.next(), frames) : null);

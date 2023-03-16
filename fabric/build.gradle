@@ -3,7 +3,6 @@ plugins {
 }
 
 archivesBaseName = archivesBaseName + "-FABRIC"
-
 minecraft {
     fabric()
 }

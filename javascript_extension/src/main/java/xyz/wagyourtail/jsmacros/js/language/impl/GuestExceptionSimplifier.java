@@ -34,20 +34,24 @@ public final class GuestExceptionSimplifier {
      * @param ex the exception to simplify
      * @return the simplified exception if it is a known type, otherwise the original exception
      */
-    public static String simplifyException(Throwable ex) throws ClassNotFoundException {
-        if (ex instanceof PolyglotException) {
-            PolyglotException p = (PolyglotException) ex;
-            if (p.isGuestException()) {
-                Object guest = ValueAccessor.getReceiver(((PolyglotException) ex).getGuestObject());
-                if (guest instanceof AbstractTruffleException) {
-                    Throwable cause = ((AbstractTruffleException) guest).getCause();
-                    if (cause instanceof ArityException) {
-                        return simplifyArityError(ex.getMessage(), (ArityException) cause);
-                    } else if (cause instanceof UnsupportedTypeException) {
-                        return simplifyOverloadError(ex.getMessage(), (UnsupportedTypeException) cause);
+    public static String simplifyException(Throwable ex) {
+        try {
+            if (ex instanceof PolyglotException) {
+                PolyglotException p = (PolyglotException) ex;
+                if (p.isGuestException()) {
+                    Object guest = ValueAccessor.getReceiver(((PolyglotException) ex).getGuestObject());
+                    if (guest instanceof AbstractTruffleException) {
+                        Throwable cause = ((AbstractTruffleException) guest).getCause();
+                        if (cause instanceof ArityException) {
+                            return simplifyArityError(ex.getMessage(), (ArityException) cause);
+                        } else if (cause instanceof UnsupportedTypeException) {
+                            return simplifyOverloadError(ex.getMessage(), (UnsupportedTypeException) cause);
+                        }
                     }
                 }
             }
+        } catch (Throwable t) {
+            System.err.println("Failed to simplify exception: " + t.getMessage());
         }
         return ex.getMessage();
     }
