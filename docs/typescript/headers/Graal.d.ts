@@ -1,57 +1,70 @@
 
-declare function load(source: string | Java.java.io.File | Java.java.net.URL):void;
-declare function loadWithNewGlobal(source: string | Java.java.io.File | Java.java.net.URL, arguments: any):void;
-declare function print(...arg: any):void;
-declare function printerr(...arg: any):void;
-declare function quit(status: number):void;
-declare function read(file: string |  Java.java.io.File | Java.java.net.URL):string;
-declare function readbuffer(file: string | Java.java.io.File | Java.java.net.URL):ArrayBuffer;
-/**
- * reads a line of input from stdin
- */
-declare function readline():string;
+type _ = { [none: never]: never }; // to trick vscode to rename types
+
+type JavaObject                    = _javatypes.java.lang.Object & _;
+type JavaClass<T = any>            = _javatypes.java.lang.Class<T>;
+type JavaArray<T = any>            = _javatypes.java.lang.Array<T>;
+type JavaCollection<T = any>       = _javatypes.java.util.Collection<T>;
+type JavaList<T = any>             = _javatypes.java.util.List<T>;
+type JavaSet<T = any>              = _javatypes.java.util.Set<T>;
+type JavaMap<K = any, V = any>     = _javatypes.java.util.Map<K, V>;
+type JavaHashMap<K = any, V = any> = _javatypes.java.util.HashMap<K, V>;
+
+declare function load(source: string | _javatypes.java.io.File | _javatypes.java.net.URL): void;
+declare function loadWithNewGlobal(source: string | _javatypes.java.io.File | _javatypes.java.net.URL, arguments: any): void;
+declare function print(...arg: any): void;
+// declare function printerr(...arg: any): void;
+// declare function quit(status: number): void;
+// declare function read(file: string |  _javatypes.java.io.File | _javatypes.java.net.URL): string;
+// declare function readbuffer(file: string | _javatypes.java.io.File | _javatypes.java.net.URL): ArrayBuffer;
+// /**
+//  * reads a line of input from stdin
+//  */
+// declare function readline(): string;
 
 /**
  * Information about the graal runner.
  * Can someone tell me if this should be a namespace, I thought since it only had values in it, it would be best to declare this way.
  */
 declare const Graal: {
-    readonly versionJS: string;
+    readonly language: string;
     readonly versionGraalVM: string;
-    readonly isGraalRuntime: boolean;
-}
-
-/**
- * Java namespace for graal's Java functions.
- */
-declare namespace Java {
-    export function type<T>(className: string):_javatypes.java.lang.Class<T> & { new(...values): T }
-    export function from<T>(javaData: Array<T> | java.util.Collection<T>):T[];
-    export function to<T extends Java.Object>(jsData: any, toType: Java.Class<T>):T;
-    export function isJavaObject(obj: Java.Object):boolean;
-    export function isType(obj: Java.Class<any>):boolean;
-    export function typeName(obj: Java.Object):string | undefined;
-    export function isJavaFunction(fn: Java.Object):boolean;
-    export function isScriptObject(obj: any):boolean;
-    export function isScriptFunction(fn: Function):boolean;
-    export function addToClasspath(location: string):void;
-
-
+    readonly versionECMAScript: number;
+    isGraalRuntime(): boolean;
 }
 
 /**
  * This would be a namespace as well, but export/import are reserved terms in typescript
  */
 declare const Polyglot: {
-    export(key: string, value: any):void;
-    import(key: string):any;
+    export(key: string, value: any): void;
+    import(key: string): any;
 
-    eval(languageId: string, sourceCode: string):any;
-    evalFile(languageId: string, sourceFileName: string):() => any;
+    eval(languageId: string, sourceCode: string): any;
+    evalFile(languageId: string, sourceFileName: string): () => any;
 }
 
 /**
- *
+ * Java namespace for graal's Java functions.
+ */
+declare namespace Java {
+    export function type<T>(className: string): JavaClass<T> & { new(...values): T };
+    export function type<C extends keyof JavaTypeDict>(className: C): JavaTypeDict[C];
+    export function from<T>(javaData: JavaArray<T>): T[];
+    export function from<T>(javaData: JavaList<T>): T[];
+    export function from<T>(javaData: JavaCollection<T>): T[];
+    export function to<T>(jsArray: any[]): JavaArray<T>;
+    export function to<T extends JavaObject>(jsData: object, toType: JavaClass<T>): T; // does this really exist
+    export function isJavaObject(obj: JavaObject): boolean;
+    export function isType(obj: JavaClass): boolean;
+    export function typeName(obj: JavaObject): string | undefined;
+    export function isJavaFunction(fn: JavaObject): boolean;
+    export function isScriptObject(obj: any): boolean;
+    export function isScriptFunction(fn: Function): boolean;
+    export function addToClasspath(location: string): void;
+}
+
+/**
  * Declare the java typings.
  * java typings should be namespaced by their package name, for organizational/asthetic reasons,
  * java.lang classes should probably get upstreamed to this file.
@@ -61,14 +74,14 @@ declare const Polyglot: {
  * It would be nice if any libraries that add java classes / functions, used in paramethers or return values,
  * would also include the classes in the same way with a re-declaration to extend the namespace in the libraries typescript file.
  */
-declare namespace Java {
-    export function type(className: "java.lang.Class"):_javatypes.java.lang.Class<_javatypes.java.lang.Class> & _javatypes.java.lang.Class.static
-    export function type(className: "java.lang.Object"):_javatypes.java.lang.Class<_javatypes.java.lang.Object> & _javatypes.java.lang.Object.static
-    export function type(className: "java.lang.StackTraceElement"):_javatypes.java.lang.Class<_javatypes.java.lang.StackTraceElement> & _javatypes.java.lang.StackTraceElement.static
-    export function type(className: "java.lang.Throwable"):_javatypes.java.lang.Class<_javatypes.java.lang.Throwable> & _javatypes.java.lang.Throwable.static
-    export function type(className: "java.io.File"):_javatypes.java.lang.Class<_javatypes.java.io.File> & _javatypes.java.io.File.static
-    export function type(className: "java.net.URI"):_javatypes.java.lang.Class<_javatypes.java.net.URI> & _javatypes.java.net.URI.static
-    export function type(className: "java.net.URL"):_javatypes.java.lang.Class<_javatypes.java.net.URL> & _javatypes.java.net.URL.static
+interface JavaTypeDict {
+    "java.lang.Class": JavaClass<JavaClass> & _javatypes.java.lang.Class.static;
+    "java.lang.Object": JavaClass<JavaObject> & _javatypes.java.lang.Object.static;
+    "java.lang.StackTraceElement": JavaClass<_javatypes.java.lang.StackTraceElement> & _javatypes.java.lang.StackTraceElement.static;
+    "java.lang.Throwable": JavaClass<_javatypes.java.lang.Throwable> & _javatypes.java.lang.Throwable.static;
+    "java.io.File": JavaClass<_javatypes.java.io.File> & _javatypes.java.io.File.static;
+    "java.net.URI": JavaClass<_javatypes.java.net.URI> & _javatypes.java.net.URI.static;
+    "java.net.URL": JavaClass<_javatypes.java.net.URL> & _javatypes.java.net.URL.static;
 }
 
 
@@ -78,26 +91,26 @@ declare namespace _javatypes {
             interface Class<T> extends Object {}
             namespace Class {
                 interface static {
-                    forName(className: string): Class<?>
-                    forName(name: string, initialize: boolean, loader: ClassLoader): Class<?>
-                    forName(module: Module, name: string): Class<?>
+                    forName(className: string): JavaClass<?>;
+                    forName(name: string, initialize: boolean, loader: ClassLoader): JavaClass<?>;
+                    forName(module: Module, name: string): JavaClass<?>;
                 }
             }
 
             interface Object {
-                getClass(): Class<Object>
-                hashCode(): number
-                equals(obj: Object): object
-                toString(): string
-                notify(): void
-                notifyAll(): void
-                wait(): void
-                wait(var1: number): void
-                wait(timeoutMillis: number, nanos: number): void
+                getClass(): JavaClass<JavaObject>;
+                hashCode(): number;
+                equals(obj: JavaObject): object;
+                toString(): string;
+                notify(): void;
+                notifyAll(): void;
+                wait(): void;
+                wait(var1: number): void;
+                wait(timeoutMillis: number, nanos: number): void;
             }
             namespace Object {
                 interface static {
-                    new (): Object
+                    new (): JavaObject;
                 }
             }
 
@@ -107,7 +120,7 @@ declare namespace _javatypes {
             }
 
             interface Comparable<T> extends Interface {
-                compareTo(var1: T): number
+                compareTo(var1: T): number;
             }
             namespace Comparable {
                 interface static {}
@@ -122,44 +135,43 @@ declare namespace _javatypes {
             }
 
             interface StackTraceElement extends Object, java.io.Serializable {
-                getFileName():string;
-                getLineNumber():number;
-                getClassName():string;
-                getMethodName():string;
-                isNativeMethod():boolean;
-                toString():string;
-                equals(arg0: any):boolean;
-                hashCode():number;
+                getFileName(): string;
+                getLineNumber(): number;
+                getClassName(): string;
+                getMethodName(): string;
+                isNativeMethod(): boolean;
+                toString(): string;
+                equals(arg0: any): boolean;
+                hashCode(): number;
             }
             namespace StackTraceElement {
                 interface static {
-                    new (declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement
-                    new (classLoaderName: string, moduleName: string, moduleVersion: string, declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement
+                    new (declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement;
+                    new (classLoaderName: string, moduleName: string, moduleVersion: string, declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement;
                 }
             }
 
             interface Throwable extends Object, java.io.Serializable, Error {
-                getMessage():string;
-                getLocalizedMessage():string;
-                getCause():Throwable;
-                initCause(arg0: Throwable):Throwable;
-                toString():string;
-                fillInStackTrace():Throwable;
-                getStackTrace():Array<StackTraceElement>;
-                setStackTrace(arg0: Array<StackTraceElement>):void;
-                addSuppressed(arg0: Throwable):void;
-                getSuppressed():Array<Throwable>;
+                getMessage(): string;
+                getLocalizedMessage(): string;
+                getCause(): Throwable;
+                initCause(arg0: Throwable): Throwable;
+                toString(): string;
+                fillInStackTrace(): Throwable;
+                getStackTrace(): Array<StackTraceElement>;
+                setStackTrace(arg0: Array<StackTraceElement>): void;
+                addSuppressed(arg0: Throwable): void;
+                getSuppressed(): Array<Throwable>;
             }
             namespace Throwable {
                 interface static {
-                    new (): Throwable
-                    new (message: string): Throwable
-                    new (message: string, cause: Throwable): Throwable
+                    new (): Throwable;
+                    new (message: string): Throwable;
+                    new (message: string, cause: Throwable): Throwable;
                 }
             }
 
-            interface Iterable<T> extends java.lang.Interface, ArrayLike<T> {
-            }
+            interface Iterable<T> extends java.lang.Interface, ArrayLike<T> {}
             namespace Iterable {
                 namespace static {}
             }
@@ -244,8 +256,8 @@ declare namespace _javatypes {
                 isFile(): boolean;
                 isHidden(): boolean;
                 length(): number;
-                list(): java.lang.Array<string>;
-                listFiles(): java.lang.Array<File>;
+                list(): JavaArray<string>;
+                listFiles(): JavaArray<File>;
                 mkdir(): boolean;
                 mkdirs(): boolean;
                 renameTo(dest: File): boolean;
@@ -258,15 +270,15 @@ declare namespace _javatypes {
             }
             namespace File {
                 interface static {
-                    new (pathName: string): File
-                    new (parent: string, child: string): File
-                    new (parent: File, child: string): File
-                    new (uri: java.net.URI): File
-                    listRoots(): java.lang.Array<File>
+                    new (pathName: string): File;
+                    new (parent: string, child: string): File;
+                    new (parent: File, child: string): File;
+                    new (uri: java.net.URI): File;
+                    listRoots(): JavaArray<File>;
                 }
             }
 
-            interface Serializable extends java.lang.Interface{}
+            interface Serializable extends java.lang.Interface {}
             namespace Serializable {
                 interface static {}
             }
@@ -284,10 +296,10 @@ declare namespace _javatypes {
             }
             namespace URL {
                 interface static {
-                    new (protocol: string, host: string, port: number, file: string): URL
-                    new (protocol: string, host: string, file: string): URL
-                    new (spec: string): URL
-                    new (context: URL, spec: string): URL
+                    new (protocol: string, host: string, port: number, file: string): URL;
+                    new (protocol: string, host: string, file: string): URL;
+                    new (spec: string): URL;
+                    new (context: URL, spec: string): URL;
                 }
             }
 
@@ -306,13 +318,13 @@ declare namespace _javatypes {
             }
             namespace URI {
                 interface static {
-                    new (str: string): URI
-                    new (scheme: string, userInfo: string, host: string, port: number, path: string, query: string, fragment: string)
-                    new (scheme: string, authority: string, path: string, query: string, fragment: string)
-                    new (scheme: string, host: string, path: string, fragment: string)
-                    new (scheme: string, ssp: string, fragment: string)
-                    new (scheme: string, path: string)
-                    create(str: string): URI
+                    new (str: string): URI;
+                    new (scheme: string, userInfo: string, host: string, port: number, path: string, query: string, fragment: string);
+                    new (scheme: string, authority: string, path: string, query: string, fragment: string);
+                    new (scheme: string, host: string, path: string, fragment: string);
+                    new (scheme: string, ssp: string, fragment: string);
+                    new (scheme: string, path: string);
+                    create(str: string): URI;
                 }
             }
         }
