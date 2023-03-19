@@ -31,9 +31,9 @@ public class EventParser extends AbstractParser {
             }
         }
 
-        return "interface " + name + " extends BaseEvent {\n" +
-            StringHelpers.tabIn(genFields(fields)) + "\n" +
-            StringHelpers.tabIn(genMethods(methods)) +
+        return "interface " + name + " extends BaseEvent {\n    " +
+            (StringHelpers.tabIn(genFields(fields).trim()) + "\n\n" +
+            StringHelpers.tabIn(genMethods(methods).trim())).trim() +
             "\n}";
     }
 

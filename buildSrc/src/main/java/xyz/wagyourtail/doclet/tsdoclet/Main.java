@@ -90,34 +90,85 @@ public class Main implements Doclet {
         });
 
         try {
-            outputTS.append("""
+            
+            outputTS.append(
+                """
+                type _ = { [none: never]: never }; // to trick vscode to rename types
+
                 declare const event: Events.BaseEvent;
                 declare const file: _javatypes.java.io.File;
-                declare const context: _javatypes.xyz.wagyourtail.jsmacros.core.language.EventContainer<any>;
-
+                declare const context: EventContainer;
+                
                 declare namespace Events {
                     export interface BaseEvent extends _javatypes.java.lang.Object {
                         getEventName(): string;
-                    }""");
-
+                    }"""
+            );
             for (EventParser event : eventClasses) {
-                outputTS.append(StringHelpers.tabIn("\n\n" + event.genTSInterface()));
+                outputTS.append("\n\n" + StringHelpers.tabIn(event.genTSInterface()));
             }
 
-            outputTS.append("\n}");
+            outputTS.append("\n\n}\n\ninterface Events {");
+            for (EventParser event : eventClasses) {
+                outputTS.append("\n\n" + StringHelpers.tabIn(event.genTSInterface()
+                    .replaceFirst("interface (\\w+) extends BaseEvent", "$1:")));
+            }
+            outputTS.append("\n\n}");
 
             for (LibraryParser lib : libraryClasses) {
                 outputTS.append("\n\n" + lib.genTSInterface());
             }
 
             outputTS.append("\n\ndeclare " + classes.genTSTree());
-            outputTS.append("\n\ndeclare namespace Java {");
+            outputTS.append("\n\ninterface JavaTypeDict {");
             for (ClassParser clz : classes.getAllClasses()) {
-                outputTS.append("\n").append("    export function type(className: \"").append(clz.getType().getQualifiedName().toString()).append("\"): ")
-                        .append("_javatypes.java.lang.Class<_javatypes.").append(clz.getType().getQualifiedName().toString().replace(".function.", "._function."))
-                        .append("> & _javatypes.").append(clz.getType().getQualifiedName().toString().replace(".function.", "._function.")).append(".static");
+                outputTS.append("\n    \"").append(clz.getTypeString().replaceFirst("<.+$", "").replace("_javatypes.", "")).append("\": ")
+                    .append("JavaClass<").append(clz.getShortifiedType().replaceFirst("<.+$", "").replaceFirst("^\\$", "").replace(".function.", "._function."))
+                    .append("> & ").append(clz.getTypeString().replaceFirst("<.+$", "").replace(".function.", "._function.")).append(".static");
             }
-            outputTS.append("\n}");
+            outputTS.append("\n}\n");
+
+            Map<String, String> missingExtends = new HashMap<String, String>() {{ // expand needed
+                put("ScriptScreen", "IScreen");
+                put("NBTElementHelper", "NBTElementHelper$NBTCompoundHelper & NBTElementHelper$NBTListHelper & NBTElementHelper$NBTNumberHelper");
+            }};
+
+            int maxLen = 0;
+            int maxRedirLen = 0;
+            for (ClassParser clz : classes.getAllClasses()) { // count
+                String type = clz.getTypeString();
+                if (!type.startsWith("_javatypes.xyz.")) continue;
+                String shortified = clz.getShortifiedType().replaceAll("([A-Z])(?=[,>])", "$1 = any");
+                if (shortified.startsWith("$")) {
+                    if (shortified.length() > maxRedirLen) maxRedirLen = shortified.length();
+                    shortified = shortified.substring(1);
+                }
+                if (shortified.length() > maxLen) maxLen = shortified.length();
+            }
+            for (ClassParser clz : classes.getAllClasses()) { // append shortify
+                String type = clz.getTypeString();
+                if (!type.startsWith("_javatypes.xyz.")) continue;
+                String shortified = clz.getShortifiedType()
+                    .replaceAll("([A-Z])(?=[,>])", "$1 = any").replaceFirst("^\\$", "");
+                outputTS.append("\ntype ").append(String.format("%-" + maxLen + "s", shortified)).append(" = ");
+                shortified = shortified.replaceFirst("<.+$", "");
+                outputTS.append(type.endsWith(">") || missingExtends.containsKey(shortified) ?
+                    "  " : "_&").append(type);
+                if (missingExtends.containsKey(shortified))
+                    outputTS.append(" & ").append(missingExtends.get(shortified));
+                outputTS.append(";");
+            }
+            // since helper type inside helper namespace will refer to the long name instead of short
+            outputTS.append("\n\n// redirects");
+            for (ClassParser clz : classes.getAllClasses()) { // append redirects
+                String shortified = clz.getShortifiedType();
+                if (!shortified.startsWith("$")) continue;
+                shortified = shortified.replaceAll("([A-Z])(?=[,>])", "$1 = any");
+                outputTS.append("\ntype ").append(String.format("%-" + maxRedirLen + "s", shortified))
+                    .append(" = ").append(clz.getShortifiedType().substring(1)).append(";");
+            }
+
+            outputTS.append("\n");
 
         } catch (IOException e) {
             e.printStackTrace();

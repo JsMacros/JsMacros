@@ -75,14 +75,18 @@ public class PackageTree {
             return onlyChild.genTSTreeIntern();
         }
         StringBuilder s = new StringBuilder("namespace ");
-        s.append(pkgName).append(" {\n");
+        s.append(pkgName).append(" {");
+        if (!compiledClasses.isEmpty() || !children.isEmpty()) s.append("\n");
         for (String value : compiledClasses.values()) {
             s.append("\n").append(StringHelpers.tabIn(value));
         }
+        if (!compiledClasses.isEmpty()) s.append("\n");
         for (PackageTree value : children.values()) {
-            s.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
+            s.append("\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
         }
-        s.append("\n}");
+        if (!children.isEmpty()) s.append("\n");
+        if (!compiledClasses.isEmpty() || !children.isEmpty()) s.append("\n");
+        s.append("}");
         return s.toString();
     }
 
