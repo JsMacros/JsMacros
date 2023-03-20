@@ -124,7 +124,7 @@ public class Main implements Doclet {
             for (ClassParser clz : classes.getAllClasses()) {
                 outputTS.append("\n    \"").append(clz.getTypeString().replaceFirst("<.+$", "").replace("_javatypes.", "")).append("\": ")
                     .append("JavaClass<").append(clz.getShortifiedType().replaceFirst("<.+$", "").replaceFirst("^\\$", "").replace(".function.", "._function."))
-                    .append("> & ").append(clz.getTypeString().replaceFirst("<.+$", "").replace(".function.", "._function.")).append(".static");
+                    .append("> & ").append(clz.getTypeString().replaceFirst("<.+$", "").replace(".function.", "._function.")).append(".static;");
             }
             outputTS.append("\n}\n");
 
