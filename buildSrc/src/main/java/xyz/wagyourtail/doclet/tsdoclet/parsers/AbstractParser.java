@@ -188,14 +188,14 @@ public abstract class AbstractParser {
         List<? extends VariableElement> params = constructor.getParameters();
         if (params != null && !params.isEmpty()) {
             for (VariableElement param : params) {
-                s.append(param.getSimpleName()).append(": ");
-                if (type != null) s.append(type);
-                else s.append(shortify(param));
-                s.append(", ");
+                String paramName = param.getSimpleName().toString();
+                s.append(paramName).append(": ")
+                    .append(tags.containsKey(paramName) ? tags.get(paramName) : shortify(param))
+                    .append(", ");
             }
             s.setLength(s.length() - 2);
         }
-        s.append("): ").append(shortify(type)).append(";");
+        s.append("): ").append(returntag != null ? returntag : shortify(type)).append(";");
         return s.toString();
     }
 
