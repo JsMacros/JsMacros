@@ -1,5 +1,5 @@
 
-type _ = { [none: never]: never }; // to trick vscode to rename types
+type _ = { [none: symbol]: never }; // to trick vscode to rename types
 
 type JavaObject                    = _javatypes.java.lang.Object & _;
 type JavaClass<T = any>            = _javatypes.java.lang.Class<T>;
