@@ -32,6 +32,7 @@ public class Item implements RenderElement, Alignable<Item> {
     public int y;
     public int zIndex;
 
+    /** @param id #ItemId# */
     public Item(int x, int y, int zIndex, String id, boolean overlay, double scale, float rotation) {
         this(x, y, zIndex, new ItemStackHelper(id, 1), overlay, scale, rotation);
     }
@@ -68,7 +69,7 @@ public class Item implements RenderElement, Alignable<Item> {
     }
 
     /**
-     * @param id
+     * @param id #ItemId#
      * @param count
      *
      * @return
@@ -454,7 +455,7 @@ public class Item implements RenderElement, Alignable<Item> {
         }
 
         /**
-         * @param id the id of the item to draw
+         * @param id #ItemId# the id of the item to draw
          *
          * @return self for chaining.
          *
@@ -467,7 +468,7 @@ public class Item implements RenderElement, Alignable<Item> {
         }
 
         /**
-         * @param id the id of the item to draw
+         * @param id #ItemId# the id of the item to draw
          * @param count the stack size
          *
          * @return self for chaining.

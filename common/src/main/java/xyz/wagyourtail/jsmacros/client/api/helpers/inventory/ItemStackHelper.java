@@ -37,6 +37,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     private static final Style LORE_STYLE = Style.EMPTY.withColor(Formatting.DARK_PURPLE).withItalic(true);
     protected static final MinecraftClient mc = MinecraftClient.getInstance();
 
+    /** @param id #ItemId# */
     public ItemStackHelper(String id, int count) {
         super(new ItemStack(Registries.ITEM.get(RegistryHelper.parseIdentifier(id)), count));
     }
@@ -109,7 +110,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @param id the id of the enchantment to check for
+     * @param id #EnchantmentId# the id of the enchantment to check for
      * @return the enchantment instance, containing the level, or {@code null} if the item is not
      *         enchanted with the specified enchantment.
      *
@@ -142,7 +143,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @param enchantment the id of the enchantment to check for
+     * @param enchantment #EnchantmentId# the id of the enchantment to check for
      * @return {@code true} if the item is enchanted with the specified enchantment, {@code false}
      *         otherwise.
      *
@@ -309,7 +310,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
     
     /**
-     * @return
+     * @return #ItemId#
      */
      @Deprecated
     public String getItemID() {
@@ -318,7 +319,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
 
     /**
      * @since 1.6.4
-     * @return
+     * @return #ItemId#
      */
     public String getItemId() {
         return Registries.ITEM.getId(base.getItem()).toString();
@@ -326,7 +327,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
 
     /**
      * @since 1.8.2
-     * @return
+     * @return #JavaList<ItemTag>#
      */
     public List<String> getTags() {
         return base.getRegistryEntry().streamTags().map(t -> t.id().toString()).collect(Collectors.toList());

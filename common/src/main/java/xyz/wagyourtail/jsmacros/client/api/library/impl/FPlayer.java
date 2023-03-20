@@ -67,7 +67,7 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
-     * @return the player's current gamemode.
+     * @return #Gamemode# the player's current gamemode.
      * @since 1.0.9
      */
     public String getGameMode() {
@@ -77,7 +77,7 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
-     * @param gameMode possible values are survival, creative, adventure, spectator (case insensitive)
+     * @param gameMode #Gamemode# possible values are survival, creative, adventure, spectator (case insensitive)
      *
      * @since 1.8.4
      */

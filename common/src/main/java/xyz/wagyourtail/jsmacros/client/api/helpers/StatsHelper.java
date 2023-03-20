@@ -76,7 +76,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the entity
+     * @param id #EntityId# the identifier of the entity
      * @return how many times the player has killed the entity.
      *
      * @since 1.8.4
@@ -86,7 +86,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the entity
+     * @param id #EntityId# the identifier of the entity
      * @return how many times the player has killed the specified entity.
      *
      * @since 1.8.4
@@ -96,7 +96,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the block
+     * @param id #BlockId# the identifier of the block
      * @return how many times the player has mined the block.
      *
      * @since 1.8.4
@@ -106,7 +106,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the item
+     * @param id #ItemId# the identifier of the item
      * @return how many times the player has broken the item.
      *
      * @since 1.8.4
@@ -116,7 +116,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the item
+     * @param id #ItemId# the identifier of the item
      * @return how many times the player has crafted the item.
      *
      * @since 1.8.4
@@ -126,7 +126,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the item
+     * @param id #ItemId# the identifier of the item
      * @return how many times the player has used the item.
      *
      * @since 1.8.4
@@ -136,7 +136,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the item
+     * @param id #ItemId# the identifier of the item
      * @return how many times the player has picked up the item.
      *
      * @since 1.8.4
@@ -146,7 +146,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id the identifier of the item
+     * @param id #ItemId# the identifier of the item
      * @return how many times the player has dropped the item.
      *
      * @since 1.8.4

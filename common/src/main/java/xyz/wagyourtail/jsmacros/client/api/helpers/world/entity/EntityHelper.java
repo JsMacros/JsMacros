@@ -156,7 +156,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
     
     /**
-     * @return the type of the entity.
+     * @return #EntityId# the type of the entity.
      */
     public String getType() {
         return EntityType.getId(base.getType()).toString();
@@ -413,7 +413,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
     
     /**
-     * @return the name of the biome this entity is in.
+     * @return #Biome# the name of the biome this entity is in.
      *
      * @since 1.8.4
      */

@@ -478,7 +478,7 @@ public interface IDraw2D<T> {
      * @since 1.2.7
      * @param x left most corner
      * @param y top most corner
-     * @param id item id
+     * @param id #ItemId# item id
      * @return added item
      */
     Item addItem(int x, int y, String id);
@@ -488,7 +488,7 @@ public interface IDraw2D<T> {
      * @param x left most corner
      * @param y top most corner
      * @param zIndex z-index
-     * @param id item id
+     * @param id #ItemId# item id
      * @return added item
      */
     Item addItem(int x, int y, int zIndex, String id);
@@ -497,7 +497,7 @@ public interface IDraw2D<T> {
      * @since 1.2.7
      * @param x left most corner
      * @param y top most corner
-     * @param id item id
+     * @param id #ItemId# item id
      * @param overlay should include overlay health and count
      * @return added item
      */
@@ -508,7 +508,7 @@ public interface IDraw2D<T> {
      * @param x left most corner
      * @param y top most corner
      * @param zIndex z-index
-     * @param id item id
+     * @param id #ItemId# item id
      * @param overlay should include overlay health and count
      * @return added item
      */
@@ -518,7 +518,7 @@ public interface IDraw2D<T> {
      * @since 1.2.7
      * @param x left most corner
      * @param y top most corner
-     * @param id item id
+     * @param id #ItemId# item id
      * @param overlay should include overlay health and count
      * @param scale scale of item
      * @param rotation rotation of item
@@ -531,7 +531,7 @@ public interface IDraw2D<T> {
      * @param x left most corner
      * @param y top most corner
      * @param zIndex z-index
-     * @param id item id
+     * @param id #ItemId# item id
      * @param overlay should include overlay health and count
      * @param scale scale of item
      * @param rotation rotation of item

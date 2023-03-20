@@ -166,7 +166,7 @@ public class ItemHelper extends BaseHelper<Item> {
     }
 
     /**
-     * @return the identifier of this item.
+     * @return #ItemId# the identifier of this item.
      *
      * @since 1.8.4
      */

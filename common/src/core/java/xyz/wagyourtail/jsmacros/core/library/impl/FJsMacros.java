@@ -316,8 +316,8 @@ public class FJsMacros extends PerExecLibrary {
      * @see IEventListener
      * 
      * @since 1.2.7
-     * @param event
-     * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
+     * @param event #Event#
+     * @param callback #EventCallback# calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
      * @return
      */
     public IEventListener on(String event, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
@@ -380,8 +380,8 @@ public class FJsMacros extends PerExecLibrary {
      * 
      * @since 1.2.7
      * 
-     * @param event
-     * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
+     * @param event #Event#
+     * @param callback #EventCallback# calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
      * @return the listener.
      */
     public IEventListener once(String event, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
@@ -455,7 +455,7 @@ public class FJsMacros extends PerExecLibrary {
      * 
      * @since 1.2.3
      * 
-     * @param event
+     * @param event #Event#
      * @param listener
      * @return
      */
@@ -466,7 +466,7 @@ public class FJsMacros extends PerExecLibrary {
     /**
      * Will also disable all listeners for the given event, including JsMacros own event listeners.
      *
-     * @param event the event to remove all listeners from
+     * @param event #Event# the event to remove all listeners from
      * @since 1.8.4
      */
     public void disableAllListeners(String event) {
@@ -494,7 +494,7 @@ public class FJsMacros extends PerExecLibrary {
      * {@link #waitForEvent(String)}, {@link #waitForEvent(String, MethodWrapper)} and
      * {@link #waitForEvent(String, MethodWrapper, MethodWrapper)}.
      *
-     * @param event the event to remove all listeners from
+     * @param event #Event# the event to remove all listeners from
      * @since 1.8.4
      */
     public void disableScriptListeners(String event) {
@@ -524,9 +524,9 @@ public class FJsMacros extends PerExecLibrary {
     }
     
     /**
-     * @param event event to wait for
+     * @param event #Event# event to wait for
      * @since 1.5.0
-     * @return a event and a new context if the event you're waiting for was joined, to leave it early.
+     * @return #EventRes# a event and a new context if the event you're waiting for was joined, to leave it early.
      *
      * @throws InterruptedException
      */
@@ -536,8 +536,9 @@ public class FJsMacros extends PerExecLibrary {
 
     /**
      *
-     * @param event
-     * @return
+     * @param event #Event#
+     * @param filter #EventFilter#
+     * @return #EventRes#
      * @throws InterruptedException
      */
     public EventAndContext waitForEvent(String event,  MethodWrapper<BaseEvent, Object, Boolean, ?> filter) throws InterruptedException {
@@ -547,11 +548,11 @@ public class FJsMacros extends PerExecLibrary {
     /**
      * waits for an event. if this thread is bound to an event already, this will release current lock.
      *
-     * @param event event to wait for
-     * @param filter filter the event until it has the proper values or whatever.
+     * @param event #Event# event to wait for
+     * @param filter #EventFilter# filter the event until it has the proper values or whatever.
      * @param runBeforeWaiting runs as a {@link Runnable}, run before waiting, this is a thread-safety thing to prevent "interrupts" from going in between this and things like deferCurrentTask
      * @since 1.5.0
-     * @return a event and a new context if the event you're waiting for was joined, to leave it early.
+     * @return #EventRes# a event and a new context if the event you're waiting for was joined, to leave it early.
      *
      * @throws InterruptedException
      */
@@ -652,7 +653,7 @@ public class FJsMacros extends PerExecLibrary {
      * 
      * @since 1.2.3
      * 
-     * @param event
+     * @param event #Event#
      * @return a list of script-added listeners.
      */
     public List<IEventListener> listeners(String event) {
@@ -664,11 +665,11 @@ public class FJsMacros extends PerExecLibrary {
     }
     
     /**
-    * create a custom event object that can trigger a event. It's recommended to use 
-    * {@link EventCustom#registerEvent()} to set up the event to be visible in the GUI.
-    * 
-    * @see BaseEventRegistry#addEvent(String)
-    * 
+     * create a custom event object that can trigger a event. It's recommended to use 
+     * {@link EventCustom#registerEvent()} to set up the event to be visible in the GUI.
+     * 
+     * @see BaseEventRegistry#addEvent(String)
+     * 
      * @param eventName name of the event. please don't use an existing one... your scripts might not like that.
      *
      * @since 1.2.8

@@ -204,7 +204,7 @@ public class FWorld extends BaseLibrary {
     
     /**
      * @since 1.6.4
-     * @param id
+     * @param id #BlockId#
      * @param chunkrange
      *
      * @return
@@ -216,7 +216,7 @@ public class FWorld extends BaseLibrary {
 
     /**
      * @since 1.6.4
-     * @param id
+     * @param id #BlockId#
      * @param chunkrange
      *
      * @return
@@ -232,7 +232,7 @@ public class FWorld extends BaseLibrary {
 
     /**
      * @since 1.6.4
-     * @param ids
+     * @param ids #BlockId[]#
      * @param chunkrange
      *
      * @return
@@ -249,7 +249,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.6.4
      * @param centerX
      * @param centerZ
-     * @param ids
+     * @param ids #BlockId[]#
      * @param chunkrange
      *
      * @return
@@ -390,7 +390,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @param types the entity types to consider
+     * @param types #EntityId[]# the entity types to consider
      * @return all entities in the render distance, that match the specified entity type.
      *
      * @since 1.8.4
@@ -415,7 +415,7 @@ public class FWorld extends BaseLibrary {
 
     /**
      * @param distance the maximum distance to search for entities
-     * @param types the entity types to consider
+     * @param types #EntityId[]# the entity types to consider
      * @return a list of entities within the specified distance to the player, that match the specified entity type.
      *
      * @since 1.8.4
@@ -824,7 +824,7 @@ public class FWorld extends BaseLibrary {
     /**
      * Summons the amount of particles at the desired position.
      *
-     * @param id    the particle id
+     * @param id    #ParticleId# the particle id
      * @param x     the x position to spawn the particle
      * @param y     the y position to spawn the particle
      * @param z     the z position to spawn the particle
@@ -839,7 +839,7 @@ public class FWorld extends BaseLibrary {
      * Summons the amount of particles at the desired position with some variation of delta and the
      * given speed.
      *
-     * @param id     the particle id
+     * @param id     #ParticleId# the particle id
      * @param x      the x position to spawn the particle
      * @param y      the y position to spawn the particle
      * @param z      the z position to spawn the particle

@@ -85,7 +85,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     /**
-     * @param id    the id of the enchantment
+     * @param id    #EnchantmentId# the id of the enchantment
      * @param level the level of the enchantment
      * @return self for chaining.
      *
@@ -138,7 +138,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     /**
-     * @param id the id of the enchantment to remove
+     * @param id #EnchantmentId# the id of the enchantment to remove
      * @return self for chaining.
      *
      * @since 1.8.4

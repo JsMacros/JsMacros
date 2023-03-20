@@ -131,7 +131,7 @@ public class FHud extends BaseLibrary {
      * 
      * @since 1.0.5, renamed from {@code getOpenScreen} in 1.2.7
      * 
-     * @return The name of the currently open screen.
+     * @return #ScreenName# The name of the currently open screen.
      */
     public String getOpenScreenName() {
         return JsMacros.getScreenName(mc.currentScreen);

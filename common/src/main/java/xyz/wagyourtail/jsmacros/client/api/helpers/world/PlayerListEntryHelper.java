@@ -45,7 +45,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
 
     /**
      * @since 1.6.5
-     * @return null if unknown
+     * @return #Gamemode# null if unknown
      */
     public String getGamemode() {
         GameMode gm = base.getGameMode();

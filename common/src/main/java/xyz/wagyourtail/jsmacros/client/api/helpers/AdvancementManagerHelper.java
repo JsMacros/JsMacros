@@ -98,7 +98,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     }
 
     /**
-     * @param identifier the identifier of the advancement
+     * @param identifier #AdvancementId# the identifier of the advancement
      * @return the advancement for the given identifier.
      *
      * @since 1.8.4
@@ -120,6 +120,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     }
 
     /**
+     * @param identifier #AdvancementId#
      * @return the progress of the given advancement.
      *
      * @since 1.8.4

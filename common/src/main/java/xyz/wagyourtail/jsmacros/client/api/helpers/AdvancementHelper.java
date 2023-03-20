@@ -63,7 +63,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
     }
 
     /**
-     * @return the identifier of this advancement.
+     * @return #AdvancementId# the identifier of this advancement.
      *
      * @since 1.8.4
      */
@@ -99,7 +99,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
     }
 
     /**
-     * @return the recipes unlocked through this advancement.
+     * @return #RecipeId[]# the recipes unlocked through this advancement.
      *
      * @since 1.8.4
      */

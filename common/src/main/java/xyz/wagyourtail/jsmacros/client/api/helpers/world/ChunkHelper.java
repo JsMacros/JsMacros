@@ -119,7 +119,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @param xOffset the x offset
      * @param y       the y coordinate
      * @param zOffset the z offset
-     * @return the biome at the given position.
+     * @return #Biome# the biome at the given position.
      *
      * @since 1.8.4
      */

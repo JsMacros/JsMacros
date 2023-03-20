@@ -14,7 +14,7 @@ public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
 
     /**
      * @since 1.6.3
-     * @return
+     * @return #VillagerProfession#
      */
     public String getProfession() {
         return base.getVillagerData().getProfession().id();
@@ -22,7 +22,7 @@ public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
 
     /**
      * @since 1.6.3
-     * @return
+     * @return #VillagerStyle#
      */
     public String getStyle() {
         return base.getVillagerData().getType().toString();

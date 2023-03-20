@@ -20,6 +20,7 @@ public class EventClickSlot implements BaseEvent, ICancelable {
      * <a href="https://wiki.vg/Protocol#Click_Window" target="_blank">https://wiki.vg/Protocol#Click_Window</a>
      */
     public final int mode;
+    /** #ClickSlotButton# */
     public final int button;
     public final int slot;
     /**

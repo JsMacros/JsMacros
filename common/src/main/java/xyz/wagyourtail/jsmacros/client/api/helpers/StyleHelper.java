@@ -107,6 +107,9 @@ public class StyleHelper extends BaseHelper<Style> {
         return base.isObfuscated();
     }
 
+    /**
+     * @return #TextClickAction#
+     */
     public String getClickAction() {
         if (base.getClickEvent() == null) return null;
         if (base.getClickEvent() instanceof CustomClickEvent) {
@@ -127,6 +130,9 @@ public class StyleHelper extends BaseHelper<Style> {
         return null;
     }
 
+    /**
+     * @return #TextHoverAction#
+     */
     public String getHoverAction() {
         return base.getHoverEvent() == null ? null : base.getHoverEvent().getAction().getName();
     }

@@ -116,7 +116,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     }
 
     /**
-     * @param packetName the name of the packet's class that should be returned
+     * @param packetName #RecvPacketType | SendPacketType# the name of the packet's class that should be returned
      * @return the packet for this buffer.
      *
      * @see #getPacketNames()

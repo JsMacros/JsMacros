@@ -13,6 +13,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  @Event(value = "OpenScreen", oldName = "OPEN_SCREEN")
 public class EventOpenScreen implements BaseEvent {
     public final IScreen screen;
+    /** #ScreenName# */
     public final String screenName;
     
     public EventOpenScreen(Screen screen) {

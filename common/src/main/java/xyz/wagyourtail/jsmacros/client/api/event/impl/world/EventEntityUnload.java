@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 @Event("EntityUnload")
 public class EventEntityUnload implements BaseEvent {
     public final EntityHelper<?> entity;
+    /** #EntityUnloadReason# */
     public final String reason;
 
     public EventEntityUnload(Entity e, Entity.RemovalReason reason) {

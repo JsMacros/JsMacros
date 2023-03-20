@@ -18,7 +18,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     
     /**
      * @since 1.2.4
-     * @return
+     * @return #StatusEffectId#
      */
     public String getId() {
         return Registries.STATUS_EFFECT.getId(base.getEffectType()).toString();

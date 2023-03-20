@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 @Event("AttackBlock")
 public class EventAttackBlock implements BaseEvent {
     public final BlockDataHelper block;
+    /** #Side# */
     public final int side;
 
     public EventAttackBlock(BlockDataHelper block, int side) {

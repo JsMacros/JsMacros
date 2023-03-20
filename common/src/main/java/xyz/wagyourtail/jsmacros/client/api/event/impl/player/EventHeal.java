@@ -10,6 +10,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
  @Event("Heal")
 public class EventHeal implements BaseEvent {
+    /** #HealSource# */
     public final String source;
     public final float health;
     public final float change;

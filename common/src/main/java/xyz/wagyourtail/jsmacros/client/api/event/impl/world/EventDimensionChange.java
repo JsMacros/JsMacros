@@ -9,6 +9,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
  @Event(value = "DimensionChange", oldName = "DIMENSION_CHANGE")
 public class EventDimensionChange implements BaseEvent {
+    /** #Dimension# */
     public final String dimension;
     
     public EventDimensionChange(String dimension) {

@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class RegistryHelper {
 
     /**
-     * @param id the item's id
+     * @param id #ItemId# the item's id
      * @return an {@link ItemHelper} for the given item.
      *
      * @since 1.8.4
@@ -40,7 +40,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id the item's id
+     * @param id #ItemId# the item's id
      * @return an {@link ItemStackHelper} for the given item.
      *
      * @since 1.8.4
@@ -50,7 +50,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id  the item's id
+     * @param id  #ItemId# the item's id
      * @param nbt the item's nbt
      * @return an {@link ItemStackHelper} for the given item and nbt data.
      *
@@ -65,7 +65,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all registered item ids.
+     * @return #JavaList<ItemId># a list of all registered item ids.
      *
      * @since 1.8.4
      */
@@ -83,7 +83,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id the block's id
+     * @param id #BlockId# the block's id
      * @return an {@link BlockHelper} for the given block.
      *
      * @since 1.8.4
@@ -93,7 +93,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id the block's id
+     * @param id #BlockId# the block's id
      * @return an {@link BlockStateHelper} for the given block.
      *
      * @since 1.8.4
@@ -103,7 +103,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id  the block's id
+     * @param id  #BlockId# the block's id
      * @param nbt the block's nbt
      * @return an {@link BlockStateHelper} for the given block with the specified nbt.
      *
@@ -115,7 +115,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all registered block ids.
+     * @return #JavaList<BlockId># a list of all registered block ids.
      *
      * @since 1.8.4
      */
@@ -133,7 +133,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id the enchantment's id
+     * @param id #EnchantmentId# the enchantment's id
      * @return an {@link EnchantmentHelper} for the given enchantment.
      *
      * @since 1.8.4
@@ -143,7 +143,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id    the enchantment's id
+     * @param id    #EnchantmentId# the enchantment's id
      * @param level the level of the enchantment
      * @return an {@link EnchantmentHelper} for the given enchantment with the specified level.
      *
@@ -154,7 +154,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all registered enchantment ids.
+     * @return #JavaList<EnchantmentId># a list of all registered enchantment ids.
      *
      * @since 1.8.4
      */
@@ -172,7 +172,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param type the id of the entity's type
+     * @param type #EntityId# the id of the entity's type
      * @return an {@link EntityHelper} for the given entity.
      *
      * @since 1.8.4
@@ -182,7 +182,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @param type the id of the entity's type
+     * @param type #EntityId# the id of the entity's type
      * @return an {@link EntityType} for the given entity.
      *
      * @since 1.8.4
@@ -192,7 +192,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all entity type ids.
+     * @return #JavaList<EntityId># a list of all entity type ids.
      *
      * @since 1.8.4
      */
@@ -211,7 +211,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all feature ids.
+     * @return #JavaList<FeatureId># a list of all feature ids.
      *
      * @since 1.8.4
      */
@@ -220,7 +220,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all structure feature ids.
+     * @return #JavaList<StructureFeatureId># a list of all structure feature ids.
      *
      * @since 1.8.4
      */
@@ -229,7 +229,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all painting motive ids.
+     * @return #JavaList<PaintingId># a list of all painting motive ids.
      *
      * @since 1.8.4
      */
@@ -238,7 +238,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all particle type ids.
+     * @return #JavaList<ParticleTypeId># a list of all particle type ids.
      *
      * @since 1.8.4
      */
@@ -247,7 +247,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all game event names.
+     * @return #JavaList<GameEventName># a list of all game event names.
      *
      * @since 1.8.4
      */
@@ -256,7 +256,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all status effect ids.
+     * @return #JavaList<StatusEffectId># a list of all status effect ids.
      *
      * @since 1.8.4
      */
@@ -265,7 +265,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all block entity type ids.
+     * @return #JavaList<BlockEntityTypeId># a list of all block entity type ids.
      *
      * @since 1.8.4
      */
@@ -274,7 +274,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all screen handler ids.
+     * @return #JavaList<ScreenHandlerId># a list of all screen handler ids.
      *
      * @since 1.8.4
      */
@@ -283,7 +283,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all recipe type ids.
+     * @return #JavaList<RecipeTypeId># a list of all recipe type ids.
      *
      * @since 1.8.4
      */
@@ -292,7 +292,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all villager type ids.
+     * @return #JavaList<VillagerTypeId># a list of all villager type ids.
      *
      * @since 1.8.4
      */
@@ -301,7 +301,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all villager profession ids.
+     * @return #JavaList<VillagerProfession># a list of all villager profession ids.
      *
      * @since 1.8.4
      */
@@ -310,7 +310,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all point of interest type ids.
+     * @return #JavaList<PointOfInterestTypeId># a list of all point of interest type ids.
      *
      * @since 1.8.4
      */
@@ -319,7 +319,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all memory module type ids.
+     * @return #JavaList<MemoryModuleTypeId># a list of all memory module type ids.
      *
      * @since 1.8.4
      */
@@ -328,7 +328,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all villager sensor type ids.
+     * @return #JavaList<SensorTypeId># a list of all villager sensor type ids.
      *
      * @since 1.8.4
      */
@@ -337,7 +337,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all villager activity type ids.
+     * @return #JavaList<ActivityTypeId># a list of all villager activity type ids.
      *
      * @since 1.8.4
      */
@@ -346,7 +346,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all stat type ids.
+     * @return #JavaList<StatTypeId># a list of all stat type ids.
      *
      * @since 1.8.4
      */
@@ -355,7 +355,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all entity attribute ids.
+     * @return #JavaList<EntityAttributeId># a list of all entity attribute ids.
      *
      * @since 1.8.4
      */
@@ -364,7 +364,7 @@ public class RegistryHelper {
     }
 
     /**
-     * @return a list of all potion type ids.
+     * @return #JavaList<PotionTypeId># a list of all potion type ids.
      *
      * @since 1.8.4
      */

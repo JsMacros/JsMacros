@@ -24,7 +24,9 @@ import java.util.Set;
 public class EventKey implements BaseEvent {
     static final MinecraftClient mc = MinecraftClient.getInstance();
     public final int action;
+    /** #Key# */
     public final String key;
+    /** #KeyMods# */
     public final String mods;
 
     private static final Set<Integer> wasNullOnDown = new HashSet<>();

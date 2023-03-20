@@ -169,7 +169,7 @@ public class TextBuilder {
     
     /**
      * normal click events like: {@code open_url}, {@code open_file}, {@code run_command}, {@code suggest_command}, {@code change_page}, and {@code copy_to_clipboard}
-     * @param action
+     * @param action #TextClickAction#
      * @param value
      * @since 1.3.0
      * @return

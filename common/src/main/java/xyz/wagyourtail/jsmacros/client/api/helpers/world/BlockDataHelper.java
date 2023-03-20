@@ -60,7 +60,7 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
     }
     
     /**
-     * @return the item ID of the block.
+     * @return #ItemId# the item ID of the block.
      */
     public String getId() {
         return Registries.BLOCK.getId(b).toString();

@@ -18,7 +18,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
     }
 
     /**
-     * @return the block's id.
+     * @return #BlockId# the block's id.
      *
      * @since 1.8.4
      */

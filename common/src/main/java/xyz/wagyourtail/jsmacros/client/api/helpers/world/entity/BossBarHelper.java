@@ -38,7 +38,7 @@ public class BossBarHelper extends BaseHelper<BossBar> {
     
     /**
      * @since 1.2.1
-     * @return boss bar color.
+     * @return #BossBarColor# boss bar color.
      */
     public String getColor() {
         return base.getColor().getName().toUpperCase(Locale.ROOT);
@@ -46,7 +46,7 @@ public class BossBarHelper extends BaseHelper<BossBar> {
     
     /**
      * @since 1.2.1
-     * @return boss bar notch style.
+     * @return #BossBarStyle# boss bar notch style.
      */
     public String getStyle() {
         return base.getStyle().getName().toUpperCase(Locale.ROOT);

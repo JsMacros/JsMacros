@@ -33,6 +33,9 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
         this.level = level;
     }
 
+    /**
+     * @param enchantment #EnchantmentId#
+     */
     public EnchantmentHelper(String enchantment) {
         this(Registries.ENCHANTMENT.get(new Identifier(enchantment)));
     }
@@ -130,7 +133,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
-     * @return the id of this enchantment.
+     * @return #EnchantmentId# the id of this enchantment.
      *
      * @since 1.8.4
      */
@@ -139,7 +142,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
-     * @return the rarity of this enchantment.
+     * @return #EnchantmentRarity# the rarity of this enchantment.
      *
      * @since 1.8.4
      */
@@ -203,7 +206,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
-     * @return the type of item this enchantment is compatible with.
+     * @return #EnchantmentTargetType# the type of item this enchantment is compatible with.
      *
      * @since 1.8.4
      */
@@ -313,7 +316,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
-     * @param enchantment the enchantment to check
+     * @param enchantment #EnchantmentId# the enchantment to check
      * @return {@code true} if this enchantment is compatible with the given enchantment,
      *         {@code false} otherwise.
      *
@@ -335,7 +338,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
-     * @param enchantment the enchantment to check
+     * @param enchantment #EnchantmentId# the enchantment to check
      * @return {@code true} if this enchantment conflicts with the given enchantment, {@code false}
      *         otherwise.
      *

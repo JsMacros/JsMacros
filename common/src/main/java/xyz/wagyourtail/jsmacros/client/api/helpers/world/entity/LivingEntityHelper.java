@@ -45,6 +45,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * For client side entities, excluding the player, this will most likely return {@code false}
      * even if the entity has the effect, as effects are not synced to the client.
      *
+     * @param id #StatusEffectId#
      * @return {@code true} if the entity has the specified status effect, {@code false} otherwise.
      *
      * @since 1.8.4
@@ -147,7 +148,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
-     * @return the entity's mob category, {@code UNDEAD}, {@code DEFAULT}, {@code ARTHROPOD}, or
+     * @return #MobCategory# the entity's mob category, {@code UNDEAD}, {@code DEFAULT}, {@code ARTHROPOD}, or
      *         {@code ILLAGER}, {@code AQUATIC} or {@code UNKNOWN}.
      *
      * @since 1.8.4

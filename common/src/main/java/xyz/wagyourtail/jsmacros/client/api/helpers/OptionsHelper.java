@@ -190,7 +190,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return the active language.
+     * @return #Language# the active language.
      *
      * @since 1.8.4
      */
@@ -199,7 +199,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @param languageCode the language to change to
+     * @param languageCode #Language# the language to change to
      * @return self for chaining.
      *
      * @since 1.8.4
@@ -213,7 +213,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return the active difficulty.
+     * @return #Difficulty# the active difficulty.
      *
      * @since 1.8.4
      */
@@ -224,7 +224,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * The name be either "peaceful", "easy", "normal", or "hard".
      *
-     * @param name the name of the difficulty to change to
+     * @param name #Difficulty# the name of the difficulty to change to
      * @return self for chaining.
      *
      * @since 1.8.4
@@ -288,7 +288,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return 0 for 1st person, 2 for in front.
+     * @return #Trit# 0 for 1st person, 2 for in front.
      *
      * @since 1.5.0
      */
@@ -297,7 +297,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @param mode 0: first, 2: front
+     * @param mode #Trit# 0: first, 2: front
      * @since 1.5.0
      */
     public OptionsHelper setCameraMode(int mode) {
@@ -618,7 +618,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the selected graphics mode.
+         * @return #GraphicsMode# the selected graphics mode.
          *
          * @since 1.8.4
          */
@@ -636,7 +636,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @param mode the graphics mode to select. Must be either "fast", "fancy" or "fabulous"
+         * @param mode #GraphicsMode# the graphics mode to select. Must be either "fast", "fancy" or "fabulous"
          * @return self for chaining.
          *
          * @since 1.8.4
@@ -662,7 +662,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the selected chunk builder mode.
+         * @return #ChunkBuilderMode# the selected chunk builder mode.
          *
          * @since 1.8.4
          */
@@ -680,7 +680,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @param mode the chunk builder mode to select. Must be either "none", "nearby" or
+         * @param mode #ChunkBuilderMode# the chunk builder mode to select. Must be either "none", "nearby" or
          *             "player_affected"
          * @return self for chaining.
          *
@@ -848,7 +848,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the current attack indicator type.
+         * @return #AttackIndicatorType# the current attack indicator type.
          *
          * @since 1.8.4
          */
@@ -866,7 +866,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @param type the attack indicator type. Must be either "off", "crosshair", or "hotbar"
+         * @param type #AttackIndicatorType# the attack indicator type. Must be either "off", "crosshair", or "hotbar"
          * @return self for chaining.
          *
          * @since 1.8.4
@@ -931,7 +931,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the current cloud rendering mode.
+         * @return #CloudsMode# the current cloud rendering mode.
          *
          * @since 1.8.4
          */
@@ -949,7 +949,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @param mode the cloud rendering mode to select. Must be either "off", "fast" or "fancy"
+         * @param mode #CloudsMode# the cloud rendering mode to select. Must be either "off", "fast" or "fancy"
          * @return self for chaining.
          *
          * @since 1.8.4
@@ -995,7 +995,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the current particle rendering mode.
+         * @return #ParticleMode# the current particle rendering mode.
          *
          * @since 1.8.4
          */
@@ -1013,7 +1013,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @param mode the particle rendering mode to select. Must be either "minimal", "decreased"
+         * @param mode #ParticleMode# the particle rendering mode to select. Must be either "minimal", "decreased"
          *             or "all"
          * @return self for chaining.
          *
@@ -1683,7 +1683,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return a list of all keybinding catehories.
+         * @return #JavaList<KeyCategory># a list of all keybinding catehories.
          *
          * @since 1.8.4
          */
@@ -1692,7 +1692,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return a list of all key names.
+         * @return #JavaList<Key># a list of all key names.
          *
          * @since 1.8.4
          */
@@ -1701,7 +1701,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return a map of all keybindings and their bound key.
+         * @return #JavaMap<Bind, Key># a map of all keybindings and their bound key.
          *
          * @since 1.8.4
          */
@@ -1767,7 +1767,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the current chat visibility mode.
+         * @return #ChatVisibility# the current chat visibility mode.
          *
          * @since 1.8.4
          */
@@ -1777,7 +1777,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @param mode the new chat visibility mode. Must be "FULL", "SYSTEM" or "HIDDEN
+         * @param mode #ChatVisibility# the new chat visibility mode. Must be "FULL", "SYSTEM" or "HIDDEN"
          * @return self for chaining.
          *
          * @since 1.8.4
@@ -2025,7 +2025,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return the current narrator mode.
+         * @return #NarratorMode# the current narrator mode.
          *
          * @since 1.8.4
          */
@@ -2035,7 +2035,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @param mode the mode to set the narrator to. Must be either "OFF", "ALL", "CHAT", or
+         * @param mode #NarratorMode# the mode to set the narrator to. Must be either "OFF", "ALL", "CHAT", or
          *             "SYSTEM"
          * @return self for chaining.
          *
@@ -2448,7 +2448,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return 0: off, 2: fancy
+     * @return #Trit# 0: off, 2: fancy
      *
      * @since 1.1.7
      * @deprecated use {@link VideoOptionsHelper#getCloudsMode()} instead.
@@ -2466,7 +2466,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @param mode 0: off, 2: fancy
+     * @param mode #Trit# 0: off, 2: fancy
      * @return
      *
      * @since 1.1.7

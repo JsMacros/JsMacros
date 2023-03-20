@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 @Event("InteractEntity")
 public class EventInteractEntity implements BaseEvent {
     public final boolean offhand;
+    /** #ActionResult# */
     public final String result;
     public final EntityHelper<?> entity;
 

@@ -121,7 +121,7 @@ public class Inventory<T extends HandledScreen<?>> {
      *
      * @since 1.0.8
      * @param slot
-     * @param mousebutton
+     * @param mousebutton #Bit#
      * @return
      */
     public Inventory<T> click(int slot, int mousebutton) {
@@ -134,7 +134,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * Does a drag-click with a mouse button. (the slots don't have to be in order or even adjacent, but when vanilla minecraft calls the underlying function they're always sorted...)
      * 
      * @param slots
-     * @param mousebutton
+     * @param mousebutton #Bit#
      * @return
      */
     public Inventory<T> dragClick(int[] slots, int mousebutton) {
@@ -180,7 +180,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param item the item to check for
+     * @param item #ItemId# the item to check for
      * @return {@code true} if the item is contined anywhere in the inventory, {@code false}
      *         otherwise.
      *
@@ -210,7 +210,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param mapIdentifiers the identifier of the inventory sections to check
+     * @param mapIdentifiers #InvMapId[]# the identifier of the inventory sections to check
      * @return the first empty slot in the given inventory sections, or {@code -1} if there are no
      *         empty slots.
      *
@@ -226,7 +226,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @return a map of all item ids and their total count inside the inventory.
+     * @return #JavaMap<ItemId, number># a map of all item ids and their total count inside the inventory.
      *
      * @since 1.8.4
      */
@@ -246,7 +246,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param mapIdentifiers the inventory sections
+     * @param mapIdentifiers #InvMapId[]# the inventory sections
      * @return a list of all items in the given inventory sections.
      *
      * @since 1.8.4
@@ -272,7 +272,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param item the item to search for
+     * @param item #ItemId# the item to search for
      * @return all slots containing the given item.
      *
      * @since 1.8.4
@@ -288,7 +288,7 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param mapIdentifiers the inventory sections
+     * @param mapIdentifiers #InvMapId[]# the inventory sections
      * @return all slots indexes in the given inventory sections.
      *
      * @since 1.8.4
@@ -368,7 +368,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * quicks all that match the slot
      * @param slot a slot from the section you want to move items from
-     * @param button
+     * @param button #Bit#
      * @since 1.7.0
      * @return number of items that matched
      */
@@ -461,7 +461,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * equivalent to hitting the numbers or f for swapping slots to hotbar
      *
      * @param slot
-     * @param hotbarSlot 0-8 or 40 for offhand
+     * @param hotbarSlot #HotbarSwapSlot# 0-8 or 40 for offhand
      * @since 1.6.5 [citation needed]
      * @return
      */
@@ -500,7 +500,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @since 1.1.3
      * 
-     * @return the part of the mapping the slot is in.
+     * @return #ScreenName# the part of the mapping the slot is in.
      */
     public String getType() {
         return JsMacros.getScreenName(this.inventory);
@@ -509,7 +509,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @since 1.1.3
      * 
-     * @return the inventory mappings different depending on the type of open container/inventory.
+     * @return #JavaMap<InvMapId, JavaList<number>># the inventory mappings different depending on the type of open container/inventory.
      */
     public Map<String, int[]> getMap() {
         if (map == null) {
@@ -521,7 +521,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @since 1.1.3
      * 
-     * @param slotNum
+     * @param slotNum #InvMapId#
      * @return returns the part of the mapping the slot is in.
      */
     public String getLocation(int slotNum) {

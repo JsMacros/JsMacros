@@ -15,6 +15,7 @@ import java.util.UUID;
 public class EventBossbar implements BaseEvent {
     public final BossBarHelper bossBar;
     public final String uuid;
+    /** #BossBarUpdateType# */
     public final String type;
     
     public EventBossbar(String type, UUID uuid, ClientBossBar bossBar) {

@@ -27,7 +27,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
     }
 
     /**
-     * @return the block's id.
+     * @return #BlockId# the block's id.
      *
      * @since 1.8.4
      */
@@ -135,7 +135,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
     }
 
     /**
-     * @return the piston behaviour of the state.
+     * @return #PistonBehaviour# the piston behaviour of the state.
      *
      * @since 1.6.5
      */

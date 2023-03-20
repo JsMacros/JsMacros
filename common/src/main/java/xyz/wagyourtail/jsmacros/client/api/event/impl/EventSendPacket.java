@@ -15,6 +15,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 public class EventSendPacket implements BaseEvent {
 
     public final Packet<?> packet;
+    /** #SendPacketType# */
     public final String type;
 
     public EventSendPacket(Packet<?> packet) {

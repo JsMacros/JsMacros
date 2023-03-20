@@ -10,6 +10,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
  @Event(value = "Sound", oldName = "SOUND")
 public class EventSound implements BaseEvent {
+    /** #Sound# */
     public final String sound;
     public final float volume;
     public final float pitch;

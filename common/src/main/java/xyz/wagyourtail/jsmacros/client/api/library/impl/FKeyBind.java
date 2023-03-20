@@ -27,7 +27,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Dont use this one... get the raw minecraft keycode class.
      * 
-     * @param keyName
+     * @param keyName #Key#
      * @return the raw minecraft keycode class
      */
     public Key getKeyCode(String keyName) {
@@ -41,7 +41,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * @since 1.2.2
      * 
-     * @return A {@link java.util.Map Map} of all the minecraft keybinds.
+     * @return #JavaMap<Bind, Key># A {@link java.util.Map Map} of all the minecraft keybinds.
      */
     public Map<String, String> getKeyBindings() {
         Map<String, String> keys = new HashMap<>();
@@ -56,8 +56,8 @@ public class FKeyBind extends BaseLibrary {
      * 
      * @since 1.2.2
      * 
-     * @param bind
-     * @param key
+     * @param bind #Bind#
+     * @param key #Key#
      */
     public void setKeyBind(String bind, String key) {
         for (KeyBinding keybind : mc.options.allKeys) {
@@ -72,7 +72,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Set a key-state for a key.
      * 
-     * @param keyName
+     * @param keyName #Key#
      * @param keyState
      */
     public void key(String keyName, boolean keyState) {
@@ -82,7 +82,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Calls {@link #key(String, boolean)} with keyState set to true.
      *
-     * @param keyName the name of the key to press
+     * @param keyName #Key# the name of the key to press
      * @since 1.8.4
      */
     public void pressKey(String keyName) {
@@ -92,7 +92,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Calls {@link #key(String, boolean)} with keyState set to false.
      *
-     * @param keyName the name of the key to release
+     * @param keyName #Key# the name of the key to release
      * @since 1.8.4
      */
     public void releaseKey(String keyName) {
@@ -102,7 +102,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Don't use this one... set the key-state using the raw minecraft keycode class.
      * 
-     * @param keyBind
+     * @param keyBind #Bind#
      * @param keyState
      */
     protected void key(Key keyBind, boolean keyState) {
@@ -121,7 +121,7 @@ public class FKeyBind extends BaseLibrary {
      * 
      * @since 1.2.2
      * 
-     * @param keyBind
+     * @param keyBind #Bind#
      * @param keyState
      */
     public void keyBind(String keyBind, boolean keyState) {
@@ -141,7 +141,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Calls {@link #keyBind(String, boolean)} with keyState set to true.
      *
-     * @param keyBind the name of the keybinding to press
+     * @param keyBind #Bind# the name of the keybinding to press
      * @since 1.8.4
      */
     public void pressKeyBind(String keyBind) {
@@ -151,7 +151,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Calls {@link #keyBind(String, boolean)} with keyState set to false.
      *
-     * @param keyBind the name of the keybinding to release
+     * @param keyBind #Bind# the name of the keybinding to release
      * @since 1.8.4
      */
     public void releaseKeyBind(String keyBind) {
@@ -161,7 +161,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Don't use this one... set the key-state using the raw minecraft keybind class.
      * 
-     * @param keyBind
+     * @param keyBind #Bind#
      * @param keyState
      */
     protected void key(KeyBinding keyBind, boolean keyState) {
@@ -176,7 +176,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * @since 1.2.6 (turned into set instead of list in 1.6.5)
      * 
-     * @return a set of currently pressed keys.
+     * @return #JavaSet<Key># a set of currently pressed keys.
      */
     public Set<String> getPressedKeys() {
         return KeyTracker.getPressedKeys();

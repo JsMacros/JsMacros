@@ -98,7 +98,7 @@ public class BlockHelper extends BaseHelper<Block> {
     }
 
     /**
-     * @return all tags of the block as an {@link java.util.ArrayList ArrayList}.
+     * @return #JavaList<BlockTag># all tags of the block as an {@link java.util.ArrayList ArrayList}.
      *
      * @since 1.6.5
      */
@@ -116,7 +116,7 @@ public class BlockHelper extends BaseHelper<Block> {
     }
 
     /**
-     * @return the identifier of the block.
+     * @return #BlockId# the identifier of the block.
      *
      * @since 1.6.5
      */

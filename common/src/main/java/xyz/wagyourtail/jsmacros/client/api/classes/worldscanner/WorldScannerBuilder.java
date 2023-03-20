@@ -119,6 +119,10 @@ public final class WorldScannerBuilder {
         return selectedCategory == FilterCategory.NONE;
     }
 
+    /**
+     * @param operation #WorldScannerOperation#
+     * @param method #WorldScannerMethod#
+     */
     private void createNewFilter(Operation operation, FilterCategory category, String method) {
         if (canCreateNewFilter()) {
             this.operation = operation;
@@ -139,16 +143,25 @@ public final class WorldScannerBuilder {
         }
     }
 
+    /**
+     * @param method #WorldScannerMethod#
+     */
     public WorldScannerBuilder withStateFilter(String method) {
         createNewFilter(Operation.NEW, FilterCategory.STATE, method);
         return this;
     }
 
+    /**
+     * @param method #WorldScannerMethod#
+     */
     public WorldScannerBuilder andStateFilter(String method) {
         createNewFilter(Operation.AND, FilterCategory.STATE, method);
         return this;
     }
 
+    /**
+     * @param method #WorldScannerMethod#
+     */
     public WorldScannerBuilder orStateFilter(String method) {
         createNewFilter(Operation.OR, FilterCategory.STATE, method);
         return this;
@@ -160,16 +173,25 @@ public final class WorldScannerBuilder {
         return this;
     }
 
+    /**
+     * @param method #WorldScannerMethod#
+     */
     public WorldScannerBuilder withBlockFilter(String method) {
         createNewFilter(Operation.NEW, FilterCategory.BLOCK, method);
         return this;
     }
 
+    /**
+     * @param method #WorldScannerMethod#
+     */
     public WorldScannerBuilder andBlockFilter(String method) {
         createNewFilter(Operation.AND, FilterCategory.BLOCK, method);
         return this;
     }
 
+    /**
+     * @param method #WorldScannerMethod#
+     */
     public WorldScannerBuilder orBlockFilter(String method) {
         createNewFilter(Operation.OR, FilterCategory.BLOCK, method);
         return this;
@@ -230,6 +252,9 @@ public final class WorldScannerBuilder {
         return test(args);
     }
 
+    /**
+     * @param method #WorldScannerMethod[]#
+     */
     public WorldScannerBuilder test(Object[] methodArgs, Object[] filterArgs) {
         return is(methodArgs, filterArgs);
     }
@@ -259,6 +284,9 @@ public final class WorldScannerBuilder {
         return this;
     }
 
+    /**
+     * @param method #WorldScannerMethod#
+     */
     private void createStringFilter(String method, String... args) {
         if (selectedCategory == FilterCategory.STATE) {
             composeFilters(new StringifyFilter<BlockStateFilter>(method).addOption(args));

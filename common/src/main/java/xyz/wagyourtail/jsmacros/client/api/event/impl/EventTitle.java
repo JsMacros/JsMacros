@@ -11,6 +11,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
  @Event(value = "Title", oldName = "TITLE")
 public class EventTitle implements BaseEvent {
+    /** #TitleType# */
     public final String type;
     public TextHelper message;
     

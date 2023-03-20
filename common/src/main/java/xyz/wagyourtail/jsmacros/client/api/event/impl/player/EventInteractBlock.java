@@ -11,8 +11,10 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 @Event("InteractBlock")
 public class EventInteractBlock implements BaseEvent {
     public final boolean offhand;
+    /** #ActionResult# */
     public final String result;
     public final BlockDataHelper block;
+    /** #Side# */
     public final int side;
 
     public EventInteractBlock(boolean offhand, String resultStatus, BlockDataHelper block, int side) {

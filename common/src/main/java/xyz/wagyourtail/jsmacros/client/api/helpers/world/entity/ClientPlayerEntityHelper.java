@@ -243,7 +243,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x         the x coordinate to attack
      * @param y         the y coordinate to attack
      * @param z         the z coordinate to attack
-     * @param direction possible values are "up", "down", "north", "south", "east", "west"
+     * @param direction #Direction# possible values are "up", "down", "north", "south", "east", "west"
      * @return self for chaining.
      *
      * @since 1.8.4
@@ -256,7 +256,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x
      * @param y
      * @param z
-     * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
+     * @param direction #Hexit# 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
      * @since 1.5.0
      */
 
@@ -268,7 +268,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x         the x coordinate to attack
      * @param y         the y coordinate to attack
      * @param z         the z coordinate to attack
-     * @param direction possible values are "up", "down", "north", "south", "east", "west"
+     * @param direction #Direction# possible values are "up", "down", "north", "south", "east", "west"
      * @param await     whether to wait for the attack to finish
      * @return self for chaining.
      *
@@ -284,7 +284,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x
      * @param y
      * @param z
-     * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
+     * @param direction #Hexit# 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
      * @param await
      *
      * @throws InterruptedException
@@ -389,7 +389,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x         the x coordinate to interact
      * @param y         the y coordinate to interact
      * @param z         the z coordinate to interact
-     * @param direction possible values are "up", "down", "north", "south", "east", "west"
+     * @param direction #Direction# possible values are "up", "down", "north", "south", "east", "west"
      * @return self for chaining.
      *
      * @since 1.8.4
@@ -402,7 +402,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x
      * @param y
      * @param z
-     * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
+     * @param direction #Hexit# 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
      * @param offHand
      * @since 1.5.0, renamed from {@code interact} in 1.6.0
      */
@@ -414,7 +414,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x         the x coordinate to interact
      * @param y         the y coordinate to interact
      * @param z         the z coordinate to interact
-     * @param direction possible values are "up", "down", "north", "south", "east", "west"
+     * @param direction #Direction# possible values are "up", "down", "north", "south", "east", "west"
      * @param await     whether to wait for the interaction to complete
      * @return self for chaining.
      *
@@ -424,6 +424,15 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, await);
     }
     
+    /**
+     * @param x
+     * @param y
+     * @param z
+     * @param direction #Hexit# 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
+     * @param offHand
+     * @param await     whether to wait for the interaction to complete
+     * @since 1.5.0, renamed from {@code interact} in 1.6.0
+     */
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, int direction, boolean offHand, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
@@ -536,7 +545,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
-     * @param item
+     * @param item #ItemId#
      * @since 1.6.5
      * @return
      */
@@ -550,7 +559,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
 
     /**
      * @since 1.6.5
-     * @return
+     * @return #JavaMap<ItemId, number>#
      */
     public Map<String, Integer>  getTicksSinceCooldownsStart() {
         int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
@@ -559,7 +568,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
-     * @param item
+     * @param item #ItemId#
      * @since 1.6.5
      * @return
      */
