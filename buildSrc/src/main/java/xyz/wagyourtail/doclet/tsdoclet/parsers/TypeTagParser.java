@@ -69,8 +69,7 @@ public class TypeTagParser {
         "TextHoverAction",
         "VillagerStyle",
         "VillagerProfession",
-        "RecvPacketType",
-        "SendPacketType",
+        "PacketName",
         "ParticleId",
         "Language",
         "GraphicsMode",
@@ -105,7 +104,8 @@ public class TypeTagParser {
         "PotionTypeId",
         "InvMapId",
         "WorldScannerOperation",
-        "WorldScannerMethod"
+        "WorldScannerMethod",
+        "SoundCategory"
     );
     static final public Map<String, String> typeTagDefs = new HashMap<String, String>() {{
         put("Event", "E");
@@ -133,24 +133,24 @@ public class TypeTagParser {
 
         // check if there's no # at the end of tag but in description
         // or some typo spaces
-        // it could be `keyof`, `extends`, but i think it's never used in this case
-        if (Arrays.stream(type.split("\\b")).anyMatch(t -> t.matches(" +"))) {
+        // it could be `keyof` or `extends`, but i think it's never used in this case
+        if (type.replaceFirst("(?<!^|[, <&\\|]) *(?<!\\$)\\b\\w", "#").contains("#")) {
             System.out.println("potential typo found: #" + type + "#");
         }
 
-        if (count(type, '<') != count(type, '>')) {
+        if (!checkParens(type, '<', '>')) {
             System.out.println("<> doesn't match: #" + type + "#");
             return null;
         }
-        if (count(type, '(') != count(type, ')')) {
+        if (!checkParens(type, '(', ')')) {
             System.out.println("() doesn't match: #" + type + "#");
             return null;
         }
-        if (count(type, '{') != count(type, '}')) {
+        if (!checkParens(type, '{', '}')) {
             System.out.println("{} doesn't match: #" + type + "#");
             return null;
         }
-        if (type.replaceAll("[^\\[ ] *\\]|\\[ *[^\\] ]", "#").contains("#")) {
+        if (type.replaceFirst("[^\\[ ] *\\]|\\[ *[^\\] ]", "#").contains("#")) {
             System.out.println("incorrect array[]: #" + type + "#");
             return null;
         }
@@ -165,11 +165,13 @@ public class TypeTagParser {
         return type;
     }
 
-    static public int count(String str, char c) {
-        int res = 0;
-        for (int i = 0; i < str.length(); i++)
-            if (str.charAt(i) == c) res++;
-        return res;
+    static public boolean checkParens(String str, char open, char close) {
+        int opened = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == open) opened++;
+            if (str.charAt(i) == close) if (--opened < 0) return false;
+        }
+        return opened == 0;
     }
 
 }

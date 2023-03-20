@@ -16,6 +16,10 @@ public class EventParser extends AbstractParser {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String genTSInterface() {
         Set<Element> fields = new LinkedHashSet<>();

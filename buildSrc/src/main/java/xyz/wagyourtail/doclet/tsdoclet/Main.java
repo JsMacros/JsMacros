@@ -93,13 +93,12 @@ public class Main implements Doclet {
             
             outputTS.append(
                 """
-                type _ = { [none: never]: never }; // to trick vscode to rename types
-
-                declare const event: Events.BaseEvent;
+                declare const event: Events[keyof Events];
                 declare const file: _javatypes.java.io.File;
                 declare const context: EventContainer;
                 
                 declare namespace Events {
+
                     export interface BaseEvent extends _javatypes.java.lang.Object {
                         getEventName(): string;
                     }"""
@@ -108,10 +107,10 @@ public class Main implements Doclet {
                 outputTS.append("\n\n" + StringHelpers.tabIn(event.genTSInterface()));
             }
 
-            outputTS.append("\n\n}\n\ninterface Events {");
+            outputTS.append("\n\n}\n\ninterface Events {\n");
             for (EventParser event : eventClasses) {
-                outputTS.append("\n\n" + StringHelpers.tabIn(event.genTSInterface()
-                    .replaceFirst("interface (\\w+) extends BaseEvent", "$1:")));
+                outputTS.append("\n    ").append(event.getName())
+                    .append(": Events.").append(event.getName()).append(";");
             }
             outputTS.append("\n\n}");
 
@@ -126,7 +125,7 @@ public class Main implements Doclet {
                     .append("JavaClass<").append(clz.getShortifiedType().replaceFirst("<.+$", "").replaceFirst("^\\$", "").replace(".function.", "._function."))
                     .append("> & ").append(clz.getTypeString().replaceFirst("<.+$", "").replace(".function.", "._function.")).append(".static;");
             }
-            outputTS.append("\n}\n");
+            outputTS.append("\n}\n\ntype _ = { [none: symbol]: never }; // to trick vscode to rename types\n");
 
             Map<String, String> missingExtends = new HashMap<String, String>() {{ // expand needed
                 put("ScriptScreen", "IScreen");
@@ -149,9 +148,10 @@ public class Main implements Doclet {
                 String type = clz.getTypeString();
                 if (!type.startsWith("_javatypes.xyz.")) continue;
                 String shortified = clz.getShortifiedType()
-                    .replaceAll("([A-Z])(?=[,>])", "$1 = any").replaceFirst("^\\$", "");
+                    .replaceAll("([A-Z])(?=[,>])", "$1 = any");
+                if (shortified.startsWith("$")) shortified = shortified.substring(1);
                 outputTS.append("\ntype ").append(String.format("%-" + maxLen + "s", shortified)).append(" = ");
-                shortified = shortified.replaceFirst("<.+$", "");
+                shortified = shortified.replaceFirst("<.+$", ""); // remove type params
                 outputTS.append(type.endsWith(">") || missingExtends.containsKey(shortified) ?
                     "  " : "_&").append(type);
                 if (missingExtends.containsKey(shortified))
@@ -159,13 +159,14 @@ public class Main implements Doclet {
                 outputTS.append(";");
             }
             // since helper type inside helper namespace will refer to the long name instead of short
-            outputTS.append("\n\n// redirects");
+            outputTS.append("\n\ntype _r = { [none: symbol]: never };\n// redirects");
             for (ClassParser clz : classes.getAllClasses()) { // append redirects
                 String shortified = clz.getShortifiedType();
                 if (!shortified.startsWith("$")) continue;
                 shortified = shortified.replaceAll("([A-Z])(?=[,>])", "$1 = any");
                 outputTS.append("\ntype ").append(String.format("%-" + maxRedirLen + "s", shortified))
-                    .append(" = ").append(clz.getShortifiedType().substring(1)).append(";");
+                    .append(" = ").append(shortified.endsWith(">") ? "   " : "_r&")
+                    .append(clz.getShortifiedType().substring(1)).append(";");
             }
 
             outputTS.append("\n");
