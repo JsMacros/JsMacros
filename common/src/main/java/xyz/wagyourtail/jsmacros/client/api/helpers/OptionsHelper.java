@@ -1377,7 +1377,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @param category the category to get the volume of
+         * @param category #SoundCategory# the category to get the volume of
          * @return the volume of the given sound category.
          *
          * @since 1.8.4
@@ -1400,7 +1400,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @param category the category to set the volume for
+         * @param category #SoundCategory# the category to set the volume for
          * @param volume   the new volume
          * @return self for chaining.
          *
@@ -1715,7 +1715,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @param category the category to get keybindings from
+         * @param category #KeyCategory# the category to get keybindings from
          * @return a map of all keybindings and their bound key in the specified category.
          *
          * @since 1.8.4
@@ -2608,7 +2608,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     /**
      * set volume by category.
      *
-     * @param category
+     * @param category #SoundCategory# 
      * @param volume
      * @since 1.3.1
      * @deprecated use {@link MusicOptionsHelper#setVolume(String, double)} instead.
@@ -2660,7 +2660,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @param category
+     * @param category #SoundCategory# 
      * @return
      *
      * @since 1.3.1

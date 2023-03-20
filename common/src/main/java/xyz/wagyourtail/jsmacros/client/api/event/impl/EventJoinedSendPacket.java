@@ -20,7 +20,7 @@ public class EventJoinedSendPacket implements BaseEvent, ICancelable {
 
     public boolean cancel;
     public Packet<?> packet;
-    /** #SendPacketType# */
+    /** #PacketName# */
     public final String type;
 
     public EventJoinedSendPacket(Packet<?> packet) {

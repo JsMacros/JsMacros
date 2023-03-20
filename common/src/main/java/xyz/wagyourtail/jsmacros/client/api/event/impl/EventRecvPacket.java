@@ -15,7 +15,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 public class EventRecvPacket implements BaseEvent {
 
     public final Packet<?> packet;
-    /** #RecvPacketType# */
+    /** #PacketName# */
     public final String type;
 
     public EventRecvPacket(Packet<?> packet) {

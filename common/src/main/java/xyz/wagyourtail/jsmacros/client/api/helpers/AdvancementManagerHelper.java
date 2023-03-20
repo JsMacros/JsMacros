@@ -29,7 +29,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     }
 
     /**
-     * @return a map of all advancement ids and their advancement.
+     * @return #JavaMap<AdvancementId, $AdvancementHelper># a map of all advancement ids and their advancement.
      *
      * @since 1.8.4
      */

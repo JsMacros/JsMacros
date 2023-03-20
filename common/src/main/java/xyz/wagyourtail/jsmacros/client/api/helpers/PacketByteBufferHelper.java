@@ -116,7 +116,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     }
 
     /**
-     * @param packetName #RecvPacketType | SendPacketType# the name of the packet's class that should be returned
+     * @param packetName #PacketName# the name of the packet's class that should be returned
      * @return the packet for this buffer.
      *
      * @see #getPacketNames()
@@ -294,7 +294,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * These names are subject to change and are only for an easier access. They will probably not
      * change in the future, but it is not guaranteed.
      *
-     * @return a list of all packet names.
+     * @return #JavaList<PacketName># a list of all packet names.
      *
      * @since 1.8.4
      */

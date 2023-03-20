@@ -17,7 +17,7 @@ public class EventJoinedRecvPacket implements BaseEvent, ICancelable {
 
     public boolean cancel;
     public Packet<?> packet;
-    /** #RecvPacketType# */
+    /** #PacketName# */
     public final String type;
 
     public EventJoinedRecvPacket(Packet<?> packet) {

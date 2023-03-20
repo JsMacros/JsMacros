@@ -500,7 +500,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @since 1.1.3
      * 
-     * @return #ScreenName# the part of the mapping the slot is in.
+     * @return #InventoryType# the part of the mapping the slot is in.
      */
     public String getType() {
         return JsMacros.getScreenName(this.inventory);
