@@ -92,8 +92,8 @@ public abstract class AbstractParser {
         if (type == null) type = shortify(field);
 
         return genComment(field) +
-        (field.getModifiers().contains(Modifier.FINAL) ? "readonly " : "") +
-        field.getSimpleName() + ": " + type + ";";
+            (field.getModifiers().contains(Modifier.FINAL) ? "readonly " : "") +
+            field.getSimpleName() + ": " + type + ";";
     }
 
     public String genMethod(ExecutableElement method) {
@@ -138,10 +138,9 @@ public abstract class AbstractParser {
             if (params != null && !params.isEmpty()) {
                 for (VariableElement param : params) {
                     String paramName = param.getSimpleName().toString();
-                    s.append(paramName).append(": ");
-                    if (tags.containsKey(paramName)) s.append(tags.get(paramName));
-                    else s.append(shortify(param));
-                    s.append(", ");
+                    s.append(paramName).append(": ")
+                        .append(tags.containsKey(paramName) ? tags.get(paramName) : shortify(param))
+                        .append(", ");
                 }
                 s.setLength(s.length() - 2);
             }
@@ -151,8 +150,7 @@ public abstract class AbstractParser {
         if (replace2 != null) {
             s.append(replace2.value());
         } else {
-            if (returntag != null) s.append(returntag);
-            else s.append(transformType(method.getReturnType(), true));
+            s.append(returntag != null ? returntag : transformType(method.getReturnType(), true));
         }
         s.append(";");
 

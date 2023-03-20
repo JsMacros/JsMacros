@@ -80,14 +80,17 @@ public class ClassParser extends AbstractParser {
             }
         }
 
-        StringBuilder s = new StringBuilder("interface ").append(getClassName(true)).append(" extends ").append(buildExtends()).append(" {\n\n")
-                .append(StringHelpers.tabIn(genFields(fields))).append("\n")
-                .append(StringHelpers.tabIn(genMethods(methods))).append("\n\n}");
-        s.append("\nnamespace ").append(getClassName(false)).append(" {\n")
+        StringBuilder s =
+        new StringBuilder("interface ").append(getClassName(true)).append(" extends ").append(buildExtends()).append(" {\n\n")
+            .append(StringHelpers.tabIn(genFields(fields))).append("\n")
+            .append(StringHelpers.tabIn(genMethods(methods)))
+        .append("\n\n}")
+        .append("\nnamespace ").append(getClassName(false)).append(" {\n")
             .append(StringHelpers.tabIn("interface static {")).append("\n\n")
                 .append(StringHelpers.tabIn(genConstructors(constructors), 2)).append("\n")
                 .append(StringHelpers.tabIn(genStaticFields(fields), 2)).append("\n")
-                .append(StringHelpers.tabIn(genStaticMethods(methods), 2)).append("\n\n    }\n}");
+                .append(StringHelpers.tabIn(genStaticMethods(methods), 2))
+            .append("\n\n    }\n}");
 
         return s.toString().replaceAll("\\{[\n ]+\\}", "{}").replaceAll("\n\n\n+", "\n\n");
     }

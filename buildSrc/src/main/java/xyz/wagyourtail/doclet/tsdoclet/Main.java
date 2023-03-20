@@ -26,6 +26,11 @@ public class Main implements Doclet {
     public static PackageTree classes = new PackageTree("_javatypes");
     public static DocTrees treeUtils;
 
+    public static final Map<String, String> missingExtends = new HashMap<String, String>() {{ // expand needed
+        put("ScriptScreen", "IScreen");
+        put("NBTElementHelper", "NBTElementHelper$NBTCompoundHelper & NBTElementHelper$NBTListHelper & NBTElementHelper$NBTNumberHelper");
+    }};
+
     @Override
     public void init(Locale locale, Reporter reporter) {
         Main.reporter = reporter;
@@ -127,11 +132,6 @@ public class Main implements Doclet {
             }
             outputTS.append("\n}\n\ntype _ = { [none: symbol]: never }; // to trick vscode to rename types\n");
 
-            Map<String, String> missingExtends = new HashMap<String, String>() {{ // expand needed
-                put("ScriptScreen", "IScreen");
-                put("NBTElementHelper", "NBTElementHelper$NBTCompoundHelper & NBTElementHelper$NBTListHelper & NBTElementHelper$NBTNumberHelper");
-            }};
-
             int maxLen = 0;
             int maxRedirLen = 0;
             for (ClassParser clz : classes.getAllClasses()) { // count
@@ -150,6 +150,7 @@ public class Main implements Doclet {
                 String shortified = clz.getShortifiedType()
                     .replaceAll("([A-Z])(?=[,>])", "$1 = any");
                 if (shortified.startsWith("$")) shortified = shortified.substring(1);
+                
                 outputTS.append("\ntype ").append(String.format("%-" + maxLen + "s", shortified)).append(" = ");
                 shortified = shortified.replaceFirst("<.+$", ""); // remove type params
                 outputTS.append(type.endsWith(">") || missingExtends.containsKey(shortified) ?
@@ -164,6 +165,7 @@ public class Main implements Doclet {
                 String shortified = clz.getShortifiedType();
                 if (!shortified.startsWith("$")) continue;
                 shortified = shortified.replaceAll("([A-Z])(?=[,>])", "$1 = any");
+                
                 outputTS.append("\ntype ").append(String.format("%-" + maxRedirLen + "s", shortified))
                     .append(" = ").append(shortified.endsWith(">") ? "   " : "_r&")
                     .append(clz.getShortifiedType().substring(1)).append(";");
