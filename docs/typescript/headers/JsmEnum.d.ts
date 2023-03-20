@@ -12,23 +12,37 @@ type HotbarSlot = Octit | 8
 type HotbarSwapSlot = HotbarSlot | OffhandSlot
 type ClickSlotButton = HotbarSwapSlot | 9 | 10
 type OffhandSlot = 40
-type Difficulty = Dit
 
 type HealSource = DamageSource
+type InvMapId = InvMapType.All
 
-type KeyMods =
-| 'key.keyboard.left.shift'
-| 'key.keyboard.left.control'
-| 'key.keyboard.left.alt'
-| 'key.keyboard.left.shift+key.keyboard.left.control'
-| 'key.keyboard.left.shift+key.keyboard.left.alt'
-| 'key.keyboard.left.control+key.keyboard.left.alt'
-| 'key.keyboard.left.shift+key.keyboard.left.control+key.keyboard.left.alt'
+declare namespace KeyMod {
+  type shift = 'key.keyboard.left.shift'
+  type ctrl = 'key.keyboard.left.control'
+  type alt = 'key.keyboard.left.alt'
+}
+type KeyMods = KeyMod.shift | KeyMod.ctrl | KeyMod.alt
+| `${KeyMod.shift}+${KeyMod.ctrl | KeyMod.alt}`
+| `${KeyMod.ctrl}+${KeyMod.alt}`
+| `${KeyMod.shift}+${KeyMod.ctrl}+${KeyMod.alt}`
 type ArmorSlot = 'HEAD' | 'CHEST' | 'LEGS' | 'FEET'
 type TitleType = 'TITLE' | 'SUBTITLE' | 'ACTIONBAR'
+type Difficulty = 'peaceful' | 'easy' | 'normal' | 'hard'
 type BlockUpdateType = 'STATE' | 'ENTITY'
 type BossBarUpdateType = 'ADD' | 'REMOVE' | 'UPDATE_PERCENT'
 | 'UPDATE_NAME' | 'UPDATE_STYLE' | 'UPDATE_PROPERTIES'
+
+type GraphicsMode = 'fast' | 'fancy' | 'fabulous'
+type ChunkBuilderMode = 'none' | 'nearby' | 'player_affected'
+type AttackIndicatorType = 'off' | 'crosshair' | 'hotbar'
+type CloudsMode = 'off' | 'fast' | 'fancy'
+type ParticleMode = 'minimal' | 'decreased' | 'all'
+type ChatVisibility = 'FULL' | 'SYSTEM' | 'HIDDEN'
+type NarratorMode = 'OFF' | 'ALL' | "CHAT" | 'SYSTEM'
+type Direction = "up" | "down" | "north" | "south" | "east" | "west"
+type MobCategory = 'UNDEAD' | 'DEFAULT' | 'ARTHROPOD' | 'ILLAGER' | 'AQUATIC' | 'UNKNOWN'
+type WorldScannerOperation = '>' | '>=' | '<' | '<=' | '==' | '!='
+type WorldScannerMethod = 'EQUALS' | 'CONTAINS' | 'STARTS_WITH' | 'ENDS_WITH' | 'MATCHES'
 
 type HandledScreenName =
 | '1 Row Chest'
@@ -58,62 +72,157 @@ type HandledScreenName =
 | 'Horse'
 | 'Creative Inventory'
 
+declare namespace InvMapType {
+  type _inv = 'hotber' | 'main'
+  type _invio = _inv | 'input' | 'output'
+
+  type Inventory = _inv | 'offhand' | 'boots' | 'leggings' | 'chestplate' | 'helmet'
+  | 'crafting_in' | 'craft_out'
+  type CreativeInvInvTab = Exclude<Inventory, 'crafting_in' | 'crafting_out'> | 'delete'
+  type CreativeInv = 'hotbar' | 'creative'
+  type Container        = _inv | 'container'
+  type Beacon           = _inv | 'slot'
+  type Furnace          = _invio | 'fuel'
+  type BrewingStand     = _invio | 'fuel'
+  type Crafting         = _invio
+  type Enchantment      = _inv | 'lapis' | 'item'
+  type Loom             = _inv | 'output' | 'pattern' | 'dye' | 'banner'
+  type Stonecutter      = _invio
+  type Horse            = _inv | 'saddle' | 'armor' | 'container'
+  type Anvil            = _invio
+  type Merchant         = _invio
+  type Smithing         = _invio
+  type Grindstone       = _invio
+  type CartographyTable = _invio
+
+  type All = 
+  | Inventory
+  | CreativeInvInvTab
+  | CreativeInv
+  | Container
+  | Beacon
+  | Furnace
+  | BrewingStand
+  | Crafting
+  | Enchantment
+  | Loom
+  | Stonecutter
+  | Horse
+  | Anvil
+  | Merchant
+  | Smithing
+  | Grindstone
+  | CartographyTable
+}
+
 //--- runtime generates
-// class_3675
+// InputUtil
+//@Custom
 type Key = string
-// Java.from(Client.getGameOptions().getRaw().field_1839).map(k => k.method_1431())
-// option.allKeys.map(key.getTranslationKey())
+// option.allKeys.map(getTranslationKey())
+//@Eval Java.from(Client.getGameOptions().getRaw().field_1839).map(k => k.method_1431())
 type Bind = string
-// Registry.field_25933
+//@Eval RegistryManager.method_30530(RegistryKeys.field_41236).method_10235().toArray().map(id => id.toString())
 type Biome = string
-// Registry.field_11156
+//@Eval Registries.field_41172.method_10235().toArray().map(id => id.toString())
 type Sound = string
-// Registry.field_11142
+//@RegistryHelper getItemIds
 type ItemId = string
-// collect through items
+//@Eval Java.from(RegistryHelper.getItems()).flatMap(i => i.getDefaultStack().getTags())
 type ItemTag = string
-// Registry.field_11146
+//@RegistryHelper getBlockIds
 type BlockId = string
-// collect through blocks
+//@Eval Java.from(RegistryHelper.getBlocks()).flatMap(b => b.getTags())
 type BlockTag = string
-// Registry.field_11145
+//@RegistryHelper getEntityTypeIds
 type EntityId = string
-// Registry.field_17597
+//@Eval Client.getMinecraft().field_1687.method_8433().method_8126().toArray().map(r => r.method_8114().toString())
 type RecipeId = string
-// class_1934.method_8381
+//@Enum class_1934.method_8381
 type Gamemode = string
-// Registry.field_25490
+//@Eval RegistryManager.method_30530(RegistryKeys.field_41241).method_10235().toArray().map(id => id.toString())
 type Dimension = string
-// s.getClass().getName()
-// s.getTitle()
+//@Unknown
 type ScreenName =// string
 | HandledScreenName
 | 'unknown'
 // | ScreenClass
-// Registry.field_17429
+//@Unknown
 type ScreenClass = string
-// class_1269.toString
+//@Enum class_1269.toString
 type ActionResult = string
-// class_1282.method_5525
+//@Enum class_1282.method_5525
 type DamageSource = string
-// same as screenName but check if is container
+//@Unknown
 type InventoryType =// string
 | HandledScreenName
-// Registry.field_11159
+//@RegistryHelper getStatusEffectIds
 type StatusEffectId = string
-// class_3619.toString
+//@Enum class_3619.toString
 type PistonBehaviour = string
-// class_1297$class_5529.toString
+//@Enum class_1297$class_5529.toString
 type EntityUnloadReason = string
-// class_1259$class_1260.method_5421.toUpperCase
+//@Enum class_1259$class_1260.method_5421.toUpperCase
 type BossBarColor = string
-// class_1259$class_1261.method_5425.toUpperCase
+//@Enum class_1259$class_1261.method_5425.toUpperCase
 type BossBarStyle = string
-// class_2558$class_2559.method_10846
+//@Enum class_2558$class_2559.method_10846
 type TextClickAction = string
-// class_2568$class_5247.method_27674
+//@Enum class_2568$class_5247.method_27674
 type TextHoverAction = string
-// class_3854.toString
+//@Enum class_3854.toString
 type VillagerStyle = string
-// class_3852.comp_818
+//@RegistryHelper getVillagerProfessionIds
 type VillagerProfession = string
+
+
+//@RegistryHelper getFeatureIds
+type FeatureId = string
+//@RegistryHelper getPaintingIds
+type PaintingId = string
+//@RegistryHelper getParticleTypeIds
+type ParticleId = string
+//@RegistryHelper getStatTypeIds
+type StatTypeId = string
+//@RegistryHelper getRecipeTypeIds
+type RecipeTypeId = string
+//@RegistryHelper getSensorTypeIds
+type SensorTypeId = string
+//@RegistryHelper getPotionTypeIds
+type PotionTypeId = string
+//@Eval Java.from(Player.getPlayer().getAdvancementManager().getAdvancements()).map(a => a.getId())
+type AdvancementId = string
+//@RegistryHelper getParticleTypeIds
+type ParticleTypeId = string
+//@RegistryHelper getVillagerTypeIds
+type VillagerTypeId = string
+//@RegistryHelper getActivityTypeIds
+type ActivityTypeId = string
+//@RegistryHelper getScreenHandlerIds
+type ScreenHandlerId = string
+//@RegistryHelper getBlockEntityTypeIds
+type BlockEntityTypeId = string
+//@RegistryHelper getEntityAttributeIds
+type EntityAttributeId = string
+//@RegistryHelper getMemoryModuleTypeIds
+type MemoryModuleTypeId = string
+//@RegistryHelper getStructureFeatureIds
+type StructureFeatureId = string
+//@RegistryHelper getPointOfInterestTypeIds
+type PointOfInterestTypeId = string
+//@Eval Client.getMinecraft().method_1526().method_4665().toArray().map(l => l.getCode())
+type Language = string
+//@Eval Java.from(Client.getGameOptions().control.getCategories())
+type KeyCategory = string
+//@Enum class_3419.method_14840
+type SoundCategory = string
+//@RegistryHelper getGameEventNames
+type GameEventName = string
+//@RegistryHelper getEnchantmentIds
+type EnchantmentId = string
+//@Eval Java.from(RegistryHelper.getEnchantments()).map(e => e.getRarity())
+type EnchantmentRarity = string
+//@Eval Java.from(RegistryHelper.getEnchantments()).map(e => e.getTargetType())
+type EnchantmentTargetType = string
+//@Eval Java.from(Client.createPacketByteBuffer().getPacketNames())
+type PacketName = string
