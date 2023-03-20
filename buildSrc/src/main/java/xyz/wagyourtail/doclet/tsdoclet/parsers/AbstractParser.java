@@ -12,8 +12,6 @@ import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
-import java.util.stream.Collectors;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -23,7 +21,6 @@ import java.util.HashMap;
 
 public abstract class AbstractParser {
     static final public Set<String> javaShortifies = Set.of(
-        "java.lang.Object",
         "java.lang.Class",
         "java.lang.Array",
         "java.util.Collection",
@@ -32,67 +29,6 @@ public abstract class AbstractParser {
         "java.util.Map",
         "java.util.HashMap"
     );
-    static final public Set<String> typeTags = Set.of(
-        "Event",
-        "EventCallback",
-        "EventFilter",
-        "EventRes",
-
-        "Bit",
-        "Trit",
-        "Dit",
-        "Pentit",
-        "Hexit",
-        "Septit",
-        "Octit",
-
-        "Side",
-        "HotbarSlot",
-        "ClickSlotButton",
-        "OffhandSlot",
-        "Difficulty",
-
-        "KeyMods",
-        "ArmorSlot",
-        "TitleType",
-        "BlockUpdateType",
-        "BossBarUpdateType",
-        "HandledScreenName",
-
-        "Key",
-        "Bind",
-        "Biome",
-        "Sound",
-        "ItemId",
-        "ItemTag",
-        "BlockId",
-        "BlockTag",
-        "EntityId",
-        "RecipeId",
-        "Gamemode",
-        "Dimension",
-        "ScreenName",
-        "ScreenClass",
-        "ActionResult",
-        "InventoryType",
-        "StatusEffectId",
-        "PistonBehaviour",
-        "EntityUnloadReason",
-        "HealSource",
-        "DamageSource",
-        "BossBarColor",
-        "BossBarStyle",
-        "TextClickAction",
-        "TextHoverAction",
-        "VillagerStyle",
-        "VillagerProfession"
-    );
-    static final public Map<String, String> typeTagDefs = new HashMap<String, String>() {{
-        put("Event", "E");
-        put("EventCallback", "MethodWrapper<Events[E], EventContainer>");
-        put("EventFilter", "MethodWrapper<Events[E], undefined, boolean>");
-        put("EventRes", "{ event: Events[E], context: EventContainer }");
-    }};
     static public Map<String, Map<String, String>> shortifyConflictTable;
     protected TypeElement type;
 
@@ -152,7 +88,7 @@ public abstract class AbstractParser {
     public String genField(Element field) {
         DocCommentTree tree = Main.treeUtils.getDocCommentTree(field);
         String type = null;
-        if (tree != null) type = parseTypeTag(tree.getFullBody());
+        if (tree != null) type = TypeTagParser.parse(tree.getFullBody());
         if (type == null) type = shortify(field);
 
         return genComment(field) +
@@ -172,7 +108,7 @@ public abstract class AbstractParser {
         if (tree != null) for (DocTree blockTag : tree.getBlockTags()) {
             if (blockTag.getKind() != DocTree.Kind.PARAM &&
                 blockTag.getKind() != DocTree.Kind.RETURN) continue;
-            String type = parseTypeTag(
+            String type = TypeTagParser.parse(
                 blockTag.getKind() == DocTree.Kind.PARAM ?
                     ((ParamTree) blockTag).getDescription() :
                     ((ReturnTree) blockTag).getDescription()
@@ -234,7 +170,7 @@ public abstract class AbstractParser {
         DocCommentTree tree = Main.treeUtils.getDocCommentTree(constructor);
         if (tree != null) for (DocTree blockTag : tree.getBlockTags()) {
             if (blockTag.getKind() != DocTree.Kind.PARAM) continue;
-            String type = parseTypeTag(((ParamTree) blockTag).getDescription());
+            String type = TypeTagParser.parse(((ParamTree) blockTag).getDescription());
             if (type != null) tags.put(((ParamTree) blockTag).getName().toString(), type);
         }
 
@@ -349,9 +285,9 @@ public abstract class AbstractParser {
                         return "string";
                     }
 
-                    // if ("java.lang.Object".equals(rawType.toString())) {
-                    //     return "any";
-                    // }
+                    if ("java.lang.Object".equals(rawType.toString())) {
+                        return "any";
+                    }
 
                     Main.classes.addClass(((DeclaredType) type).asElement());
                     return "_javatypes." + rawType.toString();
@@ -480,26 +416,6 @@ public abstract class AbstractParser {
             }
             shortifyConflictTable.put(value, table);
         }
-    }
-
-    public String parseTypeTag(List<? extends DocTree> docList) {
-        if (docList.isEmpty()) return null;
-        String desc = docList.stream().map(d -> d.toString()).collect(Collectors.joining("")).trim();
-        if (!desc.startsWith("#")) return null;
-        String type = desc.indexOf(" ") == -1 ? desc.substring(1) : desc.substring(1, desc.indexOf(" "));
-        if (!typeTags.contains(type)) {
-            // try parse with params
-            desc = desc.replaceAll("(?<!>) ", "");
-            if (!desc.matches("^#\\w+<\\w+(?:,\\w+)*>.*")) return null;
-            desc = desc.replace("(?<=^#\\w+<\\w+(?:,\\w+)*>).*$", "");
-            if (Arrays.stream(desc.split("<|,|>")).anyMatch(t -> typeTags.contains(t))) {
-                for (String t : desc.split("<|,|>"))
-                    if (typeTagDefs.containsKey(t)) desc.replaceAll("\b" + t + "\b", typeTagDefs.get(t));
-                return desc.replaceAll(",", ", ").substring(1);
-            }else return null;
-        }
-        if (typeTagDefs.containsKey(type)) type = typeTagDefs.get(type);
-        return type;
     }
 
     @Override
