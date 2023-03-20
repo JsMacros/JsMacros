@@ -212,6 +212,7 @@ declare namespace _javatypes {
             }
 
             interface Map<K, V> extends java.lang.Object {
+                [key: K]: V | undefined;
                 clear(): void;
                 containsKey(key: K): boolean;
                 containsValue(value: V): boolean;

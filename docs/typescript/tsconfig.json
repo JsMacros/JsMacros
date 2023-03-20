@@ -9,7 +9,7 @@
     },
     "include": [
         "scripts/**/*.ts",
-      "headers/*.d.ts"
+        "headers/*.d.ts"
     ],
     "exclude": [
         "build/*"
