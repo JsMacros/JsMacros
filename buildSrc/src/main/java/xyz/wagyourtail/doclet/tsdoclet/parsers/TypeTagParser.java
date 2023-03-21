@@ -107,7 +107,7 @@ public class TypeTagParser {
         "WorldScannerMethod",
         "SoundCategory"
     );
-    static final public Map<String, String> typeTagDefs = new HashMap<String, String>() {{
+    static final public Map<String, String> typeTagDefs = new HashMap<>() {{
         put("Event", "E");
         put("EventCallback", "MethodWrapper<Events[E], EventContainer>");
         put("EventFilter", "MethodWrapper<Events[E], undefined, boolean>");
