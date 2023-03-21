@@ -12,6 +12,7 @@ import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
+import java.lang.Deprecated;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -286,8 +287,9 @@ public abstract class AbstractParser {
 
     public String genComment(Element comment) {
         DocCommentTree tree = Main.treeUtils.getDocCommentTree(comment);
+        Deprecated dep = comment.getAnnotation(Deprecated.class);
         if (tree == null) {
-            return "";
+            return dep != null ? "\n/** @deprecated */\n" : "";
         }
         final StringBuilder s = new StringBuilder();
         for (DocTree docTree : tree.getFullBody()) {
@@ -324,6 +326,7 @@ public abstract class AbstractParser {
                 s.append("\n").append(blockTag);
             }
         }
+        if (dep != null && !s.toString().contains("@deprecated")) s.append("\n@deprecated");
         return "\n/**\n" +
             StringHelpers.addToLineStarts(s.toString(), " * ") +
             "\n */\n";
