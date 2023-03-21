@@ -88,14 +88,10 @@ public abstract class AbstractParser {
     }
 
     public String genField(Element field) {
-        DocCommentTree tree = Main.treeUtils.getDocCommentTree(field);
-        String type = null;
-        if (tree != null) type = TypeTagParser.parse(tree.getFullBody());
-        if (type == null) type = shortify(field);
+        DocletReplaceReturn replace = field.getAnnotation(DocletReplaceReturn.class);
 
-        return genComment(field) +
-            (field.getModifiers().contains(Modifier.FINAL) ? "readonly " : "") +
-            field.getSimpleName() + ": " + type + ";";
+        return genComment(field) + (field.getModifiers().contains(Modifier.FINAL) ? "readonly " : "") +
+            field.getSimpleName() + ": " + (replace != null ? replace.value() : shortify(field)) + ";";
     }
 
     public String genMethod(ExecutableElement method) {
@@ -103,24 +99,8 @@ public abstract class AbstractParser {
         s.append(genComment(method));
         s.append(method.getSimpleName());
 
-        // parse type tag
-        Map<String, String> tags = new HashMap<String, String>();
-        String returntag = null;
-        DocCommentTree tree = Main.treeUtils.getDocCommentTree(method);
-        if (tree != null) for (DocTree blockTag : tree.getBlockTags()) {
-            if (blockTag.getKind() != DocTree.Kind.PARAM &&
-                blockTag.getKind() != DocTree.Kind.RETURN) continue;
-            String type = TypeTagParser.parse(
-                blockTag.getKind() == DocTree.Kind.PARAM ?
-                    ((ParamTree) blockTag).getDescription() :
-                    ((ReturnTree) blockTag).getDescription()
-            );
-            if (type == null) continue;
-
-            if (blockTag.getKind() == DocTree.Kind.RETURN) returntag = type;
-            else tags.put(((ParamTree) blockTag).getName().toString(), type);
-        }
-
+        DocletReplaceParams docletReplace = method.getAnnotation(DocletReplaceParams.class);
+        String replace = (docletReplace != null ? docletReplace.value() : null);
         //diamondOperator
         List<? extends TypeParameterElement> typeParams = method.getTypeParameters();
         if (typeParams != null && !typeParams.isEmpty()) {
@@ -129,20 +109,23 @@ public abstract class AbstractParser {
                 s.append(shortify(param)).append(", ");
             }
             s.setLength(s.length() - 2);
+            if (replace != null && replace.startsWith("<E> ")) {
+                s.append(", E extends keyof Events");
+                replace = replace.substring(4);
+            }
             s.append(">");
-        }else if (tags.values().contains("E")) s.append("<E extends keyof Events>");
+        }else if (replace != null && replace.startsWith("<E> ")) {
+            s.append("<E extends keyof Events>");
+            replace = replace.substring(4);
+        }
         s.append("(");
-        DocletReplaceParams replace = method.getAnnotation(DocletReplaceParams.class);
         if (replace != null) {
-           s.append(replace.value());
+           s.append(replace);
         } else {
             List<? extends VariableElement> params = method.getParameters();
             if (params != null && !params.isEmpty()) {
                 for (VariableElement param : params) {
-                    String paramName = param.getSimpleName().toString();
-                    s.append(paramName).append(": ")
-                        .append(tags.containsKey(paramName) ? tags.get(paramName) : shortify(param))
-                        .append(", ");
+                    s.append(param.getSimpleName()).append(": ").append(shortify(param)).append(", ");
                 }
                 s.setLength(s.length() - 2);
             }
@@ -152,7 +135,7 @@ public abstract class AbstractParser {
         if (replace2 != null) {
             s.append(replace2.value());
         } else {
-            s.append(returntag != null ? returntag : transformType(method.getReturnType(), true));
+            s.append(transformType(method.getReturnType(), true));
         }
         s.append(";");
 
@@ -163,16 +146,6 @@ public abstract class AbstractParser {
         final StringBuilder s = new StringBuilder();
         s.append(genComment(constructor));
         s.append("new ");
-
-        // parse type tag
-        Map<String, String> tags = new HashMap<String, String>();
-        String returntag = null;
-        DocCommentTree tree = Main.treeUtils.getDocCommentTree(constructor);
-        if (tree != null) for (DocTree blockTag : tree.getBlockTags()) {
-            if (blockTag.getKind() != DocTree.Kind.PARAM) continue;
-            String type = TypeTagParser.parse(((ParamTree) blockTag).getDescription());
-            if (type != null) tags.put(((ParamTree) blockTag).getName().toString(), type);
-        }
 
         //diamondOperator
         List<? extends TypeParameterElement> typeParams = type.getTypeParameters();
@@ -185,17 +158,16 @@ public abstract class AbstractParser {
             s.append(">");
         }
         s.append("(");
+        DocletReplaceParams replace = constructor.getAnnotation(DocletReplaceParams.class);
         List<? extends VariableElement> params = constructor.getParameters();
         if (params != null && !params.isEmpty()) {
             for (VariableElement param : params) {
-                String paramName = param.getSimpleName().toString();
-                s.append(paramName).append(": ")
-                    .append(tags.containsKey(paramName) ? tags.get(paramName) : shortify(param))
-                    .append(", ");
+                s.append(param.getSimpleName()).append(": ")
+                    .append(replace != null ? replace.value() : shortify(param)).append(", ");
             }
             s.setLength(s.length() - 2);
         }
-        s.append("): ").append(returntag != null ? returntag : shortify(type)).append(";");
+        s.append("): ").append(shortify(type)).append(";");
         return s.toString();
     }
 
