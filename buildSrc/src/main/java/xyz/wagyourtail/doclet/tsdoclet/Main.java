@@ -28,8 +28,7 @@ public class Main implements Doclet {
     public static Set<String> redirectNeeded = new HashSet<>();
 
     public static final Map<String, String> missingExtends = new HashMap<>() {{ // expand needed
-        put("ScriptScreen", "IScreen");
-        put("NBTElementHelper", "NBTElementHelper$NBTCompoundHelper & NBTElementHelper$NBTListHelper & NBTElementHelper$NBTNumberHelper");
+        put("BaseScreen", "IScreen");
     }};
 
     @Override

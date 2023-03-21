@@ -36,7 +36,7 @@ public class ClassParser extends AbstractParser {
 
     private String buildExtends() {
         StringBuilder s = new StringBuilder();
-        String sup = transformType(type.getSuperclass());
+        String sup = transformType(type.getSuperclass(), true);
         if (sup.equals("void")) {
             if (type.getKind().isInterface()) {
                 s.append("_javatypes.java.lang.Interface");
@@ -52,7 +52,7 @@ public class ClassParser extends AbstractParser {
         List<? extends TypeMirror> iface = type.getInterfaces();
         if (iface != null && !iface.isEmpty()) {
             for (TypeMirror ifa : iface) {
-                sup = transformType(ifa);
+                sup = transformType(ifa, true);
                 if (sup.equals("/* minecraft classes, as any, because obfuscation: */ any")) {
                     s.append(", ").append("/* supressed minecraft class */ _javatypes.java.lang.Interface");
                 } else {
