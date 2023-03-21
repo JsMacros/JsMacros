@@ -71,7 +71,6 @@ public class PackageTree {
 
     /**
      * this exist because the method above seems like will miss some type
-     * idk why to use Set.copyOf, i'm just afraid of breaking something so i'd use it as well
      * @author MelonRind
      */
     private void addRedirects(Set<String> redirects) {
