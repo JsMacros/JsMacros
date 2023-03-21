@@ -25,6 +25,7 @@ public class Main implements Doclet {
     public static FileHandler outputTS;
     public static PackageTree classes = new PackageTree("_javatypes");
     public static DocTrees treeUtils;
+    public static Set<String> redirectNeeded = new HashSet<>();
 
     public static final Map<String, String> missingExtends = new HashMap<>() {{ // expand needed
         put("ScriptScreen", "IScreen");
@@ -104,7 +105,7 @@ public class Main implements Doclet {
                 
                 declare namespace Events {
 
-                    export interface BaseEvent extends _javatypes.java.lang.Object {
+                    export interface BaseEvent extends JavaObject {
                         getEventName(): string;
                     }"""
             );
@@ -137,19 +138,16 @@ public class Main implements Doclet {
             for (ClassParser clz : classes.getAllClasses()) { // count
                 String type = clz.getTypeString();
                 if (!type.startsWith("_javatypes.xyz.")) continue;
-                String shortified = clz.getShortifiedType().replaceAll("([A-Z])(?=[,>])", "$1 = any");
-                if (shortified.startsWith("$")) {
+                String shortified = clz.getClassName(true).replaceAll("([A-Z])(?=[,>])", "$1 = any");
+                if (redirectNeeded.contains(shortified.replaceFirst("<.+$", ""))) {
                     if (shortified.length() > maxRedirLen) maxRedirLen = shortified.length();
-                    shortified = shortified.substring(1);
                 }
                 if (shortified.length() > maxLen) maxLen = shortified.length();
             }
             for (ClassParser clz : classes.getAllClasses()) { // append shortify
                 String type = clz.getTypeString();
                 if (!type.startsWith("_javatypes.xyz.")) continue;
-                String shortified = clz.getShortifiedType()
-                    .replaceAll("([A-Z])(?=[,>])", "$1 = any");
-                if (shortified.startsWith("$")) shortified = shortified.substring(1);
+                String shortified = clz.getClassName(true).replaceAll("([A-Z])(?=[,>])", "$1 = any");
                 
                 outputTS.append("\ntype ").append(String.format("%-" + maxLen + "s", shortified)).append(" = ");
                 shortified = shortified.replaceFirst("<.+$", ""); // remove type params
@@ -159,16 +157,17 @@ public class Main implements Doclet {
                     outputTS.append(" & ").append(missingExtends.get(shortified));
                 outputTS.append(";");
             }
-            // since helper type inside helper namespace will refer to the long name instead of short
+
+            // since some type will refer to the long name inside same namespace
             outputTS.append("\n\ntype _r = { [none: symbol]: never };\n// redirects");
             for (ClassParser clz : classes.getAllClasses()) { // append redirects
-                String shortified = clz.getShortifiedType();
-                if (!shortified.startsWith("$")) continue;
-                shortified = shortified.replaceAll("([A-Z])(?=[,>])", "$1 = any");
-                
-                outputTS.append("\ntype ").append(String.format("%-" + maxRedirLen + "s", shortified))
+                String shortified = clz.getClassName(true);
+                if (!redirectNeeded.contains(shortified.replaceFirst("<.+$", ""))) continue;
+
+                outputTS.append("\ntype $")
+                    .append(String.format("%-" + maxRedirLen + "s", shortified.replaceAll("([A-Z])(?=[,>])", "$1 = any")))
                     .append(" = ").append(shortified.endsWith(">") ? "   " : "_r&")
-                    .append(clz.getShortifiedType().substring(1)).append(";");
+                    .append(shortified).append(";");
             }
 
             outputTS.append("\n");

@@ -13,7 +13,7 @@ public class ClassParser extends AbstractParser {
         super(type);
     }
 
-    private String getClassName(boolean typeParams) {
+    public String getClassName(boolean typeParams) {
         StringBuilder s = new StringBuilder(type.getSimpleName());
         Element type = this.type.getEnclosingElement();
         while (type.getKind() == ElementKind.INTERFACE || type.getKind() == ElementKind.CLASS) {
@@ -41,12 +41,12 @@ public class ClassParser extends AbstractParser {
             if (type.getKind().isInterface()) {
                 s.append("_javatypes.java.lang.Interface");
             } else {
-                s.append("_javatypes.java.lang.Object");
+                s.append("JavaObject");
             }
         } else if (!sup.equals("/* minecraft classes, as any, because obfuscation: */ any")) {
             s.append(sup);
         } else {
-            s.append("/* supressed minecraft class */ _javatypes.java.lang.Object");
+            s.append("/* supressed minecraft class */ JavaObject");
         }
 
         List<? extends TypeMirror> iface = type.getInterfaces();

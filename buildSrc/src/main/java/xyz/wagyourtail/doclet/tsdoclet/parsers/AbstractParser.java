@@ -30,6 +30,8 @@ public abstract class AbstractParser {
         "java.util.HashMap"
     );
     static public Map<String, Map<String, String>> shortifyConflictTable;
+
+    public Set<String> redirects = new HashSet<>();
     protected TypeElement type;
 
     public AbstractParser(TypeElement type) {
@@ -230,7 +232,10 @@ public abstract class AbstractParser {
                     generateConflictTable();
                     if (shortifyConflictTable.containsKey(rawType.toString()))
                         rawType.insert(0, shortifyConflictTable.get(rawType.toString()).get(classpath));
-                    if (rawType.toString().endsWith("Helper")) rawType.insert(0, "$");
+                    if (redirects.contains(rawType.toString())) {
+                        Main.redirectNeeded.add(rawType.toString());
+                        rawType.insert(0, "$");
+                    }
                 }else if (shortify && javaShortifies.contains(classpath + "." + rawType.toString())) {
                     shortified = true;
                     rawType.insert(0, "Java");

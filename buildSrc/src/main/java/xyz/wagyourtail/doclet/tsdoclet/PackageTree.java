@@ -15,6 +15,7 @@ public class PackageTree {
     private Map<String, PackageTree> children = new LinkedHashMap<>();
     private Set<ClassParser> classes = new LinkedHashSet<>();
     private Map<ClassParser, String> compiledClasses = new LinkedHashMap<>();
+    private Set<String> redirects = new HashSet<>();
 
     public boolean dirty = true;
 
@@ -55,16 +56,38 @@ public class PackageTree {
         while (this.dirty) {
             this.dirty = false;
             for (ClassParser aClass : Set.copyOf(classes)) {
+                redirects.add(aClass.getClassName(false));
+            }
+            for (ClassParser aClass : Set.copyOf(classes)) {
+                aClass.redirects.addAll(redirects);
                 compiledClasses.computeIfAbsent(aClass, ClassParser::genTSInterface);
             }
             for (PackageTree value : Set.copyOf(children.values())) {
+                value.redirects.addAll(redirects);
                 value.prepareTSTree();
             }
         }
     }
 
+    // this exist because the method above seems like will miss some type
+    // idk why to use Set.copyOf, i'm just afraid of breaking something so i'd use it as well
+    private void addRedirects(Set<String> redirects) {
+        if (redirects != null) this.redirects.addAll(redirects);
+        for (ClassParser aClass : Set.copyOf(classes)) {
+            this.redirects.add(aClass.getClassName(false));
+        }
+        for (ClassParser aClass : Set.copyOf(classes)) {
+            if (aClass.redirects.addAll(this.redirects))
+                compiledClasses.put(aClass, aClass.genTSInterface());
+        }
+        for (PackageTree value : Set.copyOf(children.values())) {
+            value.addRedirects(this.redirects);
+        }
+    }
+
     public String genTSTree() {
         prepareTSTree();
+        addRedirects(null);
         return genTSTreeIntern();
     }
 
