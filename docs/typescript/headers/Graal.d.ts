@@ -1,15 +1,4 @@
 
-type _ = { [none: symbol]: never }; // to trick vscode to rename types
-
-type JavaObject                    = _javatypes.java.lang.Object & _;
-type JavaClass<T = any>            = _javatypes.java.lang.Class<T>;
-type JavaArray<T = any>            = _javatypes.java.lang.Array<T>;
-type JavaCollection<T = any>       = _javatypes.java.util.Collection<T>;
-type JavaList<T = any>             = _javatypes.java.util.List<T>;
-type JavaSet<T = any>              = _javatypes.java.util.Set<T>;
-type JavaMap<K = any, V = any>     = _javatypes.java.util.Map<K, V> & Record<K, V>;
-type JavaHashMap<K = any, V = any> = _javatypes.java.util.HashMap<K, V> & Record<K, V>;
-
 declare function load(source: string | _javatypes.java.io.File | _javatypes.java.net.URL): void;
 declare function loadWithNewGlobal(source: string | _javatypes.java.io.File | _javatypes.java.net.URL, arguments: any): void;
 declare function print(...arg: any): void;
@@ -330,3 +319,14 @@ declare namespace _javatypes {
         }
     }
 }
+
+type _ = { [none: symbol]: never }; // to trick vscode to rename types
+
+type JavaObject                    = _javatypes.java.lang.Object & _;
+type JavaClass<T = any>            = _javatypes.java.lang.Class<T>;
+type JavaArray<T = any>            = _javatypes.java.lang.Array<T>;
+type JavaCollection<T = any>       = _javatypes.java.util.Collection<T>;
+type JavaList<T = any>             = _javatypes.java.util.List<T>;
+type JavaSet<T = any>              = _javatypes.java.util.Set<T>;
+type JavaMap<K = any, V = any>     = _javatypes.java.util.Map<K, V> & Record<K, V>;
+type JavaHashMap<K = any, V = any> = _javatypes.java.util.HashMap<K, V> & Record<K, V>;
