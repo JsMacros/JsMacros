@@ -190,7 +190,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @return #Language# the active language.
+     * @return #Locale# the active language.
      *
      * @since 1.8.4
      */
@@ -199,7 +199,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     }
 
     /**
-     * @param languageCode #Language# the language to change to
+     * @param languageCode #Locale# the language to change to
      * @return self for chaining.
      *
      * @since 1.8.4

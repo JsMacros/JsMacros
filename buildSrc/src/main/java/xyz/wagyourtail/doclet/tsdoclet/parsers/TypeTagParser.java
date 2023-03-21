@@ -71,7 +71,7 @@ public class TypeTagParser {
         "VillagerProfession",
         "PacketName",
         "ParticleId",
-        "Language",
+        "Locale",
         "GraphicsMode",
         "ChunkBuilderMode",
         "AttackIndicatorType",

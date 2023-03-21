@@ -211,7 +211,7 @@ type StructureFeatureId = string
 //@RegistryHelper getPointOfInterestTypeIds
 type PointOfInterestTypeId = string
 //@Eval Client.getMinecraft().method_1526().method_4665().toArray().map(l => l.getCode())
-type Language = string
+type Locale = string
 //@Eval Java.from(Client.getGameOptions().control.getCategories())
 type KeyCategory = string
 //@Enum class_3419.method_14840
