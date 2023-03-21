@@ -373,9 +373,9 @@ public abstract class AbstractParser {
     // this is currently useless because there's no same class name in _javatypes.xyz.* yet
     public void generateConflictTable() {
         if (shortifyConflictTable != null) return;
-        shortifyConflictTable = new HashMap<String, Map<String, String>>();
+        shortifyConflictTable = new HashMap<>();
 
-        Map<String, String> all = new HashMap<String, String>();
+        Map<String, String> all = new HashMap<>();
         for (ClassParser clz : Main.classes.getAllClasses()) {
             String type = clz.getTypeString();
             if (!type.startsWith("_javatypes.xyz.")) continue;
@@ -388,14 +388,14 @@ public abstract class AbstractParser {
             String value = all.remove(key);
             if (!all.containsValue(value)) continue;
             all.put(key, value);
-            Set<String> conflicts = new HashSet<String>();
+            Set<String> conflicts = new HashSet<>();
             for (String k : all.keySet()) {
                 if (all.get(k) != value) continue;
                 all.remove(k);
                 conflicts.add(k);
             }
 
-            Map<String, String> table = new HashMap<String, String>();
+            Map<String, String> table = new HashMap<>();
             for (String path : conflicts) {
                 String remain = path.substring(0, path.lastIndexOf("."));
                 String res = remain.substring(remain.lastIndexOf("."));

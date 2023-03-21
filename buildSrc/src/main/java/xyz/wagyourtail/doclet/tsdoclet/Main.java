@@ -26,7 +26,7 @@ public class Main implements Doclet {
     public static PackageTree classes = new PackageTree("_javatypes");
     public static DocTrees treeUtils;
 
-    public static final Map<String, String> missingExtends = new HashMap<String, String>() {{ // expand needed
+    public static final Map<String, String> missingExtends = new HashMap<>() {{ // expand needed
         put("ScriptScreen", "IScreen");
         put("NBTElementHelper", "NBTElementHelper$NBTCompoundHelper & NBTElementHelper$NBTListHelper & NBTElementHelper$NBTNumberHelper");
     }};
