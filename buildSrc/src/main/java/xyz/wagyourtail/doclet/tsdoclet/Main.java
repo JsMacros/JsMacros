@@ -102,7 +102,7 @@ public class Main implements Doclet {
                 declare const event: Events[keyof Events];
                 declare const file: _javatypes.java.io.File;
                 declare const context: EventContainer;
-                
+
                 declare namespace Events {
 
                     export interface BaseEvent extends JavaObject {
