@@ -53,7 +53,7 @@ declare namespace Java {
     export function from<T>(javaData: JavaArray<T>): T[];
     export function from<T>(javaData: JavaList<T>): T[];
     export function from<T>(javaData: JavaCollection<T>): T[];
-    export function to<T>(jsArray: any[]): JavaArray<T>;
+    export function to<T>(jsArray: T[]): JavaArray<T>;
     export function to<T extends JavaObject>(jsData: object, toType: JavaClass<T>): T; // does this really exist
     export function isJavaObject(obj: JavaObject): boolean;
     export function isType(obj: JavaClass): boolean;
