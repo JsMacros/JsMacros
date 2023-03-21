@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.inventory;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -20,7 +21,7 @@ public class EventClickSlot implements BaseEvent, ICancelable {
      * <a href="https://wiki.vg/Protocol#Click_Window" target="_blank">https://wiki.vg/Protocol#Click_Window</a>
      */
     public final int mode;
-    /** #ClickSlotButton# */
+    @DocletReplaceReturn("ClickSlotButton")
     public final int button;
     public final int slot;
     /**

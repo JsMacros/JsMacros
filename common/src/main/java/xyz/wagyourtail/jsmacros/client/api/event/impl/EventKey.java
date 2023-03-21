@@ -5,6 +5,7 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.InputUtil;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FKeyBind;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
@@ -24,9 +25,9 @@ import java.util.Set;
 public class EventKey implements BaseEvent {
     static final MinecraftClient mc = MinecraftClient.getInstance();
     public final int action;
-    /** #Key# */
+    @DocletReplaceReturn("Key")
     public final String key;
-    /** #KeyMods# */
+    @DocletReplaceReturn("KeyMods")
     public final String mods;
 
     private static final Set<Integer> wasNullOnDown = new HashSet<>();

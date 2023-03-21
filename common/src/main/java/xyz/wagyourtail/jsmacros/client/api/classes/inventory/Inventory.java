@@ -16,6 +16,8 @@ import net.minecraft.screen.slot.SlotActionType;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
@@ -121,9 +123,10 @@ public class Inventory<T extends HandledScreen<?>> {
      *
      * @since 1.0.8
      * @param slot
-     * @param mousebutton #Bit#
+     * @param mousebutton
      * @return
      */
+    @DocletReplaceParams("slot: number, mousebutton: Bit")
     public Inventory<T> click(int slot, int mousebutton) {
         SlotActionType act = mousebutton == 2 ? SlotActionType.CLONE : SlotActionType.PICKUP;
         man.clickSlot(syncId, slot, mousebutton, act, player);
@@ -134,9 +137,10 @@ public class Inventory<T extends HandledScreen<?>> {
      * Does a drag-click with a mouse button. (the slots don't have to be in order or even adjacent, but when vanilla minecraft calls the underlying function they're always sorted...)
      * 
      * @param slots
-     * @param mousebutton #Bit#
+     * @param mousebutton
      * @return
      */
+    @DocletReplaceParams("slots: number[], mousebutton: Bit")
     public Inventory<T> dragClick(int[] slots, int mousebutton) {
         mousebutton = mousebutton == 0 ? 1 : 5;
         man.clickSlot(syncId, -999, mousebutton - 1, SlotActionType.QUICK_CRAFT, player); // start drag click
@@ -180,12 +184,13 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param item #ItemId# the item to check for
+     * @param item the item to check for
      * @return {@code true} if the item is contined anywhere in the inventory, {@code false}
      *         otherwise.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("item: ItemId")
     public boolean contains(String item) {
         return getItems().stream().anyMatch(stack -> stack.getItemId().equals(item));
     }
@@ -210,12 +215,13 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param mapIdentifiers #InvMapId[]# the identifier of the inventory sections to check
+     * @param mapIdentifiers the identifier of the inventory sections to check
      * @return the first empty slot in the given inventory sections, or {@code -1} if there are no
      *         empty slots.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("mapIdentifiers: InvMapId[]")
     public int findFreeSlot(String... mapIdentifiers) {
         for (int slot : getSlots(mapIdentifiers)) {
             if (getSlot(slot).isEmpty()) {
@@ -226,10 +232,11 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @return #JavaMap<ItemId, number># a map of all item ids and their total count inside the inventory.
+     * @return a map of all item ids and their total count inside the inventory.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaMap<ItemId, number>")
     public Map<String, Integer> getItemCount() {
         Object2IntOpenHashMap<String> itemMap = new Object2IntOpenHashMap<>();
         getItems().stream().filter(i -> !i.isEmpty()).forEach(item -> itemMap.addTo(item.getItemId(), item.getCount()));
@@ -246,11 +253,12 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param mapIdentifiers #InvMapId[]# the inventory sections
+     * @param mapIdentifiers the inventory sections
      * @return a list of all items in the given inventory sections.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("mapIdentifiers: InvMapId[]")
     public List<ItemStackHelper> getItems(String... mapIdentifiers) {
         return Arrays.stream(getSlots(mapIdentifiers)).mapToObj(this::getSlot).filter(i -> !i.isEmpty()).collect(Collectors.toList());
     }
@@ -272,11 +280,12 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param item #ItemId# the item to search for
+     * @param item the item to search for
      * @return all slots containing the given item.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("item: ItemId")
     public int[] findItem(String item) {
         IntList slots = new IntArrayList();
         for (int i = 0; i < getTotalSlots(); i++) {
@@ -288,11 +297,12 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @param mapIdentifiers #InvMapId[]# the inventory sections
+     * @param mapIdentifiers the inventory sections
      * @return all slots indexes in the given inventory sections.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("mapIdentifiers: InvMapId[]")
     public int[] getSlots(String... mapIdentifiers) {
         Map<String, int[]> map = getMap();
         IntList slots = new IntArrayList();
@@ -368,10 +378,11 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * quicks all that match the slot
      * @param slot a slot from the section you want to move items from
-     * @param button #Bit#
+     * @param button
      * @since 1.7.0
      * @return number of items that matched
      */
+    @DocletReplaceParams("slot: number, button: Bit")
     public int quickAll(int slot, int button) {
         int count = 0;
         ItemStack cursorStack = handler.slots.get(slot).getStack().copy();
@@ -461,10 +472,11 @@ public class Inventory<T extends HandledScreen<?>> {
      * equivalent to hitting the numbers or f for swapping slots to hotbar
      *
      * @param slot
-     * @param hotbarSlot #HotbarSwapSlot# 0-8 or 40 for offhand
+     * @param hotbarSlot 0-8 or 40 for offhand
      * @since 1.6.5 [citation needed]
      * @return
      */
+    @DocletReplaceParams("slot: number, hotbarSlot: HotbarSwapSlot")
     public Inventory<T> swapHotbar(int slot, int hotbarSlot) {
         if (hotbarSlot != 40) {
             if (hotbarSlot < 0 || hotbarSlot > 8)
@@ -500,8 +512,9 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @since 1.1.3
      * 
-     * @return #InventoryType# the part of the mapping the slot is in.
+     * @return the part of the mapping the slot is in.
      */
+    @DocletReplaceReturn("InventoryType")
     public String getType() {
         return JsMacros.getScreenName(this.inventory);
     }
@@ -509,8 +522,9 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @since 1.1.3
      * 
-     * @return #JavaMap<InvMapId, JavaList<number>># the inventory mappings different depending on the type of open container/inventory.
+     * @return the inventory mappings different depending on the type of open container/inventory.
      */
+    @DocletReplaceReturn("JavaMap<InvMapId, JavaArray<number>>")
     public Map<String, int[]> getMap() {
         if (map == null) {
             map = getMapInternal();
@@ -521,9 +535,10 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @since 1.1.3
      * 
-     * @param slotNum #InvMapId#
+     * @param slotNum
      * @return returns the part of the mapping the slot is in.
      */
+    @DocletReplaceReturn("InvMapId")
     public String getLocation(int slotNum) {
         if (map == null) {
             map = getMapInternal();

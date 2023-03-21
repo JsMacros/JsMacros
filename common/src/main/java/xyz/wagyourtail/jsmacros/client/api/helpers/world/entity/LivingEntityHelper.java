@@ -15,6 +15,8 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.registry.Registries;
 import net.minecraft.world.RaycastContext;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 
@@ -45,11 +47,12 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * For client side entities, excluding the player, this will most likely return {@code false}
      * even if the entity has the effect, as effects are not synced to the client.
      *
-     * @param id #StatusEffectId#
+     * @param id
      * @return {@code true} if the entity has the specified status effect, {@code false} otherwise.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: StatusEffectId")
     public boolean hasStatusEffect(String id) {
         StatusEffect effect = Registries.STATUS_EFFECT.get(RegistryHelper.parseIdentifier(id));
         return base.getStatusEffects().stream().anyMatch(statusEffectInstance -> statusEffectInstance.getEffectType().equals(effect));
@@ -148,11 +151,12 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
-     * @return #MobCategory# the entity's mob category, {@code UNDEAD}, {@code DEFAULT}, {@code ARTHROPOD}, or
+     * @return the entity's mob category, {@code UNDEAD}, {@code DEFAULT}, {@code ARTHROPOD}, or
      *         {@code ILLAGER}, {@code AQUATIC} or {@code UNKNOWN}.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("MobCategory")
     public String getMobCategory() {
         EntityGroup group = base.getGroup();
         if (group == EntityGroup.UNDEAD) {

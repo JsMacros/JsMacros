@@ -26,6 +26,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.RaycastContext;
 
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownEntry;
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownManager;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
@@ -243,11 +245,12 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x         the x coordinate to attack
      * @param y         the y coordinate to attack
      * @param z         the z coordinate to attack
-     * @param direction #Direction# possible values are "up", "down", "north", "south", "east", "west"
+     * @param direction possible values are "up", "down", "north", "south", "east", "west"
      * @return self for chaining.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("x: number, y: number, z: number, direction: Direction")
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, String direction) throws InterruptedException {
         return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), false);
     }
@@ -256,10 +259,10 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x
      * @param y
      * @param z
-     * @param direction #Hexit# 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
+     * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
      * @since 1.5.0
      */
-
+    @DocletReplaceParams("x: number, y: number, z: number, direction: Hexit")
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, int direction) throws InterruptedException {
         return attack(x, y, z, direction, false);
     }
@@ -268,12 +271,13 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x         the x coordinate to attack
      * @param y         the y coordinate to attack
      * @param z         the z coordinate to attack
-     * @param direction #Direction# possible values are "up", "down", "north", "south", "east", "west"
+     * @param direction possible values are "up", "down", "north", "south", "east", "west"
      * @param await     whether to wait for the attack to finish
      * @return self for chaining.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("x: number, y: number, z: number, direction: Direction, await: boolean")
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, String direction, boolean await) throws InterruptedException {
         return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), await);
     }
@@ -284,11 +288,12 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x
      * @param y
      * @param z
-     * @param direction #Hexit# 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
+     * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
      * @param await
      *
      * @throws InterruptedException
      */
+    @DocletReplaceParams("x: number, y: number, z: number, direction: Hexit, await: boolean")
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, int direction, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
@@ -389,11 +394,12 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x         the x coordinate to interact
      * @param y         the y coordinate to interact
      * @param z         the z coordinate to interact
-     * @param direction #Direction# possible values are "up", "down", "north", "south", "east", "west"
+     * @param direction possible values are "up", "down", "north", "south", "east", "west"
      * @return self for chaining.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("x: number, y: number, z: number, direction: Direction, offHand: boolean")
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, String direction, boolean offHand) throws InterruptedException {
         return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, false);
     }
@@ -402,10 +408,11 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x
      * @param y
      * @param z
-     * @param direction #Hexit# 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
+     * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
      * @param offHand
      * @since 1.5.0, renamed from {@code interact} in 1.6.0
      */
+    @DocletReplaceParams("x: number, y: number, z: number, direction: Hexit, offHand: boolean")
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, int direction, boolean offHand) throws InterruptedException {
         return interactBlock(x, y, z, direction, offHand, false);
     }
@@ -414,12 +421,13 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x         the x coordinate to interact
      * @param y         the y coordinate to interact
      * @param z         the z coordinate to interact
-     * @param direction #Direction# possible values are "up", "down", "north", "south", "east", "west"
+     * @param direction possible values are "up", "down", "north", "south", "east", "west"
      * @param await     whether to wait for the interaction to complete
      * @return self for chaining.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("x: number, y: number, z: number, direction: Direction, offHand: boolean, await: boolean")
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, String direction, boolean offHand, boolean await) throws InterruptedException {
         return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, await);
     }
@@ -428,11 +436,12 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param x
      * @param y
      * @param z
-     * @param direction #Hexit# 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
+     * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
      * @param offHand
      * @param await     whether to wait for the interaction to complete
      * @since 1.5.0, renamed from {@code interact} in 1.6.0
      */
+    @DocletReplaceParams("x: number, y: number, z: number, direction: Hexit, offHand: boolean, await: boolean")
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, int direction, boolean offHand, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
@@ -545,10 +554,11 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
-     * @param item #ItemId#
+     * @param item
      * @since 1.6.5
      * @return
      */
+    @DocletReplaceParams("item: ItemId")
     public int getItemCooldownRemainingTicks(String item) {
         int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
         Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();
@@ -559,8 +569,9 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
 
     /**
      * @since 1.6.5
-     * @return #JavaMap<ItemId, number>#
+     * @return
      */
+    @DocletReplaceReturn("JavaMap<ItemId, number>")
     public Map<String, Integer>  getTicksSinceCooldownsStart() {
         int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
         Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();
@@ -568,10 +579,11 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
-     * @param item #ItemId#
+     * @param item
      * @since 1.6.5
      * @return
      */
+    @DocletReplaceParams("item: ItemId")
     public int getTicksSinceCooldownStart(String item) {
         int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
         Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();

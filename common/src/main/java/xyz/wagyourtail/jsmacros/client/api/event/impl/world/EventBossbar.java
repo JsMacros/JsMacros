@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.world;
 
 import net.minecraft.client.gui.hud.ClientBossBar;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.BossBarHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -15,7 +16,7 @@ import java.util.UUID;
 public class EventBossbar implements BaseEvent {
     public final BossBarHelper bossBar;
     public final String uuid;
-    /** #BossBarUpdateType# */
+    @DocletReplaceReturn("BossBarUpdateType")
     public final String type;
     
     public EventBossbar(String type, UUID uuid, ClientBossBar bossBar) {

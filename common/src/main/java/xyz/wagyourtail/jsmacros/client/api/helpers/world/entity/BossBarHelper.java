@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.util.Formatting;
 
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.FormattingHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -38,16 +39,18 @@ public class BossBarHelper extends BaseHelper<BossBar> {
     
     /**
      * @since 1.2.1
-     * @return #BossBarColor# boss bar color.
+     * @return boss bar color.
      */
+    @DocletReplaceReturn("BossBarColor")
     public String getColor() {
         return base.getColor().getName().toUpperCase(Locale.ROOT);
     }
     
     /**
      * @since 1.2.1
-     * @return #BossBarStyle# boss bar notch style.
+     * @return boss bar notch style.
      */
+    @DocletReplaceReturn("BossBarStyle")
     public String getStyle() {
         return base.getStyle().getName().toUpperCase(Locale.ROOT);
     }

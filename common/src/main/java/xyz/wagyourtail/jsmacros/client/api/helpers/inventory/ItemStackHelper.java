@@ -16,6 +16,8 @@ import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
 
 import com.google.gson.JsonParseException;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -37,7 +39,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     private static final Style LORE_STYLE = Style.EMPTY.withColor(Formatting.DARK_PURPLE).withItalic(true);
     protected static final MinecraftClient mc = MinecraftClient.getInstance();
 
-    /** @param id #ItemId# */
+    // @DocletReplaceParams("id: ItemId, count: number")
     public ItemStackHelper(String id, int count) {
         super(new ItemStack(Registries.ITEM.get(RegistryHelper.parseIdentifier(id)), count));
     }
@@ -110,12 +112,13 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @param id #EnchantmentId# the id of the enchantment to check for
+     * @param id the id of the enchantment to check for
      * @return the enchantment instance, containing the level, or {@code null} if the item is not
      *         enchanted with the specified enchantment.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: EnchantmentId")
     public EnchantmentHelper getEnchantment(String id) {
         return getEnchantments().stream().filter(enchantmentHelper -> enchantmentHelper.getName().equals(id)).findFirst().orElse(null);
     }
@@ -143,12 +146,13 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     }
 
     /**
-     * @param enchantment #EnchantmentId# the id of the enchantment to check for
+     * @param enchantment the id of the enchantment to check for
      * @return {@code true} if the item is enchanted with the specified enchantment, {@code false}
      *         otherwise.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: EnchantmentId")
     public boolean hasEnchantment(String enchantment) {
         String toCheck = RegistryHelper.parseNameSpace(enchantment);
         return getEnchantments().stream().anyMatch(e -> e.getId().equals(toCheck));
@@ -308,27 +312,27 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     public List<TextHelper> getCreativeTab() {
         return ItemGroups.getGroups().parallelStream().filter(group -> !group.isSpecial() && group.getDisplayStacks().parallelStream().anyMatch(e -> e.isItemEqual(base))).map(ItemGroup::getDisplayName).map(TextHelper::new).collect(Collectors.toList());
     }
-    
-    /**
-     * @return #ItemId#
-     */
-     @Deprecated
+
+    @DocletReplaceReturn("ItemId")
+    @Deprecated
     public String getItemID() {
         return getItemId();
     }
 
     /**
      * @since 1.6.4
-     * @return #ItemId#
+     * @return
      */
+    @DocletReplaceReturn("ItemId")
     public String getItemId() {
         return Registries.ITEM.getId(base.getItem()).toString();
     }
 
     /**
      * @since 1.8.2
-     * @return #JavaList<ItemTag>#
+     * @return
      */
+    @DocletReplaceReturn("JavaList<ItemTag>")
     public List<String> getTags() {
         return base.getRegistryEntry().streamTags().map(t -> t.id().toString()).collect(Collectors.toList());
     }

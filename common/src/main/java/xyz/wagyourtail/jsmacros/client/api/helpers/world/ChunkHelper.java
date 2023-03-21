@@ -11,6 +11,7 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -119,10 +120,11 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @param xOffset the x offset
      * @param y       the y coordinate
      * @param zOffset the z offset
-     * @return #Biome# the biome at the given position.
+     * @return the biome at the given position.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("Biome")
     public String getBiome(int xOffset, int y, int zOffset) {
         return MinecraftClient.getInstance().world.getRegistryManager().get(RegistryKeys.BIOME).getId(MinecraftClient.getInstance().world.getBiome(base.getPos().getBlockPos(xOffset, y, zOffset)).value()).toString();
     }

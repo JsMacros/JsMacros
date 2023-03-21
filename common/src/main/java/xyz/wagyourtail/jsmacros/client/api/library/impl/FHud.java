@@ -5,6 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 
 import com.google.common.collect.ImmutableMap;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
@@ -131,8 +132,9 @@ public class FHud extends BaseLibrary {
      * 
      * @since 1.0.5, renamed from {@code getOpenScreen} in 1.2.7
      * 
-     * @return #ScreenName# The name of the currently open screen.
+     * @return The name of the currently open screen.
      */
+    @DocletReplaceReturn("ScreenName")
     public String getOpenScreenName() {
         return JsMacros.getScreenName(mc.currentScreen);
     }

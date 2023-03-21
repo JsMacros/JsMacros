@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.registry.Registries;
 
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 
 /**
@@ -18,10 +19,11 @@ public class FluidStateHelper extends StateHelper<FluidState> {
     }
 
     /**
-     * @return #BlockId# the block's id.
+     * @return the block's id.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("BlockId")
     public String getId() {
         return Registries.BLOCK.getId(base.getBlockState().getBlock()).toString();
     }

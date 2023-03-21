@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockState;
@@ -204,11 +205,12 @@ public class FWorld extends BaseLibrary {
     
     /**
      * @since 1.6.4
-     * @param id #BlockId#
+     * @param id
      * @param chunkrange
      *
      * @return
      */
+    @DocletReplaceParams("centerX: number, centerZ: number, id: BlockId, chunkrange: number")
     public List<Pos3D> findBlocksMatching(int centerX, int centerZ, String id, int chunkrange) {
         String finalId = RegistryHelper.parseNameSpace(id);
         return new WorldScanner(mc.world, block -> Registries.BLOCK.getId(block.getRaw()).toString().equals(finalId), null).scanChunkRange(centerX, centerZ, chunkrange);
@@ -216,11 +218,12 @@ public class FWorld extends BaseLibrary {
 
     /**
      * @since 1.6.4
-     * @param id #BlockId#
+     * @param id
      * @param chunkrange
      *
      * @return
      */
+    @DocletReplaceParams("id: BlockId, chunkrange: number")
     public List<Pos3D> findBlocksMatching(String id, int chunkrange) {
         assert mc.player != null;
         String finalId = RegistryHelper.parseNameSpace(id);
@@ -232,11 +235,12 @@ public class FWorld extends BaseLibrary {
 
     /**
      * @since 1.6.4
-     * @param ids #BlockId[]#
+     * @param ids
      * @param chunkrange
      *
      * @return
      */
+    @DocletReplaceParams("ids: BlockId[], chunkrange: number")
     public List<Pos3D> findBlocksMatching(String[] ids, int chunkrange) {
         assert mc.player != null;
         int playerChunkX = mc.player.getBlockX() >> 4;
@@ -249,11 +253,12 @@ public class FWorld extends BaseLibrary {
      * @since 1.6.4
      * @param centerX
      * @param centerZ
-     * @param ids #BlockId[]#
+     * @param ids
      * @param chunkrange
      *
      * @return
      */
+    @DocletReplaceParams("centerX: number, centerZ: number, ids: BlockId[], chunkrange: number")
     public List<Pos3D> findBlocksMatching(int centerX, int centerZ, String[] ids, int chunkrange) {
         Set<String> ids2 = Arrays.stream(ids).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         return new WorldScanner(mc.world, block -> ids2.contains(Registries.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(centerX, centerZ, chunkrange);
@@ -390,11 +395,12 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * @param types #EntityId[]# the entity types to consider
+     * @param types the entity types to consider
      * @return all entities in the render distance, that match the specified entity type.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("types: EntityId[]")
     public List<EntityHelper<?>> getEntities(String... types) {
         Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         Predicate<Entity> typePredicate = entity -> uniqueTypes.contains(Registries.ENTITY_TYPE.getId(entity.getType()).toString());
@@ -415,11 +421,12 @@ public class FWorld extends BaseLibrary {
 
     /**
      * @param distance the maximum distance to search for entities
-     * @param types #EntityId[]# the entity types to consider
+     * @param types the entity types to consider
      * @return a list of entities within the specified distance to the player, that match the specified entity type.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("distance: number, types: EntityId[]")
     public List<EntityHelper<?>> getEntities(double distance, String... types) {
         Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         assert mc.player != null;
@@ -824,13 +831,14 @@ public class FWorld extends BaseLibrary {
     /**
      * Summons the amount of particles at the desired position.
      *
-     * @param id    #ParticleId# the particle id
+     * @param id    the particle id
      * @param x     the x position to spawn the particle
      * @param y     the y position to spawn the particle
      * @param z     the z position to spawn the particle
      * @param count the amount of particles to spawn
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ParticleId, x: number, y: number, z: number, count: number")
     public void spawnParticle(String id, double x, double y, double z, int count) {
         spawnParticle(id, x, y, z, 0.1, 0.1, 0.1, 1, count, true);
     }
@@ -839,7 +847,7 @@ public class FWorld extends BaseLibrary {
      * Summons the amount of particles at the desired position with some variation of delta and the
      * given speed.
      *
-     * @param id     #ParticleId# the particle id
+     * @param id     the particle id
      * @param x      the x position to spawn the particle
      * @param y      the y position to spawn the particle
      * @param z      the z position to spawn the particle
@@ -851,6 +859,7 @@ public class FWorld extends BaseLibrary {
      * @param force  whether to show the particle if it's more than 32 blocks away
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ParticleId, x: number, y: number, z: number, deltaX: number, deltaY: number, deltaZ: number, speed: number, count: number, force: boolean")
     public void spawnParticle(String id, double x, double y, double z, double deltaX, double deltaY, double deltaZ, double speed, int count, boolean force) {
         ParticleEffect particle = (ParticleEffect) Registries.PARTICLE_TYPE.get(RegistryHelper.parseIdentifier(id));
         particle = particle != null ? particle : ParticleTypes.CLOUD;

@@ -7,6 +7,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.math.MathHelper;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
@@ -32,7 +33,7 @@ public class Item implements RenderElement, Alignable<Item> {
     public int y;
     public int zIndex;
 
-    /** @param id #ItemId# */
+    // @DocletReplaceParams("x: number, y: number, zIndex: number, id: ItemId, overlay: boolean, scale: number, rotation: number")
     public Item(int x, int y, int zIndex, String id, boolean overlay, double scale, float rotation) {
         this(x, y, zIndex, new ItemStackHelper(id, 1), overlay, scale, rotation);
     }
@@ -69,13 +70,14 @@ public class Item implements RenderElement, Alignable<Item> {
     }
 
     /**
-     * @param id #ItemId#
+     * @param id
      * @param count
      *
      * @return
      *
      * @since 1.0.5 [citation needed]
      */
+    @DocletReplaceParams("id: ItemId, count: number")
     public Item setItem(String id, int count) {
         this.item = new ItemStack(Registries.ITEM.get(RegistryHelper.parseIdentifier(id)), count);
         return this;
@@ -455,12 +457,13 @@ public class Item implements RenderElement, Alignable<Item> {
         }
 
         /**
-         * @param id #ItemId# the id of the item to draw
+         * @param id the id of the item to draw
          *
          * @return self for chaining.
          *
          * @since 1.8.4
          */
+    @DocletReplaceParams("id: ItemId")
         public Builder item(String id) {
             this.itemStack = new ItemStackHelper(Registries.ITEM.get(RegistryHelper.parseIdentifier(id))
                 .getDefaultStack());
@@ -468,13 +471,14 @@ public class Item implements RenderElement, Alignable<Item> {
         }
 
         /**
-         * @param id #ItemId# the id of the item to draw
+         * @param id the id of the item to draw
          * @param count the stack size
          *
          * @return self for chaining.
          *
          * @since 1.8.4
          */
+    @DocletReplaceParams("id: ItemId, count: number")
         public Builder item(String id, int count) {
             this.itemStack = new ItemStackHelper(id, count);
             return this;

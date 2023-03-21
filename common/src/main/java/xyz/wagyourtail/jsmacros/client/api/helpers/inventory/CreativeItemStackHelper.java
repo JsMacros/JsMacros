@@ -11,6 +11,7 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -85,12 +86,13 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     /**
-     * @param id    #EnchantmentId# the id of the enchantment
+     * @param id the id of the enchantment
      * @param level the level of the enchantment
      * @return self for chaining.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: EnchantmentId, level: number")
     public CreativeItemStackHelper addEnchantment(String id, int level) {
         return addEnchantment(Registries.ENCHANTMENT.get(RegistryHelper.parseIdentifier(id)), level);
     }
@@ -138,11 +140,12 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     /**
-     * @param id #EnchantmentId# the id of the enchantment to remove
+     * @param id the id of the enchantment to remove
      * @return self for chaining.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: EnchantmentId")
     public CreativeItemStackHelper removeEnchantment(String id) {
         NbtCompound compound = base.getOrCreateNbt();
         if (compound.contains("Enchantments", 9)) {

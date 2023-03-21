@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 import net.minecraft.block.Block;
 
 import net.minecraft.registry.Registries;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -98,10 +99,11 @@ public class BlockHelper extends BaseHelper<Block> {
     }
 
     /**
-     * @return #JavaList<BlockTag># all tags of the block as an {@link java.util.ArrayList ArrayList}.
+     * @return all tags of the block as an {@link java.util.ArrayList ArrayList}.
      *
      * @since 1.6.5
      */
+    @DocletReplaceReturn("JavaList<BlockTag>")
     public List<String> getTags() {
         return base.getRegistryEntry().streamTags().map(t -> t.id().toString()).collect(Collectors.toList());
     }
@@ -116,10 +118,11 @@ public class BlockHelper extends BaseHelper<Block> {
     }
 
     /**
-     * @return #BlockId# the identifier of the block.
+     * @return the identifier of the block.
      *
      * @since 1.6.5
      */
+    @DocletReplaceReturn("BlockId")
     public String getId() {
         return Registries.BLOCK.getId(base).toString();
     }

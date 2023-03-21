@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 
 import net.minecraft.client.gui.screen.Screen;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -13,7 +14,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  @Event(value = "OpenScreen", oldName = "OPEN_SCREEN")
 public class EventOpenScreen implements BaseEvent {
     public final IScreen screen;
-    /** #ScreenName# */
+    @DocletReplaceReturn("ScreenName")
     public final String screenName;
     
     public EventOpenScreen(Screen screen) {

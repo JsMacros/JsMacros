@@ -6,6 +6,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.InputUtil.Key;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
@@ -27,9 +29,10 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Dont use this one... get the raw minecraft keycode class.
      * 
-     * @param keyName #Key#
+     * @param keyName
      * @return the raw minecraft keycode class
      */
+    @DocletReplaceParams("keyName: Key")
     public Key getKeyCode(String keyName) {
         try {
             return InputUtil.fromTranslationKey(keyName);
@@ -41,8 +44,9 @@ public class FKeyBind extends BaseLibrary {
     /**
      * @since 1.2.2
      * 
-     * @return #JavaMap<Bind, Key># A {@link java.util.Map Map} of all the minecraft keybinds.
+     * @return A {@link java.util.Map Map} of all the minecraft keybinds.
      */
+    @DocletReplaceReturn("JavaMap<Bind, Key>")
     public Map<String, String> getKeyBindings() {
         Map<String, String> keys = new HashMap<>();
         for (KeyBinding key : ImmutableList.copyOf(mc.options.allKeys)) {
@@ -56,9 +60,10 @@ public class FKeyBind extends BaseLibrary {
      * 
      * @since 1.2.2
      * 
-     * @param bind #Bind#
-     * @param key #Key#
+     * @param bind
+     * @param key
      */
+    @DocletReplaceParams("bind: Bind, key: Key")
     public void setKeyBind(String bind, String key) {
         for (KeyBinding keybind : mc.options.allKeys) {
             if (keybind.getTranslationKey().equals(bind)) {
@@ -72,9 +77,10 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Set a key-state for a key.
      * 
-     * @param keyName #Key#
+     * @param keyName
      * @param keyState
      */
+    @DocletReplaceParams("keyName: Key, keyState: boolean")
     public void key(String keyName, boolean keyState) {
         key(getKeyCode(keyName), keyState);
     }
@@ -82,9 +88,10 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Calls {@link #key(String, boolean)} with keyState set to true.
      *
-     * @param keyName #Key# the name of the key to press
+     * @param keyName the name of the key to press
      * @since 1.8.4
      */
+    @DocletReplaceParams("keyName: Key")
     public void pressKey(String keyName) {
         key(keyName, true);
     }
@@ -92,9 +99,10 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Calls {@link #key(String, boolean)} with keyState set to false.
      *
-     * @param keyName #Key# the name of the key to release
+     * @param keyName the name of the key to release
      * @since 1.8.4
      */
+    @DocletReplaceParams("keyName: Key")
     public void releaseKey(String keyName) {
         key(keyName, false);
     }
@@ -102,7 +110,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Don't use this one... set the key-state using the raw minecraft keycode class.
      * 
-     * @param keyBind #Bind#
+     * @param keyBind
      * @param keyState
      */
     protected void key(Key keyBind, boolean keyState) {
@@ -121,9 +129,10 @@ public class FKeyBind extends BaseLibrary {
      * 
      * @since 1.2.2
      * 
-     * @param keyBind #Bind#
+     * @param keyBind
      * @param keyState
      */
+    @DocletReplaceParams("keyBind: Bind, keyState: boolean")
     public void keyBind(String keyBind, boolean keyState) {
         for (KeyBinding key : mc.options.allKeys) {
             if (key.getTranslationKey().equals(keyBind)) {
@@ -141,9 +150,10 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Calls {@link #keyBind(String, boolean)} with keyState set to true.
      *
-     * @param keyBind #Bind# the name of the keybinding to press
+     * @param keyBind the name of the keybinding to press
      * @since 1.8.4
      */
+    @DocletReplaceParams("keyBind: Bind")
     public void pressKeyBind(String keyBind) {
         keyBind(keyBind, true);
     }
@@ -151,9 +161,10 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Calls {@link #keyBind(String, boolean)} with keyState set to false.
      *
-     * @param keyBind #Bind# the name of the keybinding to release
+     * @param keyBind the name of the keybinding to release
      * @since 1.8.4
      */
+    @DocletReplaceParams("keyBind: Bind")
     public void releaseKeyBind(String keyBind) {
         keyBind(keyBind, false);
     }
@@ -161,7 +172,7 @@ public class FKeyBind extends BaseLibrary {
     /**
      * Don't use this one... set the key-state using the raw minecraft keybind class.
      * 
-     * @param keyBind #Bind#
+     * @param keyBind
      * @param keyState
      */
     protected void key(KeyBinding keyBind, boolean keyState) {
@@ -176,8 +187,9 @@ public class FKeyBind extends BaseLibrary {
     /**
      * @since 1.2.6 (turned into set instead of list in 1.6.5)
      * 
-     * @return #JavaSet<Key># a set of currently pressed keys.
+     * @return a set of currently pressed keys.
      */
+    @DocletReplaceReturn("JavaSet<Key>")
     public Set<String> getPressedKeys() {
         return KeyTracker.getPressedKeys();
     }

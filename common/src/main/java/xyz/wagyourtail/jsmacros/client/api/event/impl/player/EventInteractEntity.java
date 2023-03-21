@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 
 import net.minecraft.entity.Entity;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -8,7 +9,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 @Event("InteractEntity")
 public class EventInteractEntity implements BaseEvent {
     public final boolean offhand;
-    /** #ActionResult# */
+    @DocletReplaceReturn("ActionResult")
     public final String result;
     public final EntityHelper<?> entity;
 

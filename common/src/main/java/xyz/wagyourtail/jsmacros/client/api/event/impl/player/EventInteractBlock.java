@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -11,10 +12,10 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 @Event("InteractBlock")
 public class EventInteractBlock implements BaseEvent {
     public final boolean offhand;
-    /** #ActionResult# */
+    @DocletReplaceReturn("ActionResult")
     public final String result;
     public final BlockDataHelper block;
-    /** #Side# */
+    @DocletReplaceReturn("Side")
     public final int side;
 
     public EventInteractBlock(boolean offhand, String resultStatus, BlockDataHelper block, int side) {

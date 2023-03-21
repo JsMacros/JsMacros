@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
 import net.minecraft.client.util.math.MatrixStack;
 
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -478,9 +479,10 @@ public interface IDraw2D<T> {
      * @since 1.2.7
      * @param x left most corner
      * @param y top most corner
-     * @param id #ItemId# item id
+     * @param id item id
      * @return added item
      */
+    @DocletReplaceParams("x: number, y: number, id: ItemId")
     Item addItem(int x, int y, String id);
     
     /**
@@ -488,19 +490,21 @@ public interface IDraw2D<T> {
      * @param x left most corner
      * @param y top most corner
      * @param zIndex z-index
-     * @param id #ItemId# item id
+     * @param id item id
      * @return added item
      */
+    @DocletReplaceParams("x: number, y: number, zIndex: number, id: ItemId")
     Item addItem(int x, int y, int zIndex, String id);
     
     /**
      * @since 1.2.7
      * @param x left most corner
      * @param y top most corner
-     * @param id #ItemId# item id
+     * @param id item id
      * @param overlay should include overlay health and count
      * @return added item
      */
+    @DocletReplaceParams("x: number, y: number, id: ItemId, overlay: boolean")
     Item addItem(int x, int y, String id, boolean overlay);
     
     /**
@@ -508,22 +512,24 @@ public interface IDraw2D<T> {
      * @param x left most corner
      * @param y top most corner
      * @param zIndex z-index
-     * @param id #ItemId# item id
+     * @param id item id
      * @param overlay should include overlay health and count
      * @return added item
      */
+    @DocletReplaceParams("x: number, y: number, zIndex: number, id: ItemId, overlay: boolean")
     Item addItem(int x, int y, int zIndex, String id, boolean overlay);
     
     /**
      * @since 1.2.7
      * @param x left most corner
      * @param y top most corner
-     * @param id #ItemId# item id
+     * @param id item id
      * @param overlay should include overlay health and count
      * @param scale scale of item
      * @param rotation rotation of item
      * @return added item
      */
+    @DocletReplaceParams("x: number, y: number, id: ItemId, overlay: boolean, scale: number, rotation: number")
     Item addItem(int x, int y, String id, boolean overlay, double scale, double rotation);
     
     /**
@@ -531,12 +537,13 @@ public interface IDraw2D<T> {
      * @param x left most corner
      * @param y top most corner
      * @param zIndex z-index
-     * @param id #ItemId# item id
+     * @param id item id
      * @param overlay should include overlay health and count
      * @param scale scale of item
      * @param rotation rotation of item
      * @return added item
      */
+    @DocletReplaceParams("x: number, y: number, zIndex: number, id: ItemId, overlay: boolean, scale: number, rotation: number")
     Item addItem(int x, int y, int zIndex, String id, boolean overlay, double scale, double rotation);
     
     /**

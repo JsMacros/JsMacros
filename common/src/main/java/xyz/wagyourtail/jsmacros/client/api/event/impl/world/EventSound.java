@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.world;
 
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -10,7 +11,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
  @Event(value = "Sound", oldName = "SOUND")
 public class EventSound implements BaseEvent {
-    /** #Sound# */
+    @DocletReplaceReturn("Sound")
     public final String sound;
     public final float volume;
     public final float pitch;

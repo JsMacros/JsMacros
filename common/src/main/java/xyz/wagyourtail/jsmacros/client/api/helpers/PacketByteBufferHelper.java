@@ -37,6 +37,8 @@ import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
@@ -116,12 +118,13 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     }
 
     /**
-     * @param packetName #PacketName# the name of the packet's class that should be returned
+     * @param packetName the name of the packet's class that should be returned
      * @return the packet for this buffer.
      *
      * @see #getPacketNames()
      * @since 1.8.4
      */
+    @DocletReplaceParams("packetName: PacketName")
     public Packet<?> toPacket(String packetName) {
         return toPacket(PACKETS.get(packetName));
     }
@@ -294,10 +297,11 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * These names are subject to change and are only for an easier access. They will probably not
      * change in the future, but it is not guaranteed.
      *
-     * @return #JavaList<PacketName># a list of all packet names.
+     * @return a list of all packet names.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<PacketName>")
     public List<String> getPacketNames() {
         return ImmutableList.copyOf(PACKETS.keySet());
     }

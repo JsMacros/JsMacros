@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
 import net.minecraft.network.Packet;
 
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -15,7 +16,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 public class EventSendPacket implements BaseEvent {
 
     public final Packet<?> packet;
-    /** #PacketName# */
+    @DocletReplaceReturn("PacketName")
     public final String type;
 
     public EventSendPacket(Packet<?> packet) {

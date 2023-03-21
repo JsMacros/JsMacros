@@ -13,6 +13,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.GameMode;
 
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
@@ -67,9 +69,10 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
-     * @return #Gamemode# the player's current gamemode.
+     * @return the player's current gamemode.
      * @since 1.0.9
      */
+    @DocletReplaceReturn("Gamemode")
     public String getGameMode() {
         assert mc.interactionManager != null;
         GameMode mode = mc.interactionManager.getCurrentGameMode();
@@ -77,10 +80,11 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
-     * @param gameMode #Gamemode# possible values are survival, creative, adventure, spectator (case insensitive)
+     * @param gameMode possible values are survival, creative, adventure, spectator (case insensitive)
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("gameMode: Gamemode")
     public void setGameMode(String gameMode) {
         assert mc.interactionManager != null;
         mc.interactionManager.setGameMode(GameMode.byName(gameMode.toLowerCase(Locale.ROOT), mc.interactionManager.getCurrentGameMode()));

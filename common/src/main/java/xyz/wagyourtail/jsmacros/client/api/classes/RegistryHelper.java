@@ -10,6 +10,8 @@ import net.minecraft.util.Identifier;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.CreativeItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
@@ -30,33 +32,36 @@ import java.util.stream.Collectors;
 public class RegistryHelper {
 
     /**
-     * @param id #ItemId# the item's id
+     * @param id the item's id
      * @return an {@link ItemHelper} for the given item.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ItemId")
     public ItemHelper getItem(String id) {
         return new ItemHelper(Registries.ITEM.get(parseIdentifier(id)));
     }
 
     /**
-     * @param id #ItemId# the item's id
+     * @param id the item's id
      * @return an {@link ItemStackHelper} for the given item.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ItemId")
     public ItemStackHelper getItemStack(String id) {
         return new CreativeItemStackHelper(new ItemStack(Registries.ITEM.get(parseIdentifier(id))));
     }
 
     /**
-     * @param id  #ItemId# the item's id
+     * @param id the item's id
      * @param nbt the item's nbt
      * @return an {@link ItemStackHelper} for the given item and nbt data.
      *
      * @throws CommandSyntaxException if the nbt data is invalid.
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ItemId, nbt: string")
     public ItemStackHelper getItemStack(String id, String nbt) throws CommandSyntaxException {
         ItemStringReader.ItemResult itemResult = ItemStringReader.item(Registries.ITEM.getReadOnlyWrapper(), new StringReader(parseNameSpace(id) + nbt));
         ItemStack stack = new ItemStack(itemResult.item());
@@ -65,10 +70,11 @@ public class RegistryHelper {
     }
 
     /**
-     * @return #JavaList<ItemId># a list of all registered item ids.
+     * @return a list of all registered item ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<ItemId>")
     public List<String> getItemIds() {
         return Registries.ITEM.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
@@ -83,42 +89,46 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id #BlockId# the block's id
+     * @param id the block's id
      * @return an {@link BlockHelper} for the given block.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: BlockId")
     public BlockHelper getBlock(String id) {
         return new BlockHelper(Registries.BLOCK.get(parseIdentifier(id)));
     }
 
     /**
-     * @param id #BlockId# the block's id
+     * @param id the block's id
      * @return an {@link BlockStateHelper} for the given block.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: BlockId")
     public BlockStateHelper getBlockState(String id) {
         return new BlockStateHelper(Registries.BLOCK.get(parseIdentifier(id)).getDefaultState());
     }
 
     /**
-     * @param id  #BlockId# the block's id
+     * @param id the block's id
      * @param nbt the block's nbt
      * @return an {@link BlockStateHelper} for the given block with the specified nbt.
      *
      * @throws CommandSyntaxException if the nbt data is invalid.
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: BlockId, nbt: string")
     public BlockStateHelper getBlockState(String id, String nbt) throws CommandSyntaxException {
         return new BlockStateHelper(BlockArgumentParser.block(Registries.BLOCK.getReadOnlyWrapper(), parseNameSpace(id) + nbt, false).blockState());
     }
 
     /**
-     * @return #JavaList<BlockId># a list of all registered block ids.
+     * @return a list of all registered block ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<BlockId>")
     public List<String> getBlockIds() {
         return Registries.BLOCK.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
@@ -133,31 +143,34 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id #EnchantmentId# the enchantment's id
+     * @param id the enchantment's id
      * @return an {@link EnchantmentHelper} for the given enchantment.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: EnchantmentId")
     public EnchantmentHelper getEnchantment(String id) {
         return getEnchantment(id, 0);
     }
 
     /**
-     * @param id    #EnchantmentId# the enchantment's id
+     * @param id the enchantment's id
      * @param level the level of the enchantment
      * @return an {@link EnchantmentHelper} for the given enchantment with the specified level.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: EnchantmentId, level: number")
     public EnchantmentHelper getEnchantment(String id, int level) {
         return new EnchantmentHelper(Registries.ENCHANTMENT.get(parseIdentifier(id)), level);
     }
 
     /**
-     * @return #JavaList<EnchantmentId># a list of all registered enchantment ids.
+     * @return a list of all registered enchantment ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<EnchantmentId>")
     public List<String> getEnchantmentIds() {
         return Registries.ENCHANTMENT.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
@@ -172,30 +185,33 @@ public class RegistryHelper {
     }
 
     /**
-     * @param type #EntityId# the id of the entity's type
+     * @param type the id of the entity's type
      * @return an {@link EntityHelper} for the given entity.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("type: EntityId")
     public EntityHelper<?> getEntity(String type) {
         return EntityHelper.create(Registries.ENTITY_TYPE.get(parseIdentifier(type)).create(MinecraftClient.getInstance().world));
     }
 
     /**
-     * @param type #EntityId# the id of the entity's type
+     * @param type the id of the entity's type
      * @return an {@link EntityType} for the given entity.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("type: EntityId")
     public EntityType<?> getRawEntityType(String type) {
         return Registries.ENTITY_TYPE.get(parseIdentifier(type));
     }
 
     /**
-     * @return #JavaList<EntityId># a list of all entity type ids.
+     * @return a list of all entity type ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<EntityId>")
     public List<String> getEntityTypeIds() {
         return Registries.ENTITY_TYPE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
@@ -211,163 +227,181 @@ public class RegistryHelper {
     }
 
     /**
-     * @return #JavaList<FeatureId># a list of all feature ids.
+     * @return a list of all feature ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<FeatureId>")
     public List<String> getFeatureIds() {
         return Registries.FEATURE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<StructureFeatureId># a list of all structure feature ids.
+     * @return a list of all structure feature ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<StructureFeatureId>")
     public List<String> getStructureFeatureIds() {
         return Registries.STRUCTURE_PIECE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<PaintingId># a list of all painting motive ids.
+     * @return a list of all painting motive ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<PaintingId>")
     public List<String> getPaintingIds() {
         return Registries.PAINTING_VARIANT.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<ParticleTypeId># a list of all particle type ids.
+     * @return a list of all particle type ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<ParticleTypeId>")
     public List<String> getParticleTypeIds() {
         return Registries.PARTICLE_TYPE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<GameEventName># a list of all game event names.
+     * @return a list of all game event names.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<GameEventName>")
     public List<String> getGameEventNames() {
         return Registries.GAME_EVENT.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<StatusEffectId># a list of all status effect ids.
+     * @return a list of all status effect ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<StatusEffectId>")
     public List<String> getStatusEffectIds() {
         return Registries.STATUS_EFFECT.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<BlockEntityTypeId># a list of all block entity type ids.
+     * @return a list of all block entity type ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<BlockEntityTypeId>")
     public List<String> getBlockEntityTypeIds() {
         return Registries.BLOCK_ENTITY_TYPE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<ScreenHandlerId># a list of all screen handler ids.
+     * @return a list of all screen handler ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<ScreenHandlerId>")
     public List<String> getScreenHandlerIds() {
         return Registries.SCREEN_HANDLER.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<RecipeTypeId># a list of all recipe type ids.
+     * @return a list of all recipe type ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<RecipeTypeId>")
     public List<String> getRecipeTypeIds() {
         return Registries.RECIPE_TYPE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<VillagerTypeId># a list of all villager type ids.
+     * @return a list of all villager type ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<VillagerTypeId>")
     public List<String> getVillagerTypeIds() {
         return Registries.VILLAGER_TYPE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<VillagerProfession># a list of all villager profession ids.
+     * @return a list of all villager profession ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<VillagerProfession>")
     public List<String> getVillagerProfessionIds() {
         return Registries.VILLAGER_PROFESSION.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<PointOfInterestTypeId># a list of all point of interest type ids.
+     * @return a list of all point of interest type ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<PointOfInterestTypeId>")
     public List<String> getPointOfInterestTypeIds() {
         return Registries.POINT_OF_INTEREST_TYPE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<MemoryModuleTypeId># a list of all memory module type ids.
+     * @return a list of all memory module type ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<MemoryModuleTypeId>")
     public List<String> getMemoryModuleTypeIds() {
         return Registries.MEMORY_MODULE_TYPE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<SensorTypeId># a list of all villager sensor type ids.
+     * @return a list of all villager sensor type ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<SensorTypeId>")
     public List<String> getSensorTypeIds() {
         return Registries.SENSOR_TYPE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<ActivityTypeId># a list of all villager activity type ids.
+     * @return a list of all villager activity type ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<ActivityTypeId>")
     public List<String> getActivityTypeIds() {
         return Registries.ACTIVITY.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<StatTypeId># a list of all stat type ids.
+     * @return a list of all stat type ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<StatTypeId>")
     public List<String> getStatTypeIds() {
         return Registries.STAT_TYPE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<EntityAttributeId># a list of all entity attribute ids.
+     * @return a list of all entity attribute ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<EntityAttributeId>")
     public List<String> getEntityAttributeIds() {
         return Registries.ATTRIBUTE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
-     * @return #JavaList<PotionTypeId># a list of all potion type ids.
+     * @return a list of all potion type ids.
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<PotionTypeId>")
     public List<String> getPotionTypeIds() {
         return Registries.POTION.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }

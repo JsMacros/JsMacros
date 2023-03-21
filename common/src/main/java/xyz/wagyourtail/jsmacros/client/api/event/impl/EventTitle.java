@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
 import net.minecraft.text.Text;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -11,7 +12,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
  @Event(value = "Title", oldName = "TITLE")
 public class EventTitle implements BaseEvent {
-    /** #TitleType# */
+    @DocletReplaceReturn("TitleType")
     public final String type;
     public TextHelper message;
     

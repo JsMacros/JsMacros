@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
@@ -316,10 +318,11 @@ public class FJsMacros extends PerExecLibrary {
      * @see IEventListener
      * 
      * @since 1.2.7
-     * @param event #Event#
-     * @param callback #EventCallback# calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
+     * @param event
+     * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
      * @return
      */
+    @DocletReplaceParams("<E> event: E, callback: MethodWrapper<Events[E], EventContainer>")
     public IEventListener on(String event, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
         if (callback == null) return null;
         if (!Core.getInstance().eventRegistry.events.contains(event)) {
@@ -380,10 +383,11 @@ public class FJsMacros extends PerExecLibrary {
      * 
      * @since 1.2.7
      * 
-     * @param event #Event#
-     * @param callback #EventCallback# calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
+     * @param event
+     * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
      * @return the listener.
      */
+    @DocletReplaceParams("<E> event: E, callback: MethodWrapper<Events[E], EventContainer>")
     public IEventListener once(String event, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
         if (callback == null) return null;
         if (!Core.getInstance().eventRegistry.events.contains(event)) {
@@ -455,10 +459,11 @@ public class FJsMacros extends PerExecLibrary {
      * 
      * @since 1.2.3
      * 
-     * @param event #Event#
+     * @param event
      * @param listener
      * @return
      */
+    @DocletReplaceParams("<E> event: E, listener: IEventListener")
     public boolean off(String event, IEventListener listener) {
         return Core.getInstance().eventRegistry.removeListener(event, listener);
     }
@@ -466,9 +471,10 @@ public class FJsMacros extends PerExecLibrary {
     /**
      * Will also disable all listeners for the given event, including JsMacros own event listeners.
      *
-     * @param event #Event# the event to remove all listeners from
+     * @param event the event to remove all listeners from
      * @since 1.8.4
      */
+    @DocletReplaceParams("<E> event: E")
     public void disableAllListeners(String event) {
         for (IEventListener listener : ImmutableList.copyOf(Core.getInstance().eventRegistry.getListeners(event))) {
             listener.off();
@@ -494,9 +500,10 @@ public class FJsMacros extends PerExecLibrary {
      * {@link #waitForEvent(String)}, {@link #waitForEvent(String, MethodWrapper)} and
      * {@link #waitForEvent(String, MethodWrapper, MethodWrapper)}.
      *
-     * @param event #Event# the event to remove all listeners from
+     * @param event the event to remove all listeners from
      * @since 1.8.4
      */
+    @DocletReplaceParams("<E> event: E")
     public void disableScriptListeners(String event) {
         for (IEventListener listener : ImmutableList.copyOf(Core.getInstance().eventRegistry.getListeners(event))) {
             if (listener instanceof ScriptEventListener) {
@@ -524,23 +531,27 @@ public class FJsMacros extends PerExecLibrary {
     }
     
     /**
-     * @param event #Event# event to wait for
+     * @param event event to wait for
      * @since 1.5.0
-     * @return #EventRes# a event and a new context if the event you're waiting for was joined, to leave it early.
+     * @return a event and a new context if the event you're waiting for was joined, to leave it early.
      *
      * @throws InterruptedException
      */
+    @DocletReplaceParams("<E> event: E")
+    @DocletReplaceReturn("{ event: Events[E], context: EventContainer }")
     public EventAndContext waitForEvent(String event) throws InterruptedException {
         return waitForEvent(event, null, null);
     }
 
     /**
      *
-     * @param event #Event#
-     * @param filter #EventFilter#
-     * @return #EventRes#
+     * @param event
+     * @param filter
+     * @return
      * @throws InterruptedException
      */
+    @DocletReplaceParams("<E> event: E, filter: MethodWrapper<Events[E], undefined, boolean>")
+    @DocletReplaceReturn("{ event: Events[E], context: EventContainer }")
     public EventAndContext waitForEvent(String event,  MethodWrapper<BaseEvent, Object, Boolean, ?> filter) throws InterruptedException {
         return waitForEvent(event, filter, null);
     }
@@ -548,14 +559,16 @@ public class FJsMacros extends PerExecLibrary {
     /**
      * waits for an event. if this thread is bound to an event already, this will release current lock.
      *
-     * @param event #Event# event to wait for
-     * @param filter #EventFilter# filter the event until it has the proper values or whatever.
+     * @param event event to wait for
+     * @param filter filter the event until it has the proper values or whatever.
      * @param runBeforeWaiting runs as a {@link Runnable}, run before waiting, this is a thread-safety thing to prevent "interrupts" from going in between this and things like deferCurrentTask
      * @since 1.5.0
-     * @return #EventRes# a event and a new context if the event you're waiting for was joined, to leave it early.
+     * @return a event and a new context if the event you're waiting for was joined, to leave it early.
      *
      * @throws InterruptedException
      */
+    @DocletReplaceParams("<E> event: E, filter: MethodWrapper<Events[E], undefined, boolean>, runBeforeWaiting: MethodWrapper<JavaObject, JavaObject, JavaObject>")
+    @DocletReplaceReturn("{ event: Events[E], context: EventContainer }")
     public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean, ?> filter, MethodWrapper<Object, Object, Object, ?> runBeforeWaiting) throws InterruptedException {
         // event return values
         final BaseEvent[] ev = {null};
@@ -653,9 +666,10 @@ public class FJsMacros extends PerExecLibrary {
      * 
      * @since 1.2.3
      * 
-     * @param event #Event#
+     * @param event
      * @return a list of script-added listeners.
      */
+    @DocletReplaceParams("<E> event: E")
     public List<IEventListener> listeners(String event) {
         List<IEventListener> listeners = new ArrayList<>();
         for (IEventListener l : Core.getInstance().eventRegistry.getListeners(event)) {

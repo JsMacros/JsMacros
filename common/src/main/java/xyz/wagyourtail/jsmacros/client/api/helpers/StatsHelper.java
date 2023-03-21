@@ -13,6 +13,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registries;
 
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinStatHandler;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -76,81 +77,89 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     /**
-     * @param id #EntityId# the identifier of the entity
+     * @param id the identifier of the entity
      * @return how many times the player has killed the entity.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: EntityId")
     public int getEntityKilled(String id) {
         return getStat(Stats.KILLED, Registries.ENTITY_TYPE, id);
     }
 
     /**
-     * @param id #EntityId# the identifier of the entity
+     * @param id the identifier of the entity
      * @return how many times the player has killed the specified entity.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: EntityId")
     public int getKilledByEntity(String id) {
         return getStat(Stats.KILLED_BY, Registries.ENTITY_TYPE, id);
     }
 
     /**
-     * @param id #BlockId# the identifier of the block
+     * @param id the identifier of the block
      * @return how many times the player has mined the block.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: BlockId")
     public int getBlockMined(String id) {
         return getStat(Stats.MINED, Registries.BLOCK, id);
     }
 
     /**
-     * @param id #ItemId# the identifier of the item
+     * @param id the identifier of the item
      * @return how many times the player has broken the item.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ItemId")
     public int getItemBroken(String id) {
         return getStat(Stats.BROKEN, Registries.ITEM, id);
     }
 
     /**
-     * @param id #ItemId# the identifier of the item
+     * @param id the identifier of the item
      * @return how many times the player has crafted the item.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ItemId")
     public int getItemCrafted(String id) {
         return getStat(Stats.CRAFTED, Registries.ITEM, id);
     }
 
     /**
-     * @param id #ItemId# the identifier of the item
+     * @param id the identifier of the item
      * @return how many times the player has used the item.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ItemId")
     public int getItemUsed(String id) {
         return getStat(Stats.USED, Registries.ITEM, id);
     }
 
     /**
-     * @param id #ItemId# the identifier of the item
+     * @param id the identifier of the item
      * @return how many times the player has picked up the item.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ItemId")
     public int getItemPickedUp(String id) {
         return getStat(Stats.PICKED_UP, Registries.ITEM, id);
     }
 
     /**
-     * @param id #ItemId# the identifier of the item
+     * @param id the identifier of the item
      * @return how many times the player has dropped the item.
      *
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ItemId")
     public int getItemDropped(String id) {
         return getStat(Stats.DROPPED, Registries.ITEM, id);
     }

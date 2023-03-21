@@ -2,6 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity;
 
 import net.minecraft.entity.passive.VillagerEntity;
 
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
+
 /**
  * @since 1.6.3
  */
@@ -14,16 +16,18 @@ public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
 
     /**
      * @since 1.6.3
-     * @return #VillagerProfession#
+     * @return
      */
+    @DocletReplaceReturn("VillagerProfession")
     public String getProfession() {
         return base.getVillagerData().getProfession().id();
     }
 
     /**
      * @since 1.6.3
-     * @return #VillagerStyle#
+     * @return
      */
+    @DocletReplaceReturn("VillagerStyle")
     public String getStyle() {
         return base.getVillagerData().getType().toString();
     }
