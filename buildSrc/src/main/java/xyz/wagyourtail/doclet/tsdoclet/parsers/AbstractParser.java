@@ -161,10 +161,11 @@ public abstract class AbstractParser {
         s.append("(");
         DocletReplaceParams replace = constructor.getAnnotation(DocletReplaceParams.class);
         List<? extends VariableElement> params = constructor.getParameters();
-        if (params != null && !params.isEmpty()) {
+        if (replace != null) {
+            s.append(replace.value());
+        }else if (params != null && !params.isEmpty()) {
             for (VariableElement param : params) {
-                s.append(param.getSimpleName()).append(": ")
-                    .append(replace != null ? replace.value() : shortify(param)).append(", ");
+                s.append(param.getSimpleName()).append(": ").append(shortify(param)).append(", ");
             }
             s.setLength(s.length() - 2);
         }

@@ -33,7 +33,7 @@ public class Item implements RenderElement, Alignable<Item> {
     public int y;
     public int zIndex;
 
-    // @DocletReplaceParams("x: number, y: number, zIndex: number, id: ItemId, overlay: boolean, scale: number, rotation: number")
+    @DocletReplaceParams("x: number, y: number, zIndex: number, id: ItemId, overlay: boolean, scale: number, rotation: number")
     public Item(int x, int y, int zIndex, String id, boolean overlay, double scale, float rotation) {
         this(x, y, zIndex, new ItemStackHelper(id, 1), overlay, scale, rotation);
     }

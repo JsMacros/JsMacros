@@ -39,7 +39,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     private static final Style LORE_STYLE = Style.EMPTY.withColor(Formatting.DARK_PURPLE).withItalic(true);
     protected static final MinecraftClient mc = MinecraftClient.getInstance();
 
-    // @DocletReplaceParams("id: ItemId, count: number")
+    @DocletReplaceParams("id: ItemId, count: number")
     public ItemStackHelper(String id, int count) {
         super(new ItemStack(Registries.ITEM.get(RegistryHelper.parseIdentifier(id)), count));
     }

@@ -35,7 +35,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
         this.level = level;
     }
 
-    // @DocletReplaceParams("enchantment: EnchantmentId")
+    @DocletReplaceParams("enchantment: EnchantmentId")
     public EnchantmentHelper(String enchantment) {
         this(Registries.ENCHANTMENT.get(new Identifier(enchantment)));
     }
