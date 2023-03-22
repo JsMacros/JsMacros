@@ -13,10 +13,12 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Language;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
+import xyz.wagyourtail.doclet.DocletTypescriptExtends;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
+@DocletTypescriptExtends("IScreen")
 public abstract class BaseScreen extends Screen implements IOverlayParent {
     protected Screen parent;
     protected OverlayContainer overlay;

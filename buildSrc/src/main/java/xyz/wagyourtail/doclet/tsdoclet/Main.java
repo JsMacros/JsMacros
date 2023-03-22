@@ -27,10 +27,6 @@ public class Main implements Doclet {
     public static DocTrees treeUtils;
     public static Set<String> redirectNeeded = new HashSet<>();
 
-    public static final Map<String, String> missingExtends = new HashMap<>() {{ // expand needed
-        put("BaseScreen", "IScreen");
-    }};
-
     @Override
     public void init(Locale locale, Reporter reporter) {
         Main.reporter = reporter;
@@ -125,7 +121,8 @@ public class Main implements Doclet {
 
             outputTS.append("\n\ndeclare " + classes.genTSTree());
             outputTS.append("\n\ninterface JavaTypeDict {");
-            for (ClassParser clz : classes.getAllClasses()) {
+            List<ClassParser> allClasses = classes.getAllClasses();
+            for (ClassParser clz : allClasses) {
                 outputTS.append("\n    \"").append(clz.getTypeString().replaceFirst("<.+$", "").replace("_javatypes.", "")).append("\": ")
                     .append("JavaClass<").append(clz.getShortifiedType().replaceFirst("<.+$", "").replaceFirst("^\\$", "").replace(".function.", "._function."))
                     .append("> & ").append(clz.getTypeString().replaceFirst("<.+$", "").replace(".function.", "._function.")).append(".static;");
@@ -134,7 +131,7 @@ public class Main implements Doclet {
 
             int maxLen = 0;
             int maxRedirLen = 0;
-            for (ClassParser clz : classes.getAllClasses()) { // count
+            for (ClassParser clz : allClasses) { // check length
                 String type = clz.getTypeString();
                 if (!type.startsWith("_javatypes.xyz.")) continue;
                 String shortified = clz.getClassName(true).replaceAll("([A-Z])(?=[,>])", "$1 = any");
@@ -143,23 +140,19 @@ public class Main implements Doclet {
                 }
                 if (shortified.length() > maxLen) maxLen = shortified.length();
             }
-            for (ClassParser clz : classes.getAllClasses()) { // append shortify
+
+            for (ClassParser clz : allClasses) { // append shortify
                 String type = clz.getTypeString();
                 if (!type.startsWith("_javatypes.xyz.")) continue;
                 String shortified = clz.getClassName(true).replaceAll("([A-Z])(?=[,>])", "$1 = any");
                 
-                outputTS.append("\ntype ").append(String.format("%-" + maxLen + "s", shortified)).append(" = ");
-                shortified = shortified.replaceFirst("<.+$", ""); // remove type params
-                outputTS.append(type.endsWith(">") || missingExtends.containsKey(shortified) ?
-                    "  " : "_&").append(type);
-                if (missingExtends.containsKey(shortified))
-                    outputTS.append(" & ").append(missingExtends.get(shortified));
-                outputTS.append(";");
+                outputTS.append("\ntype ").append(String.format("%-" + maxLen + "s", shortified))
+                    .append(" = ").append(type.endsWith(">") ? "  " : "_&").append(type).append(";");
             }
 
             // since some type will refer to the long name inside same namespace
             outputTS.append("\n\ntype _r = { [none: symbol]: never };\n// redirects");
-            for (ClassParser clz : classes.getAllClasses()) { // append redirects
+            for (ClassParser clz : allClasses) { // append redirects
                 String shortified = clz.getClassName(true);
                 if (!redirectNeeded.contains(shortified.replaceFirst("<.+$", ""))) continue;
 

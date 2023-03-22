@@ -1,5 +1,6 @@
 package xyz.wagyourtail.doclet.tsdoclet.parsers;
 
+import xyz.wagyourtail.doclet.DocletTypescriptExtends;
 import xyz.wagyourtail.StringHelpers;
 
 import javax.lang.model.element.*;
@@ -60,6 +61,10 @@ public class ClassParser extends AbstractParser {
                 }
             }
         }
+
+        DocletTypescriptExtends ext = type.getAnnotation(DocletTypescriptExtends.class);
+        if (ext != null) s.append(", ").append(ext.value());
+
         return s.toString();
     }
 
