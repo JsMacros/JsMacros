@@ -474,7 +474,7 @@ public class FJsMacros extends PerExecLibrary {
      * @param event the event to remove all listeners from
      * @since 1.8.4
      */
-    @DocletReplaceParams("<E> event: E")
+    @DocletReplaceParams("event: keyof Events")
     public void disableAllListeners(String event) {
         for (IEventListener listener : ImmutableList.copyOf(Core.getInstance().eventRegistry.getListeners(event))) {
             listener.off();
@@ -503,7 +503,7 @@ public class FJsMacros extends PerExecLibrary {
      * @param event the event to remove all listeners from
      * @since 1.8.4
      */
-    @DocletReplaceParams("<E> event: E")
+    @DocletReplaceParams("event: keyof Events")
     public void disableScriptListeners(String event) {
         for (IEventListener listener : ImmutableList.copyOf(Core.getInstance().eventRegistry.getListeners(event))) {
             if (listener instanceof ScriptEventListener) {
@@ -669,7 +669,7 @@ public class FJsMacros extends PerExecLibrary {
      * @param event
      * @return a list of script-added listeners.
      */
-    @DocletReplaceParams("<E> event: E")
+    @DocletReplaceParams("event: keyof Events")
     public List<IEventListener> listeners(String event) {
         List<IEventListener> listeners = new ArrayList<>();
         for (IEventListener l : Core.getInstance().eventRegistry.getListeners(event)) {
