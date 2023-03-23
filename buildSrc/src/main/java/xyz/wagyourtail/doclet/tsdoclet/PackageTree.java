@@ -59,8 +59,11 @@ public class PackageTree {
                 redirects.add(aClass.getClassName(false));
             }
             for (ClassParser aClass : Set.copyOf(classes)) {
-                aClass.redirects.addAll(redirects);
-                compiledClasses.computeIfAbsent(aClass, ClassParser::genTSInterface);
+                if (aClass.redirects.addAll(redirects)) {
+                    compiledClasses.put(aClass, aClass.genTSInterface());
+                }else {
+                    compiledClasses.computeIfAbsent(aClass, ClassParser::genTSInterface);
+                }
             }
             for (PackageTree value : Set.copyOf(children.values())) {
                 value.redirects.addAll(redirects);
