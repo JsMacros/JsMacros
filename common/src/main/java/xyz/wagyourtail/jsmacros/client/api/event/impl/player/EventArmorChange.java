@@ -1,6 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 
 import net.minecraft.item.ItemStack;
+import xyz.wagyourtail.doclet.DocletEnumType;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -11,6 +13,8 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
  @Event(value = "ArmorChange", oldName = "ARMOR_CHANGE")
 public class EventArmorChange implements BaseEvent {
+    @DocletReplaceReturn("ArmorSlot")
+    @DocletEnumType(name = "ArmorSlot", type = "'HEAD' | 'CHEST' | 'LEGS' | 'FEET'")
     public final String slot;
     public final ItemStackHelper item;
     public final ItemStackHelper oldItem;

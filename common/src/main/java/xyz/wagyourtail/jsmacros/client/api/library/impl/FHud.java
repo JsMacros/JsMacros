@@ -5,6 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 
 import com.google.common.collect.ImmutableMap;
+import xyz.wagyourtail.doclet.DocletEnumType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
@@ -135,6 +136,34 @@ public class FHud extends BaseLibrary {
      * @return The name of the currently open screen.
      */
     @DocletReplaceReturn("ScreenName")
+    @DocletEnumType(name = "HandledScreenName", type =
+        """
+        
+        | `${ 1 | 2 | 3 | 4 | 5 | 6 } Row Chest`
+        | '3x3 Container'
+        | 'Anvil'
+        | 'Beacon'
+        | 'Blast Furnace'
+        | 'Brewing Stand'
+        | 'Crafting Table'
+        | 'Enchanting Table'
+        | 'Furnace'
+        | 'Grindstone'
+        | 'Hopper'
+        | 'Loom'
+        | 'Villager'
+        | 'Shulker Box'
+        | 'Smithing Table'
+        | 'Smoker'
+        | 'Cartography Table'
+        | 'Stonecutter'
+        | 'Survival Inventory'
+        | 'Horse'
+        | 'Creative Inventory'
+        | 'Chat'
+        | 'unknown'
+        """
+    )
     public String getOpenScreenName() {
         return JsMacros.getScreenName(mc.currentScreen);
     }

@@ -5,6 +5,7 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.InputUtil;
+import xyz.wagyourtail.doclet.DocletEnumType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FKeyBind;
@@ -28,6 +29,19 @@ public class EventKey implements BaseEvent {
     @DocletReplaceReturn("Key")
     public final String key;
     @DocletReplaceReturn("KeyMods")
+    @DocletEnumType(name = "KeyMods", type =
+        """
+        KeyMod.shift | KeyMod.ctrl | KeyMod.alt
+        | `${KeyMod.shift}+${KeyMod.ctrl | KeyMod.alt}`
+        | `${KeyMod.ctrl}+${KeyMod.alt}`
+        | `${KeyMod.shift}+${KeyMod.ctrl}+${KeyMod.alt}`
+        declare namespace KeyMod {
+            type shift = 'key.keyboard.left.shift';
+            type ctrl = 'key.keyboard.left.control';
+            type alt = 'key.keyboard.left.alt';
+        }
+        """
+    )
     public final String mods;
 
     private static final Set<Integer> wasNullOnDown = new HashSet<>();

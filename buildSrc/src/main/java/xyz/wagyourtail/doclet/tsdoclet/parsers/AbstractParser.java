@@ -2,6 +2,7 @@ package xyz.wagyourtail.doclet.tsdoclet.parsers;
 
 import com.sun.source.doctree.*;
 import xyz.wagyourtail.StringHelpers;
+import xyz.wagyourtail.doclet.DocletEnumType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.doclet.tsdoclet.Main;
@@ -33,6 +34,7 @@ public abstract class AbstractParser {
     static public Map<String, Map<String, String>> shortifyConflictTable;
 
     public Set<String> redirects = new HashSet<>();
+    private static Set<String> loggedTypes = new HashSet<>();
     protected TypeElement type;
 
     public AbstractParser(TypeElement type) {
@@ -287,6 +289,8 @@ public abstract class AbstractParser {
     }
 
     public String genComment(Element comment) {
+        checkEnumType(comment);
+
         DocCommentTree tree = Main.treeUtils.getDocCommentTree(comment);
         Deprecated dep = comment.getAnnotation(Deprecated.class);
         if (tree == null) {
@@ -394,6 +398,19 @@ public abstract class AbstractParser {
                 table.put(path.substring(0, path.lastIndexOf(".")), res.replaceAll("\\.", ""));
             }
             shortifyConflictTable.put(value, table);
+        }
+    }
+
+    public static void checkEnumType(Element element) {
+        DocletEnumType enumType = element.getAnnotation(DocletEnumType.class);
+        if (enumType != null) {
+            if (Main.enumTypes.containsKey(enumType.name()) &&
+                !loggedTypes.contains(enumType.name()) &&
+                Main.enumTypes.get(enumType.name()) != enumType.type()) {
+                System.out.println("Duplicate enum type name: " + enumType.name());
+                loggedTypes.add(enumType.name());
+            }
+            Main.enumTypes.put(enumType.name(), enumType.type());
         }
     }
 

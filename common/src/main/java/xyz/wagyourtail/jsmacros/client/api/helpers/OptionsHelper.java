@@ -28,6 +28,7 @@ import net.minecraft.world.Difficulty;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.glfw.GLFW;
+import xyz.wagyourtail.doclet.DocletEnumType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IResourcePackManager;
@@ -235,6 +236,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.8.4
      */
     @DocletReplaceParams("name: Difficulty")
+    @DocletEnumType(name = "Difficulty", type = "'peaceful' | 'easy' | 'normal' | 'hard'")
     public OptionsHelper setDifficulty(String name) {
         if (mc.isIntegratedServerRunning()) {
             mc.getServer().setDifficulty(Difficulty.byName(name), true);
@@ -651,6 +653,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         @DocletReplaceParams("mode: GraphicsMode")
+        @DocletEnumType(name = "GraphicsMode", type = "'fast' | 'fancy' | 'fabulous'")
         public VideoOptionsHelper setGraphicsMode(String mode) {
             GraphicsMode newMode;
             switch (mode.toUpperCase(Locale.ROOT)) {
@@ -698,6 +701,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         @DocletReplaceParams("mode: ChunkBuilderMode")
+        @DocletEnumType(name = "ChunkBuilderMode", type = "'none' | 'nearby' | 'player_affected'")
         public VideoOptionsHelper setChunkBuilderMode(String mode) {
             ChunkBuilderMode newMode;
             switch (mode.toUpperCase(Locale.ROOT)) {
@@ -885,6 +889,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         @DocletReplaceParams("type: AttackIndicatorType")
+        @DocletEnumType(name = "AttackIndicatorType", type = "'off' | 'crosshair' | 'hotbar'")
         public VideoOptionsHelper setAttackIndicatorType(String type) {
             AttackIndicator newType;
             switch (type.toUpperCase(Locale.ROOT)) {
@@ -970,6 +975,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         @DocletReplaceParams("mode: CloudsMode")
+        @DocletEnumType(name = "CloudsMode", type = "'off' | 'fast' | 'fancy'")
         public VideoOptionsHelper setCloudsMode(String mode) {
             CloudRenderMode newMode;
             switch (mode.toUpperCase(Locale.ROOT)) {
@@ -1037,6 +1043,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         @DocletReplaceParams("mode: ParticleMode")
+        @DocletEnumType(name = "ParticleMode", type = "'minimal' | 'decreased' | 'all'")
         public VideoOptionsHelper setParticleMode(String mode) {
             ParticlesMode newMode;
             switch (mode.toUpperCase(Locale.ROOT)) {
@@ -1808,6 +1815,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         @DocletReplaceParams("mode: ChatVisibility")
+        @DocletEnumType(name = "ChatVisibility", type = "'FULL' | 'SYSTEM' | 'HIDDEN'")
         public ChatOptionsHelper setChatVisibility(String mode) {
             ChatVisibility newMode;
             switch (mode.toUpperCase(Locale.ROOT)) {
@@ -2069,6 +2077,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         @DocletReplaceParams("mode: NarratorMode")
+        @DocletEnumType(name = "NarratorMode", type = "'OFF' | 'ALL' | 'CHAT' | 'SYSTEM'")
         public ChatOptionsHelper setNarratorMode(String mode) {
             NarratorMode newMode;
             switch (mode.toUpperCase(Locale.ROOT)) {

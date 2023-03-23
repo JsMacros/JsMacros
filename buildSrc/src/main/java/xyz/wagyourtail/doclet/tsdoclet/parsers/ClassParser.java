@@ -12,6 +12,7 @@ import java.util.Set;
 public class ClassParser extends AbstractParser {
     public ClassParser(TypeElement type) {
         super(type);
+        super.checkEnumType(type);
     }
 
     public String getClassName(boolean typeParams) {

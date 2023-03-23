@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.worldscanner;
 
 import net.minecraft.client.MinecraftClient;
+import xyz.wagyourtail.doclet.DocletEnumType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IAdvancedFilter;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IFilter;
@@ -49,6 +50,12 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
  * @author Etheradon
  * @since 1.6.5
  */
+@DocletEnumType(name = "WorldScannerMethod", type =
+    """
+    'EQUALS' | 'CONTAINS' | 'STARTS_WITH' | 'ENDS_WITH' | 'MATCHES';
+    type WorldScannerOperation = '>' | '>=' | '<' | '<=' | '==' | '!=';
+    """
+)
 public final class WorldScannerBuilder {
 
     private IAdvancedFilter<BlockHelper> blockFilter;
@@ -140,19 +147,16 @@ public final class WorldScannerBuilder {
         }
     }
 
-    @DocletReplaceParams("method: WorldScannerMethod")
     public WorldScannerBuilder withStateFilter(String method) {
         createNewFilter(Operation.NEW, FilterCategory.STATE, method);
         return this;
     }
 
-    @DocletReplaceParams("method: WorldScannerMethod")
     public WorldScannerBuilder andStateFilter(String method) {
         createNewFilter(Operation.AND, FilterCategory.STATE, method);
         return this;
     }
 
-    @DocletReplaceParams("method: WorldScannerMethod")
     public WorldScannerBuilder orStateFilter(String method) {
         createNewFilter(Operation.OR, FilterCategory.STATE, method);
         return this;
@@ -164,19 +168,16 @@ public final class WorldScannerBuilder {
         return this;
     }
 
-    @DocletReplaceParams("method: WorldScannerMethod")
     public WorldScannerBuilder withBlockFilter(String method) {
         createNewFilter(Operation.NEW, FilterCategory.BLOCK, method);
         return this;
     }
 
-    @DocletReplaceParams("method: WorldScannerMethod")
     public WorldScannerBuilder andBlockFilter(String method) {
         createNewFilter(Operation.AND, FilterCategory.BLOCK, method);
         return this;
     }
 
-    @DocletReplaceParams("method: WorldScannerMethod")
     public WorldScannerBuilder orBlockFilter(String method) {
         createNewFilter(Operation.OR, FilterCategory.BLOCK, method);
         return this;
@@ -237,7 +238,6 @@ public final class WorldScannerBuilder {
         return test(args);
     }
 
-    @DocletReplaceParams("methodArgs: WorldScannerMethod[], filterArgs: any[]")
     public WorldScannerBuilder test(Object[] methodArgs, Object[] filterArgs) {
         return is(methodArgs, filterArgs);
     }
@@ -267,7 +267,6 @@ public final class WorldScannerBuilder {
         return this;
     }
 
-    @DocletReplaceParams("method: WorldScannerMethod, args: string[]")
     private void createStringFilter(String method, String... args) {
         if (selectedCategory == FilterCategory.STATE) {
             composeFilters(new StringifyFilter<BlockStateFilter>(method).addOption(args));

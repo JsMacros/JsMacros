@@ -6,7 +6,7 @@
  * @typedef {{ [name: string]: string }} Dict
  */
 
-let jsmEnum = FS.open('./JsmEnum-template.d.ts').read().replace(/\r\n/g, '\n')
+let enumFile = FS.open('./template.d.ts').read().replace(/\r\n/g, '\n')
 /** @type {{ [name: string]: string[] }} */
 const types = {}
 /** @type {Dict} */
@@ -15,22 +15,22 @@ const fromEnum = {}
 const fromRegistryHelper = {}
 /** @type {Dict} */
 const fromEval = {}
-const custom  = jsmEnum.match(/\/\/@[Cc]ustom.*\n *type +\w+ *= *string/g)
+const custom  = enumFile.match(/\/\/@[Cc]ustom.*\n *type +\w+ *= *string/g)
   .map(s => s.match(/^\/\/@[Cc]ustom.*\n *type +(\w+) *= *string$/)[1])
-const unknown = jsmEnum.match(/\/\/@[Uu]nknown.*\n *type +\w+ *= *string/g)
+const unknown = enumFile.match(/\/\/@[Uu]nknown.*\n *type +\w+ *= *string/g)
   .map(s => s.match(/^\/\/@[Uu]nknown.*\n *type +(\w+) *= *string$/)[1])
 
-jsmEnum.match(/\/\/@Enum +\S+.*\n *type +\w+ *= *string/g).forEach(s => {
+enumFile.match(/\/\/@Enum +\S+.*\n *type +\w+ *= *string/g).forEach(s => {
   const m = s.match(/^\/\/@Enum +(\S+).*\n *type +(\w+) *= *string$/)
   fromEnum[m[2]] = m[1]
 })
 
-jsmEnum.match(/\/\/@RegistryHelper +\S+.*\n *type +\w+ *= *string/g).forEach(s => {
+enumFile.match(/\/\/@RegistryHelper +\S+.*\n *type +\w+ *= *string/g).forEach(s => {
   const m = s.match(/^\/\/@RegistryHelper +(\S+).*\n *type +(\w+) *= *string$/)
   fromRegistryHelper[m[2]] = m[1]
 })
 
-jsmEnum.match(/\/\/@Eval +.*\n *type +\w+ *= *string/g).forEach(s => {
+enumFile.match(/\/\/@Eval +.*\n *type +\w+ *= *string/g).forEach(s => {
   const m = s.match(/^\/\/@Eval +(.*)\n *type +(\w+) *= *string$/)
   fromEval[m[2]] = m[1]
 })
@@ -52,7 +52,7 @@ const replaceToFile = type => {
   else if (temp.reduce((p, v) => p + v.length + 4, 0) < 64)
        res = temp.map(f =>    " '" + f.replace(/'/g, "\\'") + "'").join(' |')
   else res = temp.map(f => "\n| '" + f.replace(/'/g, "\\'") + "'").join('')
-  jsmEnum = jsmEnum.replace(typeReg(type), `$1${res}\n`)
+  enumFile = enumFile.replace(typeReg(type), `$1${res}\n`)
 }
 
 log('start')
@@ -131,11 +131,11 @@ if (custom.includes('Key')) {
 
 custom.splice(0, Infinity, ...custom.filter(v => v))
 if (custom[0]) Chat.log(`There's ${custom.length} not fetched enum:\n${custom.join(', ')}`)
-if (unknown[0]) Chat.log(`enums marked as unknown:\n${unknown.join(', ')}`)
+if (unknown[0]) Chat.log(`Enums marked as unknown:\n${unknown.join(', ')}`)
 
-FS.open('./JsmEnum.d.ts').write(jsmEnum.replace(/\n+$/, "\n"))
+FS.open('./McIdsAndEnums.d.ts').write(enumFile.replace(/\n+$/, "\n"))
 log('exported')
 
 function log(msg) {
-  Chat.log('[JsmEnum] ' + msg)
+  Chat.log('[EnumGen] ' + msg)
 }

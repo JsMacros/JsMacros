@@ -26,6 +26,7 @@ public class Main implements Doclet {
     public static PackageTree classes = new PackageTree("_javatypes");
     public static DocTrees treeUtils;
     public static Set<String> redirectNeeded = new HashSet<>();
+    public static Map<String, String> enumTypes = new HashMap<>();
 
     @Override
     public void init(Locale locale, Reporter reporter) {
@@ -92,7 +93,7 @@ public class Main implements Doclet {
 
         try {
             
-            outputTS.append(
+            outputTS.append("\n").append(
                 """
                 declare const event: Events[keyof Events];
                 declare const file: _javatypes.java.io.File;
@@ -151,18 +152,42 @@ public class Main implements Doclet {
             }
 
             // since some type will refer to the long name inside same namespace
-            outputTS.append("\n\ntype _r = { [none: symbol]: never };\n// redirects");
+            outputTS.append("\n\ntype _r = { [none: symbol]: never };\n// redirects\n");
             for (ClassParser clz : allClasses) { // append redirects
                 String shortified = clz.getClassName(true);
                 if (!redirectNeeded.contains(shortified.replaceFirst("<.+$", ""))) continue;
 
-                outputTS.append("\ntype $")
+                outputTS.append("type $")
                     .append(String.format("%-" + maxRedirLen + "s", shortified.replaceAll("([A-Z])(?=[,>])", "$1 = any")))
                     .append(" = ").append(shortified.endsWith(">") ? "   " : "_r&")
-                    .append(shortified).append(";");
+                    .append(shortified).append(";\n");
             }
 
-            outputTS.append("\n");
+            // append number enums here because they are very unlikely to change
+            outputTS.append("\n// Enum types\n").append(
+                """
+                type Bit    = 1 | 0
+                type Trit   = 2 | Bit
+                type Dit    = 3 | Trit
+                type Pentit = 4 | Dit
+                type Hexit  = 5 | Pentit
+                type Septit = 6 | Hexit
+                type Octit  = 7 | Septit
+
+                type Side = Hexit
+                type HotbarSlot = Octit | 8
+                type HotbarSwapSlot = HotbarSlot | OffhandSlot
+                type ClickSlotButton = HotbarSwapSlot | 9 | 10
+                type OffhandSlot = 40
+
+                """
+            );
+
+            for (String key : new TreeSet<>(enumTypes.keySet())) {
+                outputTS.append("type ").append(key).append(" = ")
+                    .append(enumTypes.get(key));
+                if (!enumTypes.get(key).contains("\n")) outputTS.append(";\n");
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
