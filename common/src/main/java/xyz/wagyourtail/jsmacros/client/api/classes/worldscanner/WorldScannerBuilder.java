@@ -44,16 +44,16 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
  *     i.e. is("ENDS_WITH", "ore") checks if the returned string ends with ore (can be used with withBlockFilter("getId")).
  * For any Boolean:
  *   - is(val) with val either {@code true} or {@code false}
- *     is(false) returns true if the returned boolean value is false
+ *     i.e. is(false) returns true if the returned boolean value is false
  * </pre>
  *
  * @author Etheradon
  * @since 1.6.5
  */
-@DocletEnumType(name = "WorldScannerMethod", type =
+@DocletEnumType(name = "StringFilterMethod", type =
     """
     'EQUALS' | 'CONTAINS' | 'STARTS_WITH' | 'ENDS_WITH' | 'MATCHES';
-    type WorldScannerOperation = '>' | '>=' | '<' | '<=' | '==' | '!=';
+    type NumberFilterOperation = '>' | '>=' | '<' | '<=' | '==' | '!=';
     """
 )
 public final class WorldScannerBuilder {
@@ -147,16 +147,19 @@ public final class WorldScannerBuilder {
         }
     }
 
+    @DocletReplaceParams("method: keyof BlockStateHelper")
     public WorldScannerBuilder withStateFilter(String method) {
         createNewFilter(Operation.NEW, FilterCategory.STATE, method);
         return this;
     }
 
+    @DocletReplaceParams("method: keyof BlockStateHelper")
     public WorldScannerBuilder andStateFilter(String method) {
         createNewFilter(Operation.AND, FilterCategory.STATE, method);
         return this;
     }
 
+    @DocletReplaceParams("method: keyof BlockStateHelper")
     public WorldScannerBuilder orStateFilter(String method) {
         createNewFilter(Operation.OR, FilterCategory.STATE, method);
         return this;
@@ -168,16 +171,19 @@ public final class WorldScannerBuilder {
         return this;
     }
 
+    @DocletReplaceParams("method: keyof BlockHelper")
     public WorldScannerBuilder withBlockFilter(String method) {
         createNewFilter(Operation.NEW, FilterCategory.BLOCK, method);
         return this;
     }
 
+    @DocletReplaceParams("method: keyof BlockHelper")
     public WorldScannerBuilder andBlockFilter(String method) {
         createNewFilter(Operation.AND, FilterCategory.BLOCK, method);
         return this;
     }
 
+    @DocletReplaceParams("method: keyof BlockHelper")
     public WorldScannerBuilder orBlockFilter(String method) {
         createNewFilter(Operation.OR, FilterCategory.BLOCK, method);
         return this;
@@ -219,10 +225,52 @@ public final class WorldScannerBuilder {
         return this;
     }
 
+    // i'm gonna use cursed (and probably only unless actually adding overload to this class) -
+    // way to add overloads for typescript
+    // 
+    // pydoc doesn't use this annotation anyways  --MelonRind
+    /**
+     * for boolean value
+     */
+    @DocletReplaceParams(
+        """
+        value: boolean): $WorldScannerBuilder;
+        /**
+         * for string value
+         */
+        is(method: StringFilterMethod, value: string): $WorldScannerBuilder;
+        /**
+         * for char value
+         */
+        is(value: string): $WorldScannerBuilder;
+        /**
+         * for number value
+         */
+        is(operation: NumberFilterOperation, value: number"""
+    )
     public WorldScannerBuilder is(Object... args) {
         return is(null, args);
     }
 
+    /**
+     * for boolean value
+     */
+    @DocletReplaceParams(
+        """
+        methodArgs: any[], filterArgs: [boolean]): $WorldScannerBuilder;
+        /**
+         * for string value
+         */
+        is(methodArgs: any[], filterArgs: [StringFilterMethod, string]): $WorldScannerBuilder;
+        /**
+         * for char value
+         */
+        is(methodArgs: any[], filterArgs: [string]): $WorldScannerBuilder;
+        /**
+         * for number value
+         */
+        is(methodArgs: any[], filterArgs: [NumberFilterOperation, number]"""
+    )
     public WorldScannerBuilder is(Object[] methodArgs, Object[] filterArgs) {
         if (selectedCategory == FilterCategory.STATE) {
             composeFilters(new BlockStateFilter(method, methodArgs, filterArgs));
@@ -234,10 +282,48 @@ public final class WorldScannerBuilder {
         return this;
     }
 
+    /**
+     * for boolean value
+     */
+    @DocletReplaceParams(
+        """
+        value: boolean): $WorldScannerBuilder;
+        /**
+         * for string value
+         */
+        test(method: StringFilterMethod, value: string): $WorldScannerBuilder;
+        /**
+         * for char value
+         */
+        test(value: string): $WorldScannerBuilder;
+        /**
+         * for number value
+         */
+        test(operation: NumberFilterOperation, value: number"""
+    )
     public WorldScannerBuilder test(Object... args) {
         return test(args);
     }
 
+    /**
+     * for boolean value
+     */
+    @DocletReplaceParams(
+        """
+        methodArgs: any[], filterArgs: [boolean]): $WorldScannerBuilder;
+        /**
+         * for string value
+         */
+        test(methodArgs: any[], filterArgs: [StringFilterMethod, string]): $WorldScannerBuilder;
+        /**
+         * for char value
+         */
+        test(methodArgs: any[], filterArgs: [string]): $WorldScannerBuilder;
+        /**
+         * for number value
+         */
+        test(methodArgs: any[], filterArgs: [NumberFilterOperation, number]"""
+    )
     public WorldScannerBuilder test(Object[] methodArgs, Object[] filterArgs) {
         return is(methodArgs, filterArgs);
     }
