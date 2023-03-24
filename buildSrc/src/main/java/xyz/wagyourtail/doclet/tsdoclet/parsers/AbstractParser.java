@@ -31,7 +31,6 @@ public abstract class AbstractParser {
         "java.util.Map",
         "java.util.HashMap"
     );
-    static public Map<String, Map<String, String>> shortifyConflictTable;
 
     public Set<String> redirects = new HashSet<>();
     private static Set<String> loggedTypes = new HashSet<>();
@@ -205,9 +204,6 @@ public abstract class AbstractParser {
                     if (classpath.equals("xyz.wagyourtail.jsmacros.core.event") &&
                         rawType.toString().equals("BaseEvent")) return "Events.BaseEvent";
                     shortified = true;
-                    generateConflictTable();
-                    if (shortifyConflictTable.containsKey(rawType.toString()))
-                        rawType.insert(0, shortifyConflictTable.get(rawType.toString()).get(classpath));
                     if (redirects.contains(rawType.toString())) {
                         Main.redirectNeeded.add(rawType.toString());
                         rawType.insert(0, "$");
@@ -355,52 +351,6 @@ public abstract class AbstractParser {
 
     public String shortify(Element type) {
         return transformType(type.asType(), true);
-    }
-
-    // this is currently useless because there's no same class name in xyz.* yet
-    public void generateConflictTable() {
-        if (shortifyConflictTable != null) return;
-        shortifyConflictTable = new HashMap<>();
-
-        Map<String, String> all = new HashMap<>();
-        for (ClassParser clz : Main.classes.getAllClasses()) {
-            String type = clz.getTypeString();
-            if (!type.startsWith("xyz.")) continue;
-            if (type.contains("<")) type = type.substring(0, type.indexOf("<"));
-            all.put(type, type.substring(type.lastIndexOf(".") + 1));
-        }
-
-        while (!all.isEmpty()) {
-            String key = all.keySet().iterator().next();
-            String value = all.remove(key);
-            if (!all.containsValue(value)) continue;
-            all.put(key, value);
-            Set<String> conflicts = new HashSet<>();
-            for (String k : all.keySet()) {
-                if (all.get(k) != value) continue;
-                all.remove(k);
-                conflicts.add(k);
-            }
-
-            Map<String, String> table = new HashMap<>();
-            for (String path : conflicts) {
-                String remain = path.substring(0, path.lastIndexOf("."));
-                String res = remain.substring(remain.lastIndexOf("."));
-                remain = remain.substring(0, remain.lastIndexOf("."));
-                outer:
-                while (true) {
-                    for (String c : conflicts) {
-                        if (!c.endsWith(res)) continue;
-                        res = remain.substring(remain.lastIndexOf(".")) + res;
-                        remain = remain.substring(0, remain.lastIndexOf("."));
-                        continue outer;
-                    }
-                    break;
-                }
-                table.put(path.substring(0, path.lastIndexOf(".")), res.replaceAll("\\.", ""));
-            }
-            shortifyConflictTable.put(value, table);
-        }
     }
 
     public static void checkEnumType(Element element) {
