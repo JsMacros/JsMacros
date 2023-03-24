@@ -220,7 +220,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean isWearable() {
-        return base instanceof Wearable;
+        return base instanceof Equipment && ((Equipment) base).getSlotType().isArmorSlot();
     }
 
     /**

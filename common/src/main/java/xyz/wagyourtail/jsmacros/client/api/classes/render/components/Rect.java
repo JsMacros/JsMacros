@@ -362,7 +362,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
         float fb = (color & 0xFF) / 255F;
 
         RenderSystem.enableBlend();
-        RenderSystem.disableTexture();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 
@@ -375,7 +374,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
         buf.vertex(matrix, x2, y1, 0).color(fr, fg, fb, fa).next(); // Bottom-right
         tess.draw();
 
-        RenderSystem.enableTexture();
         RenderSystem.disableBlend();
 
         matrices.pop();

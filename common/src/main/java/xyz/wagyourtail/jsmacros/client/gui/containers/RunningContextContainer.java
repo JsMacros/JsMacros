@@ -49,8 +49,8 @@ public class RunningContextContainer extends MultiElementContainer<CancelScreen>
                     JsMacros.LOGGER.warn("Closed context {} was still in list", t.getMainThread().getName());
                     parent.removeContainer(this);
                 } else if (this.visible) {
-                    drawCenteredText(matrices, textRenderer, textRenderer.trimToWidth(service ? ((EventService) t.getTriggeringEvent()).serviceName : t.getMainThread().getName(), width - 105 - height), x + (width - 105 - height) / 2 + height + 4, y+2, 0xFFFFFF);
-                    drawCenteredText(matrices, textRenderer, textRenderer.trimToWidth(DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - t.startTime), 100), x+width - 50 + height, y+2, 0xFFFFFF);
+                    drawCenteredTextWithShadow(matrices, textRenderer, textRenderer.trimToWidth(service ? ((EventService) t.getTriggeringEvent()).serviceName : t.getMainThread().getName(), width - 105 - height), x + (width - 105 - height) / 2 + height + 4, y+2, 0xFFFFFF);
+                    drawCenteredTextWithShadow(matrices, textRenderer, textRenderer.trimToWidth(DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - t.startTime), 100), x+width - 50 + height, y+2, 0xFFFFFF);
                     fill(matrices, x+width-101, y, x+width-100, y+height, 0xFFFFFFFF);
                     fill(matrices, x+height, y, x+height+1, y+height, 0xFFFFFFFF);
                     // border

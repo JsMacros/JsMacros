@@ -561,7 +561,6 @@ public class Draw3D {
         //setup
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.disableTexture();
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 
 
@@ -589,7 +588,6 @@ public class Draw3D {
 
         //reset
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.enableTexture();
 
         matrixStack.pop();
 

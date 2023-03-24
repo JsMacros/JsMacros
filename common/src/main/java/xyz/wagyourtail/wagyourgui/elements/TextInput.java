@@ -164,7 +164,7 @@ public class TextInput extends Button {
     @Override
     public boolean clicked(double mouseX, double mouseY) {
         boolean bl = super.clicked(mouseX, mouseY);
-        if (this.isFocused() ^ bl) this.changeFocus(true);
+        if (this.isFocused() ^ bl) this.setFocused(true);
         return bl;
     }
     
@@ -175,7 +175,7 @@ public class TextInput extends Button {
     @Override
     protected void renderMessage(MatrixStack matrices) {
         fill(matrices, selStart, height > 9 ? getY() + 2 : getY(), Math.min(selEnd, getX() + width - 2), (height > 9 ? getY() + 2 : getY()) + textRenderer.fontHeight, selColor);
-        drawStringWithShadow(matrices, textRenderer, textRenderer.trimToWidth(content, width - 4), getX() + 2, height > 9 ? getY() + 2 :
+        textRenderer.drawWithShadow(matrices, textRenderer.trimToWidth(content, width - 4), getX() + 2, height > 9 ? getY() + 2 :
             getY(), textColor);
     }
 }

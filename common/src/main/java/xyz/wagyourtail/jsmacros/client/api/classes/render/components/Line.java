@@ -314,7 +314,6 @@ public class Line implements RenderElement, Alignable<Line> {
         BufferBuilder buf = tess.getBuffer();
 
         RenderSystem.enableBlend();
-        RenderSystem.disableTexture();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 
@@ -337,7 +336,6 @@ public class Line implements RenderElement, Alignable<Line> {
         buf.vertex(matrix, x2 - px, y2 - py, 0).color(color).next();
         tess.draw();
 
-        RenderSystem.enableTexture();
         RenderSystem.disableBlend();
 
         matrices.pop();

@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
-import net.minecraft.network.Packet;
 
+import net.minecraft.network.packet.Packet;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;

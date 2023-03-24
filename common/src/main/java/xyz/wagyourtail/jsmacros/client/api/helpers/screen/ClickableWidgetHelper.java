@@ -62,7 +62,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      * @return
      */
     public B setPos(int x, int y) {
-        base.setPos(x, y);
+        base.setPosition(x, y);
         return (B) this;
     }
     
