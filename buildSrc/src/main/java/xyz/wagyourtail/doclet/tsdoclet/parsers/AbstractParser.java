@@ -272,7 +272,8 @@ public abstract class AbstractParser {
                     return "_javatypes." + rawType.toString();
                 } else {
                     Main.classes.addClass(((DeclaredType) type).asElement());
-                    return (shortified ? "" : "_javatypes.") + rawType.toString().replace(".function.", "._function.");
+                    return (shortified || rawType.substring(0, 4).equals("xyz.") ? "" : "_javatypes.") +
+                        rawType.toString().replace(".function.", "._function.");
                 }
             }
             case TYPEVAR -> {
@@ -300,12 +301,13 @@ public abstract class AbstractParser {
         for (DocTree docTree : tree.getFullBody()) {
             switch (docTree.getKind()) {
                 case LINK, LINK_PLAIN -> {
-                    String referenceString = ((LinkTree) docTree).getReference().getSignature().split("\\(")[0];
+                    String referenceString = ((LinkTree) docTree).getReference().getSignature().split("\\(", 2)[0];
                     s.append("{@link ");
-                    if (referenceString.startsWith("#")) {
+                    if (referenceString.startsWith("#") || !referenceString.contains(".")) {
                         s.append(referenceString);
                     } else {
-                        s.append("_javatypes.").append(
+                        if (!referenceString.startsWith("xyz.")) s.append("_javatypes.");
+                        s.append(
                             referenceString
                             .replace(".function.", "._function.")
                         );
@@ -355,7 +357,7 @@ public abstract class AbstractParser {
         return transformType(type.asType(), true);
     }
 
-    // this is currently useless because there's no same class name in _javatypes.xyz.* yet
+    // this is currently useless because there's no same class name in xyz.* yet
     public void generateConflictTable() {
         if (shortifyConflictTable != null) return;
         shortifyConflictTable = new HashMap<>();
@@ -363,7 +365,7 @@ public abstract class AbstractParser {
         Map<String, String> all = new HashMap<>();
         for (ClassParser clz : Main.classes.getAllClasses()) {
             String type = clz.getTypeString();
-            if (!type.startsWith("_javatypes.xyz.")) continue;
+            if (!type.startsWith("xyz.")) continue;
             if (type.contains("<")) type = type.substring(0, type.indexOf("<"));
             all.put(type, type.substring(type.lastIndexOf(".") + 1));
         }

@@ -90,12 +90,18 @@ public class PackageTree {
             s.append("\n").append(StringHelpers.tabIn(value));
         }
         if (!compiledClasses.isEmpty()) s.append("\n");
+        PackageTree xyz = null;
         for (PackageTree value : children.values()) {
+            if (value.pkgName.equals("xyz")) {
+                xyz = value;
+                continue;
+            }
             s.append("\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
         }
         if (!children.isEmpty()) s.append("\n");
         if (!compiledClasses.isEmpty() || !children.isEmpty()) s.append("\n");
         s.append("}");
+        if (xyz != null) s.append("\n\ndeclare ").append(xyz.genTSTreeIntern());
         return s.toString();
     }
 

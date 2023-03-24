@@ -124,9 +124,9 @@ public class Main implements Doclet {
             outputTS.append("\n\ninterface JavaTypeDict {");
             List<ClassParser> allClasses = classes.getAllClasses();
             for (ClassParser clz : allClasses) {
-                outputTS.append("\n    \"").append(clz.getTypeString().replaceFirst("<.+$", "").replace("_javatypes.", "")).append("\": ")
-                    .append("JavaClass<").append(clz.getShortifiedType().replaceFirst("<.+$", "").replaceFirst("^\\$", "").replace(".function.", "._function."))
-                    .append("> & ").append(clz.getTypeString().replaceFirst("<.+$", "").replace(".function.", "._function.")).append(".static;");
+                outputTS.append("\n    \"").append(clz.getTypeString().split("<", 2)[0].replace("_javatypes.", "")).append("\": ")
+                    .append("JavaClass<").append(clz.getShortifiedType().split("<", 2)[0].replaceFirst("^\\$", "").replace(".function.", "._function."))
+                    .append("> & ").append(clz.getTypeString().split("<", 2)[0].replace(".function.", "._function.")).append(".static;");
             }
             outputTS.append("\n}\n\ntype _ = { [none: symbol]: never }; // to trick vscode to rename types\n");
 
@@ -134,9 +134,9 @@ public class Main implements Doclet {
             int maxRedirLen = 0;
             for (ClassParser clz : allClasses) { // check length
                 String type = clz.getTypeString();
-                if (!type.startsWith("_javatypes.xyz.")) continue;
+                if (!type.startsWith("xyz.")) continue;
                 String shortified = clz.getClassName(true).replaceAll("([A-Z])(?=[,>])", "$1 = any");
-                if (redirectNeeded.contains(shortified.replaceFirst("<.+$", ""))) {
+                if (redirectNeeded.contains(shortified.split("<", 2)[0])) {
                     if (shortified.length() > maxRedirLen) maxRedirLen = shortified.length();
                 }
                 if (shortified.length() > maxLen) maxLen = shortified.length();
@@ -144,7 +144,7 @@ public class Main implements Doclet {
 
             for (ClassParser clz : allClasses) { // append shortify
                 String type = clz.getTypeString();
-                if (!type.startsWith("_javatypes.xyz.")) continue;
+                if (!type.startsWith("xyz.")) continue;
                 String shortified = clz.getClassName(true).replaceAll("([A-Z])(?=[,>])", "$1 = any");
                 
                 outputTS.append("\ntype ").append(String.format("%-" + maxLen + "s", shortified))
@@ -155,7 +155,7 @@ public class Main implements Doclet {
             outputTS.append("\n\ntype _r = { [none: symbol]: never };\n// redirects\n");
             for (ClassParser clz : allClasses) { // append redirects
                 String shortified = clz.getClassName(true);
-                if (!redirectNeeded.contains(shortified.replaceFirst("<.+$", ""))) continue;
+                if (!redirectNeeded.contains(shortified.split("<", 2)[0])) continue;
 
                 outputTS.append("type $")
                     .append(String.format("%-" + maxRedirLen + "s", shortified.replaceAll("([A-Z])(?=[,>])", "$1 = any")))
