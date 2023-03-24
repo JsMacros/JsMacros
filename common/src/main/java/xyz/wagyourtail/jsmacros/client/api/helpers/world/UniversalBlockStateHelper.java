@@ -848,15 +848,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
     }
 
     /**
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public boolean isVineEnd() {
-        return base.get(Properties.VINE_END);
-    }
-
-    /**
      * Used on cave vine roots.
      *
      * @return

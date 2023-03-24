@@ -282,9 +282,9 @@ public class Item implements RenderElement, Alignable<Item> {
         ms.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
         if (item != null) {
             ItemRenderer i = mc.getItemRenderer();
-            i.renderGuiItemIcon(item, x, y);
+            i.renderGuiItemIcon(ms, item, x, y);
             if (overlay) {
-                i.renderGuiItemOverlay(mc.textRenderer, item, x, y, ovText);
+                i.renderGuiItemOverlay(ms, mc.textRenderer, item, x, y, ovText);
             }
         }
         ms.pop();
@@ -298,29 +298,14 @@ public class Item implements RenderElement, Alignable<Item> {
         matrices.push();
         setupMatrix(matrices, x, y, (float) scale, rotation, DEFAULT_ITEM_SIZE, DEFAULT_ITEM_SIZE, rotateCenter);
 
-        MatrixStack ms = RenderSystem.getModelViewStack();
-        ms.push();
-        ms.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
-        RenderSystem.applyModelViewMatrix();
 
         if (item != null) {
             ItemRenderer i = mc.getItemRenderer();
-            ms.push();
-            // Make the item really flat, but not too flat to avoid z-fighting
-            ms.scale(1, 1, 0.005f);
-            RenderSystem.applyModelViewMatrix();
-            RenderSystem.disableDepthTest();
-            i.renderGuiItemIcon(item, x, y);
-            ms.pop();
-            RenderSystem.applyModelViewMatrix();
-            i.zOffset = -199.9f;
+            i.renderGuiItemIcon(matrices, item, x, y);
             if (overlay) {
-                i.renderGuiItemOverlay(mc.textRenderer, item, x, y, ovText);
+                i.renderGuiItemOverlay(matrices, mc.textRenderer, item, x, y, ovText);
             }
-            i.zOffset = 0;
         }
-        ms.pop();
-        RenderSystem.applyModelViewMatrix();
         matrices.pop();
     }
 

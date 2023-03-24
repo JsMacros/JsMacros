@@ -14,6 +14,7 @@ import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.render.ChunkBuilderMode;
 import net.minecraft.client.render.entity.PlayerModelPart;
 import net.minecraft.client.resource.language.LanguageDefinition;
+import net.minecraft.client.resource.language.LanguageManager;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.util.Window;
 import net.minecraft.network.packet.c2s.play.UpdateDifficultyLockC2SPacket;
@@ -205,8 +206,14 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.8.4
      */
     public OptionsHelper setLanguage(String languageCode) {
-        LanguageDefinition language = MinecraftClient.getInstance().getLanguageManager().getLanguage(languageCode);
-        base.language = language.getCode();
+        LanguageManager manager = MinecraftClient.getInstance().getLanguageManager();
+        LanguageDefinition language = manager.getLanguage(languageCode);
+        if (language != null) {
+            manager.setLanguage(languageCode);
+            base.language = languageCode;
+            base.write();
+            mc.reloadResources();
+        }
         MinecraftClient.getInstance().reloadResources();
         base.write();
         return this;

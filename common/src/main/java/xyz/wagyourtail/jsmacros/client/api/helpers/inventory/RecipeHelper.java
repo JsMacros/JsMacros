@@ -53,7 +53,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
      * @return
      */
     public ItemStackHelper getOutput() {
-        return new ItemStackHelper(base.getOutput());
+        return new ItemStackHelper(base.getOutput(MinecraftClient.getInstance().getNetworkHandler().getRegistryManager()));
     }
     
     /**

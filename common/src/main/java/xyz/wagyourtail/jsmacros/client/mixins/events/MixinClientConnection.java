@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
 import net.minecraft.network.ClientConnection;
-import net.minecraft.network.Packet;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.PacketCallbacks;
 
 import io.netty.channel.Channel;
@@ -33,7 +33,7 @@ public class MixinClientConnection {
     @Unique
     private EventJoinedSendPacket eventSendPacket;
 
-    @Inject(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/packet/Packet;)V", at = @At("HEAD"), cancellable = true)
     private void onReceivePacket(ChannelHandlerContext channelHandlerContext, Packet<?> packet, CallbackInfo ci) {
         if (!channel.isOpen()) {
             return;
@@ -47,7 +47,7 @@ public class MixinClientConnection {
         new EventRecvPacket(event.packet);
     }
 
-    @ModifyArg(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/ClientConnection;handlePacket(Lnet/minecraft/network/Packet;Lnet/minecraft/network/listener/PacketListener;)V"), index = 0)
+    @ModifyArg(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/packet/Packet;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/ClientConnection;handlePacket(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/listener/PacketListener;)V"), index = 0)
     public Packet<?> modifyReceivedPacket(Packet<?> packet) {
         return eventRecvPacket.packet;
     }

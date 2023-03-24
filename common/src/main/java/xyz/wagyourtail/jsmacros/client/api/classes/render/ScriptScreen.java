@@ -70,11 +70,11 @@ public class ScriptScreen extends BaseScreen {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (matrices == null) return;
-        if (bgStyle == 0) this.renderBackgroundTexture(0);
-        else if (bgStyle == 1) this.renderBackground(matrices, 0);
+        if (bgStyle == 0) this.renderBackgroundTexture(matrices);
+        else if (bgStyle == 1) this.renderBackground(matrices);
 
         if (drawTitle) {
-            drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+            drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
         }
 
         super.render(matrices, mouseX, mouseY, delta);
