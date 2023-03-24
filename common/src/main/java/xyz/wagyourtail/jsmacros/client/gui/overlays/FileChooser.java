@@ -201,7 +201,7 @@ public class FileChooser extends OverlayContainer {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
 
-        textRenderer.drawTrimmed(this.dirname, x + 3, y + 3, width - 14, 0xFFFFFF);
+        textRenderer.drawTrimmed(matrices, this.dirname, x + 3, y + 3, width - 14, 0xFFFFFF);
 
         fill(matrices, x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
         fill(matrices, x + 2, y + height - 15, x + width - 2, y + height - 14, 0xFFFFFFFF);

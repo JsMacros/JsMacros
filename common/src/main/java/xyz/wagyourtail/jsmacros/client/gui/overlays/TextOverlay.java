@@ -29,7 +29,7 @@ public class TextOverlay extends OverlayContainer {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
         int x = this.centered ? Math.max(this.x + 3, this.x + 3 + (this.width - 6) / 2 - this.textRenderer.getWidth(this.text) / 2) : this.x + 3;
-        textRenderer.drawTrimmed(this.text, x, this.y + 5, width - 6, 0xFFFFFF);
+        textRenderer.drawTrimmed(matrices, this.text, x, this.y + 5, width - 6, 0xFFFFFF);
         super.render(matrices, mouseX, mouseY, delta);
     }
 

@@ -76,12 +76,7 @@ public class Slider extends ClickableWidget {
     }
 
     @Override
-    protected int getYImage(boolean hovered) {
-        return 0;
-    }
-
-    @Override
-    protected void renderBackground(MatrixStack matrices, MinecraftClient client, int mouseX, int mouseY) {
+    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         RenderSystem.setShaderTexture(0, WIDGETS_TEXTURE);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int offset = (isHovered() ? 2 : 1) * 20;

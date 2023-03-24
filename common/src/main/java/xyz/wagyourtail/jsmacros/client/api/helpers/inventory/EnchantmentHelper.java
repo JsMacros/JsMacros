@@ -182,7 +182,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getConflictingEnchantments(boolean ignoreType) {
-        return Registries.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && !e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registries.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.target == base.target) && !e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -204,7 +204,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getCompatibleEnchantments(boolean ignoreType) {
-        return Registries.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registries.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.target == base.target) && e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -214,7 +214,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      */
     @DocletReplaceReturn("EnchantmentTargetType")
     public String getTargetType() {
-        switch (base.type) {
+        switch (base.target) {
             case ARMOR:
                 return "ARMOR";
             case ARMOR_FEET:
@@ -315,7 +315,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<ItemHelper> getAcceptableItems() {
-        return Registries.ITEM.stream().filter(item -> base.type.isAcceptableItem(item)).map(ItemHelper::new).collect(Collectors.toList());
+        return Registries.ITEM.stream().filter(item -> base.target.isAcceptableItem(item)).map(ItemHelper::new).collect(Collectors.toList());
     }
 
     /**

@@ -52,7 +52,7 @@ public class MovementDummy extends LivingEntity {
         this.setBoundingBox(hitBox);
         this.setSprinting(isSprinting);
         this.setSneaking(isSneaking);
-        this.stepHeight = 0.6F;
+        this.setStepHeight(0.6F);
         this.onGround = onGround;
         this.coordsHistory.add(this.getPos());
 
@@ -126,8 +126,9 @@ public class MovementDummy extends LivingEntity {
 
         this.travel(new Vec3d(currentInput.movementSideways * 0.98, 0.0, currentInput.movementForward * 0.98));
 
-        /* flyingSpeed only gets set after travel */
-        this.airStrafingSpeed = this.isSprinting() ? 0.026F : 0.02F;
+// TODO: fix, var was removed
+//        /* flyingSpeed only gets set after travel */
+//        this.airStrafingSpeed = this.isSprinting() ? 0.026F : 0.02F;
 
         return this.getPos();
     }

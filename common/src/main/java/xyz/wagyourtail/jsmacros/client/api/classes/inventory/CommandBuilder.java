@@ -134,7 +134,7 @@ public abstract class CommandBuilder {
     }
 
     public CommandBuilder timeArg(String name) {
-        argument(name, TimeArgumentType::new);
+        argument(name, (Supplier<ArgumentType<?>>) TimeArgumentType::time);
         return this;
     }
 

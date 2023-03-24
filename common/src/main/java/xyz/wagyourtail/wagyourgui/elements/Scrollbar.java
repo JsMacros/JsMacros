@@ -87,18 +87,16 @@ public class Scrollbar extends ClickableWidget {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (this.visible) {
-            // mainpart
-            fill(matrices, getX() + 1, (int) (getY() + 1 + scrollAmount), getX() + width - 1, (int) (getY() + 1 + scrollAmount + scrollbarHeight), highlightColor);
+    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        // mainpart
+        fill(matrices, getX() + 1, (int) (getY() + 1 + scrollAmount), getX() + width - 1, (int) (getY() + 1 + scrollAmount + scrollbarHeight), highlightColor);
 
-            // outline and back
-            fill(matrices, getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, color);
-            fill(matrices, getX(), getY(), getX() + 1, getY() + height, borderColor);
-            fill(matrices, getX() + width - 1, getY(), getX() + width, getY() + height, borderColor);
-            fill(matrices, getX() + 1, getY(), getX() + width - 1, getY() + 1, borderColor);
-            fill(matrices, getX() + 1, getY() + height - 1, getX() + width - 1, getY() + height, borderColor);
-        }
+        // outline and back
+        fill(matrices, getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, color);
+        fill(matrices, getX(), getY(), getX() + 1, getY() + height, borderColor);
+        fill(matrices, getX() + width - 1, getY(), getX() + width, getY() + height, borderColor);
+        fill(matrices, getX() + 1, getY(), getX() + width - 1, getY() + 1, borderColor);
+        fill(matrices, getX() + 1, getY() + height - 1, getX() + width - 1, getY() + height, borderColor);
     }
 
     @Override

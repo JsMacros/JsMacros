@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
@@ -307,7 +308,7 @@ public class Text implements RenderElement, Alignable<Text> {
             shadow,
             matrices.peek().getPositionMatrix(),
             buffer,
-            true,
+            TextRenderer.TextLayerType.NORMAL,
             0,
             0xF000F0
         );

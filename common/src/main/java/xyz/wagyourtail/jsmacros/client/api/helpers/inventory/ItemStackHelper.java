@@ -173,7 +173,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getPossibleEnchantmentsFromTable() {
-        return Registries.ENCHANTMENT.stream().filter(enchantment -> enchantment.type.isAcceptableItem(base.getItem()) && !enchantment.isCursed() && !enchantment.isTreasure()).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registries.ENCHANTMENT.stream().filter(enchantment -> enchantment.target.isAcceptableItem(base.getItem()) && !enchantment.isCursed() && !enchantment.isTreasure()).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -358,7 +358,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      */
     public boolean isWearable() {
-        return base.getItem() instanceof Wearable;
+        return base.getItem() instanceof Equipment && ((Equipment) base.getItem()).getSlotType().isArmorSlot();
     }
 
     /**
