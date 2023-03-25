@@ -229,12 +229,13 @@ public final class WorldScannerBuilder {
     // way to add overloads for typescript
     // 
     // pydoc doesn't use this annotation anyways  --MelonRind
-    /**
-     * for boolean value
-     */
     @DocletReplaceParams(
         """
-        value: boolean): $WorldScannerBuilder;
+        ...args: any[]): $WorldScannerBuilder;
+        /**
+        * for boolean value
+        */
+        is(value: boolean): $WorldScannerBuilder;
         /**
          * for string value
          */
@@ -252,12 +253,13 @@ public final class WorldScannerBuilder {
         return is(null, args);
     }
 
-    /**
-     * for boolean value
-     */
     @DocletReplaceParams(
         """
-        methodArgs: any[], filterArgs: [boolean]): $WorldScannerBuilder;
+        methodArgs: any[], filterArgs: any[]): $WorldScannerBuilder;
+        /**
+        * for boolean value
+        */
+        is(methodArgs: any[], filterArgs: [boolean]): $WorldScannerBuilder;
         /**
          * for string value
          */
@@ -282,12 +284,13 @@ public final class WorldScannerBuilder {
         return this;
     }
 
-    /**
-     * for boolean value
-     */
     @DocletReplaceParams(
         """
-        value: boolean): $WorldScannerBuilder;
+        ...args: any[]): $WorldScannerBuilder;
+        /**
+        * for boolean value
+        */
+        test(value: boolean): $WorldScannerBuilder;
         /**
          * for string value
          */
@@ -305,12 +308,13 @@ public final class WorldScannerBuilder {
         return test(args);
     }
 
-    /**
-     * for boolean value
-     */
     @DocletReplaceParams(
         """
-        methodArgs: any[], filterArgs: [boolean]): $WorldScannerBuilder;
+        methodArgs: any[], filterArgs: any[]): $WorldScannerBuilder;
+        /**
+        * for boolean value
+        */
+        test(methodArgs: any[], filterArgs: [boolean]): $WorldScannerBuilder;
         /**
          * for string value
          */
