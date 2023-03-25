@@ -400,7 +400,7 @@ public class FWorld extends BaseLibrary {
      *
      * @since 1.8.4
      */
-    @DocletReplaceParams("types: EntityId[]")
+    @DocletReplaceParams("...types: EntityId[]")
     public List<EntityHelper<?>> getEntities(String... types) {
         Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         Predicate<Entity> typePredicate = entity -> uniqueTypes.contains(Registries.ENTITY_TYPE.getId(entity.getType()).toString());
@@ -426,7 +426,7 @@ public class FWorld extends BaseLibrary {
      *
      * @since 1.8.4
      */
-    @DocletReplaceParams("distance: number, types: EntityId[]")
+    @DocletReplaceParams("distance: number, ...types: EntityId[]")
     public List<EntityHelper<?>> getEntities(double distance, String... types) {
         Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         assert mc.player != null;

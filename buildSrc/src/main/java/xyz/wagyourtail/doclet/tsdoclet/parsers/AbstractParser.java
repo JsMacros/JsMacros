@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.HashMap;
 
 public abstract class AbstractParser {
     static final public Set<String> javaShortifies = Set.of(
@@ -127,6 +125,7 @@ public abstract class AbstractParser {
             List<? extends VariableElement> params = method.getParameters();
             if (params != null && !params.isEmpty()) {
                 for (VariableElement param : params) {
+                    if (isRestParameter(param)) s.append("...");
                     s.append(param.getSimpleName()).append(": ").append(shortify(param)).append(", ");
                 }
                 s.setLength(s.length() - 2);
@@ -364,6 +363,15 @@ public abstract class AbstractParser {
             }
             Main.enumTypes.put(enumType.name(), enumType.type());
         }
+    }
+
+    private static boolean isRestParameter(VariableElement v) { // by chatGPT
+        // Get the enclosing executable element
+        ExecutableElement executableElement = (ExecutableElement) v.getEnclosingElement();
+
+        // Check if the variable element is a varargs parameter
+        return executableElement.isVarArgs() &&
+            executableElement.getParameters().indexOf(v) == executableElement.getParameters().size() - 1;
     }
 
     @Override
