@@ -1,7 +1,7 @@
 
 declare function load(source: string | _javatypes.java.io.File | _javatypes.java.net.URL): void;
 declare function loadWithNewGlobal(source: string | _javatypes.java.io.File | _javatypes.java.net.URL, arguments: any): void;
-declare function print(...arg: any): void;
+declare function print(...arg: any[]): void;
 // declare function printerr(...arg: any): void;
 // declare function quit(status: number): void;
 // declare function read(file: string |  _javatypes.java.io.File | _javatypes.java.net.URL): string;
@@ -37,8 +37,8 @@ declare const Polyglot: {
  * Java namespace for graal's Java functions.
  */
 declare namespace Java {
-    export function type<T>(className: string): JavaClass<T> & { new(...values): T };
-    export function type<C extends keyof JavaTypeDict>(className: C): JavaTypeDict[C];
+    export function type<T extends keyof JavaTypeDict>(className: T): JavaTypeDict[T];
+    export function type<T>(className: string): JavaClass<T> & { new(...values: any[]): T };
     export function from<T>(javaData: JavaArray<T>): T[];
     export function from<T>(javaData: JavaList<T>): T[];
     export function from<T>(javaData: JavaCollection<T>): T[];
@@ -80,9 +80,9 @@ declare namespace _javatypes {
             interface Class<T> extends Object {}
             namespace Class {
                 interface static {
-                    forName(className: string): JavaClass<?>;
-                    forName(name: string, initialize: boolean, loader: ClassLoader): JavaClass<?>;
-                    forName(module: Module, name: string): JavaClass<?>;
+                    forName(className: string): JavaClass<any>;
+                    forName(name: string, initialize: boolean, loader: ClassLoader): JavaClass<any>;
+                    forName(module: Module, name: string): JavaClass<any>;
                 }
             }
 
@@ -123,6 +123,7 @@ declare namespace _javatypes {
                 interface static {}
             }
 
+            //@ts-ignore
             interface StackTraceElement extends Object, java.io.Serializable {
                 getFileName(): string;
                 getLineNumber(): number;
