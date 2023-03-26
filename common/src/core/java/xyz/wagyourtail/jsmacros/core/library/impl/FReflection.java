@@ -62,7 +62,11 @@ public class FReflection extends PerExecLibrary {
      * @see FReflection#getClass(String, String)
      * @since 1.2.3
      */
-     @DocletReplaceReturn("_javatypes.java.lang.Class<T> & { new(...values): T }")
+    @DocletReplaceReturn(
+        """
+        JavaClass<T> & { new(...values: any[]): T };
+        function getClass<T extends keyof JavaTypeDict>(name: T): JavaTypeDict[T]"""
+    )
     public <T> Class<T> getClass(String name) throws ClassNotFoundException {
         switch (name) {
             case "boolean":
@@ -100,7 +104,11 @@ public class FReflection extends PerExecLibrary {
      * @throws ClassNotFoundException
      * @since 1.2.3
      */
-     @DocletReplaceReturn("_javatypes.java.lang.Class<T> & { new(...values): T }")
+    @DocletReplaceReturn(
+        """
+        JavaClass<T> & { new(...values: any[]): T };
+        function getClass<T extends keyof JavaTypeDict>(name: T, name2: string): JavaTypeDict[T]"""
+    )
     public <T> Class<T> getClass(String name, String name2) throws ClassNotFoundException {
         try {
             return getClass(name);
