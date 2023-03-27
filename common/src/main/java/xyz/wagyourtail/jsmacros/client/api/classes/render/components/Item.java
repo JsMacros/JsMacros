@@ -1,9 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.math.MathHelper;
@@ -276,17 +275,17 @@ public class Item implements RenderElement, Alignable<Item> {
     @Override
     public void render(int mouseX, int mouseY, float delta) {
         if (item != null) {
-            RenderSystem.pushMatrix();
-            RenderSystem.scaled(scale, scale, 1);
-            RenderSystem.translated(x, y, 0);
-            RenderSystem.rotatef(rotation, 0, 0, 1);
-            RenderSystem.translated(-x, -y, 0);
+            GlStateManager.pushMatrix();
+            GlStateManager.scaled(scale, scale, 1);
+            GlStateManager.translated(x, y, 0);
+            GlStateManager.rotatef(rotation, 0, 0, 1);
+            GlStateManager.translated(-x, -y, 0);
 
             ItemRenderer i = mc.getItemRenderer();
             i.renderGuiItemIcon(item,(int) (x / scale), (int) (y / scale));
             if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, (int) (x / scale), (int) (y / scale), ovText);
 
-            RenderSystem.popMatrix();
+            GlStateManager.popMatrix();
         }
     }
 
@@ -296,11 +295,11 @@ public class Item implements RenderElement, Alignable<Item> {
 
         if (item != null) {
 
-            RenderSystem.pushMatrix();
-            RenderSystem.scalef((float) scale, (float) scale, 1);
-            RenderSystem.translatef(x, y, 0);
-            RenderSystem.rotatef(rotation, 0, 0, 1);
-            RenderSystem.translatef(-x, -y, 0);
+            GlStateManager.pushMatrix();
+            GlStateManager.scalef((float) scale, (float) scale, 1);
+            GlStateManager.translatef(x, y, 0);
+            GlStateManager.rotatef(rotation, 0, 0, 1);
+            GlStateManager.translatef(-x, -y, 0);
 
             ItemRenderer i = mc.getItemRenderer();
             i.zOffset = -100f;
@@ -309,7 +308,7 @@ public class Item implements RenderElement, Alignable<Item> {
             if (overlay) i.renderGuiItemOverlay(mc.textRenderer, item, (int) (x / scale), (int) (y / scale), ovText);
             i.zOffset = 0;
 
-            RenderSystem.popMatrix();
+            GlStateManager.popMatrix();
         }
     }
 
@@ -325,7 +324,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
     @Override
     public int getParentWidth() {
-        return parent != null ? parent.getWidth() : mc.getWindow().getScaledWidth();
+        return parent != null ? parent.getWidth() : mc.window.getScaledWidth();
     }
 
     @Override
@@ -335,7 +334,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
     @Override
     public int getParentHeight() {
-        return parent != null ? parent.getHeight() : mc.getWindow().getScaledHeight();
+        return parent != null ? parent.getHeight() : mc.window.getScaledHeight();
     }
 
     @Override

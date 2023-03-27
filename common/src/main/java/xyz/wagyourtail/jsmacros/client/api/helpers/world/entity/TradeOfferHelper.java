@@ -207,7 +207,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * @since 1.8.4
      */
     public int getDemandBonus() {
-        return base.getDemandBonus();
+        return base.method_21725();
     }
 
     @Override

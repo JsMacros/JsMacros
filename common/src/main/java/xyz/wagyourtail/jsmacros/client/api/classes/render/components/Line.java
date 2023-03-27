@@ -1,9 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.Matrix4f;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
@@ -313,9 +311,8 @@ public class Line implements RenderElement, Alignable<Line> {
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buf = tess.getBuffer();
 
-        RenderSystem.enableBlend();
-        RenderSystem.disableTexture();
-        RenderSystem.defaultBlendFunc();
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture();
 
         buf.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
 //        Matrix4f matrix = matrices.peek().getModel();
@@ -341,8 +338,8 @@ public class Line implements RenderElement, Alignable<Line> {
         buf.vertex(x2 - px, y2 - py, 0).color(r, g, b, a).next();
         tess.draw();
 
-        RenderSystem.enableTexture();
-        RenderSystem.disableBlend();
+        GlStateManager.enableTexture();
+        GlStateManager.disableBlend();
     }
 
     public Line setParent(IDraw2D<?> parent) {
@@ -362,7 +359,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
     @Override
     public int getParentWidth() {
-        return parent != null ? parent.getWidth() : mc.getWindow().getScaledWidth();
+        return parent != null ? parent.getWidth() : mc.window.getScaledWidth();
     }
 
     @Override
@@ -372,7 +369,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
     @Override
     public int getParentHeight() {
-        return parent != null ? parent.getHeight() : mc.getWindow().getScaledHeight();
+        return parent != null ? parent.getHeight() : mc.window.getScaledHeight();
     }
 
     @Override

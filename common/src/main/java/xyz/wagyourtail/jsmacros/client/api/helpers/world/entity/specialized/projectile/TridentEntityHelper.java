@@ -31,7 +31,7 @@ public class TridentEntityHelper extends EntityHelper<TridentEntity> {
      * @since 1.8.4
      */
     public boolean isEnchanted() {
-        return base.method_23751();
+        return false;
     }
 
 }

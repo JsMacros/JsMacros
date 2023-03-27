@@ -264,7 +264,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public List<String> getBlockEntityTypeIds() {
-        return Registry.BLOCK_ENTITY_TYPE.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
+        return Registry.BLOCK_ENTITY.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**

@@ -1,10 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3d;
 
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Box;
@@ -557,14 +555,13 @@ public class Draw3D {
     public void render(float tickDelta) {
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        RenderSystem.pushMatrix();
+        GlStateManager.pushMatrix();
         //setup
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.disableTexture();
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture();
 
         Vec3d camPos = mc.gameRenderer.getCamera().getPos();
-        RenderSystem.translated(-camPos.x, -camPos.y, -camPos.z);
+        GlStateManager.translated(-camPos.x, -camPos.y, -camPos.z);
 
         //render
         synchronized (boxes) {
@@ -586,9 +583,9 @@ public class Draw3D {
         }
 
         //reset
-        RenderSystem.enableTexture();
+        GlStateManager.enableTexture();
 
-        RenderSystem.popMatrix();
+        GlStateManager.popMatrix();
 
     }
 

@@ -18,7 +18,7 @@ class MixinMouse {
 
     @Inject(at = @At("HEAD"), method = "onMouseButton", cancellable = true)
     private void onMouseButton(long window, int key, int action, int mods, final CallbackInfo info) {
-        if (window != client.getWindow().getHandle()) return;
+        if (window != client.window.getHandle()) return;
         if (key == -1 || action == 2) return;
         if (EventKey.parse(key, -1, action, mods)) info.cancel();
     }

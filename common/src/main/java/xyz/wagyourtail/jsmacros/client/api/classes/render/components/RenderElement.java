@@ -2,8 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 
 /**
  * @author Wagyourtail

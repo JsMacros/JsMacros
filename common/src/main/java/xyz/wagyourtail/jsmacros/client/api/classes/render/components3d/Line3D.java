@@ -1,12 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.util.math.Matrix4f;
-import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec3D;
@@ -82,7 +79,7 @@ public class Line3D {
     public void render() {
         final boolean cull = !this.cull;
         if (cull) {
-            RenderSystem.disableDepthTest();
+            GlStateManager.disableDepthTest();
         }
 
         int a = (color >> 24) & 0xFF;
@@ -91,14 +88,14 @@ public class Line3D {
         int b = color & 0xFF;
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buf = tess.getBuffer();
-        RenderSystem.lineWidth(2.5F);
+        GlStateManager.lineWidth(2.5F);
         buf.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
         buf.vertex((float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
         buf.vertex((float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
         tess.draw();
 
         if (cull) {
-            RenderSystem.enableDepthTest();
+            GlStateManager.enableDepthTest();
         }
     }
 

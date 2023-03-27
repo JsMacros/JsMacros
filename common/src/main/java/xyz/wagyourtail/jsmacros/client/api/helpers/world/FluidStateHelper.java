@@ -51,7 +51,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
      * @since 1.8.4
      */
     public float getHeight() {
-        return base.getHeight();
+        return base.method_20785();
     }
 
     /**

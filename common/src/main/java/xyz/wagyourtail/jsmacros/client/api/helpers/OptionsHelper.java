@@ -1402,7 +1402,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public boolean isRawMouseInputEnabled() {
-            return base.rawMouseInput;
+            return base.field_20308;
         }
 
         /**
@@ -1412,7 +1412,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ControlOptionsHelper enableRawMouseInput(boolean val) {
-            base.rawMouseInput = val;
+            base.field_20308 = val;
             return this;
         }
 
@@ -1436,47 +1436,6 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
             return this;
         }
 
-        /**
-         * @return {@code true} if the toggle functionality for sneaking is enabled, {@code false}
-         *         otherwise.
-         *
-         * @since 1.8.4
-         */
-        public boolean isSneakTogglingEnabled() {
-            return base.sneakToggled;
-        }
-
-        /**
-         * @param val whether to enable or disable the toggle functionality for sneaking
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public ControlOptionsHelper toggleSneak(boolean val) {
-            base.sneakToggled = val;
-            return this;
-        }
-
-        /**
-         * @return {@code true} if the toggle functionality for sprinting is enabled, {@code false}
-         *         otherwise.
-         *
-         * @since 1.8.4
-         */
-        public boolean isSprintTogglingEnabled() {
-            return base.sprintToggled;
-        }
-
-        /**
-         * @param val whether to enable or disable the toggle functionality for sprinting
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public ControlOptionsHelper toggleSprint(boolean val) {
-            base.sprintToggled = val;
-            return this;
-        }
 
         /**
          * @return an array of all raw minecraft keybindings.
@@ -2026,48 +1985,6 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          */
         public AccessibilityOptionsHelper enableAutoJump(boolean val) {
             base.autoJump = val;
-            return this;
-        }
-
-        /**
-         * @return {@code true} if the toggle functionality for sneaking is enabled, {@code false}
-         *         otherwise.
-         *
-         * @since 1.8.4
-         */
-        public boolean isSneakTogglingEnabled() {
-            return base.sneakToggled;
-        }
-
-        /**
-         * @param val whether to enable or disable the toggle functionality for sneaking
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public AccessibilityOptionsHelper toggleSneak(boolean val) {
-            base.sneakToggled = val;
-            return this;
-        }
-
-        /**
-         * @return {@code true} if the toggle functionality for sprinting is enabled, {@code false}
-         *         otherwise.
-         *
-         * @since 1.8.4
-         */
-        public boolean isSprintTogglingEnabled() {
-            return base.sprintToggled;
-        }
-
-        /**
-         * @param val whether to enable or disable the toggle functionality for sprinting
-         * @return self for chaining.
-         *
-         * @since 1.8.4
-         */
-        public AccessibilityOptionsHelper toggleSprint(boolean val) {
-            base.sprintToggled = val;
             return this;
         }
     }

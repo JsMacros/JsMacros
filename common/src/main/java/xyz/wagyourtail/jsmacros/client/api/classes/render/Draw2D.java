@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.util.math.MatrixStack;
 
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.*;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Surface;
@@ -50,8 +49,8 @@ public class Draw2D extends DrawableHelper implements IDraw2D<Draw2D> {
     
     public Draw2D() {
         this.mc = MinecraftClient.getInstance();
-        this.widthSupplier = () -> mc.getWindow().getScaledWidth();
-        this.heightSupplier = () -> mc.getWindow().getScaledHeight();
+        this.widthSupplier = () -> mc.window.getScaledWidth();
+        this.heightSupplier = () -> mc.window.getScaledHeight();
     }
     
     /**

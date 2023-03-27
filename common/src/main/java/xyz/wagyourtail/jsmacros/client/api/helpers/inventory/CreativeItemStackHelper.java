@@ -214,7 +214,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
         CompoundTag nbtCompound = base.getOrCreateSubTag("display");
         ListTag list = nbtCompound.contains("Lore", 9) ? nbtCompound.getList("Lore", 8) : new ListTag();
         for (Text text : texts) {
-            list.add(StringTag.of(Text.Serializer.toJson(text)));
+            list.add(new StringTag(text.asString()));
         }
         nbtCompound.put("Lore", list);
 

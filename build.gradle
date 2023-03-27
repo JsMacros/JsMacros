@@ -1,7 +1,7 @@
 import groovy.json.JsonSlurper
 
 plugins {
-    id "xyz.wagyourtail.unimined" version "0.3.15" apply false
+    id "xyz.wagyourtail.unimined" version "0.4.10" apply false
 }
 
 subprojects {

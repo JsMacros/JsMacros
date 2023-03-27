@@ -1,12 +1,11 @@
 package xyz.wagyourtail.wagyourgui.elements;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
@@ -85,7 +84,7 @@ public class Slider extends AbstractButtonWidget {
     public void renderButton(int mouseX, int mouseY, float delta) {
         MinecraftClient lv = MinecraftClient.getInstance();
         lv.getTextureManager().bindTexture(WIDGETS_LOCATION);
-        RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
         int offset = (isHovered() ? 2 : 1) * 20;
         blit(x + (int) (value * (double) (width - 8)), y, 0, 46 + offset, 4, 20);
         blit(x + (int) (value * (double) (width - 8)) + 4, y, 196, 46 + offset, 4, 20);

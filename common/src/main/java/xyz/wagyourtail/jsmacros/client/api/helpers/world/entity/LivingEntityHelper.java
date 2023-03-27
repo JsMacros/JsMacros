@@ -143,7 +143,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @since 1.8.4
      */
     public int getDefaultHealth() {
-        return base.defaultMaximumHealth;
+        return base.field_6269;
     }
 
     /**
@@ -229,7 +229,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     public boolean canSeeEntity(EntityHelper<?> entity, boolean simpleCast) {
         Entity rawEntity = entity.getRaw();
         
-        Vec3d baseEyePos = new Vec3d(base.getX(), base.getY() + base.getEyeHeight(base.getPose()), base.getZ());
+        Vec3d baseEyePos = new Vec3d(base.x, base.y + base.getEyeHeight(base.getPose()), base.z);
         Vec3d vec3d = baseEyePos;
         Vec3d vec3d2 = base.getRotationVec(1.0F).multiply(10);
         Vec3d vec3d3 = vec3d.add(vec3d2);
@@ -237,9 +237,9 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
         
         Function<Vec3d, Boolean> canSee = pos -> base.world.rayTrace(new RayTraceContext(baseEyePos, pos, RayTraceContext.ShapeType.COLLIDER, RayTraceContext.FluidHandling.NONE, base)).getType() == HitResult.Type.MISS;
 
-        if (canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getEyeY(), rawEntity.getZ()))
-                || canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getY() + 0.5, rawEntity.getZ()))
-                || canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getY(), rawEntity.getZ()))) {
+        if (canSee.apply(new Vec3d(rawEntity.x, rawEntity.getEyeHeight(rawEntity.getPose()), rawEntity.z))
+                || canSee.apply(new Vec3d(rawEntity.x, rawEntity.y + 0.5, rawEntity.z))
+                || canSee.apply(new Vec3d(rawEntity.x, rawEntity.y, rawEntity.z))) {
             return true;
         }
 
@@ -255,10 +255,10 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
         // Create 4 pillars around the mob to check for visibility
         for (int i = 0; i < steps; i++) {
             double y = i * 0.1;
-            if (canSee.apply(new Vec3d(rawEntity.getX() + diffX, rawEntity.getY() + y, rawEntity.getZ()))
-                    || canSee.apply(new Vec3d(rawEntity.getX() - diffX, rawEntity.getY() + y, rawEntity.getZ()))
-                    || canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getY() + y, rawEntity.getZ() + diffZ))
-                    || canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getY() + y, rawEntity.getZ() - diffZ))) {
+            if (canSee.apply(new Vec3d(rawEntity.x + diffX, rawEntity.y + y, rawEntity.z))
+                    || canSee.apply(new Vec3d(rawEntity.x - diffX, rawEntity.y + y, rawEntity.z))
+                    || canSee.apply(new Vec3d(rawEntity.x, rawEntity.y + y, rawEntity.z + diffZ))
+                    || canSee.apply(new Vec3d(rawEntity.x, rawEntity.y + y, rawEntity.z - diffZ))) {
                 return true;
             }
         }

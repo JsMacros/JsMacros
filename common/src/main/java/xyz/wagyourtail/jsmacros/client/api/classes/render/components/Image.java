@@ -1,10 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.Matrix4f;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
@@ -335,8 +333,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
     @Override
     public void render(int mouseX, int mouseY, float delta) {
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableBlend();
+        GlStateManager.enableBlend();
         mc.getTextureManager().bindTexture(imageid);
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buf = tess.getBuffer();
@@ -365,7 +362,7 @@ public class Image implements RenderElement, Alignable<Image> {
         buf.vertex(x2, y1, 0).texture(u2, v1).color(r, g, b, a).next(); // Bottom-right
         tess.draw();
 
-        RenderSystem.disableBlend();
+        GlStateManager.disableBlend();
     }
 
     public Image setParent(IDraw2D<?> parent) {
@@ -380,7 +377,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
     @Override
     public int getParentWidth() {
-        return parent != null ? parent.getWidth() : mc.getWindow().getScaledWidth();
+        return parent != null ? parent.getWidth() : mc.window.getScaledWidth();
     }
 
     @Override
@@ -390,7 +387,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
     @Override
     public int getParentHeight() {
-        return parent != null ? parent.getHeight() : mc.getWindow().getScaledHeight();
+        return parent != null ? parent.getHeight() : mc.window.getScaledHeight();
     }
 
     @Override

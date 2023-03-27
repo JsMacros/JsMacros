@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;

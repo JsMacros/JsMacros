@@ -1,9 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -296,16 +294,15 @@ public class Text implements RenderElement, Alignable<Text> {
 
     @Override
     public void render3D(int mouseX, int mouseY, float delta) {
-        RenderSystem.pushMatrix();
-        RenderSystem.scaled(scale, scale, 1);
-        RenderSystem.translatef(x, y, 0);
-        RenderSystem.rotatef(rotation, 0, 0, 1);
-        RenderSystem.translatef(-x, -y, 0);
+        GlStateManager.pushMatrix();
+        GlStateManager.scaled(scale, scale, 1);
+        GlStateManager.translatef(x, y, 0);
+        GlStateManager.rotatef(rotation, 0, 0, 1);
+        GlStateManager.translatef(-x, -y, 0);
         Tessellator tess = Tessellator.getInstance();
-        VertexConsumerProvider.Immediate buffer = VertexConsumerProvider.immediate(tess.getBuffer());
-        mc.textRenderer.draw(text.asFormattedString(), (float)(x / scale), (float)(y / scale), color, shadow, new MatrixStack().peek().getModel(), buffer, true, 0, 0xF000F0);
-        buffer.draw();
-        RenderSystem.popMatrix();
+        if (shadow) mc.textRenderer.drawWithShadow(text.asFormattedString(), (int)(x / scale), (int)(y / scale), color);
+        else mc.textRenderer.draw(text.asFormattedString(), (int)(x / scale), (int)(y / scale), color);
+        GlStateManager.popMatrix();
     }
 
     public Text setParent(IDraw2D<?> parent) {
@@ -320,7 +317,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
     @Override
     public int getParentWidth() {
-        return parent != null ? parent.getWidth() : mc.getWindow().getScaledWidth();
+        return parent != null ? parent.getWidth() : mc.window.getScaledWidth();
     }
 
     @Override
@@ -330,7 +327,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
     @Override
     public int getParentHeight() {
-        return parent != null ? parent.getHeight() : mc.getWindow().getScaledHeight();
+        return parent != null ? parent.getHeight() : mc.window.getScaledHeight();
     }
 
     @Override

@@ -53,7 +53,7 @@ public class WitherEntityHelper extends MobEntityHelper<WitherEntity> {
      * @since 1.8.4
      */
     public boolean isSecondPhase() {
-        return base.shouldRenderOverlay();
+        return base.isAtHalfHealth();
     }
 
 }

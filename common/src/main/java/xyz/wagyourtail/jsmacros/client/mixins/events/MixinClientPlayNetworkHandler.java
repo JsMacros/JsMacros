@@ -52,7 +52,7 @@ class MixinClientPlayNetworkHandler {
     private Map<UUID, PlayerListEntry> playerListEntries;
 
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;showsDeathScreen()Z"), method="onCombatEvent")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;openScreen(Lnet/minecraft/client/gui/screen/Screen;)V"), method="onCombatEvent")
     private void onDeath(CombatEventS2CPacket packet, CallbackInfo info) {
         new EventDeath();
     }
@@ -200,7 +200,7 @@ class MixinClientPlayNetworkHandler {
     @Inject(method = "onEntityPotionEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/thread/ThreadExecutor;)V", shift = At.Shift.AFTER))
     public void onEntityStatusEffect(EntityStatusEffectS2CPacket packet, CallbackInfo info) {
         if (packet.getEntityId() == client.player.getEntityId()) {
-            StatusEffectInstance newEffect = new StatusEffectInstance(StatusEffect.byRawId(packet.getEffectId()), packet.getDuration(), packet.getAmplifier(), packet.isAmbient(), packet.shouldShowParticles(), packet.shouldShowIcon(), (StatusEffectInstance) null);
+            StatusEffectInstance newEffect = new StatusEffectInstance(StatusEffect.byRawId(packet.getEffectId()), packet.getDuration(), packet.getAmplifier(), packet.isAmbient(), packet.shouldShowParticles(), packet.shouldShowIcon());
             StatusEffectInstance oldEffect = client.player.getStatusEffect(StatusEffect.byRawId(packet.getEffectId()));
             new EventStatusEffectUpdate(oldEffect == null ? null : new StatusEffectHelper(oldEffect), new StatusEffectHelper(newEffect), true);
         }

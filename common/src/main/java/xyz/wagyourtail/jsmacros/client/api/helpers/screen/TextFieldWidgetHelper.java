@@ -153,7 +153,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
 
     public TextFieldWidgetHelper setSelection(int start, int end) {
         base.setSelectionStart(start);
-        base.setSelectionEnd(end);
+        base.method_1884(end);
         return this;
     }
 
@@ -185,7 +185,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
      * @since 1.8.4
      */
     public TextFieldWidgetHelper setCursorPosition(int position) {
-        base.setCursor(position);
+        base.method_1883(position);
         return this;
     }
 
@@ -195,7 +195,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
      * @since 1.8.4
      */
     public TextFieldWidgetHelper setCursorToStart() {
-        base.setCursorToStart();
+        base.method_1870();
         return this;
     }
 
@@ -205,7 +205,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
      * @since 1.8.4
      */
     public TextFieldWidgetHelper setCursorToEnd() {
-        base.setCursorToEnd();
+        base.method_1872();
         return this;
     }
 

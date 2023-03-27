@@ -217,17 +217,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
     }
 
     /**
-     * Used on beehives.
-     *
-     * @return
-     *
-     * @since 1.8.4
-     */
-    public int getHoneyLevel() {
-        return base.get(Properties.HONEY_LEVEL);
-    }
-
-    /**
      * Used on scaffolding.
      *
      * @return

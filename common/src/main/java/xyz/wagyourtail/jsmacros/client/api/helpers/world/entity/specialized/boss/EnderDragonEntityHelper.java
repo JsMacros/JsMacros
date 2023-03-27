@@ -43,7 +43,7 @@ public class EnderDragonEntityHelper extends MobEntityHelper<EnderDragonEntity> 
      * @since 1.8.4
      */
     public EntityHelper<?> getBodyPart(int index) {
-        return EntityHelper.create(base.getBodyParts()[index]);
+        return EntityHelper.create(base.method_5690()[index]);
     }
 
     /**
@@ -52,7 +52,7 @@ public class EnderDragonEntityHelper extends MobEntityHelper<EnderDragonEntity> 
      * @since 1.8.4
      */
     public List<? extends EntityHelper<?>> getBodyParts() {
-        return Arrays.stream(base.getBodyParts()).map(EntityHelper::create).collect(Collectors.toList());
+        return Arrays.stream(base.method_5690()).map(EntityHelper::create).collect(Collectors.toList());
     }
 
     /**
@@ -65,7 +65,7 @@ public class EnderDragonEntityHelper extends MobEntityHelper<EnderDragonEntity> 
      * @since 1.8.4
      */
     public List<? extends EntityHelper<?>> getBodyParts(String name) {
-        return Arrays.stream(base.getBodyParts()).filter(e -> e.name.equals(name)).map(EntityHelper::create).collect(Collectors.toList());
+        return Arrays.stream(base.method_5690()).filter(e -> e.name.equals(name)).map(EntityHelper::create).collect(Collectors.toList());
     }
 
 }

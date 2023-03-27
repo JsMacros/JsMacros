@@ -1,8 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
+import com.mojang.blaze3d.platform.GlStateManager;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 
@@ -248,19 +246,19 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     @Override
     public void render(int mouseX, int mouseY, float delta) {
-        RenderSystem.pushMatrix();
-        RenderSystem.translated(x, y, 0);
-        RenderSystem.scaled(scale, scale, 1);
+        GlStateManager.pushMatrix();
+        GlStateManager.translated(x, y, 0);
+        GlStateManager.scaled(scale, scale, 1);
         if (rotateCenter) {
-            RenderSystem.translated(width.getAsInt() / 2d, height.getAsInt() / 2d, 0);
+            GlStateManager.translated(width.getAsInt() / 2d, height.getAsInt() / 2d, 0);
         }
-        RenderSystem.rotatef(rotation, 0, 0, 1);
+        GlStateManager.rotatef(rotation, 0, 0, 1);
         if (rotateCenter) {
-            RenderSystem.translated(-width.getAsInt() / 2d, -height.getAsInt() / 2d, 0);
+            GlStateManager.translated(-width.getAsInt() / 2d, -height.getAsInt() / 2d, 0);
         }
         //don't translate back
         draw2D.render();
-        RenderSystem.popMatrix();
+        GlStateManager.popMatrix();
     }
 
     public Draw2DElement setParent(IDraw2D<?> parent) {
@@ -275,7 +273,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     @Override
     public int getParentWidth() {
-        return parent != null ? parent.getWidth() : mc.getWindow().getScaledWidth();
+        return parent != null ? parent.getWidth() : mc.window.getScaledWidth();
     }
 
     @Override
@@ -285,7 +283,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     @Override
     public int getParentHeight() {
-        return parent != null ? parent.getHeight() : mc.getWindow().getScaledHeight();
+        return parent != null ? parent.getHeight() : mc.window.getScaledHeight();
     }
 
     @Override

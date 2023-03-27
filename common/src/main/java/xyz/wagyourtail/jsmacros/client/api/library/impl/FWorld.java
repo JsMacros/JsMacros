@@ -626,7 +626,7 @@ public class FWorld extends BaseLibrary {
      */
     public boolean isNight() {
         assert mc.world != null;
-        return mc.world.isNight();
+        return mc.world.dimension.getType() == DimensionType.OVERWORLD && !mc.world.isDay();
     }
 
     /**
@@ -913,7 +913,7 @@ public class FWorld extends BaseLibrary {
         ParticleEffect particle = (ParticleEffect) Registry.PARTICLE_TYPE.get(RegistryHelper.parseIdentifier(id));
         particle = particle != null ? particle : ParticleTypes.CLOUD;
 
-        ParticleS2CPacket packet = new ParticleS2CPacket(particle, force, x, y, z, (float) deltaX, (float) deltaY, (float) deltaZ, (float) speed, count);
+        ParticleS2CPacket packet = new ParticleS2CPacket(particle, force, (float) x, (float) y, (float) z, (float) deltaX, (float) deltaY, (float) deltaZ, (float) speed, count);
         mc.execute(() -> mc.player.networkHandler.onParticle(packet));
     }
     

@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
@@ -32,7 +31,7 @@ public class ScriptScreen extends BaseScreen {
      */
     public boolean shouldPause = true;
     private final int bgStyle;
-    private MethodWrapper<Pos3D, MatrixStack, Object, ?> onRender;
+    private MethodWrapper<Pos3D, Object, Object, ?> onRender;
     
     public ScriptScreen(String title, boolean dirt) {
         super(new LiteralText(title), null);
@@ -61,7 +60,7 @@ public class ScriptScreen extends BaseScreen {
      * @param onRender pos3d elements are mousex, mousey, tickDelta
      * @since 1.4.0
      */
-    public void setOnRender(MethodWrapper<Pos3D, MatrixStack, Object, ?> onRender) {
+    public void setOnRender(MethodWrapper<Pos3D, Object, Object, ?> onRender) {
         this.onRender = onRender;
     }
 

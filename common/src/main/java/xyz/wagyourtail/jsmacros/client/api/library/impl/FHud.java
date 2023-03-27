@@ -294,7 +294,7 @@ public class FHud extends BaseLibrary {
      * @since 1.8.4
      */
     public int getWindowWidth() {
-        return mc.getWindow().getWidth();
+        return mc.window.getWidth();
     }
 
     /**
@@ -303,7 +303,7 @@ public class FHud extends BaseLibrary {
      * @since 1.8.4
      */
     public int getWindowHeight() {
-        return mc.getWindow().getHeight();
+        return mc.window.getHeight();
     }
     
 }

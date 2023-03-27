@@ -1,7 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.access;
 
-import net.minecraft.client.util.math.MatrixStack;
-
 public interface IScreenInternal {
     void jsmacros_render(int mouseX, int mouseY, float delta);
     

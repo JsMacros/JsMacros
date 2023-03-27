@@ -1,9 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.text.Text;
@@ -50,15 +49,15 @@ public class MixinHandledScreen<T extends Container> extends Screen implements I
         if (!Core.getInstance().config.getOptions(ClientConfigV2.class).showSlotIndexes) {
             return;
         }
-        RenderSystem.pushMatrix();
+        GlStateManager.pushMatrix();
         // Make them render in front of the slot sprites, but still behind the tooltip
-        RenderSystem.translatef(0, 0, 150);
+        GlStateManager.translatef(0, 0, 150);
         for (int i = 0; i < container.slots.size(); i++) {
             Slot slot = container.slots.get(i);
 //            if (slot.isEnabled()) {
                 font.draw(String.valueOf(i), slot.xPosition, slot.yPosition, 0xFFFFFF);
 //            }
         }
-        RenderSystem.popMatrix();
+        GlStateManager.popMatrix();
     }
 }

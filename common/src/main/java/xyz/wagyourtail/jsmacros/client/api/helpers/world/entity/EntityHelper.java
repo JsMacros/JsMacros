@@ -70,7 +70,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return entity position.
      */
     public Pos3D getPos() {
-        return new Pos3D(base.getX(), base.getY(), base.getZ());
+        return new Pos3D(base.x, base.y, base.z);
     }
 
     /**
@@ -106,7 +106,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the {@code x} value of the entity.
      */
     public double getX() {
-        return base.getX();
+        return base.x;
     }
 
     /**
@@ -114,7 +114,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the {@code y} value of the entity.
      */
     public double getY() {
-        return base.getY();
+        return base.y;
     }
     
     /**
@@ -122,7 +122,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the {@code z} value of the entity.
      */
     public double getZ() {
-        return base.getZ();
+        return base.z;
     }
 
     /**
@@ -281,7 +281,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return glow color
      */
     public int getGlowingColor() {
-        return base.getTeamColorValue();
+        return base.getScoreboardTeam().getColor().getColorIndex();
     }
 
     /**
@@ -346,8 +346,8 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.8.4
      */
     public double getSpeed() {
-        double dx = Math.abs(base.getX() - base.prevX);
-        double dz = Math.abs(base.getZ() - base.prevZ);
+        double dx = Math.abs(base.x - base.prevX);
+        double dz = Math.abs(base.z - base.prevZ);
         return Math.sqrt(dx * dx + dz * dz) * 20;
     }
 
@@ -513,8 +513,6 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
                     } else {
                         return new AbstractHorseEntityHelper<>(((HorseBaseEntity) e));
                     }
-                } else if (e instanceof BeeEntity) {
-                    return new BeeEntityHelper(((BeeEntity) e));
                 } else if (e instanceof FoxEntity) {
                     return new FoxEntityHelper(((FoxEntity) e));
                 } else if (e instanceof MooshroomEntity) {

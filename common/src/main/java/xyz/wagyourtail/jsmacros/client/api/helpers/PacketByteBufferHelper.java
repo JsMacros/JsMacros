@@ -147,7 +147,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @see #isServerbound(Class)
      * @since 1.8.4
      */
-    public Packet<?> toPacket(boolean clientbound, int packetId) {
+    public Packet<?> toPacket(boolean clientbound, int packetId) throws IllegalAccessException, InstantiationException {
         return NetworkState.PLAY.getPacketHandler(clientbound ? NetworkSide.CLIENTBOUND : NetworkSide.SERVERBOUND, packetId);
     }
 
@@ -745,7 +745,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      */
     public Map<String, Object> readBlockHitResultMap() {
         BlockHitResult hitResult = readBlockHitResult();
-        return ImmutableMap.of("side", new DirectionHelper(hitResult.getSide()), "blockPos", new BlockPosHelper(hitResult.getBlockPos()), "missed", hitResult.getType() == HitResult.Type.MISS, "inside", hitResult.isInsideBlock());
+        return ImmutableMap.of("side", new DirectionHelper(hitResult.getSide()), "blockPos", new BlockPosHelper(hitResult.getBlockPos()), "missed", hitResult.getType() == HitResult.Type.MISS, "inside", hitResult.method_17781());
     }
 
     /**

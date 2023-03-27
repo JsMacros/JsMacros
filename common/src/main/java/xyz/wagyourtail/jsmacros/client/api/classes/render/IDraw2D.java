@@ -1,7 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
-import net.minecraft.client.util.math.MatrixStack;
-
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;

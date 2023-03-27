@@ -1,11 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.util.math.Matrix4f;
-import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.opengl.GL11;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec3D;
@@ -136,7 +134,7 @@ public class Box {
         float z2 = (float) pos.z2;
 
         if (cull) {
-            RenderSystem.disableDepthTest();
+            GlStateManager.disableDepthTest();
         }
 
         Tessellator tess = Tessellator.getInstance();
@@ -148,8 +146,6 @@ public class Box {
             float fg = ((fillColor >> 8) & 0xFF) / 255F;
             float fb = (fillColor & 0xFF) / 255F;
 
-            //1.15+ culls insides
-            RenderSystem.disableCull();
 
             buf.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
 
@@ -171,10 +167,9 @@ public class Box {
 
             tess.draw();
 
-            RenderSystem.enableCull();
         }
 
-        RenderSystem.lineWidth(2.5F);
+        GlStateManager.lineWidth(2.5F);
         buf.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
         buf.vertex(x1, y1, z1).color(r, g, b, a).next();
@@ -217,7 +212,7 @@ public class Box {
         tess.draw();
 
         if (cull) {
-            RenderSystem.enableDepthTest();
+            GlStateManager.enableDepthTest();
         }
     }
 

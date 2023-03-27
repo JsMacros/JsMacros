@@ -36,8 +36,6 @@ public class IllagerEntityHelper<T extends IllagerEntity> extends MobEntityHelpe
                 return "CROSSBOW_CHARGE";
             case CELEBRATING:
                 return "CELEBRATING";
-            case NEUTRAL:
-                return "NEUTRAL";
             default:
                 throw new IllegalArgumentException();
         }

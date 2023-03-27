@@ -56,7 +56,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     public CreativeInventory scrollTo(double position) {
         if (((MixinCreativeInventoryScreen) inventory).invokeHasScrollbar()) {
             position = MathHelper.clamp(position, 0, 1);
-            handler.scrollItems((float) position);
+            handler.method_2473((float) position);
         }
         return this;
     }

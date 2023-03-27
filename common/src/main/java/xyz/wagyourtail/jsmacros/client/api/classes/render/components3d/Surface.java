@@ -1,7 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.math.Quaternion;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
@@ -237,7 +238,7 @@ public class Surface extends Draw2D implements RenderElement {
 
     @Override
     public void render3D(int mouseX, int mouseY, float delta) {
-        RenderSystem.pushMatrix();
+        GlStateManager.pushMatrix();
         if (boundEntity != null && boundEntity.isAlive()) {
             Pos3D entityPos = boundEntity.getPos().add(boundOffset);
             pos.x += (entityPos.x - pos.x) * delta;
@@ -245,55 +246,50 @@ public class Surface extends Draw2D implements RenderElement {
             pos.z += (entityPos.z - pos.z) * delta;
         }
 
-        RenderSystem.translated(pos.x, pos.y, pos.z);
+        GlStateManager.translated(pos.x, pos.y, pos.z);
 
         if (rotateToPlayer) {
-            Quaternion q = MinecraftClient.getInstance().gameRenderer.getCamera().getRotation();
+            Camera q = MinecraftClient.getInstance().gameRenderer.getCamera();
             // to euler angles
-            Vector3f rot = new Vector3f(
-                    (float) Math.atan2(2 * (q.getA() * q.getD() + q.getB() * q.getC()), 1 - 2 * (q.getC() * q.getC() + q.getD() * q.getD())),
-                    (float) Math.asin(2 * (q.getA() * q.getC() - q.getD() * q.getB())),
-                    (float) Math.atan2(2 * (q.getA() * q.getB() + q.getC() * q.getD()), 1 - 2 * (q.getB() * q.getB() + q.getC() * q.getC()))
-            );
-            rotations.x = -rot.getX();
-            rotations.y = 180 + rot.getY();
+            rotations.x = -q.getPitch();
+            rotations.y = 180 + q.getYaw();
             rotations.z = 0;
         }
         if (rotateCenter) {
-            RenderSystem.translated(sizes.x / 2, 0, 0);
-//            RenderSystem.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((float) rotations.y));
-            RenderSystem.rotatef((float) rotations.y, 0, 1, 0);
-            RenderSystem.translated(-sizes.x / 2, 0, 0);
-            RenderSystem.translated(0, -sizes.y / 2, 0);
-//            RenderSystem.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((float) rotations.x));
-            RenderSystem.rotatef((float) rotations.x, 1, 0, 0);
-            RenderSystem.translated(0, sizes.y / 2, 0);
-            RenderSystem.translated(sizes.x / 2, -sizes.y / 2, 0);
-//            RenderSystem.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion((float) rotations.z));
-            RenderSystem.rotatef((float) rotations.z, 0, 0, 1);
-            RenderSystem.translated(-sizes.x / 2, sizes.y / 2, 0);
+            GlStateManager.translated(sizes.x / 2, 0, 0);
+//            GlStateManager.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((float) rotations.y));
+            GlStateManager.rotatef((float) rotations.y, 0, 1, 0);
+            GlStateManager.translated(-sizes.x / 2, 0, 0);
+            GlStateManager.translated(0, -sizes.y / 2, 0);
+//            GlStateManager.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((float) rotations.x));
+            GlStateManager.rotatef((float) rotations.x, 1, 0, 0);
+            GlStateManager.translated(0, sizes.y / 2, 0);
+            GlStateManager.translated(sizes.x / 2, -sizes.y / 2, 0);
+//            GlStateManager.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion((float) rotations.z));
+            GlStateManager.rotatef((float) rotations.z, 0, 0, 1);
+            GlStateManager.translated(-sizes.x / 2, sizes.y / 2, 0);
         } else {
             Vector3f rot = rotations.toVector().toMojangFloatVector();
-//            RenderSystem.multiply(new Quaternion(rot.getX(), rot.getY(), rot.getZ(), true));
-            RenderSystem.rotatef(rot.getX(), 1, 0, 0);
-            RenderSystem.rotatef(rot.getY(), 0, 1, 0);
-            RenderSystem.rotatef(rot.getZ(), 0, 0, 1);
+//            GlStateManager.multiply(new Quaternion(rot.getX(), rot.getY(), rot.getZ(), true));
+            GlStateManager.rotatef(rot.getX(), 1, 0, 0);
+            GlStateManager.rotatef(rot.getY(), 0, 1, 0);
+            GlStateManager.rotatef(rot.getZ(), 0, 0, 1);
         }
         // fix it so that y-axis goes down instead of up
-        RenderSystem.scaled(1, -1, 1);
+        GlStateManager.scaled(1, -1, 1);
         // scale so that x or y have minSubdivisions units between them
-        RenderSystem.scaled((float) scale, (float) scale, (float) scale);
+        GlStateManager.scaled((float) scale, (float) scale, (float) scale);
 
         synchronized (elements) {
             renderElements3D(getElementsByZIndex());
         }
-        RenderSystem.popMatrix();
+        GlStateManager.popMatrix();
 
         if (!cull) {
-            RenderSystem.enableDepthTest();
+            GlStateManager.enableDepthTest();
         }
         if (renderBack) {
-            RenderSystem.enableCull();
+            GlStateManager.enableCull();
         }
     }
 
@@ -311,39 +307,39 @@ public class Surface extends Draw2D implements RenderElement {
     }
 
     private void renderDraw2D3D(Draw2DElement draw2DElement) {
-        RenderSystem.pushMatrix();
-        RenderSystem.translated(draw2DElement.x, draw2DElement.y, 0);
-        RenderSystem.scaled(draw2DElement.scale, draw2DElement.scale, 1);
+        GlStateManager.pushMatrix();
+        GlStateManager.translated(draw2DElement.x, draw2DElement.y, 0);
+        GlStateManager.scaled(draw2DElement.scale, draw2DElement.scale, 1);
         if (rotateCenter) {
-            RenderSystem.translated(draw2DElement.width.getAsInt() / 2d, draw2DElement.height.getAsInt() / 2d, 0);
+            GlStateManager.translated(draw2DElement.width.getAsInt() / 2d, draw2DElement.height.getAsInt() / 2d, 0);
         }
-        RenderSystem.rotatef(draw2DElement.rotation, 0, 0, 1);
+        GlStateManager.rotatef(draw2DElement.rotation, 0, 0, 1);
         if (rotateCenter) {
-            RenderSystem.translated(-draw2DElement.width.getAsInt() / 2d, -draw2DElement.height.getAsInt() / 2d, 0);
+            GlStateManager.translated(-draw2DElement.width.getAsInt() / 2d, -draw2DElement.height.getAsInt() / 2d, 0);
         }
         // Don't translate back!
         Draw2D draw2D = draw2DElement.getDraw2D();
         synchronized (draw2D.getElements()) {
             renderElements3D(draw2D.getElementsByZIndex());
         }
-        RenderSystem.popMatrix();
+        GlStateManager.popMatrix();
     }
 
     private void renderElement3D(RenderElement element) {
         if (renderBack) {
-            RenderSystem.disableCull();
+            GlStateManager.disableCull();
         } else {
-            RenderSystem.enableCull();
+            GlStateManager.enableCull();
         }
         if (!cull) {
-            RenderSystem.disableDepthTest();
+            GlStateManager.disableDepthTest();
         } else {
-            RenderSystem.enableDepthTest();
+            GlStateManager.enableDepthTest();
         }
-        RenderSystem.pushMatrix();
-        RenderSystem.translated(0, 0, zIndexScale * element.getZIndex());
+        GlStateManager.pushMatrix();
+        GlStateManager.translated(0, 0, zIndexScale * element.getZIndex());
         element.render3D(0, 0, 0);
-        RenderSystem.popMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override

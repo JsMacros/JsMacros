@@ -8,8 +8,8 @@ import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.ScreenshotUtils;
-import net.minecraft.client.render.debug.DebugRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.ProjectileUtil;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -20,6 +20,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.access.backports.TextBackport;
@@ -43,6 +44,7 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -226,8 +228,8 @@ public class FPlayer extends BaseLibrary {
     }
 
     private Text takePanorama(File directory, int width, int height) {
-        int i = mc.getWindow().getFramebufferWidth();
-        int j = mc.getWindow().getFramebufferHeight();
+        int i = mc.window.getFramebufferWidth();
+        int j = mc.window.getFramebufferHeight();
         Framebuffer framebuffer = new Framebuffer(width, height, true, mc.IS_SYSTEM_MAC);
         assert mc.player != null;
         float f = mc.player.getPitch(0);
@@ -240,7 +242,7 @@ public class FPlayer extends BaseLibrary {
         try {
             ((MixinGameRenderer) mc.gameRenderer).setRenderingPanorama(true);
             ((MixinWorldRenderer) mc.worldRenderer).invokeLoadTransparencyShader();
-            GLFW.glfwSetWindowSize(mc.getWindow().getHandle(), width, height);
+            GLFW.glfwSetWindowSize(mc.window.getHandle(), width, height);
 
             for(int l = 0; l < 6; ++l) {
                 switch(l) {
@@ -273,14 +275,14 @@ public class FPlayer extends BaseLibrary {
                 mc.player.prevYaw = mc.player.getYaw(0);
                 mc.player.prevPitch = mc.player.getPitch(0);
                 framebuffer.beginWrite(true);
-                mc.gameRenderer.renderWorld(1.0F, 0L, new MatrixStack());
+                mc.gameRenderer.renderWorld(1.0F, 0L);
 
                 try {
                     Thread.sleep(10L);
                 } catch (InterruptedException var17) {
                 }
 
-                ScreenshotUtils.saveScreenshot(directory, "panorama_" + l + ".png", framebuffer.viewportWidth, framebuffer.viewportHeight, framebuffer, message -> {
+                ScreenshotUtils.method_1662(directory, "panorama_" + l + ".png", framebuffer.viewportWidth, framebuffer.viewportHeight, framebuffer, message -> {
                 });
             }
 
@@ -296,7 +298,7 @@ public class FPlayer extends BaseLibrary {
             mc.player.prevPitch = h;
             mc.player.prevYaw = k;
             ((MixinGameRenderer) mc.gameRenderer).setBlockOutlineEnabled(true);
-            GLFW.glfwSetWindowSize(mc.getWindow().getHandle(), i, j);
+            GLFW.glfwSetWindowSize(mc.window.getHandle(), i, j);
             framebuffer.delete();
             ((MixinGameRenderer) mc.gameRenderer).setRenderingPanorama(false);
             mc.worldRenderer.reload();

@@ -139,7 +139,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
         float f = (float) yaw * (float) (Math.PI / 180.0);
         float g = -MathHelper.sin(f);
         float h = MathHelper.cos(f);
-        Vector3f vec = base.getUnitVector();
+        Vec3i vec = base.getVector();
         return vec.getX() * g + vec.getZ() * h > 0.0F;
     }
 
