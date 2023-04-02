@@ -30,7 +30,6 @@ public class ForgeEvents {
         MinecraftForge.EVENT_BUS.addListener(ForgeEvents::renderWorldListener);
         MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onTick);
         MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onRegisterCommands);
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onRegisterGuiOverlays);
 
         MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenDraw);
         
