@@ -5,19 +5,12 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,17 +18,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventAttackBlock;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventAttackEntity;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventInteractBlock;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventInteractEntity;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventInventoryChange;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
-
-import java.util.List;
 
 @Mixin(ClientPlayerInteractionManager.class)
 public class MixinClientPlayerInteractionManager {
@@ -78,20 +65,4 @@ public class MixinClientPlayerInteractionManager {
         }
     }
 
-    @Inject(method = "clickSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/ScreenHandler;onSlotClick(IILnet/minecraft/screen/slot/SlotActionType;Lnet/minecraft/entity/player/PlayerEntity;)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onClickSlot(int syncId, int slotId, int button, SlotActionType actionType, PlayerEntity player, CallbackInfo ci, ScreenHandler screenHandler, DefaultedList<Slot> defaultedList, int size, List<ItemStack> list) {
-        Int2ObjectMap<ItemStackHelper> oldItems = new Int2ObjectOpenHashMap<>();
-        Int2ObjectMap<ItemStackHelper> newItems = new Int2ObjectOpenHashMap<>();
-
-        for (int idx = 0; idx < size; idx++) {
-            ItemStack oldStack = list.get(idx);
-            ItemStack newStack = defaultedList.get(idx).getStack();
-            if (!ItemStack.areEqual(oldStack, newStack)) {
-                oldItems.put(idx, new ItemStackHelper(oldStack));
-                newItems.put(idx, new ItemStackHelper(newStack));
-            }
-        }
-        new EventInventoryChange(Inventory.create(), oldItems.keySet().toIntArray(), oldItems, newItems);
-    }
-    
 }

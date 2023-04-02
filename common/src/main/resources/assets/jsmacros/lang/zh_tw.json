@@ -105,7 +105,6 @@
   "jsmacros.event.hungerchange": "飢餓值變化",
   "jsmacros.event.interactblock": "互動方塊",
   "jsmacros.event.interactentity": "互動實體",
-  "jsmacros.event.inventorychange": "物品欄變化",
   "jsmacros.event.itemdamage": "物品耐久值變化",
   "jsmacros.event.itempickup": "拾取物品",
   "jsmacros.event.joinserver": "加入伺服器",
