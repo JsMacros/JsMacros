@@ -49,7 +49,7 @@ public class ChatHistoryManager {
      * @throws InterruptedException
      * @since 1.8.4
      */
-    public int gerRecvCount() throws InterruptedException {
+    public int getRecvCount() throws InterruptedException {
         final Semaphore semaphore = new Semaphore(0);
         AtomicInteger count = new AtomicInteger(0);
         mc.execute(() -> {

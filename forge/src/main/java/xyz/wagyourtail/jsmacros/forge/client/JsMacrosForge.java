@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.forge.client;
 
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -19,9 +20,11 @@ public class JsMacrosForge {
 
         System.setProperty("jnr.ffi.provider", "cause.class.not.found.please");
 
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onInitialize);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onInitializeClient);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onRegisterKeyMappings);
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modBus.addListener(this::onInitialize);
+        modBus.addListener(this::onInitializeClient);
+        modBus.addListener(this::onRegisterKeyMappings);
+        modBus.addListener(ForgeEvents::onRegisterGuiOverlays);
         ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((mc, parent) -> {
             JsMacros.prevScreen.setParent(parent);
             return JsMacros.prevScreen;
