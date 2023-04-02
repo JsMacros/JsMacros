@@ -35,7 +35,7 @@ public class EventDeath implements BaseEvent {
     /**
      * Respawns the player. Should be used with some delay, one tick should be enough.
      *
-     * @since 1.8.5
+     * @since 1.8.4
      */
     public void respawn() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
