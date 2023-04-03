@@ -95,7 +95,7 @@ public class Main implements Doclet {
             
             outputTS.append("\n").append(
                 """
-                declare const event: Events[keyof Events];
+                declare const event: Events.BaseEvent;
                 declare const file: _javatypes.java.io.File;
                 declare const context: EventContainer;
 
