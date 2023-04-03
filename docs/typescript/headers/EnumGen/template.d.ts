@@ -7,12 +7,12 @@ type Key = string
 type Bind = string
 //@Eval RegistryManager.method_30530(RegistryKeys.field_41236).method_10235().toArray().map(id => id.toString())
 type Biome = string
-//@Eval Registries.field_41172.method_10235().toArray().map(id => id.toString())
-type Sound = string
 //@RegistryHelper getItemIds
 type ItemId = string
 //@Eval Java.from(RegistryHelper.getItems()).flatMap(i => i.getDefaultStack().getTags())
 type ItemTag = string
+//@Eval Registries.field_41172.method_10235().toArray().map(id => id.toString())
+type SoundId = string
 //@RegistryHelper getBlockIds
 type BlockId = string
 //@Eval Java.from(RegistryHelper.getBlocks()).flatMap(b => b.getTags())

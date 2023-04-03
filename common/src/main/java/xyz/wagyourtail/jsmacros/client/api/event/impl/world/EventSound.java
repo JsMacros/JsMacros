@@ -11,7 +11,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
  @Event(value = "Sound", oldName = "SOUND")
 public class EventSound implements BaseEvent {
-    @DocletReplaceReturn("Sound")
+    @DocletReplaceReturn("SoundId")
     public final String sound;
     public final float volume;
     public final float pitch;
