@@ -57,21 +57,35 @@ declare namespace Java {
 
 type JavaTypeDict = Required<UnionToIntersection<FlattenPackage<typeof Packages>>>;
 
+declare const java:   JavaPackage<typeof Packages.java>;
+declare const javafx: JavaPackage<typeof Packages.javafx>;
+declare const javax:  JavaPackage<typeof Packages.javax>;
+declare const com:    JavaPackage<typeof Packages.com>;
+declare const org:    JavaPackage<typeof Packages.org>;
+declare const edu:    JavaPackage<typeof Packages.edu>;
+
 type UnionToIntersection<U> =
     (U extends any ? (k: U) => 0 : never) extends ((k: infer I) => 0) ? I : never;
 
+type IsStrictAny<T> = UnionToIntersection<T extends never ? 1 : 0> extends never ? true : false;
+
 type FlattenPackage<T, P extends string = ''> =
-    UnionToIntersection<T extends never ? 1 : 0> extends never ? never : // check if it's not any
-    T extends new (...args: any[]) => any ?
+    IsStrictAny<T> extends true ? never : T extends new (...args: any[]) => any ?
         { [PP in P]: T } :
         { [K in keyof T]: FlattenPackage<T[K], P extends '' ? K : `${P}.${string & K}`> }[keyof T];
 
-declare const java:   typeof Packages.java   & { [other: string]: any };
-declare const javafx: typeof Packages.javafx & { [other: string]: any };
-declare const javax:  typeof Packages.javax  & { [other: string]: any };
-declare const com:    typeof Packages.com    & { [other: string]: any };
-declare const org:    typeof Packages.org    & { [other: string]: any };
-declare const edu:    typeof Packages.edu    & { [other: string]: any };
+type JavaPackage<T> = (IsStrictAny<T> extends true ? unknown : T) & {
+    new (javaPackage: never): never;
+    /** @deprecated */ Symbol: unknown;
+    /** @deprecated */ apply: unknown;
+    /** @deprecated */ arguments: unknown;
+    /** @deprecated */ bind: unknown;
+    /** @deprecated */ call: unknown;
+    /** @deprecated */ caller: unknown;
+    /** @deprecated */ length: unknown;
+    /** @deprecated */ name: unknown;
+    /** @deprecated */ prototype: unknown;
+};
 
 declare namespace Packages {
 
