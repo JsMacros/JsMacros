@@ -37,12 +37,11 @@ public class ClassParser extends AbstractParser {
     }
 
     private String buildExtends() {
-        StringBuilder s = new StringBuilder().append(" extends ");
+        StringBuilder s = new StringBuilder();//.append(" extends ");
+        String sep = type.getKind().isInterface() ? ", " : " & ";
         String sup = transformType(type.getSuperclass());
         if (sup.equals("void")) {
-            if (type.getKind().isInterface()) {
-                s.append("java.lang.Interface");
-            } else {
+            if (!type.getKind().isInterface()) {
                 s.append("java.lang.Object");
             }
         } else if (sup.equals("/* minecraft class */ any")) {
@@ -60,16 +59,26 @@ public class ClassParser extends AbstractParser {
         if (iface != null && !iface.isEmpty()) {
             for (TypeMirror ifa : iface) {
                 sup = transformType(ifa);
-                if (sup.equals("/* minecraft class */ any")) {
-                    s.append(", ").append("/* supressed minecraft class */ java.lang.Interface");
-                } else {
-                    s.append(", ").append(sup);
+                if (!sup.equals("/* minecraft class */ any")) {
+                    if (s.length() > 0) s.append(sep);
+                    s.append(sup);
                 }
             }
         }
 
         DocletTypescriptExtends ext = type.getAnnotation(DocletTypescriptExtends.class);
-        if (ext != null) s.append(", ").append(ext.value());
+        if (ext != null) {
+            if (s.length() > 0) s.append(sep);
+            s.append(ext.value());
+        }
+
+        if (getClassName(false).equals("Iterable")) s.append("JsIterable<T>");
+
+        if (sep.equals(" & ") && s.toString().contains(" & ")) {
+            s.insert(0, "(0 as any as MergeClass<").append(">)");
+        }
+
+        if (s.length() > 0) s.insert(0, " extends ");
 
         return s.toString();
     }
@@ -91,14 +100,27 @@ public class ClassParser extends AbstractParser {
             }
         }
 
-        StringBuilder s =
-        new StringBuilder(type.getKind().isInterface() ? "interface " : "class ").append(getClassName(true)).append(buildExtends()).append(" {\n\n")
-            .append(StringHelpers.tabIn(genConstructors(constructors))).append("\n")
-            .append(StringHelpers.tabIn(genStaticFields(fields))).append("\n")
-            .append(StringHelpers.tabIn(genStaticMethods(methods))).append("\n")
-            .append(StringHelpers.tabIn(genFields(fields))).append("\n")
-            .append(StringHelpers.tabIn(genMethods(methods))).append("\n")
-        .append("\n}");
+        StringBuilder s = new StringBuilder();
+
+        if (type.getKind().isInterface()) {
+            s.append("const ").append(getClassName(false)).append(": {\n\n")
+                .append("    new (interface: never): ").append(getClassName(true)).append(";\n")
+                .append(StringHelpers.tabIn(("\n" + genStaticFields(fields)).replaceAll("\nstatic ", "\n")))
+                .append(StringHelpers.tabIn(("\n" + genStaticMethods(methods)).replaceAll("\nstatic ", "\n")))
+            .append("\n};\n")
+            .append("interface ").append(getClassName(true)).append(buildExtends()).append(" {\n\n")
+                .append(StringHelpers.tabIn(genFields(fields))).append("\n")
+                .append(StringHelpers.tabIn(genMethods(methods))).append("\n")
+            .append("}");
+        } else {
+            s.append("class ").append(getClassName(true)).append(buildExtends()).append(" {\n\n")
+                .append(StringHelpers.tabIn(genConstructors(constructors))).append("\n")
+                .append(StringHelpers.tabIn(genStaticFields(fields))).append("\n")
+                .append(StringHelpers.tabIn(genStaticMethods(methods))).append("\n")
+                .append(StringHelpers.tabIn(genFields(fields))).append("\n")
+                .append(StringHelpers.tabIn(genMethods(methods))).append("\n")
+            .append("}");
+        }
 
         return s.toString().replaceAll("\\{[\n ]+\\}", "{}").replaceAll("\n\n\n+", "\n\n");
     }

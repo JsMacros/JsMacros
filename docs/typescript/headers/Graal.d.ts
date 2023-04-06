@@ -87,6 +87,8 @@ type JavaPackage<T> = (IsStrictAny<T> extends true ? unknown : T) & {
     /** @deprecated */ prototype: unknown;
 };
 
+type MergeClass<T> = new () => T;
+
 declare namespace Packages {
 
     namespace java {
@@ -105,15 +107,15 @@ declare namespace Packages {
 
                 static readonly class: any;
 
-                static Symbol: unknown;
-                static apply: unknown;
-                static arguments: unknown;
-                static bind: unknown;
-                static call: unknown;
-                static caller: unknown;
-                static length: unknown;
-                static name: unknown;
-                static prototype: unknown;
+                /** @deprecated */ static Symbol: unknown;
+                /** @deprecated */ static apply: unknown;
+                /** @deprecated */ static arguments: unknown;
+                /** @deprecated */ static bind: unknown;
+                /** @deprecated */ static call: unknown;
+                /** @deprecated */ static caller: unknown;
+                /** @deprecated */ static length: unknown;
+                /** @deprecated */ static name: unknown;
+                /** @deprecated */ static prototype: unknown;
 
                 getClass(): JavaClass<JavaObject>;
                 hashCode(): number;
@@ -127,24 +129,27 @@ declare namespace Packages {
 
             }
 
-            class Interface {}
+            const Comparable: {
 
-            interface Comparable<T> extends Interface {
+                new (interface: never): Comparable<T>;
 
-                compareTo(var1: T): number;
+            };
+            interface Comparable<T> {
+
+                compareTo(arg0: T): number;
 
             }
 
-            class Array<T> extends Object, ArrayLike<T> {
+            class Array<T> extends (0 as any as new <T>() => T[])<T> {
 
-                constructor (abstract: never);
+                constructor (none: never);
 
                 [n: number]: T;
                 length: number;
 
             }
 
-            class StackTraceElement extends Object, java.io.Serializable {
+            class StackTraceElement extends (0 as any as new () => MergeClass<Object & java.io.Serializable>) {
 
                 constructor (declaringClass: string, methodName: string, fileName: string, lineNumber: number);
                 constructor (classLoaderName: string, moduleName: string, moduleVersion: string, declaringClass: string, methodName: string, fileName: string, lineNumber: number);
@@ -160,7 +165,7 @@ declare namespace Packages {
 
             }
 
-            class Throwable extends Object, java.io.Serializable, Error {
+            class Throwable extends (0 as any as new () => MergeClass<Object & java.io.Serializable & Error>) {
 
                 constructor ();
                 constructor (message: string);
@@ -179,64 +184,76 @@ declare namespace Packages {
 
             }
 
-            interface Iterable<T> extends Interface, ArrayLike<T> {}
+            const Iterable: {
+
+                new (interface: never): Iterable<T>;
+
+            };
+            interface Iterable<T> extends JsIterable<T> {
+
+                iterator(): java.util.Iterator<T>;
+                forEach(arg0: java.util._function.Consumer<any>): void;
+                spliterator(): java.util.Spliterator<T>;
+
+            }
 
         }
 
         namespace util {
 
-            class Collection<T> extends java.lang.Iterable<T> {
-
-                constructor (abstract: never);
+            interface Collection<T> extends java.lang.Iterable<T> {
 
                 readonly [n: number]: T;
 
-                size(): number;
-                get(index: number): T;
                 add(element: T): boolean;
+                addAll(elements: Collection<T>): boolean;
+                clear(): void;
                 contains(element: T): boolean;
                 containsAll(elements: Collection<T>): boolean;
+                equals(object: Collection<T>): boolean;
+                hashCode(): number;
                 isEmpty(): boolean;
-                // the `| T` on the return is here to make List<T> compatible
-                remove(element: T): boolean | T;
+                iterator(): Iterator<T>;
+                remove(element: T): boolean;
                 removeAll(elements: Collection<T>): boolean;
                 retainAll(elements: Collection<T>): boolean;
-                toArray(): Array<T>;
+                size(): number;
+                toArray(): T[];
 
             }
 
-            class List<T> extends Collection<T> {
+            interface List<T> extends Collection<T> {
 
-                constructor (abstract: never);
-
-                set(index: number, element: T): T;
-                // the `| T` and optional second arg are here to make this compatible with Collection<T>
-                add(index: number | T, element?: T): boolean;
+                add(element: T): boolean;
+                add(index: number, element: T): void;
                 addAll(elements: Collection<T>): boolean;
                 addAll(index: number, elements: Collection<T>): boolean;
-                clear(): void;
-                remove(index: number | T): T | boolean;
+                get(index: number): T;
                 indexOf(element: T): number;
                 lastIndexOf(element: T): number;
+                remove(index: number): T;
+                remove(element: T): boolean;
+                set(index: number, element: T): T;
+                subList(start: number, end: number): JavaList<T>;
 
             }
 
-            class Map<K, V> extends java.lang.Object {
-
-                constructor (abstract: never);
-
-                [P in K]: V;
+            interface Map<K, V> {
 
                 clear(): void;
                 containsKey(key: K): boolean;
                 containsValue(value: V): boolean;
-                delete(key: K): boolean;
-                get(key: K): V | undefined;
+                equals(object: Map<K, V>): boolean;
+                get(key: K): V | null;
                 getOrDefault(key: K, defaultValue: V): V;
-                keySet(): Set<K>;
+                hashCode(): number;
+                isEmpty(): boolean;
+                keySet(): JavaSet<K>;
                 put(ket: K, value: V): V;
                 putAll(map: Map<K, V>): void;
-                putIfAbsent(key: K, value: V): V;
+                putIfAbsent(key: K, value: V): V | null;
+                remove(key: K): V | null;
+                remove(key: K, value: V): boolean;
                 replace(key: K, value: V): V;
                 replace(key: K, oldValue: V, newValue: V): boolean;
                 size(): number;
@@ -244,11 +261,7 @@ declare namespace Packages {
 
             }
 
-            class Set<T> extends Collection<T> {
-
-                constructor (abstract: never);
-
-            }
+            interface Set<T> extends Collection<T> {}
 
         }
 
@@ -294,7 +307,12 @@ declare namespace Packages {
 
             }
 
-            interface Serializable extends java.lang.Interface {}
+            const Serializable: {
+
+                new (interface: never): Serializable;
+
+            };
+            interface Serializable {}
 
         }
 
@@ -317,7 +335,7 @@ declare namespace Packages {
 
             }
 
-            class URI extends java.lang.Object, java.lang.Comparable<URI>, java.io.Serializable {
+            class URI extends (0 as any as new () => MergeClass<java.lang.Object & java.lang.Comparable<URI> & java.io.Serializable>) {
 
                 constructor (str: string);
                 constructor (scheme: string, userInfo: string, host: string, port: number, path: string, query: string, fragment: string);
@@ -353,6 +371,8 @@ declare namespace Packages {
     }
 
 }
+
+type JsIterable<T> = Iterable<T>;
 
 type _  = { [none: symbol]: never }; // to trick vscode to rename types
 type _r = { [none: symbol]: never };

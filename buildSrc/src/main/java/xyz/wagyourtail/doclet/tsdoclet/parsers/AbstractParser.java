@@ -58,13 +58,13 @@ public abstract class AbstractParser {
     }
 
     public String genStaticFields(Set<Element> fields) {
-        final StringBuilder s = new StringBuilder();
+        final StringBuilder s = new StringBuilder("\n");
         for (Element field : fields) {
             if (!field.getModifiers().contains(Modifier.PUBLIC)) continue;
             if (!field.getModifiers().contains(Modifier.STATIC)) continue;
-            s.append("static ").append(genField(field)).append("\n");
+            s.append(genField(field)).append("\n");
         }
-        return s.toString();
+        return s.toString().replaceAll("\n(?=\\w)", "\nstatic ").substring(1);
     }
 
     public String genMethods(Set<Element> methods) {
@@ -78,17 +78,16 @@ public abstract class AbstractParser {
     }
 
     public String genStaticMethods(Set<Element> methods) {
-        final StringBuilder s = new StringBuilder();
+        final StringBuilder s = new StringBuilder("\n");
         for (Element method : methods) {
             if (!method.getModifiers().contains(Modifier.PUBLIC)) continue;
             if (!method.getModifiers().contains(Modifier.STATIC)) continue;
-            s.append("static ").append(genMethod((ExecutableElement) method)).append("\n");
+            s.append(genMethod((ExecutableElement) method)).append("\n");
         }
-        return s.toString();
+        return s.toString().replaceAll("\n(?=\\w)", "\nstatic ").substring(1);
     }
 
     public String genConstructors(Set<Element> methods) {
-        if (type.getKind().isInterface()) return "";
         final StringBuilder s = new StringBuilder();
         final StringBuilder p = new StringBuilder();
         for (Element method : methods) {
