@@ -29,6 +29,15 @@ public abstract class AbstractParser {
         "java.util.Map",
         "java.util.HashMap"
     );
+    static final public Set<String> javaNumberType = Set.of(
+        "java.lang.Integer",
+        "java.lang.Float",
+        "java.lang.Long",
+        "java.lang.Short",
+        "java.lang.Character",
+        "java.lang.Byte",
+        "java.lang.Double"
+    );
 
     public Set<String> redirects = new HashSet<>();
     private static Set<String> loggedTypes = new HashSet<>();
@@ -53,7 +62,7 @@ public abstract class AbstractParser {
         for (Element field : fields) {
             if (!field.getModifiers().contains(Modifier.PUBLIC)) continue;
             if (!field.getModifiers().contains(Modifier.STATIC)) continue;
-            s.append(genField(field)).append("\n");
+            s.append("static ").append(genField(field)).append("\n");
         }
         return s.toString();
     }
@@ -73,18 +82,29 @@ public abstract class AbstractParser {
         for (Element method : methods) {
             if (!method.getModifiers().contains(Modifier.PUBLIC)) continue;
             if (!method.getModifiers().contains(Modifier.STATIC)) continue;
-            s.append(genMethod((ExecutableElement) method)).append("\n");
+            s.append("static ").append(genMethod((ExecutableElement) method)).append("\n");
         }
         return s.toString();
     }
 
     public String genConstructors(Set<Element> methods) {
+        if (type.getKind().isInterface()) return "";
         final StringBuilder s = new StringBuilder();
+        final StringBuilder p = new StringBuilder();
         for (Element method : methods) {
-            if (!method.getModifiers().contains(Modifier.PUBLIC)) continue;
+            if (!method.getModifiers().contains(Modifier.PUBLIC)) {
+                Set<Modifier> mods = method.getModifiers();
+                if (mods.contains(Modifier.PRIVATE)) {
+                    p.append("constructor (private: never);").append("\n");
+                } else if (mods.contains(Modifier.PROTECTED)) {
+                    p.append("constructor (protected: never);").append("\n");
+                }
+                continue;
+            };
             s.append(genConstructor((ExecutableElement) method)).append("\n");
         }
-        return s.toString();
+        return s.length() > 0 ? s.toString() :
+            (p.length() > 0 ? p.toString() : "constructor (none: never);\n");
     }
 
     public String genField(Element field) {
@@ -109,14 +129,24 @@ public abstract class AbstractParser {
                 s.append(shortify(param)).append(", ");
             }
             s.setLength(s.length() - 2);
-            if (replace != null && replace.startsWith("<E> ")) {
-                s.append(", E extends keyof Events");
-                replace = replace.substring(4);
+            if (replace != null) {
+                if (replace.startsWith("<E> ")) {
+                    s.append(", E extends keyof Events");
+                    replace = replace.substring(4);
+                } else if (replace.startsWith("<C> ")) {
+                    s.append(", C extends keyof JavaTypeDict");
+                    replace = replace.substring(4);
+                }
             }
             s.append(">");
-        }else if (replace != null && replace.startsWith("<E> ")) {
-            s.append("<E extends keyof Events>");
-            replace = replace.substring(4);
+        } else if (replace != null) {
+            if (replace.startsWith("<E> ")) {
+                s.append("<E extends keyof Events>");
+                replace = replace.substring(4);
+            } else if (replace.startsWith("<C> ")) {
+                s.append("<C extends keyof JavaTypeDict>");
+                replace = replace.substring(4);
+            }
         }
         s.append("(");
         if (replace != null) {
@@ -146,7 +176,7 @@ public abstract class AbstractParser {
     public String genConstructor(ExecutableElement constructor) {
         final StringBuilder s = new StringBuilder();
         s.append(genComment(constructor));
-        s.append("new ");
+        s.append("constructor ");
 
         //diamondOperator
         List<? extends TypeParameterElement> typeParams = type.getTypeParameters();
@@ -163,13 +193,13 @@ public abstract class AbstractParser {
         List<? extends VariableElement> params = constructor.getParameters();
         if (replace != null) {
             s.append(replace.value());
-        }else if (params != null && !params.isEmpty()) {
+        } else if (params != null && !params.isEmpty()) {
             for (VariableElement param : params) {
                 s.append(param.getSimpleName()).append(": ").append(shortify(param)).append(", ");
             }
             s.setLength(s.length() - 2);
         }
-        s.append("): ").append(shortify(type)).append(";");
+        s.append(");");
         return s.toString();
     }
 
@@ -207,10 +237,10 @@ public abstract class AbstractParser {
                         Main.redirectNeeded.add(rawType.toString());
                         rawType.insert(0, "$");
                     }
-                }else if (shortify && javaShortifies.contains(classpath + "." + rawType.toString())) {
+                } else if (shortify && javaShortifies.contains(classpath + "." + rawType.toString())) {
                     shortified = true;
                     rawType.insert(0, "Java");
-                }else rawType.insert(0, classpath + ".");
+                } else rawType.insert(0, classpath + ".");
 
                 List<? extends TypeMirror> params = ((DeclaredType) type).getTypeArguments();
                 if (params != null && !params.isEmpty()) {
@@ -231,7 +261,7 @@ public abstract class AbstractParser {
                     }
                 }
 
-                if (rawType.toString().startsWith("net.minecraft")) return "/* minecraft classes, as any, because obfuscation: */ any";
+                if (rawType.toString().startsWith("net.minecraft")) return "/* minecraft class */ any";
                 AnnotationMirror mirror = type.getAnnotationMirrors().stream().filter(e -> e.getAnnotationType().asElement().getSimpleName().toString().equals("Event")).findFirst().orElse(null);
 
                 if (mirror != null) {
@@ -247,28 +277,24 @@ public abstract class AbstractParser {
                 if (rawType.toString().equals("xyz.wagyourtail.jsmacros.core.event.BaseEvent")) return "Events.BaseEvent";
 
                 if (rawType.toString().startsWith("java.lang")) {
-                    if (List.of("java.lang.Integer", "java.lang.Float", "java.lang.Long", "java.lang.Short", "java.lang.Character", "java.lang.Byte", "java.lang.Double").contains(rawType.toString())) {
+                    if (javaNumberType.contains(rawType.toString())) {
                         return "number";
                     }
 
-                    if ("java.lang.Boolean".equals(rawType.toString())) {
-                        return "boolean";
-                    }
-
-                    if ("java.lang.String".equals(rawType.toString())) {
-                        return "string";
-                    }
-
-                    if ("java.lang.Object".equals(rawType.toString())) {
-                        return "any";
+                    switch (rawType.toString()) {
+                        case "java.lang.Boolean" -> { return "boolean"; }
+                        case "java.lang.String"  -> { return "string";  }
+                        case "java.lang.Object"  -> {
+                            return shortify ? "JavaObject" : "Packages.java.lang.Object";
+                        }
                     }
 
                     Main.classes.addClass(((DeclaredType) type).asElement());
-                    return "_javatypes." + rawType.toString();
+                    return rawType.insert(0, "Packages.").toString();
                 } else {
                     Main.classes.addClass(((DeclaredType) type).asElement());
-                    return (shortified || rawType.substring(0, 4).equals("xyz.") ? "" : "_javatypes.") +
-                        rawType.toString().replace(".function.", "._function.");
+                    if (!shortified) rawType.insert(0, "Packages.");
+                    return rawType.toString().replace(".function.", "._function.");
                 }
             }
             case TYPEVAR -> {
@@ -301,7 +327,7 @@ public abstract class AbstractParser {
                     if (referenceString.startsWith("#") || !referenceString.contains(".")) {
                         s.append(referenceString);
                     } else {
-                        if (!referenceString.startsWith("xyz.")) s.append("_javatypes.");
+                        if (!referenceString.startsWith("xyz.")) s.append("Packages.");
                         s.append(
                             referenceString
                             .replace(".function.", "._function.")

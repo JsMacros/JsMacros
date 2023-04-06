@@ -61,7 +61,7 @@ public class PackageTree {
             for (ClassParser aClass : Set.copyOf(classes)) {
                 if (aClass.redirects.addAll(redirects)) {
                     compiledClasses.put(aClass, aClass.genTSInterface());
-                }else {
+                } else {
                     compiledClasses.computeIfAbsent(aClass, ClassParser::genTSInterface);
                 }
             }
@@ -85,24 +85,22 @@ public class PackageTree {
         }
         StringBuilder s = new StringBuilder("namespace ");
         s.append(pkgName).append(" {");
-        if (!compiledClasses.isEmpty() || !children.isEmpty()) s.append("\n");
         for (String value : compiledClasses.values()) {
-            s.append("\n").append(StringHelpers.tabIn(value));
+            s.append("\n\n").append(StringHelpers.tabIn(value));
         }
-        if (!compiledClasses.isEmpty()) s.append("\n");
-        PackageTree xyz = null;
         for (PackageTree value : children.values()) {
-            if (value.pkgName.equals("xyz")) {
-                xyz = value;
-                continue;
-            }
-            s.append("\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
+            s.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
         }
-        if (!children.isEmpty()) s.append("\n");
-        if (!compiledClasses.isEmpty() || !children.isEmpty()) s.append("\n");
+        if (s.charAt(s.length() - 1) != '\n') s.append("\n\n");
         s.append("}");
-        if (xyz != null) s.append("\n\ndeclare ").append(xyz.genTSTreeIntern());
-        return s.toString();
+        return s.toString().replaceAll("\\bPackages\\.", "");
+    }
+
+    public List<ClassParser> getXyzClasses() {
+        for (PackageTree value : children.values()) {
+            if (value.pkgName.equals("xyz")) return value.getAllClasses();
+        }
+        return null;
     }
 
     public List<ClassParser> getAllClasses() {

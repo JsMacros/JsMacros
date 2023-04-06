@@ -5,6 +5,7 @@ import javassist.CannotCompileException;
 import javassist.NotFoundException;
 import org.joor.Reflect;
 import xyz.wagyourtail.Util;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.classes.Mappings;
@@ -62,11 +63,12 @@ public class FReflection extends PerExecLibrary {
      * @see FReflection#getClass(String, String)
      * @since 1.2.3
      */
-    @DocletReplaceReturn(
+    @DocletReplaceParams(
         """
-        JavaClass<T> & { new(...values: any[]): T };
-        function getClass<T extends keyof JavaTypeDict>(name: T): JavaTypeDict[T]"""
+        <C> name: C): Omit<JavaTypeDict[C], 'class'>;
+        function getClass<T>(name: string"""
     )
+    @DocletReplaceReturn("unknown")
     public <T> Class<T> getClass(String name) throws ClassNotFoundException {
         switch (name) {
             case "boolean":
@@ -104,11 +106,12 @@ public class FReflection extends PerExecLibrary {
      * @throws ClassNotFoundException
      * @since 1.2.3
      */
-    @DocletReplaceReturn(
+    @DocletReplaceParams(
         """
-        JavaClass<T> & { new(...values: any[]): T };
-        function getClass<T extends keyof JavaTypeDict>(name: T, name2: string): JavaTypeDict[T]"""
+        <C> name: C, name2: string): Omit<JavaTypeDict[C], 'class'>;
+        function getClass<T>(name: string, name2: string"""
     )
+    @DocletReplaceReturn("unknown")
     public <T> Class<T> getClass(String name, String name2) throws ClassNotFoundException {
         try {
             return getClass(name);

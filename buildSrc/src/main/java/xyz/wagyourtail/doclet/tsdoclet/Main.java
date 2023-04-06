@@ -23,7 +23,7 @@ import java.util.*;
 public class Main implements Doclet {
     public static Reporter reporter;
     public static FileHandler outputTS;
-    public static PackageTree classes = new PackageTree("_javatypes");
+    public static PackageTree classes = new PackageTree("Packages");
     public static DocTrees treeUtils;
     public static Set<String> redirectNeeded = new HashSet<>();
     public static Map<String, String> enumTypes = new HashMap<>();
@@ -96,13 +96,15 @@ public class Main implements Doclet {
             outputTS.append("\n").append(
                 """
                 declare const event: Events.BaseEvent;
-                declare const file: _javatypes.java.io.File;
+                declare const file: Packages.java.io.File;
                 declare const context: EventContainer;
 
                 declare namespace Events {
 
                     export interface BaseEvent extends JavaObject {
+
                         getEventName(): string;
+
                     }"""
             );
             for (EventParser event : eventClasses) {
@@ -117,24 +119,16 @@ public class Main implements Doclet {
             outputTS.append("\n\n}");
 
             for (LibraryParser lib : libraryClasses) {
-                outputTS.append("\n\n" + lib.genTSInterface());
+                outputTS.append("\n\ndeclare ").append(lib.genTSInterface());
             }
 
-            outputTS.append("\n\ndeclare " + classes.genTSTree());
-            outputTS.append("\n\ninterface JavaTypeDict {");
-            List<ClassParser> allClasses = classes.getAllClasses();
-            for (ClassParser clz : allClasses) {
-                outputTS.append("\n    \"").append(clz.getTypeString().split("<", 2)[0].replace("_javatypes.", "")).append("\": ")
-                    .append("JavaClass<").append(clz.getShortifiedType().split("<", 2)[0].replaceFirst("^\\$", "").replace(".function.", "._function."))
-                    .append("> & ").append(clz.getTypeString().split("<", 2)[0].replace(".function.", "._function.")).append(".static;");
-            }
-            outputTS.append("\n}\n\ntype _ = { [none: symbol]: never }; // to trick vscode to rename types\n");
+            outputTS.append("\n\ndeclare ").append(classes.genTSTree()).append("\n");
 
             int maxLen = 0;
             int maxRedirLen = 0;
-            for (ClassParser clz : allClasses) { // check length
+            List<ClassParser> xyzClasses = classes.getXyzClasses();
+            for (ClassParser clz : xyzClasses) { // check length
                 String type = clz.getTypeString();
-                if (!type.startsWith("xyz.")) continue;
                 String shortified = clz.getClassName(true).replaceAll("([A-Z])(?=[,>])", "$1 = any");
                 if (redirectNeeded.contains(shortified.split("<", 2)[0])) {
                     if (shortified.length() > maxRedirLen) maxRedirLen = shortified.length();
@@ -142,24 +136,23 @@ public class Main implements Doclet {
                 if (shortified.length() > maxLen) maxLen = shortified.length();
             }
 
-            for (ClassParser clz : allClasses) { // append shortify
+            for (ClassParser clz : xyzClasses) { // append shortify
                 String type = clz.getTypeString();
-                if (!type.startsWith("xyz.")) continue;
                 String shortified = clz.getClassName(true).replaceAll("([A-Z])(?=[,>])", "$1 = any");
                 
                 outputTS.append("\ntype ").append(String.format("%-" + maxLen + "s", shortified))
-                    .append(" = ").append(type.endsWith(">") ? "  " : "_&").append(type).append(";");
+                    .append(" = ").append(type.endsWith(">") ? "    " : "_ & ").append(type).append(";");
             }
 
             // since some type will refer to the long name inside same namespace
-            outputTS.append("\n\ntype _r = { [none: symbol]: never };\n// redirects\n");
-            for (ClassParser clz : allClasses) { // append redirects
+            outputTS.append("\n\n// redirects\n");
+            for (ClassParser clz : xyzClasses) { // append redirects
                 String shortified = clz.getClassName(true);
                 if (!redirectNeeded.contains(shortified.split("<", 2)[0])) continue;
 
                 outputTS.append("type $")
                     .append(String.format("%-" + maxRedirLen + "s", shortified.replaceAll("([A-Z])(?=[,>])", "$1 = any")))
-                    .append(" = ").append(shortified.endsWith(">") ? "   " : "_r&")
+                    .append(" = ").append(shortified.endsWith(">") ? "     " : "_r & ")
                     .append(shortified).append(";\n");
             }
 

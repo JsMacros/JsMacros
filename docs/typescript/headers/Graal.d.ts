@@ -1,44 +1,45 @@
 
-declare function load(source: string | _javatypes.java.io.File | _javatypes.java.net.URL): void;
-declare function loadWithNewGlobal(source: string | _javatypes.java.io.File | _javatypes.java.net.URL, arguments: any): void;
-declare function print(...arg: any[]): void;
-// declare function printerr(...arg: any): void;
-// declare function quit(status: number): void;
-// declare function read(file: string |  _javatypes.java.io.File | _javatypes.java.net.URL): string;
-// declare function readbuffer(file: string | _javatypes.java.io.File | _javatypes.java.net.URL): ArrayBuffer;
-// /**
-//  * reads a line of input from stdin
-//  */
-// declare function readline(): string;
+/// <reference lib="ES2022"/>
+
+declare function load(source: string | Packages.java.io.File | Packages.java.net.URL): void;
+declare function loadWithNewGlobal(source: string | Packages.java.io.File | Packages.java.net.URL, arguments: any): void;
+// these two are commented out because it's useless, doesn't even show in game log
+// declare function print(...arg: any[]): void;
+// declare function printErr(...arg: any[]): void;
 
 /**
  * Information about the graal runner.
  * Can someone tell me if this should be a namespace, I thought since it only had values in it, it would be best to declare this way.
  */
 declare const Graal: {
+
     readonly language: string;
     readonly versionGraalVM: string;
     readonly versionECMAScript: number;
+
     isGraalRuntime(): boolean;
+
 }
 
 /**
  * This would be a namespace as well, but export/import are reserved terms in typescript
  */
 declare const Polyglot: {
-    export(key: string, value: any): void;
-    import(key: string): any;
 
+    import(key: string): any;
+    export(key: string, value: any): void;
     eval(languageId: string, sourceCode: string): any;
     evalFile(languageId: string, sourceFileName: string): () => any;
+
 }
 
 /**
  * Java namespace for graal's Java functions.
  */
 declare namespace Java {
-    export function type<T extends keyof JavaTypeDict>(className: T): JavaTypeDict[T];
-    export function type<T>(className: string): JavaClass<T> & { new(...values: any[]): T };
+
+    export function type<C extends keyof JavaTypeDict>(className: C): JavaTypeDict[C];
+    export function type(className: string): unknown;
     export function from<T>(javaData: JavaArray<T>): T[];
     export function from<T>(javaData: JavaList<T>): T[];
     export function from<T>(javaData: JavaCollection<T>): T[];
@@ -51,42 +52,55 @@ declare namespace Java {
     export function isScriptObject(obj: any): boolean;
     export function isScriptFunction(fn: Function): boolean;
     export function addToClasspath(location: string): void;
+
 }
 
-/**
- * Declare the java typings.
- * java typings should be namespaced by their package name, for organizational/asthetic reasons,
- * java.lang classes should probably get upstreamed to this file.
- *
- * Declaring this namespace for appending to it is expected of the user if they would like typing for other java classes.
- *
- * It would be nice if any libraries that add java classes / functions, used in paramethers or return values,
- * would also include the classes in the same way with a re-declaration to extend the namespace in the libraries typescript file.
- */
-interface JavaTypeDict {
-    "java.lang.Class": JavaClass<JavaClass> & _javatypes.java.lang.Class.static;
-    "java.lang.Object": JavaClass<JavaObject> & _javatypes.java.lang.Object.static;
-    "java.lang.StackTraceElement": JavaClass<_javatypes.java.lang.StackTraceElement> & _javatypes.java.lang.StackTraceElement.static;
-    "java.lang.Throwable": JavaClass<_javatypes.java.lang.Throwable> & _javatypes.java.lang.Throwable.static;
-    "java.io.File": JavaClass<_javatypes.java.io.File> & _javatypes.java.io.File.static;
-    "java.net.URI": JavaClass<_javatypes.java.net.URI> & _javatypes.java.net.URI.static;
-    "java.net.URL": JavaClass<_javatypes.java.net.URL> & _javatypes.java.net.URL.static;
-}
+type JavaTypeDict = Required<UnionToIntersection<FlattenPackage<typeof Packages>>>;
 
+type UnionToIntersection<U> =
+    (U extends any ? (k: U) => 0 : never) extends ((k: infer I) => 0) ? I : never;
 
-declare namespace _javatypes {
+type FlattenPackage<T, P extends string = ''> =
+    UnionToIntersection<T extends never ? 1 : 0> extends never ? never : // check if it's not any
+    T extends new (...args: any[]) => any ?
+        { [PP in P]: T } :
+        { [K in keyof T]: FlattenPackage<T[K], P extends '' ? K : `${P}.${string & K}`> }[keyof T];
+
+declare const java:   typeof Packages.java   & { [other: string]: any };
+declare const javafx: typeof Packages.javafx & { [other: string]: any };
+declare const javax:  typeof Packages.javax  & { [other: string]: any };
+declare const com:    typeof Packages.com    & { [other: string]: any };
+declare const org:    typeof Packages.org    & { [other: string]: any };
+declare const edu:    typeof Packages.edu    & { [other: string]: any };
+
+declare namespace Packages {
+
     namespace java {
+
         namespace lang {
-            interface Class<T> extends Object {}
-            namespace Class {
-                interface static {
-                    forName(className: string): JavaClass<any>;
-                    forName(name: string, initialize: boolean, loader: ClassLoader): JavaClass<any>;
-                    forName(module: Module, name: string): JavaClass<any>;
-                }
+
+            class Class<T> extends Object {
+
+                static forName(className: string): JavaClass<any>;
+                static forName(name: string, initialize: boolean, loader: ClassLoader): JavaClass<any>;
+                static forName(module: Module, name: string): JavaClass<any>;
+
             }
 
-            interface Object {
+            class Object {
+
+                static readonly class: any;
+
+                static Symbol: unknown;
+                static apply: unknown;
+                static arguments: unknown;
+                static bind: unknown;
+                static call: unknown;
+                static caller: unknown;
+                static length: unknown;
+                static name: unknown;
+                static prototype: unknown;
+
                 getClass(): JavaClass<JavaObject>;
                 hashCode(): number;
                 equals(obj: JavaObject): object;
@@ -96,35 +110,31 @@ declare namespace _javatypes {
                 wait(): void;
                 wait(var1: number): void;
                 wait(timeoutMillis: number, nanos: number): void;
-            }
-            namespace Object {
-                interface static {
-                    new (): JavaObject;
-                }
+
             }
 
-            interface Interface {}
-            namespace Interface {
-                interface static {}
-            }
+            class Interface {}
 
             interface Comparable<T> extends Interface {
+
                 compareTo(var1: T): number;
-            }
-            namespace Comparable {
-                interface static {}
+
             }
 
-            interface Array<T> extends Object, ArrayLike<T> {
+            class Array<T> extends Object, ArrayLike<T> {
+
+                constructor (abstract: never);
+
                 [n: number]: T;
                 length: number;
-            }
-            namespace Array {
-                interface static {}
+
             }
 
-            //@ts-ignore
-            interface StackTraceElement extends Object, java.io.Serializable {
+            class StackTraceElement extends Object, java.io.Serializable {
+
+                constructor (declaringClass: string, methodName: string, fileName: string, lineNumber: number);
+                constructor (classLoaderName: string, moduleName: string, moduleVersion: string, declaringClass: string, methodName: string, fileName: string, lineNumber: number);
+
                 getFileName(): string;
                 getLineNumber(): number;
                 getClassName(): string;
@@ -133,15 +143,15 @@ declare namespace _javatypes {
                 toString(): string;
                 equals(arg0: any): boolean;
                 hashCode(): number;
-            }
-            namespace StackTraceElement {
-                interface static {
-                    new (declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement;
-                    new (classLoaderName: string, moduleName: string, moduleVersion: string, declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement;
-                }
+
             }
 
-            interface Throwable extends Object, java.io.Serializable, Error {
+            class Throwable extends Object, java.io.Serializable, Error {
+
+                constructor ();
+                constructor (message: string);
+                constructor (message: string, cause: Throwable);
+
                 getMessage(): string;
                 getLocalizedMessage(): string;
                 getCause(): Throwable;
@@ -152,24 +162,21 @@ declare namespace _javatypes {
                 setStackTrace(arg0: Array<StackTraceElement>): void;
                 addSuppressed(arg0: Throwable): void;
                 getSuppressed(): Array<Throwable>;
-            }
-            namespace Throwable {
-                interface static {
-                    new (): Throwable;
-                    new (message: string): Throwable;
-                    new (message: string, cause: Throwable): Throwable;
-                }
+
             }
 
-            interface Iterable<T> extends java.lang.Interface, ArrayLike<T> {}
-            namespace Iterable {
-                namespace static {}
-            }
+            interface Iterable<T> extends Interface, ArrayLike<T> {}
+
         }
 
         namespace util {
-            interface Collection<T> extends java.lang.Iterable<T> {
+
+            class Collection<T> extends java.lang.Iterable<T> {
+
+                constructor (abstract: never);
+
                 readonly [n: number]: T;
+
                 size(): number;
                 get(index: number): T;
                 add(element: T): boolean;
@@ -181,12 +188,13 @@ declare namespace _javatypes {
                 removeAll(elements: Collection<T>): boolean;
                 retainAll(elements: Collection<T>): boolean;
                 toArray(): Array<T>;
-            }
-            namespace Collection {
-                interface static {}
+
             }
 
-            interface List<T> extends Collection<T> {
+            class List<T> extends Collection<T> {
+
+                constructor (abstract: never);
+
                 set(index: number, element: T): T;
                 // the `| T` and optional second arg are here to make this compatible with Collection<T>
                 add(index: number | T, element?: T): boolean;
@@ -196,12 +204,15 @@ declare namespace _javatypes {
                 remove(index: number | T): T | boolean;
                 indexOf(element: T): number;
                 lastIndexOf(element: T): number;
-            }
-            namespace List {
-                interface static {}
+
             }
 
-            interface Map<K, V> extends java.lang.Object {
+            class Map<K, V> extends java.lang.Object {
+
+                constructor (abstract: never);
+
+                [P in K]: V;
+
                 clear(): void;
                 containsKey(key: K): boolean;
                 containsValue(value: V): boolean;
@@ -216,19 +227,28 @@ declare namespace _javatypes {
                 replace(key: K, oldValue: V, newValue: V): boolean;
                 size(): number;
                 values(): Collection<V>;
-            }
-            namespace Map {
-                interface static {}
+
             }
 
-            interface Set<T> extends Collection<T> {}
-            namespace Set {
-                interface static {}
+            class Set<T> extends Collection<T> {
+
+                constructor (abstract: never);
+
             }
+
         }
 
         namespace io {
-            interface File extends java.lang.Object {
+
+            class File extends java.lang.Object {
+
+                constructor (pathName: string);
+                constructor (parent: string, child: string);
+                constructor (parent: File, child: string);
+                constructor (uri: java.net.URI);
+
+                static listRoots(): JavaArray<File>;
+
                 canExecute(): boolean;
                 canRead(): boolean;
                 canWrite(): boolean;
@@ -257,25 +277,22 @@ declare namespace _javatypes {
                 setWritable(writable: boolean, ownerOnly?: boolean): boolean;
                 toString(): string;
                 toURI(): java.net.URI;
-            }
-            namespace File {
-                interface static {
-                    new (pathName: string): File;
-                    new (parent: string, child: string): File;
-                    new (parent: File, child: string): File;
-                    new (uri: java.net.URI): File;
-                    listRoots(): JavaArray<File>;
-                }
+
             }
 
             interface Serializable extends java.lang.Interface {}
-            namespace Serializable {
-                interface static {}
-            }
+
         }
 
         namespace net {
-            interface URL extends java.lang.Object {
+
+            class URL extends java.lang.Object {
+
+                constructor (protocol: string, host: string, port: number, file: string);
+                constructor (protocol: string, host: string, file: string);
+                constructor (spec: string);
+                constructor (context: URL, spec: string);
+
                 getFile(): string;
                 getPath(): string;
                 getProtocol(): string;
@@ -283,17 +300,20 @@ declare namespace _javatypes {
                 getQuery(): string;
                 toString(): string;
                 toURI(): URI;
-            }
-            namespace URL {
-                interface static {
-                    new (protocol: string, host: string, port: number, file: string): URL;
-                    new (protocol: string, host: string, file: string): URL;
-                    new (spec: string): URL;
-                    new (context: URL, spec: string): URL;
-                }
+
             }
 
-            interface URI extends java.lang.Object, java.lang.Comparable<URI>, java.io.Serializable {
+            class URI extends java.lang.Object, java.lang.Comparable<URI>, java.io.Serializable {
+
+                constructor (str: string);
+                constructor (scheme: string, userInfo: string, host: string, port: number, path: string, query: string, fragment: string);
+                constructor (scheme: string, authority: string, path: string, query: string, fragment: string);
+                constructor (scheme: string, host: string, path: string, fragment: string);
+                constructor (scheme: string, ssp: string, fragment: string);
+                constructor (scheme: string, path: string);
+
+                static create(str: string): URI;
+
                 getHost(): string;
                 getPath(): string;
                 getPort(): number;
@@ -305,29 +325,29 @@ declare namespace _javatypes {
                 toASCIIString(): string;
                 toString(): string;
                 toURL(): URL;
+
             }
-            namespace URI {
-                interface static {
-                    new (str: string): URI;
-                    new (scheme: string, userInfo: string, host: string, port: number, path: string, query: string, fragment: string);
-                    new (scheme: string, authority: string, path: string, query: string, fragment: string);
-                    new (scheme: string, host: string, path: string, fragment: string);
-                    new (scheme: string, ssp: string, fragment: string);
-                    new (scheme: string, path: string);
-                    create(str: string): URI;
-                }
-            }
+
         }
+
     }
+
+    namespace net {
+
+        export const minecraft: any;
+
+    }
+
 }
 
-type _ = { [none: symbol]: never }; // to trick vscode to rename types
+type _  = { [none: symbol]: never }; // to trick vscode to rename types
+type _r = { [none: symbol]: never };
 
-type JavaObject                    = _javatypes.java.lang.Object & _;
-type JavaClass<T = any>            = _javatypes.java.lang.Class<T>;
-type JavaArray<T = any>            = _javatypes.java.lang.Array<T>;
-type JavaCollection<T = any>       = _javatypes.java.util.Collection<T>;
-type JavaList<T = any>             = _javatypes.java.util.List<T>;
-type JavaSet<T = any>              = _javatypes.java.util.Set<T>;
-type JavaMap<K = any, V = any>     = _javatypes.java.util.Map<K, V> & Record<K, V>;
-type JavaHashMap<K = any, V = any> = _javatypes.java.util.HashMap<K, V> & Record<K, V>;
+type JavaObject                    = Packages.java.lang.Object & _;
+type JavaClass<T = any>            = Packages.java.lang.Class<T>;
+type JavaArray<T = any>            = Packages.java.lang.Array<T>;
+type JavaCollection<T = any>       = Packages.java.util.Collection<T>;
+type JavaList<T = any>             = Packages.java.util.List<T>;
+type JavaSet<T = any>              = Packages.java.util.Set<T>;
+type JavaMap<K = any, V = any>     = Packages.java.util.Map<K, V> & Record<K, V>;
+type JavaHashMap<K = any, V = any> = Packages.java.util.HashMap<K, V> & Record<K, V>;

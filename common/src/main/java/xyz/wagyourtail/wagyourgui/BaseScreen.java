@@ -18,7 +18,7 @@ import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
-@DocletTypescriptExtends("IScreen")
+@DocletTypescriptExtends("xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen")
 public abstract class BaseScreen extends Screen implements IOverlayParent {
     protected Screen parent;
     protected OverlayContainer overlay;
