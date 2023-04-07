@@ -62,9 +62,8 @@ type ListPackages<T, P extends string = ''> =
 
 type GetJavaType<P extends string, T = typeof Packages> =
     IsStrictAny<T> extends true ? unknown :
-    T extends new (...args: any[]) => any ? T :
     P extends `${infer K extends string}.${infer R extends string}` ? GetJavaType<R, T[K]> :
-    P extends '' ? unknown : GetJavaType<'', T[P]>;
+    P extends '' ? T extends new (...args: any[]) => any ? T : unknown : GetJavaType<'', T[P]>;
 
 type UnionToIntersection<U> =
     (U extends any ? (k: U) => 0 : never) extends ((k: infer I) => 0) ? I : never;
