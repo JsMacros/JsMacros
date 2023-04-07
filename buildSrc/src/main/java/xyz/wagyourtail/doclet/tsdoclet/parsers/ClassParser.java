@@ -93,17 +93,40 @@ public class ClassParser extends AbstractParser {
         if (type.getKind().isInterface()) {
             String statics = genStaticFields(fields) + "\n" + genStaticMethods(methods);
             if (!statics.equals("\n"))
-                s.append("const ").append(getClassName(false)).append(": InterfaceStatics<{\n\n")
-                    .append(StringHelpers.tabIn(statics)).append("\n")
-                .append("}>;\n");
-        } else {
-            String statics = genConstructors(constructors) + "\n" +
-                genStaticFields(fields) + "\n" +
-                genStaticMethods(methods);
-            if (!statics.equals("/** no constructor */\nnew (none: never): never;\n\n\n"))
-                s.append("const ").append(getClassName(false)).append(": {\n\n")
+                s.append("const ").append(getClassName(false)).append(": JavaInterfaceStatics & {\n\n")
                     .append(StringHelpers.tabIn(statics)).append("\n")
                 .append("};\n");
+        } else {
+            String constrs = genConstructors(constructors);
+            String statics = genStaticFields(fields) + "\n" + genStaticMethods(methods);
+            if (constrs.length() > 0 || !statics.equals("\n")) {
+                String c = constrs.length() == 0 ? "false" :
+                    constrs.startsWith("new ():") && constrs.indexOf("\n") == constrs.length() - 1 ?
+                        getShortifiedType() : "true";
+
+                s.append("const ").append(getClassName(false)).append(": JavaClassStatics<").append(c).append(">");
+                if (c.equals("true") || !statics.equals("\n")) {
+                    s.append(" & {\n\n");
+                    if (c.equals("true")) {
+                        s.append(StringHelpers.tabIn(constrs)).append("\n")
+                            .append(StringHelpers.tabIn(
+                                """
+                                /** @deprecated */ Symbol: unknown;
+                                /** @deprecated */ apply: unknown;
+                                /** @deprecated */ arguments: unknown;
+                                /** @deprecated */ bind: unknown;
+                                /** @deprecated */ call: unknown;
+                                /** @deprecated */ caller: unknown;
+                                /** @deprecated */ length: unknown;
+                                /** @deprecated */ name: unknown;
+                                /** @deprecated */ prototype: unknown;
+                                """
+                            )).append("\n");
+                    }
+                    s.append(StringHelpers.tabIn(statics)).append("\n").append("}");
+                }
+                s.append(";\n");
+            }
         }
 
         s.append("interface ").append(getClassName(true)).append(buildExtends()).append(" {\n\n")

@@ -58,7 +58,7 @@ type JavaTypeList = ListPackages<typeof Packages> | string & {};
 
 type ListPackages<T, P extends string = ''> =
     IsStrictAny<T> extends true ? never : T extends new (...args: any[]) => any ? P :
-        { [K in keyof T]: ListPackages<T[K], P extends '' ? K : `${P}.${string & K}`> }[keyof T];
+    { [K in keyof T]: ListPackages<T[K], P extends '' ? K : `${P}.${string & K}`> }[keyof T];
 
 type GetJavaType<P extends string, T = typeof Packages> =
     IsStrictAny<T> extends true ? unknown :
@@ -91,7 +91,7 @@ type JavaPackage<T> = (IsStrictAny<T> extends true ? unknown : T) & {
     /** @deprecated */ prototype: unknown;
 };
 
-type InterfaceStatics<T> = T & {
+type JavaInterfaceStatics = {
     /** interface, no constructor */
     new (none: never): never;
     /** @deprecated */ Symbol: unknown;
@@ -104,6 +104,33 @@ type InterfaceStatics<T> = T & {
     /** @deprecated */ name: unknown;
     /** @deprecated */ prototype: unknown;
 };
+
+type JavaClassStatics<Constructs extends boolean | object> =
+    Constructs extends false ? {
+        /** no constructor */
+        new (none: never): never;
+        /** @deprecated */ Symbol: unknown;
+        /** @deprecated */ apply: unknown;
+        /** @deprecated */ arguments: unknown;
+        /** @deprecated */ bind: unknown;
+        /** @deprecated */ call: unknown;
+        /** @deprecated */ caller: unknown;
+        /** @deprecated */ length: unknown;
+        /** @deprecated */ name: unknown;
+        /** @deprecated */ prototype: unknown;
+    } :
+    Constructs extends true ? unknown : {
+        new (): Constructs;
+        /** @deprecated */ Symbol: unknown;
+        /** @deprecated */ apply: unknown;
+        /** @deprecated */ arguments: unknown;
+        /** @deprecated */ bind: unknown;
+        /** @deprecated */ call: unknown;
+        /** @deprecated */ caller: unknown;
+        /** @deprecated */ length: unknown;
+        /** @deprecated */ name: unknown;
+        /** @deprecated */ prototype: unknown;
+    }
 
 type MergeClass<T> = new () => T;
 

@@ -94,8 +94,7 @@ public abstract class AbstractParser {
             if (!method.getModifiers().contains(Modifier.PUBLIC)) continue;
             s.append(genConstructor((ExecutableElement) method)).append("\n");
         }
-        return s.length() > 0 ? s.toString() :
-            "/** no constructor */\nnew (none: never): never;\n";
+        return s.toString();
     }
 
     public String genField(Element field) {
