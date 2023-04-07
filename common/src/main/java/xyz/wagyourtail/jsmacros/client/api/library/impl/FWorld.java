@@ -161,8 +161,8 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * The x and z position of the chunk can be calculated by the following formula: xChunk = x >>
-     * 4; zChunk = z >> 4;
+     * The x and z position of the chunk can be calculated by the following formula:
+     * xChunk = x >> 4; zChunk = z >> 4;
      *
      * @param x the x coordinate of the chunk, not the absolute position
      * @param z the z coordinate of the chunk, not the absolute position

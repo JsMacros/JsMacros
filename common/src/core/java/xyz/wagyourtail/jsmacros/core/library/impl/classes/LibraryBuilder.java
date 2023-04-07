@@ -40,13 +40,13 @@ public class LibraryBuilder extends ClassBuilder<BaseLibrary> {
 
     /**
      * constructor, if perExec run every context, if per language run once for each lang;
-     * params are context and language class
-     * if not per exec, param will be skipped
+     * params are context and language class.
+     * if not per exec, param will be skipped.
      * ie:
-     * BaseLibrary: no params
-     * PerExecLibrary: context
-     * PerExecLanguageLibrary: context, language
-     * PerLanguageLibrary: language
+     * BaseLibrary: no params  
+     * PerExecLibrary: context  
+     * PerExecLanguageLibrary: context, language  
+     * PerLanguageLibrary: language  
      *
      * Don't do other constructors...
      * @return

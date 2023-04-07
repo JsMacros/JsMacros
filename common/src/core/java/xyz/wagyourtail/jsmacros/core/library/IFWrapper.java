@@ -48,8 +48,7 @@ public interface IFWrapper<T> {
     <A, B, R> MethodWrapper<A, B, R, ?> methodToJavaAsync(T c);
 
     /**
-     * JS/JEP ONLY
-     * allows you to set the position of the thread in the queue. you can use this for return value one's too...
+     * JS/JEP only, allows you to set the position of the thread in the queue. you can use this for return value one's too...
      * @since 1.8.0
      * @param priority
      * @param c
