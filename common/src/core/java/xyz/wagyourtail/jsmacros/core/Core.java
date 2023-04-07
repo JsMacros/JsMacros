@@ -15,6 +15,7 @@ import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.LibraryRegistry;
 import xyz.wagyourtail.jsmacros.core.service.ServiceManager;
+import xyz.wagyourtail.jsmacros.core.threads.JsMacrosThreadPool;
 
 import java.io.File;
 import java.util.Arrays;
@@ -41,6 +42,8 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
     public final T profile;
     public final ConfigManager config;
     public final ServiceManager services;
+
+    public final JsMacrosThreadPool threadPool = new JsMacrosThreadPool();
 
     private boolean deferredInit = false;
 
