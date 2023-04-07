@@ -58,13 +58,13 @@ public abstract class AbstractParser {
     }
 
     public String genStaticFields(Set<Element> fields) {
-        final StringBuilder s = new StringBuilder("\n");
+        final StringBuilder s = new StringBuilder();
         for (Element field : fields) {
             if (!field.getModifiers().contains(Modifier.PUBLIC)) continue;
             if (!field.getModifiers().contains(Modifier.STATIC)) continue;
             s.append(genField(field)).append("\n");
         }
-        return s.toString().replaceAll("\n(?=\\w)", "\nstatic ").substring(1);
+        return s.toString();
     }
 
     public String genMethods(Set<Element> methods) {
@@ -78,32 +78,23 @@ public abstract class AbstractParser {
     }
 
     public String genStaticMethods(Set<Element> methods) {
-        final StringBuilder s = new StringBuilder("\n");
+        final StringBuilder s = new StringBuilder();
         for (Element method : methods) {
             if (!method.getModifiers().contains(Modifier.PUBLIC)) continue;
             if (!method.getModifiers().contains(Modifier.STATIC)) continue;
             s.append(genMethod((ExecutableElement) method)).append("\n");
         }
-        return s.toString().replaceAll("\n(?=\\w)", "\nstatic ").substring(1);
+        return s.toString();
     }
 
     public String genConstructors(Set<Element> methods) {
         final StringBuilder s = new StringBuilder();
-        final StringBuilder p = new StringBuilder();
         for (Element method : methods) {
-            if (!method.getModifiers().contains(Modifier.PUBLIC)) {
-                Set<Modifier> mods = method.getModifiers();
-                if (mods.contains(Modifier.PRIVATE)) {
-                    p.append("constructor (private: never);").append("\n");
-                } else if (mods.contains(Modifier.PROTECTED)) {
-                    p.append("constructor (protected: never);").append("\n");
-                }
-                continue;
-            };
+            if (!method.getModifiers().contains(Modifier.PUBLIC)) continue;
             s.append(genConstructor((ExecutableElement) method)).append("\n");
         }
         return s.length() > 0 ? s.toString() :
-            (p.length() > 0 ? p.toString() : "constructor (none: never);\n");
+            "/** no constructor */\nnew (none: never): never;\n";
     }
 
     public String genField(Element field) {
@@ -175,7 +166,7 @@ public abstract class AbstractParser {
     public String genConstructor(ExecutableElement constructor) {
         final StringBuilder s = new StringBuilder();
         s.append(genComment(constructor));
-        s.append("constructor ");
+        s.append("new ");
 
         //diamondOperator
         List<? extends TypeParameterElement> typeParams = type.getTypeParameters();
@@ -198,7 +189,7 @@ public abstract class AbstractParser {
             }
             s.setLength(s.length() - 2);
         }
-        s.append(");");
+        s.append("): ").append(getShortifiedType()).append(";");
         return s.toString();
     }
 
@@ -283,9 +274,7 @@ public abstract class AbstractParser {
                     switch (rawType.toString()) {
                         case "java.lang.Boolean" -> { return "boolean"; }
                         case "java.lang.String"  -> { return "string";  }
-                        case "java.lang.Object"  -> {
-                            return shortify ? "JavaObject" : "Packages.java.lang.Object";
-                        }
+                        case "java.lang.Object"  -> { return "any";     }
                     }
 
                     Main.classes.addClass(((DeclaredType) type).asElement());
@@ -315,7 +304,7 @@ public abstract class AbstractParser {
         DocCommentTree tree = Main.treeUtils.getDocCommentTree(comment);
         Deprecated dep = comment.getAnnotation(Deprecated.class);
         if (tree == null) {
-            return dep != null ? "\n/** @deprecated */\n" : "";
+            return dep != null ? "/** @deprecated */\n" : "";
         }
         final StringBuilder s = new StringBuilder();
         for (DocTree docTree : tree.getFullBody()) {
@@ -326,7 +315,6 @@ public abstract class AbstractParser {
                     if (referenceString.startsWith("#") || !referenceString.contains(".")) {
                         s.append(referenceString);
                     } else {
-                        if (!referenceString.startsWith("xyz.")) s.append("Packages.");
                         s.append(
                             referenceString
                             .replace(".function.", "._function.")

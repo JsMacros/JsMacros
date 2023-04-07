@@ -75,7 +75,22 @@ type FlattenPackage<T, P extends string = ''> =
         { [K in keyof T]: FlattenPackage<T[K], P extends '' ? K : `${P}.${string & K}`> }[keyof T];
 
 type JavaPackage<T> = (IsStrictAny<T> extends true ? unknown : T) & {
-    new (javaPackage: never): never;
+    /** java package, no constructor */
+    new (none: never): never;
+    /** @deprecated */ Symbol: unknown;
+    /** @deprecated */ apply: unknown;
+    /** @deprecated */ arguments: unknown;
+    /** @deprecated */ bind: unknown;
+    /** @deprecated */ call: unknown;
+    /** @deprecated */ caller: unknown;
+    /** @deprecated */ length: unknown;
+    /** @deprecated */ name: unknown;
+    /** @deprecated */ prototype: unknown;
+};
+
+type InterfaceStatics<T> = T & {
+    /** interface, no constructor */
+    new (none: never): never;
     /** @deprecated */ Symbol: unknown;
     /** @deprecated */ apply: unknown;
     /** @deprecated */ arguments: unknown;
@@ -95,27 +110,19 @@ declare namespace Packages {
 
         namespace lang {
 
-            class Class<T> extends Object {
+            const Class: {
 
-                static forName(className: string): JavaClass<any>;
-                static forName(name: string, initialize: boolean, loader: ClassLoader): JavaClass<any>;
-                static forName(module: Module, name: string): JavaClass<any>;
+                /** no constructor */
+                new (none: never): never;
 
-            }
+                forName(className: string): JavaClass<any>;
+                forName(name: string, initialize: boolean, loader: ClassLoader): JavaClass<any>;
+                forName(module: Module, name: string): JavaClass<any>;
 
-            class Object {
+            };
+            interface Class<T> extends Object {}
 
-                static readonly class: any;
-
-                /** @deprecated */ static Symbol: unknown;
-                /** @deprecated */ static apply: unknown;
-                /** @deprecated */ static arguments: unknown;
-                /** @deprecated */ static bind: unknown;
-                /** @deprecated */ static call: unknown;
-                /** @deprecated */ static caller: unknown;
-                /** @deprecated */ static length: unknown;
-                /** @deprecated */ static name: unknown;
-                /** @deprecated */ static prototype: unknown;
+            interface Object {
 
                 getClass(): JavaClass<JavaObject>;
                 hashCode(): number;
@@ -129,30 +136,26 @@ declare namespace Packages {
 
             }
 
-            const Comparable: {
-
-                new (interface: never): Comparable<T>;
-
-            };
             interface Comparable<T> {
 
                 compareTo(arg0: T): number;
 
             }
 
-            class Array<T> extends (0 as any as new <T>() => T[])<T> {
-
-                constructor (none: never);
+            interface Array<T> extends JsArray<T> {
 
                 [n: number]: T;
                 length: number;
 
             }
 
-            class StackTraceElement extends (0 as any as new () => MergeClass<Object & java.io.Serializable>) {
+            const StackTraceElement: {
 
-                constructor (declaringClass: string, methodName: string, fileName: string, lineNumber: number);
-                constructor (classLoaderName: string, moduleName: string, moduleVersion: string, declaringClass: string, methodName: string, fileName: string, lineNumber: number);
+                new (declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement;
+                new (classLoaderName: string, moduleName: string, moduleVersion: string, declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement;
+
+            };
+            interface StackTraceElement extends Object, java.io.Serializable {
 
                 getFileName(): string;
                 getLineNumber(): number;
@@ -165,11 +168,14 @@ declare namespace Packages {
 
             }
 
-            class Throwable extends (0 as any as new () => MergeClass<Object & java.io.Serializable & Error>) {
+            const Throwable: {
 
-                constructor ();
-                constructor (message: string);
-                constructor (message: string, cause: Throwable);
+                new (): Throwable;
+                new (message: string): Throwable;
+                new (message: string, cause: Throwable): Throwable;
+
+            };
+            interface Throwable extends Object, java.io.Serializable, Error {
 
                 getMessage(): string;
                 getLocalizedMessage(): string;
@@ -184,11 +190,6 @@ declare namespace Packages {
 
             }
 
-            const Iterable: {
-
-                new (interface: never): Iterable<T>;
-
-            };
             interface Iterable<T> extends JsIterable<T> {
 
                 iterator(): java.util.Iterator<T>;
@@ -267,14 +268,17 @@ declare namespace Packages {
 
         namespace io {
 
-            class File extends java.lang.Object {
+            const File: {
 
-                constructor (pathName: string);
-                constructor (parent: string, child: string);
-                constructor (parent: File, child: string);
-                constructor (uri: java.net.URI);
+                new (pathName: string): File;
+                new (parent: string, child: string): File;
+                new (parent: File, child: string): File;
+                new (uri: java.net.URI): File;
 
-                static listRoots(): JavaArray<File>;
+                listRoots(): JavaArray<File>;
+
+            };
+            interface File extends JavaObject {
 
                 canExecute(): boolean;
                 canRead(): boolean;
@@ -307,23 +311,21 @@ declare namespace Packages {
 
             }
 
-            const Serializable: {
-
-                new (interface: never): Serializable;
-
-            };
             interface Serializable {}
 
         }
 
         namespace net {
 
-            class URL extends java.lang.Object {
+            const URL: {
 
-                constructor (protocol: string, host: string, port: number, file: string);
-                constructor (protocol: string, host: string, file: string);
-                constructor (spec: string);
-                constructor (context: URL, spec: string);
+                new (protocol: string, host: string, port: number, file: string): URL;
+                new (protocol: string, host: string, file: string): URL;
+                new (spec: string): URL;
+                new (context: URL, spec: string): URL;
+
+            };
+            interface URL extends java.lang.Object {
 
                 getFile(): string;
                 getPath(): string;
@@ -335,16 +337,19 @@ declare namespace Packages {
 
             }
 
-            class URI extends (0 as any as new () => MergeClass<java.lang.Object & java.lang.Comparable<URI> & java.io.Serializable>) {
+            const URI: {
 
-                constructor (str: string);
-                constructor (scheme: string, userInfo: string, host: string, port: number, path: string, query: string, fragment: string);
-                constructor (scheme: string, authority: string, path: string, query: string, fragment: string);
-                constructor (scheme: string, host: string, path: string, fragment: string);
-                constructor (scheme: string, ssp: string, fragment: string);
-                constructor (scheme: string, path: string);
+                new (str: string): URI;
+                new (scheme: string, userInfo: string, host: string, port: number, path: string, query: string, fragment: string): URI;
+                new (scheme: string, authority: string, path: string, query: string, fragment: string): URI;
+                new (scheme: string, host: string, path: string, fragment: string): URI;
+                new (scheme: string, ssp: string, fragment: string): URI;
+                new (scheme: string, path: string): URI;
 
-                static create(str: string): URI;
+                create(str: string): URI;
+
+            };
+            interface URI extends java.lang.Object, java.lang.Comparable<URI>, java.io.Serializable {
 
                 getHost(): string;
                 getPath(): string;
@@ -372,6 +377,7 @@ declare namespace Packages {
 
 }
 
+type JsArray<T> = T[];
 type JsIterable<T> = Iterable<T>;
 
 type _  = { [none: symbol]: never }; // to trick vscode to rename types
