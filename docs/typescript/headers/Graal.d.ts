@@ -38,8 +38,7 @@ declare const Polyglot: {
  */
 declare namespace Java {
 
-    export function type<C extends keyof JavaTypeDict>(className: C): JavaTypeDict[C];
-    export function type(className: string): unknown;
+    export function type<C extends JavaTypeList>(className: C): GetJavaType<C>;
     export function from<T>(javaData: JavaArray<T>): T[];
     export function from<T>(javaData: JavaList<T>): T[];
     export function from<T>(javaData: JavaCollection<T>): T[];
@@ -55,7 +54,22 @@ declare namespace Java {
 
 }
 
-type JavaTypeDict = Required<UnionToIntersection<FlattenPackage<typeof Packages>>>;
+type JavaTypeList = ListPackages<typeof Packages> | string & {};
+
+type ListPackages<T, P extends string = ''> =
+    IsStrictAny<T> extends true ? never : T extends new (...args: any[]) => any ? P :
+        { [K in keyof T]: ListPackages<T[K], P extends '' ? K : `${P}.${string & K}`> }[keyof T];
+
+type GetJavaType<P extends string, T = typeof Packages> =
+    IsStrictAny<T> extends true ? unknown :
+    T extends new (...args: any[]) => any ? T :
+    P extends `${infer K extends string}.${infer R extends string}` ? GetJavaType<R, T[K]> :
+    P extends '' ? unknown : GetJavaType<'', T[P]>;
+
+type UnionToIntersection<U> =
+    (U extends any ? (k: U) => 0 : never) extends ((k: infer I) => 0) ? I : never;
+
+type IsStrictAny<T> = UnionToIntersection<T extends never ? 1 : 0> extends never ? true : false;
 
 declare const java:   JavaPackage<typeof Packages.java>;
 declare const javafx: JavaPackage<typeof Packages.javafx>;
@@ -63,16 +77,6 @@ declare const javax:  JavaPackage<typeof Packages.javax>;
 declare const com:    JavaPackage<typeof Packages.com>;
 declare const org:    JavaPackage<typeof Packages.org>;
 declare const edu:    JavaPackage<typeof Packages.edu>;
-
-type UnionToIntersection<U> =
-    (U extends any ? (k: U) => 0 : never) extends ((k: infer I) => 0) ? I : never;
-
-type IsStrictAny<T> = UnionToIntersection<T extends never ? 1 : 0> extends never ? true : false;
-
-type FlattenPackage<T, P extends string = ''> =
-    IsStrictAny<T> extends true ? never : T extends new (...args: any[]) => any ?
-        { [PP in P]: T } :
-        { [K in keyof T]: FlattenPackage<T[K], P extends '' ? K : `${P}.${string & K}`> }[keyof T];
 
 type JavaPackage<T> = (IsStrictAny<T> extends true ? unknown : T) & {
     /** java package, no constructor */

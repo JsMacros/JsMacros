@@ -5,6 +5,7 @@ import xyz.wagyourtail.StringHelpers;
 import xyz.wagyourtail.doclet.DocletEnumType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.doclet.tsdoclet.Main;
 import xyz.wagyourtail.doclet.tsdoclet.parsers.ClassParser;
 
@@ -109,38 +110,26 @@ public abstract class AbstractParser {
         s.append(genComment(method));
         s.append(method.getSimpleName());
 
-        DocletReplaceParams docletReplace = method.getAnnotation(DocletReplaceParams.class);
-        String replace = (docletReplace != null ? docletReplace.value() : null);
-        //diamondOperator
-        List<? extends TypeParameterElement> typeParams = method.getTypeParameters();
-        if (typeParams != null && !typeParams.isEmpty()) {
-            s.append("<");
-            for (TypeParameterElement param : typeParams) {
-                s.append(shortify(param)).append(", ");
-            }
-            s.setLength(s.length() - 2);
-            if (replace != null) {
-                if (replace.startsWith("<E> ")) {
-                    s.append(", E extends keyof Events");
-                    replace = replace.substring(4);
-                } else if (replace.startsWith("<C> ")) {
-                    s.append(", C extends keyof JavaTypeDict");
-                    replace = replace.substring(4);
+        // diamondOperator
+        DocletReplaceTypeParams replace = method.getAnnotation(DocletReplaceTypeParams.class);
+        if (replace != null) {
+           s.append("<").append(replace.value()).append(">");
+        } else {
+            List<? extends TypeParameterElement> typeParams = method.getTypeParameters();
+            if (typeParams != null && !typeParams.isEmpty()) {
+                s.append("<");
+                for (TypeParameterElement param : typeParams) {
+                    s.append(shortify(param)).append(", ");
                 }
-            }
-            s.append(">");
-        } else if (replace != null) {
-            if (replace.startsWith("<E> ")) {
-                s.append("<E extends keyof Events>");
-                replace = replace.substring(4);
-            } else if (replace.startsWith("<C> ")) {
-                s.append("<C extends keyof JavaTypeDict>");
-                replace = replace.substring(4);
+                s.setLength(s.length() - 2);
+                s.append(">");
             }
         }
+
         s.append("(");
-        if (replace != null) {
-           s.append(replace);
+        DocletReplaceParams replace2 = method.getAnnotation(DocletReplaceParams.class);
+        if (replace2 != null) {
+           s.append(replace2.value());
         } else {
             List<? extends VariableElement> params = method.getParameters();
             if (params != null && !params.isEmpty()) {
@@ -152,9 +141,9 @@ public abstract class AbstractParser {
             }
         }
         s.append("): ");
-        DocletReplaceReturn replace2 = method.getAnnotation(DocletReplaceReturn.class);
-        if (replace2 != null) {
-            s.append(replace2.value());
+        DocletReplaceReturn replace3 = method.getAnnotation(DocletReplaceReturn.class);
+        if (replace3 != null) {
+            s.append(replace3.value());
         } else {
             s.append(transformType(method.getReturnType(), true));
         }
@@ -168,21 +157,27 @@ public abstract class AbstractParser {
         s.append(genComment(constructor));
         s.append("new ");
 
-        //diamondOperator
-        List<? extends TypeParameterElement> typeParams = type.getTypeParameters();
-        if (typeParams != null && !typeParams.isEmpty()) {
-            s.append("<");
-            for (TypeParameterElement param : typeParams) {
-                s.append(shortify(param)).append(", ");
-            }
-            s.setLength(s.length() - 2);
-            s.append(">");
-        }
-        s.append("(");
-        DocletReplaceParams replace = constructor.getAnnotation(DocletReplaceParams.class);
-        List<? extends VariableElement> params = constructor.getParameters();
+        // diamondOperator
+        DocletReplaceTypeParams replace = constructor.getAnnotation(DocletReplaceTypeParams.class);
         if (replace != null) {
-            s.append(replace.value());
+           s.append("<").append(replace.value()).append(">");
+        } else {
+            List<? extends TypeParameterElement> typeParams = type.getTypeParameters();
+            if (typeParams != null && !typeParams.isEmpty()) {
+                s.append("<");
+                for (TypeParameterElement param : typeParams) {
+                    s.append(shortify(param)).append(", ");
+                }
+                s.setLength(s.length() - 2);
+                s.append(">");
+            }
+        }
+
+        s.append("(");
+        DocletReplaceParams replace2 = constructor.getAnnotation(DocletReplaceParams.class);
+        List<? extends VariableElement> params = constructor.getParameters();
+        if (replace2 != null) {
+            s.append(replace2.value());
         } else if (params != null && !params.isEmpty()) {
             for (VariableElement param : params) {
                 s.append(param.getSimpleName()).append(": ").append(shortify(param)).append(", ");

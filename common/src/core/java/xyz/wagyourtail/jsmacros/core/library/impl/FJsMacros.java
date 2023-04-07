@@ -6,6 +6,7 @@ import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
@@ -322,7 +323,8 @@ public class FJsMacros extends PerExecLibrary {
      * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
      * @return
      */
-    @DocletReplaceParams("<E> event: E, callback: MethodWrapper<Events[E], EventContainer>")
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, callback: MethodWrapper<Events[E], EventContainer>")
     public IEventListener on(String event, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
         if (callback == null) return null;
         if (!Core.getInstance().eventRegistry.events.contains(event)) {
@@ -387,7 +389,8 @@ public class FJsMacros extends PerExecLibrary {
      * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
      * @return the listener.
      */
-    @DocletReplaceParams("<E> event: E, callback: MethodWrapper<Events[E], EventContainer>")
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, callback: MethodWrapper<Events[E], EventContainer>")
     public IEventListener once(String event, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
         if (callback == null) return null;
         if (!Core.getInstance().eventRegistry.events.contains(event)) {
@@ -463,7 +466,8 @@ public class FJsMacros extends PerExecLibrary {
      * @param listener
      * @return
      */
-    @DocletReplaceParams("<E> event: E, listener: IEventListener")
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, listener: IEventListener")
     public boolean off(String event, IEventListener listener) {
         return Core.getInstance().eventRegistry.removeListener(event, listener);
     }
@@ -537,7 +541,8 @@ public class FJsMacros extends PerExecLibrary {
      *
      * @throws InterruptedException
      */
-    @DocletReplaceParams("<E> event: E")
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E")
     @DocletReplaceReturn("{ event: Events[E], context: EventContainer }")
     public EventAndContext waitForEvent(String event) throws InterruptedException {
         return waitForEvent(event, null, null);
@@ -550,7 +555,8 @@ public class FJsMacros extends PerExecLibrary {
      * @return
      * @throws InterruptedException
      */
-    @DocletReplaceParams("<E> event: E, filter: MethodWrapper<Events[E], undefined, boolean>")
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, filter: MethodWrapper<Events[E], undefined, boolean>")
     @DocletReplaceReturn("{ event: Events[E], context: EventContainer }")
     public EventAndContext waitForEvent(String event,  MethodWrapper<BaseEvent, Object, Boolean, ?> filter) throws InterruptedException {
         return waitForEvent(event, filter, null);
@@ -567,7 +573,8 @@ public class FJsMacros extends PerExecLibrary {
      *
      * @throws InterruptedException
      */
-    @DocletReplaceParams("<E> event: E, filter: MethodWrapper<Events[E], undefined, boolean>, runBeforeWaiting: MethodWrapper<JavaObject, JavaObject, JavaObject>")
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, filter: MethodWrapper<Events[E], undefined, boolean>, runBeforeWaiting: MethodWrapper<JavaObject, JavaObject, JavaObject>")
     @DocletReplaceReturn("{ event: Events[E], context: EventContainer }")
     public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean, ?> filter, MethodWrapper<Object, Object, Object, ?> runBeforeWaiting) throws InterruptedException {
         // event return values

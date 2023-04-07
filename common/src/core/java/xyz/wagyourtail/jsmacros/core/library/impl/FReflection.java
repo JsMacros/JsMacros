@@ -7,6 +7,7 @@ import org.joor.Reflect;
 import xyz.wagyourtail.Util;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.classes.Mappings;
 import xyz.wagyourtail.jsmacros.core.classes.WrappedClassInstance;
@@ -63,12 +64,9 @@ public class FReflection extends PerExecLibrary {
      * @see FReflection#getClass(String, String)
      * @since 1.2.3
      */
-    @DocletReplaceParams(
-        """
-        <C> name: C): Omit<JavaTypeDict[C], 'class'>;
-        function getClass<T>(name: string"""
-    )
-    @DocletReplaceReturn("unknown")
+    @DocletReplaceTypeParams("C extends JavaTypeList")
+    @DocletReplaceParams("name: C")
+    @DocletReplaceReturn("GetJavaType<C>")
     public <T> Class<T> getClass(String name) throws ClassNotFoundException {
         switch (name) {
             case "boolean":
@@ -106,12 +104,9 @@ public class FReflection extends PerExecLibrary {
      * @throws ClassNotFoundException
      * @since 1.2.3
      */
-    @DocletReplaceParams(
-        """
-        <C> name: C, name2: string): Omit<JavaTypeDict[C], 'class'>;
-        function getClass<T>(name: string, name2: string"""
-    )
-    @DocletReplaceReturn("unknown")
+    @DocletReplaceTypeParams("C extends JavaTypeList")
+    @DocletReplaceParams("name: C, name2: JavaTypeList")
+    @DocletReplaceReturn("GetJavaType<C>")
     public <T> Class<T> getClass(String name, String name2) throws ClassNotFoundException {
         try {
             return getClass(name);
