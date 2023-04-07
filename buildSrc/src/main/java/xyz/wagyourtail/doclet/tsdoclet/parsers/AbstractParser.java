@@ -300,24 +300,25 @@ public abstract class AbstractParser {
         if (tree == null) {
             return dep != null ? "/** @deprecated */\n" : "";
         }
-        final StringBuilder s = new StringBuilder();
+        final StringBuilder a = new StringBuilder();
+        final StringBuilder b = new StringBuilder();
         for (DocTree docTree : tree.getFullBody()) {
             switch (docTree.getKind()) {
                 case LINK, LINK_PLAIN -> {
                     String referenceString = ((LinkTree) docTree).getReference().getSignature().split("\\(", 2)[0];
-                    s.append("{@link ");
+                    a.append("{@link ");
                     if (referenceString.startsWith("#") || !referenceString.contains(".")) {
-                        s.append(referenceString);
+                        a.append(referenceString);
                     } else {
-                        s.append(
+                        a.append(
                             referenceString
                             .replace(".function.", "._function.")
                         );
                     }
-                    s.append("}");
+                    a.append("}");
                 }
-                case CODE -> s.append("`").append(((LiteralTree)docTree).getBody()).append("`");
-                default -> s.append(docTree);
+                case CODE -> a.append("`").append(((LiteralTree)docTree).getBody()).append("`");
+                default -> a.append(docTree);
             }
         }
 
@@ -326,19 +327,24 @@ public abstract class AbstractParser {
                 List<? extends DocTree> sees = ((SeeTree) blockTag).getReference();
                 for (DocTree see : sees) {
                     if (see.getKind() == DocTree.Kind.REFERENCE) {
-                        s.append("\n@see ").append(((ReferenceTree) see).getSignature());
+                        b.append("\n@see ").append(((ReferenceTree) see).getSignature());
                     } else {
-                        s.append("\n@see ").append(see);
+                        b.append("\n@see ").append(see);
                     }
                 }
             } else {
-                s.append("\n").append(blockTag);
+                b.append("\n").append(blockTag);
             }
         }
-        if (dep != null && !s.toString().contains("@deprecated")) s.append("\n@deprecated");
-        return "\n/**\n" +
-            StringHelpers.addToLineStarts(s.toString(), " * ") +
-            "\n */\n";
+
+        if (dep != null && !b.toString().contains("@deprecated")) b.append("\n@deprecated");
+
+        return ("\n/**\n" +
+            StringHelpers.addToLineStarts(
+                a.toString().replaceAll("(?<=[\\.,:>]) ?\n", "  \n") +
+                b.toString()
+            , " * ") +
+            "\n */\n").replaceAll("\n \\* +\n", "\n *\n");
     }
 
     public abstract String genTSInterface();

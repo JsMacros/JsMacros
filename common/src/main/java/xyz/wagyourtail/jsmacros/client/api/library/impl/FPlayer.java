@@ -279,7 +279,7 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
-     * Parses a JSON string into a {@code PlayerInput} Object
+     * Parses a JSON string into a {@code PlayerInput} Object.
      * For details see {@code PlayerInput.fromCsv()}, on what has to be present.<br>
      * Capitalization of the keys matters.
      *
