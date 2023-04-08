@@ -65,7 +65,7 @@ public class FReflection extends PerExecLibrary {
      * @since 1.2.3
      */
     @DocletReplaceTypeParams("C extends JavaTypeList")
-    @DocletReplaceParams("name: C")
+    @DocletReplaceParams("name: C | 'boolean' | 'byte' | 'short' | 'int' | 'long' | 'float' | 'double' | 'char' | 'void'")
     @DocletReplaceReturn("GetJavaType<C>")
     public <T> Class<T> getClass(String name) throws ClassNotFoundException {
         switch (name) {
