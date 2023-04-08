@@ -65,6 +65,13 @@ type GetJavaType<P extends string, T = typeof Packages> =
     P extends `${infer K}.${infer R}` ? GetJavaType<R, T[K]> :
     P extends '' ? T extends new (...args: any[]) => any ? T : unknown : GetJavaType<'', T[P]>;
 
+type StrNumMethod<T> = // used in worldscanner
+    { [K in keyof T]: ReturnType<T[K]> extends infer R ?
+        R extends string | number ?
+            IsStrictAny<R> extends true ? never : K
+        : never
+    : never }[keyof T]
+
 type UnionToIntersection<U> =
     (U extends any ? (k: U) => 0 : never) extends ((k: infer I) => 0) ? I : never;
 
