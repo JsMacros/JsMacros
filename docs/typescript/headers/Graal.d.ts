@@ -150,10 +150,7 @@ declare namespace Packages {
 
         namespace lang {
 
-            const Class: {
-
-                /** no constructor */
-                new (none: never): never;
+            const Class: JavaClassStatics<false> & {
 
                 forName(className: string): JavaClass<any>;
                 forName(name: string, initialize: boolean, loader: ClassLoader): JavaClass<any>;
@@ -184,10 +181,20 @@ declare namespace Packages {
 
             interface Array<T> extends JsArray<T> {}
 
-            const StackTraceElement: {
+            const StackTraceElement: JavaClassStatics<true> & {
 
                 new (declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement;
                 new (classLoaderName: string, moduleName: string, moduleVersion: string, declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement;
+
+                /** @deprecated */ Symbol: unknown;
+                /** @deprecated */ apply: unknown;
+                /** @deprecated */ arguments: unknown;
+                /** @deprecated */ bind: unknown;
+                /** @deprecated */ call: unknown;
+                /** @deprecated */ caller: unknown;
+                /** @deprecated */ length: unknown;
+                /** @deprecated */ name: unknown;
+                /** @deprecated */ prototype: unknown;
 
             };
             interface StackTraceElement extends Object, java.io.Serializable {
@@ -203,11 +210,21 @@ declare namespace Packages {
 
             }
 
-            const Throwable: {
+            const Throwable: JavaClassStatics<true> & {
 
                 new (): Throwable;
                 new (message: string): Throwable;
                 new (message: string, cause: Throwable): Throwable;
+
+                /** @deprecated */ Symbol: unknown;
+                /** @deprecated */ apply: unknown;
+                /** @deprecated */ arguments: unknown;
+                /** @deprecated */ bind: unknown;
+                /** @deprecated */ call: unknown;
+                /** @deprecated */ caller: unknown;
+                /** @deprecated */ length: unknown;
+                /** @deprecated */ name: unknown;
+                /** @deprecated */ prototype: unknown;
 
             };
             interface Throwable extends Object, java.io.Serializable, Error {
@@ -242,28 +259,34 @@ declare namespace Packages {
                 readonly [n: number]: T;
 
                 add(element: T): boolean;
-                addAll(elements: Collection<T>): boolean;
+                addAll(elements: JavaCollection<T>): boolean;
                 clear(): void;
                 contains(element: T): boolean;
-                containsAll(elements: Collection<T>): boolean;
-                equals(object: Collection<T>): boolean;
+                containsAll(elements: JavaCollection<T>): boolean;
+                equals(object: JavaCollection<T>): boolean;
                 hashCode(): number;
                 isEmpty(): boolean;
                 iterator(): Iterator<T>;
                 remove(element: T): boolean;
-                removeAll(elements: Collection<T>): boolean;
-                retainAll(elements: Collection<T>): boolean;
+                removeAll(elements: JavaCollection<T>): boolean;
+                retainAll(elements: JavaCollection<T>): boolean;
                 size(): number;
                 toArray(): T[];
 
             }
 
+            const List: JavaClassStatics<false> & {
+
+                copyOf<T>(coll: JavaCollection<T>): JavaList<T>;
+                of<T>(...elements: T[]): JavaList<T>;
+
+            };
             interface List<T> extends Collection<T> {
 
-                add(element: T): boolean;
                 add(index: number, element: T): void;
-                addAll(elements: Collection<T>): boolean;
-                addAll(index: number, elements: Collection<T>): boolean;
+                add(element: T): boolean;
+                addAll(index: number, elements: JavaCollection<T>): boolean;
+                addAll(elements: JavaCollection<T>): boolean;
                 get(index: number): T;
                 indexOf(element: T): number;
                 lastIndexOf(element: T): number;
@@ -274,41 +297,77 @@ declare namespace Packages {
 
             }
 
+            const Map: JavaClassStatics<false> & {
+
+                copyOf<K, V>(coll: JavaMap<K, V>): JavaMap<K, V>;
+                entry<K, V>(k: K, v: V): Map$Entry<K, V>;
+                ofEntries<K, V>(...entries: Map$Entry<K, V>[]): JavaMap<K, V>;
+                of<K, V>(k1: K, v1: V): JavaMap<K, V>;
+                of<K, V>(k1: K, v1: V, k2: K, v2: V): JavaMap<K, V>;
+                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V): JavaMap<K, V>;
+                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V): JavaMap<K, V>;
+                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V): JavaMap<K, V>;
+                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V): JavaMap<K, V>;
+                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V): JavaMap<K, V>;
+                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V, k8: K, v8: V): JavaMap<K, V>;
+                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V, k8: K, v8: V, k9: K, v9: V): JavaMap<K, V>;
+                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V, k8: K, v8: V, k9: K, v9: V, k10: K, v10: V): JavaMap<K, V>;
+
+            };
             interface Map<K, V> {
+
+                [key: string | number]: V;
 
                 clear(): void;
                 containsKey(key: K): boolean;
                 containsValue(value: V): boolean;
-                equals(object: Map<K, V>): boolean;
+                entrySet(): JavaSet<Map$Entry<K, V>>;
+                equals(object: JavaMap<K, V>): boolean;
                 get(key: K): V | null;
                 getOrDefault(key: K, defaultValue: V): V;
                 hashCode(): number;
                 isEmpty(): boolean;
                 keySet(): JavaSet<K>;
                 put(ket: K, value: V): V;
-                putAll(map: Map<K, V>): void;
+                putAll(map: JavaMap<K, V>): void;
                 putIfAbsent(key: K, value: V): V | null;
                 remove(key: K): V | null;
                 remove(key: K, value: V): boolean;
                 replace(key: K, value: V): V;
                 replace(key: K, oldValue: V, newValue: V): boolean;
                 size(): number;
-                values(): Collection<V>;
+                values(): JavaCollection<V>;
 
             }
 
+            const Set: JavaClassStatics<false> & {
+
+                copyOf<T>(coll: JavaCollection<T>): JavaSet<T>;
+                of<T>(...elements: T[]): JavaSet<T>;
+
+            };
             interface Set<T> extends Collection<T> {}
 
         }
 
         namespace io {
 
-            const File: {
+            const File: JavaClassStatics<true> & {
 
                 new (pathName: string): File;
                 new (parent: string, child: string): File;
                 new (parent: File, child: string): File;
                 new (uri: java.net.URI): File;
+
+                /** @deprecated */ Symbol: unknown;
+                /** @deprecated */ apply: unknown;
+                /** @deprecated */ arguments: unknown;
+                /** @deprecated */ bind: unknown;
+                /** @deprecated */ call: unknown;
+                /** @deprecated */ caller: unknown;
+                /** @deprecated */ length: unknown;
+                /** @deprecated */ name: unknown;
+                /** @deprecated */ prototype: unknown;
 
                 listRoots(): JavaArray<File>;
 
@@ -352,12 +411,22 @@ declare namespace Packages {
 
         namespace net {
 
-            const URL: {
+            const URL: JavaClassStatics<true> & {
 
                 new (protocol: string, host: string, port: number, file: string): URL;
                 new (protocol: string, host: string, file: string): URL;
                 new (spec: string): URL;
                 new (context: URL, spec: string): URL;
+
+                /** @deprecated */ Symbol: unknown;
+                /** @deprecated */ apply: unknown;
+                /** @deprecated */ arguments: unknown;
+                /** @deprecated */ bind: unknown;
+                /** @deprecated */ call: unknown;
+                /** @deprecated */ caller: unknown;
+                /** @deprecated */ length: unknown;
+                /** @deprecated */ name: unknown;
+                /** @deprecated */ prototype: unknown;
 
             };
             interface URL extends java.lang.Object {
@@ -372,7 +441,7 @@ declare namespace Packages {
 
             }
 
-            const URI: {
+            const URI: JavaClassStatics<true> & {
 
                 new (str: string): URI;
                 new (scheme: string, userInfo: string, host: string, port: number, path: string, query: string, fragment: string): URI;
@@ -380,6 +449,16 @@ declare namespace Packages {
                 new (scheme: string, host: string, path: string, fragment: string): URI;
                 new (scheme: string, ssp: string, fragment: string): URI;
                 new (scheme: string, path: string): URI;
+
+                /** @deprecated */ Symbol: unknown;
+                /** @deprecated */ apply: unknown;
+                /** @deprecated */ arguments: unknown;
+                /** @deprecated */ bind: unknown;
+                /** @deprecated */ call: unknown;
+                /** @deprecated */ caller: unknown;
+                /** @deprecated */ length: unknown;
+                /** @deprecated */ name: unknown;
+                /** @deprecated */ prototype: unknown;
 
                 create(str: string): URI;
 
@@ -424,5 +503,4 @@ type JavaArray<T = any>            = Packages.java.lang.Array<T>;
 type JavaCollection<T = any>       = Packages.java.util.Collection<T>;
 type JavaList<T = any>             = Packages.java.util.List<T>;
 type JavaSet<T = any>              = Packages.java.util.Set<T>;
-type JavaMap<K = any, V = any>     = Packages.java.util.Map<K, V> & Record<K, V>;
-type JavaHashMap<K = any, V = any> = Packages.java.util.HashMap<K, V> & Record<K, V>;
+type JavaMap<K = any, V = any>     = Packages.java.util.Map<K, V>;

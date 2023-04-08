@@ -27,8 +27,7 @@ public abstract class AbstractParser {
         "java.util.Collection",
         "java.util.List",
         "java.util.Set",
-        "java.util.Map",
-        "java.util.HashMap"
+        "java.util.Map"
     );
     static final public Set<String> javaNumberType = Set.of(
         "java.lang.Integer",
