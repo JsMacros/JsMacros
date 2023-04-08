@@ -254,6 +254,7 @@ declare namespace Packages {
 
         namespace util {
 
+            // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html
             interface Collection<T> extends java.lang.Iterable<T> {
 
                 readonly [n: number]: T;
@@ -275,6 +276,7 @@ declare namespace Packages {
 
             }
 
+            // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html
             const List: JavaClassStatics<false> & {
 
                 copyOf<T>(coll: JavaCollection<T>): JavaList<T>;
@@ -297,6 +299,7 @@ declare namespace Packages {
 
             }
 
+            // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html
             const Map: JavaClassStatics<false> & {
 
                 copyOf<K, V>(coll: JavaMap<K, V>): JavaMap<K, V>;
@@ -340,6 +343,7 @@ declare namespace Packages {
 
             }
 
+            // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html
             const Set: JavaClassStatics<false> & {
 
                 copyOf<T>(coll: JavaCollection<T>): JavaSet<T>;
