@@ -275,7 +275,7 @@ public abstract class AbstractParser {
                 } else {
                     Main.classes.addClass(((DeclaredType) type).asElement());
                     if (!shortified) rawType.insert(0, "Packages.");
-                    return rawType.toString().replace(".function.", "._function.");
+                    return rawType.toString();
                 }
             }
             case TYPEVAR -> {
@@ -304,17 +304,9 @@ public abstract class AbstractParser {
         for (DocTree docTree : tree.getFullBody()) {
             switch (docTree.getKind()) {
                 case LINK, LINK_PLAIN -> {
-                    String referenceString = ((LinkTree) docTree).getReference().getSignature().split("\\(", 2)[0];
-                    a.append("{@link ");
-                    if (referenceString.startsWith("#") || !referenceString.contains(".")) {
-                        a.append(referenceString);
-                    } else {
-                        a.append(
-                            referenceString
-                            .replace(".function.", "._function.")
-                        );
-                    }
-                    a.append("}");
+                    a.append("{@link ")
+                        .append(((LinkTree) docTree).getReference().getSignature().split("\\(", 2)[0])
+                    .append("}");
                 }
                 case CODE -> a.append("`").append(((LiteralTree)docTree).getBody()).append("`");
                 default -> a.append(docTree);
