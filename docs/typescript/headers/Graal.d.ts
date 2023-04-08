@@ -62,7 +62,7 @@ type ListPackages<T, P extends string = ''> =
 
 type GetJavaType<P extends string, T = typeof Packages> =
     IsStrictAny<T> extends true ? unknown :
-    P extends `${infer K extends string}.${infer R extends string}` ? GetJavaType<R, T[K]> :
+    P extends `${infer K}.${infer R}` ? GetJavaType<R, T[K]> :
     P extends '' ? T extends new (...args: any[]) => any ? T : unknown : GetJavaType<'', T[P]>;
 
 type UnionToIntersection<U> =
@@ -172,12 +172,7 @@ declare namespace Packages {
 
             }
 
-            interface Array<T> extends JsArray<T> {
-
-                [n: number]: T;
-                length: number;
-
-            }
+            interface Array<T> extends JsArray<T> {}
 
             const StackTraceElement: {
 

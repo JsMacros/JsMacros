@@ -95,7 +95,7 @@ public class ClassBuilder<T> {
      *          map.put(keys[i], values[i]);
      *      }
      *      return map;
-     * }}
+     *  }}
      * {@code public String toString() {
      *      System.out.println(super.toString());
      *      return "Hello World!";
