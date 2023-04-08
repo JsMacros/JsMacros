@@ -98,7 +98,7 @@ type JavaPackage<T> = (IsStrictAny<T> extends true ? unknown : T) & {
     /** @deprecated */ prototype: unknown;
 };
 
-type JavaInterfaceStatics = {
+type JavaInterfaceStatics = Packages.java.lang.Object & {
     /** interface, no constructor */
     new (none: never): never;
     /** @deprecated */ Symbol: unknown;
@@ -113,7 +113,7 @@ type JavaInterfaceStatics = {
 };
 
 type JavaClassStatics<Constructs extends boolean | object, Args extends [any, ...any] = []> =
-    Constructs extends false ? {
+    Packages.java.lang.Object & (Constructs extends false ? {
         /** no constructor */
         new (none: never): never;
         /** @deprecated */ Symbol: unknown;
@@ -147,7 +147,7 @@ type JavaClassStatics<Constructs extends boolean | object, Args extends [any, ..
         /** @deprecated */ length: unknown;
         /** @deprecated */ name: unknown;
         /** @deprecated */ prototype: unknown;
-    }
+    })
 
 type MergeClass<T> = new () => T;
 
