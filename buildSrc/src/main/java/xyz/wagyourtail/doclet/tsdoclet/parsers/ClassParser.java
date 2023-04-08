@@ -37,14 +37,12 @@ public class ClassParser extends AbstractParser {
     }
 
     private String buildExtends() {
-        StringBuilder s = new StringBuilder();
+        StringBuilder s = new StringBuilder(" extends ");
         String sup = transformType(type.getSuperclass(), true);
-        if (sup.equals("void")) {
-            if (!type.getKind().isInterface()) s.append("JavaObject");
+        if (sup.equals("void") || sup.equals("any")) {
+            s.append("JavaObject");
         } else if (sup.equals("/* minecraft class */ any")) {
             s.append("/* supressed minecraft class */ JavaObject");
-        } else if (sup.equals("any")) {
-            s.append("JavaObject");
         } else {
             s.append(sup);
         }
@@ -54,21 +52,19 @@ public class ClassParser extends AbstractParser {
             for (TypeMirror ifa : iface) {
                 sup = transformType(ifa);
                 if (!sup.equals("/* minecraft class */ any")) {
-                    if (s.length() > 0) s.append(", ");
-                    s.append(sup);
+                    s.append(", ").append(sup);
                 }
             }
         }
 
         DocletTypescriptExtends ext = type.getAnnotation(DocletTypescriptExtends.class);
-        if (ext != null) {
-            if (s.length() > 0) s.append(", ");
-            s.append(ext.value());
-        }
+        if (ext != null) s.append(", ").append(ext.value());
 
-        if (getClassName(false).equals("Iterable")) s.append("JsIterable<T>");
+        if (s.toString().startsWith(" extends JavaObject, ")) s.delete(9, 21);
 
-        return s.length() > 0 ? s.insert(0, " extends ").toString() : "";
+        if (getClassName(false).equals("Iterable")) s.append(", JsIterable<T>");
+
+        return s.toString();
     }
 
     @Override
@@ -88,51 +84,53 @@ public class ClassParser extends AbstractParser {
             }
         }
 
-        StringBuilder s = new StringBuilder();
+        StringBuilder s = new StringBuilder("const ").append(getClassName(false)).append(": Java");
 
         if (type.getKind().isInterface()) {
+            s.append("InterfaceStatics");
             String statics = genStaticFields(fields) + "\n" + genStaticMethods(methods);
-            if (!statics.equals("\n"))
-                s.append("const ").append(getClassName(false)).append(": JavaInterfaceStatics & {\n\n")
+            if (!statics.equals("\n")) {
+                s.append(" & {\n\n")
                     .append(StringHelpers.tabIn(statics)).append("\n")
-                .append("};\n");
+                .append("}");
+            }
+            s.append(";\n");
         } else {
             String constrs = genConstructors(constructors);
             String statics = genStaticFields(fields) + "\n" + genStaticMethods(methods);
-            if (constrs.length() > 0 || !statics.equals("\n")) {
-                String c = "true";
-                if (constrs.length() == 0) {
-                    c = "false";
-                } else if (constrs.startsWith("new (") && constrs.indexOf("\n") == constrs.length() - 1) {
-                    c = constrs.substring(constrs.indexOf("):") + 3, constrs.length() - 2);
-                    if (!constrs.startsWith("new ()")) {
-                        c = c + ", [" + constrs.substring(5, constrs.indexOf("):")) + "]";
-                    }
-                }
 
-                s.append("const ").append(getClassName(false)).append(": JavaClassStatics<").append(c).append(">");
-                if (c.equals("true") || !statics.equals("\n")) {
-                    s.append(" & {\n\n");
-                    if (c.equals("true")) {
-                        s.append(StringHelpers.tabIn(constrs)).append("\n")
-                            .append(StringHelpers.tabIn(
-                                """
-                                /** @deprecated */ Symbol: unknown;
-                                /** @deprecated */ apply: unknown;
-                                /** @deprecated */ arguments: unknown;
-                                /** @deprecated */ bind: unknown;
-                                /** @deprecated */ call: unknown;
-                                /** @deprecated */ caller: unknown;
-                                /** @deprecated */ length: unknown;
-                                /** @deprecated */ name: unknown;
-                                /** @deprecated */ prototype: unknown;
-                                """
-                            )).append("\n");
-                    }
-                    s.append(StringHelpers.tabIn(statics)).append("\n").append("}");
+            String c = "true";
+            if (constrs.length() == 0) {
+                c = "false";
+            } else if (constrs.startsWith("new (") && constrs.indexOf("\n") == constrs.length() - 1) {
+                c = constrs.substring(constrs.indexOf("):") + 3, constrs.length() - 2);
+                if (!constrs.startsWith("new ()")) {
+                    c = c + ", [" + constrs.substring(5, constrs.indexOf("):")) + "]";
                 }
-                s.append(";\n");
             }
+
+            s.append("ClassStatics<").append(c).append(">");
+            if (c.equals("true") || !statics.equals("\n")) {
+                s.append(" & {\n\n");
+                if (c.equals("true")) {
+                    s.append(StringHelpers.tabIn(constrs)).append("\n")
+                        .append(StringHelpers.tabIn(
+                            """
+                            /** @deprecated */ Symbol: unknown;
+                            /** @deprecated */ apply: unknown;
+                            /** @deprecated */ arguments: unknown;
+                            /** @deprecated */ bind: unknown;
+                            /** @deprecated */ call: unknown;
+                            /** @deprecated */ caller: unknown;
+                            /** @deprecated */ length: unknown;
+                            /** @deprecated */ name: unknown;
+                            /** @deprecated */ prototype: unknown;
+                            """
+                        )).append("\n");
+                }
+                s.append(StringHelpers.tabIn(statics)).append("\n").append("}");
+            }
+            s.append(";\n");
         }
 
         s.append("interface ").append(getClassName(true)).append(buildExtends()).append(" {\n\n")

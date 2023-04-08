@@ -181,13 +181,15 @@ declare namespace Packages {
 
             }
 
-            interface Comparable<T> {
+            const Comparable: JavaInterfaceStatics;
+            interface Comparable<T> extends JavaObject {
 
                 compareTo(arg0: T): number;
 
             }
 
-            interface Array<T> extends JsArray<T> {}
+            const Array: JavaInterfaceStatics;
+            interface Array<T> extends JavaObject, JsArray<T> {}
 
             const StackTraceElement: JavaClassStatics<true> & {
 
@@ -250,7 +252,8 @@ declare namespace Packages {
 
             }
 
-            interface Iterable<T> extends JsIterable<T> {
+            const Iterable: JavaInterfaceStatics;
+            interface Iterable<T> extends JavaObject, JsIterable<T> {
 
                 iterator(): java.util.Iterator<T>;
                 forEach(arg0: java.util._function.Consumer<any>): void;
@@ -269,6 +272,7 @@ declare namespace Packages {
         namespace util {
 
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html
+            const Collection: JavaInterfaceStatics;
             interface Collection<T> extends java.lang.Iterable<T> {
 
                 readonly [n: number]: T;
@@ -331,7 +335,7 @@ declare namespace Packages {
                 of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V, k8: K, v8: V, k9: K, v9: V, k10: K, v10: V): JavaMap<K, V>;
 
             };
-            interface Map<K, V> {
+            interface Map<K, V> extends JavaObject {
 
                 [key: string | number]: V;
 
@@ -423,7 +427,8 @@ declare namespace Packages {
 
             }
 
-            interface Serializable {}
+            const Serializable: JavaInterfaceStatics;
+            interface Serializable extends JavaObject {}
 
         }
 
@@ -447,7 +452,7 @@ declare namespace Packages {
                 /** @deprecated */ prototype: unknown;
 
             };
-            interface URL extends java.lang.Object {
+            interface URL extends JavaObject {
 
                 getFile(): string;
                 getPath(): string;
@@ -481,7 +486,7 @@ declare namespace Packages {
                 create(str: string): URI;
 
             };
-            interface URI extends java.lang.Object, java.lang.Comparable<URI>, java.io.Serializable {
+            interface URI extends java.lang.Comparable<URI>, java.io.Serializable {
 
                 getHost(): string;
                 getPath(): string;
