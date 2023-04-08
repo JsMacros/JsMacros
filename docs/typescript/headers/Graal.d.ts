@@ -166,11 +166,12 @@ declare namespace Packages {
             };
             interface Class<T> extends Object {}
 
+            const Object: JavaClassStatics<JavaObject>;
             interface Object {
 
                 getClass(): JavaClass<JavaObject>;
                 hashCode(): number;
-                equals(obj: JavaObject): object;
+                equals(obj: JavaObject): boolean;
                 toString(): string;
                 notify(): void;
                 notifyAll(): void;
