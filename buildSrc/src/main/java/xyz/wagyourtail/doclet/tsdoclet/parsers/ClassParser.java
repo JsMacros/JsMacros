@@ -100,9 +100,15 @@ public class ClassParser extends AbstractParser {
             String constrs = genConstructors(constructors);
             String statics = genStaticFields(fields) + "\n" + genStaticMethods(methods);
             if (constrs.length() > 0 || !statics.equals("\n")) {
-                String c = constrs.length() == 0 ? "false" :
-                    constrs.startsWith("new ():") && constrs.indexOf("\n") == constrs.length() - 1 ?
-                        getShortifiedType() : "true";
+                String c = "true";
+                if (constrs.length() == 0) {
+                    c = "false";
+                } else if (constrs.startsWith("new (") && constrs.indexOf("\n") == constrs.length() - 1) {
+                    c = constrs.substring(constrs.indexOf("):") + 3, constrs.length() - 2);
+                    if (!constrs.startsWith("new ()")) {
+                        c = c + ", [" + constrs.substring(5, constrs.indexOf("):")) + "]";
+                    }
+                }
 
                 s.append("const ").append(getClassName(false)).append(": JavaClassStatics<").append(c).append(">");
                 if (c.equals("true") || !statics.equals("\n")) {

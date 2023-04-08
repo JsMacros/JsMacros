@@ -105,7 +105,7 @@ type JavaInterfaceStatics = {
     /** @deprecated */ prototype: unknown;
 };
 
-type JavaClassStatics<Constructs extends boolean | object> =
+type JavaClassStatics<Constructs extends boolean | object, Args extends [any, ...any] = []> =
     Constructs extends false ? {
         /** no constructor */
         new (none: never): never;
@@ -118,8 +118,18 @@ type JavaClassStatics<Constructs extends boolean | object> =
         /** @deprecated */ length: unknown;
         /** @deprecated */ name: unknown;
         /** @deprecated */ prototype: unknown;
-    } :
-    Constructs extends true ? unknown : {
+    } : Constructs extends true ? unknown : Args extends [any, ...any] ? {
+        new (...args: Args): Constructs;
+        /** @deprecated */ Symbol: unknown;
+        /** @deprecated */ apply: unknown;
+        /** @deprecated */ arguments: unknown;
+        /** @deprecated */ bind: unknown;
+        /** @deprecated */ call: unknown;
+        /** @deprecated */ caller: unknown;
+        /** @deprecated */ length: unknown;
+        /** @deprecated */ name: unknown;
+        /** @deprecated */ prototype: unknown;
+    } : {
         new (): Constructs;
         /** @deprecated */ Symbol: unknown;
         /** @deprecated */ apply: unknown;
