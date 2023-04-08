@@ -64,8 +64,12 @@ public class FReflection extends PerExecLibrary {
      * @see FReflection#getClass(String, String)
      * @since 1.2.3
      */
-    @DocletReplaceTypeParams("C extends JavaTypeList")
-    @DocletReplaceParams("name: C | 'boolean' | 'byte' | 'short' | 'int' | 'long' | 'float' | 'double' | 'char' | 'void'")
+    @DocletReplaceTypeParams("C extends string")
+    @DocletReplaceParams(
+        """
+        name: C & {} | 'boolean' | 'byte' | 'short' | 'int' | 'long' | 'float' | 'double' | 'char' | 'void'): GetJavaType<C>;
+        function getClass<C extends JavaTypeList>(name: C | 'boolean' | 'byte' | 'short' | 'int' | 'long' | 'float' | 'double' | 'char' | 'void'"""
+    )
     @DocletReplaceReturn("GetJavaType<C>")
     public <T> Class<T> getClass(String name) throws ClassNotFoundException {
         switch (name) {
@@ -104,8 +108,12 @@ public class FReflection extends PerExecLibrary {
      * @throws ClassNotFoundException
      * @since 1.2.3
      */
-    @DocletReplaceTypeParams("C extends JavaTypeList")
-    @DocletReplaceParams("name: C, name2: JavaTypeList")
+    @DocletReplaceTypeParams("C extends string")
+    @DocletReplaceParams(
+        """
+        name: C, name2: string): GetJavaType<C>;
+        function getClass<C extends JavaTypeList>(name: C, name2: JavaTypeList"""
+    )
     @DocletReplaceReturn("GetJavaType<C>")
     public <T> Class<T> getClass(String name, String name2) throws ClassNotFoundException {
         try {

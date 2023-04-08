@@ -38,6 +38,7 @@ declare const Polyglot: {
  */
 declare namespace Java {
 
+    export function type<C extends string>(className: C): GetJavaType<C>;
     export function type<C extends JavaTypeList>(className: C): GetJavaType<C>;
     export function from<T>(javaData: JavaArray<T>): T[];
     export function from<T>(javaData: JavaList<T>): T[];
