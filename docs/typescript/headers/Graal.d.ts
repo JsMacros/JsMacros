@@ -3,33 +3,32 @@
 
 declare function load(source: string | Packages.java.io.File | Packages.java.net.URL): void;
 declare function loadWithNewGlobal(source: string | Packages.java.io.File | Packages.java.net.URL, arguments: any): void;
-// these two are commented out because it's useless, doesn't even show in game log
+// These two are commented out because it's useless, doesn't even show in game log
 // declare function print(...arg: any[]): void;
 // declare function printErr(...arg: any[]): void;
 
 /**
  * Information about the graal runner.
- * Can someone tell me if this should be a namespace, I thought since it only had values in it, it would be best to declare this way.
  */
-declare const Graal: {
+declare namespace Graal {
 
-    readonly language: string;
-    readonly versionGraalVM: string;
-    readonly versionECMAScript: number;
+    export const language: string;
+    export const versionGraalVM: string;
+    export const versionECMAScript: number;
 
-    isGraalRuntime(): boolean;
+    export function isGraalRuntime(): boolean;
 
 }
 
-/**
- * This would be a namespace as well, but export/import are reserved terms in typescript
- */
-declare const Polyglot: {
+declare namespace Polyglot {
 
-    import(key: string): any;
-    export(key: string, value: any): void;
-    eval(languageId: string, sourceCode: string): any;
-    evalFile(languageId: string, sourceFileName: string): () => any;
+    function _import(key: string): any;
+    function _export(key: string, value: any): void;
+    export function eval(languageId: string, sourceCode: string): any;
+    export function evalFile(languageId: string, sourceFileName: string): () => any;
+
+    export { _import as import };
+    export { _export as export };
 
 }
 
@@ -59,24 +58,18 @@ type JavaTypeList = ListPackages<typeof Packages> | string & {};
 
 type ListPackages<T, P extends string = ''> =
     IsStrictAny<T> extends true ? never : T extends new (...args: any[]) => any ? P :
-    { [K in keyof T]: ListPackages<T[K], P extends '' ? K : `${P}.${string & K}`> }[keyof T];
+    { [K in keyof T]: ListPackages<T[K], P extends '' ? K : `${P}.${K}`> }[keyof T];
 
 type GetJavaType<P extends string, T = typeof Packages> =
     IsStrictAny<T> extends true ? unknown :
     P extends `${infer K}.${infer R}` ? GetJavaType<R, T[K]> :
     P extends '' ? T extends new (...args: any[]) => any ? T : unknown : GetJavaType<'', T[P]>;
 
-type StrNumMethod<T> = // used in worldscanner
-    { [K in keyof T]: ReturnType<T[K]> extends infer R ?
-        R extends string | number ?
-            IsStrictAny<R> extends true ? never : K
-        : never
-    : never }[keyof T]
+type StrNumMethod<T> = // Used in worldscanner
+    { [K in keyof T]: ReturnType<T[K]> extends infer R extends string | number ?
+    IsStrictAny<R> extends true ? never : K : never }[keyof T];
 
-type UnionToIntersection<U> =
-    (U extends any ? (k: U) => 0 : never) extends ((k: infer I) => 0) ? I : never;
-
-type IsStrictAny<T> = UnionToIntersection<T extends never ? 1 : 0> extends never ? true : false;
+type IsStrictAny<T> = 0 | 1 extends (T extends never ? 1 : 0) ? true : false;
 
 declare const java:   JavaPackage<typeof Packages.java>;
 declare const javafx: JavaPackage<typeof Packages.javafx>;
