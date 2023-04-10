@@ -143,8 +143,6 @@ type JavaClassStatics<Constructs extends boolean | object, Args extends [any, ..
         /** @deprecated */ prototype: unknown;
     })
 
-type MergeClass<T> = new () => T;
-
 declare namespace Packages {
 
     namespace java {
