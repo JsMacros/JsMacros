@@ -57,12 +57,10 @@ public class ClassParser extends AbstractParser {
             }
         }
 
-        DocletTypescriptExtends ext = type.getAnnotation(DocletTypescriptExtends.class);
-        if (ext != null) s.append(", ").append(ext.value());
-
         if (s.toString().startsWith(" extends JavaObject, ")) s.delete(9, 21);
 
-        if (getClassName(false).equals("Iterable")) s.append(", JsIterable<T>");
+        DocletTypescriptExtends ext = type.getAnnotation(DocletTypescriptExtends.class);
+        if (ext != null) s.append(", ").append(ext.value());
 
         return s.toString();
     }

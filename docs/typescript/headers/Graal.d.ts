@@ -255,12 +255,6 @@ declare namespace Packages {
 
         }
 
-        namespace util { // it needs to be separated
-
-            export { _function as function };
-
-        }
-
         namespace util {
 
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html
