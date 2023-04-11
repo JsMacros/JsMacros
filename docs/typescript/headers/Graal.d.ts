@@ -65,6 +65,9 @@ type GetJavaType<P extends string, T extends object = typeof Packages> =
     P extends `${infer K}.${infer R}` ? GetJavaType<R, T[K]> :
     P extends '' ? IsConstructor<T> extends true ? T : unknown : GetJavaType<'', T[P]>;
 
+type GetJavaTypeClass<T> = GetJavaType<T> extends infer J extends object ?
+    IsStrictAny<J['class']> extends true ? unknown : J['class'] : unknown;
+
 type StrNumMethod<T> = // Used in worldscanner
     { [K in keyof T]: ReturnType<T[K]> extends infer R extends string | number ?
     IsStrictAny<R> extends true ? never : K : never }[keyof T];
@@ -94,7 +97,8 @@ type JavaPackage<T> = (IsStrictAny<T> extends true ? unknown : T) & {
     /** @deprecated */ prototype: unknown;
 };
 
-type JavaInterfaceStatics = Packages.java.lang.Object & {
+type JavaInterfaceStatics = {
+    readonly class: JavaClass;
     /** interface, no constructor */
     new (none: never): never;
     /** @deprecated */ Symbol: unknown;
@@ -108,8 +112,42 @@ type JavaInterfaceStatics = Packages.java.lang.Object & {
     /** @deprecated */ prototype: unknown;
 };
 
-type JavaClassStatics<Constructs extends boolean | object, Args extends [any, ...any] = []> =
-    Packages.java.lang.Object & (Constructs extends false ? {
+type JavaClassStatics<
+        Constructs extends false | object | [object],
+        Args extends [] | [any, ...any] = []> =
+    JavaClassConstructor<Constructs, Args> & {
+        readonly class: JavaClass
+        & (Constructs extends false ? unknown : JavaClassConstructor<Constructs, Args>);
+    };
+
+type JavaClassConstructor<
+        Constructs extends false | object | [object],
+        Args extends [] | [any, ...any] = []> =
+    Constructs extends [infer O extends object] ?
+        Args extends [any, ...any] ? {
+            new (...args: Args): O;
+            /** @deprecated */ Symbol: unknown;
+            /** @deprecated */ apply: unknown;
+            /** @deprecated */ arguments: unknown;
+            /** @deprecated */ bind: unknown;
+            /** @deprecated */ call: unknown;
+            /** @deprecated */ caller: unknown;
+            /** @deprecated */ length: unknown;
+            /** @deprecated */ name: unknown;
+            /** @deprecated */ prototype: unknown;
+        } : {
+            new (): O;
+            /** @deprecated */ Symbol: unknown;
+            /** @deprecated */ apply: unknown;
+            /** @deprecated */ arguments: unknown;
+            /** @deprecated */ bind: unknown;
+            /** @deprecated */ call: unknown;
+            /** @deprecated */ caller: unknown;
+            /** @deprecated */ length: unknown;
+            /** @deprecated */ name: unknown;
+            /** @deprecated */ prototype: unknown;
+        } : 
+    Constructs extends false ? {
         /** no constructor */
         new (none: never): never;
         /** @deprecated */ Symbol: unknown;
@@ -121,29 +159,7 @@ type JavaClassStatics<Constructs extends boolean | object, Args extends [any, ..
         /** @deprecated */ length: unknown;
         /** @deprecated */ name: unknown;
         /** @deprecated */ prototype: unknown;
-    } : Constructs extends true ? unknown : Args extends [any, ...any] ? {
-        new (...args: Args): Constructs;
-        /** @deprecated */ Symbol: unknown;
-        /** @deprecated */ apply: unknown;
-        /** @deprecated */ arguments: unknown;
-        /** @deprecated */ bind: unknown;
-        /** @deprecated */ call: unknown;
-        /** @deprecated */ caller: unknown;
-        /** @deprecated */ length: unknown;
-        /** @deprecated */ name: unknown;
-        /** @deprecated */ prototype: unknown;
-    } : {
-        new (): Constructs;
-        /** @deprecated */ Symbol: unknown;
-        /** @deprecated */ apply: unknown;
-        /** @deprecated */ arguments: unknown;
-        /** @deprecated */ bind: unknown;
-        /** @deprecated */ call: unknown;
-        /** @deprecated */ caller: unknown;
-        /** @deprecated */ length: unknown;
-        /** @deprecated */ name: unknown;
-        /** @deprecated */ prototype: unknown;
-    })
+    } : Constructs;
 
 declare namespace Packages {
 
@@ -153,14 +169,17 @@ declare namespace Packages {
 
             const Class: JavaClassStatics<false> & {
 
-                forName(className: string): JavaClass<any>;
-                forName(name: string, initialize: boolean, loader: ClassLoader): JavaClass<any>;
-                forName(module: Module, name: string): JavaClass<any>;
+                forName<C extends string>(className: C): GetJavaTypeClass<C>;
+                forName<C extends JavaTypeList>(className: C): GetJavaTypeClass<C>;
+                forName<C extends string>(name: C, initialize: boolean, loader: ClassLoader): GetJavaTypeClass<C>;
+                forName<C extends JavaTypeList>(name: C, initialize: boolean, loader: ClassLoader): GetJavaTypeClass<C>;
+                forName<C extends string>(module: Module, name: C): GetJavaTypeClass<C>;
+                forName<C extends JavaTypeList>(module: Module, name: C): GetJavaTypeClass<C>;
 
             };
             interface Class<T> extends Object {}
 
-            const Object: JavaClassStatics<JavaObject>;
+            const Object: JavaClassStatics<[JavaObject]>;
             interface Object {
 
                 getClass(): JavaClass<JavaObject>;
@@ -185,7 +204,7 @@ declare namespace Packages {
             const Array: JavaInterfaceStatics;
             interface Array<T> extends JavaObject, JsArray<T> {}
 
-            const StackTraceElement: JavaClassStatics<true> & {
+            const StackTraceElement: JavaClassStatics<{
 
                 new (declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement;
                 new (classLoaderName: string, moduleName: string, moduleVersion: string, declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement;
@@ -200,7 +219,7 @@ declare namespace Packages {
                 /** @deprecated */ name: unknown;
                 /** @deprecated */ prototype: unknown;
 
-            };
+            }>;
             interface StackTraceElement extends Object, java.io.Serializable {
 
                 getFileName(): string;
@@ -214,7 +233,7 @@ declare namespace Packages {
 
             }
 
-            const Throwable: JavaClassStatics<true> & {
+            const Throwable: JavaClassStatics<{
 
                 new (): Throwable;
                 new (message: string): Throwable;
@@ -230,7 +249,7 @@ declare namespace Packages {
                 /** @deprecated */ name: unknown;
                 /** @deprecated */ prototype: unknown;
 
-            };
+            }>;
             interface Throwable extends Object, java.io.Serializable, Error {
 
                 getMessage(): string;
@@ -362,7 +381,7 @@ declare namespace Packages {
 
         namespace io {
 
-            const File: JavaClassStatics<true> & {
+            const File: JavaClassStatics<{
 
                 new (pathName: string): File;
                 new (parent: string, child: string): File;
@@ -378,6 +397,8 @@ declare namespace Packages {
                 /** @deprecated */ length: unknown;
                 /** @deprecated */ name: unknown;
                 /** @deprecated */ prototype: unknown;
+
+            }> & {
 
                 listRoots(): JavaArray<File>;
 
@@ -422,7 +443,7 @@ declare namespace Packages {
 
         namespace net {
 
-            const URL: JavaClassStatics<true> & {
+            const URL: JavaClassStatics<{
 
                 new (protocol: string, host: string, port: number, file: string): URL;
                 new (protocol: string, host: string, file: string): URL;
@@ -439,7 +460,7 @@ declare namespace Packages {
                 /** @deprecated */ name: unknown;
                 /** @deprecated */ prototype: unknown;
 
-            };
+            }>;
             interface URL extends JavaObject {
 
                 getFile(): string;
@@ -452,7 +473,7 @@ declare namespace Packages {
 
             }
 
-            const URI: JavaClassStatics<true> & {
+            const URI: JavaClassStatics<{
 
                 new (str: string): URI;
                 new (scheme: string, userInfo: string, host: string, port: number, path: string, query: string, fragment: string): URI;
@@ -470,6 +491,8 @@ declare namespace Packages {
                 /** @deprecated */ length: unknown;
                 /** @deprecated */ name: unknown;
                 /** @deprecated */ prototype: unknown;
+
+            }> & {
 
                 create(str: string): URI;
 

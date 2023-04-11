@@ -97,36 +97,36 @@ public class ClassParser extends AbstractParser {
             String constrs = genConstructors(constructors);
             String statics = genStaticFields(fields) + "\n" + genStaticMethods(methods);
 
-            String c = "true";
+            s.append("ClassStatics<");
             if (constrs.length() == 0) {
-                c = "false";
+                s.append("false");
             } else if (constrs.startsWith("new (") && constrs.indexOf("\n") == constrs.length() - 1) {
-                c = constrs.substring(constrs.indexOf("):") + 3, constrs.length() - 2);
+                s.append("[").append(constrs.substring(constrs.indexOf("):") + 3, constrs.length() - 2)).append("]");
                 if (!constrs.startsWith("new ()")) {
-                    c = c + ", [" + constrs.substring(5, constrs.indexOf("):")) + "]";
+                    s.append(", [").append(constrs.substring(5, constrs.indexOf("):"))).append("]");
                 }
+            } else {
+                s.append("{\n\n").append(StringHelpers.tabIn(constrs)).append("\n")
+                    .append(StringHelpers.tabIn(
+                        """
+                        /** @deprecated */ Symbol: unknown;
+                        /** @deprecated */ apply: unknown;
+                        /** @deprecated */ arguments: unknown;
+                        /** @deprecated */ bind: unknown;
+                        /** @deprecated */ call: unknown;
+                        /** @deprecated */ caller: unknown;
+                        /** @deprecated */ length: unknown;
+                        /** @deprecated */ name: unknown;
+                        /** @deprecated */ prototype: unknown;
+                        """
+                    )).append("\n}");
             }
+            s.append(">");
 
-            s.append("ClassStatics<").append(c).append(">");
-            if (c.equals("true") || !statics.equals("\n")) {
-                s.append(" & {\n\n");
-                if (c.equals("true")) {
-                    s.append(StringHelpers.tabIn(constrs)).append("\n")
-                        .append(StringHelpers.tabIn(
-                            """
-                            /** @deprecated */ Symbol: unknown;
-                            /** @deprecated */ apply: unknown;
-                            /** @deprecated */ arguments: unknown;
-                            /** @deprecated */ bind: unknown;
-                            /** @deprecated */ call: unknown;
-                            /** @deprecated */ caller: unknown;
-                            /** @deprecated */ length: unknown;
-                            /** @deprecated */ name: unknown;
-                            /** @deprecated */ prototype: unknown;
-                            """
-                        )).append("\n");
-                }
-                s.append(StringHelpers.tabIn(statics)).append("\n").append("}");
+            if (!statics.equals("\n")) {
+                s.append(" & {\n\n")
+                    .append(StringHelpers.tabIn(statics))
+                .append("\n}");
             }
             s.append(";\n");
         }
