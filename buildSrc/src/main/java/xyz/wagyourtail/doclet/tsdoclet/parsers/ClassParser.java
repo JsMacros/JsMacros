@@ -82,7 +82,8 @@ public class ClassParser extends AbstractParser {
             }
         }
 
-        StringBuilder s = new StringBuilder("const ").append(getClassName(false)).append(": Java");
+        StringBuilder s = new StringBuilder(genComment(type))
+            .append("const ").append(getClassName(false)).append(": Java");
 
         if (type.getKind().isInterface()) {
             s.append("InterfaceStatics");

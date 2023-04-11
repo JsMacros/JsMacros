@@ -76,11 +76,17 @@ type IsConstructor<T> = T extends new (...args: never) => any ? true : false;
 
 type IsStrictAny<T> = 0 | 1 extends (T extends never ? 1 : 0) ? true : false;
 
+/** One of the root packages in java. */
 declare const java:   JavaPackage<typeof Packages.java>;
+/** One of the root packages in java. */
 declare const javafx: JavaPackage<typeof Packages.javafx>;
+/** One of the root packages in java. */
 declare const javax:  JavaPackage<typeof Packages.javax>;
+/** One of the root packages in java. */
 declare const com:    JavaPackage<typeof Packages.com>;
+/** One of the root packages in java. */
 declare const org:    JavaPackage<typeof Packages.org>;
+/** One of the root packages in java. */
 declare const edu:    JavaPackage<typeof Packages.edu>;
 
 type JavaPackage<T> = (IsStrictAny<T> extends true ? unknown : T) & {
@@ -161,6 +167,14 @@ type JavaClassConstructor<
         /** @deprecated */ prototype: unknown;
     } : Constructs;
 
+/**
+ * The global `Packages` object is provided by the GraalVM JavaScript engine, and allows
+ * access to Java packages. Use it to interact with Java APIs and libraries from your
+ * JavaScript code.
+ *
+ * To access a Java package, use the `Packages` object as a namespace, followed by the
+ * fully-qualified package name. For example: `Packages.java.net.URL`.
+ */
 declare namespace Packages {
 
     namespace java {

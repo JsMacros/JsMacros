@@ -119,7 +119,16 @@ public class Main implements Doclet {
             outputTS.append("\n\n}");
 
             for (LibraryParser lib : libraryClasses) {
-                outputTS.append("\n\ndeclare ").append(lib.genTSInterface());
+                String comment = lib.genComment(lib.getType());
+                if (comment.length() > 9) { // 9 because of the `function ` added in LibraryParser
+                    outputTS.append("\n").append(
+                        comment.substring(0, comment.length() - 9)
+                            .replaceAll("\n \\*  An instance of this class is passed to scripts as the `\\w+` variable\\.", "")
+                    );
+                } else {
+                    outputTS.append("\n\n");
+                }
+                outputTS.append("declare ").append(lib.genTSInterface());
             }
 
             outputTS.append("\n\ndeclare ").append(classes.genTSTree()).append("\n");

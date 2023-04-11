@@ -332,7 +332,7 @@ public abstract class AbstractParser {
 
         return ("\n/**\n" +
             StringHelpers.addToLineStarts(
-                a.toString().replaceAll("<\\/?pre>", "```").replaceAll("(?<=[\\.,:;>]) ?\n", "  \n") +
+                a.toString().replaceAll("\n <p>", "\n").replaceAll("<\\/?pre>", "```").replaceAll("(?<=[\\.,:;>]) ?\n", "  \n") +
                 b.toString()
             , " * ") +
             "\n */\n").replaceAll("\n \\* +\n", "\n *\n");
