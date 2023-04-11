@@ -252,6 +252,7 @@ declare namespace Packages {
                 isRecord(): boolean;
                 isSealed(): boolean;
                 isSynthetic(): boolean;
+                /** @deprecated */
                 newInstance(): T;
                 toGenericString(): string;
                 toString(): string;
