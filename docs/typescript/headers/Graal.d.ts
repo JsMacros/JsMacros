@@ -56,18 +56,20 @@ declare namespace Java {
 
 type JavaTypeList = ListPackages<typeof Packages> | string & {};
 
-type ListPackages<T, P extends string = ''> =
-    IsStrictAny<T> extends true ? never : T extends new (...args: any[]) => any ? P :
+type ListPackages<T extends object, P extends string = ''> =
+    IsStrictAny<T> extends true ? never : IsConstructor<T> extends true ? P :
     { [K in keyof T]: ListPackages<T[K], P extends '' ? K : `${P}.${K}`> }[keyof T];
 
-type GetJavaType<P extends string, T = typeof Packages> =
+type GetJavaType<P extends string, T extends object = typeof Packages> =
     IsStrictAny<T> extends true ? unknown :
     P extends `${infer K}.${infer R}` ? GetJavaType<R, T[K]> :
-    P extends '' ? T extends new (...args: any[]) => any ? T : unknown : GetJavaType<'', T[P]>;
+    P extends '' ? IsConstructor<T> extends true ? T : unknown : GetJavaType<'', T[P]>;
 
 type StrNumMethod<T> = // Used in worldscanner
     { [K in keyof T]: ReturnType<T[K]> extends infer R extends string | number ?
     IsStrictAny<R> extends true ? never : K : never }[keyof T];
+
+type IsConstructor<T> = T extends new (...args: never) => any ? true : false;
 
 type IsStrictAny<T> = 0 | 1 extends (T extends never ? 1 : 0) ? true : false;
 
@@ -306,7 +308,7 @@ declare namespace Packages {
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html
             const Map: JavaClassStatics<false> & {
 
-                copyOf<K, V>(coll: JavaMap<K, V>): JavaMap<K, V>;
+                copyOf<K, V>(map: JavaMap<K, V>): JavaMap<K, V>;
                 entry<K, V>(k: K, v: V): Map$Entry<K, V>;
                 ofEntries<K, V>(...entries: Map$Entry<K, V>[]): JavaMap<K, V>;
                 of<K, V>(k1: K, v1: V): JavaMap<K, V>;
@@ -405,7 +407,7 @@ declare namespace Packages {
                 mkdirs(): boolean;
                 renameTo(dest: File): boolean;
                 setExecutable(executable: boolean, ownerOnly?: boolean): boolean;
-                setLastModified(time: number);
+                setLastModified(time: number): boolean;
                 setReadable(readable: boolean, ownerOnly?: boolean): boolean;
                 setWritable(writable: boolean, ownerOnly?: boolean): boolean;
                 toString(): string;
