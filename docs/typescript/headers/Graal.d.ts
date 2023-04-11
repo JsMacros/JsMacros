@@ -167,6 +167,7 @@ declare namespace Packages {
 
         namespace lang {
 
+            // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html
             const Class: JavaClassStatics<false> & {
 
                 forName<C extends string>(className: C): GetJavaTypeClass<C>;
@@ -177,17 +178,95 @@ declare namespace Packages {
                 forName<C extends JavaTypeList>(module: Module, name: C): GetJavaTypeClass<C>;
 
             };
-            interface Class<T> extends Object {}
+            interface Class<T> extends Object {
+
+                arrayType(): Class<any>;
+                asSubclass(clazz: Class<any>): Class<any>;
+                cast(obj: Object): T;
+                componentType(): Class<any>;
+                descriptorString(): string;
+                desiredAssertionStatus(): boolean;
+                getAnnotatedInterfaces(): reflect.AnnotatedType[];
+                getAnnotatedSuperclass(): reflect.AnnotatedType;
+                getAnnotation<A extends annotation.Annotation>(annotationClass: Class<A>): A;
+                getAnnotations(): annotation.Annotation[];
+                getAnnotationsByType<A extends annotation.Annotation>(annotationClass: Class<A>): A[];
+                getCanonicalName(): string;
+                getClasses(): Class<any>[];
+                getClassLoader(): ClassLoader;
+                getComponentType(): Class<any>;
+                getConstructor(...parameterTypes: Class<any>): reflect.Constructor<T>;
+                getConstructors(): reflect.Constructor<any>[];
+                getDeclaredAnnotation<A extends annotation.Annotation>(annotationClass: Class<A>): A;
+                getDeclaredAnnotations(): annotation.Annotation[];
+                getDeclaredAnnotationsByType<A extends annotation.Annotation>(annotationClass: Class<A>): A[];
+                getDeclaredClasses(): Class<any>[];
+                getDeclaredConstructor(...parameterTypes: Class<any>): reflect.Constructor<T>;
+                getDeclaredConstructors(): reflect.Constructor<any>[];
+                getDeclaredField(name: string): reflect.Field;
+                getDeclaredFields(): reflect.Field[];
+                getDeclaredMethod(name: string, ...parameterTypes: Class<any>): reflect.Method;
+                getDeclaredMethods(): reflect.Method[];
+                getDeclaringClass(): Class<any>;
+                getEnclosingClass(): Class<any>;
+                getEnclosingConstructor(): reflect.Constructor<any>;
+                getEnclosingMethod(): reflect.Method;
+                getEnumConstants(): T[];
+                getField(name: string): reflect.Field;
+                getFields(): reflect.Field[];
+                getGenericInterfaces(): reflect.Type[];
+                getGenericSuperclass(): reflect.Type;
+                getInterfaces(): Class<any>[];
+                getMethod(name: string, ...parameterTypes: Class<any>): reflect.Method;
+                getMethods(): reflect.Method[];
+                getModifiers(): number;
+                getModule(): Module;
+                getName(): string;
+                getNestHost(): Class<any>;
+                getNestMembers(): Class<any>[];
+                getPackage(): Package;
+                getPackageName(): string;
+                getPermittedSubclasses(): Class<any>[];
+                getProtectionDomain(): java.security.ProtectionDomain;
+                getRecordComponents(): any; // reflect.RecordComponent[];
+                getResource(name: string): java.net.URL;
+                getResourceAsStream(name: string): java.io.InputStream;
+                getSigners(): Object[];
+                getSimpleName(): string;
+                getSuperclass(): Class<any>;
+                getTypeName(): string;
+                getTypeParameters(): reflect.TypeVariable<Class<T>>[];
+                isAnnotation(): boolean;
+                isAnnotationPresent<T extends annotation.Annotation>(annotationClass: Class<T>): boolean;
+                isAnonymousClass(): boolean;
+                isArray(): boolean;
+                isAssignableFrom(cls: Class<any>): boolean;
+                isEnum(): boolean;
+                isHidden(): boolean;
+                isInstance(obj: Object): boolean;
+                isInterface(): boolean;
+                isLocalClass(): boolean;
+                isMemberClass(): boolean;
+                isNestmateOf(c: Class<any>): boolean;
+                isPrimitive(): boolean;
+                isRecord(): boolean;
+                isSealed(): boolean;
+                isSynthetic(): boolean;
+                newInstance(): T;
+                toGenericString(): string;
+                toString(): string;
+
+            }
 
             const Object: JavaClassStatics<[JavaObject]>;
             interface Object {
 
-                getClass(): JavaClass<JavaObject>;
-                hashCode(): number;
                 equals(obj: JavaObject): boolean;
-                toString(): string;
+                getClass(): JavaClass<any>;
+                hashCode(): number;
                 notify(): void;
                 notifyAll(): void;
+                toString(): string;
                 wait(): void;
                 wait(var1: number): void;
                 wait(timeoutMillis: number, nanos: number): void;
