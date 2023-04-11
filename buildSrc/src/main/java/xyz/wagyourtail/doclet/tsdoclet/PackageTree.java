@@ -99,7 +99,7 @@ public class PackageTree {
 
         StringBuilder s = new StringBuilder("namespace ");
         if (tsReservedWords.contains(pkgName)) {
-            System.out.println("Escaped typescript reserved word " + pkgName + " -> _" + pkgName);
+            System.out.println("Escaped typescript reserved word: " + pkgName + " -> _" + pkgName);
             s.append("_");
         }
         s.append(pkgName).append(" {");
