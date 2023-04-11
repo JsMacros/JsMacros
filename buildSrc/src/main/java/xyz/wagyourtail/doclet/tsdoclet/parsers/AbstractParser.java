@@ -111,7 +111,7 @@ public abstract class AbstractParser {
         // diamondOperator
         DocletReplaceTypeParams replace = method.getAnnotation(DocletReplaceTypeParams.class);
         if (replace != null) {
-           s.append("<").append(replace.value()).append(">");
+            if (replace.value().length() > 0) s.append("<").append(replace.value()).append(">");
         } else {
             List<? extends TypeParameterElement> typeParams = method.getTypeParameters();
             if (typeParams != null && !typeParams.isEmpty()) {
@@ -158,7 +158,7 @@ public abstract class AbstractParser {
         // diamondOperator
         DocletReplaceTypeParams replace = constructor.getAnnotation(DocletReplaceTypeParams.class);
         if (replace != null) {
-           s.append("<").append(replace.value()).append(">");
+            if (replace.value().length() > 0) s.append("<").append(replace.value()).append(">");
         } else {
             List<? extends TypeParameterElement> typeParams = type.getTypeParameters();
             if (typeParams != null && !typeParams.isEmpty()) {

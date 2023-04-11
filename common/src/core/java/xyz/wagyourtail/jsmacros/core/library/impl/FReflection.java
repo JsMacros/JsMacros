@@ -64,11 +64,12 @@ public class FReflection extends PerExecLibrary {
      * @see FReflection#getClass(String, String)
      * @since 1.2.3
      */
-    @DocletReplaceTypeParams("C extends string")
+    @DocletReplaceTypeParams("")
     @DocletReplaceParams(
         """
-        name: C & {} | 'boolean' | 'byte' | 'short' | 'int' | 'long' | 'float' | 'double' | 'char' | 'void'): GetJavaTypeClass<C>;
-        function getClass<C extends JavaTypeList>(name: C | 'boolean' | 'byte' | 'short' | 'int' | 'long' | 'float' | 'double' | 'char' | 'void'"""
+        name: 'boolean' | 'byte' | 'short' | 'int' | 'long' | 'float' | 'double' | 'char' | 'void'): JavaClass<any>;
+        function getClass<C extends string>(name: C): GetJavaTypeClass<C>;
+        function getClass<C extends JavaTypeList>(name: C"""
     )
     @DocletReplaceReturn("GetJavaTypeClass<C>")
     public <T> Class<T> getClass(String name) throws ClassNotFoundException {
