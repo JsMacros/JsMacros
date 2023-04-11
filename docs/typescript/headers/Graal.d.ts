@@ -274,14 +274,14 @@ declare namespace Packages {
             }
 
             const Comparable: JavaInterfaceStatics;
-            interface Comparable<T> extends JavaObject {
+            interface Comparable<T> extends Object {
 
                 compareTo(arg0: T): number;
 
             }
 
             const Array: JavaInterfaceStatics;
-            interface Array<T> extends JavaObject, JsArray<T> {}
+            interface Array<T> extends Object, JsArray<T> {}
 
             const StackTraceElement: JavaClassStatics<{
 
@@ -345,10 +345,10 @@ declare namespace Packages {
             }
 
             const Iterable: JavaInterfaceStatics;
-            interface Iterable<T> extends JavaObject, JsIterable<T> {
+            interface Iterable<T> extends Object, JsIterable<T> {
 
                 iterator(): java.util.Iterator<T>;
-                forEach(arg0: java.util._function.Consumer<any>): void;
+                forEach(arg0: java.util.function.Consumer<any>): void;
                 spliterator(): java.util.Spliterator<T>;
 
             }
@@ -421,9 +421,7 @@ declare namespace Packages {
                 of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V, k8: K, v8: V, k9: K, v9: V, k10: K, v10: V): JavaMap<K, V>;
 
             };
-            interface Map<K, V> extends JavaObject {
-
-                [key: string | number]: V;
+            interface Map<K, V> extends JavaObject, Record<string | number, V> {
 
                 clear(): void;
                 containsKey(key: K): boolean;
