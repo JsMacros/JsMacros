@@ -4,7 +4,10 @@ import xyz.wagyourtail.doclet.DocletTypescriptExtends;
 import xyz.wagyourtail.StringHelpers;
 
 import javax.lang.model.element.*;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import java.lang.Override;
+import java.util.stream.Collectors;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,7 +15,6 @@ import java.util.Set;
 public class ClassParser extends AbstractParser {
     public ClassParser(TypeElement type) {
         super(type);
-        super.checkEnumType(type);
     }
 
     public String getClassName(boolean typeParams) {
@@ -65,17 +67,77 @@ public class ClassParser extends AbstractParser {
         return s.toString();
     }
 
+    private void getSuperMcClasses(Set<TypeElement> set, TypeElement c) {
+        if (!c.getKind().isInterface()) {
+            TypeMirror sup = c.getSuperclass();
+            if (sup instanceof DeclaredType) {
+                if (transformType(sup).equals("/* minecraft class */ any")) {
+                    set.add((TypeElement) ((DeclaredType) sup).asElement());
+                }
+                getSuperMcClasses(set, (TypeElement) ((DeclaredType) sup).asElement());
+            }
+        }
+
+        List<? extends TypeMirror> iface = c.getInterfaces();
+        if (iface != null && !iface.isEmpty()) {
+            for (TypeMirror ifa : iface) {
+                if (transformType(ifa).equals("/* minecraft class */ any")) {
+                    set.add((TypeElement) ((DeclaredType) ifa).asElement());
+                }
+                getSuperMcClasses(set, (TypeElement) ((DeclaredType) ifa).asElement());
+            }
+        }
+    }
+
+    private static boolean haveSameSignature(ExecutableElement m1, ExecutableElement m2) {
+        if (!m1.getSimpleName().equals(m2.getSimpleName())) {
+            return false;
+        }
+
+        TypeMirror returnType1 = m1.getReturnType();
+        TypeMirror returnType2 = m2.getReturnType();
+        if (!returnType1.toString().equals(returnType2.toString())) {
+            return false;
+        }
+
+        List<? extends TypeMirror> parameterTypes1 = m1.getParameters().stream()
+            .map(variableElement -> variableElement.asType())
+            .collect(Collectors.toList());
+        List<? extends TypeMirror> parameterTypes2 = m2.getParameters().stream()
+            .map(variableElement -> variableElement.asType())
+            .collect(Collectors.toList());
+        if (!parameterTypes1.equals(parameterTypes2)) {
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     public String genTSInterface() {
+        Set<TypeElement> superMcs = new LinkedHashSet<>();
         Set<Element> fields = new LinkedHashSet<>();
         Set<Element> methods = new LinkedHashSet<>();
         Set<Element> constructors = new LinkedHashSet<>();
 
+        getSuperMcClasses(superMcs, type);
+
+        outer:
         for (Element el : type.getEnclosedElements()) {
             if (el.getModifiers().contains(Modifier.PUBLIC)) {
                 switch (el.getKind()) {
                     case FIELD, ENUM_CONSTANT -> fields.add(el);
-                    case METHOD -> methods.add(el);
+                    case METHOD -> {
+                        if (el.getAnnotation(Override.class) != null) {
+                            for (TypeElement clz : superMcs) {
+                                for (Element sel : clz.getEnclosedElements()) {
+                                    if (sel.getKind() != ElementKind.METHOD) continue;
+                                    if (haveSameSignature((ExecutableElement) el, (ExecutableElement) sel)) continue outer;
+                                }
+                            }
+                        }
+                        methods.add(el);
+                    }
                     case CONSTRUCTOR -> constructors.add(el);
                     default -> {}
                 }
