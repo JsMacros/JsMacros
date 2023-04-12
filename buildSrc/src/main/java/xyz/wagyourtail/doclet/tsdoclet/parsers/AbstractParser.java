@@ -298,9 +298,9 @@ public abstract class AbstractParser {
         checkEnumType(comment);
 
         DocCommentTree tree = Main.treeUtils.getDocCommentTree(comment);
-        Deprecated dep = comment.getAnnotation(Deprecated.class);
+        boolean deprecated = comment.getAnnotation(Deprecated.class) != null;
         if (tree == null) {
-            return dep != null ? "/** @deprecated */\n" : "";
+            return deprecated ? "/** @deprecated */\n" : "";
         }
         final StringBuilder a = new StringBuilder();
         final StringBuilder b = new StringBuilder();
@@ -331,7 +331,7 @@ public abstract class AbstractParser {
             }
         }
 
-        if (dep != null && !b.toString().contains("@deprecated")) b.append("\n@deprecated");
+        if (deprecated && !b.toString().contains("@deprecated")) b.append("\n@deprecated");
 
         return ("\n/**\n" +
             StringHelpers.addToLineStarts(
