@@ -131,8 +131,9 @@ public abstract class AbstractParser {
         } else {
             List<? extends VariableElement> params = method.getParameters();
             if (params != null && !params.isEmpty()) {
+                VariableElement restParam = method.isVarArgs() ? params.get(params.size() - 1) : null;
                 for (VariableElement param : params) {
-                    if (isRestParameter(param)) s.append("...");
+                    if (restParam != null && restParam.equals(param)) s.append("...");
                     s.append(param.getSimpleName()).append(": ").append(shortify(param)).append(", ");
                 }
                 s.setLength(s.length() - 2);
@@ -177,7 +178,9 @@ public abstract class AbstractParser {
         if (replace2 != null) {
             s.append(replace2.value());
         } else if (params != null && !params.isEmpty()) {
+            VariableElement restParam = constructor.isVarArgs() ? params.get(params.size() - 1) : null;
             for (VariableElement param : params) {
+                if (restParam != null && restParam.equals(param)) s.append("...");
                 s.append(param.getSimpleName()).append(": ").append(shortify(param)).append(", ");
             }
             s.setLength(s.length() - 2);
@@ -367,15 +370,6 @@ public abstract class AbstractParser {
             }
             Main.enumTypes.put(enumType.name(), enumType.type());
         }
-    }
-
-    private static boolean isRestParameter(VariableElement v) { // by chatGPT
-        // Get the enclosing executable element
-        ExecutableElement executableElement = (ExecutableElement) v.getEnclosingElement();
-
-        // Check if the variable element is a varargs parameter
-        return executableElement.isVarArgs() &&
-            executableElement.getParameters().indexOf(v) == executableElement.getParameters().size() - 1;
     }
 
     @Override
