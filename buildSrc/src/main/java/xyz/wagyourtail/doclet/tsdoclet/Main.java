@@ -171,19 +171,19 @@ public class Main implements Doclet {
             // append number enums here because they are very unlikely to change
             outputTS.append("\n// Enum types\n").append(
                 """
-                type Bit    = 1 | 0
-                type Trit   = 2 | Bit
-                type Dit    = 3 | Trit
-                type Pentit = 4 | Dit
-                type Hexit  = 5 | Pentit
-                type Septit = 6 | Hexit
-                type Octit  = 7 | Septit
+                type Bit    = 1 | 0;
+                type Trit   = 2 | Bit;
+                type Dit    = 3 | Trit;
+                type Pentit = 4 | Dit;
+                type Hexit  = 5 | Pentit;
+                type Septit = 6 | Hexit;
+                type Octit  = 7 | Septit;
 
-                type Side = Hexit
-                type HotbarSlot = Octit | 8
-                type HotbarSwapSlot = HotbarSlot | OffhandSlot
-                type ClickSlotButton = HotbarSwapSlot | 9 | 10
-                type OffhandSlot = 40
+                type Side = Hexit;
+                type HotbarSlot = Octit | 8;
+                type HotbarSwapSlot = HotbarSlot | OffhandSlot;
+                type ClickSlotButton = HotbarSwapSlot | 9 | 10;
+                type OffhandSlot = 40;
 
                 """
             );
