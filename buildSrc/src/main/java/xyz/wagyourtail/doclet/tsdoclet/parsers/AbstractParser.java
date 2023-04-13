@@ -38,7 +38,6 @@ public abstract class AbstractParser {
         "java.lang.Double"
     );
 
-    public Set<String> redirects = new HashSet<>();
     private static Set<String> loggedTypes = new HashSet<>();
     protected TypeElement type;
 
@@ -218,10 +217,7 @@ public abstract class AbstractParser {
                     if (classpath.equals("xyz.wagyourtail.jsmacros.core.event") &&
                         rawType.toString().equals("BaseEvent")) return "Events.BaseEvent";
                     shortified = true;
-                    if (redirects.contains(rawType.toString())) {
-                        Main.redirectNeeded.add(rawType.toString());
-                        rawType.insert(0, "$");
-                    }
+                    rawType.insert(0, "$");
                 } else if (shortify && javaShortifies.contains(classpath + "." + rawType.toString())) {
                     shortified = true;
                     rawType.insert(0, "Java");

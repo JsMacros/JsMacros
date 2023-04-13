@@ -27,7 +27,6 @@ public class Main implements Doclet {
     public static PackageTree classes = new PackageTree("Packages");
     public static DocTrees treeUtils;
     public static Elements elementUtils;
-    public static Set<String> redirectNeeded = new HashSet<>();
     public static Map<String, String> enumTypes = new HashMap<>();
 
     @Override
@@ -137,39 +136,27 @@ public class Main implements Doclet {
             outputTS.append("\n\ndeclare ").append(classes.genTSTree()).append("\n");
 
             int maxLen = 0;
-            int maxRedirLen = 0;
             List<ClassParser> xyzClasses = classes.getXyzClasses();
             for (ClassParser clz : xyzClasses) { // check length
                 String type = clz.getTypeString();
                 String shortified = clz.getClassName(true).replaceAll("([A-Z])(?=[,>])", "$1 = any");
-                if (redirectNeeded.contains(shortified.split("<", 2)[0])) {
-                    if (shortified.length() > maxRedirLen) maxRedirLen = shortified.length();
-                }
                 if (shortified.length() > maxLen) maxLen = shortified.length();
             }
 
-            for (ClassParser clz : xyzClasses) { // append shortify
+            for (ClassParser clz : xyzClasses) {
                 String type = clz.getTypeString();
                 String shortified = clz.getClassName(true).replaceAll("([A-Z])(?=[,>])", "$1 = any");
-                
-                outputTS.append("\ntype ").append(String.format("%-" + maxLen + "s", shortified))
-                    .append(" = ").append(type.endsWith(">") ? "    " : "_ & ").append(type).append(";");
-            }
 
-            // since some type will refer to the long name inside same namespace
-            outputTS.append("\n\n// redirects\n");
-            for (ClassParser clz : xyzClasses) { // append redirects
-                String shortified = clz.getClassName(true);
-                if (!redirectNeeded.contains(shortified.split("<", 2)[0])) continue;
-
-                outputTS.append("type $")
-                    .append(String.format("%-" + maxRedirLen + "s", shortified.replaceAll("([A-Z])(?=[,>])", "$1 = any")))
-                    .append(" = ").append(shortified.endsWith(">") ? "     " : "_r & ")
-                    .append(shortified).append(";\n");
+                // append shortify, for jsdoc in scripts
+                outputTS.append("\ntype  ").append(String.format("%-" + maxLen + "s", shortified))
+                    .append(" = ").append(type.endsWith(">") ? "     " : "_  & ").append(type).append(";");
+                // append redirects, for this d.ts file
+                outputTS.append("\ntype $").append(String.format("%-" + maxLen + "s", shortified))
+                    .append(" = ").append(type.endsWith(">") ? "     " : "_r & ").append(type).append(";");
             }
 
             // append number enums here because they are very unlikely to change
-            outputTS.append("\n// Enum types\n").append(
+            outputTS.append("\n\n// Enum types\n").append(
                 """
                 type Bit    = 1 | 0;
                 type Trit   = 2 | Bit;

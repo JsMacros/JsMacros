@@ -28,7 +28,6 @@ public class PackageTree {
     private Map<String, PackageTree> children = new LinkedHashMap<>();
     private Set<ClassParser> classes = new LinkedHashSet<>();
     private Map<ClassParser, String> compiledClasses = new LinkedHashMap<>();
-    private Set<String> redirects = new HashSet<>();
 
     public boolean dirty = true;
 
@@ -67,17 +66,9 @@ public class PackageTree {
         while (this.dirty) {
             this.dirty = false;
             for (ClassParser aClass : Set.copyOf(classes)) {
-                redirects.add(aClass.getClassName(false));
-            }
-            for (ClassParser aClass : Set.copyOf(classes)) {
-                if (aClass.redirects.addAll(redirects)) {
-                    compiledClasses.put(aClass, aClass.genTSInterface());
-                } else {
-                    compiledClasses.computeIfAbsent(aClass, ClassParser::genTSInterface);
-                }
+                compiledClasses.computeIfAbsent(aClass, ClassParser::genTSInterface);
             }
             for (PackageTree value : Set.copyOf(children.values())) {
-                if (value.redirects.addAll(redirects)) value.dirty = true;
                 value.prepareTSTree();
             }
         }
