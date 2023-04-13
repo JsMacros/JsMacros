@@ -1,6 +1,7 @@
 package xyz.wagyourtail.doclet.tsdoclet.parsers;
 
 import xyz.wagyourtail.doclet.DocletTypescriptExtends;
+import xyz.wagyourtail.doclet.tsdoclet.Main;
 import xyz.wagyourtail.StringHelpers;
 
 import javax.lang.model.element.*;
@@ -71,46 +72,24 @@ public class ClassParser extends AbstractParser {
         if (!c.getKind().isInterface()) {
             TypeMirror sup = c.getSuperclass();
             if (sup instanceof DeclaredType) {
+                TypeElement supe = (TypeElement) ((DeclaredType) sup).asElement();
                 if (transformType(sup).equals("/* minecraft class */ any")) {
-                    set.add((TypeElement) ((DeclaredType) sup).asElement());
+                    set.add(supe);
                 }
-                getSuperMcClasses(set, (TypeElement) ((DeclaredType) sup).asElement());
+                getSuperMcClasses(set, supe);
             }
         }
 
-        List<? extends TypeMirror> iface = c.getInterfaces();
-        if (iface != null && !iface.isEmpty()) {
-            for (TypeMirror ifa : iface) {
+        List<? extends TypeMirror> ifaces = c.getInterfaces();
+        if (ifaces != null && !ifaces.isEmpty()) {
+            for (TypeMirror ifa : ifaces) {
+                TypeElement ifae = (TypeElement) ((DeclaredType) ifa).asElement();
                 if (transformType(ifa).equals("/* minecraft class */ any")) {
-                    set.add((TypeElement) ((DeclaredType) ifa).asElement());
+                    set.add(ifae);
                 }
-                getSuperMcClasses(set, (TypeElement) ((DeclaredType) ifa).asElement());
+                getSuperMcClasses(set, ifae);
             }
         }
-    }
-
-    private static boolean haveSameSignature(ExecutableElement m1, ExecutableElement m2) {
-        if (!m1.getSimpleName().equals(m2.getSimpleName())) {
-            return false;
-        }
-
-        TypeMirror returnType1 = m1.getReturnType();
-        TypeMirror returnType2 = m2.getReturnType();
-        if (!returnType1.toString().equals(returnType2.toString())) {
-            return false;
-        }
-
-        List<? extends TypeMirror> parameterTypes1 = m1.getParameters().stream()
-            .map(variableElement -> variableElement.asType())
-            .collect(Collectors.toList());
-        List<? extends TypeMirror> parameterTypes2 = m2.getParameters().stream()
-            .map(variableElement -> variableElement.asType())
-            .collect(Collectors.toList());
-        if (!parameterTypes1.equals(parameterTypes2)) {
-            return false;
-        }
-
-        return true;
     }
 
     @Override
@@ -126,18 +105,22 @@ public class ClassParser extends AbstractParser {
         for (Element el : type.getEnclosedElements()) {
             if (el.getModifiers().contains(Modifier.PUBLIC)) {
                 switch (el.getKind()) {
-                    case FIELD, ENUM_CONSTANT -> fields.add(el);
                     case METHOD -> {
                         if (el.getAnnotation(Override.class) != null) {
                             for (TypeElement clz : superMcs) {
                                 for (Element sel : clz.getEnclosedElements()) {
                                     if (sel.getKind() != ElementKind.METHOD) continue;
-                                    if (haveSameSignature((ExecutableElement) el, (ExecutableElement) sel)) continue outer;
+                                    if (Main.elementUtils.overrides(
+                                        (ExecutableElement) el,
+                                        (ExecutableElement) sel,
+                                        type
+                                    )) continue outer;
                                 }
                             }
                         }
                         methods.add(el);
                     }
+                    case FIELD, ENUM_CONSTANT -> fields.add(el);
                     case CONSTRUCTOR -> constructors.add(el);
                     default -> {}
                 }

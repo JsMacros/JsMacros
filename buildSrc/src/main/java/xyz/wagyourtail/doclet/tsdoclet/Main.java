@@ -15,6 +15,7 @@ import xyz.wagyourtail.doclet.tsdoclet.parsers.LibraryParser;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
+import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class Main implements Doclet {
     public static FileHandler outputTS;
     public static PackageTree classes = new PackageTree("Packages");
     public static DocTrees treeUtils;
+    public static Elements elementUtils;
     public static Set<String> redirectNeeded = new HashSet<>();
     public static Map<String, String> enumTypes = new HashMap<>();
 
@@ -58,6 +60,7 @@ public class Main implements Doclet {
     public boolean run(DocletEnvironment environment) {
         Set<? extends Element> elements = environment.getIncludedElements();
         treeUtils = environment.getDocTrees();
+        elementUtils = environment.getElementUtils();
 
         Set<LibraryParser> libraryClasses = new LinkedHashSet<>();
         Set<EventParser> eventClasses = new LinkedHashSet<>();

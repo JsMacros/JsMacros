@@ -14,7 +14,6 @@ import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
-import java.lang.Deprecated;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -298,9 +297,8 @@ public abstract class AbstractParser {
         checkEnumType(comment);
 
         DocCommentTree tree = Main.treeUtils.getDocCommentTree(comment);
-        boolean deprecated = comment.getAnnotation(Deprecated.class) != null;
         if (tree == null) {
-            return deprecated ? "/** @deprecated */\n" : "";
+            return Main.elementUtils.isDeprecated(comment) ? "/** @deprecated */\n" : "";
         }
         final StringBuilder a = new StringBuilder();
         final StringBuilder b = new StringBuilder();
@@ -331,7 +329,9 @@ public abstract class AbstractParser {
             }
         }
 
-        if (deprecated && !b.toString().contains("@deprecated")) b.append("\n@deprecated");
+        if (Main.elementUtils.isDeprecated(comment) && !b.toString().contains("@deprecated")) {
+            b.append("\n@deprecated");
+        }
 
         return ("\n/**\n" +
             StringHelpers.addToLineStarts(
