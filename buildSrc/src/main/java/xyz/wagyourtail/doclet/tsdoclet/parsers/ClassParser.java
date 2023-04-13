@@ -68,15 +68,17 @@ public class ClassParser extends AbstractParser {
         return s.toString();
     }
 
-    private void getSuperMcClasses(Set<TypeElement> set, TypeElement c) {
+    private void getSuperMcClasses(Set<TypeElement> mc, Set<TypeElement> other, TypeElement c) {
         if (!c.getKind().isInterface()) {
             TypeMirror sup = c.getSuperclass();
             if (sup instanceof DeclaredType) {
                 TypeElement supe = (TypeElement) ((DeclaredType) sup).asElement();
                 if (transformType(sup).equals("/* minecraft class */ any")) {
-                    set.add(supe);
+                    mc.add(supe);
+                } else {
+                    other.add(supe);
                 }
-                getSuperMcClasses(set, supe);
+                getSuperMcClasses(mc, other, supe);
             }
         }
 
@@ -85,9 +87,11 @@ public class ClassParser extends AbstractParser {
             for (TypeMirror ifa : ifaces) {
                 TypeElement ifae = (TypeElement) ((DeclaredType) ifa).asElement();
                 if (transformType(ifa).equals("/* minecraft class */ any")) {
-                    set.add(ifae);
+                    mc.add(ifae);
+                } else {
+                    other.add(ifae);
                 }
-                getSuperMcClasses(set, ifae);
+                getSuperMcClasses(mc, other, ifae);
             }
         }
     }
@@ -95,11 +99,12 @@ public class ClassParser extends AbstractParser {
     @Override
     public String genTSInterface() {
         Set<TypeElement> superMcs = new LinkedHashSet<>();
+        Set<TypeElement> superClasses = new LinkedHashSet<>();
         Set<Element> fields = new LinkedHashSet<>();
         Set<Element> methods = new LinkedHashSet<>();
         Set<Element> constructors = new LinkedHashSet<>();
 
-        getSuperMcClasses(superMcs, type);
+        getSuperMcClasses(superMcs, superClasses, type);
 
         outer:
         for (Element el : type.getEnclosedElements()) {
@@ -125,6 +130,71 @@ public class ClassParser extends AbstractParser {
                     case CONSTRUCTOR -> constructors.add(el);
                     default -> {}
                 }
+            }
+        }
+
+        Set<Name> methodNames = new LinkedHashSet<>();
+        for (Element m : methods) {
+            if (!m.getModifiers().contains(Modifier.STATIC)) {
+                methodNames.add(m.getSimpleName());
+            }
+        }
+        // add super methods with same name to this class because js extending works a bit different
+        if (!methodNames.isEmpty()) {
+            Set<Element> superMethods = new LinkedHashSet<>();
+            for (TypeElement clz : superClasses) {
+                outer:
+                for (Element sel : clz.getEnclosedElements()) {
+                    if (sel.getKind() != ElementKind.METHOD) continue;
+                    if (sel.getModifiers().contains(Modifier.STATIC)) continue;
+                    Name name = sel.getSimpleName();
+                    if (!methodNames.contains(name)) continue;
+                    for (Element m : methods) {
+                        if (!m.getSimpleName().equals(name)) continue;
+                        if (Main.elementUtils.overrides(
+                            (ExecutableElement) m,
+                            (ExecutableElement) sel,
+                            type
+                        )) continue outer;
+                    }
+                    for (Element m : superMethods) {
+                        if (!m.getSimpleName().equals(name)) continue;
+                        if (Main.elementUtils.overrides(
+                            (ExecutableElement) m,
+                            (ExecutableElement) sel,
+                            type
+                        )) continue outer;
+                    }
+                    superMethods.add(sel);
+                }
+            }
+            if (!superMethods.isEmpty()) {
+                Set<Element> merged = new LinkedHashSet<>();
+                Set<Name> superMethodNames = new LinkedHashSet<>();
+                Name next = null;
+                for (Element m : superMethods) superMethodNames.add(m.getSimpleName());
+                for (Element m : methods) {
+                    if (next != null) {
+                        if (m.getSimpleName().equals(next)) {
+                            merged.add(m);
+                            continue;
+                        }
+                        for (Element sm : superMethods) {
+                            if (sm.getSimpleName().equals(next)) merged.add(sm);
+                        }
+                        superMethodNames.remove(next);
+                        next = null;
+                    }
+                    Name name = m.getSimpleName();
+                    if (superMethodNames.contains(name)) next = name;
+                    merged.add(m);
+                }
+                if (next != null) {
+                    for (Element sm : superMethods) {
+                        if (!sm.getSimpleName().equals(next)) merged.add(sm);
+                    }
+                }
+                methods = merged;
             }
         }
 
