@@ -109,12 +109,13 @@ public class ClassParser extends AbstractParser {
                         if (el.getAnnotation(Override.class) != null) {
                             for (TypeElement clz : superMcs) {
                                 for (Element sel : clz.getEnclosedElements()) {
-                                    if (sel.getKind() != ElementKind.METHOD) continue;
-                                    if (Main.elementUtils.overrides(
-                                        (ExecutableElement) el,
-                                        (ExecutableElement) sel,
-                                        type
-                                    )) continue outer;
+                                    if (sel.getKind() == ElementKind.METHOD) {
+                                        if (Main.elementUtils.overrides(
+                                            (ExecutableElement) el,
+                                            (ExecutableElement) sel,
+                                            type
+                                        )) continue outer;
+                                    }
                                 }
                             }
                         }
