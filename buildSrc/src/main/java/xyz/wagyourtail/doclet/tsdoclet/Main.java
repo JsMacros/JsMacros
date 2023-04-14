@@ -141,7 +141,7 @@ public class Main implements Doclet {
                 if (!duplicateCheck.add(clz.getClassName(false))) continue;
                 clz.isPackage = false; // to trick it transfer full type
                 outputTS.append("\ntype ").append(clz.getClassName(true, true))
-                    .append(" = Packages.").append(clz.getQualifiedType()).append(";");
+                    .append(" = ").append(clz.getQualifiedType()).append(";");
                 clz.isPackage = true;
             }
 
