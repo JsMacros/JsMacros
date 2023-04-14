@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Set;
 
 public class ClassParser extends AbstractParser {
+    private Set<TypeElement> superMcClasses;
+
     public ClassParser(TypeElement type) {
         super(type);
     }
@@ -68,17 +70,17 @@ public class ClassParser extends AbstractParser {
         return s.toString();
     }
 
-    private void getSuperMcClasses(Set<TypeElement> mc, Set<TypeElement> other, TypeElement c) {
+    private void getSuperMcClasses(Set<TypeElement> set, TypeElement c) {
         if (!c.getKind().isInterface()) {
             TypeMirror sup = c.getSuperclass();
             if (sup instanceof DeclaredType) {
                 TypeElement supe = (TypeElement) ((DeclaredType) sup).asElement();
                 if (transformType(sup).equals("/* minecraft class */ any")) {
-                    mc.add(supe);
+                    superMcClasses.add(supe);
                 } else {
-                    other.add(supe);
+                    set.add(supe);
                 }
-                getSuperMcClasses(mc, other, supe);
+                getSuperMcClasses(set, supe);
             }
         }
 
@@ -87,44 +89,50 @@ public class ClassParser extends AbstractParser {
             for (TypeMirror ifa : ifaces) {
                 TypeElement ifae = (TypeElement) ((DeclaredType) ifa).asElement();
                 if (transformType(ifa).equals("/* minecraft class */ any")) {
-                    mc.add(ifae);
+                    superMcClasses.add(ifae);
                 } else {
-                    other.add(ifae);
+                    set.add(ifae);
                 }
-                getSuperMcClasses(mc, other, ifae);
+                getSuperMcClasses(set, ifae);
             }
         }
     }
 
+    private boolean isObfuscated(Element m) {
+        return isObfuscated(m, type);
+    }
+
+    private boolean isObfuscated(Element m, TypeElement type) {
+        if (m.getAnnotation(Override.class) == null) return false;
+        if (m.getKind() != ElementKind.METHOD) return false;
+        for (TypeElement clz : superMcClasses) {
+            for (Element sel : clz.getEnclosedElements()) {
+                if (sel.getKind() != ElementKind.METHOD) continue;
+                if (Main.elementUtils.overrides(
+                    (ExecutableElement) m,
+                    (ExecutableElement) sel,
+                    type
+                )) return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String genTSInterface() {
-        Set<TypeElement> superMcs = new LinkedHashSet<>();
+        superMcClasses = new LinkedHashSet<>();
         Set<TypeElement> superClasses = new LinkedHashSet<>();
         Set<Element> fields = new LinkedHashSet<>();
         Set<Element> methods = new LinkedHashSet<>();
         Set<Element> constructors = new LinkedHashSet<>();
 
-        getSuperMcClasses(superMcs, superClasses, type);
+        getSuperMcClasses(superClasses, type);
 
-        outer:
         for (Element el : type.getEnclosedElements()) {
             if (el.getModifiers().contains(Modifier.PUBLIC)) {
                 switch (el.getKind()) {
                     case METHOD -> {
-                        if (el.getAnnotation(Override.class) != null) {
-                            for (TypeElement clz : superMcs) {
-                                for (Element sel : clz.getEnclosedElements()) {
-                                    if (sel.getKind() == ElementKind.METHOD) {
-                                        if (Main.elementUtils.overrides(
-                                            (ExecutableElement) el,
-                                            (ExecutableElement) sel,
-                                            type
-                                        )) continue outer;
-                                    }
-                                }
-                            }
-                        }
-                        methods.add(el);
+                        if (!isObfuscated(el)) methods.add(el);
                     }
                     case FIELD, ENUM_CONSTANT -> fields.add(el);
                     case CONSTRUCTOR -> constructors.add(el);
@@ -165,7 +173,7 @@ public class ClassParser extends AbstractParser {
                             type
                         )) continue outer;
                     }
-                    superMethods.add(sel);
+                    if (!isObfuscated(sel, clz)) superMethods.add(sel);
                 }
             }
             if (!superMethods.isEmpty()) {
