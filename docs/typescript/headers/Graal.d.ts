@@ -368,6 +368,8 @@ declare namespace Packages {
 
             }
 
+            export { Class, Object, Comparable, Array, StackTraceElement, Throwable, Iterable };
+
         }
 
         namespace util {
@@ -469,6 +471,8 @@ declare namespace Packages {
             };
             interface Set<T> extends Collection<T> {}
 
+            export { Collection, List, Map, Set };
+
         }
 
         namespace io {
@@ -530,6 +534,8 @@ declare namespace Packages {
 
             const Serializable: JavaInterfaceStatics;
             interface Serializable extends JavaObject {}
+
+            export { File, Serializable };
 
         }
 
@@ -605,6 +611,8 @@ declare namespace Packages {
 
             }
 
+            export { URL, URI };
+
         }
 
     }
@@ -620,13 +628,10 @@ declare namespace Packages {
 type JsArray<T> = T[];
 type JsIterable<T> = Iterable<T>;
 
-type _  = { [none: symbol]: never }; // to trick vscode to rename types
-type _r = { [none: symbol]: never };
-
-type JavaObject                    = Packages.java.lang.Object & _;
-type JavaClass<T = any>            = Packages.java.lang.Class<T>;
-type JavaArray<T = any>            = Packages.java.lang.Array<T>;
-type JavaCollection<T = any>       = Packages.java.util.Collection<T>;
-type JavaList<T = any>             = Packages.java.util.List<T>;
-type JavaSet<T = any>              = Packages.java.util.Set<T>;
-type JavaMap<K = any, V = any>     = Packages.java.util.Map<K, V>;
+type JavaObject                = Packages.java.lang.Object;
+type JavaClass<T = any>        = Packages.java.lang.Class<T>;
+type JavaArray<T = any>        = Packages.java.lang.Array<T>;
+type JavaCollection<T = any>   = Packages.java.util.Collection<T>;
+type JavaList<T = any>         = Packages.java.util.List<T>;
+type JavaSet<T = any>          = Packages.java.util.Set<T>;
+type JavaMap<K = any, V = any> = Packages.java.util.Map<K, V>;

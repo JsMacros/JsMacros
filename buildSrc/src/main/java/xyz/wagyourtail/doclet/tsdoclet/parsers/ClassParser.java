@@ -32,7 +32,7 @@ public class ClassParser extends AbstractParser {
             if (params != null && !params.isEmpty()) {
                 s.append("<");
                 for (TypeParameterElement param : params) {
-                    s.append(transformType(param.asType())).append(", ");
+                    s.append(transformType(param)).append(", ");
                 }
                 s.setLength(s.length() - 2);
                 s.append(">");
@@ -43,7 +43,7 @@ public class ClassParser extends AbstractParser {
 
     private String buildExtends() {
         StringBuilder s = new StringBuilder(" extends ");
-        String sup = transformType(type.getSuperclass(), true);
+        String sup = transformType(type.getSuperclass());
         if (sup.equals("void") || sup.equals("any")) {
             s.append("JavaObject");
         } else if (sup.equals("/* minecraft class */ any")) {

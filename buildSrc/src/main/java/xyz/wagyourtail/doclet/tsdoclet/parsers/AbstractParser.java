@@ -39,10 +39,15 @@ public abstract class AbstractParser {
     );
 
     private static Set<String> loggedTypes = new HashSet<>();
+    private String path;
     protected TypeElement type;
+    protected boolean isPackage = true;
 
     public AbstractParser(TypeElement type) {
         this.type = type;
+        Element elem = type.getEnclosingElement();
+        while (!(elem instanceof PackageElement)) elem = elem.getEnclosingElement();
+        this.path = ((PackageElement) elem).getQualifiedName().toString();
     }
 
     public String genFields(Set<Element> fields) {
@@ -98,7 +103,7 @@ public abstract class AbstractParser {
         DocletReplaceReturn replace = field.getAnnotation(DocletReplaceReturn.class);
 
         return genComment(field) + (field.getModifiers().contains(Modifier.FINAL) ? "readonly " : "") +
-            field.getSimpleName() + ": " + (replace != null ? replace.value() : shortify(field)) + ";";
+            field.getSimpleName() + ": " + (replace != null ? replace.value() : transformType(field)) + ";";
     }
 
     public String genMethod(ExecutableElement method) {
@@ -115,7 +120,7 @@ public abstract class AbstractParser {
             if (typeParams != null && !typeParams.isEmpty()) {
                 s.append("<");
                 for (TypeParameterElement param : typeParams) {
-                    s.append(shortify(param)).append(", ");
+                    s.append(transformType(param)).append(", ");
                 }
                 s.setLength(s.length() - 2);
                 s.append(">");
@@ -132,7 +137,7 @@ public abstract class AbstractParser {
                 VariableElement restParam = method.isVarArgs() ? params.get(params.size() - 1) : null;
                 for (VariableElement param : params) {
                     if (restParam != null && restParam.equals(param)) s.append("...");
-                    s.append(param.getSimpleName()).append(": ").append(shortify(param)).append(", ");
+                    s.append(param.getSimpleName()).append(": ").append(transformType(param)).append(", ");
                 }
                 s.setLength(s.length() - 2);
             }
@@ -142,7 +147,7 @@ public abstract class AbstractParser {
         if (replace3 != null) {
             s.append(replace3.value());
         } else {
-            s.append(transformType(method.getReturnType(), true));
+            s.append(transformType(method.getReturnType()));
         }
         s.append(";");
 
@@ -163,7 +168,7 @@ public abstract class AbstractParser {
             if (typeParams != null && !typeParams.isEmpty()) {
                 s.append("<");
                 for (TypeParameterElement param : typeParams) {
-                    s.append(shortify(param)).append(", ");
+                    s.append(transformType(param)).append(", ");
                 }
                 s.setLength(s.length() - 2);
                 s.append(">");
@@ -179,19 +184,19 @@ public abstract class AbstractParser {
             VariableElement restParam = constructor.isVarArgs() ? params.get(params.size() - 1) : null;
             for (VariableElement param : params) {
                 if (restParam != null && restParam.equals(param)) s.append("...");
-                s.append(param.getSimpleName()).append(": ").append(shortify(param)).append(", ");
+                s.append(param.getSimpleName()).append(": ").append(transformType(param)).append(", ");
             }
             s.setLength(s.length() - 2);
         }
-        s.append("): ").append(getShortifiedType()).append(";");
+        s.append("): ").append(transformType(type)).append(";");
         return s.toString();
     }
 
-    public String transformType(TypeMirror type) {
-        return transformType(type, false);
+    public String transformType(Element elem) {
+        return transformType(elem.asType());
     }
 
-    public String transformType(TypeMirror type, boolean shortify) {
+    public String transformType(TypeMirror type) {
         switch (type.getKind()) {
             case BOOLEAN -> {
                 return "boolean";
@@ -212,34 +217,22 @@ public abstract class AbstractParser {
                 }
 
                 boolean shortified = false;
-                String classpath = ((PackageElement) typeElement).getQualifiedName() + "";
-                if (shortify && classpath.startsWith("xyz.")) {
-                    if (classpath.equals("xyz.wagyourtail.jsmacros.core.event") &&
-                        rawType.toString().equals("BaseEvent")) return "Events.BaseEvent";
-                    shortified = true;
-                    rawType.insert(0, "$");
-                } else if (shortify && javaShortifies.contains(classpath + "." + rawType.toString())) {
+                String classpath = ((PackageElement) typeElement).getQualifiedName().toString();
+                if (javaShortifies.contains(classpath + "." + rawType.toString())) {
                     shortified = true;
                     rawType.insert(0, "Java");
+                } else if (isPackage && classpath.equals(this.path)) {
+                    shortified = true;
                 } else rawType.insert(0, classpath + ".");
 
                 List<? extends TypeMirror> params = ((DeclaredType) type).getTypeArguments();
                 if (params != null && !params.isEmpty()) {
-                    boolean skipAny = true;
-                    if (shortified) for (TypeMirror param : params) {
-                        if (!transformType(param).endsWith("any")) {
-                            skipAny = false;
-                            break;
-                        }
+                    rawType.append("<");
+                    for (TypeMirror param : params) {
+                        rawType.append(transformType(param)).append(", ");
                     }
-                    if (!shortified || !skipAny) {
-                        rawType.append("<");
-                        for (TypeMirror param : params) {
-                            rawType.append(transformType(param, shortify)).append(", ");
-                        }
-                        rawType.setLength(rawType.length() - 2);
-                        rawType.append(">");
-                    }
+                    rawType.setLength(rawType.length() - 2);
+                    rawType.append(">");
                 }
 
                 if (rawType.toString().startsWith("net.minecraft")) return "/* minecraft class */ any";
@@ -280,7 +273,7 @@ public abstract class AbstractParser {
                 return ((TypeVariable) type).asElement().getSimpleName().toString();
             }
             case ARRAY -> {
-                return transformType(((ArrayType) type).getComponentType(), shortify) + "[]";
+                return transformType(((ArrayType) type).getComponentType()) + "[]";
             }
             case WILDCARD -> {
                 return "any";
@@ -343,16 +336,8 @@ public abstract class AbstractParser {
         return type;
     }
 
-    public String getTypeString() {
-        return transformType(type.asType());
-    }
-
-    public String getShortifiedType() {
-        return shortify(type);
-    }
-
-    public String shortify(Element type) {
-        return transformType(type.asType(), true);
+    public String getQualifiedType() {
+        return isPackage ? this.path + "." + transformType(type) : transformType(type);
     }
 
     public static void checkEnumType(Element element) {

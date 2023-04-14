@@ -88,6 +88,7 @@ public class PackageTree {
             }
         }
 
+        StringBuilder exports = new StringBuilder("");
         StringBuilder s = new StringBuilder("namespace ");
         if (tsReservedWords.contains(pkgName)) {
             System.out.println("Escaped typescript reserved word: " + pkgName + " -> _" + pkgName);
@@ -95,31 +96,32 @@ public class PackageTree {
         }
         s.append(pkgName).append(" {");
 
-        for (String value : compiledClasses.values()) {
-            s.append("\n\n").append(StringHelpers.tabIn(value));
+        for (ClassParser key : compiledClasses.keySet()) {
+            if (exports.length() > 0) exports.append(",\n");
+            exports.append(key.getClassName(false));
+            s.append("\n\n").append(StringHelpers.tabIn(compiledClasses.get(key)));
         }
-        Set<PackageTree> escapes = new LinkedHashSet<>();
+        boolean escaped = false;
         for (PackageTree value : children.values()) {
+            if (exports.length() > 0) exports.append(",\n");
             if (tsReservedWords.contains(value.pkgName)) {
-                escapes.add(value);
-                continue;
+                exports.append("_").append(value.pkgName).append(" as ");
+                escaped = true;
             }
+            exports.append(value.pkgName);
             s.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
         }
 
-        if (s.charAt(s.length() - 1) == '{') s.setLength(0);
-        else s.append("\n\n}");
-
-        if (!escapes.isEmpty()) {
-            if (s.length() > 0) s.append("\n");
-            s.append("namespace ").append(pkgName).append(" {");
-            for (PackageTree value : escapes) {
-                s.append("\n\n").append("    export { _").append(value.pkgName).append(" as ")
-                    .append(value.pkgName).append(" };\n")
-                    .append(StringHelpers.tabIn(value.genTSTreeIntern()));
+        if (escaped || compiledClasses.size() > 0) {
+            if (exports.length() < 64) {
+                s.append("\n\n    export { ").append(exports.toString().replaceAll("\n", " ")).append(" };");
+            } else {
+                s.append("\n\n    export {\n")
+                    .append(StringHelpers.tabIn(exports.toString(), 2))
+                .append("\n    };");
             }
-            s.append("\n\n}");
         }
+        s.append("\n\n}");
 
         return s.toString();
     }

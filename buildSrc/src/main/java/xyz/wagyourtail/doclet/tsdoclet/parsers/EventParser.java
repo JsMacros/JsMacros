@@ -14,6 +14,7 @@ public class EventParser extends AbstractParser {
     public EventParser(TypeElement type, String name) {
         super(type);
         this.name = name;
+        this.isPackage = false;
     }
 
     public String getName() {

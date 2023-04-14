@@ -15,6 +15,7 @@ public class LibraryParser extends AbstractParser {
     public LibraryParser(TypeElement type, String name) {
         super(type);
         this.name = name;
+        this.isPackage = false;
     }
 
     @Override

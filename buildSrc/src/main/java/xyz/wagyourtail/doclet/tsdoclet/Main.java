@@ -136,24 +136,22 @@ public class Main implements Doclet {
             outputTS.append("\n\ndeclare ").append(classes.genTSTree()).append("\n");
 
             int maxLen = 0;
-            List<ClassParser> xyzClasses = classes.getXyzClasses();
-            for (ClassParser clz : xyzClasses) { // check length
-                String type = clz.getTypeString();
+            Map<String, String> shortifies = new LinkedHashMap<>();
+            Set<String> duplicateCheck = new HashSet<>();
+            for (ClassParser clz : classes.getXyzClasses()) { // check length
+                if (duplicateCheck.contains(clz.getClassName(false))) continue;
+                duplicateCheck.add(clz.getClassName(false));
                 String shortified = clz.getClassName(true).replaceAll("([A-Z])(?=[,>])", "$1 = any");
+                shortifies.put(shortified, clz.getQualifiedType());
                 if (shortified.length() > maxLen) maxLen = shortified.length();
             }
 
-            for (ClassParser clz : xyzClasses) {
-                String type = clz.getTypeString();
-                String shortified = clz.getClassName(true).replaceAll("([A-Z])(?=[,>])", "$1 = any");
-
-                // append shortify, for jsdoc in scripts
-                outputTS.append("\ntype  ").append(String.format("%-" + maxLen + "s", shortified))
-                    .append(" = ").append(type.endsWith(">") ? "     " : "_  & ").append(type).append(";");
-                // append redirects, for this d.ts file
-                outputTS.append("\ntype $").append(String.format("%-" + maxLen + "s", shortified))
-                    .append(" = ").append(type.endsWith(">") ? "     " : "_r & ").append(type).append(";");
-            }
+            // shortify, for jsdoc in scripts
+            String format = "%-" + maxLen + "s";
+            for (String name : shortifies.keySet()) {
+                outputTS.append("\ntype ").append(String.format(format, name))
+                    .append(" = Packages.").append(shortifies.get(name)).append(";");
+            } // .append(type.endsWith(">") ? "     " : "_  & ")
 
             // append number enums here because they are very unlikely to change
             outputTS.append("\n\n// Enum types\n").append(
