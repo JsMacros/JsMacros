@@ -274,7 +274,7 @@ public class ClassParser extends AbstractParser {
             .append(StringHelpers.tabIn(genMethods(methods))).append("\n")
         .append("}");
 
-        return s.toString().replaceAll("\\{[\n ]+\\}", "{}").replaceAll("\n\n\n+", "\n\n");
+        return s.toString().trim().replaceAll("\\{[\n ]+\\}", "{}").replaceAll("\n\n\n+", "\n\n");
     }
 
 }
