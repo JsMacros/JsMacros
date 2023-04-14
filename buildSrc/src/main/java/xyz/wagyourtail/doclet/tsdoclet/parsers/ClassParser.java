@@ -7,6 +7,7 @@ import xyz.wagyourtail.StringHelpers;
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
 import java.lang.Override;
 import java.util.stream.Collectors;
 import java.util.LinkedHashSet;
@@ -21,6 +22,10 @@ public class ClassParser extends AbstractParser {
     }
 
     public String getClassName(boolean typeParams) {
+        return getClassName(typeParams, false);
+    }
+
+    public String getClassName(boolean typeParams, boolean defaultToAny) {
         StringBuilder s = new StringBuilder(type.getSimpleName());
         Element type = this.type.getEnclosingElement();
         while (type.getKind() == ElementKind.INTERFACE || type.getKind() == ElementKind.CLASS) {
@@ -32,7 +37,15 @@ public class ClassParser extends AbstractParser {
             if (params != null && !params.isEmpty()) {
                 s.append("<");
                 for (TypeParameterElement param : params) {
-                    s.append(transformType(param)).append(", ");
+                    s.append(transformType(param));
+                    String ext = transformType(((TypeVariable) param.asType()).getUpperBound());
+                    if (!ext.endsWith("any")) {
+                        s.append(" extends ").append(ext);
+                        if (defaultToAny) s.append(" = any");
+                    } else if (ext.equals("/* minecraft class */ any")) {
+                        s.append(" = /* minecraft class */ any");
+                    } else if (defaultToAny) s.append(" = any");
+                    s.append(", ");
                 }
                 s.setLength(s.length() - 2);
                 s.append(">");

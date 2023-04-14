@@ -135,23 +135,15 @@ public class Main implements Doclet {
 
             outputTS.append("\n\ndeclare ").append(classes.genTSTree()).append("\n");
 
-            int maxLen = 0;
-            Map<String, String> shortifies = new LinkedHashMap<>();
-            Set<String> duplicateCheck = new HashSet<>();
-            for (ClassParser clz : classes.getXyzClasses()) { // check length
-                if (duplicateCheck.contains(clz.getClassName(false))) continue;
-                duplicateCheck.add(clz.getClassName(false));
-                String shortified = clz.getClassName(true).replaceAll("([A-Z])(?=[,>])", "$1 = any");
-                shortifies.put(shortified, clz.getQualifiedType());
-                if (shortified.length() > maxLen) maxLen = shortified.length();
-            }
-
             // shortify, for jsdoc in scripts
-            String format = "%-" + maxLen + "s";
-            for (String name : shortifies.keySet()) {
-                outputTS.append("\ntype ").append(String.format(format, name))
-                    .append(" = Packages.").append(shortifies.get(name)).append(";");
-            } // .append(type.endsWith(">") ? "     " : "_  & ")
+            Set<String> duplicateCheck = new HashSet<>();
+            for (ClassParser clz : classes.getXyzClasses()) {
+                if (!duplicateCheck.add(clz.getClassName(false))) continue;
+                clz.isPackage = false; // to trick it transfer full type
+                outputTS.append("\ntype ").append(clz.getClassName(true, true))
+                    .append(" = Packages.").append(clz.getQualifiedType()).append(";");
+                clz.isPackage = true;
+            }
 
             // append number enums here because they are very unlikely to change
             outputTS.append("\n\n// Enum types\n").append(

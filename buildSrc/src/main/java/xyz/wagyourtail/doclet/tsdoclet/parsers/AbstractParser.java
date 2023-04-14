@@ -41,7 +41,7 @@ public abstract class AbstractParser {
     private static Set<String> loggedTypes = new HashSet<>();
     private String path;
     protected TypeElement type;
-    protected boolean isPackage = true;
+    public boolean isPackage = true;
 
     public AbstractParser(TypeElement type) {
         this.type = type;
