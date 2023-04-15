@@ -43,6 +43,23 @@ public abstract class AbstractParser {
     protected TypeElement type;
     public boolean isPackage = true;
 
+    public static TypeElement objectElement = null;
+    public static Set<ExecutableElement> objectMethods = null;
+    public static Set<Name> objectMethodNames = null;
+
+    public static void initObjectElement() {
+        objectElement = Main.elementUtils.getTypeElement("java.lang.Object");
+        objectMethods = new HashSet<>();
+        for (Element oel : objectElement.getEnclosedElements()) {
+            if (oel.getKind() != ElementKind.METHOD) continue;
+            if (!oel.getModifiers().contains(Modifier.PUBLIC)) continue;
+            if (oel.getModifiers().contains(Modifier.STATIC)) continue;
+            objectMethods.add((ExecutableElement) oel);
+        }
+        objectMethodNames = new HashSet<>();
+        for (Element m : objectMethods) objectMethodNames.add(m.getSimpleName());
+    }
+
     public AbstractParser(TypeElement type) {
         this.type = type;
         Element elem = type.getEnclosingElement();
@@ -351,6 +368,16 @@ public abstract class AbstractParser {
             }
             Main.enumTypes.put(enumType.name(), enumType.type());
         }
+    }
+
+    protected boolean isObjectMethod(Element m) {
+        if (!objectMethodNames.contains(m.getSimpleName())
+        ||  m.getKind() != ElementKind.METHOD
+        ||  Main.treeUtils.getDocCommentTree(m) != null) return false;
+        for (ExecutableElement om : objectMethods) {
+            if (Main.elementUtils.overrides((ExecutableElement) m, om, type)) return true;
+        }
+        return false;
     }
 
     @Override

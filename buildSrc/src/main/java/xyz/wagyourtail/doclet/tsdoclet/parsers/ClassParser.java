@@ -145,7 +145,7 @@ public class ClassParser extends AbstractParser {
             if (el.getModifiers().contains(Modifier.PUBLIC)) {
                 switch (el.getKind()) {
                     case METHOD -> {
-                        if (!isObfuscated(el)) methods.add(el);
+                        if (!isObfuscated(el) && !isObjectMethod(el)) methods.add(el);
                     }
                     case FIELD, ENUM_CONSTANT -> fields.add(el);
                     case CONSTRUCTOR -> constructors.add(el);

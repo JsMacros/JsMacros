@@ -4,9 +4,13 @@ import xyz.wagyourtail.StringHelpers;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.Map;
 
 public class EventParser extends AbstractParser {
     protected String name;
@@ -36,10 +40,21 @@ public class EventParser extends AbstractParser {
             }
         }
 
-        return "interface " + name + " extends BaseEvent {\n\n    " +
-            (StringHelpers.tabIn(genFields(fields).trim()) + "\n\n" +
-            StringHelpers.tabIn(genMethods(methods).trim())).trim() +
-            "\n\n}";
+        Map<Name, Set<Element>> methodMap = new LinkedHashMap<>();
+        for (Element m : methods) {
+            methodMap.computeIfAbsent(m.getSimpleName(), k -> new HashSet<>()).add(m);
+        }
+        outer:
+        for (Name name : methodMap.keySet()) {
+            if (!objectMethodNames.contains(name)) continue;
+            for (Element m : methodMap.get(name)) if (!isObjectMethod(m)) continue outer;
+            methods.removeAll(methodMap.get(name));
+        }
+
+        return ("interface " + name + " extends BaseEvent {\n\n" +
+                StringHelpers.tabIn(genFields(fields)) + "\n" +
+                StringHelpers.tabIn(genMethods(methods)) +
+            "\n}").replaceAll("\\{[\n ]+\\}", "{}").replaceAll("\n\n\n+", "\n\n");
     }
 
 }

@@ -25,6 +25,10 @@ public class LibraryParser extends AbstractParser {
 
     @Override
     public String genTSInterface() {
+        String comment = super.genComment(type).trim()
+            .replaceAll("\n \\*  An instance of this class is passed to scripts as the `\\w+` variable\\.", "");
+        if (comment.length() > 0) comment += "\n";
+
         Set<Element> methods = new LinkedHashSet<>();
 
         for (Element el : type.getEnclosedElements()) {
@@ -33,7 +37,7 @@ public class LibraryParser extends AbstractParser {
             }
         }
 
-        return "namespace " + name + " {\n" +
+        return comment + "declare namespace " + name + " {\n" +
             StringHelpers.tabIn(genMethods(methods)) +
             "\n}";
     }

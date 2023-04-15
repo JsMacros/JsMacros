@@ -9,9 +9,7 @@ import xyz.wagyourtail.StringHelpers;
 import xyz.wagyourtail.doclet.options.IgnoredItem;
 import xyz.wagyourtail.doclet.options.OutputDirectory;
 import xyz.wagyourtail.doclet.options.Version;
-import xyz.wagyourtail.doclet.tsdoclet.parsers.ClassParser;
-import xyz.wagyourtail.doclet.tsdoclet.parsers.EventParser;
-import xyz.wagyourtail.doclet.tsdoclet.parsers.LibraryParser;
+import xyz.wagyourtail.doclet.tsdoclet.parsers.*;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
@@ -60,6 +58,8 @@ public class Main implements Doclet {
         Set<? extends Element> elements = environment.getIncludedElements();
         treeUtils = environment.getDocTrees();
         elementUtils = environment.getElementUtils();
+
+        AbstractParser.initObjectElement();
 
         Set<LibraryParser> libraryClasses = new LinkedHashSet<>();
         Set<EventParser> eventClasses = new LinkedHashSet<>();
@@ -141,16 +141,7 @@ public class Main implements Doclet {
             outputTS.append("\n\n}");
 
             for (LibraryParser lib : libraryClasses) {
-                String comment = lib.genComment(lib.getType());
-                if (comment.length() > 9) { // 9 because of the `function ` added in LibraryParser
-                    outputTS.append("\n").append(
-                        comment.substring(0, comment.length() - 9)
-                            .replaceAll("\n \\*  An instance of this class is passed to scripts as the `\\w+` variable\\.", "")
-                    );
-                } else {
-                    outputTS.append("\n\n");
-                }
-                outputTS.append("declare ").append(lib.genTSInterface());
+                outputTS.append("\n\n").append(lib.genTSInterface());
             }
 
             outputTS.append("\n\ndeclare ").append(classes.genTSTree()).append("\n");
