@@ -95,15 +95,35 @@ public class Main implements Doclet {
 
         try {
             
-            outputTS.append("\n").append(
+            outputTS.append(
                 """
+                \n\
+                /**
+                 * The global context  \n\
+                 * If you're trying to access the context in {@link JsMacros.on},  \n\
+                 * use the second param of callback
+                 */
+                declare const context: EventContainer;
+                /**
+                 * Cast event in javascript:  \n\
+                 * Remove the `\\` between `*` and `///` because jsdoc doesn't escape it
+                 * ```js
+                 * /** @type {Events.Service} *\\/// @ts-ignore
+                 * ```
+                 * ```js
+                 * const e = event;
+                 * ```
+                 * Cast event in typescript:
+                 * ```ts
+                 * const e = event as Events.Service;
+                 * ```
+                 */
                 declare const event: Events.BaseEvent;
                 declare const file: Packages.java.io.File;
-                declare const context: EventContainer;
 
                 declare namespace Events {
 
-                    export interface BaseEvent extends JavaObject {
+                    interface BaseEvent extends JavaObject {
 
                         getEventName(): string;
 
