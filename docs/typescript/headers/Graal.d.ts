@@ -37,6 +37,8 @@ declare namespace Polyglot {
  */
 declare namespace Java {
 
+    // don't touch this order unless you know what you're doing
+    // it's for optimizing, prevent it from flattening package if only the return type is needed
     export function type<C extends string>(className: C): GetJavaType<C>;
     export function type<C extends JavaTypeList>(className: C): GetJavaType<C>;
     export function from<T>(javaData: JavaArray<T>): T[];
@@ -617,6 +619,7 @@ declare namespace Packages {
 
     }
 
+    // remove this if someone made a d.ts for minecraft classes
     namespace net {
 
         export const minecraft: any;
