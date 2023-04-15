@@ -253,7 +253,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
         if (rotateCenter) {
             matrices.translate(width.getAsInt() / 2d, height.getAsInt() / 2d, 0);
         }
-        matrices.multiply(new Quaternionf().rotateLocalZ(rotation));
+        matrices.multiply(new Quaternionf().rotateLocalZ((float) Math.toRadians(rotation)));
         if (rotateCenter) {
             matrices.translate(-width.getAsInt() / 2d, -height.getAsInt() / 2d, 0);
         }

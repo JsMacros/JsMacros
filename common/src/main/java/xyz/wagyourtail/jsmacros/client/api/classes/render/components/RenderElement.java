@@ -28,7 +28,7 @@ public interface RenderElement extends Drawable {
         if (rotateAroundCenter) {
             matrices.translate(width / 2, height / 2, 0);
         }
-        matrices.multiply(new Quaternionf().rotateLocalZ(rotation));
+        matrices.multiply(new Quaternionf().rotateLocalZ((float) Math.toRadians(rotation)));
         if (rotateAroundCenter) {
             matrices.translate(-width / 2, -height / 2, 0);
         }
