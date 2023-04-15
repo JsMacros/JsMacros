@@ -112,6 +112,9 @@ public class PackageTree {
             s.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
         }
 
+        // exporting namespace sometimes break things
+        // so it might be the best to split them (classes and namespaces)
+        // but the output looks fine for now, i'll just put these comment here for info
         if (escaped || compiledClasses.size() > 0) {
             if (exports.length() < 64) {
                 s.append("\n\n    export { ").append(exports.toString().replaceAll("\n", " ")).append(" };");

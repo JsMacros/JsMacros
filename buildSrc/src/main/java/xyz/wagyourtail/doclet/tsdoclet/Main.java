@@ -133,6 +133,7 @@ public class Main implements Doclet {
                 outputTS.append("\n\n" + StringHelpers.tabIn(event.genTSInterface()));
             }
 
+            // for type-safe event listener
             outputTS.append("\n\n}\n\ninterface Events {\n");
             for (EventParser event : eventClasses) {
                 outputTS.append("\n    ").append(event.getName())
@@ -146,7 +147,8 @@ public class Main implements Doclet {
 
             outputTS.append("\n\ndeclare ").append(classes.genTSTree()).append("\n");
 
-            // shortify, for jsdoc in scripts
+            // short alias of jsmacros types, for jsdoc / type casting / type annotation and more
+            // also used by some DocletReplace annotations
             Set<String> duplicateCheck = new HashSet<>();
             for (ClassParser clz : classes.getXyzClasses()) {
                 if (!duplicateCheck.add(clz.getClassName(false))) continue;

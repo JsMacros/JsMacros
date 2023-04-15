@@ -44,6 +44,8 @@ public class EventParser extends AbstractParser {
         for (Element m : methods) {
             methodMap.computeIfAbsent(m.getSimpleName(), k -> new HashSet<>()).add(m);
         }
+        // remove unnecessary object method overrides
+        // mainly toString(): string;
         outer:
         for (Name name : methodMap.keySet()) {
             if (!objectMethodNames.contains(name)) continue;
