@@ -543,7 +543,7 @@ public class FJsMacros extends PerExecLibrary {
      */
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E")
-    @DocletReplaceReturn("{ event: Events[E], context: EventContainer }")
+    @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
     public EventAndContext waitForEvent(String event) throws InterruptedException {
         return waitForEvent(event, null, null);
     }
@@ -557,8 +557,8 @@ public class FJsMacros extends PerExecLibrary {
      */
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E, filter: MethodWrapper<Events[E], undefined, boolean>")
-    @DocletReplaceReturn("{ event: Events[E], context: EventContainer }")
-    public EventAndContext waitForEvent(String event,  MethodWrapper<BaseEvent, Object, Boolean, ?> filter) throws InterruptedException {
+    @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
+    public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean, ?> filter) throws InterruptedException {
         return waitForEvent(event, filter, null);
     }
 
@@ -575,7 +575,7 @@ public class FJsMacros extends PerExecLibrary {
      */
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E, filter: MethodWrapper<Events[E], undefined, boolean>, runBeforeWaiting: MethodWrapper<JavaObject, JavaObject, JavaObject>")
-    @DocletReplaceReturn("{ event: Events[E], context: EventContainer }")
+    @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
     public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean, ?> filter, MethodWrapper<Object, Object, Object, ?> runBeforeWaiting) throws InterruptedException {
         // event return values
         final BaseEvent[] ev = {null};

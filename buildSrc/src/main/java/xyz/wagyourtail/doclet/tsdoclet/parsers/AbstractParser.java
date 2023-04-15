@@ -162,6 +162,7 @@ public abstract class AbstractParser {
         s.append("): ");
         DocletReplaceReturn replace3 = method.getAnnotation(DocletReplaceReturn.class);
         if (replace3 != null) {
+            transformType(method.getReturnType()); // to add type to the Packages
             s.append(replace3.value());
         } else {
             s.append(transformType(method.getReturnType()));
