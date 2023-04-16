@@ -17,7 +17,7 @@ public interface IScreenInternal {
 
     void jsmacros_keyPressed(int keyCode, int scanCode, int modifiers);
 
-    GuiButton getFocused();
+    ButtonWidget getFocused();
 
     boolean mouseScrolled(int mouseX, int mouseY, int amount);
 
