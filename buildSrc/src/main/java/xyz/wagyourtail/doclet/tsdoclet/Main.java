@@ -150,13 +150,15 @@ public class Main implements Doclet {
             // short alias of jsmacros types, for jsdoc / type casting / type annotation and more
             // also used by some DocletReplace annotations
             Set<String> duplicateCheck = new HashSet<>();
+            Set<String> sorter = new TreeSet<>();
             for (ClassParser clz : classes.getXyzClasses()) {
                 if (!duplicateCheck.add(clz.getClassName(false))) continue;
                 clz.isPackage = false; // to trick it transfer full type
-                outputTS.append("\ntype ").append(clz.getClassName(true, true))
-                    .append(" = ").append(clz.getQualifiedType()).append(";");
+                sorter.add("\ntype " + clz.getClassName(true, true) + " = " +
+                    clz.getQualifiedType() + ";");
                 clz.isPackage = true;
             }
+            outputTS.append(String.join("", sorter));
 
             // append number enums here because they are very unlikely to change
             outputTS.append("\n\n// Enum types\n").append(
