@@ -59,7 +59,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
      * @since 1.3.2
      */
     @Override
-    @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
+    @DocletReplaceParams("c: (arg0: A, arg1: B) => R | void")
     public <A, B, R> MethodWrapper<A, B, R, GraalScriptContext> methodToJava(Value c) {
         return new JSMethodWrapper<>(c, true, 5);
     }
@@ -72,7 +72,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
      * @since 1.3.2
      */
     @Override
-    @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
+    @DocletReplaceParams("c: (arg0: A, arg1: B) => R | void")
     public <A, B, R> MethodWrapper<A, B, R, GraalScriptContext> methodToJavaAsync(Value c) {
         return new JSMethodWrapper<>(c, false, 5);
     }
