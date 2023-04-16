@@ -70,8 +70,8 @@ type GetJavaType<P extends string, T extends object = typeof Packages> =
 type GetJavaTypeClass<T> = GetJavaType<T> extends infer J extends object ?
     IsStrictAny<J['class']> extends true ? unknown : J['class'] : unknown;
 
-type StrNumMethod<T> = // Used in worldscanner
-    { [K in keyof T]: ReturnType<T[K]> extends infer R extends string | number ?
+type BooStrNumMethod<T> = // Used in worldscanner
+    { [K in keyof T]: ReturnType<T[K]> extends infer R extends boolean | string | number ?
     IsStrictAny<R> extends true ? never : K : never }[keyof T];
 
 type IsConstructor<T> = T extends new (...args: never) => any ? true : false;

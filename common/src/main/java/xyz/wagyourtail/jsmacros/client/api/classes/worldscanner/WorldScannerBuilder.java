@@ -147,19 +147,19 @@ public final class WorldScannerBuilder {
         }
     }
 
-    @DocletReplaceParams("method: StrNumMethod<BlockStateHelper>")
+    @DocletReplaceParams("method: BooStrNumMethod<BlockStateHelper>")
     public WorldScannerBuilder withStateFilter(String method) {
         createNewFilter(Operation.NEW, FilterCategory.STATE, method);
         return this;
     }
 
-    @DocletReplaceParams("method: StrNumMethod<BlockStateHelper>")
+    @DocletReplaceParams("method: BooStrNumMethod<BlockStateHelper>")
     public WorldScannerBuilder andStateFilter(String method) {
         createNewFilter(Operation.AND, FilterCategory.STATE, method);
         return this;
     }
 
-    @DocletReplaceParams("method: StrNumMethod<BlockStateHelper>")
+    @DocletReplaceParams("method: BooStrNumMethod<BlockStateHelper>")
     public WorldScannerBuilder orStateFilter(String method) {
         createNewFilter(Operation.OR, FilterCategory.STATE, method);
         return this;
@@ -171,19 +171,19 @@ public final class WorldScannerBuilder {
         return this;
     }
 
-    @DocletReplaceParams("method: StrNumMethod<BlockHelper>")
+    @DocletReplaceParams("method: BooStrNumMethod<BlockHelper>")
     public WorldScannerBuilder withBlockFilter(String method) {
         createNewFilter(Operation.NEW, FilterCategory.BLOCK, method);
         return this;
     }
 
-    @DocletReplaceParams("method: StrNumMethod<BlockHelper>")
+    @DocletReplaceParams("method: BooStrNumMethod<BlockHelper>")
     public WorldScannerBuilder andBlockFilter(String method) {
         createNewFilter(Operation.AND, FilterCategory.BLOCK, method);
         return this;
     }
 
-    @DocletReplaceParams("method: StrNumMethod<BlockHelper>")
+    @DocletReplaceParams("method: BooStrNumMethod<BlockHelper>")
     public WorldScannerBuilder orBlockFilter(String method) {
         createNewFilter(Operation.OR, FilterCategory.BLOCK, method);
         return this;
