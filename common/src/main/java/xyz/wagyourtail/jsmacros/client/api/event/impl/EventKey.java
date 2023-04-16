@@ -26,7 +26,7 @@ import java.util.Set;
 public class EventKey implements BaseEvent {
     static final MinecraftClient mc = MinecraftClient.getInstance();
     public final int action;
-    @DocletReplaceReturn("Key")
+    @DocletReplaceReturn("globalThis.Key")
     public final String key;
     @DocletReplaceReturn("KeyMods")
     @DocletEnumType(name = "KeyMods", type =
