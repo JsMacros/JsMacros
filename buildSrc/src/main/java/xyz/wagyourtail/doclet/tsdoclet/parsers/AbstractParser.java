@@ -126,16 +126,24 @@ public abstract class AbstractParser {
     }
 
     public String genMethod(ExecutableElement method) {
+        return genExecutable(method, false);
+    }
+
+    public String genConstructor(ExecutableElement constructor) {
+        return genExecutable(constructor, true);
+    }
+
+    public String genExecutable(ExecutableElement e, boolean isConstructor) {
         final StringBuilder s = new StringBuilder();
-        s.append(genComment(method));
-        s.append(method.getSimpleName());
+        s.append(genComment(e));
+        s.append(isConstructor ? "new " : e.getSimpleName());
 
         // diamondOperator
-        DocletReplaceTypeParams replace = method.getAnnotation(DocletReplaceTypeParams.class);
+        DocletReplaceTypeParams replace = e.getAnnotation(DocletReplaceTypeParams.class);
         if (replace != null) {
             if (replace.value().length() > 0) s.append("<").append(replace.value()).append(">");
         } else {
-            List<? extends TypeParameterElement> typeParams = method.getTypeParameters();
+            List<? extends TypeParameterElement> typeParams = isConstructor ? type.getTypeParameters() : e.getTypeParameters();
             if (typeParams != null && !typeParams.isEmpty()) {
                 s.append("<");
                 for (TypeParameterElement param : typeParams) {
@@ -152,73 +160,33 @@ public abstract class AbstractParser {
         }
 
         s.append("(");
-        DocletReplaceParams replace2 = method.getAnnotation(DocletReplaceParams.class);
+        DocletReplaceParams replace2 = e.getAnnotation(DocletReplaceParams.class);
         if (replace2 != null) {
-           s.append(replace2.value());
+            s.append(replace2.value());
         } else {
-            List<? extends VariableElement> params = method.getParameters();
+            List<? extends VariableElement> params = e.getParameters();
             if (params != null && !params.isEmpty()) {
-                VariableElement restParam = method.isVarArgs() ? params.get(params.size() - 1) : null;
+                VariableElement restParam = e.isVarArgs() ? params.get(params.size() - 1) : null;
                 for (VariableElement param : params) {
                     if (restParam != null && restParam.equals(param)) s.append("...");
-                    s.append(param.getSimpleName()).append(": ").append(transformType(param)).append(", ");
+                    s.append(param.getSimpleName()).append(": ")
+                        .append(transformType(param).replaceAll("\\bJavaClass\\b", "JavaClassArg"))
+                        .append(", ");
                 }
                 s.setLength(s.length() - 2);
             }
         }
         s.append("): ");
-        DocletReplaceReturn replace3 = method.getAnnotation(DocletReplaceReturn.class);
+
+        DocletReplaceReturn replace3 = e.getAnnotation(DocletReplaceReturn.class);
         if (replace3 != null) {
-            transformType(method.getReturnType()); // to add type to the Packages
+            transformType(e.getReturnType()); // to add type to the Packages
             s.append(replace3.value());
         } else {
-            s.append(transformType(method.getReturnType()));
+            s.append(transformType(isConstructor ? type.asType() : e.getReturnType()));
         }
         s.append(";");
 
-        return s.toString();
-    }
-
-    public String genConstructor(ExecutableElement constructor) {
-        final StringBuilder s = new StringBuilder();
-        s.append(genComment(constructor));
-        s.append("new ");
-
-        // diamondOperator
-        DocletReplaceTypeParams replace = constructor.getAnnotation(DocletReplaceTypeParams.class);
-        if (replace != null) {
-            if (replace.value().length() > 0) s.append("<").append(replace.value()).append(">");
-        } else {
-            List<? extends TypeParameterElement> typeParams = type.getTypeParameters();
-            if (typeParams != null && !typeParams.isEmpty()) {
-                s.append("<");
-                for (TypeParameterElement param : typeParams) {
-                    s.append(transformType(param));
-                    String ext = transformType(((TypeVariable) param.asType()).getUpperBound());
-                    if (!ext.equals("any")) {
-                        s.append(" extends ").append(ext);
-                    }
-                    s.append(", ");
-                }
-                s.setLength(s.length() - 2);
-                s.append(">");
-            }
-        }
-
-        s.append("(");
-        DocletReplaceParams replace2 = constructor.getAnnotation(DocletReplaceParams.class);
-        List<? extends VariableElement> params = constructor.getParameters();
-        if (replace2 != null) {
-            s.append(replace2.value());
-        } else if (params != null && !params.isEmpty()) {
-            VariableElement restParam = constructor.isVarArgs() ? params.get(params.size() - 1) : null;
-            for (VariableElement param : params) {
-                if (restParam != null && restParam.equals(param)) s.append("...");
-                s.append(param.getSimpleName()).append(": ").append(transformType(param)).append(", ");
-            }
-            s.setLength(s.length() - 2);
-        }
-        s.append("): ").append(transformType(type)).append(";");
         return s.toString();
     }
 

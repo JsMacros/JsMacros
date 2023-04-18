@@ -43,9 +43,9 @@ declare namespace Java {
     export function from<T>(javaData: JavaList<T>): T[];
     export function from<T>(javaData: JavaCollection<T>): T[];
     export function to<T>(jsArray: T[]): JavaArray<T>;
-    export function to<T extends JavaObject>(jsData: object, toType: JavaClass<T>): T; // does this really exist
+    export function to<T extends JavaObject>(jsData: object, toType: JavaClassArg<T>): T; // does this really exist
     export function isJavaObject(obj: JavaObject): boolean;
-    export function isType(obj: JavaClass): boolean;
+    export function isType(obj: JavaClassArg): boolean;
     export function typeName(obj: JavaObject): string | undefined;
     export function isJavaFunction(fn: JavaObject): boolean;
     export function isScriptObject(obj: any): boolean;
@@ -542,6 +542,8 @@ declare namespace Packages {
 
 type JsArray<T> = T[];
 type JsIterable<T> = Iterable<T>;
+
+type JavaClassArg<T = any> = JavaClass<T> | { readonly class: JavaClass<T> };
 
 type JavaObject                = Packages.java.lang.Object;
 type JavaClass<T = any>        = Packages.java.lang.Class<T>;
