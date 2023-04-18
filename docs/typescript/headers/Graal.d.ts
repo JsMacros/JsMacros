@@ -551,4 +551,4 @@ type JavaArray<T = any>        = Packages.java.lang.Array<T>;
 type JavaCollection<T = any>   = Packages.java.util.Collection<T>;
 type JavaList<T = any>         = Packages.java.util.List<T>;
 type JavaSet<T = any>          = Packages.java.util.Set<T>;
-type JavaMap<K = any, V = any> = Packages.java.util.Map<K, V>;
+type JavaMap<K = any, V = any> = Packages.java.util.Map<K, V> & Record<Extract<K, string | number>, V>;
