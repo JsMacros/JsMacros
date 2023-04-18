@@ -12,6 +12,8 @@ import xyz.wagyourtail.doclet.tsdoclet.parsers.ClassParser;
 import javax.lang.model.element.*;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.IntersectionType;
+import javax.lang.model.type.UnionType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import java.util.List;
@@ -137,7 +139,12 @@ public abstract class AbstractParser {
             if (typeParams != null && !typeParams.isEmpty()) {
                 s.append("<");
                 for (TypeParameterElement param : typeParams) {
-                    s.append(transformType(param)).append(", ");
+                    s.append(transformType(param));
+                    String ext = transformType(((TypeVariable) param.asType()).getUpperBound());
+                    if (!ext.equals("any")) {
+                        s.append(" extends ").append(ext);
+                    }
+                    s.append(", ");
                 }
                 s.setLength(s.length() - 2);
                 s.append(">");
@@ -186,7 +193,12 @@ public abstract class AbstractParser {
             if (typeParams != null && !typeParams.isEmpty()) {
                 s.append("<");
                 for (TypeParameterElement param : typeParams) {
-                    s.append(transformType(param)).append(", ");
+                    s.append(transformType(param));
+                    String ext = transformType(((TypeVariable) param.asType()).getUpperBound());
+                    if (!ext.equals("any")) {
+                        s.append(" extends ").append(ext);
+                    }
+                    s.append(", ");
                 }
                 s.setLength(s.length() - 2);
                 s.append(">");
@@ -295,6 +307,24 @@ public abstract class AbstractParser {
             }
             case WILDCARD -> {
                 return "any";
+            }
+            case INTERSECTION -> {
+                StringBuilder s = new StringBuilder("(");
+                for (TypeMirror t : ((IntersectionType) type).getBounds()) {
+                    s.append(transformType(t)).append(" & ");
+                }
+                s.setLength(s.length() - 3);
+                s.append(")");
+                return s.toString();
+            }
+            case UNION -> {
+                StringBuilder s = new StringBuilder("(");
+                for (TypeMirror t : ((UnionType) type).getAlternatives()) {
+                    s.append(transformType(t)).append(" | ");
+                }
+                s.setLength(s.length() - 3);
+                s.append(")");
+                return s.toString();
             }
         }
         throw new UnsupportedOperationException(String.valueOf(type.getKind()));
