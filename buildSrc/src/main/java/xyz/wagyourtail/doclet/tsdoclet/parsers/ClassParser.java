@@ -131,6 +131,10 @@ public class ClassParser extends AbstractParser {
         return false;
     }
 
+    public String gapper(String fields, String methods) {
+        return methods.isEmpty() ? fields : fields + "\n" + methods + "\n";
+    }
+
     @Override
     public String genTSInterface() {
         superMcClasses = new LinkedHashSet<>();
@@ -222,7 +226,7 @@ public class ClassParser extends AbstractParser {
         StringBuilder s = new StringBuilder(genComment(type))
             .append("const ").append(getClassName(false)).append(": Java");
 
-        String statics = genStaticFields(fields) + "\n" + genStaticMethods(methods);
+        String statics = gapper(genStaticFields(fields), genStaticMethods(methods));
         if (type.getKind().isInterface()) {
             s.append("InterfaceStatics<").append(getClassName(false));
             List<? extends TypeParameterElement> params = this.type.getTypeParameters();
@@ -233,9 +237,9 @@ public class ClassParser extends AbstractParser {
                 s.append(">");
             }
             s.append(">");
-            if (!statics.equals("\n")) {
-                s.append(" & {\n\n")
-                    .append(StringHelpers.tabIn(statics)).append("\n")
+            if (!statics.isEmpty()) {
+                s.append(" & {\n")
+                    .append(StringHelpers.tabIn(statics))
                 .append("}\n");
             } else s.append(";\n");
         } else {
@@ -252,10 +256,10 @@ public class ClassParser extends AbstractParser {
             if (constrs.isEmpty()) s.append("> & NoConstructor");
             else s.append(", ").append(getClassName(false)).append("$$constructor>");
 
-            if (!statics.isBlank()) {
-                s.append(" & {\n\n")
+            if (!statics.isEmpty()) {
+                s.append(" & {\n")
                     .append(StringHelpers.tabIn(statics))
-                .append("\n}\n");
+                .append("}\n");
             } else s.append(";\n");
 
             if (!constrs.isEmpty()) {
@@ -266,9 +270,8 @@ public class ClassParser extends AbstractParser {
             }
         }
 
-        s.append("interface ").append(getClassName(true)).append(buildExtends()).append(" {\n\n")
-            .append(StringHelpers.tabIn(genFields(fields))).append("\n")
-            .append(StringHelpers.tabIn(genMethods(methods))).append("\n")
+        s.append("interface ").append(getClassName(true)).append(buildExtends()).append(" {\n")
+            .append(StringHelpers.tabIn(gapper(genFields(fields), genMethods(methods))))
         .append("}");
 
         return s.toString().trim().replaceAll("\\{[\n ]+\\}", "{}").replaceAll("\n\n\n+", "\n\n");

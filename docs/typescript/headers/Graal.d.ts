@@ -11,7 +11,6 @@ declare function loadWithNewGlobal(source: string | Packages.java.io.File | Pack
  * Information about the graal runner.
  */
 declare namespace Graal {
-
     export const language: string;
     export const versionGraalVM: string;
     export const versionECMAScript: number;
@@ -27,8 +26,7 @@ declare namespace Polyglot {
     export function eval(languageId: string, sourceCode: string): any;
     export function evalFile(languageId: string, sourceFileName: string): () => any;
 
-    export { _import as import };
-    export { _export as export };
+    export { _import as import, _export as export };
 
 }
 
@@ -93,14 +91,19 @@ declare const edu:    JavaPackageColoring & JavaPackage<typeof Packages.edu>;
 
 type JavaPackage<T> = IsStrictAny<T> extends true ? unknown : T;
 interface JavaPackageColoring extends SuppressProperties {
+
     /** java package, no constructor, just for coloring */
     new (none: never): never;
+
 }
 
 interface JavaInterfaceStatics<T> extends SuppressProperties {
+
     /** interface, no constructor, just for coloring */
     new (none: never): never;
+
     readonly class: JavaClass<T>;
+
 }
 
 interface JavaClassStatics<T, C extends object = {}> extends C {
@@ -108,8 +111,10 @@ interface JavaClassStatics<T, C extends object = {}> extends C {
 }
 
 interface NoConstructor extends SuppressProperties {
+
     /** no constructor */
     new (none: never): never;
+
 }
 
 interface SuppressProperties {
@@ -232,7 +237,9 @@ declare namespace Packages {
 
             const Object: JavaClassStatics<JavaObject, Object$$constructor>;
             interface Object$$constructor extends SuppressProperties {
+
                 new (): JavaObject;
+
             }
             interface Object {
 
@@ -319,7 +326,6 @@ declare namespace Packages {
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html
             const Collection: JavaInterfaceStatics<Collection<any>>;
             interface Collection<T> extends java.lang.Iterable<T> {
-
                 readonly [n: number]: T;
 
                 add(element: T): boolean;

@@ -53,10 +53,13 @@ public class EventParser extends AbstractParser {
             methods.removeAll(methodMap.get(name));
         }
 
-        return ("interface " + name + " extends BaseEvent {\n\n" +
-                StringHelpers.tabIn(genFields(fields)) + "\n" +
-                StringHelpers.tabIn(genMethods(methods)) +
-            "\n}").replaceAll("\\{[\n ]+\\}", "{}").replaceAll("\n\n\n+", "\n\n");
+        StringBuilder s = new StringBuilder("interface ").append(name).append(" extends BaseEvent {\n")
+            .append(StringHelpers.tabIn(genFields(fields)));
+        String m = genMethods(methods);
+        if (!m.isEmpty()) s.append("\n").append(StringHelpers.tabIn(m)).append("\n");
+        s.append("}");
+
+        return s.toString().replaceAll("\\{[\n ]+\\}", "{}").replaceAll("\n\n\n+", "\n\n");
     }
 
 }
