@@ -89,44 +89,47 @@ public class PackageTree {
         }
 
         StringBuilder exports = new StringBuilder("");
-        StringBuilder s = new StringBuilder("namespace ");
+        StringBuilder se = new StringBuilder("namespace ");
         if (tsReservedWords.contains(pkgName)) {
             System.out.println("Escaped typescript reserved word: " + pkgName + " -> _" + pkgName);
-            s.append("_");
+            se.append("_");
         }
-        s.append(pkgName).append(" {");
+        se.append(pkgName).append(" {");
+        StringBuilder sn = new StringBuilder(se);
 
         for (ClassParser key : compiledClasses.keySet()) {
-            if (exports.length() > 0) exports.append(",\n");
-            exports.append(key.getClassName(false));
-            s.append("\n\n").append(StringHelpers.tabIn(compiledClasses.get(key)));
+            exports.append(key.getClassName(false)).append(",\n");
+            se.append("\n\n").append(StringHelpers.tabIn(compiledClasses.get(key)));
         }
         boolean escaped = false;
         for (PackageTree value : children.values()) {
-            if (exports.length() > 0) exports.append(",\n");
             if (tsReservedWords.contains(value.pkgName)) {
-                exports.append("_").append(value.pkgName).append(" as ");
+                exports.append("_").append(value.pkgName).append(" as ").append(value.pkgName).append(",\n");
                 escaped = true;
-            }
-            exports.append(value.pkgName);
-            s.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
+                se.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
+            } else sn.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
         }
 
-        // exporting namespace sometimes break things
-        // so it might be the best to split them (classes and namespaces)
-        // but the output looks fine for now, i'll just put these comment here for info
-        if (escaped || compiledClasses.size() > 0) {
+        if (!exports.isEmpty()) {
+            exports.setLength(exports.length() - 2);
+            se.append("\n\n    export {");
             if (exports.length() < 64) {
-                s.append("\n\n    export { ").append(exports.toString().replaceAll("\n", " ")).append(" };");
+                se.append(" ").append(exports.toString().replaceAll("\n", " ")).append(" };");
             } else {
-                s.append("\n\n    export {\n")
+                se.append("\n")
                     .append(StringHelpers.tabIn(exports.toString(), 2))
                 .append("\n    };");
             }
-        }
-        s.append("\n\n}");
+            se.append("\n\n}");
+        } else se.setLength(0);
 
-        return s.toString();
+        if (!sn.toString().endsWith(" {")) {
+            if (se.isEmpty()) se = sn;
+            else se.append("\n").append(sn);
+            se.append("\n\n}");
+        }
+
+        return se.toString();
     }
 
     public List<ClassParser> getXyzClasses() {
