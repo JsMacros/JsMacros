@@ -232,21 +232,13 @@ public final class WorldScannerBuilder {
     @DocletReplaceParams(
         """
         ...args: any[]): $WorldScannerBuilder;
-        /**
-        * for boolean value
-        */
+        /** for boolean value */
         is(value: boolean): $WorldScannerBuilder;
-        /**
-         * for string value
-         */
+        /** for string value */
         is(method: StringFilterMethod, value: string): $WorldScannerBuilder;
-        /**
-         * for char value
-         */
+        /** for char value */
         is(value: string): $WorldScannerBuilder;
-        /**
-         * for number value
-         */
+        /** for number value */
         is(operation: NumberFilterOperation, value: number"""
     )
     public WorldScannerBuilder is(Object... args) {
@@ -256,21 +248,13 @@ public final class WorldScannerBuilder {
     @DocletReplaceParams(
         """
         methodArgs: any[], filterArgs: any[]): $WorldScannerBuilder;
-        /**
-        * for boolean value
-        */
+        /** for boolean value */
         is(methodArgs: any[], filterArgs: [boolean]): $WorldScannerBuilder;
-        /**
-         * for string value
-         */
+        /** for string value */
         is(methodArgs: any[], filterArgs: [StringFilterMethod, string]): $WorldScannerBuilder;
-        /**
-         * for char value
-         */
+        /** for char value */
         is(methodArgs: any[], filterArgs: [string]): $WorldScannerBuilder;
-        /**
-         * for number value
-         */
+        /** for number value */
         is(methodArgs: any[], filterArgs: [NumberFilterOperation, number]"""
     )
     public WorldScannerBuilder is(Object[] methodArgs, Object[] filterArgs) {
@@ -287,21 +271,13 @@ public final class WorldScannerBuilder {
     @DocletReplaceParams(
         """
         ...args: any[]): $WorldScannerBuilder;
-        /**
-        * for boolean value
-        */
+        /** for boolean value */
         test(value: boolean): $WorldScannerBuilder;
-        /**
-         * for string value
-         */
+        /** for string value */
         test(method: StringFilterMethod, value: string): $WorldScannerBuilder;
-        /**
-         * for char value
-         */
+        /** for char value */
         test(value: string): $WorldScannerBuilder;
-        /**
-         * for number value
-         */
+        /** for number value */
         test(operation: NumberFilterOperation, value: number"""
     )
     public WorldScannerBuilder test(Object... args) {
@@ -311,21 +287,13 @@ public final class WorldScannerBuilder {
     @DocletReplaceParams(
         """
         methodArgs: any[], filterArgs: any[]): $WorldScannerBuilder;
-        /**
-        * for boolean value
-        */
+        /** for boolean value */
         test(methodArgs: any[], filterArgs: [boolean]): $WorldScannerBuilder;
-        /**
-         * for string value
-         */
+        /** for string value */
         test(methodArgs: any[], filterArgs: [StringFilterMethod, string]): $WorldScannerBuilder;
-        /**
-         * for char value
-         */
+        /** for char value */
         test(methodArgs: any[], filterArgs: [string]): $WorldScannerBuilder;
-        /**
-         * for number value
-         */
+        /** for number value */
         test(methodArgs: any[], filterArgs: [NumberFilterOperation, number]"""
     )
     public WorldScannerBuilder test(Object[] methodArgs, Object[] filterArgs) {

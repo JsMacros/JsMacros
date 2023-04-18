@@ -366,15 +366,23 @@ public abstract class AbstractParser {
             }
         }
 
+        String fin = (a.toString().replaceAll("(?<=[\\.,:;>]) ?\n", "  \n") + b.toString()).trim()
+            .replaceAll("\n <p>", "\n")
+            .replaceAll("<\\/?pre>", "```")
+            .replaceAll("<a (?:\n|.)*?href=\"([^\"]*)\"(?:\n|.)*?>((?:\n|.)*?)</a>", "[$2]($1)")
+            .replaceAll("\n@param <\\w>(?! )", "")
+            .replaceAll("&lt;", "<")
+            .replaceAll("&gt;", ">");
+        if (fin.isBlank()) return Main.elementUtils.isDeprecated(comment) ? "/** @deprecated */\n" : "";
+
         if (Main.elementUtils.isDeprecated(comment) && !b.toString().contains("@deprecated")) {
-            b.append("\n@deprecated");
+            fin += "\n@deprecated";
         }
 
+        if (fin.startsWith("@since") && !fin.contains("\n")) return "/** " + fin + " */\n";
+
         return ("\n/**\n" +
-            StringHelpers.addToLineStarts(
-                a.toString().replaceAll("\n <p>", "\n").replaceAll("<\\/?pre>", "```").replaceAll("(?<=[\\.,:;>]) ?\n", "  \n") +
-                b.toString()
-            , " * ") +
+            StringHelpers.addToLineStarts(fin, " * ") +
             "\n */\n").replaceAll("\n \\* +\n", "\n *\n");
     }
 
