@@ -79,21 +79,40 @@ type IsConstructor<T> = T extends new (...args: never) => any ? true : false;
 type IsStrictAny<T> = 0 | 1 extends (T extends never ? 1 : 0) ? true : false;
 
 /** One of the root packages in java. */
-declare const java:   JavaPackage<typeof Packages.java>;
+declare const java:   JavaPackageColoring & JavaPackage<typeof Packages.java>;
 /** One of the root packages in java. */
-declare const javafx: JavaPackage<typeof Packages.javafx>;
+declare const javafx: JavaPackageColoring & JavaPackage<typeof Packages.javafx>;
 /** One of the root packages in java. */
-declare const javax:  JavaPackage<typeof Packages.javax>;
+declare const javax:  JavaPackageColoring & JavaPackage<typeof Packages.javax>;
 /** One of the root packages in java. */
-declare const com:    JavaPackage<typeof Packages.com>;
+declare const com:    JavaPackageColoring & JavaPackage<typeof Packages.com>;
 /** One of the root packages in java. */
-declare const org:    JavaPackage<typeof Packages.org>;
+declare const org:    JavaPackageColoring & JavaPackage<typeof Packages.org>;
 /** One of the root packages in java. */
-declare const edu:    JavaPackage<typeof Packages.edu>;
+declare const edu:    JavaPackageColoring & JavaPackage<typeof Packages.edu>;
 
-type JavaPackage<T> = (IsStrictAny<T> extends true ? unknown : T) & {
-    /** java package, no constructor */
+type JavaPackage<T> = IsStrictAny<T> extends true ? unknown : T;
+interface JavaPackageColoring extends SuppressProperties {
+    /** java package, no constructor, just for coloring */
     new (none: never): never;
+}
+
+interface JavaInterfaceStatics<T> extends SuppressProperties {
+    /** interface, no constructor, just for coloring */
+    new (none: never): never;
+    readonly class: JavaClass<T>;
+}
+
+interface JavaClassStatics<T, C extends object = {}> extends C {
+    readonly class: JavaClass<T> & C;
+}
+
+interface NoConstructor extends SuppressProperties {
+    /** no constructor */
+    new (none: never): never;
+}
+
+interface SuppressProperties {
     /** @deprecated */ Symbol: unknown;
     /** @deprecated */ apply: unknown;
     /** @deprecated */ arguments: unknown;
@@ -103,71 +122,7 @@ type JavaPackage<T> = (IsStrictAny<T> extends true ? unknown : T) & {
     /** @deprecated */ length: unknown;
     /** @deprecated */ name: unknown;
     /** @deprecated */ prototype: unknown;
-};
-
-type JavaInterfaceStatics = {
-    readonly class: JavaClass;
-    /** interface, no constructor */
-    new (none: never): never;
-    /** @deprecated */ Symbol: unknown;
-    /** @deprecated */ apply: unknown;
-    /** @deprecated */ arguments: unknown;
-    /** @deprecated */ bind: unknown;
-    /** @deprecated */ call: unknown;
-    /** @deprecated */ caller: unknown;
-    /** @deprecated */ length: unknown;
-    /** @deprecated */ name: unknown;
-    /** @deprecated */ prototype: unknown;
-};
-
-type JavaClassStatics<
-        Constructs extends false | object | [object],
-        Args extends [] | [any, ...any] = []> =
-    JavaClassConstructor<Constructs, Args> & {
-        readonly class: JavaClass
-        & (Constructs extends false ? unknown : JavaClassConstructor<Constructs, Args>);
-    };
-
-type JavaClassConstructor<
-        Constructs extends false | object | [object],
-        Args extends [] | [any, ...any] = []> =
-    Constructs extends [infer O extends object] ?
-        Args extends [any, ...any] ? {
-            new (...args: Args): O;
-            /** @deprecated */ Symbol: unknown;
-            /** @deprecated */ apply: unknown;
-            /** @deprecated */ arguments: unknown;
-            /** @deprecated */ bind: unknown;
-            /** @deprecated */ call: unknown;
-            /** @deprecated */ caller: unknown;
-            /** @deprecated */ length: unknown;
-            /** @deprecated */ name: unknown;
-            /** @deprecated */ prototype: unknown;
-        } : {
-            new (): O;
-            /** @deprecated */ Symbol: unknown;
-            /** @deprecated */ apply: unknown;
-            /** @deprecated */ arguments: unknown;
-            /** @deprecated */ bind: unknown;
-            /** @deprecated */ call: unknown;
-            /** @deprecated */ caller: unknown;
-            /** @deprecated */ length: unknown;
-            /** @deprecated */ name: unknown;
-            /** @deprecated */ prototype: unknown;
-        } : 
-    Constructs extends false ? {
-        /** no constructor */
-        new (none: never): never;
-        /** @deprecated */ Symbol: unknown;
-        /** @deprecated */ apply: unknown;
-        /** @deprecated */ arguments: unknown;
-        /** @deprecated */ bind: unknown;
-        /** @deprecated */ call: unknown;
-        /** @deprecated */ caller: unknown;
-        /** @deprecated */ length: unknown;
-        /** @deprecated */ name: unknown;
-        /** @deprecated */ prototype: unknown;
-    } : Constructs;
+}
 
 /**
  * The global `Packages` object is provided by the GraalVM JavaScript engine, and allows
@@ -184,7 +139,7 @@ declare namespace Packages {
         namespace lang {
 
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html
-            const Class: JavaClassStatics<false> & {
+            const Class: JavaClassStatics<Class<any>> & NoConstructor & {
 
                 forName<C extends string>(className: C): GetJavaTypeClass<C>;
                 forName<C extends JavaTypeList>(className: C): GetJavaTypeClass<C>;
@@ -193,7 +148,7 @@ declare namespace Packages {
                 forName<C extends string>(module: Module, name: C): GetJavaTypeClass<C>;
                 forName<C extends JavaTypeList>(module: Module, name: C): GetJavaTypeClass<C>;
 
-            };
+            }
             interface Class<T> extends Object {
 
                 arrayType(): Class<any>;
@@ -275,7 +230,10 @@ declare namespace Packages {
 
             }
 
-            const Object: JavaClassStatics<[JavaObject]>;
+            const Object: JavaClassStatics<JavaObject, Object$$constructor>;
+            interface Object$$constructor extends SuppressProperties {
+                new (): JavaObject;
+            }
             interface Object {
 
                 equals(obj: JavaObject): boolean;
@@ -290,32 +248,23 @@ declare namespace Packages {
 
             }
 
-            const Comparable: JavaInterfaceStatics;
+            const Comparable: JavaInterfaceStatics<Comparable<any>>;
             interface Comparable<T> extends Object {
 
                 compareTo(arg0: T): number;
 
             }
 
-            const Array: JavaInterfaceStatics;
+            const Array: JavaInterfaceStatics<Array<any>>;
             interface Array<T> extends Object, JsArray<T> {}
 
-            const StackTraceElement: JavaClassStatics<{
+            const StackTraceElement: JavaClassStatics<StackTraceElement, StackTraceElement$$constructor>;
+            interface StackTraceElement$$constructor extends SuppressProperties {
 
                 new (declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement;
                 new (classLoaderName: string, moduleName: string, moduleVersion: string, declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement;
 
-                /** @deprecated */ Symbol: unknown;
-                /** @deprecated */ apply: unknown;
-                /** @deprecated */ arguments: unknown;
-                /** @deprecated */ bind: unknown;
-                /** @deprecated */ call: unknown;
-                /** @deprecated */ caller: unknown;
-                /** @deprecated */ length: unknown;
-                /** @deprecated */ name: unknown;
-                /** @deprecated */ prototype: unknown;
-
-            }>;
+            }
             interface StackTraceElement extends Object, java.io.Serializable {
 
                 getFileName(): string;
@@ -329,23 +278,14 @@ declare namespace Packages {
 
             }
 
-            const Throwable: JavaClassStatics<{
+            const Throwable: JavaClassStatics<Throwable, Throwable$$constructor>;
+            interface Throwable$$constructor extends SuppressProperties {
 
                 new (): Throwable;
                 new (message: string): Throwable;
                 new (message: string, cause: Throwable): Throwable;
 
-                /** @deprecated */ Symbol: unknown;
-                /** @deprecated */ apply: unknown;
-                /** @deprecated */ arguments: unknown;
-                /** @deprecated */ bind: unknown;
-                /** @deprecated */ call: unknown;
-                /** @deprecated */ caller: unknown;
-                /** @deprecated */ length: unknown;
-                /** @deprecated */ name: unknown;
-                /** @deprecated */ prototype: unknown;
-
-            }>;
+            }
             interface Throwable extends Object, java.io.Serializable, Error {
 
                 getMessage(): string;
@@ -361,7 +301,7 @@ declare namespace Packages {
 
             }
 
-            const Iterable: JavaInterfaceStatics;
+            const Iterable: JavaInterfaceStatics<Iterable<any>>;
             interface Iterable<T> extends Object, JsIterable<T> {
 
                 iterator(): java.util.Iterator<T>;
@@ -377,7 +317,7 @@ declare namespace Packages {
         namespace util {
 
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html
-            const Collection: JavaInterfaceStatics;
+            const Collection: JavaInterfaceStatics<Collection<any>>;
             interface Collection<T> extends java.lang.Iterable<T> {
 
                 readonly [n: number]: T;
@@ -400,12 +340,12 @@ declare namespace Packages {
             }
 
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html
-            const List: JavaClassStatics<false> & {
+            const List: JavaClassStatics<List<any>> & NoConstructor & {
 
                 copyOf<T>(coll: JavaCollection<T>): JavaList<T>;
                 of<T>(...elements: T[]): JavaList<T>;
 
-            };
+            }
             interface List<T> extends Collection<T> {
 
                 add(index: number, element: T): void;
@@ -423,7 +363,7 @@ declare namespace Packages {
             }
 
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html
-            const Map: JavaClassStatics<false> & {
+            const Map: JavaClassStatics<Map<any, any>> & NoConstructor & {
 
                 copyOf<K, V>(map: JavaMap<K, V>): JavaMap<K, V>;
                 entry<K, V>(k: K, v: V): java.util.Map$Entry<K, V>;
@@ -439,7 +379,7 @@ declare namespace Packages {
                 of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V, k8: K, v8: V, k9: K, v9: V): JavaMap<K, V>;
                 of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V, k8: K, v8: V, k9: K, v9: V, k10: K, v10: V): JavaMap<K, V>;
 
-            };
+            }
             interface Map<K, V> extends JavaObject, Record<string | number, V> {
 
                 clear(): void;
@@ -465,12 +405,12 @@ declare namespace Packages {
             }
 
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html
-            const Set: JavaClassStatics<false> & {
+            const Set: JavaClassStatics<Set<any>> & NoConstructor & {
 
                 copyOf<T>(coll: JavaCollection<T>): JavaSet<T>;
                 of<T>(...elements: T[]): JavaSet<T>;
 
-            };
+            }
             interface Set<T> extends Collection<T> {}
 
             export { Collection, List, Map, Set };
@@ -479,28 +419,19 @@ declare namespace Packages {
 
         namespace io {
 
-            const File: JavaClassStatics<{
+            const File: JavaClassStatics<File, File$$constructor> & {
+
+                listRoots(): JavaArray<File>;
+
+            }
+            interface File$$constructor extends SuppressProperties {
 
                 new (pathName: string): File;
                 new (parent: string, child: string): File;
                 new (parent: File, child: string): File;
                 new (uri: java.net.URI): File;
 
-                /** @deprecated */ Symbol: unknown;
-                /** @deprecated */ apply: unknown;
-                /** @deprecated */ arguments: unknown;
-                /** @deprecated */ bind: unknown;
-                /** @deprecated */ call: unknown;
-                /** @deprecated */ caller: unknown;
-                /** @deprecated */ length: unknown;
-                /** @deprecated */ name: unknown;
-                /** @deprecated */ prototype: unknown;
-
-            }> & {
-
-                listRoots(): JavaArray<File>;
-
-            };
+            }
             interface File extends JavaObject {
 
                 canExecute(): boolean;
@@ -534,7 +465,7 @@ declare namespace Packages {
 
             }
 
-            const Serializable: JavaInterfaceStatics;
+            const Serializable: JavaInterfaceStatics<Serializable>;
             interface Serializable extends JavaObject {}
 
             export { File, Serializable };
@@ -543,24 +474,15 @@ declare namespace Packages {
 
         namespace net {
 
-            const URL: JavaClassStatics<{
+            const URL: JavaClassStatics<URL, URL$$constructor>;
+            interface URL$$constructor extends SuppressProperties {
 
                 new (protocol: string, host: string, port: number, file: string): URL;
                 new (protocol: string, host: string, file: string): URL;
                 new (spec: string): URL;
                 new (context: URL, spec: string): URL;
 
-                /** @deprecated */ Symbol: unknown;
-                /** @deprecated */ apply: unknown;
-                /** @deprecated */ arguments: unknown;
-                /** @deprecated */ bind: unknown;
-                /** @deprecated */ call: unknown;
-                /** @deprecated */ caller: unknown;
-                /** @deprecated */ length: unknown;
-                /** @deprecated */ name: unknown;
-                /** @deprecated */ prototype: unknown;
-
-            }>;
+            }
             interface URL extends JavaObject {
 
                 getFile(): string;
@@ -573,7 +495,12 @@ declare namespace Packages {
 
             }
 
-            const URI: JavaClassStatics<{
+            const URI: JavaClassStatics<URI, URI$$constructor> & {
+
+                create(str: string): URI;
+
+            }
+            interface URI$$constructor extends SuppressProperties {
 
                 new (str: string): URI;
                 new (scheme: string, userInfo: string, host: string, port: number, path: string, query: string, fragment: string): URI;
@@ -582,21 +509,7 @@ declare namespace Packages {
                 new (scheme: string, ssp: string, fragment: string): URI;
                 new (scheme: string, path: string): URI;
 
-                /** @deprecated */ Symbol: unknown;
-                /** @deprecated */ apply: unknown;
-                /** @deprecated */ arguments: unknown;
-                /** @deprecated */ bind: unknown;
-                /** @deprecated */ call: unknown;
-                /** @deprecated */ caller: unknown;
-                /** @deprecated */ length: unknown;
-                /** @deprecated */ name: unknown;
-                /** @deprecated */ prototype: unknown;
-
-            }> & {
-
-                create(str: string): URI;
-
-            };
+            }
             interface URI extends java.lang.Comparable<URI>, java.io.Serializable {
 
                 getHost(): string;
@@ -616,13 +529,6 @@ declare namespace Packages {
             export { URL, URI };
 
         }
-
-    }
-
-    // remove this if someone made a d.ts for minecraft classes
-    namespace net {
-
-        export const minecraft: any;
 
     }
 
