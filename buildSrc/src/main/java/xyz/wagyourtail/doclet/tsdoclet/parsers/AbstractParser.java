@@ -119,10 +119,23 @@ public abstract class AbstractParser {
     }
 
     public String genField(Element field) {
-        DocletReplaceReturn replace = field.getAnnotation(DocletReplaceReturn.class);
+        StringBuilder s = new StringBuilder();
+        s.append(genComment(field));
 
-        return genComment(field) + (field.getModifiers().contains(Modifier.FINAL) ? "readonly " : "") +
-            field.getSimpleName() + ": " + (replace != null ? replace.value() : transformType(field)) + ";";
+        if (field.getModifiers().contains(Modifier.FINAL)) s.append("readonly ");
+        s.append(field.getSimpleName()).append(": ");
+
+        DocletReplaceReturn replace = field.getAnnotation(DocletReplaceReturn.class);
+        if (replace != null) {
+            s.append(replace.value());
+        } else {
+            s.append(transformType(field));
+            if (isNullable(field)) s.append(" | null");
+        }
+
+        s.append(";");
+
+        return s.toString();
     }
 
     public String genMethod(ExecutableElement method) {
@@ -170,8 +183,9 @@ public abstract class AbstractParser {
                 for (VariableElement param : params) {
                     if (restParam != null && restParam.equals(param)) s.append("...");
                     s.append(param.getSimpleName()).append(": ")
-                        .append(transformType(param).replaceAll("\\bJavaClass\\b", "JavaClassArg"))
-                        .append(", ");
+                        .append(transformType(param).replaceAll("\\bJavaClass\\b", "JavaClassArg"));
+                    if (isNullable(param)) s.append(" | null");
+                    s.append(", ");
                 }
                 s.setLength(s.length() - 2);
             }
@@ -184,6 +198,7 @@ public abstract class AbstractParser {
             s.append(replace3.value());
         } else {
             s.append(transformType(isConstructor ? type.asType() : e.getReturnType()));
+            if (isNullable(e)) s.append(" | null");
         }
         s.append(";");
 
@@ -383,6 +398,15 @@ public abstract class AbstractParser {
         ||  Main.treeUtils.getDocCommentTree(m) != null) return false;
         for (ExecutableElement om : objectMethods) {
             if (Main.elementUtils.overrides((ExecutableElement) m, om, type)) return true;
+        }
+        return false;
+    }
+
+    public boolean isNullable(Element e) {
+        for (AnnotationMirror annotationMirror : e.getAnnotationMirrors()) {
+            if (annotationMirror.getAnnotationType().asElement().getSimpleName().toString().equals("Nullable")) {
+                return true;
+            }
         }
         return false;
     }
