@@ -31,18 +31,30 @@ declare namespace Polyglot {
 }
 
 /**
- * Java namespace for graal's Java functions.
+ * Java namespace for graal's Java functions.  
+ * [Graal Docs](https://www.graalvm.org/latest/reference-manual/js/)
  */
 declare namespace Java {
 
-    // don't touch this order unless you know what you're doing
-    // it's for optimizing, prevent it from flattening package if only the return type is needed
-    export function type<C extends string>(className: C): GetJavaType<C>;
-    export function type<C extends JavaTypeList>(className: C): GetJavaType<C>;
+    // this overload order is for optimizing,
+    // prevent it from flattening package if only the return type is needed
+    /**
+     * Gets a java type  
+     * Supports array type. ex: `int[]`, `short[][]`, `java.lang.String[]`
+     */
+    export function type<C extends string>(className: C): GetJava.Type$Graal<C>;
+    export function type<C extends JavaTypeList | keyof GetJava.Primitives>(className: C): GetJava.Type$Graal<C>;
     export function from<T>(javaData: JavaArray<T>): T[];
     export function from<T>(javaData: JavaList<T>): T[];
     export function from<T>(javaData: JavaCollection<T>): T[];
-    export function to<T>(jsArray: T[], toType?: `${'byte' | 'short' | 'int' | 'long' | 'float' | 'double' | 'char'}[]` | JavaClassArg): JavaArray<T>;
+
+    /**
+     * If toType is not present, converts to [Ljava.lang.Object by default
+     */
+    export function to<T>(jsArray: T[]): JavaArray<T>;
+    export function to<T extends `${string}[]`>(jsArray: GetJava.GraalJsArr<T>, toType: T): GetJava.GraalTo<T>;
+    export function to<T extends JavaArray<any>>(jsArray: GetJava.JavaToJsArrRec<T>, toType: JavaClassArg<T>): T;
+    export function to<T extends `${JavaTypeList | keyof GetJava.Primitives}[]`>(jsArray: GetJava.GraalJsArr<T>, toType: T): GetJava.GraalTo<T>;
     export function isJavaObject(obj: any): boolean;
     export function isType(obj: JavaClassArg): boolean;
     export function typeName(obj: JavaObject): string | undefined;
@@ -56,17 +68,53 @@ type ListPackages<T extends object, P extends string = ''> =
     IsStrictAny<T> extends true ? never : IsConstructor<T> extends true ? P :
     { [K in keyof T]: ListPackages<T[K], P extends '' ? K : `${P}.${K}`> }[keyof T];
 
-type GetJavaType<P extends string, T extends object = typeof Packages> =
-    IsStrictAny<T> extends true ? unknown :
-    P extends `${infer K}.${infer R}` ? GetJavaType<R, T[K]> :
-    P extends '' ? IsConstructor<T> extends true ? T : unknown : GetJavaType<'', T[P]>;
+namespace GetJava {
 
-type GetJavaTypeClass<T> = GetJavaType<T> extends infer J extends object ?
-    IsStrictAny<J['class']> extends true ? unknown : J['class'] : unknown;
+    type Type$Graal<P extends string, _K extends keyof Primitive<any> = 'type'> =
+        P extends `${string}[]` ? JavaArrayStatics<ArrayType<P>> :
+        P extends keyof Primitives ? Primitives[P][_K] :
+        Type<P>;
+
+    type ArrayType<P extends string, _K extends keyof Primitive<any> = 'type'> =
+        P extends `${infer C extends string}[]` ? JavaArray<ArrayType<C>> :
+        Type$Graal<P, _K> extends JavaClassStatics<infer T> ? T : unknown;
+    
+    type GraalTo<P extends string> = ArrayType<P>;
+    type GraalJsArr<P extends string> = JavaToJsArrRec<ArrayType<P, 'from'>>;
+    type JavaToJsArrRec<T> = T extends JavaArray<infer C> ? JavaToJsArrRec<C>[] : T;
+
+    type Type$Reflection<P extends string> =
+        P extends keyof Primitives ? Primitives[P]['type']['class'] : TypeClass<P>;
+
+    type TypeClass<T> = Type<T>['class'] extends infer C extends JavaClass<any> ?
+        IsStrictAny<C> extends false ? C : unknown : unknown;
+
+    type Type<P extends string, T extends object = typeof Packages> =
+        IsStrictAny<T> extends true ? unknown :
+        P extends `${infer K}.${infer R}` ? Type<R, T[K]> :
+        P extends '' ? IsConstructor<T> extends true ? T : unknown : Type<'', T[P]>;
+
+    interface Primitives {
+        boolean: Primitive<boolean, boolean>;
+        byte:    Primitive<number, number>;
+        short:   Primitive<number, number>;
+        int:     Primitive<number, number>;
+        long:    Primitive<number, number>;
+        float:   Primitive<number, number>;
+        double:  Primitive<number, number>;
+        char:    Primitive<string | number, string>;
+    }
+    
+    interface Primitive<A, T = any> {
+        readonly from: A;
+        readonly type: JavaClassStatics<T> & NoConstructor;
+    }
+
+}
 
 type BooStrNumMethod<T> = // Used in worldscanner
     { [K in keyof T]: ReturnType<T[K]> extends infer R extends boolean | string | number ?
-    IsStrictAny<R> extends true ? never : K : never }[keyof T];
+    IsStrictAny<R> extends false ? K : never : never }[keyof T];
 
 type IsConstructor<T> = T extends new (...args: never) => any ? true : false;
 
@@ -106,6 +154,14 @@ interface JavaClassStatics<T, C extends object = {}> extends C {
     readonly class: JavaClass<T> & C;
 }
 
+interface JavaArrayStatics<T extends JavaArray<any>> extends JavaClassStatics<T, JavaArrayConstructor<T>> {}
+
+interface JavaArrayConstructor<T extends JavaArray<any>> extends SuppressProperties {
+
+    new (length: number): T;
+
+}
+
 interface NoConstructor extends SuppressProperties {
 
     /** no constructor */
@@ -142,12 +198,12 @@ declare namespace Packages {
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html
             const Class: JavaClassStatics<Class<any>> & NoConstructor & {
 
-                forName<C extends string>(className: C): GetJavaTypeClass<C>;
-                forName<C extends JavaTypeList>(className: C): GetJavaTypeClass<C>;
-                forName<C extends string>(name: C, initialize: boolean, loader: java.lang.ClassLoader): GetJavaTypeClass<C>;
-                forName<C extends JavaTypeList>(name: C, initialize: boolean, loader: java.lang.ClassLoader): GetJavaTypeClass<C>;
-                forName<C extends string>(module: Module, name: C): GetJavaTypeClass<C>;
-                forName<C extends JavaTypeList>(module: Module, name: C): GetJavaTypeClass<C>;
+                forName<C extends string>(className: C): GetJava.TypeClass<C>;
+                forName<C extends JavaTypeList>(className: C): GetJava.TypeClass<C>;
+                forName<C extends string>(name: C, initialize: boolean, loader: java.lang.ClassLoader): GetJava.TypeClass<C>;
+                forName<C extends JavaTypeList>(name: C, initialize: boolean, loader: java.lang.ClassLoader): GetJava.TypeClass<C>;
+                forName<C extends string>(module: Module, name: C): GetJava.TypeClass<C>;
+                forName<C extends JavaTypeList>(module: Module, name: C): GetJava.TypeClass<C>;
 
             }
             interface Class<T> extends Object {

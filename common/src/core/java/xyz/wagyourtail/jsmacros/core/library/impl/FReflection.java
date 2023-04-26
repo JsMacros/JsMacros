@@ -64,14 +64,13 @@ public class FReflection extends PerExecLibrary {
      * @see FReflection#getClass(String, String)
      * @since 1.2.3
      */
-    @DocletReplaceTypeParams("")
+    @DocletReplaceTypeParams("C extends string")
     @DocletReplaceParams(
         """
-        name: 'boolean' | 'byte' | 'short' | 'int' | 'long' | 'float' | 'double' | 'char' | 'void'): JavaClass<any>;
-        function getClass<C extends string>(name: C): GetJavaTypeClass<C>;
-        function getClass<C extends JavaTypeList>(name: C"""
+        name: C): GetJava.Type$Reflection<C>;
+        function getClass<C extends JavaTypeList | keyof GetJava.Primitives>(name: C"""
     )
-    @DocletReplaceReturn("GetJavaTypeClass<C>")
+    @DocletReplaceReturn("GetJava.Type$Reflection<C>")
     public <T> Class<T> getClass(String name) throws ClassNotFoundException {
         switch (name) {
             case "boolean":
@@ -112,10 +111,10 @@ public class FReflection extends PerExecLibrary {
     @DocletReplaceTypeParams("C extends string")
     @DocletReplaceParams(
         """
-        name: C, name2: string): GetJavaTypeClass<C>;
-        function getClass<C extends JavaTypeList>(name: C, name2: JavaTypeList"""
+        name: C, name2: string): GetJava.Type$Reflection<C>;
+        function getClass<C extends JavaTypeList | keyof GetJava.Primitives>(name: C, name2: JavaTypeList | keyof GetJava.Primitives"""
     )
-    @DocletReplaceReturn("GetJavaTypeClass<C>")
+    @DocletReplaceReturn("GetJava.Type$Reflection<C>")
     public <T> Class<T> getClass(String name, String name2) throws ClassNotFoundException {
         try {
             return getClass(name);
