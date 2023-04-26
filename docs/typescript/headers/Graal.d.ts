@@ -26,7 +26,7 @@ declare namespace Polyglot {
     export function eval(languageId: string, sourceCode: string): any;
     export function evalFile(languageId: string, sourceFileName: string): () => any;
 
-    export { _import as import, _export as export };
+    export { _import as import, _export as export }
 
 }
 
@@ -317,7 +317,7 @@ declare namespace Packages {
 
             }
 
-            export { Class, Object, Comparable, Array, StackTraceElement, Throwable, Iterable };
+            export { Class, Object, Comparable, Array, StackTraceElement, Throwable, Iterable }
 
         }
 
@@ -419,7 +419,7 @@ declare namespace Packages {
             }
             interface Set<T> extends Collection<T> {}
 
-            export { Collection, List, Map, Set };
+            export { Collection, List, Map, Set }
 
         }
 
@@ -474,7 +474,7 @@ declare namespace Packages {
             const Serializable: JavaInterfaceStatics<Serializable>;
             interface Serializable extends JavaObject {}
 
-            export { File, Serializable };
+            export { File, Serializable }
 
         }
 
@@ -532,7 +532,7 @@ declare namespace Packages {
 
             }
 
-            export { URL, URI };
+            export { URL, URI }
 
         }
 

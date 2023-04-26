@@ -114,11 +114,11 @@ public class PackageTree {
             exports.setLength(exports.length() - 2);
             se.append("\n\n    export {");
             if (exports.length() < 64) {
-                se.append(" ").append(exports.toString().replaceAll("\n", " ")).append(" };");
+                se.append(" ").append(exports.toString().replaceAll("\n", " ")).append(" }");
             } else {
                 se.append("\n")
                     .append(StringHelpers.tabIn(exports.toString(), 2))
-                .append("\n    };");
+                .append("\n    }");
             }
             se.append("\n\n}");
         } else se.setLength(0);
