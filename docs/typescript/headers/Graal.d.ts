@@ -1,8 +1,8 @@
 
 /// <reference lib="ES2022"/>
 
-declare function load(source: string | Packages.java.io.File | Packages.java.net.URL): void;
-declare function loadWithNewGlobal(source: string | Packages.java.io.File | Packages.java.net.URL, arguments: any): void;
+declare function load(source: string | Packages.java.io.File | Packages.java.net.URL): any;
+declare function loadWithNewGlobal(source: string | Packages.java.io.File | Packages.java.net.URL, ...arguments: any[]): any;
 // These two are commented out because it's useless, doesn't even show in game log
 // declare function print(...arg: any[]): void;
 // declare function printErr(...arg: any[]): void;
@@ -24,7 +24,7 @@ declare namespace Polyglot {
     function _import(key: string): any;
     function _export(key: string, value: any): void;
     export function eval(languageId: string, sourceCode: string): any;
-    export function evalFile(languageId: string, sourceFileName: string): () => any;
+    export function evalFile(languageId: string, sourceFileName: string): any;
 
     export { _import as import, _export as export }
 
@@ -42,19 +42,15 @@ declare namespace Java {
     export function from<T>(javaData: JavaArray<T>): T[];
     export function from<T>(javaData: JavaList<T>): T[];
     export function from<T>(javaData: JavaCollection<T>): T[];
-    export function to<T>(jsArray: T[]): JavaArray<T>;
-    export function to<T extends JavaObject>(jsData: object, toType: JavaClassArg<T>): T; // does this really exist
-    export function isJavaObject(obj: JavaObject): boolean;
+    export function to<T>(jsArray: T[], toType?: `${'byte' | 'short' | 'int' | 'long' | 'float' | 'double' | 'char'}[]` | JavaClassArg): JavaArray<T>;
+    export function isJavaObject(obj: any): boolean;
     export function isType(obj: JavaClassArg): boolean;
     export function typeName(obj: JavaObject): string | undefined;
-    export function isJavaFunction(fn: JavaObject): boolean;
-    export function isScriptObject(obj: any): boolean;
-    export function isScriptFunction(fn: Function): boolean;
     export function addToClasspath(location: string): void;
 
 }
 
-type JavaTypeList = ListPackages<typeof Packages> | string & {};
+type JavaTypeList = ListPackages<typeof Packages>;
 
 type ListPackages<T extends object, P extends string = ''> =
     IsStrictAny<T> extends true ? never : IsConstructor<T> extends true ? P :
