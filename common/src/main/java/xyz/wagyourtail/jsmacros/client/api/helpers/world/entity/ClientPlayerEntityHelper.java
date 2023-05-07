@@ -251,7 +251,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      *
      * @since 1.8.4
      */
-    @DocletReplaceParams("x: number, y: number, z: number, direction: Direction")
+    @DocletReplaceParams("x: int, y: int, z: int, direction: Direction")
     @DocletEnumType(name = "Direction", type = "'up' | 'down' | 'north' | 'south' | 'east' | 'west'")
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, String direction) throws InterruptedException {
         return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), false);
@@ -264,7 +264,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
      * @since 1.5.0
      */
-    @DocletReplaceParams("x: number, y: number, z: number, direction: Hexit")
+    @DocletReplaceParams("x: int, y: int, z: int, direction: Hexit")
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, int direction) throws InterruptedException {
         return attack(x, y, z, direction, false);
     }
@@ -279,7 +279,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      *
      * @since 1.8.4
      */
-    @DocletReplaceParams("x: number, y: number, z: number, direction: Direction, await: boolean")
+    @DocletReplaceParams("x: int, y: int, z: int, direction: Direction, await: boolean")
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, String direction, boolean await) throws InterruptedException {
         return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), await);
     }
@@ -295,7 +295,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      *
      * @throws InterruptedException
      */
-    @DocletReplaceParams("x: number, y: number, z: number, direction: Hexit, await: boolean")
+    @DocletReplaceParams("x: int, y: int, z: int, direction: Hexit, await: boolean")
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, int direction, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
@@ -401,7 +401,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      *
      * @since 1.8.4
      */
-    @DocletReplaceParams("x: number, y: number, z: number, direction: Direction, offHand: boolean")
+    @DocletReplaceParams("x: int, y: int, z: int, direction: Direction, offHand: boolean")
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, String direction, boolean offHand) throws InterruptedException {
         return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, false);
     }
@@ -414,7 +414,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param offHand
      * @since 1.5.0, renamed from {@code interact} in 1.6.0
      */
-    @DocletReplaceParams("x: number, y: number, z: number, direction: Hexit, offHand: boolean")
+    @DocletReplaceParams("x: int, y: int, z: int, direction: Hexit, offHand: boolean")
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, int direction, boolean offHand) throws InterruptedException {
         return interactBlock(x, y, z, direction, offHand, false);
     }
@@ -429,7 +429,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      *
      * @since 1.8.4
      */
-    @DocletReplaceParams("x: number, y: number, z: number, direction: Direction, offHand: boolean, await: boolean")
+    @DocletReplaceParams("x: int, y: int, z: int, direction: Direction, offHand: boolean, await: boolean")
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, String direction, boolean offHand, boolean await) throws InterruptedException {
         return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, await);
     }
@@ -443,7 +443,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param await     whether to wait for the interaction to complete
      * @since 1.5.0, renamed from {@code interact} in 1.6.0
      */
-    @DocletReplaceParams("x: number, y: number, z: number, direction: Hexit, offHand: boolean, await: boolean")
+    @DocletReplaceParams("x: int, y: int, z: int, direction: Hexit, offHand: boolean, await: boolean")
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, int direction, boolean offHand, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;

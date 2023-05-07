@@ -96,13 +96,13 @@ namespace GetJava {
 
     interface Primitives {
         boolean: Primitive<boolean, boolean>;
-        byte:    Primitive<number, number>;
-        short:   Primitive<number, number>;
-        int:     Primitive<number, number>;
-        long:    Primitive<number, number>;
-        float:   Primitive<number, number>;
-        double:  Primitive<number, number>;
-        char:    Primitive<string | number, string>;
+        byte:    Primitive<byte   , byte>;
+        short:   Primitive<short  , short>;
+        int:     Primitive<int    , int>;
+        long:    Primitive<long   , long>;
+        float:   Primitive<float  , float>;
+        double:  Primitive<double , double>;
+        char:    Primitive<string | char, string>;
     }
     
     interface Primitive<A, T = any> {
@@ -158,7 +158,7 @@ interface JavaArrayStatics<T extends JavaArray<any>> extends JavaClassStatics<T,
 
 interface JavaArrayConstructor<T extends JavaArray<any>> extends SuppressProperties {
 
-    new (length: number): T;
+    new (length: int): T;
 
 }
 
@@ -302,8 +302,8 @@ declare namespace Packages {
                 notifyAll(): void;
                 toString(): string;
                 wait(): void;
-                wait(var1: number): void;
-                wait(timeoutMillis: number, nanos: number): void;
+                wait(var1: long): void;
+                wait(timeoutMillis: long, nanos: int): void;
 
             }
 
@@ -324,8 +324,8 @@ declare namespace Packages {
             const StackTraceElement: JavaClassStatics<StackTraceElement, StackTraceElement$$constructor>;
             interface StackTraceElement$$constructor extends SuppressProperties {
 
-                new (declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement;
-                new (classLoaderName: string, moduleName: string, moduleVersion: string, declaringClass: string, methodName: string, fileName: string, lineNumber: number): StackTraceElement;
+                new (declaringClass: string, methodName: string, fileName: string, lineNumber: int): StackTraceElement;
+                new (classLoaderName: string, moduleName: string, moduleVersion: string, declaringClass: string, methodName: string, fileName: string, lineNumber: int): StackTraceElement;
 
             }
             interface StackTraceElement extends Object, java.io.Serializable {
@@ -382,7 +382,7 @@ declare namespace Packages {
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html
             const Collection: JavaInterfaceStatics<Collection<any>>;
             interface Collection<T> extends java.lang.Iterable<T> {
-                readonly [n: number]: T;
+                readonly [n: int]: T;
 
                 add(element: T): boolean;
                 addAll(elements: JavaCollection<T>): boolean;
@@ -410,17 +410,17 @@ declare namespace Packages {
             }
             interface List<T> extends Collection<T> {
 
-                add(index: number, element: T): void;
+                add(index: int, element: T): void;
                 add(element: T): boolean;
-                addAll(index: number, elements: JavaCollection<T>): boolean;
+                addAll(index: int, elements: JavaCollection<T>): boolean;
                 addAll(elements: JavaCollection<T>): boolean;
-                get(index: number): T;
+                get(index: int): T;
                 indexOf(element: T): number;
                 lastIndexOf(element: T): number;
-                remove(index: number): T;
+                remove(index: int): T;
                 remove(element: T): boolean;
-                set(index: number, element: T): T;
-                subList(start: number, end: number): JavaList<T>;
+                set(index: int, element: T): T;
+                subList(start: int, end: int): JavaList<T>;
 
             }
 
@@ -451,7 +451,6 @@ declare namespace Packages {
                 equals(object: JavaMap<K, V>): boolean;
                 get(key: K): V | null;
                 getOrDefault(key: K, defaultValue: V): V;
-                hashCode(): number;
                 isEmpty(): boolean;
                 keySet(): JavaSet<K>;
                 put(ket: K, value: V): V;
@@ -519,7 +518,7 @@ declare namespace Packages {
                 mkdirs(): boolean;
                 renameTo(dest: File): boolean;
                 setExecutable(executable: boolean, ownerOnly?: boolean): boolean;
-                setLastModified(time: number): boolean;
+                setLastModified(time: long): boolean;
                 setReadable(readable: boolean, ownerOnly?: boolean): boolean;
                 setWritable(writable: boolean, ownerOnly?: boolean): boolean;
                 toString(): string;
@@ -539,7 +538,7 @@ declare namespace Packages {
             const URL: JavaClassStatics<URL, URL$$constructor>;
             interface URL$$constructor extends SuppressProperties {
 
-                new (protocol: string, host: string, port: number, file: string): URL;
+                new (protocol: string, host: string, port: int, file: string): URL;
                 new (protocol: string, host: string, file: string): URL;
                 new (spec: string): URL;
                 new (context: URL, spec: string): URL;
@@ -565,7 +564,7 @@ declare namespace Packages {
             interface URI$$constructor extends SuppressProperties {
 
                 new (str: string): URI;
-                new (scheme: string, userInfo: string, host: string, port: number, path: string, query: string, fragment: string): URI;
+                new (scheme: string, userInfo: string, host: string, port: int, path: string, query: string, fragment: string): URI;
                 new (scheme: string, authority: string, path: string, query: string, fragment: string): URI;
                 new (scheme: string, host: string, path: string, fragment: string): URI;
                 new (scheme: string, ssp: string, fragment: string): URI;
@@ -595,6 +594,14 @@ declare namespace Packages {
     }
 
 }
+
+type char   = number & {};
+type byte   = number & {};
+type short  = number & {};
+type int    = number & {};
+type long   = number | BigInt;
+type float  = number & {};
+type double = number & {};
 
 type JavaClassArg<T = any> = JavaClass<T> | { readonly class: JavaClass<T> };
 

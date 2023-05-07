@@ -160,7 +160,7 @@ public class RegistryHelper {
      *
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: EnchantmentId, level: number")
+    @DocletReplaceParams("id: EnchantmentId, level: int")
     public EnchantmentHelper getEnchantment(String id, int level) {
         return new EnchantmentHelper(Registries.ENCHANTMENT.get(parseIdentifier(id)), level);
     }

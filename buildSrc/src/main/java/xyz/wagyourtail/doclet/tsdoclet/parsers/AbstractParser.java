@@ -19,6 +19,7 @@ import javax.lang.model.type.TypeVariable;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.Map;
 import java.util.HashSet;
 
 public abstract class AbstractParser {
@@ -30,14 +31,14 @@ public abstract class AbstractParser {
         "java.util.Set",
         "java.util.Map"
     );
-    static final public Set<String> javaNumberType = Set.of(
-        "java.lang.Integer",
-        "java.lang.Float",
-        "java.lang.Long",
-        "java.lang.Short",
-        "java.lang.Character",
-        "java.lang.Byte",
-        "java.lang.Double"
+    static final public Map<String, String> javaNumberType = Map.of(
+        "java.lang.Integer",   "int",
+        "java.lang.Float",     "float",
+        "java.lang.Long",      "long",
+        "java.lang.Short",     "short",
+        "java.lang.Character", "char",
+        "java.lang.Byte",      "byte",
+        "java.lang.Double",    "double"
     );
 
     private static Set<String> loggedTypes = new HashSet<>();
@@ -222,8 +223,26 @@ public abstract class AbstractParser {
             case BOOLEAN -> {
                 return "boolean";
             }
-            case BYTE, SHORT, INT, LONG, FLOAT, DOUBLE, CHAR -> {
-                return "number";
+            case BYTE -> {
+                return "byte";
+            }
+            case SHORT -> {
+                return "short";
+            }
+            case INT -> {
+                return "int";
+            }
+            case LONG -> {
+                return "long";
+            }
+            case FLOAT -> {
+                return "float";
+            }
+            case DOUBLE -> {
+                return "double";
+            }
+            case CHAR -> {
+                return "char";
             }
             case VOID, NONE -> {
                 return "void";
@@ -273,8 +292,8 @@ public abstract class AbstractParser {
                 if (rawType.toString().equals("xyz.wagyourtail.jsmacros.core.event.BaseEvent")) return "Events.BaseEvent";
 
                 if (rawType.toString().startsWith("java.lang")) {
-                    if (javaNumberType.contains(rawType.toString())) {
-                        return "number";
+                    if (javaNumberType.containsKey(rawType.toString())) {
+                        return isParamType ? javaNumberType.get(rawType.toString()) : "number";
                     }
 
                     switch (rawType.toString()) {

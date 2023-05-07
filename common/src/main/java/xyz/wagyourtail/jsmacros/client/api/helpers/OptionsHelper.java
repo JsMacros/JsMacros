@@ -1439,7 +1439,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          *
          * @since 1.8.4
          */
-        @DocletReplaceParams("category: SoundCategory, volume: number")
+        @DocletReplaceParams("category: SoundCategory, volume: double")
         public MusicOptionsHelper setVolume(String category, double volume) {
             base.getSoundVolumeOption(SOUND_CATEGORY_MAP.get(category)).setValue(volume);
             return this;
@@ -2659,7 +2659,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.3.1
      * @deprecated use {@link MusicOptionsHelper#setVolume(String, double)} instead.
      */
-    @DocletReplaceParams("category: SoundCategory, volume: number")
+    @DocletReplaceParams("category: SoundCategory, volume: double")
     @Deprecated
     public OptionsHelper setVolume(String category, double volume) {
         base.getSoundVolumeOption(Arrays.stream(SoundCategory.values()).filter(e -> e.getName().equals(category)).findFirst().orElseThrow(() -> new IllegalArgumentException("unknown sound category"))).setValue(volume);

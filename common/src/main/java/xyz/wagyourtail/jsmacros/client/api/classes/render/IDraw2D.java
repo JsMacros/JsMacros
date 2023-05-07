@@ -482,7 +482,7 @@ public interface IDraw2D<T> {
      * @param id item id
      * @return added item
      */
-    @DocletReplaceParams("x: number, y: number, id: ItemId")
+    @DocletReplaceParams("x: int, y: int, id: ItemId")
     Item addItem(int x, int y, String id);
     
     /**
@@ -493,7 +493,7 @@ public interface IDraw2D<T> {
      * @param id item id
      * @return added item
      */
-    @DocletReplaceParams("x: number, y: number, zIndex: number, id: ItemId")
+    @DocletReplaceParams("x: int, y: int, zIndex: int, id: ItemId")
     Item addItem(int x, int y, int zIndex, String id);
     
     /**
@@ -504,7 +504,7 @@ public interface IDraw2D<T> {
      * @param overlay should include overlay health and count
      * @return added item
      */
-    @DocletReplaceParams("x: number, y: number, id: ItemId, overlay: boolean")
+    @DocletReplaceParams("x: int, y: int, id: ItemId, overlay: boolean")
     Item addItem(int x, int y, String id, boolean overlay);
     
     /**
@@ -516,7 +516,7 @@ public interface IDraw2D<T> {
      * @param overlay should include overlay health and count
      * @return added item
      */
-    @DocletReplaceParams("x: number, y: number, zIndex: number, id: ItemId, overlay: boolean")
+    @DocletReplaceParams("x: int, y: int, zIndex: int, id: ItemId, overlay: boolean")
     Item addItem(int x, int y, int zIndex, String id, boolean overlay);
     
     /**
@@ -529,7 +529,7 @@ public interface IDraw2D<T> {
      * @param rotation rotation of item
      * @return added item
      */
-    @DocletReplaceParams("x: number, y: number, id: ItemId, overlay: boolean, scale: number, rotation: number")
+    @DocletReplaceParams("x: int, y: int, id: ItemId, overlay: boolean, scale: double, rotation: double")
     Item addItem(int x, int y, String id, boolean overlay, double scale, double rotation);
     
     /**
@@ -543,7 +543,7 @@ public interface IDraw2D<T> {
      * @param rotation rotation of item
      * @return added item
      */
-    @DocletReplaceParams("x: number, y: number, zIndex: number, id: ItemId, overlay: boolean, scale: number, rotation: number")
+    @DocletReplaceParams("x: int, y: int, zIndex: int, id: ItemId, overlay: boolean, scale: double, rotation: double")
     Item addItem(int x, int y, int zIndex, String id, boolean overlay, double scale, double rotation);
     
     /**

@@ -92,7 +92,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      *
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: EnchantmentId, level: number")
+    @DocletReplaceParams("id: EnchantmentId, level: int")
     public CreativeItemStackHelper addEnchantment(String id, int level) {
         return addEnchantment(Registries.ENCHANTMENT.get(RegistryHelper.parseIdentifier(id)), level);
     }

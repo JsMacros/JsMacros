@@ -127,7 +127,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @param mousebutton
      * @return
      */
-    @DocletReplaceParams("slot: number, mousebutton: Bit")
+    @DocletReplaceParams("slot: int, mousebutton: Bit")
     public Inventory<T> click(int slot, int mousebutton) {
         SlotActionType act = mousebutton == 2 ? SlotActionType.CLONE : SlotActionType.PICKUP;
         man.clickSlot(syncId, slot, mousebutton, act, player);
@@ -141,7 +141,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @param mousebutton
      * @return
      */
-    @DocletReplaceParams("slots: number[], mousebutton: Bit")
+    @DocletReplaceParams("slots: int[], mousebutton: Bit")
     public Inventory<T> dragClick(int[] slots, int mousebutton) {
         mousebutton = mousebutton == 0 ? 1 : 5;
         man.clickSlot(syncId, -999, mousebutton - 1, SlotActionType.QUICK_CRAFT, player); // start drag click
@@ -383,7 +383,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @since 1.7.0
      * @return number of items that matched
      */
-    @DocletReplaceParams("slot: number, button: Bit")
+    @DocletReplaceParams("slot: int, button: Bit")
     public int quickAll(int slot, int button) {
         int count = 0;
         ItemStack cursorStack = handler.slots.get(slot).getStack().copy();
@@ -477,7 +477,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @since 1.6.5 [citation needed]
      * @return
      */
-    @DocletReplaceParams("slot: number, hotbarSlot: HotbarSwapSlot")
+    @DocletReplaceParams("slot: int, hotbarSlot: HotbarSwapSlot")
     public Inventory<T> swapHotbar(int slot, int hotbarSlot) {
         if (hotbarSlot != 40) {
             if (hotbarSlot < 0 || hotbarSlot > 8)

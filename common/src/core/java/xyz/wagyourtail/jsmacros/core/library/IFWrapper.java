@@ -57,7 +57,7 @@ public interface IFWrapper<T> {
      * @param <B>
      * @param <R>
      */
-    @DocletReplaceParams("priority: number, c: (arg0: A, arg1: B) => R | void")
+    @DocletReplaceParams("priority: int, c: (arg0: A, arg1: B) => R | void")
     default <A, B, R> MethodWrapper<A, B, R, ?> methodToJavaAsync(int priority, T c) {
         return methodToJavaAsync(c);
     }
