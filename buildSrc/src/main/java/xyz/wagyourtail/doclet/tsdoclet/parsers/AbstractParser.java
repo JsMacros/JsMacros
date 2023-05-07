@@ -183,7 +183,7 @@ public abstract class AbstractParser {
                 for (VariableElement param : params) {
                     if (restParam != null && restParam.equals(param)) s.append("...");
                     s.append(param.getSimpleName()).append(": ")
-                        .append(transformType(param).replaceAll("\\bJavaClass\\b", "JavaClassArg"));
+                        .append(transformType(param, true));
                     if (isNullable(param)) s.append(" | null");
                     s.append(", ");
                 }
@@ -206,10 +206,18 @@ public abstract class AbstractParser {
     }
 
     public String transformType(Element elem) {
-        return transformType(elem.asType());
+        return transformType(elem.asType(), false);
+    }
+
+    public String transformType(Element elem, boolean isParamType) {
+        return transformType(elem.asType(), isParamType);
     }
 
     public String transformType(TypeMirror type) {
+        return transformType(type, false);
+    }
+
+    public String transformType(TypeMirror type, boolean isParamType) {
         switch (type.getKind()) {
             case BOOLEAN -> {
                 return "boolean";
@@ -234,6 +242,7 @@ public abstract class AbstractParser {
                 if (javaShortifies.contains(classpath + "." + rawType.toString())) {
                     shortified = true;
                     rawType.insert(0, "Java");
+                    if (isParamType && rawType.toString().equals("JavaClass")) rawType.append("Arg");
                 } else if (isPackage && classpath.equals(this.path)) {
                     shortified = true;
                 } else rawType.insert(0, classpath + ".");
@@ -242,7 +251,7 @@ public abstract class AbstractParser {
                 if (params != null && !params.isEmpty()) {
                     rawType.append("<");
                     for (TypeMirror param : params) {
-                        rawType.append(transformType(param)).append(", ");
+                        rawType.append(transformType(param, isParamType)).append(", ");
                     }
                     rawType.setLength(rawType.length() - 2);
                     rawType.append(">");
@@ -286,7 +295,8 @@ public abstract class AbstractParser {
                 return ((TypeVariable) type).asElement().getSimpleName().toString();
             }
             case ARRAY -> {
-                return transformType(((ArrayType) type).getComponentType()) + "[]";
+                String component = transformType(((ArrayType) type).getComponentType(), isParamType);
+                return isParamType ? component + "[]" : "JavaArray<" + component + ">";
             }
             case WILDCARD -> {
                 return "any";
@@ -294,7 +304,7 @@ public abstract class AbstractParser {
             case INTERSECTION -> {
                 StringBuilder s = new StringBuilder("(");
                 for (TypeMirror t : ((IntersectionType) type).getBounds()) {
-                    s.append(transformType(t)).append(" & ");
+                    s.append(transformType(t, isParamType)).append(" & ");
                 }
                 s.setLength(s.length() - 3);
                 s.append(")");
@@ -303,7 +313,7 @@ public abstract class AbstractParser {
             case UNION -> {
                 StringBuilder s = new StringBuilder("(");
                 for (TypeMirror t : ((UnionType) type).getAlternatives()) {
-                    s.append(transformType(t)).append(" | ");
+                    s.append(transformType(t, isParamType)).append(" | ");
                 }
                 s.setLength(s.length() - 3);
                 s.append(")");

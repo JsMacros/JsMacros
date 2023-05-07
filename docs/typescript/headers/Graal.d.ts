@@ -315,7 +315,11 @@ declare namespace Packages {
             }
 
             const Array: JavaInterfaceStatics<Array<any>>;
-            interface Array<T> extends Object, JsArray<T> {}
+            interface Array<T> extends Object, globalThis.Array<T> {
+
+                clone(): Array<T>;
+
+            }
 
             const StackTraceElement: JavaClassStatics<StackTraceElement, StackTraceElement$$constructor>;
             interface StackTraceElement$$constructor extends SuppressProperties {
@@ -361,7 +365,7 @@ declare namespace Packages {
             }
 
             const Iterable: JavaInterfaceStatics<Iterable<any>>;
-            interface Iterable<T> extends Object, JsIterable<T> {
+            interface Iterable<T> extends Object, globalThis.Iterable<T> {
 
                 iterator(): java.util.Iterator<T>;
                 forEach(arg0: java.util.function.Consumer<any>): void;
@@ -591,9 +595,6 @@ declare namespace Packages {
     }
 
 }
-
-type JsArray<T> = T[];
-type JsIterable<T> = Iterable<T>;
 
 type JavaClassArg<T = any> = JavaClass<T> | { readonly class: JavaClass<T> };
 

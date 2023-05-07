@@ -105,7 +105,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      *
      * @since 1.8.4
      */
-    @DocletReplaceReturn("RecipeId[]")
+    @DocletReplaceReturn("JavaArray<RecipeId>")
     public String[] getRecipes() {
         return (String[]) Arrays.stream(base.getRewards().getRecipes()).map(Identifier::toString).toArray();
     }
