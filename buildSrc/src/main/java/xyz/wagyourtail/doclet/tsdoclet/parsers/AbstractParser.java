@@ -224,25 +224,25 @@ public abstract class AbstractParser {
                 return "boolean";
             }
             case BYTE -> {
-                return "byte";
+                return isParamType ? "byte" : "number";
             }
             case SHORT -> {
-                return "short";
+                return isParamType ? "short" : "number";
             }
             case INT -> {
-                return "int";
+                return isParamType ? "int" : "number";
             }
             case LONG -> {
-                return "long";
+                return isParamType ? "long" : "number";
             }
             case FLOAT -> {
-                return "float";
+                return isParamType ? "float" : "number";
             }
             case DOUBLE -> {
-                return "double";
+                return isParamType ? "double" : "number";
             }
             case CHAR -> {
-                return "char";
+                return isParamType ? "char" : "number";
             }
             case VOID, NONE -> {
                 return "void";
