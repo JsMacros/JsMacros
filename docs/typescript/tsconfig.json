@@ -5,7 +5,8 @@
         "target": "ES2022",
         "lib": ["ES2022"],
         "outDir": "./build",
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "typeRoots": []
     },
     "include": [
         "scripts/**/*.ts",
