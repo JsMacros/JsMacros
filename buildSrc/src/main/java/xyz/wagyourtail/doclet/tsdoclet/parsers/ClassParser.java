@@ -56,7 +56,7 @@ public class ClassParser extends AbstractParser {
 
     private String buildExtends() {
         StringBuilder s = new StringBuilder(" extends ");
-        String sup = transformType(type.getSuperclass());
+        String sup = transformType(type.getSuperclass(), false, true);
         if (sup.equals("void") || sup.equals("any")) {
             s.append("JavaObject");
         } else if (sup.equals("/* minecraft class */ any")) {
@@ -68,7 +68,7 @@ public class ClassParser extends AbstractParser {
         List<? extends TypeMirror> iface = type.getInterfaces();
         if (iface != null && !iface.isEmpty()) {
             for (TypeMirror ifa : iface) {
-                sup = transformType(ifa);
+                sup = transformType(ifa, false, true);
                 if (!sup.equals("/* minecraft class */ any")) {
                     s.append(", ").append(sup);
                 }

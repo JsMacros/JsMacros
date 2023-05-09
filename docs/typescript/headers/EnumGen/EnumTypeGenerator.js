@@ -73,10 +73,10 @@ const replaceToFile = type => {
   let res = ''
   if (!temp.length) {
     res = ' string // not found'
-  }else if (type.length + temp.reduce((p, v) => p + v.length + 4, -2) < 80) {
+  } else if (type.length + temp.reduce((p, v) => p + v.length + 4, -2) < 80) {
     // single line if short enough
     res = temp.map(f =>    " '" + f.replace(/'/g, "\\'") + "'").join(' |')
-  }else {
+  } else {
     res = temp.map(f => "\n| '" + f.replace(/'/g, "\\'") + "'").join('')
   }
 
@@ -149,7 +149,7 @@ if ('Key' in custom) {
     .concat(temp.filter(k => !funcRegex.test(k) && !commonRegex.test(k) && !groupRegex.test(k)))
   log(`fetched ${temp?.length} keys for Key`)
   replaceToFile('Key')
-}else Chat.log('custom type Key not found')
+} else Chat.log('custom type Key not found')
 
 
 // get registry classes for evals
