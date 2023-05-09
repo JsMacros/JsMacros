@@ -283,7 +283,9 @@ public abstract class AbstractParser {
                     rawType.append(">");
                 }
 
-                if (rawType.toString().startsWith("net.minecraft")) return "/* minecraft class */ any";
+                if (rawType.toString().startsWith("net.minecraft")) {
+                    return "/* " + rawType.toString().replaceAll("/\\* ", "").replaceAll(" \\*/(?: any)?", "") + " */ any";
+                }
 
                 AnnotationMirror mirror = type.getAnnotationMirrors().stream().filter(e -> e.getAnnotationType().asElement().getSimpleName().toString().equals("Event")).findFirst().orElse(null);
                 if (mirror != null) {

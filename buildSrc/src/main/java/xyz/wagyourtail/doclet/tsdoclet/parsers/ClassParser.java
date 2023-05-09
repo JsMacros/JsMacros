@@ -42,8 +42,8 @@ public class ClassParser extends AbstractParser {
                     if (!ext.endsWith("any")) {
                         s.append(" extends ").append(ext);
                         if (defaultToAny) s.append(" = any");
-                    } else if (ext.equals("/* minecraft class */ any")) {
-                        s.append(" = /* minecraft class */ any");
+                    } else if (ext.startsWith("/* net.minecraft")) {
+                        s.append(" = ").append(ext);
                     } else if (defaultToAny) s.append(" = any");
                     s.append(", ");
                 }
@@ -59,8 +59,8 @@ public class ClassParser extends AbstractParser {
         String sup = transformType(type.getSuperclass(), false, true);
         if (sup.equals("void") || sup.equals("any")) {
             s.append("JavaObject");
-        } else if (sup.equals("/* minecraft class */ any")) {
-            s.append("/* supressed minecraft class */ JavaObject");
+        } else if (sup.startsWith("/* net.minecraft")) {
+            s.append(sup.substring(0, sup.length() - 3)).append("JavaObject");
         } else {
             s.append(sup);
         }
@@ -69,8 +69,11 @@ public class ClassParser extends AbstractParser {
         if (iface != null && !iface.isEmpty()) {
             for (TypeMirror ifa : iface) {
                 sup = transformType(ifa, false, true);
-                if (!sup.equals("/* minecraft class */ any")) {
-                    s.append(", ").append(sup);
+                s.append(", ");
+                if (sup.startsWith("/* net.minecraft")) {
+                    s.append(sup.substring(0, sup.length() - 3)).append("JavaObject");
+                } else {
+                    s.append(sup);
                 }
             }
         }
@@ -88,7 +91,7 @@ public class ClassParser extends AbstractParser {
             TypeMirror sup = c.getSuperclass();
             if (sup instanceof DeclaredType) {
                 TypeElement supe = (TypeElement) ((DeclaredType) sup).asElement();
-                if (transformType(sup).equals("/* minecraft class */ any")) {
+                if (transformType(sup).startsWith("/* net.minecraft")) {
                     superMcClasses.add(supe);
                 } else {
                     set.add(supe);
@@ -101,7 +104,7 @@ public class ClassParser extends AbstractParser {
         if (ifaces != null && !ifaces.isEmpty()) {
             for (TypeMirror ifa : ifaces) {
                 TypeElement ifae = (TypeElement) ((DeclaredType) ifa).asElement();
-                if (transformType(ifa).equals("/* minecraft class */ any")) {
+                if (transformType(ifa).startsWith("/* net.minecraft")) {
                     superMcClasses.add(ifae);
                 } else {
                     set.add(ifae);
