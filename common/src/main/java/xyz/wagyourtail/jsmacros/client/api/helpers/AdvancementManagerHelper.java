@@ -35,7 +35,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      *
      * @since 1.8.4
      */
-    @DocletReplaceReturn("JavaMap<AdvancementId, $AdvancementHelper>")
+    @DocletReplaceReturn("JavaMap<AdvancementId, AdvancementHelper>")
     public Map<String, AdvancementHelper> getAdvancementsForIdentifiers() {
         return ((MixinAdvancementManager) base).getAdvancements().entrySet().stream().collect(Collectors.toMap(
                 identifierAdvancementEntry -> identifierAdvancementEntry.getKey().toString(),
