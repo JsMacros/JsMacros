@@ -300,8 +300,7 @@ public abstract class AbstractParser {
                 if (rawType.toString().equals("xyz.wagyourtail.jsmacros.core.event.BaseEvent")) return "Events.BaseEvent";
 
                 Main.classes.addClass(((DeclaredType) type).asElement());
-                if (!isExtends)
-                if (rawType.toString().startsWith("java.lang")) {
+                if (!isExtends && rawType.toString().startsWith("java.lang")) {
                     if (javaNumberType.containsKey(rawType.toString())) {
                         return isParamType ? javaNumberType.get(rawType.toString()) : "number";
                     }
