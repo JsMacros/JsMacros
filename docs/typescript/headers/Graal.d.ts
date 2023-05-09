@@ -474,25 +474,7 @@ declare namespace Packages {
             }
             interface Set<T> extends Collection<T> {}
 
-            namespace _function {
-
-                const Function: JavaInterfaceStatics<Function<any, any>> & {
-
-                    identity<T>(): Function<T, T>;
-
-                }
-                interface Function<T, R> extends JavaObject {
-
-                    (arg?: T): R;
-                    apply(arg0: T): R;
-                    compose<V>(arg0: Function<any, any>): Function<V, R>;
-                    andThen<V>(arg0: Function<any, any>): Function<T, V>;
-
-                }
-
-            }
-
-            export { Collection, List, Map, Set, _function as function }
+            export { Collection, List, Map, Set }
 
         }
 
