@@ -219,7 +219,7 @@ public class ClassParser extends AbstractParser {
                 }
                 if (next != null) {
                     for (Element sm : superMethods) {
-                        if (!sm.getSimpleName().equals(next)) merged.add(sm);
+                        if (sm.getSimpleName().equals(next)) merged.add(sm);
                     }
                 }
                 methods = merged;
