@@ -15,6 +15,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelStorageException;
 
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
@@ -268,6 +269,7 @@ public class FClient extends PerExecLibrary {
      *
      * @since 1.6.0
      */
+    @DocletReplaceReturn("never")
     public void shutdown() {
         mc.execute(mc::scheduleStop);
 
@@ -443,6 +445,7 @@ public class FClient extends PerExecLibrary {
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("never")
     public void exitGamePeacefully() {
         mc.scheduleStop();
     }
@@ -452,6 +455,7 @@ public class FClient extends PerExecLibrary {
      *
      * @since 1.8.4
      */
+    @DocletReplaceReturn("never")
     public void exitGameForcefully() {
         System.exit(0);
     }
