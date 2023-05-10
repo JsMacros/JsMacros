@@ -4,6 +4,10 @@ sourceSets {
         compileClasspath += configurations.coreImplementation + configurations.minecraftLibraries
         runtimeClasspath += configurations.coreImplementation + configurations.minecraftLibraries
     }
+    client_api {
+        compileClasspath += core.compileClasspath + main.compileClasspath + core.output
+        runtimeClasspath += core.runtimeClasspath + main.compileClasspath + core.output
+    }
     main {
         compileClasspath += core.output
         runtimeClasspath += core.output

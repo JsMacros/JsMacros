@@ -41,8 +41,6 @@ public class JsMacros {
         } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
-
-        // HINT TO EXTENSION DEVS: Use this init to add your shit before any scripts are actually run
     }
 
 
@@ -117,7 +115,7 @@ public class JsMacros {
             } else if (s instanceof CreativeInventoryScreen) {
                 return "Creative Inventory";
             } else {
-                return s.getClass().getName();
+                return "Unknown Container " + s.getClass().getName();
             }
         } else if (s instanceof ChatScreen) {
             return "Chat";
