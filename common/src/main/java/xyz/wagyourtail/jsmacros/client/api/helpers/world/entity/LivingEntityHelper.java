@@ -42,6 +42,24 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
+     * @since 1.8.4
+     * @param effect the status effect
+     * @return if the entity can have a certain status effect
+     */
+    public boolean canHaveStatusEffect (StatusEffectInstance effect) {
+        return base.canHaveStatusEffect(effect);
+    }
+
+    /**
+     * @since 1.8.4
+     * @param effect the status effect
+     * @return if the entity can have a certain status effect
+     */
+    public boolean canHaveStatusEffect (StatusEffectHelper effect) {
+        return canHaveStatusEffect(effect.getRaw());
+    }
+
+    /**
      * For client side entities, excluding the player, this will most likely return {@code false}
      * even if the entity has the effect, as effects are not synced to the client.
      *
@@ -184,6 +202,93 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     public boolean isFallFlying() {
         return base.isFallFlying();
     }
+
+    /**
+     * @since 1.8.4
+     * @return if the entity is on the ground
+     */
+    public boolean isOnGround() {
+        return base.isOnGround();
+    }
+
+    /**
+     * @since 1.8.4
+     * @return if the entity can breathe in water
+     */
+    public boolean canBreatheInWater() {
+        return base.canBreatheInWater();
+    }
+
+    /**
+     * @since 1.8.4
+     * @return if the entity has no drag
+     */
+    public boolean hasNoDrag() {
+        return base.hasNoDrag();
+    }
+
+    /**
+     * @since 1.8.4
+     * @return if the entity has no gravity
+     */
+    public boolean hasNoGravity() {
+        return base.hasNoGravity();
+    }
+
+    /**
+     * @since 1.8.4
+     * @param target the target entity
+     * @return if the entity can target a target entity
+     */
+    public boolean canTarget(LivingEntity target) {
+        return base.canTarget(target);
+    }
+
+    /**
+     * @since 1.8.4
+     * @param target the target entity
+     * @return if the entity can target a target entity
+     */
+    public boolean canTarget(LivingEntityHelper<?> target) {
+        return canTarget(target.getRaw());
+    }
+
+    /**
+     * @since 1.8.4
+     * @return if the entity can take damage
+     */
+    public boolean canTakeDamage() {
+        return base.canTakeDamage();
+    }
+
+    /**
+     * @since 1.8.4
+     * @return if the entity is part of the game (is alive and not spectator)
+     */
+    public boolean isPartOfGame() {
+        return base.isPartOfGame();
+    }
+
+    /**
+     * @since 1.8.4
+     * @return if the entity is in spectator
+     */
+    public boolean isSpectator() {
+        return base.isSpectator();
+    }
+
+    /**
+     * @since 1.8.4
+     * @return if the entity is undead
+     */
+    public boolean isUndead() {
+        return base.isUndead();
+    }
+
+    /**
+     * @since 1.8.4
+     */
+
 
     /**
      * @return the bow pull progress of the entity, {@code 0} by default.

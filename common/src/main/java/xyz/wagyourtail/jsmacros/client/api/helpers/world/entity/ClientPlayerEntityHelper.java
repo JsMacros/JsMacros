@@ -58,6 +58,49 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
+     * @since 1.8.4
+     */
+    public void setVelocity(Vec3d velocity) {
+        base.setVelocity(velocity);
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public void setVelocity(Pos3D velocity) {
+        setVelocity(velocity.toMojangDoubleVector());
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public void setVelocity(double x, double y, double z) {
+        setVelocity(new Vec3d(x, y, z));
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public void addVelocity(Vec3d velocity) {
+        base.addVelocity(velocity);
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public void addVelocity(Pos3D velocity) {
+        addVelocity(velocity.toMojangDoubleVector());
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public void addVelocity(double x, double y, double z) {
+        addVelocity(new Vec3d(x, y, z));
+    }
+
+
+    /**
      * Sets the player rotation along the given axis and keeps the other axis the same.
      *
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
