@@ -104,7 +104,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     /**
      * @since 1.8.4
      */
-    private ClientPlayerEntityHelper<T> setPosition(Vec3d pos) {
+    private ClientPlayerEntityHelper<T> setPos(Vec3d pos) {
         base.setPosition(pos);
         return this;
     }
@@ -112,15 +112,29 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     /**
      * @since 1.8.4
      */
-    public ClientPlayerEntityHelper<T> setPosition(Pos3D pos) {
-        return setPosition(pos.toMojangDoubleVector());
+    public ClientPlayerEntityHelper<T> setPos(Pos3D pos) {
+        return setPos(pos.toMojangDoubleVector());
     }
 
     /**
      * @since 1.8.4
      */
-    public ClientPlayerEntityHelper<T> setPosition(double x, double y, double z) {
-        return setPosition(new Vec3d(x, y, z));
+    public ClientPlayerEntityHelper<T> setPos(double x, double y, double z) {
+        return setPos(new Vec3d(x, y, z));
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public ClientPlayerEntityHelper<T> addPos(Pos3D pos) {
+        return setPos(getPos().add(pos));
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public ClientPlayerEntityHelper<T> addPos(double x, double y, double z) {
+        return setPos(getPos().add(new Pos3D(x, y, z)));
     }
 
     /**
