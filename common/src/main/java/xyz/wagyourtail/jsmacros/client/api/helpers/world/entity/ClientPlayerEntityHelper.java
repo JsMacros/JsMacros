@@ -60,43 +60,45 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     /**
      * @since 1.8.4
      */
-    public void setVelocity(Vec3d velocity) {
+    public ClientPlayerEntityHelper<T> setVelocity(Vec3d velocity) {
         base.setVelocity(velocity);
+        return this;
     }
 
     /**
      * @since 1.8.4
      */
-    public void setVelocity(Pos3D velocity) {
-        setVelocity(velocity.toMojangDoubleVector());
+    public ClientPlayerEntityHelper<T>  setVelocity(Pos3D velocity) {
+        return setVelocity(velocity.toMojangDoubleVector());
     }
 
     /**
      * @since 1.8.4
      */
-    public void setVelocity(double x, double y, double z) {
-        setVelocity(new Vec3d(x, y, z));
+    public ClientPlayerEntityHelper<T> setVelocity(double x, double y, double z) {
+        return setVelocity(new Vec3d(x, y, z));
     }
 
     /**
      * @since 1.8.4
      */
-    public void addVelocity(Vec3d velocity) {
+    public ClientPlayerEntityHelper<T> addVelocity(Vec3d velocity) {
         base.addVelocity(velocity);
+        return this;
     }
 
     /**
      * @since 1.8.4
      */
-    public void addVelocity(Pos3D velocity) {
-        addVelocity(velocity.toMojangDoubleVector());
+    public ClientPlayerEntityHelper<T> addVelocity(Pos3D velocity) {
+        return addVelocity(velocity.toMojangDoubleVector());
     }
 
     /**
      * @since 1.8.4
      */
-    public void addVelocity(double x, double y, double z) {
-        addVelocity(new Vec3d(x, y, z));
+    public ClientPlayerEntityHelper<T> addVelocity(double x, double y, double z) {
+        return addVelocity(new Vec3d(x, y, z));
     }
 
 
