@@ -46,7 +46,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @param effect the status effect
      * @return if the entity can have a certain status effect
      */
-    public boolean canHaveStatusEffect (StatusEffectInstance effect) {
+    private boolean canHaveStatusEffect (StatusEffectInstance effect) {
         return base.canHaveStatusEffect(effect);
     }
 
@@ -240,7 +240,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @param target the target entity
      * @return if the entity can target a target entity
      */
-    public boolean canTarget(LivingEntity target) {
+    private boolean canTarget(LivingEntity target) {
         return base.canTarget(target);
     }
 
