@@ -60,7 +60,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     /**
      * @since 1.8.4
      */
-    public ClientPlayerEntityHelper<T> setVelocity(Vec3d velocity) {
+    private ClientPlayerEntityHelper<T> setVelocity(Vec3d velocity) {
         base.setVelocity(velocity);
         return this;
     }
@@ -82,7 +82,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     /**
      * @since 1.8.4
      */
-    public ClientPlayerEntityHelper<T> addVelocity(Vec3d velocity) {
+    private ClientPlayerEntityHelper<T> addVelocity(Vec3d velocity) {
         base.addVelocity(velocity);
         return this;
     }
@@ -101,6 +101,27 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         return addVelocity(new Vec3d(x, y, z));
     }
 
+    /**
+     * @since 1.8.4
+     */
+    private ClientPlayerEntityHelper<T> setPosition(Vec3d pos) {
+        base.setPosition(pos);
+        return this;
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public ClientPlayerEntityHelper<T> setPosition(Pos3D pos) {
+        return setPosition(pos.toMojangDoubleVector());
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public ClientPlayerEntityHelper<T> setPosition(double x, double y, double z) {
+        return setPosition(new Vec3d(x, y, z));
+    }
 
     /**
      * Sets the player rotation along the given axis and keeps the other axis the same.
