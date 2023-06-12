@@ -396,7 +396,6 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
 
     /**
      * @return the velocity vector.
-     *
      * @since 1.8.4
      */
     public Pos3D getVelocity() {

@@ -1,9 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.registry.Registries;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
+
 
 /**
  * @author Wagyourtail
@@ -15,7 +17,21 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     public StatusEffectHelper(StatusEffectInstance s) {
         super(s);
     }
-    
+
+    /**
+     * @since 1.8.4
+     */
+    public StatusEffectHelper(StatusEffect s) {
+        this(s, 0);
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public StatusEffectHelper(StatusEffect s, int t) {
+        super(new StatusEffectInstance(s, t));
+    }
+
     /**
      * @since 1.2.4
      * @return
@@ -30,6 +46,18 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      */
     public int getStrength() {
         return base.getAmplifier();
+    }
+
+    /**
+     * @since 1.8.4
+     * @return the string name of the category of the status effect, "HARMFUL", "NEUTRAL", or "BENEFICIAL".
+     */
+    public String getCategory() {
+        return switch (base.getEffectType().getCategory()) {
+            case HARMFUL -> "HARMFUL";
+            case NEUTRAL -> "NEUTRAL";
+            case BENEFICIAL -> "BENEFICIAL";
+        };
     }
     
     /**
