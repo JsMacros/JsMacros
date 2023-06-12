@@ -285,10 +285,6 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
         return base.isUndead();
     }
 
-    /**
-     * @since 1.8.4
-     */
-
 
     /**
      * @return the bow pull progress of the entity, {@code 0} by default.

@@ -27,7 +27,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.math.MathHelper;
 
-import net.minecraft.util.math.Vec3d;
 import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;

@@ -4,7 +4,6 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.registry.Registries;
-import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 
