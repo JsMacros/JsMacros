@@ -14,36 +14,47 @@ jobs:
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
-      
-    - uses: actions/github-script@v2
-      id: fname
-      with:
-        result-encoding: string
-        script: |
-          const fs = require("fs");
-          let file = fs.readFileSync("./gradle.properties");
-          file = file.toString().split("\n").map(e => e.trim().startsWith("mod_version") ? `${e}-beta-${process.env.GITHUB_SHA.substring(0, 7)}` : e).join("\n");
-          fs.writeFileSync("./gradle.properties", file);
-          const mod_version = file.toString().split("\n").filter(e => e.trim().startsWith("mod_version"))[0].split("=")[1].trim();
-          const archives_base_name = file.toString().split("\n").filter(e => e.trim().startsWith("archives_base_name"))[0].split("=")[1].trim();
-          return `${archives_base_name}-${mod_version}`;
-      
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-       distribution: 'adopt'
-       java-version: '17'
-       cache: 'gradle'
-        
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-      
-    - name: Build with Gradle
-      run: ./gradlew build -x test
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: ${{ steps.fname.outputs.result }}
-        path: ./dist/**/*
+      - uses: actions/github-script@v6
+        id: fname
+        with:
+          result-encoding: string
+          script: |
+            const fs = require("fs");
+            let file = fs.readFileSync("./gradle.properties");
+            file = file.toString().split("\n").map(e => e.trim().startsWith("mod_version") ? `${e}-beta-${process.env.GITHUB_SHA.substring(0, 7)}` : e).join("\n");
+            fs.writeFileSync("./gradle.properties", file);
+            const mod_version = file.toString().split("\n").filter(e => e.trim().startsWith("mod_version"))[0].split("=")[1].trim();
+            const archives_base_name = file.toString().split("\n").filter(e => e.trim().startsWith("archives_base_name"))[0].split("=")[1].trim();
+            return `${archives_base_name}-${mod_version}`;
+
+      - name: Zip source code
+        run: |
+          mkdir -p dist
+          zip -r "./dist/${{ steps.fname.outputs.result }}-source.zip" .
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      - name: Run build with Gradle wrapper
+        run: |
+          chmod +x gradlew
+          ./gradlew build -x test
+
+      - name: Bundle mods, documentation and source code
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.fname.outputs.result }}
+          path: |
+            ./dist/**/*
+            !./dist/*-sources.jar
+            !./dist/*-dev.jar
+            !./dist/*-dev-shadow.jar
