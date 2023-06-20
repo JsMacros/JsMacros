@@ -11,7 +11,7 @@ public class Sorting {
         TriggerName,
         FileName
     }
-    
+
     public static class SortByEnabled implements Comparator<ScriptTrigger> {
         @Override
         public int compare(ScriptTrigger a, ScriptTrigger b) {
@@ -21,26 +21,37 @@ public class Sorting {
                 return a.toString().compareTo(b.toString());
             }
         }
+
     }
-    
+
     public static class SortByTriggerName implements Comparator<ScriptTrigger> {
         @Override
         public int compare(ScriptTrigger a, ScriptTrigger b) {
             int comp = a.event.compareTo(b.event);
-            if (comp != 0) return comp;
-            if (a.enabled ^ b.enabled) return a.enabled ? -1 : 1;
+            if (comp != 0) {
+                return comp;
+            }
+            if (a.enabled ^ b.enabled) {
+                return a.enabled ? -1 : 1;
+            }
             return a.toString().compareTo(b.toString());
         }
+
     }
-    
+
     public static class SortByFileName implements Comparator<ScriptTrigger> {
         @Override
         public int compare(ScriptTrigger a, ScriptTrigger b) {
             int comp = a.scriptFile.compareTo(b.scriptFile);
-            if (comp != 0) return comp;
-            if (a.enabled ^ b.enabled) return a.enabled ? -1 : 1;
+            if (comp != 0) {
+                return comp;
+            }
+            if (a.enabled ^ b.enabled) {
+                return a.enabled ? -1 : 1;
+            }
             return a.toString().compareTo(b.toString());
         }
+
     }
 
     /**
@@ -53,7 +64,7 @@ public class Sorting {
         Enabled,
         Running;
     }
-    
+
     /**
      * @author Etheradon
      * @since 1.8.4
@@ -69,6 +80,7 @@ public class Sorting {
                 return a.compareTo(b);
             }
         }
+
     }
 
     /**
@@ -80,6 +92,7 @@ public class Sorting {
         public int compare(String a, String b) {
             return a.compareTo(b);
         }
+
     }
 
     /**
@@ -97,6 +110,7 @@ public class Sorting {
                 return a.compareTo(b);
             }
         }
+
     }
 
     /**
@@ -111,6 +125,7 @@ public class Sorting {
             int comp = fileA.compareTo(fileB);
             return comp != 0 ? comp : new SortServiceByEnabled().compare(a, b);
         }
+
     }
-    
+
 }

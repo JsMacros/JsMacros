@@ -15,7 +15,6 @@ public class VindicatorEntityHelper extends IllagerEntityHelper<VindicatorEntity
 
     /**
      * @return {@code true} if this vindicator is johnny, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isJohnny() {

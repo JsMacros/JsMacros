@@ -15,7 +15,6 @@ public class StriderEntityHelper extends AnimalEntityHelper<StriderEntity> {
 
     /**
      * @return {@code true} if this strider is saddled, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isSaddled() {
@@ -24,7 +23,6 @@ public class StriderEntityHelper extends AnimalEntityHelper<StriderEntity> {
 
     /**
      * @return {@code true} if this strider is shivering in the cold, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isShivering() {

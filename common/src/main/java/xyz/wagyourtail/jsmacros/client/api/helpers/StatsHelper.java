@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import com.google.common.collect.ImmutableSet;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.packet.c2s.play.ClientStatusC2SPacket;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.StatHandler;
@@ -11,8 +11,6 @@ import net.minecraft.stat.StatType;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.registry.Registries;
-
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinStatHandler;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -78,7 +76,6 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     /**
      * @param id the identifier of the entity
      * @return how many times the player has killed the entity.
-     *
      * @since 1.8.4
      */
     public int getEntityKilled(String id) {
@@ -88,7 +85,6 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     /**
      * @param id the identifier of the entity
      * @return how many times the player has killed the specified entity.
-     *
      * @since 1.8.4
      */
     public int getKilledByEntity(String id) {
@@ -98,7 +94,6 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     /**
      * @param id the identifier of the block
      * @return how many times the player has mined the block.
-     *
      * @since 1.8.4
      */
     public int getBlockMined(String id) {
@@ -108,7 +103,6 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     /**
      * @param id the identifier of the item
      * @return how many times the player has broken the item.
-     *
      * @since 1.8.4
      */
     public int getItemBroken(String id) {
@@ -118,7 +112,6 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     /**
      * @param id the identifier of the item
      * @return how many times the player has crafted the item.
-     *
      * @since 1.8.4
      */
     public int getItemCrafted(String id) {
@@ -128,7 +121,6 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     /**
      * @param id the identifier of the item
      * @return how many times the player has used the item.
-     *
      * @since 1.8.4
      */
     public int getItemUsed(String id) {
@@ -138,7 +130,6 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     /**
      * @param id the identifier of the item
      * @return how many times the player has picked up the item.
-     *
      * @since 1.8.4
      */
     public int getItemPickedUp(String id) {
@@ -148,7 +139,6 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     /**
      * @param id the identifier of the item
      * @return how many times the player has dropped the item.
-     *
      * @since 1.8.4
      */
     public int getItemDropped(String id) {
@@ -158,7 +148,6 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     /**
      * @param id the identifier of the custom stat
      * @return the value of the custom stat.
-     *
      * @since 1.8.4
      */
     public int getCustomStat(String id) {
@@ -172,7 +161,6 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     /**
      * @param id the identifier of the custom stat
      * @return the formatted value of the custom stat.
-     *
      * @since 1.8.4
      */
     public String getCustomFormattedStat(String id) {
@@ -184,7 +172,6 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * Used to request an update of the statistics from the server.
      *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public StatsHelper updateStatistics() {
@@ -198,5 +185,5 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     public String toString() {
         return String.format("StatsHelper:{%s}", getFormattedStatMap());
     }
-    
+
 }

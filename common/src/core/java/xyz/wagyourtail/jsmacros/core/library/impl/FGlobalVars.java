@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * "Global" variables for passing to other contexts.
- *
+ * <p>
  * An instance of this class is passed to scripts as the {@code GlobalVars} variable.
  *
  * @author Wagyourtail
@@ -25,9 +25,7 @@ public class FGlobalVars extends BaseLibrary {
      *
      * @param name
      * @param i
-     *
      * @return
-     *
      * @since 1.0.4
      */
     public int putInt(String name, int i) {
@@ -40,9 +38,7 @@ public class FGlobalVars extends BaseLibrary {
      *
      * @param name
      * @param str
-     *
      * @return
-     *
      * @since 1.0.4
      */
     public String putString(String name, String str) {
@@ -55,9 +51,7 @@ public class FGlobalVars extends BaseLibrary {
      *
      * @param name
      * @param d
-     *
      * @return
-     *
      * @since 1.0.8
      */
     public double putDouble(String name, double d) {
@@ -70,9 +64,7 @@ public class FGlobalVars extends BaseLibrary {
      *
      * @param name
      * @param b
-     *
      * @return
-     *
      * @since 1.1.7
      */
     public boolean putBoolean(String name, boolean b) {
@@ -85,9 +77,7 @@ public class FGlobalVars extends BaseLibrary {
      *
      * @param name
      * @param o
-     *
      * @return
-     *
      * @since 1.1.7
      */
     public Object putObject(String name, Object o) {
@@ -102,9 +92,7 @@ public class FGlobalVars extends BaseLibrary {
      * Returns the type of the defined item in the global variable space as a string.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.0.4
      */
     public String getType(String name) {
@@ -128,9 +116,7 @@ public class FGlobalVars extends BaseLibrary {
      * Gets an Integer from the global variable space.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.0.4
      */
     public Integer getInt(String name) {
@@ -146,9 +132,7 @@ public class FGlobalVars extends BaseLibrary {
      * Gets an Integer from the global variable space. and then increment it there.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Integer getAndIncrementInt(String name) {
@@ -168,9 +152,7 @@ public class FGlobalVars extends BaseLibrary {
      * Gets an integer from the global variable pace. and then decrement it there.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Integer getAndDecrementInt(String name) {
@@ -190,9 +172,7 @@ public class FGlobalVars extends BaseLibrary {
      * increment an Integer in the global variable space. then return it.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Integer incrementAndGetInt(String name) {
@@ -204,7 +184,7 @@ public class FGlobalVars extends BaseLibrary {
             globalRaw.put(name, 1);
             return 1;
         } else {
-        return null;
+            return null;
         }
     }
 
@@ -212,9 +192,7 @@ public class FGlobalVars extends BaseLibrary {
      * decrement an Integer in the global variable space. then return it.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Integer decrementAndGetInt(String name) {
@@ -234,9 +212,7 @@ public class FGlobalVars extends BaseLibrary {
      * Gets a String from the global variable space
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.0.4
      */
     public String getString(String name) {
@@ -248,14 +224,11 @@ public class FGlobalVars extends BaseLibrary {
         }
     }
 
-
     /**
      * Gets a Double from the global variable space.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.0.8
      */
     public Double getDouble(String name) {
@@ -271,9 +244,7 @@ public class FGlobalVars extends BaseLibrary {
      * Gets a Boolean from the global variable space.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.1.7
      */
     public Boolean getBoolean(String name) {
@@ -289,9 +260,7 @@ public class FGlobalVars extends BaseLibrary {
      * toggles a global boolean and returns its new value
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Boolean toggleBoolean(String name) {
@@ -311,9 +280,7 @@ public class FGlobalVars extends BaseLibrary {
      * Gets an Object from the global variable space.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.1.7
      */
     public Object getObject(String name) {
@@ -324,7 +291,6 @@ public class FGlobalVars extends BaseLibrary {
      * removes a key from the global variable space.
      *
      * @param key
-     *
      * @since 1.2.0
      */
     public void remove(String key) {

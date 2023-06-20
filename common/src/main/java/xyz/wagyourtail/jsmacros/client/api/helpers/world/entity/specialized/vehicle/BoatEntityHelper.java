@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.veh
 
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.entity.vehicle.ChestBoatEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinBoatEntity;
@@ -20,7 +19,6 @@ public class BoatEntityHelper extends EntityHelper<BoatEntity> {
 
     /**
      * @return {@code true} if the boat is a chest boat, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isChestBoat() {
@@ -29,7 +27,6 @@ public class BoatEntityHelper extends EntityHelper<BoatEntity> {
 
     /**
      * @return the boat's plank type.
-     *
      * @since 1.8.4
      */
     public BlockHelper getBoatBlockType() {
@@ -38,7 +35,6 @@ public class BoatEntityHelper extends EntityHelper<BoatEntity> {
 
     /**
      * @return the name of the boat's material.
-     *
      * @since 1.8.4
      */
     public String getBoatType() {
@@ -47,7 +43,6 @@ public class BoatEntityHelper extends EntityHelper<BoatEntity> {
 
     /**
      * @return {@code true} if the boat is on top of water, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isInWater() {
@@ -56,7 +51,6 @@ public class BoatEntityHelper extends EntityHelper<BoatEntity> {
 
     /**
      * @return {@code true} if the boat is on land, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isOnLand() {
@@ -65,7 +59,6 @@ public class BoatEntityHelper extends EntityHelper<BoatEntity> {
 
     /**
      * @return {@code true} if the boat is underwater, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isUnderwater() {
@@ -74,7 +67,6 @@ public class BoatEntityHelper extends EntityHelper<BoatEntity> {
 
     /**
      * @return {@code true} if the boat is in the air, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isInAir() {

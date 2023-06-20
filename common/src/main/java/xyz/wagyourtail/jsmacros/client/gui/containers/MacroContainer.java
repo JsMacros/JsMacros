@@ -3,17 +3,17 @@ package xyz.wagyourtail.jsmacros.client.gui.containers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
+import xyz.wagyourtail.jsmacros.client.util.TranslationUtil;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
-import xyz.wagyourtail.jsmacros.client.util.TranslationUtil;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 
@@ -65,27 +65,31 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
                 btn.setMessage(Text.translatable("jsmacros.presskey"));
             }
         }));
-        if (macro.triggerType != ScriptTrigger.TriggerType.EVENT) keyStateBtn = addDrawableChild(new Button(x + w / 4 - height, y + 1, height, height - 2, textRenderer,0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal(""), (btn) -> {
-            switch(macro.triggerType) {
-            default:
-            case KEY_RISING:
-                macro.triggerType = ScriptTrigger.TriggerType.KEY_FALLING;
-                break;
-            case KEY_FALLING:
-                macro.triggerType = ScriptTrigger.TriggerType.KEY_BOTH;
-                break;
-            case KEY_BOTH:
-                macro.triggerType = ScriptTrigger.TriggerType.KEY_RISING;
-                break;
-            }
-        }));
+        if (macro.triggerType != ScriptTrigger.TriggerType.EVENT) {
+            keyStateBtn = addDrawableChild(new Button(x + w / 4 - height, y + 1, height, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal(""), (btn) -> {
+                switch (macro.triggerType) {
+                    default:
+                    case KEY_RISING:
+                        macro.triggerType = ScriptTrigger.TriggerType.KEY_FALLING;
+                        break;
+                    case KEY_FALLING:
+                        macro.triggerType = ScriptTrigger.TriggerType.KEY_BOTH;
+                        break;
+                    case KEY_BOTH:
+                        macro.triggerType = ScriptTrigger.TriggerType.KEY_RISING;
+                        break;
+                }
+            }));
+        }
 
-        fileBtn = addDrawableChild(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("./"+macro.scriptFile.replaceAll("\\\\", "/")), (btn) -> {
+        fileBtn = addDrawableChild(new Button(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("./" + macro.scriptFile.replaceAll("\\\\", "/")), (btn) -> {
             parent.setFile(this);
         }));
 
         editBtn = addDrawableChild(new Button(x + w - 32, y + 1, 30, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.translatable("selectServer.edit"), (btn) -> {
-            if (!macro.scriptFile.equals("")) parent.editFile(new File(Core.getInstance().config.macroFolder, macro.scriptFile));
+            if (!macro.scriptFile.equals("")) {
+                parent.editFile(new File(Core.getInstance().config.macroFolder, macro.scriptFile));
+            }
         }));
 
         delBtn = addDrawableChild(new Button(x + w - 1, y + 1, 12, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("X"), (btn) -> {
@@ -102,7 +106,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
 
     public void setFile(File f) {
         macro.scriptFile = Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(f.getAbsoluteFile().toPath()).toString();
-        fileBtn.setMessage(Text.literal("./"+macro.scriptFile.replaceAll("\\\\", "/")));
+        fileBtn.setMessage(Text.literal("./" + macro.scriptFile.replaceAll("\\\\", "/")));
     }
 
     @Override
@@ -111,7 +115,9 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
         int w = width - 12;
         enableBtn.setPos(x + 1, y + 1, w / 12 - 1, height - 2);
         keyBtn.setPos(x + w / 12 + 1, y + 1, macro.triggerType == ScriptTrigger.TriggerType.EVENT ? (w / 4) - (w / 12) - 1 : (w / 4) - (w / 12) - 1 - height, height - 2);
-        if (macro.triggerType != ScriptTrigger.TriggerType.EVENT) keyStateBtn.setPos(x + w / 4 - height, y + 1, height, height - 2);
+        if (macro.triggerType != ScriptTrigger.TriggerType.EVENT) {
+            keyStateBtn.setPos(x + w / 4 - height, y + 1, height, height - 2);
+        }
         fileBtn.setPos(x + (w / 4) + 1, y + 1, w * 3 / 4 - 3 - 30, height - 2);
         editBtn.setPos(x + w - 32, y + 1, 30, height - 2);
         delBtn.setPos(x + w - 1, y + 1, 12, height - 2);
@@ -130,7 +136,9 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
         MutableText text = Text.literal("");
         boolean notfirst = false;
         for (String s : translationKeys.split("\\+")) {
-            if (notfirst) text.append("+");
+            if (notfirst) {
+                text.append("+");
+            }
             text.append(JsMacros.getKeyText(s));
             notfirst = true;
         }
@@ -146,54 +154,56 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (visible) {
             int w = this.width - 12;
             // separate
-            fill(matrices, x + (w / 12), y + 1, x + (w / 12) + 1, y + height - 1, 0xFFFFFFFF);
-            fill(matrices, x + (w / 4), y + 1, x + (w / 4) + 1, y + height - 1, 0xFFFFFFFF);
-            fill(matrices, x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
+            drawContext.fill(x + (w / 12), y + 1, x + (w / 12) + 1, y + height - 1, 0xFFFFFFFF);
+            drawContext.fill(x + (w / 4), y + 1, x + (w / 4) + 1, y + height - 1, 0xFFFFFFFF);
+            drawContext.fill(x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
             RenderSystem.setShader(GameRenderer::getPositionTexProgram);
             // icon for keystate
+            Identifier tex;
             if (macro.triggerType != ScriptTrigger.TriggerType.EVENT) {
                 switch (macro.triggerType) {
-                default:
-                case KEY_FALLING:
-                    RenderSystem.setShaderTexture(0, key_up_tex);
-                    break;
-                case KEY_RISING:
-                    RenderSystem.setShaderTexture(0, key_down_tex);
-                    break;
-                case KEY_BOTH:
-                    RenderSystem.setShaderTexture(0, key_both_tex);
-                    break;
+                    default:
+                    case KEY_FALLING:
+                        tex = key_up_tex;
+                        break;
+                    case KEY_RISING:
+                        tex = key_down_tex;
+                        break;
+                    case KEY_BOTH:
+                        tex = key_both_tex;
+                        break;
                 }
                 RenderSystem.enableBlend();
-                drawTexture(matrices, x + w / 4 - height + 2, y + 2, height-4, height-4, 0, 0, 32, 32, 32, 32);
+                drawContext.drawTexture(tex, x + w / 4 - height + 2, y + 2, height - 4, height - 4, 0, 0, 32, 32, 32, 32);
                 RenderSystem.disableBlend();
             }
 
             // border
-            fill(matrices, x, y, x + width, y + 1, 0xFFFFFFFF);
-            fill(matrices, x, y + height - 1, x + width, y + height, 0xFFFFFFFF);
-            fill(matrices, x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
-            fill(matrices, x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
+            drawContext.fill(x, y, x + width, y + 1, 0xFFFFFFFF);
+            drawContext.fill(x, y + height - 1, x + width, y + height, 0xFFFFFFFF);
+            drawContext.fill(x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
+            drawContext.fill(x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
 
             // overlay
             if (keyBtn.hovering && keyBtn.cantRenderAllText()) {
-                fill(matrices, mouseX-2, mouseY-textRenderer.fontHeight - 3, mouseX+textRenderer.getWidth(keyBtn.getMessage())+2, mouseY, 0xFF000000);
-                drawTextWithShadow(matrices, textRenderer, keyBtn.getMessage(), mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
+                drawContext.fill(mouseX - 2, mouseY - textRenderer.fontHeight - 3, mouseX + textRenderer.getWidth(keyBtn.getMessage()) + 2, mouseY, 0xFF000000);
+                drawContext.drawTextWithShadow(textRenderer, keyBtn.getMessage(), mouseX, mouseY - textRenderer.fontHeight - 1, 0xFFFFFF);
             }
             if (fileBtn.hovering && fileBtn.cantRenderAllText()) {
                 List<OrderedText> lines = textRenderer.wrapLines(fileBtn.getMessage(), this.x + this.width - mouseX);
-                int top = mouseY-(textRenderer.fontHeight*lines.size())-2;
-                int width = lines.stream().map(e -> textRenderer.getWidth(e)).reduce(0, (e, t) -> Math.max(e, t));
-                fill(matrices, mouseX-2, top - 1, mouseX+width+2, mouseY, 0xFF000000);
+                int top = mouseY - (textRenderer.fontHeight * lines.size()) - 2;
+                int width = lines.stream().map(e -> textRenderer.getWidth(e)).reduce(0, Math::max);
+                drawContext.fill(mouseX - 2, top - 1, mouseX + width + 2, mouseY, 0xFF000000);
                 for (int i = 0; i < lines.size(); ++i) {
                     int wi = textRenderer.getWidth(lines.get(i)) / 2;
-                    textRenderer.draw(matrices, lines.get(i), mouseX + width/2 - wi, top+textRenderer.fontHeight*i, 0xFFFFFF);
+                    drawContext.drawText(textRenderer, lines.get(i), mouseX + width / 2 - wi, top + textRenderer.fontHeight * i, 0xFFFFFF, false);
                 }
             }
         }
     }
+
 }

@@ -7,7 +7,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @author Wagyourtail
  * @since 1.2.7
  */
- @Event(value = "EXPChange", oldName = "EXP_CHANGE")
+@Event(value = "EXPChange", oldName = "EXP_CHANGE")
 public class EventEXPChange implements BaseEvent {
     public final float progress;
     public final int total;
@@ -33,12 +33,13 @@ public class EventEXPChange implements BaseEvent {
         this.prevProgress = prevProgress;
         this.prevTotal = prevTotal;
         this.prevLevel = prevLevel;
-        
+
         profile.triggerEvent(this);
     }
-    
+
     @Override
     public String toString() {
         return String.format("%s:{\"total\": %d}", this.getEventName(), total);
     }
+
 }

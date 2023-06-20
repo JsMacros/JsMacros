@@ -29,9 +29,7 @@ public class Pos2D {
     /**
      * @param x
      * @param y
-     *
      * @return
-     *
      * @since 1.6.3
      */
     public Pos2D add(double x, double y) {
@@ -40,9 +38,7 @@ public class Pos2D {
 
     /**
      * @param pos the position to subtract
-     *
      * @return the new position.
-     *
      * @since 1.8.4
      */
     public Pos2D sub(Pos2D pos) {
@@ -52,9 +48,7 @@ public class Pos2D {
     /**
      * @param x the x coordinate to subtract
      * @param y the y coordinate to subtract
-     *
      * @return the new position.
-     *
      * @since 1.8.4
      */
     public Pos2D sub(double x, double y) {
@@ -68,9 +62,7 @@ public class Pos2D {
     /**
      * @param x
      * @param y
-     *
      * @return
-     *
      * @since 1.6.3
      */
     public Pos2D multiply(double x, double y) {
@@ -79,9 +71,7 @@ public class Pos2D {
 
     /**
      * @param pos the position to divide by
-     *
      * @return the new position.
-     *
      * @since 1.8.4
      */
     public Pos2D divide(Pos2D pos) {
@@ -91,9 +81,7 @@ public class Pos2D {
     /**
      * @param x the x coordinate to divide by
      * @param y the y coordinate to divide by
-     *
      * @return the new position.
-     *
      * @since 1.8.4
      */
     public Pos2D divide(double x, double y) {
@@ -102,9 +90,7 @@ public class Pos2D {
 
     /**
      * @param scale
-     *
      * @return
-     *
      * @since 1.6.3
      */
     public Pos2D scale(double scale) {
@@ -125,22 +111,17 @@ public class Pos2D {
 
     /**
      * @param start_pos
-     *
      * @return
-     *
      * @since 1.6.4
      */
     public Vec2D toVector(Pos2D start_pos) {
         return new Vec2D(start_pos, this);
     }
 
-
     /**
      * @param start_x
      * @param start_y
-     *
      * @return
-     *
      * @since 1.6.4
      */
     public Vec2D toVector(double start_x, double start_y) {
@@ -149,7 +130,6 @@ public class Pos2D {
 
     /**
      * @return
-     *
      * @since 1.6.4
      */
     public Vec2D toReverseVector() {
@@ -158,9 +138,7 @@ public class Pos2D {
 
     /**
      * @param end_pos
-     *
      * @return
-     *
      * @since 1.6.4
      */
     public Vec2D toReverseVector(Pos2D end_pos) {
@@ -170,9 +148,7 @@ public class Pos2D {
     /**
      * @param end_x
      * @param end_y
-     *
      * @return
-     *
      * @since 1.6.4
      */
     public Vec2D toReverseVector(double end_x, double end_y) {

@@ -15,7 +15,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return the id of this panda's main gene.
-     *
      * @since 1.8.4
      */
     public int getMainGene() {
@@ -24,7 +23,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return the name of this panda's main gene.
-     *
      * @since 1.8.4
      */
     public String getMainGeneName() {
@@ -33,7 +31,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return {@code true} if this panda's main gene is recessive, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isMainGeneRecessive() {
@@ -42,7 +39,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return the id of this panda's hidden gene.
-     *
      * @since 1.8.4
      */
     public int getHiddenGene() {
@@ -51,7 +47,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return the name of this panda's hidden gene.
-     *
      * @since 1.8.4
      */
     public String getHiddenGeneName() {
@@ -60,7 +55,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return {@code true} if this panda's hidden gene is recessive, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isHiddenGeneRecessive() {
@@ -69,7 +63,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return {@code true} if this panda is idling, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isIdle() {
@@ -78,7 +71,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return {@code true} if this panda is currently sneezing, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isSneezing() {
@@ -87,7 +79,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return {@code true} if this panda is playing, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isPlaying() {
@@ -96,7 +87,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return {@code true} if this panda is sitting, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isSitting() {
@@ -105,7 +95,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return {@code true} if this panda is lying on its back, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isLyingOnBack() {
@@ -114,7 +103,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return {@code true} if this panda's genes make him lazy, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isLazy() {
@@ -123,7 +111,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return {@code true} if this panda's genes make him worried, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isWorried() {
@@ -132,8 +119,7 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return {@code true} if this panda is scared by an active thunderstorm, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isScaredByThunderstorm() {
@@ -142,7 +128,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return {@code true} if this panda's genes make him playful, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isPlayful() {
@@ -151,7 +136,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return {@code true} if this panda's genes make him brown, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isBrown() {
@@ -160,7 +144,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return {@code true} if this panda's genes make him weak, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isWeak() {
@@ -169,7 +152,6 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
 
     /**
      * @return {@code true} if this panda's genes make him aggressive, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isAttacking() {

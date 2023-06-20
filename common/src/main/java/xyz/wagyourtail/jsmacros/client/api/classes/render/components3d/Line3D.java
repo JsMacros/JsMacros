@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
@@ -40,7 +41,6 @@ public class Line3D {
      * @param x2
      * @param y2
      * @param z2
-     *
      * @since 1.0.6
      */
     public void setPos(double x1, double y1, double z1, double x2, double y2, double z2) {
@@ -49,7 +49,6 @@ public class Line3D {
 
     /**
      * @param color
-     *
      * @since 1.0.6
      */
     public void setColor(int color) {
@@ -62,7 +61,6 @@ public class Line3D {
     /**
      * @param color
      * @param alpha
-     *
      * @since 1.1.8
      */
     public void setColor(int color, int alpha) {
@@ -71,14 +69,14 @@ public class Line3D {
 
     /**
      * @param alpha
-     *
      * @since 1.1.8
      */
     public void setAlpha(int alpha) {
         this.color = (alpha << 24) | (color & 0xFFFFFF);
     }
 
-    public void render(MatrixStack matrixStack) {
+    public void render(DrawContext drawContext) {
+        MatrixStack matrixStack = drawContext.getMatrices();
         final boolean cull = !this.cull;
         if (cull) {
             RenderSystem.disableDepthTest();
@@ -121,9 +119,7 @@ public class Line3D {
 
         /**
          * @param pos1 the first position of the line
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos1(Pos3D pos1) {
@@ -133,9 +129,7 @@ public class Line3D {
 
         /**
          * @param pos1 the first position of the line
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos1(BlockPosHelper pos1) {
@@ -147,9 +141,7 @@ public class Line3D {
          * @param x1 the x coordinate of the first position of the line
          * @param y1 the y coordinate of the first position of the line
          * @param z1 the z coordinate of the first position of the line
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos1(double x1, double y1, double z1) {
@@ -159,7 +151,6 @@ public class Line3D {
 
         /**
          * @return the first position of the line.
-         *
          * @since 1.8.4
          */
         public Pos3D getPos1() {
@@ -168,9 +159,7 @@ public class Line3D {
 
         /**
          * @param pos2 the second position of the line
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos2(Pos3D pos2) {
@@ -180,9 +169,7 @@ public class Line3D {
 
         /**
          * @param pos2 the second position of the line
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos2(BlockPosHelper pos2) {
@@ -194,9 +181,7 @@ public class Line3D {
          * @param x2 the x coordinate of the second position of the line
          * @param y2 the y coordinate of the second position of the line
          * @param z2 the z coordinate of the second position of the line
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos2(int x2, int y2, int z2) {
@@ -206,7 +191,6 @@ public class Line3D {
 
         /**
          * @return the second position of the line.
-         *
          * @since 1.8.4
          */
         public Pos3D getPos2() {
@@ -220,9 +204,7 @@ public class Line3D {
          * @param x2 the x coordinate of the second position of the line
          * @param y2 the x coordinate of the second position of the line
          * @param z2 the z coordinate of the second position of the line
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos(int x1, int y1, int z1, int x2, int y2, int z2) {
@@ -234,9 +216,7 @@ public class Line3D {
         /**
          * @param pos1 the first position of the line
          * @param pos2 the second position of the line
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos(BlockPosHelper pos1, BlockPosHelper pos2) {
@@ -248,9 +228,7 @@ public class Line3D {
         /**
          * @param pos1 the first position of the line
          * @param pos2 the second position of the line
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos(Pos3D pos1, Pos3D pos2) {
@@ -261,9 +239,7 @@ public class Line3D {
 
         /**
          * @param color the color of the line
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int color) {
@@ -274,9 +250,7 @@ public class Line3D {
         /**
          * @param color the color of the line
          * @param alpha the alpha value of the line's color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int color, int alpha) {
@@ -289,9 +263,7 @@ public class Line3D {
          * @param r the red component of the color
          * @param g the green component of the color
          * @param b the blue component of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int r, int g, int b) {
@@ -304,9 +276,7 @@ public class Line3D {
          * @param g the green component of the color
          * @param b the blue component of the color
          * @param a the alpha value of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int r, int g, int b, int a) {
@@ -317,7 +287,6 @@ public class Line3D {
 
         /**
          * @return the color of the line.
-         *
          * @since 1.8.4
          */
         public int getColor() {
@@ -326,9 +295,7 @@ public class Line3D {
 
         /**
          * @param alpha the alpha value for the line's color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder alpha(int alpha) {
@@ -338,7 +305,6 @@ public class Line3D {
 
         /**
          * @return the alpha value of the line's color.
-         *
          * @since 1.8.4
          */
         public int getAlpha() {
@@ -347,9 +313,7 @@ public class Line3D {
 
         /**
          * @param cull whether to cull the line or not
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder cull(boolean cull) {
@@ -359,7 +323,6 @@ public class Line3D {
 
         /**
          * @return {@code true} if the line should be culled, {@code false} otherwise.
-         *
          * @since 1.8.4
          */
         public boolean isCulled() {
@@ -370,7 +333,6 @@ public class Line3D {
          * Creates the line for the given values and adds it to the draw3D.
          *
          * @return the build line.
-         *
          * @since 1.8.4
          */
         public Line3D buildAndAdd() {

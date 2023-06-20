@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Quaternionf;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
@@ -38,7 +39,6 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @return the internal draw2D this draw2D element is wrapping.
-     *
      * @since 1.8.4
      */
     public Draw2D getDraw2D() {
@@ -47,9 +47,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @param x the x position
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Draw2DElement setX(int x) {
@@ -59,7 +57,6 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @return the x position of this draw2D.
-     *
      * @since 1.8.4
      */
     public int getX() {
@@ -68,9 +65,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @param y the y position
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Draw2DElement setY(int y) {
@@ -80,7 +75,6 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @return the y position of this draw2D.
-     *
      * @since 1.8.4
      */
     public int getY() {
@@ -90,9 +84,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
     /**
      * @param x the x position
      * @param y the y position
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Draw2DElement setPos(int x, int y) {
@@ -103,9 +95,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @param width the width
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Draw2DElement setWidth(int width) {
@@ -118,7 +108,6 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @return the width of this draw2D.
-     *
      * @since 1.8.4
      */
     public int getWidth() {
@@ -127,9 +116,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @param height the height
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Draw2DElement setHeight(int height) {
@@ -142,7 +129,6 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @return the height of this draw2D.
-     *
      * @since 1.8.4
      */
     public int getHeight() {
@@ -150,11 +136,9 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
     }
 
     /**
-     * @param width the width
+     * @param width  the width
      * @param height the height
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Draw2DElement setSize(int width, int height) {
@@ -163,9 +147,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @param scale the scale
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Draw2DElement setScale(double scale) {
@@ -178,7 +160,6 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @return the scale of this draw2D.
-     *
      * @since 1.8.4
      */
     public float getScale() {
@@ -187,9 +168,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @param rotation the rotation
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Draw2DElement setRotation(double rotation) {
@@ -199,7 +178,6 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @return the rotation of this draw2D.
-     *
      * @since 1.8.4
      */
     public float getRotation() {
@@ -208,9 +186,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @param rotateCenter whether this draw2D should be rotated around its center
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Draw2DElement setRotateCenter(boolean rotateCenter) {
@@ -220,8 +196,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @return {@code true} if this draw2D should be rotated around its center, {@code false}
-     *     otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isRotatingCenter() {
@@ -230,9 +205,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     /**
      * @param zIndex the z-index of this draw2D
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Draw2DElement setZIndex(int zIndex) {
@@ -246,7 +219,8 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        MatrixStack matrices = drawContext.getMatrices();
         matrices.push();
         matrices.translate(x, y, 0);
         matrices.scale(scale, scale, 1);
@@ -258,7 +232,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
             matrices.translate(-width.getAsInt() / 2d, -height.getAsInt() / 2d, 0);
         }
         //don't translate back
-        draw2D.render(matrices);
+        draw2D.render(drawContext);
         matrices.pop();
     }
 
@@ -328,9 +302,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @param x the x position of the draw2D
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder x(int x) {
@@ -340,7 +312,6 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @return the x position of the draw2D.
-         *
          * @since 1.8.4
          */
         public int getX() {
@@ -349,9 +320,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @param y the y position of the draw2D
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder y(int y) {
@@ -361,7 +330,6 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @return the y position of the draw2D.
-         *
          * @since 1.8.4
          */
         public int getY() {
@@ -371,9 +339,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
         /**
          * @param x the x position of the draw2D
          * @param y the y position of the draw2D
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos(int x, int y) {
@@ -384,9 +350,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @param width the width of the draw2D
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder width(int width) {
@@ -399,7 +363,6 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @return the width of the draw2D.
-         *
          * @since 1.8.4
          */
         public int getWidth() {
@@ -408,9 +371,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @param height the height of the draw2D
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder height(int height) {
@@ -423,7 +384,6 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @return the height of the draw2D.
-         *
          * @since 1.8.4
          */
         public int getHeight() {
@@ -431,11 +391,9 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
         }
 
         /**
-         * @param width the width of the draw2D
+         * @param width  the width of the draw2D
          * @param height the height of the draw2D
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder size(int width, int height) {
@@ -444,9 +402,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @param scale the scale of the draw2D
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder scale(double scale) {
@@ -456,7 +412,6 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @return the scale of the draw2D.
-         *
          * @since 1.8.4
          */
         public float getScale() {
@@ -465,9 +420,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @param rotation the rotation (clockwise) of the draw2D in degrees
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder rotation(double rotation) {
@@ -477,7 +430,6 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @return the rotation (clockwise) of the draw2D in degrees.
-         *
          * @since 1.8.4
          */
         public float getRotation() {
@@ -486,9 +438,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @param rotateCenter whether this draw2D should be rotated around its center
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder rotateCenter(boolean rotateCenter) {
@@ -498,8 +448,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @return {@code true} if this draw2D should be rotated around its center,
-         *     {@code false} otherwise.
-         *
+         * {@code false} otherwise.
          * @since 1.8.4
          */
         public boolean isRotatingCenter() {
@@ -508,7 +457,6 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @return the z-index of the draw2D.
-         *
          * @since 1.8.4
          */
         public Builder zIndex(int zIndex) {
@@ -518,7 +466,6 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
         /**
          * @return the z-index of the draw2D.
-         *
          * @since 1.8.4
          */
         public int getZIndex() {
@@ -528,7 +475,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
         @Override
         protected Draw2DElement createElement() {
             return new Draw2DElement(draw2D, x, y, width, height, zIndex, scale, rotation).setRotateCenter(rotateCenter)
-                .setParent(parent);
+                    .setParent(parent);
         }
 
         @Override

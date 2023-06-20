@@ -15,7 +15,6 @@ public class PolarBearEntityHelper extends AnimalEntityHelper<PolarBearEntity> {
 
     /**
      * @return {@code true} if the polar bear is standing up to attack, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isAttacking() {

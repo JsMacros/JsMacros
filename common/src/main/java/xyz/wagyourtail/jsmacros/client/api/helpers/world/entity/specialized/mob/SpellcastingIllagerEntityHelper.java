@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob;
 
 import net.minecraft.entity.mob.SpellcastingIllagerEntity;
-
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinSpellcastingIllagerEntityHelper;
 
 /**
@@ -17,8 +16,7 @@ public class SpellcastingIllagerEntityHelper<T extends SpellcastingIllagerEntity
 
     /**
      * @return {@code true} if this spell caster is currently casting a spell, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isCastingSpell() {
@@ -27,7 +25,6 @@ public class SpellcastingIllagerEntityHelper<T extends SpellcastingIllagerEntity
 
     /**
      * @return the spell this spell caster is currently casting.
-     *
      * @since 1.8.4
      */
     public String getCastedSpell() {

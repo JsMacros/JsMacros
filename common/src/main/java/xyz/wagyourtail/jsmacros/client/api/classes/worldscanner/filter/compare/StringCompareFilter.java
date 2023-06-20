@@ -17,7 +17,7 @@ public class StringCompareFilter implements IFilter<String> {
         this.compareTo = compareTo;
         filter = FilterMethod.valueOf(operation).getMethod();
     }
-    
+
     @Override
     public Boolean apply(String val) {
         return filter.compare(val, compareTo);
@@ -40,5 +40,5 @@ public class StringCompareFilter implements IFilter<String> {
             return method;
         }
     }
-    
+
 }

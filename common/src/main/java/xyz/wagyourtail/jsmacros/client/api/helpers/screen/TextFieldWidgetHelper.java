@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinTextFieldWidget;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -22,40 +21,37 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
     public TextFieldWidgetHelper(TextFieldWidget t) {
         super(t);
     }
-    
+
     public TextFieldWidgetHelper(TextFieldWidget t, int zIndex) {
         super(t, zIndex);
     }
-    
+
     /**
-     * @since 1.0.5
      * @return the currently entered {@link java.lang.String String}.
+     * @since 1.0.5
      */
     public String getText() {
         return base.getText();
     }
-    
+
     /**
-     *
-     * @since 1.0.5
      * @param text
      * @return
+     * @since 1.0.5
      */
     public TextFieldWidgetHelper setText(String text) throws InterruptedException {
         setText(text, true);
         return this;
     }
-    
+
     /**
      * set the currently entered {@link java.lang.String String}.
      *
      * @param text
      * @param await
-     *
      * @return
-     * @since 1.3.1
-     *
      * @throws InterruptedException
+     * @since 1.3.1
      */
     public TextFieldWidgetHelper setText(String text, boolean await) throws InterruptedException {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
@@ -70,21 +66,21 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
         }
         return this;
     }
-    
+
     /**
-     * @since 1.0.5
      * @param color
      * @return
+     * @since 1.0.5
      */
     public TextFieldWidgetHelper setEditableColor(int color) {
         base.setEditableColor(color);
         return this;
     }
-    
+
     /**
-     * @since 1.0.5
      * @param edit
      * @return
+     * @since 1.0.5
      */
     public TextFieldWidgetHelper setEditable(boolean edit) {
         base.setEditable(edit);
@@ -98,11 +94,11 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
     public boolean isEditable() {
         return ((MixinTextFieldWidget) base).getEditable();
     }
-    
+
     /**
-     * @since 1.0.5
      * @param color
      * @return
+     * @since 1.0.5
      */
     public TextFieldWidgetHelper setUneditableColor(int color) {
         base.setUneditableColor(color);
@@ -111,7 +107,6 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
 
     /**
      * @return the selected text.
-     *
      * @since 1.8.4
      */
     public String getSelectedText() {
@@ -121,7 +116,6 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
     /**
      * @param suggestion the suggestion to set
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public TextFieldWidgetHelper setSuggestion(String suggestion) {
@@ -131,9 +125,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
 
     /**
      * @return the maximum length of this text field.
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public int getMaxLength() {
@@ -143,7 +135,6 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
     /**
      * @param length the new maximum length
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public TextFieldWidgetHelper setMaxLength(int length) {
@@ -160,7 +151,6 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
     /**
      * @param predicate the text filter
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public TextFieldWidgetHelper setTextPredicate(MethodWrapper<String, ?, ?, ?> predicate) {
@@ -170,7 +160,6 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
 
     /**
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public TextFieldWidgetHelper resetTextPredicate() {
@@ -181,7 +170,6 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
     /**
      * @param position the cursor position
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public TextFieldWidgetHelper setCursorPosition(int position) {
@@ -191,7 +179,6 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
 
     /**
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public TextFieldWidgetHelper setCursorToStart() {
@@ -201,7 +188,6 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
 
     /**
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public TextFieldWidgetHelper setCursorToEnd() {
@@ -231,7 +217,6 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
 
         /**
          * @return the callback for when the text is changed.
-         *
          * @since 1.8.4
          */
         public MethodWrapper<String, IScreen, Object, ?> getAction() {
@@ -241,7 +226,6 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
         /**
          * @param action the callback for when the text is changed
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public TextFieldBuilder action(MethodWrapper<String, IScreen, Object, ?> action) {
@@ -251,7 +235,6 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
 
         /**
          * @return the current suggestion.
-         *
          * @since 1.8.4
          */
         public String getSuggestion() {
@@ -261,7 +244,6 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
         /**
          * @param suggestion the suggestion to use
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public TextFieldBuilder suggestion(String suggestion) {
@@ -286,6 +268,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
             b.set(new TextFieldWidgetHelper(textField, getZIndex()));
             return b.get();
         }
+
     }
-    
+
 }

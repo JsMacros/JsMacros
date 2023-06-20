@@ -23,6 +23,7 @@ public class ProxyBuilder<T> {
     public final ProxyFactory factory;
     public final Map<MethodSigParts, MethodWrapper<ProxyReference<T>, Object[], ?, ?>> proxiedMethods = new HashMap<>();
     public final Map<String, MethodWrapper<ProxyReference<T>, Object[], ?, ?>> proxiedMethodDefaults = new HashMap<>();
+
     public ProxyBuilder(Class<T> clazz, Class<?>[] interfaces) {
         this.factory = new ProxyFactory();
         if (clazz.isInterface()) {
@@ -39,16 +40,17 @@ public class ProxyBuilder<T> {
     private MethodWrapper<ProxyReference<T>, Object[], ?, ?> getWrapperForMethod(Method m) {
         MethodSigParts sig = methodToSigParts(m);
         MethodWrapper<ProxyReference<T>, Object[], ?, ?> wrapper = proxiedMethods.get(sig);
-        if (wrapper == null) wrapper = proxiedMethodDefaults.get(sig.name);
+        if (wrapper == null) {
+            wrapper = proxiedMethodDefaults.get(sig.name);
+        }
         return wrapper;
     }
 
     /**
      * @param methodNameOrSig name of method or sig (the usual format)
      * @param proxyMethod
-     * @since 1.6.0
-     *
      * @return self for chaining
+     * @since 1.6.0
      */
     public ProxyBuilder<T> addMethod(String methodNameOrSig, MethodWrapper<ProxyReference<T>, Object[], ?, ?> proxyMethod) throws ClassNotFoundException {
         String[] parts = methodNameOrSig.split("\\(");
@@ -62,14 +64,12 @@ public class ProxyBuilder<T> {
 
     /**
      * @param constructorArgs args for the super constructor
-     * @since 1.6.0
-     *
      * @return new instance of the constructor
-     *
      * @throws InvocationTargetException
      * @throws NoSuchMethodException
      * @throws InstantiationException
      * @throws IllegalAccessException
+     * @since 1.6.0
      */
     public T buildInstance(Object[] constructorArgs) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Class<?>[] params = new Class<?>[constructorArgs.length];
@@ -89,37 +89,31 @@ public class ProxyBuilder<T> {
         }
     }
 
-
     /**
-     * @param constructorSig string signature (you can skip the &lt;init&gt; part)
+     * @param constructorSig  string signature (you can skip the &lt;init&gt; part)
      * @param constructorArgs args for the super constructor
-     * @since 1.6.0
-     *
      * @return new instance of the constructor
-     *
      * @throws InvocationTargetException
      * @throws NoSuchMethodException
      * @throws InstantiationException
      * @throws IllegalAccessException
      * @throws ClassNotFoundException
+     * @since 1.6.0
      */
     public T buildInstance(String constructorSig, Object[] constructorArgs) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         return buildInstance(mapMethodSig(constructorSig).params, constructorArgs);
     }
 
-
     /**
-     * @param constructorSig string signature (you can skip the &lt;init&gt; part)
+     * @param constructorSig  string signature (you can skip the &lt;init&gt; part)
      * @param constructorArgs args for the super constructor
-     * @since 1.6.0
-     *
      * @return new instance of the constructor
-     *
      * @throws InvocationTargetException
      * @throws NoSuchMethodException
      * @throws InstantiationException
      * @throws IllegalAccessException
      * @throws ClassNotFoundException
+     * @since 1.6.0
      */
     public T buildInstance(Class<?>[] constructorSig, Object[] constructorArgs) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         for (int i = 0; i < constructorArgs.length; ++i) {
@@ -128,10 +122,11 @@ public class ProxyBuilder<T> {
         return (T) factory.create(constructorSig, constructorArgs, this::invoke);
     }
 
-
     private Object invoke(Object self, Method thisMethod, @Nullable Method proceed, Object[] args) throws Throwable {
         MethodWrapper<ProxyReference<T>, Object[], ?, ?> wrapper = getWrapperForMethod(thisMethod);
-        if (wrapper == null) return proceed.invoke(self, args);
+        if (wrapper == null) {
+            return proceed.invoke(self, args);
+        }
         if (thisMethod.getReturnType().equals(void.class)) {
             try {
                 wrapper.accept(new ProxyReference<>((T) self, proceed != null ? (arg) -> {
@@ -221,10 +216,16 @@ public class ProxyBuilder<T> {
     }
 
     private static boolean areParamsCompatible(Class<?>[] fuzzable, Class<?>[] target) {
-        if (fuzzable.length != target.length) return false;
+        if (fuzzable.length != target.length) {
+            return false;
+        }
         for (int i = 0; i < fuzzable.length; ++i) {
-            if (Number.class.isAssignableFrom(fuzzable[i]) && (Number.class.isAssignableFrom(target[i]) || target[i].isPrimitive())) continue;
-            if (target[i].isAssignableFrom(fuzzable[i])) continue;
+            if (Number.class.isAssignableFrom(fuzzable[i]) && (Number.class.isAssignableFrom(target[i]) || target[i].isPrimitive())) {
+                continue;
+            }
+            if (target[i].isAssignableFrom(fuzzable[i])) {
+                continue;
+            }
             return false;
         }
         return true;
@@ -244,6 +245,7 @@ public class ProxyBuilder<T> {
             this.self = self;
             this.parent = parent;
         }
+
     }
 
     private static class MethodSigParts {
@@ -259,8 +261,12 @@ public class ProxyBuilder<T> {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof MethodSigParts)) return false;
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof MethodSigParts)) {
+                return false;
+            }
             MethodSigParts that = (MethodSigParts) o;
             return name.equals(that.name) && Arrays.equals(params, that.params) && returnType.equals(that.returnType);
         }
@@ -273,4 +279,5 @@ public class ProxyBuilder<T> {
         }
 
     }
+
 }

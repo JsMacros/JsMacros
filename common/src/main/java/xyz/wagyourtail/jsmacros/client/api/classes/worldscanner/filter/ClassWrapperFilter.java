@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
  * @since 1.6.5
  */
 public abstract class ClassWrapperFilter<T> extends BasicFilter<T> {
-    
+
     protected final String methodName;
     protected final Method method;
     protected final Object[] methodArgs;
-    
+
     protected IFilter<?> filter;
-    
+
     //TODO: Add a way to filter objects
 
     /**
@@ -39,11 +39,11 @@ public abstract class ClassWrapperFilter<T> extends BasicFilter<T> {
         this.methodArgs = methodArgs;
         this.filter = getFilter(method.getReturnType(), filterArgs);
     }
-    
+
     public static IFilter<?> getFilter(Class<?> clazz, String methodName, Object... args) {
         return getFilter(getPublicNoParameterMethods(clazz).get(methodName).getReturnType(), args);
     }
-    
+
     private static IFilter<?> getFilter(Class<?> returnType, Object... args) {
         if (returnType == boolean.class || returnType == Boolean.class) {
             return new BooleanCompareFilter((boolean) args[0]);
@@ -79,4 +79,5 @@ public abstract class ClassWrapperFilter<T> extends BasicFilter<T> {
                 .filter(method -> method.getParameterCount() == 0)
                 .collect(Collectors.toMap(Method::getName, p -> p));
     }
+
 }

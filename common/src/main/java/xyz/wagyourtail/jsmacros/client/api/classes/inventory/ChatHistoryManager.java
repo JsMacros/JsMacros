@@ -3,8 +3,8 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
-import xyz.wagyourtail.jsmacros.client.api.helpers.screen.ChatHudLineHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.screen.ChatHudLineHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
@@ -26,8 +26,8 @@ public class ChatHistoryManager {
 
     /**
      * @param index
-     * @since 1.6.0
      * @return
+     * @since 1.6.0
      */
     public ChatHudLineHelper getRecvLine(int index) throws InterruptedException {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
@@ -45,7 +45,6 @@ public class ChatHistoryManager {
 
     /**
      * @return the amount of messages in the chat history.
-     *
      * @throws InterruptedException
      * @since 1.8.4
      */
@@ -62,7 +61,6 @@ public class ChatHistoryManager {
 
     /**
      * @return all received messages in the chat history.
-     *
      * @throws InterruptedException
      * @since 1.8.4
      */
@@ -76,11 +74,11 @@ public class ChatHistoryManager {
         semaphore.acquire();
         return recvLines;
     }
-    
+
     /**
-     * @since 1.6.0
      * @param index
      * @param line
+     * @since 1.6.0
      */
     public void insertRecvText(int index, TextHelper line) throws InterruptedException {
         insertRecvText(index, line, 0, false);
@@ -88,6 +86,7 @@ public class ChatHistoryManager {
 
     /**
      * you should probably run {@link #refreshVisible()} after...
+     *
      * @param index
      * @param line
      * @param timeTicks
@@ -95,15 +94,15 @@ public class ChatHistoryManager {
      */
     public void insertRecvText(int index, TextHelper line, int timeTicks) throws InterruptedException {
         insertRecvText(index, line, timeTicks, false);
-     }
+    }
 
     /**
      * @param index
      * @param line
      * @param timeTicks
      * @param await
-     * @since 1.6.0
      * @throws InterruptedException
+     * @since 1.6.0
      */
     public void insertRecvText(int index, TextHelper line, int timeTicks, boolean await) throws InterruptedException {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
@@ -119,8 +118,8 @@ public class ChatHistoryManager {
     }
 
     /**
-     * @since 1.6.0
      * @param index
+     * @since 1.6.0
      */
     public void removeRecvText(int index) throws InterruptedException {
         removeRecvText(index, false);
@@ -129,8 +128,8 @@ public class ChatHistoryManager {
     /**
      * @param index
      * @param await
-     * @since 1.6.0
      * @throws InterruptedException
+     * @since 1.6.0
      */
     public void removeRecvText(int index, boolean await) throws InterruptedException {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
@@ -146,8 +145,8 @@ public class ChatHistoryManager {
     }
 
     /**
-     * @since 1.6.0
      * @param text
+     * @since 1.6.0
      */
     public void removeRecvTextMatching(TextHelper text) throws InterruptedException {
         removeRecvTextMatching(text, false);
@@ -156,8 +155,8 @@ public class ChatHistoryManager {
     /**
      * @param text
      * @param await
-     * @since 1.6.0
      * @throws InterruptedException
+     * @since 1.6.0
      */
     public void removeRecvTextMatching(TextHelper text, boolean await) throws InterruptedException {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
@@ -173,8 +172,8 @@ public class ChatHistoryManager {
     }
 
     /**
-     * @since 1.6.0
      * @param filter
+     * @since 1.6.0
      */
     public void removeRecvTextMatchingFilter(MethodWrapper<ChatHudLineHelper, Object, Boolean, ?> filter) throws InterruptedException {
         removeRecvTextMatchingFilter(filter, false);
@@ -183,8 +182,8 @@ public class ChatHistoryManager {
     /**
      * @param filter
      * @param await
-     * @since 1.6.0
      * @throws InterruptedException
+     * @since 1.6.0
      */
     public void removeRecvTextMatchingFilter(MethodWrapper<ChatHudLineHelper, Object, Boolean, ?> filter, boolean await) throws InterruptedException {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
@@ -192,7 +191,7 @@ public class ChatHistoryManager {
             return;
         }
         final Semaphore semaphore = new Semaphore(await ? 0 : 1);
-        Throwable[] ex = new Throwable[] {null};
+        Throwable[] ex = new Throwable[]{null};
         mc.execute(() -> {
             try {
                 ((IChatHud) hud).jsmacros_removeMessagePredicate((c) -> filter.test(new ChatHudLineHelper(c, hud)));
@@ -212,16 +211,17 @@ public class ChatHistoryManager {
 
     /**
      * this will reset the view of visible messages
+     *
      * @since 1.6.0
      */
-     public void refreshVisible() throws InterruptedException {
+    public void refreshVisible() throws InterruptedException {
         refreshVisible(false);
-     }
+    }
 
     /**
      * @param await
-     * @since 1.6.0
      * @throws InterruptedException
+     * @since 1.6.0
      */
     public void refreshVisible(boolean await) throws InterruptedException {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
@@ -240,15 +240,14 @@ public class ChatHistoryManager {
     /**
      * @since 1.6.0
      */
-     public void clearRecv() throws InterruptedException {
+    public void clearRecv() throws InterruptedException {
         clearRecv(false);
-     }
-
+    }
 
     /**
      * @param await
-     * @since 1.6.0
      * @throws InterruptedException
+     * @since 1.6.0
      */
     public void clearRecv(boolean await) throws InterruptedException {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
@@ -264,8 +263,8 @@ public class ChatHistoryManager {
     }
 
     /**
-     * @since 1.6.0
      * @return direct reference to sent message history list. modifications will affect the list.
+     * @since 1.6.0
      */
     public List<String> getSent() {
         return hud.getMessageHistory();
@@ -274,14 +273,14 @@ public class ChatHistoryManager {
     /**
      * @since 1.6.0
      */
-     public void clearSent() throws InterruptedException {
+    public void clearSent() throws InterruptedException {
         clearSent(false);
-     }
+    }
 
     /**
      * @param await
-     * @since 1.6.0
      * @throws InterruptedException
+     * @since 1.6.0
      */
     public void clearSent(boolean await) throws InterruptedException {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
@@ -295,4 +294,5 @@ public class ChatHistoryManager {
         });
         semaphore.acquire();
     }
+
 }

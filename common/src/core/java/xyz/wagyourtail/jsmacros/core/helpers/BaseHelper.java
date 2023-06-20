@@ -6,7 +6,7 @@ public abstract class BaseHelper<T> {
     public BaseHelper(T base) {
         this.base = base;
     }
-    
+
     public T getRaw() {
         return base;
     }
@@ -23,5 +23,5 @@ public abstract class BaseHelper<T> {
         }
         return base.equals(obj);
     }
-    
+
 }

@@ -7,15 +7,17 @@ import xyz.wagyourtail.jsmacros.client.access.IMerchantScreen;
 
 @Mixin(MerchantScreen.class)
 public abstract class MixinMerchantScreen implements IMerchantScreen {
-    
-    @Shadow private int selectedIndex;
-    
-    @Shadow protected abstract void syncRecipeIndex();
-    
+
+    @Shadow
+    private int selectedIndex;
+
+    @Shadow
+    protected abstract void syncRecipeIndex();
+
     @Override
     public void jsmacros_selectIndex(int index) {
         selectedIndex = index;
         syncRecipeIndex();
     }
-    
+
 }

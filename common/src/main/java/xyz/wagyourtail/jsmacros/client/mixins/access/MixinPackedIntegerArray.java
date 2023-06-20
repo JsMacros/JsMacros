@@ -8,15 +8,25 @@ import xyz.wagyourtail.jsmacros.client.access.IPackedIntegerArray;
 
 @Mixin(PackedIntegerArray.class)
 public class MixinPackedIntegerArray implements IPackedIntegerArray {
-    @Shadow @Final private long maxValue;
+    @Shadow
+    @Final
+    private long maxValue;
 
-    @Shadow @Final private int elementsPerLong;
+    @Shadow
+    @Final
+    private int elementsPerLong;
 
-    @Shadow @Final private int indexScale;
+    @Shadow
+    @Final
+    private int indexScale;
 
-    @Shadow @Final private int indexOffset;
+    @Shadow
+    @Final
+    private int indexOffset;
 
-    @Shadow @Final private int indexShift;
+    @Shadow
+    @Final
+    private int indexShift;
 
     @Override
     public long jsmacros_getMaxValue() {

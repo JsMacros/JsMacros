@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 import net.minecraft.state.State;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Util;
-
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Map;
@@ -23,7 +22,6 @@ public abstract class StateHelper<U extends State<?, ?>> extends BaseHelper<U> {
 
     /**
      * @return a map of the state properties with its identifier and value.
-     *
      * @since 1.8.4
      */
     public Map<String, String> toMap() {

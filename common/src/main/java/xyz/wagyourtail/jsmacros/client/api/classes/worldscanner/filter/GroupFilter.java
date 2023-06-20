@@ -53,6 +53,7 @@ public abstract class GroupFilter<T> implements IFilter<T> {
         public Boolean apply(T t) {
             return filters.stream().allMatch(filter -> filter.apply(t));
         }
+
     }
 
     public static class AnyMatchFilter<T> extends GroupFilter<T> {
@@ -65,6 +66,7 @@ public abstract class GroupFilter<T> implements IFilter<T> {
         public Boolean apply(T t) {
             return filters.stream().anyMatch(filter -> filter.apply(t));
         }
+
     }
 
     public static class NoneMatchFilter<T> extends GroupFilter<T> {
@@ -77,6 +79,7 @@ public abstract class GroupFilter<T> implements IFilter<T> {
         public Boolean apply(T t) {
             return filters.stream().noneMatch(filter -> filter.apply(t));
         }
+
     }
 
     public static class CountMatchFilter<T> extends GroupFilter<T> {
@@ -92,6 +95,7 @@ public abstract class GroupFilter<T> implements IFilter<T> {
         public Boolean apply(T t) {
             return filter.apply(filters.stream().filter(filter -> filter.apply(t)).count());
         }
+
     }
 
 }

@@ -26,4 +26,5 @@ public class EventEntityDamaged implements BaseEvent {
     public String toString() {
         return String.format("%s:{\"entity\": %s, \"health\": %f, \"damage\": %f}", this.getEventName(), entity.toString(), health, damage);
     }
+
 }

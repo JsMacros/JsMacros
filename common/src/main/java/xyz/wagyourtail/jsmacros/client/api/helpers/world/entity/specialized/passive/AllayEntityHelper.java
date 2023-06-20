@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.AllayEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAllayEntity;
 
@@ -18,7 +17,6 @@ public class AllayEntityHelper extends MobEntityHelper<AllayEntity> {
 
     /**
      * @return {@code true} if this allay is dancing, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isDancing() {
@@ -27,7 +25,6 @@ public class AllayEntityHelper extends MobEntityHelper<AllayEntity> {
 
     /**
      * @return {@code true} if this allay can be duplicated, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean canDuplicate() {
@@ -36,7 +33,6 @@ public class AllayEntityHelper extends MobEntityHelper<AllayEntity> {
 
     /**
      * @return {@code true} if this allay is holding a item, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isHoldingItem() {

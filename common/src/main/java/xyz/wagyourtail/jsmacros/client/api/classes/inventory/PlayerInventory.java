@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.screen.PlayerScreenHandler;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
 /**
@@ -19,7 +18,6 @@ public class PlayerInventory extends RecipeInventory<InventoryScreen> {
      * @param x the x position of the input from 0 to 1, going left to right
      * @param y the y position of the input from 0 to 1, going top to bottom
      * @return the input item at the given position of the crafting grid.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getInput(int x, int y) {
@@ -29,8 +27,7 @@ public class PlayerInventory extends RecipeInventory<InventoryScreen> {
     /**
      * @param slot the slot to check
      * @return {@code true} if the slot is in the hotbar or the offhand slot, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isInHotbar(int slot) {
@@ -39,7 +36,6 @@ public class PlayerInventory extends RecipeInventory<InventoryScreen> {
 
     /**
      * @return the item in the offhand.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getOffhand() {
@@ -48,7 +44,6 @@ public class PlayerInventory extends RecipeInventory<InventoryScreen> {
 
     /**
      * @return the equipped helmet item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getHelmet() {
@@ -57,7 +52,6 @@ public class PlayerInventory extends RecipeInventory<InventoryScreen> {
 
     /**
      * @return the equipped chestplate item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getChestplate() {
@@ -66,7 +60,6 @@ public class PlayerInventory extends RecipeInventory<InventoryScreen> {
 
     /**
      * @return the equipped leggings item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getLeggings() {
@@ -75,7 +68,6 @@ public class PlayerInventory extends RecipeInventory<InventoryScreen> {
 
     /**
      * @return the equipped boots item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getBoots() {

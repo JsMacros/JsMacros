@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob;
 
 import net.minecraft.entity.mob.IllagerEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 
 /**

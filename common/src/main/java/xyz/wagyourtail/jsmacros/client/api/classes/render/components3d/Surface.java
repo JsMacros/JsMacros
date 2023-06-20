@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -54,9 +55,7 @@ public class Surface extends Draw2D implements RenderElement {
 
     /**
      * @param pos the position of the surface
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Surface setPos(Pos3D pos) {
@@ -68,9 +67,7 @@ public class Surface extends Draw2D implements RenderElement {
 
     /**
      * @param pos the position of the surface
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Surface setPos(BlockPosHelper pos) {
@@ -91,9 +88,7 @@ public class Surface extends Draw2D implements RenderElement {
      * The surface will move with the entity at the offset location.
      *
      * @param boundEntity the entity to bind the surface to
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Surface bindToEntity(EntityHelper<?> boundEntity) {
@@ -103,8 +98,7 @@ public class Surface extends Draw2D implements RenderElement {
 
     /**
      * @return the entity the surface is bound to, or {@code null} if it is not bound to an
-     *     entity.
-     *
+     * entity.
      * @since 1.8.4
      */
     public EntityHelper<?> getBoundEntity() {
@@ -113,9 +107,7 @@ public class Surface extends Draw2D implements RenderElement {
 
     /**
      * @param boundOffset the offset from the entity's position to render the surface at
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Surface setBoundOffset(Pos3D boundOffset) {
@@ -127,9 +119,7 @@ public class Surface extends Draw2D implements RenderElement {
      * @param x the x offset from the entity's position to render the surface at
      * @param y the y offset from the entity's position to render the surface at
      * @param z the z offset from the entity's position to render the surface at
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Surface setBoundOffset(double x, double y, double z) {
@@ -139,7 +129,6 @@ public class Surface extends Draw2D implements RenderElement {
 
     /**
      * @return the offset from the entity's position to render the surface at.
-     *
      * @since 1.8.4
      */
     public Pos3D getBoundOffset() {
@@ -148,9 +137,7 @@ public class Surface extends Draw2D implements RenderElement {
 
     /**
      * @param rotateToPlayer whether to rotate the surface to face the player or not
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Surface setRotateToPlayer(boolean rotateToPlayer) {
@@ -160,8 +147,7 @@ public class Surface extends Draw2D implements RenderElement {
 
     /**
      * @return {@code true} if the surface should be rotated to face the player, {@code false}
-     *     otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean doesRotateToPlayer() {
@@ -205,9 +191,7 @@ public class Surface extends Draw2D implements RenderElement {
 
     /**
      * @param rotateCenter whether to rotate the surface around its center or not
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Surface setRotateCenter(boolean rotateCenter) {
@@ -217,8 +201,7 @@ public class Surface extends Draw2D implements RenderElement {
 
     /**
      * @return {@code true} if this surface is rotated around it's center, {@code false}
-     *     otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isRotatingCenter() {
@@ -237,7 +220,8 @@ public class Surface extends Draw2D implements RenderElement {
     }
 
     @Override
-    public void render3D(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
+    public void render3D(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        MatrixStack matrixStack = drawContext.getMatrices();
         matrixStack.push();
         if (boundEntity != null && boundEntity.isAlive()) {
             Pos3D entityPos = boundEntity.getPos().add(boundOffset);
@@ -277,7 +261,7 @@ public class Surface extends Draw2D implements RenderElement {
         matrixStack.scale((float) scale, (float) scale, (float) scale);
 
         synchronized (elements) {
-            renderElements3D(matrixStack, getElementsByZIndex());
+            renderElements3D(drawContext, getElementsByZIndex());
         }
         matrixStack.pop();
 
@@ -302,7 +286,7 @@ public class Surface extends Draw2D implements RenderElement {
         float zSquared = z * z;
         float sumSquared = wSquared + xSquared + ySquared + zSquared;
         float k = 2.0F * w * x - 2.0F * y * z;
-        
+
         double radianX = Math.asin(k / sumSquared);
         double radianY;
         double radianZ;
@@ -316,19 +300,20 @@ public class Surface extends Draw2D implements RenderElement {
         return new Vector3f((float) Math.toDegrees(radianX), (float) Math.toDegrees(radianY), (float) Math.toDegrees(radianZ));
     }
 
-    private void renderElements3D(MatrixStack matrixStack, Iterator<RenderElement> iter) {
+    private void renderElements3D(DrawContext drawContext, Iterator<RenderElement> iter) {
         while (iter.hasNext()) {
             RenderElement element = iter.next();
             // Render each draw2D element individually so that the cull and renderBack settings are used
             if (element instanceof Draw2DElement draw2DElement) {
-                renderDraw2D3D(matrixStack, draw2DElement);
+                renderDraw2D3D(drawContext, draw2DElement);
             } else {
-                renderElement3D(matrixStack, element);
+                renderElement3D(drawContext, element);
             }
         }
     }
 
-    private void renderDraw2D3D(MatrixStack matrixStack, Draw2DElement draw2DElement) {
+    private void renderDraw2D3D(DrawContext drawContext, Draw2DElement draw2DElement) {
+        MatrixStack matrixStack = drawContext.getMatrices();
         matrixStack.push();
         matrixStack.translate(draw2DElement.x, draw2DElement.y, 0);
         matrixStack.scale(draw2DElement.scale, draw2DElement.scale, 1);
@@ -342,12 +327,12 @@ public class Surface extends Draw2D implements RenderElement {
         // Don't translate back!
         Draw2D draw2D = draw2DElement.getDraw2D();
         synchronized (draw2D.getElements()) {
-            renderElements3D(matrixStack, draw2D.getElementsByZIndex());
+            renderElements3D(drawContext, draw2D.getElementsByZIndex());
         }
         matrixStack.pop();
     }
 
-    private void renderElement3D(MatrixStack matrixStack, RenderElement element) {
+    private void renderElement3D(DrawContext drawContext, RenderElement element) {
         if (renderBack) {
             RenderSystem.disableCull();
         } else {
@@ -358,14 +343,15 @@ public class Surface extends Draw2D implements RenderElement {
         } else {
             RenderSystem.enableDepthTest();
         }
+        MatrixStack matrixStack = drawContext.getMatrices();
         matrixStack.push();
         matrixStack.translate(0, 0, zIndexScale * element.getZIndex());
-        element.render3D(matrixStack, 0, 0, 0);
+        element.render3D(drawContext, 0, 0, 0);
         matrixStack.pop();
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
 
     }
 
@@ -397,9 +383,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @param pos the position of the surface
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos(Pos3D pos) {
@@ -409,9 +393,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @param pos the position of the surface
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos(BlockPosHelper pos) {
@@ -423,9 +405,7 @@ public class Surface extends Draw2D implements RenderElement {
          * @param x the x position of the surface
          * @param y the y position of the surface
          * @param z the z position of the surface
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos(double x, double y, double z) {
@@ -435,7 +415,6 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @return the position of the surface.
-         *
          * @since 1.8.4
          */
         public Pos3D getPos() {
@@ -446,9 +425,7 @@ public class Surface extends Draw2D implements RenderElement {
          * The surface will move with the entity at the offset location.
          *
          * @param boundEntity the entity to bind the surface to
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder bindToEntity(EntityHelper<?> boundEntity) {
@@ -458,8 +435,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @return the entity the surface is bound to, or {@code null} if it is not bound to an
-         *     entity.
-         *
+         * entity.
          * @since 1.8.4
          */
         public EntityHelper<?> getBoundEntity() {
@@ -468,9 +444,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @param entityOffset the offset from the entity's position to render the surface at
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder boundOffset(Pos3D entityOffset) {
@@ -482,9 +456,7 @@ public class Surface extends Draw2D implements RenderElement {
          * @param x the x offset from the entity's position to render the surface at
          * @param y the y offset from the entity's position to render the surface at
          * @param z the z offset from the entity's position to render the surface at
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder boundOffset(double x, double y, double z) {
@@ -494,7 +466,6 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @return the offset from the entity's position to render the surface at.
-         *
          * @since 1.8.4
          */
         public Pos3D getBoundOffset() {
@@ -503,9 +474,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @param xRot the x rotation of the surface
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder xRotation(double xRot) {
@@ -515,7 +484,6 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @return the x rotation of the surface.
-         *
          * @since 1.8.4
          */
         public double getXRotation() {
@@ -524,9 +492,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @param yRot the y rotation of the surface
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder yRotation(double yRot) {
@@ -536,7 +502,6 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @return the y rotation of the surface.
-         *
          * @since 1.8.4
          */
         public double getYRotation() {
@@ -545,9 +510,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @param zRot the z rotation of the surface
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder zRotation(double zRot) {
@@ -557,7 +520,6 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @return the z rotation of the surface.
-         *
          * @since 1.8.4
          */
         public double getZRotation() {
@@ -568,9 +530,7 @@ public class Surface extends Draw2D implements RenderElement {
          * @param xRot the x rotation of the surface
          * @param yRot the y rotation of the surface
          * @param zRot the z rotation of the surface
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder rotation(double xRot, double yRot, double zRot) {
@@ -582,9 +542,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @param rotateCenter whether to rotate around the center of the surface
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder rotateCenter(boolean rotateCenter) {
@@ -594,8 +552,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @return {@code true} if this surface should be rotated around its center,
-         *     {@code false} otherwise.
-         *
+         * {@code false} otherwise.
          * @since 1.8.4
          */
         public boolean isRotatingCenter() {
@@ -604,9 +561,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @param rotateToPlayer whether to rotate the surface to face the player or not
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder rotateToPlayer(boolean rotateToPlayer) {
@@ -616,8 +571,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @return {@code true} if the surface should be rotated to face the player,
-         *     {@code false} otherwise.
-         *
+         * {@code false} otherwise.
          * @since 1.8.4
          */
         public boolean doesRotateToPlayer() {
@@ -626,9 +580,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @param width the width of the surface
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder width(double width) {
@@ -638,7 +590,6 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @return the width of the surface.
-         *
          * @since 1.8.4
          */
         public double getWidth() {
@@ -647,9 +598,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @param height the height of the surface
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder height(double height) {
@@ -659,7 +608,6 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @return the height of the surface.
-         *
          * @since 1.8.4
          */
         public double getHeight() {
@@ -667,11 +615,9 @@ public class Surface extends Draw2D implements RenderElement {
         }
 
         /**
-         * @param width the width of the surface
+         * @param width  the width of the surface
          * @param height the height of the surface
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder size(double width, double height) {
@@ -682,9 +628,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @param minSubdivisions the minimum number of subdivisions
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder minSubdivisions(int minSubdivisions) {
@@ -694,7 +638,6 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @return the minimum number of subdivisions.
-         *
          * @since 1.8.4
          */
         public int getMinSubdivisions() {
@@ -703,9 +646,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @param renderBack whether the back of the surface should be rendered or not
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder renderBack(boolean renderBack) {
@@ -715,8 +656,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @return {@code true} if the back of the surface should be rendered, {@code false}
-         *     otherwise.
-         *
+         * otherwise.
          * @since 1.8.4
          */
         public boolean shouldRenderBack() {
@@ -725,9 +665,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @param cull whether to enable culling or not
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder cull(boolean cull) {
@@ -737,7 +675,6 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @return {@code true} if culling is enabled for this box, {@code false} otherwise.
-         *
          * @since 1.8.4
          */
         public boolean isCulled() {
@@ -746,9 +683,7 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @param zIndexScale the scale of the z-index
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder zIndex(double zIndexScale) {
@@ -758,7 +693,6 @@ public class Surface extends Draw2D implements RenderElement {
 
         /**
          * @return the scale of the z-index.
-         *
          * @since 1.8.4
          */
         public double getZIndexScale() {
@@ -769,7 +703,6 @@ public class Surface extends Draw2D implements RenderElement {
          * Creates the surface for the given values and adds it to the draw3D.
          *
          * @return the build surface.
-         *
          * @since 1.8.4
          */
         public Surface buildAndAdd() {
@@ -785,17 +718,17 @@ public class Surface extends Draw2D implements RenderElement {
          */
         public Surface build() {
             Surface surface = new Surface(
-                pos,
-                new Pos3D(xRot, yRot, zRot),
-                new Pos2D(width, height),
-                minSubdivisions,
-                renderBack,
-                cull
+                    pos,
+                    new Pos3D(xRot, yRot, zRot),
+                    new Pos2D(width, height),
+                    minSubdivisions,
+                    renderBack,
+                    cull
             )
-                .setRotateCenter(rotateCenter)
-                .setRotateToPlayer(rotateToPlayer)
-                .bindToEntity(boundEntity)
-                .setBoundOffset(boundOffset);
+                    .setRotateCenter(rotateCenter)
+                    .setRotateToPlayer(rotateToPlayer)
+                    .bindToEntity(boundEntity)
+                    .setBoundOffset(boundOffset);
             return surface;
         }
 

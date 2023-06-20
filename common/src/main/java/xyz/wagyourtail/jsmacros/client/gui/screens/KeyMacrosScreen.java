@@ -30,8 +30,12 @@ public class KeyMacrosScreen extends MacroScreen {
         Set<IEventListener> listeners = Core.getInstance().eventRegistry.getListeners().get(EventKey.class.getAnnotation(Event.class).value());
         List<ScriptTrigger> macros = new ArrayList<>();
 
-        if (listeners != null) for (IEventListener event : ImmutableList.copyOf(listeners)) {
-            if (event instanceof BaseListener && ((BaseListener) event).getRawTrigger().triggerType != ScriptTrigger.TriggerType.EVENT) macros.add(((BaseListener) event).getRawTrigger());
+        if (listeners != null) {
+            for (IEventListener event : ImmutableList.copyOf(listeners)) {
+                if (event instanceof BaseListener && ((BaseListener) event).getRawTrigger().triggerType != ScriptTrigger.TriggerType.EVENT) {
+                    macros.add(((BaseListener) event).getRawTrigger());
+                }
+            }
         }
 
         macros.sort(Core.getInstance().config.getOptions(ClientConfigV2.class).getSortComparator());
@@ -44,10 +48,14 @@ public class KeyMacrosScreen extends MacroScreen {
     @Override
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         String translationKey = EventKey.getKeyModifiers(modifiers);
-        if (!translationKey.equals("")) translationKey += "+";
+        if (!translationKey.equals("")) {
+            translationKey += "+";
+        }
         translationKey += InputUtil.fromKeyCode(keyCode, scanCode).getTranslationKey();
-        for (MacroContainer macro : (List<MacroContainer>)(List) macros) {
-            if (!macro.onKey(translationKey)) return false;
+        for (MacroContainer macro : (List<MacroContainer>) (List) macros) {
+            if (!macro.onKey(translationKey)) {
+                return false;
+            }
         }
         return super.keyReleased(keyCode, scanCode, modifiers);
     }
@@ -55,15 +63,26 @@ public class KeyMacrosScreen extends MacroScreen {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         int mods = 0;
-        if (hasShiftDown()) mods += 1;
-        if (hasControlDown()) mods += 2;
-        if (hasAltDown()) mods += 4;
+        if (hasShiftDown()) {
+            mods += 1;
+        }
+        if (hasControlDown()) {
+            mods += 2;
+        }
+        if (hasAltDown()) {
+            mods += 4;
+        }
         String translationKey = EventKey.getKeyModifiers(mods);
-        if (!translationKey.equals("")) translationKey += "+";
+        if (!translationKey.equals("")) {
+            translationKey += "+";
+        }
         translationKey += InputUtil.Type.MOUSE.createFromCode(button).getTranslationKey();
-        for (MacroContainer macro : (List<MacroContainer>)(List) macros) {
-            if (!macro.onKey(translationKey)) return false;
+        for (MacroContainer macro : (List<MacroContainer>) (List) macros) {
+            if (!macro.onKey(translationKey)) {
+                return false;
+            }
         }
         return super.mouseReleased(mouseX, mouseY, button);
     }
+
 }

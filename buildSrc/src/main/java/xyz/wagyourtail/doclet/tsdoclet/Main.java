@@ -18,7 +18,10 @@ import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 public class Main implements Doclet {
     public static Reporter reporter;
@@ -39,11 +42,11 @@ public class Main implements Doclet {
     @Override
     public Set<? extends Option> getSupportedOptions() {
         return Set.of(
-            new Version(),
-            new OutputDirectory(),
-            new IgnoredItem("-doctitle", 1),
-            new IgnoredItem("-notimestamp", 0),
-            new IgnoredItem("-windowtitle", 1)
+                new Version(),
+                new OutputDirectory(),
+                new IgnoredItem("-doctitle", 1),
+                new IgnoredItem("-notimestamp", 0),
+                new IgnoredItem("-windowtitle", 1)
         );
     }
 
@@ -59,7 +62,6 @@ public class Main implements Doclet {
 
         Set<LibraryParser> libraryClasses = new LinkedHashSet<>();
         Set<EventParser> eventClasses = new LinkedHashSet<>();
-
 
         outputTS = new FileHandler(new File(OutputDirectory.outputDir, "JsMacros-" + Version.version + ".d.ts"));
 
@@ -91,14 +93,14 @@ public class Main implements Doclet {
 
         try {
             outputTS.append("""
-                declare const event: Events.BaseEvent;
-                declare const file: _javatypes.java.io.File;
-                declare const context: _javatypes.xyz.wagyourtail.jsmacros.core.language.EventContainer<any>;
+                    declare const event: Events.BaseEvent;
+                    declare const file: _javatypes.java.io.File;
+                    declare const context: _javatypes.xyz.wagyourtail.jsmacros.core.language.EventContainer<any>;
 
-                declare namespace Events {
-                    export interface BaseEvent extends _javatypes.java.lang.Object {
-                        getEventName(): string;
-                    }""");
+                    declare namespace Events {
+                        export interface BaseEvent extends _javatypes.java.lang.Object {
+                            getEventName(): string;
+                        }""");
 
             for (EventParser event : eventClasses) {
                 outputTS.append(StringHelpers.tabIn("\n\n" + event.genTSInterface()));
@@ -129,8 +131,9 @@ public class Main implements Doclet {
 
     public static Object getAnnotationValue(String key, AnnotationMirror annotation) {
         for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> el : annotation.getElementValues().entrySet()) {
-            if (el.getKey().getSimpleName().toString().equals(key))
+            if (el.getKey().getSimpleName().toString().equals(key)) {
                 return el.getValue().getValue();
+            }
         }
         return null;
     }

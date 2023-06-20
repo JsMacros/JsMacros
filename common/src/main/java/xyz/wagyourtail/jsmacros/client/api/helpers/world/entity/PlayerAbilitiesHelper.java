@@ -9,38 +9,38 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
  */
 @SuppressWarnings("unused")
 public class PlayerAbilitiesHelper extends BaseHelper<PlayerAbilities> {
-    
+
     public PlayerAbilitiesHelper(PlayerAbilities a) {
         super(a);
     }
-    
+
     /**
-     * @since 1.0.3
      * @return whether the player can be damaged.
+     * @since 1.0.3
      */
     public boolean getInvulnerable() {
         return base.invulnerable;
     }
-    
+
     /**
-     * @since 1.0.3
      * @return if the player is currently flying.
+     * @since 1.0.3
      */
     public boolean getFlying() {
         return base.flying;
     }
-    
+
     /**
-     * @since 1.0.3
      * @return if the player is allowed to fly.
+     * @since 1.0.3
      */
     public boolean getAllowFlying() {
         return base.allowFlying;
     }
-    
+
     /**
-     * @since 1.0.3
      * @return if the player is in creative.
+     * @since 1.0.3
      */
     public boolean getCreativeMode() {
         return base.creativeMode;
@@ -52,60 +52,58 @@ public class PlayerAbilitiesHelper extends BaseHelper<PlayerAbilities> {
      * interacting with blocks.
      *
      * @return {@code true} if the player is allowed to modify the world, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean canModifyWorld() {
         return base.allowModifyWorld;
     }
-    
+
     /**
      * set the player flying state.
-     * 
-     * @since 1.0.3
+     *
      * @param b
      * @return
+     * @since 1.0.3
      */
     public PlayerAbilitiesHelper setFlying(boolean b) {
         base.flying = b;
         return this;
     }
-    
+
     /**
      * set the player allow flying state.
-     * 
-     * @since 1.0.3
+     *
      * @param b
      * @return
+     * @since 1.0.3
      */
     public PlayerAbilitiesHelper setAllowFlying(boolean b) {
         base.allowFlying = b;
         return this;
     }
-    
+
     /**
-     * @since 1.0.3
      * @return the player fly speed multiplier.
+     * @since 1.0.3
      */
     public float getFlySpeed() {
         return base.getFlySpeed();
     }
-    
+
     /**
      * set the player fly speed multiplier.
-     * 
-     * @since 1.0.3
+     *
      * @param flySpeed
      * @return
+     * @since 1.0.3
      */
     public PlayerAbilitiesHelper setFlySpeed(double flySpeed) {
-        base.setFlySpeed((float)flySpeed);
+        base.setFlySpeed((float) flySpeed);
         return this;
     }
 
     /**
      * @return the player's walk speed.
-     *
      * @since 1.8.4
      */
     public float getWalkSpeed() {
@@ -115,7 +113,6 @@ public class PlayerAbilitiesHelper extends BaseHelper<PlayerAbilities> {
     /**
      * @param speed the new walk speed
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PlayerAbilitiesHelper setWalkSpeed(double speed) {
@@ -135,5 +132,5 @@ public class PlayerAbilitiesHelper extends BaseHelper<PlayerAbilities> {
                 + ", \"walkSpeed\": " + base.getWalkSpeed()
                 + "}";
     }
-    
+
 }

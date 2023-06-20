@@ -38,4 +38,5 @@ public class BossBarConsumer implements BossBarS2CPacket.Consumer {
         ClientBossBar bar = ((IBossBarHud) MinecraftClient.getInstance().inGameHud.getBossBarHud()).jsmacros_GetBossBars().get(uuid);
         new EventBossbar("UPDATE_PROPERTIES", uuid, bar);
     }
+
 }

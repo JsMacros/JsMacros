@@ -20,7 +20,7 @@ import java.util.Set;
  * @author Wagyourtail
  * @since 1.2.7
  */
- @Event(value = "Key", oldName = "KEY")
+@Event(value = "Key", oldName = "KEY")
 public class EventKey implements BaseEvent {
     static final MinecraftClient mc = MinecraftClient.getInstance();
     public final int action;
@@ -39,24 +39,40 @@ public class EventKey implements BaseEvent {
 
     public static boolean parse(int key, int scancode, int action, int mods) {
         InputUtil.Key keycode;
-        if (key <= 7) keycode = InputUtil.Type.MOUSE.createFromCode(key);
-        else keycode = InputUtil.Type.KEYSYM.createFromCode(key);
+        if (key <= 7) {
+            keycode = InputUtil.Type.MOUSE.createFromCode(key);
+        } else {
+            keycode = InputUtil.Type.KEYSYM.createFromCode(key);
+        }
 
         String keyStr = keycode.getTranslationKey();
         String modsStr = getKeyModifiers(mods);
-        
-        if (keycode == InputUtil.UNKNOWN_KEY) return false;
 
-        if (action == 1) FKeyBind.KeyTracker.press(keycode);
-        else FKeyBind.KeyTracker.unpress(keycode);
+        if (keycode == InputUtil.UNKNOWN_KEY) {
+            return false;
+        }
+
+        if (action == 1) {
+            FKeyBind.KeyTracker.press(keycode);
+        } else {
+            FKeyBind.KeyTracker.unpress(keycode);
+        }
 
         if (mc.currentScreen != null) {
             if (action != 0 || !wasNullOnDown.contains(key)) {
-                if (Core.getInstance().config.getOptions(ClientConfigV2.class).disableKeyWhenScreenOpen) return false;
-                if (mc.currentScreen instanceof BaseScreen) return false;
+                if (Core.getInstance().config.getOptions(ClientConfigV2.class).disableKeyWhenScreenOpen) {
+                    return false;
+                }
+                if (mc.currentScreen instanceof BaseScreen) {
+                    return false;
+                }
                 Element focused = mc.currentScreen.getFocused();
-                if (focused instanceof TextFieldWidget) return false;
-                if (focused instanceof RecipeBookWidget && ((IRecipeBookWidget) focused).jsmacros_isSearching()) return false;
+                if (focused instanceof TextFieldWidget) {
+                    return false;
+                }
+                if (focused instanceof RecipeBookWidget && ((IRecipeBookWidget) focused).jsmacros_isSearching()) {
+                    return false;
+                }
             }
         } else if (action == 1) {
             wasNullOnDown.add(key);
@@ -68,9 +84,13 @@ public class EventKey implements BaseEvent {
 
         // fix mods if it was a mod key
         if (action == 1) {
-            if (key == 340 || key == 344) mods -= 1;
-            else if (key == 341 || key == 345) mods -= 2;
-            else if (key == 342 || key == 346) mods -= 4;
+            if (key == 340 || key == 344) {
+                mods -= 1;
+            } else if (key == 341 || key == 345) {
+                mods -= 2;
+            } else if (key == 342 || key == 346) {
+                mods -= 4;
+            }
         }
 
         EventJoinedKey ev = new EventJoinedKey(action, keyStr, modsStr);
@@ -89,11 +109,10 @@ public class EventKey implements BaseEvent {
     public String toString() {
         return String.format("%s:{\"key\": \"%s\"}", this.getEventName(), key);
     }
-    
 
-    
     /**
-     * turn an {@link java.lang.Integer Integer} for key modifiers into a Translation Key. 
+     * turn an {@link java.lang.Integer Integer} for key modifiers into a Translation Key.
+     *
      * @param mods
      * @return
      */
@@ -103,18 +122,23 @@ public class EventKey implements BaseEvent {
             s += "key.keyboard.left.shift";
         }
         if ((mods & 2) == 2) {
-            if (s.length() > 0) s += "+";
+            if (s.length() > 0) {
+                s += "+";
+            }
             s += "key.keyboard.left.control";
         }
         if ((mods & 4) == 4) {
-            if (s.length() > 0) s += "+";
+            if (s.length() > 0) {
+                s += "+";
+            }
             s += "key.keyboard.left.alt";
         }
         return s;
     }
-    
+
     /**
-     * turn a Translation Key for modifiers into an {@link java.lang.Integer Integer}. 
+     * turn a Translation Key for modifiers into an {@link java.lang.Integer Integer}.
+     *
      * @param mods
      * @return
      */
@@ -139,6 +163,7 @@ public class EventKey implements BaseEvent {
             }
         }
         return i;
-        
+
     }
+
 }

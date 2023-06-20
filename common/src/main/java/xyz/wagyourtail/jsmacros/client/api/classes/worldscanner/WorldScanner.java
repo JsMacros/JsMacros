@@ -14,27 +14,26 @@ import net.minecraft.world.chunk.PalettedContainer;
 import xyz.wagyourtail.jsmacros.client.access.IPackedIntegerArray;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainer;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainerData;
+import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * A class to scan the world for certain blocks. The results of the filters are cached, 
- * so it's a good idea to reuse an instance of this if possible. 
+ * A class to scan the world for certain blocks. The results of the filters are cached,
+ * so it's a good idea to reuse an instance of this if possible.
  * The scanner can either return a list of all block positions or
  * a list of blocks and their respective count for every block / state matching the filters criteria.
- * 
+ *
  * @author Etheradon
  * @since 1.6.5
  */
@@ -51,7 +50,7 @@ public class WorldScanner {
     private final boolean useParallelStream;
 
     /**
-     * Creates a new World scanner with for the given world. It accepts two boolean functions, 
+     * Creates a new World scanner with for the given world. It accepts two boolean functions,
      * one for {@link BlockHelper} and the other for {@link BlockStateHelper}.
      *
      * @param world       the world to scan
@@ -129,8 +128,7 @@ public class WorldScanner {
 
         List<Pos3D> blocks = new ArrayList<>();
 
-        streamChunkSections(world.getChunk(pos.x, pos.z), (section, isInFilter) -> {
-            int yOffset = section.getYOffset();
+        streamChunkSections(world.getChunk(pos.x, pos.z), (section, yOffset, isInFilter) -> {
             PackedIntegerArray array = (PackedIntegerArray) ((IPalettedContainer<?>) section.getBlockStateContainer()).jsmacros_getData().jsmacros_getStorage();
             forEach(array, isInFilter, place -> blocks.add(new Pos3D(
                     chunkX + ((place & 255) & 15),
@@ -180,7 +178,7 @@ public class WorldScanner {
 
             Object2IntOpenHashMap<BlockState> blocks = new Object2IntOpenHashMap<>();
 
-            streamChunkSections(world.getChunk(pos.x, pos.z), (section, isInFilter) -> count(section.getBlockStateContainer(), isInFilter, blocks::addTo));
+            streamChunkSections(world.getChunk(pos.x, pos.z), (section, yOffset, isInFilter) -> count(section.getBlockStateContainer(), isInFilter, blocks::addTo));
             return blocks.object2IntEntrySet().stream();
         }).forEach(blockStateEntry -> {
             BlockState state = blockStateEntry.getKey();
@@ -241,9 +239,11 @@ public class WorldScanner {
             return list.stream();
         }
     }
-    
-    private void streamChunkSections(Chunk chunk, BiConsumer<ChunkSection, boolean[]> consumer) {
+
+    private void streamChunkSections(Chunk chunk, TriConsumer<ChunkSection, Integer, boolean[]> consumer) {
+        int yOffset = chunk.getBottomY() - 16;
         for (ChunkSection section : chunk.getSectionArray()) {
+            yOffset += 16;
             if (section == null || section.isEmpty()) {
                 continue;
             }
@@ -258,7 +258,7 @@ public class WorldScanner {
             if (isInFilter.length == 0) {
                 continue;
             }
-            consumer.accept(section, isInFilter);
+            consumer.accept(section, yOffset, isInFilter);
         }
     }
 
@@ -284,7 +284,7 @@ public class WorldScanner {
             return null;
         }
     }
-    
+
     private static void forEach(PackedIntegerArray array, boolean[] isInFilter, IntConsumer action) {
         int counter = 0;
 
@@ -312,7 +312,7 @@ public class WorldScanner {
             }
         }
     }
-    
+
     private static void count(PalettedContainer<BlockState> container, boolean[] isInFilter, PalettedContainer.Counter<BlockState> counter) {
         IPalettedContainerData<BlockState> data = ((IPalettedContainer<BlockState>) container).jsmacros_getData();
         Palette<BlockState> palette = data.jsmacros_getPalette();
@@ -330,6 +330,12 @@ public class WorldScanner {
                 }
             }
         }
+    }
+
+    @FunctionalInterface
+    private interface TriConsumer<A, B, C> {
+        void accept(A a, B b, C c);
+
     }
 
 }

@@ -13,25 +13,23 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class VillagerInventory extends Inventory<MerchantScreen> {
-    
+
     protected VillagerInventory(MerchantScreen inventory) {
         super(inventory);
     }
-    
+
     /**
-    *  select the trade by its index
-    *
+     * select the trade by its index
+     *
      * @param index
-     *
      * @return self for chaining
-     *
      * @since 1.3.1
      */
     public VillagerInventory selectTrade(int index) {
-        ((IMerchantScreen)inventory).jsmacros_selectIndex(index);
+        ((IMerchantScreen) inventory).jsmacros_selectIndex(index);
         return this;
     }
-    
+
     /**
      * @return
      * @since 1.3.1
@@ -39,7 +37,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
     public int getExperience() {
         return inventory.getScreenHandler().getExperience();
     }
-    
+
     /**
      * @return
      * @since 1.3.1
@@ -47,7 +45,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
     public int getLevelProgress() {
         return inventory.getScreenHandler().getLevelProgress();
     }
-    
+
     /**
      * @return
      * @since 1.3.1
@@ -55,7 +53,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
     public int getMerchantRewardedExperience() {
         return inventory.getScreenHandler().getMerchantRewardedExperience();
     }
-    
+
     /**
      * @return
      * @since 1.3.1
@@ -63,7 +61,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
     public boolean canRefreshTrades() {
         return inventory.getScreenHandler().canRefreshTrades();
     }
-    
+
     /**
      * @return
      * @since 1.3.1
@@ -71,7 +69,7 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
     public boolean isLeveled() {
         return inventory.getScreenHandler().isLeveled();
     }
-    
+
     /**
      * @return list of trade offers
      * @since 1.3.1
@@ -89,5 +87,5 @@ public class VillagerInventory extends Inventory<MerchantScreen> {
     public String toString() {
         return String.format("VillagerInventory:{\"level\": %d}", getLevelProgress());
     }
-    
+
 }

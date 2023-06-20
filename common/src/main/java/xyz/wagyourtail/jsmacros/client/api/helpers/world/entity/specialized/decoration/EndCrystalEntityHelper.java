@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.decoration;
 
 import net.minecraft.entity.decoration.EndCrystalEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
@@ -21,7 +20,6 @@ public class EndCrystalEntityHelper extends EntityHelper<EndCrystalEntity> {
      * not.
      *
      * @return {@code true} if the end crystal was not placed by a player, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isNatural() {
@@ -30,7 +28,6 @@ public class EndCrystalEntityHelper extends EntityHelper<EndCrystalEntity> {
 
     /**
      * @return the target of the crystal's beam, or {@code null} if there is none.
-     *
      * @since 1.8.4
      */
     public BlockPosHelper getBeamTarget() {

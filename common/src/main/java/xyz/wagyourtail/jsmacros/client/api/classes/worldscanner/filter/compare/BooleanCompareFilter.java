@@ -18,4 +18,5 @@ public class BooleanCompareFilter implements IFilter<Boolean> {
     public Boolean apply(Boolean bool) {
         return bool.equals(compareTo);
     }
+
 }

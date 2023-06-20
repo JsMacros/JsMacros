@@ -22,16 +22,16 @@ import java.util.zip.ZipInputStream;
  * @author Wagyourtail
  * @since 1.3.1
  */
- @SuppressWarnings("unused")
+@SuppressWarnings("unused")
 public class Mappings {
     public final String mappingsource;
     private final Map<String, ClassData> mappings = new LinkedHashMap<>();
     private final Map<String, ClassData> reversedMappings = new LinkedHashMap<>();
-    
+
     public Mappings(String mappingsource) {
         this.mappingsource = mappingsource;
     }
-    
+
     protected void loadMappings() throws IOException {
         StringBuilder builder = new StringBuilder();
         if (mappingsource.endsWith(".tiny")) {
@@ -48,7 +48,7 @@ public class Mappings {
                 zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(Core.getInstance().config.macroFolder.toPath().resolve(mappingsource).toFile()), 1024));
             }
             ZipEntry e;
-            while ((e = zis.getNextEntry()) != null && !e.getName().equals("mappings/mappings.tiny"));
+            while ((e = zis.getNextEntry()) != null && !e.getName().equals("mappings/mappings.tiny")) ;
             int read;
             byte[] buff = new byte[1024];
             while ((read = zis.read(buff, 0, 1024)) > 0) {
@@ -57,7 +57,7 @@ public class Mappings {
         }
         parseMappings(builder.toString());
     }
-    
+
     protected void parseMappings(String rawmappings) {
         ClassData currentClass = null;
         for (String line : rawmappings.split("\n")) {
@@ -78,12 +78,15 @@ public class Mappings {
                         default:
                     }
                 }
-            } catch (IndexOutOfBoundsException ignored) {}
+            } catch (IndexOutOfBoundsException ignored) {
+            }
         }
     }
 
     protected void reverseMappings() throws IOException {
-        if (mappings.isEmpty()) loadMappings();
+        if (mappings.isEmpty()) {
+            loadMappings();
+        }
         for (Map.Entry<String, ClassData> clazz : mappings.entrySet()) {
             ClassData mappedClass = clazz.getValue();
             ClassData reversedClass = new ClassData(clazz.getKey());
@@ -98,19 +101,23 @@ public class Mappings {
             });
         }
     }
-    
+
     private static final Pattern methodParts = Pattern.compile("\\((.*?)\\)(.+)");
     private static final Pattern sig = Pattern.compile("L(.+?);");
 
     private static String remapSig(String sign, Map<String, ClassData> mappings) {
         Matcher m = methodParts.matcher(sign);
-        if (!m.find()) throw new RuntimeException(String.format("method signature \"%s\" invalid", sign));
+        if (!m.find()) {
+            throw new RuntimeException(String.format("method signature \"%s\" invalid", sign));
+        }
         Matcher cfinder = sig.matcher(sign);
         int offset = 0;
 
         while (cfinder.find()) {
             String cls = cfinder.group(1);
-            if (mappings.containsKey(cls)) cls = mappings.get(cls).name;
+            if (mappings.containsKey(cls)) {
+                cls = mappings.get(cls).name;
+            }
             sign = sign.substring(0, cfinder.start(1) + offset) + cls + sign.substring(cfinder.end(1) + offset);
             offset += cls.length() - cfinder.group(1).length();
         }
@@ -120,27 +127,31 @@ public class Mappings {
 
     /**
      * @return mappings from Intermediary to Named
-     * @since 1.3.1
      * @throws IOException will throw if malformed url/path
+     * @since 1.3.1
      */
     public Map<String, ClassData> getMappings() throws IOException {
-        if (mappings.isEmpty()) loadMappings();
+        if (mappings.isEmpty()) {
+            loadMappings();
+        }
         return mappings;
     }
-    
+
     /**
      * @return mappings from Named to Intermediary
-     * @since 1.3.1
      * @throws IOException will throw if malformed url/path
+     * @since 1.3.1
      */
     public Map<String, ClassData> getReversedMappings() throws IOException {
-        if (reversedMappings.isEmpty()) reverseMappings();
+        if (reversedMappings.isEmpty()) {
+            reverseMappings();
+        }
         return reversedMappings;
     }
 
     /**
-     * @since 1.6.0
      * @return
+     * @since 1.6.0
      */
     public <T> MappedClass<T> remapClass(T instance) throws IOException {
         getReversedMappings();
@@ -148,12 +159,10 @@ public class Mappings {
     }
 
     /**
-     *
      * gets the class without instance, so can only access static methods/fields
+     *
      * @param className
-     *
      * @return
-     *
      * @throws IOException
      * @throws ClassNotFoundException
      */
@@ -174,36 +183,38 @@ public class Mappings {
 
     public static class ClassData {
         public final Map<String, MethodData> methods = new LinkedHashMap<>();
-        public final Map<String, String> fields =  new LinkedHashMap<>();
+        public final Map<String, String> fields = new LinkedHashMap<>();
         public final String name;
-        
+
         public ClassData(String name) {
             this.name = name;
         }
-        
+
         public String toString() {
             return String.format("{\"methods\": %s, \"fields\": %s}", methods.toString(), fields.toString());
         }
+
     }
-    
+
     public static class MethodData {
         public final String name;
         public final Supplier<String> sig;
-        
+
         public MethodData(String name, Supplier<String> sig) {
             this.name = name;
             this.sig = sig;
-            
+
         }
-        
+
         public String toString() {
             return name + sig.get();
         }
+
     }
 
     /**
-     * @since 1.6.0
      * @param <T>
+     * @since 1.6.0
      */
     public class MappedClass<T> extends WrappedClassInstance<T> {
 
@@ -270,8 +281,9 @@ public class Mappings {
             toTryIntermediaries.add(methodName);
             if (cls != null) {
                 for (Map.Entry<String, MethodData> method : cls.methods.entrySet()) {
-                    if (method.getValue().name.equals(methodName))
+                    if (method.getValue().name.equals(methodName)) {
                         toTryIntermediaries.add(method.getKey().split("\\(")[0]);
+                    }
                 }
             }
             for (Method method : asClass.getDeclaredMethods()) {
@@ -303,4 +315,5 @@ public class Mappings {
         }
 
     }
+
 }

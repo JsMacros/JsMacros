@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer;
 
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
@@ -28,6 +28,7 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
     public int topScroll = 0;
     public int totalHeight = 0;
     public Supplier<T> defaultValue = () -> null;
+
     public AbstractMapSettingContainer(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
         super(x, y, width, height, textRenderer, parent, group);
     }
@@ -120,9 +121,9 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        textRenderer.draw(matrices, settingName, x + width / 2F - textRenderer.getWidth(settingName) / 2F + 20, y + 1, 0xFFFFFF);
-        fill(matrices, x, y + 10, x+width,y + 11,0xFFFFFFFF);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        drawContext.drawText(textRenderer, settingName, (int) (x + width / 2F - textRenderer.getWidth(settingName) / 2F + 20), y + 1, 0xFFFFFF, false);
+        drawContext.fill(x, y + 10, x + width, y + 11, 0xFFFFFFFF);
     }
 
     public static abstract class MapSettingEntry<T> extends MultiElementContainer<AbstractMapSettingContainer<T, MapSettingEntry<T>>> {
@@ -193,8 +194,10 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
         }
 
         @Override
-        public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
 
         }
+
     }
+
 }

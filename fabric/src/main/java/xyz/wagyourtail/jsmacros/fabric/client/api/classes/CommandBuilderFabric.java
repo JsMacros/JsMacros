@@ -18,7 +18,9 @@ import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -60,8 +62,10 @@ public class CommandBuilderFabric extends CommandBuilder {
     @Override
     protected <S> void suggests(SuggestionProvider<S> suggestionProvider) {
         Pair<Boolean, Function<CommandRegistryAccess, ArgumentBuilder<FabricClientCommandSource, ?>>> arg = pointer.pop();
-        if (!arg.getT()) throw new AssertionError("SuggestionProvider can only be used on non-literal arguments");
-        pointer.push(new Pair<>(true, arg.getU().andThen((e) -> ((RequiredArgumentBuilder)e).suggests(suggestionProvider))));
+        if (!arg.getT()) {
+            throw new AssertionError("SuggestionProvider can only be used on non-literal arguments");
+        }
+        pointer.push(new Pair<>(true, arg.getU().andThen((e) -> ((RequiredArgumentBuilder) e).suggests(suggestionProvider))));
     }
 
     @Override
@@ -121,4 +125,5 @@ public class CommandBuilderFabric extends CommandBuilder {
             }
         });
     }
+
 }

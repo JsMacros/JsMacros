@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 
 import net.minecraft.util.math.MathHelper;
-
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -26,7 +25,6 @@ public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper
 
     /**
      * @return the current value of this slider.
-     *
      * @since 1.8.4
      */
     public double getValue() {
@@ -36,7 +34,6 @@ public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper
     /**
      * @param value the new value
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public SliderWidgetHelper setValue(double value) {
@@ -46,7 +43,6 @@ public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper
 
     /**
      * @return the set amount of steps of this slider.
-     *
      * @since 1.8.4
      */
     public int getSteps() {
@@ -56,7 +52,6 @@ public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper
     /**
      * @param steps the amount of steps
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public SliderWidgetHelper setSteps(int steps) {
@@ -85,7 +80,6 @@ public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper
 
         /**
          * @return the amount of steps of this slider.
-         *
          * @since 1.8.4
          */
         public int getSteps() {
@@ -95,7 +89,6 @@ public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper
         /**
          * @param steps the amount of steps for the slider. Must be greater or equal to 2
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public SliderBuilder steps(int steps) {
@@ -105,7 +98,6 @@ public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper
 
         /**
          * @return the initial value of the slider.
-         *
          * @since 1.8.4
          */
         public int getValue() {
@@ -115,7 +107,6 @@ public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper
         /**
          * @param value the initial value of the slider. Must be between 0 and steps - 1
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public SliderBuilder initially(int value) {
@@ -125,7 +116,6 @@ public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper
 
         /**
          * @return the change listener of the slider.
-         *
          * @since 1.8.4
          */
         public MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> getAction() {
@@ -156,6 +146,7 @@ public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper
             b.set(new SliderWidgetHelper(slider, getZIndex()));
             return b.get();
         }
+
     }
 
 }

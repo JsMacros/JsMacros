@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob
 
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.mob.WardenEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 
 /**
@@ -18,7 +17,6 @@ public class WardenEntityHelper extends MobEntityHelper<WardenEntity> {
 
     /**
      * @return this warden's anger towards its active target.
-     *
      * @since 1.8.4
      */
     public int getAnger() {
@@ -27,7 +25,6 @@ public class WardenEntityHelper extends MobEntityHelper<WardenEntity> {
 
     /**
      * @return {@code true} if this warden is digging into the ground, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isDigging() {
@@ -36,7 +33,6 @@ public class WardenEntityHelper extends MobEntityHelper<WardenEntity> {
 
     /**
      * @return {@code true} if this warden is emerging from the ground, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isEmerging() {
@@ -45,7 +41,6 @@ public class WardenEntityHelper extends MobEntityHelper<WardenEntity> {
 
     /**
      * @return {@code true} if this warden is roaring, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isRoaring() {
@@ -54,7 +49,6 @@ public class WardenEntityHelper extends MobEntityHelper<WardenEntity> {
 
     /**
      * @return {@code true} if this warden is sniffing, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isSniffing() {
@@ -63,12 +57,11 @@ public class WardenEntityHelper extends MobEntityHelper<WardenEntity> {
 
     /**
      * @return {@code true} if this warden is charging its sonic boom attack, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isChargingSonicBoom() {
         return base.chargingSonicBoomAnimationState.isRunning();
     }
-    
+
 }

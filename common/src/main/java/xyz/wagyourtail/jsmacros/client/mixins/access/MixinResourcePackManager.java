@@ -31,4 +31,5 @@ public class MixinResourcePackManager implements IResourcePackManager {
         }
         return instance.isAlwaysEnabled();
     }
+
 }

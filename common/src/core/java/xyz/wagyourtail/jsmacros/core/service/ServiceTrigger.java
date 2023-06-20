@@ -18,13 +18,17 @@ public class ServiceTrigger {
 
     public ScriptTrigger toScriptTrigger() {
         return new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventService.class.getAnnotation(Event.class).value(), new File(
-            Core.getInstance().config.macroFolder, file), enabled);
+                Core.getInstance().config.macroFolder, file), enabled);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ServiceTrigger)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ServiceTrigger)) {
+            return false;
+        }
         ServiceTrigger that = (ServiceTrigger) o;
         return enabled == that.enabled && Objects.equals(file, that.file);
     }

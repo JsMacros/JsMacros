@@ -27,8 +27,8 @@ public class EventService implements BaseEvent {
     @Override
     public String toString() {
         return "EventService{" +
-            "serviceName:\"" + serviceName + '\"' +
-            '}';
+                "serviceName:\"" + serviceName + '\"' +
+                '}';
     }
 
     protected Map<String, Object> args = new ConcurrentHashMap<>();
@@ -38,9 +38,7 @@ public class EventService implements BaseEvent {
      *
      * @param name
      * @param i
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public int putInt(String name, int i) {
@@ -53,9 +51,7 @@ public class EventService implements BaseEvent {
      *
      * @param name
      * @param str
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public String putString(String name, String str) {
@@ -68,9 +64,7 @@ public class EventService implements BaseEvent {
      *
      * @param name
      * @param d
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public double putDouble(String name, double d) {
@@ -83,9 +77,7 @@ public class EventService implements BaseEvent {
      *
      * @param name
      * @param b
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public boolean putBoolean(String name, boolean b) {
@@ -98,9 +90,7 @@ public class EventService implements BaseEvent {
      *
      * @param name
      * @param o
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Object putObject(String name, Object o) {
@@ -115,9 +105,7 @@ public class EventService implements BaseEvent {
      * Returns the type of the defined item in the global variable space as a string.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public String getType(String name) {
@@ -141,9 +129,7 @@ public class EventService implements BaseEvent {
      * Gets an Integer from the global variable space.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Integer getInt(String name) {
@@ -159,9 +145,7 @@ public class EventService implements BaseEvent {
      * Gets an Integer from the global variable space. and then increment it there.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Integer getAndIncrementInt(String name) {
@@ -178,9 +162,7 @@ public class EventService implements BaseEvent {
      * Gets an integer from the global variable pace. and then decrement it there.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Integer getAndDecrementInt(String name) {
@@ -197,9 +179,7 @@ public class EventService implements BaseEvent {
      * increment an Integer in the global variable space. then return it.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Integer incrementAndGetInt(String name) {
@@ -216,9 +196,7 @@ public class EventService implements BaseEvent {
      * decrement an Integer in the global variable space. then return it.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Integer decrementAndGetInt(String name) {
@@ -235,9 +213,7 @@ public class EventService implements BaseEvent {
      * Gets a String from the global variable space
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public String getString(String name) {
@@ -249,14 +225,11 @@ public class EventService implements BaseEvent {
         }
     }
 
-
     /**
      * Gets a Double from the global variable space.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Double getDouble(String name) {
@@ -272,9 +245,7 @@ public class EventService implements BaseEvent {
      * Gets a Boolean from the global variable space.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Boolean getBoolean(String name) {
@@ -290,9 +261,7 @@ public class EventService implements BaseEvent {
      * toggles a global boolean and returns its new value
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Boolean toggleBoolean(String name) {
@@ -309,9 +278,7 @@ public class EventService implements BaseEvent {
      * Gets an Object from the global variable space.
      *
      * @param name
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Object getObject(String name) {
@@ -322,7 +289,6 @@ public class EventService implements BaseEvent {
      * removes a key from the global variable space.
      *
      * @param key
-     *
      * @since 1.6.5
      */
     public void remove(String key) {
@@ -332,4 +298,5 @@ public class EventService implements BaseEvent {
     public Map<String, Object> getRaw() {
         return args;
     }
+
 }

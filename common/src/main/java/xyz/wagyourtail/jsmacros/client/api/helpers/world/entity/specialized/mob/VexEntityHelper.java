@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob;
 
 import net.minecraft.entity.mob.VexEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 
 /**
@@ -17,8 +16,7 @@ public class VexEntityHelper extends MobEntityHelper<VexEntity> {
 
     /**
      * @return {@code true} if this vex is currently charging at its target, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isCharging() {

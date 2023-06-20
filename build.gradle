@@ -1,5 +1,5 @@
 plugins {
-    id "xyz.wagyourtail.unimined" version "0.4.0-SNAPSHOT" apply false
+    id "xyz.wagyourtail.unimined" version "0.4.1-SNAPSHOT" apply false
 }
 
 subprojects {
@@ -49,7 +49,7 @@ subprojects {
         minecraft "net.minecraft:minecraft:${rootProject.minecraft_version}"
 
         mappings "net.fabricmc:intermediary:${rootProject.minecraft_version}:v2"
-        mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+        mappings "net.fabricmc:yarn:${rootProject.minecraft_version}+${project.yarn_mappings}:v2"
 
         // non-mod dependencies:
         implementation "io.noties:prism4j:${project.prism_version}"

@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
@@ -38,9 +39,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @param x1 the x position of the start of the line
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Line setX1(int x1) {
@@ -50,7 +49,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @return the x position of the start of the line.
-     *
      * @since 1.8.4
      */
     public int getX1() {
@@ -59,9 +57,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @param y1 the y position of the start of the line
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Line setY1(int y1) {
@@ -71,7 +67,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @return the y position of the start of the line.
-     *
      * @since 1.8.4
      */
     public int getY1() {
@@ -81,9 +76,7 @@ public class Line implements RenderElement, Alignable<Line> {
     /**
      * @param x1 the x position of the start of the line
      * @param y1 the y position of the start of the line
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Line setPos1(int x1, int y1) {
@@ -94,9 +87,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @param x2 the x position of the end of the line
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Line setX2(int x2) {
@@ -106,7 +97,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @return the x position of the end of the line.
-     *
      * @since 1.8.4
      */
     public int getX2() {
@@ -115,9 +105,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @param y2 the y position of the end of the line
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Line setY2(int y2) {
@@ -127,7 +115,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @return the y position of the end of the line.
-     *
      * @since 1.8.4
      */
     public int getY2() {
@@ -137,9 +124,7 @@ public class Line implements RenderElement, Alignable<Line> {
     /**
      * @param x2 the x position of the end of the line
      * @param y2 the y position of the end of the line
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Line setPos2(int x2, int y2) {
@@ -153,9 +138,7 @@ public class Line implements RenderElement, Alignable<Line> {
      * @param y1 the y position of the start of the line
      * @param x2 the x position of the end of the line
      * @param y2 the y position of the end of the line
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Line setPos(int x1, int y1, int x2, int y2) {
@@ -168,9 +151,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @param color the color of the line
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Line setColor(int color) {
@@ -184,9 +165,7 @@ public class Line implements RenderElement, Alignable<Line> {
     /**
      * @param color the color of the line
      * @param alpha the alpha of the line
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Line setColor(int color, int alpha) {
@@ -196,7 +175,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @return the color of the line.
-     *
      * @since 1.8.4
      */
     public int getColor() {
@@ -205,9 +183,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @param alpha the alpha value of the line's color
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Line setAlpha(int alpha) {
@@ -217,7 +193,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @return the alpha value of the line's color.
-     *
      * @since 1.8.4
      */
     public int getAlpha() {
@@ -226,9 +201,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @param rotation the rotation (clockwise) of the line
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Line setRotation(double rotation) {
@@ -238,7 +211,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @return the rotation (clockwise) of the line.
-     *
      * @since 1.8.4
      */
     public float getRotation() {
@@ -247,9 +219,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @param rotateCenter whether this line should be rotated around its center
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Line setRotateCenter(boolean rotateCenter) {
@@ -259,8 +229,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @return {@code true} if this line should be rotated around its center, {@code false}
-     *     otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isRotatingCenter() {
@@ -269,9 +238,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @param width the width of the line
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Line setWidth(double width) {
@@ -281,7 +248,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @return the width of the line.
-     *
      * @since 1.8.4
      */
     public float getWidth() {
@@ -290,9 +256,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
     /**
      * @param zIndex the z-index of the line
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Line setZIndex(int zIndex) {
@@ -306,7 +270,8 @@ public class Line implements RenderElement, Alignable<Line> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        MatrixStack matrices = drawContext.getMatrices();
         matrices.push();
         setupMatrix(matrices, x1, y1, 1, rotation, getScaledWidth(), getScaledHeight(), rotateCenter);
 
@@ -404,9 +369,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @param x1 the x position of the first point
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder x1(int x1) {
@@ -416,7 +379,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @return the x position of the first point.
-         *
          * @since 1.8.4
          */
         public int getX1() {
@@ -425,9 +387,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @param y1 the y position of the first point
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder y1(int y1) {
@@ -437,7 +397,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @return the y position of the first point.
-         *
          * @since 1.8.4
          */
         public int getY1() {
@@ -447,9 +406,7 @@ public class Line implements RenderElement, Alignable<Line> {
         /**
          * @param x1 the x position of the first point
          * @param y1 the y position of the first point
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos1(int x1, int y1) {
@@ -460,9 +417,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @param x2 the x position of the second point
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder x2(int x2) {
@@ -472,7 +427,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @return the x position of the second point.
-         *
          * @since 1.8.4
          */
         public int getX2() {
@@ -481,9 +435,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @param y2 the y position of the second point
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder y2(int y2) {
@@ -493,7 +445,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @return the y position of the second point.
-         *
          * @since 1.8.4
          */
         public int getY2() {
@@ -503,9 +454,7 @@ public class Line implements RenderElement, Alignable<Line> {
         /**
          * @param x2 the x position of the second point
          * @param y2 the y position of the second point
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos2(int x2, int y2) {
@@ -519,9 +468,7 @@ public class Line implements RenderElement, Alignable<Line> {
          * @param y1 the y position of the first point
          * @param x2 the x position of the second point
          * @param y2 the y position of the second point
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos(int x1, int y1, int x2, int y2) {
@@ -534,9 +481,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @param rotation the rotation (clockwise) of the line
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder rotation(double rotation) {
@@ -546,7 +491,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @return the rotation (clockwise) of the line.
-         *
          * @since 1.8.4
          */
         public float getRotation() {
@@ -555,9 +499,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @param rotateCenter whether this line should be rotated around its center
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder rotateCenter(boolean rotateCenter) {
@@ -567,8 +509,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @return {@code true} if this line should be rotated around its center, {@code false}
-         *     otherwise.
-         *
+         * otherwise.
          * @since 1.8.4
          */
         public boolean isRotatingCenter() {
@@ -577,9 +518,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @param width the width of the line
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder width(double width) {
@@ -589,7 +528,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @return the width of the line.
-         *
          * @since 1.8.4
          */
         public float getWidth() {
@@ -598,9 +536,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @param color the color of the line
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int color) {
@@ -611,9 +547,7 @@ public class Line implements RenderElement, Alignable<Line> {
         /**
          * @param color the color of the line
          * @param alpha the alpha component of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int color, int alpha) {
@@ -626,9 +560,7 @@ public class Line implements RenderElement, Alignable<Line> {
          * @param r the red component of the color
          * @param g the green component of the color
          * @param b the blue component of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int r, int g, int b) {
@@ -641,9 +573,7 @@ public class Line implements RenderElement, Alignable<Line> {
          * @param g the green component of the color
          * @param b the blue component of the color
          * @param a the alpha value of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int r, int g, int b, int a) {
@@ -653,7 +583,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @return the color of the line.
-         *
          * @since 1.8.4
          */
         public int getColor() {
@@ -662,9 +591,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @param alpha the alpha value of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder alpha(int alpha) {
@@ -674,7 +601,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @return the alpha value of the color.
-         *
          * @since 1.8.4
          */
         public int getAlpha() {
@@ -683,9 +609,7 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @param zIndex the z-index of the line
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder zIndex(int zIndex) {
@@ -695,7 +619,6 @@ public class Line implements RenderElement, Alignable<Line> {
 
         /**
          * @return the z-index of the line.
-         *
          * @since 1.8.4
          */
         public int getZIndex() {
@@ -705,14 +628,14 @@ public class Line implements RenderElement, Alignable<Line> {
         @Override
         protected Line createElement() {
             return new Line(
-                x1,
-                y1,
-                x2,
-                y2,
-                (alpha << 24) | (color & 0xFFFFFF),
-                rotation,
-                width,
-                zIndex
+                    x1,
+                    y1,
+                    x2,
+                    y2,
+                    (alpha << 24) | (color & 0xFFFFFF),
+                    rotation,
+                    width,
+                    zIndex
             ).setRotateCenter(rotateCenter).setParent(parent);
         }
 

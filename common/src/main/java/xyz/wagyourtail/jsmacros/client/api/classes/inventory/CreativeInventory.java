@@ -9,10 +9,9 @@ import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.math.MathHelper;
-
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinCreativeInventoryScreen;
 
 import java.util.List;
@@ -37,7 +36,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      *
      * @param amount the amount to scroll by, between -1 and 1
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeInventory scroll(double amount) {
@@ -50,7 +48,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      *
      * @param position the position to scroll to, between 0 and 1
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeInventory scrollTo(double position) {
@@ -63,7 +60,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
 
     /**
      * @return a list of all shown items.
-     *
      * @since 1.8.4
      */
     public List<ItemStackHelper> getShownItems() {
@@ -73,7 +69,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     /**
      * @param search the string to search for
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeInventory search(String search) {
@@ -88,7 +83,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * Select the search tab.
      *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeInventory selectSearch() {
@@ -100,7 +94,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * Select the inventory tab.
      *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeInventory selectInventory() {
@@ -112,7 +105,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * Select the tab where the hotbars are stored.
      *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeInventory selectHotbar() {
@@ -123,7 +115,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     /**
      * @param tabName the name of the tab to select
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeInventory selectTab(String tabName) {
@@ -149,7 +140,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * Destroys the currently held item.
      *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeInventory destroyHeldItem() {
@@ -161,7 +151,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * Destroys all items in the player's inventory.
      *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeInventory destroyAllItems() {
@@ -175,7 +164,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     /**
      * @param stack the item stack to drag
      * @return self for chaining.
-     *
      * @see RegistryHelper#getItemStack(String, String)
      * @since 1.8.4
      */
@@ -188,7 +176,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @param slot  the slot to insert the item into
      * @param stack the item stack to insert
      * @return self for chaining.
-     *
      * @see RegistryHelper#getItemStack(String, String)
      * @since 1.8.4
      */
@@ -200,7 +187,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     /**
      * @param index the index to save the hotbar to, from 0 to 8
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeInventory saveHotbar(int index) {
@@ -211,7 +197,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     /**
      * @param index the index to save the hotbar to, from 0 to 8
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeInventory restoreHotbar(int index) {
@@ -222,7 +207,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     /**
      * @param index the index to save the hotbar to, from 0 to 8
      * @return a list of all items in the saved hotbar.
-     *
      * @since 1.8.4
      */
     public List<ItemStackHelper> getSavedHotbar(int index) {
@@ -233,8 +217,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     /**
      * @param slot the slot to check
      * @return {@code true} if the slot is in the hotbar or the offhand slot, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isInHotbar(int slot) {
@@ -243,7 +226,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
 
     /**
      * @return the item in the offhand.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getOffhand() {
@@ -252,7 +234,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
 
     /**
      * @return the equipped helmet item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getHelmet() {
@@ -261,7 +242,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
 
     /**
      * @return the equipped chestplate item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getChestplate() {
@@ -270,7 +250,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
 
     /**
      * @return the equipped leggings item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getLeggings() {
@@ -279,7 +258,6 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
 
     /**
      * @return the equipped boots item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getBoots() {

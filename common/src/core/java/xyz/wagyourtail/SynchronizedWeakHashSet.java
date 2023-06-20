@@ -46,5 +46,4 @@ public class SynchronizedWeakHashSet<E> extends AbstractSet<E> implements Serial
         return ImmutableSet.copyOf(map.keySet()).iterator();
     }
 
-
 }

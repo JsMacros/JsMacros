@@ -26,21 +26,24 @@ public class EventContainer<T extends BaseScriptContext<?>> {
     }
 
     public void setLockThread(Thread lockThread) {
-        if (this.lockThread != null) throw new AssertionError("Cannot change lock thread of context container once assigned!");
+        if (this.lockThread != null) {
+            throw new AssertionError("Cannot change lock thread of context container once assigned!");
+        }
         this.lockThread = lockThread;
         ctx.events.put(lockThread, (EventContainer) this);
     }
-    
+
     public T getCtx() {
         return ctx;
     }
-    
+
     public Thread getLockThread() {
         return lockThread;
     }
-    
+
     /**
-    * careful with this one it can cause deadlocks if used in scripts incorrectly.
+     * careful with this one it can cause deadlocks if used in scripts incorrectly.
+     *
      * @param then must be a {@link MethodWrapper} when called from a script.
      * @throws InterruptedException
      * @since 1.4.0
@@ -52,7 +55,9 @@ public class EventContainer<T extends BaseScriptContext<?>> {
             }
         }
         if (locked) {
-            if (then != null) this.then.add(then);
+            if (then != null) {
+                this.then.add(then);
+            }
             this.wait();
         } else {
             try {
@@ -64,8 +69,9 @@ public class EventContainer<T extends BaseScriptContext<?>> {
     }
 
     /**
-    * can be released earlier in a script or language impl.
-    * @since 1.4.0
+     * can be released earlier in a script or language impl.
+     *
+     * @since 1.4.0
      */
     public synchronized void releaseLock() {
         locked = false;

@@ -12,30 +12,25 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.registry.Registries;
+import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.RaycastContext;
-
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownEntry;
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownManager;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.AdvancementManagerHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec3D;
+import xyz.wagyourtail.jsmacros.client.api.helpers.AdvancementManagerHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.List;
@@ -68,7 +63,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     /**
      * @since 1.8.4
      */
-    public ClientPlayerEntityHelper<T>  setVelocity(Pos3D velocity) {
+    public ClientPlayerEntityHelper<T> setVelocity(Pos3D velocity) {
         return setVelocity(velocity.toMojangDoubleVector());
     }
 
@@ -142,7 +137,6 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      *
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public ClientPlayerEntityHelper<T> lookAt(String direction) {
@@ -156,7 +150,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         }
         return lookAt(yaw, pitch);
     }
-    
+
     /**
      * @param yaw   (was pitch prior to 1.2.6)
      * @param pitch (was yaw prior to 1.2.6)
@@ -167,8 +161,8 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         pitch = MathHelper.clamp(pitch, -90.0F, 90.0F);
         base.prevPitch = base.getPitch();
         base.prevYaw = base.getYaw();
-        base.setPitch((float)pitch);
-        base.setYaw(MathHelper.wrapDegrees((float)yaw));
+        base.setPitch((float) pitch);
+        base.setYaw(MathHelper.wrapDegrees((float) yaw));
         if (base.getVehicle() != null) {
             base.getVehicle().onPassengerLookAround(base);
         }
@@ -195,14 +189,13 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param y the y coordinate of the block to look at
      * @param z the z coordinate of the block to look at
      * @return {@code true} if the player is targeting the specified block, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean tryLookAt(int x, int y, int z) {
         return tryLookAt(new BlockPosHelper(x, y, z));
     }
-    
+
     /**
      * Will try many rotations to find one that will make the player target the specified block. If
      * successful, the player will be turned towards the block and {@code true} will be returned. If
@@ -210,8 +203,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      *
      * @param pos the position of the block to look at
      * @return {@code true} if the player is targeting the specified block, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean tryLookAt(BlockPosHelper pos) {
@@ -244,7 +236,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
                         double x = center.x + ((xc & 1) == 0 ? 1 : -1) * xOffset * (xc / 2) * 0.999;
                         double y = center.y + ((yc & 1) == 0 ? 1 : -1) * yOffset * (yc / 2) * 0.999;
                         double z = center.z + ((zc & 1) == 0 ? 1 : -1) * zOffset * (zc / 2) * 0.999;
-                        BlockHitResult result = base.world.raycast(new RaycastContext(base.getEyePos(), new Vec3d(x, y, z), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, base));
+                        BlockHitResult result = base.getWorld().raycast(new RaycastContext(base.getEyePos(), new Vec3d(x, y, z), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, base));
                         if (result.getType() == HitResult.Type.BLOCK && result.getBlockPos().equals(pos.getRaw())) {
                             Vec3D vec = new Vec3D(eyePos, new Pos3D(x, y, z));
                             lookAt(vec.getYaw(), vec.getPitch());
@@ -259,7 +251,6 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
 
     /**
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public ClientPlayerEntityHelper<T> turnLeft() {
@@ -268,7 +259,6 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
 
     /**
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public ClientPlayerEntityHelper<T> turnRight() {
@@ -277,7 +267,6 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
 
     /**
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public ClientPlayerEntityHelper<T> turnBack() {
@@ -293,15 +282,16 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
-     * @since 1.6.0
-     *
      * @param await
      * @param entity
+     * @since 1.6.0
      */
     public ClientPlayerEntityHelper<T> attack(EntityHelper<?> entity, boolean await) throws InterruptedException {
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         assert mc.interactionManager != null;
-        if (entity.getRaw() == mc.player) throw new AssertionError("Can't interact with self!");
+        if (entity.getRaw() == mc.player) {
+            throw new AssertionError("Can't interact with self!");
+        }
         if (joinedMain) {
             mc.interactionManager.attackEntity(mc.player, entity.getRaw());
             assert mc.player != null;
@@ -325,13 +315,12 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param z         the z coordinate to attack
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, String direction) throws InterruptedException {
         return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), false);
     }
-    
+
     /**
      * @param x
      * @param y
@@ -351,23 +340,20 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
      * @param await     whether to wait for the attack to finish
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, String direction, boolean await) throws InterruptedException {
         return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), await);
     }
-    
+
     /**
-     * @since 1.6.0
-     *
      * @param x
      * @param y
      * @param z
      * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
      * @param await
-     *
      * @throws InterruptedException
+     * @since 1.6.0
      */
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, int direction, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
@@ -402,26 +388,30 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param entity
      * @param offHand
      * @param await
-     * @since 1.6.0
      * @throws InterruptedException
+     * @since 1.6.0
      */
     public ClientPlayerEntityHelper<T> interactEntity(EntityHelper<?> entity, boolean offHand, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
-        if (entity.getRaw() == mc.player) throw new AssertionError("Can't interact with self!");
+        if (entity.getRaw() == mc.player) {
+            throw new AssertionError("Can't interact with self!");
+        }
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
             ActionResult result = mc.interactionManager.interactEntity(mc.player, entity.getRaw(), hand);
             assert mc.player != null;
-            if (result.isAccepted())
+            if (result.isAccepted()) {
                 mc.player.swingHand(hand);
+            }
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
                 ActionResult result = mc.interactionManager.interactEntity(mc.player, entity.getRaw(), hand);
                 assert mc.player != null;
-                if (result.isAccepted())
+                if (result.isAccepted()) {
                     mc.player.swingHand(hand);
+                }
                 wait.release();
             });
             wait.acquire();
@@ -438,9 +428,9 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
-     * @since 1.6.0
      * @param offHand
      * @param await
+     * @since 1.6.0
      */
     public ClientPlayerEntityHelper<T> interactItem(boolean offHand, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
@@ -449,15 +439,17 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         if (joinedMain) {
             ActionResult result = mc.interactionManager.interactItem(mc.player, hand);
             assert mc.player != null;
-            if (result.isAccepted())
+            if (result.isAccepted()) {
                 mc.player.swingHand(hand);
+            }
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
                 ActionResult result = mc.interactionManager.interactItem(mc.player, hand);
                 assert mc.player != null;
-                if (result.isAccepted())
+                if (result.isAccepted()) {
                     mc.player.swingHand(hand);
+                }
                 wait.release();
             });
             wait.acquire();
@@ -471,13 +463,12 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param z         the z coordinate to interact
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, String direction, boolean offHand) throws InterruptedException {
         return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, false);
     }
-    
+
     /**
      * @param x
      * @param y
@@ -497,33 +488,34 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param direction possible values are "up", "down", "north", "south", "east", "west"
      * @param await     whether to wait for the interaction to complete
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, String direction, boolean offHand, boolean await) throws InterruptedException {
         return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, await);
     }
-    
+
     public ClientPlayerEntityHelper<T> interactBlock(int x, int y, int z, int direction, boolean offHand, boolean await) throws InterruptedException {
         assert mc.interactionManager != null;
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
             ActionResult result = mc.interactionManager.interactBlock(mc.player, hand,
-                new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
+                    new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
             );
             assert mc.player != null;
-            if (result.isAccepted())
+            if (result.isAccepted()) {
                 mc.player.swingHand(hand);
+            }
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
                 ActionResult result = mc.interactionManager.interactBlock(mc.player, hand,
-                    new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
+                        new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
                 );
                 assert mc.player != null;
-                if (result.isAccepted())
+                if (result.isAccepted()) {
                     mc.player.swingHand(hand);
+                }
                 wait.release();
             });
             wait.acquire();
@@ -539,8 +531,8 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
-     * @since 1.6.0
      * @param await
+     * @since 1.6.0
      */
     public ClientPlayerEntityHelper<T> interact(boolean await) throws InterruptedException {
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
@@ -565,8 +557,8 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
-     * @since 1.6.0
      * @param await
+     * @since 1.6.0
      */
     public ClientPlayerEntityHelper<T> attack(boolean await) throws InterruptedException {
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
@@ -585,29 +577,35 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
 
     /**
      * @param stop
-     * @since 1.6.3
      * @return
+     * @since 1.6.3
      */
     public ClientPlayerEntityHelper<T> setLongAttack(boolean stop) {
-        if (!stop) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.attackKey.getBoundKeyTranslationKey()));
-        else KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(mc.options.attackKey.getBoundKeyTranslationKey()), false);
+        if (!stop) {
+            KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.attackKey.getBoundKeyTranslationKey()));
+        } else {
+            KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(mc.options.attackKey.getBoundKeyTranslationKey()), false);
+        }
         return this;
     }
 
     /**
      * @param stop
-     * @since 1.6.3
      * @return
+     * @since 1.6.3
      */
     public ClientPlayerEntityHelper<T> setLongInteract(boolean stop) {
-        if (!stop) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.useKey.getBoundKeyTranslationKey()));
-        else KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(mc.options.useKey.getBoundKeyTranslationKey()), false);
+        if (!stop) {
+            KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.useKey.getBoundKeyTranslationKey()));
+        } else {
+            KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(mc.options.useKey.getBoundKeyTranslationKey()), false);
+        }
         return this;
     }
 
     /**
-     * @since 1.6.5
      * @return
+     * @since 1.6.5
      */
     public Map<String, Integer> getItemCooldownsRemainingTicks() {
         int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
@@ -617,22 +615,24 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
 
     /**
      * @param item
-     * @since 1.6.5
      * @return
+     * @since 1.6.5
      */
     public int getItemCooldownRemainingTicks(String item) {
         int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
         Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();
         IItemCooldownEntry entry = map.get(Registries.ITEM.get(RegistryHelper.parseIdentifier(item)));
-        if (entry == null) return -1;
+        if (entry == null) {
+            return -1;
+        }
         return entry.jsmacros_getEndTick() - tick;
     }
 
     /**
-     * @since 1.6.5
      * @return
+     * @since 1.6.5
      */
-    public Map<String, Integer>  getTicksSinceCooldownsStart() {
+    public Map<String, Integer> getTicksSinceCooldownsStart() {
         int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
         Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();
         return map.entrySet().stream().collect(Collectors.toMap(e -> e.getKey().getName().getString(), e -> e.getValue().jsmacros_getStartTick() - tick));
@@ -640,14 +640,16 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
 
     /**
      * @param item
-     * @since 1.6.5
      * @return
+     * @since 1.6.5
      */
     public int getTicksSinceCooldownStart(String item) {
         int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
         Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();
         IItemCooldownEntry entry = map.get(Registries.ITEM.get(RegistryHelper.parseIdentifier(item)));
-        if (entry == null) return -1;
+        if (entry == null) {
+            return -1;
+        }
         return entry.jsmacros_getStartTick() - tick;
     }
 
@@ -663,16 +665,14 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * This will return the invisible hunger decade that you may have seen in mods as a yellow overlay.
      *
      * @return the saturation level.
-     *
      * @since 1.8.4
      */
     public float getSaturation() {
         return base.getHungerManager().getSaturationLevel();
     }
-    
+
     /**
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public ClientPlayerEntityHelper<?> dropHeldItem(boolean dropStack) {
@@ -682,7 +682,6 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
 
     /**
      * @return an advancement manager to work with advancements.
-     *
      * @since 1.8.4
      */
     public AdvancementManagerHelper getAdvancementManager() {
@@ -695,7 +694,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      *
      * @param block the block to mine
      * @return the time in ticks that it will approximately take the player with the currently held
-     *         item to mine said block.
+     * item to mine said block.
      */
     public int calculateMiningSpeed(BlockStateHelper block) {
         return calculateMiningSpeed(getMainHand(), block);
@@ -709,8 +708,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @param usedItem   the item to mine with
      * @param blockState the block to mine
      * @return the time in ticks that it will approximately take the player with the specified item
-     *         to mine said block.
-     *
+     * to mine said block.
      * @since 1.8.4
      */
     public int calculateMiningSpeed(ItemStackHelper usedItem, BlockStateHelper blockState) {
@@ -766,4 +764,5 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         }
         return (int) Math.ceil(1 / damage);
     }
+
 }

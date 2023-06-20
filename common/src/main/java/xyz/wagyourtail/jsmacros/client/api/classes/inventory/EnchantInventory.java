@@ -2,23 +2,22 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.screen.EnchantmentScreenHandler;
 import net.minecraft.registry.Registries;
-
+import net.minecraft.screen.EnchantmentScreenHandler;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 
 /**
  * @since 1.3.1
  */
 @SuppressWarnings("unused")
 public class EnchantInventory extends Inventory<EnchantmentScreen> {
-    
+
     protected EnchantInventory(EnchantmentScreen inventory) {
         super(inventory);
     }
-    
+
     /**
      * @return xp level required to do enchantments
      * @since 1.3.1
@@ -26,7 +25,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
     public int[] getRequiredLevels() {
         return inventory.getScreenHandler().enchantmentPower;
     }
-    
+
     /**
      * @return list of enchantments text.
      * @since 1.3.1
@@ -44,7 +43,6 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
 
     /**
      * @return the visible enchantment for each level.
-     *
      * @since 1.8.4
      */
     public EnchantmentHelper[] getEnchantmentHelpers() {
@@ -55,7 +53,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
         }
         return enchantments;
     }
-    
+
     /**
      * @return id for enchantments
      * @since 1.3.1
@@ -70,7 +68,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
         }
         return enchants;
     }
-    
+
     /**
      * @return level of enchantments
      * @since 1.3.1
@@ -78,10 +76,10 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
     public int[] getEnchantmentLevels() {
         return inventory.getScreenHandler().enchantmentLevel;
     }
-    
+
     /**
-    *  clicks the button to enchant.
-    *
+     * clicks the button to enchant.
+     *
      * @param index
      * @return success
      * @since 1.3.1
@@ -97,7 +95,6 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
 
     /**
      * @return the item to be enchanted.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getItemToEnchant() {
@@ -106,7 +103,6 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
 
     /**
      * @return the slot containing the lapis lazuli.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getLapis() {
@@ -117,5 +113,5 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
     public String toString() {
         return String.format("EnchantInventory:{}");
     }
-    
+
 }

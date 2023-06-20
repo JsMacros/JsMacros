@@ -1,13 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.RunningContextContainer;
@@ -40,8 +39,8 @@ public class CancelScreen extends BaseScreen {
         System.gc();
         topScroll = 10;
         running.clear();
-        s = this.addDrawableChild(new Scrollbar(width - 12, 5, 8, height-10, 0xFFFFFFFF, 0xFF000000, 0x7FFFFFFF, 1, this::onScrollbar));
-        
+        s = this.addDrawableChild(new Scrollbar(width - 12, 5, 8, height - 10, 0xFFFFFFFF, 0xFF000000, 0x7FFFFFFF, 1, this::onScrollbar));
+
         this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.back"), (btn) -> this.close()));
         services = this.addDrawableChild(new AnnotatedCheckBox(this.width / 12 + 5, this.height - 12, 200, 12, textRenderer, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.showservices"), Core.getInstance().config.getOptions(ClientConfigV2.class).showRunningServices, btn -> Core.getInstance().config.getOptions(ClientConfigV2.class).showRunningServices = ((AnnotatedCheckBox) btn).value));
     }
@@ -67,7 +66,7 @@ public class CancelScreen extends BaseScreen {
             remove(b);
         }
         running.remove(t);
-        s.setScrollPages(running.size() * 15 / (double)(height - 20));
+        s.setScrollPages(running.size() * 15 / (double) (height - 20));
         updatePos();
     }
 
@@ -78,39 +77,46 @@ public class CancelScreen extends BaseScreen {
 
     public void updatePos() {
         for (int i = 0; i < running.size(); ++i) {
-            if (topScroll + i * 15 < 10 || topScroll + i * 15 > height - 10) running.get(i).setVisible(false);
-            else {
+            if (topScroll + i * 15 < 10 || topScroll + i * 15 > height - 10) {
+                running.get(i).setVisible(false);
+            } else {
                 running.get(i).setVisible(true);
                 running.get(i).setPos(10, topScroll + i * 15, width - 26, 13);
             }
         }
     }
-    
+
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         s.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
-    
+
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (matrices == null) return;
-        this.renderBackground(matrices);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        if (drawContext == null) {
+            return;
+        }
+        this.renderBackground(drawContext);
         List<BaseScriptContext<?>> tl = new ArrayList<>(Core.getInstance().getContexts());
-        
+
         for (RunningContextContainer r : ImmutableList.copyOf(this.running)) {
             tl.remove(r.t);
-            if (!services.value && r.service) removeContainer(r);
-            r.render(matrices, mouseX, mouseY, delta);
+            if (!services.value && r.service) {
+                removeContainer(r);
+            }
+            r.render(drawContext, mouseX, mouseY, delta);
         }
-        
+
         for (BaseScriptContext<?> t : tl) {
             addContainer(t);
         }
-        
+
         for (Element b : ImmutableList.copyOf(this.children())) {
-            if (!(b instanceof Drawable)) continue;
-            ((Drawable) b).render(matrices, mouseX, mouseY, delta);
+            if (!(b instanceof Drawable)) {
+                continue;
+            }
+            ((Drawable) b).render(drawContext, mouseX, mouseY, delta);
         }
     }
 
@@ -129,10 +135,11 @@ public class CancelScreen extends BaseScreen {
         public int compare(RunningContextContainer arg0, RunningContextContainer arg1) {
             try {
                 return arg0.t.getMainThread().getName().compareTo(arg1.t.getMainThread().getName());
-            } catch(NullPointerException e) {
+            } catch (NullPointerException e) {
                 return 0;
             }
         }
 
     }
+
 }

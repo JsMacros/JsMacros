@@ -6,4 +6,5 @@ import java.util.Set;
 
 public interface IFontManager {
     Set<Identifier> jsmacros_getFontList();
+
 }

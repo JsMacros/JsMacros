@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mojang.authlib.yggdrasil.response.Response;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -17,37 +16,33 @@ import java.util.stream.Collectors;
 
 /**
  * @author Wagyourtail
- *
  * @since 1.1.8
- *
  */
- @SuppressWarnings("unused")
+@SuppressWarnings("unused")
 public class HTTPRequest {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public Map<String, String> headers = new HashMap<>();
     public URL conn;
-    
+
     public HTTPRequest(String url) throws IOException {
         this.conn = new URL(url);
     }
-    
+
     /**
-     * @since 1.1.8
-     * 
      * @param key
      * @param value
      * @return
+     * @since 1.1.8
      */
     public HTTPRequest addHeader(String key, String value) {
         headers.put(key, value);
         return this;
     }
-    
+
     /**
-     * @since 1.1.8
-     * 
      * @return
      * @throws IOException
+     * @since 1.1.8
      */
     public Response get() throws IOException {
         HttpURLConnection conn = (HttpURLConnection) this.conn.openConnection();
@@ -58,13 +53,12 @@ public class HTTPRequest {
         InputStream stream = conn.getInputStream();
         return new Response(stream, conn.getResponseCode(), conn.getHeaderFields());
     }
-    
+
     /**
-     * @since 1.1.8
-     * 
      * @param data
      * @return
      * @throws IOException
+     * @since 1.1.8
      */
     public Response post(String data) throws IOException {
         byte[] b = data.getBytes(StandardCharsets.UTF_8);
@@ -74,24 +68,22 @@ public class HTTPRequest {
         }
         conn.addRequestProperty("Content-Length", Integer.toString(b.length));
         conn.setRequestMethod("POST");
-        
+
         conn.setDoOutput(true);
         OutputStream os = conn.getOutputStream();
         os.write(b);
         os.flush();
         os.close();
-        
-        
+
         InputStream stream = conn.getInputStream();
         return new Response(stream, conn.getResponseCode(), conn.getHeaderFields());
     }
 
     /**
-     * @since 1.8.4
-     *
      * @param data
      * @return
      * @throws IOException
+     * @since 1.8.4
      */
     public Response post(byte[] data) throws IOException {
         HttpURLConnection conn = (HttpURLConnection) this.conn.openConnection();
@@ -107,17 +99,15 @@ public class HTTPRequest {
         os.flush();
         os.close();
 
-
         InputStream stream = conn.getInputStream();
         return new Response(stream, conn.getResponseCode(), conn.getHeaderFields());
     }
 
     /**
-     * @since 1.8.4
-     *
      * @param data
      * @return
      * @throws IOException
+     * @since 1.8.4
      */
     public Response put(String data) throws IOException {
         byte[] b = data.getBytes(StandardCharsets.UTF_8);
@@ -134,17 +124,15 @@ public class HTTPRequest {
         os.flush();
         os.close();
 
-
         InputStream stream = conn.getInputStream();
         return new Response(stream, conn.getResponseCode(), conn.getHeaderFields());
     }
 
     /**
-     * @since 1.8.4
-     *
      * @param data
      * @return
      * @throws IOException
+     * @since 1.8.4
      */
     public Response put(byte[] data) throws IOException {
         HttpURLConnection conn = (HttpURLConnection) this.conn.openConnection();
@@ -165,12 +153,11 @@ public class HTTPRequest {
     }
 
     /**
-     * @since 1.8.4
-     *
      * @param method
      * @param data
      * @return
      * @throws IOException
+     * @since 1.8.4
      */
     public Response send(String method, String data) throws IOException {
         byte[] b = data.getBytes(StandardCharsets.UTF_8);
@@ -187,18 +174,16 @@ public class HTTPRequest {
         os.flush();
         os.close();
 
-
         InputStream stream = conn.getInputStream();
         return new Response(stream, conn.getResponseCode(), conn.getHeaderFields());
     }
 
     /**
-     * @since 1.8.4
-     *
      * @param method
      * @param data
      * @return
      * @throws IOException
+     * @since 1.8.4
      */
     public Response send(String method, byte[] data) throws IOException {
         HttpURLConnection conn = (HttpURLConnection) this.conn.openConnection();
@@ -214,64 +199,65 @@ public class HTTPRequest {
         os.flush();
         os.close();
 
-
         InputStream stream = conn.getInputStream();
         return new Response(stream, conn.getResponseCode(), conn.getHeaderFields());
     }
 
-
     /**
      * @author Wagyourtail
-     *
      * @since 1.1.8
-     *
      */
     public static class Response {
         private final InputStream raw;
         private String text;
         public Map<String, List<String>> headers;
         public int responseCode;
-        
+
         public Response(InputStream inputStream, int responseCode, Map<String, List<String>> headers) {
             this.raw = inputStream;
             this.responseCode = responseCode;
-            if (headers != null) this.headers = new HashMap<>(headers);
+            if (headers != null) {
+                this.headers = new HashMap<>(headers);
+            }
         }
-        
+
         /**
-         * @since 1.1.8
-         * 
          * @return
+         * @since 1.1.8
          */
         public String text() {
-            if (text != null) return text;
+            if (text != null) {
+                return text;
+            }
             text = new BufferedReader(
                     new InputStreamReader(raw, StandardCharsets.UTF_8))
-                      .lines()
-                      .collect(Collectors.joining("\n"));
+                    .lines()
+                    .collect(Collectors.joining("\n"));
             return text;
         }
-        
+
         /**
          * Don't use this. Parse {@link HTTPRequest.Response#text()} in the guest language
+         *
+         * @return
          * @since 1.1.8
          * @deprecated
-         * @return
          */
-         @Deprecated
+        @Deprecated
         public Object json() {
             text();
             return null;
         }
-        
+
         /**
-         * @since 1.2.2
-         * 
          * @return
          * @throws IOException
+         * @since 1.2.2
          */
         public byte[] byteArray() throws IOException {
             return IOUtils.toByteArray(raw);
         }
+
     }
+
 }

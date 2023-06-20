@@ -3,11 +3,10 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.registry.Registries;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -24,48 +23,45 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
     private final Block b;
     private final BlockPos bp;
     private final BlockEntity e;
-    
+
     public BlockDataHelper(BlockState b, BlockEntity e, BlockPos bp) {
         super(b);
         this.b = b.getBlock();
         this.bp = bp;
         this.e = e;
     }
-    
+
     /**
-     * @since 1.1.7
-     * 
      * @return the {@code x} value of the block.
+     * @since 1.1.7
      */
     public int getX() {
         return bp.getX();
     }
-    
+
     /**
-     * @since 1.1.7
-     * 
      * @return the {@code y} value of the block.
+     * @since 1.1.7
      */
     public int getY() {
         return bp.getY();
     }
-    
+
     /**
-     * @since 1.1.7
-     * 
      * @return the {@code z} value of the block.
+     * @since 1.1.7
      */
     public int getZ() {
         return bp.getZ();
     }
-    
+
     /**
      * @return the item ID of the block.
      */
     public String getId() {
         return Registries.BLOCK.getId(b).toString();
     }
-    
+
     /**
      * @return the translated name of the block. (was string before 1.6.5)
      */
@@ -78,13 +74,14 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
      * @since 1.5.1, used to be a {@link Map}&lt;{@link String}, {@link String}&gt;
      */
     public NBTElementHelper<?> getNBT() {
-        if (e == null) return null;
+        if (e == null) {
+            return null;
+        }
         return NBTElementHelper.resolve(e.createNbt());
     }
 
     /**
      * @return
-     *
      * @since 1.6.5
      */
     public BlockStateHelper getBlockStateHelper() {
@@ -93,7 +90,6 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
 
     /**
      * @return
-     *
      * @since 1.6.5
      * @deprecated use {@link #getBlock()} instead.
      */
@@ -104,17 +100,15 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
 
     /**
      * @return the block
-     *
      * @since 1.6.5
      */
     public BlockHelper getBlock() {
         return new BlockHelper(base.getBlock());
     }
-    
+
     /**
-     * @since 1.1.7
-     * 
      * @return block state data as a {@link Map}.
+     * @since 1.1.7
      */
     public Map<String, String> getBlockState() {
         Map<String, String> map = new HashMap<>();
@@ -123,30 +117,30 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
         }
         return map;
     }
-    
+
     /**
-     * @since 1.2.7
-     * 
      * @return the block pos.
+     * @since 1.2.7
      */
     public BlockPosHelper getBlockPos() {
         return new BlockPosHelper(bp);
     }
-    
+
     public Block getRawBlock() {
         return b;
     }
-    
+
     public BlockState getRawBlockState() {
         return base;
     }
-    
+
     public BlockEntity getRawBlockEntity() {
         return e;
     }
-    
+
     @Override
     public String toString() {
         return String.format("BlockDataHelper:{\"x\": %d, \"y\": %d, \"z\": %d, \"id\": \"%s\"}", bp.getX(), bp.getY(), bp.getZ(), this.getId());
     }
+
 }

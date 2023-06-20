@@ -13,7 +13,7 @@ public class MixinRecipeBookResults implements IRecipeBookResults {
 
     @Shadow
     private List<RecipeResultCollection> resultCollections;
-    
+
     @Override
     public List<RecipeResultCollection> jsmacros_getResultCollections() {
         return resultCollections;

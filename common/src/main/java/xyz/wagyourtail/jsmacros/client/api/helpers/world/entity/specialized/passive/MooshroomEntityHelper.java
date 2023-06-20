@@ -15,7 +15,6 @@ public class MooshroomEntityHelper extends AnimalEntityHelper<MooshroomEntity> {
 
     /**
      * @return {@code true} if this mooshroom can be sheared, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isShearable() {
@@ -24,7 +23,6 @@ public class MooshroomEntityHelper extends AnimalEntityHelper<MooshroomEntity> {
 
     /**
      * @return {@code true} if this mooshroom is a red mooshroom, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isRed() {
@@ -33,7 +31,6 @@ public class MooshroomEntityHelper extends AnimalEntityHelper<MooshroomEntity> {
 
     /**
      * @return {@code true} if this mooshroom is a brown mooshroom, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isBrown() {

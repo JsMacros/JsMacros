@@ -51,9 +51,10 @@ public class EventClickSlot implements BaseEvent, ICancelable {
     public boolean isCanceled() {
         return cancel;
     }
-    
+
     @Override
     public String toString() {
         return String.format("%s:{\"slot\": %d, \"screen\": \"%s\"}", this.getEventName(), slot, JsMacros.getScreenName(screen));
     }
+
 }

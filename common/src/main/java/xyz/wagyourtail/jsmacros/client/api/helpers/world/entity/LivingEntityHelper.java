@@ -1,8 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity;
 
 import com.google.common.collect.ImmutableList;
-import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.EquipmentSlot;
@@ -10,13 +8,14 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.BowItem;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.registry.Registries;
 import net.minecraft.world.RaycastContext;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +29,8 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
-     * @since 1.2.7
      * @return entity status effects.
+     * @since 1.2.7
      */
     public List<StatusEffectHelper> getStatusEffects() {
         List<StatusEffectHelper> l = new ArrayList<>();
@@ -42,20 +41,20 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
-     * @since 1.8.4
      * @param effect the status effect
      * @return if the entity can have a certain status effect
+     * @since 1.8.4
      */
-    private boolean canHaveStatusEffect (StatusEffectInstance effect) {
+    private boolean canHaveStatusEffect(StatusEffectInstance effect) {
         return base.canHaveStatusEffect(effect);
     }
 
     /**
-     * @since 1.8.4
      * @param effect the status effect
      * @return if the entity can have a certain status effect
+     * @since 1.8.4
      */
-    public boolean canHaveStatusEffect (StatusEffectHelper effect) {
+    public boolean canHaveStatusEffect(StatusEffectHelper effect) {
         return canHaveStatusEffect(effect.getRaw());
     }
 
@@ -64,74 +63,73 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * even if the entity has the effect, as effects are not synced to the client.
      *
      * @return {@code true} if the entity has the specified status effect, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasStatusEffect(String id) {
         StatusEffect effect = Registries.STATUS_EFFECT.get(RegistryHelper.parseIdentifier(id));
         return base.getStatusEffects().stream().anyMatch(statusEffectInstance -> statusEffectInstance.getEffectType().equals(effect));
     }
-    
+
     /**
-     * @since 1.2.7
-     * @see ItemStackHelper
      * @return the item in the entity's main hand.
+     * @see ItemStackHelper
+     * @since 1.2.7
      */
     public ItemStackHelper getMainHand() {
         return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.MAINHAND));
     }
-    
+
     /**
-     * @since 1.2.7
      * @return the item in the entity's off hand.
+     * @since 1.2.7
      */
     public ItemStackHelper getOffHand() {
         return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.OFFHAND));
     }
-    
+
     /**
-     * @since 1.2.7
      * @return the item in the entity's head armor slot.
+     * @since 1.2.7
      */
     public ItemStackHelper getHeadArmor() {
         return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.HEAD));
     }
-    
+
     /**
-     * @since 1.2.7
      * @return the item in the entity's chest armor slot.
+     * @since 1.2.7
      */
     public ItemStackHelper getChestArmor() {
         return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.CHEST));
     }
-    
+
     /**
-     * @since 1.2.7
      * @return the item in the entity's leg armor slot.
+     * @since 1.2.7
      */
     public ItemStackHelper getLegArmor() {
         return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.LEGS));
     }
-    
+
     /**
-     * @since 1.2.7
      * @return the item in the entity's foot armor slot.
+     * @since 1.2.7
      */
     public ItemStackHelper getFootArmor() {
         return new ItemStackHelper(base.getEquippedStack(EquipmentSlot.FEET));
     }
-    
+
     /**
-     * @since 1.3.1
      * @return entity's health
+     * @since 1.3.1
      */
     public float getHealth() {
         return base.getHealth();
     }
 
     /**
-     * @since 1.6.5
      * @return entity's max health
+     * @since 1.6.5
      */
     public float getMaxHealth() {
         return base.getMaxHealth();
@@ -139,7 +137,6 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
 
     /**
      * @return the entity's absorption amount.
-     *
      * @since 1.8.4
      */
     public float getAbsorptionHealth() {
@@ -148,7 +145,6 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
 
     /**
      * @return the entity's armor value.
-     *
      * @since 1.8.4
      */
     public int getArmor() {
@@ -157,7 +153,6 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
 
     /**
      * @return the entity's default health.
-     *
      * @since 1.8.4
      */
     public int getDefaultHealth() {
@@ -166,8 +161,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
 
     /**
      * @return the entity's mob category, {@code UNDEAD}, {@code DEFAULT}, {@code ARTHROPOD}, or
-     *         {@code ILLAGER}, {@code AQUATIC} or {@code UNKNOWN}.
-     *
+     * {@code ILLAGER}, {@code AQUATIC} or {@code UNKNOWN}.
      * @since 1.8.4
      */
     public String getMobCategory() {
@@ -186,109 +180,107 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
             return "UNKNOWN";
         }
     }
-    
+
     /**
-     * @since 1.2.7
      * @return if the entity is in a bed.
+     * @since 1.2.7
      */
     public boolean isSleeping() {
         return base.isSleeping();
     }
 
     /**
-     * @since 1.5.0
      * @return if the entity has elytra deployed
+     * @since 1.5.0
      */
     public boolean isFallFlying() {
         return base.isFallFlying();
     }
 
     /**
-     * @since 1.8.4
      * @return if the entity is on the ground
+     * @since 1.8.4
      */
     public boolean isOnGround() {
         return base.isOnGround();
     }
 
     /**
-     * @since 1.8.4
      * @return if the entity can breathe in water
+     * @since 1.8.4
      */
     public boolean canBreatheInWater() {
         return base.canBreatheInWater();
     }
 
     /**
-     * @since 1.8.4
      * @return if the entity has no drag
+     * @since 1.8.4
      */
     public boolean hasNoDrag() {
         return base.hasNoDrag();
     }
 
     /**
-     * @since 1.8.4
      * @return if the entity has no gravity
+     * @since 1.8.4
      */
     public boolean hasNoGravity() {
         return base.hasNoGravity();
     }
 
     /**
-     * @since 1.8.4
      * @param target the target entity
      * @return if the entity can target a target entity
+     * @since 1.8.4
      */
     private boolean canTarget(LivingEntity target) {
         return base.canTarget(target);
     }
 
     /**
-     * @since 1.8.4
      * @param target the target entity
      * @return if the entity can target a target entity
+     * @since 1.8.4
      */
     public boolean canTarget(LivingEntityHelper<?> target) {
         return canTarget(target.getRaw());
     }
 
     /**
-     * @since 1.8.4
      * @return if the entity can take damage
+     * @since 1.8.4
      */
     public boolean canTakeDamage() {
         return base.canTakeDamage();
     }
 
     /**
-     * @since 1.8.4
      * @return if the entity is part of the game (is alive and not spectator)
+     * @since 1.8.4
      */
     public boolean isPartOfGame() {
         return base.isPartOfGame();
     }
 
     /**
-     * @since 1.8.4
      * @return if the entity is in spectator
+     * @since 1.8.4
      */
     public boolean isSpectator() {
         return base.isSpectator();
     }
 
     /**
-     * @since 1.8.4
      * @return if the entity is undead
+     * @since 1.8.4
      */
     public boolean isUndead() {
         return base.isUndead();
     }
 
-
     /**
      * @return the bow pull progress of the entity, {@code 0} by default.
-     *
      * @since 1.8.4
      */
     public double getBowPullProgress() {
@@ -301,7 +293,6 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
 
     /**
      * @return {@code true} if the entity is a baby, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isBaby() {
@@ -311,8 +302,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     /**
      * @param entity the entity to check line of sight to
      * @return {@code true} if the player has line of sight to the specified entity, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean canSeeEntity(EntityHelper<?> entity) {
@@ -323,20 +313,19 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @param entity     the entity to check line of sight to
      * @param simpleCast whether to use a simple raycast or a more complex one
      * @return {@code true} if the entity has line of sight to the specified entity, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean canSeeEntity(EntityHelper<?> entity, boolean simpleCast) {
         Entity rawEntity = entity.getRaw();
-        
+
         Vec3d baseEyePos = new Vec3d(base.getX(), base.getEyeY(), base.getZ());
         Vec3d vec3d = base.getEyePos();
         Vec3d vec3d2 = base.getRotationVec(1.0F).multiply(10);
         Vec3d vec3d3 = vec3d.add(vec3d2);
         Box box = base.getBoundingBox().stretch(vec3d2).expand(1.0);
-        
-        Function<Vec3d, Boolean> canSee = pos -> base.world.raycast(new RaycastContext(baseEyePos, pos, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, base)).getType() == HitResult.Type.MISS;
+
+        Function<Vec3d, Boolean> canSee = pos -> base.getWorld().raycast(new RaycastContext(baseEyePos, pos, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, base)).getType() == HitResult.Type.MISS;
 
         if (canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getEyeY(), rawEntity.getZ()))
                 || canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getY() + 0.5, rawEntity.getZ()))

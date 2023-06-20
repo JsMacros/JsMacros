@@ -9,13 +9,14 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class MerchantEntityHelper<T extends MerchantEntity> extends LivingEntityHelper<T> {
-    
+
     public MerchantEntityHelper(T e) {
         super(e);
     }
-    
+
     /**
      * these might not work... depends on the data the server sends, maybe just singleplayer.
+     *
      * @return
      */
     public List<TradeOfferHelper> getTrades() {
@@ -30,14 +31,14 @@ public class MerchantEntityHelper<T extends MerchantEntity> extends LivingEntity
         ((IMerchantEntity) base).jsmacros_refreshOffers();
         return getTrades();
     }
-    
+
     /**
      * @return
      */
     public int getExperience() {
         return base.getExperience();
     }
-    
+
     /**
      * @return
      */

@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.HorseEntity;
-
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinHorseEntity;
 
 /**
@@ -17,7 +16,6 @@ public class HorseEntityHelper extends AbstractHorseEntityHelper<HorseEntity> {
 
     /**
      * @return the variant of this horse.
-     *
      * @since 1.8.4
      */
     public int getVariant() {

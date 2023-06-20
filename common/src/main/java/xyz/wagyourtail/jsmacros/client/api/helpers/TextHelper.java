@@ -16,56 +16,58 @@ import java.util.regex.Pattern;
 public class TextHelper extends BaseHelper<Text> {
 
     public static final Pattern STRIP_FORMATTING_PATTERN = Pattern.compile("\u00a7[0-9A-FK-OR]", Pattern.CASE_INSENSITIVE);
-    
+
     public TextHelper(Text t) {
         super(t);
     }
-    
+
     /**
      * replace the text in this class with JSON data.
-     * @since 1.0.8
+     *
      * @param json
-     * @deprecated use {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FChat#createTextHelperFromJSON(String)} instead.
      * @return
+     * @since 1.0.8
+     * @deprecated use {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FChat#createTextHelperFromJSON(String)} instead.
      */
     @Deprecated
     public TextHelper replaceFromJson(String json) {
         base = Text.Serializer.fromJson(json);
         return this;
     }
-    
+
     /**
      * replace the text in this class with {@link java.lang.String String} data.
-     * @since 1.0.8
+     *
      * @param content
-     * @deprecated use {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FChat#createTextHelperFromString(String)} instead.
      * @return
+     * @since 1.0.8
+     * @deprecated use {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FChat#createTextHelperFromString(String)} instead.
      */
     @Deprecated
     public TextHelper replaceFromString(String content) {
         base = Text.literal(content);
         return this;
     }
-    
+
     /**
-     * @since 1.2.7
      * @return JSON data representation.
+     * @since 1.2.7
      */
     public String getJson() {
         return Text.Serializer.toJson(base);
     }
 
     /**
-     * @since 1.2.7
      * @return the text content.
+     * @since 1.2.7
      */
     public String getString() {
         return base.getString();
     }
 
     /**
-     * @since 1.6.5
      * @return the text content. stripped formatting when servers send it the (super) old way due to shitty coders.
+     * @since 1.6.5
      */
     public String getStringStripFormatting() {
         return STRIP_FORMATTING_PATTERN.matcher(base.getString()).replaceAll("");
@@ -73,13 +75,12 @@ public class TextHelper extends BaseHelper<Text> {
 
     /**
      * @return the text helper without the formatting applied.
-     *
      * @since 1.8.4
      */
     public TextHelper withoutFormatting() {
         return new TextHelper(Text.literal(getStringStripFormatting()));
     }
-    
+
     /**
      * @param visitor function with 2 args, no return.
      * @since 1.6.5
@@ -94,29 +95,29 @@ public class TextHelper extends BaseHelper<Text> {
 
     /**
      * @return the width of this text.
-     *
      * @since 1.8.4
      */
     public int getWidth() {
         return MinecraftClient.getInstance().textRenderer.getWidth(base);
     }
-    
+
     /**
+     * @return
      * @since 1.0.8
      * @deprecated confusing name, use {@link #getJson()} instead.
-     * @return
      */
-     @Deprecated
+    @Deprecated
     public String toJson() {
         return getJson();
     }
 
     /**
-     * @since 1.0.8, this used to do the same as {@link #getString}
      * @return String representation of text helper.
+     * @since 1.0.8, this used to do the same as {@link #getString}
      */
     @Override
     public String toString() {
         return String.format("TextHelper:{\"text\": \"%s\"}", base.getString());
     }
+
 }

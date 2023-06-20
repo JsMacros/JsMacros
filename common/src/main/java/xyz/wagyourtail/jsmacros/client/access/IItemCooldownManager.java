@@ -9,4 +9,5 @@ public interface IItemCooldownManager {
     Map<Item, IItemCooldownEntry> jsmacros_getCooldownItems();
 
     int jsmacros_getManagerTicks();
+
 }

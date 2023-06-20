@@ -6,7 +6,6 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.registry.Registries;
-
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
@@ -21,15 +20,15 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class RecipeHelper extends BaseHelper<Recipe<?>> {
     protected int syncId;
-    
+
     public RecipeHelper(Recipe<?> base, int syncId) {
         super(base);
         this.syncId = syncId;
     }
-    
+
     /**
-     * @since 1.3.1
      * @return
+     * @since 1.3.1
      */
     public String getId() {
         return base.getId().toString();
@@ -37,8 +36,9 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
 
     /**
      * get ingredients list
-     * @since 1.8.3
+     *
      * @return
+     * @since 1.8.3
      */
     public List<List<ItemStackHelper>> getIngredients() {
         List<List<ItemStackHelper>> ingredients = new ArrayList<>();
@@ -49,22 +49,22 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     }
 
     /**
-     * @since 1.3.1
      * @return
+     * @since 1.3.1
      */
     public ItemStackHelper getOutput() {
         return new ItemStackHelper(base.getOutput(MinecraftClient.getInstance().getNetworkHandler().getRegistryManager()));
     }
-    
+
     /**
-     * @since 1.3.1
      * @param craftAll
+     * @since 1.3.1
      */
     public RecipeHelper craft(boolean craftAll) {
         MinecraftClient mc = MinecraftClient.getInstance();
         assert mc.player != null;
         if ((mc.currentScreen instanceof HandledScreen && ((HandledScreen<?>) mc.currentScreen).getScreenHandler().syncId == syncId) ||
-            (mc.currentScreen == null && syncId == mc.player.playerScreenHandler.syncId)) {
+                (mc.currentScreen == null && syncId == mc.player.playerScreenHandler.syncId)) {
             assert mc.interactionManager != null;
             mc.interactionManager.clickRecipe(syncId, base, craftAll);
             return this;
@@ -74,7 +74,6 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
 
     /**
      * @return the type of this recipe.
-     *
      * @since 1.8.4
      */
     public String getGroup() {
@@ -86,7 +85,6 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
      * itself. Items with durability or with a lot of tags will probably not work correctly.
      *
      * @return will return {@code true} if any of the default ingredients have a recipe remainder.
-     *
      * @since 1.8.4
      */
     public boolean hasRecipeRemainders() {
@@ -95,7 +93,6 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
 
     /**
      * @return a list of all possible recipe remainders.
-     *
      * @since 1.8.4
      */
     public List<List<ItemStackHelper>> getRecipeRemainders() {
@@ -107,7 +104,6 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
 
     /**
      * @return the type of this recipe.
-     *
      * @since 1.8.4
      */
     public String getType() {
@@ -116,8 +112,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
 
     /**
      * @return {@code true} if the recipe can be crafted with the current inventory, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean canCraft() {
@@ -129,8 +124,7 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     /**
      * @param amount the amount of items to craft
      * @return {@code true} if the given amount of items can be crafted with the current inventory,
-     *         {@code false} otherwise.
-     *
+     * {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean canCraft(int amount) {
@@ -139,7 +133,6 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
 
     /**
      * @return how often the recipe can be crafted with the current player inventory.
-     *
      * @since 1.8.4
      */
     public int getCraftableAmount() {
@@ -152,5 +145,5 @@ public class RecipeHelper extends BaseHelper<Recipe<?>> {
     public String toString() {
         return String.format("RecipeHelper:{\"id\": \"%s\"}", base.getId().toString());
     }
-    
+
 }

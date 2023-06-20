@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.IronGolemEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 
 /**
@@ -17,7 +16,6 @@ public class IronGolemEntityHelper extends MobEntityHelper<IronGolemEntity> {
 
     /**
      * @return {@code true} if this iron golem was created by a player, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isPlayerCreated() {

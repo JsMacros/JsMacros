@@ -1,5 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.*;
@@ -12,10 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
-
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
@@ -108,8 +107,8 @@ public class Inventory<T extends HandledScreen<?>> {
 
     /**
      * @param slot
-     * @since 1.5.0
      * @return
+     * @since 1.5.0
      */
     public Inventory<T> click(int slot) {
         click(slot, 0);
@@ -119,10 +118,10 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * Clicks a slot with a mouse button.~~if the slot is a container, it will click the first slot in the container
      *
-     * @since 1.0.8
      * @param slot
      * @param mousebutton
      * @return
+     * @since 1.0.8
      */
     public Inventory<T> click(int slot, int mousebutton) {
         SlotActionType act = mousebutton == 2 ? SlotActionType.CLONE : SlotActionType.PICKUP;
@@ -132,7 +131,7 @@ public class Inventory<T extends HandledScreen<?>> {
 
     /**
      * Does a drag-click with a mouse button. (the slots don't have to be in order or even adjacent, but when vanilla minecraft calls the underlying function they're always sorted...)
-     * 
+     *
      * @param slots
      * @param mousebutton
      * @return
@@ -148,8 +147,8 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * @since 1.5.0
      * @param slot
+     * @since 1.5.0
      */
     public Inventory<T> dropSlot(int slot) {
         man.clickSlot(syncId, slot, 0, SlotActionType.THROW, player);
@@ -160,7 +159,6 @@ public class Inventory<T extends HandledScreen<?>> {
      * @param slot  the slot to drop
      * @param stack decide whether to drop the whole stack or just a single item
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Inventory<T> dropSlot(int slot, boolean stack) {
@@ -171,8 +169,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @param item the item to check for
      * @return {@code true} if the item is contined anywhere in the inventory, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean contains(ItemStackHelper item) {
@@ -182,8 +179,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @param item the item to check for
      * @return {@code true} if the item is contined anywhere in the inventory, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean contains(String item) {
@@ -192,8 +188,7 @@ public class Inventory<T extends HandledScreen<?>> {
 
     /**
      * @return the first empty slot in the main inventory or {@code -1} if there are no empty
-     *         slots.
-     *
+     * slots.
      * @since 1.8.4
      */
     public int findFreeInventorySlot() {
@@ -202,7 +197,6 @@ public class Inventory<T extends HandledScreen<?>> {
 
     /**
      * @return the first empty hotbar slot or {@code -1} if there are no empty slots.
-     *
      * @since 1.8.4
      */
     public int findFreeHotbarSlot() {
@@ -212,8 +206,7 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @param mapIdentifiers the identifier of the inventory sections to check
      * @return the first empty slot in the given inventory sections, or {@code -1} if there are no
-     *         empty slots.
-     *
+     * empty slots.
      * @since 1.8.4
      */
     public int findFreeSlot(String... mapIdentifiers) {
@@ -227,7 +220,6 @@ public class Inventory<T extends HandledScreen<?>> {
 
     /**
      * @return a map of all item ids and their total count inside the inventory.
-     *
      * @since 1.8.4
      */
     public Map<String, Integer> getItemCount() {
@@ -238,7 +230,6 @@ public class Inventory<T extends HandledScreen<?>> {
 
     /**
      * @return a list of all items in the inventory.
-     *
      * @since 1.8.4
      */
     public List<ItemStackHelper> getItems() {
@@ -248,7 +239,6 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @param mapIdentifiers the inventory sections
      * @return a list of all items in the given inventory sections.
-     *
      * @since 1.8.4
      */
     public List<ItemStackHelper> getItems(String... mapIdentifiers) {
@@ -258,7 +248,6 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @param item the item to search for
      * @return all slots containing the given item.
-     *
      * @since 1.8.4
      */
     public int[] findItem(ItemStackHelper item) {
@@ -274,7 +263,6 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @param item the item to search for
      * @return all slots containing the given item.
-     *
      * @since 1.8.4
      */
     public int[] findItem(String item) {
@@ -290,7 +278,6 @@ public class Inventory<T extends HandledScreen<?>> {
     /**
      * @param mapIdentifiers the inventory sections
      * @return all slots indexes in the given inventory sections.
-     *
      * @since 1.8.4
      */
     public int[] getSlots(String... mapIdentifiers) {
@@ -303,34 +290,35 @@ public class Inventory<T extends HandledScreen<?>> {
         }
         return slots.toIntArray();
     }
-    
+
     /**
-     * @since 1.2.5
-     * 
      * @return the index of the selected hotbar slot.
+     * @since 1.2.5
      */
     public int getSelectedHotbarSlotIndex() {
         return player.getInventory().selectedSlot;
     }
-    
+
     /**
-     * @since 1.2.5
-     * 
      * @param index
+     * @since 1.2.5
      */
     public void setSelectedHotbarSlotIndex(int index) {
-        if (PlayerInventory.isValidHotbarIndex(index))
+        if (PlayerInventory.isValidHotbarIndex(index)) {
             player.getInventory().selectedSlot = index;
+        }
     }
 
     /**
      * closes the inventory, (if the inventory/container is visible it will close the gui). also drops any "held on mouse" items.
-     * 
+     *
      * @return
      */
     public Inventory<T> closeAndDrop() {
         ItemStack held = handler.getCursorStack();
-        if (!held.isEmpty()) man.clickSlot(syncId, -999, 0, SlotActionType.PICKUP, player);
+        if (!held.isEmpty()) {
+            man.clickSlot(syncId, -999, 0, SlotActionType.PICKUP, player);
+        }
         close();
         return this;
     }
@@ -358,8 +346,8 @@ public class Inventory<T extends HandledScreen<?>> {
 
     /**
      * @param slot
-     * @since 1.7.0
      * @return
+     * @since 1.7.0
      */
     public int quickAll(int slot) {
         return quickAll(slot, 0);
@@ -367,21 +355,22 @@ public class Inventory<T extends HandledScreen<?>> {
 
     /**
      * quicks all that match the slot
-     * @param slot a slot from the section you want to move items from
+     *
+     * @param slot   a slot from the section you want to move items from
      * @param button
-     * @since 1.7.0
      * @return number of items that matched
+     * @since 1.7.0
      */
     public int quickAll(int slot, int button) {
         int count = 0;
         ItemStack cursorStack = handler.slots.get(slot).getStack().copy();
         net.minecraft.inventory.Inventory hoverSlotInv = handler.slots.get(slot).inventory;
-        for(Slot slot2 : handler.slots) {
+        for (Slot slot2 : handler.slots) {
             if (slot2 != null
-                && slot2.canTakeItems(mc.player)
-                && slot2.hasStack()
-                && slot2.inventory == hoverSlotInv
-                && ScreenHandler.canInsertItemIntoSlot(slot2, cursorStack, true)) {
+                    && slot2.canTakeItems(mc.player)
+                    && slot2.hasStack()
+                    && slot2.inventory == hoverSlotInv
+                    && ScreenHandler.canInsertItemIntoSlot(slot2, cursorStack, true)) {
                 count += slot2.getStack().getCount();
                 man.clickSlot(syncId, slot2.id, button, SlotActionType.QUICK_MOVE, player);
             }
@@ -397,7 +386,6 @@ public class Inventory<T extends HandledScreen<?>> {
     }
 
     /**
-     * 
      * @param slot
      * @return the item in the slot.
      */
@@ -414,15 +402,19 @@ public class Inventory<T extends HandledScreen<?>> {
 
     /**
      * Splits the held stack into two slots. can be alternatively done with {@link Inventory#dragClick(int[], int)} if this one has issues on some servers.
-     * 
+     *
      * @param slot1
      * @param slot2
      * @return
      * @throws Exception
      */
     public Inventory<T> split(int slot1, int slot2) throws Exception {
-        if (slot1 == slot2) throw new Exception("must be 2 different slots.");
-        if (!getSlot(slot1).isEmpty() || !getSlot(slot2).isEmpty()) throw new Exception("slots must be empty.");
+        if (slot1 == slot2) {
+            throw new Exception("must be 2 different slots.");
+        }
+        if (!getSlot(slot1).isEmpty() || !getSlot(slot2).isEmpty()) {
+            throw new Exception("slots must be empty.");
+        }
         man.clickSlot(syncId, slot1, 1, SlotActionType.PICKUP, player);
         man.clickSlot(syncId, slot2, 0, SlotActionType.PICKUP, player);
         return this;
@@ -430,7 +422,7 @@ public class Inventory<T extends HandledScreen<?>> {
 
     /**
      * Does that double click thingy to turn a incomplete stack pickup into a complete stack pickup if you have more in your inventory.
-     * 
+     *
      * @param slot
      * @return
      */
@@ -442,7 +434,7 @@ public class Inventory<T extends HandledScreen<?>> {
 
     /**
      * swaps the items in two slots.
-     * 
+     *
      * @param slot1
      * @param slot2
      * @return
@@ -450,10 +442,16 @@ public class Inventory<T extends HandledScreen<?>> {
     public Inventory<T> swap(int slot1, int slot2) {
         boolean is1 = getSlot(slot1).isEmpty();
         boolean is2 = getSlot(slot2).isEmpty();
-        if (is1 && is2) return this;
-        if (!is1) man.clickSlot(syncId, slot1, 0, SlotActionType.PICKUP, player);
+        if (is1 && is2) {
+            return this;
+        }
+        if (!is1) {
+            man.clickSlot(syncId, slot1, 0, SlotActionType.PICKUP, player);
+        }
         man.clickSlot(syncId, slot2, 0, SlotActionType.PICKUP, player);
-        if (!is2) man.clickSlot(syncId, slot1, 0, SlotActionType.PICKUP, player);
+        if (!is2) {
+            man.clickSlot(syncId, slot1, 0, SlotActionType.PICKUP, player);
+        }
         return this;
     }
 
@@ -462,54 +460,55 @@ public class Inventory<T extends HandledScreen<?>> {
      *
      * @param slot
      * @param hotbarSlot 0-8 or 40 for offhand
-     * @since 1.6.5 [citation needed]
      * @return
+     * @since 1.6.5 [citation needed]
      */
     public Inventory<T> swapHotbar(int slot, int hotbarSlot) {
         if (hotbarSlot != 40) {
-            if (hotbarSlot < 0 || hotbarSlot > 8)
+            if (hotbarSlot < 0 || hotbarSlot > 8) {
                 throw new IllegalArgumentException("hotbarSlot must be between 0 and 8 or 40 for offhand.");
+            }
         }
         man.clickSlot(syncId, slot, hotbarSlot, SlotActionType.SWAP, player);
         return this;
     }
-    
-    /**
-     * @since 1.2.8
-     *
-     */
-     public void openGui() {
-        mc.execute(() -> mc.setScreen(this.inventory));
-     }
 
     /**
-     * @since 1.1.3
-     * 
+     * @since 1.2.8
+     */
+    public void openGui() {
+        mc.execute(() -> mc.setScreen(this.inventory));
+    }
+
+    /**
      * @return the id of the slot under the mouse.
+     * @since 1.1.3
      */
     public int getSlotUnderMouse() {
         MinecraftClient mc = MinecraftClient.getInstance();
-        double x = mc.mouse.getX() * (double)mc.getWindow().getScaledWidth() / (double)mc.getWindow().getWidth();
-        double y = mc.mouse.getY() * (double)mc.getWindow().getScaledHeight() / (double)mc.getWindow().getHeight();
-        if (this.inventory != mc.currentScreen) throw new RuntimeException("Inventory screen is not open.");
-        Slot s = ((IInventory)this.inventory).jsmacros_getSlotUnder(x, y);
-        if (s == null) return -999;
+        double x = mc.mouse.getX() * (double) mc.getWindow().getScaledWidth() / (double) mc.getWindow().getWidth();
+        double y = mc.mouse.getY() * (double) mc.getWindow().getScaledHeight() / (double) mc.getWindow().getHeight();
+        if (this.inventory != mc.currentScreen) {
+            throw new RuntimeException("Inventory screen is not open.");
+        }
+        Slot s = ((IInventory) this.inventory).jsmacros_getSlotUnder(x, y);
+        if (s == null) {
+            return -999;
+        }
         return this.handler.slots.indexOf(s);
     }
-    
+
     /**
-     * @since 1.1.3
-     * 
      * @return the part of the mapping the slot is in.
+     * @since 1.1.3
      */
     public String getType() {
         return JsMacros.getScreenName(this.inventory);
     }
 
     /**
-     * @since 1.1.3
-     * 
      * @return the inventory mappings different depending on the type of open container/inventory.
+     * @since 1.1.3
      */
     public Map<String, int[]> getMap() {
         if (map == null) {
@@ -517,19 +516,18 @@ public class Inventory<T extends HandledScreen<?>> {
         }
         return map;
     }
-    
+
     /**
-     * @since 1.1.3
-     * 
      * @param slotNum
      * @return returns the part of the mapping the slot is in.
+     * @since 1.1.3
      */
     public String getLocation(int slotNum) {
         if (map == null) {
             map = getMapInternal();
         }
         for (String k : map.keySet()) {
-           for (int i : map.get(k)) {
+            for (int i : map.get(k)) {
                 if (i == slotNum) {
                     return k;
                 }
@@ -538,18 +536,15 @@ public class Inventory<T extends HandledScreen<?>> {
         return null;
     }
 
-
-
     /**
      * @return the x/y position of the specified slot index
-     *
      * @since 1.8.4
      */
     public Pos2D getSlotPos(int slot) {
         Slot s = handler.getSlot(slot);
         return new Pos2D(s.x - ((IInventory) inventory).getX(), s.y - ((IInventory) inventory).getY());
     }
-    
+
     private Map<String, int[]> getMapInternal() {
         Map<String, int[]> map = new HashMap<>();
         int slots = getTotalSlots();
@@ -580,38 +575,42 @@ public class Inventory<T extends HandledScreen<?>> {
             } else if (isContainer()) {
                 map.put("container", JsMacros.range(slots - 9 - 27));
             } else if (inventory instanceof BeaconScreen) {
-                map.put("slot", new int[] { slots - 9 - 27 - 1 });
+                map.put("slot", new int[]{slots - 9 - 27 - 1});
             } else if (inventory instanceof BlastFurnaceScreen || inventory instanceof FurnaceScreen || inventory instanceof SmokerScreen) {
-                map.put("output", new int[] { slots - 9 - 27 - 1 });
-                map.put("fuel", new int[] { slots - 9 - 27 - 2 });
-                map.put("input", new int[] { slots - 9 - 27 - 3 });
+                map.put("output", new int[]{slots - 9 - 27 - 1});
+                map.put("fuel", new int[]{slots - 9 - 27 - 2});
+                map.put("input", new int[]{slots - 9 - 27 - 3});
             } else if (inventory instanceof BrewingStandScreen) {
-                map.put("fuel", new int[] { slots - 9 - 27 - 1 });
-                map.put("input", new int[] { slots - 9 - 27 - 2 });
+                map.put("fuel", new int[]{slots - 9 - 27 - 1});
+                map.put("input", new int[]{slots - 9 - 27 - 2});
                 map.put("output", JsMacros.range(slots - 9 - 27 - 2));
             } else if (inventory instanceof CraftingScreen) {
                 map.put("input", JsMacros.range(slots - 9 - 27 - 9, slots - 9 - 27));
-                map.put("output", new int[] { slots - 9 - 27 - 10 });
+                map.put("output", new int[]{slots - 9 - 27 - 10});
             } else if (inventory instanceof EnchantmentScreen) {
-                map.put("lapis", new int[] { slots - 9 - 27 - 1 });
-                map.put("item", new int[] { slots - 9 - 27 - 2 });
+                map.put("lapis", new int[]{slots - 9 - 27 - 1});
+                map.put("item", new int[]{slots - 9 - 27 - 2});
             } else if (inventory instanceof LoomScreen) {
-                map.put("output", new int[] { slots - 9 - 27 - 1 });
-                map.put("pattern", new int[] { slots - 9 - 27 - 2 });
-                map.put("dye", new int[] { slots - 9 - 27 - 3 });
-                map.put("banner", new int[] { slots - 9 - 27 - 4 });
+                map.put("output", new int[]{slots - 9 - 27 - 1});
+                map.put("pattern", new int[]{slots - 9 - 27 - 2});
+                map.put("dye", new int[]{slots - 9 - 27 - 3});
+                map.put("banner", new int[]{slots - 9 - 27 - 4});
             } else if (inventory instanceof StonecutterScreen) {
-                map.put("output", new int[] { slots - 9 - 27 - 1 });
-                map.put("input", new int[] { slots - 9 - 27 - 2 });
+                map.put("output", new int[]{slots - 9 - 27 - 1});
+                map.put("input", new int[]{slots - 9 - 27 - 2});
             } else if (inventory instanceof HorseScreen) {
-                AbstractHorseEntity h = (AbstractHorseEntity) ((IHorseScreen)this.inventory).jsmacros_getEntity();
-                if (h.canBeSaddled()) map.put("saddle", new int[] {0});
-                if (h.hasArmorSlot()) map.put("armor", new int[] {1});
+                AbstractHorseEntity h = (AbstractHorseEntity) ((IHorseScreen) this.inventory).jsmacros_getEntity();
+                if (h.canBeSaddled()) {
+                    map.put("saddle", new int[]{0});
+                }
+                if (h.hasArmorSlot()) {
+                    map.put("armor", new int[]{1});
+                }
                 if (h instanceof AbstractDonkeyEntity && ((AbstractDonkeyEntity) h).hasChest()) {
                     map.put("container", JsMacros.range(2, slots - 9 - 27));
                 }
-            } else if (inventory instanceof AnvilScreen || inventory instanceof  MerchantScreen || inventory instanceof SmithingScreen || inventory instanceof GrindstoneScreen || inventory instanceof CartographyTableScreen) {
-                map.put("output", new int[] { slots - 9 - 27 - 1 });
+            } else if (inventory instanceof AnvilScreen || inventory instanceof MerchantScreen || inventory instanceof SmithingScreen || inventory instanceof GrindstoneScreen || inventory instanceof CartographyTableScreen) {
+                map.put("output", new int[]{slots - 9 - 27 - 1});
                 map.put("input", JsMacros.range(slots - 9 - 27 - 1));
             }
         }
@@ -621,36 +620,35 @@ public class Inventory<T extends HandledScreen<?>> {
 
     /**
      * @return {@code true} if the inventory is a container, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isContainer() {
         return inventory instanceof GenericContainerScreen || inventory instanceof Generic3x3ContainerScreen || inventory instanceof HopperScreen || inventory instanceof ShulkerBoxScreen;
     }
-    
+
     /**
-     * @since 1.2.3
-     * 
      * @return
+     * @since 1.2.3
      */
     public String getContainerTitle() {
         return this.inventory.getTitle().getString();
     }
-    
+
     public T getRawContainer() {
         return this.inventory;
     }
-    
+
     @Override
     public String toString() {
         return String.format("Inventory:{\"Type\": \"%s\"}", this.getType());
     }
 
     /**
-     * @since 1.6.0
      * @return
+     * @since 1.6.0
      */
     public int getCurrentSyncId() {
         return syncId;
     }
+
 }

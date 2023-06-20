@@ -29,5 +29,5 @@ public class XorFilter<T> extends BasicFilter<T> {
     public IFilter<T> getFilterTwo() {
         return filterTwo;
     }
-    
+
 }

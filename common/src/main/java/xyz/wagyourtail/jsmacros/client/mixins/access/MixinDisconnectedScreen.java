@@ -10,4 +10,5 @@ public interface MixinDisconnectedScreen {
 
     @Accessor
     Text getReason();
+
 }

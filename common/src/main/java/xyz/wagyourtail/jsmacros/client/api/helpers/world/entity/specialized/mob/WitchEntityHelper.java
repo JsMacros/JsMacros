@@ -1,9 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob;
 
 import net.minecraft.entity.mob.WitchEntity;
-
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 
 /**
  * @author Etheradon
@@ -18,7 +17,6 @@ public class WitchEntityHelper extends MobEntityHelper<WitchEntity> {
 
     /**
      * @return {@code true} if this witch is drinking a potion, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isDrinkingPotion() {
@@ -27,7 +25,6 @@ public class WitchEntityHelper extends MobEntityHelper<WitchEntity> {
 
     /**
      * @return the held potion item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getPotion() {

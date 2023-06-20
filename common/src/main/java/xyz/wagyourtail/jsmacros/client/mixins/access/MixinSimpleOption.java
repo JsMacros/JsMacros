@@ -8,4 +8,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface MixinSimpleOption {
     @Accessor("value")
     <T> void forceSetValue(T value);
+
 }

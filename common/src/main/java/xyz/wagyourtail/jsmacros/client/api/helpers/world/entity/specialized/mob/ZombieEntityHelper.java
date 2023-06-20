@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob;
 
 import net.minecraft.entity.mob.ZombieEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 
 /**
@@ -17,7 +16,6 @@ public class ZombieEntityHelper<T extends ZombieEntity> extends MobEntityHelper<
 
     /**
      * @return {@code true} if this zombie is converting to a drowned, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isConvertingToDrowned() {

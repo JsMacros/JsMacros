@@ -1,17 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-
-import com.google.common.collect.ImmutableMap;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.ScriptScreen;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.*;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
@@ -21,19 +16,17 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 
  * Functions for displaying stuff in 2 to 3 dimensions
- * 
+ * <p>
  * An instance of this class is passed to scripts as the {@code Hud} variable.
- * 
- * @since 1.0.5
- * 
+ *
  * @author Wagyourtail
+ * @since 1.0.5
  */
- @Library("Hud")
- @SuppressWarnings("unused")
+@Library("Hud")
+@SuppressWarnings("unused")
 public class FHud extends BaseLibrary {
-    
+
     private static final MinecraftClient mc = MinecraftClient.getInstance();
     /**
      * Don't touch this here
@@ -43,29 +36,24 @@ public class FHud extends BaseLibrary {
      * Don't touch this here
      */
     public static final Set<Draw3D> renders = ConcurrentHashMap.newKeySet();
-    
+
     /**
-     * 
-     * @see IScreen
-     * 
-     * @since 1.0.5
-     * 
      * @param title
      * @param dirtBG boolean of whether to use a dirt background or not.
      * @return a new {@link IScreen IScreen} Object.
+     * @see IScreen
+     * @since 1.0.5
      */
     public ScriptScreen createScreen(String title, boolean dirtBG) {
         return new ScriptScreen(title, dirtBG);
     }
-    
+
     /**
      * Opens a {@link IScreen IScreen} Object.
-     * 
-     * @since 1.0.5
-     * 
-     * @see IScreen
-     * 
+     *
      * @param s
+     * @see IScreen
+     * @since 1.0.5
      */
     public void openScreen(IScreen s) {
         net.minecraft.client.gui.screen.Screen screen = (net.minecraft.client.gui.screen.Screen) s;
@@ -73,14 +61,11 @@ public class FHud extends BaseLibrary {
             mc.setScreen(screen);
         });
     }
-    
+
     /**
-     * 
-     * @since 1.2.7
-     * 
-     * @see IScreen
-     * 
      * @return the currently open Screen as an {@link IScreen IScreen}
+     * @see IScreen
+     * @since 1.2.7
      */
     public IScreen getOpenScreen() {
         return (IScreen) mc.currentScreen;
@@ -90,8 +75,7 @@ public class FHud extends BaseLibrary {
      * @param width  the width of the canvas
      * @param height the height of the canvas
      * @return a {@link CustomImage} that can be used as a texture for screen backgrounds, rendering
-     *         images, etc.
-     *
+     * images, etc.
      * @since 1.8.4
      */
     public CustomImage createTexture(int width, int height, String name) {
@@ -101,8 +85,7 @@ public class FHud extends BaseLibrary {
     /**
      * @param path absolute path to an image file
      * @return a {@link CustomImage} that can be used as a texture for screen backgrounds, rendering
-     *         images, etc.
-     *
+     * images, etc.
      * @since 1.8.4
      */
     public CustomImage createTexture(String path, String name) {
@@ -111,187 +94,163 @@ public class FHud extends BaseLibrary {
 
     /**
      * @return an immutable Map of all registered custom textures.
-     *
      * @since 1.8.4
      */
     public Map<String, CustomImage> getRegisteredTextures() {
         return ImmutableMap.copyOf(CustomImage.IMAGES);
     }
-    
+
     /**
      * @return the current gui scale factor of minecraft.
-     *
      * @since 1.8.4
      */
     public int getScaleFactor() {
         return mc.options.getGuiScale().getValue();
     }
-    
+
     /**
-     * 
-     * @since 1.0.5, renamed from {@code getOpenScreen} in 1.2.7
-     * 
      * @return The name of the currently open screen.
+     * @since 1.0.5, renamed from {@code getOpenScreen} in 1.2.7
      */
     public String getOpenScreenName() {
         return JsMacros.getScreenName(mc.currentScreen);
     }
-    
+
     /**
-     * 
+     * @return a {@link java.lang.Boolean boolean} denoting if the currently open screen is a container.
      * @since 1.1.2
-     * 
-     * @return a {@link java.lang.Boolean boolean} denoting if the currently open screen is a container. 
      */
     public boolean isContainer() {
         return mc.currentScreen instanceof HandledScreen;
     }
-    
-    
+
     /**
-     * @since 1.0.5
-     * 
-     * @see IDraw2D
-     *
      * @return
+     * @see IDraw2D
+     * @since 1.0.5
      */
     public Draw2D createDraw2D() {
         return new Draw2D();
     }
-    
+
     /**
+     * @param overlay
+     * @see IDraw2D
      * @since 1.0.5
-     * 
+     * <p>
      * Registers an {@link IDraw2D IDraw2D} to be rendered.
      * @deprecated since 1.6.5, use {@link Draw2D#register()} instead.
-     * @see IDraw2D
-     * 
-     * @param overlay
      */
     @Deprecated
     public void registerDraw2D(IDraw2D<Draw2D> overlay) {
         ((Draw2D) overlay).init();
         overlays.add(overlay);
     }
-    
+
     /**
+     * @param overlay
+     * @see IDraw2D
      * @since 1.0.5
-     * 
+     * <p>
      * Unregisters an {@link IDraw2D IDraw2D} to stop it being rendered.
      * @deprecated since 1.6.5, use {@link Draw2D#unregister()} instead.
-     * @see IDraw2D
-     * 
-     * @param overlay
      */
-     @Deprecated
+    @Deprecated
     public void unregisterDraw2D(IDraw2D<Draw2D> overlay) {
         overlays.remove(overlay);
     }
-    
+
     /**
-     * @since 1.0.5
-     * 
-     * @see IDraw2D
-     * 
      * @return A list of current {@link IDraw2D IDraw2Ds}.
+     * @see IDraw2D
+     * @since 1.0.5
      */
     public List<IDraw2D<Draw2D>> listDraw2Ds() {
         return ImmutableList.copyOf(overlays);
     }
-    
+
     /**
-     * @since 1.0.5
-     * 
-     * clears the Draw2D render list.
-     * 
      * @see IDraw2D
+     * @since 1.0.5
+     * <p>
+     * clears the Draw2D render list.
      */
     public void clearDraw2Ds() {
         overlays.clear();
     }
-    
+
     /**
-     * @since 1.0.6
-     * 
-     * @see Draw3D
-     * 
      * @return a new {@link Draw3D Draw3D}.
+     * @see Draw3D
+     * @since 1.0.6
      */
     public Draw3D createDraw3D() {
         return new Draw3D();
     }
-    
+
     /**
+     * @param draw
+     * @see Draw3D
      * @since 1.0.6
-     * 
+     * <p>
      * Registers an {@link Draw3D Draw3D} to be rendered.
      * @deprecated since 1.6.5 use {@link Draw3D#register()} instead.
-     * @see Draw3D
-     * 
-     * @param draw
      */
-     @Deprecated
+    @Deprecated
     public void registerDraw3D(Draw3D draw) {
         renders.add(draw);
     }
-    
+
     /**
+     * @param draw
+     * @see Draw3D
      * @since 1.0.6
-     * 
+     * <p>
      * Unregisters an {@link Draw3D Draw3D} to stop it being rendered.
      * @since 1.6.5 use {@link Draw3D#unregister()} instead.
-     * @see Draw3D
-     * 
-     * @param draw
      */
-     @Deprecated
+    @Deprecated
     public void unregisterDraw3D(Draw3D draw) {
         renders.remove(draw);
     }
-    
+
     /**
-     * @since 1.0.6
-     * 
-     * @see Draw3D
-     * 
      * @return A list of current {@link Draw3D Draw3D}.
+     * @see Draw3D
+     * @since 1.0.6
      */
     public List<Draw3D> listDraw3Ds() {
         return ImmutableList.copyOf(renders);
     }
-    
+
     /**
-     * @since 1.0.6
-     * 
-     * clears the Draw2D render list.
-     * 
      * @see Draw3D
+     * @since 1.0.6
+     * <p>
+     * clears the Draw2D render list.
      */
     public void clearDraw3Ds() {
         renders.clear();
     }
-    
+
     /**
-     * @since 1.1.3
-     * 
      * @return the current X coordinate of the mouse
+     * @since 1.1.3
      */
     public double getMouseX() {
-        return mc.mouse.getX() * (double)mc.getWindow().getScaledWidth() / (double)mc.getWindow().getWidth();
+        return mc.mouse.getX() * (double) mc.getWindow().getScaledWidth() / (double) mc.getWindow().getWidth();
     }
-    
+
     /**
-     * @since 1.1.3
-     * 
      * @return the current Y coordinate of the mouse
+     * @since 1.1.3
      */
     public double getMouseY() {
-        return mc.mouse.getY() * (double)mc.getWindow().getScaledHeight() / (double)mc.getWindow().getHeight();
+        return mc.mouse.getY() * (double) mc.getWindow().getScaledHeight() / (double) mc.getWindow().getHeight();
     }
 
     /**
      * @return the current window width.
-     *
      * @since 1.8.4
      */
     public int getWindowWidth() {
@@ -300,11 +259,10 @@ public class FHud extends BaseLibrary {
 
     /**
      * @return the current window height.
-     *
      * @since 1.8.4
      */
     public int getWindowHeight() {
         return mc.getWindow().getHeight();
     }
-    
+
 }

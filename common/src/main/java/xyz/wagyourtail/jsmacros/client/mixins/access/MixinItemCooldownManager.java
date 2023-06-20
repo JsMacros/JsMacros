@@ -17,8 +17,8 @@ public class MixinItemCooldownManager implements IItemCooldownManager {
     @Final
     private Map<Item, IItemCooldownEntry> entries;
 
-
-    @Shadow private int tick;
+    @Shadow
+    private int tick;
 
     @Override
     public Map<Item, IItemCooldownEntry> jsmacros_getCooldownItems() {

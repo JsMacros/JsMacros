@@ -5,9 +5,9 @@ package xyz.wagyourtail.jsmacros.core.event;
  * @since 1.8.4
  */
 public interface ICancelable {
-    
+
     void cancel();
-    
+
     boolean isCanceled();
-    
+
 }

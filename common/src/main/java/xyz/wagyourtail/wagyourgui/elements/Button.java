@@ -1,9 +1,9 @@
 package xyz.wagyourtail.wagyourgui.elements;
 
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.PressableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 
@@ -23,7 +23,7 @@ public class Button extends PressableWidget {
     public Consumer<Button> onPress;
     public boolean hovering = false;
     public boolean forceHover = false;
-    
+
     public Button(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int highlightColor, int textColor, Text message, Consumer<Button> onPress) {
         super(x, y, width, height, message);
         this.textRenderer = textRenderer;
@@ -34,7 +34,7 @@ public class Button extends PressableWidget {
         this.onPress = onPress;
         this.setMessage(message);
     }
-    
+
     public Button setPos(int x, int y, int width, int height) {
         this.setX(x);
         this.setY(y);
@@ -42,15 +42,15 @@ public class Button extends PressableWidget {
         this.height = height;
         return this;
     }
-    
+
     public boolean cantRenderAllText() {
         return this.textLines.size() > this.visibleLines;
     }
-    
+
     protected void setMessageSuper(Text message) {
         super.setMessage(message);
     }
-    
+
     @Override
     public void setMessage(Text message) {
         super.setMessage(message);
@@ -58,55 +58,57 @@ public class Button extends PressableWidget {
         this.visibleLines = Math.min(Math.max((height - 2) / textRenderer.fontHeight, 1), textLines.size());
         this.verticalCenter = ((height - 4) - (visibleLines * textRenderer.fontHeight)) / 2;
     }
-    
+
     public void setColor(int color) {
         this.color = color;
     }
-    
+
     public void setHighlightColor(int color) {
         this.highlightColor = color;
     }
-    
-    protected void renderMessage(MatrixStack matrices) {
+
+    protected void renderMessage(DrawContext drawContext) {
         for (int i = 0; i < visibleLines; ++i) {
             int w = textRenderer.getWidth(textLines.get(i));
-            textRenderer.draw(matrices, textLines.get(i), horizCenter ? getX() + width / 2F - w / 2F : getX() + 1, getY() + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
+            drawContext.drawText(textRenderer, textLines.get(i), (int) (horizCenter ? getX() + width / 2F - w / 2F : getX() + 1), getY() + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor, false);
         }
     }
-    
+
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             // fill
             if (mouseX - getX() >= 0 && mouseX - getX() - width <= 0 && mouseY - getY() >= 0 && mouseY - getY() - height <= 0 && this.active || forceHover) {
                 hovering = true;
-                fill(matrices, getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, highlightColor);
+                drawContext.fill(getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, highlightColor);
             } else {
                 hovering = false;
-                fill(matrices, getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, color);
+                drawContext.fill(getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, color);
             }
             // outline
-            fill(matrices, getX(), getY(), getX() + 1, getY() + height, borderColor);
-            fill(matrices, getX() + width - 1, getY(), getX() + width, getY() + height, borderColor);
-            fill(matrices, getX() + 1, getY(), getX() + width - 1, getY() + 1, borderColor);
-            fill(matrices, getX() + 1, getY() + height - 1, getX() + width - 1, getY() + height, borderColor);
-            this.renderMessage(matrices);
+            drawContext.fill(getX(), getY(), getX() + 1, getY() + height, borderColor);
+            drawContext.fill(getX() + width - 1, getY(), getX() + width, getY() + height, borderColor);
+            drawContext.fill(getX() + 1, getY(), getX() + width - 1, getY() + 1, borderColor);
+            drawContext.fill(getX() + 1, getY() + height - 1, getX() + width - 1, getY() + height, borderColor);
+            this.renderMessage(drawContext);
         }
     }
-    
+
     @Override
     public void onClick(double mouseX, double mouseY) {
         //super.onClick(mouseX, mouseY);
     }
-    
+
     @Override
     public void onRelease(double mouseX, double mouseY) {
         super.onClick(mouseX, mouseY);
     }
-    
+
     @Override
     public void onPress() {
-        if (onPress != null) onPress.accept(this);
+        if (onPress != null) {
+            onPress.accept(this);
+        }
     }
 
     @Override

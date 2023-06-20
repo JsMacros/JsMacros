@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.dec
 
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.util.math.EulerAngle;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.LivingEntityHelper;
 
 /**
@@ -18,7 +17,6 @@ public class ArmorStandEntityHelper extends LivingEntityHelper<ArmorStandEntity>
 
     /**
      * @return {@code true} if the armor stand is visible, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isVisible() {
@@ -27,7 +25,6 @@ public class ArmorStandEntityHelper extends LivingEntityHelper<ArmorStandEntity>
 
     /**
      * @return {@code true} if the armor is small, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isSmall() {
@@ -36,7 +33,6 @@ public class ArmorStandEntityHelper extends LivingEntityHelper<ArmorStandEntity>
 
     /**
      * @return {@code true} if the armor stand has arms, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasArms() {
@@ -45,7 +41,6 @@ public class ArmorStandEntityHelper extends LivingEntityHelper<ArmorStandEntity>
 
     /**
      * @return {@code true} if the armor stand has a base plate, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasBasePlate() {
@@ -54,7 +49,6 @@ public class ArmorStandEntityHelper extends LivingEntityHelper<ArmorStandEntity>
 
     /**
      * @return {@code true} if the armor stand is a marker, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isMarker() {
@@ -65,7 +59,6 @@ public class ArmorStandEntityHelper extends LivingEntityHelper<ArmorStandEntity>
      * The rotation is in the format of {@code [yaw, pitch, roll]}.
      *
      * @return the head rotation of the armor stand.
-     *
      * @since 1.8.4
      */
     public float[] getHeadRotation() {
@@ -76,7 +69,6 @@ public class ArmorStandEntityHelper extends LivingEntityHelper<ArmorStandEntity>
      * The rotation is in the format of {@code [yaw, pitch, roll]}.
      *
      * @return the body rotation of the armor stand.
-     *
      * @since 1.8.4
      */
     public float[] getBodyRotation() {
@@ -87,7 +79,6 @@ public class ArmorStandEntityHelper extends LivingEntityHelper<ArmorStandEntity>
      * The rotation is in the format of {@code [yaw, pitch, roll]}.
      *
      * @return the left arm rotation of the armor stand.
-     *
      * @since 1.8.4
      */
     public float[] getLeftArmRotation() {
@@ -98,7 +89,6 @@ public class ArmorStandEntityHelper extends LivingEntityHelper<ArmorStandEntity>
      * The rotation is in the format of {@code [yaw, pitch, roll]}.
      *
      * @return the right arm rotation of the armor stand.
-     *
      * @since 1.8.4
      */
     public float[] getRightArmRotation() {
@@ -109,7 +99,6 @@ public class ArmorStandEntityHelper extends LivingEntityHelper<ArmorStandEntity>
      * The rotation is in the format of {@code [yaw, pitch, roll]}.
      *
      * @return the left leg rotation of the armor stand.
-     *
      * @since 1.8.4
      */
     public float[] getLeftLegRotation() {
@@ -120,7 +109,6 @@ public class ArmorStandEntityHelper extends LivingEntityHelper<ArmorStandEntity>
      * The rotation is in the format of {@code [yaw, pitch, roll]}.
      *
      * @return the right leg rotation of the armor stand.
-     *
      * @since 1.8.4
      */
     public float[] getRightLegRotation() {

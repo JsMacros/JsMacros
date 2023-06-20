@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob;
 
 import net.minecraft.entity.mob.SpiderEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 
 /**
@@ -17,7 +16,6 @@ public class SpiderEntityHelper extends MobEntityHelper<SpiderEntity> {
 
     /**
      * @return {@code true} if this spider is currently climbing a wall, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isClimbing() {

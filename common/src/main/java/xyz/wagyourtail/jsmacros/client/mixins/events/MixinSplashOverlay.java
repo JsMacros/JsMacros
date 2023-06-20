@@ -12,10 +12,13 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.EventResourcePackLoaded;
 
 @Mixin(SplashOverlay.class)
 public class MixinSplashOverlay {
-    @Shadow @Final private boolean reloading;
+    @Shadow
+    @Final
+    private boolean reloading;
 
     @Inject(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screen/SplashOverlay;reloadCompleteTime:J", opcode = Opcodes.PUTFIELD))
     private void onReloadComplete(CallbackInfo ci) {
         new EventResourcePackLoaded(!reloading);
     }
+
 }

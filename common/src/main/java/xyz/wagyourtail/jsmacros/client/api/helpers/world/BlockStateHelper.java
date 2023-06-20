@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-
 import net.minecraft.registry.Registries;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 
@@ -19,7 +18,6 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     /**
      * @return the block the state belongs to.
-     *
      * @since 1.6.5
      */
     public BlockHelper getBlock() {
@@ -28,7 +26,6 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     /**
      * @return the block's id.
-     *
      * @since 1.8.4
      */
     public String getId() {
@@ -37,7 +34,6 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     /**
      * @return the fluid state of this block state.
-     *
      * @since 1.8.4
      */
     public FluidStateHelper getFluidState() {
@@ -46,7 +42,6 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     /**
      * @return the hardness.
-     *
      * @since 1.6.5
      */
     public float getHardness() {
@@ -55,7 +50,6 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     /**
      * @return the luminance.
-     *
      * @since 1.6.5
      */
     public int getLuminance() {
@@ -64,7 +58,6 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     /**
      * @return {@code true} if the state emits redstone power.
-     *
      * @since 1.6.5
      */
     public boolean emitsRedstonePower() {
@@ -73,7 +66,6 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     /**
      * @return {@code true} if the shape of the state is a cube.
-     *
      * @since 1.6.5
      */
     public boolean exceedsCube() {
@@ -82,7 +74,6 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     /**
      * @return {@code true} if the state is air.
-     *
      * @since 1.6.5
      */
     public boolean isAir() {
@@ -91,7 +82,6 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     /**
      * @return {@code true} if the state is opaque.
-     *
      * @since 1.6.5
      */
     public boolean isOpaque() {
@@ -100,7 +90,6 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     /**
      * @return {@code true} if a tool is required to mine the block.
-     *
      * @since 1.6.5
      */
     public boolean isToolRequired() {
@@ -109,7 +98,6 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     /**
      * @return {@code true} if the state has a block entity.
-     *
      * @since 1.6.5
      */
     public boolean hasBlockEntity() {
@@ -118,7 +106,6 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     /**
      * @return {@code true} if the state can be random ticked.
-     *
      * @since 1.6.5
      */
     public boolean hasRandomTicks() {
@@ -127,7 +114,6 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     /**
      * @return {@code true} if the state has a comparator output.
-     *
      * @since 1.6.5
      */
     public boolean hasComparatorOutput() {
@@ -136,7 +122,6 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     /**
      * @return the piston behaviour of the state.
-     *
      * @since 1.6.5
      */
     public String getPistonBehaviour() {
@@ -157,48 +142,35 @@ public class BlockStateHelper extends StateHelper<BlockState> {
     }
 
     /**
-     * @return {@code true} if the state blocks light.
-     *
-     * @since 1.6.5
-     */
-    public boolean blocksLight() {
-        return base.getMaterial().blocksLight();
-    }
-
-    /**
      * @return {@code true} if the state blocks the movement of entities.
-     *
      * @since 1.6.5
      */
     public boolean blocksMovement() {
-        return base.getMaterial().blocksMovement();
+        return base.blocksMovement();
     }
 
     /**
      * @return {@code true} if the state is burnable.
-     *
      * @since 1.6.5
      */
     public boolean isBurnable() {
-        return base.getMaterial().isBurnable();
+        return base.isBurnable();
     }
 
     /**
      * @return {@code true} if the state is a liquid.
-     *
      * @since 1.6.5
      */
     public boolean isLiquid() {
-        return base.getMaterial().isLiquid();
+        return base.isLiquid();
     }
 
     /**
      * @return {@code true} if the state is solid.
-     *
      * @since 1.6.5
      */
     public boolean isSolid() {
-        return base.getMaterial().isSolid();
+        return base.isSolid();
     }
 
     /**
@@ -206,19 +178,17 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * them first.
      *
      * @return {@code true} if the state can be replaced.
-     *
      * @since 1.6.5
      */
     public boolean isReplaceable() {
-        return base.getMaterial().isReplaceable();
+        return base.isReplaceable();
     }
 
     /**
      * @param pos    the position of the block to check
      * @param entity the entity type to check
      * @return {@code true} if the entity can spawn on this block state at the given position in the
-     *         current world.
-     *
+     * current world.
      * @since 1.6.5
      */
     public boolean allowsSpawning(BlockPosHelper pos, String entity) {
@@ -228,8 +198,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
     /**
      * @param pos the position of the block to check
      * @return {@code true} if an entity can suffocate in this block state at the given position in
-     *         the current world.
-     *
+     * the current world.
      * @since 1.6.5
      */
     public boolean shouldSuffocate(BlockPosHelper pos) {
@@ -238,7 +207,6 @@ public class BlockStateHelper extends StateHelper<BlockState> {
 
     /**
      * @return an {@link UniversalBlockStateHelper} to access all properties of this block state.
-     *
      * @since 1.8.4
      */
     public UniversalBlockStateHelper getUniversal() {

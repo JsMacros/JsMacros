@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob;
 
 import net.minecraft.entity.mob.PhantomEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 
 /**
@@ -17,7 +16,6 @@ public class PhantomEntityHelper extends MobEntityHelper<PhantomEntity> {
 
     /**
      * @return the size of this phantom.
-     *
      * @since 1.8.4
      */
     public int getSize() {

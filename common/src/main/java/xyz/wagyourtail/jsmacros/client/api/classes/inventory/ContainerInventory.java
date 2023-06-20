@@ -15,7 +15,6 @@ public class ContainerInventory<T extends HandledScreen<?>> extends Inventory<T>
 
     /**
      * @return the first free slot in this container.
-     *
      * @since 1.8.4
      */
     public int findFreeContainerSlot() {
@@ -26,5 +25,5 @@ public class ContainerInventory<T extends HandledScreen<?>> extends Inventory<T>
     public String toString() {
         return String.format("ContainerInventory:{}");
     }
-    
+
 }

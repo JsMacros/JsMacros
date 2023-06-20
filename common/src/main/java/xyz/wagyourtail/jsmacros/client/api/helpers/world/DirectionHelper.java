@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
-
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -19,7 +18,6 @@ public class DirectionHelper extends BaseHelper<Direction> {
 
     /**
      * @return the name of this direction.
-     *
      * @since 1.8.4
      */
     public String getName() {
@@ -28,7 +26,6 @@ public class DirectionHelper extends BaseHelper<Direction> {
 
     /**
      * @return the name of the axis this direction is aligned to.
-     *
      * @since 1.8.4
      */
     public String getAxis() {
@@ -37,7 +34,6 @@ public class DirectionHelper extends BaseHelper<Direction> {
 
     /**
      * @return {@code true} if this direction is vertical, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isVertical() {
@@ -46,7 +42,6 @@ public class DirectionHelper extends BaseHelper<Direction> {
 
     /**
      * @return {@code true} if this direction is horizontal, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isHorizontal() {
@@ -55,8 +50,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
 
     /**
      * @return {@code true} if this direction is pointing in a positive direction, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isTowardsPositive() {
@@ -65,7 +59,6 @@ public class DirectionHelper extends BaseHelper<Direction> {
 
     /**
      * @return the yaw of this direction.
-     *
      * @since 1.8.4
      */
     public float getYaw() {
@@ -78,7 +71,6 @@ public class DirectionHelper extends BaseHelper<Direction> {
 
     /**
      * @return the pitch of this direction.
-     *
      * @since 1.8.4
      */
     public float getPitch() {
@@ -91,7 +83,6 @@ public class DirectionHelper extends BaseHelper<Direction> {
 
     /**
      * @return the opposite direction.
-     *
      * @since 1.8.4
      */
     public DirectionHelper getOpposite() {
@@ -100,7 +91,6 @@ public class DirectionHelper extends BaseHelper<Direction> {
 
     /**
      * @return the direction to the left.
-     *
      * @since 1.8.4
      */
     public DirectionHelper getLeft() {
@@ -109,7 +99,6 @@ public class DirectionHelper extends BaseHelper<Direction> {
 
     /**
      * @return the direction to the right.
-     *
      * @since 1.8.4
      */
     public DirectionHelper getRight() {
@@ -118,7 +107,6 @@ public class DirectionHelper extends BaseHelper<Direction> {
 
     /**
      * @return the direction as a directional vector.
-     *
      * @since 1.8.4
      */
     public Pos3D getVector() {
@@ -129,8 +117,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
     /**
      * @param yaw the yaw to check
      * @return {@code true} if the yaw is facing this direction more than any other one,
-     *         {@code false} otherwise.
-     *
+     * {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean pointsTo(double yaw) {

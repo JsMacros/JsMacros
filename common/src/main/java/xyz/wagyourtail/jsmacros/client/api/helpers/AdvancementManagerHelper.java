@@ -5,7 +5,6 @@ import net.minecraft.advancement.AdvancementManager;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAdvancementManager;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinClientAdvancementManager;
@@ -30,7 +29,6 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
 
     /**
      * @return a map of all advancement ids and their advancement.
-     *
      * @since 1.8.4
      */
     public Map<String, AdvancementHelper> getAdvancementsForIdentifiers() {
@@ -42,7 +40,6 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
 
     /**
      * @return a list of all advancements.
-     *
      * @since 1.8.4
      */
     public List<AdvancementHelper> getAdvancements() {
@@ -54,7 +51,6 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * completed so far, but not fully completed.
      *
      * @return a list of all started advancements.
-     *
      * @since 1.8.4
      */
     public List<AdvancementHelper> getStartedAdvancements() {
@@ -63,7 +59,6 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
 
     /**
      * @return a list of all missing advancements.
-     *
      * @since 1.8.4
      */
     public List<AdvancementHelper> getMissingAdvancements() {
@@ -72,7 +67,6 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
 
     /**
      * @return a list of all completed advancements.
-     *
      * @since 1.8.4
      */
     public List<AdvancementHelper> getCompletedAdvancements() {
@@ -81,7 +75,6 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
 
     /**
      * @return a list of all the root advancements.
-     *
      * @since 1.8.4
      */
     public List<AdvancementHelper> getRootAdvancements() {
@@ -90,7 +83,6 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
 
     /**
      * @return a list of all advancements that are not a root.
-     *
      * @since 1.8.4
      */
     public List<AdvancementHelper> getSubAdvancements() {
@@ -100,7 +92,6 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
     /**
      * @param identifier the identifier of the advancement
      * @return the advancement for the given identifier.
-     *
      * @since 1.8.4
      */
     public AdvancementHelper getAdvancement(String identifier) {
@@ -109,7 +100,6 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
 
     /**
      * @return a map of all advancements and their progress.
-     *
      * @since 1.8.4
      */
     public Map<AdvancementHelper, AdvancementProgressHelper> getAdvancementsProgress() {
@@ -121,7 +111,6 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
 
     /**
      * @return the progress of the given advancement.
-     *
      * @since 1.8.4
      */
     public AdvancementProgressHelper getAdvancementProgress(String identifier) {

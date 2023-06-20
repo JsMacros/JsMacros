@@ -15,8 +15,7 @@ public class MobEntityHelper<T extends MobEntity> extends LivingEntityHelper<T> 
 
     /**
      * @return {@code true} if the entity is currently attacking something, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isAttacking() {
@@ -28,7 +27,6 @@ public class MobEntityHelper<T extends MobEntity> extends LivingEntityHelper<T> 
      * themselves.
      *
      * @return {@code true} if the entity's AI is disabled, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isAiDisabled() {

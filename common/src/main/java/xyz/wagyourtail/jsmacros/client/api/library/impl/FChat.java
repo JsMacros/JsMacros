@@ -9,10 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
+import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.ChatHistoryManager;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandManager;
-import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandNodeHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -24,41 +24,42 @@ import java.util.concurrent.Semaphore;
 
 /**
  * Functions for interacting with chat.
- * 
+ * <p>
  * An instance of this class is passed to scripts as the {@code Chat} variable.
- * 
+ *
  * @author Wagyourtail
  */
- @Library("Chat")
- @SuppressWarnings("unused")
+@Library("Chat")
+@SuppressWarnings("unused")
 public class FChat extends BaseLibrary {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
+
     /**
      * Log to player chat.
-     * 
-     * @since 1.1.3
-     * 
+     *
      * @param message
+     * @since 1.1.3
      */
     public void log(Object message) throws InterruptedException {
         log(message, false);
     }
-    
+
     /**
      * @param message
-     * @param await should wait for message to actually be sent to chat to continue.
-     *
+     * @param await   should wait for message to actually be sent to chat to continue.
      * @throws InterruptedException
      */
     public void log(Object message, boolean await) throws InterruptedException {
-        if (message == null) return;
+        if (message == null) {
+            return;
+        }
         final Object message2 = message instanceof TextHelper ? message :
-            message instanceof TextBuilder ? ((TextBuilder) message).build() :
-                message.toString();
+                message instanceof TextBuilder ? ((TextBuilder) message).build() :
+                        message.toString();
 
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
             if (message2 instanceof TextHelper) {
-                logInternal((TextHelper)message2);
+                logInternal((TextHelper) message2);
             } else {
                 logInternal((String) message2);
             }
@@ -106,37 +107,37 @@ public class FChat extends BaseLibrary {
     private static void logInternal(String message) {
         if (message != null) {
             Text text = Text.literal(message);
-            ((IChatHud)mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
+            ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
         }
     }
-    
+
     private static void logInternal(TextHelper text) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        ((IChatHud)mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text.getRaw());
+        ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text.getRaw());
     }
-    
+
     /**
      * Say to server as player.
-     * 
-     * @since 1.0.0
-     * 
+     *
      * @param message
+     * @since 1.0.0
      */
-     public void say(String message) throws InterruptedException {
+    public void say(String message) throws InterruptedException {
         say(message, false);
-     }
-    
+    }
+
     /**
-    * Say to server as player.
-    *
+     * Say to server as player.
+     *
      * @param message
      * @param await
-     * @since 1.3.1
-     *
      * @throws InterruptedException
+     * @since 1.3.1
      */
     public void say(String message, boolean await) throws InterruptedException {
-        if (message == null) return;
+        if (message == null) {
+            return;
+        }
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
             assert mc.player != null;
             sayInternal(message);
@@ -189,12 +190,12 @@ public class FChat extends BaseLibrary {
     /**
      * open the chat input box with specific text already typed.
      *
-     * @since 1.6.4
      * @param message the message to start the chat screen with
+     * @since 1.6.4
      */
-     public void open(String message) throws InterruptedException {
+    public void open(String message) throws InterruptedException {
         open(message, false);
-     }
+    }
 
     /**
      * open the chat input box with specific text already typed.
@@ -202,12 +203,14 @@ public class FChat extends BaseLibrary {
      * {@link xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros#once(String, MethodWrapper)} to wait for the chat screen
      * to close and/or the to wait for the sent message
      *
-     * @since 1.6.4
      * @param message the message to start the chat screen with
      * @param await
+     * @since 1.6.4
      */
     public void open(String message, boolean await) throws InterruptedException {
-        if (message == null) message = "";
+        if (message == null) {
+            message = "";
+        }
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
             throw new UnsupportedOperationException("Cannot open a screen while joined to the main thread");
         } else {
@@ -220,29 +223,36 @@ public class FChat extends BaseLibrary {
             semaphore.acquire();
         }
     }
-    
+
     /**
      * Display a Title to the player.
-     * 
-     * @since 1.2.1
-     * 
+     *
      * @param title
      * @param subtitle
      * @param fadeIn
      * @param remain
      * @param fadeOut
+     * @since 1.2.1
      */
     public void title(Object title, Object subtitle, int fadeIn, int remain, int fadeOut) {
         Text titlee = null;
         Text subtitlee = null;
-        if (title instanceof TextHelper) titlee = ((TextHelper) title).getRaw();
-        else if (title != null) titlee = Text.literal(title.toString());
-        if (subtitle instanceof TextHelper) subtitlee = ((TextHelper) subtitle).getRaw();
-        else if (subtitle != null) subtitlee = Text.literal(subtitle.toString());
-        if (title != null)
+        if (title instanceof TextHelper) {
+            titlee = ((TextHelper) title).getRaw();
+        } else if (title != null) {
+            titlee = Text.literal(title.toString());
+        }
+        if (subtitle instanceof TextHelper) {
+            subtitlee = ((TextHelper) subtitle).getRaw();
+        } else if (subtitle != null) {
+            subtitlee = Text.literal(subtitle.toString());
+        }
+        if (title != null) {
             mc.inGameHud.setTitle(titlee);
-        if (subtitle != null)
+        }
+        if (subtitle != null) {
             mc.inGameHud.setSubtitle(subtitlee);
+        }
         if (title == null && subtitle == null) {
             mc.inGameHud.setTitle(null);
             mc.inGameHud.setSubtitle(null);
@@ -251,37 +261,37 @@ public class FChat extends BaseLibrary {
     }
 
     /**
-     * @since 1.8.1
      * @param text
+     * @since 1.8.1
      */
     public void actionbar(Object text) {
         actionbar(text, false);
     }
 
-    
     /**
      * Display the smaller title that's above the actionbar.
-     * 
-     * @since 1.2.1
-     * 
+     *
      * @param text
      * @param tinted
+     * @since 1.2.1
      */
     public void actionbar(Object text, boolean tinted) {
         assert mc.inGameHud != null;
         Text textt = null;
-        if (text instanceof TextHelper) textt = ((TextHelper) text).getRaw();
-        else if (text != null) textt = Text.literal(text.toString());
+        if (text instanceof TextHelper) {
+            textt = ((TextHelper) text).getRaw();
+        } else if (text != null) {
+            textt = Text.literal(text.toString());
+        }
         mc.inGameHud.setOverlayMessage(textt, tinted);
     }
-    
+
     /**
      * Display a toast.
-     * 
-     * @since 1.2.5
-     * 
+     *
      * @param title
      * @param desc
+     * @since 1.2.5
      */
     public void toast(Object title, Object desc) {
         ToastManager t = mc.getToastManager();
@@ -289,26 +299,27 @@ public class FChat extends BaseLibrary {
             Text titlee = (title instanceof TextHelper) ? ((TextHelper) title).getRaw() : title != null ? Text.literal(title.toString()) : null;
             Text descc = (desc instanceof TextHelper) ? ((TextHelper) desc).getRaw() : desc != null ? Text.literal(desc.toString()) : null;
             // There doesn't seem to be a difference in the appearance or the functionality except for the UNSECURE_SERVER_WARNING with a longer duration
-            if (titlee != null) t.add(SystemToast.create(mc, SystemToast.Type.TUTORIAL_HINT, titlee, descc));
+            if (titlee != null) {
+                t.add(SystemToast.create(mc, SystemToast.Type.TUTORIAL_HINT, titlee, descc));
+            }
         }
     }
-    
+
     /**
      * Creates a {@link xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper TextHelper} for use where you need one and not a string.
-     * 
-     * @see xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper
-     * @since 1.1.3
-     * 
+     *
      * @param content
      * @return a new {@link xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper TextHelper}
+     * @see xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper
+     * @since 1.1.3
      */
     public TextHelper createTextHelperFromString(String content) {
         return new TextHelper(Text.literal(content));
     }
 
     /**
-     * @since 1.5.2
      * @return
+     * @since 1.5.2
      */
     public Logger getLogger() {
         return JsMacros.LOGGER;
@@ -316,9 +327,10 @@ public class FChat extends BaseLibrary {
 
     /**
      * returns a log4j logger, for logging to console only.
-     * @since 1.5.2
+     *
      * @param name
      * @return
+     * @since 1.5.2
      */
     public Logger getLogger(String name) {
         return LoggerFactory.getLogger(name);
@@ -326,71 +338,69 @@ public class FChat extends BaseLibrary {
 
     /**
      * Create a  {@link xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper TextHelper} for use where you need one and not a string.
-     * 
-     * @see xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper
-     * @since 1.1.3
-     * 
+     *
      * @param json
      * @return a new {@link xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper TextHelper}
+     * @see xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper
+     * @since 1.1.3
      */
     public TextHelper createTextHelperFromJSON(String json) {
         TextHelper t = new TextHelper(null);
         t.replaceFromJson(json);
         return t;
     }
-    
+
     /**
+     * @return a new builder
      * @see TextBuilder
      * @since 1.3.0
-     * @return a new builder
      */
     public TextBuilder createTextBuilder() {
         return new TextBuilder();
     }
 
     /**
-     *
-     *@param name name of command
-     * @since 1.4.2
+     * @param name name of command
      * @return
      * @see #getCommandManager()
+     * @since 1.4.2
      */
-     @Deprecated
+    @Deprecated
     public CommandBuilder createCommandBuilder(String name) {
         return CommandManager.instance.createCommandBuilder(name);
     }
 
     /**
      * @param name
-     * @since 1.6.5
      * @see #getCommandManager()
+     * @since 1.6.5
      */
-     @Deprecated
+    @Deprecated
     public CommandNodeHelper unregisterCommand(String name) throws IllegalAccessException {
         return CommandManager.instance.unregisterCommand(name);
     }
 
     /**
-     * @since 1.6.5
      * @param node
      * @see #getCommandManager()
+     * @since 1.6.5
      */
-     @Deprecated
+    @Deprecated
     public void reRegisterCommand(CommandNodeHelper node) {
         CommandManager.instance.reRegisterCommand(node);
     }
 
     /**
-     * @since 1.7.0
      * @return
+     * @since 1.7.0
      */
     public CommandManager getCommandManager() {
         return CommandManager.instance;
     }
 
     /**
-     * @since 1.7.0
      * @return
+     * @since 1.7.0
      */
     public ChatHistoryManager getHistory() {
         return new ChatHistoryManager(mc.inGameHud.getChatHud());
@@ -399,17 +409,16 @@ public class FChat extends BaseLibrary {
     /**
      * @param text the text to get the width of
      * @return the width of the given text in pixels.
-     *
      * @since 1.8.4
      */
     public int getTextWidth(String text) {
         return mc.textRenderer.getWidth(text);
     }
-    
+
     /**
      * @param string
-     * @since 1.6.5
      * @return &#167; -> &amp;
+     * @since 1.6.5
      */
     public String sectionSymbolToAmpersand(String string) {
         return string.replaceAll("§", "&");
@@ -417,8 +426,8 @@ public class FChat extends BaseLibrary {
 
     /**
      * @param string
-     * @since 1.6.5
      * @return &amp; -> &#167;
+     * @since 1.6.5
      */
     public String ampersandToSectionSymbol(String string) {
         return string.replaceAll("&", "§");
@@ -426,12 +435,13 @@ public class FChat extends BaseLibrary {
 
     /**
      * @param string
-     * @since 1.6.5
      * @return
+     * @since 1.6.5
      */
-     public String stripFormatting(String string) {
-     // on 1.15 and lower switch to comment
+    public String stripFormatting(String string) {
+        // on 1.15 and lower switch to comment
 //        return string.replaceAll("§#\\d{6}|§.", "");
         return TextHelper.STRIP_FORMATTING_PATTERN.matcher(string).replaceAll("");
     }
+
 }

@@ -12,7 +12,6 @@ import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 
-import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ProfileStub extends BaseProfile {
@@ -81,13 +80,14 @@ public class ProfileStub extends BaseProfile {
         }
     }
 
-
     private void runJoinedEventListener(BaseEvent event, boolean joinedMain, IEventListener macroListener) {
         if (macroListener instanceof FJsMacros.ScriptEventListener && ((FJsMacros.ScriptEventListener) macroListener).getCreator() == Thread.currentThread() && ((FJsMacros.ScriptEventListener) macroListener).getWrapper().preventSameThreadJoin()) {
             throw new IllegalThreadStateException("Cannot join " + macroListener + " on same thread as it's creation.");
         }
         EventContainer<?> t = macroListener.trigger(event);
-        if (t == null) return;
+        if (t == null) {
+            return;
+        }
         try {
             if (joinedMain) {
                 joinedThreadStack.add(t.getLockThread());

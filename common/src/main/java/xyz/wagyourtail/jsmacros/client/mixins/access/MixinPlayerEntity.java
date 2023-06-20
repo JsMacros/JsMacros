@@ -23,4 +23,5 @@ public abstract class MixinPlayerEntity extends LivingEntity {
             cir.setReturnValue(getCustomName());
         }
     }
+
 }

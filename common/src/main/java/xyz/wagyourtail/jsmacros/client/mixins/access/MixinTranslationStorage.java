@@ -1,7 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
-
-import net.minecraft.client.resource.language.LanguageDefinition;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.resource.ResourceManager;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,4 +29,5 @@ public class MixinTranslationStorage {
         }
         translations.forEach(map::putIfAbsent);
     }
+
 }

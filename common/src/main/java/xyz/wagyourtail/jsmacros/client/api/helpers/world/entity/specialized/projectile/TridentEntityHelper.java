@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.projectile;
 
 import net.minecraft.entity.projectile.TridentEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinTridentEntity;
 
@@ -18,7 +17,6 @@ public class TridentEntityHelper extends EntityHelper<TridentEntity> {
 
     /**
      * @return {@code true} if the trident is enchanted with loyalty, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasLoyalty() {
@@ -27,7 +25,6 @@ public class TridentEntityHelper extends EntityHelper<TridentEntity> {
 
     /**
      * @return {@code true} if the trident is enchanted, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isEnchanted() {

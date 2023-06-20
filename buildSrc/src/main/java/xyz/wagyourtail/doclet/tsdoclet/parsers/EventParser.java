@@ -26,15 +26,16 @@ public class EventParser extends AbstractParser {
                 switch (el.getKind()) {
                     case FIELD, ENUM_CONSTANT -> fields.add(el);
                     case METHOD -> methods.add(el);
-                    default -> {}
+                    default -> {
+                    }
                 }
             }
         }
 
         return "interface " + name + " extends BaseEvent {\n" +
-            StringHelpers.tabIn(genFields(fields)) + "\n" +
-            StringHelpers.tabIn(genMethods(methods)) +
-            "\n}";
+                StringHelpers.tabIn(genFields(fields)) + "\n" +
+                StringHelpers.tabIn(genMethods(methods)) +
+                "\n}";
     }
 
 }

@@ -15,16 +15,17 @@ import java.util.UUID;
 public class EventPlayerLeave implements BaseEvent {
     public final String UUID;
     public final PlayerListEntryHelper player;
-    
+
     public EventPlayerLeave(UUID uuid, PlayerListEntry player) {
         this.UUID = uuid.toString();
         this.player = new PlayerListEntryHelper(player);
-        
+
         profile.triggerEvent(this);
     }
-    
+
     @Override
     public String toString() {
         return String.format("%s:{\"player\": %s}", this.getEventName(), player.toString());
     }
+
 }

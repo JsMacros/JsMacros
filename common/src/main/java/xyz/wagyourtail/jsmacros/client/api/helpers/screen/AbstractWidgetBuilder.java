@@ -3,10 +3,9 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
-
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.components.Alignable;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components.Alignable;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 
 /**
  * @author Etheradon
@@ -33,7 +32,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
 
     /**
      * @return the width of the widget.
-     *
      * @since 1.8.4
      */
     public int getWidth() {
@@ -43,7 +41,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
     /**
      * @param width the width of the widget
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public B width(int width) {
@@ -53,7 +50,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
 
     /**
      * @return the height of the widget.
-     *
      * @since 1.8.4
      */
     public int getHeight() {
@@ -63,7 +59,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
     /**
      * @param height the height of the widget
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public B height(int height) {
@@ -75,7 +70,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
      * @param width  the width of the widget
      * @param height the height of the widget
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public B size(int width, int height) {
@@ -86,7 +80,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
 
     /**
      * @return the z-index of the widget.
-     *
      * @since 1.8.4
      */
     public int getZIndex() {
@@ -96,7 +89,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
     /**
      * @param zIndex the z-index of the widget
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public B zIndex(int zIndex) {
@@ -106,7 +98,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
 
     /**
      * @return the x position of the widget.
-     *
      * @since 1.8.4
      */
     public int getX() {
@@ -116,7 +107,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
     /**
      * @param x the x position of the widget
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public B x(int x) {
@@ -126,7 +116,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
 
     /**
      * @return the y position of the widget.
-     *
      * @since 1.8.4
      */
     public int getY() {
@@ -136,7 +125,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
     /**
      * @param y the y position of the widget
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public B y(int y) {
@@ -148,7 +136,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
      * @param x the x position of the widget
      * @param y the y position of the widget
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public B pos(int x, int y) {
@@ -159,7 +146,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
 
     /**
      * @return the message of the widget or an empty text if none is set.
-     *
      * @since 1.8.4
      */
     public TextHelper getMessage() {
@@ -169,7 +155,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
     /**
      * @param message the message of the widget
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public B message(String message) {
@@ -182,7 +167,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
     /**
      * @param message the message of the widget
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public B message(TextHelper message) {
@@ -196,7 +180,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
      * An inactive widget can not be interacted with and may have a different appearance.
      *
      * @return {@code true} if the widget is active, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isActive() {
@@ -208,7 +191,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
      *
      * @param active whether the widget should be active or not
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public B active(boolean active) {
@@ -218,7 +200,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
 
     /**
      * @return {@code true} if the widget is visible, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isVisible() {
@@ -228,7 +209,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
     /**
      * @param visible whether the widget should be visible or not
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public B visible(boolean visible) {
@@ -238,7 +218,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
 
     /**
      * @return the alpha value of the widget.
-     *
      * @since 1.8.4
      */
     public float getAlpha() {
@@ -248,7 +227,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
     /**
      * @param alpha the alpha value of the widget
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public B alpha(double alpha) {
@@ -258,7 +236,6 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
 
     /**
      * @return the build widget for the set properties.
-     *
      * @since 1.8.4
      */
     public final U build() {
@@ -307,4 +284,5 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
     public B moveTo(int x, int y) {
         return pos(x, y);
     }
+
 }

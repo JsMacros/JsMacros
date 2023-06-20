@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.pro
 
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
 /**
@@ -18,7 +17,6 @@ public class ArrowEntityHelper extends EntityHelper<PersistentProjectileEntity> 
 
     /**
      * @return the particle's color of the arrow, or {@code -1} if the arrow has no particles.
-     *
      * @since 1.8.4
      */
     public int getColor() {
@@ -30,7 +28,6 @@ public class ArrowEntityHelper extends EntityHelper<PersistentProjectileEntity> 
 
     /**
      * @return {@code true} if the arrow will deal critical damage, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isCritical() {
@@ -42,7 +39,6 @@ public class ArrowEntityHelper extends EntityHelper<PersistentProjectileEntity> 
      * enchantment.
      *
      * @return the piercing level of the arrow.
-     *
      * @since 1.8.4
      */
     public int getPiercingLevel() {
@@ -51,7 +47,6 @@ public class ArrowEntityHelper extends EntityHelper<PersistentProjectileEntity> 
 
     /**
      * @return {@code true} if the arrow is shot from a crossbow, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isShotFromCrossbow() {

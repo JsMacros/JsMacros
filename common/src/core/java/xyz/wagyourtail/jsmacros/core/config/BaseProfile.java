@@ -23,19 +23,19 @@ public abstract class BaseProfile {
     public final Logger LOGGER;
     public final Set<Thread> joinedThreadStack = new HashSet<>();
     public String profileName;
-    
+
     public BaseProfile(Core runner, Logger logger) {
         this.runner = runner;
         this.LOGGER = logger;
     }
-    
+
     public abstract void logError(Throwable ex);
 
     /**
-     * @since 1.1.2 [citation needed]
      * @return
+     * @since 1.1.2 [citation needed]
      */
-     @Deprecated
+    @Deprecated
     public BaseEventRegistry getRegistry() {
         return runner.eventRegistry;
     }
@@ -46,8 +46,8 @@ public abstract class BaseProfile {
     public abstract boolean checkJoinedThreadStack();
 
     /**
-     * @since 1.1.2 [citation needed]
      * @param profileName
+     * @since 1.1.2 [citation needed]
      */
     public void loadOrCreateProfile(String profileName) {
         runner.eventRegistry.clearMacros();
@@ -59,13 +59,11 @@ public abstract class BaseProfile {
             runner.config.saveConfig();
         }
     }
-    
+
     /**
-    *
-    * @since 1.0.3 [citation needed]
      * @param pName
-     *
      * @return
+     * @since 1.0.3 [citation needed]
      */
     protected boolean loadProfile(String pName) {
         runner.eventRegistry.clearMacros();
@@ -79,10 +77,10 @@ public abstract class BaseProfile {
             runner.eventRegistry.addScriptTrigger(rawmacro);
         }
         new EventProfileLoad(this, pName);
-        
+
         return true;
     }
-    
+
     /**
      * @since 1.0.8 [citation needed]
      */
@@ -90,28 +88,28 @@ public abstract class BaseProfile {
         runner.config.getOptions(CoreConfigV2.class).profiles.put(getCurrentProfileName(), runner.eventRegistry.getScriptTriggers());
         runner.config.saveConfig();
     }
-    
+
     /**
-     * @since 1.2.7
      * @param event
+     * @since 1.2.7
      */
     public void triggerEvent(BaseEvent event) {
         triggerEventNoAnything(event);
-    
+
         for (IEventListener macro : runner.eventRegistry.getListeners("ANYTHING")) {
             macro.trigger(event);
         }
     }
-    
+
     /**
-     * @since 1.2.7
      * @param event
+     * @since 1.2.7
      */
     public abstract void triggerEventJoin(BaseEvent event);
-    
+
     /**
-     * @since 1.2.7
      * @param event
+     * @since 1.2.7
      */
     public void triggerEventNoAnything(BaseEvent event) {
         if (event instanceof EventCustom) {
@@ -124,32 +122,33 @@ public abstract class BaseProfile {
             }
         }
     }
-    
+
     /**
-     * @since 1.2.7
      * @param event
+     * @since 1.2.7
      */
     public abstract void triggerEventJoinNoAnything(BaseEvent event);
-    
+
     public void init(String defaultProfile) {
         initRegistries();
         loadOrCreateProfile(defaultProfile);
     }
-    
+
     public String getCurrentProfileName() {
         return profileName;
     }
-    
+
     public void renameCurrentProfile(String profile) {
         profileName = profile;
     }
+
     /**
      * Don't invoke from a script, extend to add more.
      */
     protected void initRegistries() {
         runner.eventRegistry.addEvent("ANYTHING");
         runner.eventRegistry.addEvent(EventProfileLoad.class);
-    
+
         runner.libraryRegistry.addLibrary(FJsMacros.class);
         runner.libraryRegistry.addLibrary(FFS.class);
         runner.libraryRegistry.addLibrary(FGlobalVars.class);
@@ -157,4 +156,5 @@ public abstract class BaseProfile {
         runner.libraryRegistry.addLibrary(FRequest.class);
         runner.libraryRegistry.addLibrary(FTime.class);
     }
+
 }

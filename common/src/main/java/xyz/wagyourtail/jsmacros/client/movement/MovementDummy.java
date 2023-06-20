@@ -53,7 +53,7 @@ public class MovementDummy extends LivingEntity {
         this.setSprinting(isSprinting);
         this.setSneaking(isSneaking);
         this.setStepHeight(0.6F);
-        this.onGround = onGround;
+        this.setOnGround(onGround);
         this.coordsHistory.add(this.getPos());
 
         for (EquipmentSlot value : EquipmentSlot.values()) {
@@ -115,7 +115,7 @@ public class MovementDummy extends LivingEntity {
         }
 
         if (currentInput.jumping) {
-            if (this.onGround && this.jumpingCooldown == 0) {
+            if (this.isOnGround() && this.jumpingCooldown == 0) {
                 this.jump();
                 this.jumpingCooldown = 10;
             }
@@ -148,7 +148,7 @@ public class MovementDummy extends LivingEntity {
 
     //TODO: relink?
     protected boolean canClimb() {
-        return !this.onGround || !this.isSneaking();
+        return !this.isOnGround() || !this.isSneaking();
     }
 
     @Override
@@ -192,4 +192,5 @@ public class MovementDummy extends LivingEntity {
     public MovementDummy clone() {
         return new MovementDummy(this);
     }
+
 }

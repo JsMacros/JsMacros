@@ -22,4 +22,5 @@ public class MixinClientWorld {
     public void onRemoveEntity(int entityId, Entity.RemovalReason removalReason, CallbackInfo ci, Entity entity) {
         new EventEntityUnload(entity, removalReason);
     }
+
 }

@@ -22,16 +22,23 @@ import java.util.function.Predicate;
 public abstract class MixinChatHud implements IChatHud {
 
     @Shadow
-    private void addMessage(Text message, @Nullable MessageSignatureData signature, int ticks, @Nullable MessageIndicator indicator, boolean refresh) {}
+    private void addMessage(Text message, @Nullable MessageSignatureData signature, int ticks, @Nullable MessageIndicator indicator, boolean refresh) {
+    }
 
-    @Shadow @Final private List<ChatHudLine> messages;
+    @Shadow
+    @Final
+    private List<ChatHudLine> messages;
 
 //    @Shadow protected abstract void removeMessage(int messageId);
 
     @Mutable
-    @Shadow @Final private List<String> messageHistory;
+    @Shadow
+    @Final
+    private List<String> messageHistory;
 
-    @Shadow @Final private MinecraftClient client;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     public void onInit(MinecraftClient client, CallbackInfo ci) {
@@ -55,7 +62,6 @@ public abstract class MixinChatHud implements IChatHud {
 
     @Unique
     ThreadLocal<Integer> positionOverride = ThreadLocal.withInitial(() -> 0);
-
 
     @Override
     public void jsmacros_addMessageAtIndexBypass(Text message, int index, int time) {

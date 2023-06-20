@@ -37,4 +37,5 @@ public class ModLoaderImpl implements ModLoader {
     public FabricModContainer getMod(String modId) {
         return FabricLoader.getInstance().getModContainer(modId).map(FabricModContainer::new).orElse(null);
     }
+
 }

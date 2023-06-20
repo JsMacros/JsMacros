@@ -30,14 +30,12 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
         return base.getType() == 0;
     }
 
-
     /**
      * @since 1.5.1
      */
     public boolean isNumber() {
         return base.getType() != 0 && base.getType() < 7;
     }
-
 
     /**
      * @since 1.5.1
@@ -46,14 +44,12 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
         return base.getType() == 8;
     }
 
-
     /**
      * @since 1.5.1
      */
     public boolean isList() {
         return base.getType() == 7 || base.getType() == 9 || base.getType() == 11 || base.getType() == 12;
     }
-
 
     /**
      * @since 1.5.1
@@ -62,19 +58,19 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
         return base.getType() == 10;
     }
 
-
     /**
      * if element is a string, returns value.
      * otherwise returns toString representation.
+     *
      * @since 1.5.1
      */
     public String asString() {
         return base.asString();
     }
 
-
     /**
      * check with {@link #isNumber()} first
+     *
      * @since 1.5.1
      */
     public NBTNumberHelper asNumberHelper() {
@@ -83,15 +79,16 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
 
     /**
      * check with {@link #isList()} first
+     *
      * @since 1.5.1
      */
     public NBTListHelper asListHelper() {
         return (NBTListHelper) this;
     }
 
-
     /**
      * check with {@link #isCompound()} first
+     *
      * @since 1.5.1
      */
     public NBTCompoundHelper asCompoundHelper() {
@@ -106,7 +103,9 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
      * @since 1.5.1
      */
     public static NBTElementHelper<?> resolve(NbtElement element) {
-        if (element == null) return null;
+        if (element == null) {
+            return null;
+        }
         switch (element.getType()) {
             case NbtElement.END_TYPE: //0
                 return new NBTElementHelper<>(element);
@@ -138,14 +137,12 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
             super(base);
         }
 
-
         /**
          * @since 1.5.1
          */
         public long asLong() {
             return base.longValue();
         }
-
 
         /**
          * @since 1.5.1
@@ -154,14 +151,12 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
             return base.intValue();
         }
 
-
         /**
          * @since 1.5.1
          */
         public short asShort() {
             return base.shortValue();
         }
-
 
         /**
          * @since 1.5.1
@@ -170,14 +165,12 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
             return base.byteValue();
         }
 
-
         /**
          * @since 1.5.1
          */
         public float asFloat() {
             return base.floatValue();
         }
-
 
         /**
          * @since 1.5.1
@@ -186,13 +179,13 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
             return base.doubleValue();
         }
 
-
         /**
          * @since 1.5.1
          */
         public Number asNumber() {
             return base.numberValue();
         }
+
     }
 
     /**
@@ -205,25 +198,27 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
         }
 
         /**
-         * @since 1.8.3
          * @return
+         * @since 1.8.3
          */
         public boolean isPossiblyUUID() {
             return base.getType() == NbtElement.INT_ARRAY_TYPE && base.size() == 4;
         }
 
         /**
-         * @since 1.8.3
          * @return
+         * @since 1.8.3
          */
         public UUID asUUID() {
-            if (!isPossiblyUUID()) return null;
+            if (!isPossiblyUUID()) {
+                return null;
+            }
             return NbtHelper.toUuid(base);
         }
 
         /**
-         * @since 1.5.1
          * @return
+         * @since 1.5.1
          */
         public int length() {
             return base.size();
@@ -236,13 +231,13 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
             return resolve(base.get(index));
         }
 
-
         /**
          * @since 1.5.1
          */
         public int getHeldType() {
             return base.getHeldType();
         }
+
     }
 
     /**
@@ -255,8 +250,8 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
         }
 
         /**
-         * @since 1.6.0
          * @return
+         * @since 1.6.0
          */
         public Set<String> getKeys() {
             return base.getKeys();
@@ -269,7 +264,6 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
             return base.getType(key);
         }
 
-
         /**
          * @since 1.5.1
          */
@@ -277,14 +271,12 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
             return base.contains(key);
         }
 
-
         /**
          * @since 1.5.1
          */
         public NBTElementHelper<?> get(String key) {
             return resolve(base.get(key));
         }
-
 
         /**
          * @since 1.5.1
@@ -294,4 +286,5 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
         }
 
     }
+
 }

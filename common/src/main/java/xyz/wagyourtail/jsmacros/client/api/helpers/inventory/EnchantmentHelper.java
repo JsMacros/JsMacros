@@ -6,7 +6,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -39,7 +38,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
 
     /**
      * @return the level of this enchantment.
-     *
      * @since 1.8.4
      */
     public int getLevel() {
@@ -48,7 +46,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
 
     /**
      * @return the minimum possible level of this enchantment that one can get in vanilla.
-     *
      * @since 1.8.4
      */
     public int getMinLevel() {
@@ -57,7 +54,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
 
     /**
      * @return the maximum possible level of this enchantment that one can get in vanilla.
-     *
      * @since 1.8.4
      */
     public int getMaxLevel() {
@@ -67,7 +63,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     /**
      * @param level the level for the name
      * @return the translated name of this enchantment for the given level.
-     *
      * @since 1.8.4
      */
     public String getLevelName(int level) {
@@ -79,7 +74,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * will return the arabic numeral for any given level outside that range.
      *
      * @return the translated name of this enchantment for the given level in roman numerals.
-     *
      * @since 1.8.4
      */
     public TextHelper getRomanLevelName() {
@@ -92,7 +86,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      *
      * @param level the level for the name
      * @return the translated name of this enchantment for the given level in roman numerals.
-     *
      * @since 1.8.4
      */
     public TextHelper getRomanLevelName(int level) {
@@ -122,7 +115,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
 
     /**
      * @return the name of this enchantment.
-     *
      * @since 1.8.4
      */
     public String getName() {
@@ -131,7 +123,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
 
     /**
      * @return the id of this enchantment.
-     *
      * @since 1.8.4
      */
     public String getId() {
@@ -140,7 +131,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
 
     /**
      * @return the rarity of this enchantment.
-     *
      * @since 1.8.4
      */
     public String getRarity() {
@@ -162,7 +152,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * Only accounts for enchantments of the same target type.
      *
      * @return a list of all enchantments that conflict with this one.
-     *
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getConflictingEnchantments() {
@@ -173,7 +162,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @param ignoreType whether to check only enchantments that can be applied to the same target
      *                   type.
      * @return a list of all enchantments that conflict with this one.
-     *
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getConflictingEnchantments(boolean ignoreType) {
@@ -184,7 +172,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * Only accounts for enchantments of the same target type.
      *
      * @return a list of all enchantments that can be combined with this one.
-     *
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getCompatibleEnchantments() {
@@ -195,7 +182,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @param ignoreType whether to check only enchantments that can be applied to the same target
      *                   type.
      * @return a list of all enchantments that can be combined with this one.
-     *
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getCompatibleEnchantments(boolean ignoreType) {
@@ -204,7 +190,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
 
     /**
      * @return the type of item this enchantment is compatible with.
-     *
      * @since 1.8.4
      */
     public String getTargetType() {
@@ -247,8 +232,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * it is to be chosen.
      *
      * @return the relative probability of this enchantment being applied to an enchanted item
-     *         through the enchanting table or a loot table.
-     *
+     * through the enchanting table or a loot table.
      * @since 1.8.4
      */
     public int getWeight() {
@@ -262,7 +246,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * enchantment tables, but rather from loot chests, fishing or trading with villagers.
      *
      * @return {@code true} if this enchantment is a curse, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isCursed() {
@@ -274,7 +257,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * loot chests, fishing or trading with villagers.
      *
      * @return {@code true} if this enchantment is a treasure, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isTreasure() {
@@ -284,8 +266,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     /**
      * @param item the item to check
      * @return {@code true} if this enchantment can be applied to the given item type, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean canBeApplied(ItemHelper item) {
@@ -295,8 +276,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     /**
      * @param item the item to check
      * @return {@code true} if this enchantment can be applied to the given item, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean canBeApplied(ItemStackHelper item) {
@@ -305,7 +285,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
 
     /**
      * @return a list of all acceptable item ids for this enchantment.
-     *
      * @since 1.8.4
      */
     public List<ItemHelper> getAcceptableItems() {
@@ -315,8 +294,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     /**
      * @param enchantment the enchantment to check
      * @return {@code true} if this enchantment is compatible with the given enchantment,
-     *         {@code false} otherwise.
-     *
+     * {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean isCompatible(String enchantment) {
@@ -326,8 +304,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     /**
      * @param enchantment the enchantment to check
      * @return {@code true} if this enchantment is compatible with the given enchantment,
-     *         {@code false} otherwise.
-     *
+     * {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean isCompatible(EnchantmentHelper enchantment) {
@@ -337,8 +314,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     /**
      * @param enchantment the enchantment to check
      * @return {@code true} if this enchantment conflicts with the given enchantment, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean conflictsWith(String enchantment) {
@@ -348,8 +324,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     /**
      * @param enchantment the enchantment to check
      * @return {@code true} if this enchantment conflicts with the given enchantment, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean conflictsWith(EnchantmentHelper enchantment) {

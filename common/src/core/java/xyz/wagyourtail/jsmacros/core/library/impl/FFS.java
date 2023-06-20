@@ -17,15 +17,14 @@ import java.util.stream.Stream;
 
 /**
  * Better File-System functions.
- * 
+ * <p>
  * An instance of this class is passed to scripts as the {@code FS} variable.
- * 
- * @since 1.1.8
- * 
+ *
  * @author Wagyourtail
+ * @since 1.1.8
  */
- @Library("FS")
- @SuppressWarnings("unused")
+@Library("FS")
+@SuppressWarnings("unused")
 public class FFS extends PerExecLibrary {
 
     public FFS(BaseScriptContext<?> context) {
@@ -34,35 +33,32 @@ public class FFS extends PerExecLibrary {
 
     /**
      * List files in path.
-     * 
-     * @since 1.1.8
-     * 
+     *
      * @param path relative to the script's folder.
      * @return An array of file names as {@link java.lang.String Strings}.
+     * @since 1.1.8
      */
     public String[] list(String path) {
         return ctx.getContainedFolder().toPath().resolve(path).toFile().list();
     }
-    
+
     /**
      * Check if a file exists.
-     * 
-     * @since 1.1.8
-     * 
+     *
      * @param path relative to the script's folder.
      * @return
+     * @since 1.1.8
      */
     public boolean exists(String path) {
         return ctx.getContainedFolder().toPath().resolve(path).toFile().exists();
     }
-    
+
     /**
      * Check if a file is a directory.
-     * 
-     * @since 1.1.8
-     * 
+     *
      * @param path relative to the script's folder.
      * @return
+     * @since 1.1.8
      */
     public boolean isDir(String path) {
         return ctx.getContainedFolder().toPath().resolve(path).toFile().isDirectory();
@@ -71,20 +67,18 @@ public class FFS extends PerExecLibrary {
     /**
      * @param path the path relative to the script's folder
      * @return {@code true} if the path leads to a file, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isFile(String path) {
         return ctx.getContainedFolder().toPath().resolve(path).toFile().isFile();
     }
-    
+
     /**
      * Get the last part (name) of a file.
-     * 
-     * @since 1.1.8
-     * 
+     *
      * @param path relative to the script's folder.
      * @return a {@link java.lang.String String} of the file name.
+     * @since 1.1.8
      */
     public String getName(String path) {
         return ctx.getContainedFolder().toPath().resolve(path).toFile().getName();
@@ -93,13 +87,12 @@ public class FFS extends PerExecLibrary {
     /**
      * @param absolutePath the absolute path to the file
      * @return a path relative to the script's folder to the given absolute path.
-     *
      * @since 1.8.4
      */
     public String toRelativePath(String absolutePath) {
         return ctx.getContainedFolder().toPath().relativize(Paths.get(absolutePath)).toString();
     }
-    
+
     /**
      * Creates a new file in the specified path, relative to the script's folder. This will only
      * work if the parent directory already exists. See {@link #createFile(String, String, boolean)}
@@ -108,7 +101,6 @@ public class FFS extends PerExecLibrary {
      * @param path the path relative to the script's folder
      * @param name the name of the file
      * @return {@code true} if the file was created successfully, {@code false} otherwise.
-     *
      * @throws IOException if there occurs an error while creating the file.
      * @since 1.8.4
      */
@@ -124,7 +116,6 @@ public class FFS extends PerExecLibrary {
      * @param name       the name of the file
      * @param createDirs whether to create parent directories if they do not exist or not
      * @return {@code true} if the file was created successfully, {@code false} otherwise.
-     *
      * @throws IOException if there occurs an error while creating the file.
      * @since 1.8.4
      */
@@ -135,95 +126,86 @@ public class FFS extends PerExecLibrary {
         }
         return file.createNewFile();
     }
-    
+
     /**
      * Make a directory.
-     * 
-     * @since 1.1.8
-     * 
+     *
      * @param path relative to the script's folder.
      * @return a {@link java.lang.Boolean boolean} for success.
+     * @since 1.1.8
      */
     public boolean makeDir(String path) {
         return ctx.getContainedFolder().toPath().resolve(path).toFile().mkdir();
     }
-    
+
     /**
      * Move a file.
-     * 
-     * @since 1.1.8
-     * 
+     *
      * @param from relative to the script's folder.
-     * @param to relative to the script's folder.
+     * @param to   relative to the script's folder.
      * @throws IOException
+     * @since 1.1.8
      */
     public void move(String from, String to) throws IOException {
         Files.move(ctx.getContainedFolder().toPath().resolve(from).toFile(), ctx.getContainedFolder().toPath().resolve(to).toFile());
     }
-    
+
     /**
      * Copy a file.
-     * 
-     * @since 1.1.8
-     * 
+     *
      * @param from relative to the script's folder.
-     * @param to relative to the script's folder.
+     * @param to   relative to the script's folder.
      * @throws IOException
+     * @since 1.1.8
      */
     public void copy(String from, String to) throws IOException {
         Files.copy(ctx.getContainedFolder().toPath().resolve(from).toFile(), ctx.getContainedFolder().toPath().resolve(to).toFile());
     }
-    
+
     /**
      * Delete a file.
-     * 
-     * @since 1.2.9
-     * 
+     *
      * @param path relative to the script's folder.
      * @return a {@link java.lang.Boolean boolean} for success.
+     * @since 1.2.9
      */
     public boolean unlink(String path) {
         return ctx.getContainedFolder().toPath().resolve(path).toFile().delete();
     }
-    
+
     /**
      * Combine 2 paths.
-     * 
-     * @since 1.1.8
-     * 
+     *
      * @param patha path is relative to the script's folder.
      * @param pathb
      * @return a {@link java.lang.String String} of the combined path.
      * @throws IOException
+     * @since 1.1.8
      */
     public String combine(String patha, String pathb) {
         return Paths.get(patha, pathb).toString();
     }
-    
-    
+
     /**
      * Gets the directory part of a file path, or the parent directory of a folder.
-     * 
-     * @since 1.1.8
-     * 
+     *
      * @param path relative to the script's folder.
      * @return a {@link java.lang.String String} of the combined path.
      * @throws IOException
+     * @since 1.1.8
      */
     public String getDir(String path) {
         File dir = ctx.getContainedFolder().toPath().resolve(path).toFile().getParentFile();
         return ctx.getContainedFolder().toPath().relativize(dir.toPath()).toString();
     }
-    
+
     /**
      * Open a FileHandler for the file at the specified path.
-     * 
-     * @since 1.1.8
-     * 
-     * @see FileHandler
-     * 
+     *
      * @param path relative to the script's folder.
      * @return a {@link FileHandler FileHandler} for the file path.
+     * @see FileHandler
+     * @since 1.1.8
      */
     public FileHandler open(String path) {
         return new FileHandler(ctx.getContainedFolder().toPath().resolve(path).toFile());
@@ -232,13 +214,11 @@ public class FFS extends PerExecLibrary {
     /**
      * Open a FileHandler for the file at the specified path.
      *
-     * @since 1.8.4
-     *
-     * @see FileHandler
-     *
-     * @param path relative to the script's folder.
+     * @param path    relative to the script's folder.
      * @param charset the charset to use for reading/writing the file (default is UTF-8)
      * @return a {@link FileHandler FileHandler} for the file path.
+     * @see FileHandler
+     * @since 1.8.4
      */
     public FileHandler open(String path, String charset) {
         return new FileHandler(ctx.getContainedFolder().toPath().resolve(path).toFile(), charset);
@@ -272,7 +252,6 @@ public class FFS extends PerExecLibrary {
     /**
      * @param path the relative path to get the file object for
      * @return the file object for the specified path.
-     *
      * @since 1.8.4
      */
     public File toRawFile(String path) {
@@ -282,7 +261,6 @@ public class FFS extends PerExecLibrary {
     /**
      * @param path the relative path to get the path object for
      * @return the path object for the specified path.
-     *
      * @since 1.8.4
      */
     public Path toRawPath(String path) {
@@ -292,7 +270,6 @@ public class FFS extends PerExecLibrary {
     /**
      * @param path the path relative to the script's folder
      * @return the attributes of the file at the specified path.
-     *
      * @throws IOException
      * @since 1.8.4
      */

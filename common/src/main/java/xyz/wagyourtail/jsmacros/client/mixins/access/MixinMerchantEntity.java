@@ -9,7 +9,9 @@ import xyz.wagyourtail.jsmacros.client.access.IMerchantEntity;
 
 @Mixin(MerchantEntity.class)
 public class MixinMerchantEntity implements IMerchantEntity {
-    @Shadow @Nullable protected TradeOfferList offers;
+    @Shadow
+    @Nullable
+    protected TradeOfferList offers;
 
     @Override
     public void jsmacros_refreshOffers() {

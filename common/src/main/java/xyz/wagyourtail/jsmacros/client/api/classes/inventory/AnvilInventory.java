@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAnvilScreen;
 
@@ -18,7 +17,6 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
 
     /**
      * @return the currently set name to be applied.
-     *
      * @since 1.8.4
      */
     public String getName() {
@@ -30,7 +28,6 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
      *
      * @param name the new item name
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public AnvilInventory seName(String name) {
@@ -40,7 +37,6 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
 
     /**
      * @return the level cost to apply the changes.
-     *
      * @since 1.8.4
      */
     public int getLevelCost() {
@@ -49,7 +45,6 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
 
     /**
      * @return the amount of item needed to fully repair the item.
-     *
      * @since 1.8.4
      */
     public int getItemRepairCost() {
@@ -58,7 +53,6 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
 
     /**
      * @return the maximum default level cost.
-     *
      * @since 1.8.4
      */
     public int getMaximumLevelCost() {
@@ -67,7 +61,6 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
 
     /**
      * @return the first input item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getLeftInput() {
@@ -76,7 +69,6 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
 
     /**
      * @return the second input item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getRightInput() {
@@ -85,7 +77,6 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
 
     /**
      * @return the expected output item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getOutput() {

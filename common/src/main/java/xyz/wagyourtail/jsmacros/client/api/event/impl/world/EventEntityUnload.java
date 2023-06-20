@@ -21,4 +21,5 @@ public class EventEntityUnload implements BaseEvent {
     public String toString() {
         return String.format("%s:{\"entity\": %s, \"reason\": \"%s\"}", this.getEventName(), entity.toString(), reason);
     }
+
 }

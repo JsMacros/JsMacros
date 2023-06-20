@@ -10,7 +10,6 @@ public class Vec2D {
     public double x2;
     public double y2;
 
-
     public Vec2D(double x1, double y1, double x2, double y2) {
         this.x1 = x1;
         this.y1 = y1;
@@ -24,7 +23,6 @@ public class Vec2D {
         this.x2 = end.x;
         this.y2 = end.y;
     }
-
 
     public double getX1() {
         return x1;
@@ -66,7 +64,6 @@ public class Vec2D {
 
     /**
      * @return magnitude squared
-     *
      * @since 1.6.5
      */
     public double getMagnitudeSq() {
@@ -84,9 +81,7 @@ public class Vec2D {
      * @param y1
      * @param x2
      * @param y2
-     *
      * @return
-     *
      * @since 1.6.3
      */
     public Vec2D add(double x1, double y1, double x2, double y2) {
@@ -102,9 +97,7 @@ public class Vec2D {
      * @param y1
      * @param x2
      * @param y2
-     *
      * @return
-     *
      * @since 1.6.3
      */
     public Vec2D multiply(double x1, double y1, double x2, double y2) {
@@ -113,9 +106,7 @@ public class Vec2D {
 
     /**
      * @param scale
-     *
      * @return
-     *
      * @since 1.6.3
      */
     public Vec2D scale(double scale) {
@@ -136,7 +127,6 @@ public class Vec2D {
 
     /**
      * @return a new Vec2D with the same direction but a magnitude of 1
-     *
      * @since 1.6.5
      */
     public Vec2D normalize() {

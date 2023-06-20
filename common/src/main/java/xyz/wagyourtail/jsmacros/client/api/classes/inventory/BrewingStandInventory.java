@@ -7,7 +7,6 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.recipe.BrewingRecipeRegistry;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
 import java.util.Arrays;
@@ -28,7 +27,6 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
     /**
      * @param potion the potion to check
      * @return {@code true} if the given potion is can be brewed, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isBrewablePotion(ItemStackHelper potion) {
@@ -42,7 +40,6 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
     /**
      * @param ingredient the item to check
      * @return {@code true} if the given item is a valid ingredient, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isValidIngredient(ItemStackHelper ingredient) {
@@ -53,8 +50,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
      * @param potion     the potion to check
      * @param ingredient the ingredient to check
      * @return {@code true} if the given potion and ingredient can be brewed together, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isValidRecipe(ItemStackHelper potion, ItemStackHelper ingredient) {
@@ -63,7 +59,6 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
 
     /**
      * @return the left fuel.
-     *
      * @since 1.8.4
      */
     public int getFuelCount() {
@@ -74,7 +69,6 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
      * The maximum fuel count is a constant with the value 20.
      *
      * @return the maximum fuel.
-     *
      * @since 1.8.4
      */
     public int getMaxFuelUses() {
@@ -83,8 +77,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
 
     /**
      * @return {@code true} if the brewing stand can brew any of the held potions with the current
-     *         ingredient, {@code false} otherwise.
-     *
+     * ingredient, {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean canBrewCurrentInput() {
@@ -105,7 +98,6 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
 
     /**
      * @return the time the potions have been brewing.
-     *
      * @since 1.8.4
      */
     public int getBrewTime() {
@@ -114,7 +106,6 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
 
     /**
      * @return the remaining time the potions have to brew.
-     *
      * @since 1.8.4
      */
     public int getRemainingTicks() {
@@ -125,8 +116,7 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
      * @param potion     the potion
      * @param ingredient the ingredient
      * @return the resulting potion of the given potion and ingredient if it exists and the potion
-     *         itself otherwise.
-     *
+     * itself otherwise.
      * @since 1.8.4
      */
     public ItemStackHelper previewPotion(ItemStackHelper potion, ItemStackHelper ingredient) {
@@ -135,7 +125,6 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
 
     /**
      * @return a list of all resulting potions of the current input.
-     *
      * @since 1.8.4
      */
     public List<ItemStackHelper> previewPotions() {
@@ -145,7 +134,6 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
 
     /**
      * @return the ingredient.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getIngredient() {
@@ -154,7 +142,6 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
 
     /**
      * @return the fuel item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getFuel() {
@@ -163,7 +150,6 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
 
     /**
      * @return the first potion.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getFirstPotion() {
@@ -172,7 +158,6 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
 
     /**
      * @return the second potion.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getSecondPotion() {
@@ -181,7 +166,6 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
 
     /**
      * @return the third potion.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getThirdPotion() {
@@ -190,7 +174,6 @@ public class BrewingStandInventory extends Inventory<BrewingStandScreen> {
 
     /**
      * @return a list of the potions inside the brewing stand.
-     *
      * @since 1.8.4
      */
     public List<ItemStackHelper> getPotions() {

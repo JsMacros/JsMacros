@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.forge.client;
 
-import net.minecraftforge.fml.loading.FMLLoader;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,10 +8,8 @@ import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.Mixins;
 import org.spongepowered.asm.mixin.connect.IMixinConnector;
 
-import java.io.File;
-
 public class JsMacrosEarlyRiser implements IMixinConnector {
-    public static final Logger LOGGER  = LogManager.getLogger("JsMacros EarlyRiser");
+    public static final Logger LOGGER = LogManager.getLogger("JsMacros EarlyRiser");
 //    public static final List<URL> urls = new ArrayList<>();
 //    public static ClassLoader loader;
 
@@ -24,4 +21,5 @@ public class JsMacrosEarlyRiser implements IMixinConnector {
         Mixins.addConfiguration("jsmacros.mixins.json");
         Mixins.addConfiguration("jsmacros-forge.mixins.json");
     }
+
 }

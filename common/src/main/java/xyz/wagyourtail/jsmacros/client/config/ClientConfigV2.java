@@ -27,22 +27,22 @@ public class ClientConfigV2 {
 
     @Option(translationKey = "jsmacros.showslotindexes", group = "jsmacros.settings.gui")
     public boolean showSlotIndexes = false;
-    
+
     @Option(translationKey = "jsmacros.disablewithscreen", group = "jsmacros.settings.general")
     public boolean disableKeyWhenScreenOpen = true;
-    
+
     @Option(translationKey = "jsmacros.theme", group = {"jsmacros.settings.editor", "jsmacros.settings.editor.color"}, getter = "getThemeData", type = @OptionType("color"))
     public Map<String, short[]> editorTheme = null;
-    
+
     @Option(translationKey = "jsmacros.linteroverrides", group = {"jsmacros.settings.editor", "jsmacros.settings.editor.linter"}, options = "languages", type = @OptionType("file"))
     public Map<String, String> editorLinterOverrides = new HashMap<>();
-    
+
     @Option(translationKey = "jsmacros.history", group = "jsmacros.settings.editor")
     public int editorHistorySize = 20;
-    
+
     @Option(translationKey = "jsmacros.autocomplete", group = "jsmacros.settings.editor")
     public boolean editorSuggestions = true;
-    
+
     @Option(translationKey = "jsmacros.font", group = "jsmacros.settings.editor", options = "getFonts")
     public String editorFont = "jsmacros:monocraft";
 
@@ -57,48 +57,48 @@ public class ClientConfigV2 {
 
     @Option(translationKey = "jsmacros.serviceautoreload", group = "jsmacros.settings.services", setter = "setServiceAutoReload")
     public boolean serviceAutoReload = false;
-    
+
     public List<String> languages() {
         return EditorScreen.langs;
     }
-    
+
     public List<String> getFonts() {
-        return ((IFontManager)((IMinecraftClient)MinecraftClient.getInstance()).jsmacros_getFontManager()).jsmacros_getFontList().stream().map(Identifier::toString).collect(Collectors.toList());
+        return ((IFontManager) ((IMinecraftClient) MinecraftClient.getInstance()).jsmacros_getFontManager()).jsmacros_getFontList().stream().map(Identifier::toString).collect(Collectors.toList());
     }
-    
+
     public Map<String, short[]> getThemeData() {
         if (editorTheme == null) {
             editorTheme = new HashMap<>();
             // JS
-            editorTheme.put("keyword", new short[] {0xCC, 0x78, 0x32});
-            editorTheme.put("number",  new short[] {0x79, 0xAB, 0xFF});
-            editorTheme.put("function-variable", new short[] {0x79, 0xAB, 0xFF});
-            editorTheme.put("function", new short[] {0xA2, 0xEA, 0x22});
-            editorTheme.put("operator", new short[] {0xD8, 0xD8, 0xD8});
-            editorTheme.put("string", new short[] {0x12, 0xD4, 0x89});
-            editorTheme.put("comment", new short[] {0xA0, 0xA0, 0xA0});
-            editorTheme.put("constant", new short[] {0x21, 0xB4, 0x3E});
-            editorTheme.put("class-name", new short[] {0x21, 0xB4, 0x3E});
-            editorTheme.put("boolean", new short[] {0xFF, 0xE2, 0x00});
-            editorTheme.put("punctuation", new short[] {0xD8, 0xD8, 0xD8});
-            editorTheme.put("interpolation-punctuation", new short[] {0xCC, 0x78, 0x32});
-            
+            editorTheme.put("keyword", new short[]{0xCC, 0x78, 0x32});
+            editorTheme.put("number", new short[]{0x79, 0xAB, 0xFF});
+            editorTheme.put("function-variable", new short[]{0x79, 0xAB, 0xFF});
+            editorTheme.put("function", new short[]{0xA2, 0xEA, 0x22});
+            editorTheme.put("operator", new short[]{0xD8, 0xD8, 0xD8});
+            editorTheme.put("string", new short[]{0x12, 0xD4, 0x89});
+            editorTheme.put("comment", new short[]{0xA0, 0xA0, 0xA0});
+            editorTheme.put("constant", new short[]{0x21, 0xB4, 0x3E});
+            editorTheme.put("class-name", new short[]{0x21, 0xB4, 0x3E});
+            editorTheme.put("boolean", new short[]{0xFF, 0xE2, 0x00});
+            editorTheme.put("punctuation", new short[]{0xD8, 0xD8, 0xD8});
+            editorTheme.put("interpolation-punctuation", new short[]{0xCC, 0x78, 0x32});
+
             //py
-            editorTheme.put("builtin", new short[] {0x21, 0xB4, 0x3E});
-            editorTheme.put("format-spec", new short[] {0xCC, 0x78, 0x32});
-            
+            editorTheme.put("builtin", new short[]{0x21, 0xB4, 0x3E});
+            editorTheme.put("format-spec", new short[]{0xCC, 0x78, 0x32});
+
             //regex
-            editorTheme.put("regex", new short[] {0x12, 0xD4, 0x89});
-            editorTheme.put("charset-negation", new short[] {0xCC, 0x78, 0x32});
-            editorTheme.put("charset-punctuation", new short[] {0xD8, 0xD8, 0xD8});
-            editorTheme.put("escape", new short[]  {0xFF, 0xE2, 0x00});
-            editorTheme.put("charclass", new short[] {0xFF, 0xE2, 0x00});
-            editorTheme.put("quantifier", new short[] {0x79, 0xAB, 0xFF});
+            editorTheme.put("regex", new short[]{0x12, 0xD4, 0x89});
+            editorTheme.put("charset-negation", new short[]{0xCC, 0x78, 0x32});
+            editorTheme.put("charset-punctuation", new short[]{0xD8, 0xD8, 0xD8});
+            editorTheme.put("escape", new short[]{0xFF, 0xE2, 0x00});
+            editorTheme.put("charclass", new short[]{0xFF, 0xE2, 0x00});
+            editorTheme.put("quantifier", new short[]{0x79, 0xAB, 0xFF});
             Core.getInstance().config.saveConfig();
         }
         return editorTheme;
     }
-    
+
     public void setServiceAutoReload(boolean value) {
         serviceAutoReload = value;
         if (value) {
@@ -107,10 +107,12 @@ public class ClientConfigV2 {
             Core.getInstance().services.stopReloadListener();
         }
     }
-    
+
     public Comparator<ScriptTrigger> getSortComparator() {
-        if (this.sortMethod == null) this.sortMethod = Sorting.MacroSortMethod.Enabled;
-        switch(this.sortMethod) {
+        if (this.sortMethod == null) {
+            this.sortMethod = Sorting.MacroSortMethod.Enabled;
+        }
+        switch (this.sortMethod) {
             default:
             case Enabled:
                 return new Sorting.SortByEnabled();
@@ -138,7 +140,7 @@ public class ClientConfigV2 {
                 throw new IllegalArgumentException();
         }
     }
-    
+
     @Deprecated
     public void fromV1(JsonObject v1) {
         sortMethod = Sorting.MacroSortMethod.valueOf(v1.get("sortMethod").getAsString());
@@ -172,4 +174,5 @@ public class ClientConfigV2 {
         editorFont = v1.get("editorFont").getAsString();
         v1.remove("editorFont");
     }
+
 }

@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.util.Identifier;
-
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -40,7 +39,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
         /**
          * @param height this argument is ignored and will always be set to 20
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         @Override
@@ -53,7 +51,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
          * @param width  the width of the button
          * @param height this argument is ignored and will always be set to 20
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         @Override
@@ -64,7 +61,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
 
         /**
          * @return the action to run when the button is pressed.
-         *
          * @since 1.8.4
          */
         public MethodWrapper<ButtonWidgetHelper<ButtonWidget>, IScreen, Object, ?> getAction() {
@@ -74,7 +70,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
         /**
          * @param action the action to run when the button is pressed
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public ButtonBuilder action(MethodWrapper<ButtonWidgetHelper<ButtonWidget>, IScreen, Object, ?> action) {
@@ -97,6 +92,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
             b.set(new ButtonWidgetHelper(button, getZIndex()));
             return b.get();
         }
+
     }
 
     /**
@@ -120,7 +116,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
         /**
          * @param height this argument is ignored and will always be set to 20
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         @Override
@@ -133,7 +128,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
          * @param width  the width of the button
          * @param height this argument is ignored and will always be set to 20
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         @Override
@@ -144,7 +138,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
 
         /**
          * @return the action to run when the button is pressed.
-         *
          * @since 1.8.4
          */
         public MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> getAction() {
@@ -154,7 +147,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
         /**
          * @param action the action to run when the button is pressed
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public TexturedButtonBuilder action(MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> action) {
@@ -164,7 +156,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
 
         /**
          * @return the x position in the texture to start drawing from.
-         *
          * @since 1.8.4
          */
         public int getU() {
@@ -174,7 +165,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
         /**
          * @param u the x position in the texture to start drawing from
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public TexturedButtonBuilder u(int u) {
@@ -184,7 +174,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
 
         /**
          * @return the y position in the texture to start drawing from.
-         *
          * @since 1.8.4
          */
         public int getV() {
@@ -194,7 +183,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
         /**
          * @param v the y position in the texture to start drawing from
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public TexturedButtonBuilder v(int v) {
@@ -206,7 +194,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
          * @param u the x position in the texture to start drawing from
          * @param v the y position in the texture to start drawing from
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public TexturedButtonBuilder uv(int u, int v) {
@@ -217,7 +204,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
 
         /**
          * @return the hover offset of the button.
-         *
          * @since 1.8.4
          */
         public int getHoverOffset() {
@@ -230,7 +216,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
          *
          * @param hoverOffset the hover offset
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public TexturedButtonBuilder hoverOffset(int hoverOffset) {
@@ -240,7 +225,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
 
         /**
          * @return the id of the texture to use or {@code null} if none is set.
-         *
          * @since 1.8.4
          */
         public String getTexture() {
@@ -258,7 +242,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
 
         /**
          * @return the width of the texture.
-         *
          * @since 1.8.4
          */
         public int getTextureWidth() {
@@ -268,7 +251,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
         /**
          * @param textureWidth the width of the texture
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public TexturedButtonBuilder textureWidth(int textureWidth) {
@@ -278,7 +260,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
 
         /**
          * @return the height of the texture.
-         *
          * @since 1.8.4
          */
         public int getTextureHeight() {
@@ -288,7 +269,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
         /**
          * @param textureHeight the height of the texture
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public TexturedButtonBuilder textureHeight(int textureHeight) {
@@ -300,7 +280,6 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
          * @param textureWidth  the width of the texture
          * @param textureHeight the height of the texture
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public TexturedButtonBuilder textureSize(int textureWidth, int textureHeight) {
@@ -324,6 +303,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
             b.set(new ButtonWidgetHelper(button, getZIndex()));
             return b.get();
         }
+
     }
 
 }

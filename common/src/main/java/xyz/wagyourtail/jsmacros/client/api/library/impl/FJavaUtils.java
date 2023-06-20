@@ -1,5 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
+import com.google.common.collect.Lists;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementManager;
 import net.minecraft.advancement.AdvancementProgress;
@@ -23,8 +26,8 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.item.FoodComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
@@ -36,59 +39,23 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.chunk.Chunk;
-
-import com.google.common.collect.Lists;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import xyz.wagyourtail.jsmacros.client.api.helpers.AdvancementHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.AdvancementManagerHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.AdvancementProgressHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.BossBarHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.screen.ChatHudLineHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.screen.CheckBoxWidgetHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.ChunkHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.screen.ClickableWidgetHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.screen.CyclingButtonWidgetHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.DirectionHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.FluidStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.FoodComponentHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.FormattingHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.screen.LockButtonWidgetHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.PlayerAbilitiesHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.PlayerListEntryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.RecipeHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.screen.ScoreboardObjectiveHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.ScoreboardsHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.ServerInfoHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.screen.SliderWidgetHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.StatsHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.StyleHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.SuggestionsBuilderHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.TeamHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.screen.TextFieldWidgetHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.screen.*;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.*;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.BossBarHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.PlayerAbilitiesHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.wagyourgui.elements.CheckBox;
 import xyz.wagyourtail.wagyourgui.elements.Slider;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.SplittableRandom;
+import java.util.*;
 
 /**
  * @author Etheradon
@@ -104,7 +71,6 @@ public class FJavaUtils extends BaseLibrary {
      * Creates a java {@link ArrayList}.
      *
      * @return a java ArrayList.
-     *
      * @since 1.8.4
      */
     public ArrayList<?> createArrayList() {
@@ -117,7 +83,6 @@ public class FJavaUtils extends BaseLibrary {
      * @param array the array to add to the list
      * @param <T>   the type of the array
      * @return a java ArrayList from the given array.
-     *
      * @since 1.8.4
      */
     public <T> ArrayList<T> createArrayList(T[] array) {
@@ -128,7 +93,6 @@ public class FJavaUtils extends BaseLibrary {
      * Creates a java {@link HashMap}.
      *
      * @return a java HashMap.
-     *
      * @since 1.8.4
      */
     public HashMap<?, ?> createHashMap() {
@@ -139,7 +103,6 @@ public class FJavaUtils extends BaseLibrary {
      * Creates a java {@link HashSet}.
      *
      * @return a java HashSet.
-     *
      * @since 1.8.4
      */
     public HashSet<?> createHashSet() {
@@ -150,7 +113,6 @@ public class FJavaUtils extends BaseLibrary {
      * Returns a {@link SplittableRandom}.
      *
      * @return a SplittableRandom.
-     *
      * @since 1.8.4
      */
     public SplittableRandom getRandom() {
@@ -163,7 +125,6 @@ public class FJavaUtils extends BaseLibrary {
      *
      * @param seed the seed
      * @return a SplittableRandom.
-     *
      * @since 1.8.4
      */
     public SplittableRandom getRandom(long seed) {
@@ -173,8 +134,7 @@ public class FJavaUtils extends BaseLibrary {
     /**
      * @param raw the object to wrap
      * @return the correct instance of {@link BaseHelper} for the given object if it exists and
-     *         {@code null} otherwise.
-     *
+     * {@code null} otherwise.
      * @since 1.8.4
      */
     public BaseHelper<?> getHelperFromRaw(Object raw) {
@@ -272,7 +232,6 @@ public class FJavaUtils extends BaseLibrary {
     /**
      * @param array the array to convert
      * @return the String representation of the given array.
-     *
      * @since 1.8.4
      */
     public String arrayToString(Object[] array) {
@@ -285,7 +244,6 @@ public class FJavaUtils extends BaseLibrary {
      *
      * @param array the array to convert
      * @return the String representation of the given array.
-     *
      * @since 1.8.4
      */
     public String arrayDeepToString(Object[] array) {

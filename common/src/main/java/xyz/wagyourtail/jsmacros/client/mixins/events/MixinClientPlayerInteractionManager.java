@@ -10,7 +10,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,17 +26,19 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
 @Mixin(ClientPlayerInteractionManager.class)
 public class MixinClientPlayerInteractionManager {
 
-    @Shadow @Final private MinecraftClient client;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
     @Inject(at = @At("RETURN"), method = "interactBlock")
     public void onInteractBlock(ClientPlayerEntity player, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
         if (cir.getReturnValue() != ActionResult.FAIL) {
             BlockPos pos = hitResult.getBlockPos();
             new EventInteractBlock(
-                hand != Hand.MAIN_HAND,
-                cir.getReturnValue().name(),
-                new BlockDataHelper(player.world.getBlockState(pos), player.world.getBlockEntity(pos), pos),
-                hitResult.getSide().getId()
+                    hand != Hand.MAIN_HAND,
+                    cir.getReturnValue().name(),
+                    new BlockDataHelper(player.getWorld().getBlockState(pos), player.getWorld().getBlockEntity(pos), pos),
+                    hitResult.getSide().getId()
             );
         }
     }
@@ -47,8 +48,8 @@ public class MixinClientPlayerInteractionManager {
         if (cir.getReturnValue()) {
             assert client.world != null;
             new EventAttackBlock(
-                new BlockDataHelper(client.world.getBlockState(pos), client.world.getBlockEntity(pos), pos),
-                direction.getId()
+                    new BlockDataHelper(client.world.getBlockState(pos), client.world.getBlockEntity(pos), pos),
+                    direction.getId()
             );
         }
     }

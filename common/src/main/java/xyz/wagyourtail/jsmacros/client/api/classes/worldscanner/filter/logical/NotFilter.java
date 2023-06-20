@@ -23,5 +23,5 @@ public class NotFilter<T> extends BasicFilter<T> {
     public IFilter<T> getFilter() {
         return filter;
     }
-    
+
 }

@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 import net.minecraft.client.gui.screen.ingame.GrindstoneScreen;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
 /**
@@ -19,7 +18,6 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
 
     /**
      * @return the upper item to disenchant.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getTopInput() {
@@ -28,7 +26,6 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
 
     /**
      * @return the bottom item to disenchant.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getBottomInput() {
@@ -37,7 +34,6 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
 
     /**
      * @return the expected output item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getOutput() {
@@ -49,7 +45,6 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
      * maximum amount of xp, just multiply the return value by 2.
      *
      * @return the minimum amount of xp the grindstone should return.
-     *
      * @since 1.8.4
      */
     public int simulateXp() {

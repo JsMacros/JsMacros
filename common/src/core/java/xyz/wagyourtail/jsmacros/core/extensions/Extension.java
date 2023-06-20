@@ -30,7 +30,6 @@ public interface Extension {
     String defaultFileExtension();
 
     /**
-     *
      * @return a single static instance of the language definition
      */
     BaseLanguage<?, ?> getLanguage(Core<?, ?> runner);
@@ -71,7 +70,6 @@ public interface Extension {
 
     BaseWrappedException<?> wrapException(Throwable t);
 
-
     default Map<String, String> getTranslations(String lang) {
         return getTranslationsInternal(this.getClass(), "assets/jsmacros/" + getLanguageImplName() + "/lang/" + lang + ".json");
     }
@@ -107,4 +105,5 @@ public interface Extension {
             return match;
         }
     }
+
 }

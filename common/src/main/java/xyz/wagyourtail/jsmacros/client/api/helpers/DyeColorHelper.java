@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.util.DyeColor;
-
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -17,7 +16,6 @@ public class DyeColorHelper extends BaseHelper<DyeColor> {
 
     /**
      * @return the name of the color.
-     *
      * @since 1.8.4
      */
     public String getName() {
@@ -26,7 +24,6 @@ public class DyeColorHelper extends BaseHelper<DyeColor> {
 
     /**
      * @return the color's identifier.
-     *
      * @since 1.8.4
      */
     public int getId() {
@@ -35,7 +32,6 @@ public class DyeColorHelper extends BaseHelper<DyeColor> {
 
     /**
      * @return the color's rgb value.
-     *
      * @since 1.8.4
      */
     public int getColorValue() {
@@ -45,7 +41,6 @@ public class DyeColorHelper extends BaseHelper<DyeColor> {
 
     /**
      * @return the color's variation when used in fireworks.
-     *
      * @since 1.8.4
      */
     public int getFireworkColor() {
@@ -54,7 +49,6 @@ public class DyeColorHelper extends BaseHelper<DyeColor> {
 
     /**
      * @return the color's variation when used on signs.
-     *
      * @since 1.8.4
      */
     public int getSignColor() {

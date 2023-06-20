@@ -14,4 +14,5 @@ public class CharCompareFilter implements IFilter<Character> {
     public Boolean apply(Character character) {
         return character == compareTo;
     }
+
 }

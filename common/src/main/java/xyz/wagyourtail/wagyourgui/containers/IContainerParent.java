@@ -9,12 +9,13 @@ import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 public interface IContainerParent {
 
     <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement);
-    
+
     void remove(Element button);
-    
+
     void openOverlay(OverlayContainer overlay);
-    
+
     void openOverlay(OverlayContainer overlay, boolean disableButtons);
-    
+
     IOverlayParent getFirstOverlayParent();
+
 }

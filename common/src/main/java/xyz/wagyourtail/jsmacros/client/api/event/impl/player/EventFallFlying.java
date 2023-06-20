@@ -17,4 +17,5 @@ public class EventFallFlying implements BaseEvent {
     public String toString() {
         return String.format("%s:{\"state\": %s}", this.getEventName(), state);
     }
+
 }

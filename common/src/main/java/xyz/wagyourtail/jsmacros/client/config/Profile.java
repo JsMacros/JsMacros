@@ -1,7 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.config;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.*;
+import net.minecraft.text.HoverEvent;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.slf4j.Logger;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
@@ -14,9 +17,9 @@ import xyz.wagyourtail.jsmacros.client.api.library.impl.*;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
-import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
@@ -28,11 +31,11 @@ import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 import java.util.Arrays;
 
 public class Profile extends BaseProfile {
-    
+
     public Profile(Core<Profile, ?> runner, Logger logger) {
         super(runner, logger);
     }
-    
+
     @Override
     protected boolean loadProfile(String profileName) {
         boolean val = super.loadProfile(profileName);
@@ -42,17 +45,17 @@ public class Profile extends BaseProfile {
         }
         return val;
     }
-    
+
     @Override
     public void triggerEventJoin(BaseEvent event) {
         boolean joinedMain = checkJoinedThreadStack();
         triggerEventJoinNoAnything(event);
-    
+
         for (IEventListener macro : runner.eventRegistry.getListeners("ANYTHING")) {
             runJoinedEventListener(event, joinedMain, macro);
         }
     }
-    
+
     @Override
     public void triggerEventJoinNoAnything(BaseEvent event) {
         boolean joinedMain = checkJoinedThreadStack();
@@ -66,13 +69,15 @@ public class Profile extends BaseProfile {
             }
         }
     }
-    
+
     private void runJoinedEventListener(BaseEvent event, boolean joinedMain, IEventListener macroListener) {
         if (macroListener instanceof FJsMacros.ScriptEventListener && ((FJsMacros.ScriptEventListener) macroListener).getCreator() == Thread.currentThread() && ((FJsMacros.ScriptEventListener) macroListener).getWrapper().preventSameThreadJoin()) {
             throw new IllegalThreadStateException("Cannot join " + macroListener + " on same thread as it's creation.");
         }
         EventContainer<?> t = macroListener.trigger(event);
-        if (t == null) return;
+        if (t == null) {
+            return;
+        }
         try {
             if (joinedMain) {
                 joinedThreadStack.add(t.getLockThread());
@@ -84,9 +89,9 @@ public class Profile extends BaseProfile {
         }
     }
 
-    public static Class<? extends Throwable>[] ignoredErrors = new Class[] {
-        InterruptedException.class,
-        BaseScriptContext.ScriptAssertionError.class,
+    public static Class<? extends Throwable>[] ignoredErrors = new Class[]{
+            InterruptedException.class,
+            BaseScriptContext.ScriptAssertionError.class,
     };
 
     @Override
@@ -136,7 +141,9 @@ public class Profile extends BaseProfile {
     }
 
     private Text compileError(BaseWrappedException<?> ex) {
-        if (ex == null) return null;
+        if (ex == null) {
+            return null;
+        }
         BaseWrappedException<?> head = ex;
         MutableText text = Text.literal("");
         do {
@@ -148,7 +155,7 @@ public class Profile extends BaseProfile {
                     BaseWrappedException.GuestLocation loc = (BaseWrappedException.GuestLocation) head.location;
                     if (loc.file != null) {
                         locationStyle = locationStyle.withHoverEvent(
-                            new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("jsmacros.clicktoview"))
+                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("jsmacros.clicktoview"))
                         ).withClickEvent(new CustomClickEvent(() -> {
                             if (loc.startIndex > -1) {
                                 EditorScreen.openAndScrollToIndex(loc.file, loc.startIndex, loc.endIndex);
@@ -162,12 +169,14 @@ public class Profile extends BaseProfile {
                 }
                 line.append(Text.literal(" (" + head.location + ")").setStyle(locationStyle));
             }
-            if ((head = head.next) != null) line.append("\n");
+            if ((head = head.next) != null) {
+                line.append("\n");
+            }
             text.append(line);
         } while (head != null);
         return text;
     }
-    
+
     @Override
     public void initRegistries() {
         super.initRegistries();
@@ -234,4 +243,5 @@ public class Profile extends BaseProfile {
         runner.libraryRegistry.addLibrary(FUtils.class);
         runner.libraryRegistry.addLibrary(FWorld.class);
     }
+
 }

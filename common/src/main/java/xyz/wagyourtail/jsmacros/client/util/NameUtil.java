@@ -36,7 +36,7 @@ public final class NameUtil {
      * name :". Since the last one is much more common, I will stay with this approach.
      *
      * @return a list of the name at index 0 and any potential roles as subsequent elements or an
-     *         empty list if the name could not be identified.
+     * empty list if the name could not be identified.
      */
     public static List<String> guessNameAndRoles(String text) {
         String toAnalyze = text.substring(0, Math.min(MAX_STRING_LENGTH, text.length()));

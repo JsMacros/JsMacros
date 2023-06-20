@@ -15,7 +15,6 @@ public class AxolotlEntityHelper extends AnimalEntityHelper<AxolotlEntity> {
 
     /**
      * @return the id of this axolotl's variant.
-     *
      * @since 1.8.4
      */
     public int getVariantId() {
@@ -24,7 +23,6 @@ public class AxolotlEntityHelper extends AnimalEntityHelper<AxolotlEntity> {
 
     /**
      * @return the name of this axolotl's variant.
-     *
      * @since 1.8.4
      */
     public String getVariantName() {
@@ -33,7 +31,6 @@ public class AxolotlEntityHelper extends AnimalEntityHelper<AxolotlEntity> {
 
     /**
      * @return {@code true} if the axolotl is playing dead, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isPlayingDead() {
@@ -42,7 +39,6 @@ public class AxolotlEntityHelper extends AnimalEntityHelper<AxolotlEntity> {
 
     /**
      * @return {@code true} if the axolotl came from a bucket, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isFromBucket() {

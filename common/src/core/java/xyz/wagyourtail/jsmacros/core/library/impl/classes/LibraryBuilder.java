@@ -12,16 +12,17 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * @since 1.6.5
  * @author Wagyourtail
+ * @since 1.6.5
  */
 public class LibraryBuilder extends ClassBuilder<BaseLibrary> {
     final boolean languages;
     final boolean perExec;
     boolean hasConstructorSet = false;
-    public LibraryBuilder(String name, boolean perExec, String ...allowedLangs) throws NotFoundException, CannotCompileException {
+
+    public LibraryBuilder(String name, boolean perExec, String... allowedLangs) throws NotFoundException, CannotCompileException {
         super(name, (Class<BaseLibrary>) (perExec ? (allowedLangs.length > 0 ? PerExecLanguageLibrary.class : PerExecLibrary.class) : (allowedLangs.length > 0 ?
-            PerLanguageLibrary.class : BaseLibrary.class)));
+                PerLanguageLibrary.class : BaseLibrary.class)));
         AnnotationBuilder b = this.addAnnotation(Library.class).putString("value", name);
         Class<?>[] allowed = new Class<?>[allowedLangs.length];
         for (int i = 0; i < allowedLangs.length; i++) {
@@ -47,8 +48,9 @@ public class LibraryBuilder extends ClassBuilder<BaseLibrary> {
      * PerExecLibrary: context
      * PerExecLanguageLibrary: context, language
      * PerLanguageLibrary: language
-     *
+     * <p>
      * Don't do other constructors...
+     *
      * @return
      * @throws NotFoundException
      */

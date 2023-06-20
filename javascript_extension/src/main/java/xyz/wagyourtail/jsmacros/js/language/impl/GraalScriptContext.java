@@ -9,10 +9,11 @@ import java.io.File;
 
 public class GraalScriptContext extends BaseScriptContext<Context> {
     public final PrioryFiFoTaskQueue<WrappedThread> tasks = new PrioryFiFoTaskQueue<>(GraalScriptContext::getThreadPriority);
+
     public GraalScriptContext(BaseEvent event, File file) {
         super(event, file);
     }
-    
+
     @Override
     public void closeContext() {
         super.closeContext();
@@ -25,6 +26,7 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
     public static int getThreadPriority(Object thread) {
         return -((WrappedThread) thread).priority;
     }
+
     @Override
     public boolean isMultiThreaded() {
         return false;
@@ -67,4 +69,5 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
             getContext().enter();
         }
     }
+
 }

@@ -6,12 +6,13 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventJoinedTick;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventItemDamage;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventArmorChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventFallFlying;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventHeldItemChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventTick;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 
 public class TickBasedEvents {
@@ -25,15 +26,12 @@ public class TickBasedEvents {
     private static boolean previousFallFlyState = false;
     private static long counter = 0;
 
-
-
     public static final MultiplayerServerListPinger serverListPinger = new MultiplayerServerListPinger();
 
-
     public static boolean areNotEqual(ItemStack a, ItemStack b) {
-        return (!a.isEmpty() || !b.isEmpty()) && (a.isEmpty() || b.isEmpty() || !a.isItemEqual(b) || a.getCount() != b.getCount() || !ItemStack.areNbtEqual(a, b) || a.getDamage() != b.getDamage());
+        return (!a.isEmpty() || !b.isEmpty()) && (a.isEmpty() || b.isEmpty() || !ItemStack.areItemsEqual(a, b) || a.getCount() != b.getCount() || !ItemStackHelper.areNbtEqual(a, b) || a.getDamage() != b.getDamage());
     }
-    
+
     public static boolean areTagsEqualIgnoreDamage(ItemStack a, ItemStack b) {
         if (a.isEmpty() && b.isEmpty()) {
             return true;
@@ -43,24 +41,30 @@ public class TickBasedEvents {
             } else {
                 NbtCompound at;
                 NbtCompound bt;
-                if (a.getNbt() != null) at = a.getNbt().copy();
-                else at = new NbtCompound();
-                if (b.getNbt() != null) bt = b.getNbt().copy();
-                else bt = new NbtCompound();
+                if (a.getNbt() != null) {
+                    at = a.getNbt().copy();
+                } else {
+                    at = new NbtCompound();
+                }
+                if (b.getNbt() != null) {
+                    bt = b.getNbt().copy();
+                } else {
+                    bt = new NbtCompound();
+                }
                 at.remove("Damage");
                 bt.remove("Damage");
                 return at.equals(bt);
             }
-            
+
         } else {
             return false;
         }
     }
-    
+
     public static boolean areEqualIgnoreDamage(ItemStack a, ItemStack b) {
-        return (a.isEmpty() && b.isEmpty()) || (!a.isEmpty() && !b.isEmpty() && a.isItemEqual(b) && a.getCount() == b.getCount() && areTagsEqualIgnoreDamage(a, b));
+        return (a.isEmpty() && b.isEmpty()) || (!a.isEmpty() && !b.isEmpty() && ItemStack.areItemsEqual(a, b) && a.getCount() == b.getCount() && areTagsEqualIgnoreDamage(a, b));
     }
-    
+
     public static void onTick(MinecraftClient mc) {
         if (JsMacros.keyBinding.wasPressed() && mc.currentScreen == null) {
             mc.setScreen(JsMacros.prevScreen);
@@ -75,7 +79,7 @@ public class TickBasedEvents {
         if (++counter % 10 == 0) {
             JsMacros.core.services.tickReloadListener();
         }
-        
+
         if (mc.player != null) {
             boolean state = mc.player.isFallFlying();
             if (previousFallFlyState ^ state) {
@@ -143,4 +147,5 @@ public class TickBasedEvents {
             }
         }
     }
+
 }

@@ -1,7 +1,7 @@
 package xyz.wagyourtail.wagyourgui.containers;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 
@@ -12,8 +12,7 @@ public class CheckBoxContainer extends MultiElementContainer<IContainerParent> {
     private Button checkBox;
     private final Consumer<Boolean> setState;
     public Text message;
-    
-    
+
     public CheckBoxContainer(int x, int y, int width, int height, TextRenderer textRenderer, boolean defaultState, Text message, IContainerParent parent, Consumer<Boolean> setState) {
         super(x, y, width, height, textRenderer, parent);
         this.state = defaultState;
@@ -21,27 +20,29 @@ public class CheckBoxContainer extends MultiElementContainer<IContainerParent> {
         this.setState = setState;
         this.init();
     }
-    
+
     @Override
     public void init() {
         super.init();
-        
-        checkBox = this.addDrawableChild(new Button(x, y, height, height, textRenderer, 0, 0xFF000000,0x7FFFFFFF, 0xFFFFFF, Text.literal(state ? "\u2713" : ""), btn -> {
+
+        checkBox = this.addDrawableChild(new Button(x, y, height, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(state ? "\u2713" : ""), btn -> {
             state = !state;
-            if (setState != null) setState.accept(state);
+            if (setState != null) {
+                setState.accept(state);
+            }
             btn.setMessage(Text.literal(state ? "\u2713" : ""));
         }));
     }
-    
+
     @Override
     public void setPos(int x, int y, int width, int height) {
-        checkBox.setPos(x+1, y+1, height-2, height-2);
+        checkBox.setPos(x + 1, y + 1, height - 2, height - 2);
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (this.visible) {
-            textRenderer.drawTrimmed(matrices, message, x+height, y+2, width-height-2, 0xFFFFFF);
+            drawContext.drawTextWrapped(textRenderer, message, x + height, y + 2, width - height - 2, 0xFFFFFF);
         }
     }
 

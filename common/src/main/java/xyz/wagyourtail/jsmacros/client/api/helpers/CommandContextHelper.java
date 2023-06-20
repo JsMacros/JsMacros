@@ -3,33 +3,26 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
 import net.minecraft.block.pattern.CachedBlockPosition;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientCommandSource;
 import net.minecraft.command.EntitySelector;
-import net.minecraft.command.argument.AngleArgumentType;
-import net.minecraft.command.argument.BlockPredicateArgumentType;
-import net.minecraft.command.argument.BlockStateArgument;
-import net.minecraft.command.argument.ItemPredicateArgumentType;
-import net.minecraft.command.argument.ItemStackArgument;
-import net.minecraft.command.argument.PosArgument;
+import net.minecraft.command.argument.*;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleEffect;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.registry.Registries;
-
 import xyz.wagyourtail.jsmacros.client.api.classes.FakeServerCommandSource;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -40,8 +33,8 @@ import java.util.stream.Collectors;
 /**
  * @since 1.4.2
  */
- @Event("CommandContext")
- @SuppressWarnings("unused")
+@Event("CommandContext")
+@SuppressWarnings("unused")
 public class CommandContextHelper extends BaseHelper<CommandContext<?>> implements BaseEvent {
     public CommandContextHelper(CommandContext<?> base) {
         super(base);
@@ -49,10 +42,9 @@ public class CommandContextHelper extends BaseHelper<CommandContext<?>> implemen
 
     /**
      * @param name
-     *
      * @return
-     * @since 1.4.2
      * @throws CommandSyntaxException
+     * @since 1.4.2
      */
     public Object getArg(String name) throws CommandSyntaxException {
         Object arg = base.getArgument(name, Object.class);
@@ -105,4 +97,5 @@ public class CommandContextHelper extends BaseHelper<CommandContext<?>> implemen
     public String getInput() {
         return base.getInput();
     }
+
 }

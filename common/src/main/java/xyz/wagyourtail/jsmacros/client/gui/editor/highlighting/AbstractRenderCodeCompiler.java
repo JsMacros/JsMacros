@@ -10,21 +10,21 @@ import java.util.Map;
 public abstract class AbstractRenderCodeCompiler {
     protected final EditorScreen screen;
     protected final String language;
-    
+
     public AbstractRenderCodeCompiler(String language, EditorScreen screen) {
         this.language = language;
         this.screen = screen;
     }
-    
+
     public abstract void recompileRenderedText(@NotNull String text);
-    
+
     @NotNull
     public abstract Map<String, Runnable> getRightClickOptions(int index);
-    
+
     @NotNull
     public abstract Text[] getRenderedText();
-    
+
     @NotNull
     public abstract List<AutoCompleteSuggestion> getSuggestions();
-    
+
 }

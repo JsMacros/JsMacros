@@ -3,9 +3,8 @@ package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
@@ -21,7 +20,7 @@ public class EventDeath implements BaseEvent {
 
     public final BlockPosHelper deathPos;
     public final List<ItemStackHelper> inventory;
-     
+
     public EventDeath() {
         this.deathPos = new BlockPosHelper(MinecraftClient.getInstance().player.getBlockPos());
         PlayerInventory inv = MinecraftClient.getInstance().player.getInventory();
@@ -43,9 +42,10 @@ public class EventDeath implements BaseEvent {
             player.requestRespawn();
         }
     }
-    
+
     @Override
     public String toString() {
         return String.format("%s:{\"deathPos\": %s}", this.getEventName(), deathPos);
     }
+
 }

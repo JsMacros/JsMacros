@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.util.Formatting;
-
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -17,7 +16,6 @@ public class FormattingHelper extends BaseHelper<Formatting> {
 
     /**
      * @return the color value of this formatting.
-     *
      * @since 1.8.4
      */
     public int getColorValue() {
@@ -26,7 +24,6 @@ public class FormattingHelper extends BaseHelper<Formatting> {
 
     /**
      * @return the index of this formatting or {@code -1} if this formatting is a modifier.
-     *
      * @since 1.8.4
      */
     public int getColorIndex() {
@@ -35,7 +32,6 @@ public class FormattingHelper extends BaseHelper<Formatting> {
 
     /**
      * @return the name of this formatting.
-     *
      * @since 1.8.4
      */
     public String getName() {
@@ -46,7 +42,6 @@ public class FormattingHelper extends BaseHelper<Formatting> {
      * The color code can be used with the paragraph to color text.
      *
      * @return the color code of this formatting.
-     *
      * @since 1.8.4
      */
     public char getCode() {
@@ -55,7 +50,6 @@ public class FormattingHelper extends BaseHelper<Formatting> {
 
     /**
      * @return {@code true} if this formatting is a color, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isColor() {
@@ -64,7 +58,6 @@ public class FormattingHelper extends BaseHelper<Formatting> {
 
     /**
      * @return {@code true} if this formatting is a modifier, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isModifier() {

@@ -32,7 +32,9 @@ public class CommandNodeAccessor {
     public static <S> CommandNode<S> remove(CommandNode<S> parent, String name) throws IllegalAccessException {
         Map<String, CommandNode> c = (Map<String, CommandNode>) children.get(parent);
         CommandNode<S> node = c.remove(name);
-        if (node == null) return null;
+        if (node == null) {
+            return null;
+        }
         if (node instanceof LiteralCommandNode<S>) {
             Map<String, LiteralCommandNode<S>> l = (Map<String, LiteralCommandNode<S>>) literals.get(parent);
             l.remove(name);
@@ -42,4 +44,5 @@ public class CommandNodeAccessor {
         }
         return node;
     }
+
 }

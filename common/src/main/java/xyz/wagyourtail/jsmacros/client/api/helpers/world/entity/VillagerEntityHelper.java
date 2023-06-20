@@ -13,24 +13,24 @@ public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
     }
 
     /**
-     * @since 1.6.3
      * @return
+     * @since 1.6.3
      */
     public String getProfession() {
         return base.getVillagerData().getProfession().id();
     }
 
     /**
-     * @since 1.6.3
      * @return
+     * @since 1.6.3
      */
     public String getStyle() {
         return base.getVillagerData().getType().toString();
     }
 
     /**
-     * @since 1.6.3
      * @return
+     * @since 1.6.3
      */
     public int getLevel() {
         return base.getVillagerData().getLevel();

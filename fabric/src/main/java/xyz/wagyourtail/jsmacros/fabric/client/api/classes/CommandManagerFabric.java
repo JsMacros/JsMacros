@@ -12,7 +12,6 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.CommandNodeHelper;
 
 public class CommandManagerFabric extends CommandManager {
 
-
     @Override
     public CommandBuilder createCommandBuilder(String name) {
         return new CommandBuilderFabric(name);

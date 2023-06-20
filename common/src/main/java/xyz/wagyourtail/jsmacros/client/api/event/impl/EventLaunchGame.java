@@ -9,7 +9,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
 @Event(value = "LaunchGame")
 public class EventLaunchGame implements BaseEvent {
-    
+
     public final String playerName;
 
     public EventLaunchGame(String playerName) {
@@ -21,4 +21,5 @@ public class EventLaunchGame implements BaseEvent {
     public String toString() {
         return String.format("%s:{\"name\": \"%s\"}", this.getEventName(), playerName);
     }
+
 }

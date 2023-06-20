@@ -9,11 +9,12 @@ import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 public abstract class AbstractSettingField<T> extends MultiElementContainer<AbstractSettingContainer> {
     protected final SettingsOverlay.SettingField<T> setting;
     protected final Text settingName;
+
     public AbstractSettingField(int x, int y, int width, int height, TextRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<T> field) {
         super(x, y, width, height, textRenderer, parent);
         setting = field;
         settingName = Text.translatable(field.option.translationKey());
         init();
     }
-    
+
 }

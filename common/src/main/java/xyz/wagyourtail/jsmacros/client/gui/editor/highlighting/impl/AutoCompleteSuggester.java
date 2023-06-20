@@ -17,7 +17,7 @@ public class AutoCompleteSuggester {
     private final StringHashTrie suggestions = new StringHashTrie();
     private final String language;
     private final String method_separator;
-    
+
     public AutoCompleteSuggester(String language) {
         switch (language) {
             case "python":
@@ -39,7 +39,7 @@ public class AutoCompleteSuggester {
         }
         generateSuggestionTree();
     }
-    
+
     private void generateSuggestionTree() {
         LibraryRegistry registry = Core.getInstance().libraryRegistry;
         Extension ex = Core.getInstance().extensions.getExtensionForFile(new File(language));
@@ -47,30 +47,33 @@ public class AutoCompleteSuggester {
             ex = Core.getInstance().extensions.getHighestPriorityExtension();
         }
         Class<? extends BaseLanguage> lang = ex.getLanguage(Core.getInstance()).getClass();
-        
+
         Map<String, Class<?>> libs = new HashMap<>();
-        registry.libraries.forEach((k,v) -> {
+        registry.libraries.forEach((k, v) -> {
             libs.put(k.value(), v.getClass());
         });
-        registry.perExec.forEach((k,v) -> {
+        registry.perExec.forEach((k, v) -> {
             libs.put(k.value(), v);
         });
-        registry.perLanguage.getOrDefault(lang, new HashMap<>()).forEach((k,v) -> {
+        registry.perLanguage.getOrDefault(lang, new HashMap<>()).forEach((k, v) -> {
             libs.put(k.value(), v.getClass());
         });
-        registry.perExecLanguage.getOrDefault(lang, new HashMap<>()).forEach((k,v) -> {
+        registry.perExecLanguage.getOrDefault(lang, new HashMap<>()).forEach((k, v) -> {
             libs.put(k.value(), v);
         });
-        libs.forEach((k,v) -> {
+        libs.forEach((k, v) -> {
             for (Method m : v.getDeclaredMethods()) {
-                if (!Modifier.isPublic(m.getModifiers()) || Modifier.isStatic(m.getModifiers())) continue;
+                if (!Modifier.isPublic(m.getModifiers()) || Modifier.isStatic(m.getModifiers())) {
+                    continue;
+                }
                 String sigBuilder = k + method_separator + m.getName() + "(";
                 suggestions.add(sigBuilder);
             }
         });
     }
-    
+
     public Set<String> getSuggestions(String start) {
         return suggestions.getAllWithPrefixCaseInsensitive(start);
     }
+
 }

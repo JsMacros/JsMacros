@@ -23,4 +23,5 @@ public class EventInteractEntity implements BaseEvent {
     public String toString() {
         return String.format("%s:{\"entity\": %s, \"result\": \"%s\"}", this.getEventName(), entity, result);
     }
+
 }

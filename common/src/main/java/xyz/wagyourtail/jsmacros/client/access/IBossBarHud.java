@@ -7,4 +7,5 @@ import java.util.UUID;
 
 public interface IBossBarHud {
     Map<UUID, ClientBossBar> jsmacros_GetBossBars();
+
 }

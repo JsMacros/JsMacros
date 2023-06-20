@@ -15,7 +15,6 @@ public class PigEntityHelper extends AnimalEntityHelper<PigEntity> {
 
     /**
      * @return {@code true} if this pig is saddled, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isSaddled() {

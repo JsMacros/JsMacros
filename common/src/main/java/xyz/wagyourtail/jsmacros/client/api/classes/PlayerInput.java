@@ -183,7 +183,6 @@ public class PlayerInput {
         return gson.fromJson(json, PlayerInput.class);
     }
 
-
     /**
      * Converts a Map, which has all keys lowercase and that contains all the prerequisites listed in {@code PlayerInput.fromCSV}.
      *
@@ -196,7 +195,9 @@ public class PlayerInput {
         PlayerInput playerInput = new PlayerInput();
         for (Map.Entry<String, String> entry : input.entrySet()) {
             Field field = PlayerInput.class.getDeclaredField(entry.getKey());
-            if (Modifier.isPrivate(field.getModifiers())) throw new IllegalAccessException();
+            if (Modifier.isPrivate(field.getModifiers())) {
+                throw new IllegalAccessException();
+            }
             if (float.class.isAssignableFrom(field.getType())) {
                 field.set(playerInput, Float.valueOf(entry.getValue()));
             } else if (boolean.class.isAssignableFrom(field.getType())) {
@@ -254,7 +255,9 @@ public class PlayerInput {
         stringBuilder.append("PlayerInput{");
         String prefix = "";
         for (Field field : PlayerInput.class.getDeclaredFields()) {
-            if (Modifier.isPrivate(field.getModifiers())) continue;
+            if (Modifier.isPrivate(field.getModifiers())) {
+                continue;
+            }
             try {
                 stringBuilder
                         .append(prefix)
@@ -275,4 +278,5 @@ public class PlayerInput {
     public PlayerInput clone() {
         return new PlayerInput(this);
     }
+
 }

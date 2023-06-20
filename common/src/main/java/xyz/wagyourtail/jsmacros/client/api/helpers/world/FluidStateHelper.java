@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.registry.Registries;
-
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 
 /**
@@ -19,7 +18,6 @@ public class FluidStateHelper extends StateHelper<FluidState> {
 
     /**
      * @return the block's id.
-     *
      * @since 1.8.4
      */
     public String getId() {
@@ -28,7 +26,6 @@ public class FluidStateHelper extends StateHelper<FluidState> {
 
     /**
      * @return {@code true} if this fluid is still, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isStill() {
@@ -37,8 +34,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
 
     /**
      * @return {@code true} if this fluid is empty (the default fluid state for non fluid blocks),
-     *         {@code false} otherwise.
-     *
+     * {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean isEmpty() {
@@ -47,7 +43,6 @@ public class FluidStateHelper extends StateHelper<FluidState> {
 
     /**
      * @return the height of this state.
-     *
      * @since 1.8.4
      */
     public float getHeight() {
@@ -56,7 +51,6 @@ public class FluidStateHelper extends StateHelper<FluidState> {
 
     /**
      * @return the level of this state.
-     *
      * @since 1.8.4
      */
     public int getLevel() {
@@ -65,8 +59,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
 
     /**
      * @return {@code true} if the fluid has some random tick logic (only used by lava to do the
-     *         fire spread), {@code false} otherwise.
-     *
+     * fire spread), {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean hasRandomTicks() {
@@ -76,7 +69,6 @@ public class FluidStateHelper extends StateHelper<FluidState> {
     /**
      * @param pos the position in the world
      * @return the velocity that will be applied to entities at the given position.
-     *
      * @since 1.8.4
      */
     public Pos3D getVelocity(BlockPosHelper pos) {
@@ -85,7 +77,6 @@ public class FluidStateHelper extends StateHelper<FluidState> {
 
     /**
      * @return the block state of this fluid.
-     *
      * @since 1.8.4
      */
     public BlockStateHelper getBlockState() {
@@ -94,7 +85,6 @@ public class FluidStateHelper extends StateHelper<FluidState> {
 
     /**
      * @return the blast resistance of this fluid.
-     *
      * @since 1.8.4
      */
     public float getBlastResistance() {

@@ -6,7 +6,7 @@ name: Build Release V2
 # events but only for the master branch
 on:
   release:
-    types: [created]
+    types: [ created ]
 
 jobs:
 
@@ -15,7 +15,7 @@ jobs:
     with:
       branch: main-1.20
       java_version: 17
-    
+
 
   build_1_19:
     uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20
@@ -53,17 +53,17 @@ jobs:
       branch: backport-1.14.4
       java_version: 17
 
-#  build_1_12:
-#    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20
-#    with:
-#      branch: backport-1.12.2
-#      java_version: 17
-#
-#  build_1_8:
-#    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20
-#    with:
-#      branch: backport-1.8.9
-#      java_version: 8
+  #  build_1_12:
+  #    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20
+  #    with:
+  #      branch: backport-1.12.2
+  #      java_version: 17
+  #
+  #  build_1_8:
+  #    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20
+  #    with:
+  #      branch: backport-1.8.9
+  #      java_version: 8
 
   deploy_1_20:
     uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.20
@@ -164,34 +164,34 @@ jobs:
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
     needs:
       - build_1_14
-#      - deploy_1_12
+  #      - deploy_1_12
 
-#  deploy_1_12:
-#    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.20
-#    with:
-#      branch: backport-1.12.2
-#      game_vers: 1.12.2
-#      java_vers: 8
-#      GITHUB_REF: ${{ github.ref }}
-#    secrets:
-#      CF_API_KEY: ${{ secrets.CF_API_KEY }}
-#      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-#    needs:
-#      - build_1_12
-#      - deploy_1_8
-#
-#  deploy_1_8:
-#    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.20
-#    with:
-#      branch: backport-1.8.9
-#      game_vers: 1.8.9
-#      java_vers: 8
-#      GITHUB_REF: ${{ github.ref }}
-#    secrets:
-#      CF_API_KEY: ${{ secrets.CF_API_KEY }}
-#      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-#    needs:
-#      - build_1_8
+  #  deploy_1_12:
+  #    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.20
+  #    with:
+  #      branch: backport-1.12.2
+  #      game_vers: 1.12.2
+  #      java_vers: 8
+  #      GITHUB_REF: ${{ github.ref }}
+  #    secrets:
+  #      CF_API_KEY: ${{ secrets.CF_API_KEY }}
+  #      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+  #    needs:
+  #      - build_1_12
+  #      - deploy_1_8
+  #
+  #  deploy_1_8:
+  #    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.20
+  #    with:
+  #      branch: backport-1.8.9
+  #      game_vers: 1.8.9
+  #      java_vers: 8
+  #      GITHUB_REF: ${{ github.ref }}
+  #    secrets:
+  #      CF_API_KEY: ${{ secrets.CF_API_KEY }}
+  #      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+  #    needs:
+  #      - build_1_8
 
 
   upload_pydoc:

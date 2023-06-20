@@ -11,4 +11,5 @@ public interface IInventory {
     int getY();
 
     Slot jsmacros_getSlotUnder(double x, double y);
+
 }

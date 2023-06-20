@@ -8,12 +8,14 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @since 1.4.0
  * @param <T>
+ * @since 1.4.0
  */
 public abstract class BaseScriptContext<T> {
     protected boolean closed = false;
@@ -54,27 +56,26 @@ public abstract class BaseScriptContext<T> {
     }
 
     /**
-     * @since 1.6.0
      * @return
+     * @since 1.6.0
      */
     public synchronized Map<Thread, EventContainer<? extends BaseScriptContext<T>>> getBoundEvents() {
         return ImmutableMap.copyOf(events);
     }
 
     /**
-     * @since 1.6.0
      * @param th
      * @param event
+     * @since 1.6.0
      */
     public synchronized void bindEvent(Thread th, EventContainer<BaseScriptContext<T>> event) {
         events.put(th, event);
     }
 
     /**
-     * @since 1.6.0
      * @param thread
-     *
      * @return
+     * @since 1.6.0
      */
     public synchronized boolean releaseBoundEventIfPresent(Thread thread) {
         EventContainer<? extends BaseScriptContext<T>> event = events.get(thread);
@@ -90,27 +91,31 @@ public abstract class BaseScriptContext<T> {
     }
 
     /**
-     * @since 1.5.0
      * @return
+     * @since 1.5.0
      */
     public Thread getMainThread() {
         return mainThread;
     }
 
     /**
-     * @since 1.6.0
      * @param t
      * @return is a newly bound thread
+     * @since 1.6.0
      */
     public synchronized boolean bindThread(Thread t) {
-        if (closed) throw new ScriptAssertionError("Cannot bind thread to closed context");
-        if (t == null) throw new ScriptAssertionError("Cannot bind null thread");
+        if (closed) {
+            throw new ScriptAssertionError("Cannot bind thread to closed context");
+        }
+        if (t == null) {
+            throw new ScriptAssertionError("Cannot bind null thread");
+        }
         return threads.add(t);
     }
 
     /**
-     * @since 1.6.0
      * @param t
+     * @since 1.6.0
      */
     public synchronized void unbindThread(Thread t) {
         if (!threads.remove(t)) {
@@ -123,19 +128,21 @@ public abstract class BaseScriptContext<T> {
     }
 
     /**
-     * @since 1.6.0
      * @return
+     * @since 1.6.0
      */
     public synchronized Set<Thread> getBoundThreads() {
         return ImmutableSet.copyOf(threads);
     }
 
     /**
-     * @since 1.5.0
      * @param t
+     * @since 1.5.0
      */
     public void setMainThread(Thread t) {
-        if (this.mainThread != null) throw new ScriptAssertionError("Cannot change main thread of context container once assigned!");
+        if (this.mainThread != null) {
+            throw new ScriptAssertionError("Cannot change main thread of context container once assigned!");
+        }
         this.mainThread = t;
         bindThread(t);
     }
@@ -148,17 +155,21 @@ public abstract class BaseScriptContext<T> {
     }
 
     public void setContext(T context) {
-        if (this.context != null) throw new ScriptAssertionError("Context already set");
+        if (this.context != null) {
+            throw new ScriptAssertionError("Context already set");
+        }
         this.context = context;
     }
-    
+
     public synchronized boolean isContextClosed() {
         if (syncObject.get() == null) {
-            if (!closed) closeContext();
+            if (!closed) {
+                closeContext();
+            }
         }
         return closed;
     }
-    
+
     public synchronized void closeContext() {
         closed = true;
         // fix concurrency issue the "fun" way
@@ -168,24 +179,23 @@ public abstract class BaseScriptContext<T> {
     }
 
     /**
-     * @since 1.6.0
      * @return
+     * @since 1.6.0
      */
-     @Nullable
+    @Nullable
     public File getFile() {
         return mainFile;
     }
 
     /**
-     * @since 1.6.0
      * @return
+     * @since 1.6.0
      */
     public File getContainedFolder() {
         return mainFile == null ? Core.getInstance().config.macroFolder.getAbsoluteFile() : mainFile.getParentFile().getAbsoluteFile();
     }
 
     public abstract boolean isMultiThreaded();
-
 
     public void wrapSleep(SleepRunnable sleep) throws InterruptedException {
         sleep.run();
@@ -195,10 +205,13 @@ public abstract class BaseScriptContext<T> {
         public ScriptAssertionError(String message) {
             super(message);
         }
+
     }
 
     @FunctionalInterface
     public interface SleepRunnable {
         void run() throws InterruptedException;
+
     }
+
 }

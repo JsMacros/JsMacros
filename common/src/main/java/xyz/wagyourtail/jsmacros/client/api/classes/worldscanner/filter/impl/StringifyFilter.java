@@ -16,7 +16,7 @@ public class StringifyFilter<T> extends BasicFilter<T> {
 
     private final Set<String> filterObjects;
     private final ICompare<String> filter;
-    
+
     public StringifyFilter(String operation) {
         this.filterObjects = new HashSet<>();
         filter = StringCompareFilter.FilterMethod.valueOf(operation).getMethod();
@@ -36,7 +36,7 @@ public class StringifyFilter<T> extends BasicFilter<T> {
         filterObjects.remove(toRemove);
         return this;
     }
-    
+
     public StringifyFilter removeOption(String... toRemove) {
         List.of(toRemove).forEach(filterObjects::remove);
         return this;

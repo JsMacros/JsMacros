@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.other;
 
 import net.minecraft.entity.AreaEffectCloudEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
 /**
@@ -17,7 +16,6 @@ public class AreaEffectCloudEntityHelper extends EntityHelper<AreaEffectCloudEnt
 
     /**
      * @return the radius of this cloud.
-     *
      * @since 1.8.4
      */
     public float getRadius() {
@@ -26,7 +24,6 @@ public class AreaEffectCloudEntityHelper extends EntityHelper<AreaEffectCloudEnt
 
     /**
      * @return the color of this cloud.
-     *
      * @since 1.8.4
      */
     public int getColor() {
@@ -35,7 +32,6 @@ public class AreaEffectCloudEntityHelper extends EntityHelper<AreaEffectCloudEnt
 
     /**
      * @return the id of this cloud's particles.
-     *
      * @since 1.8.4
      */
     public String getParticleType() {
@@ -44,7 +40,6 @@ public class AreaEffectCloudEntityHelper extends EntityHelper<AreaEffectCloudEnt
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isWaiting() {

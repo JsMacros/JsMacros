@@ -18,4 +18,5 @@ public abstract class MixinFontStorage {
             cir.setReturnValue(EmptyGlyphRenderer.INSTANCE);
         }
     }
+
 }

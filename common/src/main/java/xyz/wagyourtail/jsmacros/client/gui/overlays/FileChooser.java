@@ -2,8 +2,8 @@ package xyz.wagyourtail.jsmacros.client.gui.overlays;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -45,14 +45,14 @@ public class FileChooser extends OverlayContainer {
             this.remove(f.btn);
         }
         files.clear();
-        
+
         if (!dir.exists()) {
             if (!dir.mkdirs()) {
                 setDir(root);
                 return;
             }
         }
-        
+
         this.directory = dir;
         this.dirname = Text.literal("./" + root.getAbsoluteFile().toPath().relativize(dir.getAbsoluteFile().toPath()).toString().replaceAll("\\\\", "/"));
 
@@ -90,7 +90,7 @@ public class FileChooser extends OverlayContainer {
         this.addDrawableChild(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, Text.literal("X"), (btn) -> this.close()));
         scroll = this.addDrawableChild(new Scrollbar(x + width - 10, y + 13, 8, height - 28, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
 
-        this.addDrawableChild(new Button(x + w * 5 / 6 + 2, y + height - 14, w / 6, 12, textRenderer,0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.select"), (btn) -> {
+        this.addDrawableChild(new Button(x + w * 5 / 6 + 2, y + height - 14, w / 6, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.select"), (btn) -> {
             if (this.selected != null && this.setFile != null) {
                 this.setFile.accept(this.selected);
                 this.close();
@@ -98,7 +98,9 @@ public class FileChooser extends OverlayContainer {
         }));
 
         this.addDrawableChild(new Button(x + w * 4 / 6 + 2, y + height - 14, w / 6, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("selectWorld.edit"), (btn) -> {
-            if (this.selected != null) editFile.accept(selected);
+            if (this.selected != null) {
+                editFile.accept(selected);
+            }
         }));
 
         this.addDrawableChild(new Button(x + w * 3 / 6 + 2, y + height - 14, w / 6, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.rename"), (btn) -> {
@@ -122,12 +124,16 @@ public class FileChooser extends OverlayContainer {
                         break;
                     }
                 }
-                if (f != null) confirmDelete(f);
+                if (f != null) {
+                    confirmDelete(f);
+                }
             }
         }));
 
         this.addDrawableChild(new Button(x + w / 6 + 2, y + height - 14, w / 6, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.new"), (btn) -> this.openOverlay(new TextPrompt(x + width / 2 - 100, y + height / 2 - 50, 200, 100, textRenderer, Text.translatable("jsmacros.filename"), "", this, (str) -> {
-            if (str.trim().equals("")) return;
+            if (str.trim().equals("")) {
+                return;
+            }
 
             // has extension
             File f = new File(directory, str);
@@ -149,7 +155,9 @@ public class FileChooser extends OverlayContainer {
         }));
 
         this.setDir(directory);
-        if (selected != null) this.selectFile(selected);
+        if (selected != null) {
+            this.selectFile(selected);
+        }
     }
 
     public void addFile(File f) {
@@ -163,7 +171,7 @@ public class FileChooser extends OverlayContainer {
         file.btn.visible = topScroll + (files.size() / 5 * 12) >= y + 13 && topScroll + (files.size() / 5 * 12) <= y + height - 27;
         files.add(file);
         this.addDrawableChild(file.btn);
-        scroll.setScrollPages((Math.ceil(files.size() / 5D) * 12) /(double) Math.max(1, height - 39));
+        scroll.setScrollPages((Math.ceil(files.size() / 5D) * 12) / (double) Math.max(1, height - 39));
     }
 
     public void updateFilePos() {
@@ -198,28 +206,28 @@ public class FileChooser extends OverlayContainer {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        renderBackground(matrices);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        renderBackground(drawContext);
 
-        textRenderer.drawTrimmed(matrices, this.dirname, x + 3, y + 3, width - 14, 0xFFFFFF);
+        drawContext.drawTextWrapped(textRenderer, this.dirname, x + 3, y + 3, width - 14, 0xFFFFFF);
 
-        fill(matrices, x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
-        fill(matrices, x + 2, y + height - 15, x + width - 2, y + height - 14, 0xFFFFFFFF);
+        drawContext.fill(x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
+        drawContext.fill(x + 2, y + height - 15, x + width - 2, y + height - 14, 0xFFFFFFFF);
 //        textRenderer.draw(, mouseX, mouseY, color, shadow, matrix, vertexConsumers, seeThrough, backgroundColor, light)
-        super.render(matrices, mouseX, mouseY, delta);
-        
+        super.render(drawContext, mouseX, mouseY, delta);
+
         for (ClickableWidget b : ImmutableList.copyOf(this.buttons)) {
             if (b instanceof Button && ((Button) b).hovering && ((Button) b).cantRenderAllText()) {
                 // border
                 int width = textRenderer.getWidth(b.getMessage());
-                fill(matrices, mouseX-3, mouseY, mouseX+width+3, mouseY+1, 0x7F7F7F7F);
-                fill(matrices, mouseX+width+2, mouseY-textRenderer.fontHeight - 3, mouseX+width+3, mouseY, 0x7F7F7F7F);
-                fill(matrices, mouseX-3, mouseY-textRenderer.fontHeight - 3, mouseX-2, mouseY, 0x7F7F7F7F);
-                fill(matrices, mouseX-3, mouseY-textRenderer.fontHeight - 4, mouseX+width+3, mouseY-textRenderer.fontHeight - 3, 0x7F7F7F7F);
-                
+                drawContext.fill(mouseX - 3, mouseY, mouseX + width + 3, mouseY + 1, 0x7F7F7F7F);
+                drawContext.fill(mouseX + width + 2, mouseY - textRenderer.fontHeight - 3, mouseX + width + 3, mouseY, 0x7F7F7F7F);
+                drawContext.fill(mouseX - 3, mouseY - textRenderer.fontHeight - 3, mouseX - 2, mouseY, 0x7F7F7F7F);
+                drawContext.fill(mouseX - 3, mouseY - textRenderer.fontHeight - 4, mouseX + width + 3, mouseY - textRenderer.fontHeight - 3, 0x7F7F7F7F);
+
                 // fill
-                fill(matrices, mouseX-2, mouseY-textRenderer.fontHeight - 3, mouseX+width+2, mouseY, 0xFF000000);
-                drawTextWithShadow(matrices, textRenderer, b.getMessage(), mouseX, mouseY-textRenderer.fontHeight - 1, 0xFFFFFF);
+                drawContext.fill(mouseX - 2, mouseY - textRenderer.fontHeight - 3, mouseX + width + 2, mouseY, 0xFF000000);
+                drawContext.drawTextWithShadow(textRenderer, b.getMessage(), mouseX, mouseY - textRenderer.fontHeight - 1, 0xFFFFFF);
             }
         }
     }
@@ -232,6 +240,7 @@ public class FileChooser extends OverlayContainer {
             this.file = file;
             this.btn = btn;
         }
+
     }
 
     public static class sortFile implements Comparator<File> {
@@ -243,5 +252,7 @@ public class FileChooser extends OverlayContainer {
                 return a.getName().compareTo(b.getName());
             }
         }
+
     }
+
 }

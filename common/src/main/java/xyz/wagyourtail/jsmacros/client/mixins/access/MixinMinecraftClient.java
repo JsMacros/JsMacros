@@ -11,9 +11,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
-import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.function.Consumer;
@@ -21,14 +21,19 @@ import java.util.function.Consumer;
 @Mixin(MinecraftClient.class)
 abstract
 class MixinMinecraftClient implements IMinecraftClient {
-    
-    @Shadow @Final private FontManager fontManager;
 
-    @Shadow protected abstract void doItemUse();
+    @Shadow
+    @Final
+    private FontManager fontManager;
 
-    @Shadow protected abstract boolean doAttack();
+    @Shadow
+    protected abstract void doItemUse();
 
-    @Shadow public Screen currentScreen;
+    @Shadow
+    protected abstract boolean doAttack();
+
+    @Shadow
+    public Screen currentScreen;
 
     @Inject(at = @At("TAIL"), method = "onResolutionChanged")
     public void onResolutionChanged(CallbackInfo info) {
@@ -37,21 +42,24 @@ class MixinMinecraftClient implements IMinecraftClient {
             for (IDraw2D<Draw2D> h : FHud.overlays) {
                 try {
                     ((Draw2D) h).init();
-                } catch (Throwable ignored) {}
+                } catch (Throwable ignored) {
+                }
             }
         }
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;removed()V"), method="setScreen")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;removed()V"), method = "setScreen")
     public void onCloseScreen(Screen screen, CallbackInfo ci) {
-        Consumer<IScreen> onClose = ((IScreen)currentScreen).getOnClose();
+        Consumer<IScreen> onClose = ((IScreen) currentScreen).getOnClose();
         try {
-            if (onClose != null) onClose.accept((IScreen) currentScreen);
+            if (onClose != null) {
+                onClose.accept((IScreen) currentScreen);
+            }
         } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
     }
-    
+
     @Override
     public FontManager jsmacros_getFontManager() {
         return fontManager;

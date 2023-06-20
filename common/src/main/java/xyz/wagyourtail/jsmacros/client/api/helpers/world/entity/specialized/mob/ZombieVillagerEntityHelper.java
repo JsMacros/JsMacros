@@ -16,8 +16,7 @@ public class ZombieVillagerEntityHelper extends ZombieEntityHelper<ZombieVillage
 
     /**
      * @return {@code true} if this zombie villager is currently being converted back to a villager,
-     *         {@code false} otherwise.
-     *
+     * {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean isConvertingToVillager() {
@@ -26,7 +25,6 @@ public class ZombieVillagerEntityHelper extends ZombieEntityHelper<ZombieVillage
 
     /**
      * @return the type of biome the villager belonged to it was converted to a zombie.
-     *
      * @since 1.8.4
      */
     public String getVillagerBiomeType() {
@@ -35,7 +33,6 @@ public class ZombieVillagerEntityHelper extends ZombieEntityHelper<ZombieVillage
 
     /**
      * @return the profession of the villager before it was converted to a zombie.
-     *
      * @since 1.8.4
      */
     public String getProfession() {
@@ -44,7 +41,6 @@ public class ZombieVillagerEntityHelper extends ZombieEntityHelper<ZombieVillage
 
     /**
      * @return the level of the villager before it was converted to a zombie.
-     *
      * @since 1.8.4
      */
     public int getLevel() {

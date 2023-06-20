@@ -12,7 +12,7 @@ import java.util.Locale;
 public class NumberCompareFilter implements IFilter<Number> {
 
     private final static double EPSILON = 0.000001d;
-    
+
     private final String operation;
     private final Number compareTo;
     private final String numberType;
@@ -113,7 +113,7 @@ public class NumberCompareFilter implements IFilter<Number> {
             case "<":
                 return num.longValue() < compareTo.longValue();
             case "<=":
-                return num.longValue()<= compareTo.longValue();
+                return num.longValue() <= compareTo.longValue();
             case "==":
                 return num.longValue() == compareTo.longValue();
             case "!=":

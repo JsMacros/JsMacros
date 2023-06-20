@@ -17,4 +17,5 @@ public class ItemEntityHelper extends EntityHelper<ItemEntity> {
     public String toString() {
         return String.format("ItemEntityHelper:{\"containedStack\": %s}", getContainedItemStack().toString());
     }
+
 }

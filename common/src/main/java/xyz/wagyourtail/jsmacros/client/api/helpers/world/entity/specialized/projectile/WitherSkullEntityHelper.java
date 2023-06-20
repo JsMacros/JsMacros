@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.projectile;
 
 import net.minecraft.entity.projectile.WitherSkullEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
 /**
@@ -17,7 +16,6 @@ public class WitherSkullEntityHelper extends EntityHelper<WitherSkullEntity> {
 
     /**
      * @return {@code true} if the wither skull is charged, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isCharged() {

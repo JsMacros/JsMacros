@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
@@ -46,7 +47,6 @@ public class Box {
      * @param x2
      * @param y2
      * @param z2
-     *
      * @since 1.0.6
      */
     public void setPos(double x1, double y1, double z1, double x2, double y2, double z2) {
@@ -55,7 +55,6 @@ public class Box {
 
     /**
      * @param color
-     *
      * @since 1.0.6
      */
     public void setColor(int color) {
@@ -67,7 +66,6 @@ public class Box {
 
     /**
      * @param fillColor
-     *
      * @since 1.0.6
      */
     public void setFillColor(int fillColor) {
@@ -77,7 +75,6 @@ public class Box {
     /**
      * @param color
      * @param alpha
-     *
      * @since 1.1.8
      */
     public void setColor(int color, int alpha) {
@@ -86,7 +83,6 @@ public class Box {
 
     /**
      * @param alpha
-     *
      * @since 1.1.8
      */
     public void setAlpha(int alpha) {
@@ -96,7 +92,6 @@ public class Box {
     /**
      * @param fillColor
      * @param alpha
-     *
      * @since 1.1.8
      */
     public void setFillColor(int fillColor, int alpha) {
@@ -105,7 +100,6 @@ public class Box {
 
     /**
      * @param alpha
-     *
      * @since 1.1.8
      */
     public void setFillAlpha(int alpha) {
@@ -114,14 +108,14 @@ public class Box {
 
     /**
      * @param fill
-     *
      * @since 1.0.6
      */
     public void setFill(boolean fill) {
         this.fill = fill;
     }
 
-    public void render(MatrixStack matrixStack) {
+    public void render(DrawContext drawContext) {
+        MatrixStack matrixStack = drawContext.getMatrices();
         final boolean cull = !this.cull;
         int a = (color >> 24) & 0xFF;
         int r = (color >> 16) & 0xFF;
@@ -246,9 +240,7 @@ public class Box {
 
         /**
          * @param pos1 the first position of the box
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos1(Pos3D pos1) {
@@ -258,9 +250,7 @@ public class Box {
 
         /**
          * @param pos1 the first position of the box
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos1(BlockPosHelper pos1) {
@@ -272,9 +262,7 @@ public class Box {
          * @param x1 the x coordinate of the first position of the box
          * @param y1 the y coordinate of the first position of the box
          * @param z1 the z coordinate of the first position of the box
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos1(double x1, double y1, double z1) {
@@ -284,7 +272,6 @@ public class Box {
 
         /**
          * @return the first position of the box.
-         *
          * @since 1.8.4
          */
         public Pos3D getPos1() {
@@ -293,9 +280,7 @@ public class Box {
 
         /**
          * @param pos2 the second position of the box
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos2(Pos3D pos2) {
@@ -305,9 +290,7 @@ public class Box {
 
         /**
          * @param pos2 the second position of the box
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos2(BlockPosHelper pos2) {
@@ -319,9 +302,7 @@ public class Box {
          * @param x2 the x coordinate of the second position of the box
          * @param y2 the y coordinate of the second position of the box
          * @param z2 the z coordinate of the second position of the box
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos2(double x2, double y2, double z2) {
@@ -331,7 +312,6 @@ public class Box {
 
         /**
          * @return the second position of the box.
-         *
          * @since 1.8.4
          */
         public Pos3D getPos2() {
@@ -345,9 +325,7 @@ public class Box {
          * @param x2 the x coordinate of the second position of the box
          * @param y2 the y coordinate of the second position of the box
          * @param z2 the z coordinate of the second position of the box
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos(double x1, double y1, double z1, double x2, double y2, double z2) {
@@ -359,9 +337,7 @@ public class Box {
         /**
          * @param pos1 the first position of the box
          * @param pos2 the second position of the box
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos(BlockPosHelper pos1, BlockPosHelper pos2) {
@@ -373,9 +349,7 @@ public class Box {
         /**
          * @param pos1 the first position of the box
          * @param pos2 the second position of the box
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos(Pos3D pos1, Pos3D pos2) {
@@ -390,9 +364,7 @@ public class Box {
          * @param x the x coordinate of the block
          * @param y the y coordinate of the block
          * @param z the z coordinate of the block
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder forBlock(int x, int y, int z) {
@@ -405,9 +377,7 @@ public class Box {
          * Highlights the given block position.
          *
          * @param pos the block position
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder forBlock(BlockPosHelper pos) {
@@ -418,9 +388,7 @@ public class Box {
 
         /**
          * @param color the color of the box
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int color) {
@@ -431,9 +399,7 @@ public class Box {
         /**
          * @param color the fill color of the box
          * @param alpha the alpha value for the box's fill color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int color, int alpha) {
@@ -446,9 +412,7 @@ public class Box {
          * @param r the red component of the fill color
          * @param g the green component of the fill color
          * @param b the blue component of the fill color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int r, int g, int b) {
@@ -461,9 +425,7 @@ public class Box {
          * @param g the green component of the fill color
          * @param b the blue component of the fill color
          * @param a the alpha component of the fill color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int r, int g, int b, int a) {
@@ -474,7 +436,6 @@ public class Box {
 
         /**
          * @return the color of the box.
-         *
          * @since 1.8.4
          */
         public int getColor() {
@@ -483,9 +444,7 @@ public class Box {
 
         /**
          * @param alpha the alpha value for the box's color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder alpha(int alpha) {
@@ -495,7 +454,6 @@ public class Box {
 
         /**
          * @return the alpha value of the box's color.
-         *
          * @since 1.8.4
          */
         public int getAlpha() {
@@ -504,9 +462,7 @@ public class Box {
 
         /**
          * @param fillColor the fill color of the box
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder fillColor(int fillColor) {
@@ -516,10 +472,8 @@ public class Box {
 
         /**
          * @param fillColor the fill color of the box
-         * @param alpha the alpha value for the box's fill color
-         *
+         * @param alpha     the alpha value for the box's fill color
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder fillColor(int fillColor, int alpha) {
@@ -532,9 +486,7 @@ public class Box {
          * @param r the red component of the fill color
          * @param g the green component of the fill color
          * @param b the blue component of the fill color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder fillColor(int r, int g, int b) {
@@ -547,9 +499,7 @@ public class Box {
          * @param g the green component of the fill color
          * @param b the blue component of the fill color
          * @param a the alpha component of the fill color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder fillColor(int r, int g, int b, int a) {
@@ -560,7 +510,6 @@ public class Box {
 
         /**
          * @return the fill color of the box.
-         *
          * @since 1.8.4
          */
         public int getFillColor() {
@@ -569,9 +518,7 @@ public class Box {
 
         /**
          * @param fillAlpha the alpha value for the box's fill color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder fillAlpha(int fillAlpha) {
@@ -581,7 +528,6 @@ public class Box {
 
         /**
          * @return the alpha value of the box's fill color.
-         *
          * @since 1.8.4
          */
         public int getFillAlpha() {
@@ -590,9 +536,7 @@ public class Box {
 
         /**
          * @param fill {@code true} if the box should be filled, {@code false} otherwise
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder fill(boolean fill) {
@@ -602,7 +546,6 @@ public class Box {
 
         /**
          * @return {@code true} if the box should be filled, {@code false} otherwise.
-         *
          * @since 1.8.4
          */
         public boolean isFilled() {
@@ -611,9 +554,7 @@ public class Box {
 
         /**
          * @param cull whether to enable culling or not
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder cull(boolean cull) {
@@ -623,7 +564,6 @@ public class Box {
 
         /**
          * @return {@code true} if culling is enabled for this box, {@code false} otherwise.
-         *
          * @since 1.8.4
          */
         public boolean isCulled() {
@@ -634,7 +574,6 @@ public class Box {
          * Creates the box for the given values and adds it to the draw3D.
          *
          * @return the build box.
-         *
          * @since 1.8.4
          */
         public Box buildAndAdd() {
@@ -650,18 +589,18 @@ public class Box {
          */
         public Box build() {
             return new Box(
-                pos1.x,
-                pos1.y,
-                pos1.z,
-                pos2.x,
-                pos2.y,
-                pos2.z,
-                color,
-                alpha,
-                fillColor,
-                fillAlpha,
-                fill,
-                cull
+                    pos1.x,
+                    pos1.y,
+                    pos1.z,
+                    pos2.x,
+                    pos2.y,
+                    pos2.z,
+                    color,
+                    alpha,
+                    fillColor,
+                    fillAlpha,
+                    fill,
+                    cull
             );
         }
 

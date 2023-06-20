@@ -1,8 +1,8 @@
 package xyz.wagyourtail.wagyourgui.elements;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
@@ -25,7 +25,7 @@ public class Scrollbar extends ClickableWidget {
         this.onChange = onChange;
         this.setScrollPages(scrollPages);
     }
-    
+
     public Scrollbar setPos(int x, int y, int width, int height) {
         this.setX(x);
         this.setY(y);
@@ -52,12 +52,12 @@ public class Scrollbar extends ClickableWidget {
             this.visible = true;
         }
     }
-    
+
     public void scrollToPercent(double percent) {
         scrollAmount = scrollDistance * percent;
         onChange();
     }
-    
+
     @Override
     public void onClick(double mouseX, double mouseY) {
         if (this.active) {
@@ -72,31 +72,37 @@ public class Scrollbar extends ClickableWidget {
             }
         }
     }
-    
+
     public void onChange() {
-        if (onChange != null) onChange.accept(scrollPages * scrollAmount / scrollDistance);
+        if (onChange != null) {
+            onChange.accept(scrollPages * scrollAmount / scrollDistance);
+        }
     }
-    
+
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         scrollAmount += deltaY;
-        if (scrollAmount > scrollDistance) scrollAmount = scrollDistance;
-        if (scrollAmount < 0) scrollAmount = 0;
+        if (scrollAmount > scrollDistance) {
+            scrollAmount = scrollDistance;
+        }
+        if (scrollAmount < 0) {
+            scrollAmount = 0;
+        }
         onChange();
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
     @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         // mainpart
-        fill(matrices, getX() + 1, (int) (getY() + 1 + scrollAmount), getX() + width - 1, (int) (getY() + 1 + scrollAmount + scrollbarHeight), highlightColor);
+        drawContext.fill(getX() + 1, (int) (getY() + 1 + scrollAmount), getX() + width - 1, (int) (getY() + 1 + scrollAmount + scrollbarHeight), highlightColor);
 
         // outline and back
-        fill(matrices, getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, color);
-        fill(matrices, getX(), getY(), getX() + 1, getY() + height, borderColor);
-        fill(matrices, getX() + width - 1, getY(), getX() + width, getY() + height, borderColor);
-        fill(matrices, getX() + 1, getY(), getX() + width - 1, getY() + 1, borderColor);
-        fill(matrices, getX() + 1, getY() + height - 1, getX() + width - 1, getY() + height, borderColor);
+        drawContext.fill(getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, color);
+        drawContext.fill(getX(), getY(), getX() + 1, getY() + height, borderColor);
+        drawContext.fill(getX() + width - 1, getY(), getX() + width, getY() + height, borderColor);
+        drawContext.fill(getX() + 1, getY(), getX() + width - 1, getY() + 1, borderColor);
+        drawContext.fill(getX() + 1, getY() + height - 1, getX() + width - 1, getY() + height, borderColor);
     }
 
     @Override

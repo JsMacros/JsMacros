@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Set;
 
 public class EventRegistry extends BaseEventRegistry {
-    
+
     public EventRegistry(Core<?, ?> runner) {
         super(runner);
     }
-    
+
     @Override
     public synchronized void addScriptTrigger(ScriptTrigger rawmacro) {
         switch (rawmacro.triggerType) {
@@ -35,8 +35,7 @@ public class EventRegistry extends BaseEventRegistry {
                 JsMacros.LOGGER.warn("Failed To Add: Unknown macro type for file " + rawmacro.scriptFile);
         }
     }
-    
-    
+
     @Override
     public synchronized boolean removeScriptTrigger(ScriptTrigger rawmacro) {
         final String event = rawmacro.triggerType == ScriptTrigger.TriggerType.EVENT ? rawmacro.event : EventKey.class.getAnnotation(Event.class).value();
@@ -48,15 +47,18 @@ public class EventRegistry extends BaseEventRegistry {
         }
         return false;
     }
-    
+
     @Override
     public synchronized List<ScriptTrigger> getScriptTriggers() {
         final List<ScriptTrigger> rawProf = new ArrayList<>();
         for (Set<IEventListener> eventMacros : listeners.values()) {
             for (IEventListener macro : eventMacros) {
-                if (macro instanceof BaseListener) rawProf.add(((BaseListener) macro).getRawTrigger());
+                if (macro instanceof BaseListener) {
+                    rawProf.add(((BaseListener) macro).getRawTrigger());
+                }
             }
         }
         return rawProf;
     }
+
 }

@@ -29,7 +29,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getAttachment() {
@@ -38,7 +37,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getEastWallShape() {
@@ -47,7 +45,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getNorthWallShape() {
@@ -56,7 +53,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getSouthWallShape() {
@@ -65,7 +61,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getWestWallShape() {
@@ -74,7 +69,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getEastWireConnection() {
@@ -83,7 +77,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getNorthWireConnection() {
@@ -92,7 +85,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getSouthWireConnection() {
@@ -101,7 +93,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getWestWireConnection() {
@@ -110,7 +101,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getBlockHalf() {
@@ -119,7 +109,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getDoubleBlockHalf() {
@@ -128,7 +117,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getRailShape() {
@@ -137,7 +125,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getStraightRailShape() {
@@ -146,7 +133,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getOrientation() {
@@ -155,7 +141,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getWallMountLocation() {
@@ -164,7 +149,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getHorizontalAxis() {
@@ -173,7 +157,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getAxis() {
@@ -182,7 +165,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public DirectionHelper getHorizontalFacing() {
@@ -191,7 +173,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public DirectionHelper getHopperFacing() {
@@ -200,7 +181,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public DirectionHelper getFacing() {
@@ -209,7 +189,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isUp() {
@@ -218,7 +197,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isDown() {
@@ -227,7 +205,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isNorth() {
@@ -236,7 +213,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isSouth() {
@@ -245,7 +221,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isEast() {
@@ -254,7 +229,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isWest() {
@@ -265,7 +239,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on beehives.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public int getHoneyLevel() {
@@ -276,7 +249,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on scaffolding.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isBottom() {
@@ -287,10 +259,9 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on bubble columns.
      *
      * @return
-     *
      * @since 1.8.4
      */
-    @Ignore({ "hasDrag" })
+    @Ignore({"hasDrag"})
     public boolean isBubbleColumnDown() {
         return base.get(Properties.DRAG);
     }
@@ -299,7 +270,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on bubble columns.
      *
      * @return
-     *
      * @since 1.8.4
      */
     @Ignore
@@ -311,7 +281,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on trip wire hooks.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isAttached() {
@@ -322,19 +291,16 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on trip wires.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isDisarmed() {
         return base.get(Properties.DISARMED);
     }
 
-
     /**
      * Used on command blocks.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isConditional() {
@@ -345,7 +311,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on hoppers.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isEnabled() {
@@ -356,7 +321,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on pistons.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isExtended() {
@@ -367,7 +331,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on piston heads.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isShort() {
@@ -378,7 +341,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on end portal frames.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean hasEye() {
@@ -389,7 +351,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on fluids.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isFalling() {
@@ -398,20 +359,19 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     // don't make static, causes crash in main function below
     private final IntProperty[] levels = {
-        Properties.LEVEL_1_8,
-        Properties.LEVEL_3,
-        Properties.LEVEL_8,
-        Properties.LEVEL_15
+            Properties.LEVEL_1_8,
+            Properties.LEVEL_3,
+            Properties.LEVEL_8,
+            Properties.LEVEL_15
     };
 
     /**
      * Used on fluids and stuff
      *
      * @return
-     *
      * @since 1.8.4
      */
-     @Ignore({ "getLevel1_8", "getLevel3", "getLevel8", "getLevel15" })
+    @Ignore({"getLevel1_8", "getLevel3", "getLevel8", "getLevel15"})
     public int getLevel() {
         for (IntProperty level : levels) {
             if (base.contains(level)) {
@@ -422,8 +382,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
     }
 
     /**
-     * @since 1.8.4
      * @return
+     * @since 1.8.4
      */
     @Ignore
     public int getMaxLevel() {
@@ -436,8 +396,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
     }
 
     /**
-     * @since 1.8.4
      * @return
+     * @since 1.8.4
      */
     @Ignore
     public int getMinLevel() {
@@ -453,7 +413,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on lanterns.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isHanging() {
@@ -464,7 +423,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on brewing stands.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean hasBottle0() {
@@ -475,7 +433,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on brewing stands.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean hasBottle1() {
@@ -486,7 +443,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on brewing stands.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean hasBottle2() {
@@ -497,7 +453,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on jukeboxes.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean hasRecord() {
@@ -508,7 +463,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on lecterns.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean hasBook() {
@@ -519,7 +473,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on daylight sensors.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isInverted() {
@@ -530,7 +483,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on fence gates.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isInWall() {
@@ -541,7 +493,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on fence gates, barrels, trap doors and doors.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isOpen() {
@@ -552,7 +503,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on candles, all types of furnaces, campfires and redstone torches.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isLit() {
@@ -563,7 +513,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on repeaters.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isLocked() {
@@ -574,7 +523,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on repeaters.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public int getDelay() {
@@ -585,7 +533,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on beds.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isOccupied() {
@@ -596,7 +543,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on leaves.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isPersistent() {
@@ -604,18 +550,17 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
     }
 
     private final IntProperty distance[] = {
-        Properties.DISTANCE_0_7,
-        Properties.DISTANCE_1_7
+            Properties.DISTANCE_0_7,
+            Properties.DISTANCE_1_7
     };
 
     /**
      * Used on leaves and scaffold.
      *
      * @return
-     *
      * @since 1.8.4
      */
-    @Ignore({ "getDistance0_7", "getDistance1_7" })
+    @Ignore({"getDistance0_7", "getDistance1_7"})
     public int getDistance() {
         for (IntProperty d : distance) {
             if (base.contains(d)) {
@@ -629,24 +574,22 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on leaves and scaffold.
      *
      * @return
-     *
      * @since 1.8.4
      */
-     @Ignore
-     public int getMaxDistance() {
+    @Ignore
+    public int getMaxDistance() {
         for (IntProperty d : distance) {
             if (base.contains(d)) {
                 return d.getValues().stream().max(Integer::compare).orElse(-1);
             }
         }
         throw new IllegalStateException("No distance property found");
-     }
+    }
 
     /**
      * Used on leaves and scaffold.
      *
      * @return
-     *
      * @since 1.8.4
      */
     @Ignore
@@ -665,7 +608,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * hooks and trip wires.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isPowered() {
@@ -676,7 +618,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on campfires.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isSignalFire() {
@@ -687,7 +628,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on snowy dirt blocks.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isSnowy() {
@@ -698,7 +638,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on dispensers.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isTriggered() {
@@ -709,7 +648,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on tnt.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isUnstable() {
@@ -723,7 +661,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * scaffolding , sculk sensors, sea pickles, signs, stairs, slabs, trap doors and walls
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isWaterlogged() {
@@ -732,7 +669,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getBedPart() {
@@ -741,7 +677,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getDoorHinge() {
@@ -750,7 +685,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getInstrument() {
@@ -759,7 +693,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getPistonType() {
@@ -768,7 +701,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getSlabType() {
@@ -777,7 +709,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getStairShape() {
@@ -786,7 +717,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getStructureBlockMode() {
@@ -795,7 +725,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getBambooLeaves() {
@@ -804,7 +733,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getTilt() {
@@ -813,7 +741,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getVerticalDirection() {
@@ -822,7 +749,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getThickness() {
@@ -831,7 +757,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getChestType() {
@@ -840,7 +765,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public String getComparatorMode() {
@@ -851,7 +775,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on cave vine roots.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public boolean hasBerries() {
@@ -860,14 +783,14 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     // don't make static, causes crash in main function below
     private final IntProperty[] ages = {
-        Properties.AGE_1,
-        Properties.AGE_2,
-        Properties.AGE_3,
-        Properties.AGE_4,
-        Properties.AGE_5,
-        Properties.AGE_7,
-        Properties.AGE_15,
-        Properties.AGE_25
+            Properties.AGE_1,
+            Properties.AGE_2,
+            Properties.AGE_3,
+            Properties.AGE_4,
+            Properties.AGE_5,
+            Properties.AGE_7,
+            Properties.AGE_15,
+            Properties.AGE_25
     };
 
     /**
@@ -877,7 +800,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @author Wagyourtail
      * @since 1.8.4
      */
-    @Ignore({ "getAge1", "getAge2", "getAge3", "getAge4", "getAge5", "getAge7", "getAge15", "getAge25"})
+    @Ignore({"getAge1", "getAge2", "getAge3", "getAge4", "getAge5", "getAge7", "getAge15", "getAge25"})
     public int getAge() {
         for (IntProperty property : ages) {
             if (base.contains(property)) {
@@ -896,11 +819,11 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
         }
         throw new IllegalStateException("No age property found");
     }
+
     /**
      * Used on cakes.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public int getBites() {
@@ -911,7 +834,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on candles.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public int getCandles() {
@@ -922,7 +844,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on turtle eggs.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public int getEggs() {
@@ -933,7 +854,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on turtle eggs.
      *
      * @return
-     *
      * @since 1.8.4
      */
     @Ignore("getHatch")
@@ -945,19 +865,16 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on snow layers.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public int getLayers() {
         return base.get(Properties.LAYERS);
     }
 
-
     /**
      * Used on farmland.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public int getMoisture() {
@@ -968,7 +885,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on note blocks.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public int getNote() {
@@ -979,7 +895,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on sea pickles.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public int getPickles() {
@@ -991,7 +906,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * plates.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public int getPower() {
@@ -1002,7 +916,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on bamboo, saplings.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public int getStage() {
@@ -1013,7 +926,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * Used on respawn anchors.
      *
      * @return
-     *
      * @since 1.8.4
      */
     public int getCharges() {
@@ -1021,11 +933,9 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
     }
 
     /**
-    *
-    * Used on sculk sensors.
-    *
-     * @return
+     * Used on sculk sensors.
      *
+     * @return
      * @since 1.8.4
      */
     public boolean isShrieking() {
@@ -1034,9 +944,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * Used on sculk sensors.
-    *
-     * @return
      *
+     * @return
      * @since 1.8.4
      */
     public boolean canSummon() {
@@ -1044,11 +953,9 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
     }
 
     /**
-    *
      * Used on sculk sensors.
-    *
-     * @return
      *
+     * @return
      * @since 1.8.4
      */
     public String getSculkSensorPhase() {
@@ -1057,7 +964,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isBloom() {
@@ -1066,67 +972,54 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
 
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public int getRotation() {
         return base.get(Properties.ROTATION);
     }
 
-
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isSlot0Occupied() {
         return base.get(Properties.SLOT_0_OCCUPIED);
     }
 
-
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isSlot1Occupied() {
         return base.get(Properties.SLOT_1_OCCUPIED);
     }
 
-
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isSlot2Occupied() {
         return base.get(Properties.SLOT_2_OCCUPIED);
     }
 
-
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isSlot3Occupied() {
         return base.get(Properties.SLOT_3_OCCUPIED);
     }
 
-
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isSlot4Occupied() {
         return base.get(Properties.SLOT_4_OCCUPIED);
     }
 
-
     /**
      * @return
-     *
      * @since 1.8.4
      */
     public boolean isSlot5Occupied() {
@@ -1138,7 +1031,9 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
         StringBuilder result = new StringBuilder();
         String[] allWords = input.split("_");
         for (String word : allWords) {
-            if (word.equalsIgnoreCase("has") || word.equalsIgnoreCase("is") || word.equalsIgnoreCase("can")) continue;
+            if (word.equalsIgnoreCase("has") || word.equalsIgnoreCase("is") || word.equalsIgnoreCase("can")) {
+                continue;
+            }
             //test if previous ended with a number and current starts with a number
             if (result.length() > 0 && Character.isDigit(result.charAt(result.length() - 1))) {
                 if (Character.isDigit(word.charAt(0))) {
@@ -1170,8 +1065,8 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
             if (Property.class.isAssignableFrom(field.getType())) {
                 if (BooleanProperty.class.isAssignableFrom(field.getType())) {
                     if (!properties.remove("is" + SCREAMING_SNAKE_CASE_TO_PascalCase(field.getName())) &&
-                        !properties.remove("has" + SCREAMING_SNAKE_CASE_TO_PascalCase(field.getName())) &&
-                        !properties.remove("can" + SCREAMING_SNAKE_CASE_TO_PascalCase(field.getName()))) {
+                            !properties.remove("has" + SCREAMING_SNAKE_CASE_TO_PascalCase(field.getName())) &&
+                            !properties.remove("can" + SCREAMING_SNAKE_CASE_TO_PascalCase(field.getName()))) {
                         System.out.println("public boolean is" + SCREAMING_SNAKE_CASE_TO_PascalCase(field.getName()) + "() {");
                         System.out.println("    return base.get(Properties." + field.getName() + ");");
                         System.out.println("}");
@@ -1209,10 +1104,11 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
         }
     }
 
-
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.METHOD})
     private @interface Ignore {
         String[] value() default {};
+
     }
+
 }

@@ -9,20 +9,21 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @author Wagyourtail
  * @since 1.2.7
  */
- @Event(value = "Title", oldName = "TITLE")
+@Event(value = "Title", oldName = "TITLE")
 public class EventTitle implements BaseEvent {
     public final String type;
     public TextHelper message;
-    
+
     public EventTitle(String type, Text message) {
         this.type = type;
         this.message = new TextHelper(message);
-        
+
         profile.triggerEventJoinNoAnything(this);
     }
-    
+
     @Override
     public String toString() {
         return String.format("%s:{\"type\": \"%s\", \"message\": \"%s\"}", this.getEventName(), type, message.toString());
     }
+
 }

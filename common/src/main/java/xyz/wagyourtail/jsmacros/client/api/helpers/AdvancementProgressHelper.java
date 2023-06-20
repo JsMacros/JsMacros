@@ -1,9 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import com.google.common.collect.Iterables;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.criterion.CriterionProgress;
-
-import com.google.common.collect.Iterables;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAdvancementProgress;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -24,7 +23,6 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
 
     /**
      * @return {@code true} if the advancement is finished, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isDone() {
@@ -33,7 +31,6 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
 
     /**
      * @return {@code true} if any criteria has already been met, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isAnyObtained() {
@@ -42,7 +39,6 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
 
     /**
      * @return a map of all criteria and their completion date.
-     *
      * @since 1.8.4
      */
     public Map<String, Date> getCriteria() {
@@ -54,7 +50,6 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
 
     /**
      * @return all requirements of this advancement.
-     *
      * @since 1.8.4
      */
     public String[][] getRequirements() {
@@ -63,7 +58,6 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
 
     /**
      * @return the percentage of finished requirements.
-     *
      * @since 1.8.4
      */
     public float getPercentage() {
@@ -72,7 +66,6 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
 
     /**
      * @return the fraction of finished requirements to total requirements.
-     *
      * @since 1.8.4
      */
     public String getFraction() {
@@ -81,7 +74,6 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
 
     /**
      * @return the amount of requirements criteria.
-     *
      * @since 1.8.4
      */
     public int countObtainedRequirements() {
@@ -90,7 +82,6 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
 
     /**
      * @return the amount of missing criteria.
-     *
      * @since 1.8.4
      */
     public String[] getUnobtainedCriteria() {
@@ -99,7 +90,6 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
 
     /**
      * @return the ids of the finished requirements.
-     *
      * @since 1.8.4
      */
     public String[] getObtainedCriteria() {
@@ -108,7 +98,6 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
 
     /**
      * @return the earliest completion date of all criteria.
-     *
      * @since 1.8.4
      */
     public Date getEarliestProgressObtainDate() {
@@ -118,8 +107,7 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
     /**
      * @param criteria the criteria
      * @return the completion date of the given criteria or {@code null} if the criteria is not met
-     *         yet.
-     *
+     * yet.
      * @since 1.8.4
      */
     public Date getCriterionProgress(String criteria) {
@@ -130,7 +118,6 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
     /**
      * @param criteria the criteria
      * @return {@code true} if the given criteria is met, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isCriteriaObtained(String criteria) {

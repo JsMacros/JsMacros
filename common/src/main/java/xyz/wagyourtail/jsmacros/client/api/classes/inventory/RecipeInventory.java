@@ -10,13 +10,12 @@ import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
-
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookResults;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.RecipeHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.RecipeHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.List;
@@ -40,7 +39,6 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
 
     /**
      * @return the output item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getOutput() {
@@ -49,7 +47,6 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
 
     /**
      * @return the maximum input size for all recipes in this inventory.
-     *
      * @since 1.8.4
      */
     public int getInputSize() {
@@ -62,14 +59,12 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
      * @param z the z position of the input slot, starting at 0, top to bottom. Must be less than
      *          {@link #getCraftingHeight()}
      * @return the input item at the given position.
-     *
      * @since 1.8.4
      */
     public abstract ItemStackHelper getInput(int x, int z);
 
     /**
      * @return the input items of the crafting grid, in a 2d array.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper[][] getInput() {
@@ -84,7 +79,6 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
 
     /**
      * @return the width of the crafting grid.
-     *
      * @since 1.8.4
      */
     public int getCraftingWidth() {
@@ -93,7 +87,6 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
 
     /**
      * @return the height of the crafting grid.
-     *
      * @since 1.8.4
      */
     public int getCraftingHeight() {
@@ -102,7 +95,6 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
 
     /**
      * @return the amount of slots used for crafting.
-     *
      * @since 1.8.4
      */
     public int getCraftingSlotCount() {
@@ -111,7 +103,6 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
 
     /**
      * @return the recipe category of recipes that can be crafted in this inventory.
-     *
      * @since 1.8.4
      */
     public String getCategory() {
@@ -131,7 +122,6 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
 
     /**
      * @return
-     *
      * @throws InterruptedException
      * @since 1.3.1
      */
@@ -142,7 +132,6 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
     /**
      * @param craftable whether only to list craftable recipes
      * @return a list of recipes that can be crafted in this inventory.
-     *
      * @throws InterruptedException
      * @since 1.8.4
      */
@@ -218,7 +207,6 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
 
     /**
      * @return {@code true} if the recipe book is visible, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isRecipeBookOpened() {

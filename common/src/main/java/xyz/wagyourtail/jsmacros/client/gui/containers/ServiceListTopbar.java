@@ -1,9 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.gui.containers;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
-
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.config.Sorting;
 import xyz.wagyourtail.jsmacros.client.gui.screens.ServiceScreen;
@@ -46,27 +45,28 @@ public class ServiceListTopbar extends MultiElementContainer<ServiceScreen> {
             parent.reload();
         }));
 
-        addDrawableChild(new Button(x + w - 1, y+1, 11, height - 3, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("+"), (btn) -> {
+        addDrawableChild(new Button(x + w - 1, y + 1, 11, height - 3, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("+"), (btn) -> {
             openOverlay(new TextPrompt(parent.width / 4, parent.height / 4, parent.width / 2, parent.height / 2, textRenderer, Text.translatable("jsmacros.servicename"), "", getFirstOverlayParent(), (name) -> {
-                if (Core.getInstance().services.registerService(name, new ServiceTrigger(Core.getInstance().config.macroFolder, false)))
+                if (Core.getInstance().services.registerService(name, new ServiceTrigger(Core.getInstance().config.macroFolder, false))) {
                     parent.addService(name);
+                }
             }));
         }));
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        fill(matrices, x, y, x + width, y + 1, 0xFFFFFFFF);
-        fill(matrices, x, y + height - 2, x + width, y + height - 1, 0xFFFFFFFF);
-        fill(matrices, x, y + height - 1, x + width, y + height, 0xFF7F7F7F);
-        fill(matrices, x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
-        fill(matrices, x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        drawContext.fill(x, y, x + width, y + 1, 0xFFFFFFFF);
+        drawContext.fill(x, y + height - 2, x + width, y + height - 1, 0xFFFFFFFF);
+        drawContext.fill(x, y + height - 1, x + width, y + height, 0xFF7F7F7F);
+        drawContext.fill(x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
+        drawContext.fill(x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
         int w = this.width - 12;
 
-        fill(matrices, x + w * 2 / 12, y + 1, x + w * 2 / 12 + 1, y + height - 1, 0xFFFFFFFF);
-        fill(matrices, x + w * 10 / 12, y + 1, x + w * 10 / 12 + 1, y + height - 1, 0xFFFFFFFF);
-        fill(matrices, x + w * 11 / 12, y + 1, x + w * 11 / 12 + 1, y + height - 1, 0xFFFFFFFF);
-        fill(matrices, x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
+        drawContext.fill(x + w * 2 / 12, y + 1, x + w * 2 / 12 + 1, y + height - 1, 0xFFFFFFFF);
+        drawContext.fill(x + w * 10 / 12, y + 1, x + w * 10 / 12 + 1, y + height - 1, 0xFFFFFFFF);
+        drawContext.fill(x + w * 11 / 12, y + 1, x + w * 11 / 12 + 1, y + height - 1, 0xFFFFFFFF);
+        drawContext.fill(x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
     }
 
 }

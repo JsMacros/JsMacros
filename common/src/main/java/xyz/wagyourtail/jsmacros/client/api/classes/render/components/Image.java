@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -39,21 +40,21 @@ public class Image implements RenderElement, Alignable<Image> {
 
     public Image(int x, int y, int width, int height, int zIndex, int color, String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight, float rotation) {
         this(
-            x,
-            y,
-            width,
-            height,
-            zIndex,
-            0xFF,
-            color,
-            id,
-            imageX,
-            imageY,
-            regionWidth,
-            regionHeight,
-            textureWidth,
-            textureHeight,
-            rotation
+                x,
+                y,
+                width,
+                height,
+                zIndex,
+                0xFF,
+                color,
+                id,
+                imageX,
+                imageY,
+                regionWidth,
+                regionHeight,
+                textureWidth,
+                textureHeight,
+                rotation
         );
         setColor(color);
     }
@@ -73,9 +74,7 @@ public class Image implements RenderElement, Alignable<Image> {
      * @param regionHeight
      * @param textureWidth
      * @param textureHeight
-     *
      * @return self for chaining.
-     *
      * @since 1.2.3
      */
     public Image setImage(String id, int imageX, int imageY, int regionWidth, int regionHeight, int textureWidth, int textureHeight) {
@@ -91,7 +90,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @return
-     *
      * @since 1.2.3
      */
     public String getImage() {
@@ -100,9 +98,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @param x the new x position of this image
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Image setX(int x) {
@@ -112,7 +108,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @return the x position of this image.
-     *
      * @since 1.8.4
      */
     public int getX() {
@@ -121,9 +116,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @param y the new y position of this image
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Image setY(int y) {
@@ -133,7 +126,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @return the y position of this image.
-     *
      * @since 1.8.4
      */
     public int getY() {
@@ -143,9 +135,7 @@ public class Image implements RenderElement, Alignable<Image> {
     /**
      * @param x the new x position of this image
      * @param y the new y position of this image
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Image setPos(int x, int y) {
@@ -159,7 +149,6 @@ public class Image implements RenderElement, Alignable<Image> {
      * @param y
      * @param width
      * @param height
-     *
      * @since 1.2.3
      */
     public Image setPos(int x, int y, int width, int height) {
@@ -172,9 +161,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @param width the new width of this image
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Image setWidth(int width) {
@@ -184,7 +171,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @return the width of this image.
-     *
      * @since 1.8.4
      */
     public int getWidth() {
@@ -193,9 +179,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @param height the new height of this image
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Image setHeight(int height) {
@@ -205,7 +189,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @return the height of this image.
-     *
      * @since 1.8.4
      */
     public int getHeight() {
@@ -213,11 +196,9 @@ public class Image implements RenderElement, Alignable<Image> {
     }
 
     /**
-     * @param width the new width of this image
+     * @param width  the new width of this image
      * @param height the new height of this image
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Image setSize(int width, int height) {
@@ -228,9 +209,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @param color
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Image setColor(int color) {
@@ -244,9 +223,7 @@ public class Image implements RenderElement, Alignable<Image> {
     /**
      * @param color
      * @param alpha
-     *
      * @return
-     *
      * @since 1.6.5
      */
     public Image setColor(int color, int alpha) {
@@ -256,7 +233,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @return the color of this image.
-     *
      * @since 1.8.4
      */
     public int getColor() {
@@ -265,7 +241,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @return the alpha value of this image.
-     *
      * @since 1.8.4
      */
     public int getAlpha() {
@@ -274,9 +249,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @param rotation
-     *
      * @return
-     *
      * @since 1.2.6
      */
     public Image setRotation(double rotation) {
@@ -286,7 +259,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @return the rotation of this image.
-     *
      * @since 1.8.4
      */
     public float getRotation() {
@@ -295,9 +267,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @param rotateCenter whether the image should be rotated around its center
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Image setRotateCenter(boolean rotateCenter) {
@@ -307,8 +277,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @return {@code true} if this image should be rotated around its center, {@code false}
-     *     otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isRotatingCenter() {
@@ -317,9 +286,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
     /**
      * @param zIndex the new z-index of this image
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Image setZIndex(int zIndex) {
@@ -333,7 +300,8 @@ public class Image implements RenderElement, Alignable<Image> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        MatrixStack matrices = drawContext.getMatrices();
         matrices.push();
         setupMatrix(matrices, x, y, 1, rotation, getWidth(), getHeight(), rotateCenter);
         RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
@@ -438,9 +406,7 @@ public class Image implements RenderElement, Alignable<Image> {
          * Values set before the call of this method will be overwritten.
          *
          * @param customImage the custom image to use
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder fromCustomImage(CustomImage customImage) {
@@ -458,9 +424,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param identifier the identifier of the image to use
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder identifier(String identifier) {
@@ -470,7 +434,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return the identifier of the used image or {@code null} if no image is used.
-         *
          * @since 1.8.4
          */
         public String getIdentifier() {
@@ -479,9 +442,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param x the x position of the image
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder x(int x) {
@@ -491,7 +452,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return the x position of the image.
-         *
          * @since 1.8.4
          */
         public int getX() {
@@ -500,9 +460,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param y the y position of the image
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder y(int y) {
@@ -512,7 +470,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return the y position of the image.
-         *
          * @since 1.8.4
          */
         public int getY() {
@@ -522,9 +479,7 @@ public class Image implements RenderElement, Alignable<Image> {
         /**
          * @param x the x position of the image
          * @param y the y position of the image
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos(int x, int y) {
@@ -535,9 +490,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param width the width of the image
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder width(int width) {
@@ -547,7 +500,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return the width of the image.
-         *
          * @since 1.8.4
          */
         public int getWidth() {
@@ -556,9 +508,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param height the height of the image
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder height(int height) {
@@ -568,7 +518,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return the height of the image.
-         *
          * @since 1.8.4
          */
         public int getHeight() {
@@ -576,11 +525,9 @@ public class Image implements RenderElement, Alignable<Image> {
         }
 
         /**
-         * @param width the width of the image
+         * @param width  the width of the image
          * @param height the height of the image
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder size(int width, int height) {
@@ -591,9 +538,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param imageX the x position in the image texture to start drawing from
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder imageX(int imageX) {
@@ -603,7 +548,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return the x position in the image texture to start drawing from.
-         *
          * @since 1.8.4
          */
         public int getImageX() {
@@ -612,9 +556,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param imageY the y position in the image texture to start drawing from
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder imageY(int imageY) {
@@ -624,7 +566,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return the y position in the image texture to start drawing from.
-         *
          * @since 1.8.4
          */
         public int getImageY() {
@@ -634,9 +575,7 @@ public class Image implements RenderElement, Alignable<Image> {
         /**
          * @param imageX the x position in the image texture to start drawing from
          * @param imageY the y position in the image texture to start drawing from
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder imagePos(int imageX, int imageY) {
@@ -647,9 +586,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param regionWidth the width of the region to draw
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder regionWidth(int regionWidth) {
@@ -659,7 +596,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return the width of the region to draw.
-         *
          * @since 1.8.4
          */
         public int getRegionWidth() {
@@ -668,9 +604,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param regionHeight the height of the region to draw
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder regionHeight(int regionHeight) {
@@ -680,7 +614,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return the height of the region to draw.
-         *
          * @since 1.8.4
          */
         public int getRegionHeight() {
@@ -688,11 +621,9 @@ public class Image implements RenderElement, Alignable<Image> {
         }
 
         /**
-         * @param regionWidth the width of the region to draw
+         * @param regionWidth  the width of the region to draw
          * @param regionHeight the height of the region to draw
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder regionSize(int regionWidth, int regionHeight) {
@@ -702,13 +633,11 @@ public class Image implements RenderElement, Alignable<Image> {
         }
 
         /**
-         * @param x the x position in the image texture to start drawing from
-         * @param y the y position in the image texture to start drawing from
-         * @param width the width of the region to draw
+         * @param x      the x position in the image texture to start drawing from
+         * @param y      the y position in the image texture to start drawing from
+         * @param width  the width of the region to draw
          * @param height the height of the region to draw
-         *
          * @return
-         *
          * @since 1.8.4
          */
         public Builder regions(int x, int y, int width, int height) {
@@ -720,15 +649,13 @@ public class Image implements RenderElement, Alignable<Image> {
         }
 
         /**
-         * @param x the x position in the image texture to start drawing from
-         * @param y the y position in the image texture to start drawing from
-         * @param width the width of the region to draw
-         * @param height the height of the region to draw
-         * @param textureWidth the width of the used texture
+         * @param x             the x position in the image texture to start drawing from
+         * @param y             the y position in the image texture to start drawing from
+         * @param width         the width of the region to draw
+         * @param height        the height of the region to draw
+         * @param textureWidth  the width of the used texture
          * @param textureHeight the height of the used texture
-         *
          * @return
-         *
          * @since 1.8.4
          */
         public Builder regions(int x, int y, int width, int height, int textureWidth, int textureHeight) {
@@ -743,9 +670,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param textureWidth the width of the used texture
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder textureWidth(int textureWidth) {
@@ -755,7 +680,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return the width of the used texture.
-         *
          * @since 1.8.4
          */
         public int getTextureWidth() {
@@ -764,9 +688,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param textureHeight the height of the used texture
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder textureHeight(int textureHeight) {
@@ -776,7 +698,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return the height of the used texture.
-         *
          * @since 1.8.4
          */
         public int getTextureHeight() {
@@ -784,11 +705,9 @@ public class Image implements RenderElement, Alignable<Image> {
         }
 
         /**
-         * @param textureWidth the width of the used texture
+         * @param textureWidth  the width of the used texture
          * @param textureHeight the height of the used texture
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder textureSize(int textureWidth, int textureHeight) {
@@ -799,9 +718,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param color the color of the image
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int color) {
@@ -813,9 +730,7 @@ public class Image implements RenderElement, Alignable<Image> {
          * @param r the red component of the color
          * @param g the green component of the color
          * @param b the blue component of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int r, int g, int b) {
@@ -828,9 +743,7 @@ public class Image implements RenderElement, Alignable<Image> {
          * @param g the green component of the color
          * @param b the blue component of the color
          * @param a the alpha component of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int r, int g, int b, int a) {
@@ -842,9 +755,7 @@ public class Image implements RenderElement, Alignable<Image> {
         /**
          * @param color the color of the image
          * @param alpha the alpha value of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int color, int alpha) {
@@ -855,7 +766,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return the color of the image.
-         *
          * @since 1.8.4
          */
         public int getColor() {
@@ -864,9 +774,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param alpha the alpha value of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder alpha(int alpha) {
@@ -876,7 +784,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return the alpha value of the color.
-         *
          * @since 1.8.4
          */
         public int getAlpha() {
@@ -885,9 +792,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param rotation the rotation (clockwise) of the image in degrees
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder rotation(double rotation) {
@@ -897,7 +802,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return the rotation (clockwise) of the image in degrees.
-         *
          * @since 1.8.4
          */
         public float getRotation() {
@@ -906,9 +810,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param rotateCenter whether the image should be rotated around its center
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder rotateCenter(boolean rotateCenter) {
@@ -918,8 +820,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return {@code true} if this image should be rotated around its center, {@code false}
-         *     otherwise.
-         *
+         * otherwise.
          * @since 1.8.4
          */
         public boolean isRotatingCenter() {
@@ -928,9 +829,7 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @param zIndex the z-index of the image
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder zIndex(int zIndex) {
@@ -940,7 +839,6 @@ public class Image implements RenderElement, Alignable<Image> {
 
         /**
          * @return the z-index of the image.
-         *
          * @since 1.8.4
          */
         public int getZIndex() {
@@ -950,21 +848,21 @@ public class Image implements RenderElement, Alignable<Image> {
         @Override
         public Image createElement() {
             return new Image(
-                x,
-                y,
-                width,
-                height,
-                zIndex,
-                alpha,
-                color,
-                identifier,
-                imageX,
-                imageY,
-                regionWidth,
-                regionHeight,
-                textureWidth,
-                textureHeight,
-                rotation
+                    x,
+                    y,
+                    width,
+                    height,
+                    zIndex,
+                    alpha,
+                    color,
+                    identifier,
+                    imageX,
+                    imageY,
+                    regionWidth,
+                    regionHeight,
+                    textureWidth,
+                    textureHeight,
+                    rotation
             ).setRotateCenter(rotateCenter).setParent(parent);
         }
 

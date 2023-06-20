@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings.settingfields;
 
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.AbstractSettingContainer;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
@@ -11,11 +11,11 @@ import xyz.wagyourtail.wagyourgui.elements.TextInput;
 import java.lang.reflect.InvocationTargetException;
 
 public class IntField extends AbstractSettingField<Integer> {
-    
+
     public IntField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<Integer> field) {
         super(x, y, width, textRenderer.fontHeight + 2, textRenderer, parent, field);
     }
-    
+
     @Override
     public void init() {
         super.init();
@@ -35,7 +35,7 @@ public class IntField extends AbstractSettingField<Integer> {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public void setPos(int x, int y, int width, int height) {
         super.setPos(x, y, width, height);
@@ -43,10 +43,10 @@ public class IntField extends AbstractSettingField<Integer> {
             btn.setY(y);
         }
     }
-    
+
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        textRenderer.draw(matrices, BaseScreen.trimmed(textRenderer, settingName, width / 2), x, y + 1, 0xFFFFFF);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        drawContext.drawText(textRenderer, BaseScreen.trimmed(textRenderer, settingName, width / 2), x, y + 1, 0xFFFFFF, false);
     }
-    
+
 }

@@ -18,11 +18,11 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventDimensionChange;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventDisconnect;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventLaunchGame;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventOpenContainer;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventOpenScreen;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventDimensionChange;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventDisconnect;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinDisconnectedScreen;
 
 @Mixin(MinecraftClient.class)
@@ -31,23 +31,28 @@ public abstract class MixinMinecraftClient {
     @Shadow
     public Screen currentScreen;
 
-    @Shadow public abstract void setScreen(@Nullable Screen screen);
+    @Shadow
+    public abstract void setScreen(@Nullable Screen screen);
 
-    @Shadow @Nullable public ClientPlayerInteractionManager interactionManager;
+    @Shadow
+    @Nullable
+    public ClientPlayerInteractionManager interactionManager;
 
-    @Shadow @Final
+    @Shadow
+    @Final
     private Session session;
 
-    @Inject(at = @At("HEAD"), method="joinWorld")
+    @Inject(at = @At("HEAD"), method = "joinWorld")
     public void onJoinWorld(ClientWorld world, CallbackInfo info) {
-        if (world != null)
+        if (world != null) {
             new EventDimensionChange(world.getRegistryKey().getValue().toString());
+        }
     }
 
     @Unique
     private Screen prevScreen;
-    
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", opcode = Opcodes.PUTFIELD), method="setScreen")
+
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", opcode = Opcodes.PUTFIELD), method = "setScreen")
     public void onOpenScreen(Screen screen, CallbackInfo info) {
         if (screen != currentScreen) {
             if (screen instanceof AbstractInventoryScreen && interactionManager.hasCreativeInventory()) {
@@ -74,8 +79,8 @@ public abstract class MixinMinecraftClient {
         }
         prevScreen = null;
     }
-    
-    @Inject(at = @At(value = "FIELD", target= "Lnet/minecraft/client/MinecraftClient;integratedServerRunning:Z", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER), method="disconnect(Lnet/minecraft/client/gui/screen/Screen;)V")
+
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;integratedServerRunning:Z", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER), method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V")
     public void onDisconnect(Screen s, CallbackInfo info) {
         if (s instanceof DisconnectedScreen) {
             new EventDisconnect(((MixinDisconnectedScreen) s).getReason());
@@ -88,5 +93,5 @@ public abstract class MixinMinecraftClient {
     private void onStart(CallbackInfo ci) {
         new EventLaunchGame(this.session.getUsername());
     }
-    
+
 }

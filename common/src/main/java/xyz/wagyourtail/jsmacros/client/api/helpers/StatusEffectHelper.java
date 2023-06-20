@@ -6,14 +6,13 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.registry.Registries;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
-
 /**
  * @author Wagyourtail
  * @since 1.2.4
  */
 @SuppressWarnings("unused")
 public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
-    
+
     public StatusEffectHelper(StatusEffectInstance s) {
         super(s);
     }
@@ -33,24 +32,24 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     }
 
     /**
-     * @since 1.2.4
      * @return
+     * @since 1.2.4
      */
     public String getId() {
         return Registries.STATUS_EFFECT.getId(base.getEffectType()).toString();
     }
-    
+
     /**
-     * @since 1.2.4
      * @return
+     * @since 1.2.4
      */
     public int getStrength() {
         return base.getAmplifier();
     }
 
     /**
-     * @since 1.8.4
      * @return the string name of the category of the status effect, "HARMFUL", "NEUTRAL", or "BENEFICIAL".
+     * @since 1.8.4
      */
     public String getCategory() {
         return switch (base.getEffectType().getCategory()) {
@@ -59,10 +58,10 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
             case BENEFICIAL -> "BENEFICIAL";
         };
     }
-    
+
     /**
-     * @since 1.2.4
      * @return
+     * @since 1.2.4
      */
     public int getTime() {
         return base.getDuration();
@@ -70,7 +69,6 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
 
     /**
      * @return {@code true} if this effect is applied permanently, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isPermanent() {
@@ -82,7 +80,6 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      * translucent.
      *
      * @return {@code true} if this effect is an ambient one, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isAmbient() {
@@ -91,7 +88,6 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
 
     /**
      * @return {@code true} if this effect has an icon it should render, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasIcon() {
@@ -100,8 +96,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
 
     /**
      * @return {@code true} if this effect affects the particle color and gets rendered in game,
-     *         {@code false} otherwise.
-     *
+     * {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean isVisible() {
@@ -113,7 +108,6 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      * command.
      *
      * @return {@code true} if this effect should be applied instantly, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isInstant() {
@@ -122,7 +116,6 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
 
     /**
      * @return {@code true} if this effect is considered beneficial, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isBeneficial() {
@@ -131,7 +124,6 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
 
     /**
      * @return {@code true} if this effect is considered neutral, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isNeutral() {
@@ -140,7 +132,6 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
 
     /**
      * @return {@code true} if this effect is considered harmful, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isHarmful() {
@@ -151,5 +142,5 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
     public String toString() {
         return String.format("StatusEffectHelper:{\"id\": \"%s\", \"strength\": %d, \"time\": %d}", getId(), getStrength(), getTime());
     }
-    
+
 }

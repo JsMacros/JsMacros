@@ -3,7 +3,10 @@
     {
       "type": "ttf",
       "file": "jsmacros:notomono-regular.ttf",
-      "shift": [-0.5, 1.2],
+      "shift": [
+        -0.5,
+        1.2
+      ],
       "size": 9.75,
       "oversample": 4.0,
       "skip": "",

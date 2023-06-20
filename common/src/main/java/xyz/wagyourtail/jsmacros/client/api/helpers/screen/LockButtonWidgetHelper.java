@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 
 import net.minecraft.client.gui.widget.LockButtonWidget;
-
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -25,7 +24,6 @@ public class LockButtonWidgetHelper extends ClickableWidgetHelper<LockButtonWidg
 
     /**
      * @return {@code true} if the button is locked, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isLocked() {
@@ -35,7 +33,6 @@ public class LockButtonWidgetHelper extends ClickableWidgetHelper<LockButtonWidg
     /**
      * @param locked whether to lock the button or not
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public LockButtonWidgetHelper setLocked(boolean locked) {
@@ -63,7 +60,6 @@ public class LockButtonWidgetHelper extends ClickableWidgetHelper<LockButtonWidg
 
         /**
          * @return the initial state of the lock button.
-         *
          * @since 1.8.4
          */
         public boolean isLocked() {
@@ -73,7 +69,6 @@ public class LockButtonWidgetHelper extends ClickableWidgetHelper<LockButtonWidg
         /**
          * @param locked whether to initially lock the button or not
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public LockButtonBuilder locked(boolean locked) {
@@ -83,7 +78,6 @@ public class LockButtonWidgetHelper extends ClickableWidgetHelper<LockButtonWidg
 
         /**
          * @return the action to run when the button is pressed.
-         *
          * @since 1.8.4
          */
         public MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> getAction() {
@@ -93,7 +87,6 @@ public class LockButtonWidgetHelper extends ClickableWidgetHelper<LockButtonWidg
         /**
          * @param action the action to run when the button is pressed
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public LockButtonBuilder action(MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> action) {
@@ -119,6 +112,7 @@ public class LockButtonWidgetHelper extends ClickableWidgetHelper<LockButtonWidg
             b.set(new LockButtonWidgetHelper(lockButton, getZIndex()));
             return b.get();
         }
+
     }
 
 }

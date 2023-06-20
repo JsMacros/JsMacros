@@ -24,7 +24,6 @@ public class CheckBoxWidgetHelper extends ClickableWidgetHelper<CheckBoxWidgetHe
 
     /**
      * @return {@code true} if this button is checked, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isChecked() {
@@ -33,7 +32,6 @@ public class CheckBoxWidgetHelper extends ClickableWidgetHelper<CheckBoxWidgetHe
 
     /**
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CheckBoxWidgetHelper toggle() {
@@ -43,7 +41,6 @@ public class CheckBoxWidgetHelper extends ClickableWidgetHelper<CheckBoxWidgetHe
     /**
      * @param checked whether to check or uncheck this button
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CheckBoxWidgetHelper setChecked(boolean checked) {
@@ -73,7 +70,6 @@ public class CheckBoxWidgetHelper extends ClickableWidgetHelper<CheckBoxWidgetHe
 
         /**
          * @return {@code true} if the checkbox is initially checked, {@code false} otherwise.
-         *
          * @since 1.8.4
          */
         public boolean isChecked() {
@@ -83,7 +79,6 @@ public class CheckBoxWidgetHelper extends ClickableWidgetHelper<CheckBoxWidgetHe
         /**
          * @param checked whether the checkbox is initially checked or not
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public CheckBoxBuilder checked(boolean checked) {
@@ -93,7 +88,6 @@ public class CheckBoxWidgetHelper extends ClickableWidgetHelper<CheckBoxWidgetHe
 
         /**
          * @return the action to run when the button is pressed.
-         *
          * @since 1.8.4
          */
         public MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> getAction() {
@@ -103,7 +97,6 @@ public class CheckBoxWidgetHelper extends ClickableWidgetHelper<CheckBoxWidgetHe
         /**
          * @param action the action to run when the button is pressed
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public CheckBoxBuilder action(MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> action) {
@@ -126,6 +119,7 @@ public class CheckBoxWidgetHelper extends ClickableWidgetHelper<CheckBoxWidgetHe
             b.set(new CheckBoxWidgetHelper(checkBox, getZIndex()));
             return b.get();
         }
+
     }
 
 }

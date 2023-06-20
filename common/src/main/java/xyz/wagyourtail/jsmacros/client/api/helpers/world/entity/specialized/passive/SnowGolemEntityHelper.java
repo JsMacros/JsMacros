@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.SnowGolemEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 
 /**
@@ -17,7 +16,6 @@ public class SnowGolemEntityHelper extends MobEntityHelper<SnowGolemEntity> {
 
     /**
      * @return {@code true} if the snow golem has a pumpkin on its head, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasPumpkin() {
@@ -26,7 +24,6 @@ public class SnowGolemEntityHelper extends MobEntityHelper<SnowGolemEntity> {
 
     /**
      * @return {@code true} if this snow golem can be sheared, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isShearable() {

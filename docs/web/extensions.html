@@ -1,56 +1,65 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Getting Started</title>
-        <link rel="stylesheet" href="general.css" />
+<head>
+    <title>Getting Started</title>
+    <link rel="stylesheet" href="general.css"/>
 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <header>
-            <a href="../../../..">
-                <----- Return to main JsMacros docs page.
-            </a>
-        </header>
-        <main class= "General">
-            <h2>Extensions</h2>
-                    <p>
-                    <h2>Language Extensions</h2>
-                    These extensions allow you to code in languages other than JavaScript, and some even have performance benefits.
-                    <ul>
-                        <li>Jython (python 2.7 support) - <a href= "https://github.com/JsMacros/JsMacros-Jython/releases" target="_blank">Github Download</a></li>
-                        <li>JEP    (python 3.x support) - <a href= "https://github.com/JsMacros/JsMacros-JEP/releases" target="_blank">Github Download</a></li>
-                        <li>Lua    (lua 5.2 support)    - <a href= "https://github.com/JsMacros/JsMacros-Lua/releases" target="_blank">Github Download</a></li>
-                        <li>Ruby    (Ruby 2.6.x support) - <a href= "https://github.com/JsMacros/JsMacros-Ruby/releases" target="_blank">Github Download</a></li>
-                        <li>Groovy    (Groovy 4.0.4 support) - <a href= "https://github.com/JsMacros/JsMacros-Groovy/releases" target="_blank">Github Download</a></li>
-                        <li>Kotlin    (Kotlin 1.7.10 support) - <a href= "https://github.com/JsMacros/JsMacros-Kotlin/releases" target="_blank">Github Download</a></li>
-                        <li>WASM/WASI    (WasmTime 0.11.0 support) - <a href= "https://github.com/JsMacros/JsMacros-WASM/releases" target="_blank">Github Download</a></li>
-                    </ul>
-                    <h3>Installation</h3>
-                    To install jsmacros extensions, place the jar files in the <code>.minecraft/config/jsMacros/LanguageExtensions/</code> folder.
-                    <h2>Benchmarks</h2>
-                    <img src= "img/updated_bm.png" alt= "Everything's faster than JavaScript, except wasm/groovy interop" />
-                    <br>
-                    <br>
-                    Jython, Lua and Ruby will have a good performance benefit for most tasks.
-                    <br>
-                    <i>Plus, their threading scheme for launguage contexts works better,
-                    so you can have true async.</i>
-                    <br>
-                    <br>
-                    JEP/Groovy's good until you try to access a lot of different Java objects.
-                    <br>
-                    <i>but jep can be a pain to install, and has threading concerns like js</i>
-                    <br>
-                    <br>
-                    Kotlin is faster, but is more strongly typed and null-checked, so it may be harder to write valid scripts in.
-                    <br>
-                    <Br>
-                    WASM/WASI is a joke.
-                    <br>
-                    <i>have you seen its java interop code.</i>
-                    <h3>Debugging</h3>
-                    for debugger attaching in js, see <a href= "https://github.com/JsMacros/JsMacros-Debugging" target="_blank">JsMacros Debugging</a>
-        </main>
-    </body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<header>
+    <a href="../../../..">
+        <----- Return to main JsMacros docs page.
+    </a>
+</header>
+<main class="General">
+    <h2>Extensions</h2>
+    <p>
+    <h2>Language Extensions</h2>
+    These extensions allow you to code in languages other than JavaScript, and some even have performance benefits.
+    <ul>
+        <li>Jython (python 2.7 support) - <a href="https://github.com/JsMacros/JsMacros-Jython/releases"
+                                             target="_blank">Github Download</a></li>
+        <li>JEP (python 3.x support) - <a href="https://github.com/JsMacros/JsMacros-JEP/releases" target="_blank">Github
+            Download</a></li>
+        <li>Lua (lua 5.2 support) - <a href="https://github.com/JsMacros/JsMacros-Lua/releases" target="_blank">Github
+            Download</a></li>
+        <li>Ruby (Ruby 2.6.x support) - <a href="https://github.com/JsMacros/JsMacros-Ruby/releases" target="_blank">Github
+            Download</a></li>
+        <li>Groovy (Groovy 4.0.4 support) - <a href="https://github.com/JsMacros/JsMacros-Groovy/releases"
+                                               target="_blank">Github Download</a></li>
+        <li>Kotlin (Kotlin 1.7.10 support) - <a href="https://github.com/JsMacros/JsMacros-Kotlin/releases"
+                                                target="_blank">Github Download</a></li>
+        <li>WASM/WASI (WasmTime 0.11.0 support) - <a href="https://github.com/JsMacros/JsMacros-WASM/releases"
+                                                     target="_blank">Github Download</a></li>
+    </ul>
+    <h3>Installation</h3>
+    To install jsmacros extensions, place the jar files in the
+    <code>.minecraft/config/jsMacros/LanguageExtensions/</code> folder.
+    <h2>Benchmarks</h2>
+    <img src="img/updated_bm.png" alt="Everything's faster than JavaScript, except wasm/groovy interop"/>
+    <br>
+    <br>
+    Jython, Lua and Ruby will have a good performance benefit for most tasks.
+    <br>
+    <i>Plus, their threading scheme for launguage contexts works better,
+        so you can have true async.</i>
+    <br>
+    <br>
+    JEP/Groovy's good until you try to access a lot of different Java objects.
+    <br>
+    <i>but jep can be a pain to install, and has threading concerns like js</i>
+    <br>
+    <br>
+    Kotlin is faster, but is more strongly typed and null-checked, so it may be harder to write valid scripts in.
+    <br>
+    <Br>
+    WASM/WASI is a joke.
+    <br>
+    <i>have you seen its java interop code.</i>
+    <h3>Debugging</h3>
+    for debugger attaching in js, see <a href="https://github.com/JsMacros/JsMacros-Debugging" target="_blank">JsMacros
+    Debugging</a>
+</main>
+</body>
 </html>

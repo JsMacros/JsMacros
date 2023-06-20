@@ -9,7 +9,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
 @Event(value = "HealthChange")
 public class EventHealthChange implements BaseEvent {
-    
+
     public final float health;
     public final float change;
 
@@ -23,5 +23,5 @@ public class EventHealthChange implements BaseEvent {
     public String toString() {
         return String.format("%s:{\"health\": %f, \"change\": %f}", this.getEventName(), health, change);
     }
-    
+
 }

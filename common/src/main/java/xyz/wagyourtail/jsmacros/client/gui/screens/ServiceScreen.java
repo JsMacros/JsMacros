@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
-
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceContainer;
 import xyz.wagyourtail.jsmacros.client.gui.containers.ServiceListTopbar;
@@ -52,7 +51,9 @@ public class ServiceScreen extends MacroScreen {
     public void setFile(MultiElementContainer<MacroScreen> macro) {
         File f = new File(Core.getInstance().config.macroFolder, ((ServiceContainer) macro).getTrigger().file);
         File dir = Core.getInstance().config.macroFolder;
-        if (!f.equals(Core.getInstance().config.macroFolder)) dir = f.getParentFile();
+        if (!f.equals(Core.getInstance().config.macroFolder)) {
+            dir = f.getParentFile();
+        }
         openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this, ((ServiceContainer) macro)::setFile, this::editFile));
     }
 

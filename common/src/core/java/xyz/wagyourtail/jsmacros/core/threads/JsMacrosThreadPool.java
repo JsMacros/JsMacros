@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.core.threads;
 
 import xyz.wagyourtail.SynchronizedWeakHashSet;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class JsMacrosThreadPool {
@@ -89,6 +88,7 @@ public class JsMacrosThreadPool {
                 }
             }
         }
+
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -107,4 +107,5 @@ public class JsMacrosThreadPool {
         }
         Thread.sleep(5000);
     }
+
 }

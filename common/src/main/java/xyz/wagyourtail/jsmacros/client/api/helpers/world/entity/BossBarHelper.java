@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity;
 
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.util.Formatting;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.FormattingHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -19,34 +18,34 @@ public class BossBarHelper extends BaseHelper<BossBar> {
     public BossBarHelper(BossBar b) {
         super(b);
     }
-    
+
     /**
-     * @since 1.2.1
      * @return boss bar uuid.
+     * @since 1.2.1
      */
     public String getUUID() {
         return base.getUuid().toString();
     }
-    
+
     /**
-     * @since 1.2.1
      * @return percent of boss bar remaining.
+     * @since 1.2.1
      */
     public float getPercent() {
         return base.getPercent();
     }
-    
+
     /**
-     * @since 1.2.1
      * @return boss bar color.
+     * @since 1.2.1
      */
     public String getColor() {
         return base.getColor().getName().toUpperCase(Locale.ROOT);
     }
-    
+
     /**
-     * @since 1.2.1
      * @return boss bar notch style.
+     * @since 1.2.1
      */
     public String getStyle() {
         return base.getStyle().getName().toUpperCase(Locale.ROOT);
@@ -54,7 +53,6 @@ public class BossBarHelper extends BaseHelper<BossBar> {
 
     /**
      * @return the color of this boss bar.
-     *
      * @since 1.8.4
      */
     public int getColorValue() {
@@ -64,23 +62,23 @@ public class BossBarHelper extends BaseHelper<BossBar> {
 
     /**
      * @return the format of the boss bar's color.
-     *
      * @since 1.8.4
      */
     public FormattingHelper getColorFormat() {
         return new FormattingHelper(base.getColor().getTextFormat());
     }
-    
+
     /**
-     * @since 1.2.1
      * @return name of boss bar
+     * @since 1.2.1
      */
     public TextHelper getName() {
         return new TextHelper(base.getName());
     }
-    
+
     @Override
     public String toString() {
         return String.format("BossBarHelper:{\"name:\": \"%s\", \"percent\": %f}", base.getName().getString(), base.getPercent());
     }
+
 }

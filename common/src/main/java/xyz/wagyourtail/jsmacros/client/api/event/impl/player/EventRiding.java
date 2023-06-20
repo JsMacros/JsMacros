@@ -24,4 +24,5 @@ public class EventRiding implements BaseEvent {
     public String toString() {
         return String.format("%s:{\"state\": %b, \"entity\": %s}", this.getEventName(), state, entity.toString());
     }
+
 }

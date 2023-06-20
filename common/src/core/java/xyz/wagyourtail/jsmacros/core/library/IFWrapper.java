@@ -22,27 +22,24 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
  * LUA:
  * no limitations
  *
- *
- * @since 1.2.5, re-named from {@code consumer} in 1.3.2
- *
  * @author Wagyourtail
+ * @since 1.2.5, re-named from {@code consumer} in 1.3.2
  */
- @Library("JavaWrapper")
+@Library("JavaWrapper")
 public interface IFWrapper<T> {
-    
+
     /**
-     * @since 1.4.0
      * @param c
      * @return a new {@link MethodWrapper MethodWrapper}
+     * @since 1.4.0
      */
     @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
     <A, B, R> MethodWrapper<A, B, R, ?> methodToJava(T c);
 
-    
     /**
-     * @since 1.4.0
      * @param c
      * @return a new {@link MethodWrapper MethodWrapper}
+     * @since 1.4.0
      */
     @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
     <A, B, R> MethodWrapper<A, B, R, ?> methodToJavaAsync(T c);
@@ -50,13 +47,14 @@ public interface IFWrapper<T> {
     /**
      * JS/JEP ONLY
      * allows you to set the position of the thread in the queue. you can use this for return value one's too...
-     * @since 1.8.0
+     *
      * @param priority
      * @param c
-     * @return
      * @param <A>
      * @param <B>
      * @param <R>
+     * @return
+     * @since 1.8.0
      */
     @DocletReplaceParams("priority: number, c: (arg0?: A, arg1?: B) => R | void")
     default <A, B, R> MethodWrapper<A, B, R, ?> methodToJavaAsync(int priority, T c) {
@@ -66,6 +64,7 @@ public interface IFWrapper<T> {
     /**
      * JS/JEP only, puts current task at end of queue.
      * use with caution, don't accidentally cause circular waiting.
+     *
      * @throws InterruptedException
      * @since 1.4.0 [citation needed]
      */
@@ -76,9 +75,10 @@ public interface IFWrapper<T> {
     /**
      * JS/JEP only, puts current task at end of queue.
      * use with caution, don't accidentally cause circular waiting.
-     * @since 1.8.0
-     * @throws InterruptedException
+     *
      * @param priorityAdjust the amount to adjust the priority by
+     * @throws InterruptedException
+     * @since 1.8.0
      */
     default void deferCurrentTask(int priorityAdjust) throws InterruptedException {
         throw new AssertionError("deferCurrentTask() is not implemented for this language");
@@ -86,6 +86,7 @@ public interface IFWrapper<T> {
 
     /**
      * JS/JEP only, get priority of current task.
+     *
      * @throws InterruptedException
      * @since 1.8.0
      */
@@ -99,4 +100,5 @@ public interface IFWrapper<T> {
      * @since 1.2.2
      */
     void stop();
+
 }

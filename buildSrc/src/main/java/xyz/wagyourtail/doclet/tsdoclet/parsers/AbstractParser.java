@@ -25,17 +25,26 @@ public abstract class AbstractParser {
     public String genFields(Set<Element> fields) {
         final StringBuilder s = new StringBuilder();
         for (Element field : fields) {
-            if (!field.getModifiers().contains(Modifier.PUBLIC)) continue;
-            if (field.getModifiers().contains(Modifier.STATIC)) continue;
+            if (!field.getModifiers().contains(Modifier.PUBLIC)) {
+                continue;
+            }
+            if (field.getModifiers().contains(Modifier.STATIC)) {
+                continue;
+            }
             s.append(genField(field)).append("\n");
         }
         return s.toString();
     }
+
     public String genStaticFields(Set<Element> fields) {
         final StringBuilder s = new StringBuilder();
         for (Element field : fields) {
-            if (!field.getModifiers().contains(Modifier.PUBLIC)) continue;
-            if (!field.getModifiers().contains(Modifier.STATIC)) continue;
+            if (!field.getModifiers().contains(Modifier.PUBLIC)) {
+                continue;
+            }
+            if (!field.getModifiers().contains(Modifier.STATIC)) {
+                continue;
+            }
             s.append(genField(field)).append("\n");
         }
         return s.toString();
@@ -44,8 +53,12 @@ public abstract class AbstractParser {
     public String genMethods(Set<Element> methods) {
         final StringBuilder s = new StringBuilder();
         for (Element method : methods) {
-            if (!method.getModifiers().contains(Modifier.PUBLIC)) continue;
-            if (method.getModifiers().contains(Modifier.STATIC)) continue;
+            if (!method.getModifiers().contains(Modifier.PUBLIC)) {
+                continue;
+            }
+            if (method.getModifiers().contains(Modifier.STATIC)) {
+                continue;
+            }
             s.append(genMethod((ExecutableElement) method)).append("\n");
         }
         return s.toString();
@@ -54,8 +67,12 @@ public abstract class AbstractParser {
     public String genStaticMethods(Set<Element> methods) {
         final StringBuilder s = new StringBuilder();
         for (Element method : methods) {
-            if (!method.getModifiers().contains(Modifier.PUBLIC)) continue;
-            if (!method.getModifiers().contains(Modifier.STATIC)) continue;
+            if (!method.getModifiers().contains(Modifier.PUBLIC)) {
+                continue;
+            }
+            if (!method.getModifiers().contains(Modifier.STATIC)) {
+                continue;
+            }
             s.append(genMethod((ExecutableElement) method)).append("\n");
         }
         return s.toString();
@@ -64,15 +81,18 @@ public abstract class AbstractParser {
     public String genConstructors(Set<Element> methods) {
         final StringBuilder s = new StringBuilder();
         for (Element method : methods) {
-            if (!method.getModifiers().contains(Modifier.PUBLIC)) continue;
+            if (!method.getModifiers().contains(Modifier.PUBLIC)) {
+                continue;
+            }
             s.append(genConstructor((ExecutableElement) method)).append("\n");
         }
         return s.toString();
     }
+
     public String genField(Element field) {
         return genComment(field) +
-        (field.getModifiers().contains(Modifier.FINAL) ? "readonly " : "") +
-        field.getSimpleName() + ": " + transformType(field.asType()) + ";";
+                (field.getModifiers().contains(Modifier.FINAL) ? "readonly " : "") +
+                field.getSimpleName() + ": " + transformType(field.asType()) + ";";
     }
 
     public String genMethod(ExecutableElement method) {
@@ -92,7 +112,7 @@ public abstract class AbstractParser {
         s.append("(");
         DocletReplaceParams replace = method.getAnnotation(DocletReplaceParams.class);
         if (replace != null) {
-           s.append(replace.value());
+            s.append(replace.value());
         } else {
             List<? extends VariableElement> params = method.getParameters();
             if (params != null && !params.isEmpty()) {
@@ -171,7 +191,9 @@ public abstract class AbstractParser {
                     rawType.append(">");
                 }
 
-                if (rawType.toString().startsWith("net.minecraft")) return "/* minecraft classes, as any, because obfuscation: */ any";
+                if (rawType.toString().startsWith("net.minecraft")) {
+                    return "/* minecraft classes, as any, because obfuscation: */ any";
+                }
                 AnnotationMirror mirror = type.getAnnotationMirrors().stream().filter(e -> e.getAnnotationType().asElement().getSimpleName().toString().equals("Event")).findFirst().orElse(null);
 
                 if (mirror != null) {
@@ -184,7 +206,9 @@ public abstract class AbstractParser {
                     return Main.getAnnotationValue("value", mirror).toString();
                 }
 
-                if (rawType.toString().equals("xyz.wagyourtail.jsmacros.core.event.BaseEvent")) return "Events.BaseEvent";
+                if (rawType.toString().equals("xyz.wagyourtail.jsmacros.core.event.BaseEvent")) {
+                    return "Events.BaseEvent";
+                }
 
                 if (rawType.toString().startsWith("java.lang")) {
                     if (List.of("java.lang.Integer", "java.lang.Float", "java.lang.Long", "java.lang.Short", "java.lang.Character", "java.lang.Byte", "java.lang.Double").contains(rawType.toString())) {
@@ -238,13 +262,13 @@ public abstract class AbstractParser {
                         s.append(referenceString);
                     } else {
                         s.append("_javatypes.").append(
-                            referenceString
-                            .replace(".function.", "._function.")
+                                referenceString
+                                        .replace(".function.", "._function.")
                         );
                     }
                     s.append("}");
                 }
-                case CODE -> s.append("`").append(((LiteralTree)docTree).getBody()).append("`");
+                case CODE -> s.append("`").append(((LiteralTree) docTree).getBody()).append("`");
                 default -> s.append(docTree);
             }
         }
@@ -264,8 +288,8 @@ public abstract class AbstractParser {
             }
         }
         return "\n/**\n" +
-            StringHelpers.addToLineStarts(s.toString(), " * ") +
-            "\n */\n";
+                StringHelpers.addToLineStarts(s.toString(), " * ") +
+                "\n */\n";
     }
 
     public abstract String genTSInterface();
@@ -276,8 +300,12 @@ public abstract class AbstractParser {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AbstractParser that)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof AbstractParser that)) {
+            return false;
+        }
         return type.equals(that.type);
     }
 

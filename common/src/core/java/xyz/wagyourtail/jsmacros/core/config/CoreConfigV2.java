@@ -16,33 +16,32 @@ public class CoreConfigV2 {
 
     @Option(translationKey = "jsmacros.defaultprofile", group = "jsmacros.settings.profile", options = "profileOptions")
     public String defaultProfile = "default";
-    
+
     @Option(translationKey = "jsmacros.profiles", group = {"jsmacros.settings.profile", "jsmacros.settings.profile.list"}, type = @OptionType("profile"))
     public Map<String, List<ScriptTrigger>> profiles = new HashMap<>();
 
     public Map<String, ServiceTrigger> services = new HashMap<>();
-    
+
     public CoreConfigV2() {
         profiles.put("default", new ArrayList<>());
         profiles.get("default").add(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventProfileLoad.class.getAnnotation(Event.class).value(), "index.js", true));
     }
-    
+
     //"synthetic" option
     @Option(translationKey = "jsmacros.currentprofile", group = "jsmacros.settings.profile", setter = "setCurrentProfile", options = "profileOptions")
     public String getCurrentProfile() {
         return Core.getInstance().profile.getCurrentProfileName();
     }
-    
+
     public void setCurrentProfile(String pname) {
         Core.getInstance().profile.saveProfile();
         Core.getInstance().profile.loadOrCreateProfile(pname);
     }
-    
+
     public List<String> profileOptions() {
         return new ArrayList<>(profiles.keySet());
     }
-    
-    
+
     @Deprecated
     public void fromV1(JsonObject v1) {
         defaultProfile = v1.get("defaultProfile").getAsString();
@@ -57,4 +56,5 @@ public class CoreConfigV2 {
         }
         v1.remove("profiles");
     }
+
 }

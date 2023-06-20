@@ -24,8 +24,8 @@ public abstract class CommandManager {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
 
     /**
-     * @since 1.7.0
      * @return list of commands
+     * @since 1.7.0
      */
     public List<String> getValidCommands() {
         ClientPlayNetworkHandler nh = MinecraftClient.getInstance().getNetworkHandler();
@@ -37,30 +37,30 @@ public abstract class CommandManager {
 
     /**
      * @param name
-     * @since 1.7.0
      * @return
+     * @since 1.7.0
      */
     public abstract CommandBuilder createCommandBuilder(String name);
 
     /**
      * @param command
-     *
      * @return
-     * @since 1.7.0
      * @throws IllegalAccessException
+     * @since 1.7.0
      */
     public abstract CommandNodeHelper unregisterCommand(String command) throws IllegalAccessException;
 
     /**
      * warning: this method is hacky
-     * @since 1.7.0
+     *
      * @param node
+     * @since 1.7.0
      */
     public abstract void reRegisterCommand(CommandNodeHelper node);
 
     /**
-     * @since 1.8.2
      * @param commandPart
+     * @since 1.8.2
      */
     public void getArgumentAutocompleteOptions(String commandPart, MethodWrapper<List<String>, Object, Object, ?> callback) {
         assert mc.player != null;
@@ -74,4 +74,5 @@ public abstract class CommandManager {
                 }
         );
     }
+
 }

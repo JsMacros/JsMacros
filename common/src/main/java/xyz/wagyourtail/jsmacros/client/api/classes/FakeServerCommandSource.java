@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.Suggestions;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientCommandSource;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -10,12 +12,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.suggestion.Suggestions;
-
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
@@ -87,8 +87,8 @@ public class FakeServerCommandSource extends ServerCommandSource {
     }
 
     @Override
-    public void sendFeedback(Text message, boolean broadcastToOps) {
-        MinecraftClient.getInstance().player.sendMessage(message);
+    public void sendFeedback(Supplier<Text> feedbackSupplier, boolean broadcastToOps) {
+        MinecraftClient.getInstance().player.sendMessage(feedbackSupplier.get());
     }
 
 }

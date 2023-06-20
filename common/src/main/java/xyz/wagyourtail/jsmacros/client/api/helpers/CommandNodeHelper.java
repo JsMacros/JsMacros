@@ -10,4 +10,5 @@ public class CommandNodeHelper extends BaseHelper<CommandNode<?>> {
         super(base);
         this.fabric = fabric;
     }
+
 }

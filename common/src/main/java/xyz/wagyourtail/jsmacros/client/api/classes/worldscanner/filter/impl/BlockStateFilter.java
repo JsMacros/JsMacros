@@ -11,11 +11,11 @@ import java.util.Map;
  * @since 1.6.5
  */
 public class BlockStateFilter extends ClassWrapperFilter<BlockStateHelper> {
-    
+
     private static final Map<String, Method> METHOD_LOOKUP = getPublicNoParameterMethods(BlockStateHelper.class);
 
     public BlockStateFilter(String methodName, Object[] methodArgs, Object[] filterArgs) {
         super(methodName, METHOD_LOOKUP, methodArgs, filterArgs);
     }
-    
+
 }

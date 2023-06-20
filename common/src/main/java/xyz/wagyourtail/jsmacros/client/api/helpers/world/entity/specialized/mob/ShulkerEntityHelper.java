@@ -1,9 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob;
 
 import net.minecraft.entity.mob.ShulkerEntity;
-
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.DirectionHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.DyeColorHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.DirectionHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinShulkerEntity;
 

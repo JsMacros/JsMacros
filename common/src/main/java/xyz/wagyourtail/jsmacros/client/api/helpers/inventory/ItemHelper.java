@@ -1,10 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 
-import net.minecraft.command.argument.ItemStringReader;
-import net.minecraft.item.*;
-
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.command.argument.ItemStringReader;
+import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
@@ -32,7 +31,6 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return the name of this item's group or {@code "UNKNOWN"} if this item is not in a group.
-     *
      * @since 1.8.4
      */
     public List<TextHelper> getCreativeTab() {
@@ -41,8 +39,7 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return the item stack representing the group of this item or {@code null} if this item is
-     *         not in a group.
-     *
+     * not in a group.
      * @since 1.8.4
      */
     public List<ItemStackHelper> getGroupIcon() {
@@ -52,8 +49,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @param stack the possible repair material
      * @return {@code true} if the given item stack can be used to repair item stacks of this item,
-     *         {@code false} otherwise.
-     *
+     * {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean canBeRepairedWith(ItemStackHelper stack) {
@@ -64,8 +60,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @param block the block to check
      * @return {@code true} if the given block can be mined and drops when broken with this item,
-     *         {@code false} otherwise.
-     *
+     * {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean isSuitableFor(BlockHelper block) {
@@ -75,8 +70,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @param block the block to check
      * @return {@code true} if the given block can be mined and drops when broken with this item,
-     *         {@code false} otherwise.
-     *
+     * {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean isSuitableFor(BlockStateHelper block) {
@@ -85,7 +79,6 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return {@code true} if the item has a block representation, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isBlockItem() {
@@ -94,8 +87,7 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return the block representation of this item or {@code null} if this item has no
-     *         corresponding block.
-     *
+     * corresponding block.
      * @since 1.8.4
      */
     public BlockHelper getBlock() {
@@ -108,8 +100,7 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @param state the block state to check
      * @return the mining speed of this item against the given block state, returns {@code 1} by
-     *         default.
-     *
+     * default.
      * @since 1.8.4
      */
     public float getMiningSpeedMultiplier(BlockStateHelper state) {
@@ -119,7 +110,6 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return {@code true} if the item has durability, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isDamageable() {
@@ -128,8 +118,7 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return {@code true} if when crafter the item stack has a remainder, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean hasRecipeRemainder() {
@@ -138,7 +127,6 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return the recipe remainder if it exists and {@code null} otherwise.
-     *
      * @since 1.8.4
      */
     public ItemHelper getRecipeRemainder() {
@@ -149,7 +137,6 @@ public class ItemHelper extends BaseHelper<Item> {
      * With increased enchantability the change to get more and better enchantments increases.
      *
      * @return the enchantability of this item, returns {@code 0} by default.
-     *
      * @since 1.8.4
      */
     public int getEnchantability() {
@@ -158,7 +145,6 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return the name of this item, translated to the current language.
-     *
      * @since 1.8.4
      */
     public String getName() {
@@ -167,7 +153,6 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return the identifier of this item.
-     *
      * @since 1.8.4
      */
     public String getId() {
@@ -176,7 +161,6 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return the maximum amount of items in a stack of this item.
-     *
      * @since 1.8.4
      */
     public int getMaxCount() {
@@ -187,7 +171,6 @@ public class ItemHelper extends BaseHelper<Item> {
      * The damage an item has taken is the opposite of the durability still left.
      *
      * @return the maximum amount of damage this item can take.
-     *
      * @since 1.8.4
      */
     public int getMaxDurability() {
@@ -196,7 +179,6 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return {@code true} if this item is fireproof, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isFireproof() {
@@ -205,7 +187,6 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return {@code true} if this item is a tool, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isTool() {
@@ -214,7 +195,6 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return {@code true} if this item can be worn in the armor slot, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isWearable() {
@@ -223,7 +203,6 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return {@code true} if this item is food, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isFood() {
@@ -232,7 +211,6 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return the food component of this item or {@code null} if this item is not food.
-     *
      * @since 1.8.4
      */
     public FoodComponentHelper getFood() {
@@ -244,8 +222,7 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return {@code true} if this item can be nested, i.e. put into a bundle or shulker box,
-     *         {@code false} otherwise.
-     *
+     * {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean canBeNested() {
@@ -254,7 +231,6 @@ public class ItemHelper extends BaseHelper<Item> {
 
     /**
      * @return the default item stack of this item with a stack size of {@code 1}.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getDefaultStack() {
@@ -264,7 +240,6 @@ public class ItemHelper extends BaseHelper<Item> {
     /**
      * @param nbt the nbt data of the item stack
      * @return the item stack of this item with a stack size of {@code 1} and the given nbt.
-     *
      * @throws CommandSyntaxException if the nbt data is invalid.
      * @since 1.8.4
      */
@@ -277,5 +252,5 @@ public class ItemHelper extends BaseHelper<Item> {
     public String toString() {
         return String.format("ItemHelper:{\"id\": \"%s\"}", getId());
     }
-    
+
 }

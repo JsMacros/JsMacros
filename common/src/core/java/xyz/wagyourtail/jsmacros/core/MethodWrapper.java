@@ -8,13 +8,12 @@ import java.util.function.*;
 
 /**
  * Wraps most of the important functional interfaces.
- * @see xyz.wagyourtail.jsmacros.core.library.IFWrapper
- *
- * @author Wagyourtail
  *
  * @param <T>
  * @param <U>
  * @param <R>
+ * @author Wagyourtail
+ * @see xyz.wagyourtail.jsmacros.core.library.IFWrapper
  */
 public abstract class MethodWrapper<T, U, R, C extends BaseScriptContext<?>> implements Consumer<T>, BiConsumer<T, U>, Function<T, R>, BiFunction<T, U, R>, Predicate<T>, BiPredicate<T, U>, Runnable, Supplier<R>, Comparator<T> {
 
@@ -44,43 +43,46 @@ public abstract class MethodWrapper<T, U, R, C extends BaseScriptContext<?>> imp
 
     @Override
     public abstract void accept(T t);
-    
+
     @Override
     public abstract void accept(T t, U u);
-    
+
     @Override
     public abstract R apply(T t);
-    
+
     @Override
     public abstract R apply(T t, U u);
-    
+
     @Override
     public abstract boolean test(T t);
-    
+
     @Override
     public abstract boolean test(T t, U u);
-    
+
     /**
      * override to return true if the method can't join to the thread it was wrapped/created in, ie for languages that don't allow multithreading.
      */
     public boolean preventSameThreadJoin() {
         return false;
     }
-    
+
     /**
      * make return something to override the thread set in {@link xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros#on(String, MethodWrapper)}
      * (hi jep)
      */
-    public Thread overrideThread() { return null; }
+    public Thread overrideThread() {
+        return null;
+    }
 
     /**
      * Makes {@link Function} and {@link BiFunction} work together.
      * Extended so it's called on every type not just those 2.
+     *
      * @param after put a {@link MethodWrapper} here when using in scripts.
      */
     @NotNull
     @Override
-    public <V> MethodWrapper<T, U, V, C> andThen(@NotNull Function<? super R,? extends V> after) {
+    public <V> MethodWrapper<T, U, V, C> andThen(@NotNull Function<? super R, ? extends V> after) {
         return new AndThenMethodWrapper<>(this, after);
     }
 
@@ -106,23 +108,26 @@ public abstract class MethodWrapper<T, U, R, C extends BaseScriptContext<?>> imp
         @Override
         public int compare(T o1, T o2) {
             int retVal = self.compare(o1, o2);
-            if (after instanceof MethodWrapper)
-                ((MethodWrapper<?, ?, ?, ?>)after).run();
+            if (after instanceof MethodWrapper) {
+                ((MethodWrapper<?, ?, ?, ?>) after).run();
+            }
             return retVal;
         }
 
         @Override
         public void accept(T t) {
             self.accept(t);
-            if (after instanceof MethodWrapper)
-                ((MethodWrapper<?, ?, ?, ?>)after).run();
+            if (after instanceof MethodWrapper) {
+                ((MethodWrapper<?, ?, ?, ?>) after).run();
+            }
         }
 
         @Override
         public void accept(T t, U u) {
             self.accept(t, u);
-            if (after instanceof MethodWrapper)
-                ((MethodWrapper<?, ?, ?, ?>)after).run();
+            if (after instanceof MethodWrapper) {
+                ((MethodWrapper<?, ?, ?, ?>) after).run();
+            }
         }
 
         @Override
@@ -148,7 +153,7 @@ public abstract class MethodWrapper<T, U, R, C extends BaseScriptContext<?>> imp
         @SuppressWarnings("unchecked")
         @Override
         public boolean test(T arg0, U arg1) {
-            boolean result =  self.test(arg0, arg1);
+            boolean result = self.test(arg0, arg1);
             if (after instanceof MethodWrapper) {
                 return ((MethodWrapper<Boolean, ?, ?, ?>) after).test(result);
             }
@@ -158,21 +163,25 @@ public abstract class MethodWrapper<T, U, R, C extends BaseScriptContext<?>> imp
         @Override
         public boolean preventSameThreadJoin() {
             boolean afterPrevent = false;
-            if (after instanceof MethodWrapper) afterPrevent = ((MethodWrapper<?, ?, ?, ?>) after).preventSameThreadJoin();
+            if (after instanceof MethodWrapper) {
+                afterPrevent = ((MethodWrapper<?, ?, ?, ?>) after).preventSameThreadJoin();
+            }
             return self.preventSameThreadJoin() || afterPrevent;
         }
 
         @Override
         public void run() {
             self.run();
-            if (after instanceof MethodWrapper)
-                ((MethodWrapper<?, ?, ?, ?>)after).run();
+            if (after instanceof MethodWrapper) {
+                ((MethodWrapper<?, ?, ?, ?>) after).run();
+            }
         }
 
         @Override
         public V get() {
             return after.apply(self.get());
         }
+
     }
 
     private static class NegateMethodWrapper<T, U, R, C extends BaseScriptContext<?>> extends MethodWrapper<T, U, R, C> {
@@ -232,5 +241,7 @@ public abstract class MethodWrapper<T, U, R, C extends BaseScriptContext<?>> imp
         public R get() {
             return self.get();
         }
+
     }
+
 }

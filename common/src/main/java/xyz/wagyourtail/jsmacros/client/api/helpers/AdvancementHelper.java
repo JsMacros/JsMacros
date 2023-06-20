@@ -4,7 +4,6 @@ import net.minecraft.advancement.Advancement;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.Identifier;
-
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAdvancementRewards;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinClientAdvancementManager;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -28,7 +27,6 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
 
     /**
      * @return the parent advancement or {@code null} if there is none.
-     *
      * @since 1.8.4
      */
     public AdvancementHelper getParent() {
@@ -37,7 +35,6 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
 
     /**
      * @return a list of all child advancements.
-     *
      * @since 1.8.4
      */
     public List<AdvancementHelper> getChildren() {
@@ -46,7 +43,6 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
 
     /**
      * @return the requirements of this advancement.
-     *
      * @since 1.8.4
      */
     public String[][] getRequirements() {
@@ -55,7 +51,6 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
 
     /**
      * @return the amount of requirements.
-     *
      * @since 1.8.4
      */
     public int getRequirementCount() {
@@ -64,7 +59,6 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
 
     /**
      * @return the identifier of this advancement.
-     *
      * @since 1.8.4
      */
     public String getId() {
@@ -73,7 +67,6 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
 
     /**
      * @return a map of all criteria and their criterion of this advancement.
-     *
      * @since 1.8.4
      */
     public Map<String, String> getCriteria() {
@@ -82,7 +75,6 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
 
     /**
      * @return the experience awarded by this advancement.
-     *
      * @since 1.8.4
      */
     public int getExperience() {
@@ -91,7 +83,6 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
 
     /**
      * @return the loot table ids for this advancement's rewards.
-     *
      * @since 1.8.4
      */
     public String[] getLoot() {
@@ -100,7 +91,6 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
 
     /**
      * @return the recipes unlocked through this advancement.
-     *
      * @since 1.8.4
      */
     public String[] getRecipes() {
@@ -109,7 +99,6 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
 
     /**
      * @return the progress.
-     *
      * @since 1.8.4
      */
     public AdvancementProgressHelper getProgress() {

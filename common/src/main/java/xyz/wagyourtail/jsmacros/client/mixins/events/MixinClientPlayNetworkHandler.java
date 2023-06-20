@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import xyz.wagyourtail.jsmacros.client.access.BossBarConsumer;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventTitle;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventItemPickup;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventDeath;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventStatusEffectUpdate;
@@ -49,8 +49,7 @@ class MixinClientPlayNetworkHandler {
     @Final
     private Map<UUID, PlayerListEntry> playerListEntries;
 
-
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;showsDeathScreen()Z"), method="onDeathMessage")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;showsDeathScreen()Z"), method = "onDeathMessage")
     private void onDeath(DeathMessageS2CPacket packet, CallbackInfo info) {
         new EventDeath();
     }
@@ -98,18 +97,19 @@ class MixinClientPlayNetworkHandler {
         }
     }
 
-    @Inject(at = @At("TAIL"), method="onBossBar")
+    @Inject(at = @At("TAIL"), method = "onBossBar")
     public void onBossBar(BossBarS2CPacket packet, CallbackInfo info) {
         packet.accept(new BossBarConsumer());
     }
 
-
-    @Inject(at = @At(value="INVOKE", target="Lnet/minecraft/client/world/ClientWorld;playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V"), method= "onItemPickupAnimation")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/world/ClientWorld;playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V"), method = "onItemPickupAnimation")
     public void onItemPickupAnimation(ItemPickupAnimationS2CPacket packet, CallbackInfo info) {
         assert client.world != null;
         final Entity e = client.world.getEntityById(packet.getEntityId());
-        LivingEntity c = (LivingEntity)client.world.getEntityById(packet.getCollectorEntityId());
-        if (c == null) c = client.player;
+        LivingEntity c = (LivingEntity) client.world.getEntityById(packet.getCollectorEntityId());
+        if (c == null) {
+            c = client.player;
+        }
         assert c != null;
         if (c.equals(client.player) && e instanceof ItemEntity) {
             ItemStack item = ((ItemEntity) e).getStack().copy();
@@ -118,32 +118,32 @@ class MixinClientPlayNetworkHandler {
         }
     }
 
-    @Inject(at = @At("TAIL"), method="onGameJoin")
+    @Inject(at = @At("TAIL"), method = "onGameJoin")
     public void onGameJoin(GameJoinS2CPacket packet, CallbackInfo info) {
         new EventJoinServer(client.player, connection.getAddress().toString());
     }
 
-    @Inject(at = @At("TAIL"), method="onChunkData")
+    @Inject(at = @At("TAIL"), method = "onChunkData")
     public void onChunkData(ChunkDataS2CPacket packet, CallbackInfo info) {
         new EventChunkLoad(packet.getX(), packet.getZ(), true);
     }
 
-    @Inject(at = @At("TAIL"), method="onBlockUpdate")
+    @Inject(at = @At("TAIL"), method = "onBlockUpdate")
     public void onBlockUpdate(BlockUpdateS2CPacket packet, CallbackInfo info) {
         new EventBlockUpdate(packet.getState(), world.getBlockEntity(packet.getPos()), packet.getPos(), "STATE");
     }
 
-    @Inject(at = @At("TAIL"), method="onChunkDeltaUpdate")
+    @Inject(at = @At("TAIL"), method = "onChunkDeltaUpdate")
     public void onChunkDeltaUpdate(ChunkDeltaUpdateS2CPacket packet, CallbackInfo info) {
         packet.visitUpdates((blockPos, blockState) -> new EventBlockUpdate(blockState, world.getBlockEntity(blockPos), new BlockPos(blockPos), "STATE"));
     }
 
-    @Inject(at = @At("TAIL"), method="onBlockEntityUpdate")
+    @Inject(at = @At("TAIL"), method = "onBlockEntityUpdate")
     public void onBlockEntityUpdate(BlockEntityUpdateS2CPacket packet, CallbackInfo info) {
         new EventBlockUpdate(world.getBlockState(packet.getPos()), world.getBlockEntity(packet.getPos()), packet.getPos(), "ENTITY");
     }
 
-    @Inject(at = @At("TAIL"), method="onUnloadChunk")
+    @Inject(at = @At("TAIL"), method = "onUnloadChunk")
     public void onUnloadChunk(UnloadChunkS2CPacket packet, CallbackInfo info) {
         new EventChunkUnload(packet.getX(), packet.getZ());
     }
@@ -165,4 +165,3 @@ class MixinClientPlayNetworkHandler {
     }
 
 }
-    

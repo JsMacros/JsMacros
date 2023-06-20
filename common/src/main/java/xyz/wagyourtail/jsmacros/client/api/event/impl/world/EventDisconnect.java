@@ -9,13 +9,13 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @author Wagyourtail
  * @since 1.2.7
  */
- @Event(value = "Disconnect", oldName = "DISCONNECT")
+@Event(value = "Disconnect", oldName = "DISCONNECT")
 public class EventDisconnect implements BaseEvent {
     /**
      * @since 1.6.4
      */
     public final TextHelper message;
-    
+
     public EventDisconnect(Text message) {
         this.message = new TextHelper(message);
         profile.triggerEvent(this);
@@ -25,4 +25,5 @@ public class EventDisconnect implements BaseEvent {
     public String toString() {
         return String.format("%s:{}", this.getEventName());
     }
+
 }

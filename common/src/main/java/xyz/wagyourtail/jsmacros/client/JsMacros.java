@@ -26,7 +26,7 @@ import java.util.ServiceLoader;
 
 public class JsMacros {
     public static final String MOD_ID = "jsmacros";
-    public static final Logger LOGGER  = LoggerFactory.getLogger(MOD_ID);
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static KeyBinding keyBinding = new KeyBinding("jsmacros.menu", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, I18n.translate("jsmacros.title"));
     public static BaseScreen prevScreen;
     protected static final File configFolder = ServiceLoader.load(ConfigFolder.class).findFirst().orElseThrow().getFolder();
@@ -44,7 +44,6 @@ public class JsMacros {
 
         // HINT TO EXTENSION DEVS: Use this init to add your shit before any scripts are actually run
     }
-
 
     public static void onInitializeClient() {
         // this comes later, we want to do core's deferred init here
@@ -65,13 +64,15 @@ public class JsMacros {
     static public Text getKeyText(String translationKey) {
         try {
             return InputUtil.fromTranslationKey(translationKey).getLocalizedText();
-        } catch(Exception e) {
+        } catch (Exception e) {
             return Text.literal(translationKey);
         }
     }
-    
+
     static public String getScreenName(Screen s) {
-        if (s == null) return null;
+        if (s == null) {
+            return null;
+        }
         if (s instanceof HandledScreen) {
             //add more ?
             if (s instanceof GenericContainerScreen) {
@@ -124,34 +125,37 @@ public class JsMacros {
         }
         Text t = s.getTitle();
         String ret = "";
-        if (t != null) ret = t.getString();
-        if (ret.equals("")) ret = "unknown";
+        if (t != null) {
+            ret = t.getString();
+        }
+        if (ret.equals("")) {
+            ret = "unknown";
+        }
         return ret;
     }
-    
+
     @Deprecated
     static public String getLocalizedName(InputUtil.Key keyCode) {
         return I18n.translate(keyCode.getTranslationKey());
-     }
-    
+    }
+
     @Deprecated
     static public MinecraftClient getMinecraft() {
         return MinecraftClient.getInstance();
     }
-    
 
     public static int[] range(int end) {
         return range(0, end, 1);
     }
-    
+
     public static int[] range(int start, int end) {
         return range(start, end, 1);
     }
-    
+
     public static int[] range(int start, int end, int iter) {
-        int[] a = new int[end-start];
-        for (int i = start; i < end; i+=iter) {
-            a[i-start] = i;
+        int[] a = new int[end - start];
+        for (int i = start; i < end; i += iter) {
+            a[i - start] = i;
         }
         return a;
     }

@@ -11,12 +11,11 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.*;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.SuggestionsBuilderHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
-import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -34,7 +33,7 @@ import java.util.stream.Collectors;
 /**
  * @since 1.4.2
  */
- @SuppressWarnings("unused")
+@SuppressWarnings("unused")
 public abstract class CommandBuilder {
 
     protected abstract void argument(String name, Supplier<ArgumentType<?>> type);
@@ -239,17 +238,15 @@ public abstract class CommandBuilder {
 //    }
 
     /**
-     *
      * it is recommended to use {@link xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros#runScript(String, BaseEvent)}
      * in the callback if you expect to actually do anything complicated with waits.
-     *
+     * <p>
      * the {@link CommandContextHelper} arg is an {@link BaseEvent}
      * so you can pass it directly to {@link xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros#runScript(String, BaseEvent)}.
-     *
+     * <p>
      * make sure your callback returns a boolean success = true.
      *
      * @param callback
-     *
      * @return
      */
     public abstract CommandBuilder executes(MethodWrapper<CommandContextHelper, Object, Object, ?> callback);
@@ -257,10 +254,9 @@ public abstract class CommandBuilder {
     protected abstract <S> void suggests(SuggestionProvider<S> suggestionProvider);
 
     /**
-     * @since 1.6.5
      * @param suggestions
-     *
      * @return
+     * @since 1.6.5
      */
     public CommandBuilder suggestMatching(String... suggestions) {
         return suggestMatching(Arrays.asList(suggestions));
@@ -269,7 +265,6 @@ public abstract class CommandBuilder {
     /**
      * @param suggestions the strings to match
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CommandBuilder suggestMatching(Collection<String> suggestions) {
@@ -278,10 +273,9 @@ public abstract class CommandBuilder {
     }
 
     /**
-     * @since 1.6.5
      * @param suggestions
-     *
      * @return
+     * @since 1.6.5
      */
     public CommandBuilder suggestIdentifier(String... suggestions) {
         return suggestIdentifier(Arrays.asList(suggestions));
@@ -290,7 +284,6 @@ public abstract class CommandBuilder {
     /**
      * @param suggestions the identifiers to match
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CommandBuilder suggestIdentifier(Collection<String> suggestions) {
@@ -301,7 +294,6 @@ public abstract class CommandBuilder {
     /**
      * @param positions the positions to suggest
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CommandBuilder suggestBlockPositions(BlockPosHelper... positions) {
@@ -311,7 +303,6 @@ public abstract class CommandBuilder {
     /**
      * @param positions the positions to suggest
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CommandBuilder suggestBlockPositions(Collection<BlockPosHelper> positions) {
@@ -324,7 +315,6 @@ public abstract class CommandBuilder {
      *
      * @param positions the positions to suggest
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CommandBuilder suggestPositions(String... positions) {
@@ -337,7 +327,6 @@ public abstract class CommandBuilder {
      *
      * @param positions the positions to match
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CommandBuilder suggestPositions(Collection<String> positions) {
@@ -350,10 +339,9 @@ public abstract class CommandBuilder {
     }
 
     /**
-     * @since 1.6.5
      * @param callback
-     *
      * @return
+     * @since 1.6.5
      */
     public CommandBuilder suggest(MethodWrapper<CommandContextHelper, SuggestionsBuilderHelper, Object, ?> callback) {
         suggests((ctx, builder) -> {
@@ -385,13 +373,13 @@ public abstract class CommandBuilder {
         return 1;
     }
 
-
     public abstract CommandBuilder or();
 
     /**
      * name overload for {@link #or()} to work around language keyword restrictions
-     * @since 1.5.2
+     *
      * @return
+     * @since 1.5.2
      */
     public CommandBuilder otherwise() {
         or();
@@ -402,9 +390,10 @@ public abstract class CommandBuilder {
 
     /**
      * name overload for {@link #or(int)} to work around language keyword restrictions
-     * @since 1.5.2
+     *
      * @param argLevel
      * @return
+     * @since 1.5.2
      */
     public CommandBuilder otherwise(int argLevel) {
         or(argLevel);
@@ -432,11 +421,12 @@ public abstract class CommandBuilder {
                 return args;
             } else {
                 throw new SimpleCommandExceptionType(Text.translatable(
-                    "jsmacros.commandfailedregex",
-                    "/" + pattern.pattern() + "/"
+                        "jsmacros.commandfailedregex",
+                        "/" + pattern.pattern() + "/"
                 )).createWithContext(reader);
             }
         }
+
     }
 
     public abstract void register();
@@ -446,4 +436,5 @@ public abstract class CommandBuilder {
      * removes this command
      */
     public abstract void unregister() throws IllegalAccessException;
+
 }

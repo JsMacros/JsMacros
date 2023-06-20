@@ -24,15 +24,15 @@ import java.util.*;
  */
 public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
     private final ScriptTrigger scriptTrigger;
-    private Text[] compiledText = new Text[] {Text.literal("")};
+    private Text[] compiledText = new Text[]{Text.literal("")};
     private MethodWrapper<Integer, Object, Map<String, MethodWrapper<Object, Object, Object, ?>>, ?> getRClickActions = null;
     private List<AutoCompleteSuggestion> suggestions = new LinkedList<>();
-    
+
     public ScriptCodeCompiler(String language, EditorScreen screen, File scriptFile) {
         super(language, screen);
         scriptTrigger = new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "CodeCompile", scriptFile, true);
     }
-    
+
     @Override
     public void recompileRenderedText(@NotNull String text) {
         CodeCompileEvent compileEvent = new CodeCompileEvent(text, language, screen);
@@ -53,31 +53,35 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
         compiledText = compileEvent.textLines.stream().map(e -> ((MutableText) e.getRaw()).setStyle(EditorScreen.defaultStyle)).toArray(Text[]::new);
         suggestions = compileEvent.autoCompleteSuggestions;
     }
-    
+
     @NotNull
     @Override
     public Map<String, Runnable> getRightClickOptions(int index) {
-        if (getRClickActions == null) return new HashMap<>();
+        if (getRClickActions == null) {
+            return new HashMap<>();
+        }
         Map<String, ? extends Runnable> results = null;
         try {
             results = getRClickActions.apply(index);
         } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
         }
-        if (results == null) return new LinkedHashMap<>();
+        if (results == null) {
+            return new LinkedHashMap<>();
+        }
         return (Map<String, Runnable>) results;
     }
-    
+
     @NotNull
     @Override
     public Text[] getRenderedText() {
         return compiledText;
     }
-    
+
     @NotNull
     @Override
     public List<AutoCompleteSuggestion> getSuggestions() {
         return suggestions;
     }
-    
+
 }

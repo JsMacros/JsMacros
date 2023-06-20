@@ -1,11 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroContainer;
@@ -37,11 +37,11 @@ public class MacroScreen extends BaseScreen {
     protected Button serviceScreen;
     protected Button runningBtn;
     protected Button aboutBtn;
-    
+
     public MacroScreen(Screen parent) {
         super(Text.translatable("jsmacros.title"), parent);
     }
-    
+
     @Override
     protected void init() {
         super.init();
@@ -66,7 +66,7 @@ public class MacroScreen extends BaseScreen {
                 client.setScreen(new ServiceScreen(this));
             }
         }));
-        
+
         this.addDrawableChild(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.settings"), (btn) -> {
             openOverlay(new SettingsOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this));
         }));
@@ -75,7 +75,7 @@ public class MacroScreen extends BaseScreen {
 
         topScroll = 40;
         macroScroll = this.addDrawableChild(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
-    
+
         runningBtn = this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.running"), (btn) -> {
             assert client != null;
             client.setScreen(new CancelScreen(this));
@@ -87,7 +87,7 @@ public class MacroScreen extends BaseScreen {
     protected MultiElementContainer<MacroScreen> createTopbar() {
         return new MacroListTopbar(this, this.width / 12, 25, this.width * 5 / 6, 14, this.textRenderer, ScriptTrigger.TriggerType.KEY_RISING);
     }
-    
+
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (overlay == null) {
@@ -101,17 +101,19 @@ public class MacroScreen extends BaseScreen {
         macroScroll.setScrollPages(((macros.size() + 1) * 16) / (double) Math.max(1, this.height - 40));
     }
 
-    public void  setFile(MultiElementContainer<MacroScreen> macro) {
+    public void setFile(MultiElementContainer<MacroScreen> macro) {
         File f = new File(Core.getInstance().config.macroFolder, ((MacroContainer) macro).getRawMacro().scriptFile);
         File dir = Core.getInstance().config.macroFolder;
-        if (!f.equals(Core.getInstance().config.macroFolder)) dir = f.getParentFile();
+        if (!f.equals(Core.getInstance().config.macroFolder)) {
+            dir = f.getParentFile();
+        }
         openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, dir, f, this, ((MacroContainer) macro)::setFile, this::editFile));
     }
-    
+
     public void setEvent(MacroContainer macro) {
         openOverlay(new EventChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, macro.getRawMacro().event, this, macro::setEventType));
     }
-    
+
     public void runFile() {
         openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, Core.getInstance().config.macroFolder, null, this, (file) -> {
             Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null);
@@ -121,7 +123,7 @@ public class MacroScreen extends BaseScreen {
     public void confirmRemoveMacro(MultiElementContainer<MacroScreen> macro) {
         openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, this.textRenderer, Text.translatable("jsmacros.confirmdeletemacro"), this, (conf) -> removeMacro(macro)));
     }
-    
+
     public void removeMacro(MultiElementContainer<MacroScreen> macro) {
         Core.getInstance().eventRegistry.removeScriptTrigger(((MacroContainer) macro).getRawMacro());
         for (ClickableWidget b : macro.getButtons()) {
@@ -130,12 +132,12 @@ public class MacroScreen extends BaseScreen {
         macros.remove(macro);
         setMacroPos();
     }
-    
+
     private void onScrollbar(double page) {
         topScroll = 40 - (int) (page * (height - 40));
         setMacroPos();
     }
-    
+
     public void setMacroPos() {
         int i = 0;
         for (MultiElementContainer<MacroScreen> m : macros) {
@@ -150,19 +152,22 @@ public class MacroScreen extends BaseScreen {
                 String[] args = Core.getInstance().config.getOptions(ClientConfigV2.class).externalEditorCommand.split("\\s+");
                 for (int i = 0; i < args.length; ++i) {
                     args[i] = args[i]
-                        .replace("%File", file.getAbsolutePath())
-                        .replace("%MacroFolder", Core.getInstance().config.macroFolder.getAbsolutePath())
-                        .replace("%Folder", file.getParentFile().getAbsolutePath());
-                        File f = file;
-                        if (args[i].startsWith("%Parent")) {
-                            for (int j = Integer.getInteger(args[i].replace("%Parent", "")); j > 0; --j) f = f.getParentFile();
-                            args[i] = f.getAbsolutePath();
+                            .replace("%File", file.getAbsolutePath())
+                            .replace("%MacroFolder", Core.getInstance().config.macroFolder.getAbsolutePath())
+                            .replace("%Folder", file.getParentFile().getAbsolutePath());
+                    File f = file;
+                    if (args[i].startsWith("%Parent")) {
+                        for (int j = Integer.getInteger(args[i].replace("%Parent", "")); j > 0; --j) {
+                            f = f.getParentFile();
                         }
+                        args[i] = f.getAbsolutePath();
+                    }
                 }
                 try {
                     new ProcessBuilder(args).start();
                     return;
-                } catch (IOException ignored) {}
+                } catch (IOException ignored) {
+                }
                 if (System.getenv("PATHEXT") != null && !args[0].contains(".")) {
                     String arg0 = args[0];
                     for (String ext : System.getenv("PATHEXT").split(";")) {
@@ -170,7 +175,8 @@ public class MacroScreen extends BaseScreen {
                         try {
                             new ProcessBuilder(args).start();
                             return;
-                        } catch (IOException ignored) {}
+                        } catch (IOException ignored) {
+                        }
                     }
                 }
                 System.out.println(System.getenv("PATH"));
@@ -182,40 +188,44 @@ public class MacroScreen extends BaseScreen {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (matrices == null) return;
-        this.renderBackground(matrices);
-        
-        topbar.render(matrices, mouseX, mouseY, delta);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        if (drawContext == null) {
+            return;
+        }
+        this.renderBackground(drawContext);
+
+        topbar.render(drawContext, mouseX, mouseY, delta);
 
         for (Element b : ImmutableList.copyOf(this.children())) {
-            if (b instanceof Drawable)
-                ((Drawable) b).render(matrices, mouseX, mouseY, delta);
+            if (b instanceof Drawable) {
+                ((Drawable) b).render(drawContext, mouseX, mouseY, delta);
+            }
         }
 
         for (MultiElementContainer<MacroScreen> macro : ImmutableList.copyOf(this.macros)) {
-            macro.render(matrices, mouseX, mouseY, delta);
+            macro.render(drawContext, mouseX, mouseY, delta);
         }
-        
-        drawCenteredTextWithShadow(matrices, this.textRenderer, Core.getInstance().profile.getCurrentProfileName(), this.width * 8 / 12, 5, 0x7F7F7F);
 
-        fill(matrices, this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
-        fill(matrices, this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);
-        fill(matrices, this.width / 6 * 2, 0, this.width / 6 * 2 + 2, 20, 0xFFFFFFFF);
-        fill(matrices, this.width / 6 * 3 + 1, 0, this.width / 6 * 3 + 3, 20, 0xFFFFFFFF);
-        fill(matrices, 0, 20, width, 22, 0xFFFFFFFF);
+        drawContext.drawCenteredTextWithShadow(this.textRenderer, Core.getInstance().profile.getCurrentProfileName(), this.width * 8 / 12, 5, 0x7F7F7F);
 
-        super.render(matrices, mouseX, mouseY, delta);
+        drawContext.fill(this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
+        drawContext.fill(this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);
+        drawContext.fill(this.width / 6 * 2, 0, this.width / 6 * 2 + 2, 20, 0xFFFFFFFF);
+        drawContext.fill(this.width / 6 * 3 + 1, 0, this.width / 6 * 3 + 3, 20, 0xFFFFFFFF);
+        drawContext.fill(0, 20, width, 22, 0xFFFFFFFF);
+
+        super.render(drawContext, mouseX, mouseY, delta);
     }
-    
+
     @Override
     public void updateSettings() {
         reload();
     }
-    
+
     @Override
     public void close() {
         Core.getInstance().profile.saveProfile();
         super.close();
     }
+
 }

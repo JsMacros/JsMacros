@@ -8,15 +8,13 @@ import java.util.Objects;
 
 /**
  * @author Wagyourtail
- *
  * @since 1.1.8
- *
  */
 @SuppressWarnings("unused")
 public class FileHandler {
     private final File f;
     private final Charset charset;
-    
+
     public FileHandler(String path) {
         this(new File(path), StandardCharsets.UTF_8);
     }
@@ -41,15 +39,14 @@ public class FileHandler {
         this.f = path;
         this.charset = charset;
     }
-    
+
     /**
-     *
      * writes a string to the file. this is a destructive operation that replaces the file contents.
-     * @since 1.1.8
-     * 
+     *
      * @param s
      * @return
      * @throws IOException
+     * @since 1.1.8
      */
     public FileHandler write(String s) throws IOException {
         try (FileWriter out = new FileWriter(f, charset, false)) {
@@ -57,14 +54,14 @@ public class FileHandler {
         }
         return this;
     }
-    
+
     /**
      * writes a byte array to the file. this is a destructive operation that replaces the file contents.
-     * @since 1.1.8
-     * 
+     *
      * @param b
      * @return
      * @throws IOException
+     * @since 1.1.8
      */
     public FileHandler write(byte[] b) throws IOException {
         try (FileOutputStream out = new FileOutputStream(f, false)) {
@@ -72,27 +69,26 @@ public class FileHandler {
         }
         return this;
     }
-    
+
     /**
-     * @since 1.1.8
-     * 
      * @return
      * @throws IOException
+     * @since 1.1.8
      */
     public String read() throws IOException {
         return new String(readBytes(), charset);
     }
-    
+
     /**
-     * @since 1.2.6
-     * 
      * @return
      * @throws IOException
+     * @since 1.2.6
      */
     public byte[] readBytes() throws IOException {
         try (FileInputStream in = new FileInputStream(f)) {
-            if (f.length() > Integer.MAX_VALUE)
+            if (f.length() > Integer.MAX_VALUE) {
                 throw new IOException("File is too large to read into memory. (max size: " + Integer.MAX_VALUE + ")");
+            }
             byte[] bytes = new byte[(int) f.length()];
             in.read(bytes);
             return bytes;
@@ -103,8 +99,8 @@ public class FileHandler {
      * get an iterator for the lines in the file.
      * please call {@link FileLineIterator#close()} when you are done with the iterator to not leak resources.
      *
-     * @since 1.8.4
      * @return
+     * @since 1.8.4
      */
     public FileLineIterator readLines() {
         try {
@@ -117,8 +113,9 @@ public class FileHandler {
     /**
      * get an input stream for the file.
      * please call {@link BufferedInputStream#close()} when you are done with the stream to not leak resources.
-     * @since 1.8.4
+     *
      * @return
+     * @since 1.8.4
      */
     public BufferedInputStream streamBytes() {
         try {
@@ -129,11 +126,10 @@ public class FileHandler {
     }
 
     /**
-     * @since 1.1.8
-     * 
      * @param s
      * @return
      * @throws IOException
+     * @since 1.1.8
      */
     public FileHandler append(String s) throws IOException {
         try (FileWriter out = new FileWriter(f, charset, true)) {
@@ -141,25 +137,24 @@ public class FileHandler {
         }
         return this;
     }
-    
+
     /**
-     * @since 1.2.6
-     * 
      * @param b
      * @return
      * @throws IOException
+     * @since 1.2.6
      */
     public FileHandler append(byte[] b) throws IOException {
-        try (FileOutputStream out = new FileOutputStream(f,true)) {
+        try (FileOutputStream out = new FileOutputStream(f, true)) {
             out.write(b);
         }
         return this;
     }
-    
+
     public File getFile() {
         return f;
     }
-    
+
     public String toString() {
         return String.format("FileHandler:{\"file\": \"%s\"}", f.getAbsolutePath());
     }
@@ -201,4 +196,5 @@ public class FileHandler {
         }
 
     }
+
 }

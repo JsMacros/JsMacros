@@ -28,4 +28,5 @@ public class MixinKeyboard {
         ((IScreenInternal) instance).jsmacros_charTyped(chr, modifiers);
         return instance.charTyped(chr, modifiers);
     }
+
 }

@@ -12,23 +12,23 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
  */
 @SuppressWarnings("unused")
 public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
-    
+
     public PlayerListEntryHelper(PlayerListEntry p) {
         super(p);
     }
-    
+
     /**
-     * @since 1.1.9
      * @return
+     * @since 1.1.9
      */
     public String getUUID() {
         GameProfile prof = base.getProfile();
         return prof == null ? null : prof.getId().toString();
     }
-    
+
     /**
-     * @since 1.0.2
      * @return
+     * @since 1.0.2
      */
     public String getName() {
         GameProfile prof = base.getProfile();
@@ -36,16 +36,16 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
     }
 
     /**
-     * @since 1.6.5
      * @return
+     * @since 1.6.5
      */
     public int getPing() {
         return base.getLatency();
     }
 
     /**
-     * @since 1.6.5
      * @return null if unknown
+     * @since 1.6.5
      */
     public String getGamemode() {
         GameMode gm = base.getGameMode();
@@ -53,16 +53,16 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
     }
 
     /**
-     * @since 1.1.9
      * @return
+     * @since 1.1.9
      */
     public TextHelper getDisplayText() {
         return new TextHelper(base.getDisplayName());
     }
 
     /**
-     * @since 1.8.2
      * @return
+     * @since 1.8.2
      */
     public byte[] getPublicKey() {
         return base.getSession().publicKeyData().data().key().getEncoded();
@@ -70,7 +70,6 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
 
     /**
      * @return {@code true} if the player has a cape enabled, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasCape() {
@@ -81,7 +80,6 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * A slim skin is an Alex skin, while the default one is Steve.
      *
      * @return {@code true} if the player has a slim skin, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasSlimModel() {
@@ -90,7 +88,6 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
 
     /**
      * @return the identifier of the player's skin texture or {@code null} if it's unknown.
-     *
      * @since 1.8.4
      */
     public String getSkinTexture() {
@@ -99,7 +96,6 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
 
     /**
      * @return the identifier of the player's cape texture or {@code null} if it's unknown.
-     *
      * @since 1.8.4
      */
     public String getCapeTexture() {
@@ -108,16 +104,14 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
 
     /**
      * @return the identifier of the player's elytra texture or {@code null} if it's unknown.
-     *
      * @since 1.8.4
      */
     public String getElytraTexture() {
         return base.getElytraTexture() == null ? null : base.getElytraTexture().toString();
     }
-    
+
     /**
      * @return the team of the player or {@code null} if the player is not in a team.
-     *
      * @since 1.8.4
      */
     public TeamHelper getTeam() {
@@ -128,4 +122,5 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
     public String toString() {
         return String.format("PlayerListEntryHelper:{\"uuid\": \"%s\", \"name\": \"%s\"}", this.getUUID(), this.getName());
     }
+
 }

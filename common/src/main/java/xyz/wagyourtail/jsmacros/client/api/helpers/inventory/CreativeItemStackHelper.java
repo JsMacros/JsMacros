@@ -10,7 +10,6 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
-
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -32,7 +31,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param damage the damage the item should take
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper setDamage(int damage) {
@@ -43,7 +41,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param durability the new durability of this item
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper setDurability(int durability) {
@@ -54,7 +51,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param count the new count of the item
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper setCount(int count) {
@@ -65,7 +61,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param name the new name of the item
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper setName(String name) {
@@ -76,7 +71,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param name the new name of the item
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper setName(TextHelper name) {
@@ -88,7 +82,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @param id    the id of the enchantment
      * @param level the level of the enchantment
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper addEnchantment(String id, int level) {
@@ -98,7 +91,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param enchantment the enchantment to add
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper addEnchantment(EnchantmentHelper enchantment) {
@@ -116,7 +108,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
 
     /**
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper clearEnchantments() {
@@ -130,7 +121,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param enchantment the enchantment to remove
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper removeEnchantment(EnchantmentHelper enchantment) {
@@ -140,7 +130,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param id the id of the enchantment to remove
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper removeEnchantment(String id) {
@@ -158,7 +147,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
 
     /**
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper clearLore() {
@@ -172,7 +160,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param lore the new lore
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper setLore(Object... lore) {
@@ -183,7 +170,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param lore the lore to add
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper addLore(Object... lore) {
@@ -201,7 +187,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param texts the lore to add
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     private CreativeItemStackHelper addLoreInternal(Text... texts) {
@@ -218,7 +203,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param unbreakable whether the item should be unbreakable or not
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper setUnbreakable(boolean unbreakable) {
@@ -229,7 +213,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param hide whether to hide the enchantments or not
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideEnchantments(boolean hide) {
@@ -239,7 +222,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param hide whether to hide attributes and modifiers or not
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideModifiers(boolean hide) {
@@ -249,7 +231,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param hide whether to hide the unbreakable flag or not
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
 
@@ -260,7 +241,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param hide whether to hide the blocks this item can destroy or not
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideCanDestroy(boolean hide) {
@@ -270,7 +250,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param hide whether to hide the blocks this item can be placed on or not
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideCanPlace(boolean hide) {
@@ -283,7 +262,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      *
      * @param hide whether to hide additional flags or not
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideAdditional(boolean hide) {
@@ -293,7 +271,6 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     /**
      * @param hide whether to hide the color of colored leather armor or not
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideDye(boolean hide) {

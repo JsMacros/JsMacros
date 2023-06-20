@@ -15,7 +15,6 @@ public class RabbitEntityHelper extends AnimalEntityHelper<RabbitEntity> {
 
     /**
      * @return the variant of this rabbit.
-     *
      * @since 1.8.4
      */
     public String getVariant() {
@@ -24,11 +23,10 @@ public class RabbitEntityHelper extends AnimalEntityHelper<RabbitEntity> {
 
     /**
      * @return {@code true} if this rabbit is a killer bunny, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isKillerBunny() {
-        return base.getVariant() ==  RabbitEntity.RabbitType.EVIL;
+        return base.getVariant() == RabbitEntity.RabbitType.EVIL;
     }
 
 }

@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.SelectionManager;
 import net.minecraft.util.Util;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
@@ -54,7 +53,6 @@ public class FUtils extends BaseLibrary {
 
     /**
      * @return the text from the clipboard.
-     *
      * @since 1.8.4
      */
     public String getClipboard() {
@@ -67,7 +65,6 @@ public class FUtils extends BaseLibrary {
      *
      * @param text the text to check
      * @return the name of the sender or {@code null} if it couldn't be guessed.
-     *
      * @since 1.8.4
      */
     public String guessName(TextHelper text) {
@@ -80,7 +77,6 @@ public class FUtils extends BaseLibrary {
      *
      * @param text the text to check
      * @return the name of the sender or {@code null} if it couldn't be guessed.
-     *
      * @since 1.8.4
      */
     public String guessName(String text) {
@@ -95,8 +91,7 @@ public class FUtils extends BaseLibrary {
      *
      * @param text the text to check
      * @return a list of names, titles and roles of the sender or an empty list if it couldn't be
-     *         guessed.
-     *
+     * guessed.
      * @since 1.8.4
      */
     public List<String> guessNameAndRoles(TextHelper text) {
@@ -110,8 +105,7 @@ public class FUtils extends BaseLibrary {
      *
      * @param text the text to check
      * @return a list of names, titles and roles of the sender or an empty list if it couldn't be
-     *         guessed.
-     *
+     * guessed.
      * @since 1.8.4
      */
     public List<String> guessNameAndRoles(String text) {
@@ -123,7 +117,6 @@ public class FUtils extends BaseLibrary {
      *
      * @param message the message to hash
      * @return the hashed message.
-     *
      * @since 1.8.4
      */
     public String hashString(String message) {
@@ -136,7 +129,6 @@ public class FUtils extends BaseLibrary {
      * @param message   the message to hash
      * @param algorithm sha1 | sha256 | sha384 | sha512 | md2 | md5
      * @return the hashed message.
-     *
      * @since 1.8.4
      */
     public String hashString(String message, String algorithm) {
@@ -163,7 +155,6 @@ public class FUtils extends BaseLibrary {
      *
      * @param message the message to encode
      * @return the encoded message.
-     *
      * @since 1.8.4
      */
     public String encode(String message) {
@@ -175,7 +166,6 @@ public class FUtils extends BaseLibrary {
      *
      * @param message the message to decode
      * @return the decoded message.
-     *
      * @since 1.8.4
      */
     public String decode(String message) {

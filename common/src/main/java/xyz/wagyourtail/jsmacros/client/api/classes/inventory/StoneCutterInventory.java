@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.StonecutterScreen;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
 import java.util.List;
@@ -21,7 +20,6 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
 
     /**
      * @return the selected recipe index.
-     *
      * @since 1.8.4
      */
     public int getSelectedRecipeIndex() {
@@ -30,7 +28,6 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
 
     /**
      * @return the output item for the selected recipe.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getOutput() {
@@ -40,7 +37,6 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
     /**
      * @param idx the index to select
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public StoneCutterInventory selectRecipe(int idx) {
@@ -53,7 +49,6 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
 
     /**
      * @return the amount of available recipes.
-     *
      * @since 1.8.4
      */
     public int getAvailableRecipeCount() {
@@ -62,7 +57,6 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
 
     /**
      * @return a list of all available recipe results in the form of item stacks.
-     *
      * @since 1.8.4
      */
     public List<ItemStackHelper> getRecipes() {
@@ -71,7 +65,6 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
 
     /**
      * @return {@code true} if there is a selected recipe, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean canCraft() {

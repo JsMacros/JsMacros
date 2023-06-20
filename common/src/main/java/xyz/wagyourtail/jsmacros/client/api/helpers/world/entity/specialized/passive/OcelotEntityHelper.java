@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.OcelotEntity;
-
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinOcelotEntity;
 
 /**
@@ -19,8 +18,7 @@ public class OcelotEntityHelper extends AnimalEntityHelper<OcelotEntity> {
      * Ocelots trust players after being fed with cod or salmon.
      *
      * @return {@code true} if this ocelot is trusting player and not running away form them,
-     *         {@code false} otherwise.
-     *
+     * {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean isTrusting() {

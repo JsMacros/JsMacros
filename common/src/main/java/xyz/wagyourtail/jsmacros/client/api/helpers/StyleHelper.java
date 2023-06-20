@@ -26,7 +26,6 @@ public class StyleHelper extends BaseHelper<Style> {
 
     /**
      * @return the color index of this style or {@code -1} if no color is set.
-     *
      * @deprecated use {@link #getColorIndex()} instead.
      */
     @Deprecated
@@ -36,17 +35,15 @@ public class StyleHelper extends BaseHelper<Style> {
 
     /**
      * @return the formatting of this style, or {@code null} if no formatting was found.
-     *
      * @since 1.8.4
      */
     public FormattingHelper getFormatting() {
         Formatting f = Formatting.byName(base.getColor().getName());
         return f == null ? null : new FormattingHelper(f);
     }
-    
+
     /**
      * @return the color index of this style or {@code -1} if no color is set.
-     *
      * @since 1.8.4
      */
     public int getColorIndex() {
@@ -59,7 +56,6 @@ public class StyleHelper extends BaseHelper<Style> {
 
     /**
      * @return the color value of this style or {@code -1} if it doesn't have one.
-     *
      * @since 1.8.4
      */
     public int getColorValue() {
@@ -72,13 +68,12 @@ public class StyleHelper extends BaseHelper<Style> {
 
     /**
      * @return the color name of this style or {@code null} if it has no color.
-     *
      * @since 1.8.4
      */
     public String getColorName() {
         return base.getColor() == null ? null : base.getColor().getName();
     }
-    
+
     public boolean hasCustomColor() {
         return base.getColor() != null && base.getColor().getName().startsWith("#");
     }
@@ -108,7 +103,9 @@ public class StyleHelper extends BaseHelper<Style> {
     }
 
     public String getClickAction() {
-        if (base.getClickEvent() == null) return null;
+        if (base.getClickEvent() == null) {
+            return null;
+        }
         if (base.getClickEvent() instanceof CustomClickEvent) {
             return "custom";
         }
@@ -120,7 +117,9 @@ public class StyleHelper extends BaseHelper<Style> {
     }
 
     public Runnable getCustomClickValue() {
-        if (base.getClickEvent() == null) return null;
+        if (base.getClickEvent() == null) {
+            return null;
+        }
         if (base.getClickEvent() instanceof CustomClickEvent) {
             return ((CustomClickEvent) base.getClickEvent()).getEvent();
         }
@@ -132,11 +131,19 @@ public class StyleHelper extends BaseHelper<Style> {
     }
 
     public Object getHoverValue() {
-        if (base.getHoverEvent() == null) return null;
+        if (base.getHoverEvent() == null) {
+            return null;
+        }
         Object value = base.getHoverEvent().getValue(base.getHoverEvent().getAction());
-        if (value instanceof Text) return new TextHelper((Text) value);
-        if (value instanceof HoverEvent.ItemStackContent) return new ItemStackHelper(((HoverEvent.ItemStackContent) value).asStack());
-        if (value instanceof HoverEvent.EntityContent) return ((HoverEvent.EntityContent) value).asTooltip().stream().map(TextHelper::new).collect(Collectors.toList());
+        if (value instanceof Text) {
+            return new TextHelper((Text) value);
+        }
+        if (value instanceof HoverEvent.ItemStackContent) {
+            return new ItemStackHelper(((HoverEvent.ItemStackContent) value).asStack());
+        }
+        if (value instanceof HoverEvent.EntityContent) {
+            return ((HoverEvent.EntityContent) value).asTooltip().stream().map(TextHelper::new).collect(Collectors.toList());
+        }
         return value;
     }
 
@@ -147,17 +154,18 @@ public class StyleHelper extends BaseHelper<Style> {
     @Override
     public String toString() {
         return "StyleHelper:{\"color\": \"" + (hasColor() ? hasCustomColor() ? getCustomColor() : String.format("%x", getColorIndex()) : "none") + "\"" +
-                    ", \"bold\": " + bold() +
-                    ", \"italic\": " + italic() +
-                    ", \"underlined\": " + underlined() +
-                    ", \"strikethrough\": " + strikethrough() +
-                    ", \"obfuscated\": " + obfuscated() +
-                    ", \"clickAction\": \"" + getClickAction() + "\"" +
-                    ", \"clickValue\": \"" + getClickValue() + "\"" +
-                    ", \"customClickValue\": " + getCustomClickValue() +
-                    ", \"hoverAction\": \"" + getHoverAction() + "\"" +
-                    ", \"hoverValue\": " + getHoverValue() +
-                    ", \"insertion\": \"" + getInsertion() + "\"" +
+                ", \"bold\": " + bold() +
+                ", \"italic\": " + italic() +
+                ", \"underlined\": " + underlined() +
+                ", \"strikethrough\": " + strikethrough() +
+                ", \"obfuscated\": " + obfuscated() +
+                ", \"clickAction\": \"" + getClickAction() + "\"" +
+                ", \"clickValue\": \"" + getClickValue() + "\"" +
+                ", \"customClickValue\": " + getCustomClickValue() +
+                ", \"hoverAction\": \"" + getHoverAction() + "\"" +
+                ", \"hoverValue\": " + getHoverValue() +
+                ", \"insertion\": \"" + getInsertion() + "\"" +
                 "}";
     }
+
 }

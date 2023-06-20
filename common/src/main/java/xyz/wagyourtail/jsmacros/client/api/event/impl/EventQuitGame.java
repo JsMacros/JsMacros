@@ -18,5 +18,5 @@ public class EventQuitGame implements BaseEvent {
     public String toString() {
         return String.format("%s:{}", this.getEventName());
     }
-    
+
 }

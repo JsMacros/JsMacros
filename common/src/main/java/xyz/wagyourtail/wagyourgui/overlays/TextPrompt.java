@@ -1,7 +1,7 @@
 package xyz.wagyourtail.wagyourgui.overlays;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.wagyourgui.elements.Button;
@@ -28,26 +28,28 @@ public class TextPrompt extends OverlayContainer {
         int w = width - 4;
 
         ti = this.addDrawableChild(new TextInput(x + 3, y + 25, w - 2, 14, textRenderer, 0xFF101010, 0, 0xFF4040FF, 0xFFFFFF, defText, null, null));
-        
+
         this.addDrawableChild(new Button(x + 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("gui.cancel"), (btn) -> close()));
 
         this.addDrawableChild(new Button(x + w / 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.confirm"), (btn) -> {
-            if (this.accept != null) this.accept.accept(ti.content);
+            if (this.accept != null) {
+                this.accept.accept(ti.content);
+            }
             close();
         }));
-        
+
         setFocused(ti);
         ti.setSelected(true);
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        this.renderBackground(drawContext);
         int lineNum = 0;
         for (OrderedText line : textRenderer.wrapLines(message, width - 4)) {
-            textRenderer.draw(matrices, line, x + width / 2F - textRenderer.getWidth(line) / 2F, y + 5 + (lineNum++) * textRenderer.fontHeight, 0xFFFFFF);
+            drawContext.drawText(textRenderer, line, (int) (x + width / 2F - textRenderer.getWidth(line) / 2F), y + 5 + (lineNum++) * textRenderer.fontHeight, 0xFFFFFF, false);
         }
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(drawContext, mouseX, mouseY, delta);
     }
 
 }

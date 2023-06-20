@@ -12,7 +12,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @author Wagyourtail
  * @since 1.2.7
  */
- @Event(value = "RecvMessage", oldName = "RECV_MESSAGE")
+@Event(value = "RecvMessage", oldName = "RECV_MESSAGE")
 public class EventRecvMessage implements BaseEvent {
     public TextHelper text;
 
@@ -41,8 +41,9 @@ public class EventRecvMessage implements BaseEvent {
 
         profile.triggerEventJoinNoAnything(this);
     }
-    
+
     public String toString() {
         return String.format("%s:{\"text\": \"%s\", \"signature\": %s, \"messageType\": \"%s\"}", this.getEventName(), text, signature != null && signature.length > 0, messageType);
     }
+
 }

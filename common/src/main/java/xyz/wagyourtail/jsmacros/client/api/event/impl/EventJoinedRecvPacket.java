@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
-
 import net.minecraft.network.packet.Packet;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -30,7 +29,6 @@ public class EventJoinedRecvPacket implements BaseEvent, ICancelable {
      * packet and replace this packet with the modified one.
      *
      * @return a helper for accessing and modifying the packet's data.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper getPacketBuffer() {

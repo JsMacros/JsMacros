@@ -63,20 +63,18 @@ public class Vec3D extends Vec2D {
 
     public Vec3D add(Vec3D vec) {
         return new Vec3D(
-            this.x1 + vec.x1,
-            this.y1 + vec.y1,
-            this.z1 + vec.z1,
-            this.x2 + vec.x2,
-            this.y2 + vec.y2,
-            this.z2 + vec.z2
+                this.x1 + vec.x1,
+                this.y1 + vec.y1,
+                this.z1 + vec.z1,
+                this.x2 + vec.x2,
+                this.y2 + vec.y2,
+                this.z2 + vec.z2
         );
     }
 
     /**
      * @param pos
-     *
      * @return
-     *
      * @since 1.6.4
      */
     public Vec3D addStart(Pos3D pos) {
@@ -85,9 +83,7 @@ public class Vec3D extends Vec2D {
 
     /**
      * @param pos
-     *
      * @return
-     *
      * @since 1.6.4
      */
     public Vec3D addEnd(Pos3D pos) {
@@ -98,9 +94,7 @@ public class Vec3D extends Vec2D {
      * @param x
      * @param y
      * @param z
-     *
      * @return
-     *
      * @since 1.6.4
      */
     public Vec3D addStart(double x, double y, double z) {
@@ -111,15 +105,12 @@ public class Vec3D extends Vec2D {
      * @param x
      * @param y
      * @param z
-     *
      * @return
-     *
      * @since 1.6.4
      */
     public Vec3D addEnd(double x, double y, double z) {
         return new Vec3D(this.x1, this.y1, this.z1, this.x2 + x, this.y2 + y, this.z2 + z);
     }
-
 
     /**
      * @param x1
@@ -128,9 +119,7 @@ public class Vec3D extends Vec2D {
      * @param x2
      * @param y2
      * @param z2
-     *
      * @return
-     *
      * @since 1.6.3
      */
     public Vec3D add(double x1, double y1, double z1, double x2, double y2, double z2) {
@@ -139,12 +128,12 @@ public class Vec3D extends Vec2D {
 
     public Vec3D multiply(Vec3D vec) {
         return new Vec3D(
-            this.x1 * vec.x1,
-            this.y1 * vec.y1,
-            this.z1 * vec.z1,
-            this.x2 * vec.x2,
-            this.y2 * vec.y2,
-            this.z2 * vec.z2
+                this.x1 * vec.x1,
+                this.y1 * vec.y1,
+                this.z1 * vec.z1,
+                this.x2 * vec.x2,
+                this.y2 * vec.y2,
+                this.z2 * vec.z2
         );
     }
 
@@ -155,9 +144,7 @@ public class Vec3D extends Vec2D {
      * @param x2
      * @param y2
      * @param z2
-     *
      * @return
-     *
      * @since 1.6.3
      */
     public Vec3D multiply(double x1, double y1, double z1, double x2, double y2, double z2) {
@@ -166,9 +153,7 @@ public class Vec3D extends Vec2D {
 
     /**
      * @param scale
-     *
      * @return
-     *
      * @since 1.6.3
      */
     @Override
@@ -178,7 +163,6 @@ public class Vec3D extends Vec2D {
 
     /**
      * @return
-     *
      * @since 1.6.5
      */
     @Override
@@ -229,7 +213,6 @@ public class Vec3D extends Vec2D {
 
     /**
      * @return
-     *
      * @since 1.6.5
      */
     public Vector3f toMojangFloatVector() {

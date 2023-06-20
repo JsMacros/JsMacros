@@ -1,13 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.client.gui.screen.ingame.AbstractFurnaceScreen;
 import net.minecraft.item.Item;
-import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.registry.Registries;
-
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.screen.PropertyDelegate;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAbstractFurnaceScreenHandler;
 
@@ -28,7 +27,6 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
      * @param x the x position of the input, will always be 0
      * @param y the y position of the input, will always be 0
      * @return the currently smelting item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getInput(int x, int y) {
@@ -37,7 +35,6 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
 
     /**
      * @return the currently smelting item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getSmeltedItem() {
@@ -46,7 +43,6 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
 
     /**
      * @return the fuel item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getFuel() {
@@ -56,7 +52,6 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
     /**
      * @param stack the item to check
      * @return {@code true} if the item is a valid fuel, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean canUseAsFuel(ItemStackHelper stack) {
@@ -66,7 +61,6 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
     /**
      * @param stack the item to check
      * @return {@code true} if the item can be smelted, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isSmeltable(ItemStackHelper stack) {
@@ -75,7 +69,6 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
 
     /**
      * @return a map of all valid fuels and their burn times in ticks.
-     *
      * @since 1.8.4
      */
     public Map<String, Integer> getFuelValues() {
@@ -90,7 +83,6 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
      * If the returned value equals {@link #getTotalSmeltingTime()} then the item is done smelting.
      *
      * @return the current Smelting progress in ticks.
-     *
      * @since 1.8.4
      */
     public int getSmeltingProgress() {
@@ -99,7 +91,6 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
 
     /**
      * @return the total smelting time of a single input item in ticks.
-     *
      * @since 1.8.4
      */
     public int getTotalSmeltingTime() {
@@ -108,7 +99,6 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
 
     /**
      * @return the remaining time of the smelting progress in ticks.
-     *
      * @since 1.8.4
      */
     public int getRemainingSmeltingTime() {
@@ -117,7 +107,6 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
 
     /**
      * @return the remaining fuel time in ticks.
-     *
      * @since 1.8.4
      */
     public int getRemainingFuelTime() {
@@ -126,7 +115,6 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
 
     /**
      * @return the total fuel time of the current fuel item in ticks.
-     *
      * @since 1.8.4
      */
     public int getTotalFuelTime() {
@@ -139,7 +127,6 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
 
     /**
      * @return {@code true} if the furnace is currently smelting an item, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isBurning() {

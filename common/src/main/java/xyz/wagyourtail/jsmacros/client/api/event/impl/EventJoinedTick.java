@@ -14,4 +14,5 @@ public class EventJoinedTick implements BaseEvent {
     public String toString() {
         return String.format("%s:{}", this.getEventName());
     }
+
 }

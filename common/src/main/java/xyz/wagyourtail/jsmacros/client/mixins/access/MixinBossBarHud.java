@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Mixin(BossBarHud.class)
 public class MixinBossBarHud implements IBossBarHud {
-    
+
     @Shadow
     @Final
     private Map<UUID, ClientBossBar> bossBars;
@@ -22,5 +22,4 @@ public class MixinBossBarHud implements IBossBarHud {
         return bossBars;
     }
 
-    
 }

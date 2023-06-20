@@ -22,7 +22,7 @@ public class EventDropSlot implements BaseEvent, ICancelable {
     protected final HandledScreen<?> screen;
     public final int slot;
     /**
-     *  whether it's all or a single item being dropped
+     * whether it's all or a single item being dropped
      */
     public final boolean all;
     /**
@@ -37,7 +37,6 @@ public class EventDropSlot implements BaseEvent, ICancelable {
 
         profile.triggerEventJoinNoAnything(this);
     }
-
 
     /**
      * @return inventory associated with the event

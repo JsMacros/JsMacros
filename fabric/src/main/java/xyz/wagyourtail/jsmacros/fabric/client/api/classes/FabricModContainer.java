@@ -64,6 +64,7 @@ public class FabricModContainer extends ModContainerHelper<ModContainer> {
 
     @Override
     public List<String> getDependencies() {
-        return metadata.getDependencies().stream().map(ModDependency::getModId).collect(Collectors.toList());    }
+        return metadata.getDependencies().stream().map(ModDependency::getModId).collect(Collectors.toList());
+    }
 
 }

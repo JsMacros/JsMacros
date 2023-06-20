@@ -16,5 +16,5 @@ public class MixinStyleSerializer {
         }
         return action.getName();
     }
-    
+
 }

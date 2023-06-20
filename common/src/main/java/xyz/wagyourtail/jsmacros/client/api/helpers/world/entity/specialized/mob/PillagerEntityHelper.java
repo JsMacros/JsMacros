@@ -17,7 +17,6 @@ public class PillagerEntityHelper extends IllagerEntityHelper<PillagerEntity> {
 
     /**
      * @return {@code true} if this pillager is a captain, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isCaptain() {

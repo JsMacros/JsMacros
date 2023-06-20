@@ -3,7 +3,10 @@
     {
       "type": "ttf",
       "file": "jsmacros:jetbrainsmono-regular.ttf",
-      "shift": [-0.5, 1.2],
+      "shift": [
+        -0.5,
+        1.2
+      ],
       "size": 11,
       "oversample": 4.0,
       "skip": "",

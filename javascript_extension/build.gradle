@@ -44,7 +44,7 @@ processResources {
 }
 
 jar {
-    from (configurations.jsmacrosExtensionInclude.files) {
+    from(configurations.jsmacrosExtensionInclude.files) {
         include '*'
         into "META-INF/jsmacrosdeps"
     }

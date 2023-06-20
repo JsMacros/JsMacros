@@ -12,7 +12,7 @@ public class ScriptTrigger {
     public String event;
     public String scriptFile;
     public boolean enabled;
-    
+
     public ScriptTrigger(TriggerType triggerType, String event, File scriptFile, boolean enabled) {
         this(triggerType, event, Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(scriptFile.getAbsoluteFile().toPath()).toString(), enabled);
     }
@@ -24,26 +24,26 @@ public class ScriptTrigger {
         this.scriptFile = scriptFile;
         this.enabled = enabled;
     }
-    
+
     public boolean equals(ScriptTrigger macro) {
         return triggerType == macro.triggerType && event.equalsIgnoreCase(macro.event) && scriptFile.equals(macro.scriptFile);
     }
-    
+
     public String toString() {
         return String.format("RawMacro:{\"type\": \"%s\", \"eventkey\": \"%s\", \"scriptFile\": \"%s\", \"enabled\": %b}", triggerType.toString(), event, scriptFile, enabled);
     }
-    
+
     public static ScriptTrigger copy(ScriptTrigger m) {
         return new ScriptTrigger(m.triggerType, m.event, m.scriptFile, m.enabled);
     }
-    
+
     public ScriptTrigger copy() {
         return copy(this);
     }
-    
+
     /**
-     * @since 1.0.0 [citation needed]
      * @author Wagyourtail
+     * @since 1.0.0 [citation needed]
      */
     public enum TriggerType {
         KEY_FALLING,
@@ -51,36 +51,37 @@ public class ScriptTrigger {
         KEY_BOTH,
         EVENT
     }
-    
+
     /**
-     * @since 1.2.7
      * @return
+     * @since 1.2.7
      */
     public TriggerType getTriggerType() {
         return triggerType;
     }
-    
+
     /**
-     * @since 1.2.7
      * @return
+     * @since 1.2.7
      */
     public String getEvent() {
         return event;
     }
-    
+
     /**
-     * @since 1.2.7
      * @return
+     * @since 1.2.7
      */
     public String getScriptFile() {
         return scriptFile;
     }
-    
+
     /**
-     * @since 1.2.7
      * @return
+     * @since 1.2.7
      */
     public boolean getEnabled() {
         return enabled;
     }
+
 }

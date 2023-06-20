@@ -16,7 +16,7 @@ public class OrFilter<T> extends BasicFilter<T> {
         this.filterOne = filterOne;
         this.filterTwo = filterTwo;
     }
-    
+
     @Override
     public Boolean apply(T obj) {
         return filterOne.apply(obj) || filterTwo.apply(obj);
@@ -29,5 +29,5 @@ public class OrFilter<T> extends BasicFilter<T> {
     public IFilter<T> getFilterTwo() {
         return filterTwo;
     }
-    
+
 }

@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.gui.screen.ingame.CartographyTableScreen;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
 /**
@@ -17,7 +16,6 @@ public class CartographyInventory extends Inventory<CartographyTableScreen> {
 
     /**
      * @return the map item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getMapItem() {
@@ -26,7 +24,6 @@ public class CartographyInventory extends Inventory<CartographyTableScreen> {
 
     /**
      * @return the paper item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getMaterial() {
@@ -35,7 +32,6 @@ public class CartographyInventory extends Inventory<CartographyTableScreen> {
 
     /**
      * @return the output item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getOutput() {
@@ -46,5 +42,5 @@ public class CartographyInventory extends Inventory<CartographyTableScreen> {
     public String toString() {
         return String.format("CartographyInventory:{}");
     }
-    
+
 }

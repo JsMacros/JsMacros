@@ -20,5 +20,5 @@ public class EventAttackBlock implements BaseEvent {
     public String toString() {
         return String.format("%s:{\"block\": %s}", this.getEventName(), block);
     }
-    
+
 }

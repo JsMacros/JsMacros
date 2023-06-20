@@ -16,7 +16,6 @@ public class ParrotEntityHelper extends TameableEntityHelper<ParrotEntity> {
 
     /**
      * @return the variant of this parrot.
-     *
      * @since 1.8.4
      */
     public String getVariant() {
@@ -25,7 +24,6 @@ public class ParrotEntityHelper extends TameableEntityHelper<ParrotEntity> {
 
     /**
      * @return {@code true} if this parrot is sitting, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isSitting() {
@@ -34,7 +32,6 @@ public class ParrotEntityHelper extends TameableEntityHelper<ParrotEntity> {
 
     /**
      * @return {@code true} if this parrot is flying, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isFlying() {
@@ -43,7 +40,6 @@ public class ParrotEntityHelper extends TameableEntityHelper<ParrotEntity> {
 
     /**
      * @return {@code true} if this parrot is dancing to music, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isPartying() {
@@ -52,7 +48,6 @@ public class ParrotEntityHelper extends TameableEntityHelper<ParrotEntity> {
 
     /**
      * @return {@code true} if this parrot is just standing around, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isStanding() {
@@ -61,8 +56,7 @@ public class ParrotEntityHelper extends TameableEntityHelper<ParrotEntity> {
 
     /**
      * @return {@code true} if this parrot is sitting on any player's shoulder, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isSittingOnShoulder() {

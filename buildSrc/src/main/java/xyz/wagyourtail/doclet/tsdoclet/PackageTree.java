@@ -29,12 +29,16 @@ public class PackageTree {
         while (enclose != null && enclose.getKind() != ElementKind.PACKAGE) enclose = enclose.getEnclosingElement();
 
         if (enclose != null) {
-            String[] pkg = ((PackageElement)enclose).getQualifiedName().toString().replace(".function.", "._function.").split("\\.");
+            String[] pkg = ((PackageElement) enclose).getQualifiedName().toString().replace(".function.", "._function.").split("\\.");
             for (int i = pkg.length - 1; i >= 0; --i) {
-                if (pkg[i].equals("")) continue;
+                if (pkg[i].equals("")) {
+                    continue;
+                }
                 enclosing.push(pkg[i]);
             }
-            if (predefinedClasses.contains(String.join(".", pkg) + "." + clazz.getSimpleName())) return;
+            if (predefinedClasses.contains(String.join(".", pkg) + "." + clazz.getSimpleName())) {
+                return;
+            }
         }
         addClassInternal(enclosing, clazz);
     }
@@ -44,9 +48,11 @@ public class PackageTree {
             this.dirty = classes.add(new ClassParser((TypeElement) clazz)) || this.dirty;
         } else {
             String enc = enclosing.pop();
-            if (enc.equals("function")) enc = "_function";
+            if (enc.equals("function")) {
+                enc = "_function";
+            }
             this.dirty = children.computeIfAbsent(enc, PackageTree::new)
-                .addClassInternal(enclosing, clazz) || this.dirty;
+                    .addClassInternal(enclosing, clazz) || this.dirty;
         }
         return this.dirty;
     }
@@ -93,4 +99,5 @@ public class PackageTree {
         }
         return result;
     }
+
 }

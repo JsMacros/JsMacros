@@ -14,16 +14,16 @@ public class History {
     protected int MAX_UNDO = Core.getInstance().config.getOptions(ClientConfigV2.class).editorHistorySize;
     protected List<HistoryStep> undo = new ArrayList<>(MAX_UNDO + 1);
     protected List<HistoryStep> redo = new ArrayList<>(MAX_UNDO + 1);
-    
+
     public Consumer<String> onChange;
     protected SelectCursor cursor;
     public String current;
-    
+
     public History(String start, SelectCursor cursor) {
         this.current = start;
         this.cursor = cursor;
     }
-    
+
     /**
      * @param position
      * @param content
@@ -32,7 +32,7 @@ public class History {
     public synchronized boolean addChar(int position, char content) {
         return add(position, content == '\t' ? "    " : String.valueOf(content));
     }
-    
+
     public synchronized boolean add(int position, String content) {
         Add step = new Add(position, content, cursor);
         current = step.applyStep(current);
@@ -41,7 +41,9 @@ public class History {
             if (prev instanceof Add && prev.position + ((Add) prev).added.length() == position) {
                 if (!content.startsWith("\n")) {
                     ((Add) prev).added += step.added;
-                    if (onChange != null) onChange.accept(current);
+                    if (onChange != null) {
+                        onChange.accept(current);
+                    }
                     return false;
                 }
             }
@@ -51,18 +53,21 @@ public class History {
         }
         undo.add(step);
         redo.clear();
-        if (onChange != null) onChange.accept(current);
+        if (onChange != null) {
+            onChange.accept(current);
+        }
         return true;
-    
+
     }
-    
+
     /**
      * @param position
-     *
      * @return is new step.
      */
     public synchronized boolean deletePos(int position, int length) {
-        if (position == current.length()) return false;
+        if (position == current.length()) {
+            return false;
+        }
         Remove step = new Remove(position, length, false, cursor);
         current = step.applyStep(current);
         if (undo.size() > 0) {
@@ -70,7 +75,9 @@ public class History {
             if (prev instanceof Remove && !((Remove) prev).isBkspace && prev.position == position) {
                 ((Remove) prev).removed += step.removed;
                 ((Remove) prev).length += length;
-                if (onChange != null) onChange.accept(current);
+                if (onChange != null) {
+                    onChange.accept(current);
+                }
                 return false;
             }
         }
@@ -79,17 +86,20 @@ public class History {
         }
         undo.add(step);
         redo.clear();
-        if (onChange != null) onChange.accept(current);
+        if (onChange != null) {
+            onChange.accept(current);
+        }
         return true;
     }
-    
+
     /**
      * @param position
-     *
      * @return is new step
      */
     public synchronized boolean bkspacePos(int position, int length) {
-        if (position < 0) return false;
+        if (position < 0) {
+            return false;
+        }
         Remove step = new Remove(position, length, true, cursor);
         current = step.applyStep(current);
         if (undo.size() > 0) {
@@ -98,7 +108,9 @@ public class History {
                 ((Remove) prev).removed = step.removed + ((Remove) prev).removed;
                 --prev.position;
                 ((Remove) prev).length += length;
-                if (onChange != null) onChange.accept(current);
+                if (onChange != null) {
+                    onChange.accept(current);
+                }
                 return false;
             }
         }
@@ -107,20 +119,26 @@ public class History {
         }
         undo.add(step);
         redo.clear();
-        if (onChange != null) onChange.accept(current);
+        if (onChange != null) {
+            onChange.accept(current);
+        }
         return true;
     }
-    
+
     public synchronized boolean shiftLine(int startLine, int lines, boolean shiftDown) {
         if (startLine + lines == current.split("\n", -1).length && shiftDown
-            || startLine == 0 && !shiftDown) return false;
+                || startLine == 0 && !shiftDown) {
+            return false;
+        }
         ShiftLine step = new ShiftLine(startLine, lines, 1, shiftDown, cursor);
         current = step.applyStep(current);
         if (undo.size() > 0) {
             HistoryStep prev = undo.get(undo.size() - 1);
             if (prev instanceof ShiftLine && ((ShiftLine) prev).shiftDown == shiftDown && ((ShiftLine) prev).lineCount == lines && startLine == ((ShiftLine) prev).startLine + (shiftDown ? ((ShiftLine) prev).shiftAmount : -((ShiftLine) prev).shiftAmount)) {
                 ++((ShiftLine) prev).shiftAmount;
-                if (onChange != null) onChange.accept(current);
+                if (onChange != null) {
+                    onChange.accept(current);
+                }
                 return false;
             }
         }
@@ -129,10 +147,12 @@ public class History {
         }
         undo.add(step);
         redo.clear();
-        if (onChange != null) onChange.accept(current);
+        if (onChange != null) {
+            onChange.accept(current);
+        }
         return true;
     }
-    
+
     public synchronized void replace(int position, int length, String content) {
         Replace step = new Replace(position, length, content, cursor);
         current = step.applyStep(current);
@@ -141,9 +161,11 @@ public class History {
         }
         undo.add(step);
         redo.clear();
-        if (onChange != null) onChange.accept(current);
+        if (onChange != null) {
+            onChange.accept(current);
+        }
     }
-    
+
     public synchronized void tabLines(int startLine, int lineCount, boolean reverse) {
         TabLines step = new TabLines(startLine, lineCount, reverse, cursor);
         current = step.applyStep(current);
@@ -152,7 +174,9 @@ public class History {
         }
         undo.add(step);
         redo.clear();
-        if (onChange != null) onChange.accept(current);
+        if (onChange != null) {
+            onChange.accept(current);
+        }
     }
 
     public synchronized void tabLinesKeepCursor(int startLine, int startLineIndex, int endLineIndex, int lineCount, boolean reverse) {
@@ -163,9 +187,11 @@ public class History {
         }
         undo.add(step);
         redo.clear();
-        if (onChange != null) onChange.accept(current);
+        if (onChange != null) {
+            onChange.accept(current);
+        }
     }
-    
+
     /**
      * @return position of step. -1 if nothing to undo.
      */
@@ -174,13 +200,17 @@ public class History {
             HistoryStep step = undo.remove(undo.size() - 1);
             current = step.unApplyStep(current);
             redo.add(step);
-            if (onChange != null) onChange.accept(current);
+            if (onChange != null) {
+                onChange.accept(current);
+            }
             return step.position;
         }
-        if (onChange != null) onChange.accept(current);
+        if (onChange != null) {
+            onChange.accept(current);
+        }
         return -1;
     }
-    
+
     /**
      * @return position of step. -1 if nothing to redo.
      */
@@ -189,34 +219,36 @@ public class History {
             HistoryStep step = redo.remove(redo.size() - 1);
             current = step.applyStep(current);
             undo.add(step);
-            if (onChange != null) onChange.accept(current);
+            if (onChange != null) {
+                onChange.accept(current);
+            }
             return step.position;
         }
-        if (onChange != null) onChange.accept(current);
+        if (onChange != null) {
+            onChange.accept(current);
+        }
         return -1;
     }
-    
+
     protected static abstract class HistoryStep {
         int position;
         SelectCursor cursor;
-        
-        
-        
+
         protected abstract String applyStep(String input);
-        
+
         protected abstract String unApplyStep(String input);
-        
+
     }
-    
+
     protected static class Add extends HistoryStep {
         String added;
-        
+
         protected Add(int position, String added, SelectCursor cursor) {
             this.position = position;
             this.added = added;
             this.cursor = cursor;
         }
-        
+
         @Override
         protected String applyStep(String input) {
             String result = input.substring(0, position) + added + input.substring(position);
@@ -224,7 +256,7 @@ public class History {
             cursor.updateEndIndex(position + added.length(), result);
             return result;
         }
-        
+
         @Override
         protected String unApplyStep(String input) {
             String result = input.substring(0, position) + input.substring(position + added.length());
@@ -232,20 +264,21 @@ public class History {
             cursor.updateEndIndex(position, result);
             return result;
         }
-        
+
     }
-    
+
     protected static class Remove extends HistoryStep {
         boolean isBkspace;
         int length;
         String removed;
+
         protected Remove(int position, int length, boolean isBkspace, SelectCursor cursor) {
             this.position = position;
             this.length = length;
             this.isBkspace = isBkspace;
             this.cursor = cursor;
         }
-        
+
         @Override
         protected String applyStep(String input) {
             removed = input.substring(position, position + length);
@@ -254,7 +287,7 @@ public class History {
             cursor.updateEndIndex(position, result);
             return result;
         }
-        
+
         @Override
         protected String unApplyStep(String input) {
             String result = input.substring(0, position) + removed + input.substring(position);
@@ -263,21 +296,21 @@ public class History {
             cursor.arrowEnd = isBkspace;
             return result;
         }
-        
+
     }
-    
+
     protected static class Replace extends HistoryStep {
         int length;
         String oldContent;
         String newContent;
-        
+
         protected Replace(int position, int length, String newContent, SelectCursor cursor) {
             this.position = position;
             this.length = length;
             this.newContent = newContent;
             this.cursor = cursor;
         }
-        
+
         @Override
         protected String applyStep(String input) {
             oldContent = input.substring(position, position + length);
@@ -286,7 +319,7 @@ public class History {
             cursor.updateEndIndex(position + newContent.length(), result);
             return result;
         }
-        
+
         @Override
         protected String unApplyStep(String input) {
             String result = input.substring(0, position) + oldContent + input.substring(position + newContent.length());
@@ -294,15 +327,15 @@ public class History {
             cursor.updateEndIndex(position + oldContent.length(), result);
             return result;
         }
-        
+
     }
-    
+
     protected static class ShiftLine extends HistoryStep {
         int startLine;
         int lineCount;
         int shiftAmount;
         boolean shiftDown;
-        
+
         protected ShiftLine(int startLine, int lineCount, int shiftAmount, boolean shiftDown, SelectCursor cursor) {
             this.startLine = startLine;
             this.lineCount = lineCount;
@@ -310,17 +343,17 @@ public class History {
             this.shiftDown = shiftDown;
             this.cursor = cursor;
         }
-        
+
         @Override
         protected String applyStep(String input) {
             return shift(input, startLine, lineCount, shiftAmount, shiftDown);
         }
-        
+
         @Override
         protected String unApplyStep(String input) {
             return shift(input, shiftDown ? startLine + shiftAmount : startLine - shiftAmount, lineCount, shiftAmount, !shiftDown);
         }
-        
+
         private String shift(String input, int startLine, int lineCount, int shiftAmount, boolean shiftDown) {
             String[] lines = input.split("\n", -1);
             String[] shifted = new String[lines.length];
@@ -363,30 +396,31 @@ public class History {
             cursor.updateEndIndex(--endIndex, result);
             return result;
         }
+
     }
-    
+
     protected static class TabLines extends HistoryStep {
         int startLine;
         int lineCount;
         boolean reversed;
-        
+
         public TabLines(int startLine, int lineCount, boolean reversed, SelectCursor cursor) {
             this.startLine = startLine;
             this.lineCount = lineCount;
             this.reversed = reversed;
             this.cursor = cursor;
         }
-    
+
         @Override
         protected String applyStep(String input) {
             return tab(input, startLine, lineCount, reversed);
         }
-    
+
         @Override
         protected String unApplyStep(String input) {
             return tab(input, startLine, lineCount, !reversed);
         }
-        
+
         private String tab(String input, int startLine, int lineCount, boolean reversed) {
             String[] lines = input.split("\n", -1);
             int startIndex = 0;
@@ -407,6 +441,7 @@ public class History {
             cursor.updateEndIndex(--endIndex, result);
             return result;
         }
+
     }
 
     protected static class TabLinesKeepCursor extends HistoryStep {
@@ -467,5 +502,7 @@ public class History {
             cursor.updateEndIndex(--endIndex, result);
             return result;
         }
+
     }
+
 }

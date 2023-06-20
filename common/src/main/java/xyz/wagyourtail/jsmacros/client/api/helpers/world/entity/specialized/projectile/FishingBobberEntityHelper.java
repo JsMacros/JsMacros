@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.projectile;
 
 import net.minecraft.entity.projectile.FishingBobberEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinFishingBobberEntity;
 
@@ -18,7 +17,6 @@ public class FishingBobberEntityHelper extends EntityHelper<FishingBobberEntity>
 
     /**
      * @return {@code true} if a fish has been caught, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasCaughtFish() {
@@ -29,7 +27,6 @@ public class FishingBobberEntityHelper extends EntityHelper<FishingBobberEntity>
      * When in open water the player can get treasures from fishing.
      *
      * @return {@code true} if the bobber is in open water, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isInOpenWater() {
@@ -38,7 +35,6 @@ public class FishingBobberEntityHelper extends EntityHelper<FishingBobberEntity>
 
     /**
      * @return {@code true} if the bobber has an entity hooked, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasEntityHooked() {
@@ -47,7 +43,6 @@ public class FishingBobberEntityHelper extends EntityHelper<FishingBobberEntity>
 
     /**
      * @return the hooked entity, or {@code null} if there is no entity hooked.
-     *
      * @since 1.8.4
      */
     public EntityHelper<?> getHookedEntity() {

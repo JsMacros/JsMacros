@@ -1,13 +1,14 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 
 /**
  * @author Wagyourtail
@@ -47,9 +48,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @param x the new x position for this text element
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Text setX(int x) {
@@ -59,7 +58,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @return the x position of this element.
-     *
      * @since 1.8.4
      */
     public int getX() {
@@ -68,9 +66,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @param y the new y position for this text element
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Text setY(int y) {
@@ -80,7 +76,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @return the y position of this element.
-     *
      * @since 1.8.4
      */
     public int getY() {
@@ -90,9 +85,7 @@ public class Text implements RenderElement, Alignable<Text> {
     /**
      * @param x
      * @param y
-     *
      * @return
-     *
      * @since 1.0.5
      */
     public Text setPos(int x, int y) {
@@ -103,9 +96,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @param text
-     *
      * @return
-     *
      * @since 1.0.5
      */
     public Text setText(String text) {
@@ -116,9 +107,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @param text
-     *
      * @return
-     *
      * @since 1.2.7
      */
     public Text setText(TextHelper text) {
@@ -129,7 +118,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @return
-     *
      * @since 1.2.7
      */
     public TextHelper getText() {
@@ -138,7 +126,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @return
-     *
      * @since 1.0.5
      */
     public int getWidth() {
@@ -147,7 +134,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @return the height of this text.
-     *
      * @since 1.8.4
      */
     public int getHeight() {
@@ -156,9 +142,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @param shadow whether the text should be rendered with a shadow
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Text setShadow(boolean shadow) {
@@ -168,8 +152,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @return {@code true} if this text element is rendered with a shadow, {@code false}
-     *     otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean hasShadow() {
@@ -178,9 +161,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @param scale
-     *
      * @return
-     *
      * @throws IllegalArgumentException
      * @since 1.0.5
      */
@@ -194,7 +175,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @return the scale of this text.
-     *
      * @since 1.8.4
      */
     public double getScale() {
@@ -203,9 +183,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @param rotation
-     *
      * @return
-     *
      * @since 1.0.5
      */
     public Text setRotation(double rotation) {
@@ -215,7 +193,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @return the rotation of this text.
-     *
      * @since 1.8.4
      */
     public float getRotation() {
@@ -224,9 +201,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @param rotateCenter whether this text should be rotated around its center
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Text setRotateCenter(boolean rotateCenter) {
@@ -236,8 +211,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @return {@code true} if this text should be rotated around its center, {@code false}
-     *     otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isRotatingCenter() {
@@ -246,9 +220,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @param color the new color for this text element
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Text setColor(int color) {
@@ -258,7 +230,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @return the color of this text.
-     *
      * @since 1.8.4
      */
     public int getColor() {
@@ -267,9 +238,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
     /**
      * @param zIndex the new z-index for this text element
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Text setZIndex(int zIndex) {
@@ -283,34 +252,36 @@ public class Text implements RenderElement, Alignable<Text> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        MatrixStack matrices = drawContext.getMatrices();
         matrices.push();
         setupMatrix(matrices, x, y, (float) scale, rotation, getWidth(), getHeight(), rotateCenter);
         if (shadow) {
-            mc.textRenderer.drawWithShadow(matrices, text, x, y, color);
+            drawContext.drawTextWithShadow(mc.textRenderer, text, x, y, color);
         } else {
-            mc.textRenderer.draw(matrices, text, x, y, color);
+            drawContext.drawText(mc.textRenderer, text, x, y, color, false);
         }
         matrices.pop();
     }
 
     @Override
-    public void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render3D(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        MatrixStack matrices = drawContext.getMatrices();
         matrices.push();
         setupMatrix(matrices, x, y, (float) scale, rotation, getWidth(), getHeight(), rotateCenter);
         Tessellator tess = Tessellator.getInstance();
         VertexConsumerProvider.Immediate buffer = VertexConsumerProvider.immediate(tess.getBuffer());
         mc.textRenderer.draw(
-            text,
-            (float) x,
-            (float) y,
-            color,
-            shadow,
-            matrices.peek().getPositionMatrix(),
-            buffer,
-            TextRenderer.TextLayerType.NORMAL,
-            0,
-            0xF000F0
+                text,
+                (float) x,
+                (float) y,
+                color,
+                shadow,
+                matrices.peek().getPositionMatrix(),
+                buffer,
+                TextRenderer.TextLayerType.NORMAL,
+                0,
+                0xF000F0
         );
         buffer.draw();
         matrices.pop();
@@ -377,9 +348,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @param text the content of the text element
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder text(TextHelper text) {
@@ -391,9 +360,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @param text the content of the text element
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder text(TextBuilder text) {
@@ -405,9 +372,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @param text the content of the text element
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder text(String text) {
@@ -419,7 +384,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @return the content of the text element.
-         *
          * @since 1.8.4
          */
         public TextHelper getText() {
@@ -428,9 +392,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @param x the x position of the text element
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder x(int x) {
@@ -440,7 +402,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @return the x position of the text element.
-         *
          * @since 1.8.4
          */
         public int getX() {
@@ -449,9 +410,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @param y the y position of the text element
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder y(int y) {
@@ -461,7 +420,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @return the y position of the text element.
-         *
          * @since 1.8.4
          */
         public int getY() {
@@ -471,9 +429,7 @@ public class Text implements RenderElement, Alignable<Text> {
         /**
          * @param x the x position of the text element
          * @param y the y position of the text element
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos(int x, int y) {
@@ -484,7 +440,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @return the width of the string.
-         *
          * @since 1.8.4
          */
         public int getWidth() {
@@ -493,7 +448,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @return the height of the string.
-         *
          * @since 1.8.4
          */
         public int getHeight() {
@@ -502,9 +456,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @param color the color of the text element
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int color) {
@@ -516,9 +468,7 @@ public class Text implements RenderElement, Alignable<Text> {
          * @param r the red component of the color
          * @param g the green component of the color
          * @param b the blue component of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int r, int g, int b) {
@@ -530,9 +480,7 @@ public class Text implements RenderElement, Alignable<Text> {
          * @param g the green component of the color
          * @param b the blue component of the color
          * @param a the alpha component of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int r, int g, int b, int a) {
@@ -542,7 +490,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @return the color of the text element.
-         *
          * @since 1.8.4
          */
         public int getColor() {
@@ -551,9 +498,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @param scale the scale of the text element
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder scale(double scale) {
@@ -566,7 +511,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @return the scale of the text element.
-         *
          * @since 1.8.4
          */
         public double getScale() {
@@ -575,9 +519,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @param rotation the rotation (clockwise) of the text element in degrees
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder rotation(double rotation) {
@@ -587,7 +529,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @return the rotation (clockwise) of the text element in degrees.
-         *
          * @since 1.8.4
          */
         public float getRotation() {
@@ -596,9 +537,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @param rotateCenter whether this text should be rotated around its center
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder rotateCenter(boolean rotateCenter) {
@@ -608,8 +547,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @return {@code true} if this text should be rotated around its center, {@code false}
-         *     otherwise.
-         *
+         * otherwise.
          * @since 1.8.4
          */
         public boolean isRotatingCenter() {
@@ -618,9 +556,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @param shadow whether the text should have a shadow or not
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder shadow(boolean shadow) {
@@ -630,7 +566,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @return {@code true} if the text element has a shadow, {@code false} otherwise.
-         *
          * @since 1.8.4
          */
         public boolean hasShadow() {
@@ -639,7 +574,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @param zIndex the z-index of the text element
-         *
          * @return self for chaining.
          */
         public Builder zIndex(int zIndex) {
@@ -649,7 +583,6 @@ public class Text implements RenderElement, Alignable<Text> {
 
         /**
          * @return the z-index of the text element.
-         *
          * @since 1.8.4
          */
         public int getZIndex() {
@@ -659,7 +592,7 @@ public class Text implements RenderElement, Alignable<Text> {
         @Override
         public Text createElement() {
             return new Text(new TextHelper(text), x, y, color, zIndex, shadow, scale, rotation).setRotateCenter(
-                rotateCenter).setParent(parent);
+                    rotateCenter).setParent(parent);
         }
 
         @Override

@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.argument.BlockArgumentParser;
 import net.minecraft.command.argument.ItemStringReader;
@@ -7,18 +9,15 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.CreativeItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.FluidStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,7 +32,6 @@ public class RegistryHelper {
     /**
      * @param id the item's id
      * @return an {@link ItemHelper} for the given item.
-     *
      * @since 1.8.4
      */
     public ItemHelper getItem(String id) {
@@ -43,7 +41,6 @@ public class RegistryHelper {
     /**
      * @param id the item's id
      * @return an {@link ItemStackHelper} for the given item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getItemStack(String id) {
@@ -54,7 +51,6 @@ public class RegistryHelper {
      * @param id  the item's id
      * @param nbt the item's nbt
      * @return an {@link ItemStackHelper} for the given item and nbt data.
-     *
      * @throws CommandSyntaxException if the nbt data is invalid.
      * @since 1.8.4
      */
@@ -67,7 +63,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all registered item ids.
-     *
      * @since 1.8.4
      */
     public List<String> getItemIds() {
@@ -76,7 +71,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all registered items.
-     *
      * @since 1.8.4
      */
     public List<ItemHelper> getItems() {
@@ -86,7 +80,6 @@ public class RegistryHelper {
     /**
      * @param id the block's id
      * @return an {@link BlockHelper} for the given block.
-     *
      * @since 1.8.4
      */
     public BlockHelper getBlock(String id) {
@@ -96,7 +89,6 @@ public class RegistryHelper {
     /**
      * @param id the block's id
      * @return an {@link BlockStateHelper} for the given block.
-     *
      * @since 1.8.4
      */
     public BlockStateHelper getBlockState(String id) {
@@ -112,8 +104,8 @@ public class RegistryHelper {
     }
 
     /**
-     * @since 1.8.4
      * @return a list of all registered status effects as {@link StatusEffectHelper}s with 0 ticks duration.
+     * @since 1.8.4
      */
     public List<StatusEffectHelper> getStatusEffects() {
         return Registries.STATUS_EFFECT.stream().map(StatusEffectHelper::new).collect(Collectors.toList());
@@ -123,7 +115,6 @@ public class RegistryHelper {
      * @param id  the block's id
      * @param nbt the block's nbt
      * @return an {@link BlockStateHelper} for the given block with the specified nbt.
-     *
      * @throws CommandSyntaxException if the nbt data is invalid.
      * @since 1.8.4
      */
@@ -133,7 +124,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all registered block ids.
-     *
      * @since 1.8.4
      */
     public List<String> getBlockIds() {
@@ -142,7 +132,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all registered blocks.
-     *
      * @since 1.8.4
      */
     public List<BlockHelper> getBlocks() {
@@ -152,7 +141,6 @@ public class RegistryHelper {
     /**
      * @param id the enchantment's id
      * @return an {@link EnchantmentHelper} for the given enchantment.
-     *
      * @since 1.8.4
      */
     public EnchantmentHelper getEnchantment(String id) {
@@ -163,7 +151,6 @@ public class RegistryHelper {
      * @param id    the enchantment's id
      * @param level the level of the enchantment
      * @return an {@link EnchantmentHelper} for the given enchantment with the specified level.
-     *
      * @since 1.8.4
      */
     public EnchantmentHelper getEnchantment(String id, int level) {
@@ -172,7 +159,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all registered enchantment ids.
-     *
      * @since 1.8.4
      */
     public List<String> getEnchantmentIds() {
@@ -181,7 +167,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all registered enchantments.
-     *
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getEnchantments() {
@@ -191,7 +176,6 @@ public class RegistryHelper {
     /**
      * @param type the id of the entity's type
      * @return an {@link EntityHelper} for the given entity.
-     *
      * @since 1.8.4
      */
     public EntityHelper<?> getEntity(String type) {
@@ -201,7 +185,6 @@ public class RegistryHelper {
     /**
      * @param type the id of the entity's type
      * @return an {@link EntityType} for the given entity.
-     *
      * @since 1.8.4
      */
     public EntityType<?> getRawEntityType(String type) {
@@ -210,7 +193,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all entity type ids.
-     *
      * @since 1.8.4
      */
     public List<String> getEntityTypeIds() {
@@ -220,7 +202,6 @@ public class RegistryHelper {
     /**
      * @param id the fluid's id
      * @return an {@link FluidStateHelper} for the given fluid.
-     *
      * @since 1.8.4
      */
     public FluidStateHelper getFluidState(String id) {
@@ -229,7 +210,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all feature ids.
-     *
      * @since 1.8.4
      */
     public List<String> getFeatureIds() {
@@ -238,7 +218,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all structure feature ids.
-     *
      * @since 1.8.4
      */
     public List<String> getStructureFeatureIds() {
@@ -247,7 +226,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all painting motive ids.
-     *
      * @since 1.8.4
      */
     public List<String> getPaintingIds() {
@@ -256,7 +234,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all particle type ids.
-     *
      * @since 1.8.4
      */
     public List<String> getParticleTypeIds() {
@@ -265,7 +242,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all game event names.
-     *
      * @since 1.8.4
      */
     public List<String> getGameEventNames() {
@@ -274,7 +250,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all status effect ids.
-     *
      * @since 1.8.4
      */
     public List<String> getStatusEffectIds() {
@@ -283,7 +258,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all block entity type ids.
-     *
      * @since 1.8.4
      */
     public List<String> getBlockEntityTypeIds() {
@@ -292,7 +266,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all screen handler ids.
-     *
      * @since 1.8.4
      */
     public List<String> getScreenHandlerIds() {
@@ -301,7 +274,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all recipe type ids.
-     *
      * @since 1.8.4
      */
     public List<String> getRecipeTypeIds() {
@@ -310,7 +282,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all villager type ids.
-     *
      * @since 1.8.4
      */
     public List<String> getVillagerTypeIds() {
@@ -319,7 +290,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all villager profession ids.
-     *
      * @since 1.8.4
      */
     public List<String> getVillagerProfessionIds() {
@@ -328,7 +298,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all point of interest type ids.
-     *
      * @since 1.8.4
      */
     public List<String> getPointOfInterestTypeIds() {
@@ -337,7 +306,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all memory module type ids.
-     *
      * @since 1.8.4
      */
     public List<String> getMemoryModuleTypeIds() {
@@ -346,7 +314,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all villager sensor type ids.
-     *
      * @since 1.8.4
      */
     public List<String> getSensorTypeIds() {
@@ -355,7 +322,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all villager activity type ids.
-     *
      * @since 1.8.4
      */
     public List<String> getActivityTypeIds() {
@@ -364,7 +330,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all stat type ids.
-     *
      * @since 1.8.4
      */
     public List<String> getStatTypeIds() {
@@ -373,7 +338,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all entity attribute ids.
-     *
      * @since 1.8.4
      */
     public List<String> getEntityAttributeIds() {
@@ -382,7 +346,6 @@ public class RegistryHelper {
 
     /**
      * @return a list of all potion type ids.
-     *
      * @since 1.8.4
      */
     public List<String> getPotionTypeIds() {
@@ -392,7 +355,6 @@ public class RegistryHelper {
     /**
      * @param identifier the String representation of the identifier, with the namespace and path
      * @return the raw minecraft Identifier.
-     *
      * @since 1.8.4
      */
     public Identifier getIdentifier(String identifier) {

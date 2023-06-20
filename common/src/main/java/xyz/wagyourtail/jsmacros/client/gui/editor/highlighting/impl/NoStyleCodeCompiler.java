@@ -21,7 +21,7 @@ public class NoStyleCodeCompiler extends AbstractRenderCodeCompiler {
     @Override
     public void recompileRenderedText(@NotNull String text) {
         if (text.length() == 0) {
-            compiledText = new Text[] {Text.literal("")};
+            compiledText = new Text[]{Text.literal("")};
         } else {
             String[] t2 = text.split("\n");
             compiledText = new Text[t2.length];

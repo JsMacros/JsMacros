@@ -4,11 +4,11 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
- * @author Wagyourtail
- * @since 1.7.0
  * @param <T>
  * @param <U>
  * @param <R>
+ * @author Wagyourtail
+ * @since 1.7.0
  */
 @Event("WrappedScript")
 public class EventWrappedScript<T, U, R> implements BaseEvent {

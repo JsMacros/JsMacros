@@ -10,16 +10,16 @@ import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 public abstract class BaseListener implements IEventListener {
     protected final ScriptTrigger trigger;
     protected final Core runner;
-    
+
     public BaseListener(ScriptTrigger trigger, Core runner) {
         this.trigger = trigger;
         this.runner = runner;
     }
-    
+
     public ScriptTrigger getRawTrigger() {
         return trigger;
     }
-    
+
     public EventContainer<?> runScript(BaseEvent event) {
         if (trigger.enabled) {
             try {
@@ -31,10 +31,10 @@ public abstract class BaseListener implements IEventListener {
         }
         return null;
     }
-    
+
     public boolean equals(Object o) {
         if (o instanceof BaseListener) {
-            return trigger.equals(((BaseListener)o).trigger);
+            return trigger.equals(((BaseListener) o).trigger);
         }
         return super.equals(o);
     }
@@ -47,4 +47,5 @@ public abstract class BaseListener implements IEventListener {
     public String toString() {
         return trigger.toString().substring(3);
     }
+
 }

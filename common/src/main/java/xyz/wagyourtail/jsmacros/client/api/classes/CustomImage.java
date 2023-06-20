@@ -4,7 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
-
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.core.Core;
 
@@ -53,7 +52,6 @@ public class CustomImage {
 
     /**
      * @return the name of this image.
-     *
      * @since 1.8.4
      */
     public String getName() {
@@ -65,7 +63,6 @@ public class CustomImage {
      *
      * @param path the path to the image, relative to the jsMacros config folder
      * @return an image from the given path.
-     *
      * @see #drawImage(Image, int, int, int, int)
      * @see #drawImage(Image, int, int, int, int, int, int, int, int)
      * @since 1.8.4
@@ -89,7 +86,6 @@ public class CustomImage {
      * @param width  the width of the subimage
      * @param height the height of the subimage
      * @return the cropped image from the given path.
-     *
      * @see #drawImage(Image, int, int, int, int)
      * @see #drawImage(Image, int, int, int, int, int, int, int, int)
      * @since 1.8.4
@@ -108,7 +104,6 @@ public class CustomImage {
      * each change, but rather when the image is finished being changed.
      *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage update() {
@@ -128,7 +123,7 @@ public class CustomImage {
 
     /**
      * @since 1.8.4 Copies every pixel of the internal BufferedImage to the
-     *         NativeImageBackedTexture.
+     * NativeImageBackedTexture.
      */
     private void updateTexture() {
         NativeImage ni = texture.getImage();
@@ -146,7 +141,6 @@ public class CustomImage {
      * @param path     the path to the image, relative to the jsMacros config folder
      * @param fileName the file name of the image, without the extension
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage saveImage(String path, String fileName) {
@@ -170,7 +164,6 @@ public class CustomImage {
      * which require an identifier.
      *
      * @return the identifier of this image.
-     *
      * @since 1.8.4
      */
     public String getIdentifier() {
@@ -181,7 +174,6 @@ public class CustomImage {
      * The width is a constant and will not change.
      *
      * @return the width of this image.
-     *
      * @since 1.8.4
      */
     public int getWidth() {
@@ -192,7 +184,6 @@ public class CustomImage {
      * The height is a constant and will not change.
      *
      * @return the height of this image.
-     *
      * @since 1.8.4
      */
     public int getHeight() {
@@ -201,7 +192,6 @@ public class CustomImage {
 
     /**
      * @return the internal BufferedImage of this image, which all updates are made to.
-     *
      * @since 1.8.4
      */
     public BufferedImage getImage() {
@@ -214,7 +204,6 @@ public class CustomImage {
      * @param x the x position to get the color from
      * @param y the y position to get the color from
      * @return the color at the given position.
-     *
      * @since 1.8.4
      */
     public int getPixel(int x, int y) {
@@ -228,7 +217,6 @@ public class CustomImage {
      * @param y    the y position to set the color at
      * @param argb the ARGB value to set the pixel to
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage setPixel(int x, int y, int argb) {
@@ -243,7 +231,6 @@ public class CustomImage {
      * @param width  the width of the image to draw
      * @param height the height of the image to draw
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage drawImage(Image img, int x, int y, int width, int height) {
@@ -262,7 +249,6 @@ public class CustomImage {
      * @param sourceWidth  the width of the subimage to draw
      * @param sourceHeight the height of the subimage to draw
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage drawImage(Image img, int x, int y, int width, int height, int sourceX, int sourceY, int sourceWidth, int sourceHeight) {
@@ -274,7 +260,6 @@ public class CustomImage {
      * The color is a rgb value which is used for draw and fill operations.
      *
      * @return the graphics current rgb color.
-     *
      * @since 1.8.4
      */
     public int getGraphicsColor() {
@@ -286,7 +271,6 @@ public class CustomImage {
      *
      * @param color the rgb color to use for graphics operations
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage setGraphicsColor(int color) {
@@ -298,7 +282,6 @@ public class CustomImage {
      * @param x the x position of the origin point
      * @param y the y position of the origin point
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage translate(int x, int y) {
@@ -324,7 +307,6 @@ public class CustomImage {
      * @param width  the width of the new clip rectangle
      * @param height the height of the new clip rectangle
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage setClip(int x, int y, int width, int height) {
@@ -335,7 +317,6 @@ public class CustomImage {
 
     /**
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage setPaintMode() {
@@ -346,7 +327,6 @@ public class CustomImage {
     /**
      * @param color the color to use for the xor operation
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage setXorMode(int color) {
@@ -356,7 +336,6 @@ public class CustomImage {
 
     /**
      * @return an array with the bounds of the current clip.
-     *
      * @since 1.8.4
      */
     public Rectangle getClipBounds() {
@@ -371,7 +350,6 @@ public class CustomImage {
      * @param dx     the offset to the x position to copy to
      * @param dy     the offset to the y position to copy to
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage copyArea(int x, int y, int width, int height, int dx, int dy) {
@@ -385,7 +363,6 @@ public class CustomImage {
      * @param x2 the second x position of the line
      * @param y2 the second y position of the line
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage drawLine(int x1, int y1, int x2, int y2) {
@@ -399,7 +376,6 @@ public class CustomImage {
      * @param width  the width of the rectangle
      * @param height the height of the rectangle
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage drawRect(int x, int y, int width, int height) {
@@ -413,7 +389,6 @@ public class CustomImage {
      * @param width  the width of the rectangle
      * @param height the height of the rectangle
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage fillRect(int x, int y, int width, int height) {
@@ -427,7 +402,6 @@ public class CustomImage {
      * @param width  the width of the rectangle
      * @param height the height of the rectangle
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage clearRect(int x, int y, int width, int height) {
@@ -442,7 +416,6 @@ public class CustomImage {
      * @param height the height of the rectangle
      * @param color  the rgb color to fill the rectangle with
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage clearRect(int x, int y, int width, int height, int color) {
@@ -461,7 +434,6 @@ public class CustomImage {
      * @param arcWidth  the horizontal diameter of the arc at the four corners
      * @param arcHeight the vertical diameter of the arc at the four corners
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
@@ -477,7 +449,6 @@ public class CustomImage {
      * @param arcWidth  the horizontal diameter of the arc at the four corners
      * @param arcHeight the vertical diameter of the arc at the four corners
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
@@ -493,7 +464,6 @@ public class CustomImage {
      * @param raised whether the rectangle should be raised above the surface or etched into the
      *               surface
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage draw3DRect(int x, int y, int width, int height, boolean raised) {
@@ -509,7 +479,6 @@ public class CustomImage {
      * @param raised whether the rectangle should be raised above the surface or etched into the
      *               surface
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage fill3DRect(int x, int y, int width, int height, boolean raised) {
@@ -523,7 +492,6 @@ public class CustomImage {
      * @param width  the width of the oval
      * @param height the height of the oval
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage drawOval(int x, int y, int width, int height) {
@@ -537,7 +505,6 @@ public class CustomImage {
      * @param width  the width of the oval
      * @param height the height of the oval
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage fillOval(int x, int y, int width, int height) {
@@ -553,7 +520,6 @@ public class CustomImage {
      * @param startAngle the beginning angle
      * @param arcAngle   the angular extent of the arc, relative to the start angle
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
@@ -569,7 +535,6 @@ public class CustomImage {
      * @param startAngle the beginning angle
      * @param arcAngle   the angular extent of the arc, relative to the start angle
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
@@ -583,7 +548,6 @@ public class CustomImage {
      * @param pointsX an array of all x positions of the points in the polygon
      * @param pointsY an array of all y positions of the points in the polygon
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage drawPolygonLine(int[] pointsX, int[] pointsY) {
@@ -597,7 +561,6 @@ public class CustomImage {
      * @param pointsX an array of all x positions of the points in the polygon
      * @param pointsY an array of all y positions of the points in the polygon
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage drawPolygon(int[] pointsX, int[] pointsY) {
@@ -611,7 +574,6 @@ public class CustomImage {
      * @param pointsX an array of all x positions of the points in the polygon
      * @param pointsY an array of all y positions of the points in the polygon
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage fillPolygon(int[] pointsX, int[] pointsY) {
@@ -624,7 +586,6 @@ public class CustomImage {
      * @param y    the y position to draw the string at
      * @param text the text to draw
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CustomImage drawString(int x, int y, String text) {
@@ -635,7 +596,6 @@ public class CustomImage {
     /**
      * @param toAnalyze the string to analyze
      * @return the width of the string for the current font in pixels
-     *
      * @since 1.8.4
      */
     public int getStringWidth(String toAnalyze) {
@@ -679,7 +639,6 @@ public class CustomImage {
      *
      * @param argb the argb color to transform
      * @return the abgr argb for the given argb color.
-     *
      * @since 1.8.4
      */
     public static int nativeARGBFlip(int argb) {

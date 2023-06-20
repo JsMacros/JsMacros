@@ -3,7 +3,10 @@
     {
       "type": "ttf",
       "file": "jsmacros:robotomono-regular.ttf",
-      "shift": [-0.7, 1],
+      "shift": [
+        -0.7,
+        1
+      ],
       "size": 11,
       "oversample": 4.0,
       "skip": "",

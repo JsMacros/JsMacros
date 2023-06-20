@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob;
 
 import net.minecraft.entity.mob.AbstractPiglinEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAbstractPiglinEntity;
 
@@ -18,8 +17,7 @@ public class AbstractPiglinEntityHelper<T extends AbstractPiglinEntity> extends 
 
     /**
      * @return {@code true} if this piglin can be zombified in the current dimension, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean canBeZombified() {

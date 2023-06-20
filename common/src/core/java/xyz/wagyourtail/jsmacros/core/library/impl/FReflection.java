@@ -26,24 +26,21 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 /**
  * Functions for getting and using raw java classes, methods and functions.
- *
+ * <p>
  * An instance of this class is passed to scripts as the {@code Reflection} variable.
  *
  * @author Wagyourtail
  * @since 1.2.3
  */
- @Library("Reflection")
- @SuppressWarnings("unused")
+@Library("Reflection")
+@SuppressWarnings("unused")
 public class FReflection extends PerExecLibrary {
     private static final Map<String, List<Class<?>>> JAVA_CLASS_CACHE = new HashMap<>();
     public static final CombinedVariableClassLoader classLoader = new CombinedVariableClassLoader(FReflection.class.getClassLoader());
@@ -55,14 +52,12 @@ public class FReflection extends PerExecLibrary {
 
     /**
      * @param name name of class like {@code path.to.class}
-     *
      * @return resolved class
-     *
      * @throws ClassNotFoundException
      * @see FReflection#getClass(String, String)
      * @since 1.2.3
      */
-     @DocletReplaceReturn("_javatypes.java.lang.Class<T> & { new(...values): T }")
+    @DocletReplaceReturn("_javatypes.java.lang.Class<T> & { new(...values): T }")
     public <T> Class<T> getClass(String name) throws ClassNotFoundException {
         switch (name) {
             case "boolean":
@@ -87,20 +82,18 @@ public class FReflection extends PerExecLibrary {
                 return (Class<T>) Class.forName(name, true, classLoader);
         }
     }
-    
+
     /**
      * Use this to specify a class with intermediary and yarn names of classes for cleaner code. also has support for
      * java primitives by using their name in lower case.
      *
-     * @param name first try
+     * @param name  first try
      * @param name2 second try
-     *
      * @return a {@link java.lang.Class Class} reference.
-     *
      * @throws ClassNotFoundException
      * @since 1.2.3
      */
-     @DocletReplaceReturn("_javatypes.java.lang.Class<T> & { new(...values): T }")
+    @DocletReplaceReturn("_javatypes.java.lang.Class<T> & { new(...values): T }")
     public <T> Class<T> getClass(String name, String name2) throws ClassNotFoundException {
         try {
             return getClass(name);
@@ -108,14 +101,12 @@ public class FReflection extends PerExecLibrary {
             return (Class<T>) Class.forName(name2);
         }
     }
-    
+
     /**
      * @param c
      * @param name
      * @param parameterTypes
-     *
      * @return
-     *
      * @throws NoSuchMethodException
      * @throws SecurityException
      * @see FReflection#getDeclaredMethod(Class, String, String, Class...)
@@ -124,7 +115,7 @@ public class FReflection extends PerExecLibrary {
     public Method getDeclaredMethod(Class<?> c, String name, Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
         return c.getDeclaredMethod(name, parameterTypes);
     }
-    
+
     /**
      * Use this to specify a method with intermediary and yarn names of classes for cleaner code.
      *
@@ -132,9 +123,7 @@ public class FReflection extends PerExecLibrary {
      * @param name
      * @param name2
      * @param parameterTypes
-     *
      * @return a {@link java.lang.reflect.Method Method} reference.
-     *
      * @throws NoSuchMethodException
      * @throws SecurityException
      * @since 1.2.3
@@ -148,14 +137,13 @@ public class FReflection extends PerExecLibrary {
     }
 
     /**
-     * @since 1.6.0
      * @param c
      * @param name
      * @param name2
      * @param parameterTypes
-     *
      * @return
      * @throws NoSuchMethodException
+     * @since 1.6.0
      */
     public Method getMethod(Class<?> c, String name, String name2, Class<?>... parameterTypes) throws NoSuchMethodException {
         try {
@@ -166,24 +154,21 @@ public class FReflection extends PerExecLibrary {
     }
 
     /**
-     * @since 1.6.0
      * @param c
      * @param name
      * @param parameterTypes
-     *
      * @return
      * @throws NoSuchMethodException
+     * @since 1.6.0
      */
     public Method getMethod(Class<?> c, String name, Class<?>... parameterTypes) throws NoSuchMethodException {
         return c.getMethod(name, parameterTypes);
     }
-    
+
     /**
      * @param c
      * @param name
-     *
      * @return
-     *
      * @throws NoSuchFieldException
      * @throws SecurityException
      * @see FReflection#getDeclaredField(Class, String, String)
@@ -192,16 +177,14 @@ public class FReflection extends PerExecLibrary {
     public Field getDeclaredField(Class<?> c, String name) throws NoSuchFieldException, SecurityException {
         return c.getDeclaredField(name);
     }
-    
+
     /**
      * Use this to specify a field with intermediary and yarn names of classes for cleaner code.
      *
      * @param c
      * @param name
      * @param name2
-     *
      * @return a {@link java.lang.reflect.Field Field} reference.
-     *
      * @throws NoSuchFieldException
      * @throws SecurityException
      * @since 1.2.3
@@ -215,25 +198,23 @@ public class FReflection extends PerExecLibrary {
     }
 
     /**
-     * @since 1.6.0
      * @param c
      * @param name
-     *
      * @return
      * @throws NoSuchFieldException
+     * @since 1.6.0
      */
     public Field getField(Class<?> c, String name) throws NoSuchFieldException {
         return c.getField(name);
     }
 
     /**
-     * @since 1.6.0
      * @param c
      * @param name
      * @param name2
-     *
      * @return
      * @throws NoSuchFieldException
+     * @since 1.6.0
      */
     public Field getField(Class<?> c, String name, String name2) throws NoSuchFieldException {
         try {
@@ -246,12 +227,10 @@ public class FReflection extends PerExecLibrary {
     /**
      * Invoke a method on an object with auto type coercion for numbers.
      *
-     * @param m method
-     * @param c object (can be {@code null} for statics)
+     * @param m       method
+     * @param c       object (can be {@code null} for statics)
      * @param objects
-     *
      * @return
-     *
      * @throws IllegalAccessException
      * @throws IllegalArgumentException
      * @throws InvocationTargetException
@@ -264,7 +243,7 @@ public class FReflection extends PerExecLibrary {
         }
         return m.invoke(c, objects);
     }
-    
+
     /**
      * Attempts to create a new instance of a class. You probably don't have to use this one and can just call {@code
      * new} on a {@link java.lang.Class Class} unless you're in LUA, but then you also have the (kinda poorly
@@ -273,9 +252,7 @@ public class FReflection extends PerExecLibrary {
      *
      * @param c
      * @param objects
-     *
      * @return
-     *
      * @since 1.2.7
      */
     public <T> T newInstance(Class<T> c, Object... objects) {
@@ -288,7 +265,9 @@ public class FReflection extends PerExecLibrary {
             return con.newInstance(objects);
         } catch (Exception e) {
             for (Constructor<?> con : c.getConstructors()) {
-                if (con.getParameterTypes().length != objects.length) continue;
+                if (con.getParameterTypes().length != objects.length) {
+                    continue;
+                }
                 params = con.getParameterTypes();
                 Object[] tempObjects = new Object[objects.length];
                 try {
@@ -304,32 +283,27 @@ public class FReflection extends PerExecLibrary {
     }
 
     /**
-     *
      * proxy for extending java classes in the guest language with proper threading support.
      *
      * @param clazz
      * @param interfaces
      * @param <T>
-     * @since 1.6.0
      * @return
+     * @since 1.6.0
      */
     public <T> ProxyBuilder<T> createClassProxyBuilder(Class<T> clazz, Class<?>... interfaces) {
         return new ProxyBuilder<>(clazz, interfaces);
     }
 
     /**
-     *
-     *
      * @param cName
      * @param clazz
      * @param interfaces
      * @param <T>
-     *
-     * @since 1.6.5
      * @return
-     *
      * @throws NotFoundException
      * @throws CannotCompileException
+     * @since 1.6.5
      */
     public <T> ClassBuilder<T> createClassBuilder(String cName, Class<T> clazz, Class<?>... interfaces) throws NotFoundException, CannotCompileException {
         return new ClassBuilder<>(cName, clazz, interfaces);
@@ -337,10 +311,9 @@ public class FReflection extends PerExecLibrary {
 
     /**
      * @param cName
-     * @since 1.6.5
      * @return
-     *
      * @throws ClassNotFoundException
+     * @since 1.6.5
      */
     public Class<?> getClassFromClassBuilderResult(String cName) throws ClassNotFoundException {
         return Class.forName("xyz.wagyourtail.jsmacros.core.library.impl.classes.proxypackage." + cName.replaceAll("\\.", "\\$"), true, Neighbor.class.getClassLoader());
@@ -378,7 +351,6 @@ public class FReflection extends PerExecLibrary {
      * @param className the fully qualified name of the class, including the package
      * @param code      the java code to compile
      * @return the compiled class.
-     *
      * @since 1.8.4
      */
     public Class<?> compileJavaClass(String className, String code) {
@@ -391,7 +363,6 @@ public class FReflection extends PerExecLibrary {
     /**
      * @param className the fully qualified name of the class, including the package
      * @return the latest compiled class or {@code null} if it doesn't exist.
-     *
      * @since 1.8.4
      */
     public Class<?> getCompiledJavaClass(String className) {
@@ -402,20 +373,18 @@ public class FReflection extends PerExecLibrary {
     /**
      * @param className the fully qualified name of the class, including the package
      * @return all compiled versions of the class, in order of compilation.
-     *
      * @since 1.8.4
      */
     public List<Class<?>> getAllCompiledJavaClassVersions(String className) {
         List<Class<?>> versions = JAVA_CLASS_CACHE.get(className);
         return versions == null ? Collections.emptyList() : ImmutableList.copyOf(versions);
     }
-    
+
     /**
      * See <a href="https://github.com/jOOQ/jOOR">jOOR Github</a> for more information.
      *
      * @param obj the object to wrap
      * @return a wrapper for the passed object to do help with java reflection.
-     *
      * @since 1.8.4
      */
     public Reflect getReflect(Object obj) {
@@ -426,42 +395,46 @@ public class FReflection extends PerExecLibrary {
      * Loads a jar file to be accessible with this library.
      *
      * @param file relative to the script's folder.
-     *
      * @return success value
-     *
      * @throws IOException
      * @since 1.2.6
      */
     public boolean loadJarFile(String file) throws IOException {
         File jarFile = ctx.getContainedFolder().toPath().resolve(file).toFile();
-        if (classLoader.hasJar(jarFile)) return true;
-        if (!jarFile.exists()) throw new FileNotFoundException("Jar File Not Found");
-        return classLoader.addClassLoader(jarFile, new URLClassLoader(new URL[] {new URL("jar:file:" + jarFile.getCanonicalPath() + "!/")}));
+        if (classLoader.hasJar(jarFile)) {
+            return true;
+        }
+        if (!jarFile.exists()) {
+            throw new FileNotFoundException("Jar File Not Found");
+        }
+        return classLoader.addClassLoader(jarFile, new URLClassLoader(new URL[]{new URL("jar:file:" + jarFile.getCanonicalPath() + "!/")}));
     }
 
     /**
-     * @since 1.3.1
      * @return the previous mapping helper generated with {@link #loadMappingHelper(String)}
+     * @since 1.3.1
      */
     public Mappings loadCurrentMappingHelper() {
         return remapper;
     }
-    
-    
+
     /**
      * @param o class you want the name of
-     * @since 1.3.1
      * @return the fully qualified class name (with "."'s not "/"'s)
+     * @since 1.3.1
      */
     public String getClassName(Object o) {
-        if (o instanceof Class) return ((Class<?>) o).getCanonicalName();
-        else return o.getClass().getCanonicalName();
+        if (o instanceof Class) {
+            return ((Class<?>) o).getCanonicalName();
+        } else {
+            return o.getClass().getCanonicalName();
+        }
     }
-    
+
     /**
      * @param urlorfile a url or file path the the yarn mappings {@code -v2.jar} file, or {@code .tiny} file. for example {@code https://maven.fabricmc.net/net/fabricmc/yarn/1.16.5%2Bbuild.3/yarn-1.16.5%2Bbuild.3-v2.jar}, if same url/path as previous this will load from cache.
-     * @since 1.3.1
      * @return the associated mapping helper.
+     * @since 1.3.1
      */
     public Mappings loadMappingHelper(String urlorfile) {
         if (remapper != null && remapper.mappingsource.equals(urlorfile)) {
@@ -471,35 +444,32 @@ public class FReflection extends PerExecLibrary {
     }
 
     /**
-     * @since 1.6.5
      * @param instance
      * @param <T>
-     *
      * @return
+     * @since 1.6.5
      */
     public <T> WrappedClassInstance<T> wrapInstace(T instance) {
         return new WrappedClassInstance<>(instance);
     }
 
     /**
-     * @since 1.6.5
      * @param className
-     *
      * @return
-     *
      * @throws ClassNotFoundException
+     * @since 1.6.5
      */
     public WrappedClassInstance<?> getWrappedClass(String className) throws ClassNotFoundException {
         return new WrappedClassInstance(null, Class.forName(className.replace("/", ".")));
     }
-    
+
     /**
      * I know this is probably bad practice, but lets be real, this whole library is bad practice, So I can make it
      * worse, right? at least this should work better than {@code try/catch}'ing using
      * {@link ClassLoader#loadClass(String)} to search through every {@link URLClassLoader} that
      * {@link FReflection#loadJarFile(String)} would make, or how I was previously doing it by pre-loading and caching
      * all the classes to a {@link Map}
-     *
+     * <p>
      * This class is a modification to
      * <a target="_blank" href="https://www.source-code.biz/snippets/java/12.htm">Christian d'Heureuse's JoinClassLoader</a>, under the
      * <a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0 license</a> to change it from a Class array to a
@@ -510,19 +480,19 @@ public class FReflection extends PerExecLibrary {
      */
     protected static class CombinedVariableClassLoader extends ClassLoader {
         private final Map<File, ClassLoader> siblingDelegates = new LinkedHashMap<>();
-        
+
         public CombinedVariableClassLoader(ClassLoader parent) {
             super(parent);
         }
-        
+
         public boolean addClassLoader(File jarPath, ClassLoader loader) throws IOException {
             return siblingDelegates.putIfAbsent(jarPath.getCanonicalFile(), loader) == null;
         }
-        
+
         public boolean hasJar(File path) throws IOException {
             return siblingDelegates.containsKey(path.getCanonicalFile());
         }
-        
+
         @Override
         protected Class<?> findClass(String name) throws ClassNotFoundException {
             String path = name.replace('.', '/') + ".class";
@@ -538,7 +508,7 @@ public class FReflection extends PerExecLibrary {
             }
             return defineClass(name, byteCode, null);
         }
-        
+
         private ByteBuffer loadResource(URL url) throws IOException {
             try (InputStream stream = url.openStream()) {
                 int initialBufferCapacity = Math.min(0x40000, stream.available() + 1);
@@ -565,7 +535,7 @@ public class FReflection extends PerExecLibrary {
                 return buf;
             }
         }
-        
+
         @Override
         protected URL findResource(String name) {
             for (ClassLoader delegate : siblingDelegates.values()) {
@@ -576,7 +546,7 @@ public class FReflection extends PerExecLibrary {
             }
             return null;
         }
-        
+
         @Override
         protected Enumeration<URL> findResources(String name) throws IOException {
             Vector<URL> vector = new Vector<>();
@@ -588,6 +558,7 @@ public class FReflection extends PerExecLibrary {
             }
             return vector.elements();
         }
+
     }
-    
+
 }

@@ -14,50 +14,50 @@ public abstract class BaseEventRegistry {
     protected final Core runner;
     protected final Map<String, Set<IEventListener>> listeners = new LinkedHashMap<>();
     public final Map<String, String> oldEvents = new LinkedHashMap<>();
-    
+
     public final Set<String> events = new LinkedHashSet<>();
-    
+
     public BaseEventRegistry(Core runner) {
         this.runner = runner;
     }
-    
+
     public synchronized void clearMacros() {
         listeners.clear();
     }
-    
+
     /**
-     * @since 1.1.2 [citation needed]
      * @param rawmacro
+     * @since 1.1.2 [citation needed]
      */
     public abstract void addScriptTrigger(ScriptTrigger rawmacro);
-    
+
     /**
-     * @since 1.2.3
      * @param event
      * @param listener
+     * @since 1.2.3
      */
     public synchronized void addListener(String event, IEventListener listener) {
         listeners.putIfAbsent(event, new LinkedHashSet<>());
         listeners.get(event).add(listener);
     }
-    
+
     /**
-     * @since 1.2.3
      * @param event
      * @param listener
      * @return
+     * @since 1.2.3
      */
     public synchronized boolean removeListener(String event, IEventListener listener) {
         listeners.putIfAbsent(event, new LinkedHashSet<>());
         return listeners.get(event).remove(listener);
     }
-    
+
     /**
-     * @since 1.2.3
      * @param listener
      * @return
+     * @since 1.2.3
      */
-     @Deprecated
+    @Deprecated
     public synchronized boolean removeListener(IEventListener listener) {
         for (Set<IEventListener> listeners : listeners.values()) {
             if (listeners.contains(listener)) {
@@ -66,50 +66,52 @@ public abstract class BaseEventRegistry {
         }
         return false;
     }
-    
+
     /**
-     * @since 1.1.2 [citation needed]
      * @param rawmacro
      * @return
+     * @since 1.1.2 [citation needed]
      */
     public abstract boolean removeScriptTrigger(ScriptTrigger rawmacro);
-    
+
     /**
-     * @since 1.2.3
      * @return
+     * @since 1.2.3
      */
     public synchronized Map<String, Set<IEventListener>> getListeners() {
         return listeners;
     }
-    
+
     /**
-     * @since 1.2.3
      * @param key
      * @return
+     * @since 1.2.3
      */
     public synchronized Set<IEventListener> getListeners(String key) {
-        return ImmutableSet.copyOf(listeners.computeIfAbsent(key, (k)->new LinkedHashSet<>()));
+        return ImmutableSet.copyOf(listeners.computeIfAbsent(key, (k) -> new LinkedHashSet<>()));
     }
-    
+
     /**
+     * @return
      * @see ScriptTrigger
      * @since 1.1.2 [citation needed]
-     * @return
      */
     public abstract List<ScriptTrigger> getScriptTriggers();
-    
+
     /**
-     * @since 1.1.2 [citation needed]
      * @param eventName
+     * @since 1.1.2 [citation needed]
      */
     public synchronized void addEvent(String eventName) {
         events.add(eventName);
     }
-    
+
     public synchronized void addEvent(Class<? extends BaseEvent> clazz) {
         if (clazz.isAnnotationPresent(Event.class)) {
             Event e = clazz.getAnnotation(Event.class);
-            if (!e.oldName().equals("")) oldEvents.put(e.oldName(), e.value());
+            if (!e.oldName().equals("")) {
+                oldEvents.put(e.oldName(), e.value());
+            }
             oldEvents.put(clazz.getSimpleName(), e.value());
             events.add(e.value());
         } else {

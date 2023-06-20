@@ -7,9 +7,15 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.METHOD})
 public @interface Option {
     String translationKey();
+
     String[] group();
+
     String setter() default "";
+
     String getter() default "";
+
     String options() default "";
+
     OptionType type() default @OptionType;
+
 }

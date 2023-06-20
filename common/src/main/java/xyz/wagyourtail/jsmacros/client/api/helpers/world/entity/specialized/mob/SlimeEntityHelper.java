@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob;
 
 import net.minecraft.entity.mob.SlimeEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 
 /**
@@ -17,7 +16,6 @@ public class SlimeEntityHelper extends MobEntityHelper<SlimeEntity> {
 
     /**
      * @return the size of this slime.
-     *
      * @since 1.8.4
      */
     public int getSize() {
@@ -28,7 +26,6 @@ public class SlimeEntityHelper extends MobEntityHelper<SlimeEntity> {
      * Small slimes, with a size less than 1, don't attack the player.
      *
      * @return {@code true} if this slime is small, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isSmall() {

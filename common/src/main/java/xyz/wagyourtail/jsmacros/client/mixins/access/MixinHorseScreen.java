@@ -18,4 +18,5 @@ public class MixinHorseScreen implements IHorseScreen {
     public Entity jsmacros_getEntity() {
         return entity;
     }
+
 }

@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.pas
 
 import net.minecraft.entity.passive.FrogEntity;
 import net.minecraft.registry.Registries;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
 /**
@@ -18,7 +17,6 @@ public class FrogEntityHelper extends AnimalEntityHelper<FrogEntity> {
 
     /**
      * @return the variant of this frog.
-     *
      * @since 1.8.4
      */
     public String getVariant() {
@@ -27,7 +25,6 @@ public class FrogEntityHelper extends AnimalEntityHelper<FrogEntity> {
 
     /**
      * @return the target of this frog, or {@code null} if it has none.
-     *
      * @since 1.8.4
      */
     public EntityHelper<?> getTarget() {
@@ -36,7 +33,6 @@ public class FrogEntityHelper extends AnimalEntityHelper<FrogEntity> {
 
     /**
      * @return {@code true} if this frog is croaking, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isCroaking() {

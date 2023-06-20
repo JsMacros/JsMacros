@@ -15,7 +15,6 @@ public class DonkeyEntityHelper<T extends AbstractDonkeyEntity> extends Abstract
 
     /**
      * @return {@code true} if the donkey is carrying a chest, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasChest() {

@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.gui.screen.ingame.SmithingScreen;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
 /**
@@ -17,7 +16,6 @@ public class SmithingInventory extends Inventory<SmithingScreen> {
 
     /**
      * @return the left input item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getLeftInput() {
@@ -26,7 +24,6 @@ public class SmithingInventory extends Inventory<SmithingScreen> {
 
     /**
      * @return the right input item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getRightInput() {
@@ -35,7 +32,6 @@ public class SmithingInventory extends Inventory<SmithingScreen> {
 
     /**
      * @return the expected output item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getOutput() {
@@ -46,5 +42,5 @@ public class SmithingInventory extends Inventory<SmithingScreen> {
     public String toString() {
         return String.format("SmithingInventory:{}");
     }
-    
+
 }

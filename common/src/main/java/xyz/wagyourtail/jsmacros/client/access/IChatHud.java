@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public interface IChatHud {
-    
+
     void jsmacros_addMessageBypass(Text message);
 
     List<ChatHudLine> jsmacros_getMessages();
@@ -21,4 +21,5 @@ public interface IChatHud {
     void jsmacros_removeMessageByText(Text text);
 
     void jsmacros_removeMessagePredicate(Predicate<ChatHudLine> textfilter);
+
 }

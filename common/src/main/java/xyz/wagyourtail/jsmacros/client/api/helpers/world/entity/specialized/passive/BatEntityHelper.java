@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.BatEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 
 /**
@@ -17,7 +16,6 @@ public class BatEntityHelper extends MobEntityHelper<BatEntity> {
 
     /**
      * @return {@code true} if the bat is hanging upside down, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isResting() {

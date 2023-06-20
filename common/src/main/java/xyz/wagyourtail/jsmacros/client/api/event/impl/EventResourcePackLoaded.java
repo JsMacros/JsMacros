@@ -30,4 +30,5 @@ public class EventResourcePackLoaded implements BaseEvent {
     public String toString() {
         return String.format("%s:{\"isGameStart\": %b, \"loadedPacks\": %s}", this.getEventName(), isGameStart, loadedPacks);
     }
+
 }

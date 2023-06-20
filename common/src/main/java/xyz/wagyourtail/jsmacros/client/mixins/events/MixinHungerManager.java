@@ -10,14 +10,15 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventHungerChange;
 
 @Mixin(HungerManager.class)
 public class MixinHungerManager {
-    
+
     @Shadow
     private int foodLevel;
-    
-    @Inject(at = @At("HEAD"), method= "setFoodLevel")
+
+    @Inject(at = @At("HEAD"), method = "setFoodLevel")
     public void onSetFoodLevel(int foodLevel, CallbackInfo info) {
         if (foodLevel != this.foodLevel) {
             new EventHungerChange(foodLevel);
         }
     }
+
 }

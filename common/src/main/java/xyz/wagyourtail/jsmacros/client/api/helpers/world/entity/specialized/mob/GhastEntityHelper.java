@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob;
 
 import net.minecraft.entity.mob.GhastEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 
 /**
@@ -17,8 +16,7 @@ public class GhastEntityHelper extends MobEntityHelper<GhastEntity> {
 
     /**
      * @return {@code true} if this ghast is currently about to shoot a fireball, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isShooting() {

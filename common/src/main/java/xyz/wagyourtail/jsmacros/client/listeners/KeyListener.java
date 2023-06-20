@@ -11,7 +11,7 @@ import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 public class KeyListener extends BaseListener {
     private int mods;
     private String key;
-    
+
     public KeyListener(ScriptTrigger macro, Core runner) {
         super(macro, runner);
         StringBuilder mods = new StringBuilder();
@@ -20,18 +20,21 @@ public class KeyListener extends BaseListener {
             String[] comb = macro.event.split("\\+");
             int i = 0;
             for (String key : comb) {
-                if (++i == comb.length) this.key = key;
-                else {
-                    if (i > 1) mods.append("+");
+                if (++i == comb.length) {
+                    this.key = key;
+                } else {
+                    if (i > 1) {
+                        mods.append("+");
+                    }
                     mods.append(key);
                 }
             }
             this.mods = EventKey.getModInt(mods.toString());
-        } catch(Throwable e) {
+        } catch (Throwable e) {
             key = InputUtil.UNKNOWN_KEY.getTranslationKey();
         }
     }
-    
+
     @Override
     public EventContainer<?> trigger(BaseEvent event) {
         if (check((EventKey) event)) {
@@ -39,11 +42,11 @@ public class KeyListener extends BaseListener {
         }
         return null;
     }
-    
+
     private boolean check(EventKey event) {
         boolean keyState = event.action == 1;
         if (event.key.equals(key) && (EventKey.getModInt(event.mods) & mods) == mods) {
-            switch(getRawTrigger().triggerType) {
+            switch (getRawTrigger().triggerType) {
                 case KEY_FALLING:
                     return !keyState;
                 case KEY_RISING:
@@ -56,4 +59,5 @@ public class KeyListener extends BaseListener {
         }
         return false;
     }
+
 }

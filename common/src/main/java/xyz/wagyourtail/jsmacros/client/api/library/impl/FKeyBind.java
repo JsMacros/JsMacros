@@ -9,24 +9,26 @@ import net.minecraft.client.util.InputUtil.Key;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * 
  * Functions for getting and modifying key pressed states.
- * 
+ * <p>
  * An instance of this class is passed to scripts as the {@code KeyBind} variable.
- * 
+ *
  * @author Wagyourtail
  */
- @Library("KeyBind")
- @SuppressWarnings("unused")
+@Library("KeyBind")
+@SuppressWarnings("unused")
 public class FKeyBind extends BaseLibrary {
     private static final MinecraftClient mc = MinecraftClient.getInstance();
-    
+
     /**
      * Dont use this one... get the raw minecraft keycode class.
-     * 
+     *
      * @param keyName
      * @return the raw minecraft keycode class
      */
@@ -37,11 +39,10 @@ public class FKeyBind extends BaseLibrary {
             return InputUtil.UNKNOWN_KEY;
         }
     }
-    
+
     /**
-     * @since 1.2.2
-     * 
      * @return A {@link java.util.Map Map} of all the minecraft keybinds.
+     * @since 1.2.2
      */
     public Map<String, String> getKeyBindings() {
         Map<String, String> keys = new HashMap<>();
@@ -50,14 +51,13 @@ public class FKeyBind extends BaseLibrary {
         }
         return keys;
     }
-    
+
     /**
      * Sets a minecraft keybind to the specified key.
-     * 
-     * @since 1.2.2
-     * 
+     *
      * @param bind
      * @param key
+     * @since 1.2.2
      */
     public void setKeyBind(String bind, String key) {
         for (KeyBinding keybind : mc.options.allKeys) {
@@ -68,10 +68,10 @@ public class FKeyBind extends BaseLibrary {
             }
         }
     }
-    
+
     /**
      * Set a key-state for a key.
-     * 
+     *
      * @param keyName
      * @param keyState
      */
@@ -98,41 +98,50 @@ public class FKeyBind extends BaseLibrary {
     public void releaseKey(String keyName) {
         key(keyName, false);
     }
-    
+
     /**
      * Don't use this one... set the key-state using the raw minecraft keycode class.
-     * 
+     *
      * @param keyBind
      * @param keyState
      */
     protected void key(Key keyBind, boolean keyState) {
-        if (keyState) KeyBinding.onKeyPressed(keyBind);
+        if (keyState) {
+            KeyBinding.onKeyPressed(keyBind);
+        }
         KeyBinding.setKeyPressed(keyBind, keyState);
 
         // add to pressed keys list
-        if (keyState) KeyTracker.press(keyBind);
-        else KeyTracker.unpress(keyBind);
+        if (keyState) {
+            KeyTracker.press(keyBind);
+        } else {
+            KeyTracker.unpress(keyBind);
+        }
     }
-    
+
     /**
      * Set a key-state using the name of the keybind rather than the name of the key.
-     * 
+     * <p>
      * This is probably the one you should use.
-     * 
-     * @since 1.2.2
-     * 
+     *
      * @param keyBind
      * @param keyState
+     * @since 1.2.2
      */
     public void keyBind(String keyBind, boolean keyState) {
         for (KeyBinding key : mc.options.allKeys) {
             if (key.getTranslationKey().equals(keyBind)) {
-                if (keyState) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(key.getBoundKeyTranslationKey()));
+                if (keyState) {
+                    KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(key.getBoundKeyTranslationKey()));
+                }
                 key.setPressed(keyState);
 
                 // add to pressed keys list
-                if (keyState) KeyTracker.press(key);
-                else KeyTracker.unpress(key);
+                if (keyState) {
+                    KeyTracker.press(key);
+                } else {
+                    KeyTracker.unpress(key);
+                }
                 return;
             }
         }
@@ -157,26 +166,30 @@ public class FKeyBind extends BaseLibrary {
     public void releaseKeyBind(String keyBind) {
         keyBind(keyBind, false);
     }
-    
+
     /**
      * Don't use this one... set the key-state using the raw minecraft keybind class.
-     * 
+     *
      * @param keyBind
      * @param keyState
      */
     protected void key(KeyBinding keyBind, boolean keyState) {
-        if (keyState) KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(keyBind.getBoundKeyTranslationKey()));
+        if (keyState) {
+            KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(keyBind.getBoundKeyTranslationKey()));
+        }
         keyBind.setPressed(keyState);
 
         // add to pressed keys list
-        if (keyState) KeyTracker.press(keyBind);
-        else KeyTracker.unpress(keyBind);
+        if (keyState) {
+            KeyTracker.press(keyBind);
+        } else {
+            KeyTracker.unpress(keyBind);
+        }
     }
-    
+
     /**
-     * @since 1.2.6 (turned into set instead of list in 1.6.5)
-     * 
      * @return a set of currently pressed keys.
+     * @since 1.2.6 (turned into set instead of list in 1.6.5)
      */
     public Set<String> getPressedKeys() {
         return KeyTracker.getPressedKeys();
@@ -216,5 +229,7 @@ public class FKeyBind extends BaseLibrary {
         public static synchronized Set<String> getPressedKeys() {
             return ImmutableSet.copyOf(pressedKeys);
         }
+
     }
+
 }

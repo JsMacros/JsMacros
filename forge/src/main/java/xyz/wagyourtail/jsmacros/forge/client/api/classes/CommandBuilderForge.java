@@ -27,11 +27,9 @@ import java.util.function.Supplier;
 public class CommandBuilderForge extends CommandBuilder {
     private static final Map<String, Function<CommandRegistryAccess, ArgumentBuilder<ServerCommandSource, ?>>> commands = new HashMap<>();
 
-
     private final String name;
 
     private final Stack<Pair<Boolean, Function<CommandRegistryAccess, ArgumentBuilder<ServerCommandSource, ?>>>> pointer = new Stack<>();
-
 
     public CommandBuilderForge(String name) {
         Function<CommandRegistryAccess, ArgumentBuilder<ServerCommandSource, ?>> head = (a) -> LiteralArgumentBuilder.literal(name);
@@ -65,8 +63,10 @@ public class CommandBuilderForge extends CommandBuilder {
     @Override
     protected <S> void suggests(SuggestionProvider<S> suggestionProvider) {
         Pair<Boolean, Function<CommandRegistryAccess, ArgumentBuilder<ServerCommandSource, ?>>> arg = pointer.pop();
-        if (!arg.getT()) throw new AssertionError("SuggestionProvider can only be used on non-literal arguments");
-        pointer.push(new Pair<>(true, arg.getU().andThen((e) -> ((RequiredArgumentBuilder)e).suggests(suggestionProvider))));
+        if (!arg.getT()) {
+            throw new AssertionError("SuggestionProvider can only be used on non-literal arguments");
+        }
+        pointer.push(new Pair<>(true, arg.getU().andThen((e) -> ((RequiredArgumentBuilder) e).suggests(suggestionProvider))));
     }
 
     @Override

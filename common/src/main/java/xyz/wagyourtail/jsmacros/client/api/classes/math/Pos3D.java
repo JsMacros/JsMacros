@@ -33,9 +33,7 @@ public class Pos3D extends Pos2D {
      * @param x
      * @param y
      * @param z
-     *
      * @return
-     *
      * @since 1.6.3
      */
     public Pos3D add(double x, double y, double z) {
@@ -44,9 +42,7 @@ public class Pos3D extends Pos2D {
 
     /**
      * @param pos the position to subtract
-     *
      * @return the new position.
-     *
      * @since 1.8.4
      */
     public Pos3D sub(Pos3D pos) {
@@ -57,9 +53,7 @@ public class Pos3D extends Pos2D {
      * @param x the x coordinate to subtract
      * @param y the y coordinate to subtract
      * @param z the z coordinate to subtract
-     *
      * @return the new position.
-     *
      * @since 1.8.4
      */
     public Pos3D sub(double x, double y, double z) {
@@ -74,9 +68,7 @@ public class Pos3D extends Pos2D {
      * @param x
      * @param y
      * @param z
-     *
      * @return
-     *
      * @since 1.6.3
      */
     public Pos3D multiply(double x, double y, double z) {
@@ -85,9 +77,7 @@ public class Pos3D extends Pos2D {
 
     /**
      * @param pos the position to divide by
-     *
      * @return the new position.
-     *
      * @since 1.8.4
      */
     public Pos3D divide(Pos3D pos) {
@@ -98,9 +88,7 @@ public class Pos3D extends Pos2D {
      * @param x the x coordinate to divide by
      * @param y the y coordinate to divide by
      * @param z the z coordinate to divide by
-     *
      * @return the new position.
-     *
      * @since 1.8.4
      */
     public Pos3D divide(double x, double y, double z) {
@@ -109,9 +97,7 @@ public class Pos3D extends Pos2D {
 
     /**
      * @param scale
-     *
      * @return
-     *
      * @since 1.6.3
      */
     @Override
@@ -130,9 +116,7 @@ public class Pos3D extends Pos2D {
 
     /**
      * @param start_pos
-     *
      * @return
-     *
      * @since 1.6.4
      */
     @Override
@@ -142,9 +126,7 @@ public class Pos3D extends Pos2D {
 
     /**
      * @param start_pos
-     *
      * @return
-     *
      * @since 1.6.4
      */
     public Vec3D toVector(Pos3D start_pos) {
@@ -155,9 +137,7 @@ public class Pos3D extends Pos2D {
      * @param start_x
      * @param start_y
      * @param start_z
-     *
      * @return
-     *
      * @since 1.6.4
      */
     public Vec3D toVector(double start_x, double start_y, double start_z) {
@@ -166,7 +146,6 @@ public class Pos3D extends Pos2D {
 
     /**
      * @return
-     *
      * @since 1.6.4
      */
     public Vec3D toReverseVector() {
@@ -180,9 +159,7 @@ public class Pos3D extends Pos2D {
 
     /**
      * @param end_pos
-     *
      * @return
-     *
      * @since 1.6.4
      */
     public Vec3D toReverseVector(Pos3D end_pos) {
@@ -193,9 +170,7 @@ public class Pos3D extends Pos2D {
      * @param end_x
      * @param end_y
      * @param end_z
-     *
      * @return
-     *
      * @since 1.6.4
      */
     public Vec3D toReverseVector(double end_x, double end_y, double end_z) {
@@ -204,7 +179,6 @@ public class Pos3D extends Pos2D {
 
     /**
      * @return
-     *
      * @since 1.8.0
      */
     public BlockPosHelper toBlockPos() {
@@ -213,7 +187,6 @@ public class Pos3D extends Pos2D {
 
     /**
      * @return
-     *
      * @since 1.8.0
      */
     public BlockPos toRawBlockPos() {
@@ -222,7 +195,6 @@ public class Pos3D extends Pos2D {
 
     /**
      * @return the raw minecraft double vector with the same coordinates as this position.
-     *
      * @since 1.8.4
      */
     public Vec3d toMojangDoubleVector() {

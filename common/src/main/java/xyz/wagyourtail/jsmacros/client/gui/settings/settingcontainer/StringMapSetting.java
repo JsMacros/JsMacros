@@ -13,13 +13,15 @@ public class StringMapSetting extends AbstractMapSettingContainer<String, String
         super(x, y, width, height, textRenderer, parent, group);
         defaultValue = () -> "";
     }
-    
+
     @Override
     public void addField(String key, String value) {
-        if (map.containsKey(key)) return;
+        if (map.containsKey(key)) {
+            return;
+        }
         StringEntry entry = new StringEntry(x, y + 12 + totalHeight - topScroll, width - 12, textRenderer, this, key, value);
         map.put(key, entry);
-        totalHeight +=  entry.height;
+        totalHeight += entry.height;
         scroll.setScrollPages(totalHeight / (double) height);
         if (scroll.active) {
             scroll.scrollToPercent(0);
@@ -27,13 +29,13 @@ public class StringMapSetting extends AbstractMapSettingContainer<String, String
             onScrollbar(0);
         }
     }
-    
+
     public static class StringEntry extends AbstractMapSettingContainer.MapSettingEntry<String> {
-    
+
         public StringEntry(int x, int y, int width, TextRenderer textRenderer, StringMapSetting parent, String key, String value) {
             super(x, y, width, textRenderer, (AbstractMapSettingContainer) parent, key, value);
         }
-    
+
         @Override
         public void init() {
             super.init();
@@ -53,5 +55,7 @@ public class StringMapSetting extends AbstractMapSettingContainer<String, String
                 }));
             }));
         }
+
     }
+
 }

@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.TameableEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.LivingEntityHelper;
 
 /**
@@ -17,7 +16,6 @@ public class TameableEntityHelper<T extends TameableEntity> extends AnimalEntity
 
     /**
      * @return {@code true} if the entity is tamed, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isTamed() {
@@ -26,7 +24,6 @@ public class TameableEntityHelper<T extends TameableEntity> extends AnimalEntity
 
     /**
      * @return {@code true} if the entity is sitting, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isSitting() {
@@ -35,7 +32,6 @@ public class TameableEntityHelper<T extends TameableEntity> extends AnimalEntity
 
     /**
      * @return the owner's uuid, or {@code null} if the entity is not tamed.
-     *
      * @since 1.8.4
      */
     public String getOwner() {
@@ -45,7 +41,6 @@ public class TameableEntityHelper<T extends TameableEntity> extends AnimalEntity
     /**
      * @param owner the possible owner
      * @return {@code true} if the entity is tamed by the given owner, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isOwner(LivingEntityHelper<?> owner) {

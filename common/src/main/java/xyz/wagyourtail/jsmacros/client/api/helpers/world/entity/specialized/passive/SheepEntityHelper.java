@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.SheepEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.DyeColorHelper;
 
 /**
@@ -17,7 +16,6 @@ public class SheepEntityHelper extends AnimalEntityHelper<SheepEntity> {
 
     /**
      * @return {@code true} if this sheep is sheared, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isSheared() {
@@ -26,7 +24,6 @@ public class SheepEntityHelper extends AnimalEntityHelper<SheepEntity> {
 
     /**
      * @return {@code true} if this sheep can be sheared, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isShearable() {
@@ -35,7 +32,6 @@ public class SheepEntityHelper extends AnimalEntityHelper<SheepEntity> {
 
     /**
      * @return the color of this sheep.
-     *
      * @since 1.8.4
      */
     public DyeColorHelper getColor() {
@@ -47,7 +43,6 @@ public class SheepEntityHelper extends AnimalEntityHelper<SheepEntity> {
      * drop their original colored wool.
      *
      * @return {@code true} if the sheep has a rainbow overlay, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isJeb() {

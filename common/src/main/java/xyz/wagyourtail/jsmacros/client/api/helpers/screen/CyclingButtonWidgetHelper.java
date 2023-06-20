@@ -2,10 +2,9 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.text.Text;
-
 import org.apache.commons.lang3.StringUtils;
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinCyclingButton;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -32,7 +31,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
 
     /**
      * @return the current value.
-     *
      * @since 1.8.4
      */
     public T getValue() {
@@ -41,7 +39,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
 
     /**
      * @return the current value in their string representation.
-     *
      * @since 1.8.4
      */
     public String getStringValue() {
@@ -51,7 +48,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
     /**
      * @param val the new value
      * @return {@code true} if the value has changed, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean setValue(T val) {
@@ -63,7 +59,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
     /**
      * @param amount the amount to cycle by
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CyclingButtonWidgetHelper<T> cycle(int amount) {
@@ -73,7 +68,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
 
     /**
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CyclingButtonWidgetHelper<T> forward() {
@@ -82,7 +76,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
 
     /**
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public CyclingButtonWidgetHelper<T> backward() {
@@ -116,7 +109,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
 
         /**
          * @return the initial value of the slider.
-         *
          * @since 1.8.4
          */
         public T getInitialValue() {
@@ -126,7 +118,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
         /**
          * @param value the initial value of the slider
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public CyclicButtonBuilder<T> initially(T value) {
@@ -138,7 +129,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
          * The option text is a prefix of all values, seperated by a colon.
          *
          * @return the option text of the button or an empty text if it is omitted.
-         *
          * @since 1.8.4
          */
         public TextHelper getOption() {
@@ -148,7 +138,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
         /**
          * @param option the option text of the button
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public CyclicButtonBuilder<T> option(String option) {
@@ -161,7 +150,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
         /**
          * @param option the option text of the button
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public CyclicButtonBuilder<T> option(TextHelper option) {
@@ -173,7 +161,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
 
         /**
          * @return the action to run when the button is pressed.
-         *
          * @since 1.8.4
          */
         public MethodWrapper<CyclingButtonWidgetHelper<T>, IScreen, Object, ?> getAction() {
@@ -183,7 +170,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
         /**
          * @param action the action to run when the button is pressed
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public CyclicButtonBuilder<T> action(MethodWrapper<CyclingButtonWidgetHelper<T>, IScreen, Object, ?> action) {
@@ -193,7 +179,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
 
         /**
          * @return the function to convert a value to a text.
-         *
          * @since 1.8.4
          */
         public MethodWrapper<T, ?, TextHelper, ?> getValueToText() {
@@ -203,7 +188,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
         /**
          * @param valueToText the function to convert a value to a text
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public CyclicButtonBuilder<T> valueToText(MethodWrapper<T, ?, TextHelper, ?> valueToText) {
@@ -218,7 +202,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
          * true, it will cycle through the alternate values.
          *
          * @return the list of all default values.
-         *
          * @since 1.8.4
          */
         public List<T> getDefaultValues() {
@@ -230,7 +213,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
          * true, it will cycle through the alternate values.
          *
          * @return the list of all alternate values.
-         *
          * @since 1.8.4
          */
         public List<T> getAlternateValues() {
@@ -240,7 +222,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
         /**
          * @param values the default values of the button
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         @SafeVarargs
@@ -252,7 +233,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
         /**
          * @param values the alternate values of the button
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         @SafeVarargs
@@ -265,7 +245,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
          * @param defaults     the default values of the button
          * @param alternatives the alternate values of the button
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public CyclicButtonBuilder<T> values(T[] defaults, T[] alternatives) {
@@ -276,7 +255,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
          * @param defaults     the default values of the button
          * @param alternatives the alternate values of the button
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public CyclicButtonBuilder<T> values(List<T> defaults, List<T> alternatives) {
@@ -287,8 +265,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
 
         /**
          * @return the toggle function to determine if the button should cycle through the default
-         *         or the alternate values.
-         *
+         * or the alternate values.
          * @since 1.8.4
          */
         public MethodWrapper<?, ?, Boolean, ?> getAlternateToggle() {
@@ -299,7 +276,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
          * @param alternateToggle the toggle function to determine if the button should cycle
          *                        through the default or the alternate values
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public CyclicButtonBuilder<T> alternateToggle(MethodWrapper<?, ?, Boolean, ?> alternateToggle) {
@@ -311,8 +287,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
 
         /**
          * @return {@code true} if the prefix option text should be omitted, {@code false}
-         *         otherwise.
-         *
+         * otherwise.
          * @since 1.8.4
          */
         public boolean isOptionTextOmitted() {
@@ -322,7 +297,6 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
         /**
          * @param optionTextOmitted whether the prefix option text should be omitted or not
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public CyclicButtonBuilder<T> omitTextOption(boolean optionTextOmitted) {
@@ -355,6 +329,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
             b.set(new CyclingButtonWidgetHelper<>(cyclingButton, getZIndex()));
             return b.get();
         }
+
     }
 
 }

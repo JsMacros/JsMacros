@@ -15,7 +15,6 @@ public class GoatEntityHelper extends AnimalEntityHelper<GoatEntity> {
 
     /**
      * @return {@code true} if this goat is currently screaming, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isScreaming() {
@@ -24,7 +23,6 @@ public class GoatEntityHelper extends AnimalEntityHelper<GoatEntity> {
 
     /**
      * @return {@code true} if this goat has its left horn still left, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasLeftHorn() {
@@ -33,7 +31,6 @@ public class GoatEntityHelper extends AnimalEntityHelper<GoatEntity> {
 
     /**
      * @return {@code true} if this goat has its right horn still left, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasRightHorn() {
@@ -42,7 +39,6 @@ public class GoatEntityHelper extends AnimalEntityHelper<GoatEntity> {
 
     /**
      * @return {@code true} if this goat still has a horn, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasHorns() {

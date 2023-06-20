@@ -13,12 +13,21 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.EventKey;
 @Mixin(Keyboard.class)
 class MixinKeyboard {
 
-    @Shadow @Final private MinecraftClient client;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
     @Inject(at = @At("HEAD"), method = "onKey", cancellable = true)
     private void onKey(long window, int key, int scancode, int action, int mods, final CallbackInfo info) {
-        if (window != client.getWindow().getHandle()) return;
-        if (key == -1 || action == 2) return;
-        if (EventKey.parse(key, scancode, action, mods)) info.cancel();
+        if (window != client.getWindow().getHandle()) {
+            return;
+        }
+        if (key == -1 || action == 2) {
+            return;
+        }
+        if (EventKey.parse(key, scancode, action, mods)) {
+            info.cancel();
+        }
     }
+
 }

@@ -15,7 +15,6 @@ public class BeeEntityHelper extends AnimalEntityHelper<BeeEntity> {
 
     /**
      * @return {@code true} if the bee has nectar, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasNectar() {
@@ -24,7 +23,6 @@ public class BeeEntityHelper extends AnimalEntityHelper<BeeEntity> {
 
     /**
      * @return {@code true} if the bee is angry at a player, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isAngry() {
@@ -33,7 +31,6 @@ public class BeeEntityHelper extends AnimalEntityHelper<BeeEntity> {
 
     /**
      * @return {@code true} if the bee has already stung a player, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasStung() {

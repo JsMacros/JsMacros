@@ -29,14 +29,15 @@ public class ExtensionLoader {
 
     private final Path extPath;
 
-
     public ExtensionLoader(Core<?, ?> core) {
         this.core = core;
         this.extPath = core.config.configFolder.toPath().resolve("LanguageExtensions");
     }
 
     public boolean isExtensionLoaded(String name) {
-        if (notLoaded()) loadExtensions();
+        if (notLoaded()) {
+            loadExtensions();
+        }
         return extensions.stream().anyMatch(e -> e.getLanguageImplName().equals(name));
     }
 
@@ -45,7 +46,9 @@ public class ExtensionLoader {
     }
 
     public Extension getHighestPriorityExtension() {
-        if (notLoaded()) loadExtensions();
+        if (notLoaded()) {
+            loadExtensions();
+        }
         if (highestPriorityExtension == null) {
             highestPriorityExtension = extensions.stream().max(Comparator.comparingInt(Extension::getPriority)).orElse(null);
         }
@@ -53,12 +56,16 @@ public class ExtensionLoader {
     }
 
     public Set<Extension> getAllExtensions() {
-        if (notLoaded()) loadExtensions();
+        if (notLoaded()) {
+            loadExtensions();
+        }
         return extensions;
     }
 
     public @Nullable Extension getExtensionForFile(File file) {
-        if (notLoaded()) loadExtensions();
+        if (notLoaded()) {
+            loadExtensions();
+        }
         List<Pair<Extension.ExtMatch, Extension>> extensions = this.extensions.stream().map(e -> new Pair<>(e.extensionMatch(file), e)).filter(p -> p.getT().isMatch()).collect(Collectors.toList());
         if (extensions.size() > 1) {
             List<Pair<Extension.ExtMatch, Extension>> extensionsByName = extensions.stream().filter(p -> p.getT() == Extension.ExtMatch.MATCH_WITH_NAME).collect(Collectors.toList());
@@ -75,7 +82,9 @@ public class ExtensionLoader {
     }
 
     public Extension getExtensionForName(String lang) {
-        if (notLoaded()) loadExtensions();
+        if (notLoaded()) {
+            loadExtensions();
+        }
         return extensions.stream().filter(e -> e.getLanguageImplName().equals(lang)).findFirst().orElse(null);
     }
 
@@ -121,7 +130,7 @@ public class ExtensionLoader {
             System.out.println("Adding internal extension: " + lib);
             // copy resource to dependencies folder
             Path path = dependenciesPath.resolve(lib.getPath().substring(lib.getPath().lastIndexOf('/') + 1));
-            try (InputStream stream = lib.openStream()){
+            try (InputStream stream = lib.openStream()) {
                 Files.write(path, stream.readAllBytes(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
                 System.out.println("Extracted dependency " + path);
                 classLoader.addURL(path.toUri().toURL());
@@ -132,9 +141,9 @@ public class ExtensionLoader {
 
         // load extensions
         extensions.addAll(ServiceLoader.load(Extension.class, classLoader)
-            .stream()
-            .map(ServiceLoader.Provider::get)
-            .collect(Collectors.toSet()));
+                .stream()
+                .map(ServiceLoader.Provider::get)
+                .collect(Collectors.toSet()));
 
         System.out.println("Loaded " + extensions.size() + " extensions");
 
@@ -147,7 +156,7 @@ public class ExtensionLoader {
             for (URL lib : deps) {
                 // copy resource to dependencies folder
                 Path path = dependenciesPath.resolve(lib.getPath().substring(lib.getPath().lastIndexOf('/') + 1));
-                try (InputStream stream = lib.openStream()){
+                try (InputStream stream = lib.openStream()) {
                     Files.write(path, stream.readAllBytes(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
                     System.out.println("Extracted dependency " + path);
                     classLoader.addURL(path.toUri().toURL());
@@ -168,7 +177,9 @@ public class ExtensionLoader {
     }
 
     public boolean isGuestObject(Object obj) {
-        if (notLoaded()) loadExtensions();
+        if (notLoaded()) {
+            loadExtensions();
+        }
         return extensions.stream().anyMatch(e -> e.isGuestObject(obj));
     }
 

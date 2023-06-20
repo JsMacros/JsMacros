@@ -10,4 +10,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface MixinStatHandler {
     @Accessor
     Object2IntMap<Stat<?>> getStatMap();
+
 }

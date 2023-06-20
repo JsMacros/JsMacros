@@ -7,4 +7,5 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.PARAMETER})
 public @interface DocletReplaceParams {
     String value();
+
 }

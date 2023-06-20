@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.event.impl.inventory;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
@@ -40,5 +39,5 @@ public class EventOpenContainer implements BaseEvent, ICancelable {
     public String toString() {
         return String.format("%s:{\"screenName\": \"%s\", \"inventory\": %s}", this.getEventName(), JsMacros.getScreenName((Screen) screen), inventory);
     }
-    
+
 }

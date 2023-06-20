@@ -77,7 +77,6 @@
   "jsmacros.serviceautoreload": "當服務的檔案更動時自動重啟",
   "jsmacros.sortservices": "服務列表排序方式",
   "jsmacros.showslotindexes": "顯示索引數字",
-
   "jsmacros.event.anything": "所有事件",
   "jsmacros.event.airchange": "氧氣槽變化",
   "jsmacros.event.armorchange": "裝備變化",

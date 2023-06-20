@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.mixins.access;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.AbstractFurnaceScreenHandler;
 import net.minecraft.screen.PropertyDelegate;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;

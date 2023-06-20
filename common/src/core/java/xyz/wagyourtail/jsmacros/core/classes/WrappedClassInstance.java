@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.core.classes;
 
-
 import xyz.wagyourtail.Util;
 
 import java.io.IOException;
@@ -13,8 +12,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * @since 1.6.5
  * @param <T> the type of the wrapped class
+ * @since 1.6.5
  */
 @SuppressWarnings("unused")
 public class WrappedClassInstance<T> {
@@ -33,7 +32,9 @@ public class WrappedClassInstance<T> {
     }
 
     protected synchronized Set<Class<?>> getInheritance() {
-        if (!inheritance.isEmpty()) return inheritance;
+        if (!inheritance.isEmpty()) {
+            return inheritance;
+        }
         Class<?> current = tClass;
         do {
             inheritance.add(current);
@@ -47,7 +48,7 @@ public class WrappedClassInstance<T> {
         Set<Class<?>> l = new HashSet<>();
         l.add(interf);
         l.addAll(Arrays.stream(interf.getInterfaces()).flatMap(e -> getInterfaceInheritance(e).stream()).collect(
-            Collectors.toSet()));
+                Collectors.toSet()));
         return l;
     }
 
@@ -63,9 +64,12 @@ public class WrappedClassInstance<T> {
             try {
                 fd = findField(cls, fieldName);
                 break;
-            } catch (NoSuchFieldException ignored) {}
+            } catch (NoSuchFieldException ignored) {
+            }
         }
-        if (fd == null) throw new NoSuchFieldException();
+        if (fd == null) {
+            throw new NoSuchFieldException();
+        }
         return fd.get(instance);
     }
 
@@ -80,9 +84,12 @@ public class WrappedClassInstance<T> {
             try {
                 fd = findField(cls, fieldName);
                 break;
-            } catch (NoSuchFieldException ignored) {}
+            } catch (NoSuchFieldException ignored) {
+            }
         }
-        if (fd == null) throw new NoSuchFieldException();
+        if (fd == null) {
+            throw new NoSuchFieldException();
+        }
         fd.set(instance, fieldValue);
     }
 
@@ -169,16 +176,22 @@ public class WrappedClassInstance<T> {
     }
 
     protected boolean areParamsCompatible(Class<?>[] fuzzable, Class<?>[] target) {
-        if (fuzzable.length != target.length) return false;
+        if (fuzzable.length != target.length) {
+            return false;
+        }
         for (int i = 0; i < fuzzable.length; ++i) {
-            if (Number.class.isAssignableFrom(fuzzable[i]) && (Number.class.isAssignableFrom(target[i]) || target[i].isPrimitive())) continue;
-            if (target[i].isAssignableFrom(fuzzable[i])) continue;
+            if (Number.class.isAssignableFrom(fuzzable[i]) && (Number.class.isAssignableFrom(target[i]) || target[i].isPrimitive())) {
+                continue;
+            }
+            if (target[i].isAssignableFrom(fuzzable[i])) {
+                continue;
+            }
             return false;
         }
         return true;
     }
 
-    public Object invokeMethod(String methodNameOrSig, Object ...params) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
+    public Object invokeMethod(String methodNameOrSig, Object... params) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ClassNotFoundException {
         Method md = null;
         if (methodNameOrSig.contains("(")) {
             MethodSigParts methodSig = mapMethodSig(methodNameOrSig);
@@ -186,7 +199,8 @@ public class WrappedClassInstance<T> {
                 try {
                     md = findMethod(cls, methodNameOrSig, methodSig);
                     break;
-                } catch (NoSuchMethodException ignored) {}
+                } catch (NoSuchMethodException ignored) {
+                }
             }
         } else {
             Class<?>[] paramClasses = Arrays.stream(params).map(Object::getClass).toArray(Class[]::new);
@@ -194,10 +208,13 @@ public class WrappedClassInstance<T> {
                 try {
                     md = findMethod(cls, methodNameOrSig, paramClasses);
                     break;
-                } catch (NoSuchMethodException ignored) {}
+                } catch (NoSuchMethodException ignored) {
+                }
             }
         }
-        if (md == null) throw new NoSuchMethodException();
+        if (md == null) {
+            throw new NoSuchMethodException();
+        }
         Class<?>[] rightParamClasses = md.getParameterTypes();
         for (int i = 0; i < params.length; ++i) {
             params[i] = Util.tryAutoCastNumber(rightParamClasses[i], params[i]);
@@ -205,7 +222,7 @@ public class WrappedClassInstance<T> {
         return md.invoke(instance, params);
     }
 
-    public Object invokeMethodAsClass(String asClass, String methodNameOrSig, Object ...params) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public Object invokeMethodAsClass(String asClass, String methodNameOrSig, Object... params) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Class<?> cls = getClass(asClass);
         Method md;
         if (methodNameOrSig.contains("(")) {
@@ -221,21 +238,20 @@ public class WrappedClassInstance<T> {
     }
 
     /**
-     * @since 1.6.5
      * @return
+     * @since 1.6.5
      */
     public T getRawInstance() {
         return instance;
     }
 
     /**
-     * @since 1.6.5
      * @return
+     * @since 1.6.5
      */
     public Class<T> getRawClass() {
         return tClass;
     }
-
 
     public static class MethodSigParts {
         public final String name;
@@ -247,5 +263,7 @@ public class WrappedClassInstance<T> {
             this.params = params;
             this.returnType = returnType;
         }
+
     }
+
 }

@@ -1,9 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.FoxEntity;
-
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinFoxEntity;
 
 import java.util.List;
@@ -24,7 +23,6 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
 
     /**
      * @return the item in this fox's mouth.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getItemInMouth() {
@@ -33,7 +31,6 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
 
     /**
      * @return {@code true} if this fox is a snow fox, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isSnowFox() {
@@ -42,7 +39,6 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
 
     /**
      * @return {@code true} if this fox is a red fox, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isRedFox() {
@@ -51,7 +47,6 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
 
     /**
      * @return the owner's UUID, or {@code null} if this fox has no owner.
-     *
      * @since 1.8.4
      */
     public String getOwner() {
@@ -60,7 +55,6 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
 
     /**
      * @return the second owner's name, or {@code null} if this fox has no owner.
-     *
      * @since 1.8.4
      */
     public String getSecondOwner() {
@@ -74,7 +68,6 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
     /**
      * @param entity the entity to check
      * @return {@code true} if this fox trusts the given entity, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean canTrust(EntityHelper<?> entity) {
@@ -83,7 +76,6 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
 
     /**
      * @return {@code true} if this fox is preparing its jump, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasFoundTarget() {
@@ -92,7 +84,6 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
 
     /**
      * @return {@code true} if this fox is sitting, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isSitting() {
@@ -101,7 +92,6 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
 
     /**
      * @return {@code true} if this fox is wandering around, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isWandering() {
@@ -110,7 +100,6 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
 
     /**
      * @return {@code true} if this fox is sleeping, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isSleeping() {
@@ -119,7 +108,6 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
 
     /**
      * @return {@code true} if this fox is defending another fox, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isDefending() {
@@ -128,7 +116,6 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
 
     /**
      * @return {@code true} if this fox is just before its leap, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isPouncing() {
@@ -137,7 +124,6 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
 
     /**
      * @return {@code true} if this fox is jumping, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isJumping() {
@@ -146,8 +132,7 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
 
     /**
      * @return {@code true} if this fox is sneaking in preparation of an attack, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isSneaking() {

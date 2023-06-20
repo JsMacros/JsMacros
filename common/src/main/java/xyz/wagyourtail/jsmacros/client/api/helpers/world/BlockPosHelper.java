@@ -2,9 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -13,7 +12,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
  */
 @SuppressWarnings("unused")
 public class BlockPosHelper extends BaseHelper<BlockPos> {
-    
+
     public BlockPosHelper(BlockPos b) {
         super(b);
     }
@@ -21,26 +20,26 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     public BlockPosHelper(int x, int y, int z) {
         super(new BlockPos(x, y, z));
     }
-    
+
     /**
-     * @since 1.2.6
      * @return the {@code x} value of the block.
+     * @since 1.2.6
      */
     public int getX() {
         return base.getX();
     }
-    
+
     /**
-     * @since 1.2.6
      * @return the {@code y} value of the block.
+     * @since 1.2.6
      */
     public int getY() {
         return base.getY();
     }
-    
+
     /**
-     * @since 1.2.6
      * @return the {@code z} value of the block.
+     * @since 1.2.6
      */
     public int getZ() {
         return base.getZ();
@@ -48,7 +47,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
 
     /**
      * @return the block above.
-     *
      * @since 1.6.5
      */
     public BlockPosHelper up() {
@@ -58,7 +56,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     /**
      * @param distance the distance to move up
      * @return the block n-th block above.
-     *
      * @since 1.6.5
      */
     public BlockPosHelper up(int distance) {
@@ -67,7 +64,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
 
     /**
      * @return the block below.
-     *
      * @since 1.6.5
      */
     public BlockPosHelper down() {
@@ -77,7 +73,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     /**
      * @param distance the distance to move down
      * @return the block n-th block below.
-     *
      * @since 1.6.5
      */
     public BlockPosHelper down(int distance) {
@@ -86,7 +81,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
 
     /**
      * @return the block to the north.
-     *
      * @since 1.6.5
      */
     public BlockPosHelper north() {
@@ -96,7 +90,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     /**
      * @param distance the distance to move north
      * @return the n-th block to the north.
-     *
      * @since 1.6.5
      */
     public BlockPosHelper north(int distance) {
@@ -105,7 +98,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
 
     /**
      * @return the block to the south.
-     *
      * @since 1.6.5
      */
     public BlockPosHelper south() {
@@ -115,7 +107,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     /**
      * @param distance the distance to move south
      * @return the n-th block to the south.
-     *
      * @since 1.6.5
      */
     public BlockPosHelper south(int distance) {
@@ -124,7 +115,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
 
     /**
      * @return the block to the east.
-     *
      * @since 1.6.5
      */
     public BlockPosHelper east() {
@@ -134,7 +124,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     /**
      * @param distance the distance to move east
      * @return the n-th block to the east.
-     *
      * @since 1.6.5
      */
     public BlockPosHelper east(int distance) {
@@ -143,7 +132,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
 
     /**
      * @return the block to the west.
-     *
      * @since 1.6.5
      */
     public BlockPosHelper west() {
@@ -153,7 +141,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     /**
      * @param distance the distance to move west
      * @return the n-th block to the west.
-     *
      * @since 1.6.5
      */
     public BlockPosHelper west(int distance) {
@@ -163,7 +150,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     /**
      * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
      * @return the block offset by the given direction.
-     *
      * @since 1.6.5
      */
     public BlockPosHelper offset(String direction) {
@@ -172,9 +158,8 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
 
     /**
      * @param direction 0-5 in order: [DOWN, UP, NORTH, SOUTH, WEST, EAST];
-     * @param distance the distance to move in the given direction
+     * @param distance  the distance to move in the given direction
      * @return the n-th block offset by the given direction.
-     *
      * @since 1.6.5
      */
     public BlockPosHelper offset(String direction, int distance) {
@@ -186,7 +171,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
      * @param y the y offset
      * @param z the y offset
      * @return the block offset by the given values.
-     *
      * @since 1.8.4
      */
     public BlockPosHelper offset(int x, int y, int z) {
@@ -195,7 +179,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
 
     /**
      * @return the block position converted to the respective nether coordinates.
-     *
      * @since 1.8.4
      */
     public BlockPosHelper toNetherCoords() {
@@ -204,17 +187,15 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
 
     /**
      * @return the block position converted to the respective overworld coordinates.
-     *
      * @since 1.8.4
      */
     public BlockPosHelper toOverworldCoords() {
         return new BlockPosHelper(getX() * 8, getY(), getZ() * 8);
     }
-    
+
     /**
      * @param entity the entity to get the distance to
      * @return the distance of this position to the given entity.
-     *
      * @since 1.8.4
      */
     public double distanceTo(EntityHelper<?> entity) {
@@ -224,7 +205,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     /**
      * @param pos the position to get the distance to
      * @return the distance of this position to the given position.
-     *
      * @since 1.8.4
      */
     public double distanceTo(BlockPosHelper pos) {
@@ -234,7 +214,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     /**
      * @param pos the position to get the distance to
      * @return the distance of this position to the given position.
-     *
      * @since 1.8.4
      */
     public double distanceTo(Pos3D pos) {
@@ -246,7 +225,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
      * @param y the y coordinate to get the distance to
      * @param z the z coordinate to get the distance to
      * @return the distance of this position to the given position.
-     *
      * @since 1.8.4
      */
     public double distanceTo(double x, double y, double z) {
@@ -255,7 +233,6 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
 
     /**
      * @return the {@link Pos3D} representation of this position.
-     *
      * @since 1.8.4
      */
     public Pos3D toPos3D() {
@@ -266,4 +243,5 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     public String toString() {
         return String.format("BlockPosHelper:{\"x\": %d, \"y\": %d, \"z\": %d}", base.getX(), base.getY(), base.getZ());
     }
+
 }

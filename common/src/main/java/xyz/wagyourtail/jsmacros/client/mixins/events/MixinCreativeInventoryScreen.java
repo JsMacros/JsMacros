@@ -20,7 +20,8 @@ import java.util.Arrays;
 @Mixin(CreativeInventoryScreen.class)
 public abstract class MixinCreativeInventoryScreen {
 
-    @Shadow protected abstract boolean isCreativeInventorySlot(@Nullable Slot slot);
+    @Shadow
+    protected abstract boolean isCreativeInventorySlot(@Nullable Slot slot);
 
     @Unique
     private static Class<? extends Slot> lockableSlot;
@@ -33,7 +34,9 @@ public abstract class MixinCreativeInventoryScreen {
 
     @Unique
     private synchronized Slot getSlotFromCreativeSlot(Slot in) {
-        if (in.getClass().equals(Slot.class)) return in;
+        if (in.getClass().equals(Slot.class)) {
+            return in;
+        }
         boolean lockable = in.getClass().equals(lockableSlot);
         boolean creative = in.getClass().equals(creativeSlot);
         if (lockable) {
@@ -51,12 +54,12 @@ public abstract class MixinCreativeInventoryScreen {
             try {
                 Class<? extends Slot> unknown = in.getClass();
                 Field slotField = Arrays.stream(unknown.getDeclaredFields())
-                    .filter(e -> e.getType().equals(Slot.class))
-                    .findFirst()
-                    .orElse(null);
-                if (slotField == null)
+                        .filter(e -> e.getType().equals(Slot.class))
+                        .findFirst()
+                        .orElse(null);
+                if (slotField == null) {
                     lockableSlot = unknown;
-                else {
+                } else {
                     slotInCreativeSlot = slotField;
                     slotInCreativeSlot.setAccessible(true);
                     creativeSlot = unknown;
@@ -71,7 +74,9 @@ public abstract class MixinCreativeInventoryScreen {
 
     @Inject(method = "onMouseClick", at = @At("HEAD"), cancellable = true)
     public void beforeMouseClick(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
-        if (slot != null) slotId = getSlotFromCreativeSlot(slot).id;
+        if (slot != null) {
+            slotId = getSlotFromCreativeSlot(slot).id;
+        }
         EventClickSlot event = new EventClickSlot((HandledScreen<?>) (Object) this, actionType.ordinal(), button, slotId);
         if (event.isCanceled()) {
             ci.cancel();
@@ -84,4 +89,5 @@ public abstract class MixinCreativeInventoryScreen {
             }
         }
     }
+
 }

@@ -8,7 +8,8 @@ import xyz.wagyourtail.jsmacros.client.access.ILoomScreen;
 @Mixin(LoomScreen.class)
 public class MixinLoomScreen implements ILoomScreen {
 
-    @Shadow private boolean canApplyDyePattern;
+    @Shadow
+    private boolean canApplyDyePattern;
 
     @Override
     public boolean jsmacros_canApplyDyePattern() {

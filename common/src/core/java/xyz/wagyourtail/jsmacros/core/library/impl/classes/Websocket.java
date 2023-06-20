@@ -12,9 +12,8 @@ import java.util.Map;
 
 /**
  * @author Wagyourtail, R3alCl0ud
- *
  */
- @SuppressWarnings("unused")
+@SuppressWarnings("unused")
 public class Websocket {
 
     private final WebSocket ws;
@@ -43,22 +42,24 @@ public class Websocket {
         ws = new WebSocketFactory().createSocket(address).addListener(new WebSocketAdapter() {
             @Override
             public void onConnected(WebSocket ws, Map<String, List<String>> headers) {
-                if (onConnect != null)
+                if (onConnect != null) {
                     try {
                         onConnect.accept(ws, headers);
                     } catch (Throwable e) {
                         Core.getInstance().profile.logError(e);
                     }
+                }
             }
 
             @Override
             public void onDisconnected(WebSocket ws, WebSocketFrame serverFrame, WebSocketFrame clientFrame, boolean isServer) {
-                if (onDisconnect != null)
+                if (onDisconnect != null) {
                     try {
                         onDisconnect.accept(ws, new Disconnected(serverFrame, clientFrame, isServer));
                     } catch (Throwable e) {
                         Core.getInstance().profile.logError(e);
                     }
+                }
             }
 
             @Override
@@ -68,32 +69,35 @@ public class Websocket {
 
             @Override
             public void onError(WebSocket websocket, WebSocketException ex) {
-                if (onError != null)
+                if (onError != null) {
                     try {
                         onError.accept(websocket, ex);
                     } catch (Throwable e) {
                         Core.getInstance().profile.logError(e);
                     }
+                }
             }
 
             @Override
             public void onFrame(WebSocket ws, WebSocketFrame frame) {
-                if (onFrame != null)
+                if (onFrame != null) {
                     try {
                         onFrame.accept(ws, frame);
                     } catch (Throwable e) {
                         Core.getInstance().profile.logError(e);
                     }
+                }
             }
 
             @Override
             public void onTextMessage(WebSocket ws, String text) {
-                if (onTextMessage != null)
+                if (onTextMessage != null) {
                     try {
-                    onTextMessage.accept(ws, text);
+                        onTextMessage.accept(ws, text);
                     } catch (Throwable e) {
                         Core.getInstance().profile.logError(e);
                     }
+                }
             }
         });
     }
@@ -103,10 +107,9 @@ public class Websocket {
     }
 
     /**
-     * @since 1.1.9
-     * 
      * @return
      * @throws WebSocketException
+     * @since 1.1.9
      */
     public Websocket connect() throws WebSocketException {
         ws.connect();
@@ -114,19 +117,17 @@ public class Websocket {
     }
 
     /**
-     * @since 1.1.9
-     * 
      * @return
+     * @since 1.1.9
      */
     public WebSocket getWs() {
         return ws;
     }
 
     /**
-     * @since 1.1.9
-     * 
      * @param text
      * @return
+     * @since 1.1.9
      */
     public Websocket sendText(String text) {
         ws.sendText(text);
@@ -134,9 +135,8 @@ public class Websocket {
     }
 
     /**
-     * @since 1.1.9
-     * 
      * @return
+     * @since 1.1.9
      */
     public Websocket close() {
         ws.sendClose();
@@ -144,10 +144,9 @@ public class Websocket {
     }
 
     /**
-     * @since 1.1.9
-     * 
      * @param closeCode
      * @return
+     * @since 1.1.9
      */
     public Websocket close(int closeCode) {
         ws.sendClose(closeCode);
@@ -156,7 +155,6 @@ public class Websocket {
 
     /**
      * @author Perry "R3alCl0ud" Berman
-     *
      */
     public static class Disconnected {
         public WebSocketFrame serverFrame;
@@ -173,5 +171,7 @@ public class Websocket {
             this.clientFrame = clientFrame;
             this.isServer = isServer;
         }
+
     }
+
 }

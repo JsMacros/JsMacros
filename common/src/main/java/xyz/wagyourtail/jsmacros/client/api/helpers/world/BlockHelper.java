@@ -1,10 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 
 import net.minecraft.block.Block;
-
 import net.minecraft.registry.Registries;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;
@@ -23,7 +22,6 @@ public class BlockHelper extends BaseHelper<Block> {
 
     /**
      * @return the default state of the block.
-     *
      * @since 1.6.5
      */
     public BlockStateHelper getDefaultState() {
@@ -32,7 +30,6 @@ public class BlockHelper extends BaseHelper<Block> {
 
     /**
      * @return the default item stack of the block.
-     *
      * @since 1.6.5
      */
     public ItemStackHelper getDefaultItemStack() {
@@ -40,12 +37,11 @@ public class BlockHelper extends BaseHelper<Block> {
     }
 
     public boolean canMobSpawnInside() {
-        return base.canMobSpawnInside();
+        return base.canMobSpawnInside(base.getDefaultState());
     }
 
     /**
      * @return {@code true} if the block has dynamic bounds.
-     *
      * @since 1.6.5
      */
     public boolean hasDynamicBounds() {
@@ -54,7 +50,6 @@ public class BlockHelper extends BaseHelper<Block> {
 
     /**
      * @return the blast resistance.
-     *
      * @since 1.6.5
      */
     public float getBlastResistance() {
@@ -63,7 +58,6 @@ public class BlockHelper extends BaseHelper<Block> {
 
     /**
      * @return the jump velocity multiplier.
-     *
      * @since 1.6.5
      */
     public float getJumpVelocityMultiplier() {
@@ -72,7 +66,6 @@ public class BlockHelper extends BaseHelper<Block> {
 
     /**
      * @return the slipperiness.
-     *
      * @since 1.6.5
      */
     public float getSlipperiness() {
@@ -81,7 +74,6 @@ public class BlockHelper extends BaseHelper<Block> {
 
     /**
      * @return the hardness.
-     *
      * @since 1.6.5
      */
     public float getHardness() {
@@ -90,7 +82,6 @@ public class BlockHelper extends BaseHelper<Block> {
 
     /**
      * @return the velocity multiplier.
-     *
      * @since 1.6.5
      */
     public float getVelocityMultiplier() {
@@ -99,7 +90,6 @@ public class BlockHelper extends BaseHelper<Block> {
 
     /**
      * @return all tags of the block as an {@link java.util.ArrayList ArrayList}.
-     *
      * @since 1.6.5
      */
     public List<String> getTags() {
@@ -108,7 +98,6 @@ public class BlockHelper extends BaseHelper<Block> {
 
     /**
      * @return all possible block states of the block.
-     *
      * @since 1.6.5
      */
     public List<BlockStateHelper> getStates() {
@@ -117,7 +106,6 @@ public class BlockHelper extends BaseHelper<Block> {
 
     /**
      * @return the identifier of the block.
-     *
      * @since 1.6.5
      */
     public String getId() {
@@ -126,7 +114,6 @@ public class BlockHelper extends BaseHelper<Block> {
 
     /**
      * @return the name of the block.
-     *
      * @since 1.8.4
      */
     public TextHelper getName() {

@@ -7,5 +7,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 public @interface Event {
     String value();
+
     String oldName() default "";
+
 }

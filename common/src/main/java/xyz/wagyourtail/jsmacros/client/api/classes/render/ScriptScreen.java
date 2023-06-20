@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
@@ -15,12 +15,10 @@ import xyz.wagyourtail.wagyourgui.BaseScreen;
 /**
  * just go look at {@link IScreen IScreen}
  * since all the methods are done through a mixin...
- * 
+ *
  * @author Wagyourtail
- * 
- * @since 1.0.5
- * 
  * @see IScreen
+ * @since 1.0.5
  */
 public class ScriptScreen extends BaseScreen {
     public boolean drawTitle;
@@ -34,8 +32,8 @@ public class ScriptScreen extends BaseScreen {
      */
     public boolean shouldPause = true;
     private final int bgStyle;
-    private MethodWrapper<Pos3D, MatrixStack, Object, ?> onRender;
-    
+    private MethodWrapper<Pos3D, DrawContext, Object, ?> onRender;
+
     public ScriptScreen(String title, boolean dirt) {
         super(Text.literal(title), null);
         this.bgStyle = dirt ? 0 : 1;
@@ -63,30 +61,39 @@ public class ScriptScreen extends BaseScreen {
      * @param onRender pos3d elements are mousex, mousey, tickDelta
      * @since 1.4.0
      */
-    public void setOnRender(MethodWrapper<Pos3D, MatrixStack, Object, ?> onRender) {
+    public void setOnRender(MethodWrapper<Pos3D, DrawContext, Object, ?> onRender) {
         this.onRender = onRender;
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (matrices == null) return;
-        if (bgStyle == 0) this.renderBackgroundTexture(matrices);
-        else if (bgStyle == 1) this.renderBackground(matrices);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        if (drawContext == null) {
+            return;
+        }
+        if (bgStyle == 0) {
+            this.renderBackgroundTexture(drawContext);
+        } else if (bgStyle == 1) {
+            this.renderBackground(drawContext);
+        }
 
         if (drawTitle) {
-            drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+            drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
         }
 
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(drawContext, mouseX, mouseY, delta);
 
         for (Element button : ImmutableList.copyOf(this.children())) {
-            if (!(button instanceof Drawable)) continue;
-            ((Drawable) button).render(matrices, mouseX, mouseY, delta);
+            if (!(button instanceof Drawable)) {
+                continue;
+            }
+            ((Drawable) button).render(drawContext, mouseX, mouseY, delta);
         }
 
-        ((IScreenInternal) this).jsmacros_render(matrices, mouseX, mouseY, delta);
+        ((IScreenInternal) this).jsmacros_render(drawContext, mouseX, mouseY, delta);
         try {
-            if (onRender != null) onRender.accept(new Pos3D(mouseX, mouseY, delta), matrices);
+            if (onRender != null) {
+                onRender.accept(new Pos3D(mouseX, mouseY, delta), drawContext);
+            }
         } catch (Throwable e) {
             Core.getInstance().profile.logError(e);
             onRender = null;
@@ -107,4 +114,5 @@ public class ScriptScreen extends BaseScreen {
     public boolean shouldCloseOnEsc() {
         return shouldCloseOnEsc && super.shouldCloseOnEsc();
     }
+
 }

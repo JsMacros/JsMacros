@@ -47,4 +47,5 @@ public class JsMacrosForge {
     public void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(JsMacros.keyBinding);
     }
+
 }

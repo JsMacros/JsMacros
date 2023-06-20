@@ -9,7 +9,6 @@
 }
 
 
-
 body {
     font-family: Sans-Serif, serif;
     margin: 0;
@@ -44,7 +43,7 @@ code {
     border-radius: 4px;
     cursor: pointer;
     vertical-align: bottom;
-    transition: border-color .3s,background-color .3s,color .3s;
+    transition: border-color .3s, background-color .3s, color .3s;
 }
 
 .SearchCheck:checked {
@@ -56,7 +55,7 @@ code {
     padding: 5px 0px;
 }
 
-#classGroupChecks,#methodFieldChecks {
+#classGroupChecks, #methodFieldChecks {
     display: inline-block;
 }
 
@@ -89,22 +88,22 @@ code {
     color: white;
 }
 
-#EventCheck:checked,.EventFlag {
+#EventCheck:checked, .EventFlag {
     border-color: #7E481C;
     background-color: #7E481C;
 }
 
-#LibraryCheck:checked,.LibraryFlag {
+#LibraryCheck:checked, .LibraryFlag {
     border-color: #3BB143;
     background-color: #3BB143;
 }
 
-#fieldsCheck:checked,.FieldFlag {
+#fieldsCheck:checked, .FieldFlag {
     border-color: #DE3163;
     background-color: #DE3163;
 }
 
-#methodsCheck:checked,.MethodFlag {
+#methodsCheck:checked, .MethodFlag {
     border-color: #FD6A0A;
     background-color: #FD6A0A;
 }

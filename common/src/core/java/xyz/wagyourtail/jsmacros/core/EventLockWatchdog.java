@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.core;
 
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseListener;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
@@ -25,7 +24,8 @@ public class EventLockWatchdog {
                     }
                     WatchdogException ex = new WatchdogException(String.format("Script \n\"%s\"\n joined longer than allowed time of %d ms.", listener.toString(), maxTime));
                     Core.getInstance().profile.logError(ex);
-                } catch (InterruptedException ignored) { }
+                } catch (InterruptedException ignored) {
+                }
             });
             Thread u = new Thread(() -> {
                 try {
@@ -34,7 +34,8 @@ public class EventLockWatchdog {
                             t.interrupt();
                         }
                     });
-                } catch (InterruptedException ignored) {}
+                } catch (InterruptedException ignored) {
+                }
             });
             t.setPriority(Thread.NORM_PRIORITY - 1);
             u.setPriority(Thread.NORM_PRIORITY - 1);
@@ -47,6 +48,7 @@ public class EventLockWatchdog {
         public WatchdogException(String message) {
             super(message);
         }
-    }
-}
 
+    }
+
+}

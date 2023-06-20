@@ -75,7 +75,8 @@ public class ClassParser extends AbstractParser {
                     case FIELD, ENUM_CONSTANT -> fields.add(el);
                     case METHOD -> methods.add(el);
                     case CONSTRUCTOR -> constructors.add(el);
-                    default -> {}
+                    default -> {
+                    }
                 }
             }
         }
@@ -84,7 +85,7 @@ public class ClassParser extends AbstractParser {
                 .append(StringHelpers.tabIn(genFields(fields))).append("\n")
                 .append(StringHelpers.tabIn(genMethods(methods))).append("\n}");
         s.append("\nnamespace ").append(getClassName(false)).append(" {\n")
-            .append(StringHelpers.tabIn("interface static {")).append("\n")
+                .append(StringHelpers.tabIn("interface static {")).append("\n")
                 .append(StringHelpers.tabIn(genConstructors(constructors), 2)).append("\n")
                 .append(StringHelpers.tabIn(genStaticFields(fields), 2)).append("\n")
                 .append(StringHelpers.tabIn(genStaticMethods(methods), 2)).append("\n    }\n}");

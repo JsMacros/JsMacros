@@ -11,4 +11,5 @@ public interface IBeaconScreen {
     StatusEffect jsmacros_getSecondaryEffect();
 
     void jsmacros_setSecondaryEffect(StatusEffect effect);
+
 }

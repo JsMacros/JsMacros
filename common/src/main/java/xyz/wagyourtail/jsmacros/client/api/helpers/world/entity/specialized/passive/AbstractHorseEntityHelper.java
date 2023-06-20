@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.pas
 
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.passive.AbstractHorseEntity;
-
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAbstractHorseEntity;
 
 /**
@@ -18,7 +17,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return the UUID of this horse's owner, or {@code null} if it has no owner.
-     *
      * @since 1.8.4
      */
     public String getOwner() {
@@ -27,7 +25,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return {@code true} if this horse is already tamed, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isTame() {
@@ -36,7 +33,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return {@code true} if this horse is saddled, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isSaddled() {
@@ -45,7 +41,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return {@code true} if this horse is angry, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isAngry() {
@@ -54,8 +49,7 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return {@code true} if this horse was bred and not naturally spawned, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isBred() {
@@ -64,7 +58,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return {@code true} if this horse is currently eating, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isEating() {
@@ -73,7 +66,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return {@code true} if this horse can wear armor, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean canWearArmor() {
@@ -82,7 +74,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return {@code true} if this horse can be saddled, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean canBeSaddled() {
@@ -91,7 +82,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return this horse's inventory size.
-     *
      * @since 1.8.4
      */
     public int getInventorySize() {
@@ -100,7 +90,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return this horse's jump strength.
-     *
      * @since 1.8.4
      */
     public double getJumpStrengthStat() {
@@ -111,7 +100,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
      * The result of this method is only an approximation, but it's really close.
      *
      * @return this horse's maximum jump height for its current jump strength.
-     *
      * @since 1.8.4
      */
     public double getHorseJumpHeight() {
@@ -121,7 +109,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return the maximum possible value of a horse's jump strength.
-     *
      * @since 1.8.4
      */
     public int getMaxJumpStrengthStat() {
@@ -130,7 +117,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return the minimum possible value of a horse's jump strength.
-     *
      * @since 1.8.4
      */
     public double getMinJumpStrengthStat() {
@@ -139,7 +125,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return this horse's speed stat.
-     *
      * @since 1.8.4
      */
     public double getSpeedStat() {
@@ -148,7 +133,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return this horse's speed in blocks per second.
-     *
      * @since 1.8.4
      */
     public double getHorseSpeed() {
@@ -157,7 +141,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return the maximum possible value of a horse's speed stat.
-     *
      * @since 1.8.4
      */
     public double getMaxSpeedStat() {
@@ -166,7 +149,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return the minimum possible value of a horse's speed stat.
-     *
      * @since 1.8.4
      */
     public double getMinSpeedStat() {
@@ -177,7 +159,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
      * The returned value is equal to {@link #getMaxHealth()}.
      *
      * @return this horse's health stat.
-     *
      * @since 1.8.4
      */
     public double getHealthStat() {
@@ -186,7 +167,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return the maximum possible value of a horse's health stat.
-     *
      * @since 1.8.4
      */
     public int getMaxHealthStat() {
@@ -195,7 +175,6 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
 
     /**
      * @return the minimum possible value of a horse's health stat.
-     *
      * @since 1.8.4
      */
     public int getMinHealthStat() {

@@ -12,16 +12,15 @@ import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.GameMode;
-
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
-import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
-import xyz.wagyourtail.jsmacros.client.api.helpers.*;
+import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
+import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
+import xyz.wagyourtail.jsmacros.client.api.helpers.StatsHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.StatsHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.movement.MovementDummy;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -37,7 +36,7 @@ import java.util.function.Consumer;
 
 /**
  * Functions for getting and modifying the player's state.
- *
+ * <p>
  * An instance of this class is passed to scripts as the {@code Player} variable.
  *
  * @author Wagyourtail
@@ -78,14 +77,13 @@ public class FPlayer extends BaseLibrary {
 
     /**
      * @param gameMode possible values are survival, creative, adventure, spectator (case insensitive)
-     *
      * @since 1.8.4
      */
     public void setGameMode(String gameMode) {
         assert mc.interactionManager != null;
         mc.interactionManager.setGameMode(GameMode.byName(gameMode.toLowerCase(Locale.ROOT), mc.interactionManager.getCurrentGameMode()));
     }
-    
+
     /**
      * @param distance
      * @param fluid
@@ -97,10 +95,14 @@ public class FPlayer extends BaseLibrary {
         assert mc.world != null;
         assert mc.player != null;
         BlockHitResult h = (BlockHitResult) mc.player.raycast(distance, 0, fluid);
-        if (h.getType() == HitResult.Type.MISS) return null;
+        if (h.getType() == HitResult.Type.MISS) {
+            return null;
+        }
         BlockState b = mc.world.getBlockState(h.getBlockPos());
         BlockEntity t = mc.world.getBlockEntity(h.getBlockPos());
-        if (b.getBlock().equals(Blocks.VOID_AIR)) return null;
+        if (b.getBlock().equals(Blocks.VOID_AIR)) {
+            return null;
+        }
         return new BlockDataHelper(b, t, h.getBlockPos());
     }
 
@@ -110,14 +112,17 @@ public class FPlayer extends BaseLibrary {
      * @since 1.0.5
      */
     public EntityHelper<?> rayTraceEntity() {
-        if (mc.targetedEntity != null) return EntityHelper.create(mc.targetedEntity);
-        else return null;
+        if (mc.targetedEntity != null) {
+            return EntityHelper.create(mc.targetedEntity);
+        } else {
+            return null;
+        }
     }
 
     /**
      * @param distance
-     * @since 1.8.3
      * @return entity the player entity is currently looking at (if any).
+     * @since 1.8.3
      */
     public EntityHelper<?> rayTraceEntity(int distance) {
         return DebugRenderer.getTargetedEntity(mc.player, distance).map(EntityHelper::create).orElse(null);
@@ -153,9 +158,11 @@ public class FPlayer extends BaseLibrary {
     public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null;
         ScreenshotRecorder.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), mc.getFramebuffer(),
-                                          (text) -> {
-                if (callback != null) callback.accept(new TextHelper(text));
-        });
+                (text) -> {
+                    if (callback != null) {
+                        callback.accept(new TextHelper(text));
+                    }
+                });
     }
 
     /**
@@ -172,7 +179,9 @@ public class FPlayer extends BaseLibrary {
         assert folder != null && file != null;
         ScreenshotRecorder.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), file, mc.getFramebuffer(),
                 (text) -> {
-                    if (callback != null) callback.accept(new TextHelper(text));
+                    if (callback != null) {
+                        callback.accept(new TextHelper(text));
+                    }
                 });
     }
 
@@ -190,7 +199,7 @@ public class FPlayer extends BaseLibrary {
             callback.accept(new TextHelper(result));
         }
     }
-    
+
     public StatsHelper getStatistics() {
         assert mc.player != null;
         return new StatsHelper(mc.player.getStatHandler());
@@ -198,14 +207,13 @@ public class FPlayer extends BaseLibrary {
 
     /**
      * @return the current reach distance of the player.
-     *
      * @since 1.8.4
      */
     public float getReach() {
         assert mc.interactionManager != null;
         return mc.interactionManager.getReachDistance();
     }
-    
+
     /**
      * Creates a new PlayerInput object.
      *
@@ -223,7 +231,7 @@ public class FPlayer extends BaseLibrary {
      * @since 1.4.0
      */
     public PlayerInput createPlayerInput(double movementForward, double movementSideways, double yaw) {
-        return new PlayerInput((float)movementForward, (float)movementSideways, (float)yaw);
+        return new PlayerInput((float) movementForward, (float) movementSideways, (float) yaw);
     }
 
     /**
@@ -233,11 +241,12 @@ public class FPlayer extends BaseLibrary {
      * @since 1.4.0
      */
     public PlayerInput createPlayerInput(double movementForward, double yaw, boolean jumping, boolean sprinting) {
-        return new PlayerInput((float)movementForward, (float)yaw, jumping, sprinting);
+        return new PlayerInput((float) movementForward, (float) yaw, jumping, sprinting);
     }
 
     /**
      * Creates a new PlayerInput object.
+     *
      * @param movementForward  1 = forward input (W); 0 = no input; -1 = backward input (S)
      * @param movementSideways 1 = left input (A); 0 = no input; -1 = right input (D)
      * @param yaw              yaw of the player
@@ -251,7 +260,6 @@ public class FPlayer extends BaseLibrary {
     public PlayerInput createPlayerInput(double movementForward, double movementSideways, double yaw, double pitch, boolean jumping, boolean sneaking, boolean sprinting) {
         return new PlayerInput(movementForward, movementSideways, yaw, pitch, jumping, sneaking, sprinting);
     }
-
 
     /**
      * Parses each row of CSV string into a {@code PlayerInput}.
@@ -375,8 +383,8 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
-     * @since 1.8.0
      * @return
+     * @since 1.8.0
      */
     public boolean isBreakingBlock() {
         assert mc.interactionManager != null;
@@ -434,6 +442,7 @@ public class FPlayer extends BaseLibrary {
 
     /**
      * Adds sideways movement with a relative yaw value to the MovementQueue.
+     *
      * @param yaw the relative yaw for the player
      * @since 1.4.2
      */
@@ -446,6 +455,7 @@ public class FPlayer extends BaseLibrary {
 
     /**
      * Adds sideways movement with a relative yaw value to the MovementQueue.
+     *
      * @param yaw the relative yaw for the player
      * @since 1.4.2
      */
@@ -455,4 +465,5 @@ public class FPlayer extends BaseLibrary {
         input.yaw = (float) (getPlayer().getYaw() + yaw);
         addInput(input);
     }
+
 }

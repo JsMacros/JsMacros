@@ -1,14 +1,15 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.math.MathHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
 /**
  * @author Wagyourtail
@@ -52,9 +53,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @param i
-     *
      * @return
-     *
      * @since 1.0.5 [citation needed]
      */
     public Item setItem(ItemStackHelper i) {
@@ -69,9 +68,7 @@ public class Item implements RenderElement, Alignable<Item> {
     /**
      * @param id
      * @param count
-     *
      * @return
-     *
      * @since 1.0.5 [citation needed]
      */
     public Item setItem(String id, int count) {
@@ -81,7 +78,6 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @return
-     *
      * @since 1.0.5 [citation needed]
      */
     public ItemStackHelper getItem() {
@@ -90,9 +86,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @param x the new x position of this element
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Item setX(int x) {
@@ -102,7 +96,6 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @return the x position of this element.
-     *
      * @since 1.8.4
      */
     public int getX() {
@@ -111,9 +104,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @param y the new y position of this element
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Item setY(int y) {
@@ -123,7 +114,6 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @return the y position of this element.
-     *
      * @since 1.8.4
      */
     public int getY() {
@@ -133,9 +123,7 @@ public class Item implements RenderElement, Alignable<Item> {
     /**
      * @param x
      * @param y
-     *
      * @return
-     *
      * @since 1.0.5
      */
     public Item setPos(int x, int y) {
@@ -146,9 +134,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @param scale
-     *
      * @return
-     *
      * @throws IllegalArgumentException
      * @since 1.2.6
      */
@@ -162,7 +148,6 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @return the scale of this item.
-     *
      * @since 1.8.4
      */
     public double getScale() {
@@ -171,9 +156,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @param rotation
-     *
      * @return
-     *
      * @since 1.2.6
      */
     public Item setRotation(double rotation) {
@@ -183,7 +166,6 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @return the rotation of this item.
-     *
      * @since 1.8.4
      */
     public float getRotation() {
@@ -192,9 +174,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @param rotateCenter whether the item should be rotated around its center
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Item setRotateCenter(boolean rotateCenter) {
@@ -204,8 +184,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @return {@code true} if this item should be rotated around its center, {@code false}
-     *     otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isRotatingCenter() {
@@ -214,9 +193,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @param overlay
-     *
      * @return
-     *
      * @since 1.2.0
      */
     public Item setOverlay(boolean overlay) {
@@ -226,8 +203,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @return {@code true}, if the overlay, i.e. the durability bar, and the overlay text or
-     *     item count should be shown, {@code false} otherwise.
-     *
+     * item count should be shown, {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean shouldShowOverlay() {
@@ -236,9 +212,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @param ovText
-     *
      * @return
-     *
      * @since 1.2.0
      */
     public Item setOverlayText(String ovText) {
@@ -248,7 +222,6 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @return the overlay text of this item.
-     *
      * @since 1.8.4
      */
     public String getOverlayText() {
@@ -257,9 +230,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
     /**
      * @param zIndex the new z-index of this item
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Item setZIndex(int zIndex) {
@@ -273,22 +244,23 @@ public class Item implements RenderElement, Alignable<Item> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        render(matrices, mouseX, mouseY, delta, false);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        render(drawContext, mouseX, mouseY, delta, false);
     }
 
     @Override
-    public void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        render(matrices, mouseX, mouseY, delta, true);
+    public void render3D(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        render(drawContext, mouseX, mouseY, delta, true);
     }
 
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, boolean is3dRender) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta, boolean is3dRender) {
         if (item == null) {
             return;
         }
+        MatrixStack matrices = drawContext.getMatrices();
         matrices.push();
         setupMatrix(matrices, x, y, (float) scale, rotation, DEFAULT_ITEM_SIZE, DEFAULT_ITEM_SIZE, rotateCenter);
-        ItemRenderer i = mc.getItemRenderer();
+        TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
         if (is3dRender) {
             // The item has an offset of 100 and item texts of 200. This will make them render at the correct position
             // by translating them back and scaling the item down to be flat
@@ -297,16 +269,16 @@ public class Item implements RenderElement, Alignable<Item> {
             // Don't make this to small, otherwise there will be z-fighting for items like anvils
             final float scaleZ = 0.001f;
             matrices.scale(1, 1, scaleZ);
-            i.renderGuiItemIcon(matrices, item, x, y);
+            drawContext.drawItem(item, x, y);
             matrices.scale(1, 1, 1 / scaleZ);
         } else {
-            i.renderGuiItemIcon(matrices, item, x, y);
+            drawContext.drawItem(item, x, y);
         }
         if (overlay) {
             if (is3dRender) {
-                matrices.translate(0, 0, -199.9);
+                matrices.translate(0, 0, -199.5);
             }
-            i.renderGuiItemOverlay(matrices, mc.textRenderer, item, x, y, ovText);
+            drawContext.drawItemInSlot(mc.textRenderer, item, x, y, ovText);
         }
         matrices.pop();
     }
@@ -372,9 +344,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @param x the x position of the item
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder x(int x) {
@@ -384,7 +354,6 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @return the x position of the item.
-         *
          * @since 1.8.4
          */
         public int getX() {
@@ -393,9 +362,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @param y the y position of the item
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder y(int y) {
@@ -405,7 +372,6 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @return the y position of the item.
-         *
          * @since 1.8.4
          */
         public int getY() {
@@ -415,9 +381,7 @@ public class Item implements RenderElement, Alignable<Item> {
         /**
          * @param x the x position of the item
          * @param y the y position of the item
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos(int x, int y) {
@@ -428,9 +392,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @param item the item to draw
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder item(ItemStackHelper item) {
@@ -442,23 +404,19 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @param id the id of the item to draw
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder item(String id) {
             this.itemStack = new ItemStackHelper(Registries.ITEM.get(RegistryHelper.parseIdentifier(id))
-                .getDefaultStack());
+                    .getDefaultStack());
             return this;
         }
 
         /**
-         * @param id the id of the item to draw
+         * @param id    the id of the item to draw
          * @param count the stack size
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder item(String id, int count) {
@@ -468,7 +426,6 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @return the item to be drawn.
-         *
          * @since 1.8.4
          */
         public ItemStackHelper getItem() {
@@ -479,9 +436,7 @@ public class Item implements RenderElement, Alignable<Item> {
          * This also sets the overlay to be shown.
          *
          * @param overlayText the overlay text
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder overlayText(String overlayText) {
@@ -492,7 +447,6 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @return the overlay text.
-         *
          * @since 1.8.4
          */
         public String getOverlayText() {
@@ -501,9 +455,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @param visible whether the overlay should be visible or not
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder overlayVisible(boolean visible) {
@@ -513,7 +465,6 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @return {@code true} if the overlay should be visible, {@code false} otherwise.
-         *
          * @since 1.8.4
          */
         public boolean isOverlayVisible() {
@@ -522,9 +473,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @param scale the scale of the item
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder scale(double scale) {
@@ -537,7 +486,6 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @return the scale of the item.
-         *
          * @since 1.8.4
          */
         public double getScale() {
@@ -546,9 +494,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @param rotation the rotation (clockwise) of the item in degrees
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder rotation(double rotation) {
@@ -558,7 +504,6 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @return the rotation (clockwise) of the item in degrees.
-         *
          * @since 1.8.4
          */
         public float getRotation() {
@@ -567,9 +512,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @param rotateCenter whether the item should be rotated around its center
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder rotateCenter(boolean rotateCenter) {
@@ -579,8 +522,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @return {@code true} if this item should be rotated around its center, {@code false}
-         *     otherwise.
-         *
+         * otherwise.
          * @since 1.8.4
          */
         public boolean isRotatingCenter() {
@@ -589,9 +531,7 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @param zIndex the z-index of the item
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder zIndex(int zIndex) {
@@ -601,7 +541,6 @@ public class Item implements RenderElement, Alignable<Item> {
 
         /**
          * @return the z-index of the item.
-         *
          * @since 1.8.4
          */
         public int getZIndex() {
@@ -611,7 +550,7 @@ public class Item implements RenderElement, Alignable<Item> {
         @Override
         protected Item createElement() {
             return new Item(x, y, zIndex, itemStack, overlay, scale, rotation, ovText).setRotateCenter(rotateCenter)
-                .setParent(parent);
+                    .setParent(parent);
         }
 
         @Override

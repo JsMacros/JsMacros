@@ -1,13 +1,12 @@
 package xyz.wagyourtail.wagyourgui.elements;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
-
-import com.mojang.blaze3d.systems.RenderSystem;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
@@ -54,7 +53,7 @@ public class Slider extends ClickableWidget {
     private void applyValue() {
         action.accept(this);
     }
-    
+
     public double getValue() {
         return value;
     }
@@ -76,12 +75,11 @@ public class Slider extends ClickableWidget {
     }
 
     @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        RenderSystem.setShaderTexture(0, WIDGETS_TEXTURE);
+    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int offset = (isHovered() ? 2 : 1) * 20;
-        drawTexture(matrices, getX() + (int) (value * (double) (width - 8)), getY(), 0, 46 + offset, 4, 20);
-        drawTexture(matrices, getX() + (int) (value * (double) (width - 8)) + 4, getY(), 196, 46 + offset, 4, 20);
+        drawContext.drawTexture(WIDGETS_TEXTURE, getX() + (int) (value * (double) (width - 8)), getY(), 0, 46 + offset, 4, 20);
+        drawContext.drawTexture(WIDGETS_TEXTURE, getX() + (int) (value * (double) (width - 8)) + 4, getY(), 196, 46 + offset, 4, 20);
     }
 
     @Override

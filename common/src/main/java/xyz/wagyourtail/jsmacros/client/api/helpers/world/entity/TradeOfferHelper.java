@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.village.TradeOffer;
-
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.VillagerInventory;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
@@ -22,7 +21,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
         this.inv = inv;
         this.index = index;
     }
-    
+
     /**
      * @return list of input items required
      */
@@ -44,7 +43,6 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * {@link ItemStackHelper#isEmpty()} if the first input doesn't exist.
      *
      * @return the first input item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getLeftInput() {
@@ -56,7 +54,6 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * {@link ItemStackHelper#isEmpty()} if the first input doesn't exist.
      *
      * @return the second input item.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getRightInput() {
@@ -72,43 +69,43 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
 
     /**
      * @return the index if this trade in the given villager inventory.
-     *
      * @since 1.8.4
      */
     public int getIndex() {
         return index;
     }
-    
+
     /**
      * select trade offer on screen
      */
     public TradeOfferHelper select() {
-        if (inv != null && MinecraftClient.getInstance().currentScreen == inv.getRawContainer())
+        if (inv != null && MinecraftClient.getInstance().currentScreen == inv.getRawContainer()) {
             inv.selectTrade(index);
+        }
         return this;
     }
-    
+
     /**
      * @return
      */
     public boolean isAvailable() {
         return !base.isDisabled();
     }
-    
+
     /**
      * @return trade offer as nbt tag
      */
     public NBTElementHelper<?> getNBT() {
         return NBTElementHelper.resolve(base.toNbt());
     }
-    
+
     /**
      * @return current number of uses
      */
     public int getUses() {
         return base.getUses();
     }
-    
+
     /**
      * @return max uses before it locks
      */
@@ -118,21 +115,20 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
 
     /**
      * @return {@code true} if after a successful trade xp will be summoned, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean shouldRewardPlayerExperience() {
         return base.shouldRewardPlayerExperience();
     }
-    
+
     /**
      * @return experience gained for trade
      */
     public int getExperience() {
         return base.getMerchantExperience();
     }
-    
+
     /**
      * @return current price adjustment, negative is discount.
      */
@@ -142,7 +138,6 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
 
     /**
      * @return the original priced item without any adjustments due to rewards or demand.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper getOriginalFirstInput() {
@@ -151,7 +146,6 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
 
     /**
      * @return the original price of the item without any adjustments due to rewards or demand.
-     *
      * @since 1.8.4
      */
     public int getOriginalPrice() {
@@ -160,7 +154,6 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
 
     /**
      * @return the adjusted price of the item.
-     *
      * @since 1.8.4
      */
     public int getAdjustedPrice() {
@@ -173,8 +166,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * reduce this value.
      *
      * @return the special price multiplier, which affects the price of the item depending on the
-     *         player's reputation with the villager.
-     *
+     * player's reputation with the villager.
      * @since 1.8.4
      */
     public int getSpecialPrice() {
@@ -186,7 +178,6 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * ones. The default value is 0.05 and 0.2 for armor and tools.
      *
      * @return the price multiplier, which is only depended on the type of trade.
-     *
      * @since 1.8.4
      */
     public float getPriceMultiplier() {
@@ -203,7 +194,6 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * The demand is also capped at 0, so it can not decrease the price.
      *
      * @return the demand bonus for this trade.
-     *
      * @since 1.8.4
      */
     public int getDemandBonus() {
@@ -214,4 +204,5 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
     public String toString() {
         return String.format("TradeOfferHelper:{\"inputs\": %s, \"output\": %s}", getInput().toString(), getOutput().toString());
     }
+
 }

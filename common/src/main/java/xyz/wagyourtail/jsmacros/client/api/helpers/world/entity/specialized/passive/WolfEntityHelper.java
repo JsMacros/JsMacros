@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.WolfEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.DyeColorHelper;
 
 /**
@@ -17,8 +16,7 @@ public class WolfEntityHelper extends TameableEntityHelper<WolfEntity> {
 
     /**
      * @return {@code true} if this wolf is tamed and the player has either a bone or meat in one of
-     *         their hands, {@code false} otherwise.
-     *
+     * their hands, {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean isBegging() {
@@ -27,7 +25,6 @@ public class WolfEntityHelper extends TameableEntityHelper<WolfEntity> {
 
     /**
      * @return the color of this wolf's collar.
-     *
      * @since 1.8.4
      */
     public DyeColorHelper getCollarColor() {
@@ -36,7 +33,6 @@ public class WolfEntityHelper extends TameableEntityHelper<WolfEntity> {
 
     /**
      * @return {@code true} if this wolf is angry, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isAngry() {
@@ -45,7 +41,6 @@ public class WolfEntityHelper extends TameableEntityHelper<WolfEntity> {
 
     /**
      * @return {@code true} if this wolf is wet, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isWet() {

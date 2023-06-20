@@ -11,18 +11,20 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 public class FileMapSetting extends AbstractMapSettingContainer<String, FileMapSetting.FileEntry> {
-    
+
     public FileMapSetting(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
         super(x, y, width, height, textRenderer, parent, group);
         defaultValue = () -> "./";
     }
-    
+
     @Override
     public void addField(String key, String value) {
-        if (map.containsKey(key)) return;
+        if (map.containsKey(key)) {
+            return;
+        }
         FileEntry entry = new FileEntry(x, y + 12 + totalHeight - topScroll, width - 12, textRenderer, this, key, value);
         map.put(key, entry);
-        totalHeight +=  entry.height;
+        totalHeight += entry.height;
         scroll.setScrollPages(totalHeight / (double) height);
         if (scroll.active) {
             scroll.scrollToPercent(0);
@@ -30,13 +32,13 @@ public class FileMapSetting extends AbstractMapSettingContainer<String, FileMapS
             onScrollbar(0);
         }
     }
-    
+
     public static class FileEntry extends AbstractMapSettingContainer.MapSettingEntry<String> {
-    
+
         public FileEntry(int x, int y, int width, TextRenderer textRenderer, FileMapSetting parent, String key, String value) {
             super(x, y, width, textRenderer, (AbstractMapSettingContainer) parent, key, value);
         }
-    
+
         @Override
         public void init() {
             super.init();
@@ -51,10 +53,13 @@ public class FileMapSetting extends AbstractMapSettingContainer<String, FileMapS
                     } catch (InvocationTargetException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
-                }, file -> {});
+                }, file -> {
+                });
                 fc.root = FileField.getTopLevel(parent.setting);
                 parent.openOverlay(fc);
             }));
         }
+
     }
+
 }

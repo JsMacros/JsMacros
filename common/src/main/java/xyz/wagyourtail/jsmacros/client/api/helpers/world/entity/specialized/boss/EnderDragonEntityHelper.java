@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.boss;
 
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinPhaseType;
@@ -29,7 +28,6 @@ public class EnderDragonEntityHelper extends MobEntityHelper<EnderDragonEntity> 
      * {@code ChargingPlayer}, {@code Dying}, {@code Hover}
      *
      * @return the current phase of the dragon.
-     *
      * @since 1.8.4
      */
     public String getPhase() {
@@ -39,7 +37,6 @@ public class EnderDragonEntityHelper extends MobEntityHelper<EnderDragonEntity> 
     /**
      * @param index the index of the dragon's body part to get
      * @return the specified body part of the dragon.
-     *
      * @since 1.8.4
      */
     public EntityHelper<?> getBodyPart(int index) {
@@ -48,7 +45,6 @@ public class EnderDragonEntityHelper extends MobEntityHelper<EnderDragonEntity> 
 
     /**
      * @return a list of all body parts of the dragon.
-     *
      * @since 1.8.4
      */
     public List<? extends EntityHelper<?>> getBodyParts() {
@@ -61,7 +57,6 @@ public class EnderDragonEntityHelper extends MobEntityHelper<EnderDragonEntity> 
      *
      * @param name the name of the body part to get
      * @return a list of all body parts of the dragon with the specified name.
-     *
      * @since 1.8.4
      */
     public List<? extends EntityHelper<?>> getBodyParts(String name) {

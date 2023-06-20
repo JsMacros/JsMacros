@@ -1,6 +1,18 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.ClassPath;
+import com.mojang.authlib.GameProfile;
+import com.mojang.datafixers.util.Either;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.NetworkSide;
 import net.minecraft.network.NetworkState;
@@ -17,34 +29,17 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.IndexedIterable;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.ChunkSectionPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.GlobalPos;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.mojang.authlib.GameProfile;
-import com.mojang.datafixers.util.Either;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
-import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
-import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import xyz.wagyourtail.Pair;
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
+import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
+import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.ChunkHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.DirectionHelper;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
-import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -52,7 +47,6 @@ import java.io.IOException;
 import java.security.PublicKey;
 import java.time.Instant;
 import java.util.*;
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -107,8 +101,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the packet for this buffer or {@code null} if no packet was used to create this
-     *         helper.
-     *
+     * helper.
      * @since 1.8.4
      */
     public Packet<?> toPacket() {
@@ -118,7 +111,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param packetName the name of the packet's class that should be returned
      * @return the packet for this buffer.
-     *
      * @see #getPacketNames()
      * @since 1.8.4
      */
@@ -129,7 +121,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param clazz the class of the packet to return
      * @return the packet for this buffer.
-     *
      * @since 1.8.4
      */
     public Packet<?> toPacket(Class<? extends Packet> clazz) {
@@ -140,7 +131,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param clientbound whether the packet is clientbound or serverbound
      * @param packetId    the id of the packet
      * @return the packet for this buffer.
-     *
      * @see #getPacketId(Class)
      * @see #getNetworkStateId(Class)
      * @see #isClientbound(Class)
@@ -154,7 +144,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param packetClass the class of the packet to get the id for
      * @return the id of the packet.
-     *
      * @since 1.8.4
      */
     public int getPacketId(Class<? extends Packet<?>> packetClass) {
@@ -164,7 +153,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param packetClass the class of the packet to get the id for
      * @return the id of the network state the packet belongs to.
-     *
      * @since 1.8.4
      */
     public int getNetworkStateId(Class<? extends Packet<?>> packetClass) {
@@ -174,7 +162,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param packetClass the class to get the side for
      * @return {@code true} if the packet is clientbound, {@code false} if it is serverbound.
-     *
      * @since 1.8.4
      */
     public boolean isClientbound(Class<? extends Packet<?>> packetClass) {
@@ -184,7 +171,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param packetClass the class to get the id for
      * @return {@code true} if the packet is serverbound, {@code false} if it is clientbound.
-     *
      * @since 1.8.4
      */
     public boolean isServerbound(Class<? extends Packet<?>> packetClass) {
@@ -195,7 +181,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * Send a packet of the given type, created from this buffer, to the server.
      *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper sendPacket() {
@@ -208,7 +193,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param packetName the name of the packet's class that should be sent
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper sendPacket(String packetName) {
@@ -220,7 +204,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      *
      * @param clazz the class of the packet to send
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper sendPacket(Class<? extends Packet<?>> clazz) {
@@ -231,7 +214,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param channel the channel to send the packet on
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper sendCustomPacket(String channel) {
@@ -241,7 +223,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper receivePacket() {
@@ -254,7 +235,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param packetName the name of the packet's class that should be received
      * @return self for chaining.
-     *
      * @see #getPacketNames()
      * @since 1.8.4
      */
@@ -268,7 +248,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param clazz the class of the packet to receive
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper receivePacket(Class<? extends Packet> clazz) {
@@ -281,7 +260,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param channel the channel to receive the packet on
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper receiveCustomPacket(String channel) {
@@ -295,7 +273,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * change in the future, but it is not guaranteed.
      *
      * @return a list of all packet names.
-     *
      * @since 1.8.4
      */
     public List<String> getPacketNames() {
@@ -306,7 +283,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * Resets the buffer to the state it was in when this helper was created.
      *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper reset() {
@@ -318,7 +294,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param registry the registry the value is from
      * @param value    the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public <T> PacketByteBufferHelper writeRegistryValue(IndexedIterable<T> registry, T value) {
@@ -329,7 +304,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param registry the registry the read value is from
      * @return the registry value.
-     *
      * @since 1.8.4
      */
     public <T> T readRegistryValue(IndexedIterable<T> registry) {
@@ -339,7 +313,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param key the registry key to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeRegistryKey(RegistryKey<?> key) {
@@ -350,7 +323,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param registry the registry the read key is from
      * @return the registry key.
-     *
      * @since 1.8.4
      */
     public <T> RegistryKey<T> readRegistryKey(RegistryKey<? extends Registry<T>> registry) {
@@ -361,7 +333,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param collection the collection to store
      * @param writer     the function that writes the collection's elements to the buffer
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public <T> PacketByteBufferHelper writeCollection(Collection<T> collection, MethodWrapper<PacketByteBuf, T, ?, ?> writer) {
@@ -372,7 +343,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param reader the function that reads the collection's elements from the buffer
      * @return the read list.
-     *
      * @since 1.8.4
      */
     public <T> List<T> readList(MethodWrapper<PacketByteBuf, ?, T, ?> reader) {
@@ -382,7 +352,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param list the integer list to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeIntList(Collection<Integer> list) {
@@ -392,7 +361,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read integer list.
-     *
      * @since 1.8.4
      */
     public IntList readIntList() {
@@ -404,7 +372,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param keyWriter   the function to write the map's keys to the buffer
      * @param valueWriter the function to write the map's values to the buffer
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public <K, V> PacketByteBufferHelper writeMap(Map<K, V> map, MethodWrapper<PacketByteBuf, K, ?, ?> keyWriter, MethodWrapper<PacketByteBuf, V, ?, ?> valueWriter) {
@@ -416,7 +383,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param keyReader   the function to read the map's keys from the buffer
      * @param valueReader the function to read the map's values from the buffer
      * @return the read map.
-     *
      * @since 1.8.4
      */
     public <K, V> Map<K, V> readMap(MethodWrapper<PacketByteBuf, ?, K, ?> keyReader, MethodWrapper<PacketByteBuf, ?, V, ?> valueReader) {
@@ -426,7 +392,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param reader the function to read the collection's elements from the buffer
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper forEachInCollection(MethodWrapper<PacketByteBuf, ?, Object, ?> reader) {
@@ -438,7 +403,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param value  the optional value to store
      * @param writer the function to write the optional value if present to the buffer
      * @return self for chaining.
-     *
      * @see #writeNullable(Object, MethodWrapper)
      * @since 1.8.4
      */
@@ -450,7 +414,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param reader the function to read the optional value from the buffer if present
      * @return the optional value.
-     *
      * @see #readNullable(MethodWrapper)
      * @since 1.8.4
      */
@@ -462,8 +425,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param value  the optional value to store
      * @param writer the function to write the optional value if it's not null to the buffer
      * @return self for chaining.
-     *
-     * @see #writeOptional(Object, MethodWrapper) 
+     * @see #writeOptional(Object, MethodWrapper)
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeNullable(Object value, MethodWrapper<PacketByteBuf, Object, ?, ?> writer) {
@@ -474,7 +436,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param reader the function to read the value from the buffer if it's not null
      * @return the read value or {@code null} if it was null.
-     *
      * @see #readOptional(MethodWrapper)
      * @since 1.8.4
      */
@@ -490,7 +451,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param leftWriter  the function to write the left value to the buffer
      * @param rightWriter the function to write the right value to the buffer
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public <L, R> PacketByteBufferHelper writeEither(L left, R right, MethodWrapper<PacketByteBuf, L, ?, ?> leftWriter, MethodWrapper<PacketByteBuf, R, ?, ?> rightWriter) {
@@ -502,7 +462,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param leftReader  the function to read the left value from the buffer
      * @param rightReader the function to read the right value from the buffer
      * @return the read object.
-     *
      * @since 1.8.4
      */
     public Object readEither(MethodWrapper<PacketByteBuf, ?, Object, ?> leftReader, MethodWrapper<PacketByteBuf, ?, Object, ?> rightReader) {
@@ -513,7 +472,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param bytes the bytes to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeByteArray(byte[] bytes) {
@@ -523,7 +481,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read byte array.
-     *
      * @since 1.8.4
      */
     public byte[] readByteArray() {
@@ -535,7 +492,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      *
      * @param maxSize the maximum size of the byte array to read
      * @return the read byte array.
-     *
      * @since 1.8.4
      */
     public byte[] readByteArray(int maxSize) {
@@ -545,7 +501,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param ints the int array to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeIntArray(int[] ints) {
@@ -555,7 +510,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read int array.
-     *
      * @since 1.8.4
      */
     public int[] readIntArray() {
@@ -567,7 +521,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      *
      * @param maxSize the maximum size of the int array to read
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper readIntArray(int maxSize) {
@@ -578,7 +531,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param longs the long array to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeLongArray(long[] longs) {
@@ -588,7 +540,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read long array.
-     *
      * @since 1.8.4
      */
     public long[] readLongArray() {
@@ -600,7 +551,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      *
      * @param maxSize the maximum size of the long array to read
      * @return the read long array.
-     *
      * @since 1.8.4
      */
     public long[] readLongArray(int maxSize) {
@@ -610,7 +560,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param pos the block position to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeBlockPos(BlockPosHelper pos) {
@@ -623,7 +572,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param y the y coordinate of the block position to store
      * @param z the z coordinate of the block position to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeBlockPos(int x, int y, int z) {
@@ -633,7 +581,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read block position.
-     *
      * @since 1.8.4
      */
     public BlockPosHelper readBlockPos() {
@@ -644,7 +591,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param x the x coordinate of the chunk to store
      * @param z the z coordinate of the chunk to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeChunkPos(int x, int z) {
@@ -655,7 +601,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param chunk the chunk to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeChunkPos(ChunkHelper chunk) {
@@ -665,7 +610,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the position of the read chunk, x at index 0, z at index 1.
-     *
      * @since 1.8.4
      */
     public int[] readChunkPos() {
@@ -675,7 +619,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return a {@link ChunkHelper} for the read chunk position.
-     *
      * @since 1.8.4
      */
     public ChunkHelper readChunkHelper() {
@@ -689,7 +632,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param y      the y coordinate to store
      * @param chunkZ the z coordinate of the chunk to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeChunkSectionPos(int chunkX, int y, int chunkZ) {
@@ -701,7 +643,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param chunk the chunk whose position should be stored
      * @param y     the y to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeChunkSectionPos(ChunkHelper chunk, int y) {
@@ -711,7 +652,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read chunk section pos, as a {@link BlockPosHelper}.
-     *
      * @since 1.8.4
      */
     public BlockPosHelper readChunkSectionPos() {
@@ -724,7 +664,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      *                  {@code the_end}
      * @param pos       the position to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeGlobalPos(String dimension, BlockPosHelper pos) {
@@ -740,7 +679,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param y         the y coordinate of the position to store
      * @param z         the z coordinate of the position to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeGlobalPos(String dimension, int x, int y, int z) {
@@ -751,7 +689,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read global pos, the first element is the dimension, the second is the position.
-     *
      * @since 1.8.4
      */
     public Pair<String, BlockPosHelper> readGlobalPos() {
@@ -762,7 +699,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param text the string to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeText(String text) {
@@ -773,7 +709,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param builder the text builder whose text should be stored
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeText(TextBuilder builder) {
@@ -784,7 +719,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param text the text to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeText(TextHelper text) {
@@ -794,7 +728,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read text.
-     *
      * @since 1.8.4
      */
     public TextHelper readText() {
@@ -804,7 +737,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param constant the enum constant to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeEnumConstant(Enum<?> constant) {
@@ -815,7 +747,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param enumClass the class of the enum to read from
      * @return the read enum constant.
-     *
      * @since 1.8.4
      */
     public <T extends Enum<T>> T readEnumConstant(Class<T> enumClass) {
@@ -825,7 +756,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param i the int to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeVarInt(int i) {
@@ -835,7 +765,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read int.
-     *
      * @since 1.8.4
      */
     public int readVarInt() {
@@ -845,7 +774,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param l the long to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeVarLong(long l) {
@@ -855,7 +783,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read long.
-     *
      * @since 1.8.4
      */
     public long readVarLong() {
@@ -865,7 +792,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param uuid the UUID to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeUuid(String uuid) {
@@ -875,7 +801,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read UUID.
-     *
      * @since 1.8.4
      */
     public UUID readUuid() {
@@ -885,7 +810,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param nbt the nbt
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeNbt(NBTElementHelper.NBTCompoundHelper nbt) {
@@ -895,7 +819,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read nbt data.
-     *
      * @since 1.8.4
      */
     public NBTElementHelper<?> readNbt() {
@@ -905,7 +828,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param stack the item stack to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeItemStack(ItemStackHelper stack) {
@@ -915,7 +837,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read item stack.
-     *
      * @since 1.8.4
      */
     public ItemStackHelper readItemStack() {
@@ -925,7 +846,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param string the string to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeString(String string) {
@@ -939,7 +859,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param string    the string to store
      * @param maxLength the maximum length of the string
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeString(String string, int maxLength) {
@@ -949,7 +868,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read string.
-     *
      * @since 1.8.4
      */
     public String readString() {
@@ -961,7 +879,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      *
      * @param maxLength the maximum length of the string to read
      * @return the read string.
-     *
      * @since 1.8.4
      */
     public String readString(int maxLength) {
@@ -971,7 +888,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param id the identifier to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeIdentifier(String id) {
@@ -981,7 +897,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read identifier.
-     *
      * @since 1.8.4
      */
     public String readIdentifier() {
@@ -991,7 +906,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param date the date to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeDate(Date date) {
@@ -1001,7 +915,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read date.
-     *
      * @since 1.8.4
      */
     public Date readDate() {
@@ -1011,7 +924,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param instant the instant to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeInstant(Instant instant) {
@@ -1021,7 +933,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read instant.
-     *
      * @since 1.8.4
      */
     public Instant readInstant() {
@@ -1031,7 +942,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param key the public key to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writePublicKey(PublicKey key) {
@@ -1041,7 +951,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read public key.
-     *
      * @since 1.8.4
      */
     public PublicKey readPublicKey() {
@@ -1051,7 +960,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param hitResult the hit result to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeBlockHitResult(BlockHitResult hitResult) {
@@ -1066,7 +974,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param missed      whether the BlockHitResult missed
      * @param insideBlock whether the BlockHitResult is inside a block
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeBlockHitResult(Pos3D pos, String direction, BlockPosHelper blockPos, boolean missed, boolean insideBlock) {
@@ -1081,7 +988,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read block hit result.
-     *
      * @since 1.8.4
      */
     public BlockHitResult readBlockHitResult() {
@@ -1090,7 +996,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return a map of the block hit result's data and their values.
-     *
      * @since 1.8.4
      */
     public Map<String, Object> readBlockHitResultMap() {
@@ -1101,7 +1006,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param bitSet the bit set to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeBitSet(BitSet bitSet) {
@@ -1111,7 +1015,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read bit set.
-     *
      * @since 1.8.4
      */
     public BitSet readBitSet() {
@@ -1121,7 +1024,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param profile the profile to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeGameProfile(GameProfile profile) {
@@ -1131,7 +1033,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read game profile.
-     *
      * @since 1.8.4
      */
     public GameProfile readGameProfile() {
@@ -1140,7 +1041,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read profile's name.
-     *
      * @since 1.8.4
      */
     public String readGameProfileName() {
@@ -1149,7 +1049,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read profile's UUID.
-     *
      * @since 1.8.4
      */
     public UUID readGameProfileUuid() {
@@ -1158,7 +1057,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the readers current position.
-     *
      * @since 1.8.4
      */
     public int readerIndex() {
@@ -1168,7 +1066,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param index the readers new index
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper setReaderIndex(int index) {
@@ -1178,7 +1075,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the writers current position.
-     *
      * @since 1.8.4
      */
     public int writerIndex() {
@@ -1188,7 +1084,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param index the writers new index
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper setWriterIndex(int index) {
@@ -1200,7 +1095,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param readerIndex the readers new index
      * @param writerIndex the writers new index
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper setIndices(int readerIndex, int writerIndex) {
@@ -1212,7 +1106,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * Resets the readers and writers index to their respective last marked indices.
      *
      * @return self for chaining.
-     *
      * @see #markReaderIndex()
      * @see #markWriterIndex()
      * @since 1.8.4
@@ -1227,7 +1120,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * Marks the readers current index for later use.
      *
      * @return self for chaining.
-     *
      * @see #resetReaderIndex()
      * @since 1.8.4
      */
@@ -1240,7 +1132,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * Resets the readers index to the last marked index.
      *
      * @return self for chaining.
-     *
      * @see #markReaderIndex()
      * @since 1.8.4
      */
@@ -1253,7 +1144,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * Marks the writers current index for later use.
      *
      * @return self for chaining.
-     *
      * @see #resetWriterIndex() ()
      * @since 1.8.4
      */
@@ -1266,7 +1156,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * Resets the writers index to the last marked index.
      *
      * @return self for chaining.
-     *
      * @see #markWriterIndex()
      * @since 1.8.4
      */
@@ -1280,7 +1169,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * rather makes it so that new operations will overwrite the old data.
      *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper clear() {
@@ -1291,7 +1179,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeBoolean(boolean value) {
@@ -1303,7 +1190,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param index the index to write to
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper setBoolean(int index, boolean value) {
@@ -1313,7 +1199,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read boolean value.
-     *
      * @since 1.8.4
      */
     public boolean readBoolean() {
@@ -1323,7 +1208,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param index the index to read from
      * @return the boolean value at the given index.
-     *
      * @since 1.8.4
      */
     public boolean getBoolean(int index) {
@@ -1333,7 +1217,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeChar(int value) {
@@ -1345,7 +1228,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param index the index to write to
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper setChar(int index, char value) {
@@ -1355,7 +1237,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read char value.
-     *
      * @since 1.8.4
      */
     public char readChar() {
@@ -1365,7 +1246,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param index the index to read from
      * @return the char at the given index.
-     *
      * @since 1.8.4
      */
     public char getChar(int index) {
@@ -1375,7 +1255,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeByte(int value) {
@@ -1387,7 +1266,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param index the index to write to
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper setByte(int index, int value) {
@@ -1397,7 +1275,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read byte value.
-     *
      * @since 1.8.4
      */
     public byte readByte() {
@@ -1406,7 +1283,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read unsigned byte value, represented as a short.
-     *
      * @since 1.8.4
      */
     public short readUnsignedByte() {
@@ -1416,7 +1292,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param index the index to read from
      * @return the byte at the given index.
-     *
      * @since 1.8.4
      */
     public byte getByte(int index) {
@@ -1426,7 +1301,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param index the index to read from
      * @return the unsigned byte at the given index, represented as a short.
-     *
      * @since 1.8.4
      */
     public short getUnsignedByte(int index) {
@@ -1436,7 +1310,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeShort(int value) {
@@ -1448,7 +1321,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param index the index to write to
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper setShort(int index, int value) {
@@ -1458,7 +1330,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read short value.
-     *
      * @since 1.8.4
      */
     public short readShort() {
@@ -1467,7 +1338,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read unsigned short value, represented as an int.
-     *
      * @since 1.8.4
      */
     public int readUnsignedShort() {
@@ -1477,7 +1347,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param index the index to read from
      * @return the short at the given index.
-     *
      * @since 1.8.4
      */
     public short getShort(int index) {
@@ -1487,7 +1356,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param index the index to read from
      * @return the unsigned short at the given index, represented as an int.
-     *
      * @since 1.8.4
      */
     public int getUnsignedShort(int index) {
@@ -1497,7 +1365,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeMedium(int value) {
@@ -1509,7 +1376,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param index the index to write to
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper setMedium(int index, int value) {
@@ -1519,7 +1385,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read medium value.
-     *
      * @since 1.8.4
      */
     public int readMedium() {
@@ -1528,7 +1393,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read unsigned medium value.
-     *
      * @since 1.8.4
      */
     public int readUnsignedMedium() {
@@ -1538,7 +1402,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param index the index to read from
      * @return the medium at the given index.
-     *
      * @since 1.8.4
      */
     public int getMedium(int index) {
@@ -1548,7 +1411,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param index the index to read from
      * @return the unsigned medium at the given index.
-     *
      * @since 1.8.4
      */
     public int getUnsignedMedium(int index) {
@@ -1558,7 +1420,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeInt(int value) {
@@ -1570,7 +1431,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param index the index to write to
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper setInt(int index, int value) {
@@ -1580,7 +1440,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read int value.
-     *
      * @since 1.8.4
      */
     public int readInt() {
@@ -1589,7 +1448,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read unsigned int value, represented as a long.
-     *
      * @since 1.8.4
      */
     public long readUnsignedInt() {
@@ -1599,7 +1457,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param index the index to read from
      * @return the int at the given index.
-     *
      * @since 1.8.4
      */
     public int getInt(int index) {
@@ -1609,7 +1466,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param index the index to read from
      * @return the unsigned int at the given index, represented as a long.
-     *
      * @since 1.8.4
      */
     public long getUnsignedInt(int index) {
@@ -1619,7 +1475,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeLong(long value) {
@@ -1631,7 +1486,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param index the index to write to
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper setLong(int index, long value) {
@@ -1641,7 +1495,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read long value.
-     *
      * @since 1.8.4
      */
     public long readLong() {
@@ -1651,7 +1504,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param index the index to read from
      * @return the long at the given index.
-     *
      * @since 1.8.4
      */
     public long getLong(int index) {
@@ -1661,7 +1513,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeFloat(double value) {
@@ -1673,7 +1524,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param index the index to write to
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper setFloat(int index, double value) {
@@ -1683,7 +1533,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read float value.
-     *
      * @since 1.8.4
      */
     public float readFloat() {
@@ -1693,7 +1542,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param index the index to read from
      * @return the float at the given index.
-     *
      * @since 1.8.4
      */
     public float getFloat(int index) {
@@ -1703,7 +1551,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeDouble(double value) {
@@ -1715,7 +1562,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param index the index to write to
      * @param value the value to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper setDouble(int index, double value) {
@@ -1725,7 +1571,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read double value.
-     *
      * @since 1.8.4
      */
     public double readDouble() {
@@ -1735,7 +1580,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param index the index to read from
      * @return the double at the given index.
-     *
      * @since 1.8.4
      */
     public double getDouble(int index) {
@@ -1745,7 +1589,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param length the amount of zeros to write
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeZero(int length) {
@@ -1757,7 +1600,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param index  the index to write to
      * @param length the amount of zeros to write
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper setZero(int index, int length) {
@@ -1768,7 +1610,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param bytes the bytes to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper writeBytes(byte[] bytes) {
@@ -1780,7 +1621,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param index the index to write to
      * @param bytes the bytes to store
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper setBytes(int index, byte[] bytes) {
@@ -1793,7 +1633,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      *
      * @param length the length of the array to read
      * @return the read byte array.
-     *
      * @since 1.8.4
      */
     public byte[] readBytes(int length) {
@@ -1806,7 +1645,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param index  the index to start reading from
      * @param length the length of the array to read
      * @return the read byte array .
-     *
      * @since 1.8.4
      */
     public byte[] getBytes(int index, int length) {
@@ -1820,7 +1658,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      *
      * @param length the amount of bytes to skip
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public PacketByteBufferHelper skipBytes(int length) {

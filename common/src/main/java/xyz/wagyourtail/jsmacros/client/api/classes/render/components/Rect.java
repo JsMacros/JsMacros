@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
@@ -38,9 +39,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @param x1 the first x position of this rectangle
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Rect setX1(int x1) {
@@ -50,7 +49,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @return the first x position of this rectangle.
-     *
      * @since 1.8.4
      */
     public int getX1() {
@@ -59,9 +57,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @param y1 the first y position of this rectangle
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Rect setY1(int y1) {
@@ -71,7 +67,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @return the first y position of this rectangle.
-     *
      * @since 1.8.4
      */
     public int getY1() {
@@ -81,9 +76,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
     /**
      * @param x1 the first x position of this rectangle
      * @param y1 the first y position of this rectangle
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Rect setPos1(int x1, int y1) {
@@ -94,9 +87,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @param x2 the second x position of this rectangle
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Rect setX2(int x2) {
@@ -106,7 +97,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @return the second x position of this rectangle.
-     *
      * @since 1.8.4
      */
     public int getX2() {
@@ -115,9 +105,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @param y2 the second y position of this rectangle
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Rect setY2(int y2) {
@@ -127,7 +115,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @return the second y position of the rectangle.
-     *
      * @since 1.8.4
      */
     public int getY2() {
@@ -137,9 +124,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
     /**
      * @param x2 the second x position of this rectangle
      * @param y2 the second y position of this rectangle
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Rect setPos2(int x2, int y2) {
@@ -153,9 +138,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
      * @param y1
      * @param x2
      * @param y2
-     *
      * @return
-     *
      * @since 1.1.8
      */
     public Rect setPos(int x1, int y1, int x2, int y2) {
@@ -168,9 +151,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @param width the new width of this rectangle
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Rect setWidth(int width) {
@@ -184,7 +165,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @return the width of this rectangle.
-     *
      * @since 1.8.4
      */
     public int getWidth() {
@@ -193,9 +173,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @param height the new height of this rectangle
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Rect setHeight(int height) {
@@ -209,7 +187,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @return the height of this rectangle.
-     *
      * @since 1.8.4
      */
     public int getHeight() {
@@ -217,11 +194,9 @@ public class Rect implements RenderElement, Alignable<Rect> {
     }
 
     /**
-     * @param width the new width of this rectangle
+     * @param width  the new width of this rectangle
      * @param height the new height of this rectangle
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Rect setSize(int width, int height) {
@@ -232,9 +207,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @param color
-     *
      * @return
-     *
      * @since 1.0.5
      */
     public Rect setColor(int color) {
@@ -248,9 +221,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
     /**
      * @param color
      * @param alpha
-     *
      * @return
-     *
      * @since 1.1.8
      */
     public Rect setColor(int color, int alpha) {
@@ -260,9 +231,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @param alpha
-     *
      * @return
-     *
      * @since 1.1.8
      */
     public Rect setAlpha(int alpha) {
@@ -272,7 +241,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @return the color value of this rectangle.
-     *
      * @since 1.8.4
      */
     public int getColor() {
@@ -281,7 +249,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @return the alpha value of this rectangle.
-     *
      * @since 1.8.4
      */
     public int getAlpha() {
@@ -290,9 +257,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @param rotation
-     *
      * @return
-     *
      * @since 1.2.6
      */
     public Rect setRotation(double rotation) {
@@ -302,7 +267,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @return the rotation of this rectangle.
-     *
      * @since 1.8.4
      */
     public float getRotation() {
@@ -311,9 +275,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @param rotateCenter whether this rectangle should be rotated around its center
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Rect setRotateCenter(boolean rotateCenter) {
@@ -323,8 +285,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @return {@code true} if this rectangle should be rotated around its center, {@code false}
-     *     otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isRotatingCenter() {
@@ -333,9 +294,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     /**
      * @param zIndex the new z-index for this rectangle
-     *
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public Rect setZIndex(int zIndex) {
@@ -349,7 +308,8 @@ public class Rect implements RenderElement, Alignable<Rect> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        MatrixStack matrices = drawContext.getMatrices();
         matrices.push();
         setupMatrix(matrices, x1, y1, 1, rotation, getWidth(), getHeight(), rotateCenter);
 
@@ -440,9 +400,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @param x1 the first x position of the rectangle
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder x1(int x1) {
@@ -452,7 +410,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @return the first x position of the rectangle.
-         *
          * @since 1.8.4
          */
         public int getX1() {
@@ -461,9 +418,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @param y1 the first y position of the rectangle
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder y1(int y1) {
@@ -473,7 +428,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @return the first y position of the rectangle.
-         *
          * @since 1.8.4
          */
         public int getY1() {
@@ -483,9 +437,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
         /**
          * @param x1 the first x position of the rectangle
          * @param y1 the first y position of the rectangle
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos1(int x1, int y1) {
@@ -496,9 +448,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @param x2 the second x position of the rectangle
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder x2(int x2) {
@@ -508,7 +458,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @return the second x position of the rectangle.
-         *
          * @since 1.8.4
          */
         public int getX2() {
@@ -517,9 +466,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @param y2 the second y position of the rectangle
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder y2(int y2) {
@@ -529,7 +476,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @return the second y position of the rectangle.
-         *
          * @since 1.8.4
          */
         public int getY2() {
@@ -539,9 +485,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
         /**
          * @param x2 the second x position of the rectangle
          * @param y2 the second y position of the rectangle
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos2(int x2, int y2) {
@@ -555,9 +499,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
          * @param y1 the first y position of the rectangle
          * @param x2 the second x position of the rectangle
          * @param y2 the second y position of the rectangle
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder pos(int x1, int y1, int x2, int y2) {
@@ -572,9 +514,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
          * The width will just set the x2 position to {@code x1 + width}.
          *
          * @param width the width of the rectangle
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder width(int width) {
@@ -584,7 +524,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @return the width of the rectangle.
-         *
          * @since 1.8.4
          */
         public int getWidth() {
@@ -595,9 +534,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
          * The width will just set the y2 position to {@code y1 + height}.
          *
          * @param height the height of the rectangle
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder height(int height) {
@@ -607,7 +544,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @return the height of the rectangle.
-         *
          * @since 1.8.4
          */
         public int getHeight() {
@@ -615,11 +551,9 @@ public class Rect implements RenderElement, Alignable<Rect> {
         }
 
         /**
-         * @param width the width of the rectangle
+         * @param width  the width of the rectangle
          * @param height the height of the rectangle
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder size(int width, int height) {
@@ -628,9 +562,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @param color the color of the rectangle
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int color) {
@@ -642,9 +574,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
          * @param r the red component of the color
          * @param g the green component of the color
          * @param b the blue component of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int r, int g, int b) {
@@ -657,9 +587,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
          * @param g the green component of the color
          * @param b the blue component of the color
          * @param a the alpha value of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int r, int g, int b, int a) {
@@ -671,9 +599,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
         /**
          * @param color the color of the rectangle
          * @param alpha the alpha value of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder color(int color, int alpha) {
@@ -684,7 +610,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @return the color of the rectangle.
-         *
          * @since 1.8.4
          */
         public int getColor() {
@@ -693,9 +618,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @param alpha the alpha value of the color
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder alpha(int alpha) {
@@ -705,7 +628,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @return the alpha value of the color.
-         *
          * @since 1.8.4
          */
         public int getAlpha() {
@@ -714,9 +636,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @param rotation the rotation (clockwise) of the rectangle in degrees
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder rotation(double rotation) {
@@ -726,7 +646,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @return the rotation (clockwise) of the rectangle in degrees.
-         *
          * @since 1.8.4
          */
         public float getRotation() {
@@ -735,9 +654,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @param rotateCenter whether this rectangle should be rotated around its center
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder rotateCenter(boolean rotateCenter) {
@@ -747,8 +664,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @return {@code true} if this rectangle should be rotated around its center,
-         *     {@code false} otherwise.
-         *
+         * {@code false} otherwise.
          * @since 1.8.4
          */
         public boolean isRotatingCenter() {
@@ -757,9 +673,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @param zIndex the z-index of the rectangle
-         *
          * @return self for chaining.
-         *
          * @since 1.8.4
          */
         public Builder zIndex(int zIndex) {
@@ -769,7 +683,6 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
         /**
          * @return the z-index of the rectangle.
-         *
          * @since 1.8.4
          */
         public int getZIndex() {
@@ -779,7 +692,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
         @Override
         public Rect createElement() {
             return new Rect(x1, y1, x2, y2, color, alpha, rotation, zIndex).setRotateCenter(rotateCenter).setParent(
-                parent);
+                    parent);
         }
 
         @Override

@@ -3,23 +3,18 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.registry.Registries;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -36,7 +31,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
 
     /**
      * @return the first block (0 0 0 coordinate) of this chunk.
-     *
      * @since 1.8.4
      */
     public BlockPosHelper getStartingBlock() {
@@ -51,7 +45,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @param y       the actual y coordinate
      * @param zOffset the zOffset offset
      * @return the block offset from the starting block of this chunk by xOffset y zOffset.
-     *
      * @since 1.8.4
      */
     public BlockPosHelper getOffsetBlock(int xOffset, int y, int zOffset) {
@@ -60,7 +53,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
 
     /**
      * @return the maximum height of this chunk.
-     *
      * @since 1.8.4
      */
     public int getMaxBuildHeight() {
@@ -69,7 +61,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
 
     /**
      * @return the minimum height of this chunk.
-     *
      * @since 1.8.4
      */
     public int getMinBuildHeight() {
@@ -78,7 +69,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
 
     /**
      * @return the height of this chunk.
-     *
      * @since 1.8.4
      */
     public int getHeight() {
@@ -90,7 +80,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @param zOffset   the zOffset coordinate
      * @param heightmap the heightmap to use
      * @return the maximum {@code y} position of all blocks inside this chunk.
-     *
      * @since 1.8.4
      */
     public int getTopYAt(int xOffset, int zOffset, Heightmap heightmap) {
@@ -99,7 +88,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
 
     /**
      * @return the {@code x} coordinate (not the world coordinate) of this chunk.
-     *
      * @since 1.8.4
      */
     public int getChunkX() {
@@ -108,7 +96,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
 
     /**
      * @return the {@code z} coordinate (not the world coordinate) of this chunk.
-     *
      * @since 1.8.4
      */
     public int getChunkZ() {
@@ -120,7 +107,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @param y       the y coordinate
      * @param zOffset the z offset
      * @return the biome at the given position.
-     *
      * @since 1.8.4
      */
     public String getBiome(int xOffset, int y, int zOffset) {
@@ -133,7 +119,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * will increase.
      *
      * @return the cumulative time players have spent inside this chunk.
-     *
      * @since 1.8.4
      */
     public long getInhabitedTime() {
@@ -142,7 +127,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
 
     /**
      * @return all entities inside this chunk.
-     *
      * @since 1.8.4
      */
     public List<? extends EntityHelper<?>> getEntities() {
@@ -152,7 +136,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
 
     /**
      * @return all tile entity positions inside this chunk.
-     *
      * @since 1.8.4
      */
     public List<BlockPosHelper> getTileEntities() {
@@ -163,7 +146,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * @param includeAir whether to include air blocks or not
      * @param callback   the callback function
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public ChunkHelper forEach(boolean includeAir, MethodWrapper<BlockDataHelper, ?, ?, ?> callback) {
@@ -186,8 +168,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     /**
      * @param blocks the blocks to search for
      * @return {@code true} if this chunk contains at least one of the specified blocks,
-     *         {@code false} otherwise.
-     *
+     * {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean containsAny(String... blocks) {
@@ -211,8 +192,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     /**
      * @param blocks the blocks to search for
      * @return {@code true} if the chunk contains all the specified blocks, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean containsAll(String... blocks) {
@@ -236,7 +216,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
 
     /**
      * @return a map of the raw heightmap data.
-     *
      * @since 1.8.4
      */
     public Collection<Map.Entry<Heightmap.Type, Heightmap>> getHeightmaps() {
@@ -245,7 +224,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
 
     /**
      * @return the raw surface heightmap.
-     *
      * @since 1.8.4
      */
     public Heightmap getSurfaceHeightmap() {
@@ -254,7 +232,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
 
     /**
      * @return the raw ocean floor heightmap.
-     *
      * @since 1.8.4
      */
     public Heightmap getOceanFloorHeightmap() {
@@ -263,7 +240,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
 
     /**
      * @return the raw motion blocking heightmap.
-     *
      * @since 1.8.4
      */
     public Heightmap getMotionBlockingHeightmap() {
@@ -272,7 +248,6 @@ public class ChunkHelper extends BaseHelper<Chunk> {
 
     /**
      * @return the raw motion blocking heightmap without leaves.
-     *
      * @since 1.8.4
      */
     public Heightmap getMotionBlockingNoLeavesHeightmap() {

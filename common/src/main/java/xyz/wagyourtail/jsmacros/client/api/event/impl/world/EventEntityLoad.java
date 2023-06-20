@@ -19,4 +19,5 @@ public class EventEntityLoad implements BaseEvent {
     public String toString() {
         return String.format("%s:{\"entity\": %s}", this.getEventName(), entity.toString());
     }
+
 }

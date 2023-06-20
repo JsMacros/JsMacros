@@ -4,7 +4,6 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,9 +14,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventDamage;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventHeal;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventHealthChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventEntityDamaged;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventEntityHealed;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventHealthChange;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity {
@@ -27,7 +26,8 @@ public abstract class MixinLivingEntity extends Entity {
         super(arg, arg2);
     }
 
-    @Shadow public abstract float getMaxHealth();
+    @Shadow
+    public abstract float getMaxHealth();
 
     @Unique
     private float lastHealth;
@@ -48,22 +48,21 @@ public abstract class MixinLivingEntity extends Entity {
 
         if (difference > 0) {
             if ((Object) this instanceof ClientPlayerEntity) {
-                new EventDamage(world.getDamageSources().generic(), health, difference);
+                new EventDamage(getWorld().getDamageSources().generic(), health, difference);
                 new EventHealthChange(health, -difference);
             }
-            new EventEntityDamaged((Entity)(Object) this, health, difference);
-        }
-        else if (difference < 0) {
+            new EventEntityDamaged((Entity) (Object) this, health, difference);
+        } else if (difference < 0) {
 
             difference *= -1;
 
             if ((Object) this instanceof ClientPlayerEntity) {
-                new EventHeal(world.getDamageSources().generic(), health, difference);
+                new EventHeal(getWorld().getDamageSources().generic(), health, difference);
                 new EventHealthChange(health, difference);
             }
-            new EventEntityHealed((Entity)(Object) this, health, difference);
+            new EventEntityHealed((Entity) (Object) this, health, difference);
         }
         lastHealth = health;
     }
-}
 
+}

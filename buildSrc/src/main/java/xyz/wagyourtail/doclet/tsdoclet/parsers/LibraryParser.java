@@ -33,8 +33,8 @@ public class LibraryParser extends AbstractParser {
         }
 
         return "namespace " + name + " {\n" +
-            StringHelpers.tabIn(genMethods(methods)) +
-            "\n}";
+                StringHelpers.tabIn(genMethods(methods)) +
+                "\n}";
     }
 
 }

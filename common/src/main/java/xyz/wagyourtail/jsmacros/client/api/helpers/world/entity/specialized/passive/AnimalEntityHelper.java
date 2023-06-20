@@ -1,10 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.AnimalEntity;
-
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 
 /**
  * @author Etheradon
@@ -20,8 +19,7 @@ public class AnimalEntityHelper<T extends AnimalEntity> extends MobEntityHelper<
     /**
      * @param item the item to check
      * @return {@code true} if the item can be used to feed and breed this animal, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isFood(ItemHelper item) {
@@ -31,8 +29,7 @@ public class AnimalEntityHelper<T extends AnimalEntity> extends MobEntityHelper<
     /**
      * @param item the item to check
      * @return {@code true} if the item can be used to feed and breed this animal, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean isFood(ItemStackHelper item) {
@@ -42,8 +39,7 @@ public class AnimalEntityHelper<T extends AnimalEntity> extends MobEntityHelper<
     /**
      * @param other the other animal to check
      * @return {@code true} if this animal can be bred with the other animal, {@code false}
-     *         otherwise.
-     *
+     * otherwise.
      * @since 1.8.4
      */
     public boolean canBreedWith(AnimalEntityHelper<?> other) {

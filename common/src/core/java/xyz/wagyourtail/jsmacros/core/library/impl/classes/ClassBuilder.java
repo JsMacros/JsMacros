@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @param <T>
  * @since 1.6.5
  */
- @SuppressWarnings("unused")
+@SuppressWarnings("unused")
 public class ClassBuilder<T> {
     public static final Map<String, MethodWrapper<Object, Object, Object, ?>> methodWrappers = new ConcurrentHashMap<>();
     ClassPool defaultPool = ClassPool.getDefault();
@@ -31,8 +31,7 @@ public class ClassBuilder<T> {
     private final AnnotationsAttribute classAnnotations;
     private final AnnotationsAttribute invisibleClassAnnotations;
 
-
-    public ClassBuilder(String name, Class<T> parent, Class<?> ...interfaces) throws NotFoundException, CannotCompileException {
+    public ClassBuilder(String name, Class<T> parent, Class<?>... interfaces) throws NotFoundException, CannotCompileException {
         className = name.replaceAll("\\.", "\\$");
         ctClass = defaultPool.makeClass("xyz.wagyourtail.jsmacros.core.library.impl.classes.proxypackage." + className);
         ctClass.setSuperclass(defaultPool.getCtClass(parent.getName()));
@@ -62,7 +61,6 @@ public class ClassBuilder<T> {
      *
      * @param code the code for the field
      * @return self for chaining.
-     *
      * @throws CannotCompileException
      * @since 1.8.4
      */
@@ -72,7 +70,7 @@ public class ClassBuilder<T> {
         return this;
     }
 
-    public MethodBuilder addMethod(Class<?> returnType, String name, Class<?> ...params) throws NotFoundException {
+    public MethodBuilder addMethod(Class<?> returnType, String name, Class<?>... params) throws NotFoundException {
         CtClass[] paramCtClasses = new CtClass[params.length];
         for (int i = 0; i < params.length; i++) {
             paramCtClasses[i] = defaultPool.getCtClass(params[i].getName());
@@ -104,7 +102,6 @@ public class ClassBuilder<T> {
      *
      * @param code the code for the method
      * @return self for chaining.
-     *
      * @throws CannotCompileException
      * @since 1.8.4
      */
@@ -114,7 +111,7 @@ public class ClassBuilder<T> {
         return this;
     }
 
-    public ConstructorBuilder addConstructor(Class<?> ...params) throws NotFoundException {
+    public ConstructorBuilder addConstructor(Class<?>... params) throws NotFoundException {
         CtClass[] paramCtClasses = new CtClass[params.length];
         for (int i = 0; i < params.length; i++) {
             paramCtClasses[i] = defaultPool.getCtClass(params[i].getName());
@@ -138,9 +135,9 @@ public class ClassBuilder<T> {
      *      this.other = other;
      * }}
      * </pre>
+     *
      * @param code the code for the constructor
      * @return self for chaining.
-     *
      * @throws CannotCompileException
      * @since 1.8.4
      */
@@ -153,7 +150,6 @@ public class ClassBuilder<T> {
     public ConstructorBuilder addClinit() {
         return new ConstructorBuilder(new CtClass[0], true);
     }
-
 
     public AnnotationBuilder<ClassBuilder<T>> addAnnotation(Class<?> type) throws NotFoundException {
         Annotation annotation = new Annotation(ctClass.getClassFile().getConstPool(), defaultPool.getCtClass(type.getName()));
@@ -239,7 +235,6 @@ public class ClassBuilder<T> {
             return ClassBuilder.this;
         }
 
-
         public class FieldInitializerBuilder {
 
             public FieldBuilder setInt(int value) {
@@ -292,22 +287,22 @@ public class ClassBuilder<T> {
                 return FieldBuilder.this;
             }
 
-            public FieldBuilder initClass(Class<?> clazz, String ...code_arg) throws NotFoundException {
+            public FieldBuilder initClass(Class<?> clazz, String... code_arg) throws NotFoundException {
                 FieldBuilder.this.fieldInitializer = CtField.Initializer.byNewWithParams(defaultPool.getCtClass(clazz.getName()), code_arg);
                 return FieldBuilder.this;
             }
 
-            public FieldBuilder callStaticMethod(Class<?> clazz, String methodName, String ...code_arg) throws NotFoundException {
+            public FieldBuilder callStaticMethod(Class<?> clazz, String methodName, String... code_arg) throws NotFoundException {
                 FieldBuilder.this.fieldInitializer = CtField.Initializer.byCallWithParams(defaultPool.getCtClass(clazz.getName()), methodName, code_arg);
                 return FieldBuilder.this;
             }
 
-            public FieldBuilder callStaticMethodInThisClass(String methodName, String ...code_arg) {
+            public FieldBuilder callStaticMethodInThisClass(String methodName, String... code_arg) {
                 FieldBuilder.this.fieldInitializer = CtField.Initializer.byCallWithParams(ctClass, methodName, code_arg);
                 return FieldBuilder.this;
             }
-        }
 
+        }
 
     }
 
@@ -320,8 +315,7 @@ public class ClassBuilder<T> {
         final AnnotationsAttribute invisibleMethodAnnotations = new AnnotationsAttribute(ctClass.getClassFile().getConstPool(), AnnotationsAttribute.invisibleTag);
         int methodMods = 0;
 
-
-        public MethodBuilder(CtClass methodReturnType, String methodName, CtClass ...params) {
+        public MethodBuilder(CtClass methodReturnType, String methodName, CtClass... params) {
             this.methodReturnType = methodReturnType;
             this.methodName = methodName;
             this.params = params;
@@ -362,7 +356,7 @@ public class ClassBuilder<T> {
             return this;
         }
 
-        public MethodBuilder exceptions(Class<?> ...exceptions) throws NotFoundException {
+        public MethodBuilder exceptions(Class<?>... exceptions) throws NotFoundException {
             this.exceptions = new CtClass[exceptions.length];
             for (int i = 0; i < exceptions.length; i++) {
                 this.exceptions[i] = defaultPool.getCtClass(exceptions[i].getName());
@@ -387,26 +381,26 @@ public class ClassBuilder<T> {
             StringBuilder body = new StringBuilder();
             body.append("{");
             if (!voidReturn) {
-                    body.append(" return ");
-                    if (!methodReturnType.isPrimitive()) {
-                        body.append("((").append(methodReturnType.getName()).append(")");
+                body.append(" return ");
+                if (!methodReturnType.isPrimitive()) {
+                    body.append("((").append(methodReturnType.getName()).append(")");
+                } else {
+                    if (methodReturnType.equals(CtClass.booleanType)) {
+                        body.append("((java.lang.Boolean)");
                     } else {
-                        if (methodReturnType.equals(CtClass.booleanType)) {
-                            body.append("((java.lang.Boolean)");
-                        } else {
-                            body.append("((java.lang.Number)");
-                        }
+                        body.append("((java.lang.Number)");
                     }
+                }
             } else {
                 body.append("(");
             }
             body.append("((xyz.wagyourtail.jsmacros.core.MethodWrapper)")
-                .append("xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder.methodWrappers.get(\"")
-                .append(guestName)
-                .append("\")).")
-                .append(voidReturn ? "accept" : "apply")
-                .append("(")
-                .append("this, new Object[]{");
+                    .append("xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder.methodWrappers.get(\"")
+                    .append(guestName)
+                    .append("\")).")
+                    .append(voidReturn ? "accept" : "apply")
+                    .append("(")
+                    .append("this, new Object[]{");
             int i = 0;
             for (CtClass param : params) {
                 if (!param.isPrimitive()) {
@@ -505,13 +499,15 @@ public class ClassBuilder<T> {
             Annotation annotation = new Annotation(ctClass.getClassFile().getConstPool(), defaultPool.getCtClass(type.getName()));
             return new AnnotationBuilder<>(annotation, ctClass.getClassFile().getConstPool(), this, type.getAnnotation(Retention.class).value() != RetentionPolicy.RUNTIME ? invisibleMethodAnnotations : methodAnnotations);
         }
+
     }
 
     public class ConstructorBuilder extends MethodBuilder {
         public ConstructorBuilder(CtClass[] params, boolean clInit) {
             super(CtClass.voidType, clInit ? MethodInfo.nameClinit : MethodInfo.nameInit, params);
-            if (clInit)
+            if (clInit) {
                 this.methodMods |= Modifier.STATIC;
+            }
         }
 
         @Override
@@ -526,7 +522,9 @@ public class ClassBuilder<T> {
 
         @Override
         public ClassBuilder<T> guestBody(MethodWrapper<Object, Object, Object, ?> methodBody) throws CannotCompileException, NotFoundException {
-            if (params.length != 0) throw new IllegalArgumentException("must use one of the other body methods as this one can't call super...");
+            if (params.length != 0) {
+                throw new IllegalArgumentException("must use one of the other body methods as this one can't call super...");
+            }
             CtConstructor method = new CtConstructor(this.params, ctClass);
             method.setModifiers(this.methodMods);
             method.setExceptionTypes(this.exceptions);
@@ -541,18 +539,20 @@ public class ClassBuilder<T> {
             })) {
                 body.append("super(");
                 for (int i = 0; i < params.length; i++) {
-                    if (i != 0) body.append(", ");
+                    if (i != 0) {
+                        body.append(", ");
+                    }
                     body.append("$").append(i + 1);
                 }
                 body.append(");");
             }
             body.append("{(((xyz.wagyourtail.jsmacros.core.MethodWrapper)")
-                .append("xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder.methodWrappers.get(\"")
-                .append(guestName)
-                .append("\")).")
-                .append("apply")
-                .append("(")
-                .append("this, new Object[]{");
+                    .append("xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder.methodWrappers.get(\"")
+                    .append(guestName)
+                    .append("\")).")
+                    .append("apply")
+                    .append("(")
+                    .append("this, new Object[]{");
             int i = 0;
             for (CtClass param : params) {
                 if (!param.isPrimitive()) {
@@ -709,9 +709,10 @@ public class ClassBuilder<T> {
             return ab;
         }
 
-
         public T finish() {
-            if (attr != null) attr.addAnnotation(annotationInstance);
+            if (attr != null) {
+                attr.addAnnotation(annotationInstance);
+            }
             return member;
         }
 
@@ -802,10 +803,11 @@ public class ClassBuilder<T> {
                 arrayMemberValue.setValue(mv.toArray(new MemberValue[0]));
                 return parent;
             }
+
         }
 
     }
-    
+
     public class BodyBuilder {
         private final CtBehavior ctBehavior;
         private final String guestName;
@@ -825,8 +827,7 @@ public class ClassBuilder<T> {
         /**
          * @param code
          * @param argsAsObjects
-         * @param tokenBefore ie, "return", "Object wasd = " etc
-         *
+         * @param tokenBefore   ie, "return", "Object wasd = " etc
          * @return
          */
         public BodyBuilder appendGuestCode(MethodWrapper<Object, Object, Object, ?> code, String argsAsObjects, String tokenBefore) {
@@ -834,12 +835,12 @@ public class ClassBuilder<T> {
                 body.append(tokenBefore);
             }
             body.append("(((xyz.wagyourtail.jsmacros.core.MethodWrapper)")
-                .append("xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder.methodWrappers.get(\"")
-                .append(guestName).append(": ").append(guestCount)
-                .append("\")).").append("apply").append("(")
-                .append("this, new Object[]{")
-                .append(argsAsObjects)
-                .append("}));\n");
+                    .append("xyz.wagyourtail.jsmacros.core.library.impl.classes.ClassBuilder.methodWrappers.get(\"")
+                    .append(guestName).append(": ").append(guestCount)
+                    .append("\")).").append("apply").append("(")
+                    .append("this, new Object[]{")
+                    .append(argsAsObjects)
+                    .append("}));\n");
             methodWrappers.put(guestName + ": " + (guestCount++), code);
             return this;
         }
@@ -849,5 +850,7 @@ public class ClassBuilder<T> {
             ctBehavior.setBody(body.toString());
             return ClassBuilder.this;
         }
+
     }
+
 }

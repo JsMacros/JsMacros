@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.decoration;
 
 import net.minecraft.entity.decoration.painting.PaintingEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
 /**
@@ -17,7 +16,6 @@ public class PaintingEntityHelper extends EntityHelper<PaintingEntity> {
 
     /**
      * @return the width of this painting.
-     *
      * @since 1.8.4
      */
     public int getWidth() {
@@ -26,7 +24,6 @@ public class PaintingEntityHelper extends EntityHelper<PaintingEntity> {
 
     /**
      * @return the height of this painting.
-     *
      * @since 1.8.4
      */
     public int getHeight() {
@@ -35,7 +32,6 @@ public class PaintingEntityHelper extends EntityHelper<PaintingEntity> {
 
     /**
      * @return the identifier of this painting's art.
-     *
      * @since 1.8.4
      */
     public String getIdentifier() {

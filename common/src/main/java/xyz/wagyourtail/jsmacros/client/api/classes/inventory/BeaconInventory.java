@@ -11,7 +11,6 @@ import xyz.wagyourtail.jsmacros.client.access.IBeaconScreen;
 import java.util.Arrays;
 import java.util.Optional;
 
-
 /**
  * @since 1.5.1
  */
@@ -22,16 +21,16 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
     }
 
     /**
-     * @since 1.5.1
      * @return
+     * @since 1.5.1
      */
     public int getLevel() {
         return inventory.getScreenHandler().getProperties();
     }
 
     /**
-     * @since 1.5.1
      * @return
+     * @since 1.5.1
      */
     public String getFirstEffect() {
         StatusEffect effect = ((IBeaconScreen) inventory).jsmacros_getPrimaryEffect();
@@ -39,8 +38,8 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
     }
 
     /**
-     * @since 1.5.1
      * @return
+     * @since 1.5.1
      */
     public String getSecondEffect() {
         StatusEffect effect = ((IBeaconScreen) inventory).jsmacros_getSecondaryEffect();
@@ -49,8 +48,8 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
 
     /**
      * @param id
-     * @since 1.5.1
      * @return
+     * @since 1.5.1
      */
     public boolean selectFirstEffect(String id) {
         StatusEffect matchEffect;
@@ -66,8 +65,8 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
 
     /**
      * @param id
-     * @since 1.5.1
      * @return
+     * @since 1.5.1
      */
     public boolean selectSecondEffect(String id) {
         if (getLevel() >= 3) {
@@ -80,9 +79,9 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
             for (int i = 0; i < getLevel(); i++) {
                 matchEffect = Arrays.stream(BeaconBlockEntity.EFFECTS_BY_LEVEL[i]).filter(e -> Registries.STATUS_EFFECT.getId(e).toString().equals(id)).findFirst().orElse(null);
                 if (matchEffect != null) {
-                    if (primaryEffect != null && matchEffect.equals(StatusEffects.REGENERATION))
+                    if (primaryEffect != null && matchEffect.equals(StatusEffects.REGENERATION)) {
                         ((IBeaconScreen) inventory).jsmacros_setSecondaryEffect(matchEffect);
-                    else {
+                    } else {
                         ((IBeaconScreen) inventory).jsmacros_setPrimaryEffect(matchEffect);
                         ((IBeaconScreen) inventory).jsmacros_setSecondaryEffect(matchEffect);
                         return true;
@@ -94,13 +93,13 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
     }
 
     /**
-     * @since 1.5.1
      * @return
+     * @since 1.5.1
      */
     public boolean applyEffects() {
         if (inventory.getScreenHandler().hasPayment()) {
             mc.getNetworkHandler().sendPacket(new UpdateBeaconC2SPacket(Optional.ofNullable(((IBeaconScreen) inventory).jsmacros_getPrimaryEffect()),
-                Optional.ofNullable(((IBeaconScreen) inventory).jsmacros_getSecondaryEffect())));
+                    Optional.ofNullable(((IBeaconScreen) inventory).jsmacros_getSecondaryEffect())));
             player.closeHandledScreen();
             return true;
         }
@@ -111,5 +110,5 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
     public String toString() {
         return String.format("BeaconInventory:{}");
     }
-    
+
 }

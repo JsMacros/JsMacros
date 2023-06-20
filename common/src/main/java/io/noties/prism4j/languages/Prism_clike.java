@@ -16,44 +16,45 @@ import static java.util.regex.Pattern.compile;
 @SuppressWarnings("unused")
 public abstract class Prism_clike {
 
-  @NotNull
-  public static Prism4j.Grammar create(@NotNull Prism4j prism4j) {
-    return grammar(
-      "clike",
-      token(
-        "comment",
-        pattern(compile("(^|[^\\\\])\\/\\*[\\s\\S]*?(?:\\*\\/|$)"), true, true),
-        pattern(compile("(^|[^\\\\:])\\/\\/.*"), true, true)
-      ),
-      token(
-        "string",
-        pattern(compile("([\"'])(?:\\\\(?:\\r\\n|[\\s\\S])|(?!\\1)[^\\\\\\r\\n])*\\1"), false, true)
-      ),
-      token(
-        "class-name",
-        pattern(
-          compile("(\\b(?:class|extends|implements|instanceof|interface|new|trait)\\s+|\\bcatch\\s+\\()[\\w.\\\\]+", Pattern.CASE_INSENSITIVE),
-          true,
-          false,
-          null,
-          grammar("inside", token("punctuation", pattern(compile("[.\\\\]"))))
-        )
-      ),
-      token(
-        "keyword",
-        pattern(compile("\\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\\b"))
-      ),
-      token("boolean", pattern(compile("\\b(?:false|true)\\b"))),
-      token("function", pattern(compile("\\b[a-zA-Z_]\\w*(?=\\s*\\()" /* this is more accurate */, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE))),
-      token(
-        "number",
-        pattern(compile("\\b0x[\\da-f]+\\b|(?:\\b\\d+(?:\\.\\d*)?|\\B\\.\\d+)(?:e[+-]?\\d+)?", Pattern.CASE_INSENSITIVE))
-      ),
-      token("operator", pattern(compile("--?|\\+\\+?|!=?=?|<=?|>=?|==?=?|&&?|\\|\\|?|\\?|\\*|\\/|~|\\^|%"))),
-      token("punctuation", pattern(compile("[{}\\[\\];(),.:]")))
-    );
-  }
+    @NotNull
+    public static Prism4j.Grammar create(@NotNull Prism4j prism4j) {
+        return grammar(
+                "clike",
+                token(
+                        "comment",
+                        pattern(compile("(^|[^\\\\])\\/\\*[\\s\\S]*?(?:\\*\\/|$)"), true, true),
+                        pattern(compile("(^|[^\\\\:])\\/\\/.*"), true, true)
+                ),
+                token(
+                        "string",
+                        pattern(compile("([\"'])(?:\\\\(?:\\r\\n|[\\s\\S])|(?!\\1)[^\\\\\\r\\n])*\\1"), false, true)
+                ),
+                token(
+                        "class-name",
+                        pattern(
+                                compile("(\\b(?:class|extends|implements|instanceof|interface|new|trait)\\s+|\\bcatch\\s+\\()[\\w.\\\\]+", Pattern.CASE_INSENSITIVE),
+                                true,
+                                false,
+                                null,
+                                grammar("inside", token("punctuation", pattern(compile("[.\\\\]"))))
+                        )
+                ),
+                token(
+                        "keyword",
+                        pattern(compile("\\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\\b"))
+                ),
+                token("boolean", pattern(compile("\\b(?:false|true)\\b"))),
+                token("function", pattern(compile("\\b[a-zA-Z_]\\w*(?=\\s*\\()" /* this is more accurate */, Pattern.CASE_INSENSITIVE | Pattern.MULTILINE))),
+                token(
+                        "number",
+                        pattern(compile("\\b0x[\\da-f]+\\b|(?:\\b\\d+(?:\\.\\d*)?|\\B\\.\\d+)(?:e[+-]?\\d+)?", Pattern.CASE_INSENSITIVE))
+                ),
+                token("operator", pattern(compile("--?|\\+\\+?|!=?=?|<=?|>=?|==?=?|&&?|\\|\\|?|\\?|\\*|\\/|~|\\^|%"))),
+                token("punctuation", pattern(compile("[{}\\[\\];(),.:]")))
+        );
+    }
 
-  private Prism_clike() {
-  }
+    private Prism_clike() {
+    }
+
 }

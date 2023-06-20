@@ -53,7 +53,7 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
         config = new ConfigManager(configFolder, macroFolder, logger);
         profile = profileFunction.apply(this, logger);
 
-        extensions =  new ExtensionLoader(this);
+        extensions = new ExtensionLoader(this);
         this.services = new ServiceManager(this);
     }
 
@@ -93,14 +93,15 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      *
      * @param eventRegistryFunction
      * @param profileFunction
-     *
      * @param configFolder
      * @param macroFolder
      * @param logger
      * @return
      */
     public static <V extends BaseProfile, R extends BaseEventRegistry> Core<V, R> createInstance(Function<Core<V, R>, R> eventRegistryFunction, BiFunction<Core<V, R>, Logger, V> profileFunction, File configFolder, File macroFolder, Logger logger) {
-        if (instance != null) throw new RuntimeException("Can't declare RunScript instance more than once");
+        if (instance != null) {
+            throw new RuntimeException("Can't declare RunScript instance more than once");
+        }
 
         new Core<>(eventRegistryFunction, profileFunction, configFolder, macroFolder, logger);
 
@@ -109,9 +110,9 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
 
     /**
      * executes an {@link BaseEvent Event} on a ${@link ScriptTrigger}
+     *
      * @param macro
      * @param event
-     *
      * @return
      */
     public EventContainer<?> exec(ScriptTrigger macro, BaseEvent event) {
@@ -120,11 +121,11 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
 
     /**
      * Executes an {@link BaseEvent Event} on a ${@link ScriptTrigger} with callback.
+     *
      * @param macro
      * @param event
      * @param then
      * @param catcher
-     *
      * @return
      */
     public EventContainer<?> exec(ScriptTrigger macro, BaseEvent event, Runnable then,
@@ -132,12 +133,13 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
 
         final File file = new File(this.config.macroFolder, macro.scriptFile);
         Extension l = extensions.getExtensionForFile(file);
-        if (l == null) l = extensions.getHighestPriorityExtension();
+        if (l == null) {
+            l = extensions.getHighestPriorityExtension();
+        }
         return l.getLanguage(this).trigger(macro, event, then, catcher);
     }
 
     /**
-     * @since 1.7.0
      * @param lang
      * @param script
      * @param fakeFile
@@ -145,6 +147,7 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      * @param then
      * @param catcher
      * @return
+     * @since 1.7.0
      */
     public EventContainer<?> exec(String lang, String script, File fakeFile, BaseEvent event, Runnable then, Consumer<Throwable> catcher) {
         Extension l = extensions.getExtensionForFile(new File(lang.startsWith(".") ? lang : "." + lang));
@@ -154,15 +157,19 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
 
     /**
      * wraps an exception for more uniform parsing between languages, also extracts useful info.
-     * @param ex exception to wrap.
      *
+     * @param ex exception to wrap.
      * @return
      */
     public BaseWrappedException<?> wrapException(Throwable ex) {
-        if (ex == null) return null;
+        if (ex == null) {
+            return null;
+        }
         for (Extension lang : Core.getInstance().extensions.getAllExtensions()) {
             BaseWrappedException<?> e = lang.wrapException(ex);
-            if (e != null) return e;
+            if (e != null) {
+                return e;
+            }
         }
         Iterator<StackTraceElement> elements = Arrays.stream(ex.getStackTrace()).iterator();
         String message = ex.getClass().getSimpleName();
@@ -172,8 +179,9 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
         }
         return new BaseWrappedException<>(ex, message, null, elements.hasNext() ? wrapHostInternal(elements.next(), elements) : null);
     }
-    
+
     private BaseWrappedException<StackTraceElement> wrapHostInternal(StackTraceElement e, Iterator<StackTraceElement> elements) {
         return BaseWrappedException.wrapHostElement(e, elements.hasNext() ? wrapHostInternal(elements.next(), elements) : null);
     }
+
 }

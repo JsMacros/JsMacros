@@ -25,5 +25,5 @@ public class EventJoinedKey extends EventKey implements ICancelable {
     public boolean isCanceled() {
         return cancel;
     }
-    
+
 }

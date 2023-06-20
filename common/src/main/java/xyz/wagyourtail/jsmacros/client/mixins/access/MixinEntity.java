@@ -29,7 +29,7 @@ public abstract class MixinEntity implements IMixinEntity {
 
     @Inject(method = "getTeamColorValue()I", cancellable = true, at = @At("HEAD"))
     public void getTeamColorValue(CallbackInfoReturnable<Integer> ci) {
-        if(glowingColor != -1) {
+        if (glowingColor != -1) {
             ci.setReturnValue(glowingColor);
             ci.cancel();
         }

@@ -12,14 +12,16 @@ import java.util.Set;
 
 public class Prism implements GrammarLocator {
     private final static Prism4j prism4j = new Prism4j(new Prism());
-    
+
     @NotNull
     public static List<Prism4j.Node> getNodes(String text, String language) {
         Prism4j.Grammar grammar = prism4j.grammar(language);
-        if (grammar == null) throw new NullPointerException("could not locate grammar definition for language: " + language);
+        if (grammar == null) {
+            throw new NullPointerException("could not locate grammar definition for language: " + language);
+        }
         return prism4j.tokenize(text, grammar);
     }
-    
+
     @Nullable
     @Override
     public Prism4j.Grammar grammar(@NotNull Prism4j prism4j, @NotNull String language) {
@@ -48,22 +50,22 @@ public class Prism implements GrammarLocator {
                 return null;
         }
     }
-    
+
     @NotNull
     @Override
     public Set<String> languages() {
         return Sets.newHashSet(
-            "javascript",
-            "lua",
-            "python",
-            "clike",
-            "regex",
-            "json",
-            "ruby",
-            "typescript",
-            "groovy",
-            "kotlin"
+                "javascript",
+                "lua",
+                "python",
+                "clike",
+                "regex",
+                "json",
+                "ruby",
+                "typescript",
+                "groovy",
+                "kotlin"
         );
     }
-    
+
 }

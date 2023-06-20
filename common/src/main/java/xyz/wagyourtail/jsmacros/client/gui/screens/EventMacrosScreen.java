@@ -13,35 +13,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventMacrosScreen extends MacroScreen {
-    
+
     public EventMacrosScreen(Screen parent) {
         super(parent);
         this.parent = parent;
     }
-    
+
     @Override
     protected void init() {
         super.init();
         eventScreen.setColor(0x4FFFFFFF);
-        
-        ((MacroListTopbar)topbar).updateType(ScriptTrigger.TriggerType.EVENT);
-        
+
+        ((MacroListTopbar) topbar).updateType(ScriptTrigger.TriggerType.EVENT);
+
         List<ScriptTrigger> macros = new ArrayList<>();
-        
+
         for (String event : ImmutableList.copyOf(Core.getInstance().eventRegistry.events)) {
-                for (IEventListener macro : Core.getInstance().eventRegistry.getListeners(event)) {
-                    if (macro instanceof BaseListener && ((BaseListener) macro).getRawTrigger().triggerType == ScriptTrigger.TriggerType.EVENT) macros.add(((BaseListener) macro).getRawTrigger());
+            for (IEventListener macro : Core.getInstance().eventRegistry.getListeners(event)) {
+                if (macro instanceof BaseListener && ((BaseListener) macro).getRawTrigger().triggerType == ScriptTrigger.TriggerType.EVENT) {
+                    macros.add(((BaseListener) macro).getRawTrigger());
                 }
-        }
-        if (Core.getInstance().eventRegistry.getListeners().containsKey(""))
-            for (IEventListener macro : Core.getInstance().eventRegistry.getListeners().get("")) {
-                if (macro instanceof BaseListener) macros.add(((BaseListener) macro).getRawTrigger());
             }
+        }
+        if (Core.getInstance().eventRegistry.getListeners().containsKey("")) {
+            for (IEventListener macro : Core.getInstance().eventRegistry.getListeners().get("")) {
+                if (macro instanceof BaseListener) {
+                    macros.add(((BaseListener) macro).getRawTrigger());
+                }
+            }
+        }
 
         macros.sort(Core.getInstance().config.getOptions(ClientConfigV2.class).getSortComparator());
-        
+
         for (ScriptTrigger macro : macros) {
             addMacro(macro);
         }
     }
+
 }

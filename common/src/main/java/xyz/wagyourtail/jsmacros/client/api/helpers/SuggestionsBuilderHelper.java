@@ -1,9 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.command.CommandSource;
 import net.minecraft.util.Identifier;
-
-import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -59,7 +58,6 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
     /**
      * @param suggestions the strings to match
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public SuggestionsBuilderHelper suggestMatching(String... suggestions) {
@@ -69,7 +67,6 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
     /**
      * @param suggestions the strings to match
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public SuggestionsBuilderHelper suggestMatching(Collection<String> suggestions) {
@@ -80,7 +77,6 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
     /**
      * @param identifiers the identifiers to match
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public SuggestionsBuilderHelper suggestIdentifier(String... identifiers) {
@@ -90,7 +86,6 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
     /**
      * @param identifiers the identifiers to match
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public SuggestionsBuilderHelper suggestIdentifier(Collection<String> identifiers) {
@@ -101,7 +96,6 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
     /**
      * @param positions the positions to suggest
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public SuggestionsBuilderHelper suggestBlockPositions(BlockPosHelper... positions) {
@@ -111,7 +105,6 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
     /**
      * @param positions the positions to suggest
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public SuggestionsBuilderHelper suggestBlockPositions(Collection<BlockPosHelper> positions) {
@@ -124,7 +117,6 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
      *
      * @param positions the positions to suggest
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public SuggestionsBuilderHelper suggestPositions(String... positions) {
@@ -137,7 +129,6 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
      *
      * @param positions the relative positions to suggest
      * @return self for chaining.
-     *
      * @since 1.8.4
      */
     public SuggestionsBuilderHelper suggestPositions(Collection<String> positions) {
@@ -147,5 +138,5 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
         }).collect(Collectors.toList()), base, s -> true);
         return this;
     }
-    
+
 }

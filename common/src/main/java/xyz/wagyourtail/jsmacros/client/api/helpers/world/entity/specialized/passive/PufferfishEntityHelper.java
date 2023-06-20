@@ -18,7 +18,6 @@ public class PufferfishEntityHelper extends FishEntityHelper<PufferfishEntity> {
      * of 2 means the fish is fully inflated.
      *
      * @return the puff state of this pufferfish.
-     *
      * @since 1.8.4
      */
     public int getSize() {

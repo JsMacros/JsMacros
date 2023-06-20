@@ -3,10 +3,10 @@ package xyz.wagyourtail.jsmacros.client.movement;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.Vec3d;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
-import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
+import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,8 +52,9 @@ public class MovementQueue {
             reCalcPredictions = false;
         }
 
-        if (predictions.size() > 0)
+        if (predictions.size() > 0) {
             LOGGER.debug("Predic pos x={}, y={}, z={}", predictions.get(0).getX(), predictions.get(0).getY(), predictions.get(0).getZ());
+        }
 
         queuePos++;
         return queue.get(queuePos - 1);
@@ -104,4 +105,5 @@ public class MovementQueue {
         }
         queuePos = 0;
     }
+
 }

@@ -16,7 +16,6 @@ public class DrownedEntityHelper extends ZombieEntityHelper<DrownedEntity> {
 
     /**
      * @return {@code true} if this drowned is holding a trident, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasTrident() {
@@ -25,7 +24,6 @@ public class DrownedEntityHelper extends ZombieEntityHelper<DrownedEntity> {
 
     /**
      * @return {@code true} if this drowned is holding a nautilus shell, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean hasNautilusShell() {

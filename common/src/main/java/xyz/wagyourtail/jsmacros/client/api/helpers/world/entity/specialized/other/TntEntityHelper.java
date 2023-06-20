@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.other;
 
 import net.minecraft.entity.TntEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
 /**
@@ -17,7 +16,6 @@ public class TntEntityHelper extends EntityHelper<TntEntity> {
 
     /**
      * @return the remaining time until this TNT explodes.
-     *
      * @since 1.8.4
      */
     public int getRemainingTime() {

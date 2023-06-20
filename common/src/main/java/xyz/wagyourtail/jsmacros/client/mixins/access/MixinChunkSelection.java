@@ -8,11 +8,14 @@ import xyz.wagyourtail.jsmacros.client.access.IChunkSection;
 @Mixin(ChunkSection.class)
 public class MixinChunkSelection implements IChunkSection {
 
-    @Shadow private short nonEmptyBlockCount;
+    @Shadow
+    private short nonEmptyBlockCount;
 
-    @Shadow private short randomTickableBlockCount;
+    @Shadow
+    private short randomTickableBlockCount;
 
-    @Shadow private short nonEmptyFluidCount;
+    @Shadow
+    private short nonEmptyFluidCount;
 
     @Override
     public short jsmacros_getNonEmptyBlockCount() {
@@ -28,4 +31,5 @@ public class MixinChunkSelection implements IChunkSection {
     public short jsmacros_getNonEmptyFluidCount() {
         return nonEmptyFluidCount;
     }
+
 }

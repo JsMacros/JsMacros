@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob;
 
 import net.minecraft.entity.mob.CreeperEntity;
-
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinCreeperEntity;
 
@@ -18,7 +17,6 @@ public class CreeperEntityHelper extends MobEntityHelper<CreeperEntity> {
 
     /**
      * @return {@code true} if the creeper is charged, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isCharged() {
@@ -27,7 +25,6 @@ public class CreeperEntityHelper extends MobEntityHelper<CreeperEntity> {
 
     /**
      * @return {@code true} if the creeper has been ignited, {@code false} otherwise.
-     *
      * @since 1.8.4
      */
     public boolean isIgnited() {
@@ -39,7 +36,6 @@ public class CreeperEntityHelper extends MobEntityHelper<CreeperEntity> {
      * creeper is currently charging up.
      *
      * @return the change in fuse every tick.
-     *
      * @since 1.8.4
      */
     public int getFuseChange() {
@@ -48,7 +44,6 @@ public class CreeperEntityHelper extends MobEntityHelper<CreeperEntity> {
 
     /**
      * @return the time the creeper has been charging up.
-     *
      * @since 1.8.4
      */
     public int getFuseTime() {
@@ -57,7 +52,6 @@ public class CreeperEntityHelper extends MobEntityHelper<CreeperEntity> {
 
     /**
      * @return the maximum time the creeper can be charged for before exploding.
-     *
      * @since 1.8.4
      */
     public int getMaxFuseTime() {
@@ -66,8 +60,7 @@ public class CreeperEntityHelper extends MobEntityHelper<CreeperEntity> {
 
     /**
      * @return the remaining time until the creeper explodes with the current fuse time, or
-     *         {@code -1} if the creeper is not about to explode.
-     *
+     * {@code -1} if the creeper is not about to explode.
      * @since 1.8.4
      */
     public int getRemainingFuseTime() {
