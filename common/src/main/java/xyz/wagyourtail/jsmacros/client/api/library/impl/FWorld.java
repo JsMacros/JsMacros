@@ -695,6 +695,7 @@ public class FWorld extends BaseLibrary {
      * @see FWorld#playSound(String, double, double, double, double, double)
      * @param id
      */
+    @DocletReplaceParams("id: SoundId")
     public void playSound(String id) {
         playSound(id, 1F);
     }
@@ -705,6 +706,7 @@ public class FWorld extends BaseLibrary {
      * @param id
      * @param volume
      */
+    @DocletReplaceParams("id: SoundId, volume: double")
     public void playSound(String id, double volume) {
         playSound(id, volume, 0.25F);
     }
@@ -716,6 +718,7 @@ public class FWorld extends BaseLibrary {
      * @param volume
      * @param pitch
      */
+    @DocletReplaceParams("id: SoundId, volume: double, pitch: double")
     public void playSound(String id, double volume, double pitch) {
         SoundEvent sound = SoundEvent.of(new Identifier(id));
         assert sound != null;
@@ -732,6 +735,7 @@ public class FWorld extends BaseLibrary {
      * @param y
      * @param z
      */
+    @DocletReplaceParams("id: SoundId, volume: double, pitch: double, x: double, y: double, z: double")
     public void playSound(String id, double volume, double pitch, double x, double y, double z) {
         assert mc.world != null;
         SoundEvent sound = SoundEvent.of(new Identifier(id));
