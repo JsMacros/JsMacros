@@ -535,7 +535,7 @@ public class Inventory<T extends HandledScreen<?>> {
 
             type Inventory = _inv | 'offhand' | 'boots' | 'leggings' | 'chestplate' | 'helmet'
             | 'crafting_in' | 'craft_out';
-            type CreativeInvInvTab = Exclude<Inventory, 'crafting_in' | 'crafting_out'> | 'delete';
+            type CreativeInvInvTab = Exclude<Inventory, 'crafting_in' | 'craft_out'> | 'delete';
             type CreativeInv = 'hotbar' | 'creative';
             type Container        = _inv | 'container';
             type Beacon           = _inv | 'slot';
