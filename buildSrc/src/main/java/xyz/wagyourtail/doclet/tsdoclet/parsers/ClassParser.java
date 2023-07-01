@@ -156,7 +156,8 @@ public class ClassParser extends AbstractParser {
                     }
                     case FIELD, ENUM_CONSTANT -> fields.add(el);
                     case CONSTRUCTOR -> constructors.add(el);
-                    default -> {}
+                    default -> {
+                    }
                 }
             }
         }

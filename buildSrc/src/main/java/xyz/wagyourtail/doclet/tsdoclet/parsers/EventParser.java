@@ -35,7 +35,8 @@ public class EventParser extends AbstractParser {
                 switch (el.getKind()) {
                     case FIELD, ENUM_CONSTANT -> fields.add(el);
                     case METHOD -> methods.add(el);
-                    default -> {}
+                    default -> {
+                    }
                 }
             }
         }

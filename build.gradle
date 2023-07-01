@@ -1,138 +1,346 @@
+import groovy.json.JsonSlurper
+
 plugins {
-    id "xyz.wagyourtail.unimined" version "0.4.0-SNAPSHOT" apply false
+    id "xyz.wagyourtail.unimined" version "1.0.0-SNAPSHOT"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
-subprojects {
-    apply plugin: "xyz.wagyourtail.unimined"
+sourceCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
+targetCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
 
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
 
-    archivesBaseName = rootProject.archives_base_name
-    version = rootProject.mod_version
-    group = rootProject.maven_group
-
-    java {
-        withSourcesJar()
+repositories {
+    maven {
+        name "fabricmc repository"
+        url 'https://maven.fabricmc.net/'
     }
-
-    configurations {
-        coreImplementation {
-            extendsFrom implementation
-        }
-        jsmacrosExtensionInclude
+    maven {
+        name "modmenu repository"
+        url 'https://maven.terraformersmc.com/releases/'
     }
-
-    sourceSets {
-        main {
-            compileClasspath += configurations.coreImplementation + configurations.jsmacrosExtensionInclude
-            runtimeClasspath += configurations.coreImplementation + configurations.jsmacrosExtensionInclude
-        }
+    maven {
+        name "forge repository"
+        url 'https://files.minecraftforge.net/maven/'
     }
-
-    repositories {
-        maven {
-            url 'https://maven.fabricmc.net/'
-            metadataSources {
-                artifact()
-            }
-        }
-        maven {
-            name "modmenu repository"
-            url 'https://maven.terraformersmc.com/releases/'
-        }
-        maven { url 'https://jitpack.io' }
-        mavenCentral()
-    }
-
-    dependencies {
-        minecraft "net.minecraft:minecraft:${rootProject.minecraft_version}"
-
-        mappings "net.fabricmc:intermediary:${rootProject.minecraft_version}:v2"
-        mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-
-        // non-mod dependencies:
-        implementation "io.noties:prism4j:${project.prism_version}"
-
-        coreImplementation "org.jooq:joor:0.9.14"
-        coreImplementation "com.neovisionaries:nv-websocket-client:2.10"
-        coreImplementation "org.javassist:javassist:3.28.0-GA"
-    }
-
-    tasks.withType(JavaCompile) {
-        options.encoding = "UTF-8"
-    }
-
-    jar {
-
-        def files = []
-        def jsons = []
-
-        eachFile {
-            files.add(it)
-        }
-
-        filesMatching("**/*.mixins.json") {
-            def json = new groovy.json.JsonSlurper().parse(it.open())
-            jsons.add(json)
-        }
-
-        doLast {
-            def pkgs = new ArrayList()
-            def client = new ArrayList()
-            def server = new ArrayList()
-            def mixins = new ArrayList()
-            jsons.forEach({
-                def pkg = it.package
-                pkgs.add(pkg.replace(".", "/"))
-                def cl = it.client
-                if (cl != null) {
-                    cl.forEach({
-                        client.add((pkg + "." + it).replace(".", "/"))
-                    })
-                }
-                def sl = it.server
-                if (sl != null) {
-                    sl.forEach({
-                        server.add((pkg + "." + it).replace(".", "/"))
-                    })
-                }
-                def ml = it.mixins
-                if (ml != null) {
-                    ml.forEach({
-                        mixins.add((pkg + "." + it).replace(".", "/"))
-                    })
-                }
-            })
-            files.forEach({
-                def name = it.relativePath.toString()
-                for (def cl in client) {
-                    if (name.endsWith(cl + ".class")) {
-                        return
-                    }
-                }
-                for (def sl in server) {
-                    if (name.endsWith(sl + ".class")) {
-                        return
-                    }
-                }
-                for (def ml in mixins) {
-                    if (name.endsWith(ml + ".class")) {
-                        return
-                    }
-                }
-                for (def pkg in pkgs) {
-                    if (name.contains(pkg + "/") && name.endsWith(".class")) {
-                        System.err.println("File " + name + " is not in a mixin json")
-                    }
-                }
-            })
-        }
-    }
-
-    task removeDist(type: Delete) {
-        delete new File(rootProject.rootDir, "dist")
-    }
-
-    clean.finalizedBy(removeDist)
+    maven { url 'https://jitpack.io' }
+    mavenCentral()
 }
+
+configurations {
+    implementation {
+        canBeResolved = true
+    }
+    jsmacrosExtensionInclude
+    shadowForge
+}
+
+sourceSets {
+    core {
+        java {
+            srcDir "common/src/core/java"
+        }
+        resources {
+            srcDir "common/src/core/resources"
+        }
+        compileClasspath += configurations.implementation
+        runtimeClasspath += configurations.implementation
+    }
+    main {
+        java {
+            srcDir "common/src/main/java"
+        }
+        resources {
+            srcDir "common/src/main/resources"
+        }
+        compileClasspath += core.output
+        runtimeClasspath += core.output
+    }
+    forge {
+        compileClasspath += core.output + main.output + configurations.implementation
+        runtimeClasspath += core.output + main.output + configurations.implementation
+    }
+    fabric {
+        compileClasspath += core.output + main.output + configurations.implementation
+        runtimeClasspath += core.output + main.output + configurations.implementation
+    }
+}
+
+tasks.register("fabricJar", Jar) {
+    from sourceSets.fabric.output, sourceSets.main.output, sourceSets.core.output
+
+    archiveClassifier = "fabric"
+}
+
+tasks.register("forgeJar", Jar) {
+    from sourceSets.forge.output, sourceSets.main.output, sourceSets.core.output
+
+    archiveClassifier = "forge"
+}
+
+unimined.minecraft {
+    version project.minecraft_version
+
+    mappings {
+        intermediary()
+        yarn project.yarn_mappings
+    }
+
+    defaultRemapJar = false
+    runs.off = true
+}
+
+sourceSets {
+    core {
+        compileClasspath += configurations.minecraftLibraries
+        runtimeClasspath += configurations.minecraftLibraries
+    }
+}
+
+unimined.minecraft(sourceSets.forge) {
+    version project.minecraft_version
+
+    mappings {
+        intermediary()
+        yarn project.yarn_mappings
+
+        devFallbackNamespace "intermediary"
+    }
+
+    forge {
+        forge project.forge_version
+
+        mixinConfig = ["jsmacros-forge.mixins.json", "jsmacros.mixins.json"]
+    }
+}
+
+unimined.minecraft(sourceSets.fabric) {
+    version project.minecraft_version
+
+    mappings {
+        yarn project.yarn_mappings
+    }
+
+    fabric {
+        loader project.fabric_loader_version
+    }
+
+    mods {
+        modImplementation {
+            mixinRemap("unimined")
+        }
+    }
+}
+
+dependencies {
+    implementation "io.noties:prism4j:${project.prism_version}"
+    compileOnly "org.spongepowered:mixin:0.8.5"
+    implementation "org.ow2.asm:asm:9.3"
+
+    coreImplementation "org.jooq:joor:0.9.14"
+    coreImplementation "com.neovisionaries:nv-websocket-client:2.10"
+    coreImplementation "org.javassist:javassist:3.28.0-GA"
+
+    fabricModImplementation fabricApi.module("fabric-api-base", project.fapi_version)
+    fabricModImplementation fabricApi.module("fabric-lifecycle-events-v1", project.fapi_version)
+    fabricModImplementation fabricApi.module("fabric-key-binding-api-v1", project.fapi_version)
+    fabricModImplementation fabricApi.module("fabric-resource-loader-v0", project.fapi_version)
+    fabricModImplementation fabricApi.module("fabric-command-api-v2", project.fapi_version)
+
+    fabricInclude fabricApi.module("fabric-api-base", project.fapi_version)
+    fabricInclude fabricApi.module("fabric-lifecycle-events-v1", project.fapi_version)
+    fabricInclude fabricApi.module("fabric-key-binding-api-v1", project.fapi_version)
+    fabricInclude fabricApi.module("fabric-resource-loader-v0", project.fapi_version)
+    fabricInclude fabricApi.module("fabric-command-api-v2", project.fapi_version)
+
+    fabricInclude "io.noties:prism4j:${project.prism_version}"
+    fabricInclude "com.neovisionaries:nv-websocket-client:2.10"
+    fabricInclude "org.javassist:javassist:3.28.0-GA"
+    fabricInclude "org.jooq:joor:0.9.14"
+
+    fabricModImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+    fabricModImplementation fabricApi.module("fabric-screen-api-v1", project.fapi_version)
+
+    shadowForge "io.noties:prism4j:${project.prism_version}", {
+        exclude module: "annotations-java5"
+    }
+    shadowForge "com.neovisionaries:nv-websocket-client:2.10"
+    shadowForge "org.javassist:javassist:3.28.0-GA"
+    shadowForge "org.jooq:joor:0.9.14"
+
+    fabricRuntimeOnly(forgeRuntimeOnly(project(":javascript_extension")) { transitive = false })
+
+    fabricRuntimeOnly(forgeRuntimeOnly("org.graalvm.sdk:graal-sdk:${project.graal_version}"))
+    fabricRuntimeOnly(forgeRuntimeOnly("org.graalvm.js:js:${project.graal_version}"))
+    fabricRuntimeOnly(forgeRuntimeOnly("org.graalvm.truffle:truffle-api:${project.graal_version}"))
+    fabricRuntimeOnly(forgeRuntimeOnly("org.graalvm.regex:regex:${project.graal_version}"))
+
+    jsmacrosExtensionInclude(project(":javascript_extension")) { transitive = false }
+}
+
+tasks.register('removeDist', Delete) {
+    delete new File(rootProject.rootDir, "dist")
+}
+
+clean.finalizedBy(removeDist)
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+
+    var javaVersion = project.java_version.toInteger()
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.release.set javaVersion
+    }
+}
+
+processForgeResources {
+    inputs.property "version", project.version
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
+    }
+
+    filesMatching("jsmacros.extension.json") {
+        expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")
+    }
+}
+
+forgeJar {
+    archiveClassifier = "forge-dev"
+    from sourceSets.forge.output, sourceSets.main.output, sourceSets.core.output
+
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+
+    manifest {
+        attributes([
+                'MixinConnector': 'xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser',
+        ])
+    }
+}
+
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+task shadowForgeJar(type: ShadowJar) {
+    archiveClassifier = "forge-dev-shadow"
+    from(forgeJar)
+
+    // exclude icu that's "accidentally" (I hope) included in graaljs jar
+    exclude "com/ibm/**"
+
+    mergeServiceFiles()
+
+    configurations = [project.configurations.shadowForge]
+}
+
+remapForgeJar {
+    inputFile.set shadowForgeJar.archiveFile
+
+    from(configurations.jsmacrosExtensionInclude.files) {
+        include '*'
+        into "META-INF/jsmacrosdeps"
+    }
+}
+
+processFabricResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+
+    filesMatching("jsmacros.extension.json") {
+        expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")
+    }
+}
+
+fabricJar {
+    from sourceSets.fabric.output, sourceSets.main.output, sourceSets.core.output
+
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+remapFabricJar {
+    from(configurations.jsmacrosExtensionInclude.files) {
+        include '*'
+        into "META-INF/jsmacrosdeps"
+    }
+}
+
+task generatePyDoc(type: Javadoc) {
+    group = "documentation"
+    description = "Generates the python documentation for the project"
+    source = sourceSets.main.allJava + sourceSets.core.allJava
+    doFirst {
+        classpath = sourceSets.main.compileClasspath + sourceSets.core.compileClasspath
+    }
+    destinationDir = new File(rootProject.buildDir, "docs/python/JsMacrosAC/")
+    options.doclet = "xyz.wagyourtail.doclet.pydoclet.Main"
+    options.docletpath new File(rootProject.rootDir, "buildSrc/build/libs/buildSrc.jar")
+    options.addStringOption "v", version
+}
+
+task copyPyDoc(type: Copy, dependsOn: generatePyDoc) {
+    group = "documentation"
+    description = "Copies the python documentation to the build folder"
+    from new File(rootProject.rootDir, "docs/python")
+    into new File(rootProject.buildDir, "docs/python")
+}
+
+task generateTSDoc(type: Javadoc) {
+    group = "documentation"
+    description = "Generates the typescript documentation for the project"
+    source = sourceSets.main.allJava + sourceSets.core.allJava
+    doFirst {
+        classpath = sourceSets.main.compileClasspath + sourceSets.core.compileClasspath
+    }
+    destinationDir = new File(rootProject.buildDir, "docs/typescript/headers/")
+    options.doclet = "xyz.wagyourtail.doclet.tsdoclet.Main"
+    options.docletpath new File(rootProject.rootDir, "buildSrc/build/libs/buildSrc.jar")
+    options.addStringOption "v", version
+}
+
+task copyTSEnv(type: Copy, dependsOn: generateTSDoc) {
+    group = "documentation"
+    description = "Copies the typescript files to the build folder"
+    from new File(rootProject.rootDir, "docs/typescript")
+    into new File(rootProject.buildDir, "docs/typescript")
+}
+
+task generateWebDoc(type: Javadoc) {
+    group = "documentation"
+    description = "Generates the web documentation for the project"
+    source = sourceSets.main.allJava + sourceSets.core.allJava
+    doFirst {
+        classpath = sourceSets.main.compileClasspath + sourceSets.core.compileClasspath
+    }
+    destinationDir = new File(rootProject.buildDir, "docs/web/")
+    options.doclet = "xyz.wagyourtail.doclet.webdoclet.Main"
+    options.docletpath new File(rootProject.rootDir, "buildSrc/build/libs/buildSrc.jar")
+    options.addStringOption "v", version
+    options.addStringOption "mcv", rootProject.minecraft_version
+    options {
+        links 'https://docs.oracle.com/javase/8/docs/api/', 'https://www.javadoc.io/doc/org.slf4j/slf4j-api/1.7.30/', 'https://javadoc.io/doc/com.neovisionaries/nv-websocket-client/latest/'
+    }
+}
+
+task copyWebDoc(type: Copy, dependsOn: generateWebDoc) {
+    group = "documentation"
+    description = "Copies the web documentation to the build folder"
+    from new File(rootProject.rootDir, "docs/web")
+    into new File(rootProject.buildDir, "docs/web")
+}
+
+task createDist(type: Copy) {
+    group = "build"
+    description = "Creates all files for the distribution of the project"
+    dependsOn copyPyDoc, copyTSEnv, copyWebDoc
+    from(new File(rootProject.buildDir, "docs"))
+    from(new File(project.buildDir, "libs"))
+    into new File(rootProject.rootDir, "dist")
+}
+
+build.finalizedBy(createDist)

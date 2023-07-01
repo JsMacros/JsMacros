@@ -16,7 +16,9 @@ public class GraalConfig {
     @Deprecated
     public void fromV1(JsonObject v1) {
         JsonObject obj = v1.getAsJsonObject("extraJsOptions");
-        if (obj == null) return;
+        if (obj == null) {
+            return;
+        }
         for (Map.Entry<String, JsonElement> el : obj.entrySet()) {
             extraGraalOptions.put(el.getKey(), el.getValue().getAsString());
         }
@@ -30,4 +32,5 @@ public class GraalConfig {
             fromV1(v1.getAsJsonObject());
         }
     }
+
 }

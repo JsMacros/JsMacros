@@ -31,10 +31,9 @@ public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptCo
     protected Context buildContext(File currentDir, String lang, Map<String, String> extraJsOptions, Map<String, Object> globals, Map<String, BaseLibrary> libs) throws IOException {
 
         Builder build = Context.newBuilder()
-            .engine(engine)
-            .allowAllAccess(true)
-            .allowExperimentalOptions(true);
-
+                .engine(engine)
+                .allowAllAccess(true)
+                .allowExperimentalOptions(true);
 
         for (Map.Entry<String, String> e : extraJsOptions.entrySet()) {
             try {
@@ -55,28 +54,31 @@ public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptCo
         }
 
         final Context con = build.build();
-        
+
         // Set Bindings
         final Value binds = con.getBindings(lang);
-        
-        if (globals != null) globals.forEach(binds::putMember);
+
+        if (globals != null) {
+            globals.forEach(binds::putMember);
+        }
 
         libs.forEach(binds::putMember);
 
         return con;
     }
-    
+
     @Override
     protected void exec(EventContainer<GraalScriptContext> ctx, ScriptTrigger macro, BaseEvent event) throws Exception {
         Map<String, Object> globals = new HashMap<>();
-        
+
         globals.put("event", event);
         globals.put("file", ctx.getCtx().getFile());
         globals.put("context", ctx);
 
         final GraalConfig conf = runner.config.getOptions(GraalConfig.class);
-        if (conf.extraGraalOptions == null)
+        if (conf.extraGraalOptions == null) {
             conf.extraGraalOptions = new LinkedHashMap<>();
+        }
 
         Map<String, BaseLibrary> lib = retrieveLibs(ctx.getCtx());
         String lang = Source.findLanguage(ctx.getCtx().getFile());
@@ -102,7 +104,7 @@ public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptCo
             }
         }
     }
-    
+
     @Override
     protected void exec(EventContainer<GraalScriptContext> ctx, String lang, String script, BaseEvent event) throws Exception {
         Map<String, Object> globals = new HashMap<>();
@@ -112,8 +114,9 @@ public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptCo
         globals.put("context", ctx);
 
         final GraalConfig conf = runner.config.getOptions(GraalConfig.class);
-        if (conf.extraGraalOptions == null)
+        if (conf.extraGraalOptions == null) {
             conf.extraGraalOptions = new LinkedHashMap<>();
+        }
 
         Map<String, BaseLibrary> lib = retrieveLibs(ctx.getCtx());
         lang = Source.findLanguage(new File(lang.startsWith(".") ? lang : "." + lang));
@@ -147,4 +150,5 @@ public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptCo
     public GraalScriptContext createContext(BaseEvent event, File file) {
         return new GraalScriptContext(event, file);
     }
+
 }

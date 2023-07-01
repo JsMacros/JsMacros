@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "jsmacros",
+  "version": "${version}",
+  "name": "Js Macros",
+  "description": "Javascript Macros for Fabric",
+  "authors": [
+    "wagyourtail"
+  ],
+  "contact": {
+    "homepage": "https://wagyourtail.xyz/",
+    "sources": "https://github.com/wagyourtail/JsMacros"
+  },
+  "license": "MPL-2.0",
+  "icon": "assets/jsmacros/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "xyz.wagyourtail.jsmacros.fabric.client.JsMacrosFabric"
+    ],
+    "client": [
+      "xyz.wagyourtail.jsmacros.fabric.client.JsMacrosFabric"
+    ],
+    "modmenu": [
+      "xyz.wagyourtail.jsmacros.fabric.client.ModMenuEntry"
+    ]
+  },
+  "mixins": [
+    "jsmacros.mixins.json",
+    "jsmacros-fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.9.0",
+    "minecraft": "1.20.1"
+  }
+}

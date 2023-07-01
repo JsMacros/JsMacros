@@ -40,11 +40,11 @@ public class Main implements Doclet {
     @Override
     public Set<? extends Option> getSupportedOptions() {
         return Set.of(
-            new Version(),
-            new OutputDirectory(),
-            new IgnoredItem("-doctitle", 1),
-            new IgnoredItem("-notimestamp", 0),
-            new IgnoredItem("-windowtitle", 1)
+                new Version(),
+                new OutputDirectory(),
+                new IgnoredItem("-doctitle", 1),
+                new IgnoredItem("-notimestamp", 0),
+                new IgnoredItem("-windowtitle", 1)
         );
     }
 
@@ -63,7 +63,6 @@ public class Main implements Doclet {
 
         Set<LibraryParser> libraryClasses = new LinkedHashSet<>();
         Set<EventParser> eventClasses = new LinkedHashSet<>();
-
 
         outputTS = new FileHandler(new File(OutputDirectory.outputDir, "JsMacros-" + Version.version + ".d.ts"));
 
@@ -196,8 +195,9 @@ public class Main implements Doclet {
 
     public static Object getAnnotationValue(String key, AnnotationMirror annotation) {
         for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> el : annotation.getElementValues().entrySet()) {
-            if (el.getKey().getSimpleName().toString().equals(key))
+            if (el.getKey().getSimpleName().toString().equals(key)) {
                 return el.getValue().getValue();
+            }
         }
         return null;
     }

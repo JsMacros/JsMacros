@@ -4,29 +4,26 @@ import java.io.*;
 
 /**
  * @author Wagyourtail
- *
  * @since 1.1.8
- *
  */
 public class FileHandler {
     private final File f;
-    
+
     public FileHandler(String path) {
         this(new File(path));
     }
-    
+
     public FileHandler(File path) {
         f = path;
     }
-    
+
     /**
-     *
      * writes a string to the file. this is a destructive operation that replaces the file contents.
-     * @since 1.1.8
      *
      * @param s
      * @return
      * @throws IOException
+     * @since 1.1.8
      */
     public FileHandler write(String s) throws IOException {
         try (FileWriter out = new FileWriter(f, false)) {
@@ -34,27 +31,26 @@ public class FileHandler {
         }
         return this;
     }
-    
+
     /**
      * writes a byte array to the file. this is a destructive operation that replaces the file contents.
-     * @since 1.1.8
      *
      * @param b
      * @return
      * @throws IOException
+     * @since 1.1.8
      */
     public FileHandler write(byte[] b) throws IOException {
-        try (FileOutputStream out = new FileOutputStream(f,false)) {
+        try (FileOutputStream out = new FileOutputStream(f, false)) {
             out.write(b);
         }
         return this;
     }
-    
+
     /**
-     * @since 1.1.8
-     *
      * @return
      * @throws IOException
+     * @since 1.1.8
      */
     public String read() throws IOException {
         String ret = "";
@@ -67,27 +63,25 @@ public class FileHandler {
         }
         return ret;
     }
-    
+
     /**
-     * @since 1.2.6
-     *
      * @return
      * @throws IOException
+     * @since 1.2.6
      */
     public byte[] readBytes() throws IOException {
         try (FileInputStream in = new FileInputStream(f)) {
-            byte[] bytes =  new byte[(int) f.length()];
+            byte[] bytes = new byte[(int) f.length()];
             in.read(bytes);
             return bytes;
         }
     }
-    
+
     /**
-     * @since 1.1.8
-     *
      * @param s
      * @return
      * @throws IOException
+     * @since 1.1.8
      */
     public FileHandler append(String s) throws IOException {
         try (FileWriter out = new FileWriter(f, true)) {
@@ -95,26 +89,26 @@ public class FileHandler {
         }
         return this;
     }
-    
+
     /**
-     * @since 1.2.6
-     *
      * @param b
      * @return
      * @throws IOException
+     * @since 1.2.6
      */
     public FileHandler append(byte[] b) throws IOException {
-        try (FileOutputStream out = new FileOutputStream(f,true)) {
+        try (FileOutputStream out = new FileOutputStream(f, true)) {
             out.write(b);
         }
         return this;
     }
-    
+
     public File getFile() {
         return f;
     }
-    
+
     public String toString() {
         return String.format("FileHandler:{\"file\": \"%s\"}", f.getAbsolutePath());
     }
+
 }

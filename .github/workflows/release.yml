@@ -6,220 +6,31 @@ name: Build Release V2
 # events but only for the master branch
 on:
   release:
-    types: [created]
+    types: [ created ]
 
 jobs:
 
-  build_1_20:
-    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20
+  build_latest:
+    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20.1
     with:
       branch: main-1.20
-      java_version: 17
-    
-
-  build_1_19:
-    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20
-    with:
-      branch: backport-1.19.2
-      java_version: 17
-
-  build_1_18:
-    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20
-    with:
-      branch: backport-1.18.2
-      java_version: 17
-
-  build_1_17:
-    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20
-    with:
-      branch: backport-1.17.1
-      java_version: 17
-
-  build_1_16:
-    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20
-    with:
-      branch: backport-1.16.5
-      java_version: 17
-
-  build_1_15:
-    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20
-    with:
-      branch: backport-1.15.2
-      java_version: 17
-
-  build_1_14:
-    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20
-    with:
-      branch: backport-1.14.4
-      java_version: 17
-
-#  build_1_12:
-#    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20
-#    with:
-#      branch: backport-1.12.2
-#      java_version: 17
-#
-#  build_1_8:
-#    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20
-#    with:
-#      branch: backport-1.8.9
-#      java_version: 8
-
-  deploy_1_20:
-    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.20
-    with:
-      branch: main-1.20
-      game_vers: 1.19.3
-      java_vers: 17
       GITHUB_REF: ${{ github.ref }}
+      upload_docs: true
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-    needs:
-      - build_1_20
-      - deploy_1_19
+      PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
 
-  deploy_1_19:
-    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.20
+  build_backports:
+    strategy:
+      matrix:
+        backport_version: [ 'backports/1.19.4' ]
+    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20.1
     with:
-      branch: backport-1.19.2
-      game_vers: 1.19.2
-      java_vers: 17
+      branch: ${{ matrix.backport_version }}
       GITHUB_REF: ${{ github.ref }}
+      upload_docs: false
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-    needs:
-      - build_1_19
-      - deploy_1_18
-
-  deploy_1_18:
-    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.20
-    with:
-      branch: backport-1.18.2
-      game_vers: 1.18.2
-      java_vers: 17
-      GITHUB_REF: ${{ github.ref }}
-    secrets:
-      CF_API_KEY: ${{ secrets.CF_API_KEY }}
-      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-    needs:
-      - build_1_18
-      - deploy_1_17
-
-  deploy_1_17:
-    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.20
-    with:
-      branch: backport-1.17.1
-      game_vers: 1.17.1
-      java_vers: 16
-      GITHUB_REF: ${{ github.ref }}
-    secrets:
-      CF_API_KEY: ${{ secrets.CF_API_KEY }}
-      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-    needs:
-      - build_1_17
-      - deploy_1_16
-
-  deploy_1_16:
-    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.20
-    with:
-      branch: backport-1.16.5
-      game_vers: |
-        1.16.5
-        1.16.4
-        1.16.3
-      java_vers: 8
-      GITHUB_REF: ${{ github.ref }}
-    secrets:
-      CF_API_KEY: ${{ secrets.CF_API_KEY }}
-      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-    needs:
-      - build_1_16
-      - deploy_1_15
-
-  deploy_1_15:
-    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.20
-    with:
-      branch: backport-1.15.2
-      game_vers: 1.15.2
-      java_vers: 8
-      GITHUB_REF: ${{ github.ref }}
-    secrets:
-      CF_API_KEY: ${{ secrets.CF_API_KEY }}
-      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-    needs:
-      - build_1_15
-      - deploy_1_14
-
-  deploy_1_14:
-    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.20
-    with:
-      branch: backport-1.14.4
-      game_vers: 1.14.4
-      java_vers: 8
-      GITHUB_REF: ${{ github.ref }}
-    secrets:
-      CF_API_KEY: ${{ secrets.CF_API_KEY }}
-      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-    needs:
-      - build_1_14
-#      - deploy_1_12
-
-#  deploy_1_12:
-#    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.20
-#    with:
-#      branch: backport-1.12.2
-#      game_vers: 1.12.2
-#      java_vers: 8
-#      GITHUB_REF: ${{ github.ref }}
-#    secrets:
-#      CF_API_KEY: ${{ secrets.CF_API_KEY }}
-#      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-#    needs:
-#      - build_1_12
-#      - deploy_1_8
-#
-#  deploy_1_8:
-#    uses: jsmacros/jsmacros/.github/workflows/releasedeploy.yml@main-1.20
-#    with:
-#      branch: backport-1.8.9
-#      game_vers: 1.8.9
-#      java_vers: 8
-#      GITHUB_REF: ${{ github.ref }}
-#    secrets:
-#      CF_API_KEY: ${{ secrets.CF_API_KEY }}
-#      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-#    needs:
-#      - build_1_8
-
-
-  upload_pydoc:
-    runs-on: ubuntu-latest
-    needs:
-      - build_1_20
-    steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: main-1.20
-          path: dist
-
-      - name: Install Python
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.7
-
-      - name: Install Python Deps
-        run: |
-          python -m pip install --upgrade pip
-          pip install setuptools wheel twine
-
-      - name: Upload PyDoc
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          cd dist/python
-          python setup.py sdist bdist_wheel
-          twine upload dist/*
+      PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}

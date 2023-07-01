@@ -46,13 +46,13 @@ public class Main implements Doclet {
     @Override
     public Set<? extends Option> getSupportedOptions() {
         return Set.of(
-            new Version(),
-            new McVersion(),
-            new OutputDirectory(),
-            new Links(),
-            new IgnoredItem("-doctitle", 1),
-            new IgnoredItem("-notimestamp", 0),
-            new IgnoredItem("-windowtitle", 1)
+                new Version(),
+                new McVersion(),
+                new OutputDirectory(),
+                new Links(),
+                new IgnoredItem("-doctitle", 1),
+                new IgnoredItem("-notimestamp", 0),
+                new IgnoredItem("-windowtitle", 1)
         );
     }
 
@@ -80,7 +80,9 @@ public class Main implements Doclet {
             //create package-list
             StringBuilder pkgList = new StringBuilder();
             elements.stream().filter(e -> e.getKind() == ElementKind.PACKAGE).map(e -> (PackageElement) e).forEach(e -> {
-                if (Links.externalPackages.containsKey(e.getQualifiedName().toString())) return;
+                if (Links.externalPackages.containsKey(e.getQualifiedName().toString())) {
+                    return;
+                }
                 pkgList.append(e.getQualifiedName()).append("\n");
             });
             pkgList.setLength(pkgList.length() - 1);
@@ -117,8 +119,6 @@ public class Main implements Doclet {
             }
             new FileHandler(new File(outDir, "search-list")).write(searchList.toString());
 
-
-
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -126,11 +126,11 @@ public class Main implements Doclet {
         return true;
     }
 
-
     public static Object getAnnotationValue(String key, AnnotationMirror annotation) {
         for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> el : annotation.getElementValues().entrySet()) {
-            if (el.getKey().getSimpleName().toString().equals(key))
+            if (el.getKey().getSimpleName().toString().equals(key)) {
                 return el.getValue().getValue();
+            }
         }
         return null;
     }

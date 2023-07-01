@@ -1,3 +1,4 @@
+declare function load(source: string | Java.java.io.File | Java.java.net.URL): void;
 
 /// <reference lib="ES2022"/>
 
@@ -416,6 +417,7 @@ declare namespace Packages {
                 addAll(elements: JavaCollection<T>): boolean;
                 get(index: int): T;
                 indexOf(element: T): number;
+
                 lastIndexOf(element: T): number;
                 remove(index: int): T;
                 remove(element: T): boolean;
@@ -445,7 +447,9 @@ declare namespace Packages {
             interface Map<K, V> extends JavaObject, Record<string | number, V> {
 
                 clear(): void;
+
                 containsKey(key: K): boolean;
+
                 containsValue(value: V): boolean;
                 entrySet(): JavaSet<java.util.Map$Entry<K, V>>;
                 equals(object: JavaMap<K, V>): boolean;
@@ -459,7 +463,9 @@ declare namespace Packages {
                 remove(key: K): V | null;
                 remove(key: K, value: V): boolean;
                 replace(key: K, value: V): V;
+
                 replace(key: K, oldValue: V, newValue: V): boolean;
+
                 size(): number;
                 values(): JavaCollection<V>;
 
@@ -496,32 +502,54 @@ declare namespace Packages {
             interface File extends JavaObject {
 
                 canExecute(): boolean;
+
                 canRead(): boolean;
+
                 canWrite(): boolean;
+
                 createNewFile(): boolean;
+
                 delete(): boolean;
+
                 deleteOnExit(): void;
+
                 exists(): boolean;
+
                 getAbsolutePath(): string;
+
                 getCanonicalPath(): string;
+
                 getName(): string;
+
                 getParent(): string;
+
                 getPath(): string;
+
                 isAbsolute(): boolean;
+
                 isDirectory(): boolean;
+
                 isFile(): boolean;
+
                 isHidden(): boolean;
+
                 length(): number;
                 list(): JavaArray<string>;
                 listFiles(): JavaArray<File>;
                 mkdir(): boolean;
+
                 mkdirs(): boolean;
+
                 renameTo(dest: File): boolean;
+
                 setExecutable(executable: boolean, ownerOnly?: boolean): boolean;
                 setLastModified(time: long): boolean;
                 setReadable(readable: boolean, ownerOnly?: boolean): boolean;
+
                 setWritable(writable: boolean, ownerOnly?: boolean): boolean;
+
                 toString(): string;
+
                 toURI(): java.net.URI;
 
             }
@@ -547,11 +575,17 @@ declare namespace Packages {
             interface URL extends JavaObject {
 
                 getFile(): string;
+
                 getPath(): string;
+
                 getProtocol(): string;
+
                 getRef(): string;
+
                 getQuery(): string;
+
                 toString(): string;
+
                 toURI(): URI;
 
             }
@@ -574,15 +608,25 @@ declare namespace Packages {
             interface URI extends java.lang.Comparable<URI>, java.io.Serializable {
 
                 getHost(): string;
+
                 getPath(): string;
+
                 getPort(): number;
+
                 getQuery(): string;
+
                 getScheme(): string;
+
                 normalize(): URI;
+
                 relativize(uri: URI): URI;
+
                 resolve(str: string): URI;
+
                 toASCIIString(): string;
+
                 toString(): string;
+
                 toURL(): URL;
 
             }

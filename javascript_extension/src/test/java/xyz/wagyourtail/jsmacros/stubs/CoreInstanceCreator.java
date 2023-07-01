@@ -15,13 +15,14 @@ public class CoreInstanceCreator {
         Core<ProfileStub, EventRegistryStub> instance = (Core) Core.getInstance();
         if (instance == null) {
             instance = Core.createInstance(
-                EventRegistryStub::new,
-                ProfileStub::new,
-                configFolder,
-                macroFolder,
-                LOGGER
+                    EventRegistryStub::new,
+                    ProfileStub::new,
+                    configFolder,
+                    macroFolder,
+                    LOGGER
             );
         }
         return instance;
     }
+
 }

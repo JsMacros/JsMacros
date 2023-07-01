@@ -12,7 +12,14 @@
         "scripts/**/*.ts",
         "headers/*.d.ts"
     ],
-    "exclude": [
-        "build/*"
-    ]
+    "outDir": "./build",
+    "skipLibCheck": true
+  },
+  "include": [
+    "scripts/**/*.ts",
+    "headers/*.d.ts"
+  ],
+  "exclude": [
+    "build/*"
+  ]
 }

@@ -44,10 +44,14 @@ public class PackageTree {
         if (enclose != null) {
             String[] pkg = ((PackageElement)enclose).getQualifiedName().toString().split("\\.");
             for (int i = pkg.length - 1; i >= 0; --i) {
-                if (pkg[i].equals("")) continue;
+                if (pkg[i].equals("")) {
+                    continue;
+                }
                 enclosing.push(pkg[i]);
             }
-            if (predefinedClasses.contains(String.join(".", pkg) + "." + clazz.getSimpleName())) return;
+            if (predefinedClasses.contains(String.join(".", pkg) + "." + clazz.getSimpleName())) {
+                return;
+            }
         }
         addClassInternal(enclosing, clazz);
     }
@@ -146,4 +150,5 @@ public class PackageTree {
         }
         return result;
     }
+
 }

@@ -28,4 +28,5 @@ public class StringHelpers {
     public static String addToLineStarts(String string, String start) {
         return start + string.replaceAll("\n", "\n" + start);
     }
+
 }

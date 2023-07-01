@@ -67,16 +67,16 @@ public final class GuestExceptionSimplifier {
             builder.append("ArityError on method ").append(className).append(".").append(functionName).append("\n");
             // Only count public methods, including static ones, defined in that class
             int[] possibleArities = Arrays.stream(clazz.getMethods())
-                .filter(m -> m.getName().equals(functionName))
-                .mapToInt(Method::getParameterCount)
-                .sorted()
-                .distinct()
-                .toArray();
+                    .filter(m -> m.getName().equals(functionName))
+                    .mapToInt(Method::getParameterCount)
+                    .sorted()
+                    .distinct()
+                    .toArray();
             builder.append("  Expected amount of arguments: ")
-                .append(possibleArities.length == 1 ? possibleArities[0] : Arrays.toString(possibleArities))
-                .append(", but got ")
-                .append(arityException.getActualArity())
-                .append(" arguments.");
+                    .append(possibleArities.length == 1 ? possibleArities[0] : Arrays.toString(possibleArities))
+                    .append(", but got ")
+                    .append(arityException.getActualArity())
+                    .append(" arguments.");
             return builder.toString();
         }
         return originalMessage;
@@ -165,4 +165,5 @@ public final class GuestExceptionSimplifier {
         }
         return originalMessage;
     }
+
 }
