@@ -17,7 +17,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
  * @author Wagyourtail
  */
 @SuppressWarnings("unused")
-public class Line3D {
+public class Line3D implements RenderElement3D {
     public Vec3D pos;
     public int color;
     public boolean cull;
@@ -75,7 +75,8 @@ public class Line3D {
         this.color = (alpha << 24) | (color & 0xFFFFFF);
     }
 
-    public void render(DrawContext drawContext) {
+    @Override
+    public void render(DrawContext drawContext, BufferBuilder builder, float tickDelta) {
         MatrixStack matrixStack = drawContext.getMatrices();
         final boolean cull = !this.cull;
         if (cull) {

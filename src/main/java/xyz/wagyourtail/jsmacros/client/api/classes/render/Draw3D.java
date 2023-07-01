@@ -1,22 +1,23 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3d;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Box;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line3D;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.RenderElement3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Surface;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * {@link Draw2D} is cool
@@ -26,17 +27,22 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class Draw3D {
-    private final List<Box> boxes = new ArrayList<>();
-    private final List<Line3D> lines = new ArrayList<>();
-
-    private final List<Surface> surfaces = new ArrayList<>();
+    private final Set<RenderElement3D> elements = new TreeSet<>();
 
     /**
      * @return
      * @since 1.0.6
      */
     public List<Box> getBoxes() {
-        return ImmutableList.copyOf(boxes);
+        List<Box> list = new ArrayList<>();
+        synchronized (elements) {
+            for (RenderElement3D element : elements) {
+                if (element instanceof Box) {
+                    list.add((Box) element);
+                }
+            }
+        }
+        return list;
     }
 
     /**
@@ -44,7 +50,15 @@ public class Draw3D {
      * @since 1.0.6
      */
     public List<Line3D> getLines() {
-        return ImmutableList.copyOf(lines);
+        List<Line3D> list = new ArrayList<>();
+        synchronized (elements) {
+            for (RenderElement3D element : elements) {
+                if (element instanceof Line3D) {
+                    list.add((Line3D) element);
+                }
+            }
+        }
+        return list;
     }
 
     /**
@@ -52,7 +66,34 @@ public class Draw3D {
      * @since 1.6.5
      */
     public List<Surface> getDraw2Ds() {
-        return ImmutableList.copyOf(surfaces);
+        List<Surface> list = new ArrayList<>();
+        synchronized (elements) {
+            for (RenderElement3D element : elements) {
+                if (element instanceof Surface) {
+                    list.add((Surface) element);
+                }
+            }
+        }
+        return list;
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public void clear() {
+        synchronized (elements) {
+            elements.clear();
+        }
+    }
+
+    /**
+     * @since 1.8.4
+     * @param element
+     */
+    public void reAddElement(RenderElement3D element) {
+        synchronized (elements) {
+            elements.add(element);
+        }
     }
 
     /**
@@ -60,8 +101,8 @@ public class Draw3D {
      * @since 1.8.4
      */
     public void addBox(Box box) {
-        synchronized (boxes) {
-            boxes.add(box);
+        synchronized (elements) {
+            elements.add(box);
         }
     }
 
@@ -70,8 +111,8 @@ public class Draw3D {
      * @since 1.8.4
      */
     public void addLine(Line3D line) {
-        synchronized (lines) {
-            lines.add(line);
+        synchronized (elements) {
+            elements.add(line);
         }
     }
 
@@ -80,8 +121,8 @@ public class Draw3D {
      * @since 1.8.4
      */
     public void addSurface(Surface surface) {
-        synchronized (surfaces) {
-            surfaces.add(surface);
+        synchronized (elements) {
+            elements.add(surface);
         }
     }
 
@@ -118,8 +159,8 @@ public class Draw3D {
      */
     public Box addBox(double x1, double y1, double z1, double x2, double y2, double z2, int color, int fillColor, boolean fill, boolean cull) {
         Box b = new Box(x1, y1, z1, x2, y2, z2, color, fillColor, fill, cull);
-        synchronized (boxes) {
-            boxes.add(b);
+        synchronized (elements) {
+            elements.add(b);
         }
         return b;
     }
@@ -145,8 +186,8 @@ public class Draw3D {
 
     public Box addBox(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, int fillColor, int fillAlpha, boolean fill, boolean cull) {
         Box b = new Box(x1, y1, z1, x2, y2, z2, color, alpha, fillColor, fillAlpha, fill, cull);
-        synchronized (boxes) {
-            boxes.add(b);
+        synchronized (elements) {
+            elements.add(b);
         }
         return b;
     }
@@ -157,8 +198,8 @@ public class Draw3D {
      * @since 1.0.6
      */
     public Draw3D removeBox(Box b) {
-        synchronized (boxes) {
-            boxes.remove(b);
+        synchronized (elements) {
+            elements.remove(b);
         }
         return this;
     }
@@ -192,8 +233,8 @@ public class Draw3D {
      */
     public Line3D addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color, boolean cull) {
         Line3D l = new Line3D(x1, y1, z1, x2, y2, z2, color, cull);
-        synchronized (lines) {
-            lines.add(l);
+        synchronized (elements) {
+            elements.add(l);
         }
         return l;
     }
@@ -230,8 +271,8 @@ public class Draw3D {
      */
     public Line3D addLine(double x1, double y1, double z1, double x2, double y2, double z2, int color, int alpha, boolean cull) {
         Line3D l = new Line3D(x1, y1, z1, x2, y2, z2, color, alpha, cull);
-        synchronized (lines) {
-            lines.add(l);
+        synchronized (elements) {
+            elements.add(l);
         }
         return l;
     }
@@ -242,8 +283,8 @@ public class Draw3D {
      * @since 1.0.6
      */
     public Draw3D removeLine(Line3D l) {
-        synchronized (lines) {
-            lines.remove(l);
+        synchronized (elements) {
+            elements.remove(l);
         }
         return this;
     }
@@ -432,8 +473,8 @@ public class Draw3D {
                 renderBack,
                 cull
         );
-        synchronized (surfaces) {
-            this.surfaces.add(surface);
+        synchronized (elements) {
+            this.elements.add(surface);
         }
         return surface;
     }
@@ -442,8 +483,8 @@ public class Draw3D {
      * @since 1.6.5
      */
     public void removeDraw2D(Surface surface) {
-        synchronized (this.surfaces) {
-            this.surfaces.remove(surface);
+        synchronized (elements) {
+            this.elements.remove(surface);
         }
     }
 
@@ -524,22 +565,13 @@ public class Draw3D {
         Vec3d camPos = mc.gameRenderer.getCamera().getPos();
         matrixStack.translate(-camPos.x, -camPos.y, -camPos.z);
 
-        //render
-        synchronized (boxes) {
-            for (Box b : boxes) {
-                b.render(drawContext);
-            }
-        }
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
 
-        synchronized (lines) {
-            for (Line3D l : lines) {
-                l.render(drawContext);
-            }
-        }
-
-        synchronized (surfaces) {
-            for (Surface s : surfaces) {
-                s.render3D(drawContext, 0, 0, tickDelta);
+        //sort elements by type
+        synchronized (elements) {
+            for (RenderElement3D element : elements) {
+                element.render(drawContext, bufferBuilder, tickDelta);
             }
         }
 

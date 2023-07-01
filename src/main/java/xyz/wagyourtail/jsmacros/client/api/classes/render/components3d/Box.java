@@ -17,7 +17,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
  * @author Wagyourtail
  */
 @SuppressWarnings("unused")
-public class Box {
+public class Box implements RenderElement3D {
     public Vec3D pos;
     public int color;
     public int fillColor;
@@ -114,7 +114,8 @@ public class Box {
         this.fill = fill;
     }
 
-    public void render(DrawContext drawContext) {
+    @Override
+    public void render(DrawContext drawContext, BufferBuilder builder, float tickDelta) {
         MatrixStack matrixStack = drawContext.getMatrices();
         final boolean cull = !this.cull;
         int a = (color >> 24) & 0xFF;
