@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
@@ -115,8 +114,7 @@ public class Box implements RenderElement3D {
     }
 
     @Override
-    public void render(DrawContext drawContext, BufferBuilder builder, float tickDelta) {
-        MatrixStack matrixStack = drawContext.getMatrices();
+    public void render(MatrixStack matrixStack, BufferBuilder builder, float tickDelta) {
         final boolean cull = !this.cull;
         int a = (color >> 24) & 0xFF;
         int r = (color >> 16) & 0xFF;

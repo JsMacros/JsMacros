@@ -207,7 +207,7 @@ public class FClient extends PerExecLibrary {
             } else {
                 mc.disconnect();
             }
-            ConnectScreen.connect(null, mc, new ServerAddress(ip, port), new ServerInfo("server", new ServerAddress(ip, port).toString(), false), false);
+            ConnectScreen.connect(null, mc, new ServerAddress(ip, port), new ServerInfo("server", new ServerAddress(ip, port).toString(), false));
         });
     }
 

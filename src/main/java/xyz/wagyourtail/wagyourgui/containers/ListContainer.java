@@ -2,8 +2,8 @@ package xyz.wagyourtail.wagyourgui.containers;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
@@ -12,6 +12,8 @@ import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+
+import static net.minecraft.client.gui.DrawableHelper.fill;
 
 public class ListContainer extends MultiElementContainer<IContainerParent> {
     private final List<Text> list;
@@ -64,20 +66,20 @@ public class ListContainer extends MultiElementContainer<IContainerParent> {
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
 
         for (ClickableWidget b : ImmutableList.copyOf(this.buttons)) {
             if (b instanceof Button && ((Button) b).hovering && ((Button) b).cantRenderAllText()) {
                 // border
                 int width = textRenderer.getWidth(b.getMessage());
-                drawContext.fill(mouseX - 3, mouseY, mouseX + width + 3, mouseY + 1, 0x7F7F7F7F);
-                drawContext.fill(mouseX + width + 2, mouseY - textRenderer.fontHeight - 3, mouseX + width + 3, mouseY, 0x7F7F7F7F);
-                drawContext.fill(mouseX - 3, mouseY - textRenderer.fontHeight - 3, mouseX - 2, mouseY, 0x7F7F7F7F);
-                drawContext.fill(mouseX - 3, mouseY - textRenderer.fontHeight - 4, mouseX + width + 3, mouseY - textRenderer.fontHeight - 3, 0x7F7F7F7F);
+                fill(drawContext, mouseX - 3, mouseY, mouseX + width + 3, mouseY + 1, 0x7F7F7F7F);
+                fill(drawContext, mouseX + width + 2, mouseY - textRenderer.fontHeight - 3, mouseX + width + 3, mouseY, 0x7F7F7F7F);
+                fill(drawContext, mouseX - 3, mouseY - textRenderer.fontHeight - 3, mouseX - 2, mouseY, 0x7F7F7F7F);
+                fill(drawContext, mouseX - 3, mouseY - textRenderer.fontHeight - 4, mouseX + width + 3, mouseY - textRenderer.fontHeight - 3, 0x7F7F7F7F);
 
                 // fill
-                drawContext.fill(mouseX - 2, mouseY - textRenderer.fontHeight - 3, mouseX + width + 2, mouseY, 0xFF000000);
-                drawContext.drawTextWithShadow(textRenderer, b.getMessage(), mouseX, mouseY - textRenderer.fontHeight - 1, 0xFFFFFF);
+                fill(drawContext, mouseX - 2, mouseY - textRenderer.fontHeight - 3, mouseX + width + 2, mouseY, 0xFF000000);
+                textRenderer.drawWithShadow(drawContext, b.getMessage(), mouseX, mouseY - textRenderer.fontHeight - 1, 0xFFFFFF);
             }
         }
     }

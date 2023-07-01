@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
 import net.minecraft.block.entity.SignBlockEntity;
-import net.minecraft.block.entity.SignText;
 import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
@@ -12,20 +11,17 @@ import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 @Mixin(AbstractSignEditScreen.class)
 public abstract class MixinSignEditScreen implements ISignEditScreen {
 
-    @Shadow
-    @Final
-    private SignBlockEntity blockEntity;
+    @Shadow @Final
+    protected SignBlockEntity blockEntity;
 
-    @Shadow
-    @Final
-    private boolean front;
 
-    @Shadow
-    private SignText text;
+    @Shadow @Final
+    protected String[] text;
 
     @Override
     public void jsmacros_setLine(int line, String text) {
-        this.blockEntity.setText(this.text.withMessage(line, Text.of(text)), this.front);
+        this.text[line] = text;
+        this.blockEntity.setTextOnRow(line, Text.literal(text));
     }
 
 }

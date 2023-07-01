@@ -37,7 +37,7 @@ public class BlockHelper extends BaseHelper<Block> {
     }
 
     public boolean canMobSpawnInside() {
-        return base.canMobSpawnInside(base.getDefaultState());
+        return base.canMobSpawnInside();
     }
 
     /**

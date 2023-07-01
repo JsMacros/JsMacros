@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
@@ -759,7 +759,7 @@ public interface IDraw2D<T> {
      *
      * @param drawContext
      */
-    void render(DrawContext drawContext);
+    void render(MatrixStack drawContext);
 
     /**
      * @param zIndex

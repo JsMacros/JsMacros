@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.overlays;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
@@ -10,6 +10,8 @@ import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
 import java.util.List;
+
+import static net.minecraft.client.gui.DrawableHelper.fill;
 
 public class AboutOverlay extends OverlayContainer {
     private List<OrderedText> text;
@@ -41,22 +43,22 @@ public class AboutOverlay extends OverlayContainer {
         this.vcenter = ((height - 12) - (lines * textRenderer.fontHeight)) / 2;
     }
 
-    protected void renderMessage(DrawContext drawContext) {
+    protected void renderMessage(MatrixStack drawContext) {
         for (int i = 0; i < lines; ++i) {
             int w = textRenderer.getWidth(text.get(i));
-            drawContext.drawText(textRenderer, text.get(i), (int) (x + width / 2F - w / 2F), y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF, false);
+            textRenderer.draw(drawContext, text.get(i), (int) (x + width / 2F - w / 2F), y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF);
         }
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
         renderBackground(drawContext);
 
-        drawContext.drawTextWrapped(textRenderer, Text.translatable("jsmacros.about"), x + 3, y + 3, width - 14, 0xFFFFFF);
+        textRenderer.drawTrimmed(drawContext, Text.translatable("jsmacros.about"), x + 3, y + 3, width - 14, 0xFFFFFF);
         renderMessage(drawContext);
 
-        drawContext.fill(x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
-        drawContext.fill(x + 2, y + height - 15, x + width - 2, y + height - 14, 0xFFFFFFFF);
+        fill(drawContext, x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
+        fill(drawContext, x + 2, y + height - 15, x + width - 2, y + height - 14, 0xFFFFFFFF);
         super.render(drawContext, mouseX, mouseY, delta);
 
     }
