@@ -15,6 +15,8 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -35,6 +37,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     private static final Style LORE_STYLE = Style.EMPTY.withColor(Formatting.DARK_PURPLE).withItalic(true);
     protected static final MinecraftClient mc = MinecraftClient.getInstance();
 
+    @DocletReplaceParams("id: ItemId, count: int")
     public ItemStackHelper(String id, int count) {
         super(new ItemStack(Registries.ITEM.get(RegistryHelper.parseIdentifier(id)), count));
     }
@@ -108,6 +111,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * enchanted with the specified enchantment.
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: EnchantmentId")
     public EnchantmentHelper getEnchantment(String id) {
         return getEnchantments().stream().filter(enchantmentHelper -> enchantmentHelper.getName().equals(id)).findFirst().orElse(null);
     }
@@ -138,6 +142,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * otherwise.
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: EnchantmentId")
     public boolean hasEnchantment(String enchantment) {
         String toCheck = RegistryHelper.parseNameSpace(enchantment);
         return getEnchantments().stream().anyMatch(e -> e.getId().equals(toCheck));
@@ -295,6 +300,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     /**
      * @return
      */
+    @DocletReplaceReturn("ItemId")
     @Deprecated
     public String getItemID() {
         return getItemId();
@@ -304,6 +310,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      * @since 1.6.4
      */
+    @DocletReplaceReturn("ItemId")
     public String getItemId() {
         return Registries.ITEM.getId(base.getItem()).toString();
     }
@@ -312,6 +319,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      * @since 1.8.2
      */
+    @DocletReplaceReturn("JavaList<ItemTag>")
     public List<String> getTags() {
         return base.getRegistryEntry().streamTags().map(t -> t.id().toString()).collect(Collectors.toList());
     }

@@ -33,7 +33,7 @@ public interface IFWrapper<T> {
      * @return a new {@link MethodWrapper MethodWrapper}
      * @since 1.4.0
      */
-    @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
+    @DocletReplaceParams("c: (arg0: A, arg1: B) => R | void")
     <A, B, R> MethodWrapper<A, B, R, ?> methodToJava(T c);
 
     /**
@@ -41,7 +41,7 @@ public interface IFWrapper<T> {
      * @return a new {@link MethodWrapper MethodWrapper}
      * @since 1.4.0
      */
-    @DocletReplaceParams("c: (arg0?: A, arg1?: B) => R | void")
+    @DocletReplaceParams("c: (arg0: A, arg1: B) => R | void")
     <A, B, R> MethodWrapper<A, B, R, ?> methodToJavaAsync(T c);
 
     /**
@@ -56,7 +56,7 @@ public interface IFWrapper<T> {
      * @return
      * @since 1.8.0
      */
-    @DocletReplaceParams("priority: number, c: (arg0?: A, arg1?: B) => R | void")
+    @DocletReplaceParams("priority: int, c: (arg0: A, arg1: B) => R | void")
     default <A, B, R> MethodWrapper<A, B, R, ?> methodToJavaAsync(int priority, T c) {
         return methodToJavaAsync(c);
     }

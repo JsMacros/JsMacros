@@ -6,6 +6,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.InputUtil.Key;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
@@ -32,6 +34,7 @@ public class FKeyBind extends BaseLibrary {
      * @param keyName
      * @return the raw minecraft keycode class
      */
+    @DocletReplaceParams("keyName: Key")
     public Key getKeyCode(String keyName) {
         try {
             return InputUtil.fromTranslationKey(keyName);
@@ -44,6 +47,7 @@ public class FKeyBind extends BaseLibrary {
      * @return A {@link java.util.Map Map} of all the minecraft keybinds.
      * @since 1.2.2
      */
+    @DocletReplaceReturn("JavaMap<Bind, Key>")
     public Map<String, String> getKeyBindings() {
         Map<String, String> keys = new HashMap<>();
         for (KeyBinding key : ImmutableList.copyOf(mc.options.allKeys)) {
@@ -59,6 +63,7 @@ public class FKeyBind extends BaseLibrary {
      * @param key
      * @since 1.2.2
      */
+    @DocletReplaceParams("bind: Bind, key: Key")
     public void setKeyBind(String bind, String key) {
         for (KeyBinding keybind : mc.options.allKeys) {
             if (keybind.getTranslationKey().equals(bind)) {
@@ -75,6 +80,7 @@ public class FKeyBind extends BaseLibrary {
      * @param keyName
      * @param keyState
      */
+    @DocletReplaceParams("keyName: Key, keyState: boolean")
     public void key(String keyName, boolean keyState) {
         key(getKeyCode(keyName), keyState);
     }
@@ -85,6 +91,7 @@ public class FKeyBind extends BaseLibrary {
      * @param keyName the name of the key to press
      * @since 1.8.4
      */
+    @DocletReplaceParams("keyName: Key")
     public void pressKey(String keyName) {
         key(keyName, true);
     }
@@ -95,6 +102,7 @@ public class FKeyBind extends BaseLibrary {
      * @param keyName the name of the key to release
      * @since 1.8.4
      */
+    @DocletReplaceParams("keyName: Key")
     public void releaseKey(String keyName) {
         key(keyName, false);
     }
@@ -128,6 +136,7 @@ public class FKeyBind extends BaseLibrary {
      * @param keyState
      * @since 1.2.2
      */
+    @DocletReplaceParams("keyBind: Bind, keyState: boolean")
     public void keyBind(String keyBind, boolean keyState) {
         for (KeyBinding key : mc.options.allKeys) {
             if (key.getTranslationKey().equals(keyBind)) {
@@ -153,6 +162,7 @@ public class FKeyBind extends BaseLibrary {
      * @param keyBind the name of the keybinding to press
      * @since 1.8.4
      */
+    @DocletReplaceParams("keyBind: Bind")
     public void pressKeyBind(String keyBind) {
         keyBind(keyBind, true);
     }
@@ -163,6 +173,7 @@ public class FKeyBind extends BaseLibrary {
      * @param keyBind the name of the keybinding to release
      * @since 1.8.4
      */
+    @DocletReplaceParams("keyBind: Bind")
     public void releaseKeyBind(String keyBind) {
         keyBind(keyBind, false);
     }
@@ -191,6 +202,8 @@ public class FKeyBind extends BaseLibrary {
      * @return a set of currently pressed keys.
      * @since 1.2.6 (turned into set instead of list in 1.6.5)
      */
+
+    @DocletReplaceReturn("JavaSet<Key>")
     public Set<String> getPressedKeys() {
         return KeyTracker.getPressedKeys();
     }

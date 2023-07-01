@@ -1,6 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 
 import net.minecraft.entity.damage.DamageSource;
+import xyz.wagyourtail.doclet.DocletEnumType;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
@@ -10,6 +12,8 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
 @Event("Heal")
 public class EventHeal implements BaseEvent {
+    @DocletReplaceReturn("HealSource")
+    @DocletEnumType(name = "HealSource", type = "DamageSource")
     public final String source;
     public final float health;
     public final float change;

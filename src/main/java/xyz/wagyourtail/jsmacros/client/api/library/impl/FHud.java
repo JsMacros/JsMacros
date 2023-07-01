@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import xyz.wagyourtail.doclet.DocletEnumType;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.*;
@@ -67,6 +69,7 @@ public class FHud extends BaseLibrary {
      * @see IScreen
      * @since 1.2.7
      */
+
     public IScreen getOpenScreen() {
         return (IScreen) mc.currentScreen;
     }
@@ -112,6 +115,34 @@ public class FHud extends BaseLibrary {
      * @return The name of the currently open screen.
      * @since 1.0.5, renamed from {@code getOpenScreen} in 1.2.7
      */
+    @DocletReplaceReturn("ScreenName")
+    @DocletEnumType(name = "HandledScreenName", type =
+            """
+            | `${ 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 } Row Chest`
+            | '3x3 Container'
+            | 'Anvil'
+            | 'Beacon'
+            | 'Blast Furnace'
+            | 'Brewing Stand'
+            | 'Crafting Table'
+            | 'Enchanting Table'
+            | 'Furnace'
+            | 'Grindstone'
+            | 'Hopper'
+            | 'Loom'
+            | 'Villager'
+            | 'Shulker Box'
+            | 'Smithing Table'
+            | 'Smoker'
+            | 'Cartography Table'
+            | 'Stonecutter'
+            | 'Survival Inventory'
+            | 'Horse'
+            | 'Creative Inventory'
+            | 'Chat'
+            | 'unknown'
+            """
+    )
     public String getOpenScreenName() {
         return JsMacros.getScreenName(mc.currentScreen);
     }

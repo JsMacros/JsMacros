@@ -9,25 +9,23 @@ import xyz.wagyourtail.StringHelpers;
 import xyz.wagyourtail.doclet.options.IgnoredItem;
 import xyz.wagyourtail.doclet.options.OutputDirectory;
 import xyz.wagyourtail.doclet.options.Version;
-import xyz.wagyourtail.doclet.tsdoclet.parsers.ClassParser;
-import xyz.wagyourtail.doclet.tsdoclet.parsers.EventParser;
-import xyz.wagyourtail.doclet.tsdoclet.parsers.LibraryParser;
+import xyz.wagyourtail.doclet.tsdoclet.parsers.*;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
+import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Main implements Doclet {
     public static Reporter reporter;
     public static FileHandler outputTS;
-    public static PackageTree classes = new PackageTree("_javatypes");
+    public static PackageTree classes = new PackageTree("Packages");
     public static DocTrees treeUtils;
+    public static Elements elementUtils;
+    public static Map<String, String> enumTypes = new HashMap<>();
 
     @Override
     public void init(Locale locale, Reporter reporter) {
@@ -59,6 +57,9 @@ public class Main implements Doclet {
     public boolean run(DocletEnvironment environment) {
         Set<? extends Element> elements = environment.getIncludedElements();
         treeUtils = environment.getDocTrees();
+        elementUtils = environment.getElementUtils();
+
+        AbstractParser.initObjectElement();
 
         Set<LibraryParser> libraryClasses = new LinkedHashSet<>();
         Set<EventParser> eventClasses = new LinkedHashSet<>();
@@ -92,34 +93,97 @@ public class Main implements Doclet {
         });
 
         try {
-            outputTS.append("""
-                    declare const event: Events.BaseEvent;
-                    declare const file: _javatypes.java.io.File;
-                    declare const context: _javatypes.xyz.wagyourtail.jsmacros.core.language.EventContainer<any>;
+            
+            outputTS.append(
+                """
+                \n\
+                /**
+                 * The global context  \n\
+                 * If you're trying to access the context in {@link JsMacros.on},  \n\
+                 * use the second param of callback
+                 */
+                declare const context: EventContainer;
+                /**
+                 * Cast event in javascript:  \n\
+                 * Remove the `\\` between `*` and `///` because jsdoc doesn't escape it
+                 * ```js
+                 * /** @type {Events.Service} *\\/// @ts-ignore
+                 * ```
+                 * ```js
+                 * const e = event;
+                 * ```
+                 * Cast event in typescript:
+                 * ```ts
+                 * const e = event as Events.Service;
+                 * ```
+                 */
+                declare const event: Events.BaseEvent;
+                declare const file: Packages.java.io.File;
 
-                    declare namespace Events {
-                        export interface BaseEvent extends _javatypes.java.lang.Object {
-                            getEventName(): string;
-                        }""");
+                declare namespace Events {
 
+                    interface BaseEvent extends JavaObject {
+
+                        getEventName(): string;
+
+                    }"""
+            );
             for (EventParser event : eventClasses) {
-                outputTS.append(StringHelpers.tabIn("\n\n" + event.genTSInterface()));
+                outputTS.append("\n\n" + StringHelpers.tabIn(event.genTSInterface()));
             }
 
-            outputTS.append("\n}");
+            // for type-safe event listener
+            outputTS.append("\n\n}\n\ninterface Events {\n");
+            for (EventParser event : eventClasses) {
+                outputTS.append("\n    ").append(event.getName())
+                    .append(": Events.").append(event.getName()).append(";");
+            }
+            outputTS.append("\n\n}");
 
             for (LibraryParser lib : libraryClasses) {
-                outputTS.append("\n\n" + lib.genTSInterface());
+                outputTS.append("\n\n").append(lib.genTSInterface());
             }
 
-            outputTS.append("\n\ndeclare " + classes.genTSTree());
-            outputTS.append("\n\ndeclare namespace Java {");
-            for (ClassParser clz : classes.getAllClasses()) {
-                outputTS.append("\n").append("    export function type(className: \"").append(clz.getType().getQualifiedName().toString()).append("\"): ")
-                        .append("_javatypes.java.lang.Class<_javatypes.").append(clz.getType().getQualifiedName().toString().replace(".function.", "._function."))
-                        .append("> & _javatypes.").append(clz.getType().getQualifiedName().toString().replace(".function.", "._function.")).append(".static");
+            outputTS.append("\n\ndeclare ").append(classes.genTSTree()).append("\n");
+
+            // short alias of jsmacros types, for jsdoc / type casting / type annotation and more
+            // also used by some DocletReplace annotations
+            Set<String> duplicateCheck = new HashSet<>();
+            Set<String> sorter = new TreeSet<>();
+            for (ClassParser clz : classes.getXyzClasses()) {
+                if (!duplicateCheck.add(clz.getClassName(false))) continue;
+                clz.isPackage = false; // to trick it transfer full type
+                sorter.add("\ntype " + clz.getClassName(true, true) + " = " +
+                    clz.getQualifiedType() + ";");
+                clz.isPackage = true;
             }
-            outputTS.append("\n}");
+            outputTS.append(String.join("", sorter));
+
+            // append number enums here because they are very unlikely to change
+            outputTS.append("\n\n// Enum types\n").append(
+                """
+                type Bit    = 1 | 0;
+                type Trit   = 2 | Bit;
+                type Dit    = 3 | Trit;
+                type Pentit = 4 | Dit;
+                type Hexit  = 5 | Pentit;
+                type Septit = 6 | Hexit;
+                type Octit  = 7 | Septit;
+
+                type Side = Hexit;
+                type HotbarSlot = Octit | 8;
+                type HotbarSwapSlot = HotbarSlot | OffhandSlot;
+                type ClickSlotButton = HotbarSwapSlot | 9 | 10;
+                type OffhandSlot = 40;
+
+                """
+            );
+
+            for (String key : new TreeSet<>(enumTypes.keySet())) {
+                outputTS.append("type ").append(key).append(" = ")
+                    .append(enumTypes.get(key));
+                if (!enumTypes.get(key).contains("\n")) outputTS.append(";\n");
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

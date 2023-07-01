@@ -5,6 +5,8 @@ import net.minecraft.advancement.AdvancementManager;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAdvancementManager;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinClientAdvancementManager;
@@ -31,6 +33,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @return a map of all advancement ids and their advancement.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaMap<AdvancementId, AdvancementHelper>")
     public Map<String, AdvancementHelper> getAdvancementsForIdentifiers() {
         return ((MixinAdvancementManager) base).getAdvancements().entrySet().stream().collect(Collectors.toMap(
                 identifierAdvancementEntry -> identifierAdvancementEntry.getKey().toString(),
@@ -94,6 +97,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @return the advancement for the given identifier.
      * @since 1.8.4
      */
+    @DocletReplaceParams("identifier: AdvancementId")
     public AdvancementHelper getAdvancement(String identifier) {
         return new AdvancementHelper(base.get(RegistryHelper.parseIdentifier(identifier)));
     }
@@ -113,6 +117,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @return the progress of the given advancement.
      * @since 1.8.4
      */
+    @DocletReplaceParams("identifier: AdvancementId")
     public AdvancementProgressHelper getAdvancementProgress(String identifier) {
         return new AdvancementProgressHelper(((MixinClientAdvancementManager) MinecraftClient.getInstance().player.networkHandler.getAdvancementHandler()).getAdvancementProgresses().get(base.get(RegistryHelper.parseIdentifier(identifier))));
     }

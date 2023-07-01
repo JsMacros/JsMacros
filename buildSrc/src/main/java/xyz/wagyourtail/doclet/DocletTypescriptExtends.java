@@ -4,8 +4,7 @@ import java.lang.annotation.*;
 
 @Documented
 @Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.METHOD, ElementType.PARAMETER, ElementType.CONSTRUCTOR})
-public @interface DocletReplaceParams {
+@Target({ElementType.TYPE})
+public @interface DocletTypescriptExtends {
     String value();
-
 }

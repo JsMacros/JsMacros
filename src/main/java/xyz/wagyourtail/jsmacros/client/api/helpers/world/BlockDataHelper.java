@@ -7,6 +7,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -58,6 +59,7 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
     /**
      * @return the item ID of the block.
      */
+    @DocletReplaceReturn("ItemId")
     public String getId() {
         return Registries.BLOCK.getId(b).toString();
     }

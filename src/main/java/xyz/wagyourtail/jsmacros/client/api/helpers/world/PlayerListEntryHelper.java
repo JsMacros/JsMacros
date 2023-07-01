@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.world.GameMode;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -47,6 +48,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @return null if unknown
      * @since 1.6.5
      */
+    @DocletReplaceReturn("Gamemode")
     public String getGamemode() {
         GameMode gm = base.getGameMode();
         return gm == null ? null : gm.getName();

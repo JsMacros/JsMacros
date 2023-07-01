@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -466,6 +467,7 @@ public interface IDraw2D<T> {
      * @return added item
      * @since 1.2.7
      */
+    @DocletReplaceParams("x: int, y: int, id: ItemId")
     Item addItem(int x, int y, String id);
 
     /**
@@ -476,6 +478,7 @@ public interface IDraw2D<T> {
      * @return added item
      * @since 1.4.0
      */
+    @DocletReplaceParams("x: int, y: int, zIndex: int, id: ItemId")
     Item addItem(int x, int y, int zIndex, String id);
 
     /**
@@ -486,6 +489,7 @@ public interface IDraw2D<T> {
      * @return added item
      * @since 1.2.7
      */
+    @DocletReplaceParams("x: int, y: int, id: ItemId, overlay: boolean")
     Item addItem(int x, int y, String id, boolean overlay);
 
     /**
@@ -497,6 +501,7 @@ public interface IDraw2D<T> {
      * @return added item
      * @since 1.4.0
      */
+    @DocletReplaceParams("x: int, y: int, zIndex: int, id: ItemId, overlay: boolean")
     Item addItem(int x, int y, int zIndex, String id, boolean overlay);
 
     /**
@@ -509,6 +514,7 @@ public interface IDraw2D<T> {
      * @return added item
      * @since 1.2.7
      */
+    @DocletReplaceParams("x: int, y: int, id: ItemId, overlay: boolean, scale: double, rotation: double")
     Item addItem(int x, int y, String id, boolean overlay, double scale, double rotation);
 
     /**
@@ -522,6 +528,7 @@ public interface IDraw2D<T> {
      * @return added item
      * @since 1.4.0
      */
+    @DocletReplaceParams("x: int, y: int, zIndex: int, id: ItemId, overlay: boolean, scale: double, rotation: double")
     Item addItem(int x, int y, int zIndex, String id, boolean overlay, double scale, double rotation);
 
     /**

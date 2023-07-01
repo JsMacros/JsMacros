@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.nbt.*;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Set;
@@ -33,6 +34,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
     /**
      * @since 1.5.1
      */
+    @DocletReplaceReturn("this is NBTElementHelper$NBTNumberHelper")
     public boolean isNumber() {
         return base.getType() != 0 && base.getType() < 7;
     }
@@ -47,6 +49,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
     /**
      * @since 1.5.1
      */
+    @DocletReplaceReturn("this is NBTElementHelper$NBTListHelper")
     public boolean isList() {
         return base.getType() == 7 || base.getType() == 9 || base.getType() == 11 || base.getType() == 12;
     }
@@ -54,6 +57,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
     /**
      * @since 1.5.1
      */
+    @DocletReplaceReturn("this is NBTElementHelper$NBTCompoundHelper")
     public boolean isCompound() {
         return base.getType() == 10;
     }
