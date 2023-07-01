@@ -1,7 +1,7 @@
 import groovy.json.JsonSlurper
 
 plugins {
-    id "xyz.wagyourtail.unimined" version "1.0.0"
+    id "xyz.wagyourtail.unimined" version "1.0.0-SNAPSHOT"
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
@@ -126,11 +126,17 @@ unimined.minecraft(sourceSets.fabric) {
     fabric {
         loader project.fabric_loader_version
     }
+
+    mods {
+        modImplementation {
+            mixinRemap("unimined")
+        }
+    }
 }
 
 dependencies {
     implementation "io.noties:prism4j:${project.prism_version}"
-    implementation "org.spongepowered:mixin:0.8.5"
+    compileOnly "org.spongepowered:mixin:0.8.5"
     implementation "org.ow2.asm:asm:9.3"
 
     coreImplementation "org.jooq:joor:0.9.14"
@@ -163,6 +169,13 @@ dependencies {
     shadowForge "com.neovisionaries:nv-websocket-client:2.10"
     shadowForge "org.javassist:javassist:3.28.0-GA"
     shadowForge "org.jooq:joor:0.9.14"
+
+    fabricRuntimeOnly(forgeRuntimeOnly(project(":javascript_extension")) { transitive = false })
+
+    fabricRuntimeOnly(forgeRuntimeOnly("org.graalvm.sdk:graal-sdk:${project.graal_version}"))
+    fabricRuntimeOnly(forgeRuntimeOnly("org.graalvm.js:js:${project.graal_version}"))
+    fabricRuntimeOnly(forgeRuntimeOnly("org.graalvm.truffle:truffle-api:${project.graal_version}"))
+    fabricRuntimeOnly(forgeRuntimeOnly("org.graalvm.regex:regex:${project.graal_version}"))
 
     jsmacrosExtensionInclude(project(":javascript_extension")) { transitive = false }
 }
