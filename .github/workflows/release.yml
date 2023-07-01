@@ -13,7 +13,7 @@ jobs:
   build_latest:
     uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main
     with:
-      branch: main-1.20
+      branch: main
       GITHUB_REF: ${{ github.ref }}
       upload_docs: true
     secrets:
