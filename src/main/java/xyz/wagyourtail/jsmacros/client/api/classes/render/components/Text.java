@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
@@ -252,21 +252,19 @@ public class Text implements RenderElement, Alignable<Text> {
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        MatrixStack matrices = drawContext.getMatrices();
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         matrices.push();
         setupMatrix(matrices, x, y, (float) scale, rotation, getWidth(), getHeight(), rotateCenter);
         if (shadow) {
-            drawContext.drawTextWithShadow(mc.textRenderer, text, x, y, color);
+            DrawableHelper.drawTextWithShadow(matrices, mc.textRenderer, text, x, y, color);
         } else {
-            drawContext.drawText(mc.textRenderer, text, x, y, color, false);
+            mc.textRenderer.draw(matrices, text, x, y, color);
         }
         matrices.pop();
     }
 
     @Override
-    public void render3D(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        MatrixStack matrices = drawContext.getMatrices();
+    public void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         matrices.push();
         setupMatrix(matrices, x, y, (float) scale, rotation, getWidth(), getHeight(), rotateCenter);
         Tessellator tess = Tessellator.getInstance();

@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
@@ -552,10 +551,9 @@ public class Draw3D {
         return this;
     }
 
-    public void render(DrawContext drawContext, float tickDelta) {
+    public void render(MatrixStack matrixStack, float tickDelta) {
         MinecraftClient mc = MinecraftClient.getInstance();
 
-        MatrixStack matrixStack = drawContext.getMatrices();
         matrixStack.push();
         //setup
         RenderSystem.enableBlend();
@@ -571,7 +569,7 @@ public class Draw3D {
         //sort elements by type
         synchronized (elements) {
             for (RenderElement3D element : elements) {
-                element.render(drawContext, bufferBuilder, tickDelta);
+                element.render(matrixStack, bufferBuilder, tickDelta);
             }
         }
 

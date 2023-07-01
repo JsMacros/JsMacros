@@ -149,7 +149,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean blocksMovement() {
-        return base.blocksMovement();
+        return base.getMaterial().blocksMovement();
     }
 
     /**
@@ -157,7 +157,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean isBurnable() {
-        return base.isBurnable();
+        return base.getMaterial().isBurnable();
     }
 
     /**
@@ -165,7 +165,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean isLiquid() {
-        return base.isLiquid();
+        return base.getMaterial().isLiquid();
     }
 
     /**
@@ -173,7 +173,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean isSolid() {
-        return base.isSolid();
+        return base.getMaterial().isSolid();
     }
 
     /**

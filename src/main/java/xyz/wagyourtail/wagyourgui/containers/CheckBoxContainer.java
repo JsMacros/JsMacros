@@ -1,7 +1,7 @@
 package xyz.wagyourtail.wagyourgui.containers;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 
@@ -40,9 +40,9 @@ public class CheckBoxContainer extends MultiElementContainer<IContainerParent> {
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
         if (this.visible) {
-            drawContext.drawTextWrapped(textRenderer, message, x + height, y + 2, width - height - 2, 0xFFFFFF);
+            textRenderer.drawTrimmed(drawContext, message, x + height, y + 2, width - height - 2, 0xFFFFFF);
         }
     }
 

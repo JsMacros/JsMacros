@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Quaternionf;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
@@ -219,8 +218,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        MatrixStack matrices = drawContext.getMatrices();
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         matrices.push();
         matrices.translate(x, y, 0);
         matrices.scale(scale, scale, 1);
@@ -232,7 +230,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
             matrices.translate(-width.getAsInt() / 2d, -height.getAsInt() / 2d, 0);
         }
         //don't translate back
-        draw2D.render(drawContext);
+        draw2D.render(matrices);
         matrices.pop();
     }
 

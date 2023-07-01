@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Quaternionf;
@@ -221,8 +220,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D {
     }
 
     @Override
-    public void render(DrawContext drawContext, BufferBuilder builder, float delta) {
-        MatrixStack matrixStack = drawContext.getMatrices();
+    public void render(MatrixStack matrixStack, BufferBuilder builder, float delta) {
         matrixStack.push();
         if (boundEntity != null && boundEntity.isAlive()) {
             Pos3D entityPos = boundEntity.getPos().add(boundOffset);
@@ -262,7 +260,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D {
         matrixStack.scale((float) scale, (float) scale, (float) scale);
 
         synchronized (elements) {
-            renderElements3D(drawContext, getElementsByZIndex());
+            renderElements3D(matrixStack, getElementsByZIndex());
         }
         matrixStack.pop();
 
@@ -301,7 +299,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D {
         return new Vector3f((float) Math.toDegrees(radianX), (float) Math.toDegrees(radianY), (float) Math.toDegrees(radianZ));
     }
 
-    private void renderElements3D(DrawContext drawContext, Iterator<RenderElement> iter) {
+    private void renderElements3D(MatrixStack drawContext, Iterator<RenderElement> iter) {
         while (iter.hasNext()) {
             RenderElement element = iter.next();
             // Render each draw2D element individually so that the cull and renderBack settings are used
@@ -313,8 +311,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D {
         }
     }
 
-    private void renderDraw2D3D(DrawContext drawContext, Draw2DElement draw2DElement) {
-        MatrixStack matrixStack = drawContext.getMatrices();
+    private void renderDraw2D3D(MatrixStack matrixStack, Draw2DElement draw2DElement) {
         matrixStack.push();
         matrixStack.translate(draw2DElement.x, draw2DElement.y, 0);
         matrixStack.scale(draw2DElement.scale, draw2DElement.scale, 1);
@@ -328,12 +325,12 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D {
         // Don't translate back!
         Draw2D draw2D = draw2DElement.getDraw2D();
         synchronized (draw2D.getElements()) {
-            renderElements3D(drawContext, draw2D.getElementsByZIndex());
+            renderElements3D(matrixStack, draw2D.getElementsByZIndex());
         }
         matrixStack.pop();
     }
 
-    private void renderElement3D(DrawContext drawContext, RenderElement element) {
+    private void renderElement3D(MatrixStack matrixStack, RenderElement element) {
         if (renderBack) {
             RenderSystem.disableCull();
         } else {
@@ -344,15 +341,14 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D {
         } else {
             RenderSystem.enableDepthTest();
         }
-        MatrixStack matrixStack = drawContext.getMatrices();
         matrixStack.push();
         matrixStack.translate(0, 0, zIndexScale * element.getZIndex());
-        element.render3D(drawContext, 0, 0, 0);
+        element.render3D(matrixStack, 0, 0, 0);
         matrixStack.pop();
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
 
     }
 

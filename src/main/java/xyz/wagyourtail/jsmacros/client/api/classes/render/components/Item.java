@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
@@ -247,23 +247,23 @@ public class Item implements RenderElement, Alignable<Item> {
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
         render(drawContext, mouseX, mouseY, delta, false);
     }
 
     @Override
-    public void render3D(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void render3D(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
         render(drawContext, mouseX, mouseY, delta, true);
     }
 
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta, boolean is3dRender) {
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, boolean is3dRender) {
         if (item == null) {
             return;
         }
-        MatrixStack matrices = drawContext.getMatrices();
         matrices.push();
         setupMatrix(matrices, x, y, (float) scale, rotation, DEFAULT_ITEM_SIZE, DEFAULT_ITEM_SIZE, rotateCenter);
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+        ItemRenderer i = mc.getItemRenderer();
         if (is3dRender) {
             // The item has an offset of 100 and item texts of 200. This will make them render at the correct position
             // by translating them back and scaling the item down to be flat
@@ -272,16 +272,16 @@ public class Item implements RenderElement, Alignable<Item> {
             // Don't make this to small, otherwise there will be z-fighting for items like anvils
             final float scaleZ = 0.001f;
             matrices.scale(1, 1, scaleZ);
-            drawContext.drawItem(item, x, y);
+            i.renderGuiItemIcon(matrices, item, x, y);
             matrices.scale(1, 1, 1 / scaleZ);
         } else {
-            drawContext.drawItem(item, x, y);
+            i.renderGuiItemIcon(matrices, item, x, y);
         }
         if (overlay) {
             if (is3dRender) {
                 matrices.translate(0, 0, -199.5);
             }
-            drawContext.drawItemInSlot(mc.textRenderer, item, x, y, ovText);
+            i.renderGuiItemOverlay(matrices, mc.textRenderer, item, x, y, ovText);
         }
         matrices.pop();
     }

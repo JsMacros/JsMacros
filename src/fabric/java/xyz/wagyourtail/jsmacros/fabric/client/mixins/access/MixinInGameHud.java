@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.fabric.client.mixins.access;
 
 import com.google.common.collect.ImmutableSet;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Mixin(InGameHud.class)
 class MixinInGameHud {
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;debugEnabled:Z"), method = "render")
-    public void renderHud(DrawContext drawContext, float f, final CallbackInfo info) {
+    public void renderHud(MatrixStack drawContext, float f, final CallbackInfo info) {
         for (IDraw2D<Draw2D> h : ImmutableSet.copyOf(FHud.overlays).stream().sorted(Comparator.comparingInt(IDraw2D::getZIndex)).collect(Collectors.toList())) {
             try {
                 h.render(drawContext);

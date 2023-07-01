@@ -28,6 +28,17 @@ jobs:
         with:
           ref: ${{ inputs.branch }}
 
+      - name: Get Artifact Id
+        uses: actions/github-script@v5
+        id: artifact_id
+        env:
+          branch: '${{ inputs.branch }}'
+        with:
+          result-encoding: string
+          script: |
+            // use env branch replace / with _
+            return process.env.branch.replace(/\//g, '_')
+
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
@@ -43,7 +54,7 @@ jobs:
       - name: Upload To Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.branch }}
+          name: ${{ steps.artifact_id.outputs.result }}
           path: |
             ./dist/**/*
             ./gradle.properties
@@ -53,10 +64,21 @@ jobs:
     needs:
       - build
     steps:
+      - name: Get Artifact Id
+        uses: actions/github-script@v5
+        id: artifact_id
+        env:
+          branch: '${{ inputs.branch }}'
+        with:
+          result-encoding: string
+          script: |
+            // use env branch replace / with _
+            return process.env.branch.replace(/\//g, '_')
+
       - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: ${{ inputs.branch }}
+          name: ${{ steps.artifact_id.outputs.result }}
 
       - name: Load Gradle Properties
         uses: christian-draeger/read-properties@1.1.1
@@ -103,12 +125,12 @@ jobs:
         uses: vimtor/action-zip@v1
         with:
           files: typescript/
-          dest: typescript-${{ inputs.branch }}.zip
+          dest: typescript-${{ steps.artifact_id.outputs.result }}.zip
 
       - name: Upload TS to Git Release
         uses: JasonEtco/upload-to-release@master
         with:
-          args: ./typescript-${{ inputs.branch }}.zip application/jar
+          args: ./typescript-${{ steps.artifact_id.outputs.result }}.zip application/jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -175,10 +197,21 @@ jobs:
     needs:
       - build
     steps:
+      - name: Get Artifact Id
+        uses: actions/github-script@v5
+        id: artifact_id
+        env:
+          branch: '${{ inputs.branch }}'
+        with:
+          result-encoding: string
+          script: |
+            // use env branch replace / with _
+            return process.env.branch.replace(/\//g, '_')      
+
       - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
-          name: ${{ inputs.branch }}
+          name: ${{ steps.artifact_id.outputs.result }}
           path: dist
 
       - name: Install Python

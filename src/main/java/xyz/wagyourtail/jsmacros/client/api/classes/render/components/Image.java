@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -300,8 +299,7 @@ public class Image implements RenderElement, Alignable<Image> {
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        MatrixStack matrices = drawContext.getMatrices();
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         matrices.push();
         setupMatrix(matrices, x, y, 1, rotation, getWidth(), getHeight(), rotateCenter);
         RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);

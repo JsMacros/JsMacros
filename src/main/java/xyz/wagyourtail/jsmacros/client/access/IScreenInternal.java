@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.access;
 
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.util.math.MatrixStack;
 
 public interface IScreenInternal {
-    void jsmacros_render(DrawContext drawContext, int mouseX, int mouseY, float delta);
+    void jsmacros_render(MatrixStack stack, int mouseX, int mouseY, float delta);
 
     void jsmacros_mouseClicked(double mouseX, double mouseY, int button);
 
