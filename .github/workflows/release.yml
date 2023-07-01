@@ -11,7 +11,7 @@ on:
 jobs:
 
   build_latest:
-    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20.1
+    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main
     with:
       branch: main-1.20
       GITHUB_REF: ${{ github.ref }}
@@ -24,10 +24,10 @@ jobs:
   build_backports:
     strategy:
       matrix:
-        backport_version: [ 'backports/1.19.4' ]
-    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main-1.20.1
+        branch: [ 'backports/1.19.4' ]
+    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main
     with:
-      branch: ${{ matrix.backport_version }}
+      branch: ${{ matrix.branch }}
       GITHUB_REF: ${{ github.ref }}
       upload_docs: false
     secrets:
