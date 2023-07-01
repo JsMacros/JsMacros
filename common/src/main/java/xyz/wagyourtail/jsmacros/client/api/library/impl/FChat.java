@@ -288,7 +288,8 @@ public class FChat extends BaseLibrary {
         if (t != null) {
             Text titlee = (title instanceof TextHelper) ? ((TextHelper) title).getRaw() : title != null ? Text.literal(title.toString()) : null;
             Text descc = (desc instanceof TextHelper) ? ((TextHelper) desc).getRaw() : desc != null ? Text.literal(desc.toString()) : null;
-            if (titlee != null) t.add(SystemToast.create(mc, null, titlee, descc));
+            // There doesn't seem to be a difference in the appearance or the functionality except for the UNSECURE_SERVER_WARNING with a longer duration
+            if (titlee != null) t.add(SystemToast.create(mc, SystemToast.Type.TUTORIAL_HINT, titlee, descc));
         }
     }
     

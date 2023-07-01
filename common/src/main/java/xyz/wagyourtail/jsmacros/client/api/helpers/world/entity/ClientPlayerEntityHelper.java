@@ -61,6 +61,86 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
+     * @since 1.8.4
+     */
+    private ClientPlayerEntityHelper<T> setVelocity(Vec3d velocity) {
+        base.setVelocity(velocity);
+        return this;
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public ClientPlayerEntityHelper<T>  setVelocity(Pos3D velocity) {
+        return setVelocity(velocity.toMojangDoubleVector());
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public ClientPlayerEntityHelper<T> setVelocity(double x, double y, double z) {
+        return setVelocity(new Vec3d(x, y, z));
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    private ClientPlayerEntityHelper<T> addVelocity(Vec3d velocity) {
+        base.addVelocity(velocity);
+        return this;
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public ClientPlayerEntityHelper<T> addVelocity(Pos3D velocity) {
+        return addVelocity(velocity.toMojangDoubleVector());
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public ClientPlayerEntityHelper<T> addVelocity(double x, double y, double z) {
+        return addVelocity(new Vec3d(x, y, z));
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    private ClientPlayerEntityHelper<T> setPos(Vec3d pos) {
+        base.setPosition(pos);
+        return this;
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public ClientPlayerEntityHelper<T> setPos(Pos3D pos) {
+        return setPos(pos.toMojangDoubleVector());
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public ClientPlayerEntityHelper<T> setPos(double x, double y, double z) {
+        return setPos(new Vec3d(x, y, z));
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public ClientPlayerEntityHelper<T> addPos(Pos3D pos) {
+        return setPos(getPos().add(pos));
+    }
+
+    /**
+     * @since 1.8.4
+     */
+    public ClientPlayerEntityHelper<T> addPos(double x, double y, double z) {
+        return setPos(getPos().add(new Pos3D(x, y, z)));
+    }
+
+    /**
      * Sets the player rotation along the given axis and keeps the other axis the same.
      *
      * @param direction possible values are "up", "down", "north", "south", "east", "west"

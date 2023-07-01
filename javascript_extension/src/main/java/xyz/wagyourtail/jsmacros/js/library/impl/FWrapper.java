@@ -146,7 +146,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                 throw new BaseScriptContext.ScriptAssertionError("Context closed");
             }
 
-            Thread th = new Thread(() -> {
+            Core.getInstance().threadPool.runTask(() -> {
                 try {
                     ctx.tasks.add(new WrappedThread(Thread.currentThread(), priority));
                     ctx.bindThread(Thread.currentThread());
@@ -173,9 +173,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                         Core.getInstance().profile.logError(ex);
                     } finally {
                         ctx.getContext().leave();
-
                         ctx.releaseBoundEventIfPresent(Thread.currentThread());
-
                         Core.getInstance().profile.joinedThreadStack.remove(Thread.currentThread());
                     }
                 } catch (InterruptedException e) {
@@ -186,7 +184,6 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                     ctx.tasks.poll().release();
                 }
             });
-            th.start();
         }
 
         private <R2> R2 innerApply(Object... args) {

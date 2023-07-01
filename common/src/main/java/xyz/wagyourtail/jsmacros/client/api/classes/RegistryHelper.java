@@ -12,6 +12,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.CreativeItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
@@ -111,7 +112,23 @@ public class RegistryHelper {
     }
 
     /**
-     * @param id the block's id
+     * @param id the status effect's id
+     * @return an {@link StatusEffectHelper} for the given status effect with 0 ticks duration.
+     */
+    public StatusEffectHelper getStatusEffect(String id) {
+        return new StatusEffectHelper(Registries.STATUS_EFFECT.get(parseIdentifier(id)));
+    }
+
+    /**
+     * @since 1.8.4
+     * @return a list of all registered status effects as {@link StatusEffectHelper}s with 0 ticks duration.
+     */
+    public List<StatusEffectHelper> getStatusEffects() {
+        return Registries.STATUS_EFFECT.stream().map(StatusEffectHelper::new).collect(Collectors.toList());
+    }
+
+    /**
+     * @param id  the block's id
      * @param nbt the block's nbt
      * @return an {@link BlockStateHelper} for the given block with the specified nbt.
      *

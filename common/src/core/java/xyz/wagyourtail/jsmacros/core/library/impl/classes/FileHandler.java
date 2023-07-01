@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.Objects;
 
 /**
@@ -79,15 +80,7 @@ public class FileHandler {
      * @throws IOException
      */
     public String read() throws IOException {
-        String ret = "";
-        try (BufferedReader in = new BufferedReader(new FileReader(f, charset))) {
-            String line = in.readLine();
-            while (line != null) {
-                ret += line + "\n";
-                line = in.readLine();
-            }
-        }
-        return ret;
+        return new String(readBytes(), charset);
     }
     
     /**
@@ -98,12 +91,43 @@ public class FileHandler {
      */
     public byte[] readBytes() throws IOException {
         try (FileInputStream in = new FileInputStream(f)) {
-            byte[] bytes =  new byte[(int) f.length()];
+            if (f.length() > Integer.MAX_VALUE)
+                throw new IOException("File is too large to read into memory. (max size: " + Integer.MAX_VALUE + ")");
+            byte[] bytes = new byte[(int) f.length()];
             in.read(bytes);
             return bytes;
         }
     }
-    
+
+    /**
+     * get an iterator for the lines in the file.
+     * please call {@link FileLineIterator#close()} when you are done with the iterator to not leak resources.
+     *
+     * @since 1.8.4
+     * @return
+     */
+    public FileLineIterator readLines() {
+        try {
+            return new FileLineIterator(f, charset);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * get an input stream for the file.
+     * please call {@link BufferedInputStream#close()} when you are done with the stream to not leak resources.
+     * @since 1.8.4
+     * @return
+     */
+    public BufferedInputStream streamBytes() {
+        try {
+            return new BufferedInputStream(new FileInputStream(f));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * @since 1.1.8
      * 
@@ -138,5 +162,43 @@ public class FileHandler {
     
     public String toString() {
         return String.format("FileHandler:{\"file\": \"%s\"}", f.getAbsolutePath());
+    }
+
+    public static class FileLineIterator implements Iterator<String>, AutoCloseable {
+        private final BufferedReader reader;
+        private String nextLine;
+
+        public FileLineIterator(File file, Charset charset) throws IOException {
+            this.reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
+            this.nextLine = reader.readLine();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return nextLine != null;
+        }
+
+        @Override
+        public String next() {
+            String line = nextLine;
+            try {
+                nextLine = reader.readLine();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return line;
+        }
+
+        @Override
+        public void close() throws IOException {
+            reader.close();
+        }
+
+        @Override
+        protected void finalize() throws Throwable {
+            super.finalize();
+            close();
+        }
+
     }
 }

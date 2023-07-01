@@ -24,14 +24,11 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import xyz.wagyourtail.jsmacros.client.access.BossBarConsumer;
-import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventInventoryChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventItemPickup;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventDeath;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventStatusEffectUpdate;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.world.*;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 
 import java.util.*;
@@ -167,12 +164,5 @@ class MixinClientPlayNetworkHandler {
         }
     }
 
-    @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/thread/ThreadExecutor;)V", shift = At.Shift.AFTER))
-    public void onScreenHandlerSlotUpdate(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo info) {
-        if (packet.getSyncId() != -2) {
-            return;
-        }
-        new EventInventoryChange(Inventory.create(), new int[]{packet.getSlot()}, new ItemStackHelper(client.player.getInventory().getStack(packet.getSlot())), new ItemStackHelper(packet.getItemStack()));
-    }
-    
 }
+    

@@ -10,6 +10,7 @@ import xyz.wagyourtail.jsmacros.core.service.EventService;
 import java.io.File;
 import java.nio.file.FileSystemException;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 /**
@@ -35,13 +36,16 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
         final Thread ct = Thread.currentThread();
         final File file = new File(runner.config.macroFolder, staticMacro.scriptFile);
         EventContainer<T> ctx = new EventContainer<>(createContext(event, file));
-        final Thread t = new Thread(() -> {
+        runner.threadPool.runTask(() -> {
+            Thread t = Thread.currentThread();
+            ctx.setLockThread(t);
+            ctx.getCtx().setMainThread(t);
             preThread.run();
             try {
                 if (event == null) {
-                    Thread.currentThread().setName(String.format("RunScript:{\"creator\":\"%s\"}", ct.getName()));
+                    t.setName(String.format("RunScript:{\"creator\":\"%s\"}", ct.getName()));
                 } else {
-                    Thread.currentThread().setName(String.format("Script:{\"trigger\":\"%s\", \"event\":\"%s\", \"file\":\"%s\"}", staticMacro.triggerType, staticMacro.event, staticMacro.scriptFile));
+                    t.setName(String.format("Script:{\"trigger\":\"%s\", \"event\":\"%s\", \"file\":\"%s\"}", staticMacro.triggerType, staticMacro.event, staticMacro.scriptFile));
                 }
                 if (file.exists() && file.isFile()) {
 
@@ -85,19 +89,19 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
                 }
             }
         });
-        ctx.setLockThread(t);
-        ctx.getCtx().setMainThread(t);
-        t.start();
         return ctx;
     }
     
     public final EventContainer<T> trigger(String lang, String script, File fakeFile, BaseEvent event, Runnable then, Consumer<Throwable> catcher) {
         final Thread ct = Thread.currentThread();
         EventContainer<T> ctx = new EventContainer<>(createContext(event, fakeFile));
-        final Thread t = new Thread(() -> {
+        runner.threadPool.runTask(() -> {
+            Thread t = Thread.currentThread();
+            ctx.setLockThread(t);
+            ctx.getCtx().setMainThread(t);
             preThread.run();
             try {
-                Thread.currentThread().setName(String.format("RunScript:{\"creator\":\"%s\", \"start\":\"%d\"}", ct.getName(), System.currentTimeMillis()));
+                t.setName(String.format("RunScript:{\"creator\":\"%s\", \"start\":\"%d\"}", ct.getName(), System.currentTimeMillis()));
 
                 runner.addContext(ctx);
 
@@ -123,9 +127,6 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
                 }
             }
         });
-        ctx.setLockThread(t);
-        ctx.getCtx().setMainThread(t);
-        t.start();
         return ctx;
     }
     

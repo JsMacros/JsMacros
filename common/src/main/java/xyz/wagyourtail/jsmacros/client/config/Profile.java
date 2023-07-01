@@ -198,7 +198,6 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventHungerChange.class);
         runner.eventRegistry.addEvent(EventInteractBlock.class);
         runner.eventRegistry.addEvent(EventInteractEntity.class);
-        runner.eventRegistry.addEvent(EventInventoryChange.class);
         runner.eventRegistry.addEvent(EventItemDamage.class);
         runner.eventRegistry.addEvent(EventItemPickup.class);
         runner.eventRegistry.addEvent(EventJoinedKey.class);

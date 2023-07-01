@@ -335,7 +335,7 @@ public class Surface extends Draw2D implements RenderElement {
         if (rotateCenter) {
             matrixStack.translate(draw2DElement.width.getAsInt() / 2d, draw2DElement.height.getAsInt() / 2d, 0);
         }
-        matrixStack.multiply(new Quaternionf().rotateLocalZ(draw2DElement.rotation));
+        matrixStack.multiply(new Quaternionf().rotateLocalZ((float) Math.toRadians(draw2DElement.rotation)));
         if (rotateCenter) {
             matrixStack.translate(-draw2DElement.width.getAsInt() / 2d, -draw2DElement.height.getAsInt() / 2d, 0);
         }

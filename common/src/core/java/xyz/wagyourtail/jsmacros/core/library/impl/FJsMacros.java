@@ -336,9 +336,12 @@ public class FJsMacros extends PerExecLibrary {
             @Override
             public EventContainer<?> trigger(BaseEvent e) {
                 EventContainer<?> p = new EventContainer<>(ctx);
-                Thread t = new Thread(() -> {
-                    Thread.currentThread().setName(this.toString());
-                    
+                Core.getInstance().threadPool.runTask(() -> {
+                    Thread t = Thread.currentThread();
+                    Thread ot = callback.overrideThread();
+                    p.setLockThread(ot == null ? t : ot);
+
+                    t.setName(this.toString());
                     try {
                         callback.accept(e, p);
                     } catch (Throwable ex) {
@@ -348,9 +351,6 @@ public class FJsMacros extends PerExecLibrary {
                         p.releaseLock();
                     }
                 });
-                Thread ot = callback.overrideThread();
-                p.setLockThread(ot == null ? t : ot);
-                t.start();
                 return p;
             }
     
@@ -402,8 +402,13 @@ public class FJsMacros extends PerExecLibrary {
             public EventContainer<?> trigger(BaseEvent e) {
                 Core.getInstance().eventRegistry.removeListener(event, this);
                 EventContainer<?> p = new EventContainer<>(ctx);
-                Thread t = new Thread(() -> {
-                    Thread.currentThread().setName(this.toString());
+                Core.getInstance().threadPool.runTask(() -> {
+                    Thread t = Thread.currentThread();
+                    Thread ot = callback.overrideThread();
+                    p.setLockThread(ot == null ? t : ot);
+
+
+                    t.setName(this.toString());
                     try {
                         callback.accept(e, p);
                     } catch (Throwable ex) {
@@ -412,9 +417,6 @@ public class FJsMacros extends PerExecLibrary {
                         p.releaseLock();
                     }
                 });
-                Thread ot = callback.overrideThread();
-                p.setLockThread(ot == null ? t : ot);
-                t.start();
                 return p;
             }
     

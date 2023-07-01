@@ -10,7 +10,6 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.UpdateSignC2SPacket;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
@@ -21,15 +20,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
-import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventDropSlot;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventInventoryChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventAirChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventEXPChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventRiding;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventSignEdit;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 
 import java.util.ArrayList;
@@ -138,9 +134,5 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         if (event.isCanceled()) {
             cir.setReturnValue(false);
         }
-        int[] slots = new int[]{getInventory().selectedSlot + 36};
-        ItemStackHelper[] oldItems = new ItemStackHelper[]{new ItemStackHelper(getInventory().getMainHandStack())};
-        ItemStackHelper[] newItems = new ItemStackHelper[]{new ItemStackHelper(entireStack ? Items.AIR.getDefaultStack() : getInventory().getMainHandStack())};
-        new EventInventoryChange(Inventory.create(), slots, oldItems, newItems);
     }
 }

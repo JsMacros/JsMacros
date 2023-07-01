@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -278,36 +277,39 @@ public class Item implements RenderElement, Alignable<Item> {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        matrices.push();
-        setupMatrix(matrices, x, y, (float) scale, rotation, DEFAULT_ITEM_SIZE, DEFAULT_ITEM_SIZE, rotateCenter);
-        MatrixStack ms = RenderSystem.getModelViewStack();
-        ms.push();
-        ms.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
-        if (item != null) {
-            ItemRenderer i = mc.getItemRenderer();
-            i.renderGuiItemIcon(ms, item, x, y);
-            if (overlay) {
-                i.renderGuiItemOverlay(ms, mc.textRenderer, item, x, y, ovText);
-            }
-        }
-        ms.pop();
-        RenderSystem.applyModelViewMatrix();
-        matrices.pop();
+        render(matrices, mouseX, mouseY, delta, false);
     }
 
     @Override
     public void render3D(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        //TODO: cull and renderBack still not working, draw this to a FrameBuffer and render that instead.
+        render(matrices, mouseX, mouseY, delta, true);
+    }
+
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, boolean is3dRender) {
+        if (item == null) {
+            return;
+        }
         matrices.push();
         setupMatrix(matrices, x, y, (float) scale, rotation, DEFAULT_ITEM_SIZE, DEFAULT_ITEM_SIZE, rotateCenter);
-
-
-        if (item != null) {
-            ItemRenderer i = mc.getItemRenderer();
+        ItemRenderer i = mc.getItemRenderer();
+        if (is3dRender) {
+            // The item has an offset of 100 and item texts of 200. This will make them render at the correct position
+            // by translating them back and scaling the item down to be flat
+            // Translate by -0.1 = scaleZ * 100 to get it to the render in the plane
+            matrices.translate(0, 0, -0.1);
+            // Don't make this to small, otherwise there will be z-fighting for items like anvils
+            final float scaleZ = 0.001f;
+            matrices.scale(1, 1, scaleZ);
             i.renderGuiItemIcon(matrices, item, x, y);
-            if (overlay) {
-                i.renderGuiItemOverlay(matrices, mc.textRenderer, item, x, y, ovText);
+            matrices.scale(1, 1, 1 / scaleZ);
+        } else {
+            i.renderGuiItemIcon(matrices, item, x, y);
+        }
+        if (overlay) {
+            if (is3dRender) {
+                matrices.translate(0, 0, -199.9);
             }
+            i.renderGuiItemOverlay(matrices, mc.textRenderer, item, x, y, ovText);
         }
         matrices.pop();
     }
