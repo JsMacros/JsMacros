@@ -11,6 +11,7 @@ import net.minecraft.stat.StatType;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinStatHandler;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -78,6 +79,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @return how many times the player has killed the entity.
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: EntityId")
     public int getEntityKilled(String id) {
         return getStat(Stats.KILLED, Registries.ENTITY_TYPE, id);
     }
@@ -87,6 +89,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @return how many times the player has killed the specified entity.
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: EntityId")
     public int getKilledByEntity(String id) {
         return getStat(Stats.KILLED_BY, Registries.ENTITY_TYPE, id);
     }
@@ -96,6 +99,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @return how many times the player has mined the block.
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: BlockId")
     public int getBlockMined(String id) {
         return getStat(Stats.MINED, Registries.BLOCK, id);
     }
@@ -105,6 +109,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @return how many times the player has broken the item.
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ItemId")
     public int getItemBroken(String id) {
         return getStat(Stats.BROKEN, Registries.ITEM, id);
     }
@@ -114,6 +119,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @return how many times the player has crafted the item.
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ItemId")
     public int getItemCrafted(String id) {
         return getStat(Stats.CRAFTED, Registries.ITEM, id);
     }
@@ -123,6 +129,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @return how many times the player has used the item.
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ItemId")
     public int getItemUsed(String id) {
         return getStat(Stats.USED, Registries.ITEM, id);
     }
@@ -132,6 +139,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @return how many times the player has picked up the item.
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ItemId")
     public int getItemPickedUp(String id) {
         return getStat(Stats.PICKED_UP, Registries.ITEM, id);
     }
@@ -141,6 +149,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      * @return how many times the player has dropped the item.
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ItemId")
     public int getItemDropped(String id) {
         return getStat(Stats.DROPPED, Registries.ITEM, id);
     }

@@ -34,6 +34,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
 import net.minecraft.world.RaycastContext;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -160,8 +161,8 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * The x and z position of the chunk can be calculated by the following formula: xChunk = x >>
-     * 4; zChunk = z >> 4;
+     * The x and z position of the chunk can be calculated by the following formula: xChunk =
+     * x >> 4; zChunk = z >> 4;
      *
      * @param x the x coordinate of the chunk, not the absolute position
      * @param z the z coordinate of the chunk, not the absolute position
@@ -206,6 +207,7 @@ public class FWorld extends BaseLibrary {
      * @return
      * @since 1.6.4
      */
+    @DocletReplaceParams("centerX: int, centerZ: int, id: BlockId, chunkrange: int")
     public List<Pos3D> findBlocksMatching(int centerX, int centerZ, String id, int chunkrange) {
         String finalId = RegistryHelper.parseNameSpace(id);
         return new WorldScanner(mc.world, block -> Registries.BLOCK.getId(block.getRaw()).toString().equals(finalId), null).scanChunkRange(centerX, centerZ, chunkrange);
@@ -217,6 +219,7 @@ public class FWorld extends BaseLibrary {
      * @return
      * @since 1.6.4
      */
+    @DocletReplaceParams("id: BlockId, chunkrange: int")
     public List<Pos3D> findBlocksMatching(String id, int chunkrange) {
         assert mc.player != null;
         String finalId = RegistryHelper.parseNameSpace(id);
@@ -231,6 +234,7 @@ public class FWorld extends BaseLibrary {
      * @return
      * @since 1.6.4
      */
+    @DocletReplaceParams("ids: BlockId[], chunkrange: int")
     public List<Pos3D> findBlocksMatching(String[] ids, int chunkrange) {
         assert mc.player != null;
         int playerChunkX = mc.player.getBlockX() >> 4;
@@ -247,6 +251,7 @@ public class FWorld extends BaseLibrary {
      * @return
      * @since 1.6.4
      */
+    @DocletReplaceParams("centerX: int, centerZ: int, ids: BlockId[], chunkrange: int")
     public List<Pos3D> findBlocksMatching(int centerX, int centerZ, String[] ids, int chunkrange) {
         Set<String> ids2 = Arrays.stream(ids).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         return new WorldScanner(mc.world, block -> ids2.contains(Registries.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(centerX, centerZ, chunkrange);
@@ -387,6 +392,7 @@ public class FWorld extends BaseLibrary {
      * @return all entities in the render distance, that match the specified entity type.
      * @since 1.8.4
      */
+    @DocletReplaceParams("...types: EntityId[]")
     public List<EntityHelper<?>> getEntities(String... types) {
         Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         Predicate<Entity> typePredicate = entity -> uniqueTypes.contains(Registries.ENTITY_TYPE.getId(entity.getType()).toString());
@@ -410,6 +416,7 @@ public class FWorld extends BaseLibrary {
      * @return a list of entities within the specified distance to the player, that match the specified entity type.
      * @since 1.8.4
      */
+    @DocletReplaceParams("distance: double, ...types: EntityId[]")
     public List<EntityHelper<?>> getEntities(double distance, String... types) {
         Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         assert mc.player != null;
@@ -672,6 +679,7 @@ public class FWorld extends BaseLibrary {
      * @see FWorld#playSound(String, double, double, double, double, double)
      * @since 1.1.7
      */
+    @DocletReplaceParams("id: SoundId")
     public void playSound(String id) {
         playSound(id, 1F);
     }
@@ -682,6 +690,7 @@ public class FWorld extends BaseLibrary {
      * @see FWorld#playSound(String, double, double, double, double, double)
      * @since 1.1.7
      */
+    @DocletReplaceParams("id: SoundId, volume: double")
     public void playSound(String id, double volume) {
         playSound(id, volume, 0.25F);
     }
@@ -693,6 +702,7 @@ public class FWorld extends BaseLibrary {
      * @see FWorld#playSound(String, double, double, double, double, double)
      * @since 1.1.7
      */
+    @DocletReplaceParams("id: SoundId, volume: double, pitch: double")
     public void playSound(String id, double volume, double pitch) {
         SoundEvent sound = SoundEvent.of(new Identifier(id));
         assert sound != null;
@@ -710,6 +720,7 @@ public class FWorld extends BaseLibrary {
      * @param z
      * @since 1.1.7
      */
+    @DocletReplaceParams("id: SoundId, volume: double, pitch: double, x: double, y: double, z: double")
     public void playSound(String id, double volume, double pitch, double x, double y, double z) {
         assert mc.world != null;
         SoundEvent sound = SoundEvent.of(new Identifier(id));
@@ -827,6 +838,7 @@ public class FWorld extends BaseLibrary {
      * @param count the amount of particles to spawn
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ParticleId, x: double, y: double, z: double, count: int")
     public void spawnParticle(String id, double x, double y, double z, int count) {
         spawnParticle(id, x, y, z, 0.1, 0.1, 0.1, 1, count, true);
     }
@@ -847,6 +859,7 @@ public class FWorld extends BaseLibrary {
      * @param force  whether to show the particle if it's more than 32 blocks away
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: ParticleId, x: double, y: double, z: double, deltaX: double, deltaY: double, deltaZ: double, speed: double, count: int, force: boolean")
     public void spawnParticle(String id, double x, double y, double z, double deltaX, double deltaY, double deltaZ, double speed, int count, boolean force) {
         ParticleEffect particle = (ParticleEffect) Registries.PARTICLE_TYPE.get(RegistryHelper.parseIdentifier(id));
         particle = particle != null ? particle : ParticleTypes.CLOUD;

@@ -22,6 +22,7 @@ import net.minecraft.entity.vehicle.TntMinecartEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.math.MathHelper;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
@@ -150,6 +151,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     /**
      * @return the type of the entity.
      */
+    @DocletReplaceReturn("EntityId")
     public String getType() {
         return EntityType.getId(base.getType()).toString();
     }
@@ -403,6 +405,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the name of the biome this entity is in.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("Biome")
     public String getBiome() {
         return MinecraftClient.getInstance().world.getRegistryManager().get(RegistryKeys.BIOME).getId(MinecraftClient.getInstance().world.getBiome(base.getBlockPos()).value()).toString();
     }

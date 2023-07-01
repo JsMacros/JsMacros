@@ -6,6 +6,8 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -32,6 +34,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
         this.level = level;
     }
 
+    @DocletReplaceParams("enchantment: EnchantmentId")
     public EnchantmentHelper(String enchantment) {
         this(Registries.ENCHANTMENT.get(new Identifier(enchantment)));
     }
@@ -125,6 +128,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @return the id of this enchantment.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("EnchantmentId")
     public String getId() {
         return Registries.ENCHANTMENT.getId(base).toString();
     }
@@ -133,6 +137,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @return the rarity of this enchantment.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("EnchantmentRarity")
     public String getRarity() {
         switch (base.getRarity()) {
             case COMMON:
@@ -192,6 +197,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @return the type of item this enchantment is compatible with.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("EnchantmentTargetType")
     public String getTargetType() {
         switch (base.target) {
             case ARMOR:
@@ -297,6 +303,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * {@code false} otherwise.
      * @since 1.8.4
      */
+    @DocletReplaceParams("enchantment: EnchantmentId")
     public boolean isCompatible(String enchantment) {
         return base.canCombine(Registries.ENCHANTMENT.get(RegistryHelper.parseIdentifier(enchantment)));
     }
@@ -317,6 +324,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * otherwise.
      * @since 1.8.4
      */
+    @DocletReplaceParams("enchantment: EnchantmentId")
     public boolean conflictsWith(String enchantment) {
         return !isCompatible(enchantment);
     }

@@ -15,6 +15,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import xyz.wagyourtail.doclet.DocletEnumType;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
@@ -123,6 +126,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return
      * @since 1.0.8
      */
+    @DocletReplaceParams("slot: int, mousebutton: Trit")
     public Inventory<T> click(int slot, int mousebutton) {
         SlotActionType act = mousebutton == 2 ? SlotActionType.CLONE : SlotActionType.PICKUP;
         man.clickSlot(syncId, slot, mousebutton, act, player);
@@ -136,6 +140,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @param mousebutton
      * @return
      */
+    @DocletReplaceParams("slots: int[], mousebutton: Bit")
     public Inventory<T> dragClick(int[] slots, int mousebutton) {
         mousebutton = mousebutton == 0 ? 1 : 5;
         man.clickSlot(syncId, -999, mousebutton - 1, SlotActionType.QUICK_CRAFT, player); // start drag click
@@ -182,6 +187,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * otherwise.
      * @since 1.8.4
      */
+    @DocletReplaceParams("item: ItemId")
     public boolean contains(String item) {
         return getItems().stream().anyMatch(stack -> stack.getItemId().equals(item));
     }
@@ -209,6 +215,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * empty slots.
      * @since 1.8.4
      */
+    @DocletReplaceParams("...mapIdentifiers: InvMapId[]")
     public int findFreeSlot(String... mapIdentifiers) {
         for (int slot : getSlots(mapIdentifiers)) {
             if (getSlot(slot).isEmpty()) {
@@ -222,6 +229,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return a map of all item ids and their total count inside the inventory.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaMap<ItemId, number>")
     public Map<String, Integer> getItemCount() {
         Object2IntOpenHashMap<String> itemMap = new Object2IntOpenHashMap<>();
         getItems().stream().filter(i -> !i.isEmpty()).forEach(item -> itemMap.addTo(item.getItemId(), item.getCount()));
@@ -241,6 +249,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return a list of all items in the given inventory sections.
      * @since 1.8.4
      */
+    @DocletReplaceParams("...mapIdentifiers: InvMapId[]")
     public List<ItemStackHelper> getItems(String... mapIdentifiers) {
         return Arrays.stream(getSlots(mapIdentifiers)).mapToObj(this::getSlot).filter(i -> !i.isEmpty()).collect(Collectors.toList());
     }
@@ -265,6 +274,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return all slots containing the given item.
      * @since 1.8.4
      */
+    @DocletReplaceParams("item: ItemId")
     public int[] findItem(String item) {
         IntList slots = new IntArrayList();
         for (int i = 0; i < getTotalSlots(); i++) {
@@ -280,6 +290,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return all slots indexes in the given inventory sections.
      * @since 1.8.4
      */
+    @DocletReplaceParams("...mapIdentifiers: InvMapId[]")
     public int[] getSlots(String... mapIdentifiers) {
         Map<String, int[]> map = getMap();
         IntList slots = new IntArrayList();
@@ -361,6 +372,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return number of items that matched
      * @since 1.7.0
      */
+    @DocletReplaceParams("slot: int, button: Bit")
     public int quickAll(int slot, int button) {
         int count = 0;
         ItemStack cursorStack = handler.slots.get(slot).getStack().copy();
@@ -463,6 +475,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return
      * @since 1.6.5 [citation needed]
      */
+    @DocletReplaceParams("slot: int, hotbarSlot: HotbarSwapSlot")
     public Inventory<T> swapHotbar(int slot, int hotbarSlot) {
         if (hotbarSlot != 40) {
             if (hotbarSlot < 0 || hotbarSlot > 8) {
@@ -502,6 +515,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return the part of the mapping the slot is in.
      * @since 1.1.3
      */
+    @DocletReplaceReturn("InventoryType")
     public String getType() {
         return JsMacros.getScreenName(this.inventory);
     }
@@ -510,6 +524,52 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return the inventory mappings different depending on the type of open container/inventory.
      * @since 1.1.3
      */
+    @DocletReplaceReturn("JavaMap<InvMapId, JavaArray<number>>")
+    @DocletEnumType(name = "InvMapId", type =
+            """
+            InvMapType.All;
+            declare namespace InvMapType {
+                type _inv = 'hotbar' | 'main';
+                type _invio = _inv | 'input' | 'output';
+                type Inventory = _inv | 'offhand' | 'boots' | 'leggings' | 'chestplate' | 'helmet'
+                | 'crafting_in' | 'craft_out';
+                type CreativeInvInvTab = Exclude<Inventory, 'crafting_in' | 'craft_out'> | 'delete';
+                type CreativeInv = 'hotbar' | 'creative';
+                type Container        = _inv | 'container';
+                type Beacon           = _inv | 'slot';
+                type Furnace          = _invio | 'fuel';
+                type BrewingStand     = _invio | 'fuel';
+                type Crafting         = _invio;
+                type Enchantment      = _inv | 'lapis' | 'item';
+                type Loom             = _inv | 'output' | 'pattern' | 'dye' | 'banner';
+                type Stonecutter      = _invio;
+                type Horse            = _inv | 'saddle' | 'armor' | 'container';
+                type Anvil            = _invio;
+                type Merchant         = _invio;
+                type Smithing         = _invio;
+                type Grindstone       = _invio;
+                type CartographyTable = _invio;
+                type All = 
+                | Inventory
+                | CreativeInvInvTab
+                | CreativeInv
+                | Container
+                | Beacon
+                | Furnace
+                | BrewingStand
+                | Crafting
+                | Enchantment
+                | Loom
+                | Stonecutter
+                | Horse
+                | Anvil
+                | Merchant
+                | Smithing
+                | Grindstone
+                | CartographyTable
+            }
+            """
+    )
     public Map<String, int[]> getMap() {
         if (map == null) {
             map = getMapInternal();
@@ -522,6 +582,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return returns the part of the mapping the slot is in.
      * @since 1.1.3
      */
+    @DocletReplaceReturn("InvMapId")
     public String getLocation(int slotNum) {
         if (map == null) {
             map = getMapInternal();

@@ -4,6 +4,7 @@ import net.minecraft.advancement.Advancement;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.Identifier;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAdvancementRewards;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinClientAdvancementManager;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -61,6 +62,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      * @return the identifier of this advancement.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("AdvancementId")
     public String getId() {
         return base.getId().toString();
     }
@@ -93,6 +95,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      * @return the recipes unlocked through this advancement.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaArray<RecipeId>")
     public String[] getRecipes() {
         return (String[]) Arrays.stream(base.getRewards().getRecipes()).map(Identifier::toString).toArray();
     }

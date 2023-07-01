@@ -5,6 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
@@ -155,6 +156,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @return the identifier of this item.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("ItemId")
     public String getId() {
         return Registries.ITEM.getId(base).toString();
     }

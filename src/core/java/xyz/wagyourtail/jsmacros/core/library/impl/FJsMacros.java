@@ -3,6 +3,9 @@ package xyz.wagyourtail.jsmacros.core.library.impl;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
@@ -299,6 +302,8 @@ public class FJsMacros extends PerExecLibrary {
      * @see IEventListener
      * @since 1.2.7
      */
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, callback: MethodWrapper<Events[E], EventContainer>")
     public IEventListener on(String event, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
         if (callback == null) {
             return null;
@@ -363,6 +368,8 @@ public class FJsMacros extends PerExecLibrary {
      * @see IEventListener
      * @since 1.2.7
      */
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, callback: MethodWrapper<Events[E], EventContainer>")
     public IEventListener once(String event, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
         if (callback == null) {
             return null;
@@ -424,6 +431,8 @@ public class FJsMacros extends PerExecLibrary {
      * @see FJsMacros#off(String, IEventListener)
      * @since 1.2.3
      */
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, listener: IEventListener")
     public boolean off(IEventListener listener) {
         return Core.getInstance().eventRegistry.removeListener(listener);
     }
@@ -447,6 +456,7 @@ public class FJsMacros extends PerExecLibrary {
      * @param event the event to remove all listeners from
      * @since 1.8.4
      */
+    @DocletReplaceParams("event: keyof Events")
     public void disableAllListeners(String event) {
         for (IEventListener listener : ImmutableList.copyOf(Core.getInstance().eventRegistry.getListeners(event))) {
             listener.off();
@@ -475,6 +485,7 @@ public class FJsMacros extends PerExecLibrary {
      * @param event the event to remove all listeners from
      * @since 1.8.4
      */
+    @DocletReplaceParams("event: keyof Events")
     public void disableScriptListeners(String event) {
         for (IEventListener listener : ImmutableList.copyOf(Core.getInstance().eventRegistry.getListeners(event))) {
             if (listener instanceof ScriptEventListener) {
@@ -507,6 +518,9 @@ public class FJsMacros extends PerExecLibrary {
      * @throws InterruptedException
      * @since 1.5.0
      */
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E")
+    @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
     public EventAndContext waitForEvent(String event) throws InterruptedException {
         return waitForEvent(event, null, null);
     }
@@ -516,6 +530,9 @@ public class FJsMacros extends PerExecLibrary {
      * @return
      * @throws InterruptedException
      */
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, filter: MethodWrapper<Events[E], undefined, boolean>")
+    @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
     public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean, ?> filter) throws InterruptedException {
         return waitForEvent(event, filter, null);
     }
@@ -530,6 +547,9 @@ public class FJsMacros extends PerExecLibrary {
      * @throws InterruptedException
      * @since 1.5.0
      */
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, filter: MethodWrapper<Events[E], undefined, boolean>, runBeforeWaiting: MethodWrapper<JavaObject, JavaObject, JavaObject>")
+    @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
     public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean, ?> filter, MethodWrapper<Object, Object, Object, ?> runBeforeWaiting) throws InterruptedException {
         // event return values
         final BaseEvent[] ev = {null};
@@ -630,6 +650,7 @@ public class FJsMacros extends PerExecLibrary {
      * @return a list of script-added listeners.
      * @since 1.2.3
      */
+    @DocletReplaceParams("event: keyof Events")
     public List<IEventListener> listeners(String event) {
         List<IEventListener> listeners = new ArrayList<>();
         for (IEventListener l : Core.getInstance().eventRegistry.getListeners(event)) {

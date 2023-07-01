@@ -4,6 +4,7 @@ import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -102,6 +103,7 @@ public class StyleHelper extends BaseHelper<Style> {
         return base.isObfuscated();
     }
 
+    @DocletReplaceReturn("TextClickAction")
     public String getClickAction() {
         if (base.getClickEvent() == null) {
             return null;
@@ -126,6 +128,7 @@ public class StyleHelper extends BaseHelper<Style> {
         return null;
     }
 
+    @DocletReplaceReturn("TextHoverAction")
     public String getHoverAction() {
         return base.getHoverEvent() == null ? null : base.getHoverEvent().getAction().getName();
     }

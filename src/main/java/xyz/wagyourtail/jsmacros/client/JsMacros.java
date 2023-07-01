@@ -69,6 +69,8 @@ public class JsMacros {
         }
     }
 
+    // if any screen name is added or modified, add it at FHud#getOpenScreenName() annotation as well
+    // i didn't put it here is because doclet won't check this class
     static public String getScreenName(Screen s) {
         if (s == null) {
             return null;

@@ -7,6 +7,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.math.MathHelper;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
@@ -32,6 +33,7 @@ public class Item implements RenderElement, Alignable<Item> {
     public int y;
     public int zIndex;
 
+    @DocletReplaceParams("x: int, y: int, zIndex: int, id: ItemId, overlay: boolean, scale: double, rotation: float")
     public Item(int x, int y, int zIndex, String id, boolean overlay, double scale, float rotation) {
         this(x, y, zIndex, new ItemStackHelper(id, 1), overlay, scale, rotation);
     }
@@ -71,6 +73,7 @@ public class Item implements RenderElement, Alignable<Item> {
      * @return
      * @since 1.0.5 [citation needed]
      */
+    @DocletReplaceParams("id: ItemId, count: int")
     public Item setItem(String id, int count) {
         this.item = new ItemStack(Registries.ITEM.get(RegistryHelper.parseIdentifier(id)), count);
         return this;
@@ -407,6 +410,7 @@ public class Item implements RenderElement, Alignable<Item> {
          * @return self for chaining.
          * @since 1.8.4
          */
+        @DocletReplaceParams("id: ItemId")
         public Builder item(String id) {
             this.itemStack = new ItemStackHelper(Registries.ITEM.get(RegistryHelper.parseIdentifier(id))
                     .getDefaultStack());
@@ -419,6 +423,7 @@ public class Item implements RenderElement, Alignable<Item> {
          * @return self for chaining.
          * @since 1.8.4
          */
+        @DocletReplaceParams("id: ItemId, count: int")
         public Builder item(String id, int count) {
             this.itemStack = new ItemStackHelper(id, count);
             return this;

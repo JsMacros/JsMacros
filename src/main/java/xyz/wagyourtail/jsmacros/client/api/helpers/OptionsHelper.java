@@ -19,6 +19,9 @@ import net.minecraft.util.Arm;
 import net.minecraft.world.Difficulty;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.glfw.GLFW;
+import xyz.wagyourtail.doclet.DocletEnumType;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IResourcePackManager;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinSimpleOption;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -168,6 +171,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return the active language.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("Locale")
     public String getLanguage() {
         return base.language;
     }
@@ -177,6 +181,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return self for chaining.
      * @since 1.8.4
      */
+    @DocletReplaceParams("languageCode: Locale")
     public OptionsHelper setLanguage(String languageCode) {
         LanguageManager manager = MinecraftClient.getInstance().getLanguageManager();
         LanguageDefinition language = manager.getLanguage(languageCode);
@@ -195,6 +200,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return the active difficulty.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("Difficulty")
     public String getDifficulty() {
         return mc.world.getDifficulty().getName();
     }
@@ -206,6 +212,8 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return self for chaining.
      * @since 1.8.4
      */
+    @DocletReplaceParams("name: Difficulty")
+    @DocletEnumType(name = "Difficulty", type = "'peaceful' | 'easy' | 'normal' | 'hard'")
     public OptionsHelper setDifficulty(String name) {
         if (mc.isIntegratedServerRunning()) {
             mc.getServer().setDifficulty(Difficulty.byName(name), true);
@@ -263,6 +271,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @return 0 for 1st person, 2 for in front.
      * @since 1.5.0
      */
+    @DocletReplaceReturn("Trit")
     public int getCameraMode() {
         return base.getPerspective().ordinal();
     }
@@ -271,6 +280,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @param mode 0: first, 2: front
      * @since 1.5.0
      */
+    @DocletReplaceParams("mode: Trit")
     public OptionsHelper setCameraMode(int mode) {
         base.setPerspective(Perspective.values()[mode]);
         return this;
@@ -567,6 +577,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return the selected graphics mode.
          * @since 1.8.4
          */
+        @DocletReplaceReturn("GraphicsMode")
         public String getGraphicsMode() {
             switch (base.getGraphicsMode().getValue()) {
                 case FAST:
@@ -585,6 +596,8 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return self for chaining.
          * @since 1.8.4
          */
+        @DocletReplaceParams("mode: GraphicsMode")
+        @DocletEnumType(name = "GraphicsMode", type = "'fast' | 'fancy' | 'fabulous'")
         public VideoOptionsHelper setGraphicsMode(String mode) {
             GraphicsMode newMode;
             switch (mode.toUpperCase(Locale.ROOT)) {
@@ -609,6 +622,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return the selected chunk builder mode.
          * @since 1.8.4
          */
+        @DocletReplaceReturn("ChunkBuilderMode")
         public String getChunkBuilderMode() {
             switch (base.getChunkBuilderMode().getValue()) {
                 case NONE:
@@ -628,6 +642,8 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return self for chaining.
          * @since 1.8.4
          */
+        @DocletReplaceParams("mode: ChunkBuilderMode")
+        @DocletEnumType(name = "ChunkBuilderMode", type = "'none' | 'nearby' | 'player_affected'")
         public VideoOptionsHelper setChunkBuilderMode(String mode) {
             ChunkBuilderMode newMode;
             switch (mode.toUpperCase(Locale.ROOT)) {
@@ -779,6 +795,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return the current attack indicator type.
          * @since 1.8.4
          */
+        @DocletReplaceReturn("AttackIndicatorType")
         public String getAttackIndicatorType() {
             switch (base.getAttackIndicator().getValue()) {
                 case OFF:
@@ -797,6 +814,8 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return self for chaining.
          * @since 1.8.4
          */
+        @DocletReplaceParams("type: AttackIndicatorType")
+        @DocletEnumType(name = "AttackIndicatorType", type = "'off' | 'crosshair' | 'hotbar'")
         public VideoOptionsHelper setAttackIndicatorType(String type) {
             AttackIndicator newType;
             switch (type.toUpperCase(Locale.ROOT)) {
@@ -856,6 +875,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return the current cloud rendering mode.
          * @since 1.8.4
          */
+        @DocletReplaceReturn("CloudsMode")
         public String getCloudsMode() {
             switch (base.getCloudRenderMode().getValue()) {
                 case OFF:
@@ -874,6 +894,8 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return self for chaining.
          * @since 1.8.4
          */
+        @DocletReplaceParams("mode: CloudsMode")
+        @DocletEnumType(name = "CloudsMode", type = "'off' | 'fast' | 'fancy'")
         public VideoOptionsHelper setCloudsMode(String mode) {
             CloudRenderMode newMode;
             switch (mode.toUpperCase(Locale.ROOT)) {
@@ -916,6 +938,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return the current particle rendering mode.
          * @since 1.8.4
          */
+        @DocletReplaceReturn("ParticleMode")
         public String getParticleMode() {
             switch (base.getParticles().getValue()) {
                 case MINIMAL:
@@ -935,6 +958,8 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return self for chaining.
          * @since 1.8.4
          */
+        @DocletReplaceParams("mode: ParticleMode")
+        @DocletEnumType(name = "ParticleMode", type = "'minimal' | 'decreased' | 'all'")
         public VideoOptionsHelper setParticleMode(String mode) {
             ParticlesMode newMode;
             switch (mode.toUpperCase(Locale.ROOT)) {
@@ -1264,6 +1289,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return the volume of the given sound category.
          * @since 1.8.4
          */
+        @DocletReplaceParams("category: SoundCategory")
         public float getVolume(String category) {
             return base.getSoundVolume(SOUND_CATEGORY_MAP.get(category));
         }
@@ -1286,6 +1312,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return self for chaining.
          * @since 1.8.4
          */
+        @DocletReplaceParams("category: SoundCategory, volume: double")
         public MusicOptionsHelper setVolume(String category, double volume) {
             base.getSoundVolumeOption(SOUND_CATEGORY_MAP.get(category)).setValue(volume);
             return this;
@@ -1541,6 +1568,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return a list of all keybinding catehories.
          * @since 1.8.4
          */
+        @DocletReplaceReturn("JavaList<KeyCategory>")
         public List<String> getCategories() {
             return Arrays.stream(base.allKeys).map(KeyBinding::getCategory).distinct().collect(Collectors.toList());
         }
@@ -1549,6 +1577,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return a list of all key names.
          * @since 1.8.4
          */
+        @DocletReplaceReturn("JavaList<Key>")
         public List<String> getKeys() {
             return Arrays.stream(base.allKeys).map(KeyBinding::getTranslationKey).collect(Collectors.toList());
         }
@@ -1557,6 +1586,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return a map of all keybindings and their bound key.
          * @since 1.8.4
          */
+        @DocletReplaceReturn("JavaMap<Bind, Key>")
         public Map<String, String> getKeyBinds() {
             Map<String, String> keyBinds = new HashMap<>(base.allKeys.length);
 
@@ -1571,6 +1601,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return a map of all keybindings and their bound key in the specified category.
          * @since 1.8.4
          */
+        @DocletReplaceParams("category: KeyCategory")
         public Map<String, String> getKeyBindsByCategory(String category) {
             return getKeyBindsByCategory().get(category);
         }
@@ -1619,6 +1650,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return the current chat visibility mode.
          * @since 1.8.4
          */
+        @DocletReplaceReturn("ChatVisibility")
         public String getChatVisibility() {
             String chatVisibilityKey = base.getChatVisibility().getValue().getTranslationKey();
             return chatVisibilityKey.substring(chatVisibilityKey.lastIndexOf('.'));
@@ -1629,6 +1661,8 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return self for chaining.
          * @since 1.8.4
          */
+        @DocletReplaceParams("mode: ChatVisibility")
+        @DocletEnumType(name = "ChatVisibility", type = "'FULL' | 'SYSTEM' | 'HIDDEN'")
         public ChatOptionsHelper setChatVisibility(String mode) {
             ChatVisibility newMode;
             switch (mode.toUpperCase(Locale.ROOT)) {
@@ -1853,6 +1887,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return the current narrator mode.
          * @since 1.8.4
          */
+        @DocletReplaceReturn("NarratorMode")
         public String getNarratorMode() {
             String narratorKey = ((TranslatableTextContent) (base.getNarrator().getValue().getName().getContent())).getKey();
             return narratorKey.substring(narratorKey.lastIndexOf('.'));
@@ -1864,6 +1899,8 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @return self for chaining.
          * @since 1.8.4
          */
+        @DocletReplaceParams("mode: NarratorMode")
+        @DocletEnumType(name = "NarratorMode", type = "'OFF' | 'ALL' | 'CHAT' | 'SYSTEM'")
         public ChatOptionsHelper setNarratorMode(String mode) {
             NarratorMode newMode;
             switch (mode.toUpperCase(Locale.ROOT)) {
@@ -2241,6 +2278,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @deprecated use {@link VideoOptionsHelper#getCloudsMode()} instead.
      */
     @Deprecated
+    @DocletReplaceReturn("Trit")
     public int getCloudMode() {
         switch (base.getCloudRenderMode().getValue()) {
             case FANCY:
@@ -2259,6 +2297,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @deprecated use {@link VideoOptionsHelper#setCloudsMode(String)} instead.
      */
     @Deprecated
+    @DocletReplaceParams("mode: Trit")
     public OptionsHelper setCloudMode(int mode) {
         switch (mode) {
             case 2:
@@ -2396,6 +2435,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @deprecated use {@link MusicOptionsHelper#setVolume(String, double)} instead.
      */
     @Deprecated
+    @DocletReplaceParams("category: SoundCategory, volume: double")
     public OptionsHelper setVolume(String category, double volume) {
         base.getSoundVolumeOption(Arrays.stream(SoundCategory.values()).filter(e -> e.getName().equals(category)).findFirst().orElseThrow(() -> new IllegalArgumentException("unknown sound category"))).setValue(volume);
         return this;
@@ -2407,6 +2447,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @deprecated use {@link MusicOptionsHelper#getVolumes()} instead.
      */
     @Deprecated
+    @DocletReplaceReturn("JavaMap<SoundCategory, float>")
     public Map<String, Float> getVolumes() {
         Map<String, Float> volumes = new HashMap<>();
         for (SoundCategory category : SoundCategory.values()) {
@@ -2446,6 +2487,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @deprecated use {@link MusicOptionsHelper#getVolume(String)} instead.
      */
     @Deprecated
+    @DocletReplaceParams("category: SoundCategory")
     public float getVolume(String category) {
         return base.getSoundVolume(SOUND_CATEGORY_MAP.get(category));
     }

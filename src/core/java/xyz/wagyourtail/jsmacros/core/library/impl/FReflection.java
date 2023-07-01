@@ -5,7 +5,9 @@ import javassist.CannotCompileException;
 import javassist.NotFoundException;
 import org.joor.Reflect;
 import xyz.wagyourtail.Util;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.classes.Mappings;
 import xyz.wagyourtail.jsmacros.core.classes.WrappedClassInstance;
@@ -57,7 +59,13 @@ public class FReflection extends PerExecLibrary {
      * @see FReflection#getClass(String, String)
      * @since 1.2.3
      */
-    @DocletReplaceReturn("_javatypes.java.lang.Class<T> & { new(...values): T }")
+    @DocletReplaceTypeParams("C extends string")
+    @DocletReplaceParams(
+            """
+            name: C): GetJava.Type$Reflection<C>;
+            function getClass<C extends JavaTypeList | keyof GetJava.Primitives>(name: C"""
+    )
+    @DocletReplaceReturn("GetJava.Type$Reflection<C>")
     public <T> Class<T> getClass(String name) throws ClassNotFoundException {
         switch (name) {
             case "boolean":
@@ -93,7 +101,13 @@ public class FReflection extends PerExecLibrary {
      * @throws ClassNotFoundException
      * @since 1.2.3
      */
-    @DocletReplaceReturn("_javatypes.java.lang.Class<T> & { new(...values): T }")
+    @DocletReplaceTypeParams("C extends string")
+    @DocletReplaceParams(
+            """
+            name: C, name2: string): GetJava.Type$Reflection<C>;
+            function getClass<C extends JavaTypeList | keyof GetJava.Primitives>(name: C, name2: JavaTypeList | keyof GetJava.Primitives"""
+    )
+    @DocletReplaceReturn("GetJava.Type$Reflection<C>")
     public <T> Class<T> getClass(String name, String name2) throws ClassNotFoundException {
         try {
             return getClass(name);

@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
 import net.minecraft.network.packet.Packet;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -16,6 +17,7 @@ public class EventJoinedRecvPacket implements BaseEvent, ICancelable {
 
     public boolean cancel;
     public Packet<?> packet;
+    @DocletReplaceReturn("PacketName")
     public final String type;
 
     public EventJoinedRecvPacket(Packet<?> packet) {

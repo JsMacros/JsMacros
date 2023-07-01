@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.registry.Registries;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 
 /**
@@ -28,6 +29,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * @return the block's id.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("BlockId")
     public String getId() {
         return Registries.BLOCK.getId(base.getBlock()).toString();
     }
@@ -124,6 +126,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * @return the piston behaviour of the state.
      * @since 1.6.5
      */
+    @DocletReplaceReturn("PistonBehaviour")
     public String getPistonBehaviour() {
         switch (base.getPistonBehavior()) {
             case NORMAL:

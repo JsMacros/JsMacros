@@ -4,6 +4,7 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.registry.Registries;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -35,6 +36,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      * @return
      * @since 1.2.4
      */
+    @DocletReplaceReturn("StatusEffectId")
     public String getId() {
         return Registries.STATUS_EFFECT.getId(base.getEffectType()).toString();
     }

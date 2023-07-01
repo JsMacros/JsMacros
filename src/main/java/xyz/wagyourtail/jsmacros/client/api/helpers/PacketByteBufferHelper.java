@@ -33,6 +33,8 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import xyz.wagyourtail.Pair;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
@@ -114,6 +116,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @see #getPacketNames()
      * @since 1.8.4
      */
+    @DocletReplaceParams("packetName: PacketName")
     public Packet<?> toPacket(String packetName) {
         return toPacket(PACKETS.get(packetName));
     }
@@ -275,6 +278,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @return a list of all packet names.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("JavaList<PacketName>")
     public List<String> getPacketNames() {
         return ImmutableList.copyOf(PACKETS.keySet());
     }

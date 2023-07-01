@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventJoinedRecvPacket;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventJoinedSendPacket;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventRecvPacket;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventSendPacket;
 
