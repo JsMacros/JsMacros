@@ -235,13 +235,19 @@ task shadowForgeJar(type: ShadowJar) {
     configurations = [project.configurations.shadowForge]
 }
 
-remapForgeJar {
-    inputFile.set shadowForgeJar.archiveFile
+task insertJs(type: Jar) {
+    from(zipTree shadowForgeJar.archiveFile)
+
+    archiveClassifier = "forge-dev-shadow-js"
 
     from(configurations.jsmacrosExtensionInclude.files) {
         include '*'
         into "META-INF/jsmacrosdeps"
     }
+}
+
+remapForgeJar {
+    inputFile.set insertJs.archiveFile
 }
 
 processFabricResources {
@@ -261,9 +267,7 @@ fabricJar {
 
     preserveFileTimestamps = false
     reproducibleFileOrder = true
-}
 
-remapFabricJar {
     from(configurations.jsmacrosExtensionInclude.files) {
         include '*'
         into "META-INF/jsmacrosdeps"
