@@ -57,6 +57,7 @@ public class ClassParser {
 
     /**
      * nothing much
+     *
      * @return up dir string
      */
     private String getUpDir(int extra) {
@@ -78,17 +79,22 @@ public class ClassParser {
         StringBuilder s = new StringBuilder();
         String cname = getClassName(type).replaceAll("\\$", ".");
         s.append("C\t").append(cname).append("\t")
-            .append(getPathPart());
-        if (group != null) s.append("\t").append(group);
-        if (alias != null) s.append("\t").append(alias);
+                .append(getPathPart());
+        if (group != null) {
+            s.append("\t").append(group);
+        }
+        if (alias != null) {
+            s.append("\t").append(alias);
+        }
         s.append("\n");
         for (Element el : type.getEnclosedElements()) {
             switch (el.getKind()) {
                 case ENUM_CONSTANT, FIELD -> s.append("F\t").append(cname).append("#").append(memberName(el))
-                    .append("\t").append(getPathPart()).append("#").append(memberId(el)).append("\n");
+                        .append("\t").append(getPathPart()).append("#").append(memberId(el)).append("\n");
                 case METHOD -> s.append("M\t").append(cname).append("#").append(memberName(el))
-                    .append("\t").append(getPathPart()).append("#").append(memberId(el)).append("\n");
-                default -> {}
+                        .append("\t").append(getPathPart()).append("#").append(memberId(el)).append("\n");
+                default -> {
+                }
             }
         }
         return s.toString();
@@ -96,16 +102,16 @@ public class ClassParser {
 
     public String genXML() {
         return "<!DOCTYPE html>\n" + new XMLBuilder("html").append(
-            new XMLBuilder("head").append(
-                new XMLBuilder("link", true, true).addStringOption("rel", "stylesheet").addStringOption("href", getUpDir(1) + "classContent.css")
-            ),
-            new XMLBuilder("body").append(
-                new XMLBuilder("header").append(
-                    new XMLBuilder("a").addStringOption("href", getUpDir(1)).append(
-                        "<----- Return to main JsMacros docs page."
-                    )
-                )),
-            parseClass()
+                new XMLBuilder("head").append(
+                        new XMLBuilder("link", true, true).addStringOption("rel", "stylesheet").addStringOption("href", getUpDir(1) + "classContent.css")
+                ),
+                new XMLBuilder("body").append(
+                        new XMLBuilder("header").append(
+                                new XMLBuilder("a").addStringOption("href", getUpDir(1)).append(
+                                        "<----- Return to main JsMacros docs page."
+                                )
+                        )),
+                parseClass()
         );
     }
 
@@ -152,13 +158,14 @@ public class ClassParser {
         builder.append(getSince(type));
         builder.append(getDescription(type));
 
-
         AtomicBoolean firstFlag = new AtomicBoolean(true);
         AtomicReference<XMLBuilder> constructors = new AtomicReference<>();
         //CONSTRUCTORS
         if (!group.equals("Library")) {
             type.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.CONSTRUCTOR).forEach(el -> {
-                if (!el.getModifiers().contains(Modifier.PUBLIC)) return;
+                if (!el.getModifiers().contains(Modifier.PUBLIC)) {
+                    return;
+                }
                 if (firstFlag.get()) {
                     firstFlag.set(false);
                     builder.append(new XMLBuilder("h3", true, true).append("Constructors"));
@@ -178,7 +185,9 @@ public class ClassParser {
 
         firstFlag.set(true);
         type.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.FIELD || e.getKind() == ElementKind.ENUM_CONSTANT).forEach(el -> {
-            if (!el.getModifiers().contains(Modifier.PUBLIC)) return;
+            if (!el.getModifiers().contains(Modifier.PUBLIC)) {
+                return;
+            }
             if (firstFlag.get()) {
                 firstFlag.set(false);
 
@@ -195,20 +204,21 @@ public class ClassParser {
 
             fields.get().append(parseField(el));
             fieldShorts.get().append(
-                new XMLBuilder("div").setClass("shortField shortClassItem").append(
-                    new XMLBuilder("a", true, true).addStringOption("href", getURL(el).getKey()).append(memberName(el)),
-                    createFlags(el, true)
-                )
+                    new XMLBuilder("div").setClass("shortField shortClassItem").append(
+                            new XMLBuilder("a", true, true).addStringOption("href", getURL(el).getKey()).append(memberName(el)),
+                            createFlags(el, true)
+                    )
             );
         });
-
 
         AtomicReference<XMLBuilder> methodShorts = new AtomicReference<>();
         AtomicReference<XMLBuilder> methods = new AtomicReference<>();
 
         firstFlag.set(true);
         type.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.METHOD).forEach(el -> {
-            if (!el.getModifiers().contains(Modifier.PUBLIC)) return;
+            if (!el.getModifiers().contains(Modifier.PUBLIC)) {
+                return;
+            }
             if (firstFlag.get()) {
                 firstFlag.set(false);
 
@@ -224,10 +234,10 @@ public class ClassParser {
             }
             methods.get().append(parseMethod((ExecutableElement) el));
             methodShorts.get().append(
-                new XMLBuilder("div").setClass("shortMethod shortClassItem").append(
-                    new XMLBuilder("a", true, true).addStringOption("href", getURL(el).getKey()).append(memberName(el)),
-                    createFlags(el, true)
-                )
+                    new XMLBuilder("div").setClass("shortMethod shortClassItem").append(
+                            new XMLBuilder("a", true, true).addStringOption("href", getURL(el).getKey()).append(memberName(el)),
+                            createFlags(el, true)
+                    )
             );
         });
 
@@ -237,18 +247,20 @@ public class ClassParser {
     private XMLBuilder parseConstructor(ExecutableElement element) {
         XMLBuilder constructor = new XMLBuilder("div").setClass("constructor classItem").setId(memberId(element));
         constructor.append(new XMLBuilder("h4").setClass("constructorTitle classItemTitle").append(
-            "new ", getClassName((TypeElement) element.getEnclosingElement()), "(",
+                "new ", getClassName((TypeElement) element.getEnclosingElement()), "(",
                 createTitleParams(element).setClass("constructorParams"),
-            ")"
+                ")"
         ));
         constructor.append(createFlags(element, false));
         constructor.append(getSince(element));
 
         constructor.append(new XMLBuilder("div").setClass("constructorDesc classItemDesc")
-            .append(getDescription(element)));
+                .append(getDescription(element)));
 
         XMLBuilder paramTable = createParamTable(element);
-        if (paramTable != null) constructor.append(paramTable);
+        if (paramTable != null) {
+            constructor.append(paramTable);
+        }
 
         return constructor;
     }
@@ -257,7 +269,7 @@ public class ClassParser {
         XMLBuilder method = new XMLBuilder("div").setClass("method classItem").setId(memberId(element));
         XMLBuilder methodTitle;
         method.append(methodTitle = new XMLBuilder("h4", true).setClass("methodTitle classItemTitle").append(
-            ".", element.getSimpleName()
+                ".", element.getSimpleName()
         ));
 
         List<? extends TypeParameterElement> params = element.getTypeParameters();
@@ -271,8 +283,8 @@ public class ClassParser {
         }
 
         methodTitle.append("(",
-            createTitleParams(element).setClass("methodParams"),
-            ")"
+                createTitleParams(element).setClass("methodParams"),
+                ")"
         );
         method.append(createFlags(element, false));
         method.append(getSince(element));
@@ -280,13 +292,15 @@ public class ClassParser {
         method.append(new XMLBuilder("div").setClass("methodDesc classItemDesc").append(getDescription(element)));
 
         XMLBuilder paramTable = createParamTable(element);
-        if (paramTable != null) method.append(paramTable);
+        if (paramTable != null) {
+            method.append(paramTable);
+        }
 
         method.append(new XMLBuilder("div").setClass("methodReturn classItemType").append(
-            new XMLBuilder("h5", true, true).setClass("methodReturnTitle classItemTypeTitle").append(
-                "Returns: ", parseType(element.getReturnType())
-            ),
-            getReturnDescription(element).setClass("methodReturnDesc classItemTypeDesc")
+                new XMLBuilder("h5", true, true).setClass("methodReturnTitle classItemTypeTitle").append(
+                        "Returns: ", parseType(element.getReturnType())
+                ),
+                getReturnDescription(element).setClass("methodReturnDesc classItemTypeDesc")
         ));
 
         return method;
@@ -294,9 +308,13 @@ public class ClassParser {
 
     private XMLBuilder getReturnDescription(ExecutableElement element) {
         DocCommentTree dct = Main.treeUtils.getDocCommentTree(element);
-        if (dct == null) return new XMLBuilder("p");
+        if (dct == null) {
+            return new XMLBuilder("p");
+        }
         ReturnTree t = (ReturnTree) dct.getBlockTags().stream().filter(e -> e.getKind() == DocTree.Kind.RETURN).findFirst().orElse(null);
-        if (t == null) return new XMLBuilder("p");
+        if (t == null) {
+            return new XMLBuilder("p");
+        }
         return createDescription(element, t.getDescription());
     }
 
@@ -307,28 +325,32 @@ public class ClassParser {
             flag = true;
             builder.append(parameter.getSimpleName(), ", ");
         }
-        if (flag) builder.pop();
+        if (flag) {
+            builder.pop();
+        }
         return builder;
     }
 
     private XMLBuilder createParamTable(ExecutableElement element) {
         List<? extends VariableElement> params = element.getParameters();
-        if (params == null || params.isEmpty()) return null;
+        if (params == null || params.isEmpty()) {
+            return null;
+        }
         XMLBuilder body;
         XMLBuilder table = new XMLBuilder("table").setClass("paramTable").append(
-            new XMLBuilder("thead").append(
-                new XMLBuilder("th", true, true).append("Parameter"),
-                new XMLBuilder("th", true, true).append("Type"),
-                new XMLBuilder("th", true, true).append("Description")
-            ),
-            body = new XMLBuilder("tbody")
+                new XMLBuilder("thead").append(
+                        new XMLBuilder("th", true, true).append("Parameter"),
+                        new XMLBuilder("th", true, true).append("Type"),
+                        new XMLBuilder("th", true, true).append("Description")
+                ),
+                body = new XMLBuilder("tbody")
         );
         Map<String, XMLBuilder> paramDescMap = getParamDescriptions(element);
         for (VariableElement param : params) {
             body.append(new XMLBuilder("tr").append(
-                new XMLBuilder("td", true, true).append(param.getSimpleName()),
-                new XMLBuilder("td", true, true).append(parseType(param.asType())),
-                new XMLBuilder("td", true, true).append(paramDescMap.get(param.getSimpleName().toString()))
+                    new XMLBuilder("td", true, true).append(param.getSimpleName()),
+                    new XMLBuilder("td", true, true).append(parseType(param.asType())),
+                    new XMLBuilder("td", true, true).append(paramDescMap.get(param.getSimpleName().toString()))
             ));
         }
         return table;
@@ -337,7 +359,7 @@ public class ClassParser {
     private XMLBuilder parseField(Element element) {
         XMLBuilder field = new XMLBuilder("div").setClass("field classItem").setId(memberId(element));
         field.append(new XMLBuilder("h4", true).setClass("classItemTitle").append(
-            ".", memberName(element)
+                ".", memberName(element)
         ));
         field.append(createFlags(element, false));
         field.append(getSince(element));
@@ -345,9 +367,9 @@ public class ClassParser {
         field.append(new XMLBuilder("div").setClass("fieldDesc classItemDesc").append(getDescription(element)));
 
         field.append(new XMLBuilder("div").setClass("fieldReturn classItemType").append(
-            new XMLBuilder("h5", true, true).setClass("fieldTypeTitle classItemTypeTitle").append(
-                "Type: ", parseType(element.asType())
-            )
+                new XMLBuilder("h5", true, true).setClass("fieldTypeTitle classItemTypeTitle").append(
+                        "Type: ", parseType(element.asType())
+                )
         ));
 
         return field;
@@ -356,7 +378,9 @@ public class ClassParser {
     public Map<String, XMLBuilder> getParamDescriptions(ExecutableElement element) {
         Map<String, XMLBuilder> paramMap = new HashMap<>();
         DocCommentTree comment = Main.treeUtils.getDocCommentTree(element);
-        if (comment == null) return paramMap;
+        if (comment == null) {
+            return paramMap;
+        }
         comment.getBlockTags().stream().filter(e -> e.getKind() == DocTree.Kind.PARAM).forEach(e -> paramMap.put(((ParamTree) e).getName().getName().toString(), createDescription(element, ((ParamTree) e).getDescription())));
         return paramMap;
     }
@@ -427,14 +451,18 @@ public class ClassParser {
                         if (url.getValue()) {
                             link.addStringOption("target", "_blank");
                         }
-                        if (link.options.get("href").equals("\"\"")) link.setClass("type deadType");
-                        else link.setClass("type");
+                        if (link.options.get("href").equals("\"\"")) {
+                            link.setClass("type deadType");
+                        } else {
+                            link.setClass("type");
+                        }
 
                     } else {
                         s.append(((LinkTree) docTree).getReference().getSignature());
                     }
                 }
-                case CODE -> s.append(new XMLBuilder("code", true).setClass("inlineCode").append(((LiteralTree)docTree).getBody()));
+                case CODE ->
+                        s.append(new XMLBuilder("code", true).setClass("inlineCode").append(((LiteralTree) docTree).getBody()));
                 default -> s.append(docTree);
             }
         }
@@ -460,14 +488,24 @@ public class ClassParser {
                 if (url.getValue()) {
                     typeLink.addStringOption("target", "_blank");
                 }
-                if (typeLink.options.get("href").equals("\"\"")) typeLink.setClass("type deadType");
-                else typeLink.setClass("type");
+                if (typeLink.options.get("href").equals("\"\"")) {
+                    typeLink.setClass("type deadType");
+                } else {
+                    typeLink.setClass("type");
+                }
 
                 List<? extends TypeMirror> params = ((DeclaredType) type).getTypeArguments();
                 if (params != null && !params.isEmpty()) {
                     builder.append("<");
                     for (TypeMirror param : params) {
-                        builder.append(parseType(param), ", ");
+                        if (param instanceof TypeVariable typeVariable && typeVariable.getUpperBound().equals(type)) {
+                            builder.append(typeLink = new XMLBuilder("p", true));
+                            typeLink.setClass("type primitiveType");
+                            typeLink.append(typeVariable.asElement().getSimpleName());
+                            builder.append(", ");
+                        } else {
+                            builder.append(parseType(param), ", ");
+                        }
                     }
                     builder.pop();
                     builder.append(">");
@@ -476,12 +514,12 @@ public class ClassParser {
             case TYPEVAR -> {
                 builder.append(typeLink = new XMLBuilder("p", true));
                 typeLink.setClass("type primitiveType");
-                typeLink.append(((TypeVariable)type).asElement().getSimpleName());
+                typeLink.append(((TypeVariable) type).asElement().getSimpleName());
                 TypeMirror ext = ((TypeVariable) type).getUpperBound();
                 if (!ext.toString().equals("java.lang.Object")) {
                     typeLink.append(
-                        new XMLBuilder("p").setClass("classExtends").append("<b> extends </b>"),
-                        parseType(ext)
+                            new XMLBuilder("p").setClass("classExtends").append("<b> extends </b>"),
+                            parseType(ext)
                     );
                 }
             }
@@ -495,7 +533,9 @@ public class ClassParser {
     }
 
     private Pair<String, Boolean> getURL(Element type) {
-        if (type.asType().getKind().isPrimitive()) return new Pair<>("", false);
+        if (type.asType().getKind().isPrimitive()) {
+            return new Pair<>("", false);
+        }
         Element clazz = type;
         while (!(clazz instanceof TypeElement)) {
             clazz = clazz.getEnclosingElement();
@@ -531,14 +571,18 @@ public class ClassParser {
         switch (member.getKind()) {
             case ENUM_CONSTANT, FIELD -> s.append(member.getSimpleName());
             case CONSTRUCTOR, METHOD -> {
-                if (member.getKind() == ElementKind.METHOD) s.append(member.getSimpleName());
-                else s.append("constructor");
+                if (member.getKind() == ElementKind.METHOD) {
+                    s.append(member.getSimpleName());
+                } else {
+                    s.append("constructor");
+                }
                 for (VariableElement parameter : ((ExecutableElement) member).getParameters()) {
                     s.append("-").append(getTypeMirrorName(parameter.asType()));
                 }
                 s.append("-");
             }
-            case TYPE_PARAMETER -> {}
+            case TYPE_PARAMETER -> {
+            }
             default -> throw new UnsupportedOperationException(String.valueOf(member.getKind()));
         }
 
@@ -554,7 +598,9 @@ public class ClassParser {
                 for (VariableElement parameter : ((ExecutableElement) member).getParameters()) {
                     s.append(parameter.getSimpleName()).append(", ");
                 }
-                if (((ExecutableElement) member).getParameters().size() > 0) s.setLength(s.length() - 2);
+                if (((ExecutableElement) member).getParameters().size() > 0) {
+                    s.setLength(s.length() - 2);
+                }
                 s.append(")");
             }
             default -> throw new UnsupportedOperationException(String.valueOf(member.getKind()));
@@ -617,32 +663,33 @@ public class ClassParser {
                 case ABSTRACT -> {
                     if (member.getKind() != ElementKind.INTERFACE && member.getEnclosingElement().getKind() != ElementKind.INTERFACE) {
                         flags.append(
-                            new XMLBuilder("div", true, true).setClass("flag abstractFlag").append(shortFlags ? "A" : "Abstract")
+                                new XMLBuilder("div", true, true).setClass("flag abstractFlag").append(shortFlags ? "A" : "Abstract")
                         );
                     }
                 }
                 case STATIC -> flags.append(
-                    new XMLBuilder("div", true, true).addStringOption("class", "flag staticFlag").append(shortFlags ? "S" : "Static")
+                        new XMLBuilder("div", true, true).addStringOption("class", "flag staticFlag").append(shortFlags ? "S" : "Static")
                 );
                 case FINAL -> flags.append(
-                    new XMLBuilder("div", true, true).addStringOption("class", "flag finalFlag").append(shortFlags ? "F" : "Final")
+                        new XMLBuilder("div", true, true).addStringOption("class", "flag finalFlag").append(shortFlags ? "F" : "Final")
                 );
-                default -> {}
+                default -> {
+                }
             }
         }
         if (member.getKind() == ElementKind.ENUM || member.getKind() == ElementKind.ENUM_CONSTANT) {
             flags.append(
-                new XMLBuilder("div", true, true).addStringOption("class", "flag enumFlag").append(shortFlags ? "E" : "Enum")
+                    new XMLBuilder("div", true, true).addStringOption("class", "flag enumFlag").append(shortFlags ? "E" : "Enum")
             );
         }
         if (member.getKind() == ElementKind.INTERFACE) {
             flags.append(
-                new XMLBuilder("div", true, true).addStringOption("class", "flag interfaceFlag").append(shortFlags ? "I" : "Interface")
+                    new XMLBuilder("div", true, true).addStringOption("class", "flag interfaceFlag").append(shortFlags ? "I" : "Interface")
             );
         }
         if (member.getAnnotation(Deprecated.class) != null) {
             flags.append(
-                new XMLBuilder("div", true, true).addStringOption("class", "flag deprecatedFlag").append(shortFlags ? "D" : "Deprecated")
+                    new XMLBuilder("div", true, true).addStringOption("class", "flag deprecatedFlag").append(shortFlags ? "D" : "Deprecated")
             );
         }
         return flags;
@@ -650,8 +697,12 @@ public class ClassParser {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ClassParser that)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ClassParser that)) {
+            return false;
+        }
         return type.equals(that.type);
     }
 

@@ -29,7 +29,6 @@ public class Main implements Doclet {
     public static Set<? extends Element> elements;
     public static Map<Element, ClassParser> internalClasses;
 
-
     @Override
     public void init(Locale locale, Reporter reporter) {
         Main.reporter = reporter;
@@ -91,28 +90,28 @@ public class Main implements Doclet {
                 //Library
                 if (mirror != null) {
                     //Library
-                    if(!classes.containsKey("libraries")){
+                    if (!classes.containsKey("libraries")) {
                         classes.put("libraries", new HashMap<>());
                     }
                     classes.get("libraries").put(ClassParser.getClassName(e), getAnnotationValue("value", mirror) + "");
-                }else if(e.getAnnotationMirrors().stream().filter(a -> a.getAnnotationType().asElement().getSimpleName().toString().equals("Event")).findFirst().orElse(null) != null){
+                } else if (e.getAnnotationMirrors().stream().filter(a -> a.getAnnotationType().asElement().getSimpleName().toString().equals("Event")).findFirst().orElse(null) != null) {
                     //Event
-                    if(!classes.containsKey("events")){
+                    if (!classes.containsKey("events")) {
                         classes.put("events", new HashMap<>());
                     }
                     classes.get("events").put(ClassParser.getClassName(e), getAnnotationValue("value", e.getAnnotationMirrors().stream().filter(a -> a.getAnnotationType().asElement().getSimpleName().toString().equals("Event")).findFirst().orElse(null)) + "");
-                }else if(ClassParser.getClassName(e).contains("Helper")){
-                    if(!classes.containsKey("helpers")){
+                } else if (ClassParser.getClassName(e).contains("Helper")) {
+                    if (!classes.containsKey("helpers")) {
                         classes.put("helpers", new HashMap<>());
                     }
                     classes.get("helpers").put(ClassParser.getClassName(e), ClassParser.getClassName(e));
-                }else if(ClassParser.getClassName(e).contains("Mixin")){
-                    if(!classes.containsKey("mixins")){
+                } else if (ClassParser.getClassName(e).contains("Mixin")) {
+                    if (!classes.containsKey("mixins")) {
                         classes.put("mixins", new HashMap<>());
                     }
                     classes.get("mixins").put(ClassParser.getClassName(e), ClassParser.getClassName(e));
-                }else{
-                    if(!classes.containsKey("rest")){
+                } else {
+                    if (!classes.containsKey("rest")) {
                         classes.put("rest", new HashMap<>());
                     }
                     classes.get("rest").put(ClassParser.getClassName(e), ClassParser.getClassName(e));
@@ -122,22 +121,22 @@ public class Main implements Doclet {
 
             //Create Sum Up Files
             reporter.print(Diagnostic.Kind.NOTE, classes + "");
-            for(Map.Entry<String, HashMap<String, String>> entry : classes.entrySet()){
+            for (Map.Entry<String, HashMap<String, String>> entry : classes.entrySet()) {
                 StringBuilder sb = new StringBuilder();
 
                 sb.append("from typing import TypeVar\n\n");
                 sb.append("from .EventContainer import EventContainer\n");
                 sb.append("from .BaseEvent import BaseEvent\n");
 
-                for(Map.Entry<String, String> args : entry.getValue().entrySet()) {
+                for (Map.Entry<String, String> args : entry.getValue().entrySet()) {
                     sb.append("from .").append(args.getKey()).append(" import ").append(args.getKey()).append("\n");
                 }
 
                 sb.append("\nFile = TypeVar(\"java.io.File\")\n\n"); // TypeVar should be ()
 
-                if(entry.getKey().equalsIgnoreCase("libraries")){
+                if (entry.getKey().equalsIgnoreCase("libraries")) {
                     sb.append("\n\n");
-                    for(Map.Entry<String, String> args : entry.getValue().entrySet()) {
+                    for (Map.Entry<String, String> args : entry.getValue().entrySet()) {
                         sb.append(args.getValue()).append(" = ").append(args.getKey()).append("()\n");
                     }
 
@@ -148,9 +147,8 @@ public class Main implements Doclet {
                 new FileHandler(new File(outDir, entry.getKey() + ".py")).write(sb.toString());
             }
 
-
             //Create Classes
-            for(ClassParser value : internalClasses.values()){
+            for (ClassParser value : internalClasses.values()) {
                 File out = new File(outDir, ClassParser.getClassName(value.type) + ".py");
                 File parent = out.getParentFile();
                 if (!parent.exists() && !parent.mkdirs()) {
@@ -162,11 +160,10 @@ public class Main implements Doclet {
 
             //Create __init__.py
             StringBuilder sb = new StringBuilder();
-            for(String file : classes.keySet()){
+            for (String file : classes.keySet()) {
                 sb.append("from .").append(file).append(" import *\n");
             }
             new FileHandler(new File(outDir, "__init__.py")).write(sb.toString());
-
 
             sb.delete(0, sb.length());
             sb.append("""
@@ -187,7 +184,7 @@ public class Main implements Doclet {
                     if "-" in VERSION: VERSION = VERSION.split("-")[0]
                     VERSION += "." + str(time.time()).split(".")[0][3:]
                     DESCRIPTION = 'A package to let your IDE know what JsMacros can do'
-                    
+                                        
                     def package_files(directory):
                         paths = []
                         for (path, directories, filenames) in os.walk(directory):
@@ -217,10 +214,10 @@ public class Main implements Doclet {
                             "Operating System :: MacOS :: MacOS X",
                             "Operating System :: Microsoft :: Windows",
                         ]
-                    )""");  
+                    )""");
             new FileHandler(new File(outDir.getParent(), "setup.py")).write(sb.toString());
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -229,8 +226,9 @@ public class Main implements Doclet {
 
     public static Object getAnnotationValue(String key, AnnotationMirror annotation) {
         for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> el : annotation.getElementValues().entrySet()) {
-            if (el.getKey().getSimpleName().toString().equals(key))
+            if (el.getKey().getSimpleName().toString().equals(key)) {
                 return el.getValue().getValue();
+            }
         }
         return null;
     }

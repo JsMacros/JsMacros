@@ -7,10 +7,10 @@
     --primary-text-color: #000000;
     --link-color: #0000FF;
     --visited-link-color: #800080;
-  }
-  
-  /* Dark Mode */
-  [color-mode="dark"] {
+}
+
+/* Dark Mode */
+[color-mode="dark"] {
     --top-nav-footer-color: #373a3d;
     --side-nav-color: #424345;
     --class-content-color: #181a1b;
@@ -18,9 +18,9 @@
     --primary-text-color: #e8e6e3;
     --link-color: #3391ff;
     --visited-link-color: #a832b1;
-  }
+}
 
-  /* Any element with the class "light--hidden" will be hidden when the site is set to Light Mode */
+/* Any element with the class "light--hidden" will be hidden when the site is set to Light Mode */
 :root[color-mode="light"] .light--hidden {
     display: none;
 }
@@ -50,6 +50,7 @@ select, input {
     color: var(--primary-text-color);
     background-color: transparent;
 }
+
 .color-mode__btn:hover {
     background-color: var(--side-nav-color);
 }
@@ -164,29 +165,36 @@ body > div {
     .topNav h1 {
         width: 100%;
     }
+
     .sideNav {
         position: absolute;
         float: left;
         display: none;
-        background-color: rgba(0,0,0,0);
+        background-color: rgba(0, 0, 0, 0);
     }
+
     #mainNav {
         background-color: var(--side-nav-color);
         padding: 5px;
     }
+
     #mainNav a {
         margin: 10px;
     }
+
     #mainContent {
         width: 100%;
     }
+
     body > div {
         display: block;
     }
+
     .topNav h1 {
         float: left;
         width: auto;
     }
+
     #menuBtn {
         display: block;
         position: absolute;

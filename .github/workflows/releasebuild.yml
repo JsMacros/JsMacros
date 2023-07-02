@@ -4,33 +4,224 @@ on:
       branch:
         required: true
         type: string
-      java_version:
+      GITHUB_REF:
         required: true
         type: string
+      upload_docs:
+        required: true
+        type: boolean
+    secrets:
+      CF_API_KEY:
+        required: true
+      MODRINTH_TOKEN:
+        required: true
+      PYPI_API_TOKEN:
+        required: true
+
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ inputs.branch }}
 
+      - name: Get Artifact Id
+        uses: actions/github-script@v5
+        id: artifact_id
+        env:
+          branch: '${{ inputs.branch }}'
+        with:
+          result-encoding: string
+          script: |
+            // use env branch replace / with _
+            return process.env.branch.replace(/\//g, '_')
+
       - name: Setup Java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'adopt'
-          java-version: ${{ inputs.java_version }}
+          java-version: 17
 
-      - name: Grant Execute Permiussion
+      - name: Grant Execute Permission
         run: chmod +x gradlew
 
       - name: Build
         run: ./gradlew build
 
       - name: Upload To Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.branch }}
-          path: ./dist/**/*
+          name: ${{ steps.artifact_id.outputs.result }}
+          path: |
+            ./dist/**/*
+            ./gradle.properties
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+      - name: Get Artifact Id
+        uses: actions/github-script@v5
+        id: artifact_id
+        env:
+          branch: '${{ inputs.branch }}'
+        with:
+          result-encoding: string
+          script: |
+            // use env branch replace / with _
+            return process.env.branch.replace(/\//g, '_')
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ steps.artifact_id.outputs.result }}
+
+      - name: Load Gradle Properties
+        uses: christian-draeger/read-properties@1.1.1
+        id: gradle_properties
+        with:
+          path: './gradle.properties'
+          properties: 'java_version'
+
+      - name: Check For Fabric Jar
+        uses: actions/github-script@v5
+        id: fabric_release
+        with:
+          result-encoding: string
+          script: |
+            const fs = require("fs")
+            return fs.readdirSync("./dist/").filter(e => e.endsWith("fabric.jar"))[0] || false;
+
+      - name: Check For Forge Jar
+        uses: actions/github-script@v5
+        id: forge_release
+        with:
+          result-encoding: string
+          script: |
+            const fs = require("fs")
+            return fs.readdirSync("./dist/").filter(e => e.endsWith("forge.jar"))[0] || false;
+
+      - name: Zip TS
+        uses: vimtor/action-zip@v1
+        with:
+          files: dist/typescript/
+          dest: dist/typescript-${{ steps.artifact_id.outputs.result }}.zip
+
+      - name: Upload TS to Git Release
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: ./dist/typescript-${{ steps.artifact_id.outputs.result }}.zip application/jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Version Number
+        uses: actions/github-script@v5
+        id: version_num
+        env:
+          GV: '${{ steps.gradle_properties.outputs.minecraft_version }}'
+          REF: '${{ inputs.GITHUB_REF }}'
+        with:
+          result-encoding: string
+          script: |
+            return `${process.env.REF.replace(/\/?refs\/tags\//, '')}+${process.env.GV}`
+
+      - name: Run Publish Fabric
+        if: ${{ steps.fabric_release.outputs.result != 'false' }}
+        uses: Kir-Antipov/mc-publish@v3.2
+        with:
+          modrinth-id: 3wGWhm8A
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          modrinth-featured: false
+          modrinth-unfeature-mode: any
+
+          curseforge-id: 403185
+          curseforge-token: ${{ secrets.CF_API_KEY }}
+
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+          name: ${{ steps.fabric_release.outputs.result }}
+          version: ${{ steps.version_num.outputs.result }}-fabric
+
+          files: ./dist/${{ steps.fabric_release.outputs.result }}
+          version-type: release
+
+          loaders: fabric
+          game-versions: ${{ steps.gradle_properties.outputs.minecraft_version }}
+
+          java: ${{ steps.gradle_properties.outputs.java_version }}
+          retry-attempts: 5
+          retry-delay: 60000
+          fail-mode: skip
+
+      - name: Run Publish Forge
+        if: ${{ steps.forge_release.outputs.result != 'false' }}
+        uses: Kir-Antipov/mc-publish@v3.2
+        with:
+          modrinth-id: 3wGWhm8A
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          modrinth-featured: false
+          modrinth-unfeature-mode: any
+
+          curseforge-id: 403185
+          curseforge-token: ${{ secrets.CF_API_KEY }}
+
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+          name: ${{ steps.forge_release.outputs.result }}
+          version: ${{ steps.version_num.outputs.result }}-forge
+
+          files: ./dist/${{ steps.forge_release.outputs.result }}
+          version-type: release
+
+          loaders: forge
+          game-versions: ${{ steps.gradle_properties.outputs.minecraft_version }}
+
+          java: ${{ steps.gradle_properties.outputs.java_version }}
+          retry-attempts: 5
+          retry-delay: 60000
+          fail-mode: skip
+
+  upload_pydoc:
+    if: ${{ inputs.upload_docs }}
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+      - name: Get Artifact Id
+        uses: actions/github-script@v5
+        id: artifact_id
+        env:
+          branch: '${{ inputs.branch }}'
+        with:
+          result-encoding: string
+          script: |
+            // use env branch replace / with _
+            return process.env.branch.replace(/\//g, '_')      
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ steps.artifact_id.outputs.result }}
+
+      - name: Install Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+
+      - name: Install Python Deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools wheel twine
+
+      - name: Upload PyDoc
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          cd dist/python
+          python setup.py sdist bdist_wheel
+          twine upload dist/*

@@ -8,31 +8,30 @@ public class XMLBuilder {
     public final String type;
     public boolean inline;
     public boolean startNewLine;
-    
+
     public XMLBuilder(String type) {
         this.type = type;
         this.inline = false;
         this.startNewLine = true;
     }
-    
+
     public XMLBuilder(String type, boolean inline) {
         this.type = type;
         this.inline = inline;
         this.startNewLine = !inline;
     }
-    
+
     public XMLBuilder(String type, boolean inline, boolean startNewLine) {
         this.type = type;
         this.inline = inline;
         this.startNewLine = startNewLine;
     }
-    
-    
+
     public XMLBuilder addOption(String key, String option) {
         options.put(key, option);
         return this;
     }
-    
+
     public XMLBuilder addKeyOption(String option) {
         options.put(option, null);
         return this;
@@ -50,8 +49,8 @@ public class XMLBuilder {
         options.put(key, "\"" + option + "\"");
         return this;
     }
-    
-    public XMLBuilder append(Object ...children) {
+
+    public XMLBuilder append(Object... children) {
         this.children.addAll(Arrays.asList(children));
         return this;
     }
@@ -68,7 +67,9 @@ public class XMLBuilder {
         final StringBuilder builder = new StringBuilder("<").append(type);
         for (Map.Entry<String, String> option : options.entrySet()) {
             builder.append(" ").append(option.getKey());
-            if (option.getValue() != null) builder.append("=").append(option.getValue());
+            if (option.getValue() != null) {
+                builder.append("=").append(option.getValue());
+            }
         }
         builder.append(">");
         if (children.isEmpty()) {
@@ -89,9 +90,12 @@ public class XMLBuilder {
         }
         return builder.toString();
     }
-    
+
     private String tabIn(String string, boolean inline) {
-        if (inline) return string;
+        if (inline) {
+            return string;
+        }
         return string.replaceAll("\n", "\n    ");
     }
+
 }
