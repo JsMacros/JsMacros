@@ -87,7 +87,7 @@ jobs:
         id: gradle_properties
         with:
           path: './gradle.properties'
-          properties: 'java_version'
+          properties: 'java_version minecraft_version'
 
       - name: Check For Fabric Jar
         uses: actions/github-script@v5
@@ -146,7 +146,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
           name: ${{ steps.fabric_release.outputs.result }}
-          version: ${{ steps.version_num.outputs.result }}-fabric
+          version: ${{ steps.version_num.outputs.result }}
 
           files: ./dist/${{ steps.fabric_release.outputs.result }}
           version-type: release
@@ -174,7 +174,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
           name: ${{ steps.forge_release.outputs.result }}
-          version: ${{ steps.version_num.outputs.result }}-forge
+          version: ${{ steps.version_num.outputs.result }}
 
           files: ./dist/${{ steps.forge_release.outputs.result }}
           version-type: release
