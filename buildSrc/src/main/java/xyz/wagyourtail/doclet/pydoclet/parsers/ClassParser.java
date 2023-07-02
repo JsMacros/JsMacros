@@ -91,7 +91,7 @@ public class ClassParser {
             sb.append(") -> ");
             if (method.getReceiverType() != null) {
                 String return_type = getTypeMirrorName(method.getReturnType(), false);
-                Main.reporter.print(Diagnostic.Kind.NOTE, return_type);  // TODO hey! why weird type?
+//                Main.reporter.print(Diagnostic.Kind.NOTE, return_type);  // TODO hey! why weird type?
 
                 sb.append(return_type);
             };
