@@ -83,6 +83,7 @@ public class Main implements Doclet {
 
             //Create ClassParser
             elements.stream().filter(e -> e instanceof TypeElement).map(e -> (TypeElement) e).forEach(e -> {
+                // filter elements, if e is TypeElement, then it can be
                 internalClasses.put(e, new ClassParser(e));
 
                 AnnotationMirror mirror = e.getAnnotationMirrors().stream().filter(a -> a.getAnnotationType().asElement().getSimpleName().toString().equals("Library")).findFirst().orElse(null);
@@ -131,7 +132,7 @@ public class Main implements Doclet {
                     sb.append("from .").append(args.getKey()).append(" import ").append(args.getKey()).append("\n");
                 }
 
-                sb.append("\nFile = TypeVar[\"java.io.File\"]\n\n");
+                sb.append("\nFile = TypeVar(\"java.io.File\")\n\n"); // TypeVar should be ()
 
                 if (entry.getKey().equalsIgnoreCase("libraries")) {
                     sb.append("\n\n");
