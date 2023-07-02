@@ -90,7 +90,7 @@ public class ClassParser {
             if (method.getReceiverType() != null) {
                 sb.append(getTypeMirrorName(method.getReturnType(), false));
             }
-
+            // TODO: NEED MERGE
             if (method.getReceiverType() != null) {
                 String return_type = getTypeMirrorName(method.getReturnType(), false);
 
@@ -306,6 +306,7 @@ public class ClassParser {
             sb.append(entry.getKey()).append(" = TypeVar").append(entry.getValue().getValue() ? "(" : "[").append("\"").append(entry.getValue().getKey().replace("<", "_").replace(">", "_").replace("?", "")).append("\"").append(entry.getValue().getValue() ? ")" : "]").append("\n");
             //sb.append(entry.getKey()).append(" = TypeVar[\"").append(entry.getValue().replace("<", "_").replace(">", "_").replace("?", "")).append("\"]\n");
         }
+        // TODO: NEED MERGE
         String type_name;
         for(Map.Entry<String, Map.Entry<String, Boolean>> entry : typeVars.entrySet()){
             type_name = entry.getValue().getKey().replace("<", "_").replace(">", "_").replace("?", "").replace(".", "_");
