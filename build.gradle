@@ -213,12 +213,6 @@ forgeJar {
 
     preserveFileTimestamps = false
     reproducibleFileOrder = true
-
-    manifest {
-        attributes([
-                'MixinConnector': 'xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser',
-        ])
-    }
 }
 
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
@@ -243,6 +237,12 @@ task insertJs(type: Jar) {
     from(configurations.jsmacrosExtensionInclude.files) {
         include '*'
         into "META-INF/jsmacrosdeps"
+    }
+
+    manifest {
+        attributes([
+                'MixinConnector': 'xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser',
+        ])
     }
 }
 
