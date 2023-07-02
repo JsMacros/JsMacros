@@ -96,14 +96,6 @@ jobs:
             const fs = require("fs")
             return fs.readdirSync("./dist/").filter(e => e.endsWith("fabric.jar"))[0] || false;
 
-      - name: Upload Fabric to Git Release
-        if: ${{ steps.fabric_release.outputs.result != 'false' }}
-        uses: JasonEtco/upload-to-release@master
-        with:
-          args: ./dist/${{ steps.fabric_release.outputs.result }} application/jar
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Check For Forge Jar
         uses: actions/github-script@v5
         id: forge_release
@@ -112,14 +104,6 @@ jobs:
           script: |
             const fs = require("fs")
             return fs.readdirSync("./dist/").filter(e => e.endsWith("forge.jar"))[0] || false;
-
-      - name: Upload Forge to Git Release
-        if: ${{ steps.forge_release.outputs.result != 'false' }}
-        uses: JasonEtco/upload-to-release@master
-        with:
-          args: ./dist/${{ steps.forge_release.outputs.result }} application/jar
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Zip TS
         uses: vimtor/action-zip@v1
@@ -157,6 +141,8 @@ jobs:
           curseforge-id: 403185
           curseforge-token: ${{ secrets.CF_API_KEY }}
 
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
           name: ${{ steps.fabric_release.outputs.result }}
           version: ${{ steps.version_num.outputs.result }}-fabric
 
@@ -182,6 +168,8 @@ jobs:
 
           curseforge-id: 403185
           curseforge-token: ${{ secrets.CF_API_KEY }}
+
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
           name: ${{ steps.forge_release.outputs.result }}
           version: ${{ steps.version_num.outputs.result }}-forge
