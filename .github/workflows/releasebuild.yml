@@ -124,12 +124,11 @@ jobs:
         uses: actions/github-script@v5
         id: version_num
         env:
-          GV: '${{ steps.gradle_properties.outputs.minecraft_version }}'
           REF: '${{ inputs.GITHUB_REF }}'
         with:
           result-encoding: string
           script: |
-            return `${process.env.REF.replace(/\/?refs\/tags\//, '')}+${process.env.GV}`
+            return process.env.REF.replace(/\/?refs\/tags\//, '')
 
       - name: Run Publish Fabric
         if: ${{ steps.fabric_release.outputs.result != 'false' }}
