@@ -60,8 +60,6 @@ public class ClassParser {
         //imports + abstract types
         sb.insert(0, getImports()).append("\n");
 
-        //Main.reporter.print(Diagnostic.Kind.NOTE, type + ", " + imports + "");
-
         return sb.toString();
     }
 
@@ -88,7 +86,6 @@ public class ClassParser {
             sb.append(") -> ");
             if (method.getReceiverType() != null) {
                 String return_type = getTypeMirrorName(method.getReturnType(), false);
-//                Main.reporter.print(Diagnostic.Kind.NOTE, return_type);  // TODO hey! why weird type?
 
                 sb.append(return_type);
             };
@@ -197,9 +194,7 @@ public class ClassParser {
     private String createDescription(Element element, List<? extends DocTree> inlineDoc) {
         StringBuilder sb = new StringBuilder();
 
-        //Main.reporter.print(Diagnostic.Kind.NOTE, element + "");
         for (DocTree docTree : inlineDoc) {
-            //Main.reporter.print(Diagnostic.Kind.NOTE, " - " + docTree + ", " + docTree.getKind());
             switch (docTree.getKind()) {
                 case TEXT -> sb.append(docTree.toString().strip()).append(" "); //.replace("\n", "")
                 case CODE -> sb.append("'").append(((LiteralTree) docTree).getBody()).append("' ");
@@ -237,7 +232,6 @@ public class ClassParser {
         StringBuilder sb = new StringBuilder();
 
         List<String> imp = new LinkedList<>();
-        //Main.reporter.print(Diagnostic.Kind.NOTE, type + ": " + importList);
 
         imports.forEach(t -> {
             if (!types.containsKey(getClearedNameFromTypeMirror(t))) {
@@ -255,7 +249,6 @@ public class ClassParser {
                             (t + "").startsWith("java.lang.Runnable") || (t + "").startsWith("java.lang.Thread") || (t + "").startsWith("java.lang.Throwable") ||
                             (t + "").startsWith("java.util.function") || (t + "").startsWith("java.lang.ref") || (t + "").startsWith("java.io") || (t + "").startsWith("org") || (t + "").startsWith("java.lang.Iterable") ||
                             (t + "").startsWith("java.lang.StackTraceElement")) {
-                        //Main.reporter.print(Diagnostic.Kind.NOTE, typeVars + "");
                         if (!importTypeVar) {
                             importTypeVar = true;
                         }
@@ -371,7 +364,6 @@ public class ClassParser {
                 sb.append(getTypeMirrorName(extend, true));
                 addImport(extend);
             }
-            //Main.reporter.print(Diagnostic.Kind.NOTE, sb.lastIndexOf(", ") + ", " + sb.length());
             if (sb.lastIndexOf(", ") == sb.length() - 2) {
                 sb.delete(sb.length() - 2, sb.length());
             }
@@ -402,9 +394,6 @@ public class ClassParser {
 
     private String getTypeMirrorName(TypeMirror type, boolean cls) {
         imports.add(type);
-//        Main.reporter.print(Diagnostic.Kind.MANDATORY_WARNING, type + "");
-//        Main.reporter.print(Diagnostic.Kind.NOTE, type.toString());
-        // TODO  hey! why weird names?
         switch (type.getKind()) {
             case BOOLEAN -> {
                 return "bool";
