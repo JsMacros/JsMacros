@@ -1,13 +1,15 @@
 package xyz.wagyourtail.wagyourgui.overlays;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 
 import java.util.List;
 import java.util.function.Consumer;
+
+import static net.minecraft.client.gui.DrawableHelper.fill;
 
 public class ConfirmOverlay extends OverlayContainer {
     private final Consumer<ConfirmOverlay> accept;
@@ -50,18 +52,18 @@ public class ConfirmOverlay extends OverlayContainer {
 
     }
 
-    protected void renderMessage(DrawContext drawContext) {
+    protected void renderMessage(MatrixStack drawContext) {
         for (int i = 0; i < lines; ++i) {
             int w = textRenderer.getWidth(text.get(i));
             int centeredX = (int) (hcenter ? x + width / 2F - w / 2F : x + 3);
-            drawContext.drawText(textRenderer, text.get(i), centeredX, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF, false);
+            textRenderer.draw(drawContext, text.get(i), centeredX, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF);
         }
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
         this.renderBackground(drawContext);
-        drawContext.fill(x + 1, y + height - 13, x + width - 1, y + height - 12, 0xFFFFFFFF);
+        fill(drawContext, x + 1, y + height - 13, x + width - 1, y + height - 12, 0xFFFFFFFF);
         this.renderMessage(drawContext);
         super.render(drawContext, mouseX, mouseY, delta);
     }

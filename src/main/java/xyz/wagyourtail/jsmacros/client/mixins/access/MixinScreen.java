@@ -6,6 +6,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.*;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -91,6 +92,8 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Shadow
     public abstract boolean handleTextClick(@Nullable Style style);
+
+    @Shadow protected abstract void renderTextHoverEffect(MatrixStack matrices, @Nullable Style style, int x, int y);
 
     @Override
     public int getWidth() {
@@ -902,7 +905,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public void jsmacros_render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void jsmacros_render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
         if (drawContext == null) {
             return;
         }
@@ -923,7 +926,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             }
 
             if (hoverText != null) {
-                drawContext.drawHoverEvent(textRenderer, textRenderer.getTextHandler().getStyleAt(hoverText.text, mouseX - hoverText.x), mouseX, mouseY);
+                renderTextHoverEffect(drawContext, textRenderer.getTextHandler().getStyleAt(hoverText.text, mouseX - hoverText.x), mouseX, mouseY);
             }
         }
     }

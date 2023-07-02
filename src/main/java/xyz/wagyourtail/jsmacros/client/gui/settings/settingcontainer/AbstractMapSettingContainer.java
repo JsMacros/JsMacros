@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import static net.minecraft.client.gui.DrawableHelper.fill;
 
 public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettingContainer.MapSettingEntry<T>> extends AbstractSettingContainer {
     public SettingsOverlay.SettingField<Map<String, T>> setting;
@@ -121,9 +123,9 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        drawContext.drawText(textRenderer, settingName, (int) (x + width / 2F - textRenderer.getWidth(settingName) / 2F + 20), y + 1, 0xFFFFFF, false);
-        drawContext.fill(x, y + 10, x + width, y + 11, 0xFFFFFFFF);
+    public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
+        textRenderer.draw(drawContext, settingName, (int) (x + width / 2F - textRenderer.getWidth(settingName) / 2F + 20), y + 1, 0xFFFFFF);
+        fill(drawContext, x, y + 10, x + width, y + 11, 0xFFFFFFFF);
     }
 
     public static abstract class MapSettingEntry<T> extends MultiElementContainer<AbstractMapSettingContainer<T, MapSettingEntry<T>>> {
@@ -194,7 +196,7 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
         }
 
         @Override
-        public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
 
         }
 

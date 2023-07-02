@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.containers;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
@@ -10,6 +10,9 @@ import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.service.EventService;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
+
+import static net.minecraft.client.gui.DrawableHelper.drawCenteredTextWithShadow;
+import static net.minecraft.client.gui.DrawableHelper.fill;
 
 public class RunningContextContainer extends MultiElementContainer<CancelScreen> {
     private Button cancelButton;
@@ -42,22 +45,22 @@ public class RunningContextContainer extends MultiElementContainer<CancelScreen>
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
         try {
             if (t != null) {
                 if (t.isContextClosed()) {
                     JsMacros.LOGGER.warn("Closed context {} was still in list", t.getMainThread().getName());
                     parent.removeContainer(this);
                 } else if (this.visible) {
-                    drawContext.drawCenteredTextWithShadow(textRenderer, textRenderer.trimToWidth(service ? ((EventService) t.getTriggeringEvent()).serviceName : t.getMainThread().getName(), width - 105 - height), x + (width - 105 - height) / 2 + height + 4, y + 2, 0xFFFFFF);
-                    drawContext.drawCenteredTextWithShadow(textRenderer, textRenderer.trimToWidth(DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - t.startTime), 100), x + width - 50 + height, y + 2, 0xFFFFFF);
-                    drawContext.fill(x + width - 101, y, x + width - 100, y + height, 0xFFFFFFFF);
-                    drawContext.fill(x + height, y, x + height + 1, y + height, 0xFFFFFFFF);
+                    drawCenteredTextWithShadow(drawContext, textRenderer, textRenderer.trimToWidth(service ? ((EventService) t.getTriggeringEvent()).serviceName : t.getMainThread().getName(), width - 105 - height), x + (width - 105 - height) / 2 + height + 4, y + 2, 0xFFFFFF);
+                    drawCenteredTextWithShadow(drawContext, textRenderer, textRenderer.trimToWidth(DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - t.startTime), 100), x + width - 50 + height, y + 2, 0xFFFFFF);
+                    fill(drawContext, x + width - 101, y, x + width - 100, y + height, 0xFFFFFFFF);
+                    fill(drawContext, x + height, y, x + height + 1, y + height, 0xFFFFFFFF);
                     // border
-                    drawContext.fill(x, y, x + width, y + 1, 0xFFFFFFFF);
-                    drawContext.fill(x, y + height - 1, x + width, y + height, 0xFFFFFFFF);
-                    drawContext.fill(x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
-                    drawContext.fill(x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
+                    fill(drawContext, x, y, x + width, y + 1, 0xFFFFFFFF);
+                    fill(drawContext, x, y + height - 1, x + width, y + height, 0xFFFFFFFF);
+                    fill(drawContext, x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
+                    fill(drawContext, x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
                 }
             } else {
                 parent.removeContainer(this);

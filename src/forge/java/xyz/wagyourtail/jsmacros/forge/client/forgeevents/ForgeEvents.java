@@ -2,13 +2,9 @@ package xyz.wagyourtail.jsmacros.forge.client.forgeevents;
 
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraftforge.client.event.RegisterClientCommandsEvent;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
@@ -28,17 +24,6 @@ import java.util.stream.Collectors;
 
 public class ForgeEvents {
     private static final MinecraftClient client = MinecraftClient.getInstance();
-
-    private static final Constructor<DrawContext> DRAW_CONTEXT_CONSTRUCTOR;
-
-    static {
-        try {
-            DRAW_CONTEXT_CONSTRUCTOR = DrawContext.class.getDeclaredConstructor(MinecraftClient.class, MatrixStack.class, VertexConsumerProvider.Immediate.class);
-            DRAW_CONTEXT_CONSTRUCTOR.setAccessible(true);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public static void init() {
         MinecraftForge.EVENT_BUS.addListener(ForgeEvents::renderWorldListener);
@@ -66,7 +51,7 @@ public class ForgeEvents {
 
     public static void onScreenDraw(ScreenEvent.Render.Post event) {
         if (!(event.getScreen() instanceof ScriptScreen)) {
-            ((IScreenInternal) event.getScreen()).jsmacros_render(event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTick());
+            ((IScreenInternal) event.getScreen()).jsmacros_render(event.getPoseStack(), event.getMouseX(), event.getMouseY(), event.getPartialTick());
         }
     }
 
@@ -86,7 +71,7 @@ public class ForgeEvents {
         ((IScreenInternal) event.getScreen()).jsmacros_mouseDragged(event.getMouseX(), event.getMouseY(), event.getMouseButton(), event.getDragX(), event.getDragY());
     }
 
-    public static void renderHudListener(ForgeGui gui, DrawContext drawContext, float partialTicks, int width, int height) {
+    public static void renderHudListener(ForgeGui gui, MatrixStack drawContext, float partialTicks, int width, int height) {
         for (IDraw2D<Draw2D> h : ImmutableSet.copyOf(FHud.overlays).stream().sorted(Comparator.comparingInt(IDraw2D::getZIndex)).collect(Collectors.toList())) {
             try {
                 h.render(drawContext);
@@ -99,15 +84,12 @@ public class ForgeEvents {
         ev.registerBelow(VanillaGuiOverlay.DEBUG_TEXT.id(), "jsmacros_hud", ForgeEvents::renderHudListener);
     }
 
-    public static void renderWorldListener(RenderLevelStageEvent e) {
-        if (e.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) {
-            return;
-        }
+    @SuppressWarnings("removal")
+    public static void renderWorldListener(RenderLevelLastEvent e) {
         client.getProfiler().swap("jsmacros_draw3d");
         for (Draw3D d : ImmutableSet.copyOf(FHud.renders)) {
             try {
-                DrawContext drawContext = DRAW_CONTEXT_CONSTRUCTOR.newInstance(client, e.getPoseStack(), client.getBufferBuilders().getEntityVertexConsumers());
-                d.render(drawContext, e.getPartialTick());
+                d.render(e.getPoseStack(), e.getPartialTick());
             } catch (Throwable t) {
                 t.printStackTrace();
             }
