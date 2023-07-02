@@ -283,7 +283,6 @@ public class ClassParser {
                 sb.append(entry.getKey()).append(" = ").append(type_name).append("\n\n");
             };
         }
-        sb.append("\n");
 
         return sb.toString();
     }
