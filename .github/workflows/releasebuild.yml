@@ -84,7 +84,7 @@ jobs:
         uses: christian-draeger/read-properties@1.1.1
         id: gradle_properties
         with:
-          path: './dist/gradle.properties'
+          path: './gradle.properties'
           properties: 'java_version'
 
       - name: Check For Fabric Jar
