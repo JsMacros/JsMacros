@@ -296,22 +296,16 @@ public class ClassParser {
         imp.forEach(s -> sb.append("from .").append(s).append(" import ").append(s).append("\n"));
 
         sb.append("\n");
-        for (Map.Entry<String, Map.Entry<String, Boolean>> entry : typeVars.entrySet()) {
-            sb.append(entry.getKey()).append(" = TypeVar").append(entry.getValue().getValue() ? "(" : "[").append("\"").append(entry.getValue().getKey().replace("<", "_").replace(">", "_").replace("?", "")).append("\"").append(entry.getValue().getValue() ? ")" : "]").append("\n");
-            //sb.append(entry.getKey()).append(" = TypeVar[\"").append(entry.getValue().replace("<", "_").replace(">", "_").replace("?", "")).append("\"]\n");
+        String type_name;
+        for(Map.Entry<String, Map.Entry<String, Boolean>> entry : typeVars.entrySet()){
+            type_name = entry.getValue().getKey().replace("<", "_").replace(">", "_").replace("?", "").replace(".", "_");
+            if(Objects.equals(type_name.toString(), "T") || Objects.equals(type_name.toString(), "U") || Objects.equals(type_name.toString(), "R")){
+                sb.append(entry.getKey()).append(" = TypeVar(\"").append(entry.getKey()).append("\")\n");
+            } else {
+                sb.append(type_name).append(" = TypeVar(\"").append(type_name).append("\")\n");
+                sb.append(entry.getKey()).append(" = ").append(type_name).append("\n\n");
+            };
         }
-        // TODO: NEED MERGE
-//        String type_name;
-//        for(Map.Entry<String, Map.Entry<String, Boolean>> entry : typeVars.entrySet()){
-//            type_name = entry.getValue().getKey().replace("<", "_").replace(">", "_").replace("?", "").replace(".", "_");
-//            if(Objects.equals(type_name.toString(), "T") || Objects.equals(type_name.toString(), "U") || Objects.equals(type_name.toString(), "R")){
-//                sb.append(entry.getKey()).append(" = TypeVar(\"").append(entry.getKey()).append("\")\n");
-//            } else {
-//                sb.append(type_name).append(" = TypeVar(\"").append(type_name).append("\")\n");
-//                sb.append(entry.getKey()).append(" = ").append(type_name).append("\n\n");
-//            };
-//        }
-        sb.append("\n");
 
         return sb.toString();
     }
