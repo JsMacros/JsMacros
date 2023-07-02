@@ -8,7 +8,6 @@ import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.js.language.impl.GraalLanguageDefinition;
-import xyz.wagyourtail.jsmacros.js.language.impl.GuestExceptionSimplifier;
 import xyz.wagyourtail.jsmacros.js.library.impl.FWrapper;
 
 import java.io.File;
@@ -33,7 +32,7 @@ public class GraalExtension implements Extension {
         });
         t.start();
         try {
-            Core.getInstance().config.addOptions("js", GraalConfig.class);
+            Core.getInstance().config.addOptions("js", JSConfig.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -69,6 +68,7 @@ public class GraalExtension implements Extension {
         return "js";
     }
 
+
     @Override
     public BaseLanguage<?, ?> getLanguage(Core<?, ?> runner) {
         if (languageDefinition == null) {
@@ -93,6 +93,7 @@ public class GraalExtension implements Extension {
         return Extension.super.getDependencies();
     }
 
+
     @Override
     public BaseWrappedException<?> wrapException(Throwable ex) {
         if (ex instanceof PolyglotException) {
@@ -105,7 +106,7 @@ public class GraalExtension implements Extension {
                     message += ": " + intMessage;
                 }
             } else {
-                message = GuestExceptionSimplifier.simplifyException(ex);
+                message = ex.getMessage();
                 if (message == null) {
                     message = "UnknownGuestException";
                 }
@@ -121,15 +122,11 @@ public class GraalExtension implements Extension {
     }
 
     private BaseWrappedException<?> internalWrap(PolyglotException.StackFrame current, Iterator<PolyglotException.StackFrame> frames) {
-        if (current == null) {
-            return null;
-        }
+        if (current == null) return null;
         if (current.isGuestFrame()) {
             return new BaseWrappedException<>(current, " at " + current.getRootName(), wrapLocation(current.getSourceLocation()), frames.hasNext() ? internalWrap(frames.next(), frames) : null);
         }
-        if (current.toHostFrame().getClassName().equals("org.graalvm.polyglot.Context") && current.toHostFrame().getMethodName().equals("eval")) {
-            return null;
-        }
+        if (current.toHostFrame().getClassName().equals("org.graalvm.polyglot.Context") && current.toHostFrame().getMethodName().equals("eval")) return null;
         return BaseWrappedException.wrapHostElement(current.toHostFrame(), frames.hasNext() ? internalWrap(frames.next(), frames) : null);
     }
 
@@ -144,5 +141,4 @@ public class GraalExtension implements Extension {
         }
         return loc;
     }
-
 }

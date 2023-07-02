@@ -1,23 +1,19 @@
 plugins {
-    id "java"
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 archivesBaseName = archivesBaseName + "-js-extension"
 
 configurations {
-    jsmacrosExtensionInclude
-}
-
-repositories {
-    mavenCentral()
+    common
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
 }
 
 dependencies {
-    implementation "com.google.guava:guava:32.0.1-jre"
-    implementation "com.google.code.gson:gson:2.8.9"
-    implementation "org.slf4j:slf4j-api:1.7.32"
-    implementation "it.unimi.dsi:fastutil:8.5.6"
+    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
+    // Do NOT use other classes from fabric loader
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
 
     implementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
     implementation "org.graalvm.js:js:${project.graal_version}"
@@ -26,6 +22,7 @@ dependencies {
 //		implementation "org.graalvm.compiler:compiler:${project.graal_version}"
 //		implementation "org.graalvm.compiler:compiler-management:${project.graal_version}"
 
+
     jsmacrosExtensionInclude "org.graalvm.sdk:graal-sdk:${project.graal_version}"
     jsmacrosExtensionInclude "org.graalvm.js:js:${project.graal_version}"
     jsmacrosExtensionInclude "org.graalvm.truffle:truffle-api:${project.graal_version}"
@@ -33,10 +30,9 @@ dependencies {
 //		jsmacrosExtensionInclude "org.graalvm.compiler:compiler:${project.graal_version}"
 //		jsmacrosExtensionInclude "org.graalvm.compiler:compiler-management:${project.graal_version}"
 
-    implementation(rootProject.sourceSets.core.output)
+    implementation(project(":common").sourceSets.core.output)
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testImplementation 'org.jetbrains:annotations:20.1.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
 }
@@ -48,7 +44,7 @@ processResources {
 }
 
 jar {
-    from(configurations.jsmacrosExtensionInclude.files) {
+    from (configurations.jsmacrosExtensionInclude.files) {
         include '*'
         into "META-INF/jsmacrosdeps"
     }
@@ -56,4 +52,18 @@ jar {
 
 test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenFabric(MavenPublication) {
+            artifactId = rootProject.archives_base_name + "-" + project.name
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+    }
 }

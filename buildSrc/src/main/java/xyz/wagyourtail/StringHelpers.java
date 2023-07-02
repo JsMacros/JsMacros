@@ -11,12 +11,12 @@ public class StringHelpers {
     }
 
     public static String tabIn(String string) {
-        return ("\n" + string).replaceAll("\n(?=[^\n])", "\n    ").substring(1);
+        return "    " + string.replaceAll("\n", "\n    ");
     }
 
     public static String tabIn(String string, int count) {
         for (int i = 0; i < count; i++) {
-            string = tabIn(string);
+            string = "    " + string.replaceAll("\n", "\n    ");
         }
         return string;
     }
@@ -28,5 +28,4 @@ public class StringHelpers {
     public static String addToLineStarts(String string, String start) {
         return start + string.replaceAll("\n", "\n" + start);
     }
-
 }

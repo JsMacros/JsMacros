@@ -39,7 +39,7 @@ public class Links implements Doclet.Option {
 
     @Override
     public boolean process(String option, List<String> arguments) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL(arguments.get(0) + "package-list").openStream()))) {
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(new URL(arguments.get(0) + "package-list").openStream()))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 externalPackages.put(line, arguments.get(0) + "index.html?" + line.replaceAll("\\.", "/") + "/");

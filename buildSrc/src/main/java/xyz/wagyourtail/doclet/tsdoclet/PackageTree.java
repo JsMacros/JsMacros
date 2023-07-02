@@ -10,20 +10,7 @@ import javax.lang.model.element.TypeElement;
 import java.util.*;
 
 public class PackageTree {
-    public final static Set<String> predefinedClasses = Set.of(
-        "java.util.Collection", "java.util.List", "java.util.Map", "java.util.Set",
-        "java.io.File", "java.net.URL", "java.net.URI", "java.lang.Object", "java.lang.Class",
-        "java.lang.Throwable", "java.io.Serializable", "java.lang.StackTraceElement",
-        "java.lang.Iterable"
-    );
-    // List of reserved keywords #2536
-    // https://github.com/microsoft/TypeScript/issues/2536
-    public final static Set<String> tsReservedWords = Set.of(
-        "break", "case", "catch", "class", "const", "continue", "debugger", "default",
-        "delete", "do", "else", "enum", "export", "extends", "false", "finally", "for",
-        "function", "if", "import", "in", "instanceof", "new", "null", "return", "super",
-        "switch", "this", "throw", "true", "try", "typeof", "var", "void", "while", "with"
-    );
+    public final static List<String> predefinedClasses = List.of("java.util.Collection", "java.util.List", "java.util.Map", "java.util.Set", "java.io.File", "java.net.URL", "java.net.URI", "java.lang.Object", "java.lang.Class", "java.lang.Throwable", "java.io.Serializable", "java.lang.StackTraceElement");
     private String pkgName;
     private Map<String, PackageTree> children = new LinkedHashMap<>();
     private Set<ClassParser> classes = new LinkedHashSet<>();
@@ -42,16 +29,12 @@ public class PackageTree {
         while (enclose != null && enclose.getKind() != ElementKind.PACKAGE) enclose = enclose.getEnclosingElement();
 
         if (enclose != null) {
-            String[] pkg = ((PackageElement)enclose).getQualifiedName().toString().split("\\.");
+            String[] pkg = ((PackageElement)enclose).getQualifiedName().toString().replace(".function.", "._function.").split("\\.");
             for (int i = pkg.length - 1; i >= 0; --i) {
-                if (pkg[i].equals("")) {
-                    continue;
-                }
+                if (pkg[i].equals("")) continue;
                 enclosing.push(pkg[i]);
             }
-            if (predefinedClasses.contains(String.join(".", pkg) + "." + clazz.getSimpleName())) {
-                return;
-            }
+            if (predefinedClasses.contains(String.join(".", pkg) + "." + clazz.getSimpleName())) return;
         }
         addClassInternal(enclosing, clazz);
     }
@@ -60,7 +43,9 @@ public class PackageTree {
         if (enclosing.empty()) {
             this.dirty = classes.add(new ClassParser((TypeElement) clazz)) || this.dirty;
         } else {
-            this.dirty = children.computeIfAbsent(enclosing.pop(), PackageTree::new)
+            String enc = enclosing.pop();
+            if (enc.equals("function")) enc = "_function";
+            this.dirty = children.computeIfAbsent(enc, PackageTree::new)
                 .addClassInternal(enclosing, clazz) || this.dirty;
         }
         return this.dirty;
@@ -80,67 +65,25 @@ public class PackageTree {
 
     public String genTSTree() {
         prepareTSTree();
-        return genTSTreeIntern().replaceAll("\\bPackages\\.", "");
+        return genTSTreeIntern();
     }
 
     private String genTSTreeIntern() {
         if (classes.size() == 0 && children.size() == 1) {
             PackageTree onlyChild = children.values().stream().findFirst().get();
-            if (!tsReservedWords.contains(onlyChild.pkgName)) {
-                onlyChild.pkgName = pkgName + "." + onlyChild.pkgName;
-                return onlyChild.genTSTreeIntern();
-            }
+            onlyChild.pkgName = pkgName + "." + onlyChild.pkgName;
+            return onlyChild.genTSTreeIntern();
         }
-
-        StringBuilder exports = new StringBuilder("");
-        StringBuilder se = new StringBuilder("namespace ");
-        if (tsReservedWords.contains(pkgName)) {
-            System.out.println("Escaped typescript reserved word: " + pkgName + " -> _" + pkgName);
-            se.append("_");
+        StringBuilder s = new StringBuilder("namespace ");
+        s.append(pkgName).append(" {\n");
+        for (String value : compiledClasses.values()) {
+            s.append("\n").append(StringHelpers.tabIn(value));
         }
-        se.append(pkgName).append(" {");
-        StringBuilder sn = new StringBuilder(se);
-
-        for (ClassParser key : compiledClasses.keySet()) {
-            exports.append(key.getClassName(false)).append(",\n");
-            se.append("\n\n").append(StringHelpers.tabIn(compiledClasses.get(key)));
-        }
-        boolean escaped = false;
         for (PackageTree value : children.values()) {
-            if (tsReservedWords.contains(value.pkgName)) {
-                exports.append("_").append(value.pkgName).append(" as ").append(value.pkgName).append(",\n");
-                escaped = true;
-                se.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
-            } else sn.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
+            s.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
         }
-
-        if (!exports.isEmpty()) {
-            exports.setLength(exports.length() - 2);
-            se.append("\n\n    export {");
-            if (exports.length() < 64) {
-                se.append(" ").append(exports.toString().replaceAll("\n", " ")).append(" }");
-            } else {
-                se.append("\n")
-                    .append(StringHelpers.tabIn(exports.toString(), 2))
-                .append("\n    }");
-            }
-            se.append("\n\n}");
-        } else se.setLength(0);
-
-        if (!sn.toString().endsWith(" {")) {
-            if (se.isEmpty()) se = sn;
-            else se.append("\n").append(sn);
-            se.append("\n\n}");
-        }
-
-        return se.toString();
-    }
-
-    public List<ClassParser> getXyzClasses() {
-        for (PackageTree value : children.values()) {
-            if (value.pkgName.equals("xyz")) return value.getAllClasses();
-        }
-        return null;
+        s.append("\n}");
+        return s.toString();
     }
 
     public List<ClassParser> getAllClasses() {
@@ -150,5 +93,4 @@ public class PackageTree {
         }
         return result;
     }
-
 }

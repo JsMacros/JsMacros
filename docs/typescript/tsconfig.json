@@ -2,24 +2,16 @@
     "compilerOptions": {
         "module": "CommonJS",
         "removeComments": false,
-        "target": "ES2022",
-        "lib": ["ES2022"],
+        "target": "ES2020",
+        "lib": ["ES2020"],
         "outDir": "./build",
-        "skipLibCheck": true,
-        "typeRoots": []
+        "skipLibCheck": true
     },
     "include": [
         "scripts/**/*.ts",
-        "headers/*.d.ts"
+      "headers/*.d.ts"
     ],
-    "outDir": "./build",
-    "skipLibCheck": true
-  },
-  "include": [
-    "scripts/**/*.ts",
-    "headers/*.d.ts"
-  ],
-  "exclude": [
-    "build/*"
-  ]
+    "exclude": [
+        "build/*"
+    ]
 }

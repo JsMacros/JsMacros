@@ -1,13 +1,11 @@
 # JsMacros
 
-This mod allows for the development of scripts to interact with the chat, and other parts of the world, using a
-scripting language.  
-More information and documentation of all features and modules can be found on the
-website: <https://jsmacros.wagyourtail.xyz>
+This mod allows for the development of scripts to interact with the chat, and other parts of the world, using a scripting language.  
+More information and documentation of all features and modules can be found on the website: <https://jsmacros.wagyourtail.xyz>
 
 [**Join The JsMacros Discord**](https://discord.gg/P6W58J8)
 
-## Downloads/Releases
+## Downloads/Releases 
 
 [![Build Release](https://github.com/JsMacros/JsMacros/actions/workflows/release.yml/badge.svg)](https://github.com/wagyourtail/JsMacros/actions/workflows/release.yml)
 
@@ -19,13 +17,11 @@ website: <https://jsmacros.wagyourtail.xyz>
 
 ## Extensions
 
-Extensions allow you to code in languages other than the default language JavaScript, and some even have performance
-benefits.
+Extensions allow you to code in languages other than the default language JavaScript, and some even have performance benefits. 
 
 #### [More about extensions](https://jsmacros.wagyourtail.xyz/?/extensions.html)
 
 ## Beta Builds
-
 1.18: [![Build Beta](https://github.com/JsMacros/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=main-1.18)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Amain-1.18)
 
 1.17.1: [![Build Beta](https://github.com/JsMacros/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.17.1)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.17.1)
@@ -45,7 +41,6 @@ benefits.
 <https://www.patreon.com/wagyourtail>
 
 ## Acknoledgements
-
 [
 ![JProfiler](https://www.ej-technologies.com/images/product_banners/jprofiler_small.png)
 Thank You to JProfiler for usage of the Java Profiler tool for optimizing jsmacros!

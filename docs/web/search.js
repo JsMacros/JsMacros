@@ -17,15 +17,11 @@ async function reloadSearchMap() {
                 case "C":
                     if (!searchMaps.classes.has(parts[4] ?? parts[1]))
                         searchMaps.classes.set(parts[4] ?? parts[1], new Set());
-                    searchMaps.classes.get(parts[4] ?? parts[1]).add({
-                        name: parts[1],
-                        url: parts[2],
-                        group: parts[3] ?? "Class"
-                    });
+                    searchMaps.classes.get(parts[4] ?? parts[1]).add({name: parts[1], url: parts[2], group: parts[3] ?? "Class"});
                     if (parts[3] && parts[3] !== "Class") classGroups.add(parts[3]);
                     break;
                 case "M": {
-                    let methodStuff = {class: parts[1].split("#")[0], name: parts[1].split("#")[1], url: parts[2]}
+                    let methodStuff = {class: parts[1].split("#")[0], name: parts[1].split("#")[1], url:parts[2]}
                     let cname = methodStuff.class;
                     if (!searchMaps.classes.has(cname)) {
                         for (const [name, st] of searchMaps.classes) {
@@ -41,7 +37,7 @@ async function reloadSearchMap() {
                     break;
                 }
                 case "F": {
-                    let fieldStuff = {class: parts[1].split("#")[0], name: parts[1].split("#")[1], url: parts[2]}
+                    let fieldStuff = {class: parts[1].split("#")[0], name: parts[1].split("#")[1], url:parts[2]}
                     let cname = fieldStuff.class;
                     if (!searchMaps.classes.has(cname)) {
                         for (const [name, clazz] of searchMaps.classes) {
@@ -87,14 +83,14 @@ function updateClassGroups() {
         input.setAttribute("checked", null);
         input.setAttribute("onclick", "searchF(search.value, true)")
         div.appendChild(input);
-
+        
         classGroupChecks.appendChild(div);
 
     }
 
 }
 
-async function searchF(val, override = false) {
+async function searchF(val, override=false) {
     val = val.toLowerCase();
     if (!loaded) {
         loaded = true;

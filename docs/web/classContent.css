@@ -23,7 +23,7 @@
     --classItemTypeDesc-color: #A0A0A0;
     --methofConstructor-color: #A0A0A0;
     --primitiveType-font-size: 1rem
-}
+  }
 
 
 .classDoc {
@@ -60,7 +60,7 @@ code {
     width: 50%;
 }
 
-.classItemTitle, .classTitle {
+.classItemTitle,.classTitle {
     display: inline-block;
 }
 
@@ -71,7 +71,7 @@ code {
 }
 
 
-.constructorDoc, .fieldDoc, .methodDoc {
+.constructorDoc,.fieldDoc,.methodDoc {
     padding-bottom: 2em;
     border-bottom: 1px solid #4E4E4E;
 }
@@ -95,7 +95,7 @@ code {
     padding-right: 5px;
 }
 
-.flags, .shortFlags {
+.flags,.shortFlags {
     display: inline-block;
 }
 
@@ -145,7 +145,7 @@ code {
 }
 
 
-.methodParams, .constructorParams {
+.methodParams,.constructorParams {
     display: inline-block;
     color: var(--methodConstructor-color);
 }
@@ -164,7 +164,7 @@ code {
     border-collapse: collapse;
 }
 
-.paramTable tr, td, th {
+.paramTable tr,td,th {
     border: 2px solid #606060;
     margin: 0;
 }
