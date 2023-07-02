@@ -6,6 +6,7 @@ import xyz.wagyourtail.doclet.pydoclet.Main;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
+import javax.tools.Diagnostic;
 import java.util.*;
 
 public class ClassParser {
@@ -59,8 +60,6 @@ public class ClassParser {
         //imports + abstract types
         sb.insert(0, getImports()).append("\n");
 
-        //Main.reporter.print(Diagnostic.Kind.NOTE, type + ", " + imports + "");
-
         return sb.toString();
     }
 
@@ -85,10 +84,11 @@ public class ClassParser {
 
             method.getParameters().forEach(parameter -> sb.append(", ").append(getVarName(parameter.getSimpleName().toString())).append(": ").append(getTypeMirrorName(parameter.asType(), false)));
             sb.append(") -> ");
-            //Main.reporter.print(Diagnostic.Kind.NOTE, getTypeMirrorName(method.getReturnType(), false) + "");
             if (method.getReceiverType() != null) {
-                sb.append(getTypeMirrorName(method.getReturnType(), false));
-            }
+                String return_type = getTypeMirrorName(method.getReturnType(), false);
+
+                sb.append(return_type);
+            };
             sb.append(":\n");
 
             sb.append(getMethodDoc(method));
@@ -194,9 +194,7 @@ public class ClassParser {
     private String createDescription(Element element, List<? extends DocTree> inlineDoc) {
         StringBuilder sb = new StringBuilder();
 
-        //Main.reporter.print(Diagnostic.Kind.NOTE, element + "");
         for (DocTree docTree : inlineDoc) {
-            //Main.reporter.print(Diagnostic.Kind.NOTE, " - " + docTree + ", " + docTree.getKind());
             switch (docTree.getKind()) {
                 case TEXT -> sb.append(docTree.toString().strip()).append(" "); //.replace("\n", "")
                 case CODE -> sb.append("'").append(((LiteralTree) docTree).getBody()).append("' ");
@@ -234,7 +232,6 @@ public class ClassParser {
         StringBuilder sb = new StringBuilder();
 
         List<String> imp = new LinkedList<>();
-        //Main.reporter.print(Diagnostic.Kind.NOTE, type + ": " + importList);
 
         imports.forEach(t -> {
             if (!types.containsKey(getClearedNameFromTypeMirror(t))) {
@@ -252,7 +249,6 @@ public class ClassParser {
                             (t + "").startsWith("java.lang.Runnable") || (t + "").startsWith("java.lang.Thread") || (t + "").startsWith("java.lang.Throwable") ||
                             (t + "").startsWith("java.util.function") || (t + "").startsWith("java.lang.ref") || (t + "").startsWith("java.io") || (t + "").startsWith("org") || (t + "").startsWith("java.lang.Iterable") ||
                             (t + "").startsWith("java.lang.StackTraceElement")) {
-                        //Main.reporter.print(Diagnostic.Kind.NOTE, typeVars + "");
                         if (!importTypeVar) {
                             importTypeVar = true;
                         }
@@ -263,7 +259,7 @@ public class ClassParser {
                                 getClassName((TypeElement) Main.typeUtils.asElement(t)),
                                 new AbstractMap.SimpleEntry<>(t + "", false)
                         );
-                    }
+                    };
                 }
             }
         });
@@ -293,11 +289,16 @@ public class ClassParser {
         imp.forEach(s -> sb.append("from .").append(s).append(" import ").append(s).append("\n"));
 
         sb.append("\n");
-        for (Map.Entry<String, Map.Entry<String, Boolean>> entry : typeVars.entrySet()) {
-            sb.append(entry.getKey()).append(" = TypeVar").append(entry.getValue().getValue() ? "(" : "[").append("\"").append(entry.getValue().getKey().replace("<", "_").replace(">", "_").replace("?", "")).append("\"").append(entry.getValue().getValue() ? ")" : "]").append("\n");
-            //sb.append(entry.getKey()).append(" = TypeVar[\"").append(entry.getValue().replace("<", "_").replace(">", "_").replace("?", "")).append("\"]\n");
+        String type_name;
+        for(Map.Entry<String, Map.Entry<String, Boolean>> entry : typeVars.entrySet()){
+            type_name = entry.getValue().getKey().replace("<", "_").replace(">", "_").replace("?", "").replace(".", "_");
+            if(Objects.equals(type_name.toString(), "T") || Objects.equals(type_name.toString(), "U") || Objects.equals(type_name.toString(), "R")){
+                sb.append(entry.getKey()).append(" = TypeVar(\"").append(entry.getKey()).append("\")\n");
+            } else {
+                sb.append(type_name).append(" = TypeVar(\"").append(type_name).append("\")\n");
+                sb.append(entry.getKey()).append(" = ").append(type_name).append("\n\n");
+            };
         }
-        sb.append("\n");
 
         return sb.toString();
     }
@@ -335,8 +336,8 @@ public class ClassParser {
         return new String(new char[amount]).replace("\0", "\t");
     }
 
-    private String getClassLine() {
-        StringBuilder sb = new StringBuilder("class ");
+    private String getClassLine(){
+        StringBuilder sb = new StringBuilder("\nclass "); // for PEP8
         sb.append(getClassName(type));
 
         List<? extends TypeMirror> implement = type.getInterfaces();
@@ -363,7 +364,6 @@ public class ClassParser {
                 sb.append(getTypeMirrorName(extend, true));
                 addImport(extend);
             }
-            //Main.reporter.print(Diagnostic.Kind.NOTE, sb.lastIndexOf(", ") + ", " + sb.length());
             if (sb.lastIndexOf(", ") == sb.length() - 2) {
                 sb.delete(sb.length() - 2, sb.length());
             }
@@ -394,7 +394,6 @@ public class ClassParser {
 
     private String getTypeMirrorName(TypeMirror type, boolean cls) {
         imports.add(type);
-        //Main.reporter.print(Diagnostic.Kind.MANDATORY_WARNING, type + "");
         switch (type.getKind()) {
             case BOOLEAN -> {
                 return "bool";
