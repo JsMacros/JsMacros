@@ -49,7 +49,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build
-        run: ./gradlew build
+        run: |
+          ./gradlew :javascript_extension:build
+          ./gradlew build
 
       - name: Upload To Artifacts
         uses: actions/upload-artifact@v3
