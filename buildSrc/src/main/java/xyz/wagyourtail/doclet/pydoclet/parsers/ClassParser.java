@@ -305,6 +305,7 @@ public class ClassParser {
         for (Map.Entry<String, Map.Entry<String, Boolean>> entry : typeVars.entrySet()) {
             sb.append(entry.getKey()).append(" = TypeVar").append(entry.getValue().getValue() ? "(" : "[").append("\"").append(entry.getValue().getKey().replace("<", "_").replace(">", "_").replace("?", "")).append("\"").append(entry.getValue().getValue() ? ")" : "]").append("\n");
             //sb.append(entry.getKey()).append(" = TypeVar[\"").append(entry.getValue().replace("<", "_").replace(">", "_").replace("?", "")).append("\"]\n");
+        }
         String type_name;
         for(Map.Entry<String, Map.Entry<String, Boolean>> entry : typeVars.entrySet()){
             type_name = entry.getValue().getKey().replace("<", "_").replace(">", "_").replace("?", "").replace(".", "_");
