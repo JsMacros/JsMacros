@@ -86,15 +86,9 @@ public class ClassParser {
 
             method.getParameters().forEach(parameter -> sb.append(", ").append(getVarName(parameter.getSimpleName().toString())).append(": ").append(getTypeMirrorName(parameter.asType(), false)));
             sb.append(") -> ");
-            //Main.reporter.print(Diagnostic.Kind.NOTE, getTypeMirrorName(method.getReturnType(), false) + "");
-            if (method.getReceiverType() != null) {
-                sb.append(getTypeMirrorName(method.getReturnType(), false));
-            }
-            // TODO: NEED MERGE
             if (method.getReceiverType() != null) {
                 String return_type = getTypeMirrorName(method.getReturnType(), false);
-
-//                Main.reporter.print(Diagnostic.Kind.NOTE, return_type);  // TODO hey! why weird type?
+                Main.reporter.print(Diagnostic.Kind.NOTE, return_type);  // TODO hey! why weird type?
 
                 sb.append(return_type);
             };
@@ -307,16 +301,16 @@ public class ClassParser {
             //sb.append(entry.getKey()).append(" = TypeVar[\"").append(entry.getValue().replace("<", "_").replace(">", "_").replace("?", "")).append("\"]\n");
         }
         // TODO: NEED MERGE
-        String type_name;
-        for(Map.Entry<String, Map.Entry<String, Boolean>> entry : typeVars.entrySet()){
-            type_name = entry.getValue().getKey().replace("<", "_").replace(">", "_").replace("?", "").replace(".", "_");
-            if(Objects.equals(type_name.toString(), "T") || Objects.equals(type_name.toString(), "U") || Objects.equals(type_name.toString(), "R")){
-                sb.append(entry.getKey()).append(" = TypeVar(\"").append(entry.getKey()).append("\")\n");
-            } else {
-                sb.append(type_name).append(" = TypeVar(\"").append(type_name).append("\")\n");
-                sb.append(entry.getKey()).append(" = ").append(type_name).append("\n\n");
-            };
-        }
+//        String type_name;
+//        for(Map.Entry<String, Map.Entry<String, Boolean>> entry : typeVars.entrySet()){
+//            type_name = entry.getValue().getKey().replace("<", "_").replace(">", "_").replace("?", "").replace(".", "_");
+//            if(Objects.equals(type_name.toString(), "T") || Objects.equals(type_name.toString(), "U") || Objects.equals(type_name.toString(), "R")){
+//                sb.append(entry.getKey()).append(" = TypeVar(\"").append(entry.getKey()).append("\")\n");
+//            } else {
+//                sb.append(type_name).append(" = TypeVar(\"").append(type_name).append("\")\n");
+//                sb.append(entry.getKey()).append(" = ").append(type_name).append("\n\n");
+//            };
+//        }
         sb.append("\n");
 
         return sb.toString();
