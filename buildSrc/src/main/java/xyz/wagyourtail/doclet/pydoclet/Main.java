@@ -83,7 +83,7 @@ public class Main implements Doclet {
 
             //Create ClassParser
             elements.stream().filter(e -> e instanceof TypeElement).map(e -> (TypeElement) e).forEach(e -> {
-            // elements 的流 进行过滤 如果 给出的 e 是 TypeElement 那么就可以
+                // filter elements, if e is TypeElement, then it can be
                 internalClasses.put(e, new ClassParser(e));
 
                 AnnotationMirror mirror = e.getAnnotationMirrors().stream().filter(a -> a.getAnnotationType().asElement().getSimpleName().toString().equals("Library")).findFirst().orElse(null);
