@@ -247,6 +247,7 @@ task insertJs(type: Jar) {
 }
 
 remapForgeJar {
+    dependsOn(insertJs)
     inputFile.set insertJs.archiveFile
 }
 
