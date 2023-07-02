@@ -151,6 +151,8 @@ jobs:
         with:
           modrinth-id: 3wGWhm8A
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          modrinth-featured: false
+          modrinth-unfeature-mode: any
 
           curseforge-id: 403185
           curseforge-token: ${{ secrets.CF_API_KEY }}
@@ -167,6 +169,7 @@ jobs:
           java: ${{ steps.gradle_properties.outputs.java_version }}
           retry-attempts: 5
           retry-delay: 60000
+          fail-mode: skip
 
       - name: Run Publish Forge
         if: ${{ steps.forge_release.outputs.result != 'false' }}
@@ -174,6 +177,8 @@ jobs:
         with:
           modrinth-id: 3wGWhm8A
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          modrinth-featured: false
+          modrinth-unfeature-mode: any
 
           curseforge-id: 403185
           curseforge-token: ${{ secrets.CF_API_KEY }}
@@ -190,6 +195,7 @@ jobs:
           java: ${{ steps.gradle_properties.outputs.java_version }}
           retry-attempts: 5
           retry-delay: 60000
+          fail-mode: skip
 
   upload_pydoc:
     if: ${{ inputs.upload_docs }}
