@@ -3,8 +3,8 @@ package xyz.wagyourtail.jsmacros.client.gui.containers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -19,9 +19,6 @@ import xyz.wagyourtail.wagyourgui.elements.Button;
 
 import java.io.File;
 import java.util.List;
-
-import static net.minecraft.client.gui.DrawableHelper.drawTexture;
-import static net.minecraft.client.gui.DrawableHelper.fill;
 
 public class MacroContainer extends MultiElementContainer<MacroScreen> {
     private static final Identifier key_down_tex = new Identifier(JsMacros.MOD_ID, "resources/key_down.png");
@@ -157,13 +154,13 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
     }
 
     @Override
-    public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (visible) {
             int w = this.width - 12;
             // separate
-            fill(drawContext, x + (w / 12), y + 1, x + (w / 12) + 1, y + height - 1, 0xFFFFFFFF);
-            fill(drawContext, x + (w / 4), y + 1, x + (w / 4) + 1, y + height - 1, 0xFFFFFFFF);
-            fill(drawContext, x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
+            drawContext.fill(x + (w / 12), y + 1, x + (w / 12) + 1, y + height - 1, 0xFFFFFFFF);
+            drawContext.fill(x + (w / 4), y + 1, x + (w / 4) + 1, y + height - 1, 0xFFFFFFFF);
+            drawContext.fill(x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
             RenderSystem.setShader(GameRenderer::getPositionTexProgram);
             // icon for keystate
             Identifier tex;
@@ -181,29 +178,29 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
                         break;
                 }
                 RenderSystem.enableBlend();
-                drawTexture(drawContext, x + w / 4 - height + 2, y + 2, height-4, height-4, 0, 0, 32, 32, 32, 32);
+                drawContext.drawTexture(tex, x + w / 4 - height + 2, y + 2, height - 4, height - 4, 0, 0, 32, 32, 32, 32);
                 RenderSystem.disableBlend();
             }
 
             // border
-            fill(drawContext, x, y, x + width, y + 1, 0xFFFFFFFF);
-            fill(drawContext, x, y + height - 1, x + width, y + height, 0xFFFFFFFF);
-            fill(drawContext, x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
-            fill(drawContext, x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
+            drawContext.fill(x, y, x + width, y + 1, 0xFFFFFFFF);
+            drawContext.fill(x, y + height - 1, x + width, y + height, 0xFFFFFFFF);
+            drawContext.fill(x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
+            drawContext.fill(x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
 
             // overlay
             if (keyBtn.hovering && keyBtn.cantRenderAllText()) {
-                fill(drawContext, mouseX - 2, mouseY - textRenderer.fontHeight - 3, mouseX + textRenderer.getWidth(keyBtn.getMessage()) + 2, mouseY, 0xFF000000);
-                textRenderer.drawWithShadow(drawContext, keyBtn.getMessage(), mouseX, mouseY - textRenderer.fontHeight - 1, 0xFFFFFF);
+                drawContext.fill(mouseX - 2, mouseY - textRenderer.fontHeight - 3, mouseX + textRenderer.getWidth(keyBtn.getMessage()) + 2, mouseY, 0xFF000000);
+                drawContext.drawTextWithShadow(textRenderer, keyBtn.getMessage(), mouseX, mouseY - textRenderer.fontHeight - 1, 0xFFFFFF);
             }
             if (fileBtn.hovering && fileBtn.cantRenderAllText()) {
                 List<OrderedText> lines = textRenderer.wrapLines(fileBtn.getMessage(), this.x + this.width - mouseX);
                 int top = mouseY - (textRenderer.fontHeight * lines.size()) - 2;
                 int width = lines.stream().map(e -> textRenderer.getWidth(e)).reduce(0, Math::max);
-                fill(drawContext, mouseX - 2, top - 1, mouseX + width + 2, mouseY, 0xFF000000);
+                drawContext.fill(mouseX - 2, top - 1, mouseX + width + 2, mouseY, 0xFF000000);
                 for (int i = 0; i < lines.size(); ++i) {
                     int wi = textRenderer.getWidth(lines.get(i)) / 2;
-                    textRenderer.draw(drawContext, lines.get(i), mouseX + width / 2 - wi, top + textRenderer.fontHeight * i, 0xFFFFFF);
+                    drawContext.drawText(textRenderer, lines.get(i), mouseX + width / 2 - wi, top + textRenderer.fontHeight * i, 0xFFFFFF, false);
                 }
             }
         }

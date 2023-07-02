@@ -1,7 +1,7 @@
 package xyz.wagyourtail.wagyourgui.overlays;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.wagyourgui.elements.Button;
@@ -43,11 +43,11 @@ public class TextPrompt extends OverlayContainer {
     }
 
     @Override
-    public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         this.renderBackground(drawContext);
         int lineNum = 0;
         for (OrderedText line : textRenderer.wrapLines(message, width - 4)) {
-            textRenderer.draw(drawContext, line, (int) (x + width / 2F - textRenderer.getWidth(line) / 2F), y + 5 + (lineNum++) * textRenderer.fontHeight, 0xFFFFFF);
+            drawContext.drawText(textRenderer, line, (int) (x + width / 2F - textRenderer.getWidth(line) / 2F), y + 5 + (lineNum++) * textRenderer.fontHeight, 0xFFFFFF, false);
         }
         super.render(drawContext, mouseX, mouseY, delta);
     }

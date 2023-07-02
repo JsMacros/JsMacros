@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -53,18 +54,19 @@ public class MixinHandledScreen<T extends ScreenHandler> extends Screen implemen
         return getSlotAt(x, y);
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/util/math/MatrixStack;II)V", shift = At.Shift.BEFORE))
-    public void onDrawForeground(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/gui/DrawContext;II)V", shift = At.Shift.BEFORE))
+    public void onDrawForeground(DrawContext drawContext, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (!Core.getInstance().config.getOptions(ClientConfigV2.class).showSlotIndexes) {
             return;
         }
+        MatrixStack matrices = drawContext.getMatrices();
         matrices.push();
         // Make them render in front of the slot sprites, but still behind the tooltip
         matrices.translate(0, 0, 150);
         for (int i = 0; i < handler.slots.size(); i++) {
             Slot slot = handler.slots.get(i);
             if (slot.isEnabled()) {
-                textRenderer.draw(matrices, String.valueOf(i), slot.x, slot.y, 0xFFFFFF);
+                drawContext.drawText(textRenderer, String.valueOf(i), slot.x, slot.y, 0xFFFFFF, false);
             }
         }
         matrices.pop();

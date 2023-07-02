@@ -681,7 +681,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         if (!client.isIntegratedServerRunning()) {
             return null;
         }
-        Entity entity = client.getServer().getPlayerManager().getPlayer(client.player.getUuid()).getWorld().getEntity(base.getUuid());
+        Entity entity = client.getServer().getPlayerManager().getPlayer(client.player.getUuid()).getServerWorld().getEntity(base.getUuid());
         if (entity == null) {
             return null;
         } else {

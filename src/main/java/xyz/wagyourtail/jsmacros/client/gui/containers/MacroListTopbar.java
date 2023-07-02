@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.gui.containers;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.config.Sorting;
@@ -10,8 +10,6 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
-
-import static net.minecraft.client.gui.DrawableHelper.fill;
 
 public class MacroListTopbar extends MultiElementContainer<MacroScreen> {
     public ScriptTrigger.TriggerType deftype;
@@ -61,17 +59,17 @@ public class MacroListTopbar extends MultiElementContainer<MacroScreen> {
     }
 
     @Override
-    public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
-        fill(drawContext, x, y, x + width, y + 1, 0xFFFFFFFF);
-        fill(drawContext, x, y + height - 2, x + width, y + height - 1, 0xFFFFFFFF);
-        fill(drawContext, x, y + height - 1, x + width, y + height, 0xFF7F7F7F);
-        fill(drawContext, x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
-        fill(drawContext, x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        drawContext.fill(x, y, x + width, y + 1, 0xFFFFFFFF);
+        drawContext.fill(x, y + height - 2, x + width, y + height - 1, 0xFFFFFFFF);
+        drawContext.fill(x, y + height - 1, x + width, y + height, 0xFF7F7F7F);
+        drawContext.fill(x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
+        drawContext.fill(x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
         int w = this.width - 12;
 
-        fill(drawContext, x + (w / 12), y + 1, x + (w / 12) + 1, y + height - 1, 0xFFFFFFFF);
-        fill(drawContext, x + (w / 4), y + 1, x + (w / 4) + 1, y + height - 1, 0xFFFFFFFF);
-        fill(drawContext, x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
+        drawContext.fill(x + (w / 12), y + 1, x + (w / 12) + 1, y + height - 1, 0xFFFFFFFF);
+        drawContext.fill(x + (w / 4), y + 1, x + (w / 4) + 1, y + height - 1, 0xFFFFFFFF);
+        drawContext.fill(x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
     }
 
 }

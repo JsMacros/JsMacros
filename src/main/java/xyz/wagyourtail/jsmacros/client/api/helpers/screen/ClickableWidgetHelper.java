@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.Alignable;
@@ -240,11 +240,10 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
     }
 
     @Override
-    public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         base.render(drawContext, mouseX, mouseY, delta);
         if (base.isMouseOver(mouseX, mouseY) && tooltips.size() > 0) {
-            assert mc.currentScreen != null;
-            mc.currentScreen.renderTooltip(drawContext, tooltips, mouseX, mouseY);
+            drawContext.drawTooltip(mc.textRenderer, tooltips, mouseX, mouseY);
         }
     }
 

@@ -86,12 +86,9 @@ public class FakeServerCommandSource extends ServerCommandSource {
         return source.getRegistryManager();
     }
 
+    @Override
     public void sendFeedback(Supplier<Text> feedbackSupplier, boolean broadcastToOps) {
         MinecraftClient.getInstance().player.sendMessage(feedbackSupplier.get());
     }
 
-    @Override
-    public void sendFeedback(Text message, boolean broadcastToOps) {
-        sendFeedback(() -> message, broadcastToOps);
-    }
 }

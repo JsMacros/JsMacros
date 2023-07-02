@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
@@ -75,7 +76,8 @@ public class Line3D implements RenderElement3D {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, BufferBuilder builder, float tickDelta) {
+    public void render(DrawContext drawContext, BufferBuilder builder, float tickDelta) {
+        MatrixStack matrixStack = drawContext.getMatrices();
         final boolean cull = !this.cull;
         if (cull) {
             RenderSystem.disableDepthTest();

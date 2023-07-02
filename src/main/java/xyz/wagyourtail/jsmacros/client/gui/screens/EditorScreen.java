@@ -3,11 +3,11 @@ package xyz.wagyourtail.jsmacros.client.gui.screens;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -661,21 +661,21 @@ public class EditorScreen extends BaseScreen {
     }
 
     @Override
-    public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         assert client != null;
         renderBackground(drawContext);
 
-        textRenderer.drawWithShadow(drawContext, fileName, 2, 2, 0xFFFFFF);
+        drawContext.drawTextWithShadow(textRenderer, fileName, 2, 2, 0xFFFFFF);
 
-        textRenderer.drawWithShadow(drawContext, String.format("%d ms", (int) textRenderTime), 2, height - 10, 0xFFFFFF);
-        textRenderer.drawWithShadow(drawContext, lineCol, (int) (width - textRenderer.getWidth(lineCol) - (width - 10) / 4F - 2), height - 10, 0xFFFFFF);
+        drawContext.drawTextWithShadow(textRenderer, String.format("%d ms", (int) textRenderTime), 2, height - 10, 0xFFFFFF);
+        drawContext.drawTextWithShadow(textRenderer, lineCol, (int) (width - textRenderer.getWidth(lineCol) - (width - 10) / 4F - 2), height - 10, 0xFFFFFF);
 
-        fill(drawContext, 0, 12, width - 10, height - 12, 0xFF2B2B2B);
-        fill(drawContext, 28, 12, 29, height - 12, 0xFF707070);
-        fill(drawContext, 0, 12, 1, height - 12, 0xFF707070);
-        fill(drawContext, width - 11, 12, width - 10, height - 12, 0xFF707070);
-        fill(drawContext, 1, 12, width - 11, 13, 0xFF707070);
-        fill(drawContext, 1, height - 13, width - 11, height - 12, 0xFF707070);
+        drawContext.fill(0, 12, width - 10, height - 12, 0xFF2B2B2B);
+        drawContext.fill(28, 12, 29, height - 12, 0xFF707070);
+        drawContext.fill(0, 12, 1, height - 12, 0xFF707070);
+        drawContext.fill(width - 11, 12, width - 10, height - 12, 0xFF707070);
+        drawContext.fill(1, 12, width - 11, 13, 0xFF707070);
+        drawContext.fill(1, height - 13, width - 11, height - 12, 0xFF707070);
 
         Style lineNumStyle = defaultStyle.withColor(TextColor.fromRgb(0xD8D8D8));
         int add = lineSpread - scroll % lineSpread;
@@ -688,17 +688,17 @@ public class EditorScreen extends BaseScreen {
 
         for (int i = 0, j = firstLine; j <= lastLine && j < renderedText.length; ++i, ++j) {
             if (cursor.startLine == j && cursor.endLine == j) {
-                fill(drawContext, 30 + cursor.startCol, y + add + i * lineSpread, 30 + cursor.endCol, y + add + (i + 1) * lineSpread, 0xFF33508F);
+                drawContext.fill(30 + cursor.startCol, y + add + i * lineSpread, 30 + cursor.endCol, y + add + (i + 1) * lineSpread, 0xFF33508F);
             } else if (cursor.startLine == j) {
-                fill(drawContext, 30 + cursor.startCol, y + add + i * lineSpread, width - 10, y + add + (i + 1) * lineSpread, 0xFF33508F);
+                drawContext.fill(30 + cursor.startCol, y + add + i * lineSpread, width - 10, y + add + (i + 1) * lineSpread, 0xFF33508F);
             } else if (j > cursor.startLine && j < cursor.endLine) {
-                fill(drawContext, 29, y + add + i * lineSpread, width - 10, y + add + (i + 1) * lineSpread, 0xFF33508F);
+                drawContext.fill(29, y + add + i * lineSpread, width - 10, y + add + (i + 1) * lineSpread, 0xFF33508F);
             } else if (cursor.endLine == j) {
-                fill(drawContext, 29, y + add + i * lineSpread, 30 + cursor.endCol, y + add + (i + 1) * lineSpread, 0xFF33508F);
+                drawContext.fill(29, y + add + i * lineSpread, 30 + cursor.endCol, y + add + (i + 1) * lineSpread, 0xFF33508F);
             }
             Text lineNum = Text.literal(String.format("%d.", j + 1)).setStyle(lineNumStyle);
-            client.textRenderer.draw(drawContext, lineNum, 28 - client.textRenderer.getWidth(lineNum), y + add + i * lineSpread, 0xFFFFFF);
-            client.textRenderer.draw(drawContext, trim(renderedText[j]), 30, y + add + i * lineSpread, 0xFFFFFF);
+            drawContext.drawText(client.textRenderer, lineNum, 28 - client.textRenderer.getWidth(lineNum), y + add + i * lineSpread, 0xFFFFFF, false);
+            drawContext.drawText(client.textRenderer, trim(renderedText[j]), 30, y + add + i * lineSpread, 0xFFFFFF, false);
         }
 
         for (Element b : ImmutableList.copyOf(this.children())) {

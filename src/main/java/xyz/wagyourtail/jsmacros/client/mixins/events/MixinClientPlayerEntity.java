@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.mixins.events;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.input.Input;
@@ -66,16 +67,18 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     }
 
     @Inject(at = @At("HEAD"), method = "openEditSignScreen", cancellable = true)
-    public void onOpenEditSignScreen(SignBlockEntity sign, CallbackInfo ci) {
+    public void onOpenEditSignScreen(SignBlockEntity sign, boolean front, CallbackInfo ci) {
         List<String> lines = new ArrayList<>(Arrays.asList("", "", "", ""));
         final EventSignEdit event = new EventSignEdit(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ());
         lines = event.signText;
         if (event.closeScreen) {
+            SignText text = new SignText();
             for (int i = 0; i < 4; ++i) {
-                sign.setTextOnRow(i, Text.literal(lines.get(i)));
+                text = text.withMessage(i, Text.of(lines.get(i)));
             }
+            sign.setText(text, front);
             sign.markDirty();
-            networkHandler.sendPacket(new UpdateSignC2SPacket(sign.getPos(), lines.get(0), lines.get(1), lines.get(2), lines.get(3)));
+            networkHandler.sendPacket(new UpdateSignC2SPacket(sign.getPos(), front, lines.get(0), lines.get(1), lines.get(2), lines.get(3)));
             ci.cancel();
             return;
         }
@@ -88,7 +91,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
             }
         } //else
         if (cancel) {
-            final SignEditScreen signScreen = new SignEditScreen(sign, true);
+            final SignEditScreen signScreen = new SignEditScreen(sign, front, true);
             client.setScreen(signScreen);
             for (int i = 0; i < 4; ++i) {
                 ((ISignEditScreen) signScreen).jsmacros_setLine(i, lines.get(i));

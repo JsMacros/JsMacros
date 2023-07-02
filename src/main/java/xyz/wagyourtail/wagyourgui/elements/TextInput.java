@@ -2,8 +2,8 @@ package xyz.wagyourtail.wagyourgui.elements;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
@@ -211,9 +211,9 @@ public class TextInput extends Button {
     }
 
     @Override
-    protected void renderMessage(MatrixStack drawContext) {
-        fill(drawContext, selStart, height > 9 ? getY() + 2 : getY(), Math.min(selEnd, getX() + width - 2), (height > 9 ? getY() + 2 : getY()) + textRenderer.fontHeight, selColor);
-        textRenderer.drawWithShadow(drawContext, textRenderer.trimToWidth(content, width - 4), getX() + 2, height > 9 ? getY() + 2 :
+    protected void renderMessage(DrawContext drawContext) {
+        drawContext.fill(selStart, height > 9 ? getY() + 2 : getY(), Math.min(selEnd, getX() + width - 2), (height > 9 ? getY() + 2 : getY()) + textRenderer.fontHeight, selColor);
+        drawContext.drawTextWithShadow(textRenderer, textRenderer.trimToWidth(content, width - 4), getX() + 2, height > 9 ? getY() + 2 :
                 getY(), textColor);
     }
 

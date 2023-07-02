@@ -1,8 +1,8 @@
 package xyz.wagyourtail.wagyourgui.elements;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
@@ -93,16 +93,16 @@ public class Scrollbar extends ClickableWidget {
     }
 
     @Override
-    public void renderButton(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
+    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         // mainpart
-        fill(drawContext, getX() + 1, (int) (getY() + 1 + scrollAmount), getX() + width - 1, (int) (getY() + 1 + scrollAmount + scrollbarHeight), highlightColor);
+        drawContext.fill(getX() + 1, (int) (getY() + 1 + scrollAmount), getX() + width - 1, (int) (getY() + 1 + scrollAmount + scrollbarHeight), highlightColor);
 
         // outline and back
-        fill(drawContext, getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, color);
-        fill(drawContext, getX(), getY(), getX() + 1, getY() + height, borderColor);
-        fill(drawContext, getX() + width - 1, getY(), getX() + width, getY() + height, borderColor);
-        fill(drawContext, getX() + 1, getY(), getX() + width - 1, getY() + 1, borderColor);
-        fill(drawContext, getX() + 1, getY() + height - 1, getX() + width - 1, getY() + height, borderColor);
+        drawContext.fill(getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, color);
+        drawContext.fill(getX(), getY(), getX() + 1, getY() + height, borderColor);
+        drawContext.fill(getX() + width - 1, getY(), getX() + width, getY() + height, borderColor);
+        drawContext.fill(getX() + 1, getY(), getX() + width - 1, getY() + 1, borderColor);
+        drawContext.fill(getX() + 1, getY() + height - 1, getX() + width - 1, getY() + height, borderColor);
     }
 
     @Override
