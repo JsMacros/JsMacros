@@ -59,3 +59,4 @@ jobs:
             !./dist/*-sources.jar
             !./dist/*-dev.jar
             !./dist/*-dev-shadow.jar
+            !./dist/*-dev-shadow-js.jar
