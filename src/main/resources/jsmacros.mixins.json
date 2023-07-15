@@ -70,6 +70,7 @@
     "events.MixinHungerManager",
     "events.MixinKeyboard",
     "events.MixinLivingEntity",
+    "events.MixinMessageHandler",
     "events.MixinMinecraftClient",
     "events.MixinMouse",
     "events.MixinSoundSystem",
