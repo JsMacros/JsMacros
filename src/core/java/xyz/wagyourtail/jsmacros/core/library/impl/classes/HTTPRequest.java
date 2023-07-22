@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mojang.authlib.yggdrasil.response.Response;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -23,6 +24,8 @@ public class HTTPRequest {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public Map<String, String> headers = new HashMap<>();
     public URL conn;
+    public int connectTimeout;
+    public int readTimeout;
 
     public HTTPRequest(String url) throws IOException {
         this.conn = new URL(url);
@@ -36,6 +39,24 @@ public class HTTPRequest {
      */
     public HTTPRequest addHeader(String key, String value) {
         headers.put(key, value);
+        return this;
+    }
+
+    /**
+     * @since 1.8.6
+     * @return
+     */
+    public HTTPRequest setConnectTimeout(int timeout) {
+        this.connectTimeout = timeout;
+        return this;
+    }
+
+    /**
+     * @since 1.8.6
+     * @return
+     */
+    public HTTPRequest setReadTimeout(int timeout) {
+        this.readTimeout = timeout;
         return this;
     }
 
@@ -147,6 +168,21 @@ public class HTTPRequest {
         os.write(data);
         os.flush();
         os.close();
+
+        InputStream stream = conn.getInputStream();
+        return new Response(stream, conn.getResponseCode(), conn.getHeaderFields());
+    }
+
+    /**
+     * @since 1.8.6
+     * @return
+     */
+    public Response send(String method) throws IOException {
+        HttpURLConnection conn = (HttpURLConnection) this.conn.openConnection();
+        for (Entry<String, String> e : headers.entrySet()) {
+            conn.addRequestProperty(e.getKey(), e.getValue());
+        }
+        conn.setRequestMethod(method);
 
         InputStream stream = conn.getInputStream();
         return new Response(stream, conn.getResponseCode(), conn.getHeaderFields());
