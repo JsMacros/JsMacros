@@ -109,8 +109,8 @@ unimined.minecraft(sourceSets.forge) {
         devFallbackNamespace "intermediary"
     }
 
-    forge {
-        forge project.forge_version
+    minecraftForge {
+        loader project.forge_version
 
         mixinConfig = ["jsmacros-forge.mixins.json", "jsmacros.mixins.json"]
     }
