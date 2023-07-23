@@ -38,8 +38,6 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
         EventContainer<T> ctx = new EventContainer<>(createContext(event, file));
         runner.threadPool.runTask(() -> {
             Thread t = Thread.currentThread();
-            ctx.setLockThread(t);
-            ctx.getCtx().setMainThread(t);
             preThread.run();
             try {
                 if (event == null) {
@@ -94,6 +92,9 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
                     ctx.getCtx().closeContext();
                 }
             }
+        }, th -> {
+            ctx.setLockThread(th);
+            ctx.getCtx().setMainThread(th);
         });
         return ctx;
     }
@@ -103,8 +104,6 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
         EventContainer<T> ctx = new EventContainer<>(createContext(event, fakeFile));
         runner.threadPool.runTask(() -> {
             Thread t = Thread.currentThread();
-            ctx.setLockThread(t);
-            ctx.getCtx().setMainThread(t);
             preThread.run();
             try {
                 t.setName(String.format("RunScript:{\"creator\":\"%s\", \"start\":\"%d\"}", ct.getName(), System.currentTimeMillis()));
@@ -139,6 +138,9 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
                     ctx.getCtx().closeContext();
                 }
             }
+        }, th -> {
+            ctx.setLockThread(th);
+            ctx.getCtx().setMainThread(th);
         });
         return ctx;
     }
