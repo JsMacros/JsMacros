@@ -9,7 +9,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.8.4
  */
 @Event(value = "StatusEffectUpdate")
-public class EventStatusEffectUpdate implements BaseEvent {
+public class EventStatusEffectUpdate extends BaseEvent {
 
     public final StatusEffectHelper oldEffect;
     public final StatusEffectHelper newEffect;
@@ -21,7 +21,6 @@ public class EventStatusEffectUpdate implements BaseEvent {
         this.newEffect = newEffect;
         this.added = added;
         this.removed = !added;
-        profile.triggerEvent(this);
     }
 
     @Override

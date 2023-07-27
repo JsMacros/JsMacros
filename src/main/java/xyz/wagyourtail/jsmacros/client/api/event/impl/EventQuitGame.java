@@ -8,11 +8,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.8.4
  */
 @Event(value = "QuitGame")
-public class EventQuitGame implements BaseEvent {
-
-    public EventQuitGame() {
-        profile.triggerEventJoinNoAnything(this);
-    }
+public class EventQuitGame extends BaseEvent {
 
     @Override
     public String toString() {

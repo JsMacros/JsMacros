@@ -13,7 +13,8 @@ public class MixinMessageHandler {
     @ModifyArg(method = "onGameMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;setOverlayMessage(Lnet/minecraft/text/Text;Z)V"))
     private Text modifyOverlayMessage(Text text) {
         EventTitle et = new EventTitle("ACTIONBAR", text);
-        if (et.message == null) {
+        et.trigger();
+        if (et.message == null || et.isCanceled()) {
             return null;
         } else {
             return et.message.getRaw();

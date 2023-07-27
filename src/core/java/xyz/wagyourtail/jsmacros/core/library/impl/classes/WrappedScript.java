@@ -6,6 +6,7 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventWrappedScript;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
@@ -31,7 +32,7 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
             if (joinedMain) {
                 p.joinedThreadStack.add(t1.getLockThread());
             }
-            EventLockWatchdog.startWatchdog(t1, event -> null, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+            EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
             try {
                 t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
             } catch (InterruptedException ignored) {
@@ -48,7 +49,7 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
             if (joinedMain) {
                 p.joinedThreadStack.add(t1.getLockThread());
             }
-            EventLockWatchdog.startWatchdog(t1, event -> null, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+            EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
             try {
                 t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
             } catch (InterruptedException ignored) {
@@ -65,7 +66,7 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
         if (joinedMain) {
             p.joinedThreadStack.add(t1.getLockThread());
         }
-        EventLockWatchdog.startWatchdog(t1, event -> null, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+        EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
         try {
             t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
         } catch (InterruptedException ignored) {
@@ -82,7 +83,7 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
         if (joinedMain) {
             p.joinedThreadStack.add(t1.getLockThread());
         }
-        EventLockWatchdog.startWatchdog(t1, event -> null, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+        EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
         try {
             t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
         } catch (InterruptedException ignored) {
@@ -99,7 +100,7 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
         if (joinedMain) {
             p.joinedThreadStack.add(t1.getLockThread());
         }
-        EventLockWatchdog.startWatchdog(t1, event -> null, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+        EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
         try {
             t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
         } catch (InterruptedException ignored) {
@@ -116,7 +117,7 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
         if (joinedMain) {
             p.joinedThreadStack.add(t1.getLockThread());
         }
-        EventLockWatchdog.startWatchdog(t1, event -> null, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+        EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
         try {
             t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
         } catch (InterruptedException ignored) {
@@ -133,7 +134,7 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
             if (joinedMain) {
                 p.joinedThreadStack.add(t1.getLockThread());
             }
-            EventLockWatchdog.startWatchdog(t1, event -> null, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+            EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
             try {
                 t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
             } catch (InterruptedException ignored) {
@@ -150,7 +151,7 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
         if (joinedMain) {
             p.joinedThreadStack.add(t1.getLockThread());
         }
-        EventLockWatchdog.startWatchdog(t1, event -> null, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+        EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
         try {
             t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
         } catch (InterruptedException ignored) {
@@ -167,7 +168,7 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
         if (joinedMain) {
             p.joinedThreadStack.add(t1.getLockThread());
         }
-        EventLockWatchdog.startWatchdog(t1, event -> null, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+        EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
         try {
             t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
         } catch (InterruptedException ignored) {

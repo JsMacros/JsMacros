@@ -22,10 +22,11 @@ import java.util.Set;
  * @author Wagyourtail
  * @since 1.2.7
  */
-@Event(value = "Key", oldName = "KEY")
-public class EventKey implements BaseEvent {
+@Event(value = "Key", oldName = "KEY", cancellable = true)
+public class EventKey extends BaseEvent {
     static final MinecraftClient mc = MinecraftClient.getInstance();
     public final int action;
+
     @DocletReplaceReturn("globalThis.Key")
     public final String key;
     @DocletReplaceReturn("KeyMods")
@@ -50,8 +51,6 @@ public class EventKey implements BaseEvent {
         this.action = action;
         this.key = key;
         this.mods = mods;
-
-        trigger();
     }
 
     public static boolean parse(int key, int scancode, int action, int mods) {
@@ -110,16 +109,9 @@ public class EventKey implements BaseEvent {
             }
         }
 
-        EventJoinedKey ev = new EventJoinedKey(action, keyStr, modsStr);
-        // Only call the key event if it's not canceled.
-        if (!ev.isCanceled()) {
-            new EventKey(action, keyStr, modsStr);
-        }
+        EventKey ev = new EventKey(action, keyStr, modsStr);
+        ev.trigger();
         return ev.isCanceled();
-    }
-
-    protected void trigger() {
-        profile.triggerEvent(this);
     }
 
     @Override
@@ -182,5 +174,4 @@ public class EventKey implements BaseEvent {
         return i;
 
     }
-
 }

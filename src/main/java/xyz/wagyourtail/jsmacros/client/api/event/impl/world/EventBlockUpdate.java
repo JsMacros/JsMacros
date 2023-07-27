@@ -14,7 +14,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.2.7
  */
 @Event(value = "BlockUpdate", oldName = "BLOCK_UPDATE")
-public class EventBlockUpdate implements BaseEvent {
+public class EventBlockUpdate extends BaseEvent {
     public final BlockDataHelper block;
     @DocletReplaceReturn("BlockUpdateType")
     @DocletEnumType(name = "BlockUpdateType", type = "'STATE' | 'ENTITY'")
@@ -23,8 +23,6 @@ public class EventBlockUpdate implements BaseEvent {
     public EventBlockUpdate(BlockState block, BlockEntity blockEntity, BlockPos blockPos, String updateType) {
         this.block = new BlockDataHelper(block, blockEntity, blockPos);
         this.updateType = updateType;
-
-        profile.triggerEvent(this);
     }
 
     @Override

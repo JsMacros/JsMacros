@@ -15,12 +15,12 @@ public class MixinClientWorld {
 
     @Inject(at = @At("TAIL"), method = "addEntityPrivate")
     public void onAddEntity(int id, Entity entity, CallbackInfo ci) {
-        new EventEntityLoad(entity);
+        new EventEntityLoad(entity).trigger();
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;onRemoved()V"), method = "removeEntity", locals = LocalCapture.CAPTURE_FAILHARD)
     public void onRemoveEntity(int entityId, Entity.RemovalReason removalReason, CallbackInfo ci, Entity entity) {
-        new EventEntityUnload(entity, removalReason);
+        new EventEntityUnload(entity, removalReason).trigger();
     }
 
 }

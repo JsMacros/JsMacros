@@ -78,12 +78,14 @@ public abstract class MixinCreativeInventoryScreen {
             slotId = getSlotFromCreativeSlot(slot).id;
         }
         EventClickSlot event = new EventClickSlot((HandledScreen<?>) (Object) this, actionType.ordinal(), button, slotId);
+        event.trigger();
         if (event.isCanceled()) {
             ci.cancel();
             return;
         }
         if (actionType == SlotActionType.THROW || slotId == -999) {
             EventDropSlot eventDrop = new EventDropSlot((HandledScreen<?>) (Object) this, slotId, button == 1);
+            eventDrop.trigger();
             if (eventDrop.isCanceled()) {
                 ci.cancel();
             }

@@ -9,13 +9,12 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.2.7
  */
 @Event(value = "DimensionChange", oldName = "DIMENSION_CHANGE")
-public class EventDimensionChange implements BaseEvent {
+public class EventDimensionChange extends BaseEvent {
     @DocletReplaceReturn("Dimension")
     public final String dimension;
 
     public EventDimensionChange(String dimension) {
         this.dimension = dimension;
-        profile.triggerEvent(this);
     }
 
     @Override

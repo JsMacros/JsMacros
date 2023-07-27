@@ -7,7 +7,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
 @Event("EntityUnload")
-public class EventEntityUnload implements BaseEvent {
+public class EventEntityUnload extends BaseEvent {
     public final EntityHelper<?> entity;
     @DocletReplaceReturn("EntityUnloadReason")
     public final String reason;
@@ -15,8 +15,6 @@ public class EventEntityUnload implements BaseEvent {
     public EventEntityUnload(Entity e, Entity.RemovalReason reason) {
         this.entity = EntityHelper.create(e);
         this.reason = reason.toString();
-
-        profile.triggerEvent(this);
     }
 
     @Override

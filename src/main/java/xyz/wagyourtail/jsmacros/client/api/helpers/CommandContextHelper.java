@@ -35,9 +35,28 @@ import java.util.stream.Collectors;
  */
 @Event("CommandContext")
 @SuppressWarnings("unused")
-public class CommandContextHelper extends BaseHelper<CommandContext<?>> implements BaseEvent {
+public class CommandContextHelper extends BaseEvent {
+    protected CommandContext<?> base;
+
     public CommandContextHelper(CommandContext<?> base) {
-        super(base);
+        this.base = base;
+    }
+
+    public CommandContext<?> getRaw() {
+        return base;
+    }
+
+    @Override
+    public int hashCode() {
+        return base.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof CommandContextHelper) {
+            return base.equals(((CommandContextHelper) obj).base);
+        }
+        return base.equals(obj);
     }
 
     /**

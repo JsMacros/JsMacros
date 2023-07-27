@@ -14,7 +14,7 @@ import java.util.UUID;
  * @since 1.2.7
  */
 @Event(value = "Bossbar", oldName = "BOSSBAR_UPDATE")
-public class EventBossbar implements BaseEvent {
+public class EventBossbar extends BaseEvent {
     public final BossBarHelper bossBar;
     public final String uuid;
     @DocletReplaceReturn("BossBarUpdateType")
@@ -34,8 +34,6 @@ public class EventBossbar implements BaseEvent {
         }
         this.uuid = uuid.toString();
         this.type = type;
-
-        profile.triggerEvent(this);
     }
 
     @Override

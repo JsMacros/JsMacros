@@ -19,21 +19,20 @@ public class EventRegistry extends BaseEventRegistry {
 
     @Override
     public synchronized void addScriptTrigger(ScriptTrigger rawmacro) {
-        switch (rawmacro.triggerType) {
-            case KEY_RISING:
-            case KEY_FALLING:
-            case KEY_BOTH:
-                addListener(EventKey.class.getAnnotation(Event.class).value(), new KeyListener(rawmacro, runner));
-                return;
-            case EVENT:
-                if (oldEvents.containsKey(rawmacro.event)) {
-                    rawmacro.event = oldEvents.get(rawmacro.event);
-                }
-                addListener(rawmacro.event, new EventListener(rawmacro, runner));
-                return;
-            default:
-                JsMacros.LOGGER.warn("Failed To Add: Unknown macro type for file " + rawmacro.scriptFile);
+        if (oldEvents.containsKey(rawmacro.event)) {
+            rawmacro.event = oldEvents.get(rawmacro.event);
         }
+        String event;
+        if (rawmacro.triggerType == ScriptTrigger.TriggerType.EVENT) {
+            if (rawmacro.event.startsWith("Joined")) {
+                rawmacro.event = rawmacro.event.substring(6);
+                rawmacro.joined = true;
+            }
+            event = rawmacro.event;
+        } else {
+            event = EventKey.class.getAnnotation(Event.class).value();
+        }
+        addListener(event, new EventListener(rawmacro, runner));
     }
 
     @Override

@@ -9,15 +9,13 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.5.0
  */
 @Event("Riding")
-public class EventRiding implements BaseEvent {
+public class EventRiding extends BaseEvent {
     public final boolean state;
     public final EntityHelper<?> entity;
 
     public EventRiding(boolean state, Entity entity) {
         this.state = state;
         this.entity = EntityHelper.create(entity);
-
-        profile.triggerEvent(this);
     }
 
     @Override

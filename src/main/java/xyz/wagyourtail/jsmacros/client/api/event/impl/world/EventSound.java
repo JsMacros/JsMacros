@@ -9,8 +9,8 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @author Wagyourtail
  * @since 1.2.7
  */
-@Event(value = "Sound", oldName = "SOUND")
-public class EventSound implements BaseEvent {
+@Event(value = "Sound", oldName = "SOUND", cancellable = true)
+public class EventSound extends BaseEvent {
     @DocletReplaceReturn("SoundId")
     public final String sound;
     public final float volume;
@@ -22,8 +22,6 @@ public class EventSound implements BaseEvent {
         this.volume = volume;
         this.pitch = pitch;
         this.position = new Pos3D(x, y, z);
-
-        profile.triggerEvent(this);
     }
 
     @Override

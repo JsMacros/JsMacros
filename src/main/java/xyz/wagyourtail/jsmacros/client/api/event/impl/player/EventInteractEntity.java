@@ -7,7 +7,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
 @Event("InteractEntity")
-public class EventInteractEntity implements BaseEvent {
+public class EventInteractEntity extends BaseEvent {
     public final boolean offhand;
     @DocletReplaceReturn("ActionResult")
     public final String result;
@@ -17,8 +17,6 @@ public class EventInteractEntity implements BaseEvent {
         this.offhand = offhand;
         this.result = resultStatus;
         this.entity = EntityHelper.create(entity);
-
-        profile.triggerEvent(this);
     }
 
     @Override

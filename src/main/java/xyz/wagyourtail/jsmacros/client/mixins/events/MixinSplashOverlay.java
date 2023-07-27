@@ -18,7 +18,7 @@ public class MixinSplashOverlay {
 
     @Inject(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screen/SplashOverlay;reloadCompleteTime:J", opcode = Opcodes.PUTFIELD))
     private void onReloadComplete(CallbackInfo ci) {
-        new EventResourcePackLoaded(!reloading);
+        new EventResourcePackLoaded(!reloading).trigger();
     }
 
 }

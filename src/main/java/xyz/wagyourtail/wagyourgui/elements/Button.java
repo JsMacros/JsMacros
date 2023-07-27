@@ -101,7 +101,8 @@ public class Button extends PressableWidget {
 
     @Override
     public void onRelease(double mouseX, double mouseY) {
-        super.onClick(mouseX, mouseY);
+        if (this.active)
+            super.onClick(mouseX, mouseY);
     }
 
     @Override

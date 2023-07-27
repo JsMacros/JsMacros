@@ -10,13 +10,11 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.2.7
  */
 @Event(value = "ItemPickup", oldName = "ITEM_PICKUP")
-public class EventItemPickup implements BaseEvent {
+public class EventItemPickup extends BaseEvent {
     public final ItemStackHelper item;
 
     public EventItemPickup(ItemStack item) {
         this.item = new ItemStackHelper(item);
-
-        profile.triggerEvent(this);
     }
 
     @Override

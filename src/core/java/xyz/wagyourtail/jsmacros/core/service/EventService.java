@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.6.4
  */
 @Event("Service")
-public class EventService implements BaseEvent {
+public class EventService extends BaseEvent {
     public final String serviceName;
 
     /**

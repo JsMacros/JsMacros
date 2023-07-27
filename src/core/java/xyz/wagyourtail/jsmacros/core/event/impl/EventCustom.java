@@ -16,9 +16,21 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Event("Custom")
 @SuppressWarnings("unused")
-public class EventCustom implements BaseEvent {
+public class EventCustom extends BaseEvent {
     protected Map<String, Object> args = new ConcurrentHashMap<>();
     public String eventName;
+    public boolean joinable;
+    public boolean cancelable;
+
+    @Override
+    public boolean joinable() {
+        return joinable || cancelable;
+    }
+
+    @Override
+    public boolean cancellable() {
+        return cancelable;
+    }
 
     /**
      * @param eventName name of the event. please don't use an existing one... your scripts might not like that.
@@ -34,35 +46,24 @@ public class EventCustom implements BaseEvent {
      * @since 1.2.8
      */
     public void trigger() {
-        profile.triggerEventNoAnything(this);
+        profile.triggerEvent(this);
     }
 
     /**
      * trigger the event listeners, then run {@code callback} when they finish.
      *
      * @param callback used as a {@link Runnable}, so no args, no return value.
-     * @since 1.3.1
+     * @since 1.9.0
      */
-    public void trigger(MethodWrapper<Object, Object, Object, ?> callback) {
+    public void triggerAsync(MethodWrapper<Object, Object, Object, ?> callback) {
         Core.getInstance().threadPool.runTask(() -> {
-            profile.triggerEventJoinNoAnything(this);
+            profile.triggerEvent(this);
             try {
                 callback.run();
             } catch (Throwable e) {
                 Core.getInstance().profile.logError(e);
             }
         });
-    }
-
-    /**
-     * Triggers the event and waits for it to complete.
-     * In languages with threading issues (js/jep) this may cause circular waiting when triggered from the same thread as
-     * the {@code jsmacros.on} registration for the event
-     *
-     * @since 1.2.8
-     */
-    public void triggerJoin() {
-        profile.triggerEventJoinNoAnything(this);
     }
 
     /**

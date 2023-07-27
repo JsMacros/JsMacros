@@ -10,18 +10,16 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @author Etheradon
  * @since 1.8.4
  */
-@Event(value = "RecvPacket")
+@Event(value = "RecvPacket", cancellable = true)
 @SuppressWarnings("unused")
-public class EventRecvPacket implements BaseEvent {
-
-    public final Packet<?> packet;
+public class EventRecvPacket extends BaseEvent {
+    public Packet<?> packet;
     @DocletReplaceReturn("PacketName")
     public final String type;
 
     public EventRecvPacket(Packet<?> packet) {
         this.packet = packet;
         this.type = PacketByteBufferHelper.getPacketName(packet);
-        profile.triggerEventNoAnything(this);
     }
 
     /**

@@ -10,4 +10,8 @@ public @interface Event {
 
     String oldName() default "";
 
+    boolean cancellable() default false;
+
+    boolean joinable() default false;
+
 }

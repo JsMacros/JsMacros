@@ -29,7 +29,7 @@ import java.util.Map;
  */
 @Event("CodeRender")
 @SuppressWarnings("unused")
-public class CodeCompileEvent implements BaseEvent {
+public class CodeCompileEvent extends BaseEvent {
     public final SelectCursor cursor;
     public final String code;
     public final String language;

@@ -32,6 +32,11 @@ public abstract class BaseListener implements IEventListener {
         return null;
     }
 
+    @Override
+    public boolean joined() {
+        return trigger.joined;
+    }
+
     public boolean equals(Object o) {
         if (o instanceof BaseListener) {
             return trigger.equals(((BaseListener) o).trigger);

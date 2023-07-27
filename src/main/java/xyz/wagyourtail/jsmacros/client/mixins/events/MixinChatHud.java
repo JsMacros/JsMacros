@@ -25,11 +25,16 @@ class MixinChatHud {
 
     @Inject(
             method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V",
-            at = @At("HEAD")
+            at = @At("HEAD"),
+            cancellable = true
     )
     private void onAddMessage1(Text message, MessageSignatureData signature, MessageIndicator indicator, CallbackInfo ci) {
         originalMessage = message;
         eventRecvMessage = new EventRecvMessage(message, signature, indicator);
+        eventRecvMessage.trigger();
+        if (eventRecvMessage.isCanceled()) {
+            ci.cancel();
+        }
     }
 
     @Unique

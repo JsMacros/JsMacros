@@ -12,7 +12,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.2.7
  */
 @Event(value = "OpenScreen", oldName = "OPEN_SCREEN")
-public class EventOpenScreen implements BaseEvent {
+public class EventOpenScreen extends BaseEvent {
     public final IScreen screen;
     @DocletReplaceReturn("ScreenName")
     public final String screenName;
@@ -20,8 +20,6 @@ public class EventOpenScreen implements BaseEvent {
     public EventOpenScreen(Screen screen) {
         this.screen = (IScreen) screen;
         this.screenName = JsMacros.getScreenName(screen);
-
-        profile.triggerEvent(this);
     }
 
     @Override

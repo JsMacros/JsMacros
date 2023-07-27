@@ -8,13 +8,11 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.2.7
  */
 @Event(value = "HungerChange", oldName = "HUNGER_CHANGE")
-public class EventHungerChange implements BaseEvent {
+public class EventHungerChange extends BaseEvent {
     public final int foodLevel;
 
     public EventHungerChange(int foodLevel) {
         this.foodLevel = foodLevel;
-
-        profile.triggerEvent(this);
     }
 
     @Override

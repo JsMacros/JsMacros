@@ -46,49 +46,6 @@ public class Profile extends BaseProfile {
         return val;
     }
 
-    @Override
-    public void triggerEventJoin(BaseEvent event) {
-        boolean joinedMain = checkJoinedThreadStack();
-        triggerEventJoinNoAnything(event);
-
-        for (IEventListener macro : runner.eventRegistry.getListeners("ANYTHING")) {
-            runJoinedEventListener(event, joinedMain, macro);
-        }
-    }
-
-    @Override
-    public void triggerEventJoinNoAnything(BaseEvent event) {
-        boolean joinedMain = checkJoinedThreadStack();
-        if (event instanceof EventCustom) {
-            for (IEventListener macro : runner.eventRegistry.getListeners(((EventCustom) event).eventName)) {
-                runJoinedEventListener(event, joinedMain, macro);
-            }
-        } else {
-            for (IEventListener macro : runner.eventRegistry.getListeners(event.getEventName())) {
-                runJoinedEventListener(event, joinedMain, macro);
-            }
-        }
-    }
-
-    private void runJoinedEventListener(BaseEvent event, boolean joinedMain, IEventListener macroListener) {
-        if (macroListener instanceof FJsMacros.ScriptEventListener && ((FJsMacros.ScriptEventListener) macroListener).getCreator() == Thread.currentThread() && ((FJsMacros.ScriptEventListener) macroListener).getWrapper().preventSameThreadJoin()) {
-            throw new IllegalThreadStateException("Cannot join " + macroListener + " on same thread as it's creation.");
-        }
-        EventContainer<?> t = macroListener.trigger(event);
-        if (t == null) {
-            return;
-        }
-        try {
-            if (joinedMain) {
-                joinedThreadStack.add(t.getLockThread());
-                EventLockWatchdog.startWatchdog(t, macroListener, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
-            }
-            t.awaitLock(() -> joinedThreadStack.remove(t.getLockThread()));
-        } catch (InterruptedException ignored) {
-            joinedThreadStack.remove(t.getLockThread());
-        }
-    }
-
     public static Class<? extends Throwable>[] ignoredErrors = new Class[]{
             InterruptedException.class,
             BaseScriptContext.ScriptAssertionError.class,
@@ -209,10 +166,8 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventInteractEntity.class);
         runner.eventRegistry.addEvent(EventItemDamage.class);
         runner.eventRegistry.addEvent(EventItemPickup.class);
-        runner.eventRegistry.addEvent(EventJoinedKey.class);
-        runner.eventRegistry.addEvent(EventJoinedRecvPacket.class);
-        runner.eventRegistry.addEvent(EventJoinedSendPacket.class);
-        runner.eventRegistry.addEvent(EventJoinedTick.class);
+        runner.eventRegistry.addEvent(EventRecvPacket.class);
+        runner.eventRegistry.addEvent(EventSendPacket.class);
         runner.eventRegistry.addEvent(EventJoinServer.class);
         runner.eventRegistry.addEvent(EventKey.class);
         runner.eventRegistry.addEvent(EventLaunchGame.class);

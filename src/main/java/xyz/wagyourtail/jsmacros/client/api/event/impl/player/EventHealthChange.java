@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.8.4
  */
 @Event(value = "HealthChange")
-public class EventHealthChange implements BaseEvent {
+public class EventHealthChange extends BaseEvent {
 
     public final float health;
     public final float change;
@@ -16,7 +16,6 @@ public class EventHealthChange implements BaseEvent {
     public EventHealthChange(float health, float change) {
         this.health = health;
         this.change = change;
-        profile.triggerEvent(this);
     }
 
     @Override

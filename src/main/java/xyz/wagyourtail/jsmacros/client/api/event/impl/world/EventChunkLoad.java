@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.2.7
  */
 @Event(value = "ChunkLoad", oldName = "CHUNK_LOAD")
-public class EventChunkLoad implements BaseEvent {
+public class EventChunkLoad extends BaseEvent {
     public final int x;
     public final int z;
     public final boolean isFull;
@@ -17,8 +17,6 @@ public class EventChunkLoad implements BaseEvent {
         this.x = x;
         this.z = z;
         this.isFull = isFull;
-
-        profile.triggerEvent(this);
     }
 
     @Override

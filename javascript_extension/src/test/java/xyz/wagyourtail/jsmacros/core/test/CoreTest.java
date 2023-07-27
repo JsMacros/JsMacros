@@ -4,6 +4,7 @@ import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.Test;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
+import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.stubs.CoreInstanceCreator;
@@ -85,7 +86,7 @@ public class CoreTest {
                 null,
                 null
         );
-        EventLockWatchdog.startWatchdog(ev, e -> null, 3000);
+        EventLockWatchdog.startWatchdog(ev, IEventListener.NULL, 3000);
         ev.awaitLock(() -> {
         });
         assertEquals("[\"a\",\"b\",\"a\",\"b\",\"a\",\"b\",\"a\",\"b\",\"a\",\"b\",\"c\"]", custom.getString("test"));
@@ -140,7 +141,7 @@ public class CoreTest {
                 null,
                 null
         );
-        EventLockWatchdog.startWatchdog(ev, e -> null, 10000);
+        EventLockWatchdog.startWatchdog(ev, IEventListener.NULL, 10000);
         ev.awaitLock(() -> {
         });
         System.out.println("Time: " + custom.getDouble("time"));

@@ -107,9 +107,9 @@ public class FJsMacros extends PerExecLibrary {
      */
     public EventContainer<?> runScript(String file, BaseEvent fakeEvent, MethodWrapper<Throwable, Object, Object, ?> callback) {
         if (callback != null) {
-            return Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true), fakeEvent, () -> callback.accept(null), callback);
+            return Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true, false), fakeEvent, () -> callback.accept(null), callback);
         } else {
-            return Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true), fakeEvent, null, null);
+            return Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true, false), fakeEvent, null, null);
         }
     }
 
@@ -175,7 +175,7 @@ public class FJsMacros extends PerExecLibrary {
      * @since 1.7.0
      */
     public <T, U, R> MethodWrapper<T, U, R, ?> wrapScriptRun(String file) {
-        return new WrappedScript<>((e) -> (EventContainer<BaseScriptContext<?>>) Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, e.getEventName(), Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true), e, null, null), false);
+        return new WrappedScript<>((e) -> (EventContainer<BaseScriptContext<?>>) Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, e.getEventName(), Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true, false), e, null, null), false);
     }
 
     /**
@@ -214,7 +214,7 @@ public class FJsMacros extends PerExecLibrary {
      * @since 1.7.0
      */
     public <T, U, R> MethodWrapper<T, U, R, ?> wrapScriptRunAsync(String file) {
-        return new WrappedScript<>((e) -> (EventContainer<BaseScriptContext<?>>) Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, e.getEventName(), Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true), e, null, null), true);
+        return new WrappedScript<>((e) -> (EventContainer<BaseScriptContext<?>>) Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, e.getEventName(), Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true, false), e, null, null), true);
     }
 
     /**
@@ -305,6 +305,21 @@ public class FJsMacros extends PerExecLibrary {
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E, callback: MethodWrapper<Events[E], EventContainer>")
     public IEventListener on(String event, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
+        return on(event, false, callback);
+    }
+
+    /**
+     * Creates a listener for an event, this function can be more efficient that running a script file when used properly.
+     *
+     * @param event
+     * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
+     * @return
+     * @see IEventListener
+     * @since 1.9.0
+     */
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, joined: boolean, callback: MethodWrapper<Events[E], EventContainer>")
+    public IEventListener on(String event, boolean joined, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
         if (callback == null) {
             return null;
         }
@@ -313,6 +328,11 @@ public class FJsMacros extends PerExecLibrary {
         }
         Thread th = Thread.currentThread();
         IEventListener listener = new ScriptEventListener() {
+
+            @Override
+            public boolean joined() {
+                return joined;
+            }
 
             @Override
             public EventContainer<?> trigger(BaseEvent e) {
@@ -371,6 +391,22 @@ public class FJsMacros extends PerExecLibrary {
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E, callback: MethodWrapper<Events[E], EventContainer>")
     public IEventListener once(String event, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
+        return once(event, false, callback);
+    }
+
+
+    /**
+     * Creates a single-run listener for an event, this function can be more efficient that running a script file when used properly.
+     *
+     * @param event
+     * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
+     * @return the listener.
+     * @see IEventListener
+     * @since 1.9.0
+     */
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, joined: boolean, callback: MethodWrapper<Events[E], EventContainer>")
+    public IEventListener once(String event, boolean joined, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
         if (callback == null) {
             return null;
         }
@@ -379,6 +415,11 @@ public class FJsMacros extends PerExecLibrary {
         }
         Thread th = Thread.currentThread();
         IEventListener listener = new ScriptEventListener() {
+            @Override
+            public boolean joined() {
+                return joined;
+            }
+
             @Override
             public EventContainer<?> trigger(BaseEvent e) {
                 Core.getInstance().eventRegistry.removeListener(event, this);
@@ -526,15 +567,43 @@ public class FJsMacros extends PerExecLibrary {
     }
 
     /**
+     * @param event event to wait for
+     * @return a event and a new context if the event you're waiting for was joined, to leave it early.
+     * @throws InterruptedException
+     * @since 1.9.0
+     */
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, join: boolean")
+    @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
+    public EventAndContext waitForEvent(String event, boolean join) throws InterruptedException {
+        return waitForEvent(event, join, null, null);
+    }
+
+    /**
      * @param event
      * @return
      * @throws InterruptedException
+     * @since 1.5.0 [citation needed]
      */
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E, filter: MethodWrapper<Events[E], undefined, boolean>")
     @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
     public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean, ?> filter) throws InterruptedException {
         return waitForEvent(event, filter, null);
+    }
+
+
+    /**
+     * @param event
+     * @return
+     * @throws InterruptedException
+     * @since 1.9.0
+     */
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, join: boolean, filter: MethodWrapper<Events[E], undefined, boolean>")
+    @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
+    public EventAndContext waitForEvent(String event, boolean join, MethodWrapper<BaseEvent, Object, Boolean, ?> filter) throws InterruptedException {
+        return waitForEvent(event, join, filter, null);
     }
 
     /**
@@ -551,6 +620,25 @@ public class FJsMacros extends PerExecLibrary {
     @DocletReplaceParams("event: E, filter: MethodWrapper<Events[E], undefined, boolean>, runBeforeWaiting: MethodWrapper<JavaObject, JavaObject, JavaObject>")
     @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
     public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean, ?> filter, MethodWrapper<Object, Object, Object, ?> runBeforeWaiting) throws InterruptedException {
+        return waitForEvent(event, false, filter, runBeforeWaiting);
+    }
+
+
+
+    /**
+     * waits for an event. if this thread is bound to an event already, this will release current lock.
+     *
+     * @param event            event to wait for
+     * @param filter           filter the event until it has the proper values or whatever.
+     * @param runBeforeWaiting runs as a {@link Runnable}, run before waiting, this is a thread-safety thing to prevent "interrupts" from going in between this and things like deferCurrentTask
+     * @return a event and a new context if the event you're waiting for was joined, to leave it early.
+     * @throws InterruptedException
+     * @since 1.9.0
+     */
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, join: boolean, filter: MethodWrapper<Events[E], undefined, boolean>, runBeforeWaiting: MethodWrapper<JavaObject, JavaObject, JavaObject>")
+    @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
+    public EventAndContext waitForEvent(String event, boolean join, MethodWrapper<BaseEvent, Object, Boolean, ?> filter, MethodWrapper<Object, Object, Object, ?> runBeforeWaiting) throws InterruptedException {
         // event return values
         final BaseEvent[] ev = {null};
         // create a new event container so we can actually release joined events
@@ -569,6 +657,11 @@ public class FJsMacros extends PerExecLibrary {
 
             // create the listener
             IEventListener listener = new ScriptEventListener() {
+                @Override
+                public boolean joined() {
+                    return join;
+                }
+
                 @Override
                 public EventContainer<?> trigger(BaseEvent evt) {
                     ev[0] = evt;

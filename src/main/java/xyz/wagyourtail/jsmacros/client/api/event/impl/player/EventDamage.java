@@ -11,9 +11,17 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.2.7
  */
 @Event(value = "Damage", oldName = "DAMAGE")
-public class EventDamage implements BaseEvent {
+public class EventDamage extends BaseEvent {
+    /**
+     * @deprecated may not work on servers
+     */
+    @Deprecated
     public final EntityHelper<?> attacker;
+    /**
+     * @deprecated may not work on servers
+     */
     @DocletReplaceReturn("DamageSource")
+    @Deprecated
     public final String source;
     public final float health;
     public final float change;
@@ -27,8 +35,6 @@ public class EventDamage implements BaseEvent {
         this.source = source.getName();
         this.health = health;
         this.change = change;
-
-        profile.triggerEvent(this);
     }
 
     @Override
