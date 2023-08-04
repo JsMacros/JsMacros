@@ -31,6 +31,7 @@ import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 import java.util.Arrays;
 
 public class Profile extends BaseProfile {
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
 
     public Profile(Core<Profile, ?> runner, Logger logger) {
         super(runner, logger);
@@ -94,7 +95,7 @@ public class Profile extends BaseProfile {
 
     @Override
     public boolean checkJoinedThreadStack() {
-        return MinecraftClient.getInstance().isOnThread() || joinedThreadStack.contains(Thread.currentThread());
+        return mc.isOnThread() || joinedThreadStack.contains(Thread.currentThread());
     }
 
     private Text compileError(BaseWrappedException<?> ex) {

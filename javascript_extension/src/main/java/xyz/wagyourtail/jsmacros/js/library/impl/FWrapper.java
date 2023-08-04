@@ -137,6 +137,11 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
             this.priority = priority;
         }
 
+        @Override
+        public boolean preventSameScriptJoin() {
+            return true;
+        }
+
         private void innerAccept(Object... args) {
             if (await) {
                 innerApply(args);

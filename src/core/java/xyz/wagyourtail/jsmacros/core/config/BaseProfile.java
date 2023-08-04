@@ -134,8 +134,8 @@ public abstract class BaseProfile {
     }
 
     protected void runJoinedEventListener(BaseEvent event, boolean joinedMain, IEventListener macroListener) {
-        if (macroListener instanceof FJsMacros.ScriptEventListener && ((FJsMacros.ScriptEventListener) macroListener).getCreator() == Thread.currentThread() && ((FJsMacros.ScriptEventListener) macroListener).getWrapper().preventSameThreadJoin()) {
-            throw new IllegalThreadStateException("Cannot join " + macroListener + " on same thread as it's creation.");
+        if (macroListener instanceof FJsMacros.ScriptEventListener && ((FJsMacros.ScriptEventListener) macroListener).getWrapper().getCtx().getBoundThreads().contains(Thread.currentThread()) && ((FJsMacros.ScriptEventListener) macroListener).getWrapper().preventSameScriptJoin()) {
+            throw new IllegalThreadStateException("Cannot join " + macroListener + " on same context as it's creation.");
         }
         EventContainer<?> t = macroListener.trigger(event);
         if (t == null) {

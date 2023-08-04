@@ -19,10 +19,10 @@ public class EventLockWatchdog {
                         }
                     }
                     lock.getCtx().closeContext();
+                    lock.releaseLock();
                     if (listener instanceof BaseListener) {
                         ((BaseListener) listener).getRawTrigger().enabled = false;
                     }
-                    lock.releaseLock();
                     WatchdogException ex = new WatchdogException(String.format("Script \n\"%s\"\n joined longer than allowed time of %d ms.", listener.toString(), maxTime));
                     Core.getInstance().profile.logError(ex);
                 } catch (InterruptedException ignored) {

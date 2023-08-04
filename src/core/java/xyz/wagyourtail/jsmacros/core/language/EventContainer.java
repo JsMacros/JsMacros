@@ -25,12 +25,13 @@ public class EventContainer<T extends BaseScriptContext<?>> {
         return locked;
     }
 
-    public void setLockThread(Thread lockThread) {
+    public synchronized void setLockThread(Thread lockThread) {
         if (this.lockThread != null) {
             throw new AssertionError("Cannot change lock thread of context container once assigned!");
         }
         this.lockThread = lockThread;
-        ctx.events.put(lockThread, (EventContainer) this);
+        if (locked)
+            ctx.events.put(lockThread, (EventContainer) this);
     }
 
     public T getCtx() {
@@ -86,7 +87,8 @@ public class EventContainer<T extends BaseScriptContext<?>> {
         then.clear();
         this.notifyAll();
         synchronized (ctx) {
-            ctx.events.remove(lockThread);
+            if (lockThread != null)
+                ctx.events.remove(lockThread);
         }
     }
 

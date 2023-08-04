@@ -12,7 +12,7 @@ public class JsMacrosThreadPool {
     public final int maxFreeThreads;
 
     public JsMacrosThreadPool() {
-        this(4, 12);
+        this(Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().availableProcessors() * 3);
     }
 
     public JsMacrosThreadPool(int minFreeThreads, int maxFreeThreads) {
@@ -22,6 +22,22 @@ public class JsMacrosThreadPool {
             PoolThread t = new PoolThread();
             t.start();
         }
+        runTask(() -> {
+            while (true) {
+                synchronized (freeThreads) {
+                    try {
+                        freeThreads.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    if (freeThreads.size() < minFreeThreads) {
+                        PoolThread t = new PoolThread();
+                        t.start();
+                    }
+                }
+                ;
+            }
+        });
     }
 
     public Thread runTask(Runnable task) {
@@ -30,8 +46,7 @@ public class JsMacrosThreadPool {
             if (freeThreads.isEmpty()) {
                 // this shouldn't happen, I guess if called too fast...
                 t = new PoolThread();
-                t.start();
-                t.runTask(task);
+                t.startWithTask(task);
             } else {
                 t = freeThreads.iterator().next();
                 freeThreads.remove(t);
@@ -48,11 +63,11 @@ public class JsMacrosThreadPool {
                 // this shouldn't happen, I guess if called too fast...
                 t = new PoolThread();
                 beforeRunTask.accept(t);
-                t.start();
-                t.runTask(task);
+                t.startWithTask(task);
             } else {
                 t = freeThreads.iterator().next();
                 freeThreads.remove(t);
+                freeThreads.notify();
                 beforeRunTask.accept(t);
                 t.runTask(task);
             }
@@ -70,8 +85,14 @@ public class JsMacrosThreadPool {
 
         @Override
         public synchronized void start() {
-            super.start();
             freeThreads.add(this);
+            super.start();
+        }
+
+        public synchronized void startWithTask(Runnable task) {
+            this.setContextClassLoader(Thread.currentThread().getContextClassLoader());
+            this.task = task;
+            start();
         }
 
         public void runTask(Runnable task) {
@@ -89,12 +110,6 @@ public class JsMacrosThreadPool {
                     synchronized (this) {
                         while (task == null) {
                             wait();
-                        }
-                    }
-                    synchronized (freeThreads) {
-                        if (freeThreads.size() < minFreeThreads) {
-                            PoolThread t = new PoolThread();
-                            t.start();
                         }
                     }
                     task.run();

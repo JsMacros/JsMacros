@@ -327,6 +327,7 @@ public class FJsMacros extends PerExecLibrary {
             throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
         }
         Thread th = Thread.currentThread();
+        String creatorName = th.getName();
         IEventListener listener = new ScriptEventListener() {
 
             @Override
@@ -337,11 +338,9 @@ public class FJsMacros extends PerExecLibrary {
             @Override
             public EventContainer<?> trigger(BaseEvent e) {
                 EventContainer<?> p = new EventContainer<>(ctx);
-                Core.getInstance().threadPool.runTask(() -> {
+                Thread ot = callback.overrideThread();
+                Thread th = Core.getInstance().threadPool.runTask(() -> {
                     Thread t = Thread.currentThread();
-                    Thread ot = callback.overrideThread();
-                    p.setLockThread(ot == null ? t : ot);
-
                     t.setName(this.toString());
                     try {
                         callback.accept(e, p);
@@ -352,12 +351,13 @@ public class FJsMacros extends PerExecLibrary {
                         p.releaseLock();
                     }
                 });
+                p.setLockThread(ot == null ? th : ot);
                 return p;
             }
 
             @Override
-            public Thread getCreator() {
-                return th;
+            public String getCreatorName() {
+                return creatorName;
             }
 
             @Override
@@ -372,7 +372,7 @@ public class FJsMacros extends PerExecLibrary {
 
             @Override
             public String toString() {
-                return String.format("ScriptEventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", th.getName(), event);
+                return String.format("ScriptEventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", getCreatorName(), event);
             }
         };
         Core.getInstance().eventRegistry.addListener(event, listener);
@@ -414,6 +414,7 @@ public class FJsMacros extends PerExecLibrary {
             throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
         }
         Thread th = Thread.currentThread();
+        String creatorName = th.getName();
         IEventListener listener = new ScriptEventListener() {
             @Override
             public boolean joined() {
@@ -424,10 +425,9 @@ public class FJsMacros extends PerExecLibrary {
             public EventContainer<?> trigger(BaseEvent e) {
                 Core.getInstance().eventRegistry.removeListener(event, this);
                 EventContainer<?> p = new EventContainer<>(ctx);
-                Core.getInstance().threadPool.runTask(() -> {
+                Thread ot = callback.overrideThread();
+                Thread th = Core.getInstance().threadPool.runTask(() -> {
                     Thread t = Thread.currentThread();
-                    Thread ot = callback.overrideThread();
-                    p.setLockThread(ot == null ? t : ot);
 
                     t.setName(this.toString());
                     try {
@@ -438,12 +438,13 @@ public class FJsMacros extends PerExecLibrary {
                         p.releaseLock();
                     }
                 });
+                p.setLockThread(ot == null ? th : ot);
                 return p;
             }
 
             @Override
-            public Thread getCreator() {
-                return th;
+            public String getCreatorName() {
+                return creatorName;
             }
 
             @Override
@@ -458,7 +459,7 @@ public class FJsMacros extends PerExecLibrary {
 
             @Override
             public String toString() {
-                return String.format("OnceScriptEventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", th.getName(), event);
+                return String.format("OnceScriptEventListener:{\"creator\":\"%s\", \"event\":\"%s\"}", getCreatorName(), event);
             }
 
         };
@@ -650,6 +651,7 @@ public class FJsMacros extends PerExecLibrary {
 
             //get current thread establish the lock to use for waiting blah blah blah
             Thread th = Thread.currentThread();
+            String creatorName = th.getName();
             Semaphore lock = new Semaphore(0);
             Semaphore lock2 = new Semaphore(0);
 
@@ -684,8 +686,8 @@ public class FJsMacros extends PerExecLibrary {
                 }
 
                 @Override
-                public Thread getCreator() {
-                    return th;
+                public String getCreatorName() {
+                    return creatorName;
                 }
 
                 @Override
@@ -768,7 +770,7 @@ public class FJsMacros extends PerExecLibrary {
     }
 
     public interface ScriptEventListener extends IEventListener {
-        Thread getCreator();
+        String getCreatorName();
 
         MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> getWrapper();
 
