@@ -337,6 +337,12 @@ task copyWebDoc(type: Copy, dependsOn: generateWebDoc) {
     description = "Copies the web documentation to the build folder"
     from new File(rootProject.rootDir, "docs/web")
     into new File(rootProject.buildDir, "docs/web")
+
+    inputs.property "version", project.version
+
+    filesMatching("index.html") {
+        expand "version": project.version
+    }
 }
 
 task createDist(type: Copy) {
