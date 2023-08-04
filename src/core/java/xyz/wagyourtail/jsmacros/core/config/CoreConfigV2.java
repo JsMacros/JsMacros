@@ -17,6 +17,14 @@ public class CoreConfigV2 {
     @Option(translationKey = "jsmacros.defaultprofile", group = "jsmacros.settings.profile", options = "profileOptions")
     public String defaultProfile = "default";
 
+    @Option(translationKey = "jsmacros.anythingIgnored", group = { "jsmacros.settings.general" }, options = "getEvents")
+    public List<String> anythingIgnored = new ArrayList<>(Arrays.asList(
+            "Sound",
+            "Tick",
+            "RecvPacket",
+            "SendPacket"
+    ));
+
     @Option(translationKey = "jsmacros.profiles", group = {"jsmacros.settings.profile", "jsmacros.settings.profile.list"}, type = @OptionType("profile"))
     public Map<String, List<ScriptTrigger>> profiles = new HashMap<>();
 
@@ -24,7 +32,7 @@ public class CoreConfigV2 {
 
     public CoreConfigV2() {
         profiles.put("default", new ArrayList<>());
-        profiles.get("default").add(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventProfileLoad.class.getAnnotation(Event.class).value(), "index.js", true));
+        profiles.get("default").add(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventProfileLoad.class.getAnnotation(Event.class).value(), "index.js", true, false));
     }
 
     //"synthetic" option
@@ -40,6 +48,10 @@ public class CoreConfigV2 {
 
     public List<String> profileOptions() {
         return new ArrayList<>(profiles.keySet());
+    }
+
+    public List<String> getEvents() {
+        return new ArrayList<>(Core.getInstance().eventRegistry.events);
     }
 
     @Deprecated

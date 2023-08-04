@@ -2,17 +2,16 @@ package xyz.wagyourtail.jsmacros.core.config;
 
 import org.slf4j.Logger;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventProfileLoad;
+import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.impl.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Wagyourtail
@@ -22,6 +21,9 @@ public abstract class BaseProfile {
     protected final Core runner;
     public final Logger LOGGER;
     public final Set<Thread> joinedThreadStack = new HashSet<>();
+
+    public final Set<String> events = new HashSet<>();
+
     public String profileName;
 
     public BaseProfile(Core runner, Logger logger) {
@@ -76,7 +78,7 @@ public abstract class BaseProfile {
         for (ScriptTrigger rawmacro : rawProfile) {
             runner.eventRegistry.addScriptTrigger(rawmacro);
         }
-        new EventProfileLoad(this, pName);
+        new EventProfileLoad(this, pName).trigger();
 
         return true;
     }
@@ -94,40 +96,61 @@ public abstract class BaseProfile {
      * @since 1.2.7
      */
     public void triggerEvent(BaseEvent event) {
-        triggerEventNoAnything(event);
-
-        for (IEventListener macro : runner.eventRegistry.getListeners("ANYTHING")) {
-            macro.trigger(event);
-        }
-    }
-
-    /**
-     * @param event
-     * @since 1.2.7
-     */
-    public abstract void triggerEventJoin(BaseEvent event);
-
-    /**
-     * @param event
-     * @since 1.2.7
-     */
-    public void triggerEventNoAnything(BaseEvent event) {
+        boolean joinedMain = checkJoinedThreadStack();
         if (event instanceof EventCustom) {
             for (IEventListener macro : runner.eventRegistry.getListeners(((EventCustom) event).eventName)) {
                 macro.trigger(event);
             }
+
+            if (!runner.config.getOptions(CoreConfigV2.class).anythingIgnored.contains(((EventCustom) event).eventName)) {
+                for (IEventListener macro : runner.eventRegistry.getListeners("ANYTHING")) {
+                    if (macro.joined() && event.joinable()) {
+                        runJoinedEventListener(event, joinedMain, macro);
+                    } else {
+                        macro.trigger(event);
+                    }
+                }
+            }
         } else {
-            for (IEventListener macro : runner.eventRegistry.getListeners(event.getEventName())) {
-                macro.trigger(event);
+            String eventName = event.getEventName();
+            for (IEventListener macro : runner.eventRegistry.getListeners(eventName)) {
+                if (macro.joined() && runner.eventRegistry.joinableEvents.contains(eventName)) {
+                    runJoinedEventListener(event, joinedMain, macro);
+                } else {
+                    macro.trigger(event);
+                }
+            }
+
+            if (!runner.config.getOptions(CoreConfigV2.class).anythingIgnored.contains(eventName)) {
+                for (IEventListener macro : runner.eventRegistry.getListeners("ANYTHING")) {
+                    if (macro.joined() && runner.eventRegistry.joinableEvents.contains(eventName)) {
+                        runJoinedEventListener(event, joinedMain, macro);
+                    } else {
+                        macro.trigger(event);
+                    }
+                }
             }
         }
     }
 
-    /**
-     * @param event
-     * @since 1.2.7
-     */
-    public abstract void triggerEventJoinNoAnything(BaseEvent event);
+    protected void runJoinedEventListener(BaseEvent event, boolean joinedMain, IEventListener macroListener) {
+        if (macroListener instanceof FJsMacros.ScriptEventListener && ((FJsMacros.ScriptEventListener) macroListener).getCreator() == Thread.currentThread() && ((FJsMacros.ScriptEventListener) macroListener).getWrapper().preventSameThreadJoin()) {
+            throw new IllegalThreadStateException("Cannot join " + macroListener + " on same thread as it's creation.");
+        }
+        EventContainer<?> t = macroListener.trigger(event);
+        if (t == null) {
+            return;
+        }
+        try {
+            if (joinedMain) {
+                joinedThreadStack.add(t.getLockThread());
+                EventLockWatchdog.startWatchdog(t, macroListener, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+            }
+            t.awaitLock(() -> joinedThreadStack.remove(t.getLockThread()));
+        } catch (InterruptedException ignored) {
+            joinedThreadStack.remove(t.getLockThread());
+        }
+    }
 
     public void init(String defaultProfile) {
         initRegistries();
@@ -146,7 +169,7 @@ public abstract class BaseProfile {
      * Don't invoke from a script, extend to add more.
      */
     protected void initRegistries() {
-        runner.eventRegistry.addEvent("ANYTHING");
+        runner.eventRegistry.addEvent("ANYTHING", true, true);
         runner.eventRegistry.addEvent(EventProfileLoad.class);
 
         runner.libraryRegistry.addLibrary(FJsMacros.class);

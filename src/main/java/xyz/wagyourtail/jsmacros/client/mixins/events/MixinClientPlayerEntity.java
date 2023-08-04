@@ -55,22 +55,23 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     @Override
     public void setAir(int air) {
         if (air % 20 == 0) {
-            new EventAirChange(air);
+            new EventAirChange(air).trigger();
         }
         super.setAir(air);
     }
 
     @Inject(at = @At("HEAD"), method = "setExperience")
     public void onSetExperience(float progress, int total, int level, CallbackInfo info) {
-        new EventEXPChange(progress, total, level, this.experienceProgress, this.totalExperience, this.experienceLevel);
+        new EventEXPChange(progress, total, level, this.experienceProgress, this.totalExperience, this.experienceLevel).trigger();
     }
 
     @Inject(at = @At("HEAD"), method = "openEditSignScreen", cancellable = true)
     public void onOpenEditSignScreen(SignBlockEntity sign, CallbackInfo ci) {
         List<String> lines = new ArrayList<>(Arrays.asList("", "", "", ""));
         final EventSignEdit event = new EventSignEdit(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ());
+        event.trigger();
         lines = event.signText;
-        if (event.closeScreen) {
+        if (event.closeScreen || event.isCanceled()) {
             for (int i = 0; i < 4; ++i) {
                 sign.setTextOnRow(i, Text.literal(lines.get(i)));
             }
@@ -120,13 +121,13 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
 
     @Inject(method = "startRiding", at = @At(value = "RETURN", ordinal = 1))
     public void onStartRiding(Entity entity, boolean force, CallbackInfoReturnable<Boolean> cir) {
-        new EventRiding(true, entity);
+        new EventRiding(true, entity).trigger();
     }
 
     @Inject(method = "dismountVehicle", at = @At("HEAD"))
     public void onStopRiding(CallbackInfo ci) {
         if (this.getVehicle() != null) {
-            new EventRiding(false, this.getVehicle());
+            new EventRiding(false, this.getVehicle()).trigger();
         }
     }
 
@@ -134,6 +135,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
     public void onDropSelected(boolean entireStack, CallbackInfoReturnable<Boolean> cir) {
         int selectedHotbarIndex = getInventory().selectedSlot;
         EventDropSlot event = new EventDropSlot(null, 36 + selectedHotbarIndex, entireStack);
+        event.trigger();
         if (event.isCanceled()) {
             cir.setReturnValue(false);
         }

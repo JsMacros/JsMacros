@@ -45,7 +45,7 @@ public abstract class MixinMinecraftClient {
     @Inject(at = @At("HEAD"), method = "joinWorld")
     public void onJoinWorld(ClientWorld world, CallbackInfo info) {
         if (world != null) {
-            new EventDimensionChange(world.getRegistryKey().getValue().toString());
+            new EventDimensionChange(world.getRegistryKey().getValue().toString()).trigger();
         }
     }
 
@@ -62,7 +62,7 @@ public abstract class MixinMinecraftClient {
             } else {
                 prevScreen = currentScreen;
             }
-            new EventOpenScreen(screen);
+            new EventOpenScreen(screen).trigger();
         }
     }
 
@@ -73,6 +73,7 @@ public abstract class MixinMinecraftClient {
                 return;
             }
             EventOpenContainer event = new EventOpenContainer(((HandledScreen<?>) screen));
+            event.trigger();
             if (event.isCanceled()) {
                 setScreen(prevScreen);
             }
@@ -83,15 +84,15 @@ public abstract class MixinMinecraftClient {
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;integratedServerRunning:Z", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER), method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V")
     public void onDisconnect(Screen s, CallbackInfo info) {
         if (s instanceof DisconnectedScreen) {
-            new EventDisconnect(((MixinDisconnectedScreen) s).getReason());
+            new EventDisconnect(((MixinDisconnectedScreen) s).getReason()).trigger();
         } else {
-            new EventDisconnect(null);
+            new EventDisconnect(null).trigger();
         }
     }
 
     @Inject(at = @At("HEAD"), method = "run")
     private void onStart(CallbackInfo ci) {
-        new EventLaunchGame(this.session.getUsername());
+        new EventLaunchGame(this.session.getUsername()).trigger();
     }
 
 }

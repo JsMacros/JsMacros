@@ -54,49 +54,4 @@ public class ProfileStub extends BaseProfile {
     public boolean checkJoinedThreadStack() {
         return joinedThreadStack.contains(Thread.currentThread());
     }
-
-    @Override
-    public void triggerEventJoin(BaseEvent event) {
-        boolean joinedMain = checkJoinedThreadStack();
-        triggerEventJoinNoAnything(event);
-
-        for (IEventListener macro : runner.eventRegistry.getListeners("ANYTHING")) {
-            runJoinedEventListener(event, joinedMain, macro);
-        }
-    }
-
-    @Override
-    public void triggerEventJoinNoAnything(BaseEvent event) {
-
-        boolean joinedMain = checkJoinedThreadStack();
-        if (event instanceof EventCustom) {
-            for (IEventListener macro : runner.eventRegistry.getListeners(((EventCustom) event).eventName)) {
-                runJoinedEventListener(event, joinedMain, macro);
-            }
-        } else {
-            for (IEventListener macro : runner.eventRegistry.getListeners(event.getEventName())) {
-                runJoinedEventListener(event, joinedMain, macro);
-            }
-        }
-    }
-
-    private void runJoinedEventListener(BaseEvent event, boolean joinedMain, IEventListener macroListener) {
-        if (macroListener instanceof FJsMacros.ScriptEventListener && ((FJsMacros.ScriptEventListener) macroListener).getCreator() == Thread.currentThread() && ((FJsMacros.ScriptEventListener) macroListener).getWrapper().preventSameThreadJoin()) {
-            throw new IllegalThreadStateException("Cannot join " + macroListener + " on same thread as it's creation.");
-        }
-        EventContainer<?> t = macroListener.trigger(event);
-        if (t == null) {
-            return;
-        }
-        try {
-            if (joinedMain) {
-                joinedThreadStack.add(t.getLockThread());
-                EventLockWatchdog.startWatchdog(t, macroListener, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
-            }
-            t.awaitLock(() -> joinedThreadStack.remove(t.getLockThread()));
-        } catch (InterruptedException ignored) {
-            joinedThreadStack.remove(t.getLockThread());
-        }
-    }
-
 }

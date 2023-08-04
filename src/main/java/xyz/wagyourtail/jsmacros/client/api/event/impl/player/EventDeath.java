@@ -16,7 +16,7 @@ import java.util.List;
  * @since 1.2.7
  */
 @Event(value = "Death", oldName = "DEATH")
-public class EventDeath implements BaseEvent {
+public class EventDeath extends BaseEvent {
 
     public final BlockPosHelper deathPos;
     public final List<ItemStackHelper> inventory;
@@ -28,7 +28,6 @@ public class EventDeath implements BaseEvent {
         for (int i = 0; i < inv.size(); i++) {
             this.inventory.add(new ItemStackHelper(inv.getStack(i)));
         }
-        profile.triggerEvent(this);
     }
 
     /**

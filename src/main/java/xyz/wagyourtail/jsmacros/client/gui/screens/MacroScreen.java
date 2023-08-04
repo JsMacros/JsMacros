@@ -116,7 +116,7 @@ public class MacroScreen extends BaseScreen {
 
     public void runFile() {
         openOverlay(new FileChooser(width / 4, height / 4, width / 2, height / 2, this.textRenderer, Core.getInstance().config.macroFolder, null, this, (file) -> {
-            Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true), null);
+            Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", file, true, false), null);
         }, this::editFile));
     }
 

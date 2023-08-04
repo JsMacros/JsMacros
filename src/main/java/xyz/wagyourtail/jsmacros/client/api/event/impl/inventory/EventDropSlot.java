@@ -7,7 +7,6 @@ import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
-import xyz.wagyourtail.jsmacros.core.event.ICancelable;
 
 /**
  * event triggered when an item is dropped
@@ -15,8 +14,8 @@ import xyz.wagyourtail.jsmacros.core.event.ICancelable;
  * @author Wagyourtail
  * @since 1.6.4
  */
-@Event("DropSlot")
-public class EventDropSlot implements BaseEvent, ICancelable {
+@Event(value = "DropSlot", cancellable = true)
+public class EventDropSlot extends BaseEvent {
     protected static final MinecraftClient mc = MinecraftClient.getInstance();
 
     protected final HandledScreen<?> screen;
@@ -34,8 +33,6 @@ public class EventDropSlot implements BaseEvent, ICancelable {
         this.screen = screen;
         this.slot = slot;
         this.all = all;
-
-        profile.triggerEventJoinNoAnything(this);
     }
 
     /**
@@ -47,16 +44,6 @@ public class EventDropSlot implements BaseEvent, ICancelable {
             return Inventory.create(new InventoryScreen(mc.player));
         }
         return Inventory.create(screen);
-    }
-
-    @Override
-    public void cancel() {
-        this.cancel = true;
-    }
-
-    @Override
-    public boolean isCanceled() {
-        return cancel;
     }
 
     @Override

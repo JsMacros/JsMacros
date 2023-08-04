@@ -10,7 +10,7 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventSound;
 
 @Mixin(SoundSystem.class)
 public class MixinSoundSystem {
-    @Inject(at = @At("HEAD"), method = "play(Lnet/minecraft/client/sound/SoundInstance;)V")
+    @Inject(at = @At("HEAD"), method = "play(Lnet/minecraft/client/sound/SoundInstance;)V", cancellable = true)
     public void onPlay(SoundInstance instance, CallbackInfo info) {
         String id = null;
         try {
@@ -25,7 +25,11 @@ public class MixinSoundSystem {
         } catch (NullPointerException ignored) {
         }
 
-        new EventSound(id, volume, pitch, instance.getX(), instance.getY(), instance.getZ());
+        EventSound ev = new EventSound(id, volume, pitch, instance.getX(), instance.getY(), instance.getZ());
+        ev.trigger();
+        if (ev.isCanceled()) {
+            info.cancel();
+        }
     }
 
 }

@@ -137,7 +137,7 @@ public class FJavaUtils extends BaseLibrary {
      * {@code null} otherwise.
      * @since 1.8.4
      */
-    public BaseHelper<?> getHelperFromRaw(Object raw) {
+    public Object getHelperFromRaw(Object raw) {
         // Didn't implement CommandNodeHelper, TradeOfferHelper, ModContainerHelper
         if (raw instanceof Entity) {
             return EntityHelper.create(((Entity) raw));

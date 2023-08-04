@@ -15,15 +15,13 @@ import java.util.List;
  * @since 1.5.1
  */
 @Event("ResourcePackLoaded")
-public class EventResourcePackLoaded implements BaseEvent {
+public class EventResourcePackLoaded extends BaseEvent {
     public final boolean isGameStart;
     public final List<String> loadedPacks;
 
     public EventResourcePackLoaded(boolean isGameStart) {
         this.isGameStart = isGameStart;
         this.loadedPacks = new ArrayList<>(MinecraftClient.getInstance().getResourcePackManager().getEnabledNames());
-
-        profile.triggerEvent(this);
     }
 
     @Override

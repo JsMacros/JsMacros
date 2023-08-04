@@ -10,15 +10,13 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.2.7
  */
 @Event(value = "ItemDamage", oldName = "ITEM_DAMAGE")
-public class EventItemDamage implements BaseEvent {
+public class EventItemDamage extends BaseEvent {
     public final ItemStackHelper item;
     public final int damage;
 
     public EventItemDamage(ItemStack stack, int damage) {
         this.item = new ItemStackHelper(stack);
         this.damage = damage;
-
-        profile.triggerEvent(this);
     }
 
     @Override

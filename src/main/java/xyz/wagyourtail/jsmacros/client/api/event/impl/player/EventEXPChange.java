@@ -8,7 +8,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.2.7
  */
 @Event(value = "EXPChange", oldName = "EXP_CHANGE")
-public class EventEXPChange implements BaseEvent {
+public class EventEXPChange extends BaseEvent {
     public final float progress;
     public final int total;
     public final int level;
@@ -33,8 +33,6 @@ public class EventEXPChange implements BaseEvent {
         this.prevProgress = prevProgress;
         this.prevTotal = prevTotal;
         this.prevLevel = prevLevel;
-
-        profile.triggerEvent(this);
     }
 
     @Override

@@ -11,7 +11,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.7.0
  */
 @Event("WrappedScript")
-public class EventWrappedScript<T, U, R> implements BaseEvent {
+public class EventWrappedScript<T, U, R> extends BaseEvent {
     public final T arg1;
     public final U arg2;
 

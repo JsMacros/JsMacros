@@ -12,7 +12,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.2.7
  */
 @Event(value = "ArmorChange", oldName = "ARMOR_CHANGE")
-public class EventArmorChange implements BaseEvent {
+public class EventArmorChange extends BaseEvent {
     @DocletReplaceReturn("ArmorSlot")
     @DocletEnumType(name = "ArmorSlot", type = "'HEAD' | 'CHEST' | 'LEGS' | 'FEET'")
     public final String slot;
@@ -23,8 +23,6 @@ public class EventArmorChange implements BaseEvent {
         this.slot = slot;
         this.item = new ItemStackHelper(item);
         this.oldItem = new ItemStackHelper(old);
-
-        profile.triggerEvent(this);
     }
 
     @Override

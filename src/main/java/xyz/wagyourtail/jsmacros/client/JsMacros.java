@@ -58,7 +58,7 @@ public class JsMacros {
             Core.getInstance().services.startReloadListener();
         }
         PacketByteBufferHelper.init();
-        Runtime.getRuntime().addShutdownHook(new Thread(EventQuitGame::new));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> new EventQuitGame().trigger()));
     }
 
     static public Text getKeyText(String translationKey) {

@@ -11,8 +11,8 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @author Wagyourtail
  * @since 1.2.7
  */
-@Event(value = "Title", oldName = "TITLE")
-public class EventTitle implements BaseEvent {
+@Event(value = "Title", oldName = "TITLE", cancellable = true)
+public class EventTitle extends BaseEvent {
     @DocletReplaceReturn("TitleType")
     @DocletEnumType(name = "TitleType", type = "'TITLE' | 'SUBTITLE' | 'ACTIONBAR'")
     public final String type;
@@ -21,8 +21,6 @@ public class EventTitle implements BaseEvent {
     public EventTitle(String type, Text message) {
         this.type = type;
         this.message = new TextHelper(message);
-
-        profile.triggerEventJoinNoAnything(this);
     }
 
     @Override

@@ -13,8 +13,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventJoinedRecvPacket;
-import xyz.wagyourtail.jsmacros.client.api.event.impl.EventJoinedSendPacket;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventRecvPacket;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventSendPacket;
 
@@ -28,22 +26,22 @@ public class MixinClientConnection {
     @Shadow
     private Channel channel;
     @Unique
-    private EventJoinedRecvPacket eventRecvPacket;
+    private EventRecvPacket eventRecvPacket;
     @Unique
-    private EventJoinedSendPacket eventSendPacket;
+    private EventSendPacket eventSendPacket;
 
     @Inject(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/packet/Packet;)V", at = @At("HEAD"), cancellable = true)
     private void onReceivePacket(ChannelHandlerContext channelHandlerContext, Packet<?> packet, CallbackInfo ci) {
         if (!channel.isOpen()) {
             return;
         }
-        EventJoinedRecvPacket event = new EventJoinedRecvPacket(packet);
+        EventRecvPacket event = new EventRecvPacket(packet);
         if (event.isCanceled() || event.packet == null) {
             ci.cancel();
             return;
         }
+        event.trigger();
         eventRecvPacket = event;
-        new EventRecvPacket(event.packet);
     }
 
     @ModifyArg(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/packet/Packet;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/ClientConnection;handlePacket(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/listener/PacketListener;)V"), index = 0)
@@ -53,13 +51,13 @@ public class MixinClientConnection {
 
     @Inject(method = "sendImmediately", at = @At("HEAD"), cancellable = true)
     private void onSendPacket(Packet<?> packet, PacketCallbacks callbacks, CallbackInfo ci) {
-        EventJoinedSendPacket event = new EventJoinedSendPacket(packet);
+        EventSendPacket event = new EventSendPacket(packet);
+        event.trigger();
         if (event.isCanceled() || event.packet == null) {
             ci.cancel();
             return;
         }
         eventSendPacket = event;
-        new EventSendPacket(event.packet);
     }
 
     @ModifyVariable(method = "sendImmediately", at = @At(value = "LOAD"), ordinal = 0, argsOnly = true)

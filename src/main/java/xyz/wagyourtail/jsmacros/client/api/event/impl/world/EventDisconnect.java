@@ -10,7 +10,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.2.7
  */
 @Event(value = "Disconnect", oldName = "DISCONNECT")
-public class EventDisconnect implements BaseEvent {
+public class EventDisconnect extends BaseEvent {
     /**
      * @since 1.6.4
      */
@@ -18,7 +18,6 @@ public class EventDisconnect implements BaseEvent {
 
     public EventDisconnect(Text message) {
         this.message = new TextHelper(message);
-        profile.triggerEvent(this);
     }
 
     @Override

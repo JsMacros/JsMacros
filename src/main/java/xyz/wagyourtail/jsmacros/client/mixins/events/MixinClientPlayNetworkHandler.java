@@ -51,7 +51,7 @@ class MixinClientPlayNetworkHandler {
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;showsDeathScreen()Z"), method = "onDeathMessage")
     private void onDeath(DeathMessageS2CPacket packet, CallbackInfo info) {
-        new EventDeath();
+        new EventDeath().trigger();
     }
 
     @Unique
@@ -59,18 +59,19 @@ class MixinClientPlayNetworkHandler {
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/SocialInteractionsManager;setPlayerOnline(Lnet/minecraft/client/network/PlayerListEntry;)V"), method = "onPlayerList", locals = LocalCapture.CAPTURE_FAILHARD)
     public void onPlayerList(PlayerListS2CPacket packet, CallbackInfo ci, Iterator var2, Entry entry, PlayerListEntry playerListEntry) {
-        new EventPlayerJoin(entry.profileId(), playerListEntry);
+        new EventPlayerJoin(entry.profileId(), playerListEntry).trigger();
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Ljava/util/Set;remove(Ljava/lang/Object;)Z", remap = false), method = "onPlayerRemove", locals = LocalCapture.CAPTURE_FAILHARD)
     public void onPlayerListEnd(PlayerRemoveS2CPacket packet, CallbackInfo ci, Iterator var2, UUID uUID, PlayerListEntry playerListEntry) {
-        new EventPlayerLeave(uUID, playerListEntry);
+        new EventPlayerLeave(uUID, playerListEntry).trigger();
     }
 
     @ModifyArg(method = "onTitle", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;setTitle(Lnet/minecraft/text/Text;)V"))
     public Text onTitle(Text title) {
         EventTitle et = new EventTitle("TITLE", title);
-        if (et.message == null) {
+        et.trigger();
+        if (et.message == null || et.isCanceled()) {
             return null;
         } else {
             return et.message.getRaw();
@@ -80,17 +81,8 @@ class MixinClientPlayNetworkHandler {
     @ModifyArg(method = "onSubtitle", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;setSubtitle(Lnet/minecraft/text/Text;)V"))
     public Text onSubtitle(Text title) {
         EventTitle et = new EventTitle("SUBTITLE", title);
-        if (et.message == null) {
-            return null;
-        } else {
-            return et.message.getRaw();
-        }
-    }
-
-    @ModifyArg(method = "onOverlayMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;setOverlayMessage(Lnet/minecraft/text/Text;Z)V"))
-    public Text onActionbar(Text title) {
-        EventTitle et = new EventTitle("ACTIONBAR", title);
-        if (et.message == null) {
+        et.trigger();
+        if (et.message == null || et.isCanceled()) {
             return null;
         } else {
             return et.message.getRaw();
@@ -114,38 +106,38 @@ class MixinClientPlayNetworkHandler {
         if (c.equals(client.player) && e instanceof ItemEntity) {
             ItemStack item = ((ItemEntity) e).getStack().copy();
             item.setCount(packet.getStackAmount());
-            new EventItemPickup(item);
+            new EventItemPickup(item).trigger();
         }
     }
 
     @Inject(at = @At("TAIL"), method = "onGameJoin")
     public void onGameJoin(GameJoinS2CPacket packet, CallbackInfo info) {
-        new EventJoinServer(client.player, connection.getAddress().toString());
+        new EventJoinServer(client.player, connection.getAddress().toString()).trigger();
     }
 
     @Inject(at = @At("TAIL"), method = "onChunkData")
     public void onChunkData(ChunkDataS2CPacket packet, CallbackInfo info) {
-        new EventChunkLoad(packet.getX(), packet.getZ(), true);
+        new EventChunkLoad(packet.getX(), packet.getZ(), true).trigger();
     }
 
     @Inject(at = @At("TAIL"), method = "onBlockUpdate")
     public void onBlockUpdate(BlockUpdateS2CPacket packet, CallbackInfo info) {
-        new EventBlockUpdate(packet.getState(), world.getBlockEntity(packet.getPos()), packet.getPos(), "STATE");
+        new EventBlockUpdate(packet.getState(), world.getBlockEntity(packet.getPos()), packet.getPos(), "STATE").trigger();
     }
 
     @Inject(at = @At("TAIL"), method = "onChunkDeltaUpdate")
     public void onChunkDeltaUpdate(ChunkDeltaUpdateS2CPacket packet, CallbackInfo info) {
-        packet.visitUpdates((blockPos, blockState) -> new EventBlockUpdate(blockState, world.getBlockEntity(blockPos), new BlockPos(blockPos), "STATE"));
+        packet.visitUpdates((blockPos, blockState) -> new EventBlockUpdate(blockState, world.getBlockEntity(blockPos), new BlockPos(blockPos), "STATE").trigger());
     }
 
     @Inject(at = @At("TAIL"), method = "onBlockEntityUpdate")
     public void onBlockEntityUpdate(BlockEntityUpdateS2CPacket packet, CallbackInfo info) {
-        new EventBlockUpdate(world.getBlockState(packet.getPos()), world.getBlockEntity(packet.getPos()), packet.getPos(), "ENTITY");
+        new EventBlockUpdate(world.getBlockState(packet.getPos()), world.getBlockEntity(packet.getPos()), packet.getPos(), "ENTITY").trigger();
     }
 
     @Inject(at = @At("TAIL"), method = "onUnloadChunk")
     public void onUnloadChunk(UnloadChunkS2CPacket packet, CallbackInfo info) {
-        new EventChunkUnload(packet.getX(), packet.getZ());
+        new EventChunkUnload(packet.getX(), packet.getZ()).trigger();
     }
 
     @Inject(method = "onEntityStatusEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/thread/ThreadExecutor;)V", shift = At.Shift.AFTER))
@@ -153,14 +145,14 @@ class MixinClientPlayNetworkHandler {
         if (packet.getEntityId() == client.player.getId()) {
             StatusEffectInstance newEffect = new StatusEffectInstance(packet.getEffectId(), packet.getDuration(), packet.getAmplifier(), packet.isAmbient(), packet.shouldShowParticles(), packet.shouldShowIcon(), (StatusEffectInstance) null, Optional.ofNullable(packet.getFactorCalculationData()));
             StatusEffectInstance oldEffect = client.player.getStatusEffect(packet.getEffectId());
-            new EventStatusEffectUpdate(oldEffect == null ? null : new StatusEffectHelper(oldEffect), new StatusEffectHelper(newEffect), true);
+            new EventStatusEffectUpdate(oldEffect == null ? null : new StatusEffectHelper(oldEffect), new StatusEffectHelper(newEffect), true).trigger();
         }
     }
 
     @Inject(method = "onRemoveEntityStatusEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/thread/ThreadExecutor;)V", shift = At.Shift.AFTER))
     public void onEntityStatusEffect(RemoveEntityStatusEffectS2CPacket packet, CallbackInfo info) {
         if (packet.getEntity(client.world) == client.player) {
-            new EventStatusEffectUpdate(new StatusEffectHelper(client.player.getStatusEffect(packet.getEffectType())), null, false);
+            new EventStatusEffectUpdate(new StatusEffectHelper(client.player.getStatusEffect(packet.getEffectType())), null, false).trigger();
         }
     }
 

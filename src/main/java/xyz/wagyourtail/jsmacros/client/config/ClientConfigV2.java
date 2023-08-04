@@ -12,10 +12,7 @@ import xyz.wagyourtail.jsmacros.core.config.Option;
 import xyz.wagyourtail.jsmacros.core.config.OptionType;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ClientConfigV2 {
@@ -62,6 +59,7 @@ public class ClientConfigV2 {
         return EditorScreen.langs;
     }
 
+    @SuppressWarnings("resource")
     public List<String> getFonts() {
         return ((IFontManager) ((IMinecraftClient) MinecraftClient.getInstance()).jsmacros_getFontManager()).jsmacros_getFontList().stream().map(Identifier::toString).collect(Collectors.toList());
     }

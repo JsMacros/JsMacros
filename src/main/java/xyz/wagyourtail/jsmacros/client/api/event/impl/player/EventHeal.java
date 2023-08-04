@@ -11,7 +11,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.6.5
  */
 @Event("Heal")
-public class EventHeal implements BaseEvent {
+public class EventHeal extends BaseEvent {
     @DocletReplaceReturn("HealSource")
     @DocletEnumType(name = "HealSource", type = "DamageSource")
     public final String source;
@@ -22,8 +22,6 @@ public class EventHeal implements BaseEvent {
         this.source = source.getName();
         this.health = health;
         this.change = change;
-
-        profile.triggerEvent(this);
     }
 
     @Override

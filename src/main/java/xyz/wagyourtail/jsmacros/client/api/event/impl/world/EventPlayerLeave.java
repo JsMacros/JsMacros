@@ -12,15 +12,13 @@ import java.util.UUID;
  * @since 1.2.7
  */
 @Event(value = "PlayerLeave", oldName = "PLAYER_LEAVE")
-public class EventPlayerLeave implements BaseEvent {
+public class EventPlayerLeave extends BaseEvent {
     public final String UUID;
     public final PlayerListEntryHelper player;
 
     public EventPlayerLeave(UUID uuid, PlayerListEntry player) {
         this.UUID = uuid.toString();
         this.player = new PlayerListEntryHelper(player);
-
-        profile.triggerEvent(this);
     }
 
     @Override

@@ -6,13 +6,11 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
 @Event("EntityLoad")
-public class EventEntityLoad implements BaseEvent {
+public class EventEntityLoad extends BaseEvent {
     public final EntityHelper<?> entity;
 
     public EventEntityLoad(Entity e) {
         entity = EntityHelper.create(e);
-
-        profile.triggerEvent(this);
     }
 
     @Override

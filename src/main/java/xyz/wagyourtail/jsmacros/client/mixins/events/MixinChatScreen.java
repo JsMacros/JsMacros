@@ -19,15 +19,17 @@ public abstract class MixinChatScreen extends Screen {
 
     @Inject(method = "sendMessage", at = @At("HEAD"), cancellable = true)
     public void onSendChatMessage(String chatText, boolean addToHistory, CallbackInfoReturnable<Boolean> cir) {
-        final String result = new EventSendMessage(chatText).message;
-        if (result == null || result.equals("")) {
+        final EventSendMessage event = new EventSendMessage(chatText);
+        event.trigger();
+        if (event.message == null || event.message.equals("") || event.isCanceled()) {
             cir.setReturnValue(true);
-        } else if (!result.equals(chatText)) {
+        } else if (!event.message.equals(chatText)) {
             cir.setReturnValue(true);
-            if (result.startsWith("/")) {
-                this.client.player.networkHandler.sendChatCommand(result.substring(1));
+            assert this.client.player != null;
+            if (event.message.startsWith("/")) {
+                this.client.player.networkHandler.sendChatCommand(event.message.substring(1));
             } else {
-                this.client.player.networkHandler.sendChatMessage(result);
+                this.client.player.networkHandler.sendChatMessage(event.message);
             }
         }
     }

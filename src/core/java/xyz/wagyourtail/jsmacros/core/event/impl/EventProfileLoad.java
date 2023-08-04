@@ -9,13 +9,11 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.2.7
  */
 @Event(value = "ProfileLoad", oldName = "PROFILE_LOAD")
-public class EventProfileLoad implements BaseEvent {
+public class EventProfileLoad extends BaseEvent {
     public final String profileName;
 
     public EventProfileLoad(BaseProfile profile, String profileName) {
         this.profileName = profileName;
-
-        profile.triggerEvent(this);
     }
 
     public String toString() {

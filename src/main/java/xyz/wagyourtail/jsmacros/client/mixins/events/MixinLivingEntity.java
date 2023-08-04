@@ -48,19 +48,19 @@ public abstract class MixinLivingEntity extends Entity {
 
         if (difference > 0) {
             if ((Object) this instanceof ClientPlayerEntity) {
-                new EventDamage(getWorld().getDamageSources().generic(), health, difference);
-                new EventHealthChange(health, -difference);
+                new EventDamage(getWorld().getDamageSources().generic(), health, difference).trigger();
+                new EventHealthChange(health, -difference).trigger();
             }
-            new EventEntityDamaged((Entity) (Object) this, health, difference);
+            new EventEntityDamaged((Entity) (Object) this, health, difference).trigger();
         } else if (difference < 0) {
 
             difference *= -1;
 
             if ((Object) this instanceof ClientPlayerEntity) {
-                new EventHeal(getWorld().getDamageSources().generic(), health, difference);
-                new EventHealthChange(health, difference);
+                new EventHeal(getWorld().getDamageSources().generic(), health, difference).trigger();
+                new EventHealthChange(health, difference).trigger();
             }
-            new EventEntityHealed((Entity) (Object) this, health, difference);
+            new EventEntityHealed((Entity) (Object) this, health, difference).trigger();
         }
         lastHealth = health;
     }

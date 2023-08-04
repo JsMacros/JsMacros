@@ -10,7 +10,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.2.7
  */
 @Event(value = "HeldItemChange", oldName = "HELD_ITEM")
-public class EventHeldItemChange implements BaseEvent {
+public class EventHeldItemChange extends BaseEvent {
     public final boolean offHand;
     public final ItemStackHelper item;
     public final ItemStackHelper oldItem;
@@ -19,8 +19,6 @@ public class EventHeldItemChange implements BaseEvent {
         this.item = new ItemStackHelper(item);
         this.oldItem = new ItemStackHelper(oldItem);
         this.offHand = offHand;
-
-        profile.triggerEvent(this);
     }
 
     @Override

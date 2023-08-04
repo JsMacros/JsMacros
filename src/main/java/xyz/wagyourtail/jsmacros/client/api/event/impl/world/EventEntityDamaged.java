@@ -6,7 +6,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
 @Event("EntityDamaged")
-public class EventEntityDamaged implements BaseEvent {
+public class EventEntityDamaged extends BaseEvent {
     public final EntityHelper<?> entity;
     /**
      * @since 1.6.5
@@ -18,8 +18,6 @@ public class EventEntityDamaged implements BaseEvent {
         entity = EntityHelper.create(e);
         this.health = health;
         this.damage = amount;
-
-        profile.triggerEvent(this);
     }
 
     @Override

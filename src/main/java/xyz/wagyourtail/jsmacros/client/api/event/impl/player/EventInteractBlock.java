@@ -10,7 +10,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.8.0
  */
 @Event("InteractBlock")
-public class EventInteractBlock implements BaseEvent {
+public class EventInteractBlock extends BaseEvent {
     public final boolean offhand;
     @DocletReplaceReturn("ActionResult")
     public final String result;
@@ -23,8 +23,6 @@ public class EventInteractBlock implements BaseEvent {
         this.result = resultStatus;
         this.block = block;
         this.side = side;
-
-        profile.triggerEvent(this);
     }
 
     @Override

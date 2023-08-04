@@ -18,7 +18,7 @@ public class ServiceTrigger {
 
     public ScriptTrigger toScriptTrigger() {
         return new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventService.class.getAnnotation(Event.class).value(), new File(
-                Core.getInstance().config.macroFolder, file), enabled);
+                Core.getInstance().config.macroFolder, file), enabled, false);
     }
 
     @Override

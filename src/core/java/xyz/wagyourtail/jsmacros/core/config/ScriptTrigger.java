@@ -12,17 +12,19 @@ public class ScriptTrigger {
     public String event;
     public String scriptFile;
     public boolean enabled;
+    public boolean joined;
 
-    public ScriptTrigger(TriggerType triggerType, String event, File scriptFile, boolean enabled) {
-        this(triggerType, event, Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(scriptFile.getAbsoluteFile().toPath()).toString(), enabled);
+    public ScriptTrigger(TriggerType triggerType, String event, File scriptFile, boolean enabled, boolean joined) {
+        this(triggerType, event, Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(scriptFile.getAbsoluteFile().toPath()).toString(), enabled, joined);
     }
 
     @Deprecated
-    public ScriptTrigger(TriggerType triggerType, String event, String scriptFile, boolean enabled) {
+    public ScriptTrigger(TriggerType triggerType, String event, String scriptFile, boolean enabled, boolean joined) {
         this.triggerType = triggerType;
         this.event = event;
         this.scriptFile = scriptFile;
         this.enabled = enabled;
+        this.joined = joined;
     }
 
     public boolean equals(ScriptTrigger macro) {
@@ -30,11 +32,11 @@ public class ScriptTrigger {
     }
 
     public String toString() {
-        return String.format("RawMacro:{\"type\": \"%s\", \"eventkey\": \"%s\", \"scriptFile\": \"%s\", \"enabled\": %b}", triggerType.toString(), event, scriptFile, enabled);
+        return String.format("RawMacro:{\"type\": \"%s\", \"eventkey\": \"%s\", \"scriptFile\": \"%s\", \"enabled\": %b, \"joined\": %b}", triggerType.toString(), event, scriptFile, enabled, joined);
     }
 
     public static ScriptTrigger copy(ScriptTrigger m) {
-        return new ScriptTrigger(m.triggerType, m.event, m.scriptFile, m.enabled);
+        return new ScriptTrigger(m.triggerType, m.event, m.scriptFile, m.enabled, m.joined);
     }
 
     public ScriptTrigger copy() {

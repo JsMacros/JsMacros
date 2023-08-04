@@ -7,13 +7,12 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @author Wagyourtail
  * @since 1.2.7
  */
-@Event(value = "SendMessage", oldName = "SEND_MESSAGE")
-public class EventSendMessage implements BaseEvent {
+@Event(value = "SendMessage", oldName = "SEND_MESSAGE", cancellable = true)
+public class EventSendMessage extends BaseEvent {
     public String message;
 
     public EventSendMessage(String message) {
         this.message = message;
-        profile.triggerEventJoinNoAnything(this);
     }
 
     @Override

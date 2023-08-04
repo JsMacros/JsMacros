@@ -12,15 +12,13 @@ import java.util.UUID;
  * @since 1.2.7
  */
 @Event(value = "PlayerJoin", oldName = "PLAYER_JOIN")
-public class EventPlayerJoin implements BaseEvent {
+public class EventPlayerJoin extends BaseEvent {
     public final String UUID;
     public final PlayerListEntryHelper player;
 
     public EventPlayerJoin(UUID uuid, PlayerListEntry player) {
         this.UUID = uuid.toString();
         this.player = new PlayerListEntryHelper(player);
-
-        profile.triggerEvent(this);
     }
 
     @Override

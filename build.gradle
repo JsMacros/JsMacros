@@ -207,6 +207,10 @@ processForgeResources {
     }
 }
 
+jar {
+    enabled = false
+}
+
 forgeJar {
     archiveClassifier = "forge-dev"
     from sourceSets.forge.output, sourceSets.main.output, sourceSets.core.output
@@ -229,10 +233,9 @@ task shadowForgeJar(type: ShadowJar) {
     configurations = [project.configurations.shadowForge]
 }
 
-task insertJs(type: Jar) {
-    from(zipTree shadowForgeJar.archiveFile)
-
-    archiveClassifier = "forge-dev-shadow-js"
+remapForgeJar {
+    dependsOn(shadowForgeJar)
+    inputFile = shadowForgeJar.archiveFile.get().asFile
 
     from(configurations.jsmacrosExtensionInclude.files) {
         include '*'
@@ -244,11 +247,6 @@ task insertJs(type: Jar) {
                 'MixinConnector': 'xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser',
         ])
     }
-}
-
-remapForgeJar {
-    dependsOn(insertJs)
-    inputFile.set insertJs.archiveFile
 }
 
 processFabricResources {
@@ -268,6 +266,8 @@ fabricJar {
 
     preserveFileTimestamps = false
     reproducibleFileOrder = true
+
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
 
     from(configurations.jsmacrosExtensionInclude.files) {
         include '*'

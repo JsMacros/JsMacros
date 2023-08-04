@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.core.threads;
 import xyz.wagyourtail.SynchronizedWeakHashSet;
 
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class JsMacrosThreadPool {
     private final Set<PoolThread> freeThreads = new SynchronizedWeakHashSet<>();
@@ -23,19 +24,40 @@ public class JsMacrosThreadPool {
         }
     }
 
-    public void runTask(Runnable task) {
+    public Thread runTask(Runnable task) {
+        PoolThread t;
         synchronized (freeThreads) {
             if (freeThreads.isEmpty()) {
                 // this shouldn't happen, I guess if called too fast...
-                PoolThread t = new PoolThread();
+                t = new PoolThread();
                 t.start();
                 t.runTask(task);
             } else {
-                PoolThread t = freeThreads.iterator().next();
+                t = freeThreads.iterator().next();
                 freeThreads.remove(t);
                 t.runTask(task);
             }
         }
+        return t;
+    }
+
+    public Thread runTask(Runnable task, Consumer<Thread> beforeRunTask) {
+        PoolThread t;
+        synchronized (freeThreads) {
+            if (freeThreads.isEmpty()) {
+                // this shouldn't happen, I guess if called too fast...
+                t = new PoolThread();
+                beforeRunTask.accept(t);
+                t.start();
+                t.runTask(task);
+            } else {
+                t = freeThreads.iterator().next();
+                freeThreads.remove(t);
+                beforeRunTask.accept(t);
+                t.runTask(task);
+            }
+        }
+        return t;
     }
 
     public class PoolThread extends Thread {

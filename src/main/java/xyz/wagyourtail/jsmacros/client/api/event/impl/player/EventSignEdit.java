@@ -10,8 +10,8 @@ import java.util.List;
  * @author Wagyourtail
  * @since 1.2.7
  */
-@Event(value = "SignEdit", oldName = "SIGN_EDIT")
-public class EventSignEdit implements BaseEvent {
+@Event(value = "SignEdit", oldName = "SIGN_EDIT", cancellable = true)
+public class EventSignEdit extends BaseEvent {
     public final Pos3D pos;
     public boolean closeScreen = false;
     public List<String> signText;
@@ -19,8 +19,6 @@ public class EventSignEdit implements BaseEvent {
     public EventSignEdit(List<String> signText, int x, int y, int z) {
         this.pos = new Pos3D(x, y, z);
         this.signText = signText;
-
-        profile.triggerEventJoinNoAnything(this);
     }
 
     @Override

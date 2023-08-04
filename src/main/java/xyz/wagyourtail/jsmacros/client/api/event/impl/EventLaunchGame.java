@@ -8,13 +8,12 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @since 1.8.4
  */
 @Event(value = "LaunchGame")
-public class EventLaunchGame implements BaseEvent {
+public class EventLaunchGame extends BaseEvent {
 
     public final String playerName;
 
     public EventLaunchGame(String playerName) {
         this.playerName = playerName;
-        profile.triggerEvent(this);
     }
 
     @Override

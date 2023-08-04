@@ -4,13 +4,11 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
 @Event("FallFlying")
-public class EventFallFlying implements BaseEvent {
+public class EventFallFlying extends BaseEvent {
     public final boolean state;
 
     public EventFallFlying(boolean state) {
         this.state = state;
-
-        profile.triggerEvent(this);
     }
 
     @Override

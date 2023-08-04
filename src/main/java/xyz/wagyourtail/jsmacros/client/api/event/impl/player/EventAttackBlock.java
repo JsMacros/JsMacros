@@ -6,7 +6,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
 @Event("AttackBlock")
-public class EventAttackBlock implements BaseEvent {
+public class EventAttackBlock extends BaseEvent {
     public final BlockDataHelper block;
     @DocletReplaceReturn("Side")
     public final int side;
@@ -14,8 +14,6 @@ public class EventAttackBlock implements BaseEvent {
     public EventAttackBlock(BlockDataHelper block, int side) {
         this.block = block;
         this.side = side;
-
-        profile.triggerEvent(this);
     }
 
     @Override
