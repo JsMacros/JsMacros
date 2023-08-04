@@ -59,12 +59,12 @@ sourceSets {
         runtimeClasspath += core.output
     }
     forge {
-        compileClasspath += core.output + main.output + configurations.implementation
-        runtimeClasspath += core.output + main.output + configurations.implementation
+        compileClasspath += core.output + core.compileClasspath + main.output + configurations.implementation
+        runtimeClasspath += core.output + core.runtimeClasspath + main.output + configurations.implementation
     }
     fabric {
-        compileClasspath += core.output + main.output + configurations.implementation
-        runtimeClasspath += core.output + main.output + configurations.implementation
+        compileClasspath += core.output + core.compileClasspath + main.output + configurations.implementation
+        runtimeClasspath += core.output + core.runtimeClasspath + main.output + configurations.implementation
     }
 }
 

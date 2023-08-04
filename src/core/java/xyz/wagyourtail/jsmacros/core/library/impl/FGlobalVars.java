@@ -149,7 +149,7 @@ public class FGlobalVars extends BaseLibrary {
     }
 
     /**
-     * Gets an integer from the global variable pace. and then decrement it there.
+     * Gets an integer from the global variable space. and then decrement it there.
      *
      * @param name
      * @return

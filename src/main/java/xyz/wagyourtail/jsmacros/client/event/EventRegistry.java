@@ -22,17 +22,15 @@ public class EventRegistry extends BaseEventRegistry {
         if (oldEvents.containsKey(rawmacro.event)) {
             rawmacro.event = oldEvents.get(rawmacro.event);
         }
-        String event;
         if (rawmacro.triggerType == ScriptTrigger.TriggerType.EVENT) {
             if (rawmacro.event.startsWith("Joined")) {
                 rawmacro.event = rawmacro.event.substring(6);
                 rawmacro.joined = true;
             }
-            event = rawmacro.event;
+            addListener(rawmacro.event, new EventListener(rawmacro, runner));
         } else {
-            event = EventKey.class.getAnnotation(Event.class).value();
+            addListener(EventKey.class.getAnnotation(Event.class).value(), new KeyListener(rawmacro, runner));
         }
-        addListener(event, new EventListener(rawmacro, runner));
     }
 
     @Override
