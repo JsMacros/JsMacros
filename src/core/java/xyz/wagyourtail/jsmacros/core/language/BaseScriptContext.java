@@ -118,9 +118,6 @@ public abstract class BaseScriptContext<T> {
      * @since 1.6.0
      */
     public synchronized void unbindThread(Thread t) {
-        if (!threads.remove(t)) {
-            throw new ScriptAssertionError("Thread was not bound");
-        }
         EventContainer<?> container = events.get(t);
         if (container != null) {
             container.releaseLock();
