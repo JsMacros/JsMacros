@@ -147,6 +147,7 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventBossbar.class);
         runner.eventRegistry.addEvent(EventChunkLoad.class);
         runner.eventRegistry.addEvent(EventChunkUnload.class);
+        runner.eventRegistry.addEvent(EventContainerUpdate.class);
         runner.eventRegistry.addEvent(EventClickSlot.class);
         runner.eventRegistry.addEvent(EventDamage.class);
         runner.eventRegistry.addEvent(EventHeal.class);
@@ -184,6 +185,7 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventResourcePackLoaded.class);
         runner.eventRegistry.addEvent(EventSendMessage.class);
         runner.eventRegistry.addEvent(EventSignEdit.class);
+        runner.eventRegistry.addEvent(EventSlotUpdate.class);
         runner.eventRegistry.addEvent(EventSound.class);
         runner.eventRegistry.addEvent(EventStatusEffectUpdate.class);
         runner.eventRegistry.addEvent(EventTick.class);
