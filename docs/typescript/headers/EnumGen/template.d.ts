@@ -108,3 +108,4 @@ type EnchantmentRarity = string
 type EnchantmentTargetType = string
 //@Eval Java.from(Client.createPacketByteBuffer().getPacketNames())
 type PacketName = string
+type SlotUpdateType = "HELD" | "INVENTORY" | "SCREEN"
