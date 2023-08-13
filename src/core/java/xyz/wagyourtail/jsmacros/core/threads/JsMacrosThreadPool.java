@@ -47,6 +47,7 @@ public class JsMacrosThreadPool {
                 t.start();
             } else {
                 t = freeThreads.removeLast();
+                freeThreads.notify();
                 t.runTask(task);
             }
         }
@@ -64,6 +65,7 @@ public class JsMacrosThreadPool {
                 t.start();
             } else {
                 t = freeThreads.removeLast();
+                freeThreads.notify();
                 beforeRunTask.accept(t);
                 t.runTask(task);
             }
