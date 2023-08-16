@@ -153,7 +153,7 @@ public class FWorld extends BaseLibrary {
     }
 
     public BlockDataHelper getBlock(Pos3D pos) {
-        return getBlock(Math.floor(pos.x), Math.floor(pos.y), Math.floor(pos.z));
+        return getBlock((int) Math.floor(pos.x), (int) Math.floor(pos.y), (int) Math.floor(pos.z));
     }
 
     public BlockDataHelper getBlock(BlockPosHelper pos) {
