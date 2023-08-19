@@ -19,6 +19,7 @@ public class EventLockWatchdog {
                         }
                     }
                     lock.getCtx().closeContext();
+                    lock.releaseLock();
                     if (listener instanceof BaseListener) {
                         ((BaseListener) listener).getRawTrigger().enabled = false;
                     }

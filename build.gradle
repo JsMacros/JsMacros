@@ -1,7 +1,7 @@
 import groovy.json.JsonSlurper
 
 plugins {
-    id "xyz.wagyourtail.unimined" version "1.0.0-SNAPSHOT"
+    id "xyz.wagyourtail.unimined"
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
@@ -80,6 +80,8 @@ tasks.register("forgeJar", Jar) {
     archiveClassifier = "forge"
 }
 
+unimined.useGlobalCache = false
+
 unimined.minecraft {
     version project.minecraft_version
 
@@ -125,12 +127,6 @@ unimined.minecraft(sourceSets.fabric) {
 
     fabric {
         loader project.fabric_loader_version
-    }
-
-    mods {
-        modImplementation {
-            mixinRemap("unimined")
-        }
     }
 }
 

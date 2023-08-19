@@ -60,9 +60,9 @@ public abstract class MethodWrapper<T, U, R, C extends BaseScriptContext<?>> imp
     public abstract boolean test(T t, U u);
 
     /**
-     * override to return true if the method can't join to the thread it was wrapped/created in, ie for languages that don't allow multithreading.
+     * override to return true if the method can't join to the context it was wrapped/created in, ie for languages that don't allow multithreading.
      */
-    public boolean preventSameThreadJoin() {
+    public boolean preventSameScriptJoin() {
         return false;
     }
 
@@ -161,12 +161,12 @@ public abstract class MethodWrapper<T, U, R, C extends BaseScriptContext<?>> imp
         }
 
         @Override
-        public boolean preventSameThreadJoin() {
+        public boolean preventSameScriptJoin() {
             boolean afterPrevent = false;
             if (after instanceof MethodWrapper) {
-                afterPrevent = ((MethodWrapper<?, ?, ?, ?>) after).preventSameThreadJoin();
+                afterPrevent = ((MethodWrapper<?, ?, ?, ?>) after).preventSameScriptJoin();
             }
-            return self.preventSameThreadJoin() || afterPrevent;
+            return self.preventSameScriptJoin() || afterPrevent;
         }
 
         @Override
@@ -228,8 +228,8 @@ public abstract class MethodWrapper<T, U, R, C extends BaseScriptContext<?>> imp
         }
 
         @Override
-        public boolean preventSameThreadJoin() {
-            return self.preventSameThreadJoin();
+        public boolean preventSameScriptJoin() {
+            return self.preventSameScriptJoin();
         }
 
         @Override

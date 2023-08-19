@@ -17,7 +17,7 @@ public class CoreConfigV2 {
     @Option(translationKey = "jsmacros.defaultprofile", group = "jsmacros.settings.profile", options = "profileOptions")
     public String defaultProfile = "default";
 
-    @Option(translationKey = "jsmacros.anythingIgnored", group = { "jsmacros.settings.general" }, options = "getEvents")
+    @Option(translationKey = "jsmacros.anythingIgnored", group = { "jsmacros.settings.general", "jsmacros.anythingIgnored" }, options = "getEvents")
     public List<String> anythingIgnored = new ArrayList<>(Arrays.asList(
             "Sound",
             "Tick",

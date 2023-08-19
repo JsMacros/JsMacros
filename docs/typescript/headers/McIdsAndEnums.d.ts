@@ -53,3 +53,4 @@ type EnchantmentId = string
 type EnchantmentRarity = string
 type EnchantmentTargetType = string
 type PacketName = string
+type SlotUpdateType = string

@@ -3,7 +3,11 @@ plugins {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
+    maven { url "https://maven.wagyourtail.xyz/releases" }
+    maven { url "https://maven.wagyourtail.xyz/snapshots" }
+    maven { url "https://maven.neoforged.net/releases"}
 }
 
 
@@ -14,4 +18,6 @@ dependencies {
     implementation gradleApi()
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'
+
+    implementation "xyz.wagyourtail.unimined:unimined:1.1.0-SNAPSHOT"
 }

@@ -19,6 +19,28 @@ import java.util.stream.Collectors;
 
 public interface Extension {
 
+    /**
+     * @return the *minimum* version of the jsMacros core that this extension is compatible with.
+     * @since 1.9.0
+     */
+    default String minCoreVersion() {
+        return "1.8.0";
+    }
+
+    /**
+     * @return the *maximum* version of the jsMacros core that this extension is compatible with.
+     * @since 1.9.0
+     * @return
+     */
+    default String maxCoreVersion() {
+        //TODO: update this when there's a breaking change
+        switch (minCoreVersion()) {
+            case "1.8.0":
+            default:
+                return "1.9.0";
+        }
+    }
+
     void init();
 
     int getPriority();

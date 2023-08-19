@@ -1,0 +1,44 @@
+package xyz.wagyourtail.jsmacros.client.api.event.impl.inventory;
+
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.item.ItemStack;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.Event;
+
+/**
+ * @since 1.9.0
+ */
+@Event(value = "SlotUpdate")
+public class EventSlotUpdate extends BaseEvent {
+    protected final HandledScreen<?> screen;
+    @DocletReplaceReturn("SlotUpdateType")
+    public final String type;
+    public final int slot;
+    public final ItemStackHelper oldStack;
+    public final ItemStackHelper newStack;
+
+    public EventSlotUpdate(HandledScreen<?> screen, String type, int slot, ItemStack oldStack, ItemStack newStack) {
+        this.screen = screen;
+        this.type = type;
+        this.slot = slot;
+        this.oldStack = new ItemStackHelper(oldStack);
+        this.newStack = new ItemStackHelper(newStack);
+    }
+
+    /**
+     * @return inventory associated with the event
+     */
+    public Inventory<?> getInventory() {
+        return Inventory.create(screen);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s:{\"slot\": %d, \"screen\": \"%s\"}", this.getEventName(), slot, JsMacros.getScreenName(screen));
+    }
+
+}

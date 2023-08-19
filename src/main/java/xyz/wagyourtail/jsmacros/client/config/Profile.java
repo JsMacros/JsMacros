@@ -31,6 +31,7 @@ import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 import java.util.Arrays;
 
 public class Profile extends BaseProfile {
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
 
     public Profile(Core<Profile, ?> runner, Logger logger) {
         super(runner, logger);
@@ -94,7 +95,7 @@ public class Profile extends BaseProfile {
 
     @Override
     public boolean checkJoinedThreadStack() {
-        return MinecraftClient.getInstance().isOnThread() || joinedThreadStack.contains(Thread.currentThread());
+        return mc.isOnThread() || joinedThreadStack.contains(Thread.currentThread());
     }
 
     private Text compileError(BaseWrappedException<?> ex) {
@@ -146,6 +147,7 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventBossbar.class);
         runner.eventRegistry.addEvent(EventChunkLoad.class);
         runner.eventRegistry.addEvent(EventChunkUnload.class);
+        runner.eventRegistry.addEvent(EventContainerUpdate.class);
         runner.eventRegistry.addEvent(EventClickSlot.class);
         runner.eventRegistry.addEvent(EventDamage.class);
         runner.eventRegistry.addEvent(EventHeal.class);
@@ -183,6 +185,7 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventResourcePackLoaded.class);
         runner.eventRegistry.addEvent(EventSendMessage.class);
         runner.eventRegistry.addEvent(EventSignEdit.class);
+        runner.eventRegistry.addEvent(EventSlotUpdate.class);
         runner.eventRegistry.addEvent(EventSound.class);
         runner.eventRegistry.addEvent(EventStatusEffectUpdate.class);
         runner.eventRegistry.addEvent(EventTick.class);
