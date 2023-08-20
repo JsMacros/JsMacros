@@ -298,6 +298,13 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
+     * @since 1.9.0
+     */
+    public int getItemUseTimeLeft() {
+        return base.getItemUseTimeLeft();
+    }
+
+    /**
      * @return {@code true} if the entity is a baby, {@code false} otherwise.
      * @since 1.8.4
      */

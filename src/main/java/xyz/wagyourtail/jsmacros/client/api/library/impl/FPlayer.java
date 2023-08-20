@@ -111,10 +111,12 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
-     * @return the entity the camera is currently looking at.
+     * @return the entity the camera is currently looking at. can be affected by {@link ClientPlayerEntityHelper#setTarget(EntityHelper)}
      * @see EntityHelper
+     * @deprecated use {@link FPlayer#rayTraceEntity(int)} or {@link ClientPlayerEntityHelper#getTargetedEntity()} instead
      * @since 1.0.5
      */
+    @Deprecated
     public EntityHelper<?> rayTraceEntity() {
         if (mc.targetedEntity != null) {
             return EntityHelper.create(mc.targetedEntity);
