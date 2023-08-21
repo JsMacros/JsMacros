@@ -124,10 +124,10 @@ public class InteractionProxy {
         }
 
         public static boolean isInRange(float tickDelta) {
-            if (override == null || mc.getCameraEntity() == null || mc.interactionManager == null) return false;
+            if (override == null || mc.player == null || mc.interactionManager == null) return false;
             if (override.getType() == HitResult.Type.MISS) return true;
 
-            Vec3d campos = mc.getCameraEntity().getCameraPosVec(tickDelta);
+            Vec3d campos = mc.player.getCameraPosVec(tickDelta);
             double reach = mc.interactionManager.getReachDistance();
             // might need to rewrite entity distance check
             // not sure how to handle modded entity reach distance
