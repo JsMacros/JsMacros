@@ -799,8 +799,7 @@ public class ClassBuilder<T> {
             }
 
             public U finish() {
-                ArrayMemberValue arrayMemberValue = new ArrayMemberValue(constPool);
-                arrayMemberValue.setValue(mv.toArray(new MemberValue[0]));
+                this.arrayMemberValue.setValue((MemberValue[])this.mv.toArray(new MemberValue[0]));
                 return parent;
             }
 
