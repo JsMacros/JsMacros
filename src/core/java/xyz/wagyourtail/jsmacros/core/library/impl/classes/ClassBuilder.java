@@ -703,7 +703,7 @@ public class ClassBuilder<T> {
             return new AnnotationBuilder<>(annotation, constPool, this, null);
         }
 
-        public AnnotationArrayBuilder<AnnotationBuilder<T>> putArray(String key, Class<?> annotationClass) {
+        public AnnotationArrayBuilder<AnnotationBuilder<T>> putArray(String key) {
             AnnotationArrayBuilder ab = new AnnotationArrayBuilder<>(this, constPool);
             annotationInstance.addMemberValue(key, ab.arrayMemberValue);
             return ab;
