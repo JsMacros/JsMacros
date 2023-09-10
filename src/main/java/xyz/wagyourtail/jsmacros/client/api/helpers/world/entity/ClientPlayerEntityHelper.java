@@ -17,16 +17,19 @@ import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.RaycastContext;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletEnumType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownEntry;
 import xyz.wagyourtail.jsmacros.client.access.IItemCooldownManager;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
+import xyz.wagyourtail.jsmacros.client.api.classes.InteractionProxy;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec3D;
@@ -34,7 +37,9 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.AdvancementManagerHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
+import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.List;
 import java.util.Locale;
@@ -277,6 +282,372 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     }
 
     /**
+     * sets crosshair target to a block
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> setTarget(int x, int y, int z) {
+        setTarget(x, y, z, 0);
+        return this;
+    }
+
+    /**
+     * sets crosshair target to a block
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    @DocletReplaceParams("x: int, y: int, z: int, direction: Direction")
+    @DocletEnumType(name = "Direction", type = "'up' | 'down' | 'north' | 'south' | 'east' | 'west'")
+    public ClientPlayerEntityHelper<T> setTarget(int x, int y, int z, String direction) {
+        setTarget(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId());
+        return this;
+    }
+
+    /**
+     * sets crosshair target to a block
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    @DocletReplaceParams("x: int, y: int, z: int, direction: Hexit")
+    public ClientPlayerEntityHelper<T> setTarget(int x, int y, int z, int direction) {
+        InteractionProxy.Target.setTargetBlock(new BlockPos(x, y, z), direction);
+        return this;
+    }
+
+    /**
+     * sets crosshair target to a block
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> setTarget(BlockPosHelper pos) {
+        setTarget(pos, 0);
+        return this;
+    }
+
+    /**
+     * sets crosshair target to a block
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    @DocletReplaceParams("bpos: BlockPosHelper, direction: Direction")
+    public ClientPlayerEntityHelper<T> setTarget(BlockPosHelper pos, String direction) {
+        setTarget(pos, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId());
+        return this;
+    }
+
+    /**
+     * sets crosshair target to a block
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    @DocletReplaceParams("bpos: BlockPosHelper, direction: Hexit")
+    public ClientPlayerEntityHelper<T> setTarget(BlockPosHelper pos, int direction) {
+        InteractionProxy.Target.setTargetBlock(pos.getRaw(), direction);
+        return this;
+    }
+
+    /**
+     * sets crosshair target to an entity
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> setTarget(EntityHelper<?> entity) {
+        if (!entity.getRaw().canHit()) throw new AssertionError(String.format("Can't target not-hittable entity! (%s)", entity.getType()));
+        if (entity.getRaw() == mc.player) throw new AssertionError("Can't target self!");
+        InteractionProxy.Target.setTarget(new EntityHitResult(entity.getRaw()));
+        return this;
+    }
+
+    /**
+     * @return targeted block pos, null if not targeting block
+     * @since 1.9.0
+     */
+    public @Nullable BlockPosHelper getTargetedBlock() {
+        if (mc.crosshairTarget != null && mc.crosshairTarget.getType() == HitResult.Type.BLOCK) {
+            return new BlockPosHelper(((BlockHitResult) mc.crosshairTarget).getBlockPos());
+        }
+        return null;
+    }
+
+    /**
+     * @return targeted entity, null if not targeting entity
+     * @since 1.9.0
+     */
+    public @Nullable EntityHelper<?> getTargetedEntity() {
+        if (mc.targetedEntity != null) {
+            return EntityHelper.create(mc.targetedEntity);
+        }
+        return null;
+    }
+
+    /**
+     * sets crosshair target to missed (doesn't target anything)
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> setTargetMissed() {
+        InteractionProxy.Target.setTargetMissed();
+        return this;
+    }
+
+    /**
+     * clears target override
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> clearTargetOverride() {
+        InteractionProxy.Target.setTarget(null);
+        return this;
+    }
+
+    /**
+     * @param enabled if target overriding should check range. default is {@code true}
+     * @param autoClear if override should clear when out of range.
+     *                  if {@code false}, target will set to missed if out of range. default is {@code true}
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> setTargetRangeCheck(boolean enabled, boolean autoClear) {
+        InteractionProxy.Target.checkDistance = enabled;
+        InteractionProxy.Target.clearIfOutOfRange = autoClear;
+        return this;
+    }
+
+    /**
+     * @param enabled if target overriding should check air. default is {@code false}
+     * @param autoClear if override should clear when is air.
+     *                  if {@code false}, target will set to missed if is air. default is {@code false}
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> setTargetAirCheck(boolean enabled, boolean autoClear) {
+        InteractionProxy.Target.checkAir = enabled;
+        InteractionProxy.Target.clearIfIsAir = autoClear;
+        return this;
+    }
+
+    /**
+     * this check ignores air. use {@code ClientPlayerEntityHelper#setTargetAirCheck()} to check air.
+     * @param enabled if target overriding should check block shape. default is {@code true}
+     * @param autoClear if override should clear when shape is empty.
+     *                  if {@code false}, target will set to missed if is empty. default is {@code false}
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> setTargetShapeCheck(boolean enabled, boolean autoClear) {
+        InteractionProxy.Target.checkShape = enabled;
+        InteractionProxy.Target.clearIfEmptyShape = autoClear;
+        return this;
+    }
+
+    /**
+     * resets all range, air and shape check settings to default.
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> resetTargetChecks() {
+        InteractionProxy.Target.resetChecks();
+        return this;
+    }
+
+    /**
+     * @return {@code true} if target have been set by {@code ClientPlayerEntityHelper#setTarget()} or
+     *  {@code ClientPlayerEntityHelper#setTargetMissed()}
+     * @since 1.9.0
+     */
+    public boolean hasTargetOverride() {
+        return InteractionProxy.Target.hasOverride();
+    }
+
+    /**
+     * breaks a block, will wait till it's done<br>
+     * you can use {@code ClientPlayerEntityHelper#setTarget()} to specify which block to break
+     * @return result
+     * @see ClientPlayerEntityHelper#setTarget(int, int, int, String)
+     * @throws InterruptedException
+     * @since 1.9.0
+     */
+    public InteractionProxy.Break.BreakBlockResult breakBlock() throws InterruptedException {
+        if (Core.getInstance().profile.checkJoinedThreadStack()) {
+            throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined to main!");
+        }
+
+        final InteractionProxy.Break.BreakBlockResult[] ret = {null};
+        Semaphore wait = new Semaphore(0);
+
+        InteractionProxy.Break.addCallback(res -> {
+            ret[0] = res;
+            wait.release();
+        });
+        InteractionProxy.Break.setOverride(true);
+        preBreakBlock();
+
+        wait.acquire();
+        return ret[0];
+    }
+
+    /**
+     * breaks a block, will wait till it's done<br>
+     * this is the same as:
+     * <pre>
+     * setTarget(x, y, z);
+     * let res = null;
+     * if (getTargetedBlock()?.getRaw().equals(new BlockPos(x, y, z))) res = breakBlock();
+     * clearTargetOverride();
+     * return res;
+     * </pre>
+     * @return result
+     * @throws InterruptedException
+     * @since 1.9.0
+     */
+    public @Nullable InteractionProxy.Break.BreakBlockResult breakBlock(int x, int y, int z) throws InterruptedException {
+        return breakBlock(new BlockPos(x, y, z));
+    }
+
+    /**
+     * breaks a block, will wait till it's done<br>
+     * this is the same as:
+     * <pre>
+     * setTarget(pos);
+     * let res = null;
+     * if (getTargetedBlock()?.equals(pos)) res = breakBlock();
+     * clearTargetOverride();
+     * return res;
+     * </pre>
+     * @return result
+     * @throws InterruptedException
+     * @since 1.9.0
+     */
+    public @Nullable InteractionProxy.Break.BreakBlockResult breakBlock(BlockPosHelper pos) throws InterruptedException {
+        return breakBlock(pos.getRaw());
+    }
+
+    private @Nullable InteractionProxy.Break.BreakBlockResult breakBlock(BlockPos pos) throws InterruptedException {
+        InteractionProxy.Target.setTargetBlock(pos, 0);
+        InteractionProxy.Break.BreakBlockResult res = null;
+        BlockPosHelper pos2 = getTargetedBlock();
+        if (pos2 != null && pos2.getRaw().equals(pos)) res = breakBlock();
+        clearTargetOverride();
+        return res;
+    }
+
+    /**
+     * starts breaking a block<br>
+     * you can use {@code ClientPlayerEntityHelper#setTarget()} to specify which block to break
+     * @param callback this will mostly be called on main thread!
+     *                 Use {@code methodToJavaAsync()} instead of {@code methodToJava()} to avoid errors.
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> breakBlockAsync(@Nullable MethodWrapper<InteractionProxy.Break.BreakBlockResult, Object, ?, ?> callback) throws InterruptedException {
+        InteractionProxy.Break.addCallback(callback);
+        InteractionProxy.Break.setOverride(true);
+        preBreakBlock();
+        return this;
+    }
+
+    private void preBreakBlock() throws InterruptedException {
+        if (mc.crosshairTarget == null || mc.crosshairTarget.getType() != HitResult.Type.BLOCK) return;
+        BlockHitResult target = (BlockHitResult) mc.crosshairTarget;
+        BlockPos pos = target.getBlockPos();
+        attack(pos.getX(), pos.getY(), pos.getZ(), target.getSide().getId(), true);
+    }
+
+    /**
+     * cancels breaking block that previously started by {@code ClientPlayerEntityHelper#breakBlock()} or
+     *  {@code ClientPlayerEntityHelper#breakBlockAsync()}
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> cancelBreakBlock() {
+        InteractionProxy.Break.setOverride(false, "CANCELLED");
+        return this;
+    }
+
+    /**
+     * @return {@code true} if there's not finished block breaking from {@code ClientPlayerEntityHelper#breakBlock()}
+     * @since 1.9.0
+     */
+    public boolean hasBreakBlockOverride() {
+        return InteractionProxy.Break.isBreaking();
+    }
+
+    /**
+     * starts/stops long interact
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> holdInteract(boolean holding) throws InterruptedException {
+        return holdInteract(holding, false);
+    }
+
+    /**
+     * starts/stops long interact
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> holdInteract(boolean holding, boolean awaitFirstClick) throws InterruptedException {
+        if (!holding) {
+            InteractionProxy.Interact.setOverride(false);
+            return this;
+        }
+        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        if (joinedMain) {
+            InteractionProxy.Interact.setOverride(true);
+        } else {
+            Semaphore wait = new Semaphore(awaitFirstClick ? 0 : 1);
+            mc.execute(() -> {
+                InteractionProxy.Interact.setOverride(true);
+                wait.release();
+            });
+            wait.acquire();
+        }
+        return this;
+    }
+
+    /**
+     * interacts for specified number of ticks
+     * @return remaining ticks if the interaction was interrupted
+     * @throws InterruptedException
+     * @since 1.9.0
+     */
+    public int holdInteract(int ticks) throws InterruptedException {
+        return holdInteract(ticks, true);
+    }
+
+    /**
+     * interacts for specified number of ticks
+     * @param stopOnPause if {@code false}, this interaction will not return when interrupted by pause.
+     *                    the timer will not decrease, meaning it'll continue right after unpause and interact exact amount of ticks.
+     * @return remaining ticks if the interaction was interrupted
+     * @throws InterruptedException
+     * @since 1.9.0
+     */
+    public int holdInteract(int ticks, boolean stopOnPause) throws InterruptedException {
+        if (Core.getInstance().profile.checkJoinedThreadStack()) {
+            throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined to main!");
+        }
+
+        holdInteract(true, true);
+        while (ticks > 0) {
+            FClient.tickSynchronizer.waitTick();
+            if (!InteractionProxy.Interact.isInteracting()) break;
+            if (!mc.isPaused()) ticks--;
+            else if (stopOnPause) break;
+        }
+        holdInteract(false);
+        return ticks;
+    }
+
+    /**
+     * @return {@code true} if interaction from {@code ClientPlayerEntityHelper#holdInteract()} is active
+     * @since 1.9.0
+     */
+    public boolean hasInteractOverride() {
+        return InteractionProxy.Interact.isInteracting();
+    }
+
+    /**
      * @param entity
      * @since 1.5.0
      */
@@ -321,7 +692,6 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @since 1.8.4
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction")
-    @DocletEnumType(name = "Direction", type = "'up' | 'down' | 'north' | 'south' | 'east' | 'west'")
     public ClientPlayerEntityHelper<T> attack(int x, int y, int z, String direction) throws InterruptedException {
         return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), false);
     }
@@ -600,6 +970,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      * @since 1.6.3
      */
+    @Deprecated
     public ClientPlayerEntityHelper<T> setLongAttack(boolean stop) {
         if (!stop) {
             KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.attackKey.getBoundKeyTranslationKey()));
@@ -614,6 +985,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      * @since 1.6.3
      */
+    @Deprecated
     public ClientPlayerEntityHelper<T> setLongInteract(boolean stop) {
         if (!stop) {
             KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.useKey.getBoundKeyTranslationKey()));
