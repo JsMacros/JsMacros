@@ -73,7 +73,7 @@ public class FPlayer extends BaseLibrary {
      */
     public InteractionManagerHelper getInteractionManager() {
         assert mc.interactionManager != null;
-        return new InteractionManagerHelper(mc.interactionManager);
+        return new InteractionManagerHelper();
     }
 
     /**

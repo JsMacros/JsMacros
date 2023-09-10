@@ -23,21 +23,24 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Locale;
 import java.util.concurrent.Semaphore;
 
 /**
+ * Helper for ClientPlayerInteractionManager
+ * it accesses interaction manager from {@code mc} instead of {@code base}, to avoid issues
  * @author aMelonRind
  * @since 1.9.0
  */
 @SuppressWarnings("unused")
-public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteractionManager> {
+public class InteractionManagerHelper {
     protected final MinecraftClient mc = MinecraftClient.getInstance();
 
-    public InteractionManagerHelper(ClientPlayerInteractionManager base) {
-        super(base);
+    public InteractionManagerHelper() {}
+
+    public ClientPlayerInteractionManager getRaw() {
+        return mc.interactionManager;
     }
 
     /**
@@ -46,7 +49,8 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      */
     @DocletReplaceReturn("Gamemode")
     public String getGameMode() {
-        return base.getCurrentGameMode().getName();
+        assert mc.interactionManager != null;
+        return mc.interactionManager.getCurrentGameMode().getName();
     }
 
     /**
@@ -56,7 +60,8 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      */
     @DocletReplaceParams("gameMode: Gamemode")
     public InteractionManagerHelper setGameMode(String gameMode) {
-        base.setGameMode(GameMode.byName(gameMode.toLowerCase(Locale.ROOT), base.getCurrentGameMode()));
+        assert mc.interactionManager != null;
+        mc.interactionManager.setGameMode(GameMode.byName(gameMode.toLowerCase(Locale.ROOT), mc.interactionManager.getCurrentGameMode()));
         return this;
     }
 
@@ -65,7 +70,8 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      * @since 1.8.4
      */
     public float getReach() {
-        return base.getReachDistance();
+        assert mc.interactionManager != null;
+        return mc.interactionManager.getReachDistance();
     }
 
 
@@ -483,8 +489,8 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     }
 
     private @Nullable InteractionProxy.Break.BreakBlockResult checkInstaBreak(BlockPos pos) throws InterruptedException {
-        if (mc.world == null || mc.player == null
-        ||  ((IClientPlayerInteractionManager) base).jsmacros_getBlockBreakingCooldown() != 0
+        if (mc.world == null || mc.player == null || mc.interactionManager == null
+        ||  ((IClientPlayerInteractionManager) mc.interactionManager).jsmacros_getBlockBreakingCooldown() != 0
         ||  mc.world.getBlockState(pos).calcBlockBreakingDelta(mc.player, mc.player.getWorld(), pos) < 1.0F
         ) return null;
         int side = 0;
@@ -496,7 +502,8 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     }
 
     private void preBreakBlock() throws InterruptedException {
-        if (((IClientPlayerInteractionManager) base).jsmacros_getBlockBreakingCooldown() == 0) {
+        if (mc.interactionManager == null) return;
+        if (((IClientPlayerInteractionManager) mc.interactionManager).jsmacros_getBlockBreakingCooldown() == 0) {
             if (mc.crosshairTarget == null || mc.crosshairTarget.getType() != HitResult.Type.BLOCK) return;
             BlockHitResult target = (BlockHitResult) mc.crosshairTarget;
             BlockPos pos = target.getBlockPos();
@@ -508,7 +515,8 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      * @since 1.8.0
      */
     public boolean isBreakingBlock() {
-        return base.isBreakingBlock();
+        assert mc.interactionManager != null;
+        return mc.interactionManager.isBreakingBlock();
     }
 
     /**
