@@ -12,14 +12,18 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import xyz.wagyourtail.jsmacros.client.access.IClientPlayerInteractionManager;
 import xyz.wagyourtail.jsmacros.client.api.classes.InteractionProxy;
 
 @Mixin(ClientPlayerInteractionManager.class)
-class MixinClientPlayerInteractionManager {
+class MixinClientPlayerInteractionManager implements IClientPlayerInteractionManager {
 
     @Shadow
     @Final
     private MinecraftClient client;
+
+    @Shadow
+    private int blockBreakingCooldown;
 
     @Inject(at = @At("RETURN"), method = "breakBlock")
     public void onBreakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
@@ -34,6 +38,11 @@ class MixinClientPlayerInteractionManager {
                 && client.crosshairTarget.getType() == HitResult.Type.BLOCK
                 && ((BlockHitResult) client.crosshairTarget).getBlockPos().equals(pos)
         ) InteractionProxy.Break.setOverride(false, "NOT_BREAKING");
+    }
+
+    @Override
+    public int jsmacros_getBlockBreakingCooldown() {
+        return blockBreakingCooldown;
     }
 
 }

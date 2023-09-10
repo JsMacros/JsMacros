@@ -62,11 +62,13 @@ public class InteractionProxy {
         }
 
         public static void setTarget(@Nullable HitResult value) {
-            override = value;
-            if (value != null && value.getType() == HitResult.Type.ENTITY) overrideEntity = ((EntityHitResult) value).getEntity();
-            else overrideEntity = null;
-            onUpdate(0, null);
-            Break.isBreaking();
+            synchronized (Target.class) {
+                override = value;
+                if (value != null && value.getType() == HitResult.Type.ENTITY) overrideEntity = ((EntityHitResult) value).getEntity();
+                else overrideEntity = null;
+                onUpdate(0, null);
+                Break.isBreaking();
+            }
         }
 
         public static void setTargetMissed() {
@@ -78,68 +80,72 @@ public class InteractionProxy {
         }
 
         public static void onUpdate(float tickDelta, @Nullable CallbackInfo ci) {
-            if (override != null) {
-                boolean shouldMiss = false;
-                if (overrideEntity != null) {
-                    if (!overrideEntity.isAlive()) {
-                        setTarget(null);
-                        return;
+            synchronized (Target.class) {
+                if (override != null) {
+                    boolean shouldMiss = false;
+                    if (overrideEntity != null) {
+                        if (!overrideEntity.isAlive()) {
+                            setTarget(null);
+                            return;
+                        }
+                    } else if ((checkAir || checkShape) && override.getType() == HitResult.Type.BLOCK) {
+                        if (mc.world == null) return;
+                        BlockPos pos = ((BlockHitResult) override).getBlockPos();
+                        BlockState state = mc.world.getBlockState(pos);
+                        if (checkAir && state.isAir()) {
+                            if (!clearIfIsAir) shouldMiss = true;
+                            else {
+                                setTarget(null);
+                                return;
+                            }
+                        }
+                        if (checkShape && !state.isAir() && state.getOutlineShape(mc.world, pos).isEmpty()) {
+                            if (!clearIfEmptyShape) shouldMiss = true;
+                            else {
+                                setTarget(null);
+                                return;
+                            }
+                        }
                     }
-                } else if ((checkAir || checkShape) && override.getType() == HitResult.Type.BLOCK) {
-                    if (mc.world == null) return;
-                    BlockPos pos = ((BlockHitResult) override).getBlockPos();
-                    BlockState state = mc.world.getBlockState(pos);
-                    if (checkAir && state.isAir()) {
-                        if (!clearIfIsAir) shouldMiss = true;
+                    if (checkDistance && !isInRange(tickDelta)) {
+                        if (!clearIfOutOfRange) shouldMiss = true;
                         else {
                             setTarget(null);
                             return;
                         }
                     }
-                    if (checkShape && !state.isAir() && state.getOutlineShape(mc.world, pos).isEmpty()) {
-                        if (!clearIfEmptyShape) shouldMiss = true;
-                        else {
-                            setTarget(null);
-                            return;
-                        }
+                    if (override == null) return;
+                    if (ci != null) ci.cancel();
+                    if (shouldMiss) {
+                        mc.crosshairTarget = MISSED;
+                        mc.targetedEntity = null;
+                    } else {
+                        mc.crosshairTarget = override;
+                        mc.targetedEntity = overrideEntity;
                     }
-                }
-                if (checkDistance && !isInRange(tickDelta)) {
-                    if (!clearIfOutOfRange) shouldMiss = true;
-                    else {
-                        setTarget(null);
-                        return;
-                    }
-                }
-                if (override == null) return;
-                if (ci != null) ci.cancel();
-                if (shouldMiss) {
-                    mc.crosshairTarget = MISSED;
-                    mc.targetedEntity = null;
-                } else {
-                    mc.crosshairTarget = override;
-                    mc.targetedEntity = overrideEntity;
                 }
             }
         }
 
         public static boolean isInRange(float tickDelta) {
-            if (override == null || mc.player == null || mc.interactionManager == null) return false;
-            if (override.getType() == HitResult.Type.MISS) return true;
+            synchronized (Target.class) {
+                if (override == null || mc.player == null || mc.interactionManager == null) return false;
+                if (override.getType() == HitResult.Type.MISS) return true;
 
-            Vec3d campos = mc.player.getCameraPosVec(tickDelta);
-            double reach = mc.interactionManager.getReachDistance();
-            // might need to rewrite entity distance check
-            // not sure how to handle modded entity reach distance
-            if (override.getPos().isInRange(campos, reach)) return true;
+                Vec3d campos = mc.player.getCameraPosVec(tickDelta);
+                double reach = mc.interactionManager.getReachDistance();
+                // might need to rewrite entity distance check
+                // not sure how to handle modded entity reach distance
+                if (override.getPos().isInRange(campos, reach)) return true;
 
-            if (override.getType() != HitResult.Type.BLOCK) return false;
-            BlockPos pos = ((BlockHitResult) override).getBlockPos();
-            return campos.squaredDistanceTo(
-                    MathHelper.clamp(campos.x, pos.getX(), pos.getX() + 1),
-                    MathHelper.clamp(campos.y, pos.getY(), pos.getY() + 1),
-                    MathHelper.clamp(campos.z, pos.getZ(), pos.getZ() + 1)
-            ) < reach * reach;
+                if (override.getType() != HitResult.Type.BLOCK) return false;
+                BlockPos pos = ((BlockHitResult) override).getBlockPos();
+                return campos.squaredDistanceTo(
+                        MathHelper.clamp(campos.x, pos.getX(), pos.getX() + 1),
+                        MathHelper.clamp(campos.y, pos.getY(), pos.getY() + 1),
+                        MathHelper.clamp(campos.z, pos.getZ(), pos.getZ() + 1)
+                ) < reach * reach;
+            }
         }
 
     }
@@ -166,8 +172,11 @@ public class InteractionProxy {
             }
         }
 
-        public static void addCallback(Consumer<BreakBlockResult> callback) {
-            if (callback != null) mc.execute(() -> callbacks.add(callback));
+        public static void addCallback(Consumer<BreakBlockResult> callback, boolean breaking) {
+            synchronized (callbacks) {
+                if (callback != null) callbacks.add(callback);
+                if (breaking) setOverride(true);
+            }
         }
 
         private static void runCallback(@Nullable String reason, @Nullable BlockPos pos) {
@@ -176,23 +185,27 @@ public class InteractionProxy {
         }
 
         private static void runCallback(BreakBlockResult result) {
-            if (!callbacks.isEmpty()) mc.execute(() -> {
-                callbacks.forEach(cb -> {
-                    try {
-                        cb.accept(result);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-                callbacks.clear();
-            });
+            synchronized (callbacks) {
+                if (!callbacks.isEmpty()) {
+                    callbacks.forEach(cb -> {
+                        try {
+                            cb.accept(result);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    callbacks.clear();
+                }
+            }
         }
 
         public static boolean isBreaking() {
             if (mc.world == null) setOverride(false, "RESET");
-            if (!override) {
-                if (!callbacks.isEmpty()) runCallback("NO_OVERRIDE", null);
-                return false;
+            synchronized (callbacks) {
+                if (!override) {
+                    if (!callbacks.isEmpty()) runCallback("NO_OVERRIDE", null);
+                    return false;
+                }
             }
             if (mc.crosshairTarget == null || mc.crosshairTarget.getType() != HitResult.Type.BLOCK) {
                 setOverride(false, lastTarget == null ? "NO_TARGET" : "TARGET_LOST");
@@ -221,7 +234,7 @@ public class InteractionProxy {
             public final @Nullable String reason;
             public final @Nullable BlockPosHelper pos;
 
-            private BreakBlockResult(@Nullable String reason, @Nullable BlockPosHelper pos) {
+            public BreakBlockResult(@Nullable String reason, @Nullable BlockPosHelper pos) {
                 this.reason = reason;
                 this.pos = pos;
             }
