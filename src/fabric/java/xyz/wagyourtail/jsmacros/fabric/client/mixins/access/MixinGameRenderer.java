@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
+import xyz.wagyourtail.jsmacros.client.api.classes.InteractionProxy;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.ScriptScreen;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
@@ -59,6 +60,11 @@ public class MixinGameRenderer {
             }
         }
         client.getProfiler().pop();
+    }
+
+    @Inject(at = @At("HEAD"), method = "updateTargetedEntity", cancellable = true)
+    public void onTargetUpdate(float tickDelta, CallbackInfo ci) {
+        InteractionProxy.Target.onUpdate(tickDelta, ci);
     }
 
 }
