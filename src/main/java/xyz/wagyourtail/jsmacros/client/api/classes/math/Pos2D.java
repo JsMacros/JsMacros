@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.math;
 
+import java.util.Objects;
+
 /**
  * @author Wagyourtail
  * @since 1.2.6 [citation needed]
@@ -153,6 +155,19 @@ public class Pos2D {
      */
     public Vec2D toReverseVector(double end_x, double end_y) {
         return new Vec2D(this, new Pos2D(end_x, end_y));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pos2D pos2D = (Pos2D) o;
+        return Double.compare(x, pos2D.x) == 0 && Double.compare(y, pos2D.y) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
 }

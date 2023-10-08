@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.math;
 
+import java.util.Objects;
+
 /**
  * @author Wagyourtail
  * @since 1.2.6 [citation needed]
@@ -140,6 +142,22 @@ public class Vec2D {
 
     public Vec3D to3D() {
         return new Vec3D(x1, y1, 0, x2, y2, 0);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vec2D vec2D = (Vec2D) o;
+        return Double.compare(x1, vec2D.x1) == 0
+                && Double.compare(y1, vec2D.y1) == 0
+                && Double.compare(x2, vec2D.x2) == 0
+                && Double.compare(y2, vec2D.y2) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x1, y1, x2, y2);
     }
 
 }
