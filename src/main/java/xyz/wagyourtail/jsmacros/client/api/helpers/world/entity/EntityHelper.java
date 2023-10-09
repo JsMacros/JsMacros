@@ -222,10 +222,10 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return
      * @since 1.2.8, was a {@link String} until 1.5.0
      */
-    public NBTElementHelper<?> getNBT() {
+    public NBTElementHelper.NBTCompoundHelper getNBT() {
         NbtCompound nbt = new NbtCompound();
         base.writeNbt(nbt);
-        return NBTElementHelper.resolve(nbt);
+        return NBTElementHelper.wrapCompound(nbt);
     }
 
     /**

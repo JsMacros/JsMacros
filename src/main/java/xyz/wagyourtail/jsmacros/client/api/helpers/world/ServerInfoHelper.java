@@ -67,8 +67,8 @@ public class ServerInfoHelper extends BaseHelper<ServerInfo> {
         return base.isLocal();
     }
 
-    public NBTElementHelper<?> getNbt() {
-        return NBTElementHelper.resolve(base.toNbt());
+    public NBTElementHelper.NBTCompoundHelper getNbt() {
+        return NBTElementHelper.wrapCompound(base.toNbt());
     }
 
     /**

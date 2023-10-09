@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.nbt.*;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -101,6 +102,14 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
 
     public String toString() {
         return String.format("NBTElementHelper:{%s}", base.toString());
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    @Nullable
+    public static NBTCompoundHelper wrapCompound(@Nullable NbtCompound compound) {
+        return compound == null ? null : new NBTCompoundHelper(compound);
     }
 
     /**
