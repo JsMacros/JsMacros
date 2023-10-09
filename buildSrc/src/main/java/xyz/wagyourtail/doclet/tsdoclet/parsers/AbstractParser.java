@@ -462,7 +462,17 @@ public abstract class AbstractParser {
                     if (javaNumberType.containsKey(sig)) s.append(javaNumberType.get(sig));
                     else if (sig.equals("java.lang.String")) s.append("string");
                     else if (sig.equals("java.lang.Boolean")) s.append("boolean");
-                    else s.append("{@link ").append(convertSignature(sig)).append("}");
+                    else {
+                        String str = convertSignature(sig);
+                        int i = str.indexOf("<");
+                        if (i == -1) i = str.indexOf("(");
+                        s.append("{@link ");
+                        if (i == -1) {
+                            s.append(str).append("}");
+                        } else {
+                            s.append(str, 0, i).append("}").append(str.substring(i));
+                        }
+                    }
                 }
                 case CODE -> s.append("`").append(((LiteralTree) docTree).getBody()).append("`");
                 default -> s.append(docTree);
@@ -474,10 +484,10 @@ public abstract class AbstractParser {
     private String convertSignature(String sig) {
         if (sig.matches("^xyz\\.wagyourtail\\.[^#]+\\w$")) return sig.replaceFirst("^.+\\.(?=[^.]+$)", "");
         if (sig.matches("^\\w+\\.(?:\\w+\\.)+[\\w$_]+$")) return "Packages." + sig;
-        sig = sig.replaceFirst("(?<=\\S)(?=[<(])", " ");
+//        sig = sig.replaceFirst("(?<=\\S)(?=[<(])", " ");
         return sig.startsWith("#")
             ? sig.substring(1)
-            : sig.replaceFirst("^(?:xyz\\.wagyourtail\\.jsmacros\\.(?:client\\.api|core)\\.library\\.impl\\.)?F([A-Z]\\w+)#", "$1.");
+            : sig.replaceFirst("^(?:xyz\\.wagyourtail\\.jsmacros\\.(?:client\\.api|core)\\.library\\.impl\\.)?F([A-Z]\\w+)#", "$1.").replaceFirst("#", ".");
     }
 
     public abstract String genTSInterface();
