@@ -83,7 +83,9 @@ public class Main implements Doclet {
                     libraryClasses.add(new LibraryParser(e, getAnnotationValue("value", annotationMirror).toString()));
                 }
                 if (annotationName.equals("Event")) {
-                    eventClasses.add(new EventParser(e, getAnnotationValue("value", annotationMirror).toString()));
+                    Object cancellableValue = getAnnotationValue("cancellable", annotationMirror);
+                    boolean cancellable = cancellableValue != null && (Boolean) cancellableValue;
+                    eventClasses.add(new EventParser(e, getAnnotationValue("value", annotationMirror).toString(), cancellable));
                 }
             }
             if (e.getSimpleName().toString().equals("EventContainer")) {
@@ -125,6 +127,12 @@ public class Main implements Doclet {
                     interface BaseEvent extends JavaObject {
 
                         getEventName(): string;
+
+                    }
+
+                    interface Cancellable {
+
+                        cancel(): void;
 
                     }"""
             );
