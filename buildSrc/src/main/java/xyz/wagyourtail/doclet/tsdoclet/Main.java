@@ -27,6 +27,11 @@ public class Main implements Doclet {
     public static Elements elementUtils;
     public static Map<String, String> enumTypes = new HashMap<>();
 
+    public static final List<String> includedClassPath = List.of(
+            "xyz.wagyourtail.jsmacros.client.api.helpers.",
+            "xyz.wagyourtail.jsmacros.client.api.classes.inventory."
+    );
+
     @Override
     public void init(Locale locale, Reporter reporter) {
         Main.reporter = reporter;
@@ -87,6 +92,10 @@ public class Main implements Doclet {
                     boolean cancellable = cancellableValue != null && (Boolean) cancellableValue;
                     eventClasses.add(new EventParser(e, getAnnotationValue("value", annotationMirror).toString(), cancellable));
                 }
+            }
+            String qualifiedName = e.getQualifiedName().toString();
+            if (includedClassPath.stream().anyMatch(qualifiedName::startsWith)) {
+                classes.addClass(e);
             }
             if (e.getSimpleName().toString().equals("EventContainer")) {
                 classes.addClass(e);
