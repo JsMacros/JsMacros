@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
+import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.*;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Surface;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -578,6 +579,7 @@ public class Draw2D implements IDraw2D<Draw2D> {
     }
 
     @Override
+    @DocletIgnore
     public void render(DrawContext drawContext) {
         if (drawContext == null || !visible) {
             return;

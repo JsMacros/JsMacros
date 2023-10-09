@@ -2,10 +2,7 @@ package xyz.wagyourtail.doclet.tsdoclet.parsers;
 
 import com.sun.source.doctree.*;
 import xyz.wagyourtail.StringHelpers;
-import xyz.wagyourtail.doclet.DocletEnumType;
-import xyz.wagyourtail.doclet.DocletReplaceParams;
-import xyz.wagyourtail.doclet.DocletReplaceReturn;
-import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
+import xyz.wagyourtail.doclet.*;
 import xyz.wagyourtail.doclet.tsdoclet.Main;
 
 import javax.lang.model.element.*;
@@ -79,6 +76,9 @@ public abstract class AbstractParser {
             if (field.getModifiers().contains(Modifier.STATIC)) {
                 continue;
             }
+            if (field.getAnnotation(DocletIgnore.class) != null) {
+                continue;
+            }
             s.append(genField(field)).append("\n");
         }
         return s.toString();
@@ -91,6 +91,9 @@ public abstract class AbstractParser {
                 continue;
             }
             if (!field.getModifiers().contains(Modifier.STATIC)) {
+                continue;
+            }
+            if (field.getAnnotation(DocletIgnore.class) != null) {
                 continue;
             }
             s.append(genField(field)).append("\n");
@@ -107,6 +110,9 @@ public abstract class AbstractParser {
             if (method.getModifiers().contains(Modifier.STATIC)) {
                 continue;
             }
+            if (method.getAnnotation(DocletIgnore.class) != null) {
+                continue;
+            }
             s.append(genMethod((ExecutableElement) method)).append("\n");
         }
         return s.toString();
@@ -121,6 +127,9 @@ public abstract class AbstractParser {
             if (!method.getModifiers().contains(Modifier.STATIC)) {
                 continue;
             }
+            if (method.getAnnotation(DocletIgnore.class) != null) {
+                continue;
+            }
             s.append(genMethod((ExecutableElement) method)).append("\n");
         }
         return s.toString();
@@ -130,6 +139,9 @@ public abstract class AbstractParser {
         final StringBuilder s = new StringBuilder();
         for (Element method : methods) {
             if (!method.getModifiers().contains(Modifier.PUBLIC)) {
+                continue;
+            }
+            if (method.getAnnotation(DocletIgnore.class) != null) {
                 continue;
             }
             s.append(genConstructor((ExecutableElement) method)).append("\n");
