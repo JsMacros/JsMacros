@@ -42,6 +42,7 @@ public abstract class AbstractParser {
     private final String path;
     protected TypeElement type;
     public boolean isPackage = true;
+    private transient boolean returnsSelf = false;
 
     public static TypeElement objectElement = null;
     public static Set<ExecutableElement> objectMethods = null;
@@ -227,6 +228,8 @@ public abstract class AbstractParser {
         if (replace3 != null) {
             transformType(e.getReturnType()); // to add type to the Packages
             s.append(replace3.value());
+        } else if (!isConstructor && returnsSelf && type.asType().equals(e.getReturnType())) {
+            s.append("this");
         } else {
             s.append(transformType(isConstructor ? type.asType() : e.getReturnType()));
             if (isNullable(e)) s.append(" | null");
@@ -389,6 +392,7 @@ public abstract class AbstractParser {
 
     public String genComment(Element element) {
         checkEnumType(element);
+        returnsSelf = false;
 
         DocCommentTree tree = Main.treeUtils.getDocCommentTree(element);
         if (tree == null) {
@@ -419,6 +423,7 @@ public abstract class AbstractParser {
                 case RETURN -> {
                     if (!((ReturnTree) blockTag).getDescription().isEmpty()) {
                         String desc = genCommentDesc(((ReturnTree) blockTag).getDescription());
+                        if (desc.equals("self") || desc.startsWith("self ")) returnsSelf = true;
                         b.append("\n@return ").append(desc.startsWith("{") ? "{*} " : "").append(desc);
                     }
                 }
