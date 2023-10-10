@@ -14,14 +14,16 @@ import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 
 /**
- * the screenPos is not meant to be exposed because it works in a poor way
- * it needs fov and aspect ratio info to render normally when not on center
- * but for customize availability I just put it there as a field
  * @author aMelonRind
  * @since 1.9.0
  */
 @SuppressWarnings("unused")
 public class TraceLine implements RenderElement3D {
+    /**
+     * this is not meant to be exposed because it works in a poor way<br>
+     * it needs fov and aspect ratio info to render normally when not on center<br>
+     * but for customize availability I just put it here as a field
+     */
     public Pos2D screenPos = new Pos2D(0.0, 0.0);
     public Pos3D pos;
     public int color;
