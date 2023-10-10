@@ -32,6 +32,17 @@ public abstract class AbstractParser {
         "java.lang.Double",    "double",
         "java.lang.Number",    "number"
     );
+    static final public Map<String, String> functionalInterfaces = Map.of(
+        "java.util.function.Consumer", "MethodWrapper<$0>",
+        "java.util.function.BiConsumer", "MethodWrapper<$0, $1>",
+        "java.util.function.Function", "MethodWrapper<$0, any, $1>",
+        "java.util.function.BiFunction", "MethodWrapper<$0, $1, $2>",
+        "java.util.function.Predicate", "MethodWrapper<$0, any, boolean>",
+        "java.util.function.BiPredicate", "MethodWrapper<$0, $1, boolean>",
+        "java.util.function.Supplier", "MethodWrapper<any, any, $0>",
+        "java.util.Comparator", "MethodWrapper<$0, $0, int>",
+        "java.lang.Runnable", "MethodWrapper"
+    );
 
     private static final Set<String> loggedTypes = new HashSet<>();
     private final String path;
@@ -301,7 +312,18 @@ public abstract class AbstractParser {
                 } else rawType.insert(0, classpath + ".");
 
                 List<? extends TypeMirror> params = ((DeclaredType) type).getTypeArguments();
-                if (params != null && !params.isEmpty()) {
+                if (!isExtends && functionalInterfaces.containsKey(rawType.toString())) {
+                    String res = functionalInterfaces.get(rawType.toString());
+                    if (!params.isEmpty()) {
+                        int size = params.size();
+                        for (int i = 0; i < size; i++) {
+                            res = res.replace("$" + i, transformType(params.get(i), isParamType, false));
+                        }
+                    }
+                    return res;
+                }
+
+                if (!params.isEmpty()) {
                     rawType.append("<");
                     for (TypeMirror param : params) {
                         rawType.append(transformType(param, isParamType, isExtends)).append(", ");
