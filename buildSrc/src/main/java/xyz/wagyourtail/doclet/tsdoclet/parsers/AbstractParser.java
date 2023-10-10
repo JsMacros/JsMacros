@@ -6,12 +6,7 @@ import xyz.wagyourtail.doclet.*;
 import xyz.wagyourtail.doclet.tsdoclet.Main;
 
 import javax.lang.model.element.*;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.IntersectionType;
-import javax.lang.model.type.UnionType;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.TypeVariable;
+import javax.lang.model.type.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -366,7 +361,9 @@ public abstract class AbstractParser {
                 return isParamType ? component + "[]" : "JavaArray<" + component + ">";
             }
             case WILDCARD -> {
-                return "any";
+                TypeMirror bound = ((WildcardType) type).getExtendsBound();
+                if (bound == null) bound = ((WildcardType) type).getSuperBound();
+                return bound == null ? "any" : transformType(bound, isParamType, isExtends);
             }
             case INTERSECTION -> {
                 StringBuilder s = new StringBuilder("(");
