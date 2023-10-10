@@ -7,6 +7,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.math.MathHelper;
+import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
@@ -252,10 +253,12 @@ public class Item implements RenderElement, Alignable<Item> {
     }
 
     @Override
+    @DocletIgnore
     public void render3D(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         render(drawContext, mouseX, mouseY, delta, true);
     }
 
+    @DocletIgnore
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta, boolean is3dRender) {
         if (item == null) {
             return;

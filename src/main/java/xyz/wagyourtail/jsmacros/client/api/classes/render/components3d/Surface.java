@@ -7,6 +7,7 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
@@ -221,6 +222,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D {
     }
 
     @Override
+    @DocletIgnore
     public void render(DrawContext drawContext, BufferBuilder builder, float delta) {
         MatrixStack matrixStack = drawContext.getMatrices();
         matrixStack.push();
