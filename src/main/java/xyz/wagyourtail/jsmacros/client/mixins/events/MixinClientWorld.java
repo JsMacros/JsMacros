@@ -13,8 +13,8 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventEntityUnload;
 @Mixin(ClientWorld.class)
 public class MixinClientWorld {
 
-    @Inject(at = @At("TAIL"), method = "addEntityPrivate")
-    public void onAddEntity(int id, Entity entity, CallbackInfo ci) {
+    @Inject(at = @At("TAIL"), method = "addEntity")
+    public void onAddEntity(Entity entity, CallbackInfo ci) {
         new EventEntityLoad(entity).trigger();
     }
 

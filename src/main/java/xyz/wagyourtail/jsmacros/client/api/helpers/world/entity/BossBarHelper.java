@@ -76,7 +76,7 @@ public class BossBarHelper extends BaseHelper<BossBar> {
      * @since 1.2.1
      */
     public TextHelper getName() {
-        return new TextHelper(base.getName());
+        return TextHelper.wrap(base.getName());
     }
 
     @Override

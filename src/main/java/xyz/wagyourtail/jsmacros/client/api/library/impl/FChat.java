@@ -314,7 +314,7 @@ public class FChat extends BaseLibrary {
      * @since 1.1.3
      */
     public TextHelper createTextHelperFromString(String content) {
-        return new TextHelper(Text.literal(content));
+        return TextHelper.wrap(Text.literal(content));
     }
 
     /**
@@ -345,7 +345,7 @@ public class FChat extends BaseLibrary {
      * @since 1.1.3
      */
     public TextHelper createTextHelperFromJSON(String json) {
-        TextHelper t = new TextHelper(null);
+        TextHelper t = TextHelper.wrap(null);
         t.replaceFromJson(json);
         return t;
     }

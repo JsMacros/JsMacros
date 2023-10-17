@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.scoreboard.ScoreboardDisplaySlot;
 import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.util.Formatting;
@@ -33,7 +34,7 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
     public ScoreboardObjectiveHelper getObjectiveForTeamColorIndex(int index) {
         ScoreboardObjective obj = null;
         if (index >= 0) {
-            obj = base.getObjectiveForSlot(index + 3);
+            obj = base.getObjectiveForSlot(ScoreboardDisplaySlot.values()[index + 3]);
         }
         return obj == null ? null : new ScoreboardObjectiveHelper(obj);
     }
@@ -49,7 +50,7 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
     public ScoreboardObjectiveHelper getObjectiveSlot(int slot) {
         ScoreboardObjective obj = null;
         if (slot >= 0) {
-            obj = base.getObjectiveForSlot(slot);
+            obj = base.getObjectiveForSlot(ScoreboardDisplaySlot.values()[slot]);
         }
         return obj == null ? null : new ScoreboardObjectiveHelper(obj);
     }

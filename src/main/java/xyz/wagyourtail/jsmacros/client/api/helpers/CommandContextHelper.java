@@ -80,7 +80,7 @@ public class CommandContextHelper extends BaseEvent {
         } else if (arg instanceof NbtElement) {
             arg = NBTElementHelper.resolve((NbtElement) arg);
         } else if (arg instanceof Text) {
-            arg = new TextHelper((Text) arg);
+            arg = TextHelper.wrap((Text) arg);
         } else if (arg instanceof Formatting) {
             arg = new FormattingHelper((Formatting) arg);
         } else if (arg instanceof AngleArgumentType.Angle) {

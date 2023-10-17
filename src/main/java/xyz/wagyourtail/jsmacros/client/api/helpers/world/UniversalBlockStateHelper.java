@@ -143,14 +143,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @return
      * @since 1.8.4
      */
-    public String getWallMountLocation() {
-        return base.get(Properties.WALL_MOUNT_LOCATION).asString();
-    }
-
-    /**
-     * @return
-     * @since 1.8.4
-     */
     public String getHorizontalAxis() {
         return base.get(Properties.HORIZONTAL_AXIS).asString();
     }
@@ -1026,6 +1018,38 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
         return base.get(Properties.SLOT_5_OCCUPIED);
     }
 
+    /**
+     * @since 1.9.0
+     * @return
+     */
+    public int getFlowerAmount() {
+        return base.get(Properties.FLOWER_AMOUNT);
+    }
+
+    /**
+     * @since 1.9.0
+     * @return
+     */
+    public String getBlockFace() {
+        return base.get(Properties.BLOCK_FACE).asString();
+    }
+
+    /**
+     * @since 1.9.0
+     * @return
+     */
+    public int getDusted() {
+        return base.get(Properties.DUSTED);
+    }
+
+    /**
+     * @since 1.9.0
+     * @return
+     */
+    public boolean isCracked() {
+        return base.get(Properties.CRACKED);
+    }
+
     @Ignore
     private static String SCREAMING_SNAKE_CASE_TO_PascalCase(String input) {
         StringBuilder result = new StringBuilder();
@@ -1035,7 +1059,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
                 continue;
             }
             //test if previous ended with a number and current starts with a number
-            if (result.length() > 0 && Character.isDigit(result.charAt(result.length() - 1))) {
+            if (!result.isEmpty() && Character.isDigit(result.charAt(result.length() - 1))) {
                 if (Character.isDigit(word.charAt(0))) {
                     result.append("_");
                 }

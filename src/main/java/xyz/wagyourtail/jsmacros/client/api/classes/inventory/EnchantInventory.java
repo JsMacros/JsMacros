@@ -35,7 +35,7 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
         for (int j = 0; j < 3; ++j) {
             Enchantment enchantment = Enchantment.byRawId(inventory.getScreenHandler().enchantmentId[j]);
             if ((enchantment) != null) {
-                enchants[j] = new TextHelper(enchantment.getName(inventory.getScreenHandler().enchantmentLevel[j]));
+                enchants[j] = TextHelper.wrap(enchantment.getName(inventory.getScreenHandler().enchantmentLevel[j]));
             }
         }
         return enchants;

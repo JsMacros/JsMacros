@@ -28,11 +28,11 @@ public class ServerInfoHelper extends BaseHelper<ServerInfo> {
     }
 
     public TextHelper getPlayerCountLabel() {
-        return new TextHelper(base.playerCountLabel);
+        return TextHelper.wrap(base.playerCountLabel);
     }
 
     public TextHelper getLabel() {
-        return new TextHelper(base.label);
+        return TextHelper.wrap(base.label);
     }
 
     public long getPing() {
@@ -44,11 +44,11 @@ public class ServerInfoHelper extends BaseHelper<ServerInfo> {
     }
 
     public TextHelper getVersion() {
-        return new TextHelper(base.version);
+        return TextHelper.wrap(base.version);
     }
 
     public List<TextHelper> getPlayerListSummary() {
-        return base.playerListSummary.stream().map(TextHelper::new).collect(Collectors.toList());
+        return base.playerListSummary.stream().map(TextHelper::wrap).collect(Collectors.toList());
     }
 
     public String resourcePackPolicy() {

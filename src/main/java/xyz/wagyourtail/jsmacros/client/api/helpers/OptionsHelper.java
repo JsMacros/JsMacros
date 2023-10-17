@@ -9,6 +9,7 @@ import net.minecraft.client.resource.language.LanguageDefinition;
 import net.minecraft.client.resource.language.LanguageManager;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.util.Window;
+import net.minecraft.network.message.ChatVisibility;
 import net.minecraft.network.packet.c2s.play.UpdateDifficultyLockC2SPacket;
 import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.resource.ResourcePackProfile;

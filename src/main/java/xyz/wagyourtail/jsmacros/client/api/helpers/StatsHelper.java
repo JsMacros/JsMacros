@@ -10,6 +10,7 @@ import net.minecraft.stat.StatHandler;
 import net.minecraft.stat.StatType;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -28,12 +29,12 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     }
 
     public List<String> getStatList() {
-        return ((MixinStatHandler) base).getStatMap().keySet().stream().map(Stat::getType).map(StatType::getTranslationKey).collect(Collectors.toList());
+        return ((MixinStatHandler) base).getStatMap().keySet().stream().map(this::getTranslationKey).collect(Collectors.toList());
     }
 
     public Text getStatText(String statKey) {
         for (Stat<?> stat : ImmutableSet.copyOf(((MixinStatHandler) base).getStatMap().keySet())) {
-            if (stat.getType().getTranslationKey().equals(statKey)) {
+            if (getTranslationKey(stat).equals(statKey)) {
                 return stat.getType().getName();
             }
         }
@@ -42,7 +43,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
 
     public int getRawStatValue(String statKey) {
         for (Stat<?> stat : ImmutableSet.copyOf(((MixinStatHandler) base).getStatMap().keySet())) {
-            if (stat.getType().getTranslationKey().equals(statKey)) {
+            if (getTranslationKey(stat).equals(statKey)) {
                 return base.getStat(stat);
             }
         }
@@ -51,17 +52,25 @@ public class StatsHelper extends BaseHelper<StatHandler> {
 
     public String getFormattedStatValue(String statKey) {
         for (Stat<?> stat : ImmutableSet.copyOf(((MixinStatHandler) base).getStatMap().keySet())) {
-            if (stat.getType().getTranslationKey().equals(statKey)) {
+            if (getTranslationKey(stat).equals(statKey)) {
                 return stat.format(base.getStat(stat));
             }
         }
         throw new IllegalArgumentException("Stat not found: " + statKey);
     }
 
+    private String getTranslationKey(Stat<?> stat) {
+        if (stat.getType().getName() instanceof TranslatableTextContent t) {
+            return t.getKey();
+        } else {
+            return stat.getType().getName().getString();
+        }
+    }
+
     public Map<String, String> getFormattedStatMap() {
         Map<String, String> map = new HashMap<>();
         for (Stat<?> stat : ImmutableSet.copyOf(((MixinStatHandler) base).getStatMap().keySet())) {
-            map.put(stat.getType().getTranslationKey(), stat.format(base.getStat(stat)));
+            map.put(getTranslationKey(stat), stat.format(base.getStat(stat)));
         }
         return map;
     }
@@ -69,7 +78,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
     public Map<String, Integer> getRawStatMap() {
         Map<String, Integer> map = new HashMap<>();
         for (Stat<?> stat : ImmutableSet.copyOf(((MixinStatHandler) base).getStatMap().keySet())) {
-            map.put(stat.getType().getTranslationKey(), base.getStat(stat));
+            map.put(getTranslationKey(stat), base.getStat(stat));
         }
         return map;
     }

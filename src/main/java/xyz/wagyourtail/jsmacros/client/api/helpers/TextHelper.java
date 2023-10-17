@@ -17,8 +17,16 @@ public class TextHelper extends BaseHelper<Text> {
 
     public static final Pattern STRIP_FORMATTING_PATTERN = Pattern.compile("\u00a7[0-9A-FK-OR]", Pattern.CASE_INSENSITIVE);
 
-    public TextHelper(Text t) {
+    private TextHelper(Text t) {
         super(t);
+    }
+
+    public static TextHelper wrap(Text t) {
+        if (t != null) {
+            return TextHelper.wrap(t);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -78,7 +86,7 @@ public class TextHelper extends BaseHelper<Text> {
      * @since 1.8.4
      */
     public TextHelper withoutFormatting() {
-        return new TextHelper(Text.literal(getStringStripFormatting()));
+        return TextHelper.wrap(Text.literal(getStringStripFormatting()));
     }
 
     /**

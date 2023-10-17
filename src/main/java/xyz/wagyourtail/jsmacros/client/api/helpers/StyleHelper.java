@@ -139,13 +139,13 @@ public class StyleHelper extends BaseHelper<Style> {
         }
         Object value = base.getHoverEvent().getValue(base.getHoverEvent().getAction());
         if (value instanceof Text) {
-            return new TextHelper((Text) value);
+            return TextHelper.wrap((Text) value);
         }
         if (value instanceof HoverEvent.ItemStackContent) {
             return new ItemStackHelper(((HoverEvent.ItemStackContent) value).asStack());
         }
         if (value instanceof HoverEvent.EntityContent) {
-            return ((HoverEvent.EntityContent) value).asTooltip().stream().map(TextHelper::new).collect(Collectors.toList());
+            return ((HoverEvent.EntityContent) value).asTooltip().stream().map(TextHelper::wrap).collect(Collectors.toList());
         }
         return value;
     }

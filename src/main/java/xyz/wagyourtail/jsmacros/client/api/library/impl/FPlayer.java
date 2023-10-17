@@ -166,7 +166,7 @@ public class FPlayer extends BaseLibrary {
         ScreenshotRecorder.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), mc.getFramebuffer(),
                 (text) -> {
                     if (callback != null) {
-                        callback.accept(new TextHelper(text));
+                        callback.accept(TextHelper.wrap(text));
                     }
                 });
     }
@@ -186,7 +186,7 @@ public class FPlayer extends BaseLibrary {
         ScreenshotRecorder.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), file, mc.getFramebuffer(),
                 (text) -> {
                     if (callback != null) {
-                        callback.accept(new TextHelper(text));
+                        callback.accept(TextHelper.wrap(text));
                     }
                 });
     }
@@ -202,7 +202,7 @@ public class FPlayer extends BaseLibrary {
         assert folder != null;
         Text result = mc.takePanorama(new File(Core.getInstance().config.macroFolder, folder), width, height);
         if (callback != null) {
-            callback.accept(new TextHelper(result));
+            callback.accept(TextHelper.wrap(result));
         }
     }
 
