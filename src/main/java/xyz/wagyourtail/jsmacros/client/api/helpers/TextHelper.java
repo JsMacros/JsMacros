@@ -23,7 +23,7 @@ public class TextHelper extends BaseHelper<Text> {
 
     public static TextHelper wrap(Text t) {
         if (t != null) {
-            return TextHelper.wrap(t);
+            return new TextHelper(t);
         } else {
             return null;
         }
