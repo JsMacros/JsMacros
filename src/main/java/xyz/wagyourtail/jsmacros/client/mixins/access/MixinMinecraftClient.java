@@ -113,7 +113,7 @@ class MixinMinecraftClient implements IMinecraftClient {
                 InteractionProxy.Break.setOverride(false, "INTERRUPTED");
                 return;
             }
-            if (this.attackCooldown > 20) this.attackCooldown = 0;
+            if (this.attackCooldown > 20) this.attackCooldown = 0; // prevent mc from setting it to 10000 while in screen
             if (!breaking) {
                 ci.cancel();
                 handleBlockBreaking(true);

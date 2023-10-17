@@ -18,6 +18,7 @@ import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.PlayerInput;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
+import xyz.wagyourtail.jsmacros.client.api.helpers.InteractionManagerHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
@@ -68,6 +69,14 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
+     * @since 1.9.0
+     */
+    public InteractionManagerHelper getInteractionManager() {
+        assert mc.interactionManager != null;
+        return new InteractionManagerHelper();
+    }
+
+    /**
      * @return the player's current gamemode.
      * @since 1.0.9
      */
@@ -111,9 +120,9 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
-     * @return the entity the camera is currently looking at. can be affected by {@link ClientPlayerEntityHelper#setTarget(EntityHelper)}
+     * @return the entity the camera is currently looking at. can be affected by {@link InteractionManagerHelper#setTarget(EntityHelper)}
      * @see EntityHelper
-     * @deprecated use {@link FPlayer#rayTraceEntity(int)} or {@link ClientPlayerEntityHelper#getTargetedEntity()} instead
+     * @deprecated use {@link FPlayer#rayTraceEntity(int)} or {@link InteractionManagerHelper#getTargetedEntity()} instead
      * @since 1.0.5
      */
     @Deprecated
@@ -214,7 +223,9 @@ public class FPlayer extends BaseLibrary {
     /**
      * @return the current reach distance of the player.
      * @since 1.8.4
+     * @deprecated moved to {@code Player.getInteractionManager()}
      */
+    @Deprecated
     public float getReach() {
         assert mc.interactionManager != null;
         return mc.interactionManager.getReachDistance();
@@ -391,7 +402,9 @@ public class FPlayer extends BaseLibrary {
     /**
      * @return
      * @since 1.8.0
+     * @deprecated use {@code Player.getInteractionManager().isBreakingBlock()} instead
      */
+    @Deprecated
     public boolean isBreakingBlock() {
         assert mc.interactionManager != null;
         return mc.interactionManager.isBreakingBlock();
